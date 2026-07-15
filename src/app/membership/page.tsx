@@ -1,14 +1,33 @@
 import Link from "next/link";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cookies } from "next/headers";
+import { Locale, tServer } from "@/lib/i18n";
 
-export const metadata = {
-  title: "মেম্বারশিপ প্ল্যান - হেলথ ক্লাব",
-  description: "আমাদের ৩টি মেম্বারশিপ প্ল্যান দেখে আপনার জন্য উপযুক্ত প্ল্যানটি বেছে নিন এবং চিকিৎসা ব্যয় সাশ্রয় করা শুরু করুন।"
-};
+export async function generateMetadata() {
+  const cookieStore = await cookies();
+  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
+  return {
+    title: locale === "en" ? "Membership Plans - Health Club" : "মেম্বারশিপ প্ল্যান - হেলথ ক্লাব",
+    description: locale === "en"
+      ? "Check out our membership plans to find the right one for you and start saving on medical bills."
+      : "আমাদের মেম্বারশিপ প্ল্যান দেখে আপনার জন্য উপযুক্ত প্ল্যানটি বেছে নিন এবং চিকিৎসা ব্যয় সাশ্রয় করা শুরু করুন।"
+  };
+}
 
-export default function MembershipPage() {
-  const benefitDetails = [
+export default async function MembershipPage() {
+  const cookieStore = await cookies();
+  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
+  const t = (key: string) => tServer(locale, key);
+
+  const benefitDetails = locale === "en" ? [
+    { title: "Hospital Discount", desc: "Flat 10% discount on the total bill at any partner hospital simply by showing your digital membership card." },
+    { title: "Diagnostic Test Off", desc: "Flat 10% discount on all pathological and imaging tests including blood tests and X-rays." },
+    { title: "Model Pharmacy Offer", desc: "Flat 10% direct discount on purchasing essential medicines from designated partner pharmacies." },
+    { title: "Family Savings", desc: "Family plans allow up to 4 family members to get individual membership cards with the same discount benefits." },
+    { title: "Free Health Camps", desc: "Access to regularly organized free diabetes checkups, eye camps, and blood pressure tests." },
+    { title: "1 Year Founding Status", desc: "Membership is completely free for 1 year for the first 100 founding members." }
+  ] : [
     { title: "হাসপাতাল ডিসকাউন্ট", desc: "যেকোনো অংশীদার হাসপাতালে শুধু ডিজিটাল মেম্বার কার্ড প্রদর্শন করে বিলের উপর ফ্ল্যাট ১০% ডিসকাউন্ট।" },
     { title: "ডায়াগনস্টিক টেস্ট ছাড়", desc: "রক্ত পরীক্ষা, এক্স-রে সহ সকল প্যাথলজিক্যাল ও ইমেজিং পরীক্ষায় ফ্ল্যাট ১০% ডিসকাউন্ট।" },
     { title: "মডেল ফার্মেসী অফার", desc: "নির্ধারিত পার্টনার ফার্মেসীগুলো থেকে প্রয়োজনীয় ঔষধ ক্রয়ের ক্ষেত্রে সরাসরি ফ্ল্যাট ১০% ডিসকাউন্ট।" },
@@ -23,12 +42,14 @@ export default function MembershipPage() {
         
         {/* Header */}
         <div className="text-center space-y-4 max-w-2xl mx-auto">
-          <span className="text-xs font-extrabold text-primary tracking-widest uppercase">প্ল্যান ও বিবরণী</span>
+          <span className="text-xs font-extrabold text-primary tracking-widest uppercase">
+            {t("membership.page.plansDetails")}
+          </span>
           <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-secondary dark:text-white">
-            সাশ্রয়ী স্বাস্থ্য মেম্বারশিপ প্ল্যান
+            {t("membership.page.affordableHealthcareMembershipPlans")}
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground">
-            আপনার পরিবারের প্রয়োজন ও বাজেট অনুযায়ী মানানসই প্ল্যানটি বেছে নিন।
+            {t("membership.page.chooseTheRightPlanThat")}
           </p>
         </div>
 
@@ -38,40 +59,44 @@ export default function MembershipPage() {
           {/* Founding Member */}
           <div className="bg-gradient-to-b from-primary-light/50 to-background border-2 border-primary rounded-3xl p-8 relative flex flex-col justify-between shadow-xl ring-4 ring-primary/10">
             <div className="absolute top-4 right-4 bg-primary text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
-              সীমিত অফার
+              {t("membership.page.limitedOffer")}
             </div>
             <div className="space-y-6">
               <div>
                 <h3 className="font-heading text-xl font-bold text-secondary">Founding Member</h3>
-                <p className="text-xs text-muted-foreground mt-1">প্রথম ১০০ জন ফাউন্ডিং মেম্বারশিপ পাবেন।</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t("membership.page.theFirst100MembersWill")}
+                </p>
               </div>
               <div className="flex items-baseline gap-1 text-secondary dark:text-white font-mono">
-                <span className="text-4xl font-extrabold">৳০</span>
-                <span className="text-xs text-muted-foreground font-semibold">/ ১ বছর ফ্রী</span>
+                <span className="text-4xl font-extrabold">{t("membership.page.0")}</span>
+                <span className="text-xs text-muted-foreground font-semibold">
+                  {t("membership.page.1YearFree")}
+                </span>
               </div>
               <ul className="space-y-3 text-sm text-secondary/80">
                 <li className="flex items-start gap-2.5">
                   <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <span>সদস্য নিজে এবং তার পরিবার ও আত্মীয়-স্বজন কভারেজ</span>
+                  <span>{t("membership.page.coverageForTheMemberFamily")}</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <span>১ বছর মেম্বারশিপ</span>
+                  <span>{t("membership.page.1YearMembership")}</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <span>সকল পার্টনার হাসপাতালে ডিসকাউন্ট</span>
+                  <span>{t("membership.page.discountsAtAllPartnerHospitals")}</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <span>ডিজিটাল মেম্বারশিপ কার্ড ও ভেরিফাইড কিউআর</span>
+                  <span>{t("membership.page.digitalMembershipCardVerifiedQr")}</span>
                 </li>
               </ul>
             </div>
             <div className="pt-8">
               <Link href="/register">
                 <Button className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
-                  ফ্রি জয়েন করুন
+                  {t("membership.page.joinForFree")}
                 </Button>
               </Link>
             </div>
@@ -82,35 +107,39 @@ export default function MembershipPage() {
             <div className="space-y-6">
               <div>
                 <h3 className="font-heading text-xl font-bold text-secondary dark:text-white">Individual Membership</h3>
-                <p className="text-xs text-muted-foreground mt-1">একক সদস্যদের বাৎসরিক কার্ড ও সুবিধা।</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t("membership.page.annualCardAndBenefitsFor")}
+                </p>
               </div>
               <div className="flex items-baseline gap-1 text-secondary dark:text-white font-mono">
-                <span className="text-4xl font-extrabold">৳৫০০</span>
-                <span className="text-xs text-muted-foreground font-semibold">/ বাৎসরিক সাবস্ক্রিপশন</span>
+                <span className="text-4xl font-extrabold">{t("membership.page.500")}</span>
+                <span className="text-xs text-muted-foreground font-semibold">
+                  {t("membership.page.annualSubscription")}
+                </span>
               </div>
               <ul className="space-y-3 text-sm text-muted-foreground">
                 <li className="flex items-start gap-2.5">
                   <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <span>সদস্য নিজে এবং তার পরিবার ও আত্মীয়-স্বজন কভারেজ</span>
+                  <span>{t("membership.page.coverageForTheMemberFamily")}</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <span>বাৎসরিক রিনিউয়াল সাপেক্ষে মেয়াদ বৃদ্ধি</span>
+                  <span>{t("membership.page.renewalOnAnAnnualBasis")}</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <span>সকল পার্টনার হাসপাতালে ডিসকাউন্ট</span>
+                  <span>{t("membership.page.discountsAtAllPartnerHospitals")}</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <span>ডিজিটাল মেম্বারশিপ কার্ড ও ভেরিফাইড কিউআর</span>
+                  <span>{t("membership.page.digitalMembershipCardVerifiedQr")}</span>
                 </li>
               </ul>
             </div>
             <div className="pt-8">
               <Link href="/register?plan=individual">
                 <Button variant="outline" className="w-full border-border hover:bg-muted text-secondary dark:text-white">
-                  প্ল্যান কিনুন
+                  {t("membership.page.buyPlan")}
                 </Button>
               </Link>
             </div>
@@ -122,10 +151,10 @@ export default function MembershipPage() {
         <div className="space-y-8 pt-8 border-t border-border">
           <div className="text-center space-y-3">
             <h2 className="font-heading text-2xl sm:text-3xl font-bold text-secondary dark:text-white">
-              বিস্তারিত মেম্বারশিপের সুবিধাসমূহ
+              {t("membership.page.detailedMembershipBenefits")}
             </h2>
             <p className="text-sm text-muted-foreground max-w-xl mx-auto">
-              আমাদের সকল মেম্বারশিপ প্ল্যানেই নিচে উল্লেখ করা মৌলিক স্বাস্থ্য সুবিধা ও ক্যাশলেস ডিসকাউন্ট কভারেজ অন্তর্ভুক্ত থাকে।
+              {t("membership.page.allOfOurMembershipPlans")}
             </p>
           </div>
 

@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --font-heading: var(--font-sans);
+    --font-heading: var(--font-heading);
     --font-sans: var(--font-sans);
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
@@ -32,6 +32,8 @@
     --color-secondary: var(--secondary);
     --color-primary-foreground: var(--primary-foreground);
     --color-primary: var(--primary);
+    --color-primary-light: var(--primary-light);
+    --color-primary-dark: var(--primary-dark);
     --color-popover-foreground: var(--popover-foreground);
     --color-popover: var(--popover);
     --color-card-foreground: var(--card-foreground);
@@ -48,6 +50,8 @@
 }
 
 :root {
+    --font-sans: var(--font-hind-siliguri), var(--font-inter), sans-serif;
+    --font-heading: var(--font-hind-siliguri), var(--font-inter), sans-serif;
     --background: #ffffff;
     --foreground: #0f172a;
     --card: #ffffff;
@@ -55,6 +59,8 @@
     --popover: #ffffff;
     --popover-foreground: #0f172a;
     --primary: #16a34a;
+    --primary-light: #f0fdf4;
+    --primary-dark: #15803d;
     --primary-foreground: #ffffff;
     --secondary: #0f172a;
     --secondary-foreground: #ffffff;
@@ -84,6 +90,11 @@
     --chart-5: #ef4444;
 }
 
+html[lang="en"] {
+    --font-sans: var(--font-inter), sans-serif;
+    --font-heading: var(--font-inter), sans-serif;
+}
+
 .dark {
     --background: #0f172a;
     --foreground: #f8fafc;
@@ -92,6 +103,8 @@
     --popover: #0f172a;
     --popover-foreground: #f8fafc;
     --primary: #22c55e;
+    --primary-light: #14532d;
+    --primary-dark: #16a34a;
     --primary-foreground: #0f172a;
     --secondary: #1e293b;
     --secondary-foreground: #f8fafc;
@@ -177,4 +190,13 @@ body {
 .scroll-x {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+/* Improve text contrast in dark mode for elements using text-secondary */
+:where(.dark) .text-secondary {
+  color: var(--foreground);
+}
+
+:where(.dark) .text-secondary\/80 {
+  color: var(--muted-foreground);
 }

@@ -7,6 +7,8 @@ import { Partner } from "@/services/db";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/components/layout/LanguageProvider";
+import { formatDiscount } from "@/lib/i18n";
 
 interface PartnerDirectoryProps {
   limit?: number;
@@ -17,6 +19,7 @@ export default function PartnerDirectory({ limit, showFilters = true }: PartnerD
   const [partners, setPartners] = useState<Partner[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const { locale, t } = useLanguage();
 
   useEffect(() => {
     dbStore.getPartners().then(setPartners);
@@ -54,21 +57,21 @@ export default function PartnerDirectory({ limit, showFilters = true }: PartnerD
   const getCategoryLabel = (category: string) => {
     switch (category) {
       case "hospital":
-        return "হাসপাতাল";
+        return t("ui.partnerdirectory.hospital");
       case "diagnostic":
-        return "ডায়াগনস্টিক";
+        return t("ui.partnerdirectory.diagnostic");
       case "pharmacy":
-        return "ফার্মেসী";
+        return t("ui.partnerdirectory.pharmacy");
       default:
-        return "স্বাস্থ্যসেবা";
+        return t("ui.partnerdirectory.healthcare");
     }
   };
 
   const categories = [
-    { value: "all", label: "সব ক্যাটাগরি" },
-    { value: "hospital", label: "হাসপাতাল" },
-    { value: "diagnostic", label: "ডায়াগনস্টিক সেন্টার" },
-    { value: "pharmacy", label: "ফার্মেসী" },
+    { value: "all", label: t("ui.partnerdirectory.allCategories") },
+    { value: "hospital", label: t("ui.partnerdirectory.hospital") },
+    { value: "diagnostic", label: t("ui.partnerdirectory.diagnosticCenter") },
+    { value: "pharmacy", label: t("ui.partnerdirectory.pharmacy") },
   ];
 
   return (
@@ -82,7 +85,7 @@ export default function PartnerDirectory({ limit, showFilters = true }: PartnerD
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="text"
-            placeholder="হাসপাতাল বা এলাকার নাম দিয়ে খুঁজুন..."
+            placeholder={t("ui.partnerdirectory.searchByHospitalNameOr")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 border-border bg-background"
@@ -148,9 +151,11 @@ export default function PartnerDirectory({ limit, showFilters = true }: PartnerD
                 {/* Bottom Discount & Call */}
                 <div className="pt-4 border-t border-border mt-4 flex items-center justify-between gap-2">
                   <div>
-                    <p className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">Discount Rate</p>
+                    <p className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">
+                      {t("ui.partnerdirectory.discountRate")}
+                    </p>
                     <p className="text-base font-bold text-primary font-heading">
-                      {partner.discount}
+                      {formatDiscount(partner.discount, locale)}
                     </p>
                   </div>
 
@@ -159,14 +164,14 @@ export default function PartnerDirectory({ limit, showFilters = true }: PartnerD
                       <a href={partner.mapLink} target="_blank" rel="noopener noreferrer">
                         <Button variant="outline" size="sm" className="gap-1 border-slate-200 dark:border-slate-800 text-muted-foreground hover:bg-muted">
                           <MapPin className="h-3.5 w-3.5" />
-                          ম্যাপে দেখুন
+                          {t("ui.partnerdirectory.viewMap")}
                         </Button>
                       </a>
                     )}
                     <a href={`tel:${partner.phone}`}>
                       <Button variant="outline" size="sm" className="gap-1 border-primary text-primary hover:bg-primary-light">
                         <Phone className="h-3.5 w-3.5" />
-                        কল করুন
+                        {t("ui.partnerdirectory.call")}
                       </Button>
                     </a>
                   </div>
@@ -178,7 +183,9 @@ export default function PartnerDirectory({ limit, showFilters = true }: PartnerD
         </div>
       ) : (
         <div className="text-center py-12 border border-dashed border-border rounded-xl">
-          <p className="text-muted-foreground text-sm">কোন পার্টনার হাসপাতাল বা ল্যাব খুঁজে পাওয়া যায়নি।</p>
+          <p className="text-muted-foreground text-sm">
+            {t("ui.partnerdirectory.noPartnerHospitalOrLab")}
+          </p>
         </div>
       )}
 

@@ -3,16 +3,22 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, LogOut, User, Heart } from "lucide-react";
+import { Menu, X, LogOut, Heart, Globe, Sun, Moon, Settings, LayoutDashboard } from "lucide-react";
+import Image from "next/image";
 import { dbStore } from "@/services/dbStore";
 import { Member } from "@/services/db";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/components/layout/LanguageProvider";
+import { useTheme } from "@/components/layout/ThemeProvider";
+import UserDropdown from "./UserDropdown";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<Member | null>(null);
   const pathname = usePathname();
   const router = useRouter();
+  const { locale, setLocale, t } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -43,12 +49,12 @@ export default function Header() {
   };
 
   const navLinks = [
-    { name: "হোম", path: "/" },
-    { name: "সুবিধাসমূহ", path: "/#benefits" },
-    { name: "পার্টনার হাসপাতাল", path: "/partner-hospitals" },
-    { name: "মেম্বারশিপ প্ল্যান", path: "/membership" },
-    { name: "আমাদের সম্পর্কে", path: "/about-us" },
-    { name: "যোগাযোগ", path: "/contact" },
+    { name: t("layout.header.home"), path: "/" },
+    { name: t("layout.header.benefits"), path: "/#benefits" },
+    { name: t("layout.header.partnerHospitals"), path: "/partner-hospitals" },
+    { name: t("layout.header.membershipPlans"), path: "/membership" },
+    { name: t("layout.header.aboutUs"), path: "/about-us" },
+    { name: t("layout.header.contact"), path: "/contact" },
   ];
 
   const isActive = (path: string) => {
@@ -70,7 +76,7 @@ export default function Header() {
           >
             <Heart className="h-6 w-6 fill-primary" />
             <span className="font-heading text-xl font-bold tracking-tight text-secondary dark:text-white">
-              হেলথ <span className="text-primary">ক্লাব</span>
+              {t("layout.header.health")} <span className="text-primary">{t("layout.header.club")}</span>
             </span>
           </Link>
 
@@ -93,41 +99,42 @@ export default function Header() {
 
           {/* Desktop Buttons */}
           <div className="hidden md:flex items-center space-x-3">
+            {/* Language Switcher Button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setLocale(locale === "bn" ? "en" : "bn")}
+              className="gap-1.5 text-muted-foreground hover:text-foreground h-9 px-3"
+            >
+              <Globe className="h-4 w-4" />
+              <span className="text-xs font-semibold">{locale === "bn" ? "English" : "বাংলা"}</span>
+            </Button>
+
+            {/* Theme Toggle Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="h-9 w-9 text-muted-foreground hover:text-foreground"
+              aria-label="Toggle Theme"
+            >
+              {theme === "light" ? (
+                <Moon className="h-4 w-4" />
+              ) : (
+                <Sun className="h-4 w-4 text-amber-500" />
+              )}
+            </Button>
+
             {user ? (
-              <>
-                {user.email === "healthclubfeni@gmail.com" ? (
-                  <Link href="/admin">
-                    <Button variant="outline" size="sm" className="gap-2 border-primary text-primary hover:bg-primary-light">
-                      <User className="h-4 w-4" />
-                      এডমিন প্যানেল
-                    </Button>
-                  </Link>
-                ) : (
-                  <Link href="/dashboard">
-                    <Button variant="outline" size="sm" className="gap-2 border-primary text-primary hover:bg-primary-light">
-                      <User className="h-4 w-4" />
-                      ড্যাশবোর্ড
-                    </Button>
-                  </Link>
-                )}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleLogout}
-                  className="gap-2 text-destructive hover:bg-destructive/10"
-                >
-                  <LogOut className="h-4 w-4" />
-                  লগআউট
-                </Button>
-              </>
+              <UserDropdown user={user} />
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost" size="sm">লগইন</Button>
+                  <Button variant="ghost" size="sm">{t("layout.header.login")}</Button>
                 </Link>
                 <Link href="/register">
                   <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary-dark">
-                    সদস্য হোন
+                    {t("layout.header.becomeMember")}
                   </Button>
                 </Link>
               </>
@@ -135,7 +142,33 @@ export default function Header() {
           </div>
 
           {/* Mobile Hamburger Toggle */}
-          <div className="flex md:hidden">
+          <div className="flex md:hidden items-center space-x-2">
+            {/* Quick language switcher on Mobile header to improve accessibility */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setLocale(locale === "bn" ? "en" : "bn")}
+              className="h-9 w-9 text-muted-foreground hover:text-foreground"
+              aria-label="Change Language"
+            >
+              <Globe className="h-4 w-4" />
+            </Button>
+
+            {/* Quick theme switcher on Mobile header */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="h-9 w-9 text-muted-foreground hover:text-foreground"
+              aria-label="Toggle Theme"
+            >
+              {theme === "light" ? (
+                <Moon className="h-4 w-4" />
+              ) : (
+                <Sun className="h-4 w-4 text-amber-500" />
+              )}
+            </Button>
+
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="inline-flex items-center justify-center rounded-md p-2 text-muted-foreground hover:bg-muted hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
@@ -185,44 +218,95 @@ export default function Header() {
           </div>
 
           <div className="border-t border-border mx-3 pt-3 pb-4 space-y-2">
+            {/* Mobile Language Switcher Section */}
+            <div className="flex items-center justify-between border-b border-border/60 pb-3 mb-2">
+              <span className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
+                <Globe className="h-4 w-4" />
+                {t("layout.header.changeLanguage")}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setLocale(locale === "bn" ? "en" : "bn")}
+                className="text-xs h-8 border-border px-3 gap-1"
+              >
+                <span>{locale === "bn" ? "English" : "বাংলা"}</span>
+              </Button>
+            </div>
+
+            {/* Mobile Theme Switcher Section */}
+            <div className="flex items-center justify-between border-b border-border/60 pb-3 mb-2">
+              <span className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
+                {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4 text-amber-500" />}
+                {t("layout.header.darkMode")}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={toggleTheme}
+                className="text-xs h-8 border-border px-3"
+              >
+                <span>{theme === "light" ? t("layout.header.enable") : t("layout.header.disable")}</span>
+              </Button>
+            </div>
+
             {user ? (
               <>
                 <div className="flex items-center gap-2 text-sm font-semibold text-foreground mb-2 pb-2 border-b border-border/60">
-                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                    <User className="h-4 w-4 text-primary" />
-                  </div>
+                  {user.profilePictureUrl ? (
+                    <Image
+                      src={user.profilePictureUrl}
+                      alt={user.name}
+                      width={32}
+                      height={32}
+                      unoptimized
+                      className="h-8 w-8 rounded-full object-cover border border-border shrink-0"
+                    />
+                  ) : (
+                    <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs uppercase shrink-0 border border-primary/20">
+                      {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+                    </div>
+                  )}
                   <span className="truncate">{user.name}</span>
                 </div>
                 {user.email === "healthclubfeni@gmail.com" ? (
                   <Link href="/admin" className="block w-full" onClick={() => setIsOpen(false)}>
                     <Button variant="outline" className="w-full justify-start gap-2 border-primary text-primary">
-                      এডমিন প্যানেল
+                      <LayoutDashboard className="h-4 w-4" />
+                      {t("layout.header.adminPanel")}
                     </Button>
                   </Link>
                 ) : (
                   <Link href="/dashboard" className="block w-full" onClick={() => setIsOpen(false)}>
                     <Button variant="outline" className="w-full justify-start gap-2 border-primary text-primary">
-                      ড্যাশবোর্ড
+                      <LayoutDashboard className="h-4 w-4" />
+                      {t("layout.header.dashboard")}
                     </Button>
                   </Link>
                 )}
+                <Link href="/profile" className="block w-full" onClick={() => setIsOpen(false)}>
+                  <Button variant="outline" className="w-full justify-start gap-2 border-primary text-primary">
+                    <Settings className="h-4 w-4" />
+                    {t("profile.page.profileSettings")}
+                  </Button>
+                </Link>
                 <Button
                   variant="ghost"
                   onClick={handleLogout}
                   className="w-full justify-start gap-2 text-destructive hover:bg-destructive/10"
                 >
                   <LogOut className="h-4 w-4" />
-                  লগআউট
+                  {t("layout.header.logout")}
                 </Button>
               </>
             ) : (
               <div className="grid grid-cols-2 gap-2 pt-1">
                 <Link href="/login" onClick={() => setIsOpen(false)}>
-                  <Button variant="outline" className="w-full">লগইন</Button>
+                  <Button variant="outline" className="w-full">{t("layout.header.login")}</Button>
                 </Link>
                 <Link href="/register" onClick={() => setIsOpen(false)}>
                   <Button className="w-full bg-primary text-primary-foreground hover:bg-primary-dark">
-                    সদস্য হোন
+                    {t("layout.header.becomeMember")}
                   </Button>
                 </Link>
               </div>

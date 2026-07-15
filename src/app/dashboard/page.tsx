@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { 
-  Heart, CreditCard, History, LayoutDashboard, Save, CheckCircle2, User 
+  Heart, CreditCard, History, LayoutDashboard, Save, CheckCircle2 
 } from "lucide-react";
 import { toast } from "sonner";
 import { dbStore } from "@/services/dbStore";

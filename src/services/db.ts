@@ -24,6 +24,7 @@ export interface Partner {
   phone: string;
   logoText: string;
   mapLink?: string;
+  imageUrl?: string;
 }
 
 export interface Transaction {

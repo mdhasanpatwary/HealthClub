@@ -25,6 +25,7 @@ export async function getPartnersAction(): Promise<Partner[]> {
       phone: p.phone,
       logoText: p.logoText,
       mapLink: p.mapLink || undefined,
+      imageUrl: p.imageUrl || undefined,
     }));
   } catch (error) {
     console.error("Error in getPartnersAction:", error);
@@ -45,6 +46,7 @@ export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Pa
         phone: partner.phone,
         logoText: partner.logoText,
         mapLink: partner.mapLink || null,
+        imageUrl: partner.imageUrl || null,
       },
     });
 
@@ -57,6 +59,7 @@ export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Pa
       phone: p.phone,
       logoText: p.logoText,
       mapLink: p.mapLink || undefined,
+      imageUrl: p.imageUrl || undefined,
     };
   } catch (error) {
     console.error("Error in addPartnerAction:", error);
@@ -76,6 +79,7 @@ export async function updatePartnerAction(id: string, partner: Omit<Partner, "id
         phone: partner.phone,
         logoText: partner.logoText,
         mapLink: partner.mapLink || null,
+        imageUrl: partner.imageUrl || null,
       },
     });
     return true;

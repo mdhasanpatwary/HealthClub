@@ -1,25 +1,39 @@
 import Link from "next/link";
 import PartnerDirectory from "@/components/ui/PartnerDirectory";
 import { Button } from "@/components/ui/button";
+import { cookies } from "next/headers";
+import { Locale, tServer } from "@/lib/i18n";
 
-export const metadata = {
-  title: "পার্টনার হাসপাতাল ও ডায়াগনস্টিকস - হেলথ ক্লাব",
-  description: "আমাদের মেম্বারশিপ কার্ড ব্যবহার করে দেশের যেসব হাসপাতাল, ল্যাব ও ফার্মেসীতে ডিসকাউন্ট পাবেন তার তালিকা।"
-};
+export async function generateMetadata() {
+  const cookieStore = await cookies();
+  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
+  return {
+    title: locale === "en" ? "Partner Hospitals & Diagnostics - Health Club" : "পার্টনার হাসপাতাল ও ডায়াগনস্টিকস - হেলথ ক্লাব",
+    description: locale === "en"
+      ? "List of hospitals, labs, and pharmacies where you can get discounts using our membership card."
+      : "আমাদের মেম্বারশিপ কার্ড ব্যবহার করে দেশের যেসব হাসপাতাল, ল্যাব ও ফার্মেসীতে ডিসকাউন্ট পাবেন তার তালিকা।"
+  };
+}
 
-export default function PartnerHospitalsPage() {
+export default async function PartnerHospitalsPage() {
+  const cookieStore = await cookies();
+  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
+  const t = (key: string) => tServer(locale, key);
+
   return (
     <div className="bg-background min-h-screen py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
         
         {/* Header */}
         <div className="text-center space-y-4 max-w-2xl mx-auto">
-          <span className="text-xs font-extrabold text-primary tracking-widest uppercase">অংশীদার নেটওয়ার্ক</span>
+          <span className="text-xs font-extrabold text-primary tracking-widest uppercase">
+            {t("partnerHospitals.page.partnerNetwork")}
+          </span>
           <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-secondary dark:text-white">
-            পার্টনার হাসপাতাল ও ডায়াগনস্টিকস
+            {t("partnerHospitals.page.partnerHospitalsDiagnostics")}
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground">
-            আপনার নিকটস্থ পার্টনার সুবিধা খুঁজুন এবং প্রতিটি সেবায় বিশেষ ছাড় ও ছাড়ের হার নিশ্চিত করুন।
+            {t("partnerHospitals.page.findYourNearestPartnerFacilities")}
           </p>
         </div>
 
@@ -31,15 +45,15 @@ export default function PartnerHospitalsPage() {
         {/* Become Partner Banner */}
         <div className="bg-gradient-to-r from-primary/10 via-emerald-500/5 to-secondary/5 border border-primary/20 rounded-3xl p-8 md:p-12 text-center space-y-6 max-w-4xl mx-auto">
           <h2 className="font-heading text-2xl md:text-3xl font-bold text-secondary dark:text-white">
-            আপনি কি একটি স্বাস্থ্যসেবা প্রতিষ্ঠান পরিচালনা করেন?
+            {t("partnerHospitals.page.doYouManageAHealthcare")}
           </h2>
           <p className="text-sm md:text-base text-muted-foreground max-w-xl mx-auto">
-            আমাদের হেলথ ক্লাব পার্টনার নেটওয়ার্কে যুক্ত হয়ে হাজার হাজার সদস্যদের কাছে আপনার সেবা পৌঁছে দিন এবং আপনার কাস্টমার বেস বৃদ্ধি করুন।
+            {t("partnerHospitals.page.joinOurHealthClubPartner")}
           </p>
           <div>
             <Link href="/become-partner">
               <Button size="lg" className="bg-primary hover:bg-primary-dark text-white font-semibold">
-                পার্টনার হাসপাতাল হিসেবে আবেদন করুন
+                {t("partnerHospitals.page.applyAsAPartnerHospital")}
               </Button>
             </Link>
           </div>

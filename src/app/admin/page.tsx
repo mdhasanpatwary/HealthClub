@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/components/layout/LanguageProvider";
+import { formatNum } from "@/lib/i18n";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
@@ -20,6 +22,7 @@ import { ImageUpload } from "@/components/ui/ImageUpload";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
+  const { t, locale } = useLanguage();
 
   // States
   const [stats, setStats] = useState({
@@ -51,7 +54,7 @@ export default function AdminDashboardPage() {
     profilePictureUrl: ""
   });
   const [editingMember, setEditingMember] = useState<Member | null>(null);
-  const [newPartner, setNewPartner] = useState({ name: "", category: "hospital" as Partner["category"], address: "", discount: "", phone: "", logoText: "", mapLink: "" });
+  const [newPartner, setNewPartner] = useState({ name: "", category: "hospital" as Partner["category"], address: "", discount: "", phone: "", logoText: "", mapLink: "", imageUrl: "" });
   const [editingPartner, setEditingPartner] = useState<Partner | null>(null);
   const [newTx, setNewTx] = useState({ memberId: "", partnerId: "", amount: "" });
   const [txSuccess, setTxSuccess] = useState("");
@@ -136,25 +139,25 @@ export default function AdminDashboardPage() {
       setEditingMember(null);
       setIsMemberOpen(false);
       loadData();
-      toast.success(editingMember ? "সদস্য তথ্য সফলভাবে আপডেট করা হয়েছে।" : "সদস্য সফলভাবে যোগ করা হয়েছে।");
+      toast.success(editingMember ? t("admin.dashboard.memberUpdatedSuccess") : t("admin.dashboard.memberAddedSuccess"));
     } catch {
-      toast.error(editingMember ? "সদস্য তথ্য আপডেট করতে ব্যর্থ হয়েছে।" : "সদস্য যোগ করতে ব্যর্থ হয়েছে।");
+      toast.error(editingMember ? t("admin.dashboard.memberUpdatedFailed") : t("admin.dashboard.memberAddedFailed"));
     }
   };
 
   // Handle Delete Member
   const handleDeleteMember = async (id: string, name: string) => {
-    if (confirm(`আপনি কি নিশ্চিতভাবে "${name}" সদস্যকে ডিলিট করতে চান? ডিলিট করলে তার সকল ডিসকাউন্ট ট্রানজেকশনও মুছে যাবে।`)) {
+    if (confirm(t("admin.dashboard.confirmDeleteMember").replace("${name}", name))) {
       try {
         const success = await dbStore.deleteMember(id);
         if (success) {
-          toast.success("সদস্য সফলভাবে ডিলিট করা হয়েছে।");
+          toast.success(t("admin.dashboard.memberDeletedSuccess"));
           loadData();
         } else {
-          toast.error("সদস্য ডিলিট করতে ব্যর্থ হয়েছে।");
+          toast.error(t("admin.dashboard.memberDeletedFailed"));
         }
       } catch {
-        toast.error("সদস্য ডিলিট করতে ব্যর্থ হয়েছে।");
+        toast.error(t("admin.dashboard.memberDeletedFailed"));
       }
     }
   };
@@ -174,7 +177,8 @@ export default function AdminDashboardPage() {
           discount: newPartner.discount,
           phone: newPartner.phone,
           logoText: newPartner.logoText || newPartner.name.substring(0, 5),
-          mapLink: newPartner.mapLink
+          mapLink: newPartner.mapLink,
+          imageUrl: newPartner.imageUrl
         });
         if (!success) throw new Error("Update failed");
       } else {
@@ -186,33 +190,34 @@ export default function AdminDashboardPage() {
           discount: newPartner.discount,
           phone: newPartner.phone,
           logoText: newPartner.logoText || newPartner.name.substring(0, 5),
-          mapLink: newPartner.mapLink
+          mapLink: newPartner.mapLink,
+          imageUrl: newPartner.imageUrl
         });
       }
 
-      setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "", mapLink: "" });
+      setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "", mapLink: "", imageUrl: "" });
       setEditingPartner(null);
       setIsPartnerOpen(false);
       loadData();
-      toast.success(editingPartner ? "পার্টনার সফলভাবে আপডেট করা হয়েছে।" : "পার্টনার সফলভাবে যোগ করা হয়েছে।");
+      toast.success(editingPartner ? t("admin.dashboard.partnerUpdatedSuccess") : t("admin.dashboard.partnerAddedSuccess"));
     } catch {
-      toast.error(editingPartner ? "পার্টনার আপডেট করতে ব্যর্থ হয়েছে।" : "পার্টনার যোগ করতে ব্যর্থ হয়েছে।");
+      toast.error(editingPartner ? t("admin.dashboard.partnerUpdatedFailed") : t("admin.dashboard.partnerAddedFailed"));
     }
   };
 
   // Handle Delete Partner
   const handleDeletePartner = async (id: string, name: string) => {
-    if (confirm(`আপনি কি নিশ্চিতভাবে "${name}" পার্টনারটি ডিলিট করতে চান?`)) {
+    if (confirm(t("admin.dashboard.confirmDeletePartner").replace("${name}", name))) {
       try {
         const success = await dbStore.deletePartner(id);
         if (success) {
-          toast.success("পার্টনার সফলভাবে ডিলিট করা হয়েছে।");
+          toast.success(t("admin.dashboard.partnerDeletedSuccess"));
           loadData();
         } else {
-          toast.error("পার্টনার ডিলিট করতে ব্যর্থ হয়েছে।");
+          toast.error(t("admin.dashboard.partnerDeletedFailed"));
         }
       } catch {
-        toast.error("পার্টনার ডিলিট করতে ব্যর্থ হয়েছে।");
+        toast.error(t("admin.dashboard.partnerDeletedFailed"));
       }
     }
   };
@@ -224,26 +229,26 @@ export default function AdminDashboardPage() {
     setTxError("");
 
     if (!newTx.memberId || !newTx.partnerId || !newTx.amount) {
-      setTxError("সবগুলো তথ্য প্রদান করুন।");
+      setTxError(t("admin.dashboard.fillAllFields"));
       return;
     }
 
     try {
       const member = await dbStore.getMemberById(newTx.memberId);
       if (!member) {
-        setTxError("প্রদত্ত সদস্য পাওয়া যায়নি (আইডি বা ফোন নম্বর পরীক্ষা করুন)।");
+        setTxError(t("admin.dashboard.memberNotFound"));
         return;
       }
 
       const partner = partners.find(p => p.id === newTx.partnerId);
       if (!partner) {
-        setTxError("নির্বাচিত পার্টনার চিকিৎসাকেন্দ্র খুঁজে পাওয়া যায়নি।");
+        setTxError(t("admin.dashboard.selectedPartnerNotFound"));
         return;
       }
 
       const billAmount = Number(newTx.amount);
       if (isNaN(billAmount) || billAmount <= 0) {
-        setTxError("সঠিক বিলের পরিমাণ প্রদান করুন।");
+        setTxError(t("admin.dashboard.enterValidBillAmount"));
         return;
       }
 
@@ -260,7 +265,7 @@ export default function AdminDashboardPage() {
         saved: saved
       });
 
-      setTxSuccess(`৳${saved} ডিসকাউন্ট সফলভাবে লগ করা হয়েছে।`);
+      setTxSuccess(t("admin.dashboard.txLoggedSuccess").replace("${saved}", formatNum(saved, locale)));
       setNewTx({ memberId: "", partnerId: "", amount: "" });
       loadData();
 
@@ -269,7 +274,7 @@ export default function AdminDashboardPage() {
         setIsTxOpen(false);
       }, 2000);
     } catch {
-      setTxError("ট্রানজেকশন লগ করতে সমস্যা হয়েছে।");
+      setTxError(t("admin.dashboard.txLogFailed"));
     }
   };
 
@@ -281,10 +286,10 @@ export default function AdminDashboardPage() {
     const newStatus = member.status === "active" ? "inactive" : "active";
     const success = await dbStore.updateMemberStatus(id, newStatus);
     if (success) {
-      toast.success("সদস্যের স্ট্যাটাস সফলভাবে আপডেট করা হয়েছে।");
+      toast.success(t("admin.dashboard.memberStatusUpdatedSuccess"));
       loadData();
     } else {
-      toast.error("সদস্যের স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে।");
+      toast.error(t("admin.dashboard.memberStatusUpdatedFailed"));
     }
   };
 
@@ -308,17 +313,17 @@ export default function AdminDashboardPage() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border pb-6">
           <div>
             <h1 className="font-heading text-2xl sm:text-3xl font-bold text-secondary dark:text-white">
-              এডমিন অ্যানালিটিক্স ড্যাশবোর্ড
+              {t("admin.dashboard.adminAnalyticsDashboard")}
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              হেলথ ক্লাব মেম্বারশিপের সকল পরিসংখ্যান ও সেটিংস পরিচালনা করুন।
+              {t("admin.dashboard.manageStatsDesc")}
             </p>
           </div>
 
           <div className="flex flex-wrap gap-2 mt-1 sm:mt-0">
             <Button onClick={() => setIsTxOpen(true)} className="bg-primary hover:bg-primary-dark text-white font-semibold gap-2" size="sm">
               <PlusCircle className="h-4 w-4" />
-              <span className="hidden xs:inline">ডিসকাউন্ট</span> লগ করুন
+              <span className="hidden xs:inline">{t("admin.dashboard.discount")}</span> {t("admin.dashboard.log")}
             </Button>
           </div>
         </div>
@@ -328,9 +333,9 @@ export default function AdminDashboardPage() {
           <Card className="border-border shadow-sm">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
-                <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider">মোট নিবন্ধিত সদস্য</p>
-                <p className="text-3xl font-extrabold text-secondary dark:text-white font-mono mt-1">{stats.totalMembers}</p>
-                <p className="text-[10px] text-green-600 mt-1 font-semibold">{stats.activeMembers} জন সচল সদস্য</p>
+                <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider">{t("admin.dashboard.totalRegisteredMembers")}</p>
+                <p className="text-3xl font-extrabold text-secondary dark:text-white font-mono mt-1">{formatNum(stats.totalMembers, locale)}</p>
+                <p className="text-[10px] text-green-600 mt-1 font-semibold">{formatNum(stats.activeMembers, locale)} {t("admin.dashboard.activeMembersSuffix")}</p>
               </div>
               <div className="h-12 w-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
                 <Users className="h-6 w-6" />
@@ -341,9 +346,9 @@ export default function AdminDashboardPage() {
           <Card className="border-border shadow-sm">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
-                <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider">মোট অংশীদার হাসপাতাল</p>
-                <p className="text-3xl font-extrabold text-secondary dark:text-white font-mono mt-1">{stats.partnerCount}</p>
-                <p className="text-[10px] text-muted-foreground mt-1">অংশীদার চিকিৎসাকেন্দ্র তালিকা</p>
+                <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider">{t("admin.dashboard.totalPartnerHospitals")}</p>
+                <p className="text-3xl font-extrabold text-secondary dark:text-white font-mono mt-1">{formatNum(stats.partnerCount, locale)}</p>
+                <p className="text-[10px] text-muted-foreground mt-1">{t("admin.dashboard.partnerFacilitiesList")}</p>
               </div>
               <div className="h-12 w-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
                 <Building className="h-6 w-6" />
@@ -354,9 +359,9 @@ export default function AdminDashboardPage() {
           <Card className="border-border shadow-sm">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
-                <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider">মোট চিকিৎসা ছাড়</p>
-                <p className="text-3xl font-extrabold text-primary font-mono mt-1">৳{stats.totalSaved.toLocaleString("bn-BD")}</p>
-                <p className="text-[10px] text-muted-foreground mt-1">সদস্যদের সর্বমোট সাশ্রয়</p>
+                <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider">{t("admin.dashboard.totalMedicalDiscounts")}</p>
+                <p className="text-3xl font-extrabold text-primary font-mono mt-1">৳{formatNum(stats.totalSaved, locale)}</p>
+                <p className="text-[10px] text-muted-foreground mt-1">{t("admin.dashboard.totalMemberSavings")}</p>
               </div>
               <div className="h-12 w-12 rounded-xl bg-primary-light text-primary flex items-center justify-center">
                 <Heart className="h-6 w-6 fill-primary/10" />
@@ -367,9 +372,9 @@ export default function AdminDashboardPage() {
           <Card className="border-border shadow-sm">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
-                <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider">আনুমানিক রাজস্ব</p>
-                <p className="text-3xl font-extrabold text-secondary dark:text-white font-mono mt-1">৳{stats.revenue.toLocaleString("bn-BD")}</p>
-                <p className="text-[10px] text-muted-foreground mt-1">Individual / Family মেম্বারশিপ ফি</p>
+                <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider">{t("admin.dashboard.estimatedRevenue")}</p>
+                <p className="text-3xl font-extrabold text-secondary dark:text-white font-mono mt-1">৳{formatNum(stats.revenue, locale)}</p>
+                <p className="text-[10px] text-muted-foreground mt-1">{t("admin.dashboard.membershipFeeSource")}</p>
               </div>
               <div className="h-12 w-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
                 <DollarSign className="h-6 w-6" />
@@ -381,8 +386,8 @@ export default function AdminDashboardPage() {
         {/* Dynamic SVG Analytics Chart */}
         <Card className="border-border shadow-md">
           <CardHeader>
-            <CardTitle className="font-heading text-lg font-bold text-secondary">মাসিক প্রবৃদ্ধি ও অ্যানালিটিক্স</CardTitle>
-            <CardDescription>২০২৬ সালের নিবন্ধিত সদস্য ও ট্রানজেকশন প্রবৃদ্ধির চিত্র রূপরেখা (SVG-based Chart)।</CardDescription>
+            <CardTitle className="font-heading text-lg font-bold text-secondary">{t("admin.dashboard.monthlyGrowthAnalytics")}</CardTitle>
+            <CardDescription>{t("admin.dashboard.svgChartDesc")}</CardDescription>
           </CardHeader>
           <CardContent className="p-6">
             <div className="w-full h-48 bg-muted/30 rounded-xl relative border border-border/50 flex items-end p-4">
@@ -391,10 +396,10 @@ export default function AdminDashboardPage() {
 
                 {/* Y-axis labels */}
                 <div className="absolute left-0 bottom-4 top-4 flex flex-col justify-between text-[10px] text-muted-foreground border-r border-border pr-2 pointer-events-none">
-                  <span>১২০</span>
-                  <span>৮০</span>
-                  <span>৪০</span>
-                  <span>০</span>
+                  <span>{t("admin.dashboard.oneTwenty")}</span>
+                  <span>{t("admin.dashboard.eighty")}</span>
+                  <span>{t("admin.dashboard.forty")}</span>
+                  <span>{t("admin.dashboard.zero")}</span>
                 </div>
 
                 <div className="flex flex-col items-center gap-1.5 h-full justify-end w-12 ml-8">
@@ -440,9 +445,9 @@ export default function AdminDashboardPage() {
         {/* Tab Interfaces */}
         <Tabs defaultValue="members" className="w-full">
           <TabsList className="grid w-full grid-cols-3 bg-muted p-1 rounded-xl">
-            <TabsTrigger value="members" className="rounded-lg text-xs font-semibold py-2">সদস্য তালিকা</TabsTrigger>
-            <TabsTrigger value="partners" className="rounded-lg text-xs font-semibold py-2">পার্টনার হাসপাতাল</TabsTrigger>
-            <TabsTrigger value="txs" className="rounded-lg text-xs font-semibold py-2">লেনদেন লগ</TabsTrigger>
+            <TabsTrigger value="members" className="rounded-lg text-xs font-semibold py-2">{t("admin.dashboard.membersList")}</TabsTrigger>
+            <TabsTrigger value="partners" className="rounded-lg text-xs font-semibold py-2">{t("admin.dashboard.partnerHospitals")}</TabsTrigger>
+            <TabsTrigger value="txs" className="rounded-lg text-xs font-semibold py-2">{t("admin.dashboard.transactionLog")}</TabsTrigger>
           </TabsList>
 
           {/* 1. Members Management Tab */}
@@ -450,8 +455,8 @@ export default function AdminDashboardPage() {
             <Card className="border-border shadow-md">
               <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                  <CardTitle className="font-heading text-lg font-bold text-secondary">নিবন্ধিত স্বাস্থ্য কার্ড সদস্যসমূহ</CardTitle>
-                  <CardDescription>গ্রাহক তালিকা পরিচালনা, সচল/অচল অবস্থা নির্ধারণ করুন।</CardDescription>
+                  <CardTitle className="font-heading text-lg font-bold text-secondary">{t("admin.dashboard.registeredMembers")}</CardTitle>
+                  <CardDescription>{t("admin.dashboard.manageCustomersDesc")}</CardDescription>
                 </div>
 
                 <div className="flex gap-2 w-full sm:w-auto">
@@ -459,7 +464,7 @@ export default function AdminDashboardPage() {
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       type="text"
-                      placeholder="সদস্য খুঁজুন..."
+                      placeholder={t("admin.dashboard.searchMemberPlaceholder")}
                       value={memberSearch}
                       onChange={(e) => setMemberSearch(e.target.value)}
                       className="pl-9 h-9 border-border bg-background"
@@ -470,7 +475,7 @@ export default function AdminDashboardPage() {
                     setNewMember({ name: "", phone: "", email: "", tier: "founding", address: "", birthDate: "", profession: "", profilePictureUrl: "" });
                     setIsMemberOpen(true);
                   }} size="sm" className="bg-primary hover:bg-primary-dark text-white">
-                    নতুন সদস্য
+                    {t("admin.dashboard.newMember")}
                   </Button>
                 </div>
               </CardHeader>
@@ -479,13 +484,13 @@ export default function AdminDashboardPage() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">মেম্বার আইডি</TableHead>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">নাম</TableHead>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">ফোন নম্বর</TableHead>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">প্ল্যান</TableHead>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">মোট সাশ্রয়</TableHead>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">অবস্থা</TableHead>
-                        <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">অ্যাকশন</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.memberId")}</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.name")}</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.phoneNumber")}</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.plan")}</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.totalSavings")}</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.status")}</TableHead>
+                        <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">{t("admin.dashboard.action")}</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody className="text-xs sm:text-sm">
@@ -514,13 +519,13 @@ export default function AdminDashboardPage() {
                           </TableCell>
                           <TableCell className="font-mono whitespace-nowrap">{m.phone}</TableCell>
                           <TableCell className="capitalize text-xs font-semibold whitespace-nowrap">
-                            {m.tier === "founding" ? "Founding (ফ্রী)" : m.tier === "individual" ? "Individual" : "Family"}
+                            {m.tier === "founding" ? t("admin.dashboard.tierFounding") : m.tier === "individual" ? t("admin.dashboard.tierIndividual") : t("admin.dashboard.tierFamily")}
                           </TableCell>
-                          <TableCell className="font-mono font-semibold whitespace-nowrap">৳{(m.totalSaved || 0).toLocaleString("bn-BD")}</TableCell>
+                          <TableCell className="font-mono font-semibold whitespace-nowrap">৳{formatNum(m.totalSaved || 0, locale)}</TableCell>
                           <TableCell>
                             <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${m.status === "active" ? "bg-green-50 text-green-600 border border-green-200" : "bg-rose-50 text-rose-600 border border-rose-200"
                               }`}>
-                              {m.status === "active" ? "সচল" : "অচল"}
+                              {m.status === "active" ? t("admin.dashboard.active") : t("admin.dashboard.inactive")}
                             </span>
                           </TableCell>
                           <TableCell className="text-right">
@@ -534,7 +539,7 @@ export default function AdminDashboardPage() {
                                 }}
                                 className={`text-[10px] h-8 px-2.5 font-bold ${m.status === "active" ? "text-rose-600 hover:bg-rose-50" : "text-primary hover:bg-primary-light"}`}
                               >
-                                {m.status === "active" ? "অচল করুন" : "সচল করুন"}
+                                {m.status === "active" ? t("admin.dashboard.deactivate") : t("admin.dashboard.activate")}
                               </Button>
                               <Button
                                 variant="ghost"
@@ -585,8 +590,8 @@ export default function AdminDashboardPage() {
             <Card className="border-border shadow-md">
               <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                  <CardTitle className="font-heading text-lg font-bold text-secondary">অংশীদার স্বাস্থ্যসেবা ডিরেক্টরি</CardTitle>
-                  <CardDescription>চুক্তিভুক্ত হাসপাতাল, ল্যাব ও ফার্মেসী তালিকা।</CardDescription>
+                  <CardTitle className="font-heading text-lg font-bold text-secondary">{t("admin.dashboard.partnerHealthcareDirectory")}</CardTitle>
+                  <CardDescription>{t("admin.dashboard.contractedFacilitiesDesc")}</CardDescription>
                 </div>
 
                 <div className="flex gap-2 w-full sm:w-auto">
@@ -594,7 +599,7 @@ export default function AdminDashboardPage() {
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       type="text"
-                      placeholder="পার্টনার হাসপাতাল খুঁজুন..."
+                      placeholder={t("admin.dashboard.searchPartnerPlaceholder")}
                       value={partnerSearch}
                       onChange={(e) => setPartnerSearch(e.target.value)}
                       className="pl-9 h-9 border-border bg-background"
@@ -602,10 +607,10 @@ export default function AdminDashboardPage() {
                   </div>
                   <Button onClick={() => {
                     setEditingPartner(null);
-                    setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "", mapLink: "" });
+                    setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "", mapLink: "", imageUrl: "" });
                     setIsPartnerOpen(true);
                   }} size="sm" className="bg-primary hover:bg-primary-dark text-white">
-                    নতুন পার্টনার হাসপাতাল
+                    {t("admin.dashboard.newPartnerTitle")}
                   </Button>
                 </div>
               </CardHeader>
@@ -614,12 +619,12 @@ export default function AdminDashboardPage() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">নাম</TableHead>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">ক্যাটাগরি</TableHead>
-                        <TableHead className="font-semibold text-secondary">ঠিকানা</TableHead>
-                        <TableHead className="font-semibold text-primary whitespace-nowrap">ডিসকাউন্ট হার</TableHead>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">হটলাইন নম্বর</TableHead>
-                        <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">অ্যাকশন</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.name")}</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.category")}</TableHead>
+                        <TableHead className="font-semibold text-secondary">{t("admin.dashboard.addressLabel")}</TableHead>
+                        <TableHead className="font-semibold text-primary whitespace-nowrap">{t("admin.dashboard.discountRate")}</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.hotline")}</TableHead>
+                        <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">{t("admin.dashboard.action")}</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody className="text-xs sm:text-sm">
@@ -627,7 +632,7 @@ export default function AdminDashboardPage() {
                         <TableRow key={p.id}>
                           <TableCell className="font-bold text-secondary whitespace-nowrap">{p.name}</TableCell>
                           <TableCell className="capitalize text-xs font-semibold whitespace-nowrap">
-                            {p.category === "hospital" ? "হাসপাতাল" : p.category === "diagnostic" ? "ডায়াগনস্টিক" : "ফার্মেসী"}
+                            {p.category === "hospital" ? t("admin.dashboard.hospital") : p.category === "diagnostic" ? t("admin.dashboard.diagnostic") : t("admin.dashboard.pharmacy")}
                           </TableCell>
                           <TableCell className="text-muted-foreground">{p.address}</TableCell>
                           <TableCell className="font-bold text-primary font-heading whitespace-nowrap">{p.discount}</TableCell>
@@ -646,7 +651,8 @@ export default function AdminDashboardPage() {
                                     discount: p.discount,
                                     phone: p.phone,
                                     logoText: p.logoText || "",
-                                    mapLink: p.mapLink || ""
+                                    mapLink: p.mapLink || "",
+                                    imageUrl: p.imageUrl || ""
                                   });
                                   setIsPartnerOpen(true);
                                 }}
@@ -677,32 +683,32 @@ export default function AdminDashboardPage() {
           <TabsContent value="txs" className="mt-4">
             <Card className="border-border shadow-md">
               <CardHeader>
-                <CardTitle className="font-heading text-lg font-bold text-secondary">সাম্প্রতিক ডিসকাউন্ট ট্রানজেকশন</CardTitle>
-                <CardDescription>হাসপাতাল ভ্যালিডেশন কোড ও ডিসকাউন্ট সাশ্রয় বিবরণী লগ।</CardDescription>
+                <CardTitle className="font-heading text-lg font-bold text-secondary">{t("admin.dashboard.recentTransactionsTitle")}</CardTitle>
+                <CardDescription>{t("admin.dashboard.txDescLabel")}</CardDescription>
               </CardHeader>
               <CardContent className="p-0">
                 <div className="overflow-x-auto">
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">সদস্যের নাম</TableHead>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">চিকিৎসাকেন্দ্র</TableHead>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">তারিখ</TableHead>
-                        <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">মোট বিল</TableHead>
-                        <TableHead className="font-semibold text-primary text-right whitespace-nowrap">সাশ্রয়</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.memberName")}</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.medicalCenter")}</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.date")}</TableHead>
+                        <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">{t("admin.dashboard.totalBill")}</TableHead>
+                        <TableHead className="font-semibold text-primary text-right whitespace-nowrap">{t("admin.dashboard.savings")}</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody className="text-xs sm:text-sm">
-                      {transactions.map((t) => (
-                        <TableRow key={t.id}>
+                      {transactions.map((tx) => (
+                        <TableRow key={tx.id}>
                           <TableCell className="font-semibold text-secondary whitespace-nowrap">
-                            {t.memberName}
-                            <span className="block text-[10px] text-muted-foreground font-mono font-normal">{t.memberId}</span>
+                            {tx.memberName}
+                            <span className="block text-[10px] text-muted-foreground font-mono font-normal">{tx.memberId}</span>
                           </TableCell>
-                          <TableCell className="text-secondary whitespace-nowrap">{t.partnerName}</TableCell>
-                          <TableCell className="text-muted-foreground whitespace-nowrap">{t.date}</TableCell>
-                          <TableCell className="text-right font-mono whitespace-nowrap">৳{t.amount.toLocaleString("bn-BD")}</TableCell>
-                          <TableCell className="text-right font-mono text-primary font-bold whitespace-nowrap">৳{t.saved.toLocaleString("bn-BD")}</TableCell>
+                          <TableCell className="text-secondary whitespace-nowrap">{tx.partnerName}</TableCell>
+                          <TableCell className="text-muted-foreground whitespace-nowrap">{tx.date}</TableCell>
+                          <TableCell className="text-right font-mono whitespace-nowrap">৳{formatNum(tx.amount, locale)}</TableCell>
+                          <TableCell className="text-right font-mono text-primary font-bold whitespace-nowrap">৳{formatNum(tx.saved, locale)}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -728,50 +734,50 @@ export default function AdminDashboardPage() {
             <DialogContent className="border-border bg-background">
               <DialogHeader>
                 <DialogTitle className="font-heading font-bold text-secondary">
-                  {editingMember ? "সদস্য তথ্য পরিবর্তন করুন" : "নতুন সদস্য যুক্ত করুন"}
+                  {editingMember ? t("admin.dashboard.editMemberTitle") : t("admin.dashboard.addNewMemberTitle")}
                 </DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSaveMember} className="space-y-4 pt-2">
                 <ImageUpload
                   value={newMember.profilePictureUrl || ""}
                   onChange={(url) => setNewMember({ ...newMember, profilePictureUrl: url })}
-                  label="প্রোফাইল ছবি"
+                  label={t("admin.dashboard.profilePictureLabel")}
                 />
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">নাম *</label>
-                  <Input type="text" required placeholder="যেমন: মোঃ আব্দুর রহমান" value={newMember.name} onChange={e => setNewMember({ ...newMember, name: e.target.value })} className="border-border bg-background" />
+                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.nameLabel")}</label>
+                  <Input type="text" required placeholder={t("admin.dashboard.egName")} value={newMember.name} onChange={e => setNewMember({ ...newMember, name: e.target.value })} className="border-border bg-background" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">মোবাইল নম্বর *</label>
-                  <Input type="tel" required placeholder="যেমন: 017XXXXXXXX" value={newMember.phone} onChange={e => setNewMember({ ...newMember, phone: e.target.value })} className="border-border bg-background" />
+                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.phoneLabel")}</label>
+                  <Input type="tel" required placeholder={t("admin.dashboard.egPhone")} value={newMember.phone} onChange={e => setNewMember({ ...newMember, phone: e.target.value })} className="border-border bg-background" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">ইমেইল ঠিকানা</label>
-                  <Input type="email" placeholder="যেমন: arahman@gmail.com" value={newMember.email} onChange={e => setNewMember({ ...newMember, email: e.target.value })} className="border-border bg-background" />
+                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.emailLabel")}</label>
+                  <Input type="email" placeholder={t("admin.dashboard.egEmail")} value={newMember.email} onChange={e => setNewMember({ ...newMember, email: e.target.value })} className="border-border bg-background" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">মেম্বারশিপ প্ল্যান *</label>
+                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.membershipPlanLabel")}</label>
                   <select value={newMember.tier} onChange={e => setNewMember({ ...newMember, tier: e.target.value as Member["tier"] })} className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary">
-                    <option value="founding">Founding Member (ফ্রী ১ বছর)</option>
-                    <option value="individual">Individual Plan (৳৫০০ / বাৎসরিক)</option>
+                    <option value="founding">{t("admin.dashboard.planFoundingOption")}</option>
+                    <option value="individual">{t("admin.dashboard.planIndividualOption")}</option>
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">ঠিকানা</label>
-                  <Input type="text" placeholder="যেমন: মিজান রোড, ফেনী" value={newMember.address} onChange={e => setNewMember({ ...newMember, address: e.target.value })} className="border-border bg-background" />
+                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.addressLabel")}</label>
+                  <Input type="text" placeholder={t("admin.dashboard.egAddress")} value={newMember.address} onChange={e => setNewMember({ ...newMember, address: e.target.value })} className="border-border bg-background" />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary">জন্ম তারিখ</label>
+                    <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.birthDateLabel")}</label>
                     <Input type="date" value={newMember.birthDate} onChange={e => setNewMember({ ...newMember, birthDate: e.target.value })} className="border-border bg-background" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary">পেশা</label>
-                    <Input type="text" placeholder="যেমন: চাকুরিজীবী, ব্যবসায়ী, শিক্ষার্থী" value={newMember.profession} onChange={e => setNewMember({ ...newMember, profession: e.target.value })} className="border-border bg-background" />
+                    <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.professionLabel")}</label>
+                    <Input type="text" placeholder={t("admin.dashboard.egProfession")} value={newMember.profession} onChange={e => setNewMember({ ...newMember, profession: e.target.value })} className="border-border bg-background" />
                   </div>
                 </div>
                 <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
-                  {editingMember ? "পরিবর্তন সংরক্ষণ করুন" : "সংরক্ষণ করুন"}
+                  {editingMember ? t("admin.dashboard.saveChanges") : t("admin.dashboard.saveButton")}
                 </Button>
               </form>
             </DialogContent>
@@ -784,54 +790,60 @@ export default function AdminDashboardPage() {
             setIsPartnerOpen(open);
             if (!open) {
               setEditingPartner(null);
-              setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "", mapLink: "" });
+              setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "", mapLink: "", imageUrl: "" });
             }
           }}>
             <DialogContent className="border-border bg-background">
               <DialogHeader>
                 <DialogTitle className="font-heading font-bold text-secondary">
-                  {editingPartner ? "পার্টনার হাসপাতাল তথ্য পরিবর্তন করুন" : "নতুন পার্টনার হাসপাতাল যুক্ত করুন"}
+                  {editingPartner ? t("admin.dashboard.editPartnerTitle") : t("admin.dashboard.addNewPartnerTitle")}
                 </DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSavePartner} className="space-y-4 pt-2">
+                <ImageUpload
+                  value={newPartner.imageUrl || ""}
+                  onChange={(url) => setNewPartner({ ...newPartner, imageUrl: url })}
+                  label={t("admin.dashboard.partnerImageLabel")}
+                  fallbackType="building"
+                />
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">হাসপাতাল/ল্যাবের নাম *</label>
-                  <Input type="text" required placeholder="যেমন: ইবনে সিনা ল্যাব" value={newPartner.name} onChange={e => setNewPartner({ ...newPartner, name: e.target.value })} className="border-border bg-background" />
+                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.partnerNameLabel")}</label>
+                  <Input type="text" required placeholder={t("admin.dashboard.egPartnerName")} value={newPartner.name} onChange={e => setNewPartner({ ...newPartner, name: e.target.value })} className="border-border bg-background" />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary">ক্যাটাগরি *</label>
+                    <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.categoryLabel")}</label>
                     <select value={newPartner.category} onChange={e => setNewPartner({ ...newPartner, category: e.target.value as Partner["category"] })} className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary">
-                      <option value="hospital">হাসপাতাল (Hospital)</option>
-                      <option value="diagnostic">ডায়াগনস্টিক সেন্টার</option>
-                      <option value="pharmacy">ফার্মেসী (Pharmacy)</option>
+                      <option value="hospital">{t("admin.dashboard.categoryHospitalOption")}</option>
+                      <option value="diagnostic">{t("admin.dashboard.categoryDiagnosticOption")}</option>
+                      <option value="pharmacy">{t("admin.dashboard.categoryPharmacyOption")}</option>
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary">ডিসকাউন্টের হার *</label>
-                    <Input type="text" required placeholder="যেমন: ১৫% ল্যাব টেস্টে" value={newPartner.discount} onChange={e => setNewPartner({ ...newPartner, discount: e.target.value })} className="border-border bg-background" />
+                    <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.discountLabel")}</label>
+                    <Input type="text" required placeholder={t("admin.dashboard.egDiscount")} value={newPartner.discount} onChange={e => setNewPartner({ ...newPartner, discount: e.target.value })} className="border-border bg-background" />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">ঠিকানা *</label>
-                  <Input type="text" required placeholder="যেমন: মিজান রোড, ফেনী" value={newPartner.address} onChange={e => setNewPartner({ ...newPartner, address: e.target.value })} className="border-border bg-background" />
+                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.addressLabelReq")}</label>
+                  <Input type="text" required placeholder={t("admin.dashboard.egAddress")} value={newPartner.address} onChange={e => setNewPartner({ ...newPartner, address: e.target.value })} className="border-border bg-background" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">গুগল ম্যাপ লোকেশন লিংক (Google Map Link)</label>
-                  <Input type="url" placeholder="যেমন: https://maps.app.goo.gl/..." value={newPartner.mapLink} onChange={e => setNewPartner({ ...newPartner, mapLink: e.target.value })} className="border-border bg-background" />
+                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.googleMapLinkLabel")}</label>
+                  <Input type="url" placeholder={t("admin.dashboard.egMapLink")} value={newPartner.mapLink} onChange={e => setNewPartner({ ...newPartner, mapLink: e.target.value })} className="border-border bg-background" />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary">হটলাইন নম্বর *</label>
-                    <Input type="text" required placeholder="যেমন: ০৯৬১৩৭৮৭৮০১" value={newPartner.phone} onChange={e => setNewPartner({ ...newPartner, phone: e.target.value })} className="border-border bg-background" />
+                    <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.hotlineLabel")}</label>
+                    <Input type="text" required placeholder={t("admin.dashboard.egHotline")} value={newPartner.phone} onChange={e => setNewPartner({ ...newPartner, phone: e.target.value })} className="border-border bg-background" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary">লোগো সংক্ষিপ্ত টেক্সট</label>
-                    <Input type="text" placeholder="যেমন: Ibn Sina" value={newPartner.logoText} onChange={e => setNewPartner({ ...newPartner, logoText: e.target.value })} className="border-border bg-background" />
+                    <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.logoTextLabel")}</label>
+                    <Input type="text" placeholder={t("admin.dashboard.egLogoText")} value={newPartner.logoText} onChange={e => setNewPartner({ ...newPartner, logoText: e.target.value })} className="border-border bg-background" />
                   </div>
                 </div>
                 <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
-                  {editingPartner ? "পরিবর্তন সংরক্ষণ করুন" : "পার্টনার সংরক্ষণ করুন"}
+                  {editingPartner ? t("admin.dashboard.saveChanges") : t("admin.dashboard.savePartnerButton")}
                 </Button>
               </form>
             </DialogContent>
@@ -843,7 +855,7 @@ export default function AdminDashboardPage() {
           <Dialog open={isTxOpen} onOpenChange={setIsTxOpen}>
             <DialogContent className="border-border bg-background">
               <DialogHeader>
-                <DialogTitle className="font-heading font-bold text-secondary">সদস্য ডিসকাউন্ট লগ করুন</DialogTitle>
+                <DialogTitle className="font-heading font-bold text-secondary">{t("admin.dashboard.logMemberDiscountTitle")}</DialogTitle>
               </DialogHeader>
 
               {txSuccess && (
@@ -859,14 +871,14 @@ export default function AdminDashboardPage() {
 
               <form onSubmit={handleAddTransaction} className="space-y-4 pt-2">
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">সদস্যের মেম্বার আইডি বা মোবাইল নম্বর *</label>
-                  <Input type="text" required placeholder="যেমন: HC-1001 বা 01711112222" value={newTx.memberId} onChange={e => setNewTx({ ...newTx, memberId: e.target.value })} className="border-border bg-background" />
+                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.memberSearchLabel")}</label>
+                  <Input type="text" required placeholder={t("admin.dashboard.egMemberSearch")} value={newTx.memberId} onChange={e => setNewTx({ ...newTx, memberId: e.target.value })} className="border-border bg-background" />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">অংশীদার চিকিৎসাকেন্দ্র *</label>
+                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.partnerMedicalCenterLabelReq")}</label>
                   <select value={newTx.partnerId} onChange={e => setNewTx({ ...newTx, partnerId: e.target.value })} className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary">
-                    <option value="">হাসপাতাল/ল্যাব নির্বাচন করুন</option>
+                    <option value="">{t("admin.dashboard.selectPartnerLabel")}</option>
                     {partners.map(p => (
                       <option key={p.id} value={p.id}>{p.name} ({p.discount})</option>
                     ))}
@@ -874,11 +886,11 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">মূল বিলের পরিমাণ (BDT) *</label>
-                  <Input type="number" required placeholder="যেমন: ৫০০০" value={newTx.amount} onChange={e => setNewTx({ ...newTx, amount: e.target.value })} className="border-border bg-background" />
+                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.billAmountLabel")}</label>
+                  <Input type="number" required placeholder={t("admin.dashboard.egBillAmount")} value={newTx.amount} onChange={e => setNewTx({ ...newTx, amount: e.target.value })} className="border-border bg-background" />
                 </div>
 
-                <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">ডিসকাউন্ট কার্যকর ও লগ করুন</Button>
+                <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">{t("admin.dashboard.applyLogDiscountButton")}</Button>
               </form>
             </DialogContent>
           </Dialog>
@@ -902,10 +914,10 @@ export default function AdminDashboardPage() {
                   </div>
                   <div>
                     <DialogTitle className="font-heading font-bold text-lg text-secondary">
-                      সদস্যের প্রোফাইল বিবরণ
+                      {t("admin.dashboard.memberProfileDetailsTitle")}
                     </DialogTitle>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      মেম্বার আইডি: <span className="font-mono font-bold text-primary">{viewingMember.id}</span>
+                      {t("admin.dashboard.memberIdLabel")} <span className="font-mono font-bold text-primary">{viewingMember.id}</span>
                     </p>
                   </div>
                 </div>
@@ -915,20 +927,20 @@ export default function AdminDashboardPage() {
                 {/* Status Badges */}
                 <div className="flex items-center justify-between bg-muted/40 p-3 rounded-xl border border-border">
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">প্ল্যান টাইপ</span>
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("admin.dashboard.planTypeLabel")}</span>
                     <span className="text-xs font-bold text-secondary capitalize">
-                      {viewingMember.tier === "founding" ? "Founding (ফ্রী ১ বছর)" : viewingMember.tier === "individual" ? "Individual" : "Family"}
+                      {viewingMember.tier === "founding" ? t("admin.dashboard.tierFounding1Year") : viewingMember.tier === "individual" ? t("admin.dashboard.tierIndividual") : t("admin.dashboard.tierFamily")}
                     </span>
                   </div>
                   <div className="flex flex-col items-end gap-0.5">
-                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">মেম্বারশিপ অবস্থা</span>
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("admin.dashboard.membershipStatusLabel")}</span>
                     <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                       viewingMember.status === "active" 
                         ? "bg-green-50 text-green-600 border border-green-200" 
                         : "bg-rose-50 text-rose-600 border border-rose-200"
                     }`}>
                       <span className={`h-1.5 w-1.5 rounded-full ${viewingMember.status === "active" ? "bg-green-500" : "bg-rose-500"}`} />
-                      {viewingMember.status === "active" ? "সচল" : "অচল"}
+                      {viewingMember.status === "active" ? t("admin.dashboard.active") : t("admin.dashboard.inactive")}
                     </span>
                   </div>
                 </div>
@@ -938,7 +950,7 @@ export default function AdminDashboardPage() {
                   <div className="space-y-1">
                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                       <User className="h-3.5 w-3.5" />
-                      <span>নাম</span>
+                      <span>{t("admin.dashboard.name")}</span>
                     </div>
                     <p className="text-sm font-bold text-secondary">{viewingMember.name}</p>
                   </div>
@@ -946,7 +958,7 @@ export default function AdminDashboardPage() {
                   <div className="space-y-1">
                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                       <Phone className="h-3.5 w-3.5" />
-                      <span>মোবাইল নম্বর</span>
+                      <span>{t("admin.dashboard.mobileNumberLabel")}</span>
                     </div>
                     <p className="text-sm font-semibold text-secondary font-mono">{viewingMember.phone}</p>
                   </div>
@@ -954,23 +966,23 @@ export default function AdminDashboardPage() {
                   <div className="space-y-1">
                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                       <Mail className="h-3.5 w-3.5" />
-                      <span>ইমেইল ঠিকানা</span>
+                      <span>{t("admin.dashboard.emailLabel")}</span>
                     </div>
-                    <p className="text-sm text-secondary font-mono break-all">{viewingMember.email || "প্রদান করা হয়নি"}</p>
+                    <p className="text-sm text-secondary font-mono break-all">{viewingMember.email || t("admin.dashboard.notProvided")}</p>
                   </div>
 
                   <div className="space-y-1">
                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                       <Heart className="h-3.5 w-3.5" />
-                      <span>মোট চিকিৎসা সাশ্রয়</span>
+                      <span>{t("admin.dashboard.totalMedicalSavings")}</span>
                     </div>
-                    <p className="text-sm font-extrabold text-primary font-mono">৳{(viewingMember.totalSaved || 0).toLocaleString("bn-BD")}</p>
+                    <p className="text-sm font-extrabold text-primary font-mono">৳{formatNum(viewingMember.totalSaved || 0, locale)}</p>
                   </div>
 
                   <div className="space-y-1">
                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                       <Calendar className="h-3.5 w-3.5" />
-                      <span>যোগদানের তারিখ</span>
+                      <span>{t("admin.dashboard.joinedDateLabel")}</span>
                     </div>
                     <p className="text-sm font-semibold text-secondary font-mono">{viewingMember.joinedDate || "N/A"}</p>
                   </div>
@@ -978,7 +990,7 @@ export default function AdminDashboardPage() {
                   <div className="space-y-1">
                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                       <Calendar className="h-3.5 w-3.5" />
-                      <span>মেয়াদ উত্তীর্ণের তারিখ</span>
+                      <span>{t("admin.dashboard.expiryDateLabel")}</span>
                     </div>
                     <p className="text-sm font-semibold text-secondary font-mono">{viewingMember.expiryDate || "N/A"}</p>
                   </div>
@@ -986,25 +998,25 @@ export default function AdminDashboardPage() {
                   <div className="space-y-1">
                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                       <MapPin className="h-3.5 w-3.5" />
-                      <span>ঠিকানা</span>
+                      <span>{t("admin.dashboard.addressLabel")}</span>
                     </div>
-                    <p className="text-sm text-secondary">{viewingMember.address || "প্রদান করা হয়নি"}</p>
+                    <p className="text-sm text-secondary">{viewingMember.address || t("admin.dashboard.notProvided")}</p>
                   </div>
 
                   <div className="space-y-1">
                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                       <Calendar className="h-3.5 w-3.5" />
-                      <span>জন্ম তারিখ</span>
+                      <span>{t("admin.dashboard.birthDateLabel")}</span>
                     </div>
-                    <p className="text-sm font-semibold text-secondary font-mono">{viewingMember.birthDate || "প্রদান করা হয়নি"}</p>
+                    <p className="text-sm font-semibold text-secondary font-mono">{viewingMember.birthDate || t("admin.dashboard.notProvided")}</p>
                   </div>
 
                   <div className="space-y-1 col-span-1 sm:col-span-2">
                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                       <Briefcase className="h-3.5 w-3.5" />
-                      <span>পেশা</span>
+                      <span>{t("admin.dashboard.professionLabel")}</span>
                     </div>
-                    <p className="text-sm text-secondary">{viewingMember.profession || "প্রদান করা হয়নি"}</p>
+                    <p className="text-sm text-secondary">{viewingMember.profession || t("admin.dashboard.notProvided")}</p>
                   </div>
                 </div>
 
@@ -1012,17 +1024,17 @@ export default function AdminDashboardPage() {
                 <div className="border-t border-border pt-4">
                   <h4 className="text-xs font-bold text-secondary uppercase font-mono tracking-wider mb-2 flex items-center gap-1">
                     <HistoryIcon className="h-4 w-4 text-primary" />
-                    ডিসকাউন্ট ব্যবহারের বিবরণ
+                    {t("admin.dashboard.txLogDesc")}
                   </h4>
                   {transactions.filter(t => t.memberId === viewingMember.id).length > 0 ? (
                     <div className="overflow-x-auto border border-border rounded-xl">
                       <Table>
                         <TableHeader className="bg-muted/40">
                           <TableRow>
-                            <TableHead className="text-[10px] font-semibold text-secondary whitespace-nowrap py-2">চিকিৎসাকেন্দ্র</TableHead>
-                            <TableHead className="text-[10px] font-semibold text-secondary whitespace-nowrap py-2">তারিখ</TableHead>
-                            <TableHead className="text-[10px] font-semibold text-secondary text-right whitespace-nowrap py-2">বিল</TableHead>
-                            <TableHead className="text-[10px] font-semibold text-primary text-right whitespace-nowrap py-2">সাশ্রয়</TableHead>
+                            <TableHead className="text-[10px] font-semibold text-secondary whitespace-nowrap py-2">{t("admin.dashboard.medicalCenter")}</TableHead>
+                            <TableHead className="text-[10px] font-semibold text-secondary whitespace-nowrap py-2">{t("admin.dashboard.date")}</TableHead>
+                            <TableHead className="text-[10px] font-semibold text-secondary text-right whitespace-nowrap py-2">{t("admin.dashboard.bill")}</TableHead>
+                            <TableHead className="text-[10px] font-semibold text-primary text-right whitespace-nowrap py-2">{t("admin.dashboard.savings")}</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody className="text-[11px]">
@@ -1041,7 +1053,7 @@ export default function AdminDashboardPage() {
                     </div>
                   ) : (
                     <p className="text-xs text-muted-foreground text-center py-4 bg-muted/20 border border-dashed border-border rounded-xl">
-                      কোনো পূর্ববর্তী ট্রানজেকশন রেকর্ড পাওয়া যায়নি।
+                      {t("admin.dashboard.noTxsFound")}
                     </p>
                   )}
                 </div>
@@ -1067,14 +1079,14 @@ export default function AdminDashboardPage() {
                     className="flex-1 bg-primary hover:bg-primary-dark text-white font-semibold gap-1.5"
                   >
                     <Edit3 className="h-4 w-4" />
-                    সম্পাদনা করুন
+                    {t("admin.dashboard.editButton")}
                   </Button>
                   <Button 
                     variant="outline" 
                     onClick={() => setViewingMember(null)}
                     className="flex-1 border-border text-secondary font-semibold"
                   >
-                    বন্ধ করুন
+                    {t("admin.dashboard.closeButton")}
                   </Button>
                 </div>
               </div>

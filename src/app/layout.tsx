@@ -4,6 +4,10 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Toaster } from "sonner";
+import { cookies } from "next/headers";
+import { LanguageProvider } from "@/components/layout/LanguageProvider";
+import { ThemeProvider } from "@/components/layout/ThemeProvider";
+import { Locale } from "@/lib/i18n";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -33,13 +37,17 @@ export const metadata: Metadata = {
   }
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
+  const theme = (cookieStore.get("theme")?.value as "light" | "dark") || "light";
+
   return (
-    <html lang="bn" className={`${inter.variable} ${hindSiliguri.variable}`}>
+    <html lang={locale} className={`${theme} ${inter.variable} ${hindSiliguri.variable}`}>
       <body className="font-sans antialiased bg-background text-foreground min-h-screen flex flex-col">
         {/* JSON-LD Structured Data for Healthcare Membership Organization */}
         <script
@@ -63,10 +71,14 @@ export default function RootLayout({
             })
           }}
         />
-        <Header />
-        <main className="flex-grow">{children}</main>
-        <Footer />
-        <Toaster richColors position="top-right" />
+        <ThemeProvider initialTheme={theme}>
+          <LanguageProvider initialLocale={locale}>
+            <Header />
+            <main className="flex-grow">{children}</main>
+            <Footer locale={locale} />
+            <Toaster richColors position="top-right" />
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

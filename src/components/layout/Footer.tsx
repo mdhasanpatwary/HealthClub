@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { Heart, Phone, Mail, MapPin, MessageSquare } from "lucide-react";
+import { Locale, tServer } from "@/lib/i18n";
 
-export default function Footer() {
+export default function Footer({ locale = "bn" }: { locale?: string }) {
+  const currentLocale = (locale === "en" ? "en" : "bn") as Locale;
+  const t = (key: string) => tServer(currentLocale, key);
+
   return (
     <footer className="bg-secondary text-slate-300 border-t border-slate-800" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
@@ -12,11 +16,11 @@ export default function Footer() {
             <Link href="/" className="flex items-center space-x-2 text-primary">
               <Heart className="h-6 w-6 fill-primary" />
               <span className="font-heading text-xl font-bold tracking-tight text-white">
-                হেলথ <span className="text-primary">ক্লাব</span>
+                {t("layout.footer.health")} <span className="text-primary">{t("layout.footer.club")}</span>
               </span>
             </Link>
             <p className="text-sm text-slate-400 max-w-xs">
-              স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী। হেলথ ক্লাব মেম্বারশিপের সাথে পান নির্ধারিত পার্টনার হাসপাতালে বিশেষ সুবিধা ও ডিসকাউন্ট।
+              {t("layout.footer.healthcareMadeSimpleAndAffordable")}
             </p>
             <div className="flex space-x-4">
               <a
@@ -59,32 +63,32 @@ export default function Footer() {
             {/* Quick Links */}
             <div>
               <h3 className="text-sm font-semibold text-white tracking-wider uppercase">
-                লিঙ্কসমূহ
+                {t("layout.footer.quickLinks")}
               </h3>
               <ul role="list" className="mt-4 space-y-3">
                 <li>
                   <Link href="/" className="text-sm hover:text-white transition-colors">
-                    হোম
+                    {t("layout.footer.home")}
                   </Link>
                 </li>
                 <li>
                   <Link href="/membership" className="text-sm hover:text-white transition-colors">
-                    মেম্বারশিপ প্ল্যান
+                    {t("layout.footer.membershipPlans")}
                   </Link>
                 </li>
                 <li>
                   <Link href="/partner-hospitals" className="text-sm hover:text-white transition-colors">
-                    পার্টনার হাসপাতাল
+                    {t("layout.footer.partnerHospitals")}
                   </Link>
                 </li>
                 <li>
                   <Link href="/become-partner" className="text-sm hover:text-white transition-colors">
-                    পার্টনার হোন
+                    {t("layout.footer.becomeAPartner")}
                   </Link>
                 </li>
                 <li>
                   <Link href="/about-us" className="text-sm hover:text-white transition-colors">
-                    আমাদের সম্পর্কে
+                    {t("layout.footer.aboutUs")}
                   </Link>
                 </li>
               </ul>
@@ -93,17 +97,17 @@ export default function Footer() {
             {/* Support and Address */}
             <div className="space-y-4">
               <h3 className="text-sm font-semibold text-white tracking-wider uppercase">
-                যোগাযোগ ও ঠিকানা
+                {t("layout.footer.contactAddress")}
               </h3>
               <ul className="space-y-3 text-sm text-slate-400">
                 <li className="flex items-start gap-2">
                   <MapPin className="h-5 w-5 shrink-0 text-primary" />
-                  <span>মিজান রোড, ফেনী - ৩৯০০</span>
+                  <span>{t("layout.footer.mizanRoadFeni3900")}</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Phone className="h-4 w-4 text-primary" />
                   <a href="tel:+8801783721411" className="hover:text-white transition-colors">
-                    +৮৮০ ১৭৮৩৭২১৪১১
+                    {t("layout.footer.8801783721411")}
                   </a>
                 </li>
                 <li className="flex items-center gap-2">
@@ -120,15 +124,15 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-10 border-t border-slate-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <p className="text-xs text-slate-500">
-            &copy; {new Date().getFullYear()} হেলথ ক্লাব। সর্বস্বত্ব সংরক্ষিত।
+          <p className="text-xs text-slate-400">
+            &copy; {new Date().getFullYear()} {t("layout.footer.healthClubAllRightsReserved")}
           </p>
-          <div className="flex space-x-6 text-xs text-slate-500">
-            <Link href="/privacy-policy" className="hover:text-slate-400 transition-colors">
-              গোপনীয়তা নীতি
+          <div className="flex space-x-6 text-xs text-slate-400">
+            <Link href="/privacy-policy" className="hover:text-slate-300 transition-colors">
+              {t("layout.footer.privacyPolicy")}
             </Link>
-            <Link href="/terms-conditions" className="hover:text-slate-400 transition-colors">
-              শর্তাবলী ও নিয়ম
+            <Link href="/terms-conditions" className="hover:text-slate-300 transition-colors">
+              {t("layout.footer.termsConditions")}
             </Link>
           </div>
         </div>

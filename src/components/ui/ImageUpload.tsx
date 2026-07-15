@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { User, Camera, Trash2 } from "lucide-react";
+import Image from "next/image";
+import { User, Building, Camera, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -10,9 +11,10 @@ interface ImageUploadProps {
   value: string;
   onChange: (value: string) => void;
   label?: string;
+  fallbackType?: 'user' | 'building';
 }
 
-export function ImageUpload({ value, onChange, label }: ImageUploadProps) {
+export function ImageUpload({ value, onChange, label, fallbackType = 'user' }: ImageUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,8 +39,15 @@ export function ImageUpload({ value, onChange, label }: ImageUploadProps) {
       <div className="flex items-center gap-4">
         <div className="relative h-16 w-16 rounded-xl border border-border bg-muted/40 overflow-hidden flex items-center justify-center shrink-0 shadow-sm group">
           {value ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={value} alt="Preview" className="h-full w-full object-cover" />
+            <Image
+              src={value}
+              alt="Preview"
+              fill
+              unoptimized
+              className="object-cover object-left-top"
+            />
+          ) : fallbackType === 'building' ? (
+            <Building className="h-8 w-8 text-muted-foreground" />
           ) : (
             <User className="h-8 w-8 text-muted-foreground" />
           )}

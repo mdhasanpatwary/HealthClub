@@ -697,6 +697,7 @@ export const PartnerScalarFieldEnum = {
   phone: 'phone',
   logoText: 'logoText',
   mapLink: 'mapLink',
+  imageUrl: 'imageUrl',
   createdAt: 'createdAt'
 } as const
 

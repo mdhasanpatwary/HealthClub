@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS partners (
     phone TEXT NOT NULL,
     logo_text TEXT NOT NULL,
     map_link TEXT,
+    image_url TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 

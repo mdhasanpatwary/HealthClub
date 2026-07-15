@@ -1,0 +1,546 @@
+{
+  "membersList": {
+    "bn": "সদস্য তালিকা",
+    "en": "Member List"
+  },
+  "partnerHospitals": {
+    "bn": "পার্টনার হাসপাতাল",
+    "en": "Partner Hospitals"
+  },
+  "transactionLog": {
+    "bn": "লেনদেন লগ",
+    "en": "Transaction Log"
+  },
+  "registeredMembers": {
+    "bn": "নিবন্ধিত স্বাস্থ্য কার্ড সদস্যসমূহ",
+    "en": "Registered Health Card Members"
+  },
+  "manageCustomersDesc": {
+    "bn": "গ্রাহক তালিকা পরিচালনা, সচল/অচল অবস্থা নির্ধারণ করুন।",
+    "en": "Manage customer list, set active/inactive status."
+  },
+  "searchMemberPlaceholder": {
+    "bn": "সদস্য খুঁজুন...",
+    "en": "Search member..."
+  },
+  "newMember": {
+    "bn": "নতুন সদস্য",
+    "en": "New Member"
+  },
+  "memberId": {
+    "bn": "মেম্বার আইডি",
+    "en": "Member ID"
+  },
+  "name": {
+    "bn": "নাম",
+    "en": "Name"
+  },
+  "phoneNumber": {
+    "bn": "ফোন নম্বর",
+    "en": "Phone Number"
+  },
+  "plan": {
+    "bn": "প্ল্যান",
+    "en": "Plan"
+  },
+  "totalSavings": {
+    "bn": "মোট সাশ্রয়",
+    "en": "Total Savings"
+  },
+  "status": {
+    "bn": "অবস্থা",
+    "en": "Status"
+  },
+  "action": {
+    "bn": "অ্যাকশন",
+    "en": "Action"
+  },
+  "memberAddedSuccess": {
+    "bn": "সদস্য সফলভাবে যোগ করা হয়েছে।",
+    "en": "Member added successfully."
+  },
+  "memberAddedFailed": {
+    "bn": "সদস্য যোগ করতে ব্যর্থ হয়েছে।",
+    "en": "Failed to add member."
+  },
+  "memberUpdatedSuccess": {
+    "bn": "সদস্য তথ্য সফলভাবে আপডেট করা হয়েছে।",
+    "en": "Member info updated successfully."
+  },
+  "memberUpdatedFailed": {
+    "bn": "সদস্য তথ্য আপডেট করতে ব্যর্থ হয়েছে।",
+    "en": "Failed to update member info."
+  },
+  "memberDeletedSuccess": {
+    "bn": "সদস্য সফলভাবে ডিলিট করা হয়েছে।",
+    "en": "Member deleted successfully."
+  },
+  "memberDeletedFailed": {
+    "bn": "সদস্য ডিলিট করতে ব্যর্থ হয়েছে।",
+    "en": "Failed to delete member."
+  },
+  "partnerAddedSuccess": {
+    "bn": "পার্টনার সফলভাবে যোগ করা হয়েছে।",
+    "en": "Partner added successfully."
+  },
+  "partnerAddedFailed": {
+    "bn": "পার্টনার যোগ করতে ব্যর্থ হয়েছে।",
+    "en": "Failed to add partner."
+  },
+  "partnerUpdatedSuccess": {
+    "bn": "পার্টনার সফলভাবে আপডেট করা হয়েছে।",
+    "en": "Partner updated successfully."
+  },
+  "partnerUpdatedFailed": {
+    "bn": "পার্টনার আপডেট করতে ব্যর্থ হয়েছে।",
+    "en": "Failed to update partner."
+  },
+  "partnerDeletedSuccess": {
+    "bn": "পার্টনার সফলভাবে ডিলিট করা হয়েছে।",
+    "en": "Partner deleted successfully."
+  },
+  "partnerDeletedFailed": {
+    "bn": "পার্টনার ডিলিট করতে ব্যর্থ হয়েছে।",
+    "en": "Failed to delete partner."
+  },
+  "memberStatusUpdatedSuccess": {
+    "bn": "সদস্যের স্ট্যাটাস সফলভাবে আপডেট করা হয়েছে।",
+    "en": "Member status updated successfully."
+  },
+  "memberStatusUpdatedFailed": {
+    "bn": "সদস্যের স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে।",
+    "en": "Failed to update member status."
+  },
+  "txLogFailed": {
+    "bn": "ট্রানজেকশন লগ করতে সমস্যা হয়েছে।",
+    "en": "Failed to log transaction."
+  },
+  "adminAnalyticsDashboard": {
+    "bn": "এডমিন অ্যানালিটিক্স ড্যাশবোর্ড",
+    "en": "Admin Analytics Dashboard"
+  },
+  "manageStatsDesc": {
+    "bn": "হেলথ ক্লাব মেম্বারশিপের সকল পরিসংখ্যান ও সেটিংস পরিচালনা করুন।",
+    "en": "Manage all statistics and settings of Health Club membership."
+  },
+  "discount": {
+    "bn": "ডিসকাউন্ট",
+    "en": "Discount"
+  },
+  "log": {
+    "bn": "লগ করুন",
+    "en": "Log"
+  },
+  "totalRegisteredMembers": {
+    "bn": "মোট নিবন্ধিত সদস্য",
+    "en": "Total Registered Members"
+  },
+  "activeMembersSuffix": {
+    "bn": "জন সচল সদস্য",
+    "en": "active members"
+  },
+  "totalPartnerHospitals": {
+    "bn": "মোট অংশীদার হাসপাতাল",
+    "en": "Total Partner Hospitals"
+  },
+  "partnerFacilitiesList": {
+    "bn": "অংশীদার চিকিৎসাকেন্দ্র তালিকা",
+    "en": "Partner Facilities List"
+  },
+  "totalMedicalDiscounts": {
+    "bn": "মোট চিকিৎসা ছাড়",
+    "en": "Total Medical Discounts"
+  },
+  "totalMedicalSavings": {
+    "bn": "মোট চিকিৎসা সাশ্রয়",
+    "en": "Total Medical Savings"
+  },
+  "totalMemberSavings": {
+    "bn": "সদস্যদের সর্বমোট সাশ্রয়",
+    "en": "Total Member Savings"
+  },
+  "totalTransactionsCount": {
+    "bn": "মোট লেনদেন সংখ্যা",
+    "en": "Total Transactions"
+  },
+  "savingsTxsDesc": {
+    "bn": "সাশ্রয়ী লেনদেন বিবরণী",
+    "en": "Savings transaction statements"
+  },
+  "monthlyGrowthAnalytics": {
+    "bn": "মাসিক প্রবৃদ্ধি ও অ্যানালিটিক্স",
+    "en": "Monthly Growth & Analytics"
+  },
+  "svgChartDesc": {
+    "bn": "২০২৬ সালের নিবন্ধিত সদস্য ও ট্রানজেকশন প্রবৃদ্ধির চিত্র রূপরেখা (SVG-based Chart)।",
+    "en": "SVG-based chart outline of 2026 registered members and transaction growth."
+  },
+  "addNewMemberTitle": {
+    "bn": "নতুন সদস্য যুক্ত করুন",
+    "en": "Add New Member"
+  },
+  "editMemberTitle": {
+    "bn": "সদস্য তথ্য পরিবর্তন করুন",
+    "en": "Edit Member Info"
+  },
+  "nameLabel": {
+    "bn": "নাম *",
+    "en": "Name *"
+  },
+  "egName": {
+    "bn": "যেমন: মোঃ আব্দুর রহমান",
+    "en": "e.g., Md. Abdur Rahman"
+  },
+  "phoneLabel": {
+    "bn": "মোবাইল নম্বর *",
+    "en": "Phone Number *"
+  },
+  "egPhone": {
+    "bn": "যেমন: 017XXXXXXXX",
+    "en": "e.g., 017XXXXXXXX"
+  },
+  "emailLabel": {
+    "bn": "ইমেইল ঠিকানা",
+    "en": "Email Address"
+  },
+  "egEmail": {
+    "bn": "যেমন: arahman@gmail.com",
+    "en": "e.g., arahman@gmail.com"
+  },
+  "membershipPlanLabel": {
+    "bn": "মেম্বারশিপ প্ল্যান *",
+    "en": "Membership Plan *"
+  },
+  "addressLabel": {
+    "bn": "ঠিকানা",
+    "en": "Address"
+  },
+  "egAddress": {
+    "bn": "যেমন: মিজান রোড, ফেনী",
+    "en": "e.g., Mizan Road, Feni"
+  },
+  "birthDateLabel": {
+    "bn": "জন্ম তারিখ",
+    "en": "Date of Birth"
+  },
+  "professionLabel": {
+    "bn": "পেশা",
+    "en": "Profession"
+  },
+  "egProfession": {
+    "bn": "যেমন: চাকুরিজীবী, ব্যবসায়ী, শিক্ষার্থী",
+    "en": "e.g., Service, Business, Student"
+  },
+  "profilePictureLabel": {
+    "bn": "প্রোফাইল ছবি",
+    "en": "Profile Picture"
+  },
+  "closeButton": {
+    "bn": "বন্ধ করুন",
+    "en": "Close"
+  },
+  "saveButton": {
+    "bn": "সংরক্ষণ করুন",
+    "en": "Save"
+  },
+  "newPartnerTitle": {
+    "bn": "নতুন পার্টনার হাসপাতাল",
+    "en": "New Partner Hospital"
+  },
+  "addNewPartnerTitle": {
+    "bn": "নতুন পার্টনার হাসপাতাল যুক্ত করুন",
+    "en": "Add New Partner Hospital"
+  },
+  "editPartnerTitle": {
+    "bn": "পার্টনার হাসপাতাল তথ্য পরিবর্তন করুন",
+    "en": "Edit Partner Hospital Info"
+  },
+  "categoryLabel": {
+    "bn": "ক্যাটাগরি *",
+    "en": "Category *"
+  },
+  "hospital": {
+    "bn": "হাসপাতাল",
+    "en": "Hospital"
+  },
+  "diagnostic": {
+    "bn": "ডায়াগনস্টিক",
+    "en": "Diagnostic"
+  },
+  "pharmacy": {
+    "bn": "ফার্মেসী",
+    "en": "Pharmacy"
+  },
+  "addressLabelReq": {
+    "bn": "ঠিকানা *",
+    "en": "Address *"
+  },
+  "discountLabel": {
+    "bn": "ডিসকাউন্টের হার *",
+    "en": "Discount Rate *"
+  },
+  "egDiscount": {
+    "bn": "যেমন: ১৫% ল্যাব টেস্টে",
+    "en": "e.g., 15% on Lab Tests"
+  },
+  "hotlineLabel": {
+    "bn": "হটলাইন নম্বর *",
+    "en": "Hotline Number *"
+  },
+  "egHotline": {
+    "bn": "যেমন: ০৯৬১৩৭৮৭৮০১",
+    "en": "e.g., 09613787801"
+  },
+  "logoTextLabel": {
+    "bn": "লোগো সংক্ষিপ্ত টেক্সট",
+    "en": "Logo Short Text"
+  },
+  "egLogoText": {
+    "bn": "যেমন: Ibn Sina",
+    "en": "e.g., Ibn Sina"
+  },
+  "googleMapLinkLabel": {
+    "bn": "গুগল ম্যাপ লোকেশন লিংক (Google Map Link)",
+    "en": "Google Map Location Link"
+  },
+  "egMapLink": {
+    "bn": "যেমন: https://maps.app.goo.gl/...",
+    "en": "e.g., https://maps.app.goo.gl/..."
+  },
+  "partnerImageLabel": {
+    "bn": "পার্টনার হাসপাতাল লোগো / ছবি",
+    "en": "Partner Hospital Logo / Image"
+  },
+  "logMemberDiscountTitle": {
+    "bn": "সদস্য ডিসকাউন্ট লগ করুন",
+    "en": "Log Member Discount"
+  },
+  "txDescLabel": {
+    "bn": "হাসপাতাল ভ্যালিডেশন কোড ও ডিসকাউন্ট সাশ্রয় বিবরণী লগ।",
+    "en": "Hospital validation code & discount savings log."
+  },
+  "memberSearchLabel": {
+    "bn": "সদস্যের মেম্বার আইডি বা মোবাইল নম্বর *",
+    "en": "Member ID or Mobile Number *"
+  },
+  "egMemberSearch": {
+    "bn": "যেমন: HC-1001 বা 01711112222",
+    "en": "e.g., HC-1001 or 01711112222"
+  },
+  "selectPartnerLabel": {
+    "bn": "হাসপাতাল/ল্যাব নির্বাচন করুন",
+    "en": "Select Hospital/Lab"
+  },
+  "billAmountLabel": {
+    "bn": "মূল বিলের পরিমাণ (BDT) *",
+    "en": "Original Bill Amount (BDT) *"
+  },
+  "egBillAmount": {
+    "bn": "যেমন: ৫০০০",
+    "en": "e.g., 5000"
+  },
+  "applyLogDiscountButton": {
+    "bn": "ডিসকাউন্ট কার্যকর ও লগ করুন",
+    "en": "Apply & Log Discount"
+  },
+  "memberProfileDetailsTitle": {
+    "bn": "সদস্যের প্রোফাইল বিবরণ",
+    "en": "Member Profile Details"
+  },
+  "memberIdLabel": {
+    "bn": "মেম্বার আইডি:",
+    "en": "Member ID:"
+  },
+  "planTypeLabel": {
+    "bn": "প্ল্যান টাইপ",
+    "en": "Plan Type"
+  },
+  "expiryDateLabel": {
+    "bn": "মেয়াদ উত্তীর্ণের তারিখ",
+    "en": "Expiry Date"
+  },
+  "membershipStatusLabel": {
+    "bn": "মেম্বারশিপ অবস্থা",
+    "en": "Membership Status"
+  },
+  "active": {
+    "bn": "সচল",
+    "en": "Active"
+  },
+  "inactive": {
+    "bn": "অচল",
+    "en": "Inactive"
+  },
+  "activate": {
+    "bn": "সচল করুন",
+    "en": "Activate"
+  },
+  "deactivate": {
+    "bn": "অচল করুন",
+    "en": "Deactivate"
+  },
+  "editButton": {
+    "bn": "সম্পাদনা করুন",
+    "en": "Edit"
+  },
+  "category": {
+    "bn": "ক্যাটাগরি",
+    "en": "Category"
+  },
+  "discountRate": {
+    "bn": "ডিসকাউন্ট হার",
+    "en": "Discount Rate"
+  },
+  "phone": {
+    "bn": "ফোন নম্বর",
+    "en": "Phone"
+  },
+  "contractedFacilitiesDesc": {
+    "bn": "চুক্তিভুক্ত হাসপাতাল, ল্যাব ও ফার্মেসী তালিকা।",
+    "en": "List of contracted hospitals, labs, and pharmacies."
+  },
+  "searchPartnerPlaceholder": {
+    "bn": "পার্টনার হাসপাতাল খুঁজুন...",
+    "en": "Search partner hospital..."
+  },
+  "partnerHospital": {
+    "bn": "পার্টনার হাসপাতাল",
+    "en": "Partner Hospital"
+  },
+  "savePartnerButton": {
+    "bn": "পার্টনার সংরক্ষণ করুন",
+    "en": "Save Partner"
+  },
+  "recentTransactionsTitle": {
+    "bn": "সাম্প্রতিক ডিসকাউন্ট ট্রানজেকশন",
+    "en": "Recent Discount Transactions"
+  },
+  "txLogDesc": {
+    "bn": "ডিসকাউন্ট ব্যবহারের বিবরণ",
+    "en": "Discount Usage Details"
+  },
+  "memberName": {
+    "bn": "সদস্যের নাম",
+    "en": "Member Name"
+  },
+  "date": {
+    "bn": "তারিখ",
+    "en": "Date"
+  },
+  "totalBill": {
+    "bn": "মোট বিল",
+    "en": "Total Bill"
+  },
+  "savings": {
+    "bn": "সাশ্রয়",
+    "en": "Savings"
+  },
+  "code": {
+    "bn": "কোড",
+    "en": "Code"
+  },
+  "codeLabel": {
+    "bn": "কোড *",
+    "en": "Code *"
+  },
+  "partnerList": {
+    "bn": "অংশীদার তালিকা",
+    "en": "Partner List"
+  },
+  "partnerDashboard": {
+    "bn": "অংশীদার ড্যাশবোর্ড",
+    "en": "Partner Dashboard"
+  },
+  "email": {
+    "bn": "ইমেইল ঠিকানা",
+    "en": "Email"
+  },
+  "search": {
+    "bn": "খুঁজুন",
+    "en": "Search"
+  },
+  "add": {
+    "bn": "যোগ করুন",
+    "en": "Add"
+  },
+  "delete": {
+    "bn": "ডিলিট করুন",
+    "en": "Delete"
+  },
+  "statistics": {
+    "bn": "পরিসংখ্যান",
+    "en": "Statistics"
+  },
+  "description": {
+    "bn": "বিবরণ",
+    "en": "Description"
+  },
+  "estimatedRevenue": {
+    "bn": "আনুমানিক রাজস্ব",
+    "en": "Estimated Revenue"
+  },
+  "noTxsFound": {
+    "bn": "কোনো পূর্ববর্তী ট্রানজেকশন রেকর্ড পাওয়া যায়নি।",
+    "en": "No previous transaction records found."
+  },
+  "medicalCenter": {
+    "bn": "চিকিৎসাকেন্দ্র",
+    "en": "Medical Center"
+  },
+  "googleMapLink": {
+    "bn": "গুগল ম্যাপ লোকেশন লিংক (Google Map Link)",
+    "en": "Google Map Link"
+  },
+  "egPartnerName": {
+    "bn": "যেমন: ইবনে সিনা ল্যাব",
+    "en": "e.g., Ibn Sina Lab"
+  },
+  "partnerNameLabel": {
+    "bn": "হাসপাতাল/ল্যাবের নাম *",
+    "en": "Hospital/Lab Name *"
+  },
+  "memberNotFound": {
+    "bn": "প্রদত্ত সদস্য পাওয়া যায়নি (আইডি বা ফোন নম্বর পরীক্ষা করুন)।",
+    "en": "Member not found (check ID or phone number)."
+  },
+  "notProvided": {
+    "bn": "প্রদান করা হয়নি",
+    "en": "Not provided"
+  },
+  "fillAllFields": {
+    "bn": "সবগুলো তথ্য প্রদান করুন।",
+    "en": "Please fill in all fields."
+  },
+  "invalidBillAmount": {
+    "bn": "সদস্য ভ্যালিডেশন কোড ও ডিসকাউন্ট সাশ্রয় বিবরণী লগ।",
+    "en": "Please provide a valid bill amount."
+  },
+  "zero": {
+    "bn": "০",
+    "en": "0"
+  },
+  "forty": {
+    "bn": "৪০",
+    "en": "40"
+  },
+  "eighty": {
+    "bn": "৮০",
+    "en": "80"
+  },
+  "oneTwenty": {
+    "bn": "১২০",
+    "en": "120"
+  },
+  "txLoggedSuccess": {
+    "bn": "৳${saved} ডিসকাউন্ট সফলভাবে লগ করা হয়েছে।",
+    "en": "৳${saved} discount logged successfully."
+  },
+  "confirmDeletePartner": {
+    "bn": "আপনি কি নিশ্চিতভাবে \"${name}\" পার্টনারটি ডিলিট করতে চান?",
+    "en": "Are you sure you want to delete partner \"${name}\"?"
+  },
+  "confirmDeleteMember": {
+    "bn": "আপনি কি নিশ্চিতভাবে \"${name}\" সদস্যকে ডিলিট করতে চান? ডিলিট করলে তার সকল ডিসকাউন্ট ট্রানজেকশনও মুছে যাবে।",
+    "en": "Are you sure you want to delete member \"${name}\"? Deleting will also remove all their discount transactions."
+  }
+}

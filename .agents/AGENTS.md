@@ -54,7 +54,33 @@ Always use the following color variables or class equivalents:
 
 ---
 
-## 4. AI Coding Agent - Global Execution Rules
+## 4. Core Development & Coding Rules
+
+### Component Reuse & Modular Design
+- Always design and build for reusability. Avoid duplicate UI code or business logic.
+- If a component is needed in multiple views (e.g., user panel vs. admin panel), extract it to a shared layout or common UI component folder.
+- Keep concerns separate: isolate data fetching, business logic, form validation, and presentation.
+
+### UI & Styling Standards
+- **shadcn/ui First Priority**: UI elements must utilize shadcn components found under `src/components/ui`. Always check there first before writing custom buttons, inputs, or menus.
+- When a new common UI component is needed, add it using the shadcn CLI if possible, or build it matching the existing shadcn/Radix/Base-UI configuration.
+
+### Framework & Performance
+- **React Server Components (RSC) Preference**: Keep components as Server Components where possible. Use `"use client"` only when client-side interactivity is necessary.
+- **Strict 500-Line Code Limit**: No single source code file should exceed 500 lines of code. Keep files short and split concerns into smaller, modular subcomponents, hooks, or helpers.
+- **Clean & Optimized Code**: Write optimized, readable, and maintainable TypeScript following industry best practices.
+
+### Forms & Validation
+- **Validation**: Always use **Zod** for schema validation.
+- **Form Management**: Always use **React Hook Form** for form state, submission handling, and validation binding.
+
+### No Hallucinations
+- Do not guess or invent APIs, project structures, schemas, or routing configurations.
+- If any requirement, schema, or route is ambiguous, **stop and ask the user for clarification**.
+
+---
+
+## 5. AI Coding Agent - Global Execution Rules
 
 ### Rule 1 — Never Stay in a Reasoning Loop
 If you notice you are repeating the same reasoning, checking the same files, or suggesting the same solution more than twice, STOP. Instead:
