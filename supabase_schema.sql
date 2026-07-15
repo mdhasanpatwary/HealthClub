@@ -10,6 +10,10 @@ CREATE TABLE IF NOT EXISTS members (
     expiry_date DATE NOT NULL,
     qr_code_url TEXT,
     total_saved INTEGER NOT NULL DEFAULT 0,
+    address TEXT,
+    birth_date DATE,
+    profession TEXT,
+    profile_picture_url TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
@@ -22,6 +26,7 @@ CREATE TABLE IF NOT EXISTS partners (
     discount TEXT NOT NULL,
     phone TEXT NOT NULL,
     logo_text TEXT NOT NULL,
+    map_link TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 

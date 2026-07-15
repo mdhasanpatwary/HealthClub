@@ -65,9 +65,13 @@ export const dbStore = {
     id: string,
     name: string,
     phone: string,
-    email: string
+    email: string,
+    address?: string,
+    birthDate?: string,
+    profession?: string,
+    profilePictureUrl?: string
   ): Promise<boolean> {
-    const success = await updateMemberProfileAction(id, name, phone, email);
+    const success = await updateMemberProfileAction(id, name, phone, email, address, birthDate, profession, profilePictureUrl);
     
     if (success) {
       // Sync local storage user session if logged in
@@ -78,6 +82,10 @@ export const dbStore = {
           name,
           phone,
           email,
+          address,
+          birthDate,
+          profession,
+          profilePictureUrl,
         });
       }
     }
@@ -87,7 +95,16 @@ export const dbStore = {
 
   async updateMember(
     id: string,
-    member: { name: string; phone: string; email: string; tier: Member["tier"] }
+    member: {
+      name: string;
+      phone: string;
+      email: string;
+      tier: Member["tier"];
+      address?: string;
+      birthDate?: string;
+      profession?: string;
+      profilePictureUrl?: string;
+    }
   ): Promise<boolean> {
     const success = await updateMemberAction(id, member);
     
@@ -101,6 +118,10 @@ export const dbStore = {
           phone: member.phone,
           email: member.email,
           tier: member.tier,
+          address: member.address,
+          birthDate: member.birthDate,
+          profession: member.profession,
+          profilePictureUrl: member.profilePictureUrl,
         });
       }
     }

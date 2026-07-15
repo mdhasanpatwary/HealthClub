@@ -9,6 +9,10 @@ export interface Member {
   expiryDate: string;
   qrCodeUrl?: string;
   totalSaved: number;
+  address?: string;
+  birthDate?: string;
+  profession?: string;
+  profilePictureUrl?: string;
 }
 
 export interface Partner {
@@ -19,6 +23,7 @@ export interface Partner {
   discount: string;
   phone: string;
   logoText: string;
+  mapLink?: string;
 }
 
 export interface Transaction {

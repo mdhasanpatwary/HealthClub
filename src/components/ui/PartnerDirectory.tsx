@@ -134,7 +134,13 @@ export default function PartnerDirectory({ limit, showFilters = true }: PartnerD
                     </h3>
                     <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
                       <MapPin className="h-3.5 w-3.5 shrink-0 text-primary" />
-                      <span className="line-clamp-1">{partner.address}</span>
+                      {partner.mapLink ? (
+                        <a href={partner.mapLink} target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-primary transition-all line-clamp-1">
+                          {partner.address}
+                        </a>
+                      ) : (
+                        <span className="line-clamp-1">{partner.address}</span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -148,12 +154,22 @@ export default function PartnerDirectory({ limit, showFilters = true }: PartnerD
                     </p>
                   </div>
 
-                  <a href={`tel:${partner.phone}`}>
-                    <Button variant="outline" size="sm" className="gap-1 border-primary text-primary hover:bg-primary-light">
-                      <Phone className="h-3.5 w-3.5" />
-                      কল করুন
-                    </Button>
-                  </a>
+                  <div className="flex gap-2">
+                    {partner.mapLink && (
+                      <a href={partner.mapLink} target="_blank" rel="noopener noreferrer">
+                        <Button variant="outline" size="sm" className="gap-1 border-slate-200 dark:border-slate-800 text-muted-foreground hover:bg-muted">
+                          <MapPin className="h-3.5 w-3.5" />
+                          ম্যাপে দেখুন
+                        </Button>
+                      </a>
+                    )}
+                    <a href={`tel:${partner.phone}`}>
+                      <Button variant="outline" size="sm" className="gap-1 border-primary text-primary hover:bg-primary-light">
+                        <Phone className="h-3.5 w-3.5" />
+                        কল করুন
+                      </Button>
+                    </a>
+                  </div>
                 </div>
 
               </CardContent>

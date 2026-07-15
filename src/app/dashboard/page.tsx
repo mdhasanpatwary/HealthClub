@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { 
-  Heart, CreditCard, History, LayoutDashboard, Save, CheckCircle2 
+  Heart, CreditCard, History, LayoutDashboard, Save, CheckCircle2, User 
 } from "lucide-react";
+import { toast } from "sonner";
 import { dbStore } from "@/services/dbStore";
 import { Member, Transaction } from "@/services/db";
 import MemberCard from "@/components/ui/MemberCard";
@@ -23,6 +24,10 @@ export default function DashboardPage() {
   const [profileName, setProfileName] = useState("");
   const [profileEmail, setProfileEmail] = useState("");
   const [profilePhone, setProfilePhone] = useState("");
+  const [profileAddress, setProfileAddress] = useState("");
+  const [profileBirthDate, setProfileBirthDate] = useState("");
+  const [profileProfession, setProfileProfession] = useState("");
+  const [profilePictureUrl, setProfilePictureUrl] = useState("");
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   // Load data on mount
@@ -40,6 +45,10 @@ export default function DashboardPage() {
       setProfileName(activeUser.name);
       setProfileEmail(activeUser.email || "");
       setProfilePhone(activeUser.phone);
+      setProfileAddress(activeUser.address || "");
+      setProfileBirthDate(activeUser.birthDate || "");
+      setProfileProfession(activeUser.profession || "");
+      setProfilePictureUrl(activeUser.profilePictureUrl || "");
     });
 
     // Load user specific transactions
@@ -61,7 +70,11 @@ export default function DashboardPage() {
         user.id,
         profileName,
         profilePhone,
-        profileEmail
+        profileEmail,
+        profileAddress,
+        profileBirthDate,
+        profileProfession,
+        profilePictureUrl
       );
 
       if (success) {
@@ -70,17 +83,21 @@ export default function DashboardPage() {
           ...user,
           name: profileName,
           email: profileEmail,
-          phone: profilePhone
+          phone: profilePhone,
+          address: profileAddress,
+          birthDate: profileBirthDate,
+          profession: profileProfession,
+          profilePictureUrl: profilePictureUrl
         };
         dbStore.setCurrentUser(updatedUser);
         setUser(updatedUser);
-        setSaveSuccess(true);
+        toast.success("প্রোফাইল সফলভাবে আপডেট করা হয়েছে!");
       } else {
-        alert("প্রোফাইল আপডেট করতে সমস্যা হয়েছে।");
+        toast.error("প্রোফাইল আপডেট করতে সমস্যা হয়েছে।");
       }
     } catch (err) {
       console.error(err);
-      alert("সার্ভার ত্রুটি।");
+      toast.error("সার্ভার ত্রুটি।");
     }
 
     setTimeout(() => setSaveSuccess(false), 3000);
@@ -270,6 +287,52 @@ export default function DashboardPage() {
                     <form onSubmit={handleUpdateProfile} className="space-y-4">
                       
                       <div className="space-y-2">
+                        <label className="text-xs font-semibold text-secondary">প্রোফাইল ছবি</label>
+                        <div className="flex items-center gap-4">
+                          <div className="h-16 w-16 rounded-xl border border-border bg-muted/40 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
+                            {profilePictureUrl ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={profilePictureUrl} alt="Preview" className="h-full w-full object-cover" />
+                            ) : (
+                              <User className="h-8 w-8 text-muted-foreground" />
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <Input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  if (file.size > 2 * 1024 * 1024) {
+                                    toast.error("ছবির সাইজ ২ মেগাবাইটের বেশি হওয়া যাবে না।");
+                                    e.target.value = "";
+                                    return;
+                                  }
+                                  const reader = new FileReader();
+                                  reader.onloadend = () => {
+                                    setProfilePictureUrl(reader.result as string);
+                                  };
+                                  reader.readAsDataURL(file);
+                                }
+                              }}
+                              className="border-border bg-background text-xs cursor-pointer file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
+                            />
+                            {profilePictureUrl && (
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                onClick={() => setProfilePictureUrl("")}
+                                className="text-[10px] text-rose-600 hover:text-rose-700 p-0 h-auto mt-1"
+                              >
+                                ছবি মুছে ফেলুন
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
                         <label className="text-xs font-semibold text-secondary">আপনার নাম *</label>
                         <Input
                           type="text"
@@ -297,6 +360,39 @@ export default function DashboardPage() {
                             type="email"
                             value={profileEmail}
                             onChange={(e) => setProfileEmail(e.target.value)}
+                            className="border-border"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-xs font-semibold text-secondary">ঠিকানা</label>
+                        <Input
+                          type="text"
+                          value={profileAddress}
+                          onChange={(e) => setProfileAddress(e.target.value)}
+                          placeholder="যেমন: মিজান রোড, ফেনী"
+                          className="border-border"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label className="text-xs font-semibold text-secondary">জন্ম তারিখ</label>
+                          <Input
+                            type="date"
+                            value={profileBirthDate}
+                            onChange={(e) => setProfileBirthDate(e.target.value)}
+                            className="border-border"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-xs font-semibold text-secondary">পেশা</label>
+                          <Input
+                            type="text"
+                            value={profileProfession}
+                            onChange={(e) => setProfileProfession(e.target.value)}
+                            placeholder="যেমন: চাকুরিজীবী, ব্যবসায়ী, শিক্ষার্থী"
                             className="border-border"
                           />
                         </div>

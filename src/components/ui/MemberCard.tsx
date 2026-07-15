@@ -1,5 +1,5 @@
 import { Member } from "@/services/db";
-import { Heart, Star, ShieldCheck } from "lucide-react";
+import { Heart, Star, ShieldCheck, User } from "lucide-react";
 
 interface MemberCardProps {
   member: Member;
@@ -62,29 +62,39 @@ export default function MemberCard({ member }: MemberCardProps) {
         </div>
       </div>
 
-      {/* Body section with Name, ID & QR */}
-      <div className="flex justify-between items-end mt-4 z-10">
-        <div className="space-y-4">
-          <div>
-            <p className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">Member Name</p>
-            <p className="text-lg font-bold tracking-wide mt-0.5 font-heading text-white">
-              {member.name}
-            </p>
+      <div className="flex justify-between items-end mt-4 z-10 gap-3">
+        <div className="flex items-center gap-3">
+          {/* Profile Picture */}
+          <div className="h-16 w-16 rounded-xl border border-slate-700/50 bg-slate-800/80 overflow-hidden flex items-center justify-center shrink-0 shadow-inner">
+            {member.profilePictureUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={member.profilePictureUrl} alt={member.name} className="h-full w-full object-cover" />
+            ) : (
+              <User className="h-8 w-8 text-slate-400" />
+            )}
           </div>
-
-          <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
             <div>
-              <p className="text-[9px] text-slate-400 uppercase tracking-wider font-mono">Member ID</p>
-              <p className="text-sm font-semibold tracking-wider font-mono text-emerald-400">
-                {member.id}
+              <p className="text-[9px] text-slate-400 uppercase tracking-wider font-mono">Member Name</p>
+              <p className="text-base font-bold tracking-wide mt-0.5 font-heading text-white line-clamp-1">
+                {member.name}
               </p>
             </div>
-            <div>
-              <p className="text-[9px] text-slate-400 uppercase tracking-wider font-mono">Status</p>
-              <p className="text-xs font-semibold tracking-wide text-green-400 flex items-center gap-1">
-                <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" />
-                ACTIVE
-              </p>
+
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <p className="text-[9px] text-slate-400 uppercase tracking-wider font-mono">Member ID</p>
+                <p className="text-xs font-semibold tracking-wider font-mono text-emerald-400">
+                  {member.id}
+                </p>
+              </div>
+              <div>
+                <p className="text-[9px] text-slate-400 uppercase tracking-wider font-mono">Status</p>
+                <p className="text-[10px] font-semibold tracking-wide text-green-400 flex items-center gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" />
+                  ACTIVE
+                </p>
+              </div>
             </div>
           </div>
         </div>

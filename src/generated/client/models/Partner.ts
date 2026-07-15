@@ -32,6 +32,7 @@ export type PartnerMinAggregateOutputType = {
   discount: string | null
   phone: string | null
   logoText: string | null
+  mapLink: string | null
   createdAt: Date | null
 }
 
@@ -43,6 +44,7 @@ export type PartnerMaxAggregateOutputType = {
   discount: string | null
   phone: string | null
   logoText: string | null
+  mapLink: string | null
   createdAt: Date | null
 }
 
@@ -54,6 +56,7 @@ export type PartnerCountAggregateOutputType = {
   discount: number
   phone: number
   logoText: number
+  mapLink: number
   createdAt: number
   _all: number
 }
@@ -67,6 +70,7 @@ export type PartnerMinAggregateInputType = {
   discount?: true
   phone?: true
   logoText?: true
+  mapLink?: true
   createdAt?: true
 }
 
@@ -78,6 +82,7 @@ export type PartnerMaxAggregateInputType = {
   discount?: true
   phone?: true
   logoText?: true
+  mapLink?: true
   createdAt?: true
 }
 
@@ -89,6 +94,7 @@ export type PartnerCountAggregateInputType = {
   discount?: true
   phone?: true
   logoText?: true
+  mapLink?: true
   createdAt?: true
   _all?: true
 }
@@ -173,6 +179,7 @@ export type PartnerGroupByOutputType = {
   discount: string
   phone: string
   logoText: string
+  mapLink: string | null
   createdAt: Date
   _count: PartnerCountAggregateOutputType | null
   _min: PartnerMinAggregateOutputType | null
@@ -205,6 +212,7 @@ export type PartnerWhereInput = {
   discount?: Prisma.StringFilter<"Partner"> | string
   phone?: Prisma.StringFilter<"Partner"> | string
   logoText?: Prisma.StringFilter<"Partner"> | string
+  mapLink?: Prisma.StringNullableFilter<"Partner"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Partner"> | Date | string
   transactions?: Prisma.TransactionListRelationFilter
 }
@@ -217,6 +225,7 @@ export type PartnerOrderByWithRelationInput = {
   discount?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   logoText?: Prisma.SortOrder
+  mapLink?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   transactions?: Prisma.TransactionOrderByRelationAggregateInput
 }
@@ -232,6 +241,7 @@ export type PartnerWhereUniqueInput = Prisma.AtLeast<{
   discount?: Prisma.StringFilter<"Partner"> | string
   phone?: Prisma.StringFilter<"Partner"> | string
   logoText?: Prisma.StringFilter<"Partner"> | string
+  mapLink?: Prisma.StringNullableFilter<"Partner"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Partner"> | Date | string
   transactions?: Prisma.TransactionListRelationFilter
 }, "id">
@@ -244,6 +254,7 @@ export type PartnerOrderByWithAggregationInput = {
   discount?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   logoText?: Prisma.SortOrder
+  mapLink?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.PartnerCountOrderByAggregateInput
   _max?: Prisma.PartnerMaxOrderByAggregateInput
@@ -261,6 +272,7 @@ export type PartnerScalarWhereWithAggregatesInput = {
   discount?: Prisma.StringWithAggregatesFilter<"Partner"> | string
   phone?: Prisma.StringWithAggregatesFilter<"Partner"> | string
   logoText?: Prisma.StringWithAggregatesFilter<"Partner"> | string
+  mapLink?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Partner"> | Date | string
 }
 
@@ -272,6 +284,7 @@ export type PartnerCreateInput = {
   discount: string
   phone: string
   logoText: string
+  mapLink?: string | null
   createdAt?: Date | string
   transactions?: Prisma.TransactionCreateNestedManyWithoutPartnerInput
 }
@@ -284,6 +297,7 @@ export type PartnerUncheckedCreateInput = {
   discount: string
   phone: string
   logoText: string
+  mapLink?: string | null
   createdAt?: Date | string
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutPartnerInput
 }
@@ -296,6 +310,7 @@ export type PartnerUpdateInput = {
   discount?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   logoText?: Prisma.StringFieldUpdateOperationsInput | string
+  mapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactions?: Prisma.TransactionUpdateManyWithoutPartnerNestedInput
 }
@@ -308,6 +323,7 @@ export type PartnerUncheckedUpdateInput = {
   discount?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   logoText?: Prisma.StringFieldUpdateOperationsInput | string
+  mapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutPartnerNestedInput
 }
@@ -320,6 +336,7 @@ export type PartnerCreateManyInput = {
   discount: string
   phone: string
   logoText: string
+  mapLink?: string | null
   createdAt?: Date | string
 }
 
@@ -331,6 +348,7 @@ export type PartnerUpdateManyMutationInput = {
   discount?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   logoText?: Prisma.StringFieldUpdateOperationsInput | string
+  mapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -342,6 +360,7 @@ export type PartnerUncheckedUpdateManyInput = {
   discount?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   logoText?: Prisma.StringFieldUpdateOperationsInput | string
+  mapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -353,6 +372,7 @@ export type PartnerCountOrderByAggregateInput = {
   discount?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   logoText?: Prisma.SortOrder
+  mapLink?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -364,6 +384,7 @@ export type PartnerMaxOrderByAggregateInput = {
   discount?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   logoText?: Prisma.SortOrder
+  mapLink?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -375,6 +396,7 @@ export type PartnerMinOrderByAggregateInput = {
   discount?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   logoText?: Prisma.SortOrder
+  mapLink?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -405,6 +427,7 @@ export type PartnerCreateWithoutTransactionsInput = {
   discount: string
   phone: string
   logoText: string
+  mapLink?: string | null
   createdAt?: Date | string
 }
 
@@ -416,6 +439,7 @@ export type PartnerUncheckedCreateWithoutTransactionsInput = {
   discount: string
   phone: string
   logoText: string
+  mapLink?: string | null
   createdAt?: Date | string
 }
 
@@ -443,6 +467,7 @@ export type PartnerUpdateWithoutTransactionsInput = {
   discount?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   logoText?: Prisma.StringFieldUpdateOperationsInput | string
+  mapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -454,6 +479,7 @@ export type PartnerUncheckedUpdateWithoutTransactionsInput = {
   discount?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   logoText?: Prisma.StringFieldUpdateOperationsInput | string
+  mapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -496,6 +522,7 @@ export type PartnerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   discount?: boolean
   phone?: boolean
   logoText?: boolean
+  mapLink?: boolean
   createdAt?: boolean
   transactions?: boolean | Prisma.Partner$transactionsArgs<ExtArgs>
   _count?: boolean | Prisma.PartnerCountOutputTypeDefaultArgs<ExtArgs>
@@ -509,6 +536,7 @@ export type PartnerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   discount?: boolean
   phone?: boolean
   logoText?: boolean
+  mapLink?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["partner"]>
 
@@ -520,6 +548,7 @@ export type PartnerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   discount?: boolean
   phone?: boolean
   logoText?: boolean
+  mapLink?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["partner"]>
 
@@ -531,10 +560,11 @@ export type PartnerSelectScalar = {
   discount?: boolean
   phone?: boolean
   logoText?: boolean
+  mapLink?: boolean
   createdAt?: boolean
 }
 
-export type PartnerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "category" | "address" | "discount" | "phone" | "logoText" | "createdAt", ExtArgs["result"]["partner"]>
+export type PartnerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "category" | "address" | "discount" | "phone" | "logoText" | "mapLink" | "createdAt", ExtArgs["result"]["partner"]>
 export type PartnerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactions?: boolean | Prisma.Partner$transactionsArgs<ExtArgs>
   _count?: boolean | Prisma.PartnerCountOutputTypeDefaultArgs<ExtArgs>
@@ -555,6 +585,7 @@ export type $PartnerPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     discount: string
     phone: string
     logoText: string
+    mapLink: string | null
     createdAt: Date
   }, ExtArgs["result"]["partner"]>
   composites: {}
@@ -987,6 +1018,7 @@ export interface PartnerFieldRefs {
   readonly discount: Prisma.FieldRef<"Partner", 'String'>
   readonly phone: Prisma.FieldRef<"Partner", 'String'>
   readonly logoText: Prisma.FieldRef<"Partner", 'String'>
+  readonly mapLink: Prisma.FieldRef<"Partner", 'String'>
   readonly createdAt: Prisma.FieldRef<"Partner", 'DateTime'>
 }
     

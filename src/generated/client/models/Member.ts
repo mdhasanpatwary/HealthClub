@@ -45,6 +45,10 @@ export type MemberMinAggregateOutputType = {
   expiryDate: Date | null
   qrCodeUrl: string | null
   totalSaved: number | null
+  address: string | null
+  birthDate: Date | null
+  profession: string | null
+  profilePictureUrl: string | null
   createdAt: Date | null
 }
 
@@ -59,6 +63,10 @@ export type MemberMaxAggregateOutputType = {
   expiryDate: Date | null
   qrCodeUrl: string | null
   totalSaved: number | null
+  address: string | null
+  birthDate: Date | null
+  profession: string | null
+  profilePictureUrl: string | null
   createdAt: Date | null
 }
 
@@ -73,6 +81,10 @@ export type MemberCountAggregateOutputType = {
   expiryDate: number
   qrCodeUrl: number
   totalSaved: number
+  address: number
+  birthDate: number
+  profession: number
+  profilePictureUrl: number
   createdAt: number
   _all: number
 }
@@ -97,6 +109,10 @@ export type MemberMinAggregateInputType = {
   expiryDate?: true
   qrCodeUrl?: true
   totalSaved?: true
+  address?: true
+  birthDate?: true
+  profession?: true
+  profilePictureUrl?: true
   createdAt?: true
 }
 
@@ -111,6 +127,10 @@ export type MemberMaxAggregateInputType = {
   expiryDate?: true
   qrCodeUrl?: true
   totalSaved?: true
+  address?: true
+  birthDate?: true
+  profession?: true
+  profilePictureUrl?: true
   createdAt?: true
 }
 
@@ -125,6 +145,10 @@ export type MemberCountAggregateInputType = {
   expiryDate?: true
   qrCodeUrl?: true
   totalSaved?: true
+  address?: true
+  birthDate?: true
+  profession?: true
+  profilePictureUrl?: true
   createdAt?: true
   _all?: true
 }
@@ -226,6 +250,10 @@ export type MemberGroupByOutputType = {
   expiryDate: Date
   qrCodeUrl: string | null
   totalSaved: number
+  address: string | null
+  birthDate: Date | null
+  profession: string | null
+  profilePictureUrl: string | null
   createdAt: Date
   _count: MemberCountAggregateOutputType | null
   _avg: MemberAvgAggregateOutputType | null
@@ -263,6 +291,10 @@ export type MemberWhereInput = {
   expiryDate?: Prisma.DateTimeFilter<"Member"> | Date | string
   qrCodeUrl?: Prisma.StringNullableFilter<"Member"> | string | null
   totalSaved?: Prisma.IntFilter<"Member"> | number
+  address?: Prisma.StringNullableFilter<"Member"> | string | null
+  birthDate?: Prisma.DateTimeNullableFilter<"Member"> | Date | string | null
+  profession?: Prisma.StringNullableFilter<"Member"> | string | null
+  profilePictureUrl?: Prisma.StringNullableFilter<"Member"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   transactions?: Prisma.TransactionListRelationFilter
 }
@@ -278,6 +310,10 @@ export type MemberOrderByWithRelationInput = {
   expiryDate?: Prisma.SortOrder
   qrCodeUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   totalSaved?: Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
+  birthDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  profession?: Prisma.SortOrderInput | Prisma.SortOrder
+  profilePictureUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   transactions?: Prisma.TransactionOrderByRelationAggregateInput
 }
@@ -296,6 +332,10 @@ export type MemberWhereUniqueInput = Prisma.AtLeast<{
   expiryDate?: Prisma.DateTimeFilter<"Member"> | Date | string
   qrCodeUrl?: Prisma.StringNullableFilter<"Member"> | string | null
   totalSaved?: Prisma.IntFilter<"Member"> | number
+  address?: Prisma.StringNullableFilter<"Member"> | string | null
+  birthDate?: Prisma.DateTimeNullableFilter<"Member"> | Date | string | null
+  profession?: Prisma.StringNullableFilter<"Member"> | string | null
+  profilePictureUrl?: Prisma.StringNullableFilter<"Member"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   transactions?: Prisma.TransactionListRelationFilter
 }, "id" | "phone">
@@ -311,6 +351,10 @@ export type MemberOrderByWithAggregationInput = {
   expiryDate?: Prisma.SortOrder
   qrCodeUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   totalSaved?: Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
+  birthDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  profession?: Prisma.SortOrderInput | Prisma.SortOrder
+  profilePictureUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.MemberCountOrderByAggregateInput
   _avg?: Prisma.MemberAvgOrderByAggregateInput
@@ -333,6 +377,10 @@ export type MemberScalarWhereWithAggregatesInput = {
   expiryDate?: Prisma.DateTimeWithAggregatesFilter<"Member"> | Date | string
   qrCodeUrl?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
   totalSaved?: Prisma.IntWithAggregatesFilter<"Member"> | number
+  address?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
+  birthDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Member"> | Date | string | null
+  profession?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
+  profilePictureUrl?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Member"> | Date | string
 }
 
@@ -347,6 +395,10 @@ export type MemberCreateInput = {
   expiryDate: Date | string
   qrCodeUrl?: string | null
   totalSaved?: number
+  address?: string | null
+  birthDate?: Date | string | null
+  profession?: string | null
+  profilePictureUrl?: string | null
   createdAt?: Date | string
   transactions?: Prisma.TransactionCreateNestedManyWithoutMemberInput
 }
@@ -362,6 +414,10 @@ export type MemberUncheckedCreateInput = {
   expiryDate: Date | string
   qrCodeUrl?: string | null
   totalSaved?: number
+  address?: string | null
+  birthDate?: Date | string | null
+  profession?: string | null
+  profilePictureUrl?: string | null
   createdAt?: Date | string
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutMemberInput
 }
@@ -377,6 +433,10 @@ export type MemberUpdateInput = {
   expiryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalSaved?: Prisma.IntFieldUpdateOperationsInput | number
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactions?: Prisma.TransactionUpdateManyWithoutMemberNestedInput
 }
@@ -392,6 +452,10 @@ export type MemberUncheckedUpdateInput = {
   expiryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalSaved?: Prisma.IntFieldUpdateOperationsInput | number
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutMemberNestedInput
 }
@@ -407,6 +471,10 @@ export type MemberCreateManyInput = {
   expiryDate: Date | string
   qrCodeUrl?: string | null
   totalSaved?: number
+  address?: string | null
+  birthDate?: Date | string | null
+  profession?: string | null
+  profilePictureUrl?: string | null
   createdAt?: Date | string
 }
 
@@ -421,6 +489,10 @@ export type MemberUpdateManyMutationInput = {
   expiryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalSaved?: Prisma.IntFieldUpdateOperationsInput | number
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -435,6 +507,10 @@ export type MemberUncheckedUpdateManyInput = {
   expiryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalSaved?: Prisma.IntFieldUpdateOperationsInput | number
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -449,6 +525,10 @@ export type MemberCountOrderByAggregateInput = {
   expiryDate?: Prisma.SortOrder
   qrCodeUrl?: Prisma.SortOrder
   totalSaved?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  birthDate?: Prisma.SortOrder
+  profession?: Prisma.SortOrder
+  profilePictureUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -467,6 +547,10 @@ export type MemberMaxOrderByAggregateInput = {
   expiryDate?: Prisma.SortOrder
   qrCodeUrl?: Prisma.SortOrder
   totalSaved?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  birthDate?: Prisma.SortOrder
+  profession?: Prisma.SortOrder
+  profilePictureUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -481,6 +565,10 @@ export type MemberMinOrderByAggregateInput = {
   expiryDate?: Prisma.SortOrder
   qrCodeUrl?: Prisma.SortOrder
   totalSaved?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  birthDate?: Prisma.SortOrder
+  profession?: Prisma.SortOrder
+  profilePictureUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -513,6 +601,10 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
 export type MemberCreateNestedOneWithoutTransactionsInput = {
   create?: Prisma.XOR<Prisma.MemberCreateWithoutTransactionsInput, Prisma.MemberUncheckedCreateWithoutTransactionsInput>
   connectOrCreate?: Prisma.MemberCreateOrConnectWithoutTransactionsInput
@@ -538,6 +630,10 @@ export type MemberCreateWithoutTransactionsInput = {
   expiryDate: Date | string
   qrCodeUrl?: string | null
   totalSaved?: number
+  address?: string | null
+  birthDate?: Date | string | null
+  profession?: string | null
+  profilePictureUrl?: string | null
   createdAt?: Date | string
 }
 
@@ -552,6 +648,10 @@ export type MemberUncheckedCreateWithoutTransactionsInput = {
   expiryDate: Date | string
   qrCodeUrl?: string | null
   totalSaved?: number
+  address?: string | null
+  birthDate?: Date | string | null
+  profession?: string | null
+  profilePictureUrl?: string | null
   createdAt?: Date | string
 }
 
@@ -582,6 +682,10 @@ export type MemberUpdateWithoutTransactionsInput = {
   expiryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalSaved?: Prisma.IntFieldUpdateOperationsInput | number
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -596,6 +700,10 @@ export type MemberUncheckedUpdateWithoutTransactionsInput = {
   expiryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalSaved?: Prisma.IntFieldUpdateOperationsInput | number
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -641,6 +749,10 @@ export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   expiryDate?: boolean
   qrCodeUrl?: boolean
   totalSaved?: boolean
+  address?: boolean
+  birthDate?: boolean
+  profession?: boolean
+  profilePictureUrl?: boolean
   createdAt?: boolean
   transactions?: boolean | Prisma.Member$transactionsArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
@@ -657,6 +769,10 @@ export type MemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   expiryDate?: boolean
   qrCodeUrl?: boolean
   totalSaved?: boolean
+  address?: boolean
+  birthDate?: boolean
+  profession?: boolean
+  profilePictureUrl?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["member"]>
 
@@ -671,6 +787,10 @@ export type MemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   expiryDate?: boolean
   qrCodeUrl?: boolean
   totalSaved?: boolean
+  address?: boolean
+  birthDate?: boolean
+  profession?: boolean
+  profilePictureUrl?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["member"]>
 
@@ -685,10 +805,14 @@ export type MemberSelectScalar = {
   expiryDate?: boolean
   qrCodeUrl?: boolean
   totalSaved?: boolean
+  address?: boolean
+  birthDate?: boolean
+  profession?: boolean
+  profilePictureUrl?: boolean
   createdAt?: boolean
 }
 
-export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "phone" | "email" | "tier" | "status" | "joinedDate" | "expiryDate" | "qrCodeUrl" | "totalSaved" | "createdAt", ExtArgs["result"]["member"]>
+export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "phone" | "email" | "tier" | "status" | "joinedDate" | "expiryDate" | "qrCodeUrl" | "totalSaved" | "address" | "birthDate" | "profession" | "profilePictureUrl" | "createdAt", ExtArgs["result"]["member"]>
 export type MemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactions?: boolean | Prisma.Member$transactionsArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
@@ -712,6 +836,10 @@ export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     expiryDate: Date
     qrCodeUrl: string | null
     totalSaved: number
+    address: string | null
+    birthDate: Date | null
+    profession: string | null
+    profilePictureUrl: string | null
     createdAt: Date
   }, ExtArgs["result"]["member"]>
   composites: {}
@@ -1147,6 +1275,10 @@ export interface MemberFieldRefs {
   readonly expiryDate: Prisma.FieldRef<"Member", 'DateTime'>
   readonly qrCodeUrl: Prisma.FieldRef<"Member", 'String'>
   readonly totalSaved: Prisma.FieldRef<"Member", 'Int'>
+  readonly address: Prisma.FieldRef<"Member", 'String'>
+  readonly birthDate: Prisma.FieldRef<"Member", 'DateTime'>
+  readonly profession: Prisma.FieldRef<"Member", 'String'>
+  readonly profilePictureUrl: Prisma.FieldRef<"Member", 'String'>
   readonly createdAt: Prisma.FieldRef<"Member", 'DateTime'>
 }
     

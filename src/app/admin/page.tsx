@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   Users, Building, DollarSign, Search, PlusCircle,
-  Heart, Trash2, Edit3
+  Heart, Trash2, Edit3, User, Mail, Phone, Calendar,
+  History as HistoryIcon, MapPin, Briefcase
 } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Member, Partner, Transaction } from "@/services/db";
@@ -37,9 +39,18 @@ export default function AdminDashboardPage() {
   const [partnerSearch, setPartnerSearch] = useState("");
 
   // Modals / Form states
-  const [newMember, setNewMember] = useState({ name: "", phone: "", email: "", tier: "founding" as "founding" | "individual" | "family" });
+  const [newMember, setNewMember] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    tier: "founding" as "founding" | "individual" | "family",
+    address: "",
+    birthDate: "",
+    profession: "",
+    profilePictureUrl: ""
+  });
   const [editingMember, setEditingMember] = useState<Member | null>(null);
-  const [newPartner, setNewPartner] = useState({ name: "", category: "hospital" as Partner["category"], address: "", discount: "", phone: "", logoText: "" });
+  const [newPartner, setNewPartner] = useState({ name: "", category: "hospital" as Partner["category"], address: "", discount: "", phone: "", logoText: "", mapLink: "" });
   const [editingPartner, setEditingPartner] = useState<Partner | null>(null);
   const [newTx, setNewTx] = useState({ memberId: "", partnerId: "", amount: "" });
   const [txSuccess, setTxSuccess] = useState("");
@@ -49,6 +60,7 @@ export default function AdminDashboardPage() {
   const [isMemberOpen, setIsMemberOpen] = useState(false);
   const [isPartnerOpen, setIsPartnerOpen] = useState(false);
   const [isTxOpen, setIsTxOpen] = useState(false);
+  const [viewingMember, setViewingMember] = useState<Member | null>(null);
 
   // Load data
   const loadData = async () => {
@@ -98,7 +110,11 @@ export default function AdminDashboardPage() {
           name: newMember.name,
           phone: newMember.phone,
           email: newMember.email,
-          tier: newMember.tier
+          tier: newMember.tier,
+          address: newMember.address,
+          birthDate: newMember.birthDate,
+          profession: newMember.profession,
+          profilePictureUrl: newMember.profilePictureUrl
         });
         if (!success) throw new Error("Update failed");
       } else {
@@ -107,16 +123,21 @@ export default function AdminDashboardPage() {
           name: newMember.name,
           phone: newMember.phone,
           email: newMember.email,
-          tier: newMember.tier
+          tier: newMember.tier,
+          address: newMember.address,
+          birthDate: newMember.birthDate,
+          profession: newMember.profession,
+          profilePictureUrl: newMember.profilePictureUrl
         });
       }
 
-      setNewMember({ name: "", phone: "", email: "", tier: "founding" });
+      setNewMember({ name: "", phone: "", email: "", tier: "founding", address: "", birthDate: "", profession: "", profilePictureUrl: "" });
       setEditingMember(null);
       setIsMemberOpen(false);
       loadData();
+      toast.success(editingMember ? "সদস্য তথ্য সফলভাবে আপডেট করা হয়েছে।" : "সদস্য সফলভাবে যোগ করা হয়েছে।");
     } catch {
-      alert(editingMember ? "সদস্য তথ্য আপডেট করতে ব্যর্থ হয়েছে।" : "সদস্য যোগ করতে ব্যর্থ হয়েছে।");
+      toast.error(editingMember ? "সদস্য তথ্য আপডেট করতে ব্যর্থ হয়েছে।" : "সদস্য যোগ করতে ব্যর্থ হয়েছে।");
     }
   };
 
@@ -126,12 +147,13 @@ export default function AdminDashboardPage() {
       try {
         const success = await dbStore.deleteMember(id);
         if (success) {
+          toast.success("সদস্য সফলভাবে ডিলিট করা হয়েছে।");
           loadData();
         } else {
-          alert("সদস্য ডিলিট করতে ব্যর্থ হয়েছে।");
+          toast.error("সদস্য ডিলিট করতে ব্যর্থ হয়েছে।");
         }
       } catch {
-        alert("সদস্য ডিলিট করতে ব্যর্থ হয়েছে।");
+        toast.error("সদস্য ডিলিট করতে ব্যর্থ হয়েছে।");
       }
     }
   };
@@ -150,7 +172,8 @@ export default function AdminDashboardPage() {
           address: newPartner.address,
           discount: newPartner.discount,
           phone: newPartner.phone,
-          logoText: newPartner.logoText || newPartner.name.substring(0, 5)
+          logoText: newPartner.logoText || newPartner.name.substring(0, 5),
+          mapLink: newPartner.mapLink
         });
         if (!success) throw new Error("Update failed");
       } else {
@@ -161,16 +184,18 @@ export default function AdminDashboardPage() {
           address: newPartner.address,
           discount: newPartner.discount,
           phone: newPartner.phone,
-          logoText: newPartner.logoText || newPartner.name.substring(0, 5)
+          logoText: newPartner.logoText || newPartner.name.substring(0, 5),
+          mapLink: newPartner.mapLink
         });
       }
 
-      setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "" });
+      setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "", mapLink: "" });
       setEditingPartner(null);
       setIsPartnerOpen(false);
       loadData();
+      toast.success(editingPartner ? "পার্টনার সফলভাবে আপডেট করা হয়েছে।" : "পার্টনার সফলভাবে যোগ করা হয়েছে।");
     } catch {
-      alert(editingPartner ? "পার্টনার আপডেট করতে ব্যর্থ হয়েছে।" : "পার্টনার যোগ করতে ব্যর্থ হয়েছে।");
+      toast.error(editingPartner ? "পার্টনার আপডেট করতে ব্যর্থ হয়েছে।" : "পার্টনার যোগ করতে ব্যর্থ হয়েছে।");
     }
   };
 
@@ -180,12 +205,13 @@ export default function AdminDashboardPage() {
       try {
         const success = await dbStore.deletePartner(id);
         if (success) {
+          toast.success("পার্টনার সফলভাবে ডিলিট করা হয়েছে।");
           loadData();
         } else {
-          alert("পার্টনার ডিলিট করতে ব্যর্থ হয়েছে।");
+          toast.error("পার্টনার ডিলিট করতে ব্যর্থ হয়েছে।");
         }
       } catch {
-        alert("পার্টনার ডিলিট করতে ব্যর্থ হয়েছে।");
+        toast.error("পার্টনার ডিলিট করতে ব্যর্থ হয়েছে।");
       }
     }
   };
@@ -254,9 +280,10 @@ export default function AdminDashboardPage() {
     const newStatus = member.status === "active" ? "inactive" : "active";
     const success = await dbStore.updateMemberStatus(id, newStatus);
     if (success) {
+      toast.success("সদস্যের স্ট্যাটাস সফলভাবে আপডেট করা হয়েছে।");
       loadData();
     } else {
-      alert("সদস্যের স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে।");
+      toast.error("সদস্যের স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে।");
     }
   };
 
@@ -439,7 +466,7 @@ export default function AdminDashboardPage() {
                   </div>
                   <Button onClick={() => {
                     setEditingMember(null);
-                    setNewMember({ name: "", phone: "", email: "", tier: "founding" });
+                    setNewMember({ name: "", phone: "", email: "", tier: "founding", address: "", birthDate: "", profession: "", profilePictureUrl: "" });
                     setIsMemberOpen(true);
                   }} size="sm" className="bg-primary hover:bg-primary-dark text-white">
                     নতুন সদস্য
@@ -462,11 +489,27 @@ export default function AdminDashboardPage() {
                     </TableHeader>
                     <TableBody className="text-xs sm:text-sm">
                       {filteredMembers.map((m) => (
-                        <TableRow key={m.id}>
+                        <TableRow 
+                          key={m.id} 
+                          onClick={() => setViewingMember(m)} 
+                          className="cursor-pointer hover:bg-muted/50 transition-colors"
+                        >
                           <TableCell className="font-mono text-primary font-bold whitespace-nowrap">{m.id}</TableCell>
                           <TableCell className="font-bold text-secondary whitespace-nowrap">
-                            {m.name}
-                            {m.email && <span className="block text-[10px] text-muted-foreground font-normal font-mono">{m.email}</span>}
+                            <div className="flex items-center gap-2.5">
+                              <div className="h-8 w-8 rounded-full border border-border bg-muted/40 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
+                                {m.profilePictureUrl ? (
+                                  // eslint-disable-next-line @next/next/no-img-element
+                                  <img src={m.profilePictureUrl} alt={m.name} className="h-full w-full object-cover" />
+                                ) : (
+                                  <User className="h-4 w-4 text-muted-foreground" />
+                                )}
+                              </div>
+                              <div>
+                                <span>{m.name}</span>
+                                {m.email && <span className="block text-[10px] text-muted-foreground font-normal font-mono">{m.email}</span>}
+                              </div>
+                            </div>
                           </TableCell>
                           <TableCell className="font-mono whitespace-nowrap">{m.phone}</TableCell>
                           <TableCell className="capitalize text-xs font-semibold whitespace-nowrap">
@@ -484,7 +527,10 @@ export default function AdminDashboardPage() {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => handleToggleMemberStatus(m.id)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleToggleMemberStatus(m.id);
+                                }}
                                 className={`text-[10px] h-8 px-2.5 font-bold ${m.status === "active" ? "text-rose-600 hover:bg-rose-50" : "text-primary hover:bg-primary-light"}`}
                               >
                                 {m.status === "active" ? "অচল করুন" : "সচল করুন"}
@@ -492,13 +538,18 @@ export default function AdminDashboardPage() {
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                onClick={() => {
+                                onClick={(e) => {
+                                  e.stopPropagation();
                                   setEditingMember(m);
                                   setNewMember({
                                     name: m.name,
                                     phone: m.phone,
                                     email: m.email || "",
-                                    tier: m.tier
+                                    tier: m.tier,
+                                    address: m.address || "",
+                                    birthDate: m.birthDate || "",
+                                    profession: m.profession || "",
+                                    profilePictureUrl: m.profilePictureUrl || ""
                                   });
                                   setIsMemberOpen(true);
                                 }}
@@ -509,7 +560,10 @@ export default function AdminDashboardPage() {
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                onClick={() => handleDeleteMember(m.id, m.name)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteMember(m.id, m.name);
+                                }}
                                 className="h-8 w-8 text-destructive hover:text-rose-600 hover:bg-rose-50"
                               >
                                 <Trash2 className="h-4 w-4" />
@@ -547,7 +601,7 @@ export default function AdminDashboardPage() {
                   </div>
                   <Button onClick={() => {
                     setEditingPartner(null);
-                    setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "" });
+                    setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "", mapLink: "" });
                     setIsPartnerOpen(true);
                   }} size="sm" className="bg-primary hover:bg-primary-dark text-white">
                     নতুন পার্টনার হাসপাতাল
@@ -590,7 +644,8 @@ export default function AdminDashboardPage() {
                                     address: p.address,
                                     discount: p.discount,
                                     phone: p.phone,
-                                    logoText: p.logoText || ""
+                                    logoText: p.logoText || "",
+                                    mapLink: p.mapLink || ""
                                   });
                                   setIsPartnerOpen(true);
                                 }}
@@ -666,7 +721,7 @@ export default function AdminDashboardPage() {
             setIsMemberOpen(open);
             if (!open) {
               setEditingMember(null);
-              setNewMember({ name: "", phone: "", email: "", tier: "founding" });
+              setNewMember({ name: "", phone: "", email: "", tier: "founding", address: "", birthDate: "", profession: "", profilePictureUrl: "" });
             }
           }}>
             <DialogContent className="border-border bg-background">
@@ -676,6 +731,51 @@ export default function AdminDashboardPage() {
                 </DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSaveMember} className="space-y-4 pt-2">
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-secondary">প্রোফাইল ছবি</label>
+                  <div className="flex items-center gap-4">
+                    <div className="h-16 w-16 rounded-xl border border-border bg-muted/40 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
+                      {newMember.profilePictureUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={newMember.profilePictureUrl} alt="Preview" className="h-full w-full object-cover" />
+                      ) : (
+                        <User className="h-8 w-8 text-muted-foreground" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            if (file.size > 2 * 1024 * 1024) {
+                              toast.error("ছবির সাইজ ২ মেগাবাইটের বেশি হওয়া যাবে না।");
+                              e.target.value = "";
+                              return;
+                            }
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              setNewMember({ ...newMember, profilePictureUrl: reader.result as string });
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                        className="border-border bg-background text-xs cursor-pointer file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
+                      />
+                      {newMember.profilePictureUrl && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          onClick={() => setNewMember({ ...newMember, profilePictureUrl: "" })}
+                          className="text-[10px] text-rose-600 hover:text-rose-700 p-0 h-auto mt-1"
+                        >
+                          ছবি মুছে ফেলুন
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-secondary">নাম *</label>
                   <Input type="text" required placeholder="যেমন: মোঃ আব্দুর রহমান" value={newMember.name} onChange={e => setNewMember({ ...newMember, name: e.target.value })} className="border-border bg-background" />
@@ -695,6 +795,20 @@ export default function AdminDashboardPage() {
                     <option value="individual">Individual Plan (৳৫০০ / বাৎসরিক)</option>
                   </select>
                 </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-secondary">ঠিকানা</label>
+                  <Input type="text" placeholder="যেমন: মিজান রোড, ফেনী" value={newMember.address} onChange={e => setNewMember({ ...newMember, address: e.target.value })} className="border-border bg-background" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-secondary">জন্ম তারিখ</label>
+                    <Input type="date" value={newMember.birthDate} onChange={e => setNewMember({ ...newMember, birthDate: e.target.value })} className="border-border bg-background" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-secondary">পেশা</label>
+                    <Input type="text" placeholder="যেমন: চাকুরিজীবী, ব্যবসায়ী, শিক্ষার্থী" value={newMember.profession} onChange={e => setNewMember({ ...newMember, profession: e.target.value })} className="border-border bg-background" />
+                  </div>
+                </div>
                 <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
                   {editingMember ? "পরিবর্তন সংরক্ষণ করুন" : "সংরক্ষণ করুন"}
                 </Button>
@@ -709,7 +823,7 @@ export default function AdminDashboardPage() {
             setIsPartnerOpen(open);
             if (!open) {
               setEditingPartner(null);
-              setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "" });
+              setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "", mapLink: "" });
             }
           }}>
             <DialogContent className="border-border bg-background">
@@ -740,6 +854,10 @@ export default function AdminDashboardPage() {
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-secondary">ঠিকানা *</label>
                   <Input type="text" required placeholder="যেমন: মিজান রোড, ফেনী" value={newPartner.address} onChange={e => setNewPartner({ ...newPartner, address: e.target.value })} className="border-border bg-background" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-secondary">গুগল ম্যাপ লোকেশন লিংক (Google Map Link)</label>
+                  <Input type="url" placeholder="যেমন: https://maps.app.goo.gl/..." value={newPartner.mapLink} onChange={e => setNewPartner({ ...newPartner, mapLink: e.target.value })} className="border-border bg-background" />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -801,6 +919,204 @@ export default function AdminDashboardPage() {
 
                 <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">ডিসকাউন্ট কার্যকর ও লগ করুন</Button>
               </form>
+            </DialogContent>
+          </Dialog>
+        )}
+
+        {/* Member Details Modal */}
+        {viewingMember && (
+          <Dialog open={!!viewingMember} onOpenChange={(open) => {
+            if (!open) setViewingMember(null);
+          }}>
+            <DialogContent className="max-w-md md:max-w-lg border-border bg-background max-h-[90vh] overflow-y-auto">
+              <DialogHeader className="border-b border-border pb-4">
+                <div className="flex items-center gap-4">
+                  <div className="h-14 w-14 rounded-xl border border-border bg-muted/40 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
+                    {viewingMember.profilePictureUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={viewingMember.profilePictureUrl} alt={viewingMember.name} className="h-full w-full object-cover" />
+                    ) : (
+                      <User className="h-7 w-7 text-muted-foreground" />
+                    )}
+                  </div>
+                  <div>
+                    <DialogTitle className="font-heading font-bold text-lg text-secondary">
+                      সদস্যের প্রোফাইল বিবরণ
+                    </DialogTitle>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      মেম্বার আইডি: <span className="font-mono font-bold text-primary">{viewingMember.id}</span>
+                    </p>
+                  </div>
+                </div>
+              </DialogHeader>
+
+              <div className="space-y-6 pt-4">
+                {/* Status Badges */}
+                <div className="flex items-center justify-between bg-muted/40 p-3 rounded-xl border border-border">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">প্ল্যান টাইপ</span>
+                    <span className="text-xs font-bold text-secondary capitalize">
+                      {viewingMember.tier === "founding" ? "Founding (ফ্রী ১ বছর)" : viewingMember.tier === "individual" ? "Individual" : "Family"}
+                    </span>
+                  </div>
+                  <div className="flex flex-col items-end gap-0.5">
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">মেম্বারশিপ অবস্থা</span>
+                    <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                      viewingMember.status === "active" 
+                        ? "bg-green-50 text-green-600 border border-green-200" 
+                        : "bg-rose-50 text-rose-600 border border-rose-200"
+                    }`}>
+                      <span className={`h-1.5 w-1.5 rounded-full ${viewingMember.status === "active" ? "bg-green-500" : "bg-rose-500"}`} />
+                      {viewingMember.status === "active" ? "সচল" : "অচল"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Profile Information Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <User className="h-3.5 w-3.5" />
+                      <span>নাম</span>
+                    </div>
+                    <p className="text-sm font-bold text-secondary">{viewingMember.name}</p>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <Phone className="h-3.5 w-3.5" />
+                      <span>মোবাইল নম্বর</span>
+                    </div>
+                    <p className="text-sm font-semibold text-secondary font-mono">{viewingMember.phone}</p>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <Mail className="h-3.5 w-3.5" />
+                      <span>ইমেইল ঠিকানা</span>
+                    </div>
+                    <p className="text-sm text-secondary font-mono break-all">{viewingMember.email || "প্রদান করা হয়নি"}</p>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <Heart className="h-3.5 w-3.5" />
+                      <span>মোট চিকিৎসা সাশ্রয়</span>
+                    </div>
+                    <p className="text-sm font-extrabold text-primary font-mono">৳{(viewingMember.totalSaved || 0).toLocaleString("bn-BD")}</p>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <Calendar className="h-3.5 w-3.5" />
+                      <span>যোগদানের তারিখ</span>
+                    </div>
+                    <p className="text-sm font-semibold text-secondary font-mono">{viewingMember.joinedDate || "N/A"}</p>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <Calendar className="h-3.5 w-3.5" />
+                      <span>মেয়াদ উত্তীর্ণের তারিখ</span>
+                    </div>
+                    <p className="text-sm font-semibold text-secondary font-mono">{viewingMember.expiryDate || "N/A"}</p>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <MapPin className="h-3.5 w-3.5" />
+                      <span>ঠিকানা</span>
+                    </div>
+                    <p className="text-sm text-secondary">{viewingMember.address || "প্রদান করা হয়নি"}</p>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <Calendar className="h-3.5 w-3.5" />
+                      <span>জন্ম তারিখ</span>
+                    </div>
+                    <p className="text-sm font-semibold text-secondary font-mono">{viewingMember.birthDate || "প্রদান করা হয়নি"}</p>
+                  </div>
+
+                  <div className="space-y-1 col-span-1 sm:col-span-2">
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <Briefcase className="h-3.5 w-3.5" />
+                      <span>পেশা</span>
+                    </div>
+                    <p className="text-sm text-secondary">{viewingMember.profession || "প্রদান করা হয়নি"}</p>
+                  </div>
+                </div>
+
+                {/* Member Transactions */}
+                <div className="border-t border-border pt-4">
+                  <h4 className="text-xs font-bold text-secondary uppercase font-mono tracking-wider mb-2 flex items-center gap-1">
+                    <HistoryIcon className="h-4 w-4 text-primary" />
+                    ডিসকাউন্ট ব্যবহারের বিবরণ
+                  </h4>
+                  {transactions.filter(t => t.memberId === viewingMember.id).length > 0 ? (
+                    <div className="overflow-x-auto border border-border rounded-xl">
+                      <Table>
+                        <TableHeader className="bg-muted/40">
+                          <TableRow>
+                            <TableHead className="text-[10px] font-semibold text-secondary whitespace-nowrap py-2">চিকিৎসাকেন্দ্র</TableHead>
+                            <TableHead className="text-[10px] font-semibold text-secondary whitespace-nowrap py-2">তারিখ</TableHead>
+                            <TableHead className="text-[10px] font-semibold text-secondary text-right whitespace-nowrap py-2">বিল</TableHead>
+                            <TableHead className="text-[10px] font-semibold text-primary text-right whitespace-nowrap py-2">সাশ্রয়</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody className="text-[11px]">
+                          {transactions
+                            .filter(t => t.memberId === viewingMember.id)
+                            .map((tx) => (
+                              <TableRow key={tx.id}>
+                                <TableCell className="font-semibold text-secondary py-2">{tx.partnerName}</TableCell>
+                                <TableCell className="text-muted-foreground py-2 font-mono">{tx.date.split(" ")[0]}</TableCell>
+                                <TableCell className="text-right font-mono py-2">৳{tx.amount}</TableCell>
+                                <TableCell className="text-right font-mono text-primary font-bold py-2">৳{tx.saved}</TableCell>
+                              </TableRow>
+                            ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  ) : (
+                    <p className="text-xs text-muted-foreground text-center py-4 bg-muted/20 border border-dashed border-border rounded-xl">
+                      কোনো পূর্ববর্তী ট্রানজেকশন রেকর্ড পাওয়া যায়নি।
+                    </p>
+                  )}
+                </div>
+
+                {/* Modal Footer Buttons */}
+                <div className="flex gap-2 border-t border-border pt-4">
+                  <Button 
+                    onClick={() => {
+                      setEditingMember(viewingMember);
+                      setNewMember({
+                        name: viewingMember.name,
+                        phone: viewingMember.phone,
+                        email: viewingMember.email || "",
+                        tier: viewingMember.tier,
+                        address: viewingMember.address || "",
+                        birthDate: viewingMember.birthDate || "",
+                        profession: viewingMember.profession || "",
+                        profilePictureUrl: viewingMember.profilePictureUrl || ""
+                      });
+                      setViewingMember(null);
+                      setIsMemberOpen(true);
+                    }}
+                    className="flex-1 bg-primary hover:bg-primary-dark text-white font-semibold gap-1.5"
+                  >
+                    <Edit3 className="h-4 w-4" />
+                    সম্পাদনা করুন
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setViewingMember(null)}
+                    className="flex-1 border-border text-secondary font-semibold"
+                  >
+                    বন্ধ করুন
+                  </Button>
+                </div>
+              </div>
             </DialogContent>
           </Dialog>
         )}

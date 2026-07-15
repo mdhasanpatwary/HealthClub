@@ -24,6 +24,7 @@ export async function getPartnersAction(): Promise<Partner[]> {
       discount: p.discount,
       phone: p.phone,
       logoText: p.logoText,
+      mapLink: p.mapLink || undefined,
     }));
   } catch (error) {
     console.error("Error in getPartnersAction:", error);
@@ -43,6 +44,7 @@ export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Pa
         discount: partner.discount,
         phone: partner.phone,
         logoText: partner.logoText,
+        mapLink: partner.mapLink || null,
       },
     });
 
@@ -54,6 +56,7 @@ export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Pa
       discount: p.discount,
       phone: p.phone,
       logoText: p.logoText,
+      mapLink: p.mapLink || undefined,
     };
   } catch (error) {
     console.error("Error in addPartnerAction:", error);
@@ -72,6 +75,7 @@ export async function updatePartnerAction(id: string, partner: Omit<Partner, "id
         discount: partner.discount,
         phone: partner.phone,
         logoText: partner.logoText,
+        mapLink: partner.mapLink || null,
       },
     });
     return true;
@@ -112,6 +116,10 @@ export async function getMembersAction(): Promise<Member[]> {
       expiryDate: formatDate(m.expiryDate),
       qrCodeUrl: m.qrCodeUrl || undefined,
       totalSaved: m.totalSaved,
+      address: m.address || "",
+      birthDate: m.birthDate ? formatDate(m.birthDate) : "",
+      profession: m.profession || "",
+      profilePictureUrl: m.profilePictureUrl || "",
     }));
   } catch (error) {
     console.error("Error in getMembersAction:", error);
@@ -143,6 +151,10 @@ export async function addMemberAction(
         expiryDate: expiry,
         qrCodeUrl: member.qrCodeUrl || null,
         totalSaved: 0,
+        address: member.address || null,
+        birthDate: member.birthDate ? new Date(member.birthDate) : null,
+        profession: member.profession || null,
+        profilePictureUrl: member.profilePictureUrl || null,
       },
     });
 
@@ -157,6 +169,10 @@ export async function addMemberAction(
       expiryDate: formatDate(m.expiryDate),
       qrCodeUrl: m.qrCodeUrl || undefined,
       totalSaved: m.totalSaved,
+      address: m.address || "",
+      birthDate: m.birthDate ? formatDate(m.birthDate) : "",
+      profession: m.profession || "",
+      profilePictureUrl: m.profilePictureUrl || "",
     };
   } catch (error) {
     console.error("Error in addMemberAction:", error);
@@ -189,6 +205,10 @@ export async function getMemberByIdAction(id: string): Promise<Member | undefine
       expiryDate: formatDate(data.expiryDate),
       qrCodeUrl: data.qrCodeUrl || undefined,
       totalSaved: data.totalSaved,
+      address: data.address || "",
+      birthDate: data.birthDate ? formatDate(data.birthDate) : "",
+      profession: data.profession || "",
+      profilePictureUrl: data.profilePictureUrl || "",
     };
   } catch (error) {
     console.error("Error in getMemberByIdAction:", error);
@@ -213,12 +233,24 @@ export async function updateMemberProfileAction(
   id: string,
   name: string,
   phone: string,
-  email: string
+  email: string,
+  address?: string,
+  birthDate?: string,
+  profession?: string,
+  profilePictureUrl?: string
 ): Promise<boolean> {
   try {
     await prisma.member.update({
       where: { id },
-      data: { name, phone, email: email || null },
+      data: {
+        name,
+        phone,
+        email: email || null,
+        address: address || null,
+        birthDate: birthDate ? new Date(birthDate) : null,
+        profession: profession || null,
+        profilePictureUrl: profilePictureUrl || null,
+      },
     });
     return true;
   } catch (error) {
@@ -229,7 +261,16 @@ export async function updateMemberProfileAction(
 
 export async function updateMemberAction(
   id: string,
-  member: { name: string; phone: string; email: string; tier: Member["tier"] }
+  member: {
+    name: string;
+    phone: string;
+    email: string;
+    tier: Member["tier"];
+    address?: string;
+    birthDate?: string;
+    profession?: string;
+    profilePictureUrl?: string;
+  }
 ): Promise<boolean> {
   try {
     await prisma.member.update({
@@ -239,6 +280,10 @@ export async function updateMemberAction(
         phone: member.phone,
         email: member.email || null,
         tier: member.tier,
+        address: member.address || null,
+        birthDate: member.birthDate ? new Date(member.birthDate) : null,
+        profession: member.profession || null,
+        profilePictureUrl: member.profilePictureUrl || null,
       },
     });
     return true;

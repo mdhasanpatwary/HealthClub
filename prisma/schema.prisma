@@ -18,6 +18,10 @@ model Member {
   expiryDate   DateTime      @map("expiry_date") @db.Date
   qrCodeUrl    String?       @map("qr_code_url")
   totalSaved   Int           @default(0) @map("total_saved")
+  address      String?
+  birthDate    DateTime?     @map("birth_date") @db.Date
+  profession   String?
+  profilePictureUrl String?  @map("profile_picture_url")
   createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz
   transactions Transaction[]
 
@@ -32,6 +36,7 @@ model Partner {
   discount     String
   phone        String
   logoText     String        @map("logo_text")
+  mapLink      String?       @map("map_link")
   createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz
   transactions Transaction[]
 

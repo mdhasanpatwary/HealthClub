@@ -83,6 +83,10 @@ export const MemberScalarFieldEnum = {
   expiryDate: 'expiryDate',
   qrCodeUrl: 'qrCodeUrl',
   totalSaved: 'totalSaved',
+  address: 'address',
+  birthDate: 'birthDate',
+  profession: 'profession',
+  profilePictureUrl: 'profilePictureUrl',
   createdAt: 'createdAt'
 } as const
 
@@ -97,6 +101,7 @@ export const PartnerScalarFieldEnum = {
   discount: 'discount',
   phone: 'phone',
   logoText: 'logoText',
+  mapLink: 'mapLink',
   createdAt: 'createdAt'
 } as const
 
