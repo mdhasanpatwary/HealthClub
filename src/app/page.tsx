@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, ShieldCheck, Heart, UserPlus, FileText, Check, Star } from "lucide-react";
+import { ArrowRight, CheckCircle2, Heart, Check, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PartnerDirectory from "@/components/ui/PartnerDirectory";
 import SavingsCalculator from "@/components/ui/SavingsCalculator";

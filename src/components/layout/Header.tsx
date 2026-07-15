@@ -16,6 +16,7 @@ export default function Header() {
 
   // Refresh user state on mount and path changes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setUser(dbStore.getCurrentUser());
   }, [pathname]);
 

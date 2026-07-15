@@ -7,7 +7,6 @@ interface MemberCardProps {
 
 export default function MemberCard({ member }: MemberCardProps) {
   // Determine card styles based on tier
-  const isFounding = member.tier === "founding";
   const isFamily = member.tier === "family";
 
   let bgStyles = "bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 text-white border border-emerald-500/30";

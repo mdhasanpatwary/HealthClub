@@ -1,4 +1,4 @@
-import { Heart, ShieldCheck, HelpCircle, Users, Award } from "lucide-react";
+import { Heart, ShieldCheck, Users, Award } from "lucide-react";
 
 export const metadata = {
   title: "আমাদের সম্পর্কে - হেলথ ক্লাব",

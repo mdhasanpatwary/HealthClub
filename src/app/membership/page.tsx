@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Check, Star, Heart, ShieldCheck, ArrowRight } from "lucide-react";
+import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const metadata = {
