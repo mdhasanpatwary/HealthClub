@@ -69,10 +69,10 @@ export default function Home() {
             </div>
 
             {/* Right Visual Column (5 cols on large screens) */}
-            <div className="lg:col-span-5 relative flex justify-center">
+            <div className="lg:col-span-5 relative flex justify-center mt-4 lg:mt-0">
               
               {/* Premium digital card preview mock */}
-              <div className="relative w-full max-w-sm aspect-[1.586/1] bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 rounded-2xl p-5 shadow-2xl text-white border border-emerald-500/20 animate-pulse-slow">
+              <div className="relative w-full max-w-xs sm:max-w-sm aspect-[1.586/1] bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 rounded-2xl p-5 shadow-2xl text-white border border-emerald-500/20 animate-pulse-slow">
                 <div className="flex justify-between items-start">
                   <div>
                     <span className="flex items-center gap-1 text-primary">
@@ -112,13 +112,13 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Floating Badges */}
-              <div className="absolute top-[-15px] left-[15px] bg-white dark:bg-slate-800 text-secondary dark:text-white p-2.5 rounded-xl border border-border shadow-lg flex items-center gap-2 transform -rotate-6 animate-bounce-slow">
+              {/* Floating Badges — shown from sm breakpoint to prevent overflow on tiny phones */}
+              <div className="hidden sm:flex absolute top-[-15px] left-[15px] bg-white dark:bg-slate-800 text-secondary dark:text-white p-2.5 rounded-xl border border-border shadow-lg items-center gap-2 transform -rotate-6 animate-bounce-slow">
                 <CheckCircle2 className="h-5 w-5 text-primary" />
                 <span className="text-xs font-bold">৳০ ১ বছর মেম্বারশিপ</span>
               </div>
 
-              <div className="absolute bottom-[-15px] right-[10px] bg-white dark:bg-slate-800 text-secondary dark:text-white p-2.5 rounded-xl border border-border shadow-lg flex items-center gap-2 transform rotate-3 animate-bounce-slow delay-1000">
+              <div className="hidden sm:flex absolute bottom-[-15px] right-[10px] bg-white dark:bg-slate-800 text-secondary dark:text-white p-2.5 rounded-xl border border-border shadow-lg items-center gap-2 transform rotate-3 animate-bounce-slow delay-1000">
                 <div className="h-6 w-6 rounded-full bg-emerald-100 dark:bg-emerald-950 flex items-center justify-center">
                   <span className="text-primary text-[10px] font-bold">১০%</span>
                 </div>
@@ -134,7 +134,7 @@ export default function Home() {
       {/* 2. STATS SECTION */}
       <section className="bg-muted py-12 border-y border-border">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
             
             <div className="bg-background p-6 rounded-2xl border border-border text-center shadow-sm hover:shadow-md transition-all">
               <p className="text-3xl font-extrabold text-primary font-mono">১০০+</p>
@@ -532,9 +532,9 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Comparison Table */}
-          <div className="max-w-4xl mx-auto overflow-hidden rounded-2xl border border-border shadow-md">
-            <table className="w-full text-left border-collapse bg-background">
+          {/* Comparison Table — scrollable on mobile */}
+          <div className="max-w-4xl mx-auto overflow-x-auto rounded-2xl border border-border shadow-md -webkit-overflow-scrolling-touch">
+            <table className="w-full min-w-[580px] text-left border-collapse bg-background">
               <thead>
                 <tr className="bg-secondary text-white font-heading text-sm sm:text-base border-b border-border">
                   <th className="p-4 md:p-5 font-semibold">সুবিধাসমূহ</th>

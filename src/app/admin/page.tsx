@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { 
-  Users, Building, DollarSign, Search, PlusCircle, 
-  Heart, Trash2, Edit3 
+import {
+  Users, Building, DollarSign, Search, PlusCircle,
+  Heart, Trash2, Edit3
 } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Member, Partner, Transaction } from "@/services/db";
@@ -17,7 +17,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 
 export default function AdminDashboardPage() {
   const router = useRouter();
-  
+
   // States
   const [stats, setStats] = useState({
     totalMembers: 0,
@@ -31,7 +31,7 @@ export default function AdminDashboardPage() {
   const [members, setMembers] = useState<Member[]>([]);
   const [partners, setPartners] = useState<Partner[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  
+
   // Search states
   const [memberSearch, setMemberSearch] = useState("");
   const [partnerSearch, setPartnerSearch] = useState("");
@@ -236,7 +236,7 @@ export default function AdminDashboardPage() {
       setTxSuccess(`৳${saved} ডিসকাউন্ট সফলভাবে লগ করা হয়েছে।`);
       setNewTx({ memberId: "", partnerId: "", amount: "" });
       loadData();
-      
+
       setTimeout(() => {
         setTxSuccess("");
         setIsTxOpen(false);
@@ -261,21 +261,21 @@ export default function AdminDashboardPage() {
   };
 
   // Filter lists
-  const filteredMembers = members.filter(m => 
+  const filteredMembers = members.filter(m =>
     m.name.toLowerCase().includes(memberSearch.toLowerCase()) ||
     m.id.toLowerCase().includes(memberSearch.toLowerCase()) ||
     m.phone.includes(memberSearch)
   );
 
-  const filteredPartners = partners.filter(p => 
+  const filteredPartners = partners.filter(p =>
     p.name.toLowerCase().includes(partnerSearch.toLowerCase()) ||
     p.address.toLowerCase().includes(partnerSearch.toLowerCase())
   );
 
   return (
-    <div className="bg-muted/30 min-h-screen py-10">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-8">
-        
+    <div className="bg-muted/30 min-h-screen py-6 sm:py-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
+
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border pb-6">
           <div>
@@ -286,11 +286,11 @@ export default function AdminDashboardPage() {
               হেলথ ক্লাব মেম্বারশিপের সকল পরিসংখ্যান ও সেটিংস পরিচালনা করুন।
             </p>
           </div>
-          
-          <div className="flex gap-2">
-            <Button onClick={() => setIsTxOpen(true)} className="bg-primary hover:bg-primary-dark text-white font-semibold gap-2">
+
+          <div className="flex flex-wrap gap-2 mt-1 sm:mt-0">
+            <Button onClick={() => setIsTxOpen(true)} className="bg-primary hover:bg-primary-dark text-white font-semibold gap-2" size="sm">
               <PlusCircle className="h-4 w-4" />
-              ডিসকাউন্ট লগ করুন
+              <span className="hidden xs:inline">ডিসকাউন্ট</span> লগ করুন
             </Button>
           </div>
         </div>
@@ -360,7 +360,7 @@ export default function AdminDashboardPage() {
             <div className="w-full h-48 bg-muted/30 rounded-xl relative border border-border/50 flex items-end p-4">
               {/* Simulated bars */}
               <div className="w-full flex justify-around items-end h-full pt-4 relative">
-                
+
                 {/* Y-axis labels */}
                 <div className="absolute left-0 bottom-4 top-4 flex flex-col justify-between text-[10px] text-muted-foreground border-r border-border pr-2 pointer-events-none">
                   <span>১২০</span>
@@ -413,8 +413,8 @@ export default function AdminDashboardPage() {
         <Tabs defaultValue="members" className="w-full">
           <TabsList className="grid w-full grid-cols-3 bg-muted p-1 rounded-xl">
             <TabsTrigger value="members" className="rounded-lg text-xs font-semibold py-2">সদস্য তালিকা</TabsTrigger>
-            <TabsTrigger value="partners" className="rounded-lg text-xs font-semibold py-2">পার্টনার হাসপাতালসমূহ</TabsTrigger>
-            <TabsTrigger value="txs" className="rounded-lg text-xs font-semibold py-2">সাম্প্রতিক লেনদেন লগ</TabsTrigger>
+            <TabsTrigger value="partners" className="rounded-lg text-xs font-semibold py-2">পার্টনার হাসপাতাল</TabsTrigger>
+            <TabsTrigger value="txs" className="rounded-lg text-xs font-semibold py-2">লেনদেন লগ</TabsTrigger>
           </TabsList>
 
           {/* 1. Members Management Tab */}
@@ -425,7 +425,7 @@ export default function AdminDashboardPage() {
                   <CardTitle className="font-heading text-lg font-bold text-secondary">নিবন্ধিত স্বাস্থ্য কার্ড সদস্যসমূহ</CardTitle>
                   <CardDescription>গ্রাহক তালিকা পরিচালনা, সচল/অচল অবস্থা নির্ধারণ করুন।</CardDescription>
                 </div>
-                
+
                 <div className="flex gap-2 w-full sm:w-auto">
                   <div className="relative flex-1 sm:w-60">
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -442,84 +442,85 @@ export default function AdminDashboardPage() {
                     setNewMember({ name: "", phone: "", email: "", tier: "founding" });
                     setIsMemberOpen(true);
                   }} size="sm" className="bg-primary hover:bg-primary-dark text-white">
-                    নতুন সদস্য যুক্ত করুন
+                    নতুন সদস্য
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent className="p-0 sm:p-6">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="font-semibold text-secondary">মেম্বার আইডি</TableHead>
-                      <TableHead className="font-semibold text-secondary">নাম</TableHead>
-                      <TableHead className="font-semibold text-secondary">ফোন নম্বর</TableHead>
-                      <TableHead className="font-semibold text-secondary">প্ল্যান</TableHead>
-                      <TableHead className="font-semibold text-secondary">মোট সাশ্রয়</TableHead>
-                      <TableHead className="font-semibold text-secondary">অবস্থা</TableHead>
-                      <TableHead className="font-semibold text-secondary text-right">অ্যাকশন</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody className="text-xs sm:text-sm">
-                    {filteredMembers.map((m) => (
-                      <TableRow key={m.id}>
-                        <TableCell className="font-mono text-primary font-bold">{m.id}</TableCell>
-                        <TableCell className="font-bold text-secondary">
-                          {m.name}
-                          {m.email && <span className="block text-[10px] text-muted-foreground font-normal font-mono">{m.email}</span>}
-                        </TableCell>
-                        <TableCell className="font-mono">{m.phone}</TableCell>
-                        <TableCell className="capitalize text-xs font-semibold">
-                          {m.tier === "founding" ? "Founding (ফ্রী)" : m.tier === "individual" ? "Individual" : "Family"}
-                        </TableCell>
-                        <TableCell className="font-mono font-semibold">৳{(m.totalSaved || 0).toLocaleString("bn-BD")}</TableCell>
-                        <TableCell>
-                          <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                            m.status === "active" ? "bg-green-50 text-green-600 border border-green-200" : "bg-rose-50 text-rose-600 border border-rose-200"
-                          }`}>
-                            {m.status === "active" ? "সচল" : "অচল"}
-                          </span>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end items-center gap-1">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              onClick={() => handleToggleMemberStatus(m.id)}
-                              className={`text-[10px] h-8 px-2.5 font-bold ${m.status === "active" ? "text-rose-600 hover:bg-rose-50" : "text-primary hover:bg-primary-light"}`}
-                            >
-                              {m.status === "active" ? "অচল করুন" : "সচল করুন"}
-                            </Button>
-                            <Button 
-                              variant="ghost" 
-                              size="icon" 
-                              onClick={() => {
-                                setEditingMember(m);
-                                setNewMember({
-                                  name: m.name,
-                                  phone: m.phone,
-                                  email: m.email || "",
-                                  tier: m.tier
-                                });
-                                setIsMemberOpen(true);
-                              }}
-                              className="h-8 w-8 text-primary hover:text-primary-dark hover:bg-primary-light"
-                            >
-                              <Edit3 className="h-4 w-4" />
-                            </Button>
-                            <Button 
-                              variant="ghost" 
-                              size="icon" 
-                              onClick={() => handleDeleteMember(m.id, m.name)}
-                              className="h-8 w-8 text-destructive hover:text-rose-600 hover:bg-rose-50"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">মেম্বার আইডি</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">নাম</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">ফোন নম্বর</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">প্ল্যান</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">মোট সাশ্রয়</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">অবস্থা</TableHead>
+                        <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">অ্যাকশন</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody className="text-xs sm:text-sm">
+                      {filteredMembers.map((m) => (
+                        <TableRow key={m.id}>
+                          <TableCell className="font-mono text-primary font-bold whitespace-nowrap">{m.id}</TableCell>
+                          <TableCell className="font-bold text-secondary whitespace-nowrap">
+                            {m.name}
+                            {m.email && <span className="block text-[10px] text-muted-foreground font-normal font-mono">{m.email}</span>}
+                          </TableCell>
+                          <TableCell className="font-mono whitespace-nowrap">{m.phone}</TableCell>
+                          <TableCell className="capitalize text-xs font-semibold whitespace-nowrap">
+                            {m.tier === "founding" ? "Founding (ফ্রী)" : m.tier === "individual" ? "Individual" : "Family"}
+                          </TableCell>
+                          <TableCell className="font-mono font-semibold whitespace-nowrap">৳{(m.totalSaved || 0).toLocaleString("bn-BD")}</TableCell>
+                          <TableCell>
+                            <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${m.status === "active" ? "bg-green-50 text-green-600 border border-green-200" : "bg-rose-50 text-rose-600 border border-rose-200"
+                              }`}>
+                              {m.status === "active" ? "সচল" : "অচল"}
+                            </span>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex justify-end items-center gap-1">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleToggleMemberStatus(m.id)}
+                                className={`text-[10px] h-8 px-2.5 font-bold ${m.status === "active" ? "text-rose-600 hover:bg-rose-50" : "text-primary hover:bg-primary-light"}`}
+                              >
+                                {m.status === "active" ? "অচল করুন" : "সচল করুন"}
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => {
+                                  setEditingMember(m);
+                                  setNewMember({
+                                    name: m.name,
+                                    phone: m.phone,
+                                    email: m.email || "",
+                                    tier: m.tier
+                                  });
+                                  setIsMemberOpen(true);
+                                }}
+                                className="h-8 w-8 text-primary hover:text-primary-dark hover:bg-primary-light"
+                              >
+                                <Edit3 className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleDeleteMember(m.id, m.name)}
+                                className="h-8 w-8 text-destructive hover:text-rose-600 hover:bg-rose-50"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
@@ -532,7 +533,7 @@ export default function AdminDashboardPage() {
                   <CardTitle className="font-heading text-lg font-bold text-secondary">অংশীদার স্বাস্থ্যসেবা ডিরেক্টরি</CardTitle>
                   <CardDescription>চুক্তিভুক্ত হাসপাতাল, ল্যাব ও ফার্মেসী তালিকা।</CardDescription>
                 </div>
-                
+
                 <div className="flex gap-2 w-full sm:w-auto">
                   <div className="relative flex-1 sm:w-60">
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -553,63 +554,65 @@ export default function AdminDashboardPage() {
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent className="p-0 sm:p-6">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="font-semibold text-secondary">নাম</TableHead>
-                      <TableHead className="font-semibold text-secondary">ক্যাটাগরি</TableHead>
-                      <TableHead className="font-semibold text-secondary">ঠিকানা</TableHead>
-                      <TableHead className="font-semibold text-primary">ডিসকাউন্ট হার</TableHead>
-                      <TableHead className="font-semibold text-secondary">হটলাইন নম্বর</TableHead>
-                      <TableHead className="font-semibold text-secondary text-right">অ্যাকশন</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody className="text-xs sm:text-sm">
-                    {filteredPartners.map((p) => (
-                      <TableRow key={p.id}>
-                        <TableCell className="font-bold text-secondary">{p.name}</TableCell>
-                        <TableCell className="capitalize text-xs font-semibold">
-                          {p.category === "hospital" ? "হাসপাতাল" : p.category === "diagnostic" ? "ডায়াগনস্টিক" : "ফার্মেসী"}
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">{p.address}</TableCell>
-                        <TableCell className="font-bold text-primary font-heading">{p.discount}</TableCell>
-                        <TableCell className="font-mono text-xs">{p.phone}</TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-1">
-                            <Button 
-                              variant="ghost" 
-                              size="icon" 
-                              onClick={() => {
-                                setEditingPartner(p);
-                                setNewPartner({
-                                  name: p.name,
-                                  category: p.category,
-                                  address: p.address,
-                                  discount: p.discount,
-                                  phone: p.phone,
-                                  logoText: p.logoText || ""
-                                });
-                                setIsPartnerOpen(true);
-                              }}
-                              className="h-8 w-8 text-primary hover:text-primary-dark hover:bg-primary-light"
-                            >
-                              <Edit3 className="h-4 w-4" />
-                            </Button>
-                            <Button 
-                              variant="ghost" 
-                              size="icon" 
-                              onClick={() => handleDeletePartner(p.id, p.name)}
-                              className="h-8 w-8 text-destructive hover:text-rose-600 hover:bg-rose-50"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">নাম</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">ক্যাটাগরি</TableHead>
+                        <TableHead className="font-semibold text-secondary">ঠিকানা</TableHead>
+                        <TableHead className="font-semibold text-primary whitespace-nowrap">ডিসকাউন্ট হার</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">হটলাইন নম্বর</TableHead>
+                        <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">অ্যাকশন</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody className="text-xs sm:text-sm">
+                      {filteredPartners.map((p) => (
+                        <TableRow key={p.id}>
+                          <TableCell className="font-bold text-secondary whitespace-nowrap">{p.name}</TableCell>
+                          <TableCell className="capitalize text-xs font-semibold whitespace-nowrap">
+                            {p.category === "hospital" ? "হাসপাতাল" : p.category === "diagnostic" ? "ডায়াগনস্টিক" : "ফার্মেসী"}
+                          </TableCell>
+                          <TableCell className="text-muted-foreground">{p.address}</TableCell>
+                          <TableCell className="font-bold text-primary font-heading whitespace-nowrap">{p.discount}</TableCell>
+                          <TableCell className="font-mono text-xs whitespace-nowrap">{p.phone}</TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex justify-end gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => {
+                                  setEditingPartner(p);
+                                  setNewPartner({
+                                    name: p.name,
+                                    category: p.category,
+                                    address: p.address,
+                                    discount: p.discount,
+                                    phone: p.phone,
+                                    logoText: p.logoText || ""
+                                  });
+                                  setIsPartnerOpen(true);
+                                }}
+                                className="h-8 w-8 text-primary hover:text-primary-dark hover:bg-primary-light"
+                              >
+                                <Edit3 className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleDeletePartner(p.id, p.name)}
+                                className="h-8 w-8 text-destructive hover:text-rose-600 hover:bg-rose-50"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
@@ -621,32 +624,34 @@ export default function AdminDashboardPage() {
                 <CardTitle className="font-heading text-lg font-bold text-secondary">সাম্প্রতিক ডিসকাউন্ট ট্রানজেকশন</CardTitle>
                 <CardDescription>হাসপাতাল ভ্যালিডেশন কোড ও ডিসকাউন্ট সাশ্রয় বিবরণী লগ।</CardDescription>
               </CardHeader>
-              <CardContent className="p-0 sm:p-6">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="font-semibold text-secondary">সদস্যের নাম</TableHead>
-                      <TableHead className="font-semibold text-secondary">চিকিৎসাকেন্দ্র</TableHead>
-                      <TableHead className="font-semibold text-secondary">তারিখ</TableHead>
-                      <TableHead className="font-semibold text-secondary text-right">মোট বিল</TableHead>
-                      <TableHead className="font-semibold text-primary text-right">সাশ্রয়</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody className="text-xs sm:text-sm">
-                    {transactions.map((t) => (
-                      <TableRow key={t.id}>
-                        <TableCell className="font-semibold text-secondary">
-                          {t.memberName}
-                          <span className="block text-[10px] text-muted-foreground font-mono font-normal">{t.memberId}</span>
-                        </TableCell>
-                        <TableCell className="text-secondary">{t.partnerName}</TableCell>
-                        <TableCell className="text-muted-foreground">{t.date}</TableCell>
-                        <TableCell className="text-right font-mono">৳{t.amount.toLocaleString("bn-BD")}</TableCell>
-                        <TableCell className="text-right font-mono text-primary font-bold">৳{t.saved.toLocaleString("bn-BD")}</TableCell>
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">সদস্যের নাম</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">চিকিৎসাকেন্দ্র</TableHead>
+                        <TableHead className="font-semibold text-secondary whitespace-nowrap">তারিখ</TableHead>
+                        <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">মোট বিল</TableHead>
+                        <TableHead className="font-semibold text-primary text-right whitespace-nowrap">সাশ্রয়</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody className="text-xs sm:text-sm">
+                      {transactions.map((t) => (
+                        <TableRow key={t.id}>
+                          <TableCell className="font-semibold text-secondary whitespace-nowrap">
+                            {t.memberName}
+                            <span className="block text-[10px] text-muted-foreground font-mono font-normal">{t.memberId}</span>
+                          </TableCell>
+                          <TableCell className="text-secondary whitespace-nowrap">{t.partnerName}</TableCell>
+                          <TableCell className="text-muted-foreground whitespace-nowrap">{t.date}</TableCell>
+                          <TableCell className="text-right font-mono whitespace-nowrap">৳{t.amount.toLocaleString("bn-BD")}</TableCell>
+                          <TableCell className="text-right font-mono text-primary font-bold whitespace-nowrap">৳{t.saved.toLocaleString("bn-BD")}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
@@ -673,19 +678,19 @@ export default function AdminDashboardPage() {
               <form onSubmit={handleSaveMember} className="space-y-4 pt-2">
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-secondary">নাম *</label>
-                  <Input type="text" required placeholder="যেমন: মোঃ আব্দুর রহমান" value={newMember.name} onChange={e => setNewMember({...newMember, name: e.target.value})} className="border-border bg-background" />
+                  <Input type="text" required placeholder="যেমন: মোঃ আব্দুর রহমান" value={newMember.name} onChange={e => setNewMember({ ...newMember, name: e.target.value })} className="border-border bg-background" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-secondary">মোবাইল নম্বর *</label>
-                  <Input type="tel" required placeholder="যেমন: 017XXXXXXXX" value={newMember.phone} onChange={e => setNewMember({...newMember, phone: e.target.value})} className="border-border bg-background" />
+                  <Input type="tel" required placeholder="যেমন: 017XXXXXXXX" value={newMember.phone} onChange={e => setNewMember({ ...newMember, phone: e.target.value })} className="border-border bg-background" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-secondary">ইমেইল ঠিকানা</label>
-                  <Input type="email" placeholder="যেমন: arahman@gmail.com" value={newMember.email} onChange={e => setNewMember({...newMember, email: e.target.value})} className="border-border bg-background" />
+                  <Input type="email" placeholder="যেমন: arahman@gmail.com" value={newMember.email} onChange={e => setNewMember({ ...newMember, email: e.target.value })} className="border-border bg-background" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-secondary">মেম্বারশিপ প্ল্যান *</label>
-                  <select value={newMember.tier} onChange={e => setNewMember({...newMember, tier: e.target.value as Member["tier"]})} className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary">
+                  <select value={newMember.tier} onChange={e => setNewMember({ ...newMember, tier: e.target.value as Member["tier"] })} className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary">
                     <option value="founding">Founding Member (ফ্রী ১ বছর)</option>
                     <option value="individual">Individual Plan (৳৫০০ / বাৎসরিক)</option>
                     <option value="family">Family Plan (৳১,৫০০ / বাৎসরিক)</option>
@@ -717,12 +722,12 @@ export default function AdminDashboardPage() {
               <form onSubmit={handleSavePartner} className="space-y-4 pt-2">
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-secondary">হাসপাতাল/ল্যাবের নাম *</label>
-                  <Input type="text" required placeholder="যেমন: ইবনে সিনা ল্যাব" value={newPartner.name} onChange={e => setNewPartner({...newPartner, name: e.target.value})} className="border-border bg-background" />
+                  <Input type="text" required placeholder="যেমন: ইবনে সিনা ল্যাব" value={newPartner.name} onChange={e => setNewPartner({ ...newPartner, name: e.target.value })} className="border-border bg-background" />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-xs font-semibold text-secondary">ক্যাটাগরি *</label>
-                    <select value={newPartner.category} onChange={e => setNewPartner({...newPartner, category: e.target.value as Partner["category"]})} className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary">
+                    <select value={newPartner.category} onChange={e => setNewPartner({ ...newPartner, category: e.target.value as Partner["category"] })} className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary">
                       <option value="hospital">হাসপাতাল (Hospital)</option>
                       <option value="diagnostic">ডায়াগনস্টিক সেন্টার</option>
                       <option value="pharmacy">ফার্মেসী (Pharmacy)</option>
@@ -730,21 +735,21 @@ export default function AdminDashboardPage() {
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs font-semibold text-secondary">ডিসকাউন্টের হার *</label>
-                    <Input type="text" required placeholder="যেমন: ১৫% ল্যাব টেস্টে" value={newPartner.discount} onChange={e => setNewPartner({...newPartner, discount: e.target.value})} className="border-border bg-background" />
+                    <Input type="text" required placeholder="যেমন: ১৫% ল্যাব টেস্টে" value={newPartner.discount} onChange={e => setNewPartner({ ...newPartner, discount: e.target.value })} className="border-border bg-background" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-secondary">ঠিকানা *</label>
-                  <Input type="text" required placeholder="যেমন: মিজান রোড, ফেনী" value={newPartner.address} onChange={e => setNewPartner({...newPartner, address: e.target.value})} className="border-border bg-background" />
+                  <Input type="text" required placeholder="যেমন: মিজান রোড, ফেনী" value={newPartner.address} onChange={e => setNewPartner({ ...newPartner, address: e.target.value })} className="border-border bg-background" />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-xs font-semibold text-secondary">হটলাইন নম্বর *</label>
-                    <Input type="text" required placeholder="যেমন: ০৯৬১৩৭৮৭৮০১" value={newPartner.phone} onChange={e => setNewPartner({...newPartner, phone: e.target.value})} className="border-border bg-background" />
+                    <Input type="text" required placeholder="যেমন: ০৯৬১৩৭৮৭৮০১" value={newPartner.phone} onChange={e => setNewPartner({ ...newPartner, phone: e.target.value })} className="border-border bg-background" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs font-semibold text-secondary">লোগো সংক্ষিপ্ত টেক্সট</label>
-                    <Input type="text" placeholder="যেমন: Ibn Sina" value={newPartner.logoText} onChange={e => setNewPartner({...newPartner, logoText: e.target.value})} className="border-border bg-background" />
+                    <Input type="text" placeholder="যেমন: Ibn Sina" value={newPartner.logoText} onChange={e => setNewPartner({ ...newPartner, logoText: e.target.value })} className="border-border bg-background" />
                   </div>
                 </div>
                 <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
@@ -762,7 +767,7 @@ export default function AdminDashboardPage() {
               <DialogHeader>
                 <DialogTitle className="font-heading font-bold text-secondary">সদস্য ডিসকাউন্ট লগ করুন</DialogTitle>
               </DialogHeader>
-              
+
               {txSuccess && (
                 <div className="bg-green-50 text-green-600 text-xs p-3 rounded-lg border border-green-200">
                   {txSuccess}
@@ -777,12 +782,12 @@ export default function AdminDashboardPage() {
               <form onSubmit={handleAddTransaction} className="space-y-4 pt-2">
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-secondary">সদস্যের মেম্বার আইডি বা মোবাইল নম্বর *</label>
-                  <Input type="text" required placeholder="যেমন: HC-1001 বা 01711112222" value={newTx.memberId} onChange={e => setNewTx({...newTx, memberId: e.target.value})} className="border-border bg-background" />
+                  <Input type="text" required placeholder="যেমন: HC-1001 বা 01711112222" value={newTx.memberId} onChange={e => setNewTx({ ...newTx, memberId: e.target.value })} className="border-border bg-background" />
                 </div>
-                
+
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-secondary">অংশীদার চিকিৎসাকেন্দ্র *</label>
-                  <select value={newTx.partnerId} onChange={e => setNewTx({...newTx, partnerId: e.target.value})} className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary">
+                  <select value={newTx.partnerId} onChange={e => setNewTx({ ...newTx, partnerId: e.target.value })} className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary">
                     <option value="">হাসপাতাল/ল্যাব নির্বাচন করুন</option>
                     {partners.map(p => (
                       <option key={p.id} value={p.id}>{p.name} ({p.discount})</option>
@@ -792,7 +797,7 @@ export default function AdminDashboardPage() {
 
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-secondary">মূল বিলের পরিমাণ (BDT) *</label>
-                  <Input type="number" required placeholder="যেমন: ৫০০০" value={newTx.amount} onChange={e => setNewTx({...newTx, amount: e.target.value})} className="border-border bg-background" />
+                  <Input type="number" required placeholder="যেমন: ৫০০০" value={newTx.amount} onChange={e => setNewTx({ ...newTx, amount: e.target.value })} className="border-border bg-background" />
                 </div>
 
                 <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">ডিসকাউন্ট কার্যকর ও লগ করুন</Button>

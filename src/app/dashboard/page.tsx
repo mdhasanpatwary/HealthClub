@@ -99,17 +99,19 @@ export default function DashboardPage() {
   const totalSpent = transactions.reduce((sum, t) => sum + t.amount, 0);
 
   return (
-    <div className="bg-muted/30 min-h-screen py-10">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-8">
+    <div className="bg-muted/30 min-h-screen py-6 sm:py-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
         
         {/* Welcome Banner */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-border pb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-border pb-5">
           <div>
-            <h1 className="font-heading text-2xl sm:text-3xl font-bold text-secondary dark:text-white">
+            <h1 className="font-heading text-xl sm:text-3xl font-bold text-secondary dark:text-white">
               স্বাগতম, {user.name}
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              মেম্বার আইডি: <span className="font-mono font-semibold text-primary">{user.id}</span> | প্ল্যান: <span className="capitalize font-semibold text-secondary">{user.tier} Member</span>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+              মেম্বার আইডি: <span className="font-mono font-semibold text-primary">{user.id}</span>
+              <span className="mx-1.5 text-border">|</span>
+              প্ল্যান: <span className="capitalize font-semibold text-secondary">{user.tier} Member</span>
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -121,7 +123,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Overview Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
           
           <Card className="border-border shadow-sm">
             <CardContent className="p-6 flex items-center justify-between">
@@ -213,16 +215,16 @@ export default function DashboardPage() {
                       অংশীদার হাসপাতালে কার্ড ব্যবহার করে খরচ ও মোট সঞ্চয় বিবরণী।
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="p-0 sm:p-6">
+                  <CardContent className="p-0">
                     {transactions.length > 0 ? (
                       <div className="overflow-x-auto">
                         <Table>
                           <TableHeader>
                             <TableRow>
-                              <TableHead className="font-semibold text-secondary">চিকিৎসাকেন্দ্র</TableHead>
-                              <TableHead className="font-semibold text-secondary">তারিখ</TableHead>
-                              <TableHead className="font-semibold text-secondary text-right">মূল বিল</TableHead>
-                              <TableHead className="font-semibold text-primary text-right">ডিসকাউন্ট/সাশ্রয়</TableHead>
+                              <TableHead className="font-semibold text-secondary whitespace-nowrap">চিকিৎসাকেন্দ্র</TableHead>
+                              <TableHead className="font-semibold text-secondary whitespace-nowrap">তারিখ</TableHead>
+                              <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">মূল বিল</TableHead>
+                              <TableHead className="font-semibold text-primary text-right whitespace-nowrap">ডিসকাউন্ট/সাশ্রয়</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody className="text-xs sm:text-sm">

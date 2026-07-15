@@ -131,3 +131,50 @@
     @apply font-sans;
     }
 }
+
+/* ─── Mobile Optimizations ─────────────────────────────────── */
+
+/* xs breakpoint (480px) for Tailwind v4 */
+@theme inline {
+  --breakpoint-xs: 480px;
+}
+
+/* Pointer cursor for all interactive elements */
+a,
+button,
+[role="button"],
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+label[for],
+select {
+  cursor: pointer;
+}
+
+/* Prevent horizontal overflow on mobile */
+html,
+body {
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Remove tap highlight on mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Smooth touch scrolling */
+* {
+  touch-action: manipulation;
+}
+
+/* Safe area padding for iOS notch / home bar */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Horizontal scroll helper for tables on mobile */
+.scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}

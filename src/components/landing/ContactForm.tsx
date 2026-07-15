@@ -29,9 +29,9 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-stretch max-w-5xl mx-auto">
+    <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8 items-stretch max-w-5xl mx-auto">
       
-      {/* Contact Info (2 cols) */}
+      {/* Contact Info (2 cols on lg) */}
       <div className="lg:col-span-2 space-y-6 flex flex-col justify-between">
         <div className="space-y-6">
           <div>
@@ -78,7 +78,7 @@ export default function ContactForm() {
           </div>
         </div>
 
-        <a href="https://facebook.com" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 p-3 bg-secondary text-white rounded-xl hover:bg-slate-800 transition-colors text-sm font-semibold">
+        <a href="https://www.facebook.com/profile.php?id=61591616953090" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 p-3 bg-secondary text-white rounded-xl hover:bg-slate-800 transition-colors text-sm font-semibold">
           <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
             <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z" />
           </svg>
@@ -88,7 +88,7 @@ export default function ContactForm() {
 
       {/* Form Card (3 cols) */}
       <Card className="lg:col-span-3 border border-border bg-background/50 backdrop-blur shadow-lg">
-        <CardContent className="p-6 md:p-8">
+        <CardContent className="p-4 sm:p-6 md:p-8">
           {submitted ? (
             <div className="text-center py-12 space-y-4">
               <CheckCircle className="h-16 w-16 text-primary mx-auto animate-bounce" />

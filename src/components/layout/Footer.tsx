@@ -3,12 +3,12 @@ import { Heart, Phone, Mail, MapPin, MessageSquare } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-secondary text-slate-300 border-t border-slate-800">
+    <footer className="bg-secondary text-slate-300 border-t border-slate-800" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-        <div className="xl:grid xl:grid-cols-3 xl:gap-8">
-          
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
+
           {/* Logo & Contact Info */}
-          <div className="space-y-6 xl:col-span-1">
+          <div className="space-y-6 md:col-span-1">
             <Link href="/" className="flex items-center space-x-2 text-primary">
               <Heart className="h-6 w-6 fill-primary" />
               <span className="font-heading text-xl font-bold tracking-tight text-white">
@@ -20,7 +20,7 @@ export default function Footer() {
             </p>
             <div className="flex space-x-4">
               <a
-                href="https://facebook.com"
+                href="https://www.facebook.com/profile.php?id=61591616953090"
                 target="_blank"
                 rel="noreferrer"
                 className="text-slate-400 hover:text-white transition-colors"
@@ -54,8 +54,8 @@ export default function Footer() {
           </div>
 
           {/* Quick Links Group */}
-          <div className="mt-12 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
-            
+          <div className="grid grid-cols-2 gap-8 md:col-span-2">
+
             {/* Quick Links */}
             <div>
               <h3 className="text-sm font-semibold text-white tracking-wider uppercase">
@@ -119,7 +119,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="mt-10 border-t border-slate-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
           <p className="text-xs text-slate-500">
             &copy; {new Date().getFullYear()} হেলথ ক্লাব। সর্বস্বত্ব সংরক্ষিত।
           </p>
