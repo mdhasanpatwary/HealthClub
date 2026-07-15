@@ -693,7 +693,6 @@ export default function AdminDashboardPage() {
                   <select value={newMember.tier} onChange={e => setNewMember({ ...newMember, tier: e.target.value as Member["tier"] })} className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary">
                     <option value="founding">Founding Member (ফ্রী ১ বছর)</option>
                     <option value="individual">Individual Plan (৳৫০০ / বাৎসরিক)</option>
-                    <option value="family">Family Plan (৳১,৫০০ / বাৎসরিক)</option>
                   </select>
                 </div>
                 <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">

@@ -54,7 +54,7 @@ export default function RootLayout({
               "description": "স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী - একটি প্রিমিয়াম স্বাস্থ্য মেম্বারশিপ সার্ভিস।",
               "contactPoint": {
                 "@type": "ContactPoint",
-                "telephone": "+8809612345678",
+                "telephone": "+8801783721411",
                 "contactType": "customer service",
                 "areaServed": "BD",
                 "availableLanguage": ["Bengali", "English"]

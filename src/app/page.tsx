@@ -10,29 +10,29 @@ import ContactForm from "@/components/landing/ContactForm";
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
-      
+
       {/* 1. HERO SECTION */}
       <section className="relative overflow-hidden bg-gradient-to-b from-primary-light/30 via-background to-background py-16 sm:py-24">
-        
+
         {/* Background blobs */}
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary-light rounded-full blur-3xl opacity-50 -z-10" />
         <div className="absolute top-60 -left-40 w-96 h-96 bg-emerald-100 rounded-full blur-3xl opacity-30 -z-10" />
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            
+
             {/* Left Content Column (7 cols on large screens) */}
             <div className="space-y-6 lg:col-span-7 text-center lg:text-left">
               <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20">
                 <Heart className="h-3 w-3 fill-primary" />
                 স্বাস্থ্য সুবিধা মেম্বারশিপ প্ল্যাটফর্ম
               </span>
-              
+
               <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl font-extrabold text-secondary dark:text-white leading-tight">
                 স্বাস্থ্য সেবা হোক <br className="hidden sm:inline" />
                 <span className="text-primary bg-gradient-to-r from-primary to-emerald-600 bg-clip-text text-transparent">সহজ ও সাশ্রয়ী</span>
               </h1>
-              
+
               <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 leading-relaxed">
                 হেলথ ক্লাবের সদস্য হয়ে যেকোনো পার্টনার হাসপাতালে শুধু ডিজিটাল মেম্বার কার্ড প্রদর্শন করে ফ্ল্যাট ১০% ডিসকাউন্ট উপভোগ করুন।
               </p>
@@ -70,7 +70,7 @@ export default function Home() {
 
             {/* Right Visual Column (5 cols on large screens) */}
             <div className="lg:col-span-5 relative flex justify-center mt-4 lg:mt-0">
-              
+
               {/* Premium digital card preview mock */}
               <div className="relative w-full max-w-xs sm:max-w-sm aspect-[1.586/1] bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 rounded-2xl p-5 shadow-2xl text-white border border-emerald-500/20 animate-pulse-slow">
                 <div className="flex justify-between items-start">
@@ -135,7 +135,7 @@ export default function Home() {
       <section className="bg-muted py-12 border-y border-border">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-            
+
             <div className="bg-background p-6 rounded-2xl border border-border text-center shadow-sm hover:shadow-md transition-all">
               <p className="text-3xl font-extrabold text-primary font-mono">১০০+</p>
               <h3 className="text-sm font-semibold text-secondary mt-1">ফাউন্ডিং মেম্বার সীমা</h3>
@@ -167,7 +167,7 @@ export default function Home() {
       {/* 3. HOW IT WORKS SECTION */}
       <section className="py-16 sm:py-24 bg-background">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-12">
-          
+
           <div className="space-y-4 max-w-2xl mx-auto">
             <span className="text-xs font-extrabold text-primary tracking-widest uppercase">ব্যবহার বিধি</span>
             <h2 className="font-heading text-3xl sm:text-4xl font-bold text-secondary dark:text-white">
@@ -179,7 +179,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-            
+
             {/* Step 1 */}
             <div className="space-y-4 p-6 rounded-2xl bg-muted/40 border border-border/60 hover:border-primary/20 transition-colors relative group">
               <div className="h-12 w-12 rounded-full bg-primary-light text-primary font-heading text-xl font-bold flex items-center justify-center mx-auto border border-primary/20">
@@ -220,7 +220,7 @@ export default function Home() {
       {/* 4. MEMBERSHIP BENEFITS SECTION */}
       <section id="benefits" className="py-16 sm:py-24 bg-muted/50 border-y border-border">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
-          
+
           <div className="text-center space-y-4 max-w-2xl mx-auto">
             <span className="text-xs font-extrabold text-primary tracking-widest uppercase">মেম্বারশিপ সুবিধা</span>
             <h2 className="font-heading text-3xl sm:text-4xl font-bold text-secondary dark:text-white">
@@ -232,7 +232,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            
+
             {/* Benefit 1 */}
             <div className="bg-background p-6 rounded-2xl border border-border hover:shadow-md transition-all space-y-3">
               <div className="h-10 w-10 rounded-lg bg-primary-light text-primary flex items-center justify-center">
@@ -328,7 +328,7 @@ export default function Home() {
       {/* 5. PRICING PLANS SECTION */}
       <section className="py-16 sm:py-24 bg-background">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
-          
+
           <div className="text-center space-y-4 max-w-2xl mx-auto">
             <span className="text-xs font-extrabold text-primary tracking-widest uppercase">মেম্বারশিপ প্ল্যান</span>
             <h2 className="font-heading text-3xl sm:text-4xl font-bold text-secondary dark:text-white">
@@ -339,8 +339,8 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch max-w-5xl mx-auto">
-            
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-3xl mx-auto">
+
             {/* Plan 1: Founding (Highlighted) */}
             <div className="bg-gradient-to-b from-primary-light/50 to-background border-2 border-primary rounded-3xl p-8 relative flex flex-col justify-between shadow-xl ring-4 ring-primary/10">
               <div className="absolute top-4 right-4 bg-primary text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
@@ -358,7 +358,7 @@ export default function Home() {
                 <ul className="space-y-3 text-sm text-secondary/80">
                   <li className="flex items-start gap-2.5">
                     <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                    <span>১ জন সদস্য কভারেজ</span>
+                    <span>সদস্য নিজে এবং তার পরিবার ও আত্মীয়-স্বজন কভারেজ</span>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
@@ -397,7 +397,7 @@ export default function Home() {
                 <ul className="space-y-3 text-sm text-muted-foreground">
                   <li className="flex items-start gap-2.5">
                     <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                    <span>১ জন সদস্য কভারেজ</span>
+                    <span>সদস্য নিজে এবং তার পরিবার ও আত্মীয়-স্বজন কভারেজ</span>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
@@ -422,48 +422,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Plan 3: Family */}
-            <div className="bg-background border border-border rounded-3xl p-8 flex flex-col justify-between shadow-md relative">
-              <div className="absolute top-4 right-4 bg-primary-light text-primary text-[10px] font-bold uppercase px-2.5 py-1 rounded-full border border-primary/20">
-                সেরা ভ্যালু
-              </div>
-              <div className="space-y-6">
-                <div>
-                  <h3 className="font-heading text-xl font-bold text-secondary dark:text-white">Family Membership</h3>
-                  <p className="text-xs text-muted-foreground mt-1">পরিবারের একাধিক সদস্যদের যৌথ কার্ড সুবিধা।</p>
-                </div>
-                <div className="flex items-baseline gap-1 text-secondary dark:text-white">
-                  <span className="text-4xl font-extrabold font-mono">৳১,৫০০</span>
-                  <span className="text-xs text-muted-foreground font-semibold">/ বাৎসরিক সাবস্ক্রিপশন</span>
-                </div>
-                <ul className="space-y-3 text-sm text-muted-foreground">
-                  <li className="flex items-start gap-2.5">
-                    <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                    <span className="text-secondary dark:text-white font-semibold">অনূর্ধ্ব ৪ জন পরিবার সদস্য কভারেজ</span>
-                  </li>
-                  <li className="flex items-start gap-2.5">
-                    <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                    <span>সকল সদস্যদের জন্য আলাদা ডিজিটাল কার্ড</span>
-                  </li>
-                  <li className="flex items-start gap-2.5">
-                    <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                    <span>সকল পার্টনার হাসপাতালে ডিসকাউন্ট</span>
-                  </li>
-                  <li className="flex items-start gap-2.5">
-                    <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                    <span>পারিবারিক যৌথ কভারেজ ও বিল সাশ্রয়</span>
-                  </li>
-                </ul>
-              </div>
-              <div className="pt-8">
-                <Link href="/register?plan=family">
-                  <Button variant="outline" className="w-full border-border hover:bg-muted text-secondary dark:text-white">
-                    প্ল্যান কিনুন
-                  </Button>
-                </Link>
-              </div>
-            </div>
-
           </div>
         </div>
       </section>
@@ -471,7 +429,7 @@ export default function Home() {
       {/* 6. PARTNER DIRECTORY PREVIEW */}
       <section className="py-16 sm:py-24 bg-muted/40 border-y border-border">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
-          
+
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div className="space-y-3 text-center md:text-left">
               <span className="text-xs font-extrabold text-primary tracking-widest uppercase">অংশীদার চিকিৎসাকেন্দ্র</span>
@@ -505,7 +463,7 @@ export default function Home() {
       {/* 8. TESTIMONIALS SECTION */}
       <section className="py-16 sm:py-24 bg-muted/30 border-y border-border">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-8">
-          
+
           <div className="text-center space-y-3 max-w-xl mx-auto">
             <span className="text-xs font-extrabold text-primary tracking-widest uppercase">মেম্বারদের অভিজ্ঞতা</span>
             <h2 className="font-heading text-3xl font-bold text-secondary dark:text-white">
@@ -521,7 +479,7 @@ export default function Home() {
       {/* 9. WHY CHOOSE - COMPARISON TABLE */}
       <section className="py-16 sm:py-24 bg-background">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
-          
+
           <div className="text-center space-y-3 max-w-2xl mx-auto">
             <span className="text-xs font-extrabold text-primary tracking-widest uppercase">তুলনামূলক বিবরণী</span>
             <h2 className="font-heading text-3xl font-bold text-secondary dark:text-white">
@@ -559,14 +517,6 @@ export default function Home() {
                     ১০% ফ্ল্যাট ডিসকাউন্ট সুবিধা
                   </td>
                 </tr>
-                <tr>
-                  <td className="p-4 md:p-5 font-bold text-secondary">২৪/৭ কাস্টমার সাপোর্ট হেল্পলাইন</td>
-                  <td className="p-4 md:p-5">কোনো আলাদা গাইডলাইন বা সাপোর্ট ডেস্ক নেই</td>
-                  <td className="p-4 md:p-5 font-semibold text-primary flex items-center gap-1.5">
-                    <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
-                    মেডিকেল সাপোর্ট ও হাসপাতাল বুকিং অ্যাসিস্ট্যান্স
-                  </td>
-                </tr>
               </tbody>
             </table>
           </div>
@@ -578,7 +528,7 @@ export default function Home() {
       <section className="py-16 sm:py-24 bg-muted/40 border-y border-border overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            
+
             {/* Left Content */}
             <div className="space-y-6 text-center lg:text-left">
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold bg-amber-400/20 text-amber-600 dark:text-amber-300 border border-amber-400/30">
@@ -591,7 +541,7 @@ export default function Home() {
               <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                 মোবাইল অ্যাপের মাধ্যমে আপনার মেম্বারশিপ সার্ভিস হবে আরও গতিশীল। ডিজিটাল কার্ড দেখানো, পার্টনার হাসপাতাল খোঁজা এবং ডিসকাউন্ট ট্র্যাকিং করতে পারবেন এক ট্যাপেই।
               </p>
-              
+
               <ul className="space-y-2 text-sm text-left max-w-md mx-auto lg:mx-0">
                 <li className="flex items-center gap-2 text-secondary dark:text-slate-300 font-medium">
                   <Check className="h-4 w-4 text-primary shrink-0" />
@@ -614,15 +564,15 @@ export default function Home() {
 
             {/* Right Visual (App Mockup) */}
             <div className="relative flex justify-center">
-              
+
               {/* Phone Mockup Frame */}
               <div className="relative w-56 h-[440px] bg-slate-950 rounded-[32px] border-4 border-slate-800 shadow-2xl p-3 flex flex-col justify-between overflow-hidden">
                 {/* Phone notch */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-4 bg-slate-950 rounded-b-xl z-20" />
-                
+
                 {/* App Screen Content */}
                 <div className="bg-slate-900 rounded-[22px] flex-1 flex flex-col justify-between p-3 text-white overflow-hidden relative">
-                  
+
                   {/* App Header */}
                   <div className="flex justify-between items-center text-[10px] pt-1">
                     <span className="font-bold text-primary flex items-center gap-0.5">
@@ -636,7 +586,7 @@ export default function Home() {
                   <div className="bg-gradient-to-br from-slate-950 to-emerald-950 rounded-lg p-2.5 border border-emerald-500/20 text-left my-2">
                     <p className="text-[6px] text-slate-500 font-mono">MEMBER NAME</p>
                     <p className="text-[10px] font-bold font-heading text-white truncate">মোঃ আব্দুর রহমান</p>
-                    
+
                     {/* Mini QR */}
                     <div className="flex justify-between items-end mt-2">
                       <span className="text-[8px] font-mono text-emerald-400">FOUNDING</span>
@@ -656,7 +606,7 @@ export default function Home() {
                   {/* App Quick Menu */}
                   <div className="space-y-1.5 flex-1">
                     <p className="text-[8px] text-slate-500 font-bold text-left mb-1 uppercase tracking-wider">Features</p>
-                    
+
                     <div className="bg-slate-800/80 p-2 rounded-lg text-left flex items-center gap-2">
                       <div className="h-5 w-5 bg-primary/20 text-primary flex items-center justify-center rounded-md shrink-0">
                         <span className="text-[8px] font-bold">🏥</span>
@@ -702,7 +652,7 @@ export default function Home() {
       {/* 11. FAQ SECTION */}
       <section className="py-16 sm:py-24 bg-background">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
-          
+
           <div className="text-center space-y-3 max-w-xl mx-auto">
             <span className="text-xs font-extrabold text-primary tracking-widest uppercase">প্রশ্ন ও উত্তর</span>
             <h2 className="font-heading text-3xl font-bold text-secondary dark:text-white">
@@ -721,7 +671,7 @@ export default function Home() {
       {/* 12. CONTACT SECTION */}
       <section className="py-16 sm:py-24 bg-muted/30 border-t border-border">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
-          
+
           <div className="text-center space-y-3 max-w-xl mx-auto">
             <span className="text-xs font-extrabold text-primary tracking-widest uppercase">যোগাযোগ করুন</span>
             <h2 className="font-heading text-3xl font-bold text-secondary dark:text-white">

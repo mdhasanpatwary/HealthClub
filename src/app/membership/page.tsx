@@ -33,7 +33,7 @@ export default function MembershipPage() {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-3xl mx-auto">
           
           {/* Founding Member */}
           <div className="bg-gradient-to-b from-primary-light/50 to-background border-2 border-primary rounded-3xl p-8 relative flex flex-col justify-between shadow-xl ring-4 ring-primary/10">
@@ -52,7 +52,7 @@ export default function MembershipPage() {
               <ul className="space-y-3 text-sm text-secondary/80">
                 <li className="flex items-start gap-2.5">
                   <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <span>১ জন সদস্য কভারেজ</span>
+                  <span>সদস্য নিজে এবং তার পরিবার ও আত্মীয়-স্বজন কভারেজ</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
@@ -91,7 +91,7 @@ export default function MembershipPage() {
               <ul className="space-y-3 text-sm text-muted-foreground">
                 <li className="flex items-start gap-2.5">
                   <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <span>১ জন সদস্য কভারেজ</span>
+                  <span>সদস্য নিজে এবং তার পরিবার ও আত্মীয়-স্বজন কভারেজ</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
@@ -109,48 +109,6 @@ export default function MembershipPage() {
             </div>
             <div className="pt-8">
               <Link href="/register?plan=individual">
-                <Button variant="outline" className="w-full border-border hover:bg-muted text-secondary dark:text-white">
-                  প্ল্যান কিনুন
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-          {/* Family */}
-          <div className="bg-background border border-border rounded-3xl p-8 flex flex-col justify-between shadow-md relative">
-            <div className="absolute top-4 right-4 bg-primary-light text-primary text-[10px] font-bold uppercase px-2.5 py-1 rounded-full border border-primary/20">
-              সেরা ভ্যালু
-            </div>
-            <div className="space-y-6">
-              <div>
-                <h3 className="font-heading text-xl font-bold text-secondary dark:text-white">Family Membership</h3>
-                <p className="text-xs text-muted-foreground mt-1">পরিবারের একাধিক সদস্যদের যৌথ কার্ড সুবিধা।</p>
-              </div>
-              <div className="flex items-baseline gap-1 text-secondary dark:text-white font-mono">
-                <span className="text-4xl font-extrabold">৳১,৫০০</span>
-                <span className="text-xs text-muted-foreground font-semibold">/ বাৎসরিক সাবস্ক্রিপশন</span>
-              </div>
-              <ul className="space-y-3 text-sm text-muted-foreground">
-                <li className="flex items-start gap-2.5">
-                  <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <span className="text-secondary dark:text-white font-semibold">অনূর্ধ্ব ৪ জন পরিবার সদস্য কভারেজ</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <span>সকল সদস্যদের জন্য আলাদা ডিজিটাল কার্ড</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <span>সকল পার্টনার হাসপাতালে ডিসকাউন্ট</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <span>পারিবারিক যৌথ কভারেজ ও বিল সাশ্রয়</span>
-                </li>
-              </ul>
-            </div>
-            <div className="pt-8">
-              <Link href="/register?plan=family">
                 <Button variant="outline" className="w-full border-border hover:bg-muted text-secondary dark:text-white">
                   প্ল্যান কিনুন
                 </Button>

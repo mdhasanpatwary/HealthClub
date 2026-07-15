@@ -31,7 +31,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="https://wa.me/8801700000000"
+                href="https://wa.me/8801886763849"
                 target="_blank"
                 rel="noreferrer"
                 className="text-slate-400 hover:text-white transition-colors"
@@ -102,8 +102,8 @@ export default function Footer() {
                 </li>
                 <li className="flex items-center gap-2">
                   <Phone className="h-4 w-4 text-primary" />
-                  <a href="tel:+8809612345678" className="hover:text-white transition-colors">
-                    +৮৮০ ৯৬১২৩৪৫৬৭৮
+                  <a href="tel:+8801783721411" className="hover:text-white transition-colors">
+                    +৮৮০ ১৭৮৩৭২১৪১১
                   </a>
                 </li>
                 <li className="flex items-center gap-2">

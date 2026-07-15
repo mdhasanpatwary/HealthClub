@@ -101,7 +101,7 @@ export default function BecomePartnerPage() {
               <div className="text-xs space-y-1">
                 <p className="font-bold text-secondary">সহায়তা প্রয়োজন?</p>
                 <p className="text-muted-foreground">পার্টনার সম্পর্ক টিম হটলাইন:</p>
-                <p className="font-bold text-primary font-mono">+৮৮০ ৯৬১২৩৪৫৬৭৯</p>
+                <p className="font-bold text-primary font-mono">+৮৮০ ১৭৮৩৭২১৪১১</p>
               </div>
             </div>
           </div>

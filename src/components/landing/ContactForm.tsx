@@ -45,23 +45,23 @@ export default function ContactForm() {
 
           <div className="space-y-4">
             
-            <a href="tel:+8809612345678" className="flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors">
+            <a href="tel:+8801783721411" className="flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors">
               <div className="h-10 w-10 rounded-lg bg-primary-light text-primary flex items-center justify-center">
                 <Phone className="h-5 w-5" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">হটলাইন নম্বর</p>
-                <p className="text-sm font-bold text-secondary font-mono">+৮৮০ ৯৬১২৩৪৫৬৭৮</p>
+                <p className="text-sm font-bold text-secondary font-mono">+৮৮০ ১৭৮৩৭২১৪১১</p>
               </div>
             </a>
 
-            <a href="https://wa.me/8801700000000" target="_blank" rel="noreferrer" className="flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors">
+            <a href="https://wa.me/8801886763849" target="_blank" rel="noreferrer" className="flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors">
               <div className="h-10 w-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
                 <MessageSquare className="h-5 w-5 fill-emerald-600/10" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">হোয়াটসঅ্যাপ চ্যাট</p>
-                <p className="text-sm font-bold text-secondary font-mono">+৮৮০ ১৭০০০০০০০০</p>
+                <p className="text-sm font-bold text-secondary font-mono">+৮৮০ ১৮৮৬৭৬৩৮৪৯</p>
               </div>
             </a>
 

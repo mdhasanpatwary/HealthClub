@@ -25,7 +25,7 @@ function RegisterForm() {
   // Pre-select plan from URL parameters
   useEffect(() => {
     const planParam = searchParams.get("plan");
-    if (planParam === "individual" || planParam === "family") {
+    if (planParam === "individual") {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData(prev => ({ ...prev, tier: planParam }));
     }
@@ -171,7 +171,6 @@ function RegisterForm() {
             >
               <option value="founding">Founding Member (ফ্রী ১ বছর - প্রথম ১০০ মেম্বার)</option>
               <option value="individual">Individual Plan (৳৫০০ / বাৎসরিক)</option>
-              <option value="family">Family Plan (৳১,৫০০ / বাৎসরিক)</option>
             </select>
           </div>
 
