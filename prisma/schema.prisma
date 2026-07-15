@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/client"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+
+model Member {
+  id           String        @id
+  name         String
+  phone        String        @unique
+  email        String?
+  tier         String        // 'founding' | 'individual' | 'family'
+  status       String        // 'active' | 'inactive'
+  joinedDate   DateTime      @map("joined_date") @db.Date
+  expiryDate   DateTime      @map("expiry_date") @db.Date
+  qrCodeUrl    String?       @map("qr_code_url")
+  totalSaved   Int           @default(0) @map("total_saved")
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  transactions Transaction[]
+
+  @@map("members")
+}
+
+model Partner {
+  id           String        @id
+  name         String
+  category     String        // 'hospital' | 'diagnostic' | 'pharmacy'
+  address      String
+  discount     String
+  phone        String
+  logoText     String        @map("logo_text")
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  transactions Transaction[]
+
+  @@map("partners")
+}
+
+model Transaction {
+  id          String   @id
+  memberId    String   @map("member_id")
+  memberName  String   @map("member_name")
+  partnerId   String   @map("partner_id")
+  partnerName String   @map("partner_name")
+  amount      Int
+  saved       Int
+  date        DateTime @default(now()) @db.Timestamptz
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  member  Member  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  partner Partner @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
+  @@map("transactions")
+}

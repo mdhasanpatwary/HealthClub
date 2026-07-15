@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { 
-  Users, Building, DollarSign, Activity, Search, PlusCircle, 
-  Heart, ShieldCheck, Check, Trash2, Edit3, HeartHandshake, Phone, ArrowUpRight 
+  Users, Building, DollarSign, Search, PlusCircle, 
+  Heart, Trash2, Edit3 
 } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Member, Partner, Transaction } from "@/services/db";
@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -38,7 +38,9 @@ export default function AdminDashboardPage() {
 
   // Modals / Form states
   const [newMember, setNewMember] = useState({ name: "", phone: "", email: "", tier: "founding" as "founding" | "individual" | "family" });
+  const [editingMember, setEditingMember] = useState<Member | null>(null);
   const [newPartner, setNewPartner] = useState({ name: "", category: "hospital" as Partner["category"], address: "", discount: "", phone: "", logoText: "" });
+  const [editingPartner, setEditingPartner] = useState<Partner | null>(null);
   const [newTx, setNewTx] = useState({ memberId: "", partnerId: "", amount: "" });
   const [txSuccess, setTxSuccess] = useState("");
   const [txError, setTxError] = useState("");
@@ -49,7 +51,7 @@ export default function AdminDashboardPage() {
   const [isTxOpen, setIsTxOpen] = useState(false);
 
   // Load data
-  const loadData = () => {
+  const loadData = async () => {
     // Validate if logged-in user is admin
     const currentUser = dbStore.getCurrentUser();
     if (!currentUser) {
@@ -62,54 +64,134 @@ export default function AdminDashboardPage() {
       return;
     }
 
-    setStats(dbStore.getStats());
-    setMembers(dbStore.getMembers());
-    setPartners(dbStore.getPartners());
-    setTransactions(dbStore.getTransactions());
+    try {
+      const [statsRes, membersRes, partnersRes, transactionsRes] = await Promise.all([
+        dbStore.getStats(),
+        dbStore.getMembers(),
+        dbStore.getPartners(),
+        dbStore.getTransactions()
+      ]);
+      setStats(statsRes);
+      setMembers(membersRes);
+      setPartners(partnersRes);
+      setTransactions(transactionsRes);
+    } catch (error) {
+      console.error("Error loading data in admin dashboard:", error);
+    }
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
-  // Handle Add Member
-  const handleAddMember = (e: React.FormEvent) => {
+  // Handle Save Member (Add/Edit)
+  const handleSaveMember = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMember.name || !newMember.phone) return;
 
-    dbStore.addMember({
-      name: newMember.name,
-      phone: newMember.phone,
-      email: newMember.email,
-      tier: newMember.tier
-    });
+    try {
+      if (editingMember) {
+        // Edit mode
+        const success = await dbStore.updateMember(editingMember.id, {
+          name: newMember.name,
+          phone: newMember.phone,
+          email: newMember.email,
+          tier: newMember.tier
+        });
+        if (!success) throw new Error("Update failed");
+      } else {
+        // Add mode
+        await dbStore.addMember({
+          name: newMember.name,
+          phone: newMember.phone,
+          email: newMember.email,
+          tier: newMember.tier
+        });
+      }
 
-    setNewMember({ name: "", phone: "", email: "", tier: "founding" });
-    setIsMemberOpen(false);
-    loadData();
+      setNewMember({ name: "", phone: "", email: "", tier: "founding" });
+      setEditingMember(null);
+      setIsMemberOpen(false);
+      loadData();
+    } catch {
+      alert(editingMember ? "সদস্য তথ্য আপডেট করতে ব্যর্থ হয়েছে।" : "সদস্য যোগ করতে ব্যর্থ হয়েছে।");
+    }
   };
 
-  // Handle Add Partner
-  const handleAddPartner = (e: React.FormEvent) => {
+  // Handle Delete Member
+  const handleDeleteMember = async (id: string, name: string) => {
+    if (confirm(`আপনি কি নিশ্চিতভাবে "${name}" সদস্যকে ডিলিট করতে চান? ডিলিট করলে তার সকল ডিসকাউন্ট ট্রানজেকশনও মুছে যাবে।`)) {
+      try {
+        const success = await dbStore.deleteMember(id);
+        if (success) {
+          loadData();
+        } else {
+          alert("সদস্য ডিলিট করতে ব্যর্থ হয়েছে।");
+        }
+      } catch {
+        alert("সদস্য ডিলিট করতে ব্যর্থ হয়েছে।");
+      }
+    }
+  };
+
+  // Handle Save Partner (Add/Edit)
+  const handleSavePartner = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newPartner.name || !newPartner.phone || !newPartner.discount) return;
 
-    dbStore.addPartner({
-      name: newPartner.name,
-      category: newPartner.category,
-      address: newPartner.address,
-      discount: newPartner.discount,
-      phone: newPartner.phone,
-      logoText: newPartner.logoText || newPartner.name.substring(0, 5)
-    });
+    try {
+      if (editingPartner) {
+        // Edit mode
+        const success = await dbStore.updatePartner(editingPartner.id, {
+          name: newPartner.name,
+          category: newPartner.category,
+          address: newPartner.address,
+          discount: newPartner.discount,
+          phone: newPartner.phone,
+          logoText: newPartner.logoText || newPartner.name.substring(0, 5)
+        });
+        if (!success) throw new Error("Update failed");
+      } else {
+        // Add mode
+        await dbStore.addPartner({
+          name: newPartner.name,
+          category: newPartner.category,
+          address: newPartner.address,
+          discount: newPartner.discount,
+          phone: newPartner.phone,
+          logoText: newPartner.logoText || newPartner.name.substring(0, 5)
+        });
+      }
 
-    setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "" });
-    setIsPartnerOpen(false);
-    loadData();
+      setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "" });
+      setEditingPartner(null);
+      setIsPartnerOpen(false);
+      loadData();
+    } catch {
+      alert(editingPartner ? "পার্টনার আপডেট করতে ব্যর্থ হয়েছে।" : "পার্টনার যোগ করতে ব্যর্থ হয়েছে।");
+    }
+  };
+
+  // Handle Delete Partner
+  const handleDeletePartner = async (id: string, name: string) => {
+    if (confirm(`আপনি কি নিশ্চিতভাবে "${name}" পার্টনারটি ডিলিট করতে চান?`)) {
+      try {
+        const success = await dbStore.deletePartner(id);
+        if (success) {
+          loadData();
+        } else {
+          alert("পার্টনার ডিলিট করতে ব্যর্থ হয়েছে।");
+        }
+      } catch {
+        alert("পার্টনার ডিলিট করতে ব্যর্থ হয়েছে।");
+      }
+    }
   };
 
   // Handle Log Transaction (Discount log)
-  const handleAddTransaction = (e: React.FormEvent) => {
+  const handleAddTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
     setTxSuccess("");
     setTxError("");
@@ -119,57 +201,63 @@ export default function AdminDashboardPage() {
       return;
     }
 
-    const member = dbStore.getMemberById(newTx.memberId);
-    if (!member) {
-      setTxError("প্রদত্ত সদস্য পাওয়া যায়নি (আইডি বা ফোন নম্বর পরীক্ষা করুন)।");
-      return;
+    try {
+      const member = await dbStore.getMemberById(newTx.memberId);
+      if (!member) {
+        setTxError("প্রদত্ত সদস্য পাওয়া যায়নি (আইডি বা ফোন নম্বর পরীক্ষা করুন)।");
+        return;
+      }
+
+      const partner = partners.find(p => p.id === newTx.partnerId);
+      if (!partner) {
+        setTxError("নির্বাচিত পার্টনার চিকিৎসাকেন্দ্র খুঁজে পাওয়া যায়নি।");
+        return;
+      }
+
+      const billAmount = Number(newTx.amount);
+      if (isNaN(billAmount) || billAmount <= 0) {
+        setTxError("সঠিক বিলের পরিমাণ প্রদান করুন।");
+        return;
+      }
+
+      // Determine savings (flat 10% discount)
+      const discountRate = 0.10;
+      const saved = Math.round(billAmount * discountRate);
+
+      await dbStore.addTransaction({
+        memberId: member.id,
+        memberName: member.name,
+        partnerId: partner.id,
+        partnerName: partner.name,
+        amount: billAmount,
+        saved: saved
+      });
+
+      setTxSuccess(`৳${saved} ডিসকাউন্ট সফলভাবে লগ করা হয়েছে।`);
+      setNewTx({ memberId: "", partnerId: "", amount: "" });
+      loadData();
+      
+      setTimeout(() => {
+        setTxSuccess("");
+        setIsTxOpen(false);
+      }, 2000);
+    } catch {
+      setTxError("ট্রানজেকশন লগ করতে সমস্যা হয়েছে।");
     }
-
-    const partner = partners.find(p => p.id === newTx.partnerId);
-    if (!partner) {
-      setTxError("নির্বাচিত পার্টনার চিকিৎসাকেন্দ্র খুঁজে পাওয়া যায়নি।");
-      return;
-    }
-
-    const billAmount = Number(newTx.amount);
-    if (isNaN(billAmount) || billAmount <= 0) {
-      setTxError("সঠিক বিলের পরিমাণ প্রদান করুন।");
-      return;
-    }
-
-    // Determine savings (flat 10% discount)
-    const discountRate = 0.10;
-    const saved = Math.round(billAmount * discountRate);
-
-    dbStore.addTransaction({
-      memberId: member.id,
-      memberName: member.name,
-      partnerId: partner.id,
-      partnerName: partner.name,
-      amount: billAmount,
-      saved: saved
-    });
-
-    setTxSuccess(`৳${saved} ডিসকাউন্ট সফলভাবে লগ করা হয়েছে।`);
-    setNewTx({ memberId: "", partnerId: "", amount: "" });
-    loadData();
-    
-    setTimeout(() => {
-      setTxSuccess("");
-      setIsTxOpen(false);
-    }, 2000);
   };
 
   // Toggle member status
-  const handleToggleMemberStatus = (id: string) => {
-    const updated = members.map(m => {
-      if (m.id === id) {
-        return { ...m, status: (m.status === "active" ? "inactive" : "active") as "active" | "inactive" };
-      }
-      return m;
-    });
-    localStorage.setItem("hc_members", JSON.stringify(updated));
-    loadData();
+  const handleToggleMemberStatus = async (id: string) => {
+    const member = members.find(m => m.id === id);
+    if (!member) return;
+
+    const newStatus = member.status === "active" ? "inactive" : "active";
+    const success = await dbStore.updateMemberStatus(id, newStatus);
+    if (success) {
+      loadData();
+    } else {
+      alert("সদস্যের স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে।");
+    }
   };
 
   // Filter lists
@@ -349,7 +437,11 @@ export default function AdminDashboardPage() {
                       className="pl-9 h-9 border-border bg-background"
                     />
                   </div>
-                  <Button onClick={() => setIsMemberOpen(true)} size="sm" className="bg-primary hover:bg-primary-dark text-white">
+                  <Button onClick={() => {
+                    setEditingMember(null);
+                    setNewMember({ name: "", phone: "", email: "", tier: "founding" });
+                    setIsMemberOpen(true);
+                  }} size="sm" className="bg-primary hover:bg-primary-dark text-white">
                     নতুন সদস্য যুক্ত করুন
                   </Button>
                 </div>
@@ -371,9 +463,14 @@ export default function AdminDashboardPage() {
                     {filteredMembers.map((m) => (
                       <TableRow key={m.id}>
                         <TableCell className="font-mono text-primary font-bold">{m.id}</TableCell>
-                        <TableCell className="font-bold text-secondary">{m.name}</TableCell>
+                        <TableCell className="font-bold text-secondary">
+                          {m.name}
+                          {m.email && <span className="block text-[10px] text-muted-foreground font-normal font-mono">{m.email}</span>}
+                        </TableCell>
                         <TableCell className="font-mono">{m.phone}</TableCell>
-                        <TableCell className="capitalize text-xs font-semibold">{m.tier}</TableCell>
+                        <TableCell className="capitalize text-xs font-semibold">
+                          {m.tier === "founding" ? "Founding (ফ্রী)" : m.tier === "individual" ? "Individual" : "Family"}
+                        </TableCell>
                         <TableCell className="font-mono font-semibold">৳{(m.totalSaved || 0).toLocaleString("bn-BD")}</TableCell>
                         <TableCell>
                           <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
@@ -383,14 +480,41 @@ export default function AdminDashboardPage() {
                           </span>
                         </TableCell>
                         <TableCell className="text-right">
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            onClick={() => handleToggleMemberStatus(m.id)}
-                            className={`text-xs ${m.status === "active" ? "text-destructive hover:bg-destructive/10" : "text-primary hover:bg-primary-light"}`}
-                          >
-                            {m.status === "active" ? "অচল করুন" : "সচল করুন"}
-                          </Button>
+                          <div className="flex justify-end items-center gap-1">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              onClick={() => handleToggleMemberStatus(m.id)}
+                              className={`text-[10px] h-8 px-2.5 font-bold ${m.status === "active" ? "text-rose-600 hover:bg-rose-50" : "text-primary hover:bg-primary-light"}`}
+                            >
+                              {m.status === "active" ? "অচল করুন" : "সচল করুন"}
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              onClick={() => {
+                                setEditingMember(m);
+                                setNewMember({
+                                  name: m.name,
+                                  phone: m.phone,
+                                  email: m.email || "",
+                                  tier: m.tier
+                                });
+                                setIsMemberOpen(true);
+                              }}
+                              className="h-8 w-8 text-primary hover:text-primary-dark hover:bg-primary-light"
+                            >
+                              <Edit3 className="h-4 w-4" />
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              onClick={() => handleDeleteMember(m.id, m.name)}
+                              className="h-8 w-8 text-destructive hover:text-rose-600 hover:bg-rose-50"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -420,7 +544,11 @@ export default function AdminDashboardPage() {
                       className="pl-9 h-9 border-border bg-background"
                     />
                   </div>
-                  <Button onClick={() => setIsPartnerOpen(true)} size="sm" className="bg-primary hover:bg-primary-dark text-white">
+                  <Button onClick={() => {
+                    setEditingPartner(null);
+                    setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "" });
+                    setIsPartnerOpen(true);
+                  }} size="sm" className="bg-primary hover:bg-primary-dark text-white">
                     নতুন পার্টনার হাসপাতাল
                   </Button>
                 </div>
@@ -434,16 +562,50 @@ export default function AdminDashboardPage() {
                       <TableHead className="font-semibold text-secondary">ঠিকানা</TableHead>
                       <TableHead className="font-semibold text-primary">ডিসকাউন্ট হার</TableHead>
                       <TableHead className="font-semibold text-secondary">হটলাইন নম্বর</TableHead>
+                      <TableHead className="font-semibold text-secondary text-right">অ্যাকশন</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody className="text-xs sm:text-sm">
                     {filteredPartners.map((p) => (
                       <TableRow key={p.id}>
                         <TableCell className="font-bold text-secondary">{p.name}</TableCell>
-                        <TableCell className="capitalize text-xs font-semibold">{p.category}</TableCell>
+                        <TableCell className="capitalize text-xs font-semibold">
+                          {p.category === "hospital" ? "হাসপাতাল" : p.category === "diagnostic" ? "ডায়াগনস্টিক" : "ফার্মেসী"}
+                        </TableCell>
                         <TableCell className="text-muted-foreground">{p.address}</TableCell>
                         <TableCell className="font-bold text-primary font-heading">{p.discount}</TableCell>
                         <TableCell className="font-mono text-xs">{p.phone}</TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-1">
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              onClick={() => {
+                                setEditingPartner(p);
+                                setNewPartner({
+                                  name: p.name,
+                                  category: p.category,
+                                  address: p.address,
+                                  discount: p.discount,
+                                  phone: p.phone,
+                                  logoText: p.logoText || ""
+                                });
+                                setIsPartnerOpen(true);
+                              }}
+                              className="h-8 w-8 text-primary hover:text-primary-dark hover:bg-primary-light"
+                            >
+                              <Edit3 className="h-4 w-4" />
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              onClick={() => handleDeletePartner(p.id, p.name)}
+                              className="h-8 w-8 text-destructive hover:text-rose-600 hover:bg-rose-50"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -493,14 +655,22 @@ export default function AdminDashboardPage() {
 
         {/* --- MODAL DIALOGS --- */}
 
-        {/* Add Member Modal */}
+        {/* Add/Edit Member Modal */}
         {isMemberOpen && (
-          <Dialog open={isMemberOpen} onOpenChange={setIsMemberOpen}>
+          <Dialog open={isMemberOpen} onOpenChange={(open) => {
+            setIsMemberOpen(open);
+            if (!open) {
+              setEditingMember(null);
+              setNewMember({ name: "", phone: "", email: "", tier: "founding" });
+            }
+          }}>
             <DialogContent className="border-border bg-background">
               <DialogHeader>
-                <DialogTitle className="font-heading font-bold text-secondary">নতুন সদস্য যুক্ত করুন</DialogTitle>
+                <DialogTitle className="font-heading font-bold text-secondary">
+                  {editingMember ? "সদস্য তথ্য পরিবর্তন করুন" : "নতুন সদস্য যুক্ত করুন"}
+                </DialogTitle>
               </DialogHeader>
-              <form onSubmit={handleAddMember} className="space-y-4 pt-2">
+              <form onSubmit={handleSaveMember} className="space-y-4 pt-2">
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-secondary">নাম *</label>
                   <Input type="text" required placeholder="যেমন: মোঃ আব্দুর রহমান" value={newMember.name} onChange={e => setNewMember({...newMember, name: e.target.value})} className="border-border bg-background" />
@@ -515,26 +685,36 @@ export default function AdminDashboardPage() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-secondary">মেম্বারশিপ প্ল্যান *</label>
-                  <select value={newMember.tier} onChange={e => setNewMember({...newMember, tier: e.target.value as any})} className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary">
+                  <select value={newMember.tier} onChange={e => setNewMember({...newMember, tier: e.target.value as Member["tier"]})} className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary">
                     <option value="founding">Founding Member (ফ্রী ১ বছর)</option>
                     <option value="individual">Individual Plan (৳৫০০ / বাৎসরিক)</option>
                     <option value="family">Family Plan (৳১,৫০০ / বাৎসরিক)</option>
                   </select>
                 </div>
-                <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">সংরক্ষণ করুন</Button>
+                <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
+                  {editingMember ? "পরিবর্তন সংরক্ষণ করুন" : "সংরক্ষণ করুন"}
+                </Button>
               </form>
             </DialogContent>
           </Dialog>
         )}
 
-        {/* Add Partner Modal */}
+        {/* Add/Edit Partner Modal */}
         {isPartnerOpen && (
-          <Dialog open={isPartnerOpen} onOpenChange={setIsPartnerOpen}>
+          <Dialog open={isPartnerOpen} onOpenChange={(open) => {
+            setIsPartnerOpen(open);
+            if (!open) {
+              setEditingPartner(null);
+              setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "" });
+            }
+          }}>
             <DialogContent className="border-border bg-background">
               <DialogHeader>
-                <DialogTitle className="font-heading font-bold text-secondary">নতুন পার্টনার হাসপাতাল যুক্ত করুন</DialogTitle>
+                <DialogTitle className="font-heading font-bold text-secondary">
+                  {editingPartner ? "পার্টনার হাসপাতাল তথ্য পরিবর্তন করুন" : "নতুন পার্টনার হাসপাতাল যুক্ত করুন"}
+                </DialogTitle>
               </DialogHeader>
-              <form onSubmit={handleAddPartner} className="space-y-4 pt-2">
+              <form onSubmit={handleSavePartner} className="space-y-4 pt-2">
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-secondary">হাসপাতাল/ল্যাবের নাম *</label>
                   <Input type="text" required placeholder="যেমন: ইবনে সিনা ল্যাব" value={newPartner.name} onChange={e => setNewPartner({...newPartner, name: e.target.value})} className="border-border bg-background" />
@@ -542,7 +722,7 @@ export default function AdminDashboardPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-xs font-semibold text-secondary">ক্যাটাগরি *</label>
-                    <select value={newPartner.category} onChange={e => setNewPartner({...newPartner, category: e.target.value as any})} className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary">
+                    <select value={newPartner.category} onChange={e => setNewPartner({...newPartner, category: e.target.value as Partner["category"]})} className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary">
                       <option value="hospital">হাসপাতাল (Hospital)</option>
                       <option value="diagnostic">ডায়াগনস্টিক সেন্টার</option>
                       <option value="pharmacy">ফার্মেসী (Pharmacy)</option>
@@ -567,7 +747,9 @@ export default function AdminDashboardPage() {
                     <Input type="text" placeholder="যেমন: Ibn Sina" value={newPartner.logoText} onChange={e => setNewPartner({...newPartner, logoText: e.target.value})} className="border-border bg-background" />
                   </div>
                 </div>
-                <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">পার্টনার সংরক্ষণ করুন</Button>
+                <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
+                  {editingPartner ? "পরিবর্তন সংরক্ষণ করুন" : "পার্টনার সংরক্ষণ করুন"}
+                </Button>
               </form>
             </DialogContent>
           </Dialog>

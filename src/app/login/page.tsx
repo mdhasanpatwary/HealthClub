@@ -15,7 +15,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -42,13 +42,17 @@ export default function LoginPage() {
       return;
     }
 
-    // Lookup member in storage
-    const member = dbStore.getMemberById(identifier);
-    if (member) {
-      dbStore.setCurrentUser(member);
-      router.push("/dashboard");
-    } else {
-      setError("প্রদত্ত মোবাইল নম্বর বা ইমেইল দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।");
+    try {
+      // Lookup member in storage
+      const member = await dbStore.getMemberById(identifier);
+      if (member) {
+        dbStore.setCurrentUser(member);
+        router.push("/dashboard");
+      } else {
+        setError("প্রদত্ত মোবাইল নম্বর বা ইমেইল দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।");
+      }
+    } catch {
+      setError("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
     }
   };
 

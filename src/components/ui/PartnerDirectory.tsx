@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, MapPin, Phone, Hospital, ShieldAlert, Truck, Pill, HeartHandshake } from "lucide-react";
+import { Search, MapPin, Phone, Hospital, ShieldAlert, Pill, HeartHandshake } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Partner } from "@/services/db";
 import { Input } from "@/components/ui/input";
@@ -19,7 +19,7 @@ export default function PartnerDirectory({ limit, showFilters = true }: PartnerD
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   useEffect(() => {
-    setPartners(dbStore.getPartners());
+    dbStore.getPartners().then(setPartners);
   }, []);
 
   // Filter partners

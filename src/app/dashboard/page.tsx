@@ -3,8 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { 
-  Heart, CreditCard, History, LayoutDashboard, Settings, 
-  MapPin, PlusCircle, AlertCircle, RefreshCw, Save, CheckCircle2 
+  Heart, CreditCard, History, LayoutDashboard, Save, CheckCircle2 
 } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Member, Transaction } from "@/services/db";
@@ -19,7 +18,6 @@ export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState<Member | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [activeTab, setActiveTab] = useState("overview");
 
   // Profile Form States
   const [profileName, setProfileName] = useState("");
@@ -34,50 +32,56 @@ export default function DashboardPage() {
       router.push("/login");
       return;
     }
-    setUser(currentUser);
-    setProfileName(currentUser.name);
-    setProfileEmail(currentUser.email || "");
-    setProfilePhone(currentUser.phone);
+    
+    // Refresh user state from database to ensure up-to-date details
+    dbStore.getMemberById(currentUser.id).then((freshUser) => {
+      const activeUser = freshUser || currentUser;
+      setUser(activeUser);
+      setProfileName(activeUser.name);
+      setProfileEmail(activeUser.email || "");
+      setProfilePhone(activeUser.phone);
+    });
 
     // Load user specific transactions
-    const allTx = dbStore.getTransactions();
-    const userTx = allTx.filter(t => t.memberId === currentUser.id);
-    setTransactions(userTx);
+    dbStore.getTransactions().then((allTx) => {
+      const userTx = allTx.filter(t => t.memberId === currentUser.id);
+      setTransactions(userTx);
+    });
   }, [router]);
 
   // Handle Profile Update
-  const handleUpdateProfile = (e: React.FormEvent) => {
+  const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaveSuccess(false);
 
     if (!user) return;
 
-    // Update in members list
-    const members = dbStore.getMembers();
-    const updatedMembers = members.map(m => {
-      if (m.id === user.id) {
-        return {
-          ...m,
+    try {
+      const success = await dbStore.updateMemberProfile(
+        user.id,
+        profileName,
+        profilePhone,
+        profileEmail
+      );
+
+      if (success) {
+        // Update active session
+        const updatedUser = {
+          ...user,
           name: profileName,
           email: profileEmail,
           phone: profilePhone
         };
+        dbStore.setCurrentUser(updatedUser);
+        setUser(updatedUser);
+        setSaveSuccess(true);
+      } else {
+        alert("প্রোফাইল আপডেট করতে সমস্যা হয়েছে।");
       }
-      return m;
-    });
-
-    localStorage.setItem("hc_members", JSON.stringify(updatedMembers));
-    
-    // Update active session
-    const updatedUser = {
-      ...user,
-      name: profileName,
-      email: profileEmail,
-      phone: profilePhone
-    };
-    dbStore.setCurrentUser(updatedUser);
-    setUser(updatedUser);
-    setSaveSuccess(true);
+    } catch (err) {
+      console.error(err);
+      alert("সার্ভার ত্রুটি।");
+    }
 
     setTimeout(() => setSaveSuccess(false), 3000);
   };

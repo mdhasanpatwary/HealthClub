@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ShieldCheck, ShieldAlert, Heart, Calendar, CreditCard, ArrowLeft } from "lucide-react";
+import { ShieldCheck, ShieldAlert, ArrowLeft } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Member } from "@/services/db";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function VerificationPage() {
   const params = useParams();
@@ -19,11 +19,12 @@ export default function VerificationPage() {
     if (memberId) {
       // Decode ID in case it contains URL encoded values
       const decodedId = decodeURIComponent(memberId);
-      const found = dbStore.getMemberById(decodedId);
-      if (found) {
-        setMember(found);
-      }
-      setLoading(false);
+      dbStore.getMemberById(decodedId).then((found) => {
+        if (found) {
+          setMember(found);
+        }
+        setLoading(false);
+      });
     }
   }, [memberId]);
 

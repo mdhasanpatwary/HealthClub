@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Heart, User, Phone, Mail, Lock, CheckCircle } from "lucide-react";
+import { Heart, User, Phone, Mail, Lock } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +26,7 @@ function RegisterForm() {
   useEffect(() => {
     const planParam = searchParams.get("plan");
     if (planParam === "individual" || planParam === "family") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData(prev => ({ ...prev, tier: planParam }));
     }
   }, [searchParams]);
@@ -34,7 +35,7 @@ function RegisterForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -43,16 +44,16 @@ function RegisterForm() {
       return;
     }
 
-    // Check if phone or email already registered
-    const existing = dbStore.getMemberById(formData.phone);
-    if (existing) {
-      setError("এই মোবাইল নম্বরটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।");
-      return;
-    }
-
     try {
-      // Add member to mock DB
-      const newMember = dbStore.addMember({
+      // Check if phone or email already registered
+      const existing = await dbStore.getMemberById(formData.phone);
+      if (existing) {
+        setError("এই মোবাইল নম্বরটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।");
+        return;
+      }
+
+      // Add member to Supabase DB
+      const newMember = await dbStore.addMember({
         name: formData.name,
         phone: formData.phone,
         email: formData.email,
@@ -64,7 +65,7 @@ function RegisterForm() {
 
       // Redirect to Member Dashboard
       router.push("/dashboard");
-    } catch (err) {
+    } catch {
       setError("রেজিস্ট্রেশন করতে সমস্যা হচ্ছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
     }
   };

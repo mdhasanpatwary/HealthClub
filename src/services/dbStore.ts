@@ -1,201 +1,161 @@
-import { Member, Partner, Transaction, initialMembers, initialPartners, initialTransactions } from "./db";
+import { Member, Partner, Transaction } from "./db";
+import {
+  getPartnersAction,
+  addPartnerAction,
+  updatePartnerAction,
+  deletePartnerAction,
+  getMembersAction,
+  addMemberAction,
+  getMemberByIdAction,
+  updateMemberStatusAction,
+  updateMemberProfileAction,
+  updateMemberAction,
+  deleteMemberAction,
+  getTransactionsAction,
+  addTransactionAction,
+  getStatsAction,
+} from "@/app/actions/dbActions";
 
 // Helper to check if running on client side
 const isClient = typeof window !== "undefined";
 
 // Cache keys
 const KEYS = {
-  PARTNERS: "hc_partners",
-  MEMBERS: "hc_members",
-  TRANSACTIONS: "hc_transactions",
   CURRENT_USER: "hc_current_user",
-};
-
-// In-memory fallback for server side
-const serverStore = {
-  partners: [...initialPartners],
-  members: [...initialMembers],
-  transactions: [...initialTransactions],
-  currentUser: null as Member | null,
 };
 
 export const dbStore = {
   // --- PARTNERS ---
-  getPartners(): Partner[] {
-    if (isClient) {
-      const stored = localStorage.getItem(KEYS.PARTNERS);
-      if (!stored) {
-        localStorage.setItem(KEYS.PARTNERS, JSON.stringify(initialPartners));
-        return initialPartners;
-      }
-      return JSON.parse(stored);
-    }
-    return serverStore.partners;
+  async getPartners(): Promise<Partner[]> {
+    return getPartnersAction();
   },
 
-  addPartner(partner: Omit<Partner, "id">): Partner {
-    const newPartner: Partner = {
-      ...partner,
-      id: `p_${Date.now()}`,
-    };
-    if (isClient) {
-      const current = this.getPartners();
-      const updated = [newPartner, ...current];
-      localStorage.setItem(KEYS.PARTNERS, JSON.stringify(updated));
-      return newPartner;
-    }
-    serverStore.partners.unshift(newPartner);
-    return newPartner;
+  async addPartner(partner: Omit<Partner, "id">): Promise<Partner> {
+    return addPartnerAction(partner);
+  },
+
+  async updatePartner(id: string, partner: Omit<Partner, "id">): Promise<boolean> {
+    return updatePartnerAction(id, partner);
+  },
+
+  async deletePartner(id: string): Promise<boolean> {
+    return deletePartnerAction(id);
   },
 
   // --- MEMBERS ---
-  getMembers(): Member[] {
-    if (isClient) {
-      const stored = localStorage.getItem(KEYS.MEMBERS);
-      if (!stored) {
-        localStorage.setItem(KEYS.MEMBERS, JSON.stringify(initialMembers));
-        return initialMembers;
+  async getMembers(): Promise<Member[]> {
+    return getMembersAction();
+  },
+
+  async addMember(
+    member: Omit<Member, "id" | "status" | "joinedDate" | "expiryDate" | "totalSaved">
+  ): Promise<Member> {
+    return addMemberAction(member);
+  },
+
+  async getMemberById(id: string): Promise<Member | undefined> {
+    return getMemberByIdAction(id);
+  },
+
+  async updateMemberStatus(id: string, status: Member["status"]): Promise<boolean> {
+    return updateMemberStatusAction(id, status);
+  },
+
+  async updateMemberProfile(
+    id: string,
+    name: string,
+    phone: string,
+    email: string
+  ): Promise<boolean> {
+    const success = await updateMemberProfileAction(id, name, phone, email);
+    
+    if (success) {
+      // Sync local storage user session if logged in
+      const currentUser = this.getCurrentUser();
+      if (currentUser && currentUser.id === id) {
+        this.setCurrentUser({
+          ...currentUser,
+          name,
+          phone,
+          email,
+        });
       }
-      return JSON.parse(stored);
     }
-    return serverStore.members;
+    
+    return success;
   },
 
-  addMember(member: Omit<Member, "id" | "status" | "joinedDate" | "expiryDate" | "totalSaved">): Member {
-    const year = new Date().getFullYear();
-    const rand = Math.floor(1000 + Math.random() * 9000);
-    const newMember: Member = {
-      ...member,
-      id: `HC-${year}-${rand}`,
-      status: "active",
-      joinedDate: new Date().toISOString().split("T")[0],
-      expiryDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
-      totalSaved: 0,
-    };
-
-    if (isClient) {
-      const current = this.getMembers();
-      const updated = [newMember, ...current];
-      localStorage.setItem(KEYS.MEMBERS, JSON.stringify(updated));
-      return newMember;
+  async updateMember(
+    id: string,
+    member: { name: string; phone: string; email: string; tier: Member["tier"] }
+  ): Promise<boolean> {
+    const success = await updateMemberAction(id, member);
+    
+    if (success) {
+      // Sync local storage user session if logged in
+      const currentUser = this.getCurrentUser();
+      if (currentUser && currentUser.id === id) {
+        this.setCurrentUser({
+          ...currentUser,
+          name: member.name,
+          phone: member.phone,
+          email: member.email,
+          tier: member.tier,
+        });
+      }
     }
-    serverStore.members.unshift(newMember);
-    return newMember;
+    
+    return success;
   },
 
-  getMemberById(id: string): Member | undefined {
-    return this.getMembers().find(m => m.id === id || m.phone === id || m.email === id);
+  async deleteMember(id: string): Promise<boolean> {
+    return deleteMemberAction(id);
   },
 
   // --- TRANSACTIONS ---
-  getTransactions(): Transaction[] {
-    if (isClient) {
-      const stored = localStorage.getItem(KEYS.TRANSACTIONS);
-      if (!stored) {
-        localStorage.setItem(KEYS.TRANSACTIONS, JSON.stringify(initialTransactions));
-        return initialTransactions;
-      }
-      return JSON.parse(stored);
-    }
-    return serverStore.transactions;
+  async getTransactions(): Promise<Transaction[]> {
+    return getTransactionsAction();
   },
 
-  addTransaction(tx: Omit<Transaction, "id" | "date">): Transaction {
-    const newTx: Transaction = {
-      ...tx,
-      id: `tx_${Date.now()}`,
-      date: new Date().toLocaleString("en-US", { hour12: true }),
-    };
+  async addTransaction(tx: Omit<Transaction, "id" | "date">): Promise<Transaction> {
+    const newTx = await addTransactionAction(tx);
 
-    if (isClient) {
-      const current = this.getTransactions();
-      const updated = [newTx, ...current];
-      localStorage.setItem(KEYS.TRANSACTIONS, JSON.stringify(updated));
-
-      // Update member's total savings
-      const members = this.getMembers();
-      const updatedMembers = members.map(m => {
-        if (m.id === tx.memberId) {
-          const totalSaved = (m.totalSaved || 0) + tx.saved;
-          // If the logged-in user is updated, update current user cache as well
-          const currentUser = this.getCurrentUser();
-          if (currentUser && currentUser.id === m.id) {
-            this.setCurrentUser({ ...currentUser, totalSaved });
-          }
-          return { ...m, totalSaved };
-        }
-        return m;
-      });
-      localStorage.setItem(KEYS.MEMBERS, JSON.stringify(updatedMembers));
-      return newTx;
-    }
-
-    serverStore.transactions.unshift(newTx);
-    const member = serverStore.members.find(m => m.id === tx.memberId);
+    // Refresh member to sync totalSavings to local storage if logged in
+    const member = await this.getMemberById(tx.memberId);
     if (member) {
-      member.totalSaved += tx.saved;
+      const currentUser = this.getCurrentUser();
+      if (currentUser && currentUser.id === member.id) {
+        this.setCurrentUser({ ...currentUser, totalSaved: member.totalSaved });
+      }
     }
+
     return newTx;
   },
 
-  // --- CURRENT SESSION ---
+  // --- CURRENT SESSION (Client LocalStorage Sync) ---
   getCurrentUser(): Member | null {
     if (isClient) {
       const stored = localStorage.getItem(KEYS.CURRENT_USER);
       if (!stored) return null;
-      // Refresh current user data from members list to ensure totalSaved is accurate
-      const user = JSON.parse(stored) as Member;
-      const refreshed = this.getMemberById(user.id);
-      if (refreshed) {
-        localStorage.setItem(KEYS.CURRENT_USER, JSON.stringify(refreshed));
-        return refreshed;
-      }
-      return user;
+      return JSON.parse(stored) as Member;
     }
-    return serverStore.currentUser;
+    return null;
   },
 
   setCurrentUser(user: Member): void {
     if (isClient) {
       localStorage.setItem(KEYS.CURRENT_USER, JSON.stringify(user));
-    } else {
-      serverStore.currentUser = user;
     }
   },
 
   logout(): void {
     if (isClient) {
       localStorage.removeItem(KEYS.CURRENT_USER);
-    } else {
-      serverStore.currentUser = null;
     }
   },
 
   // --- ANALYTICS ---
-  getStats() {
-    const members = this.getMembers();
-    const partners = this.getPartners();
-    const transactions = this.getTransactions();
-
-    const activeMembers = members.filter(m => m.status === "active").length;
-    const totalSaved = members.reduce((sum, m) => sum + (m.totalSaved || 0), 0);
-    const totalTransactions = transactions.length;
-
-    // Simulated revenue based on individual/family plans (500 BDT/year, 1500 BDT/year)
-    // Founding tier is free (0 BDT)
-    const revenue = members.reduce((sum, m) => {
-      if (m.tier === "individual") return sum + 500;
-      if (m.tier === "family") return sum + 1500;
-      return sum;
-    }, 0);
-
-    return {
-      totalMembers: members.length,
-      activeMembers,
-      partnerCount: partners.length,
-      totalSaved,
-      totalTransactions,
-      revenue,
-    };
-  }
+  async getStats() {
+    return getStatsAction();
+  },
 };

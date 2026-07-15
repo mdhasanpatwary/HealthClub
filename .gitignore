@@ -43,3 +43,5 @@ next-env.d.ts
 # local npm cache
 .npm-cache/
 .npmrc
+
+/src/generated/prisma
