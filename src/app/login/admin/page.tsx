@@ -3,19 +3,19 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Heart, User, Lock, AlertCircle } from "lucide-react";
+import { Heart, Lock, AlertCircle, Shield } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 
-export default function LoginPage() {
+export default function AdminLoginPage() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -24,30 +24,30 @@ export default function LoginPage() {
       return;
     }
 
-    // Prevent Admin login on this page and prompt to use the admin login page
-    if (identifier === "healthclubfeni@gmail.com") {
-      setError("এডমিন লগইন করতে /login/admin এ যান।");
+    // Check for Admin login credentials
+    if (identifier === "healthclubfeni@gmail.com" && password === "123456") {
+      const adminMember = {
+        id: "HC-ADMIN-01",
+        name: "হেলথ ক্লাব এডমিন",
+        phone: "01700000000",
+        email: "healthclubfeni@gmail.com",
+        tier: "founding" as const,
+        status: "active" as const,
+        joinedDate: "2026-01-01",
+        expiryDate: "2027-01-01",
+        totalSaved: 0
+      };
+      dbStore.setCurrentUser(adminMember);
+      router.push("/admin");
       return;
     }
 
-    try {
-      // Lookup member in storage
-      const member = await dbStore.getMemberById(identifier);
-      if (member) {
-        dbStore.setCurrentUser(member);
-        router.push("/dashboard");
-      } else {
-        setError("প্রদত্ত মোবাইল নম্বর বা ইমেইল দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।");
-      }
-    } catch {
-      setError("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
-    }
+    setError("ভুল এডমিন ক্রেডেনশিয়ালস। অনুগ্রহ করে সঠিক তথ্য প্রদান করুন।");
   };
 
   return (
     <div className="bg-muted/30 min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md border border-border shadow-xl bg-background/80 backdrop-blur">
-        
         <CardHeader className="text-center space-y-2">
           <Link href="/" className="flex items-center justify-center space-x-2 text-primary mx-auto">
             <Heart className="h-7 w-7 fill-primary" />
@@ -55,11 +55,15 @@ export default function LoginPage() {
               হেলথ <span className="text-primary">ক্লাব</span>
             </span>
           </Link>
-          <CardTitle className="font-heading text-xl font-bold text-secondary pt-2">
-            অ্যাকাউন্টে লগইন করুন
+          <div className="inline-flex items-center gap-1 bg-amber-500/10 text-amber-600 dark:text-amber-500 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mx-auto">
+            <Shield className="h-3 w-3" />
+            এডমিন পোর্টাল
+          </div>
+          <CardTitle className="font-heading text-xl font-bold text-secondary pt-1">
+            এডমিন লগইন
           </CardTitle>
           <CardDescription>
-            আপনার মেম্বার আইডি দেখতে এবং ড্যাশবোর্ড অ্যাক্সেস করতে লগইন করুন।
+            হেলথ ক্লাব ম্যানেজমেন্ট সিস্টেম অ্যাক্সেস করতে আপনার এডমিন অ্যাকাউন্ট তথ্য দিন।
           </CardDescription>
         </CardHeader>
 
@@ -71,19 +75,18 @@ export default function LoginPage() {
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-4">
-            
+          <form onSubmit={handleAdminLogin} className="space-y-4">
             <div className="space-y-2">
               <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
-                <User className="h-3.5 w-3.5 text-primary" />
-                মোবাইল নম্বর বা ইমেইল
+                <Shield className="h-3.5 w-3.5 text-primary" />
+                এডমিন মোবাইল বা ইমেইল
               </label>
               <Input
                 type="text"
                 required
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
-                placeholder="যেমন: 01711112222 বা test@example.com"
+                placeholder="যেমন: admin@healthclub.com.bd বা 01700000000"
                 className="border-border bg-background"
               />
             </div>
@@ -104,20 +107,18 @@ export default function LoginPage() {
             </div>
 
             <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
-              লগইন করুন
+              এডমিন হিসেবে প্রবেশ করুন
             </Button>
-
           </form>
 
 
 
           <div className="text-center text-sm text-muted-foreground border-t border-border pt-4">
-            নতুন সদস্য হতে চান?{" "}
-            <Link href="/register" className="text-primary hover:underline font-semibold">
-              ফ্রি রেজিস্ট্রেশন করুন
+            সদস্য ড্যাশবোর্ডে যেতে চান?{" "}
+            <Link href="/login" className="text-primary hover:underline font-semibold">
+              সাধারণ মেম্বার লগইন করুন
             </Link>
           </div>
-
         </CardContent>
       </Card>
     </div>

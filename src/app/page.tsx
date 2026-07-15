@@ -6,8 +6,30 @@ import SavingsCalculator from "@/components/ui/SavingsCalculator";
 import TestimonialCarousel from "@/components/ui/TestimonialCarousel";
 import FAQSection from "@/components/landing/FAQSection";
 import ContactForm from "@/components/landing/ContactForm";
+import { prisma } from "@/lib/prisma";
+import { toBanglaNums } from "@/lib/utils";
 
-export default function Home() {
+export default async function Home() {
+  let memberCount = 100;
+  let hospitalCount = 10;
+  let diagnosticCount = 20;
+  let pharmacyCount = 5;
+
+  try {
+    const [mCount, hCount, dCount, pCount] = await Promise.all([
+      prisma.member.count({ where: { status: "active" } }),
+      prisma.partner.count({ where: { category: "hospital" } }),
+      prisma.partner.count({ where: { category: "diagnostic" } }),
+      prisma.partner.count({ where: { category: "pharmacy" } })
+    ]);
+    memberCount = mCount;
+    hospitalCount = hCount;
+    diagnosticCount = dCount;
+    pharmacyCount = pCount;
+  } catch (error) {
+    console.error("Error fetching stats from database:", error);
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
 
@@ -34,7 +56,7 @@ export default function Home() {
               </h1>
 
               <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                হেলথ ক্লাবের সদস্য হয়ে যেকোনো পার্টনার হাসপাতালে শুধু ডিজিটাল মেম্বার কার্ড প্রদর্শন করে ফ্ল্যাট ১০% ডিসকাউন্ট উপভোগ করুন।
+                হেলথ ক্লাবের সদস্য হয়ে যেকোনো পার্টনার হাসপাতালে শুধু ডিজিটাল মেম্বার কার্ড প্রদর্শন করে ফ্ল্যাট ৫% - ২০% ডিসকাউন্ট উপভোগ করুন।
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2">
@@ -52,18 +74,30 @@ export default function Home() {
               </div>
 
               {/* Trust Indicators */}
-              <div className="grid grid-cols-3 gap-4 pt-6 border-t border-border/85 max-w-md mx-auto lg:mx-0 text-center lg:text-left">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-border/85 max-w-md mx-auto lg:mx-0 text-center lg:text-left">
                 <div>
-                  <p className="text-xl sm:text-2xl font-extrabold text-secondary font-mono">১০০+</p>
+                  <p className="text-xl sm:text-2xl font-extrabold text-secondary font-mono">
+                    {toBanglaNums(memberCount)}+
+                  </p>
                   <p className="text-xs text-muted-foreground">প্রতিষ্ঠাতা সদস্য</p>
                 </div>
                 <div>
-                  <p className="text-xl sm:text-2xl font-extrabold text-secondary font-mono">১০+</p>
+                  <p className="text-xl sm:text-2xl font-extrabold text-secondary font-mono">
+                    {toBanglaNums(hospitalCount)}+
+                  </p>
                   <p className="text-xs text-muted-foreground">পার্টনার হাসপাতাল</p>
                 </div>
                 <div>
-                  <p className="text-xl sm:text-2xl font-extrabold text-secondary font-mono">২০+</p>
+                  <p className="text-xl sm:text-2xl font-extrabold text-secondary font-mono">
+                    {toBanglaNums(diagnosticCount)}+
+                  </p>
                   <p className="text-xs text-muted-foreground">ডায়াগনস্টিক সেন্টার</p>
+                </div>
+                <div>
+                  <p className="text-xl sm:text-2xl font-extrabold text-secondary font-mono">
+                    {toBanglaNums(pharmacyCount)}+
+                  </p>
+                  <p className="text-xs text-muted-foreground">পার্টনার ফার্মেসী</p>
                 </div>
               </div>
             </div>
@@ -149,7 +183,9 @@ export default function Home() {
             </div>
 
             <div className="bg-background p-6 rounded-2xl border border-border text-center shadow-sm hover:shadow-md transition-all">
-              <p className="text-3xl font-extrabold text-primary font-mono">১০+</p>
+              <p className="text-3xl font-extrabold text-primary font-mono">
+                {toBanglaNums(hospitalCount)}+
+              </p>
               <h3 className="text-sm font-semibold text-secondary mt-1">পার্টনার হাসপাতাল</h3>
               <p className="text-xs text-muted-foreground mt-1">ফেনীর নামকরা হাসপাতাল ও ডায়াগনস্টিক চুক্তিভুক্ত।</p>
             </div>

@@ -3,11 +3,12 @@
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Heart, User, Phone, Mail, Lock } from "lucide-react";
+import { Heart, User, Phone, Mail, Lock, MapPin, Calendar } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
+import { ImageUpload } from "@/components/ui/ImageUpload";
 
 function RegisterForm() {
   const router = useRouter();
@@ -18,7 +19,10 @@ function RegisterForm() {
     phone: "",
     email: "",
     password: "",
-    tier: "founding" as "founding" | "individual" | "family"
+    tier: "founding" as "founding" | "individual" | "family",
+    address: "",
+    birthDate: "",
+    profilePictureUrl: ""
   });
   const [error, setError] = useState("");
 
@@ -39,7 +43,7 @@ function RegisterForm() {
     e.preventDefault();
     setError("");
 
-    if (!formData.name || !formData.phone || !formData.password) {
+    if (!formData.name || !formData.phone || !formData.password || !formData.email || !formData.address || !formData.birthDate || !formData.profilePictureUrl) {
       setError("সবগুলো তারকাচিহ্নিত (*) ঘর পূরণ করুন।");
       return;
     }
@@ -57,7 +61,10 @@ function RegisterForm() {
         name: formData.name,
         phone: formData.phone,
         email: formData.email,
-        tier: formData.tier
+        tier: formData.tier,
+        address: formData.address,
+        birthDate: formData.birthDate,
+        profilePictureUrl: formData.profilePictureUrl
       });
 
       // Login immediately
@@ -96,6 +103,12 @@ function RegisterForm() {
 
         <form onSubmit={handleRegister} className="space-y-4">
           
+          <ImageUpload
+            value={formData.profilePictureUrl}
+            onChange={(url) => setFormData(prev => ({ ...prev, profilePictureUrl: url }))}
+            label="প্রোফাইল ছবি *"
+          />
+
           <div className="space-y-2">
             <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
               <User className="h-3.5 w-3.5 text-primary" />
@@ -132,17 +145,49 @@ function RegisterForm() {
             <div className="space-y-2">
               <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
                 <Mail className="h-3.5 w-3.5 text-primary" />
-                ইমেইল ঠিকানা (ঐচ্ছিক)
+                ইমেইল ঠিকানা *
               </label>
               <Input
                 type="email"
                 name="email"
+                required
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="যেমন: test@example.com"
                 className="border-border bg-background"
               />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
+              <MapPin className="h-3.5 w-3.5 text-primary" />
+              ঠিকানা *
+            </label>
+            <Input
+              type="text"
+              name="address"
+              required
+              value={formData.address}
+              onChange={handleChange}
+              placeholder="যেমন: মিজান রোড, ফেনী"
+              className="border-border bg-background"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
+              <Calendar className="h-3.5 w-3.5 text-primary" />
+              জন্ম তারিখ *
+            </label>
+            <Input
+              type="date"
+              name="birthDate"
+              required
+              value={formData.birthDate}
+              onChange={handleChange}
+              className="border-border bg-background"
+            />
           </div>
 
           <div className="space-y-2">

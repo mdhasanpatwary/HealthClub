@@ -95,7 +95,7 @@ export default function Header() {
           <div className="hidden md:flex items-center space-x-3">
             {user ? (
               <>
-                {user.email === "admin@healthclub.com.bd" || user.phone === "01700000000" ? (
+                {user.email === "healthclubfeni@gmail.com" ? (
                   <Link href="/admin">
                     <Button variant="outline" size="sm" className="gap-2 border-primary text-primary hover:bg-primary-light">
                       <User className="h-4 w-4" />
@@ -193,7 +193,7 @@ export default function Header() {
                   </div>
                   <span className="truncate">{user.name}</span>
                 </div>
-                {user.email === "admin@healthclub.com.bd" || user.phone === "01700000000" ? (
+                {user.email === "healthclubfeni@gmail.com" ? (
                   <Link href="/admin" className="block w-full" onClick={() => setIsOpen(false)}>
                     <Button variant="outline" className="w-full justify-start gap-2 border-primary text-primary">
                       এডমিন প্যানেল

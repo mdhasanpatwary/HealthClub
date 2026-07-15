@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ImageUpload } from "@/components/ui/ImageUpload";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -70,7 +71,7 @@ export default function AdminDashboardPage() {
       router.push("/login");
       return;
     }
-    const isAdmin = currentUser.email === "admin@healthclub.com.bd" || currentUser.phone === "01700000000";
+    const isAdmin = currentUser.email === "healthclubfeni@gmail.com";
     if (!isAdmin) {
       router.push("/dashboard");
       return;
@@ -731,51 +732,11 @@ export default function AdminDashboardPage() {
                 </DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSaveMember} className="space-y-4 pt-2">
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">প্রোফাইল ছবি</label>
-                  <div className="flex items-center gap-4">
-                    <div className="h-16 w-16 rounded-xl border border-border bg-muted/40 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
-                      {newMember.profilePictureUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={newMember.profilePictureUrl} alt="Preview" className="h-full w-full object-cover" />
-                      ) : (
-                        <User className="h-8 w-8 text-muted-foreground" />
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <Input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            if (file.size > 2 * 1024 * 1024) {
-                              toast.error("ছবির সাইজ ২ মেগাবাইটের বেশি হওয়া যাবে না।");
-                              e.target.value = "";
-                              return;
-                            }
-                            const reader = new FileReader();
-                            reader.onloadend = () => {
-                              setNewMember({ ...newMember, profilePictureUrl: reader.result as string });
-                            };
-                            reader.readAsDataURL(file);
-                          }
-                        }}
-                        className="border-border bg-background text-xs cursor-pointer file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
-                      />
-                      {newMember.profilePictureUrl && (
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          onClick={() => setNewMember({ ...newMember, profilePictureUrl: "" })}
-                          className="text-[10px] text-rose-600 hover:text-rose-700 p-0 h-auto mt-1"
-                        >
-                          ছবি মুছে ফেলুন
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </div>
+                <ImageUpload
+                  value={newMember.profilePictureUrl || ""}
+                  onChange={(url) => setNewMember({ ...newMember, profilePictureUrl: url })}
+                  label="প্রোফাইল ছবি"
+                />
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-secondary">নাম *</label>
                   <Input type="text" required placeholder="যেমন: মোঃ আব্দুর রহমান" value={newMember.name} onChange={e => setNewMember({ ...newMember, name: e.target.value })} className="border-border bg-background" />
