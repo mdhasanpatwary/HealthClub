@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import {
   Users, Building, DollarSign, Search, PlusCircle,
   Heart, Trash2, Edit3, User, Mail, Phone, Calendar,
-  History as HistoryIcon, MapPin, Briefcase
+  History as HistoryIcon, MapPin, Briefcase, CreditCard, ShieldCheck
 } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Member, Partner, Transaction } from "@/services/db";
@@ -19,6 +19,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ImageUpload } from "@/components/ui/ImageUpload";
+import {
+  getPartnerRequestsAction,
+  updatePartnerRequestStatusAction,
+  PartnerRequest,
+} from "@/app/actions/dbActions";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -37,6 +42,7 @@ export default function AdminDashboardPage() {
   const [members, setMembers] = useState<Member[]>([]);
   const [partners, setPartners] = useState<Partner[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [partnerRequests, setPartnerRequests] = useState<PartnerRequest[]>([]);
 
   // Search states
   const [memberSearch, setMemberSearch] = useState("");
@@ -47,7 +53,7 @@ export default function AdminDashboardPage() {
     name: "",
     phone: "",
     email: "",
-    tier: "founding" as "founding" | "individual" | "family",
+    tier: "founding" as "founding" | "individual",
     address: "",
     birthDate: "",
     profession: "",
@@ -81,16 +87,18 @@ export default function AdminDashboardPage() {
     }
 
     try {
-      const [statsRes, membersRes, partnersRes, transactionsRes] = await Promise.all([
+      const [statsRes, membersRes, partnersRes, transactionsRes, requestsRes] = await Promise.all([
         dbStore.getStats(),
         dbStore.getMembers(),
         dbStore.getPartners(),
-        dbStore.getTransactions()
+        dbStore.getTransactions(),
+        getPartnerRequestsAction()
       ]);
       setStats(statsRes);
       setMembers(membersRes);
       setPartners(partnersRes);
       setTransactions(transactionsRes);
+      setPartnerRequests(requestsRes);
     } catch (error) {
       console.error("Error loading data in admin dashboard:", error);
     }
@@ -205,6 +213,38 @@ export default function AdminDashboardPage() {
     }
   };
 
+  // Handle Approve Partner Request
+  const handleApprovePartnerRequest = async (id: string) => {
+    try {
+      const success = await updatePartnerRequestStatusAction(id, "approved");
+      if (success) {
+        toast.success("অংশীদার আবেদন সফলভাবে অনুমোদিত হয়েছে এবং ডিরেক্টরিতে যুক্ত করা হয়েছে!");
+        loadData();
+      } else {
+        toast.error("আবেদন অনুমোদন করতে সমস্যা হয়েছে।");
+      }
+    } catch {
+      toast.error("সার্ভার ত্রুটি।");
+    }
+  };
+
+  // Handle Reject Partner Request
+  const handleRejectPartnerRequest = async (id: string) => {
+    if (confirm("আপনি কি নিশ্চিতভাবে এই আবেদনটি বাতিল করতে চান?")) {
+      try {
+        const success = await updatePartnerRequestStatusAction(id, "rejected");
+        if (success) {
+          toast.success("আবেদনটি সফলভাবে বাতিল করা হয়েছে।");
+          loadData();
+        } else {
+          toast.error("আবেদন বাতিল করতে সমস্যা হয়েছে।");
+        }
+      } catch {
+        toast.error("সার্ভার ত্রুটি।");
+      }
+    }
+  };
+
   // Handle Delete Partner
   const handleDeletePartner = async (id: string, name: string) => {
     if (confirm(t("admin.dashboard.confirmDeletePartner").replace("${name}", name))) {
@@ -287,6 +327,9 @@ export default function AdminDashboardPage() {
     const success = await dbStore.updateMemberStatus(id, newStatus);
     if (success) {
       toast.success(t("admin.dashboard.memberStatusUpdatedSuccess"));
+      if (viewingMember && viewingMember.id === id) {
+        setViewingMember({ ...viewingMember, status: newStatus });
+      }
       loadData();
     } else {
       toast.error(t("admin.dashboard.memberStatusUpdatedFailed"));
@@ -442,12 +485,14 @@ export default function AdminDashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Tab Interfaces */}
         <Tabs defaultValue="members" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 bg-muted p-1 rounded-xl">
+          <TabsList className="grid w-full grid-cols-4 bg-muted p-1 rounded-xl">
             <TabsTrigger value="members" className="rounded-lg text-xs font-semibold py-2">{t("admin.dashboard.membersList")}</TabsTrigger>
             <TabsTrigger value="partners" className="rounded-lg text-xs font-semibold py-2">{t("admin.dashboard.partnerHospitals")}</TabsTrigger>
             <TabsTrigger value="txs" className="rounded-lg text-xs font-semibold py-2">{t("admin.dashboard.transactionLog")}</TabsTrigger>
+            <TabsTrigger value="requests" className="rounded-lg text-xs font-semibold py-2">
+              অংশীদার আবেদন ({partnerRequests.filter(r => r.status === "pending").length})
+            </TabsTrigger>
           </TabsList>
 
           {/* 1. Members Management Tab */}
@@ -523,9 +568,18 @@ export default function AdminDashboardPage() {
                           </TableCell>
                           <TableCell className="font-mono font-semibold whitespace-nowrap">৳{formatNum(m.totalSaved || 0, locale)}</TableCell>
                           <TableCell>
-                            <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${m.status === "active" ? "bg-green-50 text-green-600 border border-green-200" : "bg-rose-50 text-rose-600 border border-rose-200"
-                              }`}>
-                              {m.status === "active" ? t("admin.dashboard.active") : t("admin.dashboard.inactive")}
+                            <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                              m.status === "active" 
+                                ? "bg-green-50 text-green-600 border border-green-200" 
+                                : m.status === "pending_approval"
+                                ? "bg-amber-50 text-amber-600 border border-amber-200"
+                                : "bg-rose-50 text-rose-600 border border-rose-200"
+                            }`}>
+                              {m.status === "active" 
+                                ? t("admin.dashboard.active") 
+                                : m.status === "pending_approval"
+                                ? "অনুমোদন পেন্ডিং"
+                                : t("admin.dashboard.inactive")}
                             </span>
                           </TableCell>
                           <TableCell className="text-right">
@@ -711,6 +765,96 @@ export default function AdminDashboardPage() {
                           <TableCell className="text-right font-mono text-primary font-bold whitespace-nowrap">৳{formatNum(tx.saved, locale)}</TableCell>
                         </TableRow>
                       ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* 4. Partner Requests Tab */}
+          <TabsContent value="requests" className="mt-4">
+            <Card className="border-border shadow-md">
+              <CardHeader>
+                <CardTitle className="font-heading text-lg font-bold text-secondary">
+                  অংশীদার হাসপাতাল ও ক্লিনিক আবেদন
+                </CardTitle>
+                <CardDescription>
+                  হেলথ ক্লাব প্ল্যাটফর্মে যুক্ত হতে ইচ্ছুক চিকিৎসাকেন্দ্র ও ফার্মেসীগুলোর আবেদনের তালিকা
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="overflow-hidden border border-border rounded-xl bg-background">
+                  <Table>
+                    <TableHeader className="bg-muted/40">
+                      <TableRow className="hover:bg-transparent border-b border-border">
+                        <TableHead className="font-semibold text-secondary">প্রতিষ্ঠান / ঠিকানা</TableHead>
+                        <TableHead className="font-semibold text-secondary">ক্যাটাগরি</TableHead>
+                        <TableHead className="font-semibold text-secondary">ডিসকাউন্ট রেট</TableHead>
+                        <TableHead className="font-semibold text-secondary">যোগাযোগ</TableHead>
+                        <TableHead className="font-semibold text-secondary">স্ট্যাটাস</TableHead>
+                        <TableHead className="font-semibold text-secondary text-right">অ্যাকশন</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {partnerRequests.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                            কোনো নতুন আবেদন পাওয়া যায়নি।
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        partnerRequests.map((req) => (
+                          <TableRow key={req.id} className="hover:bg-muted/20 border-b border-border/60">
+                            <TableCell>
+                              <div className="font-bold text-secondary">{req.orgName}</div>
+                              <div className="text-xs text-muted-foreground mt-0.5">{req.address}</div>
+                            </TableCell>
+                            <TableCell className="capitalize text-xs font-semibold">
+                              {req.category === "hospital" ? "হাসপাতাল" : req.category === "diagnostic" ? "ডায়াগনস্টিক" : "ফার্মেসী"}
+                            </TableCell>
+                            <TableCell className="font-mono text-xs font-bold text-primary">
+                              {req.discount}
+                            </TableCell>
+                            <TableCell className="text-xs space-y-0.5">
+                              <div>মোবাইল: <span className="font-semibold">{req.phone}</span></div>
+                              {req.email && <div className="text-muted-foreground">{req.email}</div>}
+                            </TableCell>
+                            <TableCell>
+                              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                                req.status === "pending"
+                                  ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300"
+                                  : req.status === "approved"
+                                  ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+                                  : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
+                              }`}>
+                                {req.status === "pending" ? "পেন্ডিং" : req.status === "approved" ? "অনুমোদিত" : "বাতিলকৃত"}
+                              </span>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              {req.status === "pending" && (
+                                <div className="flex justify-end gap-2">
+                                  <Button
+                                    size="sm"
+                                    onClick={() => handleApprovePartnerRequest(req.id)}
+                                    className="bg-primary hover:bg-primary-dark text-white text-xs h-7 py-1 px-3 animate-pulse"
+                                  >
+                                    অনুমোদন
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => handleRejectPartnerRequest(req.id)}
+                                    className="text-destructive border-destructive/20 hover:bg-destructive/10 text-xs h-7 py-1 px-3"
+                                  >
+                                    বাতিল
+                                  </Button>
+                                </div>
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
                     </TableBody>
                   </Table>
                 </div>
@@ -937,10 +1081,22 @@ export default function AdminDashboardPage() {
                     <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                       viewingMember.status === "active" 
                         ? "bg-green-50 text-green-600 border border-green-200" 
+                        : viewingMember.status === "pending_approval"
+                        ? "bg-amber-50 text-amber-600 border border-amber-200"
                         : "bg-rose-50 text-rose-600 border border-rose-200"
                     }`}>
-                      <span className={`h-1.5 w-1.5 rounded-full ${viewingMember.status === "active" ? "bg-green-500" : "bg-rose-500"}`} />
-                      {viewingMember.status === "active" ? t("admin.dashboard.active") : t("admin.dashboard.inactive")}
+                      <span className={`h-1.5 w-1.5 rounded-full ${
+                        viewingMember.status === "active" 
+                          ? "bg-green-500" 
+                          : viewingMember.status === "pending_approval"
+                          ? "bg-amber-500"
+                          : "bg-rose-500"
+                      }`} />
+                      {viewingMember.status === "active" 
+                        ? t("admin.dashboard.active") 
+                        : viewingMember.status === "pending_approval"
+                        ? "অনুমোদন পেন্ডিং"
+                        : t("admin.dashboard.inactive")}
                     </span>
                   </div>
                 </div>
@@ -1020,6 +1176,22 @@ export default function AdminDashboardPage() {
                   </div>
                 </div>
 
+                {/* bKash Payment Details */}
+                {viewingMember.bkashSender && viewingMember.bkashTxnId && (
+                  <div className="bg-amber-50 dark:bg-amber-950/20 p-4 rounded-2xl border border-amber-200 dark:border-amber-900/50 space-y-2">
+                    <h4 className="text-xs font-bold text-amber-700 dark:text-amber-400 flex items-center gap-1.5 font-heading">
+                      <CreditCard className="h-4 w-4" />
+                      বিকাশ পেমেন্ট তথ্য (bKash Payment Details)
+                    </h4>
+                    <div className="grid grid-cols-2 text-xs gap-y-1.5 font-mono">
+                      <span className="text-muted-foreground font-sans">প্রেরক বিকাশ নম্বর:</span>
+                      <span className="font-semibold text-secondary">{viewingMember.bkashSender}</span>
+                      <span className="text-muted-foreground font-sans">ট্রানজেকশন আইডি (TxnID):</span>
+                      <span className="font-semibold text-secondary select-all">{viewingMember.bkashTxnId}</span>
+                    </div>
+                  </div>
+                )}
+
                 {/* Member Transactions */}
                 <div className="border-t border-border pt-4">
                   <h4 className="text-xs font-bold text-secondary uppercase font-mono tracking-wider mb-2 flex items-center gap-1">
@@ -1059,35 +1231,46 @@ export default function AdminDashboardPage() {
                 </div>
 
                 {/* Modal Footer Buttons */}
-                <div className="flex gap-2 border-t border-border pt-4">
-                  <Button 
-                    onClick={() => {
-                      setEditingMember(viewingMember);
-                      setNewMember({
-                        name: viewingMember.name,
-                        phone: viewingMember.phone,
-                        email: viewingMember.email || "",
-                        tier: viewingMember.tier,
-                        address: viewingMember.address || "",
-                        birthDate: viewingMember.birthDate || "",
-                        profession: viewingMember.profession || "",
-                        profilePictureUrl: viewingMember.profilePictureUrl || ""
-                      });
-                      setViewingMember(null);
-                      setIsMemberOpen(true);
-                    }}
-                    className="flex-1 bg-primary hover:bg-primary-dark text-white font-semibold gap-1.5"
-                  >
-                    <Edit3 className="h-4 w-4" />
-                    {t("admin.dashboard.editButton")}
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    onClick={() => setViewingMember(null)}
-                    className="flex-1 border-border text-secondary font-semibold"
-                  >
-                    {t("admin.dashboard.closeButton")}
-                  </Button>
+                <div className="flex flex-col sm:flex-row gap-2 border-t border-border pt-4">
+                  {viewingMember.status === "pending_approval" && (
+                    <Button
+                      onClick={() => handleToggleMemberStatus(viewingMember.id)}
+                      className="bg-green-600 hover:bg-green-700 text-white font-semibold gap-1.5 flex-1"
+                    >
+                      <ShieldCheck className="h-4 w-4" />
+                      অনুমোদন ও সক্রিয় করুন (Approve & Activate)
+                    </Button>
+                  )}
+                  <div className="flex gap-2 flex-1 w-full">
+                    <Button 
+                      onClick={() => {
+                        setEditingMember(viewingMember);
+                        setNewMember({
+                          name: viewingMember.name,
+                          phone: viewingMember.phone,
+                          email: viewingMember.email || "",
+                          tier: viewingMember.tier,
+                          address: viewingMember.address || "",
+                          birthDate: viewingMember.birthDate || "",
+                          profession: viewingMember.profession || "",
+                          profilePictureUrl: viewingMember.profilePictureUrl || ""
+                        });
+                        setViewingMember(null);
+                        setIsMemberOpen(true);
+                      }}
+                      className="flex-1 bg-primary hover:bg-primary-dark text-white font-semibold gap-1.5"
+                    >
+                      <Edit3 className="h-4 w-4" />
+                      {t("admin.dashboard.editButton")}
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setViewingMember(null)}
+                      className="flex-1 border-border text-secondary font-semibold"
+                    >
+                      {t("admin.dashboard.closeButton")}
+                    </Button>
+                  </div>
                 </div>
               </div>
             </DialogContent>

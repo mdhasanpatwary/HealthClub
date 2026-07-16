@@ -24,14 +24,12 @@ export default async function MembershipPage() {
     { title: "Hospital Discount", desc: "Flat 10% discount on the total bill at any partner hospital simply by showing your digital membership card." },
     { title: "Diagnostic Test Off", desc: "Flat 10% discount on all pathological and imaging tests including blood tests and X-rays." },
     { title: "Model Pharmacy Offer", desc: "Flat 10% direct discount on purchasing essential medicines from designated partner pharmacies." },
-    { title: "Family Savings", desc: "Family plans allow up to 4 family members to get individual membership cards with the same discount benefits." },
     { title: "Free Health Camps", desc: "Access to regularly organized free diabetes checkups, eye camps, and blood pressure tests." },
     { title: "1 Year Founding Status", desc: "Membership is completely free for 1 year for the first 100 founding members." }
   ] : [
     { title: "হাসপাতাল ডিসকাউন্ট", desc: "যেকোনো অংশীদার হাসপাতালে শুধু ডিজিটাল মেম্বার কার্ড প্রদর্শন করে বিলের উপর ফ্ল্যাট ১০% ডিসকাউন্ট।" },
     { title: "ডায়াগনস্টিক টেস্ট ছাড়", desc: "রক্ত পরীক্ষা, এক্স-রে সহ সকল প্যাথলজিক্যাল ও ইমেজিং পরীক্ষায় ফ্ল্যাট ১০% ডিসকাউন্ট।" },
     { title: "মডেল ফার্মেসী অফার", desc: "নির্ধারিত পার্টনার ফার্মেসীগুলো থেকে প্রয়োজনীয় ঔষধ ক্রয়ের ক্ষেত্রে সরাসরি ফ্ল্যাট ১০% ডিসকাউন্ট।" },
-    { title: "পারিবারিক সাশ্রয়", desc: "ফ্যামিলি প্ল্যানের মাধ্যমে পরিবারের ৪ জন সদস্যের আলাদা মেম্বারশিপ কার্ড ও একই ছাড় সুবিধা।" },
     { title: "ফ্রি স্বাস্থ্য ক্যাম্প", desc: "নিয়মিত আয়োজিত ফ্রি ডায়াবেটিস চেকআপ, আই ক্যাম্প এবং রক্তচাপ পরীক্ষা।" },
     { title: "১ বছর প্রতিষ্ঠাতা স্ট্যাটাস", desc: "প্রথম ১০০ ফাউন্ডিং মেম্বারদের জন্য মেম্বারশিপ ১ বছরের জন্য সম্পুর্ণ ফ্রী।" }
   ];

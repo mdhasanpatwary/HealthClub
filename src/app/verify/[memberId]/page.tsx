@@ -36,76 +36,128 @@ export default function VerificationPage() {
         <div className="text-center text-muted-foreground">{t("pages.verify.loading")}</div>
       ) : member ? (
         
-        /* 1. VERIFIED SUCCESS SCREEN */
-        <Card className="w-full max-w-md border-2 border-primary shadow-2xl bg-background/90 backdrop-blur text-center overflow-hidden">
-          
-          {/* Header decorative badge */}
-          <div className="bg-primary/10 py-6 border-b border-primary/20">
-            <ShieldCheck className="h-16 w-16 text-primary mx-auto animate-pulse" />
-            <h1 className="font-heading text-2xl font-bold text-primary mt-2">
-              {t("pages.verify.verifiedMember")}
-            </h1>
-            <p className="text-xs text-muted-foreground mt-1">
-              {t("pages.verify.verifiedDatabase")}
-            </p>
-          </div>
-
-          <CardContent className="p-6 md:p-8 space-y-6">
+        member.status === "active" ? (
+          /* 1. VERIFIED SUCCESS SCREEN */
+          <Card className="w-full max-w-md border-2 border-primary shadow-2xl bg-background/90 backdrop-blur text-center overflow-hidden">
             
-            {/* Member Details */}
-            <div className="space-y-4 text-left bg-muted/40 p-4 rounded-2xl border border-border">
+            {/* Header decorative badge */}
+            <div className="bg-primary/10 py-6 border-b border-primary/20">
+              <ShieldCheck className="h-16 w-16 text-primary mx-auto animate-pulse" />
+              <h1 className="font-heading text-2xl font-bold text-primary mt-2">
+                {t("pages.verify.verifiedMember")}
+              </h1>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t("pages.verify.verifiedDatabase")}
+              </p>
+            </div>
+
+            <CardContent className="p-6 md:p-8 space-y-6">
               
-              <div>
-                <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberName")}</span>
-                <p className="text-base font-bold text-secondary">{member.name}</p>
+              {/* Member Details */}
+              <div className="space-y-4 text-left bg-muted/40 p-4 rounded-2xl border border-border">
+                
+                <div>
+                  <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberName")}</span>
+                  <p className="text-base font-bold text-secondary">{member.name}</p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 border-t border-border/80 pt-3">
+                  <div>
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberId")}</span>
+                    <p className="text-sm font-semibold text-secondary font-mono">{member.id}</p>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberType")}</span>
+                    <p className="text-sm font-semibold text-secondary capitalize">{member.tier}</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 border-t border-border/80 pt-3">
+                  <div>
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.expiryDate")}</span>
+                    <p className="text-sm font-semibold text-secondary font-mono">{member.expiryDate}</p>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.membershipStatus")}</span>
+                    <p className="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-200 inline-flex items-center gap-1 mt-0.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+                      {t("pages.verify.active")}
+                    </p>
+                  </div>
+                </div>
+
               </div>
 
-              <div className="grid grid-cols-2 gap-4 border-t border-border/80 pt-3">
-                <div>
-                  <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberId")}</span>
-                  <p className="text-sm font-semibold text-secondary font-mono">{member.id}</p>
-                </div>
-                <div>
-                  <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberType")}</span>
-                  <p className="text-sm font-semibold text-secondary capitalize">{member.tier}</p>
-                </div>
+              {/* Guideline note for Hospital desk */}
+              <div className="text-xs text-muted-foreground border-t border-border pt-4 text-center">
+                <p className="font-semibold text-secondary mb-1">{t("pages.verify.todoAtHospital")}</p>
+                <p>{t("pages.verify.todoStep1")}</p>
+                <p className="mt-0.5">{t("pages.verify.todoStep2")}</p>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 border-t border-border/80 pt-3">
-                <div>
-                  <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.expiryDate")}</span>
-                  <p className="text-sm font-semibold text-secondary font-mono">{member.expiryDate}</p>
-                </div>
-                <div>
-                  <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.membershipStatus")}</span>
-                  <p className="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-200 inline-flex items-center gap-1 mt-0.5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-                    {t("pages.verify.active")}
-                  </p>
-                </div>
+              <div className="pt-2">
+                <Link href="/">
+                  <Button variant="outline" className="w-full gap-2">
+                    <ArrowLeft className="h-4 w-4" />
+                    {t("pages.verify.backToHome")}
+                  </Button>
+                </Link>
               </div>
 
+            </CardContent>
+
+          </Card>
+        ) : (
+          /* PENDING / INACTIVE SCREEN */
+          <Card className="w-full max-w-md border-2 border-amber-500 shadow-2xl bg-background/90 backdrop-blur text-center overflow-hidden">
+            <div className="bg-amber-500/10 py-6 border-b border-amber-500/20">
+              <ShieldAlert className="h-16 w-16 text-amber-500 mx-auto animate-bounce" />
+              <h1 className="font-heading text-2xl font-bold text-amber-600 mt-2">
+                মেম্বারশিপ সচল নয়
+              </h1>
+              <p className="text-xs text-muted-foreground mt-1">
+                মেম্বারশিপ অ্যাকাউন্টটি বর্তমানে পেন্ডিং বা অনুমোদনের অপেক্ষায় রয়েছে
+              </p>
             </div>
-
-            {/* Guideline note for Hospital desk */}
-            <div className="text-xs text-muted-foreground border-t border-border pt-4 text-center">
-              <p className="font-semibold text-secondary mb-1">{t("pages.verify.todoAtHospital")}</p>
-              <p>{t("pages.verify.todoStep1")}</p>
-              <p className="mt-0.5">{t("pages.verify.todoStep2")}</p>
-            </div>
-
-            <div className="pt-2">
-              <Link href="/">
-                <Button variant="outline" className="w-full gap-2">
-                  <ArrowLeft className="h-4 w-4" />
-                  {t("pages.verify.backToHome")}
-                </Button>
-              </Link>
-            </div>
-
-          </CardContent>
-
-        </Card>
+            <CardContent className="p-6 md:p-8 space-y-6">
+              <div className="space-y-4 text-left bg-muted/40 p-4 rounded-2xl border border-border">
+                <div>
+                  <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberName")}</span>
+                  <p className="text-base font-bold text-secondary">{member.name}</p>
+                </div>
+                <div className="grid grid-cols-2 gap-4 border-t border-border/80 pt-3">
+                  <div>
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberId")}</span>
+                    <p className="text-sm font-semibold text-secondary font-mono">{member.id}</p>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberType")}</span>
+                    <p className="text-sm font-semibold text-secondary capitalize">{member.tier}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4 border-t border-border/80 pt-3">
+                  <div>
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">স্ট্যাটাস</span>
+                    <p className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200 inline-flex items-center gap-1 mt-0.5 uppercase">
+                      PENDING APPROVAL
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="text-xs text-muted-foreground border-t border-border pt-4 text-center">
+                মেম্বারশিপটি সচল হওয়ার পর হাসপাতাল বা অংশীদার চিকিৎসাকেন্দ্রে ডিসকাউন্ট পাওয়া যাবে।
+              </div>
+              <div className="pt-2">
+                <Link href="/">
+                  <Button variant="outline" className="w-full gap-2">
+                    <ArrowLeft className="h-4 w-4" />
+                    {t("pages.verify.backToHome")}
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        )
       ) : (
         
         /* 2. INVALID CARD SCREEN */

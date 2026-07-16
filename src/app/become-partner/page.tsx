@@ -5,6 +5,7 @@ import { CheckCircle2, Building2, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { addPartnerRequestAction } from "@/app/actions/dbActions";
 
 export default function BecomePartnerPage() {
   const [formData, setFormData] = useState({
@@ -18,9 +19,17 @@ export default function BecomePartnerPage() {
   });
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setTimeout(() => {
+    try {
+      await addPartnerRequestAction({
+        orgName: formData.orgName,
+        category: formData.category as "hospital" | "diagnostic" | "pharmacy",
+        address: formData.address,
+        discount: formData.discount,
+        phone: formData.phone,
+        email: formData.email || null,
+      });
       setSubmitted(true);
       setFormData({
         orgName: "",
@@ -31,7 +40,10 @@ export default function BecomePartnerPage() {
         phone: "",
         email: ""
       });
-    }, 800);
+    } catch (err) {
+      console.error(err);
+      alert("আবেদনটি জমা দেওয়া সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।");
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {

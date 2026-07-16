@@ -386,7 +386,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Member: 'Member',
   Partner: 'Partner',
-  Transaction: 'Transaction'
+  Transaction: 'Transaction',
+  PartnerRequest: 'PartnerRequest'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -402,7 +403,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "member" | "partner" | "transaction"
+    modelProps: "member" | "partner" | "transaction" | "partnerRequest"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -628,6 +629,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PartnerRequest: {
+      payload: Prisma.$PartnerRequestPayload<ExtArgs>
+      fields: Prisma.PartnerRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PartnerRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PartnerRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.PartnerRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PartnerRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerRequestPayload>
+        }
+        findMany: {
+          args: Prisma.PartnerRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerRequestPayload>[]
+        }
+        create: {
+          args: Prisma.PartnerRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerRequestPayload>
+        }
+        createMany: {
+          args: Prisma.PartnerRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PartnerRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.PartnerRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerRequestPayload>
+        }
+        update: {
+          args: Prisma.PartnerRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.PartnerRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PartnerRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PartnerRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.PartnerRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.PartnerRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePartnerRequest>
+        }
+        groupBy: {
+          args: Prisma.PartnerRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PartnerRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PartnerRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PartnerRequestCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -672,6 +747,7 @@ export const MemberScalarFieldEnum = {
   name: 'name',
   phone: 'phone',
   email: 'email',
+  password: 'password',
   tier: 'tier',
   status: 'status',
   joinedDate: 'joinedDate',
@@ -682,7 +758,11 @@ export const MemberScalarFieldEnum = {
   birthDate: 'birthDate',
   profession: 'profession',
   profilePictureUrl: 'profilePictureUrl',
-  createdAt: 'createdAt'
+  emailVerified: 'emailVerified',
+  verificationCode: 'verificationCode',
+  createdAt: 'createdAt',
+  bkashSender: 'bkashSender',
+  bkashTxnId: 'bkashTxnId'
 } as const
 
 export type MemberScalarFieldEnum = (typeof MemberScalarFieldEnum)[keyof typeof MemberScalarFieldEnum]
@@ -717,6 +797,21 @@ export const TransactionScalarFieldEnum = {
 } as const
 
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
+
+
+export const PartnerRequestScalarFieldEnum = {
+  id: 'id',
+  orgName: 'orgName',
+  category: 'category',
+  address: 'address',
+  discount: 'discount',
+  phone: 'phone',
+  email: 'email',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type PartnerRequestScalarFieldEnum = (typeof PartnerRequestScalarFieldEnum)[keyof typeof PartnerRequestScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -788,6 +883,13 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -917,6 +1019,7 @@ export type GlobalOmitConfig = {
   member?: Prisma.MemberOmit
   partner?: Prisma.PartnerOmit
   transaction?: Prisma.TransactionOmit
+  partnerRequest?: Prisma.PartnerRequestOmit
 }
 
 /* Types for Logging */

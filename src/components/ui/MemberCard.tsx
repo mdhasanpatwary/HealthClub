@@ -7,8 +7,6 @@ interface MemberCardProps {
 
 export default function MemberCard({ member }: MemberCardProps) {
   // Determine card styles based on tier
-  const isFamily = member.tier === "family";
-
   let bgStyles = "bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 text-white border border-emerald-500/30";
   let badgeText = "Founding Member";
   let badgeIcon = <Star className="h-4 w-4 fill-amber-400 text-amber-400" />;
@@ -19,11 +17,6 @@ export default function MemberCard({ member }: MemberCardProps) {
     badgeText = "Individual Member";
     badgeIcon = <ShieldCheck className="h-4 w-4 text-emerald-400" />;
     badgeBg = "bg-emerald-400/20 text-emerald-300 border border-emerald-400/30";
-  } else if (isFamily) {
-    bgStyles = "bg-gradient-to-br from-blue-950 via-slate-900 to-emerald-950 text-white border border-blue-500/30";
-    badgeText = "Family Member";
-    badgeIcon = <Heart className="h-4 w-4 fill-emerald-400 text-emerald-400" />;
-    badgeBg = "bg-blue-400/20 text-blue-300 border border-blue-400/30";
   }
 
   // Generate QR Code URL

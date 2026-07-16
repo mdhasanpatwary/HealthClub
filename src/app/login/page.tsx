@@ -8,6 +8,7 @@ import { dbStore } from "@/services/dbStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
+import { loginMemberAction } from "@/app/actions/dbActions";
 
 export default function LoginPage() {
   const [identifier, setIdentifier] = useState("");
@@ -31,13 +32,20 @@ export default function LoginPage() {
     }
 
     try {
-      // Lookup member in storage
-      const member = await dbStore.getMemberById(identifier);
+      const member = await loginMemberAction(identifier, password);
       if (member) {
+        if (member.status === "inactive" && !member.emailVerified) {
+          setError("আপনার ইমেইল ভেরিফাই করা হয়নি। ভেরিফিকেশন পেজে পাঠানো হচ্ছে...");
+          setTimeout(() => {
+            router.push(`/register/verify-email?email=${encodeURIComponent(member.email)}`);
+          }, 2000);
+          return;
+        }
+
         dbStore.setCurrentUser(member);
         router.push("/dashboard");
       } else {
-        setError("প্রদত্ত মোবাইল নম্বর বা ইমেইল দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।");
+        setError("ভুল মোবাইল নম্বর/ইমেইল অথবা পাসওয়ার্ড। অনুগ্রহ করে আবার চেষ্টা করুন।");
       }
     } catch {
       setError("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");

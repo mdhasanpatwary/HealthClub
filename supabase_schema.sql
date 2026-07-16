@@ -3,9 +3,10 @@ CREATE TABLE IF NOT EXISTS members (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     phone TEXT NOT NULL UNIQUE,
-    email TEXT,
-    tier TEXT NOT NULL CHECK (tier IN ('founding', 'individual', 'family')),
-    status TEXT NOT NULL CHECK (status IN ('active', 'inactive')),
+    email TEXT UNIQUE,
+    password TEXT NOT NULL,
+    tier TEXT NOT NULL CHECK (tier IN ('founding', 'individual')),
+    status TEXT NOT NULL CHECK (status IN ('active', 'inactive', 'pending_payment')),
     joined_date DATE NOT NULL,
     expiry_date DATE NOT NULL,
     qr_code_url TEXT,
@@ -14,6 +15,8 @@ CREATE TABLE IF NOT EXISTS members (
     birth_date DATE,
     profession TEXT,
     profile_picture_url TEXT,
+    email_verified BOOLEAN DEFAULT FALSE NOT NULL,
+    verification_code TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
@@ -44,6 +47,19 @@ CREATE TABLE IF NOT EXISTS transactions (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
+-- Create partner requests table
+CREATE TABLE IF NOT EXISTS partner_requests (
+    id TEXT PRIMARY KEY,
+    org_name TEXT NOT NULL,
+    category TEXT NOT NULL CHECK (category IN ('hospital', 'diagnostic', 'pharmacy')),
+    address TEXT NOT NULL,
+    discount TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    email TEXT,
+    status TEXT NOT NULL CHECK (status IN ('pending', 'approved', 'rejected')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
 -- Indexing for performance
 CREATE INDEX IF NOT EXISTS idx_members_phone ON members(phone);
 CREATE INDEX IF NOT EXISTS idx_members_email ON members(email);
@@ -61,18 +77,18 @@ VALUES
 ON CONFLICT (id) DO NOTHING;
 
 -- Insert Seed Data (Members)
-INSERT INTO members (id, name, phone, email, tier, status, joined_date, expiry_date, total_saved)
+-- Passwords are hashed representation of "123456" for demo members
+INSERT INTO members (id, name, phone, email, password, tier, status, joined_date, expiry_date, total_saved, email_verified)
 VALUES
-('HC-1001', 'মোঃ আব্দুর রহমান', '01711112222', 'arahman@gmail.com', 'founding', 'active', '2026-01-10', '2027-01-10', 2000),
-('HC-1002', 'নুসরাত জাহান', '01811112222', 'nusrat@gmail.com', 'individual', 'active', '2026-03-15', '2027-03-15', 300),
-('HC-1003', 'করিম উল্লাহ মৃধা', '01911112222', 'karim@gmail.com', 'family', 'active', '2026-05-20', '2027-05-20', 800)
+('HC-1001', 'মোঃ আব্দুর রহমান', '01711112222', 'arahman@gmail.com', 'salt:hash1', 'founding', 'active', '2026-01-10', '2027-01-10', 2000, true),
+('HC-1002', 'নুসরাত জাহান', '01811112222', 'nusrat@gmail.com', 'salt:hash2', 'individual', 'active', '2026-03-15', '2027-03-15', 300, true)
 ON CONFLICT (id) DO NOTHING;
 
 -- Insert Seed Data (Transactions)
 INSERT INTO transactions (id, member_id, member_name, partner_id, partner_name, amount, saved, date)
 VALUES
 ('tx1', 'HC-1001', 'মোঃ আব্দুর রহমান', 'p1', 'পপুলার ডায়াগনস্টিক সেন্টার', 5000, 500, '2026-06-12 10:30:00+06'),
-('tx2', 'HC-1003', 'করিম উল্লাহ মৃধা', 'p5', 'ইবনে সিনা ডায়াগনস্টিক সেন্টার', 8000, 800, '2026-06-25 16:15:00+06'),
 ('tx3', 'HC-1002', 'নুসরাত জাহান', 'p3', 'লাজ ফার্মা লিমিটেড', 3000, 300, '2026-07-02 13:20:00+06'),
 ('tx4', 'HC-1001', 'মোঃ আব্দুর রহমান', 'p2', 'ল্যাবএইড স্পেশালাইজড হাসপাতাল', 15000, 1500, '2026-07-10 11:45:00+06')
 ON CONFLICT (id) DO NOTHING;
+

@@ -11,4 +11,5 @@
 export type * from './models/Member'
 export type * from './models/Partner'
 export type * from './models/Transaction'
+export type * from './models/PartnerRequest'
 export type * from './commonInputTypes'

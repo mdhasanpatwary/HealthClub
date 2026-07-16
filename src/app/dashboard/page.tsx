@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { 
   Heart, CreditCard, History, LayoutDashboard, Save, CheckCircle2 
 } from "lucide-react";
@@ -133,9 +134,25 @@ export default function DashboardPage() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full border border-green-200">
-              মেম্বারশিপ সচল (ACTIVE)
+            <span className={`h-2 w-2 rounded-full ${
+              user.status === 'active' 
+                ? 'bg-green-500 animate-pulse' 
+                : user.status === 'pending_payment'
+                ? 'bg-rose-500 animate-pulse'
+                : 'bg-amber-500 animate-bounce'
+            }`} />
+            <span className={`text-xs font-bold px-3 py-1 rounded-full border ${
+              user.status === 'active' 
+                ? 'bg-green-50 text-green-600 border-green-200' 
+                : user.status === 'pending_payment'
+                ? 'bg-rose-50 text-rose-600 border-rose-200'
+                : 'bg-amber-50 text-amber-600 border-amber-200'
+            }`}>
+              {user.status === 'active' 
+                ? 'মেম্বারশিপ সচল (ACTIVE)' 
+                : user.status === 'pending_payment'
+                ? 'পেমেন্ট পেন্ডিং (PENDING PAYMENT)'
+                : 'অনুমোদনের অপেক্ষায় (PENDING APPROVAL)'}
             </span>
           </div>
         </div>
@@ -200,7 +217,44 @@ export default function DashboardPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6">
-                <MemberCard member={user} />
+                {user.status === "active" ? (
+                  <MemberCard member={user} />
+                ) : user.status === "pending_payment" ? (
+                  <div className="relative w-full max-w-md mx-auto aspect-[1.586/1] rounded-2xl p-6 overflow-hidden border border-rose-500/20 bg-gradient-to-br from-slate-900 to-slate-950 flex flex-col justify-center items-center text-center space-y-3 shadow-lg">
+                    <div className="absolute inset-0 bg-background/50 backdrop-blur-[3px]" />
+                    <div className="z-10 bg-rose-500/10 p-2.5 rounded-full border border-rose-500/20">
+                      <CreditCard className="h-6 w-6 text-rose-500 animate-pulse" />
+                    </div>
+                    <h4 className="z-10 font-heading text-white font-bold text-sm">মেম্বারশিপ ফি পরিশোধ করুন</h4>
+                    <p className="z-10 text-[11px] text-slate-300 max-w-xs leading-relaxed">
+                      অ্যাকাউন্ট সক্রিয় করতে ৫০০ টাকা বাৎসরিক মেম্বারশিপ ফি পরিশোধ করতে হবে।
+                    </p>
+                    <Link href={`/register/payment?memberId=${user.id}`} className="z-10">
+                      <Button className="bg-[#e2125d] hover:bg-[#c20f4f] text-white text-xs font-semibold px-4 py-1.5 h-8 rounded-lg shadow-md transition-all">
+                        পেমেন্ট করুন (৳৫০০)
+                      </Button>
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="relative w-full max-w-md mx-auto aspect-[1.586/1] rounded-2xl p-6 overflow-hidden border border-amber-500/20 bg-gradient-to-br from-slate-900 to-slate-950 flex flex-col justify-center items-center text-center space-y-2.5 shadow-lg">
+                    <div className="absolute inset-0 bg-background/50 backdrop-blur-[3px]" />
+                    <div className="z-10 bg-amber-500/10 p-2 rounded-full border border-amber-500/20">
+                      <svg className="h-6 w-6 text-amber-500 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m0 0v2m0-2h2m-2 0H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <h4 className="z-10 font-heading text-white font-bold text-sm">অনুমোদন পেন্ডিং</h4>
+                    <p className="z-10 text-[11px] text-slate-300 max-w-xs leading-relaxed">
+                      আপনার মেম্বারশিপটি বর্তমানে অনুমোদনের অপেক্ষায় রয়েছে। এডমিন এটি যাচাই করে সক্রিয় করার পর আপনার মেম্বারশিপ কার্ড ও কিউআর কোড সচল হবে।
+                    </p>
+                    {user.bkashSender && user.bkashTxnId && (
+                      <div className="z-10 bg-white/5 border border-white/10 rounded-lg p-2 text-left w-full text-[10px] text-slate-300 font-mono mt-1 space-y-0.5">
+                        <p><span className="text-slate-400">বিকাশ নম্বর:</span> {user.bkashSender}</p>
+                        <p><span className="text-slate-400">TxnID:</span> {user.bkashTxnId}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
                 <div className="text-center mt-6">
                   <p className="text-xs text-muted-foreground">
                     * মেম্বার ভেরিফিকেশনের জন্য কিউআর কোডটি সুরক্ষিতভাবে স্ক্যানযোগ্য।

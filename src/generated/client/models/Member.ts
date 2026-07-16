@@ -39,6 +39,7 @@ export type MemberMinAggregateOutputType = {
   name: string | null
   phone: string | null
   email: string | null
+  password: string | null
   tier: string | null
   status: string | null
   joinedDate: Date | null
@@ -49,7 +50,11 @@ export type MemberMinAggregateOutputType = {
   birthDate: Date | null
   profession: string | null
   profilePictureUrl: string | null
+  emailVerified: boolean | null
+  verificationCode: string | null
   createdAt: Date | null
+  bkashSender: string | null
+  bkashTxnId: string | null
 }
 
 export type MemberMaxAggregateOutputType = {
@@ -57,6 +62,7 @@ export type MemberMaxAggregateOutputType = {
   name: string | null
   phone: string | null
   email: string | null
+  password: string | null
   tier: string | null
   status: string | null
   joinedDate: Date | null
@@ -67,7 +73,11 @@ export type MemberMaxAggregateOutputType = {
   birthDate: Date | null
   profession: string | null
   profilePictureUrl: string | null
+  emailVerified: boolean | null
+  verificationCode: string | null
   createdAt: Date | null
+  bkashSender: string | null
+  bkashTxnId: string | null
 }
 
 export type MemberCountAggregateOutputType = {
@@ -75,6 +85,7 @@ export type MemberCountAggregateOutputType = {
   name: number
   phone: number
   email: number
+  password: number
   tier: number
   status: number
   joinedDate: number
@@ -85,7 +96,11 @@ export type MemberCountAggregateOutputType = {
   birthDate: number
   profession: number
   profilePictureUrl: number
+  emailVerified: number
+  verificationCode: number
   createdAt: number
+  bkashSender: number
+  bkashTxnId: number
   _all: number
 }
 
@@ -103,6 +118,7 @@ export type MemberMinAggregateInputType = {
   name?: true
   phone?: true
   email?: true
+  password?: true
   tier?: true
   status?: true
   joinedDate?: true
@@ -113,7 +129,11 @@ export type MemberMinAggregateInputType = {
   birthDate?: true
   profession?: true
   profilePictureUrl?: true
+  emailVerified?: true
+  verificationCode?: true
   createdAt?: true
+  bkashSender?: true
+  bkashTxnId?: true
 }
 
 export type MemberMaxAggregateInputType = {
@@ -121,6 +141,7 @@ export type MemberMaxAggregateInputType = {
   name?: true
   phone?: true
   email?: true
+  password?: true
   tier?: true
   status?: true
   joinedDate?: true
@@ -131,7 +152,11 @@ export type MemberMaxAggregateInputType = {
   birthDate?: true
   profession?: true
   profilePictureUrl?: true
+  emailVerified?: true
+  verificationCode?: true
   createdAt?: true
+  bkashSender?: true
+  bkashTxnId?: true
 }
 
 export type MemberCountAggregateInputType = {
@@ -139,6 +164,7 @@ export type MemberCountAggregateInputType = {
   name?: true
   phone?: true
   email?: true
+  password?: true
   tier?: true
   status?: true
   joinedDate?: true
@@ -149,7 +175,11 @@ export type MemberCountAggregateInputType = {
   birthDate?: true
   profession?: true
   profilePictureUrl?: true
+  emailVerified?: true
+  verificationCode?: true
   createdAt?: true
+  bkashSender?: true
+  bkashTxnId?: true
   _all?: true
 }
 
@@ -244,6 +274,7 @@ export type MemberGroupByOutputType = {
   name: string
   phone: string
   email: string | null
+  password: string
   tier: string
   status: string
   joinedDate: Date
@@ -254,7 +285,11 @@ export type MemberGroupByOutputType = {
   birthDate: Date | null
   profession: string | null
   profilePictureUrl: string | null
+  emailVerified: boolean
+  verificationCode: string | null
   createdAt: Date
+  bkashSender: string | null
+  bkashTxnId: string | null
   _count: MemberCountAggregateOutputType | null
   _avg: MemberAvgAggregateOutputType | null
   _sum: MemberSumAggregateOutputType | null
@@ -285,6 +320,7 @@ export type MemberWhereInput = {
   name?: Prisma.StringFilter<"Member"> | string
   phone?: Prisma.StringFilter<"Member"> | string
   email?: Prisma.StringNullableFilter<"Member"> | string | null
+  password?: Prisma.StringFilter<"Member"> | string
   tier?: Prisma.StringFilter<"Member"> | string
   status?: Prisma.StringFilter<"Member"> | string
   joinedDate?: Prisma.DateTimeFilter<"Member"> | Date | string
@@ -295,7 +331,11 @@ export type MemberWhereInput = {
   birthDate?: Prisma.DateTimeNullableFilter<"Member"> | Date | string | null
   profession?: Prisma.StringNullableFilter<"Member"> | string | null
   profilePictureUrl?: Prisma.StringNullableFilter<"Member"> | string | null
+  emailVerified?: Prisma.BoolFilter<"Member"> | boolean
+  verificationCode?: Prisma.StringNullableFilter<"Member"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
+  bkashSender?: Prisma.StringNullableFilter<"Member"> | string | null
+  bkashTxnId?: Prisma.StringNullableFilter<"Member"> | string | null
   transactions?: Prisma.TransactionListRelationFilter
 }
 
@@ -304,6 +344,7 @@ export type MemberOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
+  password?: Prisma.SortOrder
   tier?: Prisma.SortOrder
   status?: Prisma.SortOrder
   joinedDate?: Prisma.SortOrder
@@ -314,18 +355,23 @@ export type MemberOrderByWithRelationInput = {
   birthDate?: Prisma.SortOrderInput | Prisma.SortOrder
   profession?: Prisma.SortOrderInput | Prisma.SortOrder
   profilePictureUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerified?: Prisma.SortOrder
+  verificationCode?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  bkashSender?: Prisma.SortOrderInput | Prisma.SortOrder
+  bkashTxnId?: Prisma.SortOrderInput | Prisma.SortOrder
   transactions?: Prisma.TransactionOrderByRelationAggregateInput
 }
 
 export type MemberWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   phone?: string
+  email?: string
   AND?: Prisma.MemberWhereInput | Prisma.MemberWhereInput[]
   OR?: Prisma.MemberWhereInput[]
   NOT?: Prisma.MemberWhereInput | Prisma.MemberWhereInput[]
   name?: Prisma.StringFilter<"Member"> | string
-  email?: Prisma.StringNullableFilter<"Member"> | string | null
+  password?: Prisma.StringFilter<"Member"> | string
   tier?: Prisma.StringFilter<"Member"> | string
   status?: Prisma.StringFilter<"Member"> | string
   joinedDate?: Prisma.DateTimeFilter<"Member"> | Date | string
@@ -336,15 +382,20 @@ export type MemberWhereUniqueInput = Prisma.AtLeast<{
   birthDate?: Prisma.DateTimeNullableFilter<"Member"> | Date | string | null
   profession?: Prisma.StringNullableFilter<"Member"> | string | null
   profilePictureUrl?: Prisma.StringNullableFilter<"Member"> | string | null
+  emailVerified?: Prisma.BoolFilter<"Member"> | boolean
+  verificationCode?: Prisma.StringNullableFilter<"Member"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
+  bkashSender?: Prisma.StringNullableFilter<"Member"> | string | null
+  bkashTxnId?: Prisma.StringNullableFilter<"Member"> | string | null
   transactions?: Prisma.TransactionListRelationFilter
-}, "id" | "phone">
+}, "id" | "phone" | "email">
 
 export type MemberOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
+  password?: Prisma.SortOrder
   tier?: Prisma.SortOrder
   status?: Prisma.SortOrder
   joinedDate?: Prisma.SortOrder
@@ -355,7 +406,11 @@ export type MemberOrderByWithAggregationInput = {
   birthDate?: Prisma.SortOrderInput | Prisma.SortOrder
   profession?: Prisma.SortOrderInput | Prisma.SortOrder
   profilePictureUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerified?: Prisma.SortOrder
+  verificationCode?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  bkashSender?: Prisma.SortOrderInput | Prisma.SortOrder
+  bkashTxnId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.MemberCountOrderByAggregateInput
   _avg?: Prisma.MemberAvgOrderByAggregateInput
   _max?: Prisma.MemberMaxOrderByAggregateInput
@@ -371,6 +426,7 @@ export type MemberScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Member"> | string
   phone?: Prisma.StringWithAggregatesFilter<"Member"> | string
   email?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
+  password?: Prisma.StringWithAggregatesFilter<"Member"> | string
   tier?: Prisma.StringWithAggregatesFilter<"Member"> | string
   status?: Prisma.StringWithAggregatesFilter<"Member"> | string
   joinedDate?: Prisma.DateTimeWithAggregatesFilter<"Member"> | Date | string
@@ -381,7 +437,11 @@ export type MemberScalarWhereWithAggregatesInput = {
   birthDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Member"> | Date | string | null
   profession?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
   profilePictureUrl?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
+  emailVerified?: Prisma.BoolWithAggregatesFilter<"Member"> | boolean
+  verificationCode?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Member"> | Date | string
+  bkashSender?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
+  bkashTxnId?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
 }
 
 export type MemberCreateInput = {
@@ -389,6 +449,7 @@ export type MemberCreateInput = {
   name: string
   phone: string
   email?: string | null
+  password: string
   tier: string
   status: string
   joinedDate: Date | string
@@ -399,7 +460,11 @@ export type MemberCreateInput = {
   birthDate?: Date | string | null
   profession?: string | null
   profilePictureUrl?: string | null
+  emailVerified?: boolean
+  verificationCode?: string | null
   createdAt?: Date | string
+  bkashSender?: string | null
+  bkashTxnId?: string | null
   transactions?: Prisma.TransactionCreateNestedManyWithoutMemberInput
 }
 
@@ -408,6 +473,7 @@ export type MemberUncheckedCreateInput = {
   name: string
   phone: string
   email?: string | null
+  password: string
   tier: string
   status: string
   joinedDate: Date | string
@@ -418,7 +484,11 @@ export type MemberUncheckedCreateInput = {
   birthDate?: Date | string | null
   profession?: string | null
   profilePictureUrl?: string | null
+  emailVerified?: boolean
+  verificationCode?: string | null
   createdAt?: Date | string
+  bkashSender?: string | null
+  bkashTxnId?: string | null
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutMemberInput
 }
 
@@ -427,6 +497,7 @@ export type MemberUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
   tier?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   joinedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -437,7 +508,11 @@ export type MemberUpdateInput = {
   birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactions?: Prisma.TransactionUpdateManyWithoutMemberNestedInput
 }
 
@@ -446,6 +521,7 @@ export type MemberUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
   tier?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   joinedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -456,7 +532,11 @@ export type MemberUncheckedUpdateInput = {
   birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutMemberNestedInput
 }
 
@@ -465,6 +545,7 @@ export type MemberCreateManyInput = {
   name: string
   phone: string
   email?: string | null
+  password: string
   tier: string
   status: string
   joinedDate: Date | string
@@ -475,7 +556,11 @@ export type MemberCreateManyInput = {
   birthDate?: Date | string | null
   profession?: string | null
   profilePictureUrl?: string | null
+  emailVerified?: boolean
+  verificationCode?: string | null
   createdAt?: Date | string
+  bkashSender?: string | null
+  bkashTxnId?: string | null
 }
 
 export type MemberUpdateManyMutationInput = {
@@ -483,6 +568,7 @@ export type MemberUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
   tier?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   joinedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -493,7 +579,11 @@ export type MemberUpdateManyMutationInput = {
   birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MemberUncheckedUpdateManyInput = {
@@ -501,6 +591,7 @@ export type MemberUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
   tier?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   joinedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -511,7 +602,11 @@ export type MemberUncheckedUpdateManyInput = {
   birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MemberCountOrderByAggregateInput = {
@@ -519,6 +614,7 @@ export type MemberCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  password?: Prisma.SortOrder
   tier?: Prisma.SortOrder
   status?: Prisma.SortOrder
   joinedDate?: Prisma.SortOrder
@@ -529,7 +625,11 @@ export type MemberCountOrderByAggregateInput = {
   birthDate?: Prisma.SortOrder
   profession?: Prisma.SortOrder
   profilePictureUrl?: Prisma.SortOrder
+  emailVerified?: Prisma.SortOrder
+  verificationCode?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  bkashSender?: Prisma.SortOrder
+  bkashTxnId?: Prisma.SortOrder
 }
 
 export type MemberAvgOrderByAggregateInput = {
@@ -541,6 +641,7 @@ export type MemberMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  password?: Prisma.SortOrder
   tier?: Prisma.SortOrder
   status?: Prisma.SortOrder
   joinedDate?: Prisma.SortOrder
@@ -551,7 +652,11 @@ export type MemberMaxOrderByAggregateInput = {
   birthDate?: Prisma.SortOrder
   profession?: Prisma.SortOrder
   profilePictureUrl?: Prisma.SortOrder
+  emailVerified?: Prisma.SortOrder
+  verificationCode?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  bkashSender?: Prisma.SortOrder
+  bkashTxnId?: Prisma.SortOrder
 }
 
 export type MemberMinOrderByAggregateInput = {
@@ -559,6 +664,7 @@ export type MemberMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  password?: Prisma.SortOrder
   tier?: Prisma.SortOrder
   status?: Prisma.SortOrder
   joinedDate?: Prisma.SortOrder
@@ -569,7 +675,11 @@ export type MemberMinOrderByAggregateInput = {
   birthDate?: Prisma.SortOrder
   profession?: Prisma.SortOrder
   profilePictureUrl?: Prisma.SortOrder
+  emailVerified?: Prisma.SortOrder
+  verificationCode?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  bkashSender?: Prisma.SortOrder
+  bkashTxnId?: Prisma.SortOrder
 }
 
 export type MemberSumOrderByAggregateInput = {
@@ -605,6 +715,10 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type MemberCreateNestedOneWithoutTransactionsInput = {
   create?: Prisma.XOR<Prisma.MemberCreateWithoutTransactionsInput, Prisma.MemberUncheckedCreateWithoutTransactionsInput>
   connectOrCreate?: Prisma.MemberCreateOrConnectWithoutTransactionsInput
@@ -624,6 +738,7 @@ export type MemberCreateWithoutTransactionsInput = {
   name: string
   phone: string
   email?: string | null
+  password: string
   tier: string
   status: string
   joinedDate: Date | string
@@ -634,7 +749,11 @@ export type MemberCreateWithoutTransactionsInput = {
   birthDate?: Date | string | null
   profession?: string | null
   profilePictureUrl?: string | null
+  emailVerified?: boolean
+  verificationCode?: string | null
   createdAt?: Date | string
+  bkashSender?: string | null
+  bkashTxnId?: string | null
 }
 
 export type MemberUncheckedCreateWithoutTransactionsInput = {
@@ -642,6 +761,7 @@ export type MemberUncheckedCreateWithoutTransactionsInput = {
   name: string
   phone: string
   email?: string | null
+  password: string
   tier: string
   status: string
   joinedDate: Date | string
@@ -652,7 +772,11 @@ export type MemberUncheckedCreateWithoutTransactionsInput = {
   birthDate?: Date | string | null
   profession?: string | null
   profilePictureUrl?: string | null
+  emailVerified?: boolean
+  verificationCode?: string | null
   createdAt?: Date | string
+  bkashSender?: string | null
+  bkashTxnId?: string | null
 }
 
 export type MemberCreateOrConnectWithoutTransactionsInput = {
@@ -676,6 +800,7 @@ export type MemberUpdateWithoutTransactionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
   tier?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   joinedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -686,7 +811,11 @@ export type MemberUpdateWithoutTransactionsInput = {
   birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MemberUncheckedUpdateWithoutTransactionsInput = {
@@ -694,6 +823,7 @@ export type MemberUncheckedUpdateWithoutTransactionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
   tier?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   joinedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -704,7 +834,11 @@ export type MemberUncheckedUpdateWithoutTransactionsInput = {
   birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -743,6 +877,7 @@ export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name?: boolean
   phone?: boolean
   email?: boolean
+  password?: boolean
   tier?: boolean
   status?: boolean
   joinedDate?: boolean
@@ -753,7 +888,11 @@ export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   birthDate?: boolean
   profession?: boolean
   profilePictureUrl?: boolean
+  emailVerified?: boolean
+  verificationCode?: boolean
   createdAt?: boolean
+  bkashSender?: boolean
+  bkashTxnId?: boolean
   transactions?: boolean | Prisma.Member$transactionsArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["member"]>
@@ -763,6 +902,7 @@ export type MemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   name?: boolean
   phone?: boolean
   email?: boolean
+  password?: boolean
   tier?: boolean
   status?: boolean
   joinedDate?: boolean
@@ -773,7 +913,11 @@ export type MemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   birthDate?: boolean
   profession?: boolean
   profilePictureUrl?: boolean
+  emailVerified?: boolean
+  verificationCode?: boolean
   createdAt?: boolean
+  bkashSender?: boolean
+  bkashTxnId?: boolean
 }, ExtArgs["result"]["member"]>
 
 export type MemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -781,6 +925,7 @@ export type MemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   name?: boolean
   phone?: boolean
   email?: boolean
+  password?: boolean
   tier?: boolean
   status?: boolean
   joinedDate?: boolean
@@ -791,7 +936,11 @@ export type MemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   birthDate?: boolean
   profession?: boolean
   profilePictureUrl?: boolean
+  emailVerified?: boolean
+  verificationCode?: boolean
   createdAt?: boolean
+  bkashSender?: boolean
+  bkashTxnId?: boolean
 }, ExtArgs["result"]["member"]>
 
 export type MemberSelectScalar = {
@@ -799,6 +948,7 @@ export type MemberSelectScalar = {
   name?: boolean
   phone?: boolean
   email?: boolean
+  password?: boolean
   tier?: boolean
   status?: boolean
   joinedDate?: boolean
@@ -809,10 +959,14 @@ export type MemberSelectScalar = {
   birthDate?: boolean
   profession?: boolean
   profilePictureUrl?: boolean
+  emailVerified?: boolean
+  verificationCode?: boolean
   createdAt?: boolean
+  bkashSender?: boolean
+  bkashTxnId?: boolean
 }
 
-export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "phone" | "email" | "tier" | "status" | "joinedDate" | "expiryDate" | "qrCodeUrl" | "totalSaved" | "address" | "birthDate" | "profession" | "profilePictureUrl" | "createdAt", ExtArgs["result"]["member"]>
+export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "phone" | "email" | "password" | "tier" | "status" | "joinedDate" | "expiryDate" | "qrCodeUrl" | "totalSaved" | "address" | "birthDate" | "profession" | "profilePictureUrl" | "emailVerified" | "verificationCode" | "createdAt" | "bkashSender" | "bkashTxnId", ExtArgs["result"]["member"]>
 export type MemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactions?: boolean | Prisma.Member$transactionsArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
@@ -830,6 +984,7 @@ export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     name: string
     phone: string
     email: string | null
+    password: string
     tier: string
     status: string
     joinedDate: Date
@@ -840,7 +995,11 @@ export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     birthDate: Date | null
     profession: string | null
     profilePictureUrl: string | null
+    emailVerified: boolean
+    verificationCode: string | null
     createdAt: Date
+    bkashSender: string | null
+    bkashTxnId: string | null
   }, ExtArgs["result"]["member"]>
   composites: {}
 }
@@ -1269,6 +1428,7 @@ export interface MemberFieldRefs {
   readonly name: Prisma.FieldRef<"Member", 'String'>
   readonly phone: Prisma.FieldRef<"Member", 'String'>
   readonly email: Prisma.FieldRef<"Member", 'String'>
+  readonly password: Prisma.FieldRef<"Member", 'String'>
   readonly tier: Prisma.FieldRef<"Member", 'String'>
   readonly status: Prisma.FieldRef<"Member", 'String'>
   readonly joinedDate: Prisma.FieldRef<"Member", 'DateTime'>
@@ -1279,7 +1439,11 @@ export interface MemberFieldRefs {
   readonly birthDate: Prisma.FieldRef<"Member", 'DateTime'>
   readonly profession: Prisma.FieldRef<"Member", 'String'>
   readonly profilePictureUrl: Prisma.FieldRef<"Member", 'String'>
+  readonly emailVerified: Prisma.FieldRef<"Member", 'Boolean'>
+  readonly verificationCode: Prisma.FieldRef<"Member", 'String'>
   readonly createdAt: Prisma.FieldRef<"Member", 'DateTime'>
+  readonly bkashSender: Prisma.FieldRef<"Member", 'String'>
+  readonly bkashTxnId: Prisma.FieldRef<"Member", 'String'>
 }
     
 

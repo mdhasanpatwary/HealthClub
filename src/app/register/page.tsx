@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Heart, User, Phone, Mail, Lock, MapPin, Calendar } from "lucide-react";
+import { Heart, User, Phone, Mail, Lock, MapPin, Calendar, Briefcase } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,9 +19,10 @@ function RegisterForm() {
     phone: "",
     email: "",
     password: "",
-    tier: "founding" as "founding" | "individual" | "family",
+    tier: "founding" as "founding" | "individual",
     address: "",
     birthDate: "",
+    profession: "",
     profilePictureUrl: ""
   });
   const [error, setError] = useState("");
@@ -43,7 +44,7 @@ function RegisterForm() {
     e.preventDefault();
     setError("");
 
-    if (!formData.name || !formData.phone || !formData.password || !formData.email || !formData.address || !formData.birthDate || !formData.profilePictureUrl) {
+    if (!formData.name || !formData.phone || !formData.password || !formData.email || !formData.address || !formData.birthDate || !formData.profession || !formData.profilePictureUrl) {
       setError("সবগুলো তারকাচিহ্নিত (*) ঘর পূরণ করুন।");
       return;
     }
@@ -56,22 +57,21 @@ function RegisterForm() {
         return;
       }
 
-      // Add member to Supabase DB
-      const newMember = await dbStore.addMember({
+      // Add member to Supabase DB with password
+      await dbStore.addMember({
         name: formData.name,
         phone: formData.phone,
         email: formData.email,
+        password: formData.password,
         tier: formData.tier,
         address: formData.address,
         birthDate: formData.birthDate,
+        profession: formData.profession,
         profilePictureUrl: formData.profilePictureUrl
       });
 
-      // Login immediately
-      dbStore.setCurrentUser(newMember);
-
-      // Redirect to Member Dashboard
-      router.push("/dashboard");
+      // Redirect to Email Verification page
+      router.push(`/register/verify-email?email=${encodeURIComponent(formData.email)}`);
     } catch {
       setError("রেজিস্ট্রেশন করতে সমস্যা হচ্ছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
     }
@@ -175,19 +175,37 @@ function RegisterForm() {
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
-              <Calendar className="h-3.5 w-3.5 text-primary" />
-              জন্ম তারিখ *
-            </label>
-            <Input
-              type="date"
-              name="birthDate"
-              required
-              value={formData.birthDate}
-              onChange={handleChange}
-              className="border-border bg-background"
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
+                <Calendar className="h-3.5 w-3.5 text-primary" />
+                জন্ম তারিখ *
+              </label>
+              <Input
+                type="date"
+                name="birthDate"
+                required
+                value={formData.birthDate}
+                onChange={handleChange}
+                className="border-border bg-background"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
+                <Briefcase className="h-3.5 w-3.5 text-primary" />
+                পেশা *
+              </label>
+              <Input
+                type="text"
+                name="profession"
+                required
+                value={formData.profession}
+                onChange={handleChange}
+                placeholder="যেমন: চাকুরিজীবী, ব্যবসায়ী"
+                className="border-border bg-background"
+              />
+            </div>
           </div>
 
           <div className="space-y-2">

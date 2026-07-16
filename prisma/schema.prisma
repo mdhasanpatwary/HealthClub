@@ -8,22 +8,27 @@ datasource db {
 }
 
 model Member {
-  id           String        @id
-  name         String
-  phone        String        @unique
-  email        String?
-  tier         String        // 'founding' | 'individual' | 'family'
-  status       String        // 'active' | 'inactive'
-  joinedDate   DateTime      @map("joined_date") @db.Date
-  expiryDate   DateTime      @map("expiry_date") @db.Date
-  qrCodeUrl    String?       @map("qr_code_url")
-  totalSaved   Int           @default(0) @map("total_saved")
-  address      String?
-  birthDate    DateTime?     @map("birth_date") @db.Date
-  profession   String?
-  profilePictureUrl String?  @map("profile_picture_url")
-  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz
-  transactions Transaction[]
+  id                String        @id
+  name              String
+  phone             String        @unique
+  email             String?       @unique
+  password          String
+  tier              String        // 'founding' | 'individual'
+  status            String        // 'active' | 'inactive'
+  joinedDate        DateTime      @map("joined_date") @db.Date
+  expiryDate        DateTime      @map("expiry_date") @db.Date
+  qrCodeUrl         String?       @map("qr_code_url")
+  totalSaved        Int           @default(0) @map("total_saved")
+  address           String?
+  birthDate         DateTime?     @map("birth_date") @db.Date
+  profession        String?
+  profilePictureUrl String?       @map("profile_picture_url")
+  emailVerified     Boolean       @default(false) @map("email_verified")
+  verificationCode  String?       @map("verification_code")
+  createdAt         DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  bkashSender       String?       @map("bkash_sender")
+  bkashTxnId        String?       @map("bkash_txn_id")
+  transactions      Transaction[]
 
   @@map("members")
 }
@@ -60,3 +65,18 @@ model Transaction {
 
   @@map("transactions")
 }
+
+model PartnerRequest {
+  id          String   @id
+  orgName     String   @map("org_name")
+  category    String   // 'hospital' | 'diagnostic' | 'pharmacy'
+  address     String
+  discount    String
+  phone       String
+  email       String?
+  status      String   @default("pending") // 'pending' | 'approved' | 'rejected'
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@map("partner_requests")
+}
+

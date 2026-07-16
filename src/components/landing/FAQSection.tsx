@@ -28,15 +28,15 @@ export default function FAQSection() {
     },
     {
       question: "How much does the membership cost?",
-      answer: "Currently, we are offering completely free 'Founding Membership' for the first 100 members, which is free for 1 year. Afterwards, the annual fee will be ৳500 for Individual membership and ৳1500 for Family membership."
+      answer: "Currently, we are offering completely free 'Founding Membership' for the first 100 members, which is free for 1 year. Afterwards, the annual fee will be ৳500 for Individual membership."
     },
     {
       question: "How will partner hospitals verify my card?",
       answer: "Your digital membership card will have a unique QR code. When the hospital scans this QR code with their mobile or scanner, it will open a secure verification page showing your name, member ID, and membership status (Active/Inactive)."
     },
     {
-      question: "Can my family members use my card?",
-      answer: "Under our 'Family Membership' plan, you can add multiple family members and each will get their own ID card. However, the Individual card can only be used by the cardholder."
+      question: "Can someone else use my membership card?",
+      answer: "No, the membership card is non-transferable and can only be used by the registered cardholder. Partner hospitals will verify your name and identity against the card during counter desk checks."
     }
   ] : [
     {
@@ -53,15 +53,15 @@ export default function FAQSection() {
     },
     {
       question: "মেম্বারশিপের খরচ কত?",
-      answer: "বর্তমানে প্রথম ১০০ জন সদস্যের জন্য আমরা সম্পূর্ণ ফ্রি 'ফাউন্ডিং মেম্বারশিপ' দিচ্ছি, যা ১ বছরের জন্য ফ্রি থাকবে। পরবর্তীতে একক মেম্বারশিপের জন্য বাৎসরিক ৫০০ টাকা এবং পারিবারিক মেম্বারশিপের জন্য বাৎসরিক ১৫০০ টাকা ফি প্রযোজ্য হবে।"
+      answer: "বর্তমানে প্রথম ১০০ জন সদস্যের জন্য আমরা সম্পূর্ণ ফ্রি 'ফাউন্ডিং মেম্বারশিপ' দিচ্ছি, যা ১ বছরের জন্য ফ্রি থাকবে। পরবর্তীতে একক মেম্বারশিপের জন্য বাৎসরিক ৫০০ টাকা ফি প্রযোজ্য হবে।"
     },
     {
       question: "পার্টনার হাসপাতালগুলো কীভাবে আমার কার্ড ভেরিফাই করবে?",
       answer: "আপনার ডিজিটাল মেম্বারশিপ কার্ডে একটি অনন্য কিউআর (QR) কোড থাকবে। হাসপাতাল কর্তৃপক্ষ তাদের মোবাইল বা স্ক্যানার দিয়ে এই কিউআর কোডটি স্ক্যান করলে একটি সুরক্ষিত ভেরিফিকেশন পেজ খুলবে, যেখানে আপনার নাম, মেম্বার আইডি এবং মেম্বারশিপ স্ট্যাটাস (Active/Inactive) দেখা যাবে।"
     },
     {
-      question: "আমার পরিবারের সদস্যরা কি আমার কার্ড ব্যবহার করতে পারবে?",
-      answer: "আমাদের 'ফ্যামিলি মেম্বারশিপ' প্ল্যানের অধীনে আপনি আপনার পরিবারের একাধিক সদস্যকে যুক্ত করতে পারবেন এবং তারা প্রত্যেকেই নিজস্ব আইডি কার্ড পাবেন। তবে ব্যক্তিগত (Individual) কার্ডটি শুধুমাত্র কার্ডধারী ব্যক্তিই ব্যবহার করতে পারবেন।"
+      question: "আমার কার্ড কি অন্য কেউ ব্যবহার করতে পারবে?",
+      answer: "না, মেম্বারশিপ কার্ডটি হস্তান্তরযোগ্য নয়। এটি শুধুমাত্র কার্ডধারী নিবন্ধিত ব্যক্তিই ব্যবহার করতে পারবেন। পার্টনার স্বাস্থ্যসেবা কেন্দ্রে ভেরিফিকেশনের সময় কার্ডের তথ্যের সাথে আপনার পরিচয় যাচাই করা হবে।"
     }
   ];
 

@@ -32,3 +32,8 @@ export type Partner = Prisma.PartnerModel
  * 
  */
 export type Transaction = Prisma.TransactionModel
+/**
+ * Model PartnerRequest
+ * 
+ */
+export type PartnerRequest = Prisma.PartnerRequestModel

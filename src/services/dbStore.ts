@@ -14,6 +14,7 @@ import {
   getTransactionsAction,
   addTransactionAction,
   getStatsAction,
+  logoutMemberAction,
 } from "@/app/actions/dbActions";
 
 // Helper to check if running on client side
@@ -48,7 +49,7 @@ export const dbStore = {
   },
 
   async addMember(
-    member: Omit<Member, "id" | "status" | "joinedDate" | "expiryDate" | "totalSaved">
+    member: Omit<Member, "id" | "status" | "joinedDate" | "expiryDate" | "totalSaved"> & { password?: string }
   ): Promise<Member> {
     return addMemberAction(member);
   },
@@ -173,6 +174,7 @@ export const dbStore = {
     if (isClient) {
       localStorage.removeItem(KEYS.CURRENT_USER);
     }
+    logoutMemberAction(); // Clear server cookie session
   },
 
   // --- ANALYTICS ---
@@ -180,3 +182,4 @@ export const dbStore = {
     return getStatsAction();
   },
 };
+

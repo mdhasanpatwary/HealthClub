@@ -333,27 +333,7 @@ export default async function Home() {
               </p>
             </div>
 
-            {/* Benefit 5 */}
-            <div className="bg-background p-6 rounded-2xl border border-border hover:shadow-md transition-all space-y-3">
-              <div className="h-10 w-10 rounded-lg bg-primary-light text-primary flex items-center justify-center">
-                <Check className="h-5 w-5" />
-              </div>
-              <h3 className="font-heading text-base font-bold text-secondary">{t("page.familySavings")}</h3>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                {t("page.showTheMembershipCardFor")}
-              </p>
-            </div>
 
-            {/* Benefit 6 */}
-            <div className="bg-background p-6 rounded-2xl border border-border hover:shadow-md transition-all space-y-3">
-              <div className="h-10 w-10 rounded-lg bg-primary-light text-primary flex items-center justify-center">
-                <Check className="h-5 w-5" />
-              </div>
-              <h3 className="font-heading text-base font-bold text-secondary">{t("page.familyCoverage")}</h3>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                {t("page.saveOnHealthcareBillsFor")}
-              </p>
-            </div>
 
             {/* Benefit 7 */}
             <div className="bg-background p-6 rounded-2xl border border-border hover:shadow-md transition-all space-y-3">

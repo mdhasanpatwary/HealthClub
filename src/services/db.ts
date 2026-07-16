@@ -3,8 +3,8 @@ export interface Member {
   name: string;
   phone: string;
   email: string;
-  tier: 'founding' | 'individual' | 'family';
-  status: 'active' | 'inactive';
+  tier: 'founding' | 'individual';
+  status: 'active' | 'inactive' | 'pending_payment' | 'pending_approval';
   joinedDate: string;
   expiryDate: string;
   qrCodeUrl?: string;
@@ -13,6 +13,11 @@ export interface Member {
   birthDate?: string;
   profession?: string;
   profilePictureUrl?: string;
+  password?: string;
+  emailVerified?: boolean;
+  verificationCode?: string;
+  bkashSender?: string;
+  bkashTxnId?: string;
 }
 
 export interface Partner {
@@ -97,7 +102,8 @@ export const initialMembers: Member[] = [
     status: "active",
     joinedDate: "2026-01-10",
     expiryDate: "2027-01-10",
-    totalSaved: 2000
+    totalSaved: 2000,
+    emailVerified: true
   },
   {
     id: "HC-1002",
@@ -108,18 +114,8 @@ export const initialMembers: Member[] = [
     status: "active",
     joinedDate: "2026-03-15",
     expiryDate: "2027-03-15",
-    totalSaved: 300
-  },
-  {
-    id: "HC-1003",
-    name: "করিম উল্লাহ মৃধা",
-    phone: "01911112222",
-    email: "karim@gmail.com",
-    tier: "family",
-    status: "active",
-    joinedDate: "2026-05-20",
-    expiryDate: "2027-05-20",
-    totalSaved: 800
+    totalSaved: 300,
+    emailVerified: true
   }
 ];
 
@@ -133,16 +129,6 @@ export const initialTransactions: Transaction[] = [
     amount: 5000,
     saved: 500,
     date: "2026-06-12 10:30 AM"
-  },
-  {
-    id: "tx2",
-    memberId: "HC-1003",
-    memberName: "করিম উল্লাহ মৃধা",
-    partnerId: "p5",
-    partnerName: "ইবনে সিনা ডায়াগনস্টিক সেন্টার",
-    amount: 8000,
-    saved: 800,
-    date: "2026-06-25 04:15 PM"
   },
   {
     id: "tx3",
@@ -165,3 +151,4 @@ export const initialTransactions: Transaction[] = [
     date: "2026-07-10 11:45 AM"
   }
 ];
+

@@ -53,7 +53,8 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Member: 'Member',
   Partner: 'Partner',
-  Transaction: 'Transaction'
+  Transaction: 'Transaction',
+  PartnerRequest: 'PartnerRequest'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -77,6 +78,7 @@ export const MemberScalarFieldEnum = {
   name: 'name',
   phone: 'phone',
   email: 'email',
+  password: 'password',
   tier: 'tier',
   status: 'status',
   joinedDate: 'joinedDate',
@@ -87,7 +89,11 @@ export const MemberScalarFieldEnum = {
   birthDate: 'birthDate',
   profession: 'profession',
   profilePictureUrl: 'profilePictureUrl',
-  createdAt: 'createdAt'
+  emailVerified: 'emailVerified',
+  verificationCode: 'verificationCode',
+  createdAt: 'createdAt',
+  bkashSender: 'bkashSender',
+  bkashTxnId: 'bkashTxnId'
 } as const
 
 export type MemberScalarFieldEnum = (typeof MemberScalarFieldEnum)[keyof typeof MemberScalarFieldEnum]
@@ -122,6 +128,21 @@ export const TransactionScalarFieldEnum = {
 } as const
 
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
+
+
+export const PartnerRequestScalarFieldEnum = {
+  id: 'id',
+  orgName: 'orgName',
+  category: 'category',
+  address: 'address',
+  discount: 'discount',
+  phone: 'phone',
+  email: 'email',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type PartnerRequestScalarFieldEnum = (typeof PartnerRequestScalarFieldEnum)[keyof typeof PartnerRequestScalarFieldEnum]
 
 
 export const SortOrder = {
