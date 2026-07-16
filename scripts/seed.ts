@@ -103,7 +103,7 @@ async function main() {
       phone: "01811112222",
       email: "nusrat@gmail.com",
       password: hashedPw,
-      tier: "individual",
+      tier: "premium",
       status: "active",
       joinedDate: new Date("2026-03-15"),
       expiryDate: new Date("2027-03-15"),

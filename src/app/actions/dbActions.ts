@@ -609,10 +609,10 @@ export async function getStatsAction() {
     const totalSaved = members.reduce((sum, m) => sum + (m.totalSaved || 0), 0);
     const totalTransactions = transactions.length;
 
-    // Simulated revenue based on individual plans (500 BDT/year)
+    // Simulated revenue based on premium plans (500 BDT/year)
     // Founding tier is free (0 BDT)
     const revenue = members.reduce((sum, m) => {
-      if (m.tier === "individual" && m.status === "active") return sum + 500;
+      if (m.tier === "premium" && m.status === "active") return sum + 500;
       return sum;
     }, 0);
 

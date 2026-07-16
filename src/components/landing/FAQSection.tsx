@@ -28,7 +28,7 @@ export default function FAQSection() {
     },
     {
       question: "How much does the membership cost?",
-      answer: "Currently, we are offering completely free 'Founding Membership' for the first 100 members, which is free for 1 year. Afterwards, the annual fee will be ৳500 for Individual membership."
+      answer: "Currently, we are offering completely free 'Founding Membership' for the first 100 members, which is free for 1 year. Afterwards, the annual fee will be ৳500 for Premium membership."
     },
     {
       question: "How will partner hospitals verify my card?",
@@ -53,7 +53,7 @@ export default function FAQSection() {
     },
     {
       question: "মেম্বারশিপের খরচ কত?",
-      answer: "বর্তমানে প্রথম ১০০ জন সদস্যের জন্য আমরা সম্পূর্ণ ফ্রি 'ফাউন্ডিং মেম্বারশিপ' দিচ্ছি, যা ১ বছরের জন্য ফ্রি থাকবে। পরবর্তীতে একক মেম্বারশিপের জন্য বাৎসরিক ৫০০ টাকা ফি প্রযোজ্য হবে।"
+      answer: "বর্তমানে প্রথম ১০০ জন সদস্যের জন্য আমরা সম্পূর্ণ ফ্রি 'ফাউন্ডিং মেম্বারশিপ' দিচ্ছি, যা ১ বছরের জন্য ফ্রি থাকবে। পরবর্তীতে প্রিমিয়াম মেম্বারশিপের জন্য বাৎসরিক ৫০০ টাকা ফি প্রযোজ্য হবে।"
     },
     {
       question: "পার্টনার হাসপাতালগুলো কীভাবে আমার কার্ড ভেরিফাই করবে?",

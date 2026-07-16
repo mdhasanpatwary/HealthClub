@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS members (
     phone TEXT NOT NULL UNIQUE,
     email TEXT UNIQUE,
     password TEXT NOT NULL,
-    tier TEXT NOT NULL CHECK (tier IN ('founding', 'individual')),
+    tier TEXT NOT NULL CHECK (tier IN ('founding', 'premium')),
     status TEXT NOT NULL CHECK (status IN ('active', 'inactive', 'pending_payment')),
     joined_date DATE NOT NULL,
     expiry_date DATE NOT NULL,
@@ -81,7 +81,7 @@ ON CONFLICT (id) DO NOTHING;
 INSERT INTO members (id, name, phone, email, password, tier, status, joined_date, expiry_date, total_saved, email_verified)
 VALUES
 ('HC-1001', 'মোঃ আব্দুর রহমান', '01711112222', 'arahman@gmail.com', 'salt:hash1', 'founding', 'active', '2026-01-10', '2027-01-10', 2000, true),
-('HC-1002', 'নুসরাত জাহান', '01811112222', 'nusrat@gmail.com', 'salt:hash2', 'individual', 'active', '2026-03-15', '2027-03-15', 300, true)
+('HC-1002', 'নুসরাত জাহান', '01811112222', 'nusrat@gmail.com', 'salt:hash2', 'premium', 'active', '2026-03-15', '2027-03-15', 300, true)
 ON CONFLICT (id) DO NOTHING;
 
 -- Insert Seed Data (Transactions)

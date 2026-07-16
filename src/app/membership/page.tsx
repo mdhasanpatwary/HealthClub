@@ -100,11 +100,11 @@ export default async function MembershipPage() {
             </div>
           </div>
 
-          {/* Individual */}
+          {/* Premium */}
           <div className="bg-background border border-border rounded-3xl p-8 flex flex-col justify-between shadow-md">
             <div className="space-y-6">
               <div>
-                <h3 className="font-heading text-xl font-bold text-secondary dark:text-white">Individual Membership</h3>
+                <h3 className="font-heading text-xl font-bold text-secondary dark:text-white">Premium Membership</h3>
                 <p className="text-xs text-muted-foreground mt-1">
                   {t("membership.page.annualCardAndBenefitsFor")}
                 </p>
@@ -135,7 +135,7 @@ export default async function MembershipPage() {
               </ul>
             </div>
             <div className="pt-8">
-              <Link href="/register?plan=individual">
+              <Link href="/register?plan=premium">
                 <Button variant="outline" className="w-full border-border hover:bg-muted text-secondary dark:text-white">
                   {t("membership.page.buyPlan")}
                 </Button>

@@ -13,7 +13,7 @@ model Member {
   phone             String        @unique
   email             String?       @unique
   password          String
-  tier              String        // 'founding' | 'individual'
+  tier              String        // 'founding' | 'premium'
   status            String        // 'active' | 'inactive'
   joinedDate        DateTime      @map("joined_date") @db.Date
   expiryDate        DateTime      @map("expiry_date") @db.Date

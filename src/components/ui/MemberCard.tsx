@@ -12,9 +12,9 @@ export default function MemberCard({ member }: MemberCardProps) {
   let badgeIcon = <Star className="h-4 w-4 fill-amber-400 text-amber-400" />;
   let badgeBg = "bg-amber-400/20 text-amber-300 border border-amber-400/30";
 
-  if (member.tier === "individual") {
+  if (member.tier === "premium") {
     bgStyles = "bg-gradient-to-br from-emerald-900 via-emerald-850 to-slate-950 text-white border border-emerald-500/20";
-    badgeText = "Individual Member";
+    badgeText = "Premium Member";
     badgeIcon = <ShieldCheck className="h-4 w-4 text-emerald-400" />;
     badgeBg = "bg-emerald-400/20 text-emerald-300 border border-emerald-400/30";
   }

@@ -53,7 +53,7 @@ export default function AdminDashboardPage() {
     name: "",
     phone: "",
     email: "",
-    tier: "founding" as "founding" | "individual",
+    tier: "founding" as "founding" | "premium",
     address: "",
     birthDate: "",
     profession: "",
@@ -564,7 +564,7 @@ export default function AdminDashboardPage() {
                           </TableCell>
                           <TableCell className="font-mono whitespace-nowrap">{m.phone}</TableCell>
                           <TableCell className="capitalize text-xs font-semibold whitespace-nowrap">
-                            {m.tier === "founding" ? t("admin.dashboard.tierFounding") : m.tier === "individual" ? t("admin.dashboard.tierIndividual") : t("admin.dashboard.tierFamily")}
+                            {m.tier === "founding" ? t("admin.dashboard.tierFounding") : m.tier === "premium" ? t("admin.dashboard.tierPremium") : t("admin.dashboard.tierFamily")}
                           </TableCell>
                           <TableCell className="font-mono font-semibold whitespace-nowrap">৳{formatNum(m.totalSaved || 0, locale)}</TableCell>
                           <TableCell>
@@ -903,7 +903,7 @@ export default function AdminDashboardPage() {
                   <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.membershipPlanLabel")}</label>
                   <select value={newMember.tier} onChange={e => setNewMember({ ...newMember, tier: e.target.value as Member["tier"] })} className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary">
                     <option value="founding">{t("admin.dashboard.planFoundingOption")}</option>
-                    <option value="individual">{t("admin.dashboard.planIndividualOption")}</option>
+                    <option value="premium">{t("admin.dashboard.planPremiumOption")}</option>
                   </select>
                 </div>
                 <div className="space-y-2">
@@ -1073,7 +1073,7 @@ export default function AdminDashboardPage() {
                   <div className="flex flex-col gap-0.5">
                     <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("admin.dashboard.planTypeLabel")}</span>
                     <span className="text-xs font-bold text-secondary capitalize">
-                      {viewingMember.tier === "founding" ? t("admin.dashboard.tierFounding1Year") : viewingMember.tier === "individual" ? t("admin.dashboard.tierIndividual") : t("admin.dashboard.tierFamily")}
+                      {viewingMember.tier === "founding" ? t("admin.dashboard.tierFounding1Year") : viewingMember.tier === "premium" ? t("admin.dashboard.tierPremium") : t("admin.dashboard.tierFamily")}
                     </span>
                   </div>
                   <div className="flex flex-col items-end gap-0.5">

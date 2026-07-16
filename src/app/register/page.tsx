@@ -19,7 +19,7 @@ function RegisterForm() {
     phone: "",
     email: "",
     password: "",
-    tier: "founding" as "founding" | "individual",
+    tier: "founding" as "founding" | "premium",
     address: "",
     birthDate: "",
     profession: "",
@@ -30,7 +30,7 @@ function RegisterForm() {
   // Pre-select plan from URL parameters
   useEffect(() => {
     const planParam = searchParams.get("plan");
-    if (planParam === "individual") {
+    if (planParam === "premium") {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData(prev => ({ ...prev, tier: planParam }));
     }
@@ -233,7 +233,7 @@ function RegisterForm() {
               className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
             >
               <option value="founding">Founding Member (ফ্রী ১ বছর - প্রথম ১০০ মেম্বার)</option>
-              <option value="individual">Individual Plan (৳৫০০ / বাৎসরিক)</option>
+              <option value="premium">Premium Plan (৳৫০০ / বাৎসরিক)</option>
             </select>
           </div>
 

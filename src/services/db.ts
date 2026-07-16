@@ -3,7 +3,7 @@ export interface Member {
   name: string;
   phone: string;
   email: string;
-  tier: 'founding' | 'individual';
+  tier: 'founding' | 'premium';
   status: 'active' | 'inactive' | 'pending_payment' | 'pending_approval';
   joinedDate: string;
   expiryDate: string;
@@ -110,7 +110,7 @@ export const initialMembers: Member[] = [
     name: "নুসরাত জাহান",
     phone: "01811112222",
     email: "nusrat@gmail.com",
-    tier: "individual",
+    tier: "premium",
     status: "active",
     joinedDate: "2026-03-15",
     expiryDate: "2027-03-15",
