@@ -15,6 +15,7 @@ import UserDropdown from "./UserDropdown";
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<Member | null>(null);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const { locale, setLocale, t } = useLanguage();
@@ -29,6 +30,12 @@ export default function Header() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -65,46 +72,59 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header
+        className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+          scrolled
+            ? "border-b border-border/60 bg-background/80 backdrop-blur-xl shadow-sm"
+            : "border-b border-transparent bg-background/60 backdrop-blur-md"
+        }`}
+      >
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
 
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center space-x-2 text-primary"
+            className="flex items-center space-x-2 group"
             onClick={() => setIsOpen(false)}
           >
-            <Heart className="h-6 w-6 fill-primary" />
+            <div className="relative">
+              <Heart className="h-6 w-6 fill-primary text-primary transition-transform duration-300 group-hover:scale-110" />
+              <span className="absolute inset-0 h-6 w-6 rounded-full bg-primary/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </div>
             <span className="font-heading text-xl font-bold tracking-tight text-secondary dark:text-white">
-              {t("layout.header.health")} <span className="text-primary">{t("layout.header.club")}</span>
+              {t("layout.header.health")}{" "}
+              <span className="gradient-text">{t("layout.header.club")}</span>
             </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-1">
+          <nav className="hidden md:flex space-x-0.5">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 href={link.path}
-                className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
                   isActive(link.path)
-                    ? "bg-primary-light/50 text-primary dark:bg-primary-dark/20"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
                 }`}
               >
                 {link.name}
+                {isActive(link.path) && (
+                  <span className="absolute bottom-1 left-3 right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
+                )}
               </Link>
             ))}
           </nav>
 
           {/* Desktop Buttons */}
-          <div className="hidden md:flex items-center space-x-3">
+          <div className="hidden md:flex items-center space-x-2">
             {/* Language Switcher Button */}
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setLocale(locale === "bn" ? "en" : "bn")}
-              className="gap-1.5 text-muted-foreground hover:text-foreground h-9 px-3"
+              className="gap-1.5 text-muted-foreground hover:text-foreground h-9 px-3 rounded-lg"
             >
               <Globe className="h-4 w-4" />
               <span className="text-xs font-semibold">{locale === "bn" ? "English" : "বাংলা"}</span>
@@ -115,13 +135,13 @@ export default function Header() {
               variant="ghost"
               size="icon"
               onClick={toggleTheme}
-              className="h-9 w-9 text-muted-foreground hover:text-foreground"
+              className="h-9 w-9 text-muted-foreground hover:text-foreground rounded-lg"
               aria-label="Toggle Theme"
             >
               {theme === "light" ? (
                 <Moon className="h-4 w-4" />
               ) : (
-                <Sun className="h-4 w-4 text-amber-500" />
+                <Sun className="h-4 w-4 text-amber-400" />
               )}
             </Button>
 
@@ -130,10 +150,19 @@ export default function Header() {
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost" size="sm">{t("layout.header.login")}</Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="font-medium text-muted-foreground hover:text-foreground"
+                  >
+                    {t("layout.header.login")}
+                  </Button>
                 </Link>
                 <Link href="/register">
-                  <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary-dark">
+                  <Button
+                    size="sm"
+                    className="bg-primary text-white hover:bg-primary-dark font-semibold btn-glow rounded-lg px-4"
+                  >
                     {t("layout.header.becomeMember")}
                   </Button>
                 </Link>
@@ -142,36 +171,34 @@ export default function Header() {
           </div>
 
           {/* Mobile Hamburger Toggle */}
-          <div className="flex md:hidden items-center space-x-2">
-            {/* Quick language switcher on Mobile header to improve accessibility */}
+          <div className="flex md:hidden items-center space-x-1">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setLocale(locale === "bn" ? "en" : "bn")}
-              className="h-9 w-9 text-muted-foreground hover:text-foreground"
+              className="h-9 w-9 text-muted-foreground hover:text-foreground rounded-lg"
               aria-label="Change Language"
             >
               <Globe className="h-4 w-4" />
             </Button>
 
-            {/* Quick theme switcher on Mobile header */}
             <Button
               variant="ghost"
               size="icon"
               onClick={toggleTheme}
-              className="h-9 w-9 text-muted-foreground hover:text-foreground"
+              className="h-9 w-9 text-muted-foreground hover:text-foreground rounded-lg"
               aria-label="Toggle Theme"
             >
               {theme === "light" ? (
                 <Moon className="h-4 w-4" />
               ) : (
-                <Sun className="h-4 w-4 text-amber-500" />
+                <Sun className="h-4 w-4 text-amber-400" />
               )}
             </Button>
 
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center rounded-md p-2 text-muted-foreground hover:bg-muted hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="inline-flex items-center justify-center rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors"
               aria-label="Toggle navigation menu"
               aria-expanded={isOpen}
               aria-controls="mobile-menu"
@@ -196,7 +223,7 @@ export default function Header() {
         {/* Mobile Dropdown */}
         <div
           id="mobile-menu"
-          className={`md:hidden border-b border-border bg-background overflow-hidden transition-all duration-300 ease-in-out ${
+          className={`md:hidden border-b border-border/60 bg-background/95 backdrop-blur-xl overflow-hidden transition-all duration-300 ease-in-out ${
             isOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
           }`}
         >
@@ -206,7 +233,7 @@ export default function Header() {
                 key={link.path}
                 href={link.path}
                 onClick={() => setIsOpen(false)}
-                className={`flex items-center rounded-lg px-3 py-3 text-base font-medium transition-colors ${
+                className={`flex items-center rounded-xl px-3 py-3 text-base font-medium transition-colors ${
                   isActive(link.path)
                     ? "bg-primary/10 text-primary font-semibold"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -217,7 +244,7 @@ export default function Header() {
             ))}
           </div>
 
-          <div className="border-t border-border mx-3 pt-3 pb-4 space-y-2">
+          <div className="border-t border-border/60 mx-3 pt-3 pb-4 space-y-2">
             {/* Mobile Language Switcher Section */}
             <div className="flex items-center justify-between border-b border-border/60 pb-3 mb-2">
               <span className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
@@ -228,7 +255,7 @@ export default function Header() {
                 variant="outline"
                 size="sm"
                 onClick={() => setLocale(locale === "bn" ? "en" : "bn")}
-                className="text-xs h-8 border-border px-3 gap-1"
+                className="text-xs h-8 border-border px-3 gap-1 rounded-lg"
               >
                 <span>{locale === "bn" ? "English" : "বাংলা"}</span>
               </Button>
@@ -237,14 +264,14 @@ export default function Header() {
             {/* Mobile Theme Switcher Section */}
             <div className="flex items-center justify-between border-b border-border/60 pb-3 mb-2">
               <span className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
-                {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4 text-amber-500" />}
+                {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4 text-amber-400" />}
                 {t("layout.header.darkMode")}
               </span>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={toggleTheme}
-                className="text-xs h-8 border-border px-3"
+                className="text-xs h-8 border-border px-3 rounded-lg"
               >
                 <span>{theme === "light" ? t("layout.header.enable") : t("layout.header.disable")}</span>
               </Button>
@@ -252,18 +279,18 @@ export default function Header() {
 
             {user ? (
               <>
-                <div className="flex items-center gap-2 text-sm font-semibold text-foreground mb-2 pb-2 border-b border-border/60">
+                <div className="flex items-center gap-2.5 text-sm font-semibold text-foreground mb-2 pb-2 border-b border-border/60">
                   {user.profilePictureUrl ? (
                     <Image
                       src={user.profilePictureUrl}
                       alt={user.name}
-                      width={32}
-                      height={32}
+                      width={36}
+                      height={36}
                       unoptimized
-                      className="h-8 w-8 rounded-full object-cover border border-border shrink-0"
+                      className="h-9 w-9 rounded-xl object-cover border border-border shrink-0"
                     />
                   ) : (
-                    <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs uppercase shrink-0 border border-primary/20">
+                    <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 text-primary flex items-center justify-center font-bold text-sm uppercase shrink-0 border border-primary/20">
                       {user.name ? user.name.charAt(0).toUpperCase() : "U"}
                     </div>
                   )}
@@ -271,21 +298,21 @@ export default function Header() {
                 </div>
                 {user.email === "healthclubfeni@gmail.com" ? (
                   <Link href="/admin" className="block w-full" onClick={() => setIsOpen(false)}>
-                    <Button variant="outline" className="w-full justify-start gap-2 border-primary text-primary">
+                    <Button variant="outline" className="w-full justify-start gap-2 border-primary/30 text-primary hover:bg-primary/5 rounded-xl">
                       <LayoutDashboard className="h-4 w-4" />
                       {t("layout.header.adminPanel")}
                     </Button>
                   </Link>
                 ) : (
                   <Link href="/dashboard" className="block w-full" onClick={() => setIsOpen(false)}>
-                    <Button variant="outline" className="w-full justify-start gap-2 border-primary text-primary">
+                    <Button variant="outline" className="w-full justify-start gap-2 border-primary/30 text-primary hover:bg-primary/5 rounded-xl">
                       <LayoutDashboard className="h-4 w-4" />
                       {t("layout.header.dashboard")}
                     </Button>
                   </Link>
                 )}
                 <Link href="/profile" className="block w-full" onClick={() => setIsOpen(false)}>
-                  <Button variant="outline" className="w-full justify-start gap-2 border-primary text-primary">
+                  <Button variant="outline" className="w-full justify-start gap-2 border-primary/30 text-primary hover:bg-primary/5 rounded-xl">
                     <Settings className="h-4 w-4" />
                     {t("profile.page.profileSettings")}
                   </Button>
@@ -293,7 +320,7 @@ export default function Header() {
                 <Button
                   variant="ghost"
                   onClick={handleLogout}
-                  className="w-full justify-start gap-2 text-destructive hover:bg-destructive/10"
+                  className="w-full justify-start gap-2 text-destructive hover:bg-destructive/10 rounded-xl"
                 >
                   <LogOut className="h-4 w-4" />
                   {t("layout.header.logout")}
@@ -302,10 +329,10 @@ export default function Header() {
             ) : (
               <div className="grid grid-cols-2 gap-2 pt-1">
                 <Link href="/login" onClick={() => setIsOpen(false)}>
-                  <Button variant="outline" className="w-full">{t("layout.header.login")}</Button>
+                  <Button variant="outline" className="w-full rounded-xl">{t("layout.header.login")}</Button>
                 </Link>
                 <Link href="/register" onClick={() => setIsOpen(false)}>
-                  <Button className="w-full bg-primary text-primary-foreground hover:bg-primary-dark">
+                  <Button className="w-full bg-primary text-white hover:bg-primary-dark font-semibold rounded-xl btn-glow">
                     {t("layout.header.becomeMember")}
                   </Button>
                 </Link>
@@ -317,7 +344,7 @@ export default function Header() {
 
       {/* Backdrop overlay */}
       <div
-        className={`fixed inset-0 z-40 bg-black/30 md:hidden backdrop-blur-sm transition-opacity duration-300 ${
+        className={`fixed inset-0 z-40 bg-black/40 md:hidden backdrop-blur-sm transition-opacity duration-300 ${
           isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         onClick={() => setIsOpen(false)}

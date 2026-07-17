@@ -7,30 +7,39 @@ export default function Footer({ locale = "bn" }: { locale?: string }) {
   const t = (key: string) => tServer(currentLocale, key);
 
   return (
-    <footer className="bg-secondary text-slate-300 border-t border-slate-800" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+    <footer
+      className="relative bg-gradient-to-b from-slate-950 to-[#030712] text-slate-400 border-t border-slate-800/60 overflow-hidden"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+    >
+      {/* Decorative top glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-6 bg-primary/5 blur-2xl" />
+
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16 relative">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
 
           {/* Logo & Contact Info */}
           <div className="space-y-6 md:col-span-1">
-            <Link href="/" className="flex items-center space-x-2 text-primary">
-              <Heart className="h-6 w-6 fill-primary" />
+            <Link href="/" className="flex items-center space-x-2 group">
+              <Heart className="h-6 w-6 fill-primary text-primary transition-transform duration-300 group-hover:scale-110" />
               <span className="font-heading text-xl font-bold tracking-tight text-white">
-                {t("layout.footer.health")} <span className="text-primary">{t("layout.footer.club")}</span>
+                {t("layout.footer.health")}{" "}
+                <span className="gradient-text">{t("layout.footer.club")}</span>
               </span>
             </Link>
-            <p className="text-sm text-slate-400 max-w-xs">
+            <p className="text-sm text-slate-400 max-w-xs leading-relaxed">
               {t("layout.footer.healthcareMadeSimpleAndAffordable")}
             </p>
-            <div className="flex space-x-4">
+            {/* Social Icons */}
+            <div className="flex space-x-3">
               <a
                 href="https://www.facebook.com/profile.php?id=61591616953090"
                 target="_blank"
                 rel="noreferrer"
-                className="text-slate-400 hover:text-white transition-colors"
+                className="h-9 w-9 flex items-center justify-center rounded-xl bg-slate-800/60 border border-slate-700/50 text-slate-400 hover:text-white hover:bg-primary/20 hover:border-primary/30 transition-all duration-200"
                 aria-label="Facebook"
               >
-                <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24">
+                <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
                   <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z" />
                 </svg>
               </a>
@@ -38,19 +47,19 @@ export default function Footer({ locale = "bn" }: { locale?: string }) {
                 href="https://wa.me/8801886763849"
                 target="_blank"
                 rel="noreferrer"
-                className="text-slate-400 hover:text-white transition-colors"
+                className="h-9 w-9 flex items-center justify-center rounded-xl bg-slate-800/60 border border-slate-700/50 text-slate-400 hover:text-white hover:bg-emerald-500/20 hover:border-emerald-500/30 transition-all duration-200"
                 aria-label="WhatsApp"
               >
-                <MessageSquare className="h-5 w-5" />
+                <MessageSquare className="h-4 w-4" />
               </a>
               <a
                 href="https://youtube.com"
                 target="_blank"
                 rel="noreferrer"
-                className="text-slate-400 hover:text-white transition-colors"
+                className="h-9 w-9 flex items-center justify-center rounded-xl bg-slate-800/60 border border-slate-700/50 text-slate-400 hover:text-white hover:bg-red-500/20 hover:border-red-500/30 transition-all duration-200"
                 aria-label="YouTube"
               >
-                <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24">
+                <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
                   <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.508 9.388.508 9.388.508s7.517 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
                 </svg>
               </a>
@@ -62,57 +71,55 @@ export default function Footer({ locale = "bn" }: { locale?: string }) {
 
             {/* Quick Links */}
             <div>
-              <h3 className="text-sm font-semibold text-white tracking-wider uppercase">
+              <h3 className="text-xs font-semibold text-white/80 tracking-widest uppercase mb-5">
                 {t("layout.footer.quickLinks")}
               </h3>
-              <ul role="list" className="mt-4 space-y-3">
-                <li>
-                  <Link href="/" className="text-sm hover:text-white transition-colors">
-                    {t("layout.footer.home")}
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/membership" className="text-sm hover:text-white transition-colors">
-                    {t("layout.footer.membershipPlans")}
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/partner-hospitals" className="text-sm hover:text-white transition-colors">
-                    {t("layout.footer.partnerHospitals")}
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/become-partner" className="text-sm hover:text-white transition-colors">
-                    {t("layout.footer.becomeAPartner")}
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/about-us" className="text-sm hover:text-white transition-colors">
-                    {t("layout.footer.aboutUs")}
-                  </Link>
-                </li>
+              <ul role="list" className="space-y-3">
+                {[
+                  { href: "/", label: t("layout.footer.home") },
+                  { href: "/membership", label: t("layout.footer.membershipPlans") },
+                  { href: "/partner-hospitals", label: t("layout.footer.partnerHospitals") },
+                  { href: "/become-partner", label: t("layout.footer.becomeAPartner") },
+                  { href: "/about-us", label: t("layout.footer.aboutUs") },
+                ].map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-slate-400 hover:text-white transition-colors duration-200 flex items-center gap-1.5 group"
+                    >
+                      <span className="h-1 w-1 rounded-full bg-primary/60 group-hover:w-2 transition-all duration-200" />
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
 
             {/* Support and Address */}
-            <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-white tracking-wider uppercase">
+            <div>
+              <h3 className="text-xs font-semibold text-white/80 tracking-widest uppercase mb-5">
                 {t("layout.footer.contactAddress")}
               </h3>
-              <ul className="space-y-3 text-sm text-slate-400">
-                <li className="flex items-start gap-2">
-                  <MapPin className="h-5 w-5 shrink-0 text-primary" />
-                  <span>{t("layout.footer.mizanRoadFeni3900")}</span>
+              <ul className="space-y-4 text-sm text-slate-400">
+                <li className="flex items-start gap-3">
+                  <div className="h-8 w-8 rounded-lg bg-slate-800 border border-slate-700/50 flex items-center justify-center shrink-0 mt-0.5">
+                    <MapPin className="h-4 w-4 text-primary" />
+                  </div>
+                  <span className="leading-relaxed">{t("layout.footer.mizanRoadFeni3900")}</span>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Phone className="h-4 w-4 text-primary" />
+                <li className="flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-lg bg-slate-800 border border-slate-700/50 flex items-center justify-center shrink-0">
+                    <Phone className="h-4 w-4 text-primary" />
+                  </div>
                   <a href="tel:+8801783721411" className="hover:text-white transition-colors">
                     {t("layout.footer.8801783721411")}
                   </a>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-primary" />
-                  <a href="mailto:support@healthclub.com.bd" className="hover:text-white transition-colors">
+                <li className="flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-lg bg-slate-800 border border-slate-700/50 flex items-center justify-center shrink-0">
+                    <Mail className="h-4 w-4 text-primary" />
+                  </div>
+                  <a href="mailto:support@healthclub.com.bd" className="hover:text-white transition-colors break-all">
                     support@healthclub.com.bd
                   </a>
                 </li>
@@ -123,11 +130,11 @@ export default function Footer({ locale = "bn" }: { locale?: string }) {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-10 border-t border-slate-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <p className="text-xs text-slate-400">
+        <div className="mt-12 border-t border-slate-800/60 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
+          <p className="text-xs text-slate-500">
             &copy; {new Date().getFullYear()} {t("layout.footer.healthClubAllRightsReserved")}
           </p>
-          <div className="flex space-x-6 text-xs text-slate-400">
+          <div className="flex space-x-6 text-xs text-slate-500">
             <Link href="/privacy-policy" className="hover:text-slate-300 transition-colors">
               {t("layout.footer.privacyPolicy")}
             </Link>

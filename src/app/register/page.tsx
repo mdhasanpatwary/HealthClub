@@ -3,17 +3,19 @@
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Heart, User, Phone, Mail, Lock, MapPin, Calendar, Briefcase } from "lucide-react";
+import {
+  Heart, User, Phone, Mail, Lock, MapPin, Calendar, Briefcase,
+  AlertCircle, ArrowRight, Star, ShieldCheck
+} from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { ImageUpload } from "@/components/ui/ImageUpload";
 
 function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -26,8 +28,8 @@ function RegisterForm() {
     profilePictureUrl: ""
   });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // Pre-select plan from URL parameters
   useEffect(() => {
     const planParam = searchParams.get("plan");
     if (planParam === "premium") {
@@ -43,21 +45,22 @@ function RegisterForm() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     if (!formData.name || !formData.phone || !formData.password || !formData.email || !formData.address || !formData.birthDate || !formData.profession || !formData.profilePictureUrl) {
       setError("সবগুলো তারকাচিহ্নিত (*) ঘর পূরণ করুন।");
+      setLoading(false);
       return;
     }
 
     try {
-      // Check if phone or email already registered
       const existing = await dbStore.getMemberById(formData.phone);
       if (existing) {
-        setError("এই মোবাইল নম্বরটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।");
+        setError("এই মোবাইল নম্বরটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।");
+        setLoading(false);
         return;
       }
 
-      // Add member to Supabase DB with password
       await dbStore.addMember({
         name: formData.name,
         phone: formData.phone,
@@ -70,47 +73,95 @@ function RegisterForm() {
         profilePictureUrl: formData.profilePictureUrl
       });
 
-      // Redirect to Email Verification page
       router.push(`/register/verify-email?email=${encodeURIComponent(formData.email)}`);
     } catch {
       setError("রেজিস্ট্রেশন করতে সমস্যা হচ্ছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
+      setLoading(false);
     }
   };
 
   return (
-    <Card className="w-full max-w-xl border border-border shadow-xl bg-background/80 backdrop-blur">
-      <CardHeader className="text-center space-y-2">
-        <Link href="/" className="flex items-center justify-center space-x-2 text-primary mx-auto">
-          <Heart className="h-7 w-7 fill-primary" />
-          <span className="font-heading text-2xl font-bold text-secondary">
-            হেলথ <span className="text-primary">ক্লাব</span>
-          </span>
-        </Link>
-        <CardTitle className="font-heading text-xl font-bold text-secondary pt-2">
-          মেম্বার হিসেবে জয়েন করুন
-        </CardTitle>
-        <CardDescription>
-          হেলথ ক্লাবের ডিজিটাল মেম্বার আইডি কার্ড সংগ্রহ করতে ফ্রী রেজিস্ট্রেশন সম্পন্ন করুন।
-        </CardDescription>
-      </CardHeader>
+    <div className="relative bg-background/90 dark:bg-slate-900/90 backdrop-blur-xl border border-border/60 rounded-3xl shadow-2xl overflow-hidden w-full max-w-xl">
+      {/* Top accent */}
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent" />
 
-      <CardContent className="space-y-6">
+      <div className="p-8 sm:p-10 space-y-6">
+        {/* Logo & Title */}
+        <div className="text-center">
+          <Link href="/" className="inline-flex items-center justify-center space-x-2 group mb-4">
+            <div className="relative">
+              <Heart className="h-8 w-8 fill-primary text-primary transition-transform duration-300 group-hover:scale-110" />
+            </div>
+            <span className="font-heading text-2xl font-bold text-secondary dark:text-white">
+              হেলথ <span className="gradient-text">ক্লাব</span>
+            </span>
+          </Link>
+          <h1 className="font-heading text-xl font-bold text-secondary dark:text-white">
+            মেম্বার হিসেবে জয়েন করুন
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1.5">
+            হেলথ ক্লাবের ডিজিটাল মেম্বার আইডি কার্ড সংগ্রহ করতে ফ্রী রেজিস্ট্রেশন সম্পন্ন করুন।
+          </p>
+        </div>
+
+        {/* Plan selection pills */}
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={() => setFormData(p => ({ ...p, tier: "founding" }))}
+            className={`relative p-4 rounded-2xl border-2 text-left transition-all duration-200 ${
+              formData.tier === "founding"
+                ? "border-primary bg-primary/5 dark:bg-primary/10"
+                : "border-border/60 hover:border-primary/30"
+            }`}
+          >
+            {formData.tier === "founding" && (
+              <div className="absolute top-2 right-2 h-5 w-5 rounded-full bg-primary flex items-center justify-center">
+                <Star className="h-3 w-3 text-white fill-white" />
+              </div>
+            )}
+            <Star className={`h-5 w-5 mb-2 ${formData.tier === "founding" ? "text-primary fill-primary/20" : "text-muted-foreground"}`} />
+            <p className="text-xs font-bold text-secondary dark:text-white">Founding</p>
+            <p className="text-[11px] text-primary font-semibold">বিনামূল্যে ১ বছর</p>
+          </button>
+          <button
+            type="button"
+            onClick={() => setFormData(p => ({ ...p, tier: "premium" }))}
+            className={`relative p-4 rounded-2xl border-2 text-left transition-all duration-200 ${
+              formData.tier === "premium"
+                ? "border-primary bg-primary/5 dark:bg-primary/10"
+                : "border-border/60 hover:border-primary/30"
+            }`}
+          >
+            {formData.tier === "premium" && (
+              <div className="absolute top-2 right-2 h-5 w-5 rounded-full bg-primary flex items-center justify-center">
+                <ShieldCheck className="h-3 w-3 text-white" />
+              </div>
+            )}
+            <ShieldCheck className={`h-5 w-5 mb-2 ${formData.tier === "premium" ? "text-primary" : "text-muted-foreground"}`} />
+            <p className="text-xs font-bold text-secondary dark:text-white">Premium</p>
+            <p className="text-[11px] text-muted-foreground font-semibold">৳৫০০ / বাৎসরিক</p>
+          </button>
+        </div>
+
+        {/* Error */}
         {error && (
-          <div className="bg-destructive/10 text-destructive text-xs p-3 rounded-lg border border-destructive/20">
-            {error}
+          <div className="bg-destructive/8 text-destructive text-xs p-3.5 rounded-xl flex items-center gap-2.5 border border-destructive/15">
+            <AlertCircle className="h-4 w-4 shrink-0" />
+            <span>{error}</span>
           </div>
         )}
 
         <form onSubmit={handleRegister} className="space-y-4">
-          
+
           <ImageUpload
             value={formData.profilePictureUrl}
             onChange={(url) => setFormData(prev => ({ ...prev, profilePictureUrl: url }))}
             label="প্রোফাইল ছবি *"
           />
 
-          <div className="space-y-2">
-            <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5">
               <User className="h-3.5 w-3.5 text-primary" />
               আপনার নাম *
             </label>
@@ -121,13 +172,13 @@ function RegisterForm() {
               value={formData.name}
               onChange={handleChange}
               placeholder="যেমন: মোঃ আব্দুর রহমান"
-              className="border-border bg-background"
+              className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5">
                 <Phone className="h-3.5 w-3.5 text-primary" />
                 মোবাইল নম্বর *
               </label>
@@ -137,13 +188,12 @@ function RegisterForm() {
                 required
                 value={formData.phone}
                 onChange={handleChange}
-                placeholder="যেমন: 017XXXXXXXX"
-                className="border-border bg-background"
+                placeholder="017XXXXXXXX"
+                className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
               />
             </div>
-            
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5">
                 <Mail className="h-3.5 w-3.5 text-primary" />
                 ইমেইল ঠিকানা *
               </label>
@@ -153,14 +203,14 @@ function RegisterForm() {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="যেমন: test@example.com"
-                className="border-border bg-background"
+                placeholder="test@example.com"
+                className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
               />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5">
               <MapPin className="h-3.5 w-3.5 text-primary" />
               ঠিকানা *
             </label>
@@ -171,13 +221,13 @@ function RegisterForm() {
               value={formData.address}
               onChange={handleChange}
               placeholder="যেমন: মিজান রোড, ফেনী"
-              className="border-border bg-background"
+              className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5">
                 <Calendar className="h-3.5 w-3.5 text-primary" />
                 জন্ম তারিখ *
               </label>
@@ -187,12 +237,11 @@ function RegisterForm() {
                 required
                 value={formData.birthDate}
                 onChange={handleChange}
-                className="border-border bg-background"
+                className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
               />
             </div>
-
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5">
                 <Briefcase className="h-3.5 w-3.5 text-primary" />
                 পেশা *
               </label>
@@ -202,16 +251,16 @@ function RegisterForm() {
                 required
                 value={formData.profession}
                 onChange={handleChange}
-                placeholder="যেমন: চাকুরিজীবী, ব্যবসায়ী"
-                className="border-border bg-background"
+                placeholder="চাকুরিজীবী, ব্যবসায়ী..."
+                className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
               />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5">
               <Lock className="h-3.5 w-3.5 text-primary" />
-              পাসওয়ার্ড *
+              পাসওয়ার্ড *
             </label>
             <Input
               type="password"
@@ -219,47 +268,56 @@ function RegisterForm() {
               required
               value={formData.password}
               onChange={handleChange}
-              placeholder="কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড"
-              className="border-border bg-background"
+              placeholder="কমপক্ষে ৬ অক্ষর"
+              className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-xs font-semibold text-secondary">মেম্বারশিপ প্ল্যান নির্বাচন করুন *</label>
-            <select
-              name="tier"
-              value={formData.tier}
-              onChange={handleChange}
-              className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
-            >
-              <option value="founding">Founding Member (ফ্রী ১ বছর - প্রথম ১০০ মেম্বার)</option>
-              <option value="premium">Premium Plan (৳৫০০ / বাৎসরিক)</option>
-            </select>
-          </div>
-
-          <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
-            অ্যাকাউন্ট তৈরি করুন
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-primary hover:bg-primary-dark text-white font-bold rounded-xl h-11 btn-glow gap-2 mt-1"
+          >
+            {loading ? (
+              <div className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+            ) : (
+              <>
+                অ্যাকাউন্ট তৈরি করুন
+                <ArrowRight className="h-4 w-4" />
+              </>
+            )}
           </Button>
 
         </form>
 
-        <div className="text-center text-sm text-muted-foreground border-t border-border pt-4">
-          ইতিমধ্যে মেম্বারশিপ অ্যাকাউন্ট আছে?{" "}
-          <Link href="/login" className="text-primary hover:underline font-semibold">
-            লগইন করুন
+        <div className="text-center text-sm text-muted-foreground border-t border-border/60 pt-5">
+          ইতিমধ্যে অ্যাকাউন্ট আছে?{" "}
+          <Link href="/login" className="text-primary hover:text-primary-dark font-semibold transition-colors">
+            লগইন করুন →
           </Link>
         </div>
-
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
 export default function RegisterPage() {
   return (
-    <div className="bg-muted/30 min-h-[85vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="relative min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 overflow-hidden bg-gradient-to-br from-primary-light/40 via-emerald-50/20 to-background dark:from-slate-950 dark:via-slate-900 dark:to-background">
+      {/* Background orbs */}
+      <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/8 dark:bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-emerald-200/40 dark:bg-emerald-900/15 rounded-full blur-3xl pointer-events-none" />
+      <div
+        className="absolute inset-0 opacity-[0.025] dark:opacity-[0.04] pointer-events-none"
+        style={{
+          backgroundImage: "radial-gradient(circle, #16a34a 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+        }}
+      />
+
       <Suspense fallback={
         <div className="text-center py-12 text-muted-foreground">
+          <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin mx-auto mb-3" />
           লোড হচ্ছে...
         </div>
       }>
