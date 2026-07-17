@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Heart, Check, Star } from "lucide-react";
+import { ArrowRight, CheckCircle2, Heart, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PartnerDirectory from "@/components/ui/PartnerDirectory";
 import SavingsCalculator from "@/components/ui/SavingsCalculator";
@@ -10,6 +10,7 @@ import HeroCardWrapper from "@/components/landing/HeroCardWrapper";
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { Locale, tServer, formatNum } from "@/lib/i18n";
+import type { Member } from "@/services/db";
 
 export default async function Home() {
   const cookieStore = await cookies();
@@ -42,11 +43,12 @@ export default async function Home() {
     <div className="flex flex-col min-h-screen">
 
       {/* 1. HERO SECTION */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-primary-light/30 via-background to-background py-16 sm:py-24">
+      <section className="relative overflow-hidden bg-gradient-to-b from-primary-light/40 via-emerald-50/20 to-background py-16 sm:py-24">
 
         {/* Background blobs */}
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary-light rounded-full blur-3xl opacity-50 -z-10" />
-        <div className="absolute top-60 -left-40 w-96 h-96 bg-emerald-100 rounded-full blur-3xl opacity-30 -z-10" />
+        <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-primary-light rounded-full blur-3xl opacity-60 -z-10" />
+        <div className="absolute top-60 -left-40 w-[500px] h-[500px] bg-emerald-100 rounded-full blur-3xl opacity-40 -z-10" />
+        <div className="absolute bottom-0 right-1/3 w-80 h-80 bg-emerald-200 rounded-full blur-3xl opacity-20 -z-10" />
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -113,60 +115,41 @@ export default async function Home() {
             </div>
 
             {/* Right Visual Column (5 cols on large screens) */}
-            <div className="lg:col-span-5 relative flex justify-center mt-4 lg:mt-0">
+            <div className="lg:col-span-5 relative flex justify-center mt-4 lg:mt-0 py-10 px-4">
 
-              {/* Premium digital card preview wrapper */}
+              {/* Decorative glow behind card */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none -z-[1]">
+                <div className="w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
+              </div>
+
+              {/* Premium digital card preview wrapper — uses the same MemberCard as the dashboard */}
               <HeroCardWrapper
-                fallbackCard={
-                  <div className="relative w-full max-w-xs sm:max-w-sm aspect-[1.586/1] bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 rounded-2xl p-5 shadow-2xl text-white border border-emerald-500/20 animate-pulse-slow animate-fade-in">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <span className="flex items-center gap-1 text-primary">
-                          <Heart className="h-4 w-4 fill-primary" />
-                          <span className="font-heading text-sm font-bold text-white">{t("page.healthClub")}</span>
-                        </span>
-                        <span className="text-[8px] text-slate-400 font-mono tracking-wider">FOUNDING MEMBERSHIP</span>
-                      </div>
-                      <div className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] bg-amber-400/20 text-amber-300 border border-amber-400/30">
-                        <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                        {t("page.founding")}
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between items-end mt-8">
-                      <div>
-                        <p className="text-[8px] text-slate-500 font-mono">MEMBER NAME</p>
-                        <p className="text-sm font-bold font-heading">{t("page.mdAshrafulAlam")}</p>
-                        <p className="text-[10px] text-emerald-400 font-mono mt-1">{t("page.idHc20268910")}</p>
-                      </div>
-                      {/* Fake QR */}
-                      <div className="bg-white p-1.5 rounded-lg border border-slate-700/30">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://healthclub.com.bd/verify/HC-2026-8910&color=0f172a&bgcolor=ffffff"
-                          alt="Verify QR"
-                          width={44}
-                          height={44}
-                          className="w-11 h-11"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between border-t border-slate-700/40 pt-2.5 text-[8px] text-slate-400 mt-3 font-mono">
-                      <span>{t("page.joined20260110")}</span>
-                      <span>{t("page.validThru1Year")}</span>
-                    </div>
-                  </div>
-                }
+                demoMember={{
+                  id: "HC-2026-8910",
+                  name: "মোঃ আশরাফুল আলম",
+                  phone: "01700000000",
+                  email: "ashraful@example.com",
+                  tier: "founding",
+                  status: "active",
+                  joinedDate: "10-01-2026",
+                  expiryDate: "10-01-2027",
+                  totalSaved: 0,
+                } as Member}
               />
 
               {/* Floating Badges — shown from sm breakpoint to prevent overflow on tiny phones */}
-              <div className="hidden sm:flex absolute top-[-15px] left-[15px] bg-white dark:bg-slate-800 text-secondary dark:text-white p-2.5 rounded-xl border border-border shadow-lg items-center gap-2 transform -rotate-6 animate-bounce-slow">
-                <CheckCircle2 className="h-5 w-5 text-primary" />
+              <div
+                className="hidden sm:flex absolute top-2 left-0 lg:-left-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md text-secondary dark:text-white px-3 py-2 rounded-xl border border-border/60 shadow-xl items-center gap-2 animate-float z-10"
+                style={{ '--float-rotate': '-3deg' } as React.CSSProperties}
+              >
+                <CheckCircle2 className="h-4.5 w-4.5 text-primary" />
                 <span className="text-xs font-bold">{t("page.01YearMembership")}</span>
               </div>
 
-              <div className="hidden sm:flex absolute bottom-[-15px] right-[10px] bg-white dark:bg-slate-800 text-secondary dark:text-white p-2.5 rounded-xl border border-border shadow-lg items-center gap-2 transform rotate-3 animate-bounce-slow delay-1000">
+              <div
+                className="hidden sm:flex absolute bottom-2 right-0 lg:-right-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md text-secondary dark:text-white px-3 py-2 rounded-xl border border-border/60 shadow-xl items-center gap-2 animate-float-delayed z-10"
+                style={{ '--float-rotate': '2deg' } as React.CSSProperties}
+              >
                 <div className="h-6 w-6 rounded-full bg-emerald-100 dark:bg-emerald-950 flex items-center justify-center">
                   <span className="text-primary text-[10px] font-bold">{t("page.10")}</span>
                 </div>

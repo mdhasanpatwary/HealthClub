@@ -24,12 +24,12 @@ export default function MemberCard({ member }: MemberCardProps) {
   const verificationUrl = typeof window !== "undefined"
     ? `${window.location.origin}/verify/${member.id}`
     : `https://healthclub.com.bd/verify/${member.id}`;
-  
+
   const qrCodeSrc = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verificationUrl)}&color=0f172a&bgcolor=ffffff`;
 
   return (
-    <div className={`relative w-full max-w-md mx-auto aspect-[1.586/1] rounded-2xl p-6 overflow-hidden shadow-2xl flex flex-col justify-between ${bgStyles}`}>
-      
+    <div className={`relative w-full max-w-md mx-auto rounded-2xl p-6 overflow-hidden shadow-2xl flex flex-col justify-between ${bgStyles}`}>
+
       {/* Decorative Blur Background circles */}
       <div className="absolute -right-16 -top-16 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute -left-16 -bottom-16 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />

@@ -6,10 +6,11 @@ import { Member } from "@/services/db";
 import MemberCard from "@/components/ui/MemberCard";
 
 interface HeroCardWrapperProps {
-  fallbackCard: React.ReactNode;
+  /** Demo member data shown when no user is logged in */
+  demoMember: Member;
 }
 
-export default function HeroCardWrapper({ fallbackCard }: HeroCardWrapperProps) {
+export default function HeroCardWrapper({ demoMember }: HeroCardWrapperProps) {
   const [user, setUser] = useState<Member | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -29,17 +30,16 @@ export default function HeroCardWrapper({ fallbackCard }: HeroCardWrapperProps) 
   if (loading) {
     // Return a loading skeleton that matches the exact aspect ratio/shape of the card
     return (
-      <div className="w-full max-w-xs sm:max-w-sm aspect-[1.586/1] bg-slate-900/80 rounded-2xl animate-pulse border border-emerald-500/10 shadow-2xl" />
+      <div className="w-full bg-slate-900/80 rounded-2xl animate-pulse border border-emerald-500/10 shadow-2xl" />
     );
   }
 
-  if (user) {
-    return (
-      <div className="w-full max-w-xs sm:max-w-sm">
-        <MemberCard member={user} />
-      </div>
-    );
-  }
+  // Render MemberCard with either the logged-in user or the demo data
+  const displayMember = user || demoMember;
 
-  return <>{fallbackCard}</>;
+  return (
+    <div className="w-full">
+      <MemberCard member={displayMember} />
+    </div>
+  );
 }

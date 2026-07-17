@@ -200,3 +200,18 @@ body {
 :where(.dark) .text-secondary\/80 {
   color: var(--muted-foreground);
 }
+
+/* ─── Hero Section Animations ──────────────────────────────── */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(var(--float-rotate, 0deg)); }
+  50% { transform: translateY(-10px) rotate(var(--float-rotate, 0deg)); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float 4s ease-in-out 1.5s infinite;
+}
