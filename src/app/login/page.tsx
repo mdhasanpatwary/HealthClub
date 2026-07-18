@@ -7,7 +7,7 @@ import { Heart, User, Lock, AlertCircle, ArrowRight } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { loginMemberAction } from "@/app/actions/dbActions";
+import { loginMemberAction } from "@/app/actions/memberActions";
 
 export default function LoginPage() {
   const [identifier, setIdentifier] = useState("");
@@ -34,19 +34,19 @@ export default function LoginPage() {
     }
 
     try {
-      const member = await loginMemberAction(identifier, password);
-      if (member) {
-        if (member.status === "inactive" && !member.emailVerified) {
+      const res = await loginMemberAction(identifier, password);
+      if (res.success && res.member) {
+        if (res.error === "PENDING_VERIFICATION") {
           setError("আপনার ইমেইল ভেরিফাই করা হয়নি। ভেরিফিকেশন পেজে পাঠানো হচ্ছে...");
           setTimeout(() => {
-            router.push(`/register/verify-email?email=${encodeURIComponent(member.email)}`);
+            router.push(`/register/verify-email?email=${encodeURIComponent(res.member!.email || "")}`);
           }, 2000);
           return;
         }
-        dbStore.setCurrentUser(member);
+        dbStore.setCurrentUser(res.member);
         router.push("/dashboard");
       } else {
-        setError("ভুল মোবাইল নম্বর/ইমেইল অথবা পাসওয়ার্ড। অনুগ্রহ করে আবার চেষ্টা করুন।");
+        setError(res.error || "ভুল মোবাইল নম্বর/ইমেইল অথবা পাসওয়ার্ড। অনুগ্রহ করে আবার চেষ্টা করুন।");
       }
     } catch {
       setError("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");

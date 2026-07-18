@@ -6,24 +6,52 @@ import { formatNum } from "@/lib/i18n";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
-  Users, Building, DollarSign, Search, PlusCircle,
-  Heart, Trash2, Edit3, User, Mail, Phone, Calendar,
-  History as HistoryIcon, MapPin, Briefcase, CreditCard, ShieldCheck
+  Users, Building, DollarSign, PlusCircle, Heart
 } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Member, Partner, Transaction } from "@/services/db";
-import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ImageUpload } from "@/components/ui/ImageUpload";
 import {
   getPartnerRequestsAction,
   updatePartnerRequestStatusAction,
   PartnerRequest,
-} from "@/app/actions/dbActions";
+} from "@/app/actions/partnerActions";
+
+import { MemberDialog } from "./components/MemberDialog";
+import { PartnerDialog } from "./components/PartnerDialog";
+import { TransactionDialog } from "./components/TransactionDialog";
+import { MemberDetailsDialog } from "./components/MemberDetailsDialog";
+import { MembersTab } from "./components/MembersTab";
+import { PartnersTab } from "./components/PartnersTab";
+import { TransactionsTab } from "./components/TransactionsTab";
+import { PartnerRequestsTab } from "./components/PartnerRequestsTab";
+
+function parseDiscountPercentage(discountStr: string): number {
+  const banglaToEnglishMap: { [key: string]: string } = {
+    "০": "0", "১": "1", "২": "2", "৩": "3", "৪": "4",
+    "৫": "5", "৬": "6", "৭": "7", "৮": "8", "৯": "9"
+  };
+
+  let converted = discountStr;
+  for (const [bangla, english] of Object.entries(banglaToEnglishMap)) {
+    converted = converted.replaceAll(bangla, english);
+  }
+
+  const match = converted.match(/(\d+(?:\.\d+)?)\s*%/);
+  if (match) {
+    return parseFloat(match[1]) / 100;
+  }
+
+  const fallbackMatch = converted.match(/(\d+(?:\.\d+)?)/);
+  if (fallbackMatch) {
+    const num = parseFloat(fallbackMatch[1]);
+    return num > 1 ? num / 100 : num;
+  }
+
+  return 0.10;
+}
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -74,7 +102,6 @@ export default function AdminDashboardPage() {
 
   // Load data
   const loadData = async () => {
-    // Validate if logged-in user is admin
     const currentUser = dbStore.getCurrentUser();
     if (!currentUser) {
       router.push("/login");
@@ -117,7 +144,6 @@ export default function AdminDashboardPage() {
 
     try {
       if (editingMember) {
-        // Edit mode
         const success = await dbStore.updateMember(editingMember.id, {
           name: newMember.name,
           phone: newMember.phone,
@@ -130,7 +156,6 @@ export default function AdminDashboardPage() {
         });
         if (!success) throw new Error("Update failed");
       } else {
-        // Add mode
         await dbStore.addMember({
           name: newMember.name,
           phone: newMember.phone,
@@ -177,7 +202,6 @@ export default function AdminDashboardPage() {
 
     try {
       if (editingPartner) {
-        // Edit mode
         const success = await dbStore.updatePartner(editingPartner.id, {
           name: newPartner.name,
           category: newPartner.category,
@@ -190,7 +214,6 @@ export default function AdminDashboardPage() {
         });
         if (!success) throw new Error("Update failed");
       } else {
-        // Add mode
         await dbStore.addPartner({
           name: newPartner.name,
           category: newPartner.category,
@@ -262,21 +285,21 @@ export default function AdminDashboardPage() {
     }
   };
 
-  // Handle Log Transaction (Discount log)
+  // Handle Log Transaction
   const handleAddTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
-    setTxSuccess("");
     setTxError("");
-
-    if (!newTx.memberId || !newTx.partnerId || !newTx.amount) {
-      setTxError(t("admin.dashboard.fillAllFields"));
-      return;
-    }
+    setTxSuccess("");
 
     try {
-      const member = await dbStore.getMemberById(newTx.memberId);
+      const member = members.find(m => m.id === newTx.memberId || m.phone === newTx.memberId);
       if (!member) {
         setTxError(t("admin.dashboard.memberNotFound"));
+        return;
+      }
+
+      if (member.status !== "active") {
+        setTxError(t("admin.dashboard.memberNotActive"));
         return;
       }
 
@@ -292,8 +315,7 @@ export default function AdminDashboardPage() {
         return;
       }
 
-      // Determine savings (flat 10% discount)
-      const discountRate = 0.10;
+      const discountRate = parseDiscountPercentage(partner.discount);
       const saved = Math.round(billAmount * discountRate);
 
       await dbStore.addTransaction({
@@ -434,10 +456,7 @@ export default function AdminDashboardPage() {
           </CardHeader>
           <CardContent className="p-6">
             <div className="w-full h-48 bg-muted/30 rounded-xl relative border border-border/50 flex items-end p-4">
-              {/* Simulated bars */}
               <div className="w-full flex justify-around items-end h-full pt-4 relative">
-
-                {/* Y-axis labels */}
                 <div className="absolute left-0 bottom-4 top-4 flex flex-col justify-between text-[10px] text-muted-foreground border-r border-border pr-2 pointer-events-none">
                   <span>{t("admin.dashboard.oneTwenty")}</span>
                   <span>{t("admin.dashboard.eighty")}</span>
@@ -479,7 +498,6 @@ export default function AdminDashboardPage() {
                   <div className="w-6 bg-primary rounded-t-md transition-all duration-500 hover:opacity-90" style={{ height: "85%" }} />
                   <span className="text-[10px] font-bold font-mono">Jul</span>
                 </div>
-
               </div>
             </div>
           </CardContent>
@@ -495,786 +513,156 @@ export default function AdminDashboardPage() {
             </TabsTrigger>
           </TabsList>
 
-          {/* 1. Members Management Tab */}
           <TabsContent value="members" className="mt-4">
-            <Card className="border-border shadow-md">
-              <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                  <CardTitle className="font-heading text-lg font-bold text-secondary">{t("admin.dashboard.registeredMembers")}</CardTitle>
-                  <CardDescription>{t("admin.dashboard.manageCustomersDesc")}</CardDescription>
-                </div>
-
-                <div className="flex gap-2 w-full sm:w-auto">
-                  <div className="relative flex-1 sm:w-60">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      type="text"
-                      placeholder={t("admin.dashboard.searchMemberPlaceholder")}
-                      value={memberSearch}
-                      onChange={(e) => setMemberSearch(e.target.value)}
-                      className="pl-9 h-9 border-border bg-background"
-                    />
-                  </div>
-                  <Button onClick={() => {
-                    setEditingMember(null);
-                    setNewMember({ name: "", phone: "", email: "", tier: "founding", address: "", birthDate: "", profession: "", profilePictureUrl: "" });
-                    setIsMemberOpen(true);
-                  }} size="sm" className="bg-primary hover:bg-primary-dark text-white">
-                    {t("admin.dashboard.newMember")}
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.memberId")}</TableHead>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.name")}</TableHead>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.phoneNumber")}</TableHead>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.plan")}</TableHead>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.totalSavings")}</TableHead>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.status")}</TableHead>
-                        <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">{t("admin.dashboard.action")}</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody className="text-xs sm:text-sm">
-                      {filteredMembers.map((m) => (
-                        <TableRow 
-                          key={m.id} 
-                          onClick={() => setViewingMember(m)} 
-                          className="cursor-pointer hover:bg-muted/50 transition-colors"
-                        >
-                          <TableCell className="font-mono text-primary font-bold whitespace-nowrap">{m.id}</TableCell>
-                          <TableCell className="font-bold text-secondary whitespace-nowrap">
-                            <div className="flex items-center gap-2.5">
-                              <div className="h-8 w-8 rounded-full border border-border bg-muted/40 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
-                                {m.profilePictureUrl ? (
-                                  // eslint-disable-next-line @next/next/no-img-element
-                                  <img src={m.profilePictureUrl} alt={m.name} className="h-full w-full object-cover" />
-                                ) : (
-                                  <User className="h-4 w-4 text-muted-foreground" />
-                                )}
-                              </div>
-                              <div>
-                                <span>{m.name}</span>
-                                {m.email && <span className="block text-[10px] text-muted-foreground font-normal font-mono">{m.email}</span>}
-                              </div>
-                            </div>
-                          </TableCell>
-                          <TableCell className="font-mono whitespace-nowrap">{m.phone}</TableCell>
-                          <TableCell className="capitalize text-xs font-semibold whitespace-nowrap">
-                            {m.tier === "founding" ? t("admin.dashboard.tierFounding") : m.tier === "premium" ? t("admin.dashboard.tierPremium") : t("admin.dashboard.tierFamily")}
-                          </TableCell>
-                          <TableCell className="font-mono font-semibold whitespace-nowrap">৳{formatNum(m.totalSaved || 0, locale)}</TableCell>
-                          <TableCell>
-                            <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                              m.status === "active" 
-                                ? "bg-green-50 text-green-600 border border-green-200" 
-                                : m.status === "pending_approval"
-                                ? "bg-amber-50 text-amber-600 border border-amber-200"
-                                : "bg-rose-50 text-rose-600 border border-rose-200"
-                            }`}>
-                              {m.status === "active" 
-                                ? t("admin.dashboard.active") 
-                                : m.status === "pending_approval"
-                                ? "অনুমোদন পেন্ডিং"
-                                : t("admin.dashboard.inactive")}
-                            </span>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex justify-end items-center gap-1">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleToggleMemberStatus(m.id);
-                                }}
-                                className={`text-[10px] h-8 px-2.5 font-bold ${m.status === "active" ? "text-rose-600 hover:bg-rose-50" : "text-primary hover:bg-primary-light"}`}
-                              >
-                                {m.status === "active" ? t("admin.dashboard.deactivate") : t("admin.dashboard.activate")}
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setEditingMember(m);
-                                  setNewMember({
-                                    name: m.name,
-                                    phone: m.phone,
-                                    email: m.email || "",
-                                    tier: m.tier,
-                                    address: m.address || "",
-                                    birthDate: m.birthDate || "",
-                                    profession: m.profession || "",
-                                    profilePictureUrl: m.profilePictureUrl || ""
-                                  });
-                                  setIsMemberOpen(true);
-                                }}
-                                className="h-8 w-8 text-primary hover:text-primary-dark hover:bg-primary-light"
-                              >
-                                <Edit3 className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDeleteMember(m.id, m.name);
-                                }}
-                                className="h-8 w-8 text-destructive hover:text-rose-600 hover:bg-rose-50"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
+            <MembersTab
+              filteredMembers={filteredMembers}
+              memberSearch={memberSearch}
+              setMemberSearch={setMemberSearch}
+              onNewMemberClick={() => {
+                setEditingMember(null);
+                setNewMember({ name: "", phone: "", email: "", tier: "founding", address: "", birthDate: "", profession: "", profilePictureUrl: "" });
+                setIsMemberOpen(true);
+              }}
+              onViewMemberClick={setViewingMember}
+              onToggleStatus={handleToggleMemberStatus}
+              onEditClick={(m) => {
+                setEditingMember(m);
+                setNewMember({
+                  name: m.name,
+                  phone: m.phone,
+                  email: m.email || "",
+                  tier: m.tier,
+                  address: m.address || "",
+                  birthDate: m.birthDate || "",
+                  profession: m.profession || "",
+                  profilePictureUrl: m.profilePictureUrl || ""
+                });
+                setIsMemberOpen(true);
+              }}
+              onDeleteClick={handleDeleteMember}
+              locale={locale}
+              t={t}
+            />
           </TabsContent>
 
-          {/* 2. Partners Management Tab */}
           <TabsContent value="partners" className="mt-4">
-            <Card className="border-border shadow-md">
-              <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                  <CardTitle className="font-heading text-lg font-bold text-secondary">{t("admin.dashboard.partnerHealthcareDirectory")}</CardTitle>
-                  <CardDescription>{t("admin.dashboard.contractedFacilitiesDesc")}</CardDescription>
-                </div>
-
-                <div className="flex gap-2 w-full sm:w-auto">
-                  <div className="relative flex-1 sm:w-60">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      type="text"
-                      placeholder={t("admin.dashboard.searchPartnerPlaceholder")}
-                      value={partnerSearch}
-                      onChange={(e) => setPartnerSearch(e.target.value)}
-                      className="pl-9 h-9 border-border bg-background"
-                    />
-                  </div>
-                  <Button onClick={() => {
-                    setEditingPartner(null);
-                    setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "", mapLink: "", imageUrl: "" });
-                    setIsPartnerOpen(true);
-                  }} size="sm" className="bg-primary hover:bg-primary-dark text-white">
-                    {t("admin.dashboard.newPartnerTitle")}
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.name")}</TableHead>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.category")}</TableHead>
-                        <TableHead className="font-semibold text-secondary">{t("admin.dashboard.addressLabel")}</TableHead>
-                        <TableHead className="font-semibold text-primary whitespace-nowrap">{t("admin.dashboard.discountRate")}</TableHead>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.hotline")}</TableHead>
-                        <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">{t("admin.dashboard.action")}</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody className="text-xs sm:text-sm">
-                      {filteredPartners.map((p) => (
-                        <TableRow key={p.id}>
-                          <TableCell className="font-bold text-secondary whitespace-nowrap">{p.name}</TableCell>
-                          <TableCell className="capitalize text-xs font-semibold whitespace-nowrap">
-                            {p.category === "hospital" ? t("admin.dashboard.hospital") : p.category === "diagnostic" ? t("admin.dashboard.diagnostic") : t("admin.dashboard.pharmacy")}
-                          </TableCell>
-                          <TableCell className="text-muted-foreground">{p.address}</TableCell>
-                          <TableCell className="font-bold text-primary font-heading whitespace-nowrap">{p.discount}</TableCell>
-                          <TableCell className="font-mono text-xs whitespace-nowrap">{p.phone}</TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex justify-end gap-1">
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => {
-                                  setEditingPartner(p);
-                                  setNewPartner({
-                                    name: p.name,
-                                    category: p.category,
-                                    address: p.address,
-                                    discount: p.discount,
-                                    phone: p.phone,
-                                    logoText: p.logoText || "",
-                                    mapLink: p.mapLink || "",
-                                    imageUrl: p.imageUrl || ""
-                                  });
-                                  setIsPartnerOpen(true);
-                                }}
-                                className="h-8 w-8 text-primary hover:text-primary-dark hover:bg-primary-light"
-                              >
-                                <Edit3 className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => handleDeletePartner(p.id, p.name)}
-                                className="h-8 w-8 text-destructive hover:text-rose-600 hover:bg-rose-50"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
+            <PartnersTab
+              filteredPartners={filteredPartners}
+              partnerSearch={partnerSearch}
+              setPartnerSearch={setPartnerSearch}
+              onNewPartnerClick={() => {
+                setEditingPartner(null);
+                setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "", mapLink: "", imageUrl: "" });
+                setIsPartnerOpen(true);
+              }}
+              onEditClick={(p) => {
+                setEditingPartner(p);
+                setNewPartner({
+                  name: p.name,
+                  category: p.category,
+                  address: p.address,
+                  discount: p.discount,
+                  phone: p.phone,
+                  logoText: p.logoText || "",
+                  mapLink: p.mapLink || "",
+                  imageUrl: p.imageUrl || ""
+                });
+                setIsPartnerOpen(true);
+              }}
+              onDeleteClick={handleDeletePartner}
+              t={t}
+            />
           </TabsContent>
 
-          {/* 3. Transactions Log Tab */}
           <TabsContent value="txs" className="mt-4">
-            <Card className="border-border shadow-md">
-              <CardHeader>
-                <CardTitle className="font-heading text-lg font-bold text-secondary">{t("admin.dashboard.recentTransactionsTitle")}</CardTitle>
-                <CardDescription>{t("admin.dashboard.txDescLabel")}</CardDescription>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.memberName")}</TableHead>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.medicalCenter")}</TableHead>
-                        <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.date")}</TableHead>
-                        <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">{t("admin.dashboard.totalBill")}</TableHead>
-                        <TableHead className="font-semibold text-primary text-right whitespace-nowrap">{t("admin.dashboard.savings")}</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody className="text-xs sm:text-sm">
-                      {transactions.map((tx) => (
-                        <TableRow key={tx.id}>
-                          <TableCell className="font-semibold text-secondary whitespace-nowrap">
-                            {tx.memberName}
-                            <span className="block text-[10px] text-muted-foreground font-mono font-normal">{tx.memberId}</span>
-                          </TableCell>
-                          <TableCell className="text-secondary whitespace-nowrap">{tx.partnerName}</TableCell>
-                          <TableCell className="text-muted-foreground whitespace-nowrap">{tx.date}</TableCell>
-                          <TableCell className="text-right font-mono whitespace-nowrap">৳{formatNum(tx.amount, locale)}</TableCell>
-                          <TableCell className="text-right font-mono text-primary font-bold whitespace-nowrap">৳{formatNum(tx.saved, locale)}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
+            <TransactionsTab
+              transactions={transactions}
+              locale={locale}
+              t={t}
+            />
           </TabsContent>
 
-          {/* 4. Partner Requests Tab */}
           <TabsContent value="requests" className="mt-4">
-            <Card className="border-border shadow-md">
-              <CardHeader>
-                <CardTitle className="font-heading text-lg font-bold text-secondary">
-                  অংশীদার হাসপাতাল ও ক্লিনিক আবেদন
-                </CardTitle>
-                <CardDescription>
-                  হেলথ ক্লাব প্ল্যাটফর্মে যুক্ত হতে ইচ্ছুক চিকিৎসাকেন্দ্র ও ফার্মেসীগুলোর আবেদনের তালিকা
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="overflow-hidden border border-border rounded-xl bg-background">
-                  <Table>
-                    <TableHeader className="bg-muted/40">
-                      <TableRow className="hover:bg-transparent border-b border-border">
-                        <TableHead className="font-semibold text-secondary">প্রতিষ্ঠান / ঠিকানা</TableHead>
-                        <TableHead className="font-semibold text-secondary">ক্যাটাগরি</TableHead>
-                        <TableHead className="font-semibold text-secondary">ডিসকাউন্ট রেট</TableHead>
-                        <TableHead className="font-semibold text-secondary">যোগাযোগ</TableHead>
-                        <TableHead className="font-semibold text-secondary">স্ট্যাটাস</TableHead>
-                        <TableHead className="font-semibold text-secondary text-right">অ্যাকশন</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {partnerRequests.length === 0 ? (
-                        <TableRow>
-                          <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                            কোনো নতুন আবেদন পাওয়া যায়নি।
-                          </TableCell>
-                        </TableRow>
-                      ) : (
-                        partnerRequests.map((req) => (
-                          <TableRow key={req.id} className="hover:bg-muted/20 border-b border-border/60">
-                            <TableCell>
-                              <div className="font-bold text-secondary">{req.orgName}</div>
-                              <div className="text-xs text-muted-foreground mt-0.5">{req.address}</div>
-                            </TableCell>
-                            <TableCell className="capitalize text-xs font-semibold">
-                              {req.category === "hospital" ? "হাসপাতাল" : req.category === "diagnostic" ? "ডায়াগনস্টিক" : "ফার্মেসী"}
-                            </TableCell>
-                            <TableCell className="font-mono text-xs font-bold text-primary">
-                              {req.discount}
-                            </TableCell>
-                            <TableCell className="text-xs space-y-0.5">
-                              <div>মোবাইল: <span className="font-semibold">{req.phone}</span></div>
-                              {req.email && <div className="text-muted-foreground">{req.email}</div>}
-                            </TableCell>
-                            <TableCell>
-                              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                                req.status === "pending"
-                                  ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300"
-                                  : req.status === "approved"
-                                  ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
-                                  : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
-                              }`}>
-                                {req.status === "pending" ? "পেন্ডিং" : req.status === "approved" ? "অনুমোদিত" : "বাতিলকৃত"}
-                              </span>
-                            </TableCell>
-                            <TableCell className="text-right">
-                              {req.status === "pending" && (
-                                <div className="flex justify-end gap-2">
-                                  <Button
-                                    size="sm"
-                                    onClick={() => handleApprovePartnerRequest(req.id)}
-                                    className="bg-primary hover:bg-primary-dark text-white text-xs h-7 py-1 px-3 animate-pulse"
-                                  >
-                                    অনুমোদন
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={() => handleRejectPartnerRequest(req.id)}
-                                    className="text-destructive border-destructive/20 hover:bg-destructive/10 text-xs h-7 py-1 px-3"
-                                  >
-                                    বাতিল
-                                  </Button>
-                                </div>
-                              )}
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      )}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
+            <PartnerRequestsTab
+              partnerRequests={partnerRequests}
+              onApprove={handleApprovePartnerRequest}
+              onReject={handleRejectPartnerRequest}
+            />
           </TabsContent>
-
         </Tabs>
 
         {/* --- MODAL DIALOGS --- */}
 
-        {/* Add/Edit Member Modal */}
         {isMemberOpen && (
-          <Dialog open={isMemberOpen} onOpenChange={(open) => {
-            setIsMemberOpen(open);
-            if (!open) {
+          <MemberDialog
+            isOpen={isMemberOpen}
+            onClose={() => {
+              setIsMemberOpen(false);
               setEditingMember(null);
               setNewMember({ name: "", phone: "", email: "", tier: "founding", address: "", birthDate: "", profession: "", profilePictureUrl: "" });
-            }
-          }}>
-            <DialogContent className="border-border bg-background">
-              <DialogHeader>
-                <DialogTitle className="font-heading font-bold text-secondary">
-                  {editingMember ? t("admin.dashboard.editMemberTitle") : t("admin.dashboard.addNewMemberTitle")}
-                </DialogTitle>
-              </DialogHeader>
-              <form onSubmit={handleSaveMember} className="space-y-4 pt-2">
-                <ImageUpload
-                  value={newMember.profilePictureUrl || ""}
-                  onChange={(url) => setNewMember({ ...newMember, profilePictureUrl: url })}
-                  label={t("admin.dashboard.profilePictureLabel")}
-                />
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.nameLabel")}</label>
-                  <Input type="text" required placeholder={t("admin.dashboard.egName")} value={newMember.name} onChange={e => setNewMember({ ...newMember, name: e.target.value })} className="border-border bg-background" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.phoneLabel")}</label>
-                  <Input type="tel" required placeholder={t("admin.dashboard.egPhone")} value={newMember.phone} onChange={e => setNewMember({ ...newMember, phone: e.target.value })} className="border-border bg-background" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.emailLabel")}</label>
-                  <Input type="email" placeholder={t("admin.dashboard.egEmail")} value={newMember.email} onChange={e => setNewMember({ ...newMember, email: e.target.value })} className="border-border bg-background" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.membershipPlanLabel")}</label>
-                  <select value={newMember.tier} onChange={e => setNewMember({ ...newMember, tier: e.target.value as Member["tier"] })} className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary">
-                    <option value="founding">{t("admin.dashboard.planFoundingOption")}</option>
-                    <option value="premium">{t("admin.dashboard.planPremiumOption")}</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.addressLabel")}</label>
-                  <Input type="text" placeholder={t("admin.dashboard.egAddress")} value={newMember.address} onChange={e => setNewMember({ ...newMember, address: e.target.value })} className="border-border bg-background" />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.birthDateLabel")}</label>
-                    <Input type="date" value={newMember.birthDate} onChange={e => setNewMember({ ...newMember, birthDate: e.target.value })} className="border-border bg-background" />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.professionLabel")}</label>
-                    <Input type="text" placeholder={t("admin.dashboard.egProfession")} value={newMember.profession} onChange={e => setNewMember({ ...newMember, profession: e.target.value })} className="border-border bg-background" />
-                  </div>
-                </div>
-                <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
-                  {editingMember ? t("admin.dashboard.saveChanges") : t("admin.dashboard.saveButton")}
-                </Button>
-              </form>
-            </DialogContent>
-          </Dialog>
+            }}
+            editingMember={editingMember}
+            newMember={newMember}
+            setNewMember={setNewMember}
+            onSubmit={handleSaveMember}
+            t={t}
+          />
         )}
 
-        {/* Add/Edit Partner Modal */}
         {isPartnerOpen && (
-          <Dialog open={isPartnerOpen} onOpenChange={(open) => {
-            setIsPartnerOpen(open);
-            if (!open) {
+          <PartnerDialog
+            isOpen={isPartnerOpen}
+            onClose={() => {
+              setIsPartnerOpen(false);
               setEditingPartner(null);
               setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "", mapLink: "", imageUrl: "" });
-            }
-          }}>
-            <DialogContent className="border-border bg-background">
-              <DialogHeader>
-                <DialogTitle className="font-heading font-bold text-secondary">
-                  {editingPartner ? t("admin.dashboard.editPartnerTitle") : t("admin.dashboard.addNewPartnerTitle")}
-                </DialogTitle>
-              </DialogHeader>
-              <form onSubmit={handleSavePartner} className="space-y-4 pt-2">
-                <ImageUpload
-                  value={newPartner.imageUrl || ""}
-                  onChange={(url) => setNewPartner({ ...newPartner, imageUrl: url })}
-                  label={t("admin.dashboard.partnerImageLabel")}
-                  fallbackType="building"
-                />
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.partnerNameLabel")}</label>
-                  <Input type="text" required placeholder={t("admin.dashboard.egPartnerName")} value={newPartner.name} onChange={e => setNewPartner({ ...newPartner, name: e.target.value })} className="border-border bg-background" />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.categoryLabel")}</label>
-                    <select value={newPartner.category} onChange={e => setNewPartner({ ...newPartner, category: e.target.value as Partner["category"] })} className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary">
-                      <option value="hospital">{t("admin.dashboard.categoryHospitalOption")}</option>
-                      <option value="diagnostic">{t("admin.dashboard.categoryDiagnosticOption")}</option>
-                      <option value="pharmacy">{t("admin.dashboard.categoryPharmacyOption")}</option>
-                    </select>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.discountLabel")}</label>
-                    <Input type="text" required placeholder={t("admin.dashboard.egDiscount")} value={newPartner.discount} onChange={e => setNewPartner({ ...newPartner, discount: e.target.value })} className="border-border bg-background" />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.addressLabelReq")}</label>
-                  <Input type="text" required placeholder={t("admin.dashboard.egAddress")} value={newPartner.address} onChange={e => setNewPartner({ ...newPartner, address: e.target.value })} className="border-border bg-background" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.googleMapLinkLabel")}</label>
-                  <Input type="url" placeholder={t("admin.dashboard.egMapLink")} value={newPartner.mapLink} onChange={e => setNewPartner({ ...newPartner, mapLink: e.target.value })} className="border-border bg-background" />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.hotlineLabel")}</label>
-                    <Input type="text" required placeholder={t("admin.dashboard.egHotline")} value={newPartner.phone} onChange={e => setNewPartner({ ...newPartner, phone: e.target.value })} className="border-border bg-background" />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.logoTextLabel")}</label>
-                    <Input type="text" placeholder={t("admin.dashboard.egLogoText")} value={newPartner.logoText} onChange={e => setNewPartner({ ...newPartner, logoText: e.target.value })} className="border-border bg-background" />
-                  </div>
-                </div>
-                <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
-                  {editingPartner ? t("admin.dashboard.saveChanges") : t("admin.dashboard.savePartnerButton")}
-                </Button>
-              </form>
-            </DialogContent>
-          </Dialog>
+            }}
+            editingPartner={editingPartner}
+            newPartner={newPartner}
+            setNewPartner={setNewPartner}
+            onSubmit={handleSavePartner}
+            t={t}
+          />
         )}
 
-        {/* Log Transaction (Log Discount) Modal */}
         {isTxOpen && (
-          <Dialog open={isTxOpen} onOpenChange={setIsTxOpen}>
-            <DialogContent className="border-border bg-background">
-              <DialogHeader>
-                <DialogTitle className="font-heading font-bold text-secondary">{t("admin.dashboard.logMemberDiscountTitle")}</DialogTitle>
-              </DialogHeader>
-
-              {txSuccess && (
-                <div className="bg-green-50 text-green-600 text-xs p-3 rounded-lg border border-green-200">
-                  {txSuccess}
-                </div>
-              )}
-              {txError && (
-                <div className="bg-rose-50 text-rose-600 text-xs p-3 rounded-lg border border-rose-200">
-                  {txError}
-                </div>
-              )}
-
-              <form onSubmit={handleAddTransaction} className="space-y-4 pt-2">
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.memberSearchLabel")}</label>
-                  <Input type="text" required placeholder={t("admin.dashboard.egMemberSearch")} value={newTx.memberId} onChange={e => setNewTx({ ...newTx, memberId: e.target.value })} className="border-border bg-background" />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.partnerMedicalCenterLabelReq")}</label>
-                  <select value={newTx.partnerId} onChange={e => setNewTx({ ...newTx, partnerId: e.target.value })} className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary">
-                    <option value="">{t("admin.dashboard.selectPartnerLabel")}</option>
-                    {partners.map(p => (
-                      <option key={p.id} value={p.id}>{p.name} ({p.discount})</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">{t("admin.dashboard.billAmountLabel")}</label>
-                  <Input type="number" required placeholder={t("admin.dashboard.egBillAmount")} value={newTx.amount} onChange={e => setNewTx({ ...newTx, amount: e.target.value })} className="border-border bg-background" />
-                </div>
-
-                <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">{t("admin.dashboard.applyLogDiscountButton")}</Button>
-              </form>
-            </DialogContent>
-          </Dialog>
+          <TransactionDialog
+            isOpen={isTxOpen}
+            onClose={setIsTxOpen}
+            partners={partners}
+            newTx={newTx}
+            setNewTx={setNewTx}
+            onSubmit={handleAddTransaction}
+            txSuccess={txSuccess}
+            txError={txError}
+            t={t}
+          />
         )}
 
-        {/* Member Details Modal */}
         {viewingMember && (
-          <Dialog open={!!viewingMember} onOpenChange={(open) => {
-            if (!open) setViewingMember(null);
-          }}>
-            <DialogContent className="max-w-md md:max-w-lg border-border bg-background max-h-[90vh] overflow-y-auto">
-              <DialogHeader className="border-b border-border pb-4">
-                <div className="flex items-center gap-4">
-                  <div className="h-14 w-14 rounded-xl border border-border bg-muted/40 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
-                    {viewingMember.profilePictureUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={viewingMember.profilePictureUrl} alt={viewingMember.name} className="h-full w-full object-cover" />
-                    ) : (
-                      <User className="h-7 w-7 text-muted-foreground" />
-                    )}
-                  </div>
-                  <div>
-                    <DialogTitle className="font-heading font-bold text-lg text-secondary">
-                      {t("admin.dashboard.memberProfileDetailsTitle")}
-                    </DialogTitle>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      {t("admin.dashboard.memberIdLabel")} <span className="font-mono font-bold text-primary">{viewingMember.id}</span>
-                    </p>
-                  </div>
-                </div>
-              </DialogHeader>
-
-              <div className="space-y-6 pt-4">
-                {/* Status Badges */}
-                <div className="flex items-center justify-between bg-muted/40 p-3 rounded-xl border border-border">
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("admin.dashboard.planTypeLabel")}</span>
-                    <span className="text-xs font-bold text-secondary capitalize">
-                      {viewingMember.tier === "founding" ? t("admin.dashboard.tierFounding1Year") : viewingMember.tier === "premium" ? t("admin.dashboard.tierPremium") : t("admin.dashboard.tierFamily")}
-                    </span>
-                  </div>
-                  <div className="flex flex-col items-end gap-0.5">
-                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("admin.dashboard.membershipStatusLabel")}</span>
-                    <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                      viewingMember.status === "active" 
-                        ? "bg-green-50 text-green-600 border border-green-200" 
-                        : viewingMember.status === "pending_approval"
-                        ? "bg-amber-50 text-amber-600 border border-amber-200"
-                        : "bg-rose-50 text-rose-600 border border-rose-200"
-                    }`}>
-                      <span className={`h-1.5 w-1.5 rounded-full ${
-                        viewingMember.status === "active" 
-                          ? "bg-green-500" 
-                          : viewingMember.status === "pending_approval"
-                          ? "bg-amber-500"
-                          : "bg-rose-500"
-                      }`} />
-                      {viewingMember.status === "active" 
-                        ? t("admin.dashboard.active") 
-                        : viewingMember.status === "pending_approval"
-                        ? "অনুমোদন পেন্ডিং"
-                        : t("admin.dashboard.inactive")}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Profile Information Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <User className="h-3.5 w-3.5" />
-                      <span>{t("admin.dashboard.name")}</span>
-                    </div>
-                    <p className="text-sm font-bold text-secondary">{viewingMember.name}</p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <Phone className="h-3.5 w-3.5" />
-                      <span>{t("admin.dashboard.mobileNumberLabel")}</span>
-                    </div>
-                    <p className="text-sm font-semibold text-secondary font-mono">{viewingMember.phone}</p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <Mail className="h-3.5 w-3.5" />
-                      <span>{t("admin.dashboard.emailLabel")}</span>
-                    </div>
-                    <p className="text-sm text-secondary font-mono break-all">{viewingMember.email || t("admin.dashboard.notProvided")}</p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <Heart className="h-3.5 w-3.5" />
-                      <span>{t("admin.dashboard.totalMedicalSavings")}</span>
-                    </div>
-                    <p className="text-sm font-extrabold text-primary font-mono">৳{formatNum(viewingMember.totalSaved || 0, locale)}</p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <Calendar className="h-3.5 w-3.5" />
-                      <span>{t("admin.dashboard.joinedDateLabel")}</span>
-                    </div>
-                    <p className="text-sm font-semibold text-secondary font-mono">{viewingMember.joinedDate || "N/A"}</p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <Calendar className="h-3.5 w-3.5" />
-                      <span>{t("admin.dashboard.expiryDateLabel")}</span>
-                    </div>
-                    <p className="text-sm font-semibold text-secondary font-mono">{viewingMember.expiryDate || "N/A"}</p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <MapPin className="h-3.5 w-3.5" />
-                      <span>{t("admin.dashboard.addressLabel")}</span>
-                    </div>
-                    <p className="text-sm text-secondary">{viewingMember.address || t("admin.dashboard.notProvided")}</p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <Calendar className="h-3.5 w-3.5" />
-                      <span>{t("admin.dashboard.birthDateLabel")}</span>
-                    </div>
-                    <p className="text-sm font-semibold text-secondary font-mono">{viewingMember.birthDate || t("admin.dashboard.notProvided")}</p>
-                  </div>
-
-                  <div className="space-y-1 col-span-1 sm:col-span-2">
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <Briefcase className="h-3.5 w-3.5" />
-                      <span>{t("admin.dashboard.professionLabel")}</span>
-                    </div>
-                    <p className="text-sm text-secondary">{viewingMember.profession || t("admin.dashboard.notProvided")}</p>
-                  </div>
-                </div>
-
-                {/* bKash Payment Details */}
-                {viewingMember.bkashSender && viewingMember.bkashTxnId && (
-                  <div className="bg-amber-50 dark:bg-amber-950/20 p-4 rounded-2xl border border-amber-200 dark:border-amber-900/50 space-y-2">
-                    <h4 className="text-xs font-bold text-amber-700 dark:text-amber-400 flex items-center gap-1.5 font-heading">
-                      <CreditCard className="h-4 w-4" />
-                      বিকাশ পেমেন্ট তথ্য (bKash Payment Details)
-                    </h4>
-                    <div className="grid grid-cols-2 text-xs gap-y-1.5 font-mono">
-                      <span className="text-muted-foreground font-sans">প্রেরক বিকাশ নম্বর:</span>
-                      <span className="font-semibold text-secondary">{viewingMember.bkashSender}</span>
-                      <span className="text-muted-foreground font-sans">ট্রানজেকশন আইডি (TxnID):</span>
-                      <span className="font-semibold text-secondary select-all">{viewingMember.bkashTxnId}</span>
-                    </div>
-                  </div>
-                )}
-
-                {/* Member Transactions */}
-                <div className="border-t border-border pt-4">
-                  <h4 className="text-xs font-bold text-secondary uppercase font-mono tracking-wider mb-2 flex items-center gap-1">
-                    <HistoryIcon className="h-4 w-4 text-primary" />
-                    {t("admin.dashboard.txLogDesc")}
-                  </h4>
-                  {transactions.filter(t => t.memberId === viewingMember.id).length > 0 ? (
-                    <div className="overflow-x-auto border border-border rounded-xl">
-                      <Table>
-                        <TableHeader className="bg-muted/40">
-                          <TableRow>
-                            <TableHead className="text-[10px] font-semibold text-secondary whitespace-nowrap py-2">{t("admin.dashboard.medicalCenter")}</TableHead>
-                            <TableHead className="text-[10px] font-semibold text-secondary whitespace-nowrap py-2">{t("admin.dashboard.date")}</TableHead>
-                            <TableHead className="text-[10px] font-semibold text-secondary text-right whitespace-nowrap py-2">{t("admin.dashboard.bill")}</TableHead>
-                            <TableHead className="text-[10px] font-semibold text-primary text-right whitespace-nowrap py-2">{t("admin.dashboard.savings")}</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody className="text-[11px]">
-                          {transactions
-                            .filter(t => t.memberId === viewingMember.id)
-                            .map((tx) => (
-                              <TableRow key={tx.id}>
-                                <TableCell className="font-semibold text-secondary py-2">{tx.partnerName}</TableCell>
-                                <TableCell className="text-muted-foreground py-2 font-mono">{tx.date.split(" ")[0]}</TableCell>
-                                <TableCell className="text-right font-mono py-2">৳{tx.amount}</TableCell>
-                                <TableCell className="text-right font-mono text-primary font-bold py-2">৳{tx.saved}</TableCell>
-                              </TableRow>
-                            ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  ) : (
-                    <p className="text-xs text-muted-foreground text-center py-4 bg-muted/20 border border-dashed border-border rounded-xl">
-                      {t("admin.dashboard.noTxsFound")}
-                    </p>
-                  )}
-                </div>
-
-                {/* Modal Footer Buttons */}
-                <div className="flex flex-col sm:flex-row gap-2 border-t border-border pt-4">
-                  {viewingMember.status === "pending_approval" && (
-                    <Button
-                      onClick={() => handleToggleMemberStatus(viewingMember.id)}
-                      className="bg-green-600 hover:bg-green-700 text-white font-semibold gap-1.5 flex-1"
-                    >
-                      <ShieldCheck className="h-4 w-4" />
-                      অনুমোদন ও সক্রিয় করুন (Approve & Activate)
-                    </Button>
-                  )}
-                  <div className="flex gap-2 flex-1 w-full">
-                    <Button 
-                      onClick={() => {
-                        setEditingMember(viewingMember);
-                        setNewMember({
-                          name: viewingMember.name,
-                          phone: viewingMember.phone,
-                          email: viewingMember.email || "",
-                          tier: viewingMember.tier,
-                          address: viewingMember.address || "",
-                          birthDate: viewingMember.birthDate || "",
-                          profession: viewingMember.profession || "",
-                          profilePictureUrl: viewingMember.profilePictureUrl || ""
-                        });
-                        setViewingMember(null);
-                        setIsMemberOpen(true);
-                      }}
-                      className="flex-1 bg-primary hover:bg-primary-dark text-white font-semibold gap-1.5"
-                    >
-                      <Edit3 className="h-4 w-4" />
-                      {t("admin.dashboard.editButton")}
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      onClick={() => setViewingMember(null)}
-                      className="flex-1 border-border text-secondary font-semibold"
-                    >
-                      {t("admin.dashboard.closeButton")}
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
+          <MemberDetailsDialog
+            viewingMember={viewingMember}
+            onClose={() => setViewingMember(null)}
+            transactions={transactions}
+            onToggleStatus={handleToggleMemberStatus}
+            onEditClick={(m) => {
+              setEditingMember(m);
+              setNewMember({
+                name: m.name,
+                phone: m.phone,
+                email: m.email || "",
+                tier: m.tier,
+                address: m.address || "",
+                birthDate: m.birthDate || "",
+                profession: m.profession || "",
+                profilePictureUrl: m.profilePictureUrl || ""
+              });
+              setViewingMember(null);
+              setIsMemberOpen(true);
+            }}
+            locale={locale}
+            t={t}
+          />
         )}
 
       </div>

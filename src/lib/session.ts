@@ -1,41 +1,77 @@
+import "server-only";
+import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
+const secretKey = process.env.SESSION_SECRET || "health-club-default-secret-change-in-production";
+const encodedKey = new TextEncoder().encode(secretKey);
+
+export interface SessionPayload {
+  userId: string;
+  role: "user" | "admin";
+  expiresAt: Date;
+}
+
 /**
- * Sets secure HttpOnly cookies for the logged-in user session.
+ * Encrypts the session payload into a signed JWT.
+ */
+export async function encrypt(payload: SessionPayload): Promise<string> {
+  return new SignJWT({ ...payload, expiresAt: payload.expiresAt.toISOString() })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("7d")
+    .sign(encodedKey);
+}
+
+/**
+ * Decrypts and verifies a JWT session token.
+ */
+export async function decrypt(session: string | undefined = ""): Promise<SessionPayload | null> {
+  if (!session) return null;
+  try {
+    const { payload } = await jwtVerify(session, encodedKey, {
+      algorithms: ["HS256"],
+    });
+    return {
+      userId: payload.userId as string,
+      role: payload.role as "user" | "admin",
+      expiresAt: new Date(payload.expiresAt as string),
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Creates a secure HttpOnly cookie session for the logged-in user.
  */
 export async function setSessionUser(userId: string, role: "user" | "admin" = "user") {
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 1 week
+  const session = await encrypt({ userId, role, expiresAt });
   const cookieStore = await cookies();
-  cookieStore.set("session_user_id", userId, {
+
+  cookieStore.set("session", session, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 60 * 60 * 24 * 7, // 1 week
-    path: "/",
-  });
-  cookieStore.set("session_role", role, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 60 * 60 * 24 * 7, // 1 week
+    sameSite: "lax",
+    expires: expiresAt,
     path: "/",
   });
 }
 
 /**
- * Retrieves the current session user details from cookies.
+ * Retrieves and verifies the current session from cookies.
+ * Returns the decrypted session payload, or null if invalid/missing.
  */
-export async function getSessionUser() {
+export async function getSessionUser(): Promise<SessionPayload | null> {
   const cookieStore = await cookies();
-  const userId = cookieStore.get("session_user_id")?.value;
-  const role = cookieStore.get("session_role")?.value;
-  return { userId, role };
+  const sessionCookie = cookieStore.get("session")?.value;
+  return decrypt(sessionCookie);
 }
 
 /**
- * Clears the session cookies, effectively logging out the user.
+ * Clears the session cookie, effectively logging out the user.
  */
 export async function clearSessionUser() {
   const cookieStore = await cookies();
-  cookieStore.delete("session_user_id");
-  cookieStore.delete("session_role");
+  cookieStore.delete("session");
 }

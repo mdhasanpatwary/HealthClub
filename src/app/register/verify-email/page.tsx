@@ -7,7 +7,7 @@ import { Heart, ShieldCheck, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
-import { verifyEmailOtpAction, resendVerificationCodeAction } from "@/app/actions/dbActions";
+import { verifyEmailOtpAction, resendVerificationCodeAction } from "@/app/actions/memberActions";
 import { toast } from "sonner";
 
 function VerifyEmailForm() {
@@ -18,6 +18,7 @@ function VerifyEmailForm() {
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [awaitingApproval, setAwaitingApproval] = useState(false);
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,6 +41,8 @@ function VerifyEmailForm() {
         
         if (res.requiresPayment) {
           router.push(`/register/payment?memberId=${res.member.id}`);
+        } else if (res.member.status === "pending_approval") {
+          setAwaitingApproval(true);
         } else {
           router.push("/dashboard");
         }
@@ -52,6 +55,35 @@ function VerifyEmailForm() {
       setIsSubmitting(false);
     }
   };
+
+  if (awaitingApproval) {
+    return (
+      <Card className="w-full max-w-md border border-border shadow-xl bg-background/80 backdrop-blur text-center p-8 space-y-6">
+        <div className="mx-auto w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center border border-emerald-100 dark:border-emerald-900">
+          <ShieldCheck className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />
+        </div>
+        <div className="space-y-2">
+          <CardTitle className="font-heading text-2xl font-bold text-secondary dark:text-white">
+            রেজিস্ট্রেশন সম্পূর্ণ হয়েছে!
+          </CardTitle>
+          <CardDescription className="text-sm text-muted-foreground pt-1 leading-relaxed">
+            আপনার ইমেইল ভেরিফিকেশন সফলভাবে সম্পন্ন হয়েছে। আপনার মেম্বারশিপ অ্যাকাউন্টটি বর্তমানে <strong>এডমিন অনুমোদনের জন্য অপেক্ষমাণ</strong> রয়েছে।
+          </CardDescription>
+        </div>
+        <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl text-left border border-border text-xs text-muted-foreground space-y-2 leading-relaxed">
+          <p className="font-semibold text-secondary dark:text-white text-center text-sm mb-1">পরবর্তী ধাপসমূহ:</p>
+          <p>১. হেলথ ক্লাব এডমিন আপনার তথ্য যাচাই করবেন।</p>
+          <p>২. অ্যাকাউন্ট অনুমোদিত হওয়ার পর আপনার ফোনে/ইমেইলে নিশ্চিতকরণ বার্তা পাঠানো হবে।</p>
+          <p>৩. এরপর আপনি আপনার মেম্বার আইডি এবং পাসওয়ার্ড দিয়ে লগইন করে ড্যাশবোর্ড ও মেম্বারশিপ কার্ড ব্যবহার করতে পারবেন।</p>
+        </div>
+        <Link href="/" className="block">
+          <Button className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
+            হোমপেজে ফিরে যান
+          </Button>
+        </Link>
+      </Card>
+    );
+  }
 
   return (
     <Card className="w-full max-w-md border border-border shadow-xl bg-background/80 backdrop-blur">

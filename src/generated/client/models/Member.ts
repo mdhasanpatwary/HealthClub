@@ -52,6 +52,7 @@ export type MemberMinAggregateOutputType = {
   profilePictureUrl: string | null
   emailVerified: boolean | null
   verificationCode: string | null
+  verificationCodeCreatedAt: Date | null
   createdAt: Date | null
   bkashSender: string | null
   bkashTxnId: string | null
@@ -75,6 +76,7 @@ export type MemberMaxAggregateOutputType = {
   profilePictureUrl: string | null
   emailVerified: boolean | null
   verificationCode: string | null
+  verificationCodeCreatedAt: Date | null
   createdAt: Date | null
   bkashSender: string | null
   bkashTxnId: string | null
@@ -98,6 +100,7 @@ export type MemberCountAggregateOutputType = {
   profilePictureUrl: number
   emailVerified: number
   verificationCode: number
+  verificationCodeCreatedAt: number
   createdAt: number
   bkashSender: number
   bkashTxnId: number
@@ -131,6 +134,7 @@ export type MemberMinAggregateInputType = {
   profilePictureUrl?: true
   emailVerified?: true
   verificationCode?: true
+  verificationCodeCreatedAt?: true
   createdAt?: true
   bkashSender?: true
   bkashTxnId?: true
@@ -154,6 +158,7 @@ export type MemberMaxAggregateInputType = {
   profilePictureUrl?: true
   emailVerified?: true
   verificationCode?: true
+  verificationCodeCreatedAt?: true
   createdAt?: true
   bkashSender?: true
   bkashTxnId?: true
@@ -177,6 +182,7 @@ export type MemberCountAggregateInputType = {
   profilePictureUrl?: true
   emailVerified?: true
   verificationCode?: true
+  verificationCodeCreatedAt?: true
   createdAt?: true
   bkashSender?: true
   bkashTxnId?: true
@@ -287,6 +293,7 @@ export type MemberGroupByOutputType = {
   profilePictureUrl: string | null
   emailVerified: boolean
   verificationCode: string | null
+  verificationCodeCreatedAt: Date | null
   createdAt: Date
   bkashSender: string | null
   bkashTxnId: string | null
@@ -333,6 +340,7 @@ export type MemberWhereInput = {
   profilePictureUrl?: Prisma.StringNullableFilter<"Member"> | string | null
   emailVerified?: Prisma.BoolFilter<"Member"> | boolean
   verificationCode?: Prisma.StringNullableFilter<"Member"> | string | null
+  verificationCodeCreatedAt?: Prisma.DateTimeNullableFilter<"Member"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   bkashSender?: Prisma.StringNullableFilter<"Member"> | string | null
   bkashTxnId?: Prisma.StringNullableFilter<"Member"> | string | null
@@ -357,6 +365,7 @@ export type MemberOrderByWithRelationInput = {
   profilePictureUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  verificationCodeCreatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   bkashSender?: Prisma.SortOrderInput | Prisma.SortOrder
   bkashTxnId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -384,6 +393,7 @@ export type MemberWhereUniqueInput = Prisma.AtLeast<{
   profilePictureUrl?: Prisma.StringNullableFilter<"Member"> | string | null
   emailVerified?: Prisma.BoolFilter<"Member"> | boolean
   verificationCode?: Prisma.StringNullableFilter<"Member"> | string | null
+  verificationCodeCreatedAt?: Prisma.DateTimeNullableFilter<"Member"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   bkashSender?: Prisma.StringNullableFilter<"Member"> | string | null
   bkashTxnId?: Prisma.StringNullableFilter<"Member"> | string | null
@@ -408,6 +418,7 @@ export type MemberOrderByWithAggregationInput = {
   profilePictureUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  verificationCodeCreatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   bkashSender?: Prisma.SortOrderInput | Prisma.SortOrder
   bkashTxnId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -439,6 +450,7 @@ export type MemberScalarWhereWithAggregatesInput = {
   profilePictureUrl?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
   emailVerified?: Prisma.BoolWithAggregatesFilter<"Member"> | boolean
   verificationCode?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
+  verificationCodeCreatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Member"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Member"> | Date | string
   bkashSender?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
   bkashTxnId?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
@@ -462,6 +474,7 @@ export type MemberCreateInput = {
   profilePictureUrl?: string | null
   emailVerified?: boolean
   verificationCode?: string | null
+  verificationCodeCreatedAt?: Date | string | null
   createdAt?: Date | string
   bkashSender?: string | null
   bkashTxnId?: string | null
@@ -486,6 +499,7 @@ export type MemberUncheckedCreateInput = {
   profilePictureUrl?: string | null
   emailVerified?: boolean
   verificationCode?: string | null
+  verificationCodeCreatedAt?: Date | string | null
   createdAt?: Date | string
   bkashSender?: string | null
   bkashTxnId?: string | null
@@ -510,6 +524,7 @@ export type MemberUpdateInput = {
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -534,6 +549,7 @@ export type MemberUncheckedUpdateInput = {
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -558,6 +574,7 @@ export type MemberCreateManyInput = {
   profilePictureUrl?: string | null
   emailVerified?: boolean
   verificationCode?: string | null
+  verificationCodeCreatedAt?: Date | string | null
   createdAt?: Date | string
   bkashSender?: string | null
   bkashTxnId?: string | null
@@ -581,6 +598,7 @@ export type MemberUpdateManyMutationInput = {
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -604,6 +622,7 @@ export type MemberUncheckedUpdateManyInput = {
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -627,6 +646,7 @@ export type MemberCountOrderByAggregateInput = {
   profilePictureUrl?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrder
+  verificationCodeCreatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   bkashSender?: Prisma.SortOrder
   bkashTxnId?: Prisma.SortOrder
@@ -654,6 +674,7 @@ export type MemberMaxOrderByAggregateInput = {
   profilePictureUrl?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrder
+  verificationCodeCreatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   bkashSender?: Prisma.SortOrder
   bkashTxnId?: Prisma.SortOrder
@@ -677,6 +698,7 @@ export type MemberMinOrderByAggregateInput = {
   profilePictureUrl?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrder
+  verificationCodeCreatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   bkashSender?: Prisma.SortOrder
   bkashTxnId?: Prisma.SortOrder
@@ -751,6 +773,7 @@ export type MemberCreateWithoutTransactionsInput = {
   profilePictureUrl?: string | null
   emailVerified?: boolean
   verificationCode?: string | null
+  verificationCodeCreatedAt?: Date | string | null
   createdAt?: Date | string
   bkashSender?: string | null
   bkashTxnId?: string | null
@@ -774,6 +797,7 @@ export type MemberUncheckedCreateWithoutTransactionsInput = {
   profilePictureUrl?: string | null
   emailVerified?: boolean
   verificationCode?: string | null
+  verificationCodeCreatedAt?: Date | string | null
   createdAt?: Date | string
   bkashSender?: string | null
   bkashTxnId?: string | null
@@ -813,6 +837,7 @@ export type MemberUpdateWithoutTransactionsInput = {
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -836,6 +861,7 @@ export type MemberUncheckedUpdateWithoutTransactionsInput = {
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -890,6 +916,7 @@ export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   profilePictureUrl?: boolean
   emailVerified?: boolean
   verificationCode?: boolean
+  verificationCodeCreatedAt?: boolean
   createdAt?: boolean
   bkashSender?: boolean
   bkashTxnId?: boolean
@@ -915,6 +942,7 @@ export type MemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   profilePictureUrl?: boolean
   emailVerified?: boolean
   verificationCode?: boolean
+  verificationCodeCreatedAt?: boolean
   createdAt?: boolean
   bkashSender?: boolean
   bkashTxnId?: boolean
@@ -938,6 +966,7 @@ export type MemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   profilePictureUrl?: boolean
   emailVerified?: boolean
   verificationCode?: boolean
+  verificationCodeCreatedAt?: boolean
   createdAt?: boolean
   bkashSender?: boolean
   bkashTxnId?: boolean
@@ -961,12 +990,13 @@ export type MemberSelectScalar = {
   profilePictureUrl?: boolean
   emailVerified?: boolean
   verificationCode?: boolean
+  verificationCodeCreatedAt?: boolean
   createdAt?: boolean
   bkashSender?: boolean
   bkashTxnId?: boolean
 }
 
-export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "phone" | "email" | "password" | "tier" | "status" | "joinedDate" | "expiryDate" | "qrCodeUrl" | "totalSaved" | "address" | "birthDate" | "profession" | "profilePictureUrl" | "emailVerified" | "verificationCode" | "createdAt" | "bkashSender" | "bkashTxnId", ExtArgs["result"]["member"]>
+export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "phone" | "email" | "password" | "tier" | "status" | "joinedDate" | "expiryDate" | "qrCodeUrl" | "totalSaved" | "address" | "birthDate" | "profession" | "profilePictureUrl" | "emailVerified" | "verificationCode" | "verificationCodeCreatedAt" | "createdAt" | "bkashSender" | "bkashTxnId", ExtArgs["result"]["member"]>
 export type MemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactions?: boolean | Prisma.Member$transactionsArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
@@ -997,6 +1027,7 @@ export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     profilePictureUrl: string | null
     emailVerified: boolean
     verificationCode: string | null
+    verificationCodeCreatedAt: Date | null
     createdAt: Date
     bkashSender: string | null
     bkashTxnId: string | null
@@ -1441,6 +1472,7 @@ export interface MemberFieldRefs {
   readonly profilePictureUrl: Prisma.FieldRef<"Member", 'String'>
   readonly emailVerified: Prisma.FieldRef<"Member", 'Boolean'>
   readonly verificationCode: Prisma.FieldRef<"Member", 'String'>
+  readonly verificationCodeCreatedAt: Prisma.FieldRef<"Member", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Member", 'DateTime'>
   readonly bkashSender: Prisma.FieldRef<"Member", 'String'>
   readonly bkashTxnId: Prisma.FieldRef<"Member", 'String'>

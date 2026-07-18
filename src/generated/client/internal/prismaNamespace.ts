@@ -760,6 +760,7 @@ export const MemberScalarFieldEnum = {
   profilePictureUrl: 'profilePictureUrl',
   emailVerified: 'emailVerified',
   verificationCode: 'verificationCode',
+  verificationCodeCreatedAt: 'verificationCodeCreatedAt',
   createdAt: 'createdAt',
   bkashSender: 'bkashSender',
   bkashTxnId: 'bkashTxnId'

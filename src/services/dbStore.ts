@@ -4,18 +4,24 @@ import {
   addPartnerAction,
   updatePartnerAction,
   deletePartnerAction,
-  getMembersAction,
+} from "@/app/actions/partnerActions";
+import {
   addMemberAction,
   getMemberByIdAction,
+  logoutMemberAction,
+} from "@/app/actions/memberActions";
+import {
+  getMembersAction,
   updateMemberStatusAction,
   updateMemberProfileAction,
   updateMemberAction,
   deleteMemberAction,
+} from "@/app/actions/memberAdminActions";
+import {
   getTransactionsAction,
   addTransactionAction,
   getStatsAction,
-  logoutMemberAction,
-} from "@/app/actions/dbActions";
+} from "@/app/actions/transactionActions";
 
 // Helper to check if running on client side
 const isClient = typeof window !== "undefined";

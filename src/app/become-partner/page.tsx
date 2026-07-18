@@ -5,7 +5,7 @@ import { CheckCircle2, Building2, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { addPartnerRequestAction } from "@/app/actions/dbActions";
+import { addPartnerRequestAction } from "@/app/actions/partnerActions";
 
 export default function BecomePartnerPage() {
   const [formData, setFormData] = useState({

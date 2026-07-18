@@ -25,6 +25,7 @@ model Member {
   profilePictureUrl String?       @map("profile_picture_url")
   emailVerified     Boolean       @default(false) @map("email_verified")
   verificationCode  String?       @map("verification_code")
+  verificationCodeCreatedAt DateTime?     @map("verification_code_created_at") @db.Timestamptz
   createdAt         DateTime      @default(now()) @map("created_at") @db.Timestamptz
   bkashSender       String?       @map("bkash_sender")
   bkashTxnId        String?       @map("bkash_txn_id")

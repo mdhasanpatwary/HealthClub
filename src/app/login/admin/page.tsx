@@ -8,6 +8,7 @@ import { dbStore } from "@/services/dbStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
+import { loginAdminAction } from "@/app/actions/memberActions";
 
 export default function AdminLoginPage() {
   const [identifier, setIdentifier] = useState("");
@@ -24,22 +25,15 @@ export default function AdminLoginPage() {
       return;
     }
 
-    // Check for Admin login credentials
-    if (identifier === "healthclubfeni@gmail.com" && password === "123456") {
-      const adminMember = {
-        id: "HC-ADMIN-01",
-        name: "হেলথ ক্লাব এডমিন",
-        phone: "01700000000",
-        email: "healthclubfeni@gmail.com",
-        tier: "founding" as const,
-        status: "active" as const,
-        joinedDate: "2026-01-01",
-        expiryDate: "2027-01-01",
-        totalSaved: 0
-      };
-      dbStore.setCurrentUser(adminMember);
-      router.push("/admin");
-      return;
+    try {
+      const adminMember = await loginAdminAction(identifier, password);
+      if (adminMember) {
+        dbStore.setCurrentUser(adminMember);
+        router.push("/admin");
+        return;
+      }
+    } catch (err) {
+      console.error(err);
     }
 
     setError("ভুল এডমিন ক্রেডেনশিয়ালস। অনুগ্রহ করে সঠিক তথ্য প্রদান করুন।");

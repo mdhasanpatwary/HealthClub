@@ -127,14 +127,19 @@ export default function DashboardPage() {
       badge: "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/50 dark:text-rose-400 dark:border-rose-800",
       label: "পেমেন্ট পেন্ডিং",
     },
-    pending: {
+    pending_approval: {
       dot: "bg-amber-500 animate-bounce",
       badge: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/50 dark:text-amber-400 dark:border-amber-800",
-      label: "অনুমোদনের অপেক্ষায়",
+      label: "অনুমোদনের অপেক্ষায় (Awaiting Approval)",
+    },
+    inactive: {
+      dot: "bg-slate-400",
+      badge: "bg-slate-50 text-slate-600 border-slate-200 dark:bg-slate-900 dark:text-slate-400 dark:border-slate-800",
+      label: "মেম্বারশিপ অচল (INACTIVE)",
     },
   };
 
-  const status = statusConfig[user.status as keyof typeof statusConfig] || statusConfig.pending;
+  const status = statusConfig[user.status as keyof typeof statusConfig] || statusConfig.inactive;
 
   return (
     <div className="bg-muted/30 dark:bg-slate-950/50 min-h-screen py-6 sm:py-10">

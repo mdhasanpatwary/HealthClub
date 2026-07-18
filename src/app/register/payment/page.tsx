@@ -7,7 +7,7 @@ import { ShieldCheck, AlertCircle, CheckCircle2, Copy, Check, Smartphone } from 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { submitBkashPaymentAction, getMemberByIdAction } from "@/app/actions/dbActions";
+import { submitBkashPaymentAction, getMemberByIdAction } from "@/app/actions/memberActions";
 import { Member } from "@/services/db";
 import { toast } from "sonner";
 
@@ -92,7 +92,7 @@ function PaymentForm() {
         
         toast.success("পেমেন্ট তথ্য সফলভাবে সাবমিট করা হয়েছে!");
         setTimeout(() => {
-          router.push("/dashboard");
+          router.push("/");
         }, 3000);
       } else {
         toast.error("পেমেন্ট তথ্য সাবমিট করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।");
@@ -141,7 +141,7 @@ function PaymentForm() {
             <p className="text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed">
               আপনার পেমেন্ট সফলভাবে প্রাপ্ত হয়েছে। এডমিন ম্যানুয়ালি যাচাই করে আপনার অ্যাকাউন্টটি ২৪ ঘণ্টার মধ্যে সক্রিয় করবে।
             </p>
-            <p className="text-xs text-primary font-semibold">আপনাকে ড্যাশবোর্ডে রিডাইরেক্ট করা হচ্ছে...</p>
+            <p className="text-xs text-primary font-semibold">আপনাকে হোমপেজে রিডাইরেক্ট করা হচ্ছে...</p>
           </div>
         ) : (
           <>
