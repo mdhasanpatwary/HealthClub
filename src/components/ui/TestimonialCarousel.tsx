@@ -145,7 +145,7 @@ export default function TestimonialCarousel() {
         </div>
 
         {/* Arrow buttons */}
-        <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 hidden sm:flex justify-between pointer-events-none px-2">
+        <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 hidden sm:flex justify-between pointer-events-none px-2 z-20">
           <button
             onClick={prevSlide}
             className="p-2 rounded-full bg-background border border-border shadow-md text-muted-foreground hover:text-foreground hover:bg-muted pointer-events-auto transition-colors focus:outline-none"
