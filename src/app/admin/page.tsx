@@ -33,6 +33,7 @@ import { PartnersTab } from "./components/PartnersTab";
 import { TransactionsTab } from "./components/TransactionsTab";
 import { PartnerRequestsTab } from "./components/PartnerRequestsTab";
 import { ContactMessagesTab } from "./components/ContactMessagesTab";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function parseDiscountPercentage(discountStr: string): number {
   const banglaToEnglishMap: { [key: string]: string } = {
@@ -64,6 +65,7 @@ export default function AdminDashboardPage() {
   const { t, locale } = useLanguage();
 
   // States
+  const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     totalMembers: 0,
     activeMembers: 0,
@@ -137,6 +139,8 @@ export default function AdminDashboardPage() {
       setContactMessages(messagesRes);
     } catch (error) {
       console.error("Error loading data in admin dashboard:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -395,6 +399,87 @@ export default function AdminDashboardPage() {
     p.name.toLowerCase().includes(partnerSearch.toLowerCase()) ||
     p.address.toLowerCase().includes(partnerSearch.toLowerCase())
   );
+
+  if (loading) {
+    return (
+      <div className="bg-muted/30 min-h-screen py-6 sm:py-10 animate-pulse">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
+          {/* Header Skeleton */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border pb-6">
+            <div className="space-y-2">
+              <Skeleton className="h-8 w-64 animate-pulse" />
+              <Skeleton className="h-4 w-96 animate-pulse" />
+            </div>
+            <Skeleton className="h-9 w-32 rounded-md" />
+          </div>
+
+          {/* Stats Grid Skeleton */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Card key={i} className="border-border shadow-sm bg-background dark:bg-slate-900">
+                <CardContent className="p-6 flex items-center justify-between">
+                  <div className="space-y-2 w-2/3">
+                    <Skeleton className="h-3 w-32 animate-pulse" />
+                    <Skeleton className="h-8 w-20 animate-pulse" />
+                    <Skeleton className="h-3.5 w-24 animate-pulse" />
+                  </div>
+                  <Skeleton className="h-12 w-12 rounded-xl" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Chart Placeholder Skeleton */}
+          <Card className="border-border shadow-md bg-background dark:bg-slate-900">
+            <CardHeader className="space-y-2">
+              <Skeleton className="h-5 w-48 animate-pulse" />
+              <Skeleton className="h-3.5 w-72 animate-pulse" />
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="w-full h-48 bg-muted/30 rounded-xl border border-border/50 flex items-end p-4">
+                <div className="w-full flex justify-around items-end h-full pt-4">
+                  {Array.from({ length: 7 }).map((_, i) => (
+                    <div key={i} className="flex flex-col items-center gap-1.5 h-full justify-end w-12">
+                      <Skeleton className="w-6 rounded-t-md animate-pulse" style={{ height: `${30 + (i * 10)}%` }} />
+                      <Skeleton className="h-3 w-8 animate-pulse" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Tabs skeleton */}
+          <div className="space-y-4">
+            <Skeleton className="h-10 w-full rounded-xl animate-pulse" />
+            <Card className="border-border shadow-md bg-background dark:bg-slate-900">
+              <CardContent className="p-6 space-y-4">
+                <div className="flex justify-between items-center pb-4 border-b border-border">
+                  <Skeleton className="h-9 w-48 rounded-md animate-pulse" />
+                  <Skeleton className="h-9 w-24 rounded-md animate-pulse" />
+                </div>
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="flex justify-between items-center py-3 border-b border-border last:border-0">
+                    <div className="flex items-center gap-3">
+                      <Skeleton className="h-10 w-10 rounded-full" />
+                      <div className="space-y-1">
+                        <Skeleton className="h-4 w-32 animate-pulse" />
+                        <Skeleton className="h-3 w-24 animate-pulse" />
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Skeleton className="h-8 w-16 rounded-md" />
+                      <Skeleton className="h-8 w-16 rounded-md" />
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-muted/30 min-h-screen py-6 sm:py-10">

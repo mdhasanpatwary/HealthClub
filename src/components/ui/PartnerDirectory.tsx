@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatDiscount } from "@/lib/i18n";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface PartnerDirectoryProps {
   limit?: number;
@@ -17,12 +18,16 @@ interface PartnerDirectoryProps {
 
 export default function PartnerDirectory({ limit, showFilters = true }: PartnerDirectoryProps) {
   const [partners, setPartners] = useState<Partner[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const { locale, t } = useLanguage();
 
   useEffect(() => {
-    dbStore.getPartners().then(setPartners);
+    dbStore.getPartners().then((data) => {
+      setPartners(data);
+      setLoading(false);
+    });
   }, []);
 
   // Filter partners
@@ -114,7 +119,36 @@ export default function PartnerDirectory({ limit, showFilters = true }: PartnerD
       </div>
 
       {/* Directory Grid */}
-      {displayedPartners.length > 0 ? (
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: limit || 6 }).map((_, i) => (
+            <Card key={i} className="border-border bg-background/50 backdrop-blur group flex flex-col justify-between h-[210px]">
+              <CardContent className="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                <div className="space-y-3">
+                  <div className="flex justify-between items-start">
+                    <Skeleton className="h-12 w-12 rounded-xl" />
+                    <Skeleton className="h-5 w-20 rounded-full" />
+                  </div>
+                  <div className="space-y-2 mt-2">
+                    <Skeleton className="h-5 w-3/4 animate-pulse" />
+                    <Skeleton className="h-4 w-1/2 animate-pulse" />
+                  </div>
+                </div>
+                <div className="pt-4 border-t border-border mt-4 flex items-center justify-between gap-2">
+                  <div className="space-y-1">
+                    <Skeleton className="h-3 w-12" />
+                    <Skeleton className="h-5 w-16" />
+                  </div>
+                  <div className="flex gap-2">
+                    <Skeleton className="h-8 w-20 rounded-lg" />
+                    <Skeleton className="h-8 w-16 rounded-lg" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : displayedPartners.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {displayedPartners.map((partner) => (
             <Card key={partner.id} className="hover:shadow-lg transition-all duration-300 border-border bg-background/50 backdrop-blur group flex flex-col justify-between">
