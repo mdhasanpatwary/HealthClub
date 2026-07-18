@@ -18,6 +18,11 @@ import {
   updatePartnerRequestStatusAction,
   PartnerRequest,
 } from "@/app/actions/partnerActions";
+import {
+  getContactMessagesAction,
+  deleteContactMessageAction,
+  ContactMessage,
+} from "@/app/actions/contactActions";
 
 import { MemberDialog } from "./components/MemberDialog";
 import { PartnerDialog } from "./components/PartnerDialog";
@@ -27,6 +32,7 @@ import { MembersTab } from "./components/MembersTab";
 import { PartnersTab } from "./components/PartnersTab";
 import { TransactionsTab } from "./components/TransactionsTab";
 import { PartnerRequestsTab } from "./components/PartnerRequestsTab";
+import { ContactMessagesTab } from "./components/ContactMessagesTab";
 
 function parseDiscountPercentage(discountStr: string): number {
   const banglaToEnglishMap: { [key: string]: string } = {
@@ -71,6 +77,7 @@ export default function AdminDashboardPage() {
   const [partners, setPartners] = useState<Partner[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [partnerRequests, setPartnerRequests] = useState<PartnerRequest[]>([]);
+  const [contactMessages, setContactMessages] = useState<ContactMessage[]>([]);
 
   // Search states
   const [memberSearch, setMemberSearch] = useState("");
@@ -114,18 +121,20 @@ export default function AdminDashboardPage() {
     }
 
     try {
-      const [statsRes, membersRes, partnersRes, transactionsRes, requestsRes] = await Promise.all([
+      const [statsRes, membersRes, partnersRes, transactionsRes, requestsRes, messagesRes] = await Promise.all([
         dbStore.getStats(),
         dbStore.getMembers(),
         dbStore.getPartners(),
         dbStore.getTransactions(),
-        getPartnerRequestsAction()
+        getPartnerRequestsAction(),
+        getContactMessagesAction()
       ]);
       setStats(statsRes);
       setMembers(membersRes);
       setPartners(partnersRes);
       setTransactions(transactionsRes);
       setPartnerRequests(requestsRes);
+      setContactMessages(messagesRes);
     } catch (error) {
       console.error("Error loading data in admin dashboard:", error);
     }
@@ -264,6 +273,23 @@ export default function AdminDashboardPage() {
         }
       } catch {
         toast.error("সার্ভার ত্রুটি।");
+      }
+    }
+  };
+
+  // Handle Delete Contact Message
+  const handleDeleteContactMessage = async (id: string) => {
+    if (confirm(t("admin.dashboard.deleteMessageConfirm"))) {
+      try {
+        const success = await deleteContactMessageAction(id);
+        if (success) {
+          toast.success(t("admin.dashboard.messageDeletedSuccess"));
+          loadData();
+        } else {
+          toast.error(t("admin.dashboard.messageDeletedFailed"));
+        }
+      } catch {
+        toast.error(t("admin.dashboard.messageDeletedFailed"));
       }
     }
   };
@@ -504,12 +530,15 @@ export default function AdminDashboardPage() {
         </Card>
 
         <Tabs defaultValue="members" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 bg-muted p-1 rounded-xl">
+          <TabsList className="grid w-full grid-cols-5 bg-muted p-1 rounded-xl">
             <TabsTrigger value="members" className="rounded-lg text-xs font-semibold py-2">{t("admin.dashboard.membersList")}</TabsTrigger>
             <TabsTrigger value="partners" className="rounded-lg text-xs font-semibold py-2">{t("admin.dashboard.partnerHospitals")}</TabsTrigger>
             <TabsTrigger value="txs" className="rounded-lg text-xs font-semibold py-2">{t("admin.dashboard.transactionLog")}</TabsTrigger>
             <TabsTrigger value="requests" className="rounded-lg text-xs font-semibold py-2">
               অংশীদার আবেদন ({partnerRequests.filter(r => r.status === "pending").length})
+            </TabsTrigger>
+            <TabsTrigger value="messages" className="rounded-lg text-xs font-semibold py-2">
+              {t("admin.dashboard.contactMessages")} ({contactMessages.length})
             </TabsTrigger>
           </TabsList>
 
@@ -587,6 +616,15 @@ export default function AdminDashboardPage() {
               partnerRequests={partnerRequests}
               onApprove={handleApprovePartnerRequest}
               onReject={handleRejectPartnerRequest}
+            />
+          </TabsContent>
+
+          <TabsContent value="messages" className="mt-4">
+            <ContactMessagesTab
+              messages={contactMessages}
+              onDelete={handleDeleteContactMessage}
+              t={t}
+              locale={locale}
             />
           </TabsContent>
         </Tabs>

@@ -37,3 +37,8 @@ export type Transaction = Prisma.TransactionModel
  * 
  */
 export type PartnerRequest = Prisma.PartnerRequestModel
+/**
+ * Model ContactMessage
+ * 
+ */
+export type ContactMessage = Prisma.ContactMessageModel

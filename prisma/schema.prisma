@@ -81,3 +81,15 @@ model PartnerRequest {
   @@map("partner_requests")
 }
 
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  phone     String
+  email     String?
+  message   String
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@map("contact_messages")
+}
+
+

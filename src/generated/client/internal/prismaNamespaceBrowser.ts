@@ -54,7 +54,8 @@ export const ModelName = {
   Member: 'Member',
   Partner: 'Partner',
   Transaction: 'Transaction',
-  PartnerRequest: 'PartnerRequest'
+  PartnerRequest: 'PartnerRequest',
+  ContactMessage: 'ContactMessage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -144,6 +145,18 @@ export const PartnerRequestScalarFieldEnum = {
 } as const
 
 export type PartnerRequestScalarFieldEnum = (typeof PartnerRequestScalarFieldEnum)[keyof typeof PartnerRequestScalarFieldEnum]
+
+
+export const ContactMessageScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  phone: 'phone',
+  email: 'email',
+  message: 'message',
+  createdAt: 'createdAt'
+} as const
+
+export type ContactMessageScalarFieldEnum = (typeof ContactMessageScalarFieldEnum)[keyof typeof ContactMessageScalarFieldEnum]
 
 
 export const SortOrder = {

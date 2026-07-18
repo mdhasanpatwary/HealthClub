@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/components/layout/LanguageProvider";
+import { addContactMessageAction } from "@/app/actions/contactActions";
+import { toast } from "sonner";
 
 export default function ContactForm() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -16,14 +18,24 @@ export default function ContactForm() {
     message: ""
   });
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate submission
-    setTimeout(() => {
-      setSubmitted(true);
-      setFormData({ name: "", phone: "", email: "", message: "" });
-    }, 800);
+    setIsSubmitting(true);
+    try {
+      const res = await addContactMessageAction(formData);
+      if (res.success) {
+        setSubmitted(true);
+        setFormData({ name: "", phone: "", email: "", message: "" });
+      } else {
+        toast.error(res.error || (locale === "bn" ? "বার্তা পাঠাতে ব্যর্থ হয়েছে।" : "Failed to send message."));
+      }
+    } catch {
+      toast.error(locale === "bn" ? "একটি ত্রুটি ঘটেছে। অনুগ্রহ করে আবার চেষ্টা করুন।" : "An error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -162,8 +174,8 @@ export default function ContactForm() {
                 />
               </div>
 
-              <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
-                {t("landing.contactform.sendMessage")}
+              <Button type="submit" disabled={isSubmitting} className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
+                {isSubmitting ? (locale === "bn" ? "পাঠানো হচ্ছে..." : "Sending...") : t("landing.contactform.sendMessage")}
               </Button>
             </form>
           )}

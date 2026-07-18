@@ -92,3 +92,14 @@ VALUES
 ('tx4', 'HC-1001', 'মোঃ আব্দুর রহমান', 'p2', 'ল্যাবএইড স্পেশালাইজড হাসপাতাল', 15000, 1500, '2026-07-10 11:45:00+06')
 ON CONFLICT (id) DO NOTHING;
 
+-- Create contact messages table
+CREATE TABLE IF NOT EXISTS contact_messages (
+    id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+    name TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    email TEXT,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+
