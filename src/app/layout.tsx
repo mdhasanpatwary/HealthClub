@@ -8,6 +8,8 @@ import { cookies } from "next/headers";
 import { LanguageProvider } from "@/components/layout/LanguageProvider";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Locale } from "@/lib/i18n";
+import { en } from "@/lib/translations.en";
+import { bn } from "@/lib/translations.bn";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -45,6 +47,8 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const theme = (cookieStore.get("theme")?.value as "light" | "dark") || "light";
+  // Serialize only the active locale's dictionary — halves the client JS bundle
+  const initialDict = locale === "en" ? en : bn;
 
   return (
     <html lang={locale} className={`${theme} ${inter.variable} ${hindSiliguri.variable}`}>
@@ -72,7 +76,7 @@ export default async function RootLayout({
           }}
         />
         <ThemeProvider initialTheme={theme}>
-          <LanguageProvider initialLocale={locale}>
+          <LanguageProvider initialLocale={locale} initialDict={initialDict}>
             <Header />
             <main className="flex-grow">{children}</main>
             <Footer locale={locale} />

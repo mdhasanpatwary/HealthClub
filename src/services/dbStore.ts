@@ -141,8 +141,8 @@ export const dbStore = {
   },
 
   // --- TRANSACTIONS ---
-  async getTransactions(): Promise<Transaction[]> {
-    return getTransactionsAction();
+  async getTransactions(memberId?: string): Promise<Transaction[]> {
+    return getTransactionsAction(memberId);
   },
 
   async addTransaction(tx: Omit<Transaction, "id" | "date">): Promise<Transaction> {

@@ -12,23 +12,26 @@ import { formatDiscount } from "@/lib/i18n";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface PartnerDirectoryProps {
+  partners?: Partner[];
   limit?: number;
   showFilters?: boolean;
 }
 
-export default function PartnerDirectory({ limit, showFilters = true }: PartnerDirectoryProps) {
-  const [partners, setPartners] = useState<Partner[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function PartnerDirectory({ partners: initialPartners, limit, showFilters = true }: PartnerDirectoryProps) {
+  const [partners, setPartners] = useState<Partner[]>(initialPartners ?? []);
+  const [loading, setLoading] = useState(!initialPartners);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const { locale, t } = useLanguage();
 
   useEffect(() => {
+    // Skip client-side fetch when server-side data was provided as a prop
+    if (initialPartners) return;
     dbStore.getPartners().then((data) => {
       setPartners(data);
       setLoading(false);
     });
-  }, []);
+  }, [initialPartners]);
 
   // Filter partners
   const filteredPartners = partners.filter((p) => {

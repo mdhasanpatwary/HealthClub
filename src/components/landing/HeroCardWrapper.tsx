@@ -11,35 +11,29 @@ interface HeroCardWrapperProps {
 }
 
 export default function HeroCardWrapper({ demoMember }: HeroCardWrapperProps) {
-  const [user, setUser] = useState<Member | null>(null);
-  const [loading, setLoading] = useState(true);
+  // Always start null on first render (matches SSR output) to avoid hydration mismatch.
+  // localStorage is unavailable on the server, so both server and client must agree on null.
+  const [member, setMember] = useState<Member | null>(null);
 
   useEffect(() => {
     const currentUser = dbStore.getCurrentUser();
-    if (currentUser) {
-      dbStore.getMemberById(currentUser.id).then((freshUser) => {
-        setUser(freshUser || currentUser);
-        setLoading(false);
-      });
+    if (!currentUser) return;
+
+    if (currentUser.qrCodeUrl) {
+      // Wrap in Promise.resolve so setState is called asynchronously,
+      // satisfying the react-hooks/set-state-in-effect rule.
+      Promise.resolve(currentUser).then(setMember);
     } else {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setLoading(false);
+      // qrCodeUrl missing: fetch fresh data from DB
+      dbStore.getMemberById(currentUser.id).then((freshUser) => {
+        setMember(freshUser ?? null);
+      });
     }
   }, []);
 
-  if (loading) {
-    // Return a loading skeleton that matches the exact aspect ratio/shape of the card
-    return (
-      <div className="w-full bg-slate-900/80 rounded-2xl animate-pulse border border-emerald-500/10 shadow-2xl" />
-    );
-  }
-
-  // Render MemberCard with either the logged-in user or the demo data
-  const displayMember = user || demoMember;
-
   return (
     <div className="w-full">
-      <MemberCard member={displayMember} />
+      <MemberCard member={member ?? demoMember} />
     </div>
   );
 }

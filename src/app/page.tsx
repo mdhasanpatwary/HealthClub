@@ -7,7 +7,7 @@ import TestimonialCarousel from "@/components/ui/TestimonialCarousel";
 import FAQSection from "@/components/landing/FAQSection";
 import ContactForm from "@/components/landing/ContactForm";
 import HeroCardWrapper from "@/components/landing/HeroCardWrapper";
-import { prisma } from "@/lib/prisma";
+import { getHomepageStats, getHomepagePartners } from "@/lib/homepageData";
 import { cookies } from "next/headers";
 import { Locale, tServer, formatNum } from "@/lib/i18n";
 import type { Member } from "@/services/db";
@@ -17,25 +17,12 @@ export default async function Home() {
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const t = (key: string) => tServer(locale, key);
 
-  let memberCount = 100;
-  let hospitalCount = 10;
-  let diagnosticCount = 20;
-  let pharmacyCount = 5;
-
-  try {
-    const [mCount, hCount, dCount, pCount] = await Promise.all([
-      prisma.member.count({ where: { status: "active" } }),
-      prisma.partner.count({ where: { category: "hospital" } }),
-      prisma.partner.count({ where: { category: "diagnostic" } }),
-      prisma.partner.count({ where: { category: "pharmacy" } })
-    ]);
-    memberCount = mCount;
-    hospitalCount = hCount;
-    diagnosticCount = dCount;
-    pharmacyCount = pCount;
-  } catch (error) {
-    console.error("Error fetching stats from database:", error);
-  }
+  // Single cached query for all homepage stats (4 counts → 1 SQL, 60s cache)
+  const [stats, homepagePartners] = await Promise.all([
+    getHomepageStats(),
+    getHomepagePartners(3),
+  ]);
+  const { memberCount, hospitalCount, diagnosticCount, pharmacyCount } = stats;
 
   const remainingSeats = Math.max(0, 100 - memberCount);
 
@@ -431,7 +418,7 @@ export default async function Home() {
             </Link>
           </div>
 
-          <PartnerDirectory limit={3} showFilters={false} />
+          <PartnerDirectory partners={homepagePartners} limit={3} showFilters={false} />
 
         </div>
       </section>

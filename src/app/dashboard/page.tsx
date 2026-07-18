@@ -54,8 +54,7 @@ export default function DashboardPage() {
       setProfilePictureUrl(activeUser.profilePictureUrl || "");
     });
 
-    dbStore.getTransactions().then((allTx) => {
-      const userTx = allTx.filter(t => t.memberId === currentUser.id);
+    dbStore.getTransactions(currentUser.id).then((userTx) => {
       setTransactions(userTx);
     });
   }, [router]);

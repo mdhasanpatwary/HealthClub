@@ -21,13 +21,12 @@ export default function MemberCard({ member }: MemberCardProps) {
     accentColor = "from-emerald-500/10 to-transparent";
   }
 
-  // Generate QR Code URL
-  const verificationUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/verify/${member.id}`
-      : `https://healthclub.com.bd/verify/${member.id}`;
-
-  const qrCodeSrc = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verificationUrl)}&color=0f172a&bgcolor=ffffff`;
+  // Use stored QR code URL from DB if available (avoids external API call on every render).
+  // Falls back to qrserver.com only if not yet generated.
+  const verificationUrl = `https://healthclub.com.bd/verify/${member.id}`;
+  const qrCodeSrc =
+    member.qrCodeUrl ||
+    `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verificationUrl)}&color=0f172a&bgcolor=ffffff`;
 
   return (
     <div

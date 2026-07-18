@@ -7,11 +7,13 @@ import { getSessionUser } from "@/lib/session";
 
 // --- TRANSACTIONS ACTIONS ---
 
-export async function getTransactionsAction(): Promise<Transaction[]> {
+export async function getTransactionsAction(memberId?: string): Promise<Transaction[]> {
   const session = await getSessionUser();
   if (!session) return [];
   try {
     const data = await prisma.transaction.findMany({
+      // If memberId is provided, filter at DB level — avoids fetching all rows
+      where: memberId ? { memberId } : undefined,
       orderBy: { createdAt: "desc" },
     });
 

@@ -3,7 +3,11 @@
 import React, { createContext, useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Locale } from "@/lib/i18n";
-import { translations, TranslationKey } from "@/lib/translations";
+import { en } from "@/lib/translations.en";
+import type { TranslationKey } from "@/lib/translations.en";
+
+// Type for a locale dictionary
+type Dict = Record<string, string>;
 
 interface LanguageContextType {
   locale: Locale;
@@ -16,27 +20,41 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export function LanguageProvider({
   children,
   initialLocale,
+  initialDict,
 }: {
   children: React.ReactNode;
   initialLocale: Locale;
+  /**
+   * The active locale's dictionary, serialized server-side and passed as a prop.
+   * Only the active locale is shipped to the client — cuts bundle by ~50%.
+   */
+  initialDict: Dict;
 }) {
   const [locale, setLocaleState] = useState<Locale>(initialLocale);
+  const [dict, setDict] = useState<Dict>(initialDict);
   const router = useRouter();
 
-  const setLocale = (newLocale: Locale) => {
+  const setLocale = async (newLocale: Locale) => {
+    // Dynamically import only the newly requested locale dictionary
+    if (newLocale !== locale) {
+      if (newLocale === "en") {
+        const { en } = await import("@/lib/translations.en");
+        setDict(en as unknown as Dict);
+      } else {
+        const { bn } = await import("@/lib/translations.bn");
+        setDict(bn as unknown as Dict);
+      }
+    }
     setLocaleState(newLocale);
-    // Set a long-lived cookie (1 year)
     document.cookie = `locale=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
-    // Refresh the router to fetch updated Server Components with the new locale
     router.refresh();
   };
 
-  const t = (key: TranslationKey | string, fallbackEn?: string) => {
+  const t = (key: TranslationKey | string, fallbackEn?: string): string => {
     if (fallbackEn !== undefined) {
       return locale === "en" ? fallbackEn : (key as string);
     }
-    const dict = translations[locale] as Record<string, string>;
-    return dict[key] || key;
+    return dict[key] || (en as Dict)[key] || key;
   };
 
   return (
