@@ -133,6 +133,14 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-11 focus:border-primary/40"
                 />
+                <div className="flex justify-end mt-1">
+                  <Link
+                    href="/forgot-password"
+                    className="text-xs font-semibold text-primary hover:text-primary-dark transition-colors"
+                  >
+                    পাসওয়ার্ড ভুলে গেছেন?
+                  </Link>
+                </div>
               </div>
 
               <Button

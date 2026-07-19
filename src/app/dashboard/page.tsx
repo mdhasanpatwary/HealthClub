@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { 
   Heart, CreditCard, History, LayoutDashboard, Save, CheckCircle2,
-  TrendingUp, Wallet, ReceiptText
+  TrendingUp, Wallet, ReceiptText, Printer
 } from "lucide-react";
 import { toast } from "sonner";
 import { dbStore } from "@/services/dbStore";
@@ -346,7 +346,17 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent className="p-5">
                 {user.status === "active" ? (
-                  <MemberCard member={user} />
+                  <div className="space-y-4">
+                    <MemberCard member={user} />
+                    <Button
+                      onClick={() => window.open("/dashboard/print", "_blank")}
+                      variant="outline"
+                      className="w-full text-xs font-semibold h-10 rounded-xl gap-2 border-border/80 hover:bg-muted active:scale-[0.98] transition-transform"
+                    >
+                      <Printer className="h-4 w-4 text-primary" />
+                      কার্ড প্রিন্ট / ডাউনলোড করুন
+                    </Button>
+                  </div>
                 ) : user.status === "pending_payment" ? (
                   <div className="relative w-full max-w-md mx-auto aspect-[1.586/1] rounded-2xl p-6 overflow-hidden border border-rose-500/20 bg-gradient-to-br from-slate-900 to-slate-950 flex flex-col justify-center items-center text-center space-y-3 shadow-lg">
                     <div className="absolute inset-0 bg-background/50 backdrop-blur-[3px]" />

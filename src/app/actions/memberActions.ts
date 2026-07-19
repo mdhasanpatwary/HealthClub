@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { Member } from "@/services/db";
 import { hashPassword, verifyPassword } from "@/lib/crypto";
 import { setSessionUser, clearSessionUser } from "@/lib/session";
-import { sendOtpEmail } from "@/lib/mail";
+import { sendOtpEmail, sendPasswordResetEmail } from "@/lib/mail";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "healthclubfeni@gmail.com";
 
@@ -424,5 +424,85 @@ export async function resendVerificationCodeAction(email: string): Promise<{ suc
   } catch (error) {
     console.error("Error in resendVerificationCodeAction:", error);
     return { success: false, message: "কোড পুনরায় পাঠাতে সমস্যা হয়েছে।" };
+  }
+}
+
+export async function requestPasswordResetAction(email: string): Promise<{ success: boolean; message: string }> {
+  try {
+    if (!email) {
+      return { success: false, message: "অনুগ্রহ করে ইমেইল অ্যাড্রেসটি দিন।" };
+    }
+
+    const member = await prisma.member.findFirst({
+      where: { email }
+    });
+
+    if (!member) {
+      return { success: false, message: "এই ইমেইল দিয়ে কোনো মেম্বার অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।" };
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    await prisma.member.update({
+      where: { id: member.id },
+      data: {
+        verificationCode: otp,
+        verificationCodeCreatedAt: new Date(),
+      }
+    });
+
+    sendPasswordResetEmail(member.email || "", otp, member.name).catch((err) => {
+      console.error("Failed to send password reset OTP email:", err);
+    });
+
+    return { success: true, message: "আপনার ইমেইলে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
+  } catch (error) {
+    console.error("Error in requestPasswordResetAction:", error);
+    return { success: false, message: "পাসওয়ার্ড রিসেট অনুরোধ প্রক্রিয়া করতে সমস্যা হয়েছে।" };
+  }
+}
+
+export async function resetPasswordAction(
+  email: string,
+  code: string,
+  rawNewPassword: string
+): Promise<{ success: boolean; message: string }> {
+  try {
+    if (!email || !code || !rawNewPassword) {
+      return { success: false, message: "সব তথ্য প্রদান করুন।" };
+    }
+
+    const member = await prisma.member.findFirst({
+      where: { email }
+    });
+
+    if (!member) {
+      return { success: false, message: "মেম্বার অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।" };
+    }
+
+    if (member.verificationCode !== code) {
+      return { success: false, message: "ভুল ওটিপি কোড।" };
+    }
+
+    if (member.verificationCodeCreatedAt) {
+      const fifteenMinutes = 15 * 60 * 1000;
+      if (Date.now() - new Date(member.verificationCodeCreatedAt).getTime() > fifteenMinutes) {
+        return { success: false, message: "ওটিপি কোডের মেয়াদ শেষ হয়ে গেছে (১৫ মিনিট পার হয়েছে)। অনুগ্রহ করে আবার নতুন কোড পাঠান।" };
+      }
+    }
+
+    const hashedPassword = hashPassword(rawNewPassword);
+    await prisma.member.update({
+      where: { id: member.id },
+      data: {
+        password: hashedPassword,
+        verificationCode: null,
+        verificationCodeCreatedAt: null
+      }
+    });
+
+    return { success: true, message: "পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে!" };
+  } catch (error) {
+    console.error("Error in resetPasswordAction:", error);
+    return { success: false, message: "পাসওয়ার্ড রিসেট করতে সমস্যা হয়েছে।" };
   }
 }
