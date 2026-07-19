@@ -8,12 +8,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { resetPasswordAction } from "@/app/actions/memberActions";
+import { resetPartnerPasswordAction } from "@/app/actions/partnerActions";
 import { toast } from "sonner";
 
 function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
+  const isPartner = searchParams.get("type") === "partner";
 
   const [code, setCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -45,10 +47,13 @@ function ResetPasswordForm() {
     }
 
     try {
-      const res = await resetPasswordAction(email, code, newPassword);
+      const res = isPartner
+        ? await resetPartnerPasswordAction(email, code, newPassword)
+        : await resetPasswordAction(email, code, newPassword);
+
       if (res.success) {
         toast.success(res.message);
-        router.push("/login");
+        router.push(isPartner ? "/login/partner" : "/login");
       } else {
         setError(res.message || "পাসওয়ার্ড পরিবর্তন করা যায়নি।");
       }
@@ -140,7 +145,7 @@ function ResetPasswordForm() {
 
         <div className="text-center border-t border-border pt-4">
           <Link
-            href="/login"
+            href={isPartner ? "/login/partner" : "/login"}
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-primary transition-colors"
           >
             <ArrowLeft className="h-3.5 w-3.5" />

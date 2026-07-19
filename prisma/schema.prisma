@@ -38,19 +38,21 @@ model Member {
 }
 
 model Partner {
-  id           String        @id
-  name         String
-  category     String        // 'hospital' | 'diagnostic' | 'pharmacy'
-  address      String
-  discount     String
-  phone        String
-  email        String?       @unique
-  password     String?
-  logoText     String        @map("logo_text")
-  mapLink      String?       @map("map_link")
-  imageUrl     String?       @map("image_url")
-  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz
-  transactions Transaction[]
+  id                        String        @id
+  name                      String
+  category                  String        // 'hospital' | 'diagnostic' | 'pharmacy'
+  address                   String
+  discount                  String
+  phone                     String
+  email                     String?       @unique
+  password                  String?
+  logoText                  String        @map("logo_text")
+  mapLink                   String?       @map("map_link")
+  imageUrl                  String?       @map("image_url")
+  verificationCode          String?       @map("verification_code")
+  verificationCodeCreatedAt DateTime?     @map("verification_code_created_at") @db.Timestamptz
+  createdAt                 DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  transactions              Transaction[]
 
   @@map("partners")
 }

@@ -94,10 +94,15 @@ export default function PartnerLoginPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
-                <Lock className="h-3.5 w-3.5 text-primary" />
-                পাসওয়ার্ড
-              </label>
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
+                  <Lock className="h-3.5 w-3.5 text-primary" />
+                  পাসওয়ার্ড
+                </label>
+                <Link href="/forgot-password?type=partner" className="text-xs text-primary hover:underline font-semibold">
+                  পাসওয়ার্ড ভুলে গেছেন?
+                </Link>
+              </div>
               <Input
                 type="password"
                 required

@@ -198,12 +198,14 @@ export const dbStore = {
   setCurrentPartner(partner: Partner): void {
     if (isClient) {
       localStorage.setItem(KEYS.CURRENT_PARTNER, JSON.stringify(partner));
+      window.dispatchEvent(new Event("auth-change"));
     }
   },
 
   logoutPartner(): void {
     if (isClient) {
       localStorage.removeItem(KEYS.CURRENT_PARTNER);
+      window.dispatchEvent(new Event("auth-change"));
     }
     logoutMemberAction(); // Clear server cookie session
   },

@@ -6,15 +6,17 @@ import { usePathname, useRouter } from "next/navigation";
 import { Menu, X, LogOut, Heart, Globe, Sun, Moon, Settings, LayoutDashboard } from "lucide-react";
 import Image from "next/image";
 import { dbStore } from "@/services/dbStore";
-import { Member } from "@/services/db";
+import { Member, Partner } from "@/services/db";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { useTheme } from "@/components/layout/ThemeProvider";
 import UserDropdown from "./UserDropdown";
+import PartnerDropdown from "./PartnerDropdown";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<Member | null>(null);
+  const [partner, setPartner] = useState<Partner | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -24,6 +26,7 @@ export default function Header() {
   useEffect(() => {
     const syncUser = () => {
       setUser(dbStore.getCurrentUser());
+      setPartner(dbStore.getCurrentPartner());
     };
     syncUser();
 
@@ -152,6 +155,8 @@ export default function Header() {
 
             {user ? (
               <UserDropdown user={user} />
+            ) : partner ? (
+              <PartnerDropdown partner={partner} />
             ) : (
               <>
                 <Link href="/login">
@@ -325,6 +330,44 @@ export default function Header() {
                 <Button
                   variant="ghost"
                   onClick={handleLogout}
+                  className="w-full justify-start gap-2 text-destructive hover:bg-destructive/10 rounded-xl"
+                >
+                  <LogOut className="h-4 w-4" />
+                  {t("layout.header.logout")}
+                </Button>
+              </>
+            ) : partner ? (
+              <>
+                <div className="flex items-center gap-2.5 text-sm font-semibold text-foreground mb-2 pb-2 border-b border-border/60">
+                  {partner.imageUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={partner.imageUrl}
+                      alt={partner.name}
+                      width={36}
+                      height={36}
+                      className="h-9 w-9 rounded-xl object-cover border border-border shrink-0"
+                    />
+                  ) : (
+                    <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-sm uppercase shrink-0 border border-emerald-500/20">
+                      {partner.name ? partner.name.charAt(0).toUpperCase() : "P"}
+                    </div>
+                  )}
+                  <span className="truncate">{partner.name}</span>
+                </div>
+                <Link href="/partner/dashboard" className="block w-full" onClick={() => setIsOpen(false)}>
+                  <Button variant="outline" className="w-full justify-start gap-2 border-emerald-500/30 text-emerald-600 hover:bg-emerald-500/5 rounded-xl">
+                    <LayoutDashboard className="h-4 w-4" />
+                    ড্যাশবোর্ড
+                  </Button>
+                </Link>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    dbStore.logoutPartner();
+                    setIsOpen(false);
+                    router.push("/");
+                  }}
                   className="w-full justify-start gap-2 text-destructive hover:bg-destructive/10 rounded-xl"
                 >
                   <LogOut className="h-4 w-4" />

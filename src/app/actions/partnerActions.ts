@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { Partner, Transaction } from "@/services/db";
 import { getSessionUser, setSessionUser } from "@/lib/session";
 import { hashPassword, verifyPassword } from "@/lib/crypto";
+import { sendPasswordResetEmail } from "@/lib/mail";
 
 export interface PartnerRequest {
   id: string;
@@ -363,5 +364,142 @@ export async function addPartnerTransactionAction(tx: {
   } catch (error) {
     console.error("Error in addPartnerTransactionAction:", error);
     return { success: false, message: "লেনদেনটি সংরক্ষণ করতে সমস্যা হয়েছে।" };
+  }
+}
+
+export async function changePartnerPasswordAction(
+  currentPassword: string,
+  newPassword: string
+): Promise<{ success: boolean; message: string }> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "partner") {
+    return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
+  }
+
+  if (!currentPassword || !newPassword) {
+    return { success: false, message: "সকল তথ্য প্রদান করুন।" };
+  }
+
+  if (newPassword.length < 6) {
+    return { success: false, message: "নতুন পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।" };
+  }
+
+  try {
+    const partner = await prisma.partner.findUnique({
+      where: { id: session.userId }
+    });
+
+    if (!partner) {
+      return { success: false, message: "পার্টনার খুঁজে পাওয়া যায়নি।" };
+    }
+
+    if (!partner.password) {
+      return { success: false, message: "পূর্বে কোনো পাসওয়ার্ড সেট করা নেই। অনুগ্রহ করে অ্যাডমিনের সাথে যোগাযোগ করুন।" };
+    }
+
+    const isValid = verifyPassword(currentPassword, partner.password);
+    if (!isValid) {
+      return { success: false, message: "বর্তমান পাসওয়ার্ডটি সঠিক নয়।" };
+    }
+
+    const hashed = hashPassword(newPassword);
+    await prisma.partner.update({
+      where: { id: partner.id },
+      data: { password: hashed }
+    });
+
+    return { success: true, message: "পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে।" };
+  } catch (error) {
+    console.error("Error in changePartnerPasswordAction:", error);
+    return { success: false, message: "পাসওয়ার্ড পরিবর্তন করতে সমস্যা হয়েছে।" };
+  }
+}
+
+export async function requestPartnerPasswordResetAction(
+  email: string
+): Promise<{ success: boolean; message: string }> {
+  try {
+    if (!email) {
+      return { success: false, message: "অনুগ্রহ করে ইমেইল অ্যাড্রেসটি দিন।" };
+    }
+
+    const partner = await prisma.partner.findFirst({
+      where: { email }
+    });
+
+    if (!partner) {
+      return { success: false, message: "এই ইমেইল দিয়ে কোনো পার্টনার অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।" };
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    await prisma.partner.update({
+      where: { id: partner.id },
+      data: {
+        verificationCode: otp,
+        verificationCodeCreatedAt: new Date(),
+      }
+    });
+
+    sendPasswordResetEmail(partner.email || "", otp, partner.name).catch((err) => {
+      console.error("Failed to send partner password reset OTP email:", err);
+    });
+
+    return { success: true, message: "আপনার ইমেইলে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
+  } catch (error) {
+    console.error("Error in requestPartnerPasswordResetAction:", error);
+    return { success: false, message: "পাসওয়ার্ড রিসেট অনুরোধ প্রক্রিয়া করতে সমস্যা হয়েছে।" };
+  }
+}
+
+export async function resetPartnerPasswordAction(
+  email: string,
+  code: string,
+  rawNewPassword: string
+): Promise<{ success: boolean; message: string }> {
+  try {
+    if (!email || !code || !rawNewPassword) {
+      return { success: false, message: "সব তথ্য প্রদান করুন।" };
+    }
+
+    const partner = await prisma.partner.findFirst({
+      where: { email }
+    });
+
+    if (!partner) {
+      return { success: false, message: "পার্টনার অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।" };
+    }
+
+    if (!partner.verificationCode || !partner.verificationCodeCreatedAt) {
+      return { success: false, message: "রিসেট অনুরোধ পাওয়া যায়নি বা কোড ইতিমধ্যে ব্যবহৃত হয়েছে।" };
+    }
+
+    // Check OTP validity (10 minutes window)
+    const codeTime = new Date(partner.verificationCodeCreatedAt).getTime();
+    const currentTime = new Date().getTime();
+    const diffMinutes = (currentTime - codeTime) / (1000 * 60);
+
+    if (diffMinutes > 10) {
+      return { success: false, message: "ভেরিফিকেশন কোডের মেয়াদ শেষ হয়ে গেছে। অনুগ্রহ করে আবার চেষ্টা করুন।" };
+    }
+
+    if (partner.verificationCode !== code) {
+      return { success: false, message: "ভুল ভেরিফিকেশন কোড।" };
+    }
+
+    const hashedPassword = hashPassword(rawNewPassword);
+
+    await prisma.partner.update({
+      where: { id: partner.id },
+      data: {
+        password: hashedPassword,
+        verificationCode: null,
+        verificationCodeCreatedAt: null
+      }
+    });
+
+    return { success: true, message: "পাসওয়ার্ড সফলভাবে রিসেট করা হয়েছে।" };
+  } catch (error) {
+    console.error("Error in resetPartnerPasswordAction:", error);
+    return { success: false, message: "পাসওয়ার্ড রিসেট করতে সমস্যা হয়েছে।" };
   }
 }

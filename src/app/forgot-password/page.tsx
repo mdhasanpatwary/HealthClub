@@ -1,19 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Heart, Mail, AlertCircle, ArrowRight, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { requestPasswordResetAction } from "@/app/actions/memberActions";
+import { requestPartnerPasswordResetAction } from "@/app/actions/partnerActions";
 import { toast } from "sonner";
 
-export default function ForgotPasswordPage() {
+function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isPartner = searchParams.get("type") === "partner";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,10 +30,13 @@ export default function ForgotPasswordPage() {
     }
 
     try {
-      const res = await requestPasswordResetAction(email);
+      const res = isPartner
+        ? await requestPartnerPasswordResetAction(email)
+        : await requestPasswordResetAction(email);
+
       if (res.success) {
         toast.success(res.message);
-        router.push(`/forgot-password/reset?email=${encodeURIComponent(email)}`);
+        router.push(`/forgot-password/reset?email=${encodeURIComponent(email)}${isPartner ? "&type=partner" : ""}`);
       } else {
         setError(res.message || "পাসওয়ার্ড রিসেট ওটিপি পাঠানো যায়নি।");
       }
@@ -75,10 +81,12 @@ export default function ForgotPasswordPage() {
                 </span>
               </Link>
               <h1 className="font-heading text-xl font-bold text-secondary dark:text-white">
-                পাসওয়ার্ড ভুলে গেছেন?
+                {isPartner ? "পার্টনার পাসওয়ার্ড রিসেট" : "পাসওয়ার্ড ভুলে গেছেন?"}
               </h1>
               <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-                আপনার মেম্বার অ্যাকাউন্টের নিবন্ধিত ইমেইল লিখুন। আমরা আপনাকে পাসওয়ার্ড পরিবর্তন করার জন্য ৬ সংখ্যার ভেরিফিকেশন ওটিপি পাঠাব।
+                {isPartner
+                  ? "আপনার পার্টনার অ্যাকাউন্টের নিবন্ধিত ইমেইল লিখুন। আমরা আপনাকে পাসওয়ার্ড পরিবর্তন করার জন্য ৬ সংখ্যার ভেরিফিকেশন ওটিপি পাঠাব।"
+                  : "আপনার মেম্বার অ্যাকাউন্টের নিবন্ধিত ইমেইল লিখুন। আমরা আপনাকে পাসওয়ার্ড পরিবর্তন করার জন্য ৬ সংখ্যার ভেরিফিকেশন ওটিপি পাঠাব।"}
               </p>
             </div>
 
@@ -124,7 +132,7 @@ export default function ForgotPasswordPage() {
 
             <div className="mt-6 text-center">
               <Link
-                href="/login"
+                href={isPartner ? "/login/partner" : "/login"}
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-primary transition-colors"
               >
                 <ArrowLeft className="h-3.5 w-3.5" />
@@ -135,5 +143,17 @@ export default function ForgotPasswordPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ForgotPasswordPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-[85vh] flex items-center justify-center">
+        <div className="h-8 w-8 rounded-full border-4 border-primary border-t-transparent animate-spin" />
+      </div>
+    }>
+      <ForgotPasswordForm />
+    </Suspense>
   );
 }
