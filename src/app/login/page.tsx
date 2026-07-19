@@ -22,7 +22,7 @@ export default function LoginPage() {
     setLoading(true);
 
     if (!identifier || !password) {
-      setError("মোবাইল নম্বর/ইমেইল এবং পাসওয়ার্ড দিন।");
+      setError("মোবাইল নম্বর/ইমেইল এবং পাসওয়ার্ড দিন।");
       setLoading(false);
       return;
     }
@@ -37,7 +37,7 @@ export default function LoginPage() {
       const res = await loginMemberAction(identifier, password);
       if (res.success && res.member) {
         if (res.error === "PENDING_VERIFICATION") {
-          setError("আপনার ইমেইল ভেরিফাই করা হয়নি। ভেরিফিকেশন পেজে পাঠানো হচ্ছে...");
+          setError("আপনার ইমেইল ভেরিফাই করা হয়নি। ভেরিফিকেশন পেজে পাঠানো হচ্ছে...");
           setTimeout(() => {
             router.push(`/register/verify-email?email=${encodeURIComponent(res.member!.email || "")}`);
           }, 2000);
@@ -46,7 +46,7 @@ export default function LoginPage() {
         dbStore.setCurrentUser(res.member);
         router.push("/dashboard");
       } else {
-        setError(res.error || "ভুল মোবাইল নম্বর/ইমেইল অথবা পাসওয়ার্ড। অনুগ্রহ করে আবার চেষ্টা করুন।");
+        setError(res.error || "ভুল মোবাইল নম্বর/ইমেইল অথবা পাসওয়ার্ড। অনুগ্রহ করে আবার চেষ্টা করুন।");
       }
     } catch {
       setError("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
@@ -123,7 +123,7 @@ export default function LoginPage() {
               <div className="space-y-2">
                 <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5">
                   <Lock className="h-3.5 w-3.5 text-primary" />
-                  পাসওয়ার্ড
+                  পাসওয়ার্ড
                 </label>
                 <Input
                   type="password"
@@ -171,7 +171,7 @@ export default function LoginPage() {
         {/* Bottom trust badge */}
         <p className="text-center text-xs text-muted-foreground mt-5 flex items-center justify-center gap-1.5">
           <Heart className="h-3 w-3 fill-primary text-primary" />
-          হেলথ ক্লাব — স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী
+          হেলথ ক্লাব — স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী
         </p>
       </div>
     </div>

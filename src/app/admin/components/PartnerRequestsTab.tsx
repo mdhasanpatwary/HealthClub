@@ -23,7 +23,7 @@ export function PartnerRequestsTab({
           অংশীদার হাসপাতাল ও ক্লিনিক আবেদন
         </CardTitle>
         <CardDescription>
-          হেলথ ক্লাব প্ল্যাটফর্মে যুক্ত হতে ইচ্ছুক চিকিৎসাকেন্দ্র ও ফার্মেসীগুলোর আবেদনের তালিকা
+          হেলথ ক্লাব প্ল্যাটফর্মে যুক্ত হতে ইচ্ছুক চিকিৎসাকেন্দ্র ও ফার্মেসিগুলোর আবেদনের তালিকা
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -54,7 +54,7 @@ export function PartnerRequestsTab({
                       <div className="text-xs text-muted-foreground mt-0.5">{req.address}</div>
                     </TableCell>
                     <TableCell className="capitalize text-xs font-semibold">
-                      {req.category === "hospital" ? "হাসপাতাল" : req.category === "diagnostic" ? "ডায়াগনস্টিক" : "ফার্মেসী"}
+                      {req.category === "hospital" ? "হাসপাতাল" : req.category === "diagnostic" ? "ডায়াগনস্টিক" : "ফার্মেসি"}
                     </TableCell>
                     <TableCell className="font-mono text-xs font-bold text-primary">
                       {req.discount}

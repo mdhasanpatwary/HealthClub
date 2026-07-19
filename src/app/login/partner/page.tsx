@@ -37,7 +37,7 @@ export default function PartnerLoginPage() {
         router.push("/partner/dashboard");
         return;
       } else {
-        setError(res.error || "ভুল ক্রেডেনশিয়ালস। অনুগ্রহ করে সঠিক তথ্য প্রদান করুন।");
+        setError(res.error || "ভুল ক্রেডেনশিয়ালস। অনুগ্রহ করে সঠিক তথ্য প্রদান করুন।");
       }
     } catch (err) {
       console.error(err);

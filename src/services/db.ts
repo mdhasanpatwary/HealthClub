@@ -52,7 +52,7 @@ export interface Transaction {
 export const initialPartners: Partner[] = [
   {
     id: "p1",
-    name: "পপুলার ডায়াগনস্টিক সেন্টার",
+    name: "পপুলার ডায়াগনস্টিক সেন্টার",
     category: "diagnostic",
     address: "এসএসকে রোড, ফেনী",
     discount: "১০% ফ্ল্যাট ডিসকাউন্ট",
@@ -79,7 +79,7 @@ export const initialPartners: Partner[] = [
   },
   {
     id: "p5",
-    name: "ইবনে সিনা ডায়াগনস্টিক সেন্টার",
+    name: "ইবনে সিনা ডায়াগনস্টিক সেন্টার",
     category: "diagnostic",
     address: "মহিপাল, ফেনী",
     discount: "১০% ফ্ল্যাট ডিসকাউন্ট",
@@ -88,7 +88,7 @@ export const initialPartners: Partner[] = [
   },
   {
     id: "p6",
-    name: "স্কয়ার হাসপাতাল (সিলেক্টেড সুবিধা)",
+    name: "স্কয়ার হাসপাতাল (সিলেক্টেড সুবিধা)",
     category: "hospital",
     address: "গ্র্যান্ড ট্রাঙ্ক রোড, ফেনী",
     discount: "১০% ফ্ল্যাট ডিসকাউন্ট",
@@ -130,7 +130,7 @@ export const initialTransactions: Transaction[] = [
     memberId: "HC-1001",
     memberName: "মোঃ আব্দুর রহমান",
     partnerId: "p1",
-    partnerName: "পপুলার ডায়াগনস্টিক সেন্টার",
+    partnerName: "পপুলার ডায়াগনস্টিক সেন্টার",
     amount: 5000,
     saved: 500,
     date: "2026-06-12 10:30 AM"

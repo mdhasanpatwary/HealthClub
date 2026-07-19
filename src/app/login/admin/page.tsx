@@ -36,7 +36,7 @@ export default function AdminLoginPage() {
       console.error(err);
     }
 
-    setError("ভুল এডমিন ক্রেডেনশিয়ালস। অনুগ্রহ করে সঠিক তথ্য প্রদান করুন।");
+    setError("ভুল এডমিন ক্রেডেনশিয়ালস। অনুগ্রহ করে সঠিক তথ্য প্রদান করুন।");
   };
 
   return (

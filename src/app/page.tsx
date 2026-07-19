@@ -630,7 +630,7 @@ export default async function Home() {
             আজই হেলথ ক্লাবের সদস্য হন
           </h2>
           <p className="text-base sm:text-lg text-white/85 max-w-xl mx-auto">
-            বিনামূল্যে সদস্যতা নিন এবং নির্ধারিত হাসপাতাল ও ডায়াগনস্টিক সেন্টারে ১০% ছাড় উপভোগ করুন।
+            বিনামূল্যে সদস্যতা নিন এবং নির্ধারিত হাসপাতাল ও ডায়াগনস্টিক সেন্টারে ১০% ছাড় উপভোগ করুন।
           </p>
           <Link href="/register">
             <Button

@@ -395,7 +395,7 @@ export default function AdminDashboardPage() {
     try {
       const success = await approveMemberRenewalAction(memberId);
       if (success) {
-        toast.success("মেম্বারশিপ নবায়ন আবেদন সফলভাবে অনুমোদিত হয়েছে!");
+        toast.success("মেম্বারশিপ নবায়ন আবেদন সফলভাবে অনুমোদিত হয়েছে!");
         loadData();
       } else {
         toast.error("অনুমোদন করা যায়নি।");
@@ -411,7 +411,7 @@ export default function AdminDashboardPage() {
     try {
       const success = await rejectMemberRenewalAction(memberId);
       if (success) {
-        toast.success("নবায়ন আবেদন বাতিল করা হয়েছে।");
+        toast.success("নবায়ন আবেদন বাতিল করা হয়েছে।");
         loadData();
       } else {
         toast.error("বাতিল করা যায়নি।");
@@ -657,7 +657,7 @@ export default function AdminDashboardPage() {
               অংশীদার আবেদন ({partnerRequests.filter(r => r.status === "pending").length})
             </TabsTrigger>
             <TabsTrigger value="renewals" className="rounded-lg text-xs font-semibold py-2">
-              নবায়ন আবেদন ({members.filter(m => m.renewalStatus === "pending").length})
+              নবায়ন আবেদন ({members.filter(m => m.renewalStatus === "pending").length})
             </TabsTrigger>
             <TabsTrigger value="messages" className="rounded-lg text-xs font-semibold py-2">
               {t("admin.dashboard.contactMessages")} ({contactMessages.length})

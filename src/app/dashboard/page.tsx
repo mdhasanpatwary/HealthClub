@@ -102,9 +102,9 @@ export default function DashboardPage() {
         };
         dbStore.setCurrentUser(updatedUser);
         setUser(updatedUser);
-        toast.success("প্রোফাইল সফলভাবে আপডেট করা হয়েছে!");
+        toast.success("প্রোফাইল সফলভাবে আপডেট করা হয়েছে!");
       } else {
-        toast.error("প্রোফাইল আপডেট করতে সমস্যা হয়েছে।");
+        toast.error("প্রোফাইল আপডেট করতে সমস্যা হয়েছে।");
       }
     } catch (err) {
       console.error(err);
@@ -215,7 +215,7 @@ export default function DashboardPage() {
     pending_approval: {
       dot: "bg-amber-500 animate-bounce",
       badge: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/50 dark:text-amber-400 dark:border-amber-800",
-      label: "অনুমোদনের অপেক্ষায় (Awaiting Approval)",
+      label: "অনুমোদনের অপেক্ষায় (Awaiting Approval)",
     },
     inactive: {
       dot: "bg-slate-400",
@@ -294,7 +294,7 @@ export default function DashboardPage() {
           <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-4 flex items-center gap-3.5 text-blue-700 dark:text-blue-400 animate-in fade-in duration-200">
             <Clock className="h-5 w-5 shrink-0 animate-pulse text-blue-500" />
             <div className="text-sm font-semibold flex-1">
-              আপনার মেম্বারশিপ কার্ড নবায়ন (Renewal) এর পেমেন্ট অনুরোধ অ্যাডমিনের কাছে প্রক্রিয়াধীন রয়েছে। যাচাইয়ের পর আপনার কার্ডের মেয়াদ বাড়িয়ে দেওয়া হবে।
+              আপনার মেম্বারশিপ কার্ড নবায়ন (Renewal) এর পেমেন্ট অনুরোধ অ্যাডমিনের কাছে প্রক্রিয়াধীন রয়েছে। যাচাইয়ের পর আপনার কার্ডের মেয়াদ বাড়িয়ে দেওয়া হবে।
             </div>
           </div>
         ) : isExpired ? (
@@ -302,7 +302,7 @@ export default function DashboardPage() {
             <div className="flex items-center gap-3.5">
               <AlertTriangle className="h-5 w-5 shrink-0 text-rose-500" />
               <div className="text-sm font-bold">
-                আপনার হেলথ ক্লাব মেম্বারশিপ কার্ডটির মেয়াদ শেষ হয়ে গেছে! হাসপাতালের ডিসকাউন্ট সুবিধা পেতে অনুগ্রহ করে অবিলম্বে রিনিউয়াল করুন।
+                আপনার হেলথ ক্লাব মেম্বারশিপ কার্ডটির মেয়াদ শেষ হয়ে গেছে! হাসপাতালের ডিসকাউন্ট সুবিধা পেতে অনুগ্রহ করে অবিলম্বে রিনিউয়াল করুন।
               </div>
             </div>
             <Link href="/dashboard/renew">
@@ -334,9 +334,9 @@ export default function DashboardPage() {
             <CardContent className="p-6">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-xs text-emerald-600/70 dark:text-emerald-400/70 uppercase font-mono tracking-wider font-bold">মোট চিকিৎসা সাশ্রয়</p>
+                  <p className="text-xs text-emerald-600/70 dark:text-emerald-400/70 uppercase font-mono tracking-wider font-bold">মোট চিকিৎসা সাশ্রয়</p>
                   <p className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono tabular-nums mt-2">৳{totalSaved.toLocaleString("bn-BD")}</p>
-                  <p className="text-[11px] text-emerald-600/60 dark:text-emerald-400/60 mt-1">হেলথ ক্লাব ব্যবহারে সঞ্চয়</p>
+                  <p className="text-[11px] text-emerald-600/60 dark:text-emerald-400/60 mt-1">হেলথ ক্লাব ব্যবহারে সঞ্চয়</p>
                 </div>
                 <div className="h-12 w-12 rounded-2xl bg-emerald-500/15 dark:bg-emerald-500/20 border border-emerald-500/20 flex items-center justify-center">
                   <TrendingUp className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
@@ -351,7 +351,7 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-xs text-blue-600/70 dark:text-blue-400/70 uppercase font-mono tracking-wider font-bold">মোট চিকিৎসা খরচ</p>
                   <p className="text-3xl font-extrabold text-blue-600 dark:text-blue-400 font-mono tabular-nums mt-2">৳{totalSpent.toLocaleString("bn-BD")}</p>
-                  <p className="text-[11px] text-blue-600/60 dark:text-blue-400/60 mt-1">পার্টনার হাসপাতালে ব্যয়</p>
+                  <p className="text-[11px] text-blue-600/60 dark:text-blue-400/60 mt-1">পার্টনার হাসপাতালে ব্যয়</p>
                 </div>
                 <div className="h-12 w-12 rounded-2xl bg-blue-500/15 dark:bg-blue-500/20 border border-blue-500/20 flex items-center justify-center">
                   <Wallet className="h-6 w-6 text-blue-600 dark:text-blue-400" />
@@ -415,7 +415,7 @@ export default function DashboardPage() {
                     </div>
                     <h4 className="z-10 font-heading text-white font-bold text-sm">মেম্বারশিপ ফি পরিশোধ করুন</h4>
                     <p className="z-10 text-[11px] text-slate-300 max-w-xs leading-relaxed">
-                      অ্যাকাউন্ট সক্রিয় করতে ৫০০ টাকা বাৎসরিক মেম্বারশিপ ফি পরিশোধ করতে হবে।
+                      অ্যাকাউন্ট সক্রিয় করতে ৫০০ টাকা বাৎসরিক মেম্বারশিপ ফি পরিশোধ করতে হবে।
                     </p>
                     <Link href={`/register/payment?memberId=${user.id}`} className="z-10">
                       <Button className="bg-[#e2125d] hover:bg-[#c20f4f] text-white text-xs font-semibold px-4 py-1.5 h-8 rounded-lg shadow-md">
@@ -433,7 +433,7 @@ export default function DashboardPage() {
                     </div>
                     <h4 className="z-10 font-heading text-white font-bold text-sm">অনুমোদন পেন্ডিং</h4>
                     <p className="z-10 text-[11px] text-slate-300 max-w-xs leading-relaxed">
-                      আপনার মেম্বারশিপটি বর্তমানে অনুমোদনের অপেক্ষায় রয়েছে।
+                      আপনার মেম্বারশিপটি বর্তমানে অনুমোদনের অপেক্ষায় রয়েছে।
                     </p>
                     {user.bkashSender && user.bkashTxnId && (
                       <div className="z-10 bg-white/5 border border-white/10 rounded-lg p-2 text-left w-full text-[10px] text-slate-300 font-mono mt-1 space-y-0.5">
@@ -475,7 +475,7 @@ export default function DashboardPage() {
                       কার্ড ব্যবহারের লগ
                     </CardTitle>
                     <CardDescription>
-                      অংশীদার হাসপাতালে কার্ড ব্যবহার করে খরচ ও মোট সঞ্চয় বিবরণী।
+                      অংশীদার হাসপাতালে কার্ড ব্যবহার করে খরচ ও মোট সঞ্চয় বিবরণী।
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="p-0">
@@ -487,7 +487,7 @@ export default function DashboardPage() {
                               <TableHead className="font-semibold text-secondary dark:text-white whitespace-nowrap">চিকিৎসাকেন্দ্র</TableHead>
                               <TableHead className="font-semibold text-secondary dark:text-white whitespace-nowrap">তারিখ</TableHead>
                               <TableHead className="font-semibold text-secondary dark:text-white text-right whitespace-nowrap">মূল বিল</TableHead>
-                              <TableHead className="font-semibold text-primary text-right whitespace-nowrap">সাশ্রয়</TableHead>
+                              <TableHead className="font-semibold text-primary text-right whitespace-nowrap">সাশ্রয়</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody className="text-xs sm:text-sm">
@@ -529,7 +529,7 @@ export default function DashboardPage() {
                     {saveSuccess && (
                       <div className="mb-4 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 text-xs p-3 rounded-xl border border-emerald-200 dark:border-emerald-800 flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 shrink-0" />
-                        <span>প্রোফাইল সফলভাবে আপডেট করা হয়েছে!</span>
+                        <span>প্রোফাইল সফলভাবে আপডেট করা হয়েছে!</span>
                       </div>
                     )}
 
@@ -601,7 +601,7 @@ export default function DashboardPage() {
                             type="text"
                             value={profileProfession}
                             onChange={(e) => setProfileProfession(e.target.value)}
-                            placeholder="যেমন: চাকুরিজীবী, ব্যবসায়ী"
+                            placeholder="যেমন: চাকুরিজীবী, ব্যবসায়ী"
                             className="border-border/60 rounded-xl focus:border-primary/40"
                           />
                         </div>

@@ -56,7 +56,7 @@ function RegisterForm() {
     try {
       const existing = await dbStore.getMemberById(formData.phone);
       if (existing) {
-        setError("এই মোবাইল নম্বরটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।");
+        setError("এই মোবাইল নম্বরটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।");
         setLoading(false);
         return;
       }
@@ -97,10 +97,10 @@ function RegisterForm() {
             </span>
           </Link>
           <h1 className="font-heading text-xl font-bold text-secondary dark:text-white">
-            মেম্বার হিসেবে জয়েন করুন
+            মেম্বার হিসেবে জয়েন করুন
           </h1>
           <p className="text-sm text-muted-foreground mt-1.5">
-            হেলথ ক্লাবের ডিজিটাল মেম্বার আইডি কার্ড সংগ্রহ করতে ফ্রী রেজিস্ট্রেশন সম্পন্ন করুন।
+            হেলথ ক্লাবের ডিজিটাল মেম্বার আইডি কার্ড সংগ্রহ করতে ফ্রি রেজিস্ট্রেশন সম্পন্ন করুন।
           </p>
         </div>
 
@@ -251,7 +251,7 @@ function RegisterForm() {
                 required
                 value={formData.profession}
                 onChange={handleChange}
-                placeholder="চাকুরিজীবী, ব্যবসায়ী..."
+                placeholder="চাকুরিজীবী, ব্যবসায়ী..."
                 className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
               />
             </div>
@@ -260,7 +260,7 @@ function RegisterForm() {
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5">
               <Lock className="h-3.5 w-3.5 text-primary" />
-              পাসওয়ার্ড *
+              পাসওয়ার্ড *
             </label>
             <Input
               type="password"

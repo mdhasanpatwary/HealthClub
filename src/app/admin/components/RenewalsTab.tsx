@@ -38,11 +38,11 @@ export function RenewalsTab({
     <Card className="border-border shadow-md">
       <CardHeader>
         <CardTitle className="font-heading text-lg font-bold text-secondary">
-          {locale === "bn" ? "মেম্বারশিপ নবায়ন আবেদন" : "Membership Renewal Requests"}
+          {locale === "bn" ? "মেম্বারশিপ নবায়ন আবেদন" : "Membership Renewal Requests"}
         </CardTitle>
         <CardDescription>
           {locale === "bn"
-            ? "নবায়ন ফি পরিশোধকারী মেম্বারদের আবেদনের তালিকা"
+            ? "নবায়ন ফি পরিশোধকারী মেম্বারদের আবেদনের তালিকা"
             : "List of members requesting membership renewal"}
         </CardDescription>
       </CardHeader>
@@ -75,7 +75,7 @@ export function RenewalsTab({
               {pendingRenewals.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-10 text-muted-foreground text-sm">
-                    {locale === "bn" ? "কোনো পেন্ডিং নবায়ন আবেদন পাওয়া যায়নি।" : "No pending renewal requests found."}
+                    {locale === "bn" ? "কোনো পেন্ডিং নবায়ন আবেদন পাওয়া যায়নি।" : "No pending renewal requests found."}
                   </TableCell>
                 </TableRow>
               ) : (

@@ -58,10 +58,10 @@ export default function BecomePartnerPage() {
         <div className="text-center space-y-4 max-w-2xl mx-auto">
           <span className="text-xs font-extrabold text-primary tracking-widest uppercase font-mono">For Healthcare Providers</span>
           <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-secondary dark:text-white">
-            হেলথ ক্লাব পার্টনার নেটওয়ার্কে যুক্ত হোন
+            হেলথ ক্লাব পার্টনার নেটওয়ার্কে যুক্ত হোন
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground">
-            আপনার চিকিৎসাকেন্দ্র, ডায়াগনস্টিক ল্যাব বা ফার্মেসীকে আমাদের প্ল্যাটফর্মে রেজিস্টার করে নতুন পেশেন্ট বেস তৈরি করুন।
+            আপনার চিকিৎসাকেন্দ্র, ডায়াগনস্টিক ল্যাব বা ফার্মেসিকে আমাদের প্ল্যাটফর্মে রেজিস্টার করে নতুন পেশেন্ট বেস তৈরি করুন।
           </p>
         </div>
 
@@ -101,7 +101,7 @@ export default function BecomePartnerPage() {
                     <span className="text-xs font-bold">✓</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-secondary dark:text-slate-300">পেশেন্ট লয়্যালটি</h4>
+                    <h4 className="font-semibold text-secondary dark:text-slate-300">পেশেন্ট লয়্যালটি</h4>
                     <p className="text-xs mt-0.5">ডিজিটাল ভেরিফিকেশন পোর্টালে পেশেন্ট ভ্যালিডেশন অত্যন্ত নিখুঁত ও ক্যাশলেস।</p>
                   </div>
                 </li>
@@ -111,7 +111,7 @@ export default function BecomePartnerPage() {
             <div className="p-4 rounded-2xl bg-muted border border-border flex items-start gap-3">
               <HelpCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
               <div className="text-xs space-y-1">
-                <p className="font-bold text-secondary">সহায়তা প্রয়োজন?</p>
+                <p className="font-bold text-secondary">সহায়তা প্রয়োজন?</p>
                 <p className="text-muted-foreground">পার্টনার সম্পর্ক টিম হটলাইন:</p>
                 <p className="font-bold text-primary font-mono">+৮৮০ ১৭৮৩৭২১৪১১</p>
               </div>
@@ -156,7 +156,7 @@ export default function BecomePartnerPage() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-secondary">প্রতিষ্ঠানের ধরণ *</label>
+                      <label className="text-xs font-semibold text-secondary">প্রতিষ্ঠানের ধরন *</label>
                       <select
                         name="category"
                         value={formData.category}
@@ -164,8 +164,8 @@ export default function BecomePartnerPage() {
                         className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
                       >
                         <option value="hospital">হাসপাতাল (Hospital)</option>
-                        <option value="diagnostic">ডায়াগনস্টিক সেন্টার</option>
-                        <option value="pharmacy">ফার্মেসী (Pharmacy)</option>
+                        <option value="diagnostic">ডায়াগনস্টিক সেন্টার</option>
+                        <option value="pharmacy">ফার্মেসি (Pharmacy)</option>
                       </select>
                     </div>
                     
@@ -191,7 +191,7 @@ export default function BecomePartnerPage() {
                       required
                       value={formData.address}
                       onChange={handleChange}
-                      placeholder="যেমন: হরিশপুর রোড, কুষ্টিয়া সদর"
+                      placeholder="যেমন: হরিশপুর রোড, কুষ্টিয়া সদর"
                       className="border-border bg-background"
                     />
                   </div>

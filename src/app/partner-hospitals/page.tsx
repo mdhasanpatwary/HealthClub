@@ -8,10 +8,10 @@ export async function generateMetadata() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   return {
-    title: locale === "en" ? "Partner Hospitals & Diagnostics - Health Club" : "পার্টনার হাসপাতাল ও ডায়াগনস্টিকস - হেলথ ক্লাব",
+    title: locale === "en" ? "Partner Hospitals & Diagnostics - Health Club" : "পার্টনার হাসপাতাল ও ডায়াগনস্টিকস - হেলথ ক্লাব",
     description: locale === "en"
       ? "List of hospitals, labs, and pharmacies where you can get discounts using our membership card."
-      : "আমাদের মেম্বারশিপ কার্ড ব্যবহার করে দেশের যেসব হাসপাতাল, ল্যাব ও ফার্মেসীতে ডিসকাউন্ট পাবেন তার তালিকা।"
+      : "আমাদের মেম্বারশিপ কার্ড ব্যবহার করে দেশের যেসব হাসপাতাল, ল্যাব ও ফার্মেসিতে ডিসকাউন্ট পাবেন তার তালিকা।"
   };
 }
 

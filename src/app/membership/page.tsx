@@ -11,7 +11,7 @@ export async function generateMetadata() {
     title: locale === "en" ? "Membership Plans - Health Club" : "মেম্বারশিপ প্ল্যান - হেলথ ক্লাব",
     description: locale === "en"
       ? "Check out our membership plans to find the right one for you and start saving on medical bills."
-      : "আমাদের মেম্বারশিপ প্ল্যান দেখে আপনার জন্য উপযুক্ত প্ল্যানটি বেছে নিন এবং চিকিৎসা ব্যয় সাশ্রয় করা শুরু করুন।"
+      : "আমাদের মেম্বারশিপ প্ল্যান দেখে আপনার জন্য উপযুক্ত প্ল্যানটি বেছে নিন এবং চিকিৎসা ব্যয় সাশ্রয় করা শুরু করুন।"
   };
 }
 
@@ -28,10 +28,10 @@ export default async function MembershipPage() {
     { title: "1 Year Founding Status", desc: "Membership is completely free for 1 year for the first 100 founding members.", gradient: "from-amber-500 to-orange-600" }
   ] : [
     { title: "হাসপাতাল ডিসকাউন্ট", desc: "যেকোনো অংশীদার হাসপাতালে শুধু ডিজিটাল মেম্বার কার্ড প্রদর্শন করে বিলের উপর ফ্ল্যাট ১০% ডিসকাউন্ট।", gradient: "from-emerald-500 to-green-600" },
-    { title: "ডায়াগনস্টিক টেস্ট ছাড়", desc: "রক্ত পরীক্ষা, এক্স-রে সহ সকল প্যাথলজিক্যাল ও ইমেজিং পরীক্ষায় ফ্ল্যাট ১০% ডিসকাউন্ট।", gradient: "from-blue-500 to-cyan-600" },
-    { title: "মডেল ফার্মেসী অফার", desc: "নির্ধারিত পার্টনার ফার্মেসীগুলো থেকে প্রয়োজনীয় ঔষধ ক্রয়ের ক্ষেত্রে সরাসরি ফ্ল্যাট ১০% ডিসকাউন্ট।", gradient: "from-violet-500 to-purple-600" },
-    { title: "ফ্রি স্বাস্থ্য ক্যাম্প", desc: "নিয়মিত আয়োজিত ফ্রি ডায়াবেটিস চেকআপ, আই ক্যাম্প এবং রক্তচাপ পরীক্ষা।", gradient: "from-rose-500 to-pink-600" },
-    { title: "১ বছর প্রতিষ্ঠাতা স্ট্যাটাস", desc: "প্রথম ১০০ ফাউন্ডিং মেম্বারদের জন্য মেম্বারশিপ ১ বছরের জন্য সম্পুর্ণ ফ্রী।", gradient: "from-amber-500 to-orange-600" }
+    { title: "ডায়াগনস্টিক টেস্ট ছাড়", desc: "রক্ত পরীক্ষা, এক্স-রে সহ সকল প্যাথলজিক্যাল ও ইমেজিং পরীক্ষায় ফ্ল্যাট ১০% ডিসকাউন্ট।", gradient: "from-blue-500 to-cyan-600" },
+    { title: "মডেল ফার্মেসি অফার", desc: "নির্ধারিত পার্টনার ফার্মেসিগুলো থেকে প্রয়োজনীয় ঔষধ ক্রয়ের ক্ষেত্রে সরাসরি ফ্ল্যাট ১০% ডিসকাউন্ট।", gradient: "from-violet-500 to-purple-600" },
+    { title: "ফ্রি স্বাস্থ্য ক্যাম্প", desc: "নিয়মিত আয়োজিত ফ্রি ডায়াবেটিস চেকআপ, আই ক্যাম্প এবং রক্তচাপ পরীক্ষা।", gradient: "from-rose-500 to-pink-600" },
+    { title: "১ বছর প্রতিষ্ঠাতা স্ট্যাটাস", desc: "প্রথম ১০০ ফাউন্ডিং মেম্বারদের জন্য মেম্বারশিপ ১ বছরের জন্য সম্পূর্ণ ফ্রি।", gradient: "from-amber-500 to-orange-600" }
   ];
 
   return (

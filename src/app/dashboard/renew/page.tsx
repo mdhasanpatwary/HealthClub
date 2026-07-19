@@ -93,7 +93,7 @@ export default function RenewalPage() {
           router.push("/dashboard");
         }, 3000);
       } else {
-        setFormError(res.message || "রিনিউয়াল সাবমিট করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।");
+        setFormError(res.message || "রিনিউয়াল সাবমিট করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।");
       }
     } catch {
       setFormError("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
@@ -129,10 +129,10 @@ export default function RenewalPage() {
               </span>
             </div>
             <CardTitle className="font-heading text-xl font-bold text-secondary">
-              মেম্বারশিপ নবায়ন (Membership Renewal)
+              মেম্বারশিপ নবায়ন (Membership Renewal)
             </CardTitle>
             <CardDescription>
-              মেম্বারশিপ সচল রাখতে ৫০০ টাকা নবায়ন ফি বিকাশ সেন্ড মানি করুন।
+              মেম্বারশিপ সচল রাখতে ৫০০ টাকা নবায়ন ফি বিকাশ সেন্ড মানি করুন।
             </CardDescription>
           </CardHeader>
 
@@ -144,7 +144,7 @@ export default function RenewalPage() {
                 </div>
                 <h3 className="font-heading text-lg font-bold text-secondary">অনুরোধ সম্পন্ন হয়েছে!</h3>
                 <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
-                  আপনার নবায়ন পেমেন্ট ওটি ট্রানজেকশন সফলভাবে জমা দেওয়া হয়েছে। ২৪ ঘণ্টার মধ্যে এডমিন তথ্য যাচাই করে আপনার কার্ডের মেয়াদ ১ বছর বৃদ্ধি করে দেবে।
+                  আপনার নবায়ন পেমেন্ট ওটি ট্রানজেকশন সফলভাবে জমা দেওয়া হয়েছে। ২৪ ঘণ্টার মধ্যে এডমিন তথ্য যাচাই করে আপনার কার্ডের মেয়াদ ১ বছর বৃদ্ধি করে দেবে।
                 </p>
                 <p className="text-xs text-primary font-semibold">ড্যাশবোর্ডে রিডাইরেক্ট করা হচ্ছে...</p>
               </div>
@@ -234,7 +234,7 @@ export default function RenewalPage() {
                   </div>
 
                   <Button type="submit" disabled={isSubmitting} className="w-full h-11 bg-primary hover:bg-primary-dark text-white font-semibold shadow-md active:scale-[0.99] transition-transform">
-                    {isSubmitting ? "অনুরোধ জমা দেওয়া হচ্ছে..." : "রিনিউয়াল অনুরোধ পাঠান (৳৫০০)"}
+                    {isSubmitting ? "অনুরোধ জমা দেওয়া হচ্ছে..." : "রিনিউয়াল অনুরোধ পাঠান (৳৫০০)"}
                   </Button>
                 </form>
               </>

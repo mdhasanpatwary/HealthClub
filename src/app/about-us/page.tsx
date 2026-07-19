@@ -9,7 +9,7 @@ export async function generateMetadata() {
     title: locale === "en" ? "About Us - Health Club" : "আমাদের সম্পর্কে - হেলথ ক্লাব",
     description: locale === "en"
       ? "Learn about Health Club's mission, our team, how we work, and how we make healthcare affordable."
-      : "হেলথ ক্লাবের লক্ষ্য, আমাদের টিম, কাজের ধরণ এবং কীভাবে আমরা চিকিৎসা খরচ কমিয়ে এনে দেশব্যাপী স্বাস্থ্যসেবা সহজলভ্য করছি তা জানুন।"
+      : "হেলথ ক্লাবের লক্ষ্য, আমাদের টিম, কাজের ধরন এবং কীভাবে আমরা চিকিৎসা খরচ কমিয়ে এনে দেশব্যাপী স্বাস্থ্যসেবা সহজলভ্য করছি তা জানুন।"
   };
 }
 

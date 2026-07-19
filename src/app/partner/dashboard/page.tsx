@@ -240,8 +240,8 @@ export default function PartnerDashboardPage() {
 
   const categoryLabels = {
     hospital: "হাসপাতাল",
-    diagnostic: "ডায়াগনস্টিক",
-    pharmacy: "ফার্মেসী",
+    diagnostic: "ডায়াগনস্টিক",
+    pharmacy: "ফার্মেসি",
   };
 
   return (
@@ -415,7 +415,7 @@ export default function PartnerDashboardPage() {
                             ? "bg-amber-500/10 text-amber-600 dark:text-amber-500 border border-amber-500/20" 
                             : "bg-primary/10 text-primary border border-primary/20"
                         }`}>
-                          {verifiedMember.tier === "founding" ? "ফাউন্ডিং মেম্বার" : "প্রিমিয়াম মেম্বার"}
+                          {verifiedMember.tier === "founding" ? "ফাউন্ডিং মেম্বার" : "প্রিমিয়াম মেম্বার"}
                         </span>
                       </div>
                       <p className="text-xs text-muted-foreground mt-0.5">মেম্বার আইডি: {verifiedMember.id}</p>

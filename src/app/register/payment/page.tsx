@@ -139,7 +139,7 @@ function PaymentForm() {
             <CheckCircle2 className="h-16 w-16 text-emerald-500 mx-auto animate-bounce" />
             <h3 className="font-heading text-lg font-bold text-secondary">পেমেন্ট তথ্য সাবমিট করা হয়েছে!</h3>
             <p className="text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed">
-              আপনার পেমেন্ট সফলভাবে প্রাপ্ত হয়েছে। এডমিন ম্যানুয়ালি যাচাই করে আপনার অ্যাকাউন্টটি ২৪ ঘণ্টার মধ্যে সক্রিয় করবে।
+              আপনার পেমেন্ট সফলভাবে প্রাপ্ত হয়েছে। এডমিন ম্যানুয়ালি যাচাই করে আপনার অ্যাকাউন্টটি ২৪ ঘণ্টার মধ্যে সক্রিয় করবে।
             </p>
             <p className="text-xs text-primary font-semibold">আপনাকে হোমপেজে রিডাইরেক্ট করা হচ্ছে...</p>
           </div>
