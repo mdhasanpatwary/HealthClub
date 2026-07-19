@@ -29,6 +29,9 @@ model Member {
   createdAt         DateTime      @default(now()) @map("created_at") @db.Timestamptz
   bkashSender       String?       @map("bkash_sender")
   bkashTxnId        String?       @map("bkash_txn_id")
+  renewalStatus     String?       @default("none") @map("renewal_status")
+  renewalBkashSender String?      @map("renewal_bkash_sender")
+  renewalBkashTxnId  String?      @map("renewal_bkash_txn_id")
   transactions      Transaction[]
 
   @@map("members")
@@ -41,6 +44,8 @@ model Partner {
   address      String
   discount     String
   phone        String
+  email        String?       @unique
+  password     String?
   logoText     String        @map("logo_text")
   mapLink      String?       @map("map_link")
   imageUrl     String?       @map("image_url")

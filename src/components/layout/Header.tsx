@@ -22,8 +22,15 @@ export default function Header() {
   const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setUser(dbStore.getCurrentUser());
+    const syncUser = () => {
+      setUser(dbStore.getCurrentUser());
+    };
+    syncUser();
+
+    window.addEventListener("auth-change", syncUser);
+    return () => {
+      window.removeEventListener("auth-change", syncUser);
+    };
   }, [pathname]);
 
   useEffect(() => {
@@ -50,8 +57,6 @@ export default function Header() {
 
   const handleLogout = () => {
     dbStore.logout();
-    setUser(null);
-    setIsOpen(false);
     router.push("/");
   };
 

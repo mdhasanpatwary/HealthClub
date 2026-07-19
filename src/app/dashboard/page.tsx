@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { 
   Heart, CreditCard, History, LayoutDashboard, Save, CheckCircle2,
-  TrendingUp, Wallet, ReceiptText, Printer
+  TrendingUp, Wallet, ReceiptText, Printer, AlertTriangle, Clock
 } from "lucide-react";
 import { toast } from "sonner";
 import { dbStore } from "@/services/dbStore";
@@ -33,6 +33,8 @@ export default function DashboardPage() {
   const [profileProfession, setProfileProfession] = useState("");
   const [profilePictureUrl, setProfilePictureUrl] = useState("");
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
+  const [isExpired, setIsExpired] = useState(false);
 
   // Load data on mount
   useEffect(() => {
@@ -52,6 +54,16 @@ export default function DashboardPage() {
       setProfileBirthDate(activeUser.birthDate || "");
       setProfileProfession(activeUser.profession || "");
       setProfilePictureUrl(activeUser.profilePictureUrl || "");
+
+      // Expiry checks
+      const expiry = new Date(activeUser.expiryDate);
+      const today = new Date();
+      expiry.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
+      const diffTime = expiry.getTime() - today.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      setDaysRemaining(diffDays);
+      setIsExpired(diffDays < 0);
     });
 
     dbStore.getTransactions(currentUser.id).then((userTx) => {
@@ -276,6 +288,44 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+
+        {/* Expiry / Renewal Banners */}
+        {user.renewalStatus === "pending" ? (
+          <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-4 flex items-center gap-3.5 text-blue-700 dark:text-blue-400 animate-in fade-in duration-200">
+            <Clock className="h-5 w-5 shrink-0 animate-pulse text-blue-500" />
+            <div className="text-sm font-semibold flex-1">
+              আপনার মেম্বারশিপ কার্ড নবায়ন (Renewal) এর পেমেন্ট অনুরোধ অ্যাডমিনের কাছে প্রক্রিয়াধীন রয়েছে। যাচাইয়ের পর আপনার কার্ডের মেয়াদ বাড়িয়ে দেওয়া হবে।
+            </div>
+          </div>
+        ) : isExpired ? (
+          <div className="bg-destructive/10 border border-destructive/20 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-destructive animate-in fade-in duration-200">
+            <div className="flex items-center gap-3.5">
+              <AlertTriangle className="h-5 w-5 shrink-0 text-rose-500" />
+              <div className="text-sm font-bold">
+                আপনার হেলথ ক্লাব মেম্বারশিপ কার্ডটির মেয়াদ শেষ হয়ে গেছে! হাসপাতালের ডিসকাউন্ট সুবিধা পেতে অনুগ্রহ করে অবিলম্বে রিনিউয়াল করুন।
+              </div>
+            </div>
+            <Link href="/dashboard/renew">
+              <Button size="sm" className="bg-destructive text-white hover:bg-destructive/90 font-bold shrink-0">
+                মেম্বারশিপ রিনিউ করুন
+              </Button>
+            </Link>
+          </div>
+        ) : daysRemaining !== null && daysRemaining <= 30 && daysRemaining >= 0 ? (
+          <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-amber-700 dark:text-amber-500 animate-in fade-in duration-200">
+            <div className="flex items-center gap-3.5">
+              <AlertTriangle className="h-5 w-5 shrink-0 text-amber-500" />
+              <div className="text-sm font-bold">
+                আপনার মেম্বারশিপ কার্ডের মেয়াদ আর মাত্র {daysRemaining} দিন বাকি আছে। ডিসকাউন্ট সুবিধা সচল রাখতে মেম্বারশিপটি রিনিউ করতে পারেন।
+              </div>
+            </div>
+            <Link href="/dashboard/renew">
+              <Button size="sm" className="bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700 font-bold shrink-0">
+                রিনিউ করুন
+              </Button>
+            </Link>
+          </div>
+        ) : null}
 
         {/* ── Overview Stats Cards ── */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">

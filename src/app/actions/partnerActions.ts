@@ -1,8 +1,9 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { Partner } from "@/services/db";
-import { getSessionUser } from "@/lib/session";
+import { Partner, Transaction } from "@/services/db";
+import { getSessionUser, setSessionUser } from "@/lib/session";
+import { hashPassword, verifyPassword } from "@/lib/crypto";
 
 export interface PartnerRequest {
   id: string;
@@ -184,6 +185,7 @@ export async function updatePartnerRequestStatusAction(id: string, status: "appr
 
     if (status === "approved") {
       const partnerId = `p_${crypto.randomUUID()}`;
+      const defaultPassword = hashPassword("123456");
       await prisma.partner.create({
         data: {
           id: partnerId,
@@ -192,6 +194,8 @@ export async function updatePartnerRequestStatusAction(id: string, status: "appr
           address: req.address,
           discount: req.discount,
           phone: req.phone,
+          email: req.email || null,
+          password: defaultPassword,
           logoText: req.orgName.substring(0, 5),
         }
       });
@@ -201,5 +205,163 @@ export async function updatePartnerRequestStatusAction(id: string, status: "appr
   } catch (error) {
     console.error("Error in updatePartnerRequestStatusAction:", error);
     return false;
+  }
+}
+
+export async function loginPartnerAction(
+  identifier: string,
+  password: string
+): Promise<{ success: boolean; partner?: Partner; error?: string }> {
+  try {
+    if (!identifier || !password) {
+      return { success: false, error: "মোবাইল নম্বর/ইমেইল এবং পাসওয়ার্ড দিন।" };
+    }
+
+    const data = await prisma.partner.findFirst({
+      where: {
+        OR: [
+          { phone: identifier },
+          { email: identifier }
+        ]
+      }
+    });
+
+    if (!data) {
+      return { success: false, error: "ভুল মোবাইল নম্বর/ইমেইল অথবা পাসওয়ার্ড।" };
+    }
+
+    if (!data.password) {
+      return { success: false, error: "আপনার পাসওয়ার্ড সেট করা নেই। দয়া করে অ্যাডমিনের সাথে যোগাযোগ করুন।" };
+    }
+
+    const isValid = verifyPassword(password, data.password);
+    if (!isValid) {
+      return { success: false, error: "ভুল মোবাইল নম্বর/ইমেইল অথবা পাসওয়ার্ড।" };
+    }
+
+    await setSessionUser(data.id, "partner");
+
+    return {
+      success: true,
+      partner: {
+        id: data.id,
+        name: data.name,
+        category: data.category as Partner["category"],
+        address: data.address,
+        discount: data.discount,
+        phone: data.phone,
+        logoText: data.logoText,
+        mapLink: data.mapLink || undefined,
+        imageUrl: data.imageUrl || undefined,
+      }
+    };
+  } catch (error) {
+    console.error("Error in loginPartnerAction:", error);
+    return { success: false, error: "লগইন করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।" };
+  }
+}
+
+export async function getPartnerTransactionsAction(): Promise<Transaction[]> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "partner") return [];
+  try {
+    const data = await prisma.transaction.findMany({
+      where: { partnerId: session.userId },
+      orderBy: { date: "desc" },
+    });
+    return data.map((t) => ({
+      id: t.id,
+      memberId: t.memberId,
+      memberName: t.memberName,
+      partnerId: t.partnerId,
+      partnerName: t.partnerName,
+      amount: t.amount,
+      saved: t.saved,
+      date: t.date.toISOString(),
+    }));
+  } catch (error) {
+    console.error("Error in getPartnerTransactionsAction:", error);
+    return [];
+  }
+}
+
+export async function addPartnerTransactionAction(tx: {
+  memberId: string;
+  amount: number;
+}): Promise<{ success: boolean; message: string }> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "partner") {
+    return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
+  }
+
+  try {
+    const member = await prisma.member.findUnique({
+      where: { id: tx.memberId },
+    });
+
+    if (!member) {
+      return { success: false, message: "মেম্বার আইডিটি খুঁজে পাওয়া যায়নি।" };
+    }
+
+    if (member.status !== "active") {
+      return { success: false, message: "এই মেম্বারশিপটি সক্রিয় নয়।" };
+    }
+
+    // Check if membership is expired
+    const currentDate = new Date();
+    const expiryDate = new Date(member.expiryDate);
+    if (expiryDate < currentDate) {
+      return { success: false, message: "এই মেম্বারশিপ কার্ডটির মেয়াদ শেষ হয়ে গেছে।" };
+    }
+
+    const partner = await prisma.partner.findUnique({
+      where: { id: session.userId },
+    });
+
+    if (!partner) {
+      return { success: false, message: "পার্টনার ডেটা খুঁজে পাওয়া যায়নি।" };
+    }
+
+    let discountPercent = 10;
+    const bnDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+    const enDigits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    let discountStr = partner.discount;
+    for (let i = 0; i < 10; i++) {
+      discountStr = discountStr.replaceAll(bnDigits[i], enDigits[i]);
+    }
+    const match = discountStr.match(/(\d+)/);
+    if (match) {
+      discountPercent = parseInt(match[0]);
+    }
+
+    const saved = Math.round((tx.amount * discountPercent) / 100);
+    const txId = `tx_${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
+
+    await prisma.$transaction([
+      prisma.transaction.create({
+        data: {
+          id: txId,
+          memberId: member.id,
+          memberName: member.name,
+          partnerId: partner.id,
+          partnerName: partner.name,
+          amount: tx.amount,
+          saved: saved,
+        },
+      }),
+      prisma.member.update({
+        where: { id: member.id },
+        data: {
+          totalSaved: {
+            increment: saved,
+          },
+        },
+      }),
+    ]);
+
+    return { success: true, message: `লেনদেন সফলভাবে সম্পন্ন হয়েছে! ছাড়ের পরিমাণ: ৳${saved}` };
+  } catch (error) {
+    console.error("Error in addPartnerTransactionAction:", error);
+    return { success: false, message: "লেনদেনটি সংরক্ষণ করতে সমস্যা হয়েছে।" };
   }
 }

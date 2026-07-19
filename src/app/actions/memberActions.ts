@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { Member } from "@/services/db";
 import { hashPassword, verifyPassword } from "@/lib/crypto";
-import { setSessionUser, clearSessionUser } from "@/lib/session";
+import { setSessionUser, clearSessionUser, getSessionUser } from "@/lib/session";
 import { sendOtpEmail, sendPasswordResetEmail } from "@/lib/mail";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "healthclubfeni@gmail.com";
@@ -504,5 +504,84 @@ export async function resetPasswordAction(
   } catch (error) {
     console.error("Error in resetPasswordAction:", error);
     return { success: false, message: "পাসওয়ার্ড রিসেট করতে সমস্যা হয়েছে।" };
+  }
+}
+
+export async function requestRenewalAction(
+  bkashSender: string,
+  bkashTxnId: string,
+  profession?: string
+): Promise<{ success: boolean; message: string }> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "user") {
+    return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
+  }
+
+  try {
+    if (!bkashSender || !bkashTxnId) {
+      return { success: false, message: "বিকাশ নম্বর এবং ট্রানজেকশন আইডি দিন।" };
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const updateData: any = {
+      renewalStatus: "pending",
+      renewalBkashSender: bkashSender,
+      renewalBkashTxnId: bkashTxnId,
+    };
+
+    if (profession) {
+      updateData.profession = profession;
+    }
+
+    await prisma.member.update({
+      where: { id: session.userId },
+      data: updateData,
+    });
+
+    return { success: true, message: "রিনিউয়াল অনুরোধ সফলভাবে পাঠানো হয়েছে! এডমিন যাচাইয়ের পর অ্যাক্টিভ করা হবে।" };
+  } catch (error) {
+    console.error("Error in requestRenewalAction:", error);
+    return { success: false, message: "রিনিউয়াল অনুরোধ পাঠাতে সমস্যা হয়েছে।" };
+  }
+}
+
+export async function verifyMemberForPartnerAction(
+  memberId: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<{ success: boolean; member?: any; message?: string }> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "partner") {
+    return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
+  }
+
+  try {
+    const data = await prisma.member.findUnique({
+      where: { id: memberId },
+    });
+
+    if (!data) {
+      return { success: false, message: "মেম্বারশিপ আইডি পাওয়া যায়নি।" };
+    }
+
+    const isExpired = new Date(data.expiryDate) < new Date();
+
+    return {
+      success: true,
+      member: {
+        id: data.id,
+        name: data.name,
+        phone: data.phone,
+        email: data.email || "",
+        tier: data.tier,
+        status: data.status,
+        expiryDate: formatDate(data.expiryDate),
+        totalSaved: data.totalSaved,
+        profilePictureUrl: data.profilePictureUrl || "",
+        isExpired,
+      },
+    };
+  } catch (error) {
+    console.error("Error in verifyMemberForPartnerAction:", error);
+    return { success: false, message: "মেম্বার যাচাই করতে সমস্যা হয়েছে।" };
   }
 }

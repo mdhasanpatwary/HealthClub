@@ -7,7 +7,7 @@ const encodedKey = new TextEncoder().encode(secretKey);
 
 export interface SessionPayload {
   userId: string;
-  role: "user" | "admin";
+  role: "user" | "admin" | "partner";
   expiresAt: Date;
 }
 
@@ -33,7 +33,7 @@ export async function decrypt(session: string | undefined = ""): Promise<Session
     });
     return {
       userId: payload.userId as string,
-      role: payload.role as "user" | "admin",
+      role: payload.role as "user" | "admin" | "partner",
       expiresAt: new Date(payload.expiresAt as string),
     };
   } catch {
@@ -44,7 +44,7 @@ export async function decrypt(session: string | undefined = ""): Promise<Session
 /**
  * Creates a secure HttpOnly cookie session for the logged-in user.
  */
-export async function setSessionUser(userId: string, role: "user" | "admin" = "user") {
+export async function setSessionUser(userId: string, role: "user" | "admin" | "partner" = "user") {
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 1 week
   const session = await encrypt({ userId, role, expiresAt });
   const cookieStore = await cookies();

@@ -41,6 +41,9 @@ export async function getMembersAction(): Promise<Member[]> {
       profilePictureUrl: m.profilePictureUrl || "",
       bkashSender: m.bkashSender || undefined,
       bkashTxnId: m.bkashTxnId || undefined,
+      renewalStatus: m.renewalStatus || undefined,
+      renewalBkashSender: m.renewalBkashSender || undefined,
+      renewalBkashTxnId: m.renewalBkashTxnId || undefined,
     }));
   } catch (error) {
     console.error("Error in getMembersAction:", error);
@@ -141,6 +144,60 @@ export async function deleteMemberAction(id: string): Promise<boolean> {
     return true;
   } catch (error) {
     console.error("Error in deleteMemberAction:", error);
+    return false;
+  }
+}
+
+export async function approveMemberRenewalAction(memberId: string): Promise<boolean> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") throw new Error("Unauthorized");
+
+  try {
+    const member = await prisma.member.findUnique({
+      where: { id: memberId }
+    });
+
+    if (!member) return false;
+
+    const currentExpiry = new Date(member.expiryDate);
+    const baseDate = currentExpiry < new Date() ? new Date() : currentExpiry;
+    const newExpiry = new Date(baseDate);
+    newExpiry.setFullYear(baseDate.getFullYear() + 1);
+
+    await prisma.member.update({
+      where: { id: memberId },
+      data: {
+        renewalStatus: "none",
+        renewalBkashSender: null,
+        renewalBkashTxnId: null,
+        status: "active",
+        expiryDate: newExpiry,
+      }
+    });
+
+    return true;
+  } catch (error) {
+    console.error("Error in approveMemberRenewalAction:", error);
+    return false;
+  }
+}
+
+export async function rejectMemberRenewalAction(memberId: string): Promise<boolean> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") throw new Error("Unauthorized");
+
+  try {
+    await prisma.member.update({
+      where: { id: memberId },
+      data: {
+        renewalStatus: "none",
+        renewalBkashSender: null,
+        renewalBkashTxnId: null,
+      }
+    });
+    return true;
+  } catch (error) {
+    console.error("Error in rejectMemberRenewalAction:", error);
     return false;
   }
 }

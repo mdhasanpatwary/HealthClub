@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "@/lib/session";
 
-const protectedRoutes = ["/dashboard", "/admin", "/profile"];
+const protectedRoutes = ["/dashboard", "/admin", "/profile", "/partner"];
 const adminRoutes = ["/admin"];
+const partnerRoutes = ["/partner"];
 const authRoutes = ["/login", "/register"];
 
 export async function proxy(req: NextRequest) {
@@ -12,26 +13,55 @@ export async function proxy(req: NextRequest) {
   const sessionCookie = req.cookies.get("session")?.value;
   const session = await decrypt(sessionCookie);
 
-  // If user is NOT authenticated and trying to access protected routes → redirect to login
+  // If user is NOT authenticated and trying to access protected routes
   const isProtectedRoute = protectedRoutes.some((r) => path.startsWith(r));
   if (isProtectedRoute && !session?.userId) {
+    if (path.startsWith("/partner")) {
+      return NextResponse.redirect(new URL("/login/partner", req.nextUrl));
+    }
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
 
-  // If user is authenticated but NOT admin and trying to access admin routes → redirect to dashboard
-  const isAdminRoute = adminRoutes.some((r) => path.startsWith(r));
-  if (isAdminRoute && session?.role !== "admin") {
-    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
-  }
-
-  // If user IS authenticated and trying to access login/register → redirect to dashboard
-  const isAuthRoute = authRoutes.some((r) => path.startsWith(r));
-  if (isAuthRoute && session?.userId) {
-    // Allow admin to access admin login if they want to re-login
-    if (path === "/login/admin") {
-      return NextResponse.next();
+  // If user IS authenticated, check role-based route permissions
+  if (session?.userId) {
+    // 1. Partners cannot access standard user routes (/dashboard or /profile)
+    const isUserRoute = ["/dashboard", "/profile"].some((r) => path.startsWith(r));
+    if (isUserRoute && session.role === "partner") {
+      return NextResponse.redirect(new URL("/partner/dashboard", req.nextUrl));
     }
-    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+
+    // 2. Only partners can access partner routes
+    const isPartnerRoute = partnerRoutes.some((r) => path.startsWith(r));
+    if (isPartnerRoute && session.role !== "partner") {
+      if (session.role === "admin") {
+        return NextResponse.redirect(new URL("/admin", req.nextUrl));
+      }
+      return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+    }
+
+    // 3. Only admins can access admin routes
+    const isAdminRoute = adminRoutes.some((r) => path.startsWith(r));
+    if (isAdminRoute && session.role !== "admin") {
+      if (session.role === "partner") {
+        return NextResponse.redirect(new URL("/partner/dashboard", req.nextUrl));
+      }
+      return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+    }
+
+    // 4. Authenticated users trying to access login/register routes → redirect to dashboards
+    const isAuthRoute = authRoutes.some((r) => path.startsWith(r));
+    if (isAuthRoute) {
+      if (path === "/login/admin" || path === "/login/partner") {
+        return NextResponse.next();
+      }
+      if (session.role === "admin") {
+        return NextResponse.redirect(new URL("/admin", req.nextUrl));
+      } else if (session.role === "partner") {
+        return NextResponse.redirect(new URL("/partner/dashboard", req.nextUrl));
+      } else {
+        return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+      }
+    }
   }
 
   return NextResponse.next();

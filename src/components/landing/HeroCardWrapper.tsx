@@ -16,19 +16,31 @@ export default function HeroCardWrapper({ demoMember }: HeroCardWrapperProps) {
   const [member, setMember] = useState<Member | null>(null);
 
   useEffect(() => {
-    const currentUser = dbStore.getCurrentUser();
-    if (!currentUser) return;
+    const syncUser = () => {
+      const currentUser = dbStore.getCurrentUser();
+      if (!currentUser) {
+        setMember(null);
+        return;
+      }
 
-    if (currentUser.qrCodeUrl) {
-      // Wrap in Promise.resolve so setState is called asynchronously,
-      // satisfying the react-hooks/set-state-in-effect rule.
-      Promise.resolve(currentUser).then(setMember);
-    } else {
-      // qrCodeUrl missing: fetch fresh data from DB
-      dbStore.getMemberById(currentUser.id).then((freshUser) => {
-        setMember(freshUser ?? null);
-      });
-    }
+      if (currentUser.qrCodeUrl) {
+        // Wrap in Promise.resolve so setState is called asynchronously,
+        // satisfying the react-hooks/set-state-in-effect rule.
+        Promise.resolve(currentUser).then(setMember);
+      } else {
+        // qrCodeUrl missing: fetch fresh data from DB
+        dbStore.getMemberById(currentUser.id).then((freshUser) => {
+          setMember(freshUser ?? null);
+        });
+      }
+    };
+
+    syncUser();
+
+    window.addEventListener("auth-change", syncUser);
+    return () => {
+      window.removeEventListener("auth-change", syncUser);
+    };
   }, []);
 
   return (

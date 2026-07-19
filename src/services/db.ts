@@ -18,6 +18,9 @@ export interface Member {
   verificationCode?: string;
   bkashSender?: string;
   bkashTxnId?: string;
+  renewalStatus?: string;
+  renewalBkashSender?: string;
+  renewalBkashTxnId?: string;
 }
 
 export interface Partner {
@@ -30,6 +33,8 @@ export interface Partner {
   logoText: string;
   mapLink?: string;
   imageUrl?: string;
+  email?: string;
+  password?: string;
 }
 
 export interface Transaction {

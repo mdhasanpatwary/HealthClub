@@ -26,7 +26,6 @@ export default function UserDropdown({ user }: UserDropdownProps) {
   const handleLogout = () => {
     dbStore.logout();
     router.push("/");
-    router.refresh();
   };
 
   const isAdmin = user.email === "healthclubfeni@gmail.com";

@@ -95,7 +95,10 @@ export const MemberScalarFieldEnum = {
   verificationCodeCreatedAt: 'verificationCodeCreatedAt',
   createdAt: 'createdAt',
   bkashSender: 'bkashSender',
-  bkashTxnId: 'bkashTxnId'
+  bkashTxnId: 'bkashTxnId',
+  renewalStatus: 'renewalStatus',
+  renewalBkashSender: 'renewalBkashSender',
+  renewalBkashTxnId: 'renewalBkashTxnId'
 } as const
 
 export type MemberScalarFieldEnum = (typeof MemberScalarFieldEnum)[keyof typeof MemberScalarFieldEnum]
@@ -108,6 +111,8 @@ export const PartnerScalarFieldEnum = {
   address: 'address',
   discount: 'discount',
   phone: 'phone',
+  email: 'email',
+  password: 'password',
   logoText: 'logoText',
   mapLink: 'mapLink',
   imageUrl: 'imageUrl',

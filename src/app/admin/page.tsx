@@ -33,6 +33,8 @@ import { PartnersTab } from "./components/PartnersTab";
 import { TransactionsTab } from "./components/TransactionsTab";
 import { PartnerRequestsTab } from "./components/PartnerRequestsTab";
 import { ContactMessagesTab } from "./components/ContactMessagesTab";
+import { RenewalsTab } from "./components/RenewalsTab";
+import { approveMemberRenewalAction, rejectMemberRenewalAction } from "@/app/actions/memberAdminActions";
 import { Skeleton } from "@/components/ui/skeleton";
 
 function parseDiscountPercentage(discountStr: string): number {
@@ -388,6 +390,38 @@ export default function AdminDashboardPage() {
     }
   };
 
+  // Handle member renewal approval
+  const handleApproveRenewal = async (memberId: string) => {
+    try {
+      const success = await approveMemberRenewalAction(memberId);
+      if (success) {
+        toast.success("মেম্বারশিপ নবায়ন আবেদন সফলভাবে অনুমোদিত হয়েছে!");
+        loadData();
+      } else {
+        toast.error("অনুমোদন করা যায়নি।");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("সার্ভার ত্রুটি।");
+    }
+  };
+
+  // Handle member renewal rejection
+  const handleRejectRenewal = async (memberId: string) => {
+    try {
+      const success = await rejectMemberRenewalAction(memberId);
+      if (success) {
+        toast.success("নবায়ন আবেদন বাতিল করা হয়েছে।");
+        loadData();
+      } else {
+        toast.error("বাতিল করা যায়নি।");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("সার্ভার ত্রুটি।");
+    }
+  };
+
   // Filter lists
   const filteredMembers = members.filter(m =>
     m.name.toLowerCase().includes(memberSearch.toLowerCase()) ||
@@ -615,12 +649,15 @@ export default function AdminDashboardPage() {
         </Card>
 
         <Tabs defaultValue="members" className="w-full">
-          <TabsList className="grid w-full grid-cols-5 bg-muted p-1 rounded-xl">
+          <TabsList className="grid w-full grid-cols-6 bg-muted p-1 rounded-xl">
             <TabsTrigger value="members" className="rounded-lg text-xs font-semibold py-2">{t("admin.dashboard.membersList")}</TabsTrigger>
             <TabsTrigger value="partners" className="rounded-lg text-xs font-semibold py-2">{t("admin.dashboard.partnerHospitals")}</TabsTrigger>
             <TabsTrigger value="txs" className="rounded-lg text-xs font-semibold py-2">{t("admin.dashboard.transactionLog")}</TabsTrigger>
             <TabsTrigger value="requests" className="rounded-lg text-xs font-semibold py-2">
               অংশীদার আবেদন ({partnerRequests.filter(r => r.status === "pending").length})
+            </TabsTrigger>
+            <TabsTrigger value="renewals" className="rounded-lg text-xs font-semibold py-2">
+              নবায়ন আবেদন ({members.filter(m => m.renewalStatus === "pending").length})
             </TabsTrigger>
             <TabsTrigger value="messages" className="rounded-lg text-xs font-semibold py-2">
               {t("admin.dashboard.contactMessages")} ({contactMessages.length})
@@ -709,6 +746,15 @@ export default function AdminDashboardPage() {
               messages={contactMessages}
               onDelete={handleDeleteContactMessage}
               t={t}
+              locale={locale}
+            />
+          </TabsContent>
+
+          <TabsContent value="renewals" className="mt-4">
+            <RenewalsTab
+              members={members}
+              onApprove={handleApproveRenewal}
+              onReject={handleRejectRenewal}
               locale={locale}
             />
           </TabsContent>

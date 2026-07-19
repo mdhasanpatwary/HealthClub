@@ -29,6 +29,7 @@ const isClient = typeof window !== "undefined";
 // Cache keys
 const KEYS = {
   CURRENT_USER: "hc_current_user",
+  CURRENT_PARTNER: "hc_current_partner",
 };
 
 export const dbStore = {
@@ -173,12 +174,36 @@ export const dbStore = {
   setCurrentUser(user: Member): void {
     if (isClient) {
       localStorage.setItem(KEYS.CURRENT_USER, JSON.stringify(user));
+      window.dispatchEvent(new Event("auth-change"));
     }
   },
 
   logout(): void {
     if (isClient) {
       localStorage.removeItem(KEYS.CURRENT_USER);
+      window.dispatchEvent(new Event("auth-change"));
+    }
+    logoutMemberAction(); // Clear server cookie session
+  },
+
+  getCurrentPartner(): Partner | null {
+    if (isClient) {
+      const stored = localStorage.getItem(KEYS.CURRENT_PARTNER);
+      if (!stored) return null;
+      return JSON.parse(stored) as Partner;
+    }
+    return null;
+  },
+
+  setCurrentPartner(partner: Partner): void {
+    if (isClient) {
+      localStorage.setItem(KEYS.CURRENT_PARTNER, JSON.stringify(partner));
+    }
+  },
+
+  logoutPartner(): void {
+    if (isClient) {
+      localStorage.removeItem(KEYS.CURRENT_PARTNER);
     }
     logoutMemberAction(); // Clear server cookie session
   },

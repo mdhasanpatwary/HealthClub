@@ -28,6 +28,8 @@ export default function MemberCard({ member }: MemberCardProps) {
     member.qrCodeUrl ||
     `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verificationUrl)}&color=0f172a&bgcolor=ffffff`;
 
+  const isExpired = new Date(member.expiryDate) < new Date();
+
   return (
     <div
       className={`relative w-full max-w-md mx-auto rounded-2xl p-5 overflow-hidden shadow-2xl flex flex-col justify-between min-h-[200px] ${bgStyles}`}
@@ -100,27 +102,36 @@ export default function MemberCard({ member }: MemberCardProps) {
               </div>
               <div>
                 <p className="text-[8px] text-slate-500 uppercase tracking-widest font-mono">Status</p>
-                <p className="text-[11px] font-bold text-emerald-400 flex items-center gap-1">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  ACTIVE
-                </p>
+                {isExpired ? (
+                  <p className="text-[11px] font-bold text-rose-500 flex items-center gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-pulse" />
+                    EXPIRED
+                  </p>
+                ) : (
+                  <p className="text-[11px] font-bold text-emerald-400 flex items-center gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    {member.status.toUpperCase()}
+                  </p>
+                )}
               </div>
             </div>
           </div>
         </div>
 
         {/* QR Code Container */}
-        <div className="flex flex-col items-center gap-1 bg-white p-1.5 rounded-xl border border-slate-600/20 shadow-lg shrink-0">
+        <div className="relative flex flex-col items-center gap-1 bg-white p-1.5 rounded-xl border border-slate-600/20 shadow-lg shrink-0 overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={qrCodeSrc}
             alt="Membership QR Code"
             width={72}
             height={72}
-            className="w-[70px] h-[70px] select-none rounded-sm"
+            className={`w-[70px] h-[70px] select-none rounded-sm transition-all duration-300 ${isExpired ? "blur-md select-none pointer-events-none opacity-40" : ""}`}
             loading="lazy"
           />
-          <span className="text-[7px] font-bold text-slate-600 font-mono tracking-widest uppercase">SCAN</span>
+          <span className={`text-[7px] font-bold font-mono tracking-widest uppercase ${isExpired ? "text-rose-600" : "text-slate-600"}`}>
+            {isExpired ? "EXPIRED" : "SCAN"}
+          </span>
         </div>
       </div>
 

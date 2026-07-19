@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { prisma } from "../src/lib/prisma";
 import { scryptSync, randomBytes } from "crypto";
 
@@ -9,6 +10,7 @@ function hashPassword(password: string): string {
 
 async function main() {
   console.log("Seeding database...");
+  const hashedPw = hashPassword("123456");
 
   // Delete existing data to prevent duplicate keys
   await prisma.transaction.deleteMany();
@@ -25,6 +27,8 @@ async function main() {
       address: "এসএসকে রোড, ফেনী",
       discount: "১০% ফ্ল্যাট ডিসকাউন্ট",
       phone: "০৯৬১৩৭৮৭৮০১",
+      email: "popular@healthclub.com",
+      password: hashedPw,
       logoText: "Popular"
     }
   });
@@ -37,6 +41,8 @@ async function main() {
       address: "মিজান রোড, ফেনী",
       discount: "১০% ফ্ল্যাট ডিসকাউন্ট",
       phone: "১০৬০৬",
+      email: "labaid@healthclub.com",
+      password: hashedPw,
       logoText: "Labaid"
     }
   });
@@ -49,6 +55,8 @@ async function main() {
       address: "ট্রাঙ্ক রোড, ফেনী",
       discount: "১০% ফ্ল্যাট ডিসকাউন্ট",
       phone: "০২-৯৩৪৩৫১৬",
+      email: "lazz@healthclub.com",
+      password: hashedPw,
       logoText: "Lazz"
     }
   });
@@ -61,6 +69,8 @@ async function main() {
       address: "মহিপাল, ফেনী",
       discount: "১০% ফ্ল্যাট ডিসকাউন্ট",
       phone: "০৯৬১০০০৯৬১০",
+      email: "ibnesina@healthclub.com",
+      password: hashedPw,
       logoText: "Ibn Sina"
     }
   });
@@ -73,12 +83,13 @@ async function main() {
       address: "গ্র্যান্ড ট্রাঙ্ক রোড, ফেনী",
       discount: "১০% ফ্ল্যাট ডিসকাউন্ট",
       phone: "১০৬১৬",
+      email: "square@healthclub.com",
+      password: hashedPw,
       logoText: "Square"
     }
   });
 
   // 2. Seed Members
-  const hashedPw = hashPassword("123456");
 
   const m1 = await prisma.member.create({
     data: {
