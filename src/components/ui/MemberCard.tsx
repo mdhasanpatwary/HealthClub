@@ -75,6 +75,7 @@ export default function MemberCard({ member }: MemberCardProps) {
               src={member.profilePictureUrl}
               alt={member.name}
               className="h-full w-full object-cover object-left-top"
+              crossOrigin="anonymous"
             />
           ) : (
             <div className="h-full w-full bg-gradient-to-br from-primary/30 to-emerald-600/20 flex items-center justify-center">
@@ -126,6 +127,7 @@ export default function MemberCard({ member }: MemberCardProps) {
             height={72}
             className={`w-[60px] h-[60px] sm:w-[70px] sm:h-[70px] select-none rounded-sm transition-all duration-300 ${isExpired ? "blur-md select-none pointer-events-none opacity-40" : ""}`}
             loading="lazy"
+            crossOrigin="anonymous"
           />
           <span className={`text-[6px] sm:text-[7px] font-bold font-mono tracking-widest uppercase ${isExpired ? "text-rose-600" : "text-slate-600"}`}>
             {isExpired ? "EXPIRED" : "SCAN"}

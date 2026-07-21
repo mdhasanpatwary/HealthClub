@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { 
   Heart, CreditCard, History, LayoutDashboard, Save, CheckCircle2,
-  TrendingUp, Wallet, ReceiptText, Printer, AlertTriangle, Clock
+  TrendingUp, Wallet, ReceiptText, AlertTriangle, Clock,
+  Download
 } from "lucide-react";
 import { toast } from "sonner";
 import { dbStore } from "@/services/dbStore";
@@ -26,6 +27,7 @@ export default function DashboardPage() {
   const { t, locale } = useLanguage();
   const [user, setUser] = useState<Member | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   // Profile Form States
   const [profileName, setProfileName] = useState("");
@@ -73,6 +75,42 @@ export default function DashboardPage() {
       setTransactions(userTx);
     });
   }, [router]);
+
+  const handleDownloadCard = async () => {
+    if (!cardRef.current) return;
+
+    const loadingToast = toast.loading(
+      locale === "bn" ? "কার্ড ডাউনলোড হচ্ছে..." : "Downloading membership card..."
+    );
+
+    try {
+      const { toPng } = await import("html-to-image");
+      
+      const dataUrl = await toPng(cardRef.current, {
+        cacheBust: true,
+        style: {
+          transform: 'scale(1)',
+          transformOrigin: 'top left',
+        },
+      });
+
+      const link = document.createElement("a");
+      link.download = `health-club-card-${user?.id || "member"}.png`;
+      link.href = dataUrl;
+      link.click();
+
+      toast.dismiss(loadingToast);
+      toast.success(
+        locale === "bn" ? "কার্ড সফলভাবে ডাউনলোড হয়েছে!" : "Card downloaded successfully!"
+      );
+    } catch (error) {
+      console.error("Error downloading card:", error);
+      toast.dismiss(loadingToast);
+      toast.error(
+        locale === "bn" ? "ডাউনলোড ব্যর্থ হয়েছে। আবার চেষ্টা করুন।" : "Failed to download card. Please try again."
+      );
+    }
+  };
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -404,13 +442,15 @@ export default function DashboardPage() {
               <CardContent className="p-5">
                 {user.status === "active" ? (
                   <div className="space-y-4">
-                    <MemberCard member={user} />
+                    <div ref={cardRef}>
+                      <MemberCard member={user} />
+                    </div>
                     <Button
-                      onClick={() => window.open("/dashboard/print", "_blank")}
+                      onClick={handleDownloadCard}
                       variant="outline"
                       className="w-full text-xs active:scale-[0.98]"
                     >
-                      <Printer className="h-4 w-4 text-primary" />
+                      <Download className="h-4 w-4 text-primary" />
                       {t("dashboard.card.printButton")}
                     </Button>
                   </div>
