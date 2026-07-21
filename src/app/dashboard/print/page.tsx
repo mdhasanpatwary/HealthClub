@@ -8,9 +8,11 @@ import MemberCard from "@/components/ui/MemberCard";
 import { Button } from "@/components/ui/button";
 import { Printer, X } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 
 export default function PrintCardPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [member, setMember] = useState<Member | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -61,7 +63,7 @@ export default function PrintCardPage() {
       <div className="print:hidden w-full max-w-md bg-white/80 dark:bg-slate-950/80 backdrop-blur border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-lg mb-6 flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <h2 className="font-heading text-sm font-bold text-slate-800 dark:text-slate-200">
-            কার্ড প্রিন্টিং ও পিডিএফ সংরক্ষণ
+            {t("dashboard.print.title")}
           </h2>
           <Button 
             variant="ghost" 
@@ -73,7 +75,7 @@ export default function PrintCardPage() {
           </Button>
         </div>
         <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-          আপনার ব্রাউজারের প্রিন্ট ডায়ালগটি স্বয়ংক্রিয়ভাবে চালু হবে। পিডিএফ হিসেবে ডাউনলোড করতে প্রিন্ট উইন্ডোর ডেস্টিনেশনে <strong>&apos;Save as PDF&apos;</strong> সিলেক্ট করুন।
+          {t("dashboard.print.description")}
         </p>
         <div className="flex gap-2.5 mt-1">
           <Button 
@@ -81,14 +83,14 @@ export default function PrintCardPage() {
             className="flex-1 bg-primary hover:bg-primary-dark text-white font-semibold text-xs h-9 rounded-xl gap-1.5"
           >
             <Printer className="h-4 w-4" />
-            আবার প্রিন্ট করুন
+            {t("dashboard.print.printButton")}
           </Button>
           <Button 
             variant="outline" 
             onClick={handleClose}
             className="border-slate-200 dark:border-slate-800 text-xs font-semibold h-9 rounded-xl"
           >
-            বন্ধ করুন
+            {t("dashboard.print.closeButton")}
           </Button>
         </div>
       </div>

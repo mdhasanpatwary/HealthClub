@@ -11,9 +11,11 @@ import { requestRenewalAction } from "@/app/actions/memberActions";
 import { dbStore } from "@/services/dbStore";
 import { Member } from "@/services/db";
 import { toast } from "sonner";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 
 export default function RenewalPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [member, setMember] = useState<Member | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,7 +48,7 @@ export default function RenewalPage() {
   const handleCopyNumber = () => {
     navigator.clipboard.writeText(bkashNumber);
     setCopied(true);
-    toast.success("বিকাশ নম্বরটি কপি করা হয়েছে!");
+    toast.success(t("dashboard.renew.toastCopy"));
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -55,20 +57,20 @@ export default function RenewalPage() {
     setFormError("");
 
     if (!senderNumber || !transactionId) {
-      setFormError("অনুগ্রহ করে সবগুলো ঘর পূরণ করুন।");
+      setFormError(t("dashboard.renew.errorAllFields"));
       return;
     }
 
     const cleanSender = senderNumber.trim();
     const bdPhoneRegex = /^(01)[3-9]\d{8}$/;
     if (!bdPhoneRegex.test(cleanSender)) {
-      setFormError("সঠিক ১১ সংখ্যার বাংলাদেশী বিকাশ নম্বর দিন (যেমন: 017XXXXXXXX)।");
+      setFormError(t("dashboard.renew.errorPhone"));
       return;
     }
 
     const cleanTxnId = transactionId.trim().toUpperCase();
     if (cleanTxnId.length < 6 || cleanTxnId.length > 16) {
-      setFormError("সঠিক ট্রানজেকশন আইডি দিন (সাধারণত ৮ থেকে ১২ অক্ষরের হয়)।");
+      setFormError(t("dashboard.renew.errorTxn"));
       return;
     }
 
@@ -93,10 +95,10 @@ export default function RenewalPage() {
           router.push("/dashboard");
         }, 3000);
       } else {
-        setFormError(res.message || "রিনিউয়াল সাবমিট করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।");
+        setFormError(res.message || t("dashboard.renew.errorFailed"));
       }
     } catch {
-      setFormError("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
+      setFormError(t("dashboard.renew.errorServerError"));
     } finally {
       setIsSubmitting(false);
     }
@@ -117,7 +119,7 @@ export default function RenewalPage() {
       <div className="mx-auto max-w-xl">
         <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-primary mb-5 transition-colors">
           <ArrowLeft className="h-3.5 w-3.5" />
-          ড্যাশবোর্ডে ফিরে যান
+          {t("dashboard.renew.backToDashboard")}
         </Link>
 
         <Card className="border border-border shadow-xl bg-background/80 backdrop-blur">
@@ -125,14 +127,14 @@ export default function RenewalPage() {
             <div className="flex items-center justify-center space-x-2 text-primary mx-auto">
               <Heart className="h-7 w-7 fill-primary" />
               <span className="font-heading text-2xl font-bold text-secondary">
-                হেলথ <span className="text-primary">ক্লাব</span>
+                {t("layout.footer.health")} <span className="text-primary">{t("layout.footer.club")}</span>
               </span>
             </div>
             <CardTitle className="font-heading text-xl font-bold text-secondary">
-              মেম্বারশিপ নবায়ন (Membership Renewal)
+              {t("dashboard.renew.title")}
             </CardTitle>
             <CardDescription>
-              মেম্বারশিপ সচল রাখতে ৫০০ টাকা নবায়ন ফি বিকাশ সেন্ড মানি করুন।
+              {t("dashboard.renew.description")}
             </CardDescription>
           </CardHeader>
 
@@ -142,11 +144,11 @@ export default function RenewalPage() {
                 <div className="h-16 w-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto border border-emerald-200">
                   <CheckCircle2 className="h-10 w-10" />
                 </div>
-                <h3 className="font-heading text-lg font-bold text-secondary">অনুরোধ সম্পন্ন হয়েছে!</h3>
+                <h3 className="font-heading text-lg font-bold text-secondary">{t("dashboard.renew.successTitle")}</h3>
                 <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
-                  আপনার নবায়ন পেমেন্ট ওটি ট্রানজেকশন সফলভাবে জমা দেওয়া হয়েছে। ২৪ ঘণ্টার মধ্যে এডমিন তথ্য যাচাই করে আপনার কার্ডের মেয়াদ ১ বছর বৃদ্ধি করে দেবে।
+                  {t("dashboard.renew.successDesc")}
                 </p>
-                <p className="text-xs text-primary font-semibold">ড্যাশবোর্ডে রিডাইরেক্ট করা হচ্ছে...</p>
+                <p className="text-xs text-primary font-semibold">{t("dashboard.renew.redirecting")}</p>
               </div>
             ) : (
               <>
@@ -164,8 +166,8 @@ export default function RenewalPage() {
                       bKash
                     </div>
                     <div>
-                      <h4 className="font-bold text-sm text-[#e2125d]">বিকাশ সেন্ড মানি করুন (Send Money)</h4>
-                      <p className="text-xs text-muted-foreground mt-0.5">নিচের ব্যক্তিগত নম্বরে ৫০০ টাকা পাঠান।</p>
+                      <h4 className="font-bold text-sm text-[#e2125d]">{t("dashboard.renew.bkashTitle")}</h4>
+                      <p className="text-xs text-muted-foreground mt-0.5">{t("dashboard.renew.bkashSubtitle")}</p>
                     </div>
                   </div>
 
@@ -176,14 +178,14 @@ export default function RenewalPage() {
                     </div>
                     <Button onClick={handleCopyNumber} variant="ghost" size="sm" className="hover:bg-slate-100 text-xs">
                       {copied ? <Check className="h-3.5 w-3.5 text-primary" /> : <Copy className="h-3.5 w-3.5" />}
-                      {copied ? "কপি হয়েছে" : "কপি করুন"}
+                      {copied ? t("dashboard.renew.copied") : t("dashboard.renew.copy")}
                     </Button>
                   </div>
 
                   <div className="text-xs text-muted-foreground space-y-1.5 pl-1.5 border-l-2 border-[#e2125d]/20">
-                    <p>১. আপনার বিকাশ অ্যাপে লগইন করে **Send Money** অপশনে যান।</p>
-                    <p>২. উপরে দেওয়া নম্বরটি দিন এবং পরিমাণ **৳৫০০** নির্ধারণ করুন।</p>
-                    <p>৩. পেমেন্ট সম্পন্ন করার পর বিকাশ থেকে পাওয়া **Transaction ID** কপি করুন।</p>
+                    <p>{t("dashboard.renew.step1")}</p>
+                    <p>{t("dashboard.renew.step2")}</p>
+                    <p>{t("dashboard.renew.step3")}</p>
                   </div>
                 </div>
 
@@ -192,14 +194,14 @@ export default function RenewalPage() {
                   <div className="space-y-2">
                     <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
                       <Smartphone className="h-3.5 w-3.5 text-primary" />
-                      যে বিকাশ নম্বর থেকে টাকা পাঠিয়েছেন
+                      {t("dashboard.renew.senderLabel")}
                     </label>
                     <Input
                       type="text"
                       required
                       value={senderNumber}
                       onChange={(e) => setSenderNumber(e.target.value)}
-                      placeholder="যেমন: 018XXXXXXXX"
+                      placeholder={t("landing.contactform.eg017xxxxxxxx")}
                       className="h-11 border-border bg-background"
                     />
                   </div>
@@ -207,14 +209,14 @@ export default function RenewalPage() {
                   <div className="space-y-2">
                     <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
                       <ShieldCheck className="h-3.5 w-3.5 text-primary" />
-                      বিকাশ ট্রানজেকশন আইডি (Transaction ID)
+                      {t("dashboard.renew.txnLabel")}
                     </label>
                     <Input
                       type="text"
                       required
                       value={transactionId}
                       onChange={(e) => setTransactionId(e.target.value)}
-                      placeholder="যেমন: BGA678UHG"
+                      placeholder={t("যেমন: BGA678UHG", "e.g., BGA678UHG")}
                       className="h-11 border-border bg-background font-mono uppercase"
                     />
                   </div>
@@ -222,19 +224,19 @@ export default function RenewalPage() {
                   <div className="space-y-2">
                     <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
                       <User className="h-3.5 w-3.5 text-primary" />
-                      পেশা/কর্মক্ষেত্র (পরিবর্তন করতে চাইলে)
+                      {t("dashboard.renew.professionLabel")}
                     </label>
                     <Input
                       type="text"
                       value={profession}
                       onChange={(e) => setProfession(e.target.value)}
-                      placeholder="যেমন: চাকুরিজীবী, ব্যবসায়ী, ছাত্র ইত্যাদি"
+                      placeholder={t("dashboard.renew.professionPlaceholder")}
                       className="h-11 border-border bg-background"
                     />
                   </div>
 
                   <Button type="submit" disabled={isSubmitting} size="lg" className="w-full active:scale-[0.99]">
-                    {isSubmitting ? "অনুরোধ জমা দেওয়া হচ্ছে..." : "রিনিউয়াল অনুরোধ পাঠান (৳৫০০)"}
+                    {isSubmitting ? t("dashboard.renew.submittingButton") : t("dashboard.renew.submitButton")}
                   </Button>
                 </form>
               </>
