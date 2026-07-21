@@ -493,6 +493,14 @@ export default async function Home() {
                     {t("page.flat10DiscountBenefit")}
                   </td>
                 </tr>
+                <tr className="hover:bg-muted/40 dark:hover:bg-slate-800/50 transition-colors">
+                  <td className="p-4 md:p-5 font-bold text-secondary dark:text-white">{t("page.partnerPharmacyDiscount")}</td>
+                  <td className="p-4 md:p-5">{t("page.noPharmacyDiscount")}</td>
+                  <td className="p-4 md:p-5 font-semibold text-primary flex items-center gap-1.5">
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
+                    {t("page.pharmacyDiscount5to10")}
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -500,120 +508,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ──────────────────────────────────────────── */}
-      {/* 10. MOBILE APP PREVIEW */}
-      {/* ──────────────────────────────────────────── */}
-      <section className="py-20 sm:py-28 bg-background overflow-hidden">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-
-            {/* Left Content */}
-            <div className="space-y-7 text-center lg:text-left">
-              <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold bg-amber-400/15 text-amber-600 dark:text-amber-300 border border-amber-400/25">
-                COMING SOON
-              </span>
-              <h2 className="font-heading text-3xl sm:text-4xl font-bold text-secondary dark:text-white leading-tight">
-                {t("page.comingSoonOur")} <br />
-                <span className="gradient-text">{t("page.healthClubMobileApp")}</span>
-              </h2>
-              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-md mx-auto lg:mx-0">
-                {t("page.yourMembershipServiceWillBe")}
-              </p>
-
-              <ul className="space-y-3 text-sm text-left max-w-md mx-auto lg:mx-0">
-                {[
-                  t("page.digitalMembershipIdCardOffline"),
-                  t("page.mapLocationSearchForNearest"),
-                  t("page.nearestPartnerDiagnosticLabSearch"),
-                  t("page.trackingOfTotalSavingsAnd"),
-                ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3 text-secondary dark:text-slate-300 font-medium">
-                    <div className="h-6 w-6 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
-                      <Check className="h-3.5 w-3.5 text-primary" />
-                    </div>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Right Visual (App Mockup) */}
-            <div className="relative flex justify-center">
-              {/* Glow orb */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="w-64 h-64 bg-primary/10 dark:bg-primary/15 rounded-full blur-3xl animate-gradient" />
-              </div>
-
-              {/* Phone Mockup Frame */}
-              <div className="relative w-56 h-[440px] bg-slate-950 rounded-[36px] border-[5px] border-slate-800 shadow-2xl p-2.5 flex flex-col justify-between overflow-hidden">
-                {/* Phone notch */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-5 bg-slate-950 rounded-b-xl z-20" />
-
-                {/* App Screen Content */}
-                <div className="bg-slate-900 rounded-[26px] flex-1 flex flex-col justify-between p-3 text-white overflow-hidden relative">
-
-                  {/* App Header */}
-                  <div className="flex justify-between items-center text-[10px] pt-2">
-                    <span className="font-bold text-primary flex items-center gap-0.5">
-                      <Heart className="h-2.5 w-2.5 fill-primary text-primary" />
-                      {t("page.healthClub")}
-                    </span>
-                    <span className="text-slate-400 font-mono text-[9px]">HC-1001</span>
-                  </div>
-
-                  {/* App Miniature Card */}
-                  <div className="bg-gradient-to-br from-slate-950 to-emerald-950 rounded-xl p-2.5 border border-emerald-500/20 text-left my-2">
-                    <p className="text-[6px] text-slate-500 font-mono uppercase tracking-wide">Member Name</p>
-                    <p className="text-[10px] font-bold font-heading text-white truncate">{t("page.mdAbdurRahman")}</p>
-
-                    <div className="flex justify-between items-end mt-2">
-                      <span className="text-[8px] font-mono text-emerald-400 font-bold">FOUNDING</span>
-                      <div className="bg-white p-0.5 rounded-sm">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src="https://api.qrserver.com/v1/create-qr-code/?size=50x50&data=HC-1001&color=0f172a&bgcolor=ffffff"
-                          alt="QR code"
-                          width={24}
-                          height={24}
-                          className="w-6 h-6"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* App Quick Menu */}
-                  <div className="space-y-1.5 flex-1">
-                    <p className="text-[8px] text-slate-500 font-bold text-left mb-1.5 uppercase tracking-wider">Features</p>
-
-                    {[
-                      { emoji: "🏥", label: t("page.nearestHospital"), color: "bg-primary/20 text-primary" },
-                      { emoji: "🧪", label: t("page.labTestOff"), color: "bg-indigo-500/20 text-indigo-400" },
-                      { emoji: "💊", label: t("page.discountMedicines"), color: "bg-amber-500/20 text-amber-400" },
-                    ].map((feat, i) => (
-                      <div key={i} className="bg-slate-800/80 p-2 rounded-lg text-left flex items-center gap-2">
-                        <div className={`h-5 w-5 ${feat.color} flex items-center justify-center rounded-md shrink-0`}>
-                          <span className="text-[8px] font-bold">{feat.emoji}</span>
-                        </div>
-                        <span className="text-[9px] font-semibold text-slate-200">{feat.label}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* App Bottom nav */}
-                  <div className="border-t border-slate-800 pt-1.5 flex justify-around text-[8px] text-slate-500 mt-1">
-                    <span className="text-primary font-bold">Home</span>
-                    <span>Search</span>
-                    <span>Profile</span>
-                  </div>
-
-                </div>
-
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
 
       {/* ──────────────────────────────────────────── */}
       {/* CTA BANNER — before FAQ */}
@@ -645,7 +539,7 @@ export default async function Home() {
       </section>
 
       {/* ──────────────────────────────────────────── */}
-      {/* 11. FAQ SECTION */}
+      {/* 10. FAQ SECTION */}
       {/* ──────────────────────────────────────────── */}
       <section className="py-20 sm:py-28 bg-background">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
@@ -666,7 +560,7 @@ export default async function Home() {
       </section>
 
       {/* ──────────────────────────────────────────── */}
-      {/* 12. CONTACT SECTION */}
+      {/* 11. CONTACT SECTION */}
       {/* ──────────────────────────────────────────── */}
       <section className="py-20 sm:py-28 bg-muted/40 dark:bg-slate-950/60 border-t border-border/60">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
