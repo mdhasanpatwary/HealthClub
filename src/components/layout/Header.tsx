@@ -226,14 +226,43 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Dropdown */}
-        <div
-          id="mobile-menu"
-          className={`md:hidden border-b border-border/60 bg-background/95 backdrop-blur-xl overflow-hidden transition-all duration-300 ease-in-out ${
-            isOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
-          }`}
-        >
-          <div className="px-3 pt-2 pb-1 space-y-0.5">
+      </header>
+
+      {/* Mobile Menu — fixed full-screen overlay */}
+      <div
+        id="mobile-menu"
+        className={`fixed inset-0 z-50 md:hidden flex flex-col bg-background/98 backdrop-blur-xl transition-all duration-300 ease-in-out ${
+          isOpen
+            ? "opacity-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 -translate-y-4 pointer-events-none"
+        }`}
+        aria-hidden={!isOpen}
+      >
+        {/* Menu Header */}
+        <div className="flex items-center justify-between px-4 h-16 border-b border-border/60 shrink-0">
+          <Link
+            href="/"
+            className="flex items-center space-x-2"
+            onClick={() => setIsOpen(false)}
+          >
+            <Heart className="h-6 w-6 fill-primary text-primary" />
+            <span className="font-heading text-xl font-bold tracking-tight text-secondary dark:text-white">
+              {t("layout.header.health")}{" "}
+              <span className="gradient-text">{t("layout.header.club")}</span>
+            </span>
+          </Link>
+          <button
+            onClick={() => setIsOpen(false)}
+            className="inline-flex items-center justify-center rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors"
+            aria-label="Close menu"
+          >
+            <X className="h-6 w-6" />
+          </button>
+        </div>
+
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="px-3 pt-3 pb-1 space-y-0.5">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
@@ -250,8 +279,8 @@ export default function Header() {
             ))}
           </div>
 
-          <div className="border-t border-border/60 mx-3 pt-3 pb-4 space-y-2">
-            {/* Mobile Language Switcher Section */}
+          <div className="border-t border-border/60 mx-3 pt-3 pb-6 space-y-2">
+            {/* Language Switcher */}
             <div className="flex items-center justify-between border-b border-border/60 pb-3 mb-2">
               <span className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
                 <Globe className="h-4 w-4" />
@@ -267,7 +296,7 @@ export default function Header() {
               </Button>
             </div>
 
-            {/* Mobile Theme Switcher Section */}
+            {/* Theme Switcher */}
             <div className="flex items-center justify-between border-b border-border/60 pb-3 mb-2">
               <span className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
                 {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4 text-amber-400" />}
@@ -384,7 +413,7 @@ export default function Header() {
             )}
           </div>
         </div>
-      </header>
+      </div>
 
       {/* Backdrop overlay */}
       <div
