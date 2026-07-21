@@ -401,7 +401,7 @@ export default function PartnerDashboardPage() {
                   <div className="flex items-start gap-4">
                     {verifiedMember.profilePictureUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={verifiedMember.profilePictureUrl} alt="" className="h-14 w-14 rounded-full object-cover border border-border shadow-sm" />
+                      <img src={verifiedMember.profilePictureUrl} alt="" className="h-14 w-14 rounded-full object-cover object-left-top border border-border shadow-sm" />
                     ) : (
                       <div className="h-14 w-14 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-500 font-bold uppercase border border-border">
                         {verifiedMember.name.substring(0, 2)}

@@ -255,7 +255,7 @@ export default function DashboardPage() {
                   <img
                     src={user.profilePictureUrl}
                     alt={user.name}
-                    className="h-14 w-14 rounded-2xl object-cover border-2 border-white/20 shadow-lg"
+                    className="h-14 w-14 rounded-2xl object-cover object-left-top border-2 border-white/20 shadow-lg"
                   />
                 ) : (
                   <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-primary to-emerald-600 flex items-center justify-center text-white font-bold text-xl font-heading shadow-lg border-2 border-white/20">

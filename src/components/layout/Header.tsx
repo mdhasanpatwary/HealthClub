@@ -293,7 +293,7 @@ export default function Header() {
                       width={36}
                       height={36}
                       unoptimized
-                      className="h-9 w-9 rounded-xl object-cover border border-border shrink-0"
+                      className="h-9 w-9 rounded-xl object-cover object-left-top border border-border shrink-0"
                     />
                   ) : (
                     <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 text-primary flex items-center justify-center font-bold text-sm uppercase shrink-0 border border-primary/20">
@@ -342,7 +342,7 @@ export default function Header() {
                       alt={partner.name}
                       width={36}
                       height={36}
-                      className="h-9 w-9 rounded-xl object-cover border border-border shrink-0"
+                      className="h-9 w-9 rounded-xl object-cover object-left-top border border-border shrink-0"
                     />
                   ) : (
                     <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-sm uppercase shrink-0 border border-emerald-500/20">

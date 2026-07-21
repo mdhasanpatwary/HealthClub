@@ -84,7 +84,7 @@ export function MembersTab({
                       <div className="h-8 w-8 rounded-full border border-border bg-muted/40 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
                         {m.profilePictureUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img src={m.profilePictureUrl} alt={m.name} className="h-full w-full object-cover" />
+                          <img src={m.profilePictureUrl} alt={m.name} className="h-full w-full object-cover object-left-top" />
                         ) : (
                           <User className="h-4 w-4 text-muted-foreground" />
                         )}

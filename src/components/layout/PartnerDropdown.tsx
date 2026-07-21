@@ -39,7 +39,7 @@ export default function PartnerDropdown({ partner }: PartnerDropdownProps) {
             alt={partner.name}
             width={36}
             height={36}
-            className="h-9 w-9 rounded-full object-cover border border-border shrink-0 shadow-xs"
+            className="h-9 w-9 rounded-full object-cover object-left-top border border-border shrink-0 shadow-xs"
           />
         ) : (
           <div className="h-9 w-9 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-500 flex items-center justify-center font-bold text-sm uppercase shrink-0 border border-emerald-500/20">

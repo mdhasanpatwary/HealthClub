@@ -41,7 +41,7 @@ export function MemberDetailsDialog({
             <div className="h-14 w-14 rounded-xl border border-border bg-muted/40 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
               {viewingMember.profilePictureUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={viewingMember.profilePictureUrl} alt={viewingMember.name} className="h-full w-full object-cover" />
+                <img src={viewingMember.profilePictureUrl} alt={viewingMember.name} className="h-full w-full object-cover object-left-top" />
               ) : (
                 <User className="h-7 w-7 text-muted-foreground" />
               )}

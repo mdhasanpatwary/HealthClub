@@ -74,7 +74,7 @@ export default function MemberCard({ member }: MemberCardProps) {
             <img
               src={member.profilePictureUrl}
               alt={member.name}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover object-left-top"
             />
           ) : (
             <div className="h-full w-full bg-gradient-to-br from-primary/30 to-emerald-600/20 flex items-center justify-center">
