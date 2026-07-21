@@ -80,58 +80,67 @@ export default function TestimonialCarousel() {
   }, [testimonials.length]);
 
   return (
-    <div className="relative w-full max-w-3xl mx-auto px-4 py-8">
-      <div className="overflow-hidden relative min-h-[300px] flex items-center">
-        {testimonials.map((item, index) => (
-          <div
-            key={index}
-            className={`w-full transition-all duration-500 ease-in-out absolute top-0 left-0 h-full flex items-center justify-center ${
-              index === current
-                ? "opacity-100 translate-x-0 scale-100 z-10"
-                : "opacity-0 translate-x-12 scale-95 pointer-events-none"
-            }`}
-          >
-            <Card className="border border-border bg-background/50 backdrop-blur shadow-lg w-full">
-              <CardContent className="p-8 relative">
-                
-                {/* Quote Icon */}
-                <Quote className="absolute right-6 top-6 h-12 w-12 text-primary/10 rotate-180" />
+    <div className="relative w-full max-w-3xl mx-auto px-2 sm:px-4 py-8">
+      {/* Slide Track */}
+      <div className="overflow-hidden">
+        <div
+          className="flex transition-transform duration-500 ease-in-out"
+          style={{ transform: `translateX(-${current * 100}%)` }}
+        >
+          {testimonials.map((item, index) => (
+            <div key={index} className="w-full shrink-0 px-1">
+              <Card className="border border-border bg-background/50 backdrop-blur shadow-lg w-full">
+                <CardContent className="p-4 sm:p-6 md:p-8 relative">
 
-                <div className="flex flex-col md:flex-row gap-6 items-center">
-                  
-                  {/* Avatar/Savings Badge */}
-                  <div className="flex flex-col items-center shrink-0">
-                    <div className="h-16 w-16 rounded-full bg-primary-light text-primary font-heading text-2xl font-bold flex items-center justify-center border border-primary/20 shadow-inner">
-                      {item.avatar}
+                  {/* Quote Icon */}
+                  <Quote className="absolute right-4 top-4 h-8 w-8 sm:h-12 sm:w-12 text-primary/10 rotate-180" />
+
+                  <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center">
+
+                    {/* Avatar/Savings Badge */}
+                    <div className="flex flex-col items-center shrink-0">
+                      <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-primary-light text-primary font-heading text-xl sm:text-2xl font-bold flex items-center justify-center border border-primary/20 shadow-inner">
+                        {item.avatar}
+                      </div>
+                      <span className="mt-2 sm:mt-3 inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold border border-primary/20 font-mono whitespace-nowrap">
+                        {item.saved}
+                      </span>
                     </div>
-                    <span className="mt-3 inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold border border-primary/20 font-mono">
-                      {item.saved}
-                    </span>
+
+                    {/* Testimonial Story */}
+                    <div className="text-center sm:text-left space-y-3">
+                      <p className="text-sm sm:text-base md:text-lg leading-relaxed text-secondary italic font-normal">
+                        &ldquo;{item.story}&rdquo;
+                      </p>
+                      <div>
+                        <h4 className="font-heading text-sm sm:text-base font-bold text-secondary">{item.name}</h4>
+                        <p className="text-xs text-muted-foreground">{item.location}</p>
+                      </div>
+                    </div>
+
                   </div>
 
-                  {/* Testimonial Story */}
-                  <div className="text-center md:text-left space-y-4">
-                    <p className="text-base md:text-lg leading-relaxed text-secondary italic font-normal">
-                      &ldquo;{item.story}&rdquo;
-                    </p>
-                    <div>
-                      <h4 className="font-heading text-base font-bold text-secondary">{item.name}</h4>
-                      <p className="text-xs text-muted-foreground">{item.location}</p>
-                    </div>
-                  </div>
-
-                </div>
-
-              </CardContent>
-            </Card>
-          </div>
-        ))}
+                </CardContent>
+              </Card>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Control Buttons */}
-      <div className="flex justify-between items-center mt-4">
+      <div className="relative flex justify-center items-center mt-4 gap-4">
+
+        {/* Arrow buttons - visible on all screens */}
+        <button
+          onClick={prevSlide}
+          className="p-2 rounded-full bg-background border border-border shadow-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors focus:outline-none"
+          aria-label="Previous testimonial"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+
         {/* Indicators */}
-        <div className="flex gap-2 mx-auto">
+        <div className="flex gap-2">
           {testimonials.map((_, idx) => (
             <button
               key={idx}
@@ -145,22 +154,14 @@ export default function TestimonialCarousel() {
         </div>
 
         {/* Arrow buttons */}
-        <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 hidden sm:flex justify-between pointer-events-none px-2 z-20">
-          <button
-            onClick={prevSlide}
-            className="p-2 rounded-full bg-background border border-border shadow-md text-muted-foreground hover:text-foreground hover:bg-muted pointer-events-auto transition-colors focus:outline-none"
-            aria-label="Previous testimonial"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </button>
-          <button
-            onClick={nextSlide}
-            className="p-2 rounded-full bg-background border border-border shadow-md text-muted-foreground hover:text-foreground hover:bg-muted pointer-events-auto transition-colors focus:outline-none"
-            aria-label="Next testimonial"
-          >
-            <ChevronRight className="h-5 w-5" />
-          </button>
-        </div>
+        <button
+          onClick={nextSlide}
+          className="p-2 rounded-full bg-background border border-border shadow-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors focus:outline-none"
+          aria-label="Next testimonial"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </button>
+
       </div>
     </div>
   );

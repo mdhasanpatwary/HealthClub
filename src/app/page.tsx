@@ -110,7 +110,7 @@ export default async function Home() {
             </div>
 
             {/* Right Visual Column */}
-            <div className="lg:col-span-5 relative flex justify-center mt-4 lg:mt-0 py-10 sm:px-4">
+            <div className="lg:col-span-5 relative flex justify-center mt-4 lg:mt-0 sm:py-10 sm:px-4">
 
               {/* Glow behind card */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none -z-[1]">
