@@ -74,7 +74,7 @@ export default async function Home() {
                 <Link href="/register">
                   <Button
                     size="lg"
-                    className="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-bold shadow-lg btn-glow rounded-xl px-7 gap-2"
+                    className="w-full sm:w-auto shadow-lg px-7"
                   >
                     {t("page.becomeAMemberForFree")}
                     <ArrowRight className="h-4 w-4" />
@@ -84,7 +84,7 @@ export default async function Home() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="w-full sm:w-auto rounded-xl px-7 border-border hover:bg-muted/60 font-semibold"
+                    className="w-full sm:w-auto px-7"
                   >
                     {t("page.viewPartnerHospitals")}
                   </Button>
@@ -344,7 +344,7 @@ export default async function Home() {
               </div>
               <div className="relative pt-8">
                 <Link href="/register">
-                  <Button className="w-full bg-primary hover:bg-primary-dark text-white font-bold rounded-xl btn-glow py-3 text-base">
+                  <Button size="lg" className="w-full">
                     {t("page.joinForFree")}
                   </Button>
                 </Link>
@@ -383,7 +383,7 @@ export default async function Home() {
               </div>
               <div className="pt-8">
                 <Link href="/register?plan=premium">
-                  <Button variant="outline" className="w-full border-border hover:bg-muted text-secondary dark:text-white rounded-xl py-3 text-base font-semibold">
+                  <Button variant="outline" size="lg" className="w-full">
                     {t("page.buyPlan")}
                   </Button>
                 </Link>
@@ -411,7 +411,7 @@ export default async function Home() {
               </p>
             </div>
             <Link href="/partner-hospitals" className="shrink-0 self-center md:self-end">
-              <Button variant="outline" className="border-primary/40 text-primary hover:bg-primary/5 rounded-xl font-semibold gap-2">
+              <Button variant="outline" className="border-primary/40 text-primary hover:bg-primary/5">
                 {t("page.viewAllPartnersDetails")}
                 <ArrowRight className="h-4 w-4" />
               </Button>
@@ -635,7 +635,7 @@ export default async function Home() {
           <Link href="/register">
             <Button
               size="lg"
-              className="bg-white text-primary hover:bg-white/90 font-bold rounded-xl px-8 shadow-xl hover:shadow-2xl transition-all duration-200 hover:-translate-y-0.5"
+              className="bg-white text-primary hover:bg-white/90 px-8 shadow-xl hover:shadow-2xl hover:-translate-y-0.5"
             >
               বিনামূল্যে যোগ দিন
               <ArrowRight className="ml-2 h-4 w-4" />

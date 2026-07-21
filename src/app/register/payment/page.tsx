@@ -162,9 +162,8 @@ function PaymentForm() {
                   <Button 
                     type="button" 
                     variant="ghost" 
-                    size="sm" 
+                    size="icon-xs" 
                     onClick={handleCopyNumber}
-                    className="h-8 w-8 p-0 hover:bg-muted"
                   >
                     {copied ? <Check className="h-4 w-4 text-emerald-600" /> : <Copy className="h-4 w-4 text-muted-foreground" />}
                   </Button>
@@ -220,14 +219,15 @@ function PaymentForm() {
                   <Button 
                     type="submit" 
                     disabled={isSubmitting}
-                    className="w-full bg-primary hover:bg-primary-dark text-white font-semibold h-11 gap-2 rounded-xl transition-all shadow-md"
+                    size="lg"
+                    className="w-full"
                   >
                     <ShieldCheck className="h-5 w-5" />
                     {isSubmitting ? "তথ্য সাবমিট করা হচ্ছে..." : "পেমেন্ট তথ্য সাবমিট করুন"}
                   </Button>
                   
                   <Link href="/" className="block w-full">
-                    <Button variant="outline" className="w-full text-muted-foreground h-11 rounded-xl">
+                    <Button variant="outline" size="lg" className="w-full text-muted-foreground">
                       পরে সাবমিট করব
                     </Button>
                   </Link>

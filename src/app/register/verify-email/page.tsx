@@ -77,7 +77,7 @@ function VerifyEmailForm() {
           <p>৩. এরপর আপনি আপনার মেম্বার আইডি এবং পাসওয়ার্ড দিয়ে লগইন করে ড্যাশবোর্ড ও মেম্বারশিপ কার্ড ব্যবহার করতে পারবেন।</p>
         </div>
         <Link href="/" className="block">
-          <Button className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
+          <Button className="w-full">
             হোমপেজে ফিরে যান
           </Button>
         </Link>
@@ -127,7 +127,7 @@ function VerifyEmailForm() {
           <Button 
             type="submit" 
             disabled={isSubmitting || code.length !== 6}
-            className="w-full bg-primary hover:bg-primary-dark text-white font-semibold gap-2"
+            className="w-full"
           >
             <ShieldCheck className="h-4 w-4" />
             {isSubmitting ? "যাচাই করা হচ্ছে..." : "কোড যাচাই করুন"}

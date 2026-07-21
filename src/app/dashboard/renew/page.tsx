@@ -174,7 +174,7 @@ export default function RenewalPage() {
                       <p className="text-[10px] text-slate-400 tracking-wider font-mono">BKASH PERSONAL NUMBER</p>
                       <p className="text-sm font-extrabold text-secondary dark:text-white font-mono">{bkashNumber}</p>
                     </div>
-                    <Button onClick={handleCopyNumber} variant="ghost" size="sm" className="h-9 gap-1.5 hover:bg-slate-100 text-xs">
+                    <Button onClick={handleCopyNumber} variant="ghost" size="sm" className="hover:bg-slate-100 text-xs">
                       {copied ? <Check className="h-3.5 w-3.5 text-primary" /> : <Copy className="h-3.5 w-3.5" />}
                       {copied ? "কপি হয়েছে" : "কপি করুন"}
                     </Button>
@@ -233,7 +233,7 @@ export default function RenewalPage() {
                     />
                   </div>
 
-                  <Button type="submit" disabled={isSubmitting} className="w-full h-11 bg-primary hover:bg-primary-dark text-white font-semibold shadow-md active:scale-[0.99] transition-transform">
+                  <Button type="submit" disabled={isSubmitting} size="lg" className="w-full active:scale-[0.99]">
                     {isSubmitting ? "অনুরোধ জমা দেওয়া হচ্ছে..." : "রিনিউয়াল অনুরোধ পাঠান (৳৫০০)"}
                   </Button>
                 </form>

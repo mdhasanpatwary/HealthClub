@@ -150,8 +150,8 @@ export default function SavingsCalculator() {
 
         <Link href="/register">
           <Button
-            size="lg"
-            className="w-full bg-primary hover:bg-primary-dark text-white font-bold rounded-xl btn-glow gap-2 text-base min-h-[52px]"
+            size="xl"
+            className="w-full"
           >
             {t("ui.savingscalculator.becomeAMemberTodayFree")}
             <ArrowRight className="h-4 w-4" />
@@ -295,8 +295,8 @@ export default function SavingsCalculator() {
           <div className="p-6 pt-0">
             <Link href="/register">
               <Button
-                size="lg"
-                className="w-full bg-primary hover:bg-primary-dark text-white font-bold rounded-xl btn-glow gap-2 text-base"
+                size="xl"
+                className="w-full"
               >
                 {t("ui.savingscalculator.becomeAMemberTodayFree")}
                 <ArrowRight className="h-4 w-4" />

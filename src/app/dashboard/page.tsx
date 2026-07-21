@@ -306,7 +306,7 @@ export default function DashboardPage() {
               </div>
             </div>
             <Link href="/dashboard/renew">
-              <Button size="sm" className="bg-destructive text-white hover:bg-destructive/90 font-bold shrink-0">
+              <Button variant="destructive" size="sm" className="shrink-0">
                 মেম্বারশিপ রিনিউ করুন
               </Button>
             </Link>
@@ -320,7 +320,7 @@ export default function DashboardPage() {
               </div>
             </div>
             <Link href="/dashboard/renew">
-              <Button size="sm" className="bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700 font-bold shrink-0">
+              <Button size="sm" className="bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700 shrink-0">
                 রিনিউ করুন
               </Button>
             </Link>
@@ -401,7 +401,7 @@ export default function DashboardPage() {
                     <Button
                       onClick={() => window.open("/dashboard/print", "_blank")}
                       variant="outline"
-                      className="w-full text-xs font-semibold h-10 rounded-xl gap-2 border-border/80 hover:bg-muted active:scale-[0.98] transition-transform"
+                      className="w-full text-xs active:scale-[0.98]"
                     >
                       <Printer className="h-4 w-4 text-primary" />
                       কার্ড প্রিন্ট / ডাউনলোড করুন
@@ -418,7 +418,7 @@ export default function DashboardPage() {
                       অ্যাকাউন্ট সক্রিয় করতে ৫০০ টাকা বাৎসরিক মেম্বারশিপ ফি পরিশোধ করতে হবে।
                     </p>
                     <Link href={`/register/payment?memberId=${user.id}`} className="z-10">
-                      <Button className="bg-[#e2125d] hover:bg-[#c20f4f] text-white text-xs font-semibold px-4 py-1.5 h-8 rounded-lg shadow-md">
+                      <Button size="xs" className="bg-[#e2125d] hover:bg-[#c20f4f] text-white shadow-md">
                         পেমেন্ট করুন (৳৫০০)
                       </Button>
                     </Link>
@@ -608,7 +608,7 @@ export default function DashboardPage() {
                       </div>
 
                       <div className="pt-1">
-                        <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-bold gap-2 rounded-xl py-3 btn-glow">
+                        <Button type="submit" size="lg" className="w-full">
                           <Save className="h-4 w-4" />
                           পরিবর্তন সংরক্ষণ করুন
                         </Button>

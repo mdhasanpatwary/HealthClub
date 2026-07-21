@@ -100,7 +100,7 @@ export default async function MembershipPage() {
             </div>
             <div className="relative pt-8">
               <Link href="/register">
-                <Button className="w-full bg-primary hover:bg-primary-dark text-white font-bold rounded-xl btn-glow py-3 text-base gap-2">
+                <Button size="lg" className="w-full">
                   {t("membership.page.joinForFree")}
                   <ArrowRight className="h-4 w-4" />
                 </Button>
@@ -140,7 +140,7 @@ export default async function MembershipPage() {
             </div>
             <div className="pt-8">
               <Link href="/register?plan=premium">
-                <Button variant="outline" className="w-full border-border hover:bg-muted text-secondary dark:text-white rounded-xl py-3 text-base font-semibold gap-2">
+                <Button variant="outline" size="lg" className="w-full">
                   {t("membership.page.buyPlan")}
                   <ArrowRight className="h-4 w-4" />
                 </Button>

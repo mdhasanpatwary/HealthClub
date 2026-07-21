@@ -113,7 +113,7 @@ export default function PartnerLoginPage() {
               />
             </div>
 
-            <Button type="submit" disabled={loading} className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
+            <Button type="submit" disabled={loading} className="w-full">
               {loading ? "লগইন হচ্ছে..." : "পার্টনার হিসেবে প্রবেশ করুন"}
             </Button>
           </form>

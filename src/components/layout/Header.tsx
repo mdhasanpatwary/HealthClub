@@ -132,7 +132,6 @@ export default function Header() {
               variant="ghost"
               size="sm"
               onClick={() => setLocale(locale === "bn" ? "en" : "bn")}
-              className="gap-1.5 text-muted-foreground hover:text-foreground h-9 px-3 rounded-lg"
             >
               <Globe className="h-4 w-4" />
               <span className="text-xs font-semibold">{locale === "bn" ? "English" : "বাংলা"}</span>
@@ -141,9 +140,9 @@ export default function Header() {
             {/* Theme Toggle Button */}
             <Button
               variant="ghost"
-              size="icon"
+              size="icon-sm"
               onClick={toggleTheme}
-              className="h-9 w-9 text-muted-foreground hover:text-foreground rounded-lg"
+              className="text-muted-foreground hover:text-foreground"
               aria-label="Toggle Theme"
             >
               {theme === "light" ? (
@@ -159,11 +158,11 @@ export default function Header() {
               <PartnerDropdown partner={partner} />
             ) : (
               <>
-                <Link href="/login">
+                 <Link href="/login">
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="font-medium text-muted-foreground hover:text-foreground"
+                    className="text-muted-foreground hover:text-foreground"
                   >
                     {t("layout.header.login")}
                   </Button>
@@ -171,7 +170,6 @@ export default function Header() {
                 <Link href="/register">
                   <Button
                     size="sm"
-                    className="bg-primary text-white hover:bg-primary-dark font-semibold btn-glow rounded-lg px-4"
                   >
                     {t("layout.header.becomeMember")}
                   </Button>
@@ -184,19 +182,17 @@ export default function Header() {
           <div className="flex md:hidden items-center space-x-1">
             <Button
               variant="ghost"
-              size="icon"
+              size="sm"
               onClick={() => setLocale(locale === "bn" ? "en" : "bn")}
-              className="h-9 w-9 text-muted-foreground hover:text-foreground rounded-lg"
-              aria-label="Change Language"
             >
               <Globe className="h-4 w-4" />
             </Button>
 
             <Button
               variant="ghost"
-              size="icon"
+              size="icon-sm"
               onClick={toggleTheme}
-              className="h-9 w-9 text-muted-foreground hover:text-foreground rounded-lg"
+              className="text-muted-foreground hover:text-foreground"
               aria-label="Toggle Theme"
             >
               {theme === "light" ? (
@@ -308,21 +304,21 @@ export default function Header() {
                 </div>
                 {user.email === "healthclubfeni@gmail.com" ? (
                   <Link href="/admin" className="block w-full" onClick={() => setIsOpen(false)}>
-                    <Button variant="outline" className="w-full justify-start gap-2 border-primary/30 text-primary hover:bg-primary/5 rounded-xl">
+                    <Button variant="outline" className="w-full justify-start border-primary/30 text-primary hover:bg-primary/5">
                       <LayoutDashboard className="h-4 w-4" />
                       {t("layout.header.adminPanel")}
                     </Button>
                   </Link>
                 ) : (
                   <Link href="/dashboard" className="block w-full" onClick={() => setIsOpen(false)}>
-                    <Button variant="outline" className="w-full justify-start gap-2 border-primary/30 text-primary hover:bg-primary/5 rounded-xl">
+                    <Button variant="outline" className="w-full justify-start border-primary/30 text-primary hover:bg-primary/5">
                       <LayoutDashboard className="h-4 w-4" />
                       {t("layout.header.dashboard")}
                     </Button>
                   </Link>
                 )}
                 <Link href="/profile" className="block w-full" onClick={() => setIsOpen(false)}>
-                  <Button variant="outline" className="w-full justify-start gap-2 border-primary/30 text-primary hover:bg-primary/5 rounded-xl">
+                  <Button variant="outline" className="w-full justify-start border-primary/30 text-primary hover:bg-primary/5">
                     <Settings className="h-4 w-4" />
                     {t("profile.page.profileSettings")}
                   </Button>
@@ -330,7 +326,7 @@ export default function Header() {
                 <Button
                   variant="ghost"
                   onClick={handleLogout}
-                  className="w-full justify-start gap-2 text-destructive hover:bg-destructive/10 rounded-xl"
+                  className="w-full justify-start text-destructive hover:bg-destructive/10"
                 >
                   <LogOut className="h-4 w-4" />
                   {t("layout.header.logout")}
@@ -356,7 +352,7 @@ export default function Header() {
                   <span className="truncate">{partner.name}</span>
                 </div>
                 <Link href="/partner/dashboard" className="block w-full" onClick={() => setIsOpen(false)}>
-                  <Button variant="outline" className="w-full justify-start gap-2 border-emerald-500/30 text-emerald-600 hover:bg-emerald-500/5 rounded-xl">
+                  <Button variant="outline" className="w-full justify-start border-emerald-500/30 text-emerald-600 hover:bg-emerald-500/5">
                     <LayoutDashboard className="h-4 w-4" />
                     ড্যাশবোর্ড
                   </Button>
@@ -368,7 +364,7 @@ export default function Header() {
                     setIsOpen(false);
                     router.push("/");
                   }}
-                  className="w-full justify-start gap-2 text-destructive hover:bg-destructive/10 rounded-xl"
+                  className="w-full justify-start text-destructive hover:bg-destructive/10"
                 >
                   <LogOut className="h-4 w-4" />
                   {t("layout.header.logout")}
@@ -377,10 +373,10 @@ export default function Header() {
             ) : (
               <div className="grid grid-cols-2 gap-2 pt-1">
                 <Link href="/login" onClick={() => setIsOpen(false)}>
-                  <Button variant="outline" className="w-full rounded-xl">{t("layout.header.login")}</Button>
+                  <Button variant="outline" className="w-full">{t("layout.header.login")}</Button>
                 </Link>
                 <Link href="/register" onClick={() => setIsOpen(false)}>
-                  <Button className="w-full bg-primary text-white hover:bg-primary-dark font-semibold rounded-xl btn-glow">
+                  <Button className="w-full">
                     {t("layout.header.becomeMember")}
                   </Button>
                 </Link>

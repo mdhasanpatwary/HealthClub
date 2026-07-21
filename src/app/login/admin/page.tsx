@@ -100,7 +100,7 @@ export default function AdminLoginPage() {
               />
             </div>
 
-            <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
+            <Button type="submit" className="w-full">
               এডমিন হিসেবে প্রবেশ করুন
             </Button>
           </form>

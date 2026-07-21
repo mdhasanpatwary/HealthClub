@@ -309,7 +309,8 @@ export default function ProfilePage() {
                 <Button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="w-full bg-primary hover:bg-primary-dark text-primary-foreground font-semibold h-11 gap-2 rounded-xl transition-all shadow-md active:scale-[0.98]"
+                  size="lg"
+                  className="w-full active:scale-[0.98]"
                 >
                   <Save className="h-5 w-5" />
                   {isSubmitting ? t("profile.page.saving") : t("profile.page.saveChanges")}

@@ -112,7 +112,7 @@ export default function ContactForm() {
               <p className="text-sm text-muted-foreground max-w-sm mx-auto">
                 {t("landing.contactform.weHaveReceivedYourMessage")}
               </p>
-              <Button onClick={() => setSubmitted(false)} variant="outline" className="mt-4 border-primary text-primary hover:bg-primary-light">
+              <Button onClick={() => setSubmitted(false)} variant="outline" className="mt-4 border-primary text-primary hover:bg-primary/5">
                 {t("landing.contactform.sendAnotherMessage")}
               </Button>
             </div>
@@ -174,7 +174,7 @@ export default function ContactForm() {
                 />
               </div>
 
-              <Button type="submit" disabled={isSubmitting} className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
+              <Button type="submit" disabled={isSubmitting} className="w-full">
                 {isSubmitting ? (locale === "bn" ? "পাঠানো হচ্ছে..." : "Sending...") : t("landing.contactform.sendMessage")}
               </Button>
             </form>

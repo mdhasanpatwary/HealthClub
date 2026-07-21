@@ -136,7 +136,8 @@ function ResetPasswordForm() {
           <Button 
             type="submit" 
             disabled={isSubmitting || code.length !== 6 || !newPassword || !confirmPassword}
-            className="w-full bg-primary hover:bg-primary-dark text-white font-semibold gap-2 mt-2 h-11"
+            size="lg"
+            className="w-full mt-2"
           >
             <ShieldCheck className="h-4 w-4" />
             {isSubmitting ? "রিসেট করা হচ্ছে..." : "পাসওয়ার্ড সংরক্ষণ করুন"}
