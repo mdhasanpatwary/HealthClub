@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Heart, Phone, Mail, MapPin, MessageSquare } from "lucide-react";
+import { Phone, Mail, MapPin, MessageSquare } from "lucide-react";
 import { Locale, tServer } from "@/lib/i18n";
 
 export default function Footer({ locale = "bn" }: { locale?: string }) {
@@ -20,8 +20,13 @@ export default function Footer({ locale = "bn" }: { locale?: string }) {
 
           {/* Logo & Contact Info */}
           <div className="space-y-6 md:col-span-1">
-            <Link href="/" className="flex items-center space-x-2 group">
-              <Heart className="h-6 w-6 fill-primary text-primary transition-transform duration-300 group-hover:scale-110" />
+            <Link href="/" className="flex items-center space-x-2.5 group">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/member-card-logo.png"
+                alt="Health Club Logo"
+                className="h-8 w-8 sm:h-9 sm:w-9 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.3)] transition-transform duration-300 group-hover:scale-110 shrink-0"
+              />
               <span className="font-heading text-xl font-bold tracking-tight text-white">
                 {t("layout.footer.health")}{" "}
                 <span className="gradient-text">{t("layout.footer.club")}</span>

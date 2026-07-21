@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, LogOut, Heart, Globe, Sun, Moon, Settings, LayoutDashboard } from "lucide-react";
+import { Menu, X, LogOut, Globe, Sun, Moon, Settings, LayoutDashboard } from "lucide-react";
 import Image from "next/image";
 import { dbStore } from "@/services/dbStore";
 import { Member, Partner } from "@/services/db";
@@ -92,12 +92,16 @@ export default function Header() {
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center space-x-2 group"
+            className="flex items-center space-x-2.5 group"
             onClick={() => setIsOpen(false)}
           >
-            <div className="relative">
-              <Heart className="h-6 w-6 fill-primary text-primary transition-transform duration-300 group-hover:scale-110" />
-              <span className="absolute inset-0 h-6 w-6 rounded-full bg-primary/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="relative shrink-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/member-card-logo.png"
+                alt="Health Club Logo"
+                className="h-8 w-8 sm:h-9 sm:w-9 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.3)] transition-transform duration-300 group-hover:scale-110"
+              />
             </div>
             <span className="font-heading text-xl font-bold tracking-tight text-secondary dark:text-white">
               {t("layout.header.health")}{" "}
@@ -242,10 +246,15 @@ export default function Header() {
         <div className="flex items-center justify-between px-4 h-16 border-b border-border/60 shrink-0">
           <Link
             href="/"
-            className="flex items-center space-x-2"
+            className="flex items-center space-x-2.5"
             onClick={() => setIsOpen(false)}
           >
-            <Heart className="h-6 w-6 fill-primary text-primary" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/member-card-logo.png"
+              alt="Health Club Logo"
+              className="h-8 w-8 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.3)] shrink-0"
+            />
             <span className="font-heading text-xl font-bold tracking-tight text-secondary dark:text-white">
               {t("layout.header.health")}{" "}
               <span className="gradient-text">{t("layout.header.club")}</span>

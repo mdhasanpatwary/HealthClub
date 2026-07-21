@@ -439,10 +439,10 @@ export default function DashboardPage() {
                   {t("dashboard.card.description")}
                 </CardDescription>
               </CardHeader>
-              <CardContent className="p-5">
+              <CardContent className="p-3 sm:p-5">
                 {user.status === "active" ? (
                   <div className="space-y-4">
-                    <div ref={cardRef}>
+                    <div ref={cardRef} className="w-full flex justify-center pb-1">
                       <MemberCard member={user} />
                     </div>
                     <Button
