@@ -521,17 +521,17 @@ export default async function Home() {
         />
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center space-y-6">
           <h2 className="font-heading text-3xl sm:text-4xl font-extrabold text-white leading-tight">
-            আজই হেলথ ক্লাবের সদস্য হন
+            {t("page.cta.title")}
           </h2>
           <p className="text-base sm:text-lg text-white/85 max-w-xl mx-auto">
-            বিনামূল্যে সদস্যতা নিন এবং নির্ধারিত হাসপাতাল ও ডায়াগনস্টিক সেন্টারে ১০% ছাড় উপভোগ করুন।
+            {t("page.cta.description")}
           </p>
           <Link href="/register">
             <Button
               size="lg"
               className="bg-white text-primary hover:bg-white/90 px-8 shadow-xl hover:shadow-2xl hover:-translate-y-0.5"
             >
-              বিনামূল্যে যোগ দিন
+              {t("page.cta.button")}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Link>
