@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { Member } from "@/services/db";
 import { Star, ShieldCheck, User } from "lucide-react";
 
@@ -5,7 +6,10 @@ interface MemberCardProps {
   member: Member;
 }
 
-export default function MemberCard({ member }: MemberCardProps) {
+const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCard(
+  { member },
+  ref
+) {
   // Determine card tier badge & accent styling
   let badgeText = "Founding Member";
   let badgeIcon = <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400 shrink-0" />;
@@ -20,7 +24,7 @@ export default function MemberCard({ member }: MemberCardProps) {
   }
 
   // Use stored QR code URL from DB if available (avoids external API call on every render).
-  const verificationUrl = `https://healthclub.com.bd/verify/${member.id}`;
+  const verificationUrl = `https://healthclubfeni.vercel.app/verify/${member.id}`;
   const qrCodeSrc =
     member.qrCodeUrl ||
     `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verificationUrl)}&color=0f172a&bgcolor=ffffff`;
@@ -29,6 +33,7 @@ export default function MemberCard({ member }: MemberCardProps) {
 
   return (
     <div
+      ref={ref}
       lang="en"
       translate="no"
       className={`notranslate relative w-full max-w-md mx-auto rounded-2xl p-3.5 sm:p-5 overflow-hidden shadow-2xl flex flex-col justify-between min-h-[200px] sm:min-h-[220px] bg-slate-950 text-white border ${borderAccent}`}
@@ -181,4 +186,6 @@ export default function MemberCard({ member }: MemberCardProps) {
       </div>
     </div>
   );
-}
+});
+
+export default MemberCard;

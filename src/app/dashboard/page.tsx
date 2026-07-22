@@ -88,6 +88,7 @@ export default function DashboardPage() {
       
       const dataUrl = await toPng(cardRef.current, {
         cacheBust: true,
+        pixelRatio: 3,
         style: {
           transform: 'scale(1)',
           transformOrigin: 'top left',
@@ -442,8 +443,8 @@ export default function DashboardPage() {
               <CardContent className="p-3 sm:p-5">
                 {user.status === "active" ? (
                   <div className="space-y-4">
-                    <div ref={cardRef} className="w-full flex justify-center pb-1">
-                      <MemberCard member={user} />
+                    <div className="w-full flex justify-center pb-1">
+                      <MemberCard ref={cardRef} member={user} />
                     </div>
                     <Button
                       onClick={handleDownloadCard}

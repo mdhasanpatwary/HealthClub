@@ -80,7 +80,7 @@ export default function AdminLoginPage() {
                 required
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
-                placeholder="যেমন: admin@healthclub.com.bd বা 01700000000"
+                placeholder="যেমন: healthclubfeni@gmail.com বা 01700000000"
                 className="border-border bg-background"
               />
             </div>

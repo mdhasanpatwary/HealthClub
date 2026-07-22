@@ -23,6 +23,7 @@ const notoSansBengali = Noto_Sans_Bengali({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://healthclubfeni.vercel.app"),
   title: "হেলথ ক্লাব - স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী",
   description: "হেলথ ক্লাবের সদস্য হয়ে নির্ধারিত পার্টনার হাসপাতাল ও ডায়াগনস্টিক সেন্টারে বিশেষ ডিসকাউন্ট এবং সাশ্রয়ী মূল্যে উন্নত স্বাস্থ্যসেবা উপভোগ করুন।",
   keywords: ["হেলথ ক্লাব", "স্বাস্থ্য কার্ড", "হাসপাতাল ডিসকাউন্ট", "মেডিকেল ডিসকাউন্ট কার্ড", "সাশ্রয়ী চিকিৎসা"],
@@ -67,8 +68,8 @@ export default async function RootLayout({
               "@type": "Organization",
               "name": "হেলথ ক্লাব",
               "alternateName": "Health Club",
-              "url": "https://healthclub.com.bd",
-              "logo": "https://healthclub.com.bd/logo.png",
+              "url": "https://healthclubfeni.vercel.app",
+              "logo": "https://healthclubfeni.vercel.app/images/member-card-logo.png",
               "description": "স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী - একটি প্রিমিয়াম স্বাস্থ্য মেম্বারশিপ সার্ভিস।",
               "contactPoint": {
                 "@type": "ContactPoint",

@@ -124,8 +124,8 @@ export default function Footer({ locale = "bn" }: { locale?: string }) {
                   <div className="h-8 w-8 rounded-lg bg-slate-800 border border-slate-700/50 flex items-center justify-center shrink-0">
                     <Mail className="h-4 w-4 text-primary" />
                   </div>
-                  <a href="mailto:support@healthclub.com.bd" className="hover:text-white transition-colors break-all">
-                    support@healthclub.com.bd
+                  <a href="mailto:healthclubfeni@gmail.com" className="hover:text-white transition-colors break-all">
+                    healthclubfeni@gmail.com
                   </a>
                 </li>
               </ul>
