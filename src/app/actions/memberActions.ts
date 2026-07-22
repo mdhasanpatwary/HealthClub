@@ -49,7 +49,7 @@ export async function addMemberAction(
         status: "inactive",
         joinedDate: joined,
         expiryDate: expiry,
-        qrCodeUrl: member.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`https://healthclubfeni.vercel.app/verify/${newId}`)}`,
+        qrCodeUrl: member.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`${process.env.NEXT_PUBLIC_APP_URL || "https://healthclubfeni.vercel.app"}/verify/${newId}`)}`,
         totalSaved: 0,
         address: member.address || null,
         birthDate: member.birthDate ? new Date(member.birthDate) : null,

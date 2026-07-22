@@ -102,4 +102,22 @@ CREATE TABLE IF NOT EXISTS contact_messages (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
+-- Enable Row Level Security (RLS)
+ALTER TABLE members ENABLE ROW LEVEL SECURITY;
+ALTER TABLE partners ENABLE ROW LEVEL SECURITY;
+ALTER TABLE transactions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE partner_requests ENABLE ROW LEVEL SECURITY;
+ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies: Allow public read access to partners directory
+CREATE POLICY "Public partners directory is readable by everyone" 
+ON partners FOR SELECT USING (true);
+
+-- RLS Policies: Allow public creation of partner requests and contact messages
+CREATE POLICY "Anyone can submit partner requests" 
+ON partner_requests FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Anyone can send contact messages" 
+ON contact_messages FOR INSERT WITH CHECK (true);
+
 

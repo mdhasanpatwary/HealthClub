@@ -24,7 +24,8 @@ const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCa
   }
 
   // Use stored QR code URL from DB if available (avoids external API call on every render).
-  const verificationUrl = `https://healthclubfeni.vercel.app/verify/${member.id}`;
+  const appBaseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://healthclubfeni.vercel.app";
+  const verificationUrl = `${appBaseUrl}/verify/${member.id}`;
   const qrCodeSrc =
     member.qrCodeUrl ||
     `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verificationUrl)}&color=0f172a&bgcolor=ffffff`;
