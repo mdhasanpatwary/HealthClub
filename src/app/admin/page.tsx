@@ -5,12 +5,10 @@ import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatNum } from "@/lib/i18n";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import {
-  Users, Building, DollarSign, PlusCircle, Heart, Settings
-} from "lucide-react";
+import { PlusCircle, Settings } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Member, Partner, Transaction } from "@/services/db";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -34,6 +32,7 @@ import { TransactionsTab } from "./components/TransactionsTab";
 import { PartnerRequestsTab } from "./components/PartnerRequestsTab";
 import { ContactMessagesTab } from "./components/ContactMessagesTab";
 import { RenewalsTab } from "./components/RenewalsTab";
+import { AdminStatsGrid, AdminStatsData } from "./components/AdminStatsGrid";
 import { approveMemberRenewalAction, rejectMemberRenewalAction } from "@/app/actions/memberAdminActions";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -68,13 +67,28 @@ export default function AdminDashboardPage() {
 
   // States
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState({
+  const [activeTab, setActiveTab] = useState("members");
+  const [stats, setStats] = useState<AdminStatsData>({
     totalMembers: 0,
     activeMembers: 0,
+    inactiveMembers: 0,
+    foundingMembers: 0,
+    premiumMembers: 0,
+    expiringMembers: 0,
+    newMembersThisMonth: 0,
     partnerCount: 0,
+    partnerHospitals: 0,
+    partnerDiagnostics: 0,
+    partnerPharmacies: 0,
+    pendingPartnerRequests: 0,
+    pendingRenewals: 0,
+    contactMessagesCount: 0,
     totalSaved: 0,
+    thisMonthSaved: 0,
     totalTransactions: 0,
+    thisMonthTransactions: 0,
     revenue: 0,
+    topPartners: [],
   });
 
   const [members, setMembers] = useState<Member[]>([]);
@@ -555,65 +569,16 @@ export default function AdminDashboardPage() {
           <div className="flex flex-wrap gap-2 mt-1 sm:mt-0">
             <Button onClick={() => setIsTxOpen(true)} className="bg-primary hover:bg-primary-dark text-white font-semibold gap-2" size="sm">
               <PlusCircle className="h-4 w-4" />
-              <span className="hidden xs:inline">{t("admin.dashboard.discount")}</span> {t("admin.dashboard.log")}
+              {t("admin.dashboard.logMemberDiscountTitle")}
             </Button>
           </div>
         </div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="border-border shadow-sm">
-            <CardContent className="p-6 flex items-center justify-between">
-              <div>
-                <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider">{t("admin.dashboard.totalRegisteredMembers")}</p>
-                <p className="text-3xl font-extrabold text-secondary dark:text-white font-mono mt-1">{formatNum(stats.totalMembers, locale)}</p>
-                <p className="text-[10px] text-green-600 mt-1 font-semibold">{formatNum(stats.activeMembers, locale)} {t("admin.dashboard.activeMembersSuffix")}</p>
-              </div>
-              <div className="h-12 w-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                <Users className="h-6 w-6" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border shadow-sm">
-            <CardContent className="p-6 flex items-center justify-between">
-              <div>
-                <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider">{t("admin.dashboard.totalPartnerHospitals")}</p>
-                <p className="text-3xl font-extrabold text-secondary dark:text-white font-mono mt-1">{formatNum(stats.partnerCount, locale)}</p>
-                <p className="text-[10px] text-muted-foreground mt-1">{t("admin.dashboard.partnerFacilitiesList")}</p>
-              </div>
-              <div className="h-12 w-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                <Building className="h-6 w-6" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border shadow-sm">
-            <CardContent className="p-6 flex items-center justify-between">
-              <div>
-                <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider">{t("admin.dashboard.totalMedicalDiscounts")}</p>
-                <p className="text-3xl font-extrabold text-primary font-mono mt-1">৳{formatNum(stats.totalSaved, locale)}</p>
-                <p className="text-[10px] text-muted-foreground mt-1">{t("admin.dashboard.totalMemberSavings")}</p>
-              </div>
-              <div className="h-12 w-12 rounded-xl bg-primary-light text-primary flex items-center justify-center">
-                <Heart className="h-6 w-6 fill-primary/10" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border shadow-sm">
-            <CardContent className="p-6 flex items-center justify-between">
-              <div>
-                <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider">{t("admin.dashboard.estimatedRevenue")}</p>
-                <p className="text-3xl font-extrabold text-secondary dark:text-white font-mono mt-1">৳{formatNum(stats.revenue, locale)}</p>
-                <p className="text-[10px] text-muted-foreground mt-1">{t("admin.dashboard.membershipFeeSource")}</p>
-              </div>
-              <div className="h-12 w-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
-                <DollarSign className="h-6 w-6" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Admin Stats Grid & Alerts */}
+        <AdminStatsGrid
+          stats={stats}
+          onSelectTab={(tab) => setActiveTab(tab === "partnerRequests" ? "requests" : tab)}
+        />
 
         {/* Feature Settings Card */}
         <Card className="border-border shadow-sm bg-gradient-to-r from-slate-900 via-secondary to-slate-900 text-white overflow-hidden">
@@ -658,62 +623,7 @@ export default function AdminDashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Dynamic SVG Analytics Chart */}
-        <Card className="border-border shadow-md">
-          <CardHeader>
-            <CardTitle className="font-heading text-lg font-bold text-secondary">{t("admin.dashboard.monthlyGrowthAnalytics")}</CardTitle>
-            <CardDescription>{t("admin.dashboard.svgChartDesc")}</CardDescription>
-          </CardHeader>
-          <CardContent className="p-6">
-            <div className="w-full h-48 bg-muted/30 rounded-xl relative border border-border/50 flex items-end p-4">
-              <div className="w-full flex justify-around items-end h-full pt-4 relative">
-                <div className="absolute left-0 bottom-4 top-4 flex flex-col justify-between text-[10px] text-muted-foreground border-r border-border pr-2 pointer-events-none">
-                  <span>{t("admin.dashboard.oneTwenty")}</span>
-                  <span>{t("admin.dashboard.eighty")}</span>
-                  <span>{t("admin.dashboard.forty")}</span>
-                  <span>{t("admin.dashboard.zero")}</span>
-                </div>
-
-                <div className="flex flex-col items-center gap-1.5 h-full justify-end w-12 ml-8">
-                  <div className="w-6 bg-primary rounded-t-md transition-all duration-500 hover:opacity-90" style={{ height: "45%" }} />
-                  <span className="text-[10px] font-bold font-mono">Jan</span>
-                </div>
-
-                <div className="flex flex-col items-center gap-1.5 h-full justify-end w-12">
-                  <div className="w-6 bg-primary rounded-t-md transition-all duration-500 hover:opacity-90" style={{ height: "65%" }} />
-                  <span className="text-[10px] font-bold font-mono">Feb</span>
-                </div>
-
-                <div className="flex flex-col items-center gap-1.5 h-full justify-end w-12">
-                  <div className="w-6 bg-primary rounded-t-md transition-all duration-500 hover:opacity-90" style={{ height: "55%" }} />
-                  <span className="text-[10px] font-bold font-mono">Mar</span>
-                </div>
-
-                <div className="flex flex-col items-center gap-1.5 h-full justify-end w-12">
-                  <div className="w-6 bg-primary rounded-t-md transition-all duration-500 hover:opacity-90" style={{ height: "80%" }} />
-                  <span className="text-[10px] font-bold font-mono">Apr</span>
-                </div>
-
-                <div className="flex flex-col items-center gap-1.5 h-full justify-end w-12">
-                  <div className="w-6 bg-primary rounded-t-md transition-all duration-500 hover:opacity-90" style={{ height: "95%" }} />
-                  <span className="text-[10px] font-bold font-mono">May</span>
-                </div>
-
-                <div className="flex flex-col items-center gap-1.5 h-full justify-end w-12">
-                  <div className="w-6 bg-primary rounded-t-md transition-all duration-500 hover:opacity-90" style={{ height: "70%" }} />
-                  <span className="text-[10px] font-bold font-mono">Jun</span>
-                </div>
-
-                <div className="flex flex-col items-center gap-1.5 h-full justify-end w-12">
-                  <div className="w-6 bg-primary rounded-t-md transition-all duration-500 hover:opacity-90" style={{ height: "85%" }} />
-                  <span className="text-[10px] font-bold font-mono">Jul</span>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Tabs defaultValue="members" className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-6 bg-muted p-1 rounded-xl">
             <TabsTrigger value="members" className="rounded-lg text-xs font-semibold py-2">{t("admin.dashboard.membersList")}</TabsTrigger>
             <TabsTrigger value="partners" className="rounded-lg text-xs font-semibold py-2">{t("admin.dashboard.partnerHospitals")}</TabsTrigger>

@@ -99,44 +99,127 @@ export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">)
 // --- ANALYTICS ACTION ---
 
 export async function getStatsAction() {
+  const defaultStats = {
+    totalMembers: 0,
+    activeMembers: 0,
+    inactiveMembers: 0,
+    foundingMembers: 0,
+    premiumMembers: 0,
+    expiringMembers: 0,
+    newMembersThisMonth: 0,
+    partnerCount: 0,
+    partnerHospitals: 0,
+    partnerDiagnostics: 0,
+    partnerPharmacies: 0,
+    pendingPartnerRequests: 0,
+    pendingRenewals: 0,
+    contactMessagesCount: 0,
+    totalSaved: 0,
+    thisMonthSaved: 0,
+    totalTransactions: 0,
+    thisMonthTransactions: 0,
+    revenue: 0,
+    topPartners: [] as Array<{ id: string; name: string; totalSaved: number; transactionCount: number }>,
+  };
+
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") return { totalMembers: 0, activeMembers: 0, partnerCount: 0, totalSaved: 0, totalTransactions: 0, revenue: 0 };
+  if (!session || session.role !== "admin") return defaultStats;
+
   try {
-    const [totalMembers, activeMembers, partnerCount, totalTransactions, totalSavedAgg, premiumActiveCount] = await Promise.all([
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const in30Days = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+    const [
+      totalMembers,
+      activeMembers,
+      foundingMembers,
+      premiumMembers,
+      expiringMembers,
+      newMembersThisMonth,
+      partnerCount,
+      partnerHospitals,
+      partnerDiagnostics,
+      partnerPharmacies,
+      pendingPartnerRequests,
+      pendingRenewals,
+      contactMessagesCount,
+      totalTransactions,
+      thisMonthTransactions,
+      totalSavedAgg,
+      thisMonthSavedAgg,
+      topPartnerGroups,
+    ] = await Promise.all([
       prisma.member.count(),
       prisma.member.count({ where: { status: "active" } }),
-      prisma.partner.count(),
-      prisma.transaction.count(),
-      prisma.member.aggregate({
-        _sum: {
-          totalSaved: true,
-        },
-      }),
+      prisma.member.count({ where: { tier: "founding" } }),
+      prisma.member.count({ where: { tier: "premium" } }),
       prisma.member.count({
         where: {
-          tier: "premium",
           status: "active",
+          expiryDate: { gte: now, lte: in30Days },
         },
       }),
+      prisma.member.count({ where: { createdAt: { gte: startOfMonth } } }),
+      prisma.partner.count(),
+      prisma.partner.count({ where: { category: "hospital" } }),
+      prisma.partner.count({ where: { category: "diagnostic" } }),
+      prisma.partner.count({ where: { category: "pharmacy" } }),
+      prisma.partnerRequest.count({ where: { status: "pending" } }),
+      prisma.member.count({ where: { renewalStatus: "pending" } }),
+      prisma.contactMessage.count(),
+      prisma.transaction.count(),
+      prisma.transaction.count({ where: { createdAt: { gte: startOfMonth } } }),
+      prisma.member.aggregate({ _sum: { totalSaved: true } }),
+      prisma.transaction.aggregate({
+        _sum: { saved: true },
+        where: { createdAt: { gte: startOfMonth } },
+      }),
+      prisma.transaction.groupBy({
+        by: ["partnerId", "partnerName"],
+        _sum: { saved: true },
+        _count: { id: true },
+        orderBy: { _sum: { saved: "desc" } },
+        take: 3,
+      }),
     ]);
+
+    const topPartners = topPartnerGroups.map((p) => ({
+      id: p.partnerId,
+      name: p.partnerName,
+      totalSaved: p._sum.saved || 0,
+      transactionCount: p._count.id || 0,
+    }));
+
+    const activePremiumCount = await prisma.member.count({
+      where: { tier: "premium", status: "active" },
+    });
 
     return {
       totalMembers,
       activeMembers,
+      inactiveMembers: totalMembers - activeMembers,
+      foundingMembers,
+      premiumMembers,
+      expiringMembers,
+      newMembersThisMonth,
       partnerCount,
+      partnerHospitals,
+      partnerDiagnostics,
+      partnerPharmacies,
+      pendingPartnerRequests,
+      pendingRenewals,
+      contactMessagesCount,
       totalSaved: totalSavedAgg._sum.totalSaved || 0,
+      thisMonthSaved: thisMonthSavedAgg._sum.saved || 0,
       totalTransactions,
-      revenue: premiumActiveCount * 500,
+      thisMonthTransactions,
+      revenue: activePremiumCount * 500,
+      topPartners,
     };
   } catch (error) {
     console.error("Error in getStatsAction:", error);
-    return {
-      totalMembers: 0,
-      activeMembers: 0,
-      partnerCount: 0,
-      totalSaved: 0,
-      totalTransactions: 0,
-      revenue: 0,
-    };
+    return defaultStats;
   }
 }
+

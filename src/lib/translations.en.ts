@@ -57,7 +57,7 @@ export const en = {
     "admin.dashboard.inactive": "Inactive",
     "admin.dashboard.invalidBillAmount": "Please provide a valid bill amount.",
     "admin.dashboard.log": "Log",
-    "admin.dashboard.logMemberDiscountTitle": "Log Member Discount",
+    "admin.dashboard.logMemberDiscountTitle": "Add Member Transaction",
     "admin.dashboard.logoTextLabel": "Logo Short Text",
     "admin.dashboard.manageCustomersDesc": "Manage customer list, set active/inactive status.",
     "admin.dashboard.manageStatsDesc": "Manage all statistics and settings of Health Club membership.",
