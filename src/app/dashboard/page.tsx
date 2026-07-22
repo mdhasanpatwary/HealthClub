@@ -176,9 +176,10 @@ export default function DashboardPage() {
     );
 
     try {
-      const { toPng } = await import("html-to-image");
+      const { toCanvas } = await import("html-to-image");
       
-      const dataUrl = await toPng(cardRef.current, {
+      const cardElement = cardRef.current;
+      const originalCanvas = await toCanvas(cardElement, {
         cacheBust: true,
         pixelRatio: 3,
         style: {
@@ -186,6 +187,40 @@ export default function DashboardPage() {
           transformOrigin: 'top left',
         },
       });
+
+      const computedStyle = window.getComputedStyle(cardElement);
+      const borderRadiusPx = parseFloat(computedStyle.borderRadius) || 16;
+      const scale = originalCanvas.width / cardElement.offsetWidth;
+      const radius = borderRadiusPx * scale;
+
+      const outputCanvas = document.createElement("canvas");
+      outputCanvas.width = originalCanvas.width;
+      outputCanvas.height = originalCanvas.height;
+
+      const ctx = outputCanvas.getContext("2d");
+      if (ctx) {
+        ctx.beginPath();
+        if (typeof ctx.roundRect === "function") {
+          ctx.roundRect(0, 0, outputCanvas.width, outputCanvas.height, radius);
+        } else {
+          ctx.moveTo(radius, 0);
+          ctx.lineTo(outputCanvas.width - radius, 0);
+          ctx.arcTo(outputCanvas.width, 0, outputCanvas.width, radius, radius);
+          ctx.lineTo(outputCanvas.width, outputCanvas.height - radius);
+          ctx.arcTo(outputCanvas.width, outputCanvas.height, outputCanvas.width - radius, outputCanvas.height, radius);
+          ctx.lineTo(radius, outputCanvas.height);
+          ctx.arcTo(0, outputCanvas.height, 0, outputCanvas.height - radius, radius);
+          ctx.lineTo(0, radius);
+          ctx.arcTo(0, 0, radius, 0, radius);
+          ctx.closePath();
+        }
+        ctx.clip();
+        ctx.fillStyle = "#020617";
+        ctx.fillRect(0, 0, outputCanvas.width, outputCanvas.height);
+        ctx.drawImage(originalCanvas, 0, 0);
+      }
+
+      const dataUrl = outputCanvas.toDataURL("image/png");
 
       const link = document.createElement("a");
       link.download = `health-club-card-${user?.id || "member"}.png`;
