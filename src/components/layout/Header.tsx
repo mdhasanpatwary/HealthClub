@@ -186,28 +186,6 @@ export default function Header() {
 
           {/* Mobile Hamburger Toggle */}
           <div className="flex min-[992px]:hidden items-center space-x-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setLocale(locale === "bn" ? "en" : "bn")}
-            >
-              <Globe className="h-4 w-4" />
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              onClick={toggleTheme}
-              className="text-muted-foreground hover:text-foreground"
-              aria-label="Toggle Theme"
-            >
-              {theme === "light" ? (
-                <Moon className="h-4 w-4" />
-              ) : (
-                <Sun className="h-4 w-4 text-amber-400" />
-              )}
-            </Button>
-
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="inline-flex items-center justify-center rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors"
