@@ -57,7 +57,8 @@ export const initialPartners: Partner[] = [
     address: "এসএসকে রোড, ফেনী",
     discount: "১০% ফ্ল্যাট ডিসকাউন্ট",
     phone: "০৯৬১৩৭৮৭৮০১",
-    logoText: "Popular"
+    logoText: "Popular",
+    imageUrl: "https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=600&auto=format&fit=crop"
   },
   {
     id: "p2",
@@ -66,7 +67,8 @@ export const initialPartners: Partner[] = [
     address: "মিজান রোড, ফেনী",
     discount: "১০% ফ্ল্যাট ডিসকাউন্ট",
     phone: "১০৬০৬",
-    logoText: "Labaid"
+    logoText: "Labaid",
+    imageUrl: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?q=80&w=600&auto=format&fit=crop"
   },
   {
     id: "p3",
@@ -75,7 +77,8 @@ export const initialPartners: Partner[] = [
     address: "ট্রাঙ্ক রোড, ফেনী",
     discount: "১০% ফ্ল্যাট ডিসকাউন্ট",
     phone: "০২-৯৩৪৩৫১৬",
-    logoText: "Lazz"
+    logoText: "Lazz",
+    imageUrl: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?q=80&w=600&auto=format&fit=crop"
   },
   {
     id: "p5",
@@ -84,7 +87,8 @@ export const initialPartners: Partner[] = [
     address: "মহিপাল, ফেনী",
     discount: "১০% ফ্ল্যাট ডিসকাউন্ট",
     phone: "০৯৬১০০০৯৬১০",
-    logoText: "Ibn Sina"
+    logoText: "Ibn Sina",
+    imageUrl: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=600&auto=format&fit=crop"
   },
   {
     id: "p6",
@@ -93,7 +97,8 @@ export const initialPartners: Partner[] = [
     address: "গ্র্যান্ড ট্রাঙ্ক রোড, ফেনী",
     discount: "১০% ফ্ল্যাট ডিসকাউন্ট",
     phone: "১০৬১৬",
-    logoText: "Square"
+    logoText: "Square",
+    imageUrl: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=600&auto=format&fit=crop"
   }
 ];
 

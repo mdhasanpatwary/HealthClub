@@ -72,6 +72,8 @@ export default function Header() {
     { name: t("layout.header.contact"), path: "/contact" },
   ];
 
+  const mobileNavLinks = navLinks.filter((link) => !link.path.includes("#"));
+
   const isActive = (path: string) => {
     if (path === "/") return pathname === "/";
     if (path.startsWith("/#")) return false;
@@ -110,7 +112,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-0.5">
+          <nav className="hidden min-[992px]:flex space-x-0.5">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
@@ -130,7 +132,7 @@ export default function Header() {
           </nav>
 
           {/* Desktop Buttons */}
-          <div className="hidden md:flex items-center space-x-2">
+          <div className="hidden min-[992px]:flex items-center space-x-2">
             {/* Language Switcher Button */}
             <Button
               variant="ghost"
@@ -183,7 +185,7 @@ export default function Header() {
           </div>
 
           {/* Mobile Hamburger Toggle */}
-          <div className="flex md:hidden items-center space-x-1">
+          <div className="flex min-[992px]:hidden items-center space-x-1">
             <Button
               variant="ghost"
               size="sm"
@@ -235,7 +237,7 @@ export default function Header() {
       {/* Mobile Menu — fixed full-screen overlay */}
       <div
         id="mobile-menu"
-        className={`fixed inset-0 z-50 md:hidden flex flex-col bg-background/98 backdrop-blur-xl transition-all duration-300 ease-in-out ${
+        className={`fixed inset-0 z-50 min-[992px]:hidden flex flex-col bg-background/98 backdrop-blur-xl transition-all duration-300 ease-in-out ${
           isOpen
             ? "opacity-100 translate-y-0 pointer-events-auto"
             : "opacity-0 -translate-y-4 pointer-events-none"
@@ -272,7 +274,7 @@ export default function Header() {
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto">
           <div className="px-3 pt-3 pb-1 space-y-0.5">
-            {navLinks.map((link) => (
+            {mobileNavLinks.map((link) => (
               <Link
                 key={link.path}
                 href={link.path}

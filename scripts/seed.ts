@@ -29,7 +29,8 @@ async function main() {
       phone: "০৯৬১৩৭৮৭৮০১",
       email: "popular@healthclub.com",
       password: hashedPw,
-      logoText: "Popular"
+      logoText: "Popular",
+      imageUrl: "https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=600&auto=format&fit=crop"
     }
   });
 
@@ -43,7 +44,8 @@ async function main() {
       phone: "১০৬০৬",
       email: "labaid@healthclub.com",
       password: hashedPw,
-      logoText: "Labaid"
+      logoText: "Labaid",
+      imageUrl: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?q=80&w=600&auto=format&fit=crop"
     }
   });
 
@@ -57,7 +59,8 @@ async function main() {
       phone: "০২-৯৩৪৩৫১৬",
       email: "lazz@healthclub.com",
       password: hashedPw,
-      logoText: "Lazz"
+      logoText: "Lazz",
+      imageUrl: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?q=80&w=600&auto=format&fit=crop"
     }
   });
 
@@ -71,7 +74,8 @@ async function main() {
       phone: "০৯৬১০০০৯৬১০",
       email: "ibnesina@healthclub.com",
       password: hashedPw,
-      logoText: "Ibn Sina"
+      logoText: "Ibn Sina",
+      imageUrl: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=600&auto=format&fit=crop"
     }
   });
 
@@ -85,7 +89,8 @@ async function main() {
       phone: "১০৬১৬",
       email: "square@healthclub.com",
       password: hashedPw,
-      logoText: "Square"
+      logoText: "Square",
+      imageUrl: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=600&auto=format&fit=crop"
     }
   });
 
