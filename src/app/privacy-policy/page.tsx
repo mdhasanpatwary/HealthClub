@@ -1,12 +1,16 @@
 import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
+import JsonLd from "@/components/seo/JsonLd";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   return {
     title: tServer(locale, "pages.privacyPolicy.metaTitle"),
-    description: tServer(locale, "pages.privacyPolicy.metaDesc")
+    description: tServer(locale, "pages.privacyPolicy.metaDesc"),
+    alternates: {
+      canonical: "https://healthclubfeni.vercel.app/privacy-policy",
+    },
   };
 }
 
@@ -15,8 +19,30 @@ export default async function PrivacyPolicyPage() {
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const t = (key: string) => tServer(locale, key);
 
+  const jsonLdData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": locale === "en" ? "Home" : "হোম",
+          "item": "https://healthclubfeni.vercel.app"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": locale === "en" ? "Privacy Policy" : "প্রাইভেসী পলিসি",
+          "item": "https://healthclubfeni.vercel.app/privacy-policy"
+        }
+      ]
+    }
+  ];
+
   return (
     <div className="bg-background min-h-screen py-12">
+      <JsonLd data={jsonLdData} />
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 space-y-8 text-secondary/90 leading-relaxed text-sm sm:text-base">
         <h1 className="font-heading text-3xl sm:text-4xl font-bold text-secondary dark:text-white border-b border-border pb-4">
           {t("pages.privacyPolicy.title")}

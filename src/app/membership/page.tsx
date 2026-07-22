@@ -3,15 +3,32 @@ import { Check, Star, ShieldCheck, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
+import JsonLd from "@/components/seo/JsonLd";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
+  const isEn = locale === "en";
+
   return {
-    title: locale === "en" ? "Membership Plans - Health Club" : "মেম্বারশিপ প্ল্যান - হেলথ ক্লাব",
-    description: locale === "en"
-      ? "Check out our membership plans to find the right one for you and start saving on medical bills."
-      : "আমাদের মেম্বারশিপ প্ল্যান দেখে আপনার জন্য উপযুক্ত প্ল্যানটি বেছে নিন এবং চিকিৎসা ব্যয় সাশ্রয় করা শুরু করুন।"
+    title: isEn
+      ? "Membership Plans & Pricing - Health Club"
+      : "মেম্বারশিপ প্ল্যান ও ফ্রি রেজিস্ট্রেশন - হেলথ ক্লাব",
+    description: isEn
+      ? "Compare Founding Member (Free 1 year) and Premium Member plans to get instant discounts on medical bills across partner hospitals."
+      : "ফাউন্ডিং মেম্বার (১ বছর সম্পূর্ণ ফ্রি) ও প্রিমিয়াম মেম্বারশিপের সুবিধা দেখে নিন এবং আপনার জন্য সেরা প্ল্যানটি বেছে নিন।",
+    alternates: {
+      canonical: "https://healthclubfeni.vercel.app/membership",
+    },
+    openGraph: {
+      title: isEn
+        ? "Health Club Membership Plans & Benefits"
+        : "মেম্বারশিপ প্ল্যান - হেলথ ক্লাব",
+      description: isEn
+        ? "Get 1 Year Free Founding Membership for first 100 users."
+        : "প্রথম ১০০ জন সদস্য পাচ্ছেন ১ বছরের ফাউন্ডিং মেম্বারশিপ সম্পূর্ণ ফ্রি।",
+      url: "https://healthclubfeni.vercel.app/membership",
+    },
   };
 }
 
@@ -34,8 +51,58 @@ export default async function MembershipPage() {
     { title: "১ বছর প্রতিষ্ঠাতা স্ট্যাটাস", desc: "প্রথম ১০০ ফাউন্ডিং মেম্বারদের জন্য মেম্বারশিপ ১ বছরের জন্য সম্পূর্ণ ফ্রি।", gradient: "from-amber-500 to-orange-600" }
   ];
 
+  const jsonLdData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": locale === "en" ? "Home" : "হোম",
+          "item": "https://healthclubfeni.vercel.app"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": locale === "en" ? "Membership" : "মেম্বারশিপ",
+          "item": "https://healthclubfeni.vercel.app/membership"
+        }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "Health Club Membership Card",
+      "description": "Digital health discount membership card offering 10% to 50% discount at partner hospitals, diagnostic centers, and pharmacies.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Health Club"
+      },
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Founding Member (First 100 Users)",
+          "price": "0",
+          "priceCurrency": "BDT",
+          "availability": "https://schema.org/InStock",
+          "url": "https://healthclubfeni.vercel.app/membership"
+        },
+        {
+          "@type": "Offer",
+          "name": "Premium Member Annual Plan",
+          "price": "500",
+          "priceCurrency": "BDT",
+          "availability": "https://schema.org/InStock",
+          "url": "https://healthclubfeni.vercel.app/membership"
+        }
+      ]
+    }
+  ];
+
   return (
     <div className="bg-background min-h-screen">
+      <JsonLd data={jsonLdData} />
 
       {/* Page Hero */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary-light/50 via-emerald-50/20 to-background dark:from-slate-950 dark:via-slate-900 dark:to-background py-16 sm:py-24 border-b border-border/60">

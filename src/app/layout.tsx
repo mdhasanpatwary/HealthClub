@@ -10,6 +10,7 @@ import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Locale } from "@/lib/i18n";
 import { en } from "@/lib/translations.en";
 import { bn } from "@/lib/translations.bn";
+import JsonLd from "@/components/seo/JsonLd";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -24,25 +25,74 @@ const notoSansBengali = Noto_Sans_Bengali({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://healthclubfeni.vercel.app"),
-  title: "হেলথ ক্লাব - স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী",
-  description: "হেলথ ক্লাবের সদস্য হয়ে নির্ধারিত পার্টনার হাসপাতাল ও ডায়াগনস্টিক সেন্টারে বিশেষ ডিসকাউন্ট এবং সাশ্রয়ী মূল্যে উন্নত স্বাস্থ্যসেবা উপভোগ করুন।",
-  keywords: ["হেলথ ক্লাব", "স্বাস্থ্য কার্ড", "হাসপাতাল ডিসকাউন্ট", "মেডিকেল ডিসকাউন্ট কার্ড", "সাশ্রয়ী চিকিৎসা"],
+  title: {
+    default: "হেলথ ক্লাব - স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী | Health Club",
+    template: "%s | হেলথ ক্লাব",
+  },
+  description: "হেলথ ক্লাবের ডিজিটাল মেম্বারশিপ কার্ড ব্যবহার করে ফেনী ও দেশের শীর্ষ হাসপাতাল, ল্যাব ও ফার্মেসিতে সর্বোচ্চ ডিসকাউন্ট উপভোগ করুন।",
+  keywords: [
+    "হেলথ ক্লাব",
+    "Health Club",
+    "স্বাস্থ্য কার্ড",
+    "মেডিকেল ডিসকাউন্ট কার্ড",
+    "হাসপাতাল ডিসকাউন্ট",
+    "ডায়াগনস্টিক ডিসকাউন্ট ফেনী",
+    "স্বাস্থ্য মেম্বারশিপ",
+    "সাশ্রয়ী চিকিৎসা",
+  ],
+  authors: [{ name: "Health Club Team", url: "https://healthclubfeni.vercel.app" }],
+  creator: "Health Club",
+  publisher: "Health Club",
+  formatDetection: {
+    email: true,
+    address: true,
+    telephone: true,
+  },
   icons: {
     icon: "/images/member-card-logo.png",
     shortcut: "/images/member-card-logo.png",
     apple: "/images/member-card-logo.png",
   },
+  alternates: {
+    canonical: "/",
+    languages: {
+      "bn-BD": "/",
+      "en-US": "/",
+    },
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   openGraph: {
     title: "হেলথ ক্লাব - স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী",
     description: "নির্ধারিত হাসপাতাল ও ল্যাবে ডিসকাউন্ট পেতে আজই হেলথ ক্লাবের ডিজিটাল মেম্বার কার্ড সংগ্রহ করুন।",
-    type: "website",
+    url: "https://healthclubfeni.vercel.app",
+    siteName: "হেলথ ক্লাব (Health Club)",
     locale: "bn_BD",
+    type: "website",
+    images: [
+      {
+        url: "/images/member-card-logo.png",
+        width: 800,
+        height: 600,
+        alt: "Health Club Digital Membership Card Logo",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "হেলথ ক্লাব - স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী",
     description: "নির্ধারিত হাসপাতাল ও ল্যাবে ডিসকাউন্ট পেতে আজই হেলথ ক্লাবের ডিজিটাল মেম্বার কার্ড সংগ্রহ করুন।",
-  }
+    images: ["/images/member-card-logo.png"],
+  },
 };
 
 export default async function RootLayout({
@@ -56,31 +106,43 @@ export default async function RootLayout({
   // Serialize only the active locale's dictionary — halves the client JS bundle
   const initialDict = locale === "en" ? en : bn;
 
+  const globalJsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "হেলথ ক্লাব",
+      "alternateName": ["Health Club", "Health Club Feni"],
+      "url": "https://healthclubfeni.vercel.app",
+      "logo": "https://healthclubfeni.vercel.app/images/member-card-logo.png",
+      "description": "স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী - একটি প্রিমিয়াম স্বাস্থ্য মেম্বারশিপ সার্ভিস।",
+      "telephone": "+8801783721411",
+      "email": "healthclubfeni@gmail.com",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Feni",
+        "addressCountry": "BD"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+8801783721411",
+        "contactType": "customer service",
+        "areaServed": "BD",
+        "availableLanguage": ["Bengali", "English"]
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "হেলথ ক্লাব (Health Club)",
+      "url": "https://healthclubfeni.vercel.app",
+      "inLanguage": ["bn-BD", "en-US"]
+    }
+  ];
+
   return (
     <html lang={locale} className={`${theme} ${inter.variable} ${notoSansBengali.variable}`}>
       <body className="font-sans antialiased bg-background text-foreground min-h-screen flex flex-col">
-        {/* JSON-LD Structured Data for Healthcare Membership Organization */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "হেলথ ক্লাব",
-              "alternateName": "Health Club",
-              "url": "https://healthclubfeni.vercel.app",
-              "logo": "https://healthclubfeni.vercel.app/images/member-card-logo.png",
-              "description": "স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী - একটি প্রিমিয়াম স্বাস্থ্য মেম্বারশিপ সার্ভিস।",
-              "contactPoint": {
-                "@type": "ContactPoint",
-                "telephone": "+8801783721411",
-                "contactType": "customer service",
-                "areaServed": "BD",
-                "availableLanguage": ["Bengali", "English"]
-              }
-            })
-          }}
-        />
+        <JsonLd data={globalJsonLd} />
         <ThemeProvider initialTheme={theme}>
           <LanguageProvider initialLocale={locale} initialDict={initialDict}>
             <Header />

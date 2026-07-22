@@ -1,0 +1,71 @@
+# Health Club (হেলথ ক্লাব) — Complete Knowledge Base & GEO Documentation
+
+## 1. Overview & Organization Details
+- **Organization Name**: Health Club (হেলথ ক্লাব)
+- **Tagline**: স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী (Making Healthcare Easy & Affordable)
+- **Official Website**: https://healthclubfeni.vercel.app
+- **HQ Location**: Feni, Chittagong Division, Bangladesh
+- **Contact Hotline**: +880 1783-721411
+- **Official Email**: healthclubfeni@gmail.com
+- **Supported Languages**: Bengali (বাংলা), English
+
+Health Club is a technology-driven health membership organization that negotiates corporate-level group discounts with top private hospitals, diagnostic centers, and pharmacies, passing 100% of the savings directly to enrolled members and their families.
+
+---
+
+## 2. Key Membership Features & Card Technology
+
+### Digital Membership Card
+Each member receives a dynamic digital membership card featuring:
+- Unique Member ID (e.g., `HC-2026-F982A`)
+- Enrolled Tier (`Founding` or `Premium`)
+- Real-time Verification Status (`Active`, `Pending`, `Inactive`)
+- Security QR Code containing an encrypted verification link (`/verify?id=...`)
+
+### How Verification Works at Hospitals
+1. Patient arrives at a partner hospital, clinic, or diagnostic center.
+2. Patient displays their Health Club digital card on their mobile screen.
+3. The partner desk agent opens the Health Club Partner Verification Portal or scans the QR code using any smartphone scanner.
+4. The system validates the active membership status and total family discount eligibility.
+5. The discounted bill is generated instantly before payment.
+
+---
+
+## 3. Partner Healthcare Network Category & Discounts
+
+### Partner Hospitals & Diagnostic Centers
+Health Club collaborates with premier hospitals and labs in Feni and nearby districts:
+- **Diagnostic & Pathology Tests**: Flat 10% to 30% discount on blood tests, ultrasonography (USG), X-ray, ECG, echocardiography, CT scan, and MRI.
+- **Hospital Bed & Cabin Charges**: 10% to 15% discount on daily room rent and hospital stay charges.
+- **Model Pharmacies**: 5% to 10% discount on essential prescription medicines.
+
+---
+
+## 4. FAQ & Direct Answers (AEO Engine Reference)
+
+### Q1: What is Health Club? (হেলথ ক্লাব কি?)
+**Answer**: Health Club is a membership card service in Bangladesh providing instant discounts on medical bills, hospital stays, diagnostic lab tests, and doctor consultations for members and their family members.
+
+### Q2: How much does the Health Club membership card cost?
+**Answer**: Founding Membership is **FREE (৳0 for 1 year)** for the first 100 registering members. The regular Premium Membership is ৳500 per year.
+
+### Q3: How do I claim a discount at partner hospitals?
+**Answer**: Simply show your Health Club digital membership card on your mobile phone at the hospital billing desk. The desk staff will scan your card's QR code and apply the discount instantly to your bill.
+
+### Q4: Does the card cover my entire family?
+**Answer**: Yes, one Health Club membership card provides health discount coverage for the member, spouse, children, and parents.
+
+### Q5: How can a hospital or clinic become a Health Club partner?
+**Answer**: Healthcare providers can submit an application via `https://healthclubfeni.vercel.app/become-partner` or call hotline `+8801783721411`.
+
+---
+
+## 5. Website Architecture & Canonical Sitemap Routes
+- Home Page: `https://healthclubfeni.vercel.app/`
+- About Us: `https://healthclubfeni.vercel.app/about-us`
+- Membership Plans: `https://healthclubfeni.vercel.app/membership`
+- Partner Hospitals Directory: `https://healthclubfeni.vercel.app/partner-hospitals`
+- Apply as Partner: `https://healthclubfeni.vercel.app/become-partner`
+- Contact Us: `https://healthclubfeni.vercel.app/contact`
+- Privacy Policy: `https://healthclubfeni.vercel.app/privacy-policy`
+- Terms & Conditions: `https://healthclubfeni.vercel.app/terms-conditions`

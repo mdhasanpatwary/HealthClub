@@ -10,6 +10,7 @@ import { getHomepageStats, getHomepagePartners } from "@/lib/homepageData";
 import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
 import type { Member } from "@/services/db";
+import JsonLd from "@/components/seo/JsonLd";
 
 import { LandingHero } from "@/components/landing/LandingHero";
 import { LandingStats } from "@/components/landing/LandingStats";
@@ -17,6 +18,34 @@ import { LandingHowItWorks } from "@/components/landing/LandingHowItWorks";
 import { LandingBenefits } from "@/components/landing/LandingBenefits";
 import { LandingPricing } from "@/components/landing/LandingPricing";
 import { LandingComparison } from "@/components/landing/LandingComparison";
+
+export async function generateMetadata() {
+  const cookieStore = await cookies();
+  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
+  const isEn = locale === "en";
+
+  return {
+    title: isEn
+      ? "Health Club - Healthcare Discount Membership Platform in Bangladesh"
+      : "হেলথ ক্লাব - স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী | ডিজিটাল স্বাস্থ্য মেম্বারশিপ",
+    description: isEn
+      ? "Get instant discounts up to 50% on hospital admission, medical tests, labs, and pharmacies with Health Club digital membership card in Feni and Bangladesh."
+      : "হেলথ ক্লাবের ডিজিটাল মেম্বারশিপ কার্ড দিয়ে পার্টনার হাসপাতাল, ডায়াগনস্টিক ল্যাব ও মডেল ফার্মেসিতে পান আকর্ষণীয় ডিসকাউন্ট ও সাশ্রয়ী চিকিৎসা।",
+    alternates: {
+      canonical: "https://healthclubfeni.vercel.app",
+    },
+    openGraph: {
+      title: isEn
+        ? "Health Club - Save Up to 50% on Healthcare & Hospital Bills"
+        : "হেলথ ক্লাব - চিকিৎসা ব্যয়ে ৫০% পর্যন্ত ডিসকাউন্ট পান",
+      description: isEn
+        ? "Join Health Club to get digital discount card for hospitals, labs, and medicines."
+        : "নির্ধারিত হাসপাতাল ও ল্যাবে ডিসকাউন্ট পেতে আজই হেলথ ক্লাবের মেম্বারশিপ সংগ্রহ করুন।",
+      url: "https://healthclubfeni.vercel.app",
+      type: "website",
+    },
+  };
+}
 
 export default async function Home() {
   const cookieStore = await cookies();
@@ -46,8 +75,65 @@ export default async function Home() {
     address: locale === "en" ? "Mohipal, Feni" : "মহিপাল, ফেনী",
   };
 
+  // Structured FAQ JSON-LD for AEO / Answer Engine snippet optimization
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": t("faq.q1"),
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": t("faq.a1")
+        }
+      },
+      {
+        "@type": "Question",
+        "name": t("faq.q2"),
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": t("faq.a2")
+        }
+      },
+      {
+        "@type": "Question",
+        "name": t("faq.q3"),
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": t("faq.a3")
+        }
+      },
+      {
+        "@type": "Question",
+        "name": t("faq.q4"),
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": t("faq.a4")
+        }
+      },
+      {
+        "@type": "Question",
+        "name": t("faq.q5"),
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": t("faq.a5")
+        }
+      },
+      {
+        "@type": "Question",
+        "name": t("faq.q6"),
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": t("faq.a6")
+        }
+      }
+    ]
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
+      <JsonLd data={faqJsonLd} />
 
       {/* 1. HERO SECTION */}
       <LandingHero
@@ -153,7 +239,7 @@ export default async function Home() {
       </section>
 
       {/* 10. FAQ SECTION */}
-      <section className="py-20 sm:py-28 bg-background">
+      <section id="faq" className="py-20 sm:py-28 bg-background">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="text-center space-y-3 max-w-xl mx-auto">
             <span className="section-label">{t("page.questionsAnswers")}</span>

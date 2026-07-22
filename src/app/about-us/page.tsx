@@ -1,15 +1,28 @@
 import { Heart, ShieldCheck, Users, Award, Target, Zap } from "lucide-react";
 import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
+import JsonLd from "@/components/seo/JsonLd";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
+  const isEn = locale === "en";
+
   return {
-    title: locale === "en" ? "About Us - Health Club" : "আমাদের সম্পর্কে - হেলথ ক্লাব",
-    description: locale === "en"
-      ? "Learn about Health Club's mission, our team, how we work, and how we make healthcare affordable."
-      : "হেলথ ক্লাবের লক্ষ্য, আমাদের টিম, কাজের ধরন এবং কীভাবে আমরা চিকিৎসা খরচ কমিয়ে এনে দেশব্যাপী স্বাস্থ্যসেবা সহজলভ্য করছি তা জানুন।"
+    title: isEn ? "About Us - Health Club Mission & Story" : "আমাদের সম্পর্কে - হেলথ ক্লাব ভিশন ও মিশন",
+    description: isEn
+      ? "Learn about Health Club's mission to make healthcare affordable in Bangladesh through digital membership card discounts at top partner hospitals."
+      : "হেলথ ক্লাবের লক্ষ্য, আমাদের ভিশন এবং কীভাবে আমরা চিকিৎসা খরচ কমিয়ে এনে দেশব্যাপী স্বাস্থ্যসেবা সহজলভ্য করছি তা জানুন।",
+    alternates: {
+      canonical: "https://healthclubfeni.vercel.app/about-us",
+    },
+    openGraph: {
+      title: isEn ? "About Health Club - Making Healthcare Affordable" : "আমাদের সম্পর্কে - হেলথ ক্লাব",
+      description: isEn
+        ? "Discover how Health Club brings medical discounts to middle-class families."
+        : "চিকিৎসা ব্যয় সাশ্রয়ে হেলথ ক্লাবের উদ্যোগ ও লক্ষ্য সম্পর্কে বিস্তারিত জানুন।",
+      url: "https://healthclubfeni.vercel.app/about-us",
+    },
   };
 }
 
@@ -42,8 +55,37 @@ export default async function AboutUsPage() {
     },
   ];
 
+  const jsonLdData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": locale === "en" ? "Home" : "হোম",
+          "item": "https://healthclubfeni.vercel.app"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": locale === "en" ? "About Us" : "আমাদের সম্পর্কে",
+          "item": "https://healthclubfeni.vercel.app/about-us"
+        }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      "name": locale === "en" ? "About Health Club" : "হেলথ ক্লাব সম্পর্কে",
+      "url": "https://healthclubfeni.vercel.app/about-us",
+      "description": "Health Club is a healthcare membership service in Bangladesh dedicated to reducing medical expenses through partner hospital discounts."
+    }
+  ];
+
   return (
     <div className="bg-background min-h-screen">
+      <JsonLd data={jsonLdData} />
 
       {/* Page Hero */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary-light/50 via-emerald-50/20 to-background dark:from-slate-950 dark:via-slate-900 dark:to-background py-16 sm:py-24 border-b border-border/60">

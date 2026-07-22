@@ -1,0 +1,39 @@
+# Health Club (হেলথ ক্লাব)
+
+> Health Club is a premium healthcare discount membership platform based in Feni, Bangladesh. It makes healthcare affordable by enabling members and their families to receive flat 10% to 50% discounts on hospital bills, diagnostic lab tests, and doctor consultation fees across a network of contracted hospitals, clinics, diagnostic centers, and model pharmacies.
+
+## Core Information & Services
+- **Website**: https://healthclubfeni.vercel.app
+- **Primary Service Area**: Feni & Greater Chittagong Division, Bangladesh
+- **Target Audience**: Middle-class families, students, senior citizens, and healthcare seekers in Bangladesh.
+- **Main Offerings**:
+  - **Digital Membership Card**: Instantly accessible on mobile with a scannable QR code for instant hospital discount verification.
+  - **Hospital & Surgery Discounts**: Up to 10%-20% discount on hospital admission and bed charges at contracted medical centers.
+  - **Diagnostic Test Discounts**: Flat 10%-30% discount on pathological tests, imaging, X-rays, MRI, CT scans, and blood tests.
+  - **Pharmacy Discounts**: 5% to 10% discount on medicines at partner model pharmacies.
+  - **Free Health Camps**: Periodic free blood pressure, diabetes, and eye checkup camps for members.
+
+## Membership Pricing Tiers
+- **Founding Member (ফাউন্ডিং মেম্বার)**:
+  - **Price**: FREE (৳0 for 1 Year) for the first 100 registered members.
+  - **Benefits**: Full family coverage, instant digital card, 10% discount at all partner facilities.
+- **Premium Member (প্রিমিয়াম মেম্বার)**:
+  - **Price**: ৳500 / Year
+  - **Benefits**: Annual subscription, family coverage, priority support, full partner network access.
+
+## Verification & Usage Flow
+1. Member registers on the Health Club website and receives a unique Member ID (e.g. `HC-2026-F982A`) and digital card.
+2. At partner hospitals or labs, the member presents the digital membership card on their phone.
+3. Hospital desk staff scan the card's QR code or search the Member ID in the Health Club Partner Verification Portal.
+4. The discount is applied immediately to the final billing statement.
+
+## Contact & Hotline
+- **Customer Support & Hotline**: +880 1783-721411
+- **Email**: healthclubfeni@gmail.com
+- **Address**: Feni, Bangladesh
+
+## Full Documentation & Knowledge Base
+- Full Details: [llms-full.txt](https://healthclubfeni.vercel.app/llms-full.txt)
+- Partner Hospitals Directory: [Partner Hospitals](https://healthclubfeni.vercel.app/partner-hospitals)
+- Membership Plans: [Membership](https://healthclubfeni.vercel.app/membership)
+- About Us: [About Us](https://healthclubfeni.vercel.app/about-us)
