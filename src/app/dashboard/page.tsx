@@ -73,6 +73,7 @@ export default function DashboardPage() {
   const [isAddTxOpen, setIsAddTxOpen] = useState(false);
   const [newTxPartnerId, setNewTxPartnerId] = useState("");
   const [newTxAmount, setNewTxAmount] = useState("");
+  const [newTxDiscountPercent, setNewTxDiscountPercent] = useState("10");
   const [addTxSubmitting, setAddTxSubmitting] = useState(false);
 
   // Load data on mount
@@ -134,11 +135,11 @@ export default function DashboardPage() {
       return;
     }
 
+    const discountRate = (Number(newTxDiscountPercent) || 10) / 100;
+    const saved = Math.round(billAmount * discountRate);
+
     setAddTxSubmitting(true);
     try {
-      const discountRate = parseDiscountPercentage(partner.discount);
-      const saved = Math.round(billAmount * discountRate);
-
       await dbStore.addTransaction({
         memberId: user.id,
         memberName: user.name,
@@ -151,6 +152,7 @@ export default function DashboardPage() {
       toast.success(t("dashboard.history.txAddedSuccess"));
       setNewTxPartnerId("");
       setNewTxAmount("");
+      setNewTxDiscountPercent("10");
       setIsAddTxOpen(false);
 
       // Refresh transactions and user stats
@@ -607,7 +609,7 @@ export default function DashboardPage() {
               {/* Transactions History Tab */}
               <TabsContent value="history" className="mt-4">
                 <Card className="border-border/60 shadow-sm">
-                  <CardHeader className="border-b border-border/60 bg-muted/30 dark:bg-slate-900/40 flex flex-row items-center justify-between gap-2">
+                  <CardHeader className="border-b border-border/60 bg-muted/30 dark:bg-slate-900/40 flex flex-row items-center justify-between gap-2 flex-wrap">
                     <div>
                       <CardTitle className="font-heading text-base font-bold text-secondary dark:text-white flex items-center gap-2">
                         <History className="h-4 w-4 text-primary" />
@@ -621,7 +623,7 @@ export default function DashboardPage() {
                       <Button
                         onClick={() => setIsAddTxOpen(true)}
                         size="sm"
-                        className="bg-primary hover:bg-primary-dark text-white text-xs font-semibold gap-1.5 shrink-0"
+                        className="bg-primary hover:bg-primary-dark text-white text-xs font-semibold gap-1.5 shrink-0 w-full sm:w-auto"
                       >
                         <PlusCircle className="h-4 w-4" />
                         <span>{t("dashboard.history.addTxButton")}</span>
@@ -798,7 +800,18 @@ export default function DashboardPage() {
                 <select
                   required
                   value={newTxPartnerId}
-                  onChange={(e) => setNewTxPartnerId(e.target.value)}
+                  onChange={(e) => {
+                    const selectedId = e.target.value;
+                    setNewTxPartnerId(selectedId);
+                    const selectedPartner = partners.find((p) => p.id === selectedId);
+                    if (selectedPartner) {
+                      const rate = parseDiscountPercentage(selectedPartner.discount);
+                      const percentVal = Math.round(rate * 100);
+                      setNewTxDiscountPercent(percentVal > 0 ? String(percentVal) : "10");
+                    } else {
+                      setNewTxDiscountPercent("10");
+                    }
+                  }}
                   className="w-full h-10 rounded-xl border border-border/60 bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
                 >
                   <option value="">{t("admin.dashboard.selectPartnerLabel")}</option>
@@ -825,16 +838,29 @@ export default function DashboardPage() {
                 />
               </div>
 
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-secondary dark:text-white">
+                  {locale === "bn" ? "ডিসকাউন্ট (%) *" : "Discount (%) *"}
+                </label>
+                <Input
+                  type="number"
+                  required
+                  min="0"
+                  max="100"
+                  placeholder="10"
+                  value={newTxDiscountPercent}
+                  onChange={(e) => setNewTxDiscountPercent(e.target.value)}
+                  className="border-border/60 rounded-xl focus:border-primary/40"
+                />
+              </div>
+
               {newTxPartnerId && newTxAmount && Number(newTxAmount) > 0 && (
                 <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl p-3 text-xs text-emerald-700 dark:text-emerald-400 font-medium">
                   {t("dashboard.history.calculatedSavings").replace(
                     "{saved}",
                     formatNum(
                       Math.round(
-                        Number(newTxAmount) *
-                          parseDiscountPercentage(
-                            partners.find((p) => p.id === newTxPartnerId)?.discount || ""
-                          )
+                        Number(newTxAmount) * ((Number(newTxDiscountPercent) || 0) / 100)
                       ),
                       locale
                     )

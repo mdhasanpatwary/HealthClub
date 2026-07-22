@@ -55,7 +55,8 @@ export const ModelName = {
   Partner: 'Partner',
   Transaction: 'Transaction',
   PartnerRequest: 'PartnerRequest',
-  ContactMessage: 'ContactMessage'
+  ContactMessage: 'ContactMessage',
+  SystemSetting: 'SystemSetting'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -164,6 +165,15 @@ export const ContactMessageScalarFieldEnum = {
 } as const
 
 export type ContactMessageScalarFieldEnum = (typeof ContactMessageScalarFieldEnum)[keyof typeof ContactMessageScalarFieldEnum]
+
+
+export const SystemSettingScalarFieldEnum = {
+  key: 'key',
+  value: 'value',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SystemSettingScalarFieldEnum = (typeof SystemSettingScalarFieldEnum)[keyof typeof SystemSettingScalarFieldEnum]
 
 
 export const SortOrder = {

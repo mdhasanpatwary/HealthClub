@@ -42,3 +42,8 @@ export type PartnerRequest = Prisma.PartnerRequestModel
  * 
  */
 export type ContactMessage = Prisma.ContactMessageModel
+/**
+ * Model SystemSetting
+ * 
+ */
+export type SystemSetting = Prisma.SystemSettingModel

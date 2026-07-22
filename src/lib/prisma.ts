@@ -20,8 +20,8 @@ if (!globalForPrisma.pool) {
   });
 }
 
-if (!globalForPrisma.prisma) {
-  const adapter = new PrismaPg(globalForPrisma.pool);
+const adapter = new PrismaPg(globalForPrisma.pool);
+if (!globalForPrisma.prisma || !("systemSetting" in globalForPrisma.prisma)) {
   globalForPrisma.prisma = new PrismaClient({
     adapter,
     log: process.env.NODE_ENV === "production" ? ["error"] : ["error", "warn"],
@@ -29,3 +29,4 @@ if (!globalForPrisma.prisma) {
 }
 
 export const prisma = globalForPrisma.prisma;
+
