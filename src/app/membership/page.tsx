@@ -75,7 +75,7 @@ export default async function MembershipPage() {
                 <div className="h-10 w-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-3">
                   <Star className="h-5 w-5 text-primary fill-primary/20" />
                 </div>
-                <h3 className="font-heading text-xl font-bold text-secondary dark:text-white">Founding Member</h3>
+                <h3 className="font-heading text-xl font-bold text-secondary dark:text-white">{t("membership.page.foundingMember")}</h3>
                 <p className="text-xs text-muted-foreground mt-1">{t("membership.page.theFirst100MembersWill")}</p>
               </div>
               <div className="flex items-baseline gap-2 text-secondary dark:text-white">
@@ -115,7 +115,7 @@ export default async function MembershipPage() {
                 <div className="h-10 w-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-3">
                   <ShieldCheck className="h-5 w-5 text-slate-600 dark:text-slate-300" />
                 </div>
-                <h3 className="font-heading text-xl font-bold text-secondary dark:text-white">Premium Membership</h3>
+                <h3 className="font-heading text-xl font-bold text-secondary dark:text-white">{t("membership.page.premiumMembership")}</h3>
                 <p className="text-xs text-muted-foreground mt-1">{t("membership.page.annualCardAndBenefitsFor")}</p>
               </div>
               <div className="flex items-baseline gap-2 text-secondary dark:text-white">

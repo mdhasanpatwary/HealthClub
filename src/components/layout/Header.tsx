@@ -42,7 +42,11 @@ export default function Header() {
   }, [pathname]);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      // Guard: only update state when value actually changes to avoid excess re-renders
+      setScrolled((prev) => (prev !== isScrolled ? isScrolled : prev));
+    };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -98,10 +102,12 @@ export default function Header() {
             onClick={() => setIsOpen(false)}
           >
             <div className="relative shrink-0">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src="/images/member-card-logo.png"
                 alt="Health Club Logo"
+                width={36}
+                height={36}
+                priority
                 className="h-8 w-8 sm:h-9 sm:w-9 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.3)] transition-transform duration-300 group-hover:scale-110"
               />
             </div>
@@ -229,10 +235,11 @@ export default function Header() {
             className="flex items-center space-x-2.5"
             onClick={() => setIsOpen(false)}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src="/images/member-card-logo.png"
               alt="Health Club Logo"
+              width={32}
+              height={32}
               className="h-8 w-8 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.3)] shrink-0"
             />
             <span className="font-heading text-xl font-bold tracking-tight text-secondary dark:text-white">

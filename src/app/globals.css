@@ -155,8 +155,14 @@ html[lang="en"] {
     }
   html {
     @apply font-sans;
-    scroll-behavior: smooth;
     }
+}
+
+/* Respect user's motion preference — only enable smooth scroll when they haven't opted out */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* ─── Mobile Optimizations ─────────────────────────────────── */
@@ -190,8 +196,15 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Smooth touch scrolling */
-* {
+/* touch-action: manipulation eliminates the 300ms tap delay.
+   Scoped to interactive elements only — preserves pinch-to-zoom on content areas. */
+a,
+button,
+[role="button"],
+input,
+select,
+textarea,
+label {
   touch-action: manipulation;
 }
 

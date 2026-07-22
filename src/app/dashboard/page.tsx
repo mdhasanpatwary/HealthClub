@@ -2,51 +2,20 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { 
-  Heart, CreditCard, History, LayoutDashboard, Save, CheckCircle2,
-  TrendingUp, Wallet, ReceiptText, AlertTriangle, Clock,
-  Download, PlusCircle
-} from "lucide-react";
+import { History, LayoutDashboard } from "lucide-react";
 import { toast } from "sonner";
 import { dbStore } from "@/services/dbStore";
 import { Member, Partner, Transaction } from "@/services/db";
-import MemberCard from "@/components/ui/MemberCard";
-import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { ImageUpload } from "@/components/ui/ImageUpload";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useLanguage } from "@/components/layout/LanguageProvider";
-import { formatNum } from "@/lib/i18n";
 
-function parseDiscountPercentage(discountStr: string): number {
-  const banglaToEnglishMap: { [key: string]: string } = {
-    "০": "0", "১": "1", "২": "2", "৩": "3", "৪": "4",
-    "৫": "5", "৬": "6", "৭": "7", "৮": "8", "৯": "9"
-  };
-
-  let converted = discountStr;
-  for (const [bangla, english] of Object.entries(banglaToEnglishMap)) {
-    converted = converted.replaceAll(bangla, english);
-  }
-
-  const match = converted.match(/(\d+(?:\.\d+)?)\s*%/);
-  if (match) {
-    return parseFloat(match[1]) / 100;
-  }
-
-  const fallbackMatch = converted.match(/(\d+(?:\.\d+)?)/);
-  if (fallbackMatch) {
-    const num = parseFloat(fallbackMatch[1]);
-    return num > 1 ? num / 100 : num;
-  }
-
-  return 0.10;
-}
+import { DashboardSkeleton } from "./components/DashboardSkeleton";
+import { DashboardWelcomeHeader } from "./components/DashboardWelcomeHeader";
+import { DashboardStatsCards } from "./components/DashboardStatsCards";
+import { DashboardCardSection } from "./components/DashboardCardSection";
+import { DashboardHistoryTab } from "./components/DashboardHistoryTab";
+import { DashboardProfileTab } from "./components/DashboardProfileTab";
+import { AddMemberTxDialog } from "./components/AddMemberTxDialog";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -63,11 +32,12 @@ export default function DashboardPage() {
   const [profileBirthDate, setProfileBirthDate] = useState("");
   const [profileProfession, setProfileProfession] = useState("");
   const [profilePictureUrl, setProfilePictureUrl] = useState("");
-  const [saveSuccess, setSaveSuccess] = useState(false);
+
   const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
   const [isExpired, setIsExpired] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
-  // Self Transaction Entry States
+  // Add Member Transaction States
   const [allowMemberTx, setAllowMemberTx] = useState(false);
   const [partners, setPartners] = useState<Partner[]>([]);
   const [isAddTxOpen, setIsAddTxOpen] = useState(false);
@@ -76,15 +46,20 @@ export default function DashboardPage() {
   const [newTxDiscountPercent, setNewTxDiscountPercent] = useState("10");
   const [addTxSubmitting, setAddTxSubmitting] = useState(false);
 
-  // Load data on mount
+  // Load data on mount — all independent requests fire in parallel
   useEffect(() => {
     const currentUser = dbStore.getCurrentUser();
     if (!currentUser) {
       router.push("/login");
       return;
     }
-    
-    dbStore.getMemberById(currentUser.id).then((freshUser) => {
+
+    Promise.all([
+      dbStore.getMemberById(currentUser.id),
+      dbStore.getTransactions(currentUser.id),
+      dbStore.isMemberTxAllowed(),
+      dbStore.getPartners(),
+    ]).then(([freshUser, userTx, allowed, pts]) => {
       const activeUser = freshUser || currentUser;
       setUser(activeUser);
       setProfileName(activeUser.name);
@@ -104,17 +79,9 @@ export default function DashboardPage() {
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       setDaysRemaining(diffDays);
       setIsExpired(diffDays < 0);
-    });
 
-    dbStore.getTransactions(currentUser.id).then((userTx) => {
       setTransactions(userTx);
-    });
-
-    dbStore.isMemberTxAllowed().then((allowed) => {
       setAllowMemberTx(allowed);
-    });
-
-    dbStore.getPartners().then((pts) => {
       setPartners(pts);
     });
   }, [router]);
@@ -161,8 +128,8 @@ export default function DashboardPage() {
       const freshUser = await dbStore.getMemberById(user.id);
       if (freshUser) setUser(freshUser);
     } catch (err) {
-      console.error(err);
-      toast.error(t("dashboard.history.txAddFailed"));
+      console.error("Error adding member tx:", err);
+      toast.error(t("admin.dashboard.txLogFailed"));
     } finally {
       setAddTxSubmitting(false);
     }
@@ -172,19 +139,19 @@ export default function DashboardPage() {
     if (!cardRef.current) return;
 
     const loadingToast = toast.loading(
-      locale === "bn" ? "কার্ড ডাউনলোড হচ্ছে..." : "Downloading membership card..."
+      locale === "bn" ? "কার্ড ডাউনলোড হচ্ছে..." : "Downloading card..."
     );
 
     try {
       const { toCanvas } = await import("html-to-image");
-      
+
       const cardElement = cardRef.current;
       const originalCanvas = await toCanvas(cardElement, {
         cacheBust: true,
         pixelRatio: 3,
         style: {
-          transform: 'scale(1)',
-          transformOrigin: 'top left',
+          transform: "scale(1)",
+          transformOrigin: "top left",
         },
       });
 
@@ -267,7 +234,7 @@ export default function DashboardPage() {
           address: profileAddress,
           birthDate: profileBirthDate,
           profession: profileProfession,
-          profilePictureUrl: profilePictureUrl
+          profilePictureUrl: profilePictureUrl,
         };
         dbStore.setCurrentUser(updatedUser);
         setUser(updatedUser);
@@ -284,348 +251,44 @@ export default function DashboardPage() {
   };
 
   if (!user) {
-    return (
-      <div className="bg-muted/30 dark:bg-slate-950/50 min-h-screen py-6 sm:py-10 animate-pulse">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
-          {/* Welcome Banner Skeleton */}
-          <div className="relative overflow-hidden bg-slate-100 dark:bg-slate-900 rounded-2xl p-6 sm:p-8 border border-border/60 shadow-sm">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div className="flex items-center gap-4 w-full">
-                <Skeleton className="h-14 w-14 rounded-2xl shrink-0" />
-                <div className="space-y-2 w-full max-w-[250px]">
-                  <Skeleton className="h-3 w-24" />
-                  <Skeleton className="h-6 w-48" />
-                  <Skeleton className="h-3 w-40" />
-                </div>
-              </div>
-              <Skeleton className="h-8 w-32 rounded-full shrink-0" />
-            </div>
-          </div>
-
-          {/* Overview Stats Cards Skeletons */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <Card key={i} className="border-0 shadow-sm overflow-hidden bg-background dark:bg-slate-900">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-2 w-2/3">
-                      <Skeleton className="h-3 w-20" />
-                      <Skeleton className="h-8 w-28" />
-                      <Skeleton className="h-3 w-24" />
-                    </div>
-                    <Skeleton className="h-12 w-12 rounded-2xl" />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          {/* Main Dashboard Panel Skeleton */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Left Column: Digital Card Skeleton */}
-            <div className="lg:col-span-5 space-y-4">
-              <Card className="border-border/60 shadow-md overflow-hidden dark:bg-slate-900">
-                <CardHeader className="border-b border-border/60 pb-4 bg-muted/30 dark:bg-slate-900/60 space-y-2">
-                  <Skeleton className="h-5 w-40" />
-                  <Skeleton className="h-3 w-full" />
-                </CardHeader>
-                <CardContent className="p-5 flex flex-col items-center">
-                  {/* Card shape skeleton */}
-                  <Skeleton className="w-full max-w-md aspect-[1.586/1] rounded-2xl" />
-                  <Skeleton className="h-3 w-48 mt-5" />
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Right Column: Dynamic Tabs Skeleton */}
-            <div className="lg:col-span-7 space-y-4">
-              <Skeleton className="h-12 w-full rounded-xl" />
-              <Card className="border-border/60 shadow-sm dark:bg-slate-900">
-                <CardHeader className="border-b border-border/60 bg-muted/30 dark:bg-slate-900/40 space-y-2">
-                  <Skeleton className="h-5 w-32" />
-                  <Skeleton className="h-3 w-56" />
-                </CardHeader>
-                <CardContent className="p-6 space-y-4">
-                  {Array.from({ length: 4 }).map((_, i) => (
-                    <div key={i} className="flex justify-between items-center py-2 border-b border-border last:border-0">
-                      <div className="space-y-1">
-                        <Skeleton className="h-4 w-36" />
-                        <Skeleton className="h-3 w-20" />
-                      </div>
-                      <div className="flex gap-4">
-                        <Skeleton className="h-4 w-12" />
-                        <Skeleton className="h-4 w-12" />
-                      </div>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   const totalSaved = user.totalSaved || 0;
-  const totalSpent = transactions.reduce((sum, t) => sum + t.amount, 0);
-
-  const statusConfig = {
-    active: {
-      dot: "bg-emerald-500 animate-pulse",
-      badge: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-400 dark:border-emerald-800",
-      label: t("dashboard.status.active"),
-    },
-    pending_payment: {
-      dot: "bg-rose-500 animate-pulse",
-      badge: "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/50 dark:text-rose-400 dark:border-rose-800",
-      label: t("dashboard.status.pendingPayment"),
-    },
-    pending_approval: {
-      dot: "bg-amber-500 animate-bounce",
-      badge: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/50 dark:text-amber-400 dark:border-amber-800",
-      label: t("dashboard.status.pendingApproval"),
-    },
-    inactive: {
-      dot: "bg-slate-400",
-      badge: "bg-slate-50 text-slate-600 border-slate-200 dark:bg-slate-900 dark:text-slate-400 dark:border-slate-800",
-      label: t("dashboard.status.inactive"),
-    },
-  };
-
-  const status = statusConfig[user.status as keyof typeof statusConfig] || statusConfig.inactive;
+  const totalSpent = transactions.reduce((acc, tx) => acc + tx.amount, 0);
 
   return (
     <div className="bg-muted/30 dark:bg-slate-950/50 min-h-screen py-6 sm:py-10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
 
-        {/* ── Welcome Banner ── */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-secondary via-slate-800 to-slate-900 dark:from-slate-900 dark:via-slate-800 dark:to-secondary rounded-2xl p-6 sm:p-8 border border-slate-700/50 shadow-xl">
-          {/* Background dot pattern */}
-          <div
-            className="absolute inset-0 opacity-[0.04]"
-            style={{
-              backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)",
-              backgroundSize: "20px 20px",
-            }}
-          />
-          {/* Top green accent line */}
-          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent" />
+        {/* Welcome Banner */}
+        <DashboardWelcomeHeader
+          user={user}
+          t={t}
+          locale={locale}
+          daysRemaining={daysRemaining}
+          isExpired={isExpired}
+        />
 
-          <div className="relative flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div className="flex items-center gap-4">
-              {/* Avatar */}
-              <div className="relative shrink-0">
-                {user.profilePictureUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={user.profilePictureUrl}
-                    alt={user.name}
-                    className="h-14 w-14 rounded-2xl object-cover object-left-top border-2 border-white/20 shadow-lg"
-                  />
-                ) : (
-                  <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-primary to-emerald-600 flex items-center justify-center text-white font-bold text-xl font-heading shadow-lg border-2 border-white/20">
-                    {user.name ? user.name.charAt(0).toUpperCase() : "U"}
-                  </div>
-                )}
-                <span className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-emerald-500 border-2 border-slate-900 shadow" />
-              </div>
+        {/* Overview Stats Cards */}
+        <DashboardStatsCards
+          totalSaved={totalSaved}
+          totalSpent={totalSpent}
+          transactions={transactions}
+          t={t}
+          locale={locale}
+        />
 
-              <div>
-                <p className="text-xs text-slate-400 font-medium mb-0.5 flex items-center gap-1.5">
-                  <Heart className="h-3 w-3 fill-primary text-primary" />
-                  {t("dashboard.welcome.subtitle")}
-                </p>
-                <h1 className="font-heading text-xl sm:text-2xl font-bold text-white">
-                  {t("dashboard.welcome.title").replace("{name}", user.name)}
-                </h1>
-                <p className="text-xs text-slate-400 mt-1">
-                  {t("dashboard.welcome.memberId")}{" "}
-                  <span className="font-mono font-semibold text-primary">{user.id}</span>
-                  <span className="mx-1.5 text-slate-600">·</span>
-                  <span className="capitalize font-semibold text-slate-300">
-                    {t("dashboard.welcome.memberTier").replace("{tier}", user.tier)}
-                  </span>
-                </p>
-              </div>
-            </div>
-
-            {/* Status badge */}
-            <div className="flex items-center gap-2">
-              <span className={`h-2 w-2 rounded-full ${status.dot}`} />
-              <span className={`text-xs font-bold px-3.5 py-1.5 rounded-full border ${status.badge}`}>
-                {status.label}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Expiry / Renewal Banners */}
-        {user.renewalStatus === "pending" ? (
-          <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-4 flex items-center gap-3.5 text-blue-700 dark:text-blue-400 animate-in fade-in duration-200">
-            <Clock className="h-5 w-5 shrink-0 animate-pulse text-blue-500" />
-            <div className="text-sm font-semibold flex-1">
-              {t("dashboard.renewal.pendingPaymentApproval")}
-            </div>
-          </div>
-        ) : isExpired ? (
-          <div className="bg-destructive/10 border border-destructive/20 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-destructive animate-in fade-in duration-200">
-            <div className="flex items-center gap-3.5">
-              <AlertTriangle className="h-5 w-5 shrink-0 text-rose-500" />
-              <div className="text-sm font-bold">
-                {t("dashboard.renewal.expired")}
-              </div>
-            </div>
-            <Link href="/dashboard/renew">
-              <Button variant="destructive" size="sm" className="shrink-0">
-                {t("dashboard.renewal.renewButton")}
-              </Button>
-            </Link>
-          </div>
-        ) : daysRemaining !== null && daysRemaining <= 30 && daysRemaining >= 0 ? (
-          <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-amber-700 dark:text-amber-500 animate-in fade-in duration-200">
-            <div className="flex items-center gap-3.5">
-              <AlertTriangle className="h-5 w-5 shrink-0 text-amber-500" />
-              <div className="text-sm font-bold">
-                {t("dashboard.renewal.warning").replace("{daysRemaining}", formatNum(daysRemaining, locale))}
-              </div>
-            </div>
-            <Link href="/dashboard/renew">
-              <Button size="sm" className="bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700 shrink-0">
-                {t("dashboard.renewal.renewButtonShort")}
-              </Button>
-            </Link>
-          </div>
-        ) : null}
-
-        {/* ── Overview Stats Cards ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
-
-          <Card className="border-0 shadow-sm overflow-hidden bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-950/40 dark:to-slate-900">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-xs text-emerald-600/70 dark:text-emerald-400/70 uppercase font-mono tracking-wider font-bold">{t("dashboard.stats.totalSavings")}</p>
-                  <p className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono tabular-nums mt-2">৳{totalSaved.toLocaleString(locale === "en" ? "en-US" : "bn-BD")}</p>
-                  <p className="text-[11px] text-emerald-600/60 dark:text-emerald-400/60 mt-1">{t("dashboard.stats.totalSavingsDesc")}</p>
-                </div>
-                <div className="h-12 w-12 rounded-2xl bg-emerald-500/15 dark:bg-emerald-500/20 border border-emerald-500/20 flex items-center justify-center">
-                  <TrendingUp className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 shadow-sm overflow-hidden bg-gradient-to-br from-blue-50 to-white dark:from-blue-950/40 dark:to-slate-900">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-xs text-blue-600/70 dark:text-blue-400/70 uppercase font-mono tracking-wider font-bold">{t("dashboard.stats.totalSpent")}</p>
-                  <p className="text-3xl font-extrabold text-blue-600 dark:text-blue-400 font-mono tabular-nums mt-2">৳{totalSpent.toLocaleString(locale === "en" ? "en-US" : "bn-BD")}</p>
-                  <p className="text-[11px] text-blue-600/60 dark:text-blue-400/60 mt-1">{t("dashboard.stats.totalSpentDesc")}</p>
-                </div>
-                <div className="h-12 w-12 rounded-2xl bg-blue-500/15 dark:bg-blue-500/20 border border-blue-500/20 flex items-center justify-center">
-                  <Wallet className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 shadow-sm overflow-hidden bg-gradient-to-br from-violet-50 to-white dark:from-violet-950/40 dark:to-slate-900">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-xs text-violet-600/70 dark:text-violet-400/70 uppercase font-mono tracking-wider font-bold">{t("dashboard.stats.totalTransactions")}</p>
-                  <p className="text-3xl font-extrabold text-violet-600 dark:text-violet-400 font-mono tabular-nums mt-2">
-                    {formatNum(transactions.length, locale)} {t("dashboard.stats.transactionCountSuffix")}
-                  </p>
-                  <p className="text-[11px] text-violet-600/60 dark:text-violet-400/60 mt-1">{t("dashboard.stats.totalTransactionsDesc")}</p>
-                </div>
-                <div className="h-12 w-12 rounded-2xl bg-violet-500/15 dark:bg-violet-500/20 border border-violet-500/20 flex items-center justify-center">
-                  <ReceiptText className="h-6 w-6 text-violet-600 dark:text-violet-400" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-        </div>
-
-        {/* ── Main Dashboard Panel ── */}
+        {/* Main Dashboard Panel */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-          {/* Left Column: Digital Card */}
-          <div className="lg:col-span-5 space-y-4">
-            <Card className="border-border/60 shadow-md overflow-hidden">
-              <CardHeader className="border-b border-border/60 pb-4 bg-muted/30 dark:bg-slate-900/60">
-                <CardTitle className="font-heading text-base font-bold text-secondary dark:text-white flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-                    <CreditCard className="h-4 w-4 text-primary" />
-                  </div>
-                  {t("dashboard.card.title")}
-                </CardTitle>
-                <CardDescription>
-                  {t("dashboard.card.description")}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-3 sm:p-5">
-                {user.status === "active" ? (
-                  <div className="space-y-4">
-                    <div className="w-full flex justify-center pb-1">
-                      <MemberCard ref={cardRef} member={user} />
-                    </div>
-                    <Button
-                      onClick={handleDownloadCard}
-                      variant="outline"
-                      className="w-full text-xs active:scale-[0.98]"
-                    >
-                      <Download className="h-4 w-4 text-primary" />
-                      {t("dashboard.card.printButton")}
-                    </Button>
-                  </div>
-                ) : user.status === "pending_payment" ? (
-                  <div className="relative w-full max-w-md mx-auto aspect-[1.586/1] rounded-2xl p-6 overflow-hidden border border-rose-500/20 bg-gradient-to-br from-slate-900 to-slate-950 flex flex-col justify-center items-center text-center space-y-3 shadow-lg">
-                    <div className="absolute inset-0 bg-background/50 backdrop-blur-[3px]" />
-                    <div className="z-10 bg-rose-500/10 p-2.5 rounded-full border border-rose-500/20">
-                      <CreditCard className="h-6 w-6 text-rose-500 animate-pulse" />
-                    </div>
-                    <h4 className="z-10 font-heading text-white font-bold text-sm">{t("dashboard.card.payFee")}</h4>
-                    <p className="z-10 text-[11px] text-slate-300 max-w-xs leading-relaxed">
-                      {t("dashboard.card.payFeeDesc")}
-                    </p>
-                    <Link href={`/register/payment?memberId=${user.id}`} className="z-10">
-                      <Button size="xs" className="bg-[#e2125d] hover:bg-[#c20f4f] text-white shadow-md">
-                        {t("dashboard.card.payButton")}
-                      </Button>
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="relative w-full max-w-md mx-auto aspect-[1.586/1] rounded-2xl p-6 overflow-hidden border border-amber-500/20 bg-gradient-to-br from-slate-900 to-slate-950 flex flex-col justify-center items-center text-center space-y-2.5 shadow-lg">
-                    <div className="absolute inset-0 bg-background/50 backdrop-blur-[3px]" />
-                    <div className="z-10 bg-amber-500/10 p-2 rounded-full border border-amber-500/20">
-                      <svg className="h-6 w-6 text-amber-500 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m0 0v2m0-2h2m-2 0H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </div>
-                    <h4 className="z-10 font-heading text-white font-bold text-sm">{t("dashboard.card.pendingApproval")}</h4>
-                    <p className="z-10 text-[11px] text-slate-300 max-w-xs leading-relaxed">
-                      {t("dashboard.card.pendingApprovalDesc")}
-                    </p>
-                    {user.bkashSender && user.bkashTxnId && (
-                      <div className="z-10 bg-white/5 border border-white/10 rounded-lg p-2 text-left w-full text-[10px] text-slate-300 font-mono mt-1 space-y-0.5">
-                        <p><span className="text-slate-400">{t("dashboard.card.bkashNumber")}</span> {user.bkashSender}</p>
-                        <p><span className="text-slate-400">{t("dashboard.card.txnId")}</span> {user.bkashTxnId}</p>
-                      </div>
-                    )}
-                  </div>
-                )}
-                <div className="text-center mt-5">
-                  <p className="text-xs text-muted-foreground">
-                    {t("dashboard.card.qrScannerNote")}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          {/* Digital Card Section */}
+          <DashboardCardSection
+            user={user}
+            cardRef={cardRef}
+            handleDownloadCard={handleDownloadCard}
+            t={t}
+          />
 
           {/* Right Column: Dynamic Tabs */}
           <div className="lg:col-span-7">
@@ -643,167 +306,37 @@ export default function DashboardPage() {
 
               {/* Transactions History Tab */}
               <TabsContent value="history" className="mt-4">
-                <Card className="border-border/60 shadow-sm">
-                  <CardHeader className="border-b border-border/60 bg-muted/30 dark:bg-slate-900/40 flex flex-row items-center justify-between gap-2 flex-wrap">
-                    <div>
-                      <CardTitle className="font-heading text-base font-bold text-secondary dark:text-white flex items-center gap-2">
-                        <History className="h-4 w-4 text-primary" />
-                        {t("dashboard.history.title")}
-                      </CardTitle>
-                      <CardDescription>
-                        {t("dashboard.history.description")}
-                      </CardDescription>
-                    </div>
-                    {allowMemberTx && user.status === "active" && (
-                      <Button
-                        onClick={() => setIsAddTxOpen(true)}
-                        size="sm"
-                        className="bg-primary hover:bg-primary-dark text-white text-xs font-semibold gap-1.5 shrink-0 w-full sm:w-auto"
-                      >
-                        <PlusCircle className="h-4 w-4" />
-                        <span>{t("dashboard.history.addTxButton")}</span>
-                      </Button>
-                    )}
-                  </CardHeader>
-                  <CardContent className="p-0">
-                    {transactions.length > 0 ? (
-                      <div className="overflow-x-auto">
-                        <Table>
-                          <TableHeader>
-                            <TableRow className="bg-muted/40 dark:bg-slate-900/40">
-                              <TableHead className="font-semibold text-secondary dark:text-white whitespace-nowrap">{t("dashboard.history.table.hospital")}</TableHead>
-                              <TableHead className="font-semibold text-secondary dark:text-white whitespace-nowrap">{t("dashboard.history.table.date")}</TableHead>
-                              <TableHead className="font-semibold text-secondary dark:text-white text-right whitespace-nowrap">{t("dashboard.history.table.bill")}</TableHead>
-                              <TableHead className="font-semibold text-primary text-right whitespace-nowrap">{t("dashboard.history.table.saved")}</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody className="text-xs sm:text-sm">
-                            {transactions.map((tx) => (
-                              <TableRow key={tx.id} className="hover:bg-muted/40 dark:hover:bg-slate-800/40 transition-colors">
-                                <TableCell className="font-medium text-secondary dark:text-white">{tx.partnerName}</TableCell>
-                                <TableCell className="text-muted-foreground">{tx.date}</TableCell>
-                                <TableCell className="text-right font-mono">৳{tx.amount.toLocaleString(locale === "en" ? "en-US" : "bn-BD")}</TableCell>
-                                <TableCell className="text-right font-mono text-emerald-600 dark:text-emerald-400 font-bold">৳{tx.saved.toLocaleString(locale === "en" ? "en-US" : "bn-BD")}</TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </div>
-                    ) : (
-                      <div className="text-center py-16 text-muted-foreground">
-                        <ReceiptText className="h-10 w-10 mx-auto mb-3 text-muted-foreground/40" />
-                        <p className="text-sm font-medium">{t("dashboard.history.noRecords")}</p>
-                        <p className="text-xs mt-1">{t("dashboard.history.noRecordsDesc")}</p>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+                <DashboardHistoryTab
+                  transactions={transactions}
+                  allowMemberTx={allowMemberTx}
+                  user={user}
+                  setIsAddTxOpen={setIsAddTxOpen}
+                  t={t}
+                  locale={locale}
+                />
               </TabsContent>
 
               {/* Profile Settings Tab */}
               <TabsContent value="profile" className="mt-4">
-                <Card className="border-border/60 shadow-sm">
-                  <CardHeader className="border-b border-border/60 bg-muted/30 dark:bg-slate-900/40">
-                    <CardTitle className="font-heading text-base font-bold text-secondary dark:text-white flex items-center gap-2">
-                      <LayoutDashboard className="h-4 w-4 text-primary" />
-                      {t("dashboard.profile.title")}
-                    </CardTitle>
-                    <CardDescription>
-                      {t("dashboard.profile.description")}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="p-6">
-                    {saveSuccess && (
-                      <div className="mb-4 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 text-xs p-3 rounded-xl border border-emerald-200 dark:border-emerald-800 flex items-center gap-2">
-                        <CheckCircle2 className="h-4 w-4 shrink-0" />
-                        <span>{t("dashboard.profile.success")}</span>
-                      </div>
-                    )}
-
-                    <form onSubmit={handleUpdateProfile} className="space-y-5">
-
-                      <ImageUpload
-                        value={profilePictureUrl}
-                        onChange={setProfilePictureUrl}
-                        label={t("dashboard.profile.picture")}
-                      />
-
-                      <div className="space-y-2">
-                        <label className="text-xs font-semibold text-secondary dark:text-white">{t("dashboard.profile.name")}</label>
-                        <Input
-                          type="text"
-                          required
-                          value={profileName}
-                          onChange={(e) => setProfileName(e.target.value)}
-                          className="border-border/60 rounded-xl focus:border-primary/40"
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <label className="text-xs font-semibold text-secondary dark:text-white">{t("dashboard.profile.phone")}</label>
-                          <Input
-                            type="tel"
-                            required
-                            value={profilePhone}
-                            onChange={(e) => setProfilePhone(e.target.value)}
-                            className="border-border/60 rounded-xl focus:border-primary/40"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-xs font-semibold text-secondary dark:text-white">{t("dashboard.profile.email")}</label>
-                          <Input
-                            type="email"
-                            value={profileEmail}
-                            onChange={(e) => setProfileEmail(e.target.value)}
-                            className="border-border/60 rounded-xl focus:border-primary/40"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <label className="text-xs font-semibold text-secondary dark:text-white">{t("dashboard.profile.address")}</label>
-                        <Input
-                          type="text"
-                          value={profileAddress}
-                          onChange={(e) => setProfileAddress(e.target.value)}
-                          placeholder={t("dashboard.profile.addressPlaceholder")}
-                          className="border-border/60 rounded-xl focus:border-primary/40"
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <label className="text-xs font-semibold text-secondary dark:text-white">{t("dashboard.profile.dob")}</label>
-                          <Input
-                            type="date"
-                            value={profileBirthDate}
-                            onChange={(e) => setProfileBirthDate(e.target.value)}
-                            className="border-border/60 rounded-xl focus:border-primary/40"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-xs font-semibold text-secondary dark:text-white">{t("dashboard.profile.profession")}</label>
-                          <Input
-                            type="text"
-                            value={profileProfession}
-                            onChange={(e) => setProfileProfession(e.target.value)}
-                            placeholder={t("dashboard.profile.professionPlaceholder")}
-                            className="border-border/60 rounded-xl focus:border-primary/40"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="pt-1">
-                        <Button type="submit" size="lg" className="w-full">
-                          <Save className="h-4 w-4" />
-                          {t("dashboard.profile.saveButton")}
-                        </Button>
-                      </div>
-
-                    </form>
-                  </CardContent>
-                </Card>
+                <DashboardProfileTab
+                  saveSuccess={saveSuccess}
+                  handleUpdateProfile={handleUpdateProfile}
+                  profilePictureUrl={profilePictureUrl}
+                  setProfilePictureUrl={setProfilePictureUrl}
+                  profileName={profileName}
+                  setProfileName={setProfileName}
+                  profilePhone={profilePhone}
+                  setProfilePhone={setProfilePhone}
+                  profileEmail={profileEmail}
+                  setProfileEmail={setProfileEmail}
+                  profileAddress={profileAddress}
+                  setProfileAddress={setProfileAddress}
+                  profileBirthDate={profileBirthDate}
+                  setProfileBirthDate={setProfileBirthDate}
+                  profileProfession={profileProfession}
+                  setProfileProfession={setProfileProfession}
+                  t={t}
+                />
               </TabsContent>
 
             </Tabs>
@@ -815,104 +348,21 @@ export default function DashboardPage() {
 
       {/* Member Add Transaction Dialog */}
       {allowMemberTx && (
-        <Dialog open={isAddTxOpen} onOpenChange={setIsAddTxOpen}>
-          <DialogContent className="border-border bg-background max-w-md">
-            <DialogHeader>
-              <DialogTitle className="font-heading font-bold text-secondary dark:text-white flex items-center gap-2">
-                <PlusCircle className="h-5 w-5 text-primary" />
-                {t("dashboard.history.addTxTitle")}
-              </DialogTitle>
-              <DialogDescription>
-                {t("dashboard.history.addTxDesc")}
-              </DialogDescription>
-            </DialogHeader>
-
-            <form onSubmit={handleAddMemberTransaction} className="space-y-4 pt-2">
-              <div className="space-y-2">
-                <label className="text-xs font-semibold text-secondary dark:text-white">
-                  {t("dashboard.history.selectPartner")} *
-                </label>
-                <select
-                  required
-                  value={newTxPartnerId}
-                  onChange={(e) => {
-                    const selectedId = e.target.value;
-                    setNewTxPartnerId(selectedId);
-                    const selectedPartner = partners.find((p) => p.id === selectedId);
-                    if (selectedPartner) {
-                      const rate = parseDiscountPercentage(selectedPartner.discount);
-                      const percentVal = Math.round(rate * 100);
-                      setNewTxDiscountPercent(percentVal > 0 ? String(percentVal) : "10");
-                    } else {
-                      setNewTxDiscountPercent("10");
-                    }
-                  }}
-                  className="w-full h-10 rounded-xl border border-border/60 bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
-                >
-                  <option value="">{t("admin.dashboard.selectPartnerLabel")}</option>
-                  {partners.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name} ({p.discount})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-xs font-semibold text-secondary dark:text-white">
-                  {t("dashboard.history.billAmount")} *
-                </label>
-                <Input
-                  type="number"
-                  required
-                  min="1"
-                  placeholder="e.g. 2000"
-                  value={newTxAmount}
-                  onChange={(e) => setNewTxAmount(e.target.value)}
-                  className="border-border/60 rounded-xl focus:border-primary/40"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-xs font-semibold text-secondary dark:text-white">
-                  {locale === "bn" ? "ডিসকাউন্ট (%) *" : "Discount (%) *"}
-                </label>
-                <Input
-                  type="number"
-                  required
-                  min="0"
-                  max="100"
-                  placeholder="10"
-                  value={newTxDiscountPercent}
-                  onChange={(e) => setNewTxDiscountPercent(e.target.value)}
-                  className="border-border/60 rounded-xl focus:border-primary/40"
-                />
-              </div>
-
-              {newTxPartnerId && newTxAmount && Number(newTxAmount) > 0 && (
-                <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl p-3 text-xs text-emerald-700 dark:text-emerald-400 font-medium">
-                  {t("dashboard.history.calculatedSavings").replace(
-                    "{saved}",
-                    formatNum(
-                      Math.round(
-                        Number(newTxAmount) * ((Number(newTxDiscountPercent) || 0) / 100)
-                      ),
-                      locale
-                    )
-                  )}
-                </div>
-              )}
-
-              <Button
-                type="submit"
-                disabled={addTxSubmitting}
-                className="w-full bg-primary hover:bg-primary-dark text-white font-semibold"
-              >
-                {addTxSubmitting ? (locale === "bn" ? "সংরক্ষণ হচ্ছে..." : "Saving...") : t("dashboard.history.submitTx")}
-              </Button>
-            </form>
-          </DialogContent>
-        </Dialog>
+        <AddMemberTxDialog
+          isAddTxOpen={isAddTxOpen}
+          setIsAddTxOpen={setIsAddTxOpen}
+          handleAddMemberTransaction={handleAddMemberTransaction}
+          newTxPartnerId={newTxPartnerId}
+          setNewTxPartnerId={setNewTxPartnerId}
+          newTxAmount={newTxAmount}
+          setNewTxAmount={setNewTxAmount}
+          newTxDiscountPercent={newTxDiscountPercent}
+          setNewTxDiscountPercent={setNewTxDiscountPercent}
+          partners={partners}
+          addTxSubmitting={addTxSubmitting}
+          t={t}
+          locale={locale}
+        />
       )}
     </div>
   );

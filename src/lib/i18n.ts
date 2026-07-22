@@ -1,5 +1,7 @@
 import { toBanglaNums } from "./utils";
-import { translations, TranslationKey } from "./translations";
+import { en } from "./translations.en";
+import { bn } from "./translations.bn";
+import type { TranslationKey } from "./translations.en";
 
 export type Locale = "bn" | "en";
 
@@ -12,7 +14,7 @@ export function tServer(locale: Locale, key: TranslationKey | string, fallbackEn
     return locale === "en" ? fallbackEn : (key as string);
   }
   
-  const dict = translations[locale as keyof typeof translations] as Record<string, string>;
+  const dict = (locale === "en" ? en : bn) as Record<string, string>;
   return dict?.[key] || key;
 }
 

@@ -61,332 +61,262 @@ export async function addMemberAction(
       },
     });
 
-    if (m.email) {
-      sendOtpEmail(m.email, verificationCode, m.name).catch((err) => {
-        console.error("Failed to send registration OTP email:", err);
+    if (member.email) {
+      sendOtpEmail(member.email, verificationCode, member.name).catch((err) => {
+        console.error("Failed to send signup OTP email:", err);
       });
     }
 
-    return stripSensitive({
-      id: m.id,
-      name: m.name,
-      phone: m.phone,
-      email: m.email || "",
-      tier: m.tier as Member["tier"],
-      status: m.status as Member["status"],
+    return {
+      ...m,
+      email: m.email || undefined,
       joinedDate: formatDate(m.joinedDate),
       expiryDate: formatDate(m.expiryDate),
-      qrCodeUrl: m.qrCodeUrl || undefined,
-      totalSaved: m.totalSaved,
-      address: m.address || "",
-      birthDate: m.birthDate ? formatDate(m.birthDate) : "",
-      profession: m.profession || "",
-      profilePictureUrl: m.profilePictureUrl || "",
-      emailVerified: m.emailVerified,
-      bkashSender: m.bkashSender || undefined,
-      bkashTxnId: m.bkashTxnId || undefined,
-    });
+      address: m.address || undefined,
+      birthDate: m.birthDate ? formatDate(m.birthDate) : undefined,
+      profession: m.profession || undefined,
+      profilePictureUrl: m.profilePictureUrl || undefined,
+    } as Member;
   } catch (error) {
     console.error("Error in addMemberAction:", error);
     throw error;
   }
 }
 
-export async function getMemberByIdAction(id: string): Promise<Member | undefined> {
+export async function getMembersAction(): Promise<Member[]> {
   try {
-    const data = await prisma.member.findFirst({
-      where: {
-        OR: [
-          { id },
-          { phone: id },
-          { email: id }
-        ]
-      }
+    const members = await prisma.member.findMany({
+      orderBy: { createdAt: "desc" },
     });
 
-    if (!data) return undefined;
+    return members.map((m) =>
+      stripSensitive({
+        ...m,
+        email: m.email || undefined,
+        joinedDate: formatDate(m.joinedDate),
+        expiryDate: formatDate(m.expiryDate),
+        address: m.address || undefined,
+        birthDate: m.birthDate ? formatDate(m.birthDate) : undefined,
+        profession: m.profession || undefined,
+        profilePictureUrl: m.profilePictureUrl || undefined,
+      } as Member)
+    );
+  } catch (error) {
+    console.error("Error in getMembersAction:", error);
+    return [];
+  }
+}
+
+export async function getMemberByIdAction(id: string): Promise<Member | null> {
+  try {
+    const m = await prisma.member.findUnique({
+      where: { id },
+    });
+
+    if (!m) return null;
 
     return stripSensitive({
-      id: data.id,
-      name: data.name,
-      phone: data.phone,
-      email: data.email || "",
-      tier: data.tier as Member["tier"],
-      status: data.status as Member["status"],
-      joinedDate: formatDate(data.joinedDate),
-      expiryDate: formatDate(data.expiryDate),
-      qrCodeUrl: data.qrCodeUrl || undefined,
-      totalSaved: data.totalSaved,
-      address: data.address || "",
-      birthDate: data.birthDate ? formatDate(data.birthDate) : "",
-      profession: data.profession || "",
-      profilePictureUrl: data.profilePictureUrl || "",
-      emailVerified: data.emailVerified,
-      bkashSender: data.bkashSender || undefined,
-      bkashTxnId: data.bkashTxnId || undefined,
-    });
+      ...m,
+      email: m.email || undefined,
+      joinedDate: formatDate(m.joinedDate),
+      expiryDate: formatDate(m.expiryDate),
+      address: m.address || undefined,
+      birthDate: m.birthDate ? formatDate(m.birthDate) : undefined,
+      profession: m.profession || undefined,
+      profilePictureUrl: m.profilePictureUrl || undefined,
+    } as Member);
   } catch (error) {
     console.error("Error in getMemberByIdAction:", error);
-    return undefined;
-  }
-}
-
-export async function loginMemberAction(
-  identifier: string, 
-  password: string
-): Promise<{ success: boolean; member?: Member; error?: string }> {
-  try {
-    if (!identifier || !password) {
-      return { success: false, error: "মোবাইল নম্বর/ইমেইল এবং পাসওয়ার্ড দিন।" };
-    }
-
-    const data = await prisma.member.findFirst({
-      where: {
-        OR: [
-          { phone: identifier },
-          { email: identifier }
-        ]
-      }
-    });
-
-    if (!data) {
-      return { success: false, error: "ভুল মোবাইল নম্বর/ইমেইল অথবা পাসওয়ার্ড।" };
-    }
-
-    const isValid = verifyPassword(password, data.password);
-    if (!isValid) {
-      return { success: false, error: "ভুল মোবাইল নম্বর/ইমেইল অথবা পাসওয়ার্ড।" };
-    }
-
-    if (data.status === "inactive") {
-      return { success: false, error: "আপনার অ্যাকাউন্টটি নিষ্ক্রিয় করা হয়েছে। অনুগ্রহ করে এডমিনের সাথে যোগাযোগ করুন।" };
-    }
-
-    if (data.status === "pending_approval") {
-      return { success: false, error: "আপনার অ্যাকাউন্টটি এখনো অনুমোদিত হয়নি। অনুগ্রহ করে এডমিন অনুমোদনের জন্য অপেক্ষা করুন।" };
-    }
-
-    if (!data.emailVerified) {
-      const code = Math.floor(100000 + Math.random() * 900000).toString();
-      await prisma.member.update({
-        where: { id: data.id },
-        data: { 
-          verificationCode: code,
-          verificationCodeCreatedAt: new Date(),
-        }
-      });
-      if (data.email) {
-        sendOtpEmail(data.email, code, data.name).catch((err) => {
-          console.error("Failed to send login verification OTP email:", err);
-        });
-      }
-      return {
-        success: true,
-        error: "PENDING_VERIFICATION",
-        member: stripSensitive({
-          id: data.id,
-          name: data.name,
-          phone: data.phone,
-          email: data.email || "",
-          tier: data.tier as Member["tier"],
-          status: "inactive",
-          joinedDate: formatDate(data.joinedDate),
-          expiryDate: formatDate(data.expiryDate),
-          qrCodeUrl: data.qrCodeUrl || undefined,
-          totalSaved: data.totalSaved,
-          address: data.address || "",
-          birthDate: data.birthDate ? formatDate(data.birthDate) : "",
-          profession: data.profession || "",
-          profilePictureUrl: data.profilePictureUrl || "",
-          emailVerified: false,
-          bkashSender: data.bkashSender || undefined,
-          bkashTxnId: data.bkashTxnId || undefined,
-        })
-      };
-    }
-
-    const role = data.email === ADMIN_EMAIL ? "admin" : "user";
-    await setSessionUser(data.id, role);
-
-    return {
-      success: true,
-      member: stripSensitive({
-        id: data.id,
-        name: data.name,
-        phone: data.phone,
-        email: data.email || "",
-        tier: data.tier as Member["tier"],
-        status: data.status as Member["status"],
-        joinedDate: formatDate(data.joinedDate),
-        expiryDate: formatDate(data.expiryDate),
-        qrCodeUrl: data.qrCodeUrl || undefined,
-        totalSaved: data.totalSaved,
-        address: data.address || "",
-        birthDate: data.birthDate ? formatDate(data.birthDate) : "",
-        profession: data.profession || "",
-        profilePictureUrl: data.profilePictureUrl || "",
-        emailVerified: data.emailVerified,
-        bkashSender: data.bkashSender || undefined,
-        bkashTxnId: data.bkashTxnId || undefined,
-      })
-    };
-  } catch (error) {
-    console.error("Error in loginMemberAction:", error);
-    return { success: false, error: "সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।" };
-  }
-}
-
-export async function loginAdminAction(identifier: string, password: string): Promise<Member | null> {
-  try {
-    if (!identifier || !password) return null;
-    if (identifier !== ADMIN_EMAIL) return null;
-
-    let admin = await prisma.member.findFirst({
-      where: { email: ADMIN_EMAIL }
-    });
-
-    const adminPassword = process.env.ADMIN_PASSWORD || "123456";
-
-    if (!admin) {
-      const hashedPw = hashPassword(adminPassword);
-      admin = await prisma.member.create({
-        data: {
-          id: "HC-ADMIN-01",
-          name: "হেলথ ক্লাব এডমিন",
-          phone: "01700000000",
-          email: ADMIN_EMAIL,
-          password: hashedPw,
-          tier: "founding",
-          status: "active",
-          joinedDate: new Date(),
-          expiryDate: new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000), // 10 years
-          totalSaved: 0,
-          emailVerified: true
-        }
-      });
-    }
-
-    const isValid = verifyPassword(password, admin.password);
-    if (!isValid) return null;
-
-    await setSessionUser(admin.id, "admin");
-
-    return stripSensitive({
-      id: admin.id,
-      name: admin.name,
-      phone: admin.phone,
-      email: admin.email || "",
-      tier: admin.tier as Member["tier"],
-      status: admin.status as Member["status"],
-      joinedDate: formatDate(admin.joinedDate),
-      expiryDate: formatDate(admin.expiryDate),
-      qrCodeUrl: admin.qrCodeUrl || undefined,
-      totalSaved: admin.totalSaved,
-      address: admin.address || "",
-      birthDate: admin.birthDate ? formatDate(admin.birthDate) : "",
-      profession: admin.profession || "",
-      profilePictureUrl: admin.profilePictureUrl || "",
-      emailVerified: admin.emailVerified
-    });
-  } catch (error) {
-    console.error("Error in loginAdminAction:", error);
     return null;
   }
 }
 
-export async function verifyEmailOtpAction(email: string, code: string): Promise<{ success: boolean; member?: Member; requiresPayment?: boolean; message?: string }> {
-  try {
-    const data = await prisma.member.findFirst({
-      where: { email }
-    });
-
-    if (!data) {
-      return { success: false, message: "অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।" };
-    }
-
-    if (data.verificationCode !== code) {
-      return { success: false, message: "ভুল ওটিপি কোড।" };
-    }
-
-    if (data.verificationCodeCreatedAt) {
-      const fifteenMinutes = 15 * 60 * 1000;
-      if (Date.now() - new Date(data.verificationCodeCreatedAt).getTime() > fifteenMinutes) {
-        return { success: false, message: "ওটিপি কোডের মেয়াদ শেষ হয়ে গেছে (১৫ মিনিট পার হয়েছে)। অনুগ্রহ করে নতুন কোড পাঠান।" };
-      }
-    }
-
-    const nextStatus: Member["status"] = data.tier === "founding" ? "pending_approval" : "pending_payment";
-    const updated = await prisma.member.update({
-      where: { id: data.id },
-      data: {
-        emailVerified: true,
-        verificationCode: null,
-        status: nextStatus
-      }
-    });
-
-    const memberObj: Member = {
-      id: updated.id,
-      name: updated.name,
-      phone: updated.phone,
-      email: updated.email || "",
-      tier: updated.tier as Member["tier"],
-      status: updated.status as Member["status"],
-      joinedDate: formatDate(updated.joinedDate),
-      expiryDate: formatDate(updated.expiryDate),
-      qrCodeUrl: updated.qrCodeUrl || undefined,
-      totalSaved: updated.totalSaved,
-      address: updated.address || "",
-      birthDate: updated.birthDate ? formatDate(updated.birthDate) : "",
-      profession: updated.profession || "",
-      profilePictureUrl: updated.profilePictureUrl || "",
-      emailVerified: true,
-      bkashSender: updated.bkashSender || undefined,
-      bkashTxnId: updated.bkashTxnId || undefined,
-    };
-
-    return {
-      success: true,
-      member: memberObj,
-      requiresPayment: nextStatus === "pending_payment"
-    };
-  } catch (error) {
-    console.error("Error in verifyEmailOtpAction:", error);
-    return { success: false, message: "সার্ভার ত্রুটি।" };
-  }
-}
-
-export async function logoutMemberAction(): Promise<boolean> {
-  await clearSessionUser();
-  return true;
-}
-
-export async function completePaymentAction(memberId: string): Promise<boolean> {
+export async function updateMemberStatusAction(
+  id: string,
+  status: Member["status"]
+): Promise<boolean> {
   try {
     await prisma.member.update({
-      where: { id: memberId },
-      data: { status: "pending_approval" }
+      where: { id },
+      data: { status },
     });
     return true;
   } catch (error) {
-    console.error("Error in completePaymentAction:", error);
+    console.error("Error in updateMemberStatusAction:", error);
     return false;
+  }
+}
+
+export async function loginMemberAction(
+  identifier: string,
+  passwordInput: string
+): Promise<{ success: boolean; member?: Member; message?: string; error?: string }> {
+  try {
+    const isEmail = identifier.includes("@");
+    const m = await prisma.member.findFirst({
+      where: isEmail ? { email: identifier } : { phone: identifier },
+    });
+
+    if (!m) {
+      return { success: false, error: "INVALID_CREDENTIALS", message: "মেম্বারশিপ আইডি, ফোন নম্বর বা পাসওয়ার্ড সঠিক নয়।" };
+    }
+
+    const isValid = verifyPassword(passwordInput, m.password);
+    if (!isValid) {
+      return { success: false, error: "INVALID_CREDENTIALS", message: "মেম্বারশিপ আইডি, ফোন নম্বর বা পাসওয়ার্ড সঠিক নয়।" };
+    }
+
+    const safeMember = stripSensitive({
+      ...m,
+      email: m.email || undefined,
+      joinedDate: formatDate(m.joinedDate),
+      expiryDate: formatDate(m.expiryDate),
+      address: m.address || undefined,
+      birthDate: m.birthDate ? formatDate(m.birthDate) : undefined,
+      profession: m.profession || undefined,
+      profilePictureUrl: m.profilePictureUrl || undefined,
+    } as Member);
+
+    if (m.email && !m.emailVerified) {
+      return { 
+        success: true, 
+        error: "PENDING_VERIFICATION",
+        message: "আপনার ইমেইল ভেরিফাই করা হয়নি। অনুগ্রহ করে ইমেইল ভেরিফিকেশন সম্পন্ন করুন।",
+        member: safeMember,
+      };
+    }
+
+    const isAdmin = m.email === ADMIN_EMAIL;
+    await setSessionUser(safeMember.id, isAdmin ? "admin" : "user");
+
+    return { success: true, member: safeMember };
+  } catch (error) {
+    console.error("Error in loginMemberAction:", error);
+    return { success: false, error: "SERVER_ERROR", message: "লগইন করতে সমস্যা হয়েছে।" };
+  }
+}
+
+export async function loginAdminAction(identifier: string, passwordInput: string): Promise<Member | null> {
+  const res = await loginMemberAction(identifier, passwordInput);
+  if (res.success && res.member && res.member.email === ADMIN_EMAIL) {
+    return res.member;
+  }
+  return null;
+}
+
+export async function logoutUserAction(): Promise<boolean> {
+  try {
+    await clearSessionUser();
+    return true;
+  } catch (error) {
+    console.error("Error in logoutUserAction:", error);
+    return false;
+  }
+}
+
+export const logoutMemberAction = logoutUserAction;
+
+export async function updateMemberProfileAction(
+  id: string,
+  updates: Partial<Pick<Member, "name" | "phone" | "email" | "address" | "birthDate" | "profession" | "profilePictureUrl">>
+): Promise<boolean> {
+  try {
+    await prisma.member.update({
+      where: { id },
+      data: {
+        ...(updates.name && { name: updates.name }),
+        ...(updates.phone && { phone: updates.phone }),
+        ...(updates.email !== undefined && { email: updates.email || null }),
+        ...(updates.address !== undefined && { address: updates.address || null }),
+        ...(updates.birthDate !== undefined && {
+          birthDate: updates.birthDate ? new Date(updates.birthDate) : null,
+        }),
+        ...(updates.profession !== undefined && { profession: updates.profession || null }),
+        ...(updates.profilePictureUrl !== undefined && { profilePictureUrl: updates.profilePictureUrl || null }),
+      },
+    });
+    return true;
+  } catch (error) {
+    console.error("Error in updateMemberProfileAction:", error);
+    return false;
+  }
+}
+
+export async function verifyEmailOtpAction(
+  email: string,
+  code: string
+): Promise<{ success: boolean; member?: Member; message?: string; requiresPayment?: boolean }> {
+  try {
+    const member = await prisma.member.findFirst({
+      where: { email },
+    });
+
+    if (!member) {
+      return { success: false, message: "মেম্বার অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।" };
+    }
+
+    if (member.verificationCode !== code) {
+      return { success: false, message: "ভুল ওটিপি কোড।" };
+    }
+
+    if (member.verificationCodeCreatedAt) {
+      const fifteenMinutes = 15 * 60 * 1000;
+      if (Date.now() - new Date(member.verificationCodeCreatedAt).getTime() > fifteenMinutes) {
+        return { success: false, message: "ওটিপি কোডের মেয়াদ শেষ হয়ে গেছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
+      }
+    }
+
+    const updated = await prisma.member.update({
+      where: { id: member.id },
+      data: {
+        emailVerified: true,
+        verificationCode: null,
+        verificationCodeCreatedAt: null,
+      },
+    });
+
+    const safeMember = stripSensitive({
+      ...updated,
+      email: updated.email || undefined,
+      joinedDate: formatDate(updated.joinedDate),
+      expiryDate: formatDate(updated.expiryDate),
+      address: updated.address || undefined,
+      birthDate: updated.birthDate ? formatDate(updated.birthDate) : undefined,
+      profession: updated.profession || undefined,
+      profilePictureUrl: updated.profilePictureUrl || undefined,
+    } as Member);
+
+    const isAdmin = updated.email === ADMIN_EMAIL;
+    await setSessionUser(safeMember.id, isAdmin ? "admin" : "user");
+
+    const requiresPayment = updated.tier === "premium" && updated.status === "inactive" && !updated.bkashTxnId;
+
+    return { success: true, member: safeMember, requiresPayment };
+  } catch (error) {
+    console.error("Error in verifyEmailOtpAction:", error);
+    return { success: false, message: "ইমেইল ভেরিফাই করতে সমস্যা হয়েছে।" };
   }
 }
 
 export async function submitBkashPaymentAction(
   memberId: string,
-  senderPhone: string,
-  txnId: string
+  bkashSender: string,
+  bkashTxnId: string
 ): Promise<boolean> {
   try {
+    const member = await prisma.member.findUnique({
+      where: { id: memberId },
+    });
+
+    if (!member) return false;
+
     await prisma.member.update({
       where: { id: memberId },
       data: {
+        bkashSender,
+        bkashTxnId,
         status: "pending_approval",
-        bkashSender: senderPhone,
-        bkashTxnId: txnId,
-      }
+      },
     });
 
     return true;
@@ -399,7 +329,7 @@ export async function submitBkashPaymentAction(
 export async function resendVerificationCodeAction(email: string): Promise<{ success: boolean; message: string }> {
   try {
     const member = await prisma.member.findFirst({
-      where: { email }
+      where: { email },
     });
 
     if (!member) {
@@ -409,10 +339,10 @@ export async function resendVerificationCodeAction(email: string): Promise<{ suc
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     await prisma.member.update({
       where: { id: member.id },
-      data: { 
+      data: {
         verificationCode: code,
         verificationCodeCreatedAt: new Date(),
-      }
+      },
     });
 
     if (member.email) {
@@ -434,7 +364,7 @@ export async function requestPasswordResetAction(email: string): Promise<{ succe
     }
 
     const member = await prisma.member.findFirst({
-      where: { email }
+      where: { email },
     });
 
     if (!member) {
@@ -447,7 +377,7 @@ export async function requestPasswordResetAction(email: string): Promise<{ succe
       data: {
         verificationCode: otp,
         verificationCodeCreatedAt: new Date(),
-      }
+      },
     });
 
     sendPasswordResetEmail(member.email || "", otp, member.name).catch((err) => {
@@ -472,7 +402,7 @@ export async function resetPasswordAction(
     }
 
     const member = await prisma.member.findFirst({
-      where: { email }
+      where: { email },
     });
 
     if (!member) {
@@ -496,8 +426,8 @@ export async function resetPasswordAction(
       data: {
         password: hashedPassword,
         verificationCode: null,
-        verificationCodeCreatedAt: null
-      }
+        verificationCodeCreatedAt: null,
+      },
     });
 
     return { success: true, message: "পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে!" };

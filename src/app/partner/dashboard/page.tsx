@@ -2,17 +2,17 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Building2, Camera, LogOut, Search, CheckCircle, XCircle, AlertTriangle, Receipt, CreditCard, History, KeyRound } from "lucide-react";
+import { Building2, Camera, LogOut, Search, CheckCircle, XCircle, AlertTriangle, Receipt, CreditCard, History } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Partner, Transaction } from "@/services/db";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { verifyMemberForPartnerAction } from "@/app/actions/memberActions";
-import { addPartnerTransactionAction, getPartnerTransactionsAction, changePartnerPasswordAction } from "@/app/actions/partnerActions";
+import { addPartnerTransactionAction, getPartnerTransactionsAction } from "@/app/actions/partnerActions";
 import { toast } from "sonner";
 import { Html5Qrcode } from "html5-qrcode";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { ChangePartnerPasswordDialog } from "./components/ChangePartnerPasswordDialog";
 
 interface VerifiedMember {
   id: string;
@@ -44,48 +44,6 @@ export default function PartnerDashboardPage() {
   // Transactions History
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
-  // Password Change States
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [changeError, setChangeError] = useState("");
-  const [loadingChange, setLoadingChange] = useState(false);
-
-  const handleChangePasswordSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setChangeError("");
-    setLoadingChange(true);
-
-    if (newPassword.length < 6) {
-      setChangeError("নতুন পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।");
-      setLoadingChange(false);
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      setChangeError("নতুন পাসওয়ার্ড দুটি মেলেনি।");
-      setLoadingChange(false);
-      return;
-    }
-
-    try {
-      const res = await changePartnerPasswordAction(currentPassword, newPassword);
-      if (res.success) {
-        toast.success(res.message);
-        setDialogOpen(false);
-        setCurrentPassword("");
-        setNewPassword("");
-        setConfirmPassword("");
-      } else {
-        setChangeError(res.message || "পাসওয়ার্ড পরিবর্তন করা যায়নি।");
-      }
-    } catch {
-      setChangeError("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
-    } finally {
-      setLoadingChange(false);
-    }
-  };
 
   const loadTransactions = async () => {
     try {
@@ -260,82 +218,7 @@ export default function PartnerDashboardPage() {
           </div>
         </div>
         <div className="flex items-center gap-2.5 shrink-0 self-stretch sm:self-auto">
-          {/* Change Password Dialog */}
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger
-              render={
-                <Button variant="outline" size="sm" className="gap-2 border-white/25 bg-transparent text-white hover:bg-white/10 hover:text-white">
-                  <KeyRound className="h-4 w-4" />
-                  পাসওয়ার্ড পরিবর্তন
-                </Button>
-              }
-            />
-            <DialogContent className="sm:max-w-md bg-background border border-border">
-              <DialogHeader>
-                <DialogTitle className="font-heading text-lg font-bold text-secondary dark:text-white flex items-center gap-1.5">
-                  <KeyRound className="h-5 w-5 text-primary" />
-                  পাসওয়ার্ড পরিবর্তন করুন
-                </DialogTitle>
-                <DialogDescription>
-                  আপনার অ্যাকাউন্ট সুরক্ষিত রাখতে নিয়মিত পাসওয়ার্ড পরিবর্তন করুন।
-                </DialogDescription>
-              </DialogHeader>
-
-              {changeError && (
-                <div className="bg-destructive/10 text-destructive text-xs p-3 rounded-lg border border-destructive/20 flex items-center gap-2">
-                  <AlertTriangle className="h-4 w-4 shrink-0" />
-                  <span>{changeError}</span>
-                </div>
-              )}
-
-              <form onSubmit={handleChangePasswordSubmit} className="space-y-4 pt-2">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-secondary dark:text-white">বর্তমান পাসওয়ার্ড *</label>
-                  <Input
-                    type="password"
-                    required
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="border-border bg-background h-10 text-secondary dark:text-white"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-secondary dark:text-white">নতুন পাসওয়ার্ড *</label>
-                  <Input
-                    type="password"
-                    required
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="অন্তত ৬ অক্ষরের পাসওয়ার্ড"
-                    className="border-border bg-background h-10 text-secondary dark:text-white"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-secondary dark:text-white">নতুন পাসওয়ার্ড নিশ্চিত করুন *</label>
-                  <Input
-                    type="password"
-                    required
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="আবার টাইপ করুন"
-                    className="border-border bg-background h-10 text-secondary dark:text-white"
-                  />
-                </div>
-
-                <div className="flex justify-end gap-2 pt-4">
-                  <Button type="button" variant="outline" onClick={() => setDialogOpen(false)} className="border-border text-secondary dark:text-white">
-                    বাতিল
-                  </Button>
-                  <Button type="submit" disabled={loadingChange} className="bg-primary hover:bg-primary-dark text-white font-semibold">
-                    {loadingChange ? "পরিবর্তন হচ্ছে..." : "পাসওয়ার্ড আপডেট করুন"}
-                  </Button>
-                </div>
-              </form>
-            </DialogContent>
-          </Dialog>
+          <ChangePartnerPasswordDialog />
 
           <Button onClick={handleLogout} variant="destructive" size="sm" className="gap-2">
             <LogOut className="h-4 w-4" />

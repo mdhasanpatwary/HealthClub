@@ -3,7 +3,6 @@
 import React, { createContext, useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Locale } from "@/lib/i18n";
-import { en } from "@/lib/translations.en";
 import type { TranslationKey } from "@/lib/translations.en";
 
 // Type for a locale dictionary
@@ -54,7 +53,8 @@ export function LanguageProvider({
     if (fallbackEn !== undefined) {
       return locale === "en" ? fallbackEn : (key as string);
     }
-    return dict[key] || (en as Dict)[key] || key;
+    // Use the active dict; fall back to the key itself so UI is never blank
+    return dict[key] || key;
   };
 
   return (

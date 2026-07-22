@@ -149,6 +149,8 @@ export async function getStatsAction() {
       totalSavedAgg,
       thisMonthSavedAgg,
       topPartnerGroups,
+      // Moved inside Promise.all — was a sequential 19th query before
+      activePremiumCount,
     ] = await Promise.all([
       prisma.member.count(),
       prisma.member.count({ where: { status: "active" } }),
@@ -182,6 +184,7 @@ export async function getStatsAction() {
         orderBy: { _sum: { saved: "desc" } },
         take: 3,
       }),
+      prisma.member.count({ where: { tier: "premium", status: "active" } }),
     ]);
 
     const topPartners = topPartnerGroups.map((p) => ({
@@ -190,10 +193,6 @@ export async function getStatsAction() {
       totalSaved: p._sum.saved || 0,
       transactionCount: p._count.id || 0,
     }));
-
-    const activePremiumCount = await prisma.member.count({
-      where: { tier: "premium", status: "active" },
-    });
 
     return {
       totalMembers,

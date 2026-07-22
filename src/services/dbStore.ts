@@ -66,7 +66,8 @@ export const dbStore = {
   },
 
   async getMemberById(id: string): Promise<Member | undefined> {
-    return getMemberByIdAction(id);
+    const m = await getMemberByIdAction(id);
+    return m ?? undefined;
   },
 
   async updateMemberStatus(id: string, status: Member["status"]): Promise<boolean> {

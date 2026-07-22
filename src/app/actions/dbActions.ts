@@ -25,7 +25,6 @@ export {
   loginAdminAction,
   verifyEmailOtpAction,
   logoutMemberAction,
-  completePaymentAction,
   submitBkashPaymentAction,
   resendVerificationCodeAction,
 } from "./memberActions";
