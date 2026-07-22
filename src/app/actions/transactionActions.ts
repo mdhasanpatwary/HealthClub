@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { Transaction } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
+import { isMemberTxAllowedAction } from "./systemSettingsActions";
 
 
 // --- TRANSACTIONS ACTIONS ---
@@ -35,9 +36,20 @@ export async function getTransactionsAction(memberId?: string): Promise<Transact
 
 export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">): Promise<Transaction> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") throw new Error("Unauthorized");
+  if (!session) throw new Error("Unauthorized");
+
+  if (session.role !== "admin") {
+    const isAllowed = await isMemberTxAllowedAction();
+    if (!isAllowed) throw new Error("Unauthorized: Member transaction entry is disabled");
+
+    if (session.userId !== tx.memberId) {
+      throw new Error("Unauthorized: Cannot add transaction for another member");
+    }
+  }
+
   const newTxId = `tx_${crypto.randomUUID()}`;
   const now = new Date();
+
 
   try {
     const data = await prisma.$transaction(async (txPrisma) => {

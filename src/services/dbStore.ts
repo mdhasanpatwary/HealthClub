@@ -22,6 +22,10 @@ import {
   addTransactionAction,
   getStatsAction,
 } from "@/app/actions/transactionActions";
+import {
+  isMemberTxAllowedAction,
+  setMemberTxAllowedAction,
+} from "@/app/actions/systemSettingsActions";
 
 // Helper to check if running on client side
 const isClient = typeof window !== "undefined";
@@ -210,9 +214,17 @@ export const dbStore = {
     logoutMemberAction(); // Clear server cookie session
   },
 
-  // --- ANALYTICS ---
+  // --- ANALYTICS & SETTINGS ---
   async getStats() {
     return getStatsAction();
+  },
+
+  async isMemberTxAllowed(): Promise<boolean> {
+    return isMemberTxAllowedAction();
+  },
+
+  async setMemberTxAllowed(enabled: boolean): Promise<boolean> {
+    return setMemberTxAllowedAction(enabled);
   },
 };
 

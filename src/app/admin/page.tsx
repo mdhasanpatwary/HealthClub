@@ -6,7 +6,7 @@ import { formatNum } from "@/lib/i18n";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
-  Users, Building, DollarSign, PlusCircle, Heart
+  Users, Building, DollarSign, PlusCircle, Heart, Settings
 } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Member, Partner, Transaction } from "@/services/db";
@@ -82,6 +82,8 @@ export default function AdminDashboardPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [partnerRequests, setPartnerRequests] = useState<PartnerRequest[]>([]);
   const [contactMessages, setContactMessages] = useState<ContactMessage[]>([]);
+  const [allowMemberTx, setAllowMemberTx] = useState<boolean>(false);
+  const [togglingMemberTx, setTogglingMemberTx] = useState<boolean>(false);
 
   // Search states
   const [memberSearch, setMemberSearch] = useState("");
@@ -125,13 +127,14 @@ export default function AdminDashboardPage() {
     }
 
     try {
-      const [statsRes, membersRes, partnersRes, transactionsRes, requestsRes, messagesRes] = await Promise.all([
+      const [statsRes, membersRes, partnersRes, transactionsRes, requestsRes, messagesRes, allowTxRes] = await Promise.all([
         dbStore.getStats(),
         dbStore.getMembers(),
         dbStore.getPartners(),
         dbStore.getTransactions(),
         getPartnerRequestsAction(),
-        getContactMessagesAction()
+        getContactMessagesAction(),
+        dbStore.isMemberTxAllowed()
       ]);
       setStats(statsRes);
       setMembers(membersRes);
@@ -139,10 +142,29 @@ export default function AdminDashboardPage() {
       setTransactions(transactionsRes);
       setPartnerRequests(requestsRes);
       setContactMessages(messagesRes);
+      setAllowMemberTx(allowTxRes);
     } catch (error) {
       console.error("Error loading data in admin dashboard:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleToggleMemberTx = async (newVal: boolean) => {
+    setTogglingMemberTx(true);
+    try {
+      const success = await dbStore.setMemberTxAllowed(newVal);
+      if (success) {
+        setAllowMemberTx(newVal);
+        toast.success(newVal ? t("admin.dashboard.memberTxEnabled") : t("admin.dashboard.memberTxDisabled"));
+      } else {
+        toast.error(t("admin.dashboard.txLogFailed"));
+      }
+    } catch (err) {
+      console.error("Error toggling member tx setting:", err);
+      toast.error(t("admin.dashboard.txLogFailed"));
+    } finally {
+      setTogglingMemberTx(false);
     }
   };
 
@@ -592,6 +614,49 @@ export default function AdminDashboardPage() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Feature Settings Card */}
+        <Card className="border-border shadow-sm bg-gradient-to-r from-slate-900 via-secondary to-slate-900 text-white overflow-hidden">
+          <CardContent className="p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className={`h-11 w-11 rounded-2xl flex items-center justify-center border shrink-0 ${
+                allowMemberTx
+                  ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-400"
+                  : "bg-slate-800 border-slate-700 text-slate-400"
+              }`}>
+                <Settings className="h-5 w-5" />
+              </div>
+              <div>
+                <h3 className="font-heading text-base font-bold text-white flex items-center gap-2">
+                  {t("admin.dashboard.memberTxToggleTitle")}
+                  <span className={`text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider ${
+                    allowMemberTx
+                      ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                      : "bg-slate-800 text-slate-400 border border-slate-700"
+                  }`}>
+                    {allowMemberTx ? (locale === "bn" ? "চালু রয়েছে" : "Enabled") : (locale === "bn" ? "বন্ধ রয়েছে" : "Disabled")}
+                  </span>
+                </h3>
+                <p className="text-xs text-slate-300 mt-0.5">
+                  {t("admin.dashboard.memberTxToggleDesc")}
+                </p>
+              </div>
+            </div>
+
+            <Button
+              onClick={() => handleToggleMemberTx(!allowMemberTx)}
+              disabled={togglingMemberTx}
+              variant={allowMemberTx ? "destructive" : "default"}
+              size="sm"
+              className={!allowMemberTx ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-md font-semibold shrink-0" : "font-semibold shrink-0"}
+            >
+              {allowMemberTx
+                ? (locale === "bn" ? "সুবিধা বন্ধ করুন" : "Disable Feature")
+                : (locale === "bn" ? "সুবিধা চালু করুন" : "Enable Feature")
+              }
+            </Button>
+          </CardContent>
+        </Card>
 
         {/* Dynamic SVG Analytics Chart */}
         <Card className="border-border shadow-md">

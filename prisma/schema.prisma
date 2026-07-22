@@ -99,4 +99,13 @@ model ContactMessage {
   @@map("contact_messages")
 }
 
+model SystemSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@map("system_settings")
+}
+
+
 

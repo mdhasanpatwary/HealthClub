@@ -6,21 +6,47 @@ import Link from "next/link";
 import { 
   Heart, CreditCard, History, LayoutDashboard, Save, CheckCircle2,
   TrendingUp, Wallet, ReceiptText, AlertTriangle, Clock,
-  Download
+  Download, PlusCircle
 } from "lucide-react";
 import { toast } from "sonner";
 import { dbStore } from "@/services/dbStore";
-import { Member, Transaction } from "@/services/db";
+import { Member, Partner, Transaction } from "@/services/db";
 import MemberCard from "@/components/ui/MemberCard";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ImageUpload } from "@/components/ui/ImageUpload";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatNum } from "@/lib/i18n";
+
+function parseDiscountPercentage(discountStr: string): number {
+  const banglaToEnglishMap: { [key: string]: string } = {
+    "০": "0", "১": "1", "২": "2", "৩": "3", "৪": "4",
+    "৫": "5", "৬": "6", "৭": "7", "৮": "8", "৯": "9"
+  };
+
+  let converted = discountStr;
+  for (const [bangla, english] of Object.entries(banglaToEnglishMap)) {
+    converted = converted.replaceAll(bangla, english);
+  }
+
+  const match = converted.match(/(\d+(?:\.\d+)?)\s*%/);
+  if (match) {
+    return parseFloat(match[1]) / 100;
+  }
+
+  const fallbackMatch = converted.match(/(\d+(?:\.\d+)?)/);
+  if (fallbackMatch) {
+    const num = parseFloat(fallbackMatch[1]);
+    return num > 1 ? num / 100 : num;
+  }
+
+  return 0.10;
+}
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -40,6 +66,14 @@ export default function DashboardPage() {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
   const [isExpired, setIsExpired] = useState(false);
+
+  // Self Transaction Entry States
+  const [allowMemberTx, setAllowMemberTx] = useState(false);
+  const [partners, setPartners] = useState<Partner[]>([]);
+  const [isAddTxOpen, setIsAddTxOpen] = useState(false);
+  const [newTxPartnerId, setNewTxPartnerId] = useState("");
+  const [newTxAmount, setNewTxAmount] = useState("");
+  const [addTxSubmitting, setAddTxSubmitting] = useState(false);
 
   // Load data on mount
   useEffect(() => {
@@ -74,7 +108,63 @@ export default function DashboardPage() {
     dbStore.getTransactions(currentUser.id).then((userTx) => {
       setTransactions(userTx);
     });
+
+    dbStore.isMemberTxAllowed().then((allowed) => {
+      setAllowMemberTx(allowed);
+    });
+
+    dbStore.getPartners().then((pts) => {
+      setPartners(pts);
+    });
   }, [router]);
+
+  const handleAddMemberTransaction = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user || !newTxPartnerId || !newTxAmount) return;
+
+    const partner = partners.find((p) => p.id === newTxPartnerId);
+    if (!partner) {
+      toast.error(t("admin.dashboard.selectedPartnerNotFound"));
+      return;
+    }
+
+    const billAmount = Number(newTxAmount);
+    if (isNaN(billAmount) || billAmount <= 0) {
+      toast.error(t("admin.dashboard.enterValidBillAmount"));
+      return;
+    }
+
+    setAddTxSubmitting(true);
+    try {
+      const discountRate = parseDiscountPercentage(partner.discount);
+      const saved = Math.round(billAmount * discountRate);
+
+      await dbStore.addTransaction({
+        memberId: user.id,
+        memberName: user.name,
+        partnerId: partner.id,
+        partnerName: partner.name,
+        amount: billAmount,
+        saved: saved,
+      });
+
+      toast.success(t("dashboard.history.txAddedSuccess"));
+      setNewTxPartnerId("");
+      setNewTxAmount("");
+      setIsAddTxOpen(false);
+
+      // Refresh transactions and user stats
+      const updatedTx = await dbStore.getTransactions(user.id);
+      setTransactions(updatedTx);
+      const freshUser = await dbStore.getMemberById(user.id);
+      if (freshUser) setUser(freshUser);
+    } catch (err) {
+      console.error(err);
+      toast.error(t("dashboard.history.txAddFailed"));
+    } finally {
+      setAddTxSubmitting(false);
+    }
+  };
 
   const handleDownloadCard = async () => {
     if (!cardRef.current) return;
@@ -517,14 +607,26 @@ export default function DashboardPage() {
               {/* Transactions History Tab */}
               <TabsContent value="history" className="mt-4">
                 <Card className="border-border/60 shadow-sm">
-                  <CardHeader className="border-b border-border/60 bg-muted/30 dark:bg-slate-900/40">
-                    <CardTitle className="font-heading text-base font-bold text-secondary dark:text-white flex items-center gap-2">
-                      <History className="h-4 w-4 text-primary" />
-                      {t("dashboard.history.title")}
-                    </CardTitle>
-                    <CardDescription>
-                      {t("dashboard.history.description")}
-                    </CardDescription>
+                  <CardHeader className="border-b border-border/60 bg-muted/30 dark:bg-slate-900/40 flex flex-row items-center justify-between gap-2">
+                    <div>
+                      <CardTitle className="font-heading text-base font-bold text-secondary dark:text-white flex items-center gap-2">
+                        <History className="h-4 w-4 text-primary" />
+                        {t("dashboard.history.title")}
+                      </CardTitle>
+                      <CardDescription>
+                        {t("dashboard.history.description")}
+                      </CardDescription>
+                    </div>
+                    {allowMemberTx && user.status === "active" && (
+                      <Button
+                        onClick={() => setIsAddTxOpen(true)}
+                        size="sm"
+                        className="bg-primary hover:bg-primary-dark text-white text-xs font-semibold gap-1.5 shrink-0"
+                      >
+                        <PlusCircle className="h-4 w-4" />
+                        <span>{t("dashboard.history.addTxButton")}</span>
+                      </Button>
+                    )}
                   </CardHeader>
                   <CardContent className="p-0">
                     {transactions.length > 0 ? (
@@ -673,6 +775,84 @@ export default function DashboardPage() {
         </div>
 
       </div>
+
+      {/* Member Add Transaction Dialog */}
+      {allowMemberTx && (
+        <Dialog open={isAddTxOpen} onOpenChange={setIsAddTxOpen}>
+          <DialogContent className="border-border bg-background max-w-md">
+            <DialogHeader>
+              <DialogTitle className="font-heading font-bold text-secondary dark:text-white flex items-center gap-2">
+                <PlusCircle className="h-5 w-5 text-primary" />
+                {t("dashboard.history.addTxTitle")}
+              </DialogTitle>
+              <DialogDescription>
+                {t("dashboard.history.addTxDesc")}
+              </DialogDescription>
+            </DialogHeader>
+
+            <form onSubmit={handleAddMemberTransaction} className="space-y-4 pt-2">
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-secondary dark:text-white">
+                  {t("dashboard.history.selectPartner")} *
+                </label>
+                <select
+                  required
+                  value={newTxPartnerId}
+                  onChange={(e) => setNewTxPartnerId(e.target.value)}
+                  className="w-full h-10 rounded-xl border border-border/60 bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                >
+                  <option value="">{t("admin.dashboard.selectPartnerLabel")}</option>
+                  {partners.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name} ({p.discount})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-secondary dark:text-white">
+                  {t("dashboard.history.billAmount")} *
+                </label>
+                <Input
+                  type="number"
+                  required
+                  min="1"
+                  placeholder="e.g. 2000"
+                  value={newTxAmount}
+                  onChange={(e) => setNewTxAmount(e.target.value)}
+                  className="border-border/60 rounded-xl focus:border-primary/40"
+                />
+              </div>
+
+              {newTxPartnerId && newTxAmount && Number(newTxAmount) > 0 && (
+                <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl p-3 text-xs text-emerald-700 dark:text-emerald-400 font-medium">
+                  {t("dashboard.history.calculatedSavings").replace(
+                    "{saved}",
+                    formatNum(
+                      Math.round(
+                        Number(newTxAmount) *
+                          parseDiscountPercentage(
+                            partners.find((p) => p.id === newTxPartnerId)?.discount || ""
+                          )
+                      ),
+                      locale
+                    )
+                  )}
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                disabled={addTxSubmitting}
+                className="w-full bg-primary hover:bg-primary-dark text-white font-semibold"
+              >
+                {addTxSubmitting ? (locale === "bn" ? "সংরক্ষণ হচ্ছে..." : "Saving...") : t("dashboard.history.submitTx")}
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
