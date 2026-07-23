@@ -50,9 +50,9 @@ export const metadata: Metadata = {
     telephone: true,
   },
   icons: {
-    icon: "/images/member-card-logo.png",
-    shortcut: "/images/member-card-logo.png",
-    apple: "/images/member-card-logo.png",
+    icon: "/icons/icon-192.png",
+    shortcut: "/icons/icon-192.png",
+    apple: "/icons/apple-touch-icon.png",
   },
   alternates: {
     canonical: "/",
