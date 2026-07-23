@@ -21,8 +21,20 @@ export interface PartnerRequest {
 
 export async function getPartnersAction(): Promise<Partner[]> {
   try {
+    // Use select to only fetch public-facing columns; exclude password, verificationCode, etc.
     const data = await prisma.partner.findMany({
       orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        category: true,
+        address: true,
+        discount: true,
+        phone: true,
+        logoText: true,
+        mapLink: true,
+        imageUrl: true,
+      },
     });
 
     return data.map((p) => ({
@@ -296,9 +308,16 @@ export async function addPartnerTransactionAction(tx: {
   }
 
   try {
-    const member = await prisma.member.findUnique({
-      where: { id: tx.memberId },
-    });
+    const [member, partner] = await Promise.all([
+      prisma.member.findUnique({
+        where: { id: tx.memberId },
+        select: { id: true, name: true, status: true, expiryDate: true },
+      }),
+      prisma.partner.findUnique({
+        where: { id: session.userId },
+        select: { id: true, name: true, discount: true },
+      }),
+    ]);
 
     if (!member) {
       return { success: false, message: "মেম্বার আইডিটি খুঁজে পাওয়া যায়নি।" };
@@ -308,16 +327,11 @@ export async function addPartnerTransactionAction(tx: {
       return { success: false, message: "এই মেম্বারশিপটি সক্রিয় নয়।" };
     }
 
-    // Check if membership is expired
     const currentDate = new Date();
     const expiryDate = new Date(member.expiryDate);
     if (expiryDate < currentDate) {
       return { success: false, message: "এই মেম্বারশিপ কার্ডটির মেয়াদ শেষ হয়ে গেছে।" };
     }
-
-    const partner = await prisma.partner.findUnique({
-      where: { id: session.userId },
-    });
 
     if (!partner) {
       return { success: false, message: "পার্টনার ডেটা খুঁজে পাওয়া যায়নি।" };

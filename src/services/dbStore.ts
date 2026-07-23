@@ -154,13 +154,14 @@ export const dbStore = {
   async addTransaction(tx: Omit<Transaction, "id" | "date">): Promise<Transaction> {
     const newTx = await addTransactionAction(tx);
 
-    // Refresh member to sync totalSavings to local storage if logged in
-    const member = await this.getMemberById(tx.memberId);
-    if (member) {
-      const currentUser = this.getCurrentUser();
-      if (currentUser && currentUser.id === member.id) {
-        this.setCurrentUser({ ...currentUser, totalSaved: member.totalSaved });
-      }
+    // Sync totalSaved to localStorage without an extra DB round-trip.
+    // We already know the saved amount from tx.saved — no need to refetch the member.
+    const currentUser = this.getCurrentUser();
+    if (currentUser && currentUser.id === tx.memberId) {
+      this.setCurrentUser({
+        ...currentUser,
+        totalSaved: currentUser.totalSaved + tx.saved,
+      });
     }
 
     return newTx;

@@ -13,8 +13,8 @@ const connectionString = process.env.DIRECT_URL || process.env.DATABASE_URL;
 if (!globalForPrisma.pool) {
   globalForPrisma.pool = new pg.Pool({
     connectionString,
-    max: 5,
-    idleTimeoutMillis: 30_000,
+    max: 10,              // raised from 5 for better concurrency under load
+    idleTimeoutMillis: 10_000,   // lowered from 30s — recycle idle connections faster
     connectionTimeoutMillis: 10_000,
     ssl: { rejectUnauthorized: false },
   });

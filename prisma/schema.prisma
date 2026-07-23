@@ -34,6 +34,12 @@ model Member {
   renewalBkashTxnId  String?      @map("renewal_bkash_txn_id")
   transactions      Transaction[]
 
+  // Indexes for frequent filter/sort patterns
+  @@index([status])
+  @@index([tier])
+  @@index([renewalStatus], map: "members_renewal_status_idx")
+  @@index([expiryDate], map: "members_expiry_date_idx")
+  @@index([createdAt(sort: Desc)], map: "members_created_at_idx")
   @@map("members")
 }
 
@@ -54,6 +60,7 @@ model Partner {
   createdAt                 DateTime      @default(now()) @map("created_at") @db.Timestamptz
   transactions              Transaction[]
 
+  @@index([category])
   @@map("partners")
 }
 
@@ -71,6 +78,10 @@ model Transaction {
   member  Member  @relation(fields: [memberId], references: [id], onDelete: Cascade)
   partner Partner @relation(fields: [partnerId], references: [id], onDelete: Cascade)
 
+  // Indexes for frequent filter/sort patterns
+  @@index([memberId], map: "transactions_member_id_idx")
+  @@index([partnerId], map: "transactions_partner_id_idx")
+  @@index([createdAt(sort: Desc)], map: "transactions_created_at_idx")
   @@map("transactions")
 }
 
@@ -85,6 +96,7 @@ model PartnerRequest {
   status      String   @default("pending") // 'pending' | 'approved' | 'rejected'
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
 
+  @@index([status], map: "partner_requests_status_idx")
   @@map("partner_requests")
 }
 

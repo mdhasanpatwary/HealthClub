@@ -153,8 +153,10 @@ export async function approveMemberRenewalAction(memberId: string): Promise<bool
   if (!session || session.role !== "admin") throw new Error("Unauthorized");
 
   try {
+    // Only fetch the single column needed to compute the new expiry date
     const member = await prisma.member.findUnique({
-      where: { id: memberId }
+      where: { id: memberId },
+      select: { expiryDate: true },
     });
 
     if (!member) return false;

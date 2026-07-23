@@ -153,9 +153,10 @@ export async function loginMemberAction(
 ): Promise<{ success: boolean; member?: Member; message?: string; error?: string }> {
   try {
     const isEmail = identifier.includes("@");
-    const m = await prisma.member.findFirst({
-      where: isEmail ? { email: identifier } : { phone: identifier },
-    });
+    // Use findUnique for indexed unique columns to guarantee index usage
+    const m = isEmail
+      ? await prisma.member.findUnique({ where: { email: identifier } })
+      : await prisma.member.findUnique({ where: { phone: identifier } });
 
     if (!m) {
       return { success: false, error: "INVALID_CREDENTIALS", message: "মেম্বারশিপ আইডি, ফোন নম্বর বা পাসওয়ার্ড সঠিক নয়।" };
@@ -304,12 +305,7 @@ export async function submitBkashPaymentAction(
   bkashTxnId: string
 ): Promise<boolean> {
   try {
-    const member = await prisma.member.findUnique({
-      where: { id: memberId },
-    });
-
-    if (!member) return false;
-
+    // Skip the pre-check findUnique — update throws P2025 if not found, which we catch
     await prisma.member.update({
       where: { id: memberId },
       data: {
@@ -318,9 +314,10 @@ export async function submitBkashPaymentAction(
         status: "pending_approval",
       },
     });
-
     return true;
-  } catch (error) {
+  } catch (error: unknown) {
+    // P2025 = record not found — treat as false rather than throwing
+    if ((error as { code?: string })?.code === "P2025") return false;
     console.error("Error in submitBkashPaymentAction:", error);
     return false;
   }
@@ -485,8 +482,20 @@ export async function verifyMemberForPartnerAction(
   }
 
   try {
+    // Only fetch the columns returned to the partner — avoids transferring password, codes, etc.
     const data = await prisma.member.findUnique({
       where: { id: memberId },
+      select: {
+        id: true,
+        name: true,
+        phone: true,
+        email: true,
+        tier: true,
+        status: true,
+        expiryDate: true,
+        totalSaved: true,
+        profilePictureUrl: true,
+      },
     });
 
     if (!data) {

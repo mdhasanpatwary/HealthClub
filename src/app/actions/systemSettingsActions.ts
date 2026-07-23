@@ -2,6 +2,9 @@
 
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
+import { unstable_cache, updateTag } from "next/cache";
+
+const SYSTEM_SETTINGS_TAG = "system-settings";
 
 export async function getSystemSettingAction(key: string, defaultValue: string = "false"): Promise<string> {
   try {
@@ -27,6 +30,8 @@ export async function updateSystemSettingAction(key: string, value: string): Pro
       update: { value },
       create: { key, value },
     });
+    // Bust the cache so the new value is visible immediately
+    updateTag(SYSTEM_SETTINGS_TAG);
     return true;
   } catch (error) {
     console.error(`Error updating system setting '${key}':`, error);
@@ -34,8 +39,29 @@ export async function updateSystemSettingAction(key: string, value: string): Pro
   }
 }
 
+/**
+ * Cached reader for allow_member_tx.
+ * Hits the DB at most once per 60 seconds; instantly invalidated on writes
+ * via revalidateTag(SYSTEM_SETTINGS_TAG).
+ */
+const getCachedMemberTxSetting = unstable_cache(
+  async (): Promise<string> => {
+    try {
+      const setting = await prisma.systemSetting.findUnique({
+        where: { key: "allow_member_tx" },
+        select: { value: true },
+      });
+      return setting?.value ?? "false";
+    } catch {
+      return "false";
+    }
+  },
+  ["allow_member_tx"],
+  { revalidate: 60, tags: [SYSTEM_SETTINGS_TAG] }
+);
+
 export async function isMemberTxAllowedAction(): Promise<boolean> {
-  const value = await getSystemSettingAction("allow_member_tx", "false");
+  const value = await getCachedMemberTxSetting();
   return value === "true";
 }
 
