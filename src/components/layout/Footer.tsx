@@ -8,8 +8,8 @@ export default function Footer({ locale = "bn" }: { locale?: string }) {
 
   return (
     <footer
-      className="relative bg-gradient-to-b from-slate-950 to-[#030712] text-slate-400 border-t border-slate-800/60 overflow-hidden"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      className="relative bg-gradient-to-b from-slate-950 to-[#030712] text-slate-400 border-t border-slate-800/60 overflow-hidden pb-20 min-[992px]:pb-0"
+      style={{ paddingBottom: 'calc(5rem + env(safe-area-inset-bottom, 0px))' }}
     >
       {/* Decorative top glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />

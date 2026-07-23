@@ -163,7 +163,7 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
 
       {/* Directory Grid */}
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-6">
           {Array.from({ length: limit || 6 }).map((_, i) => (
             <Card key={i} className="p-0 gap-0 border-border bg-background/50 backdrop-blur group flex flex-col justify-between overflow-hidden rounded-2xl">
               <Skeleton className="h-48 sm:h-52 w-full" />
@@ -181,7 +181,7 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
           ))}
         </div>
       ) : displayedPartners.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-6">
           {displayedPartners.map((partner) => {
             const mapUrl = partner.mapLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(partner.name + " " + partner.address)}`;
 

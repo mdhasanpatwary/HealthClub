@@ -58,7 +58,7 @@ export default function TestimonialCarousel() {
   }, [testimonials.length]);
 
   return (
-    <div className="relative w-full max-w-3xl mx-auto px-2 sm:px-4 py-8">
+    <div className="relative w-full max-w-3xl mx-auto px-2 sm:px-4 py-1 sm:py-4">
       {/* Slide Track */}
       <div className="overflow-hidden">
         <div

@@ -68,34 +68,34 @@ export default async function PartnerHospitalsPage() {
   ];
 
   return (
-    <div className="bg-background min-h-screen py-12">
+    <div className="bg-background min-h-screen py-6 sm:py-12">
       <JsonLd data={jsonLdData} />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-12">
         
         {/* Header */}
-        <div className="text-center space-y-4 max-w-2xl mx-auto">
-          <span className="text-xs font-extrabold text-primary tracking-widest uppercase">
+        <div className="text-center space-y-2 sm:space-y-4 max-w-2xl mx-auto">
+          <span className="text-[11px] sm:text-xs font-extrabold text-primary tracking-widest uppercase">
             {t("partnerHospitals.page.partnerNetwork")}
           </span>
-          <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-secondary dark:text-white">
+          <h1 className="font-heading text-2xl sm:text-4xl md:text-5xl font-bold text-secondary dark:text-white">
             {t("partnerHospitals.page.partnerHospitalsDiagnostics")}
           </h1>
-          <p className="text-sm sm:text-base text-muted-foreground">
+          <p className="text-xs sm:text-base text-muted-foreground">
             {t("partnerHospitals.page.findYourNearestPartnerFacilities")}
           </p>
         </div>
 
         {/* Directory Component */}
-        <div className="bg-muted/30 border border-border/80 rounded-3xl p-6 sm:p-8">
+        <div className="bg-muted/30 border border-border/80 rounded-3xl p-3.5 sm:p-8">
           <PartnerDirectory />
         </div>
 
         {/* Become Partner Banner */}
-        <div className="bg-gradient-to-r from-primary/10 via-emerald-500/5 to-secondary/5 border border-primary/20 rounded-3xl p-8 md:p-12 text-center space-y-6 max-w-4xl mx-auto">
-          <h2 className="font-heading text-2xl md:text-3xl font-bold text-secondary dark:text-white">
+        <div className="bg-gradient-to-r from-primary/10 via-emerald-500/5 to-secondary/5 border border-primary/20 rounded-3xl p-5 sm:p-8 md:p-12 text-center space-y-4 sm:space-y-6 max-w-4xl mx-auto">
+          <h2 className="font-heading text-xl md:text-3xl font-bold text-secondary dark:text-white">
             {t("partnerHospitals.page.doYouManageAHealthcare")}
           </h2>
-          <p className="text-sm md:text-base text-muted-foreground max-w-xl mx-auto">
+          <p className="text-xs md:text-base text-muted-foreground max-w-xl mx-auto">
             {t("partnerHospitals.page.joinOurHealthClubPartner")}
           </p>
           <div>

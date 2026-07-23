@@ -162,15 +162,15 @@ export default async function Home() {
       <LandingPricing t={t} />
 
       {/* 6. PARTNER DIRECTORY PREVIEW */}
-      <section className="py-20 sm:py-28 bg-background">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
+      <section className="py-10 sm:py-20 lg:py-28 bg-background">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-12">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-            <div className="space-y-3 text-center md:text-left">
+            <div className="space-y-2 sm:space-y-3 text-center md:text-left">
               <span className="section-label">{t("page.partnerClinicsLabs")}</span>
-              <h2 className="font-heading text-3xl sm:text-4xl font-bold text-secondary dark:text-white mt-2">
+              <h2 className="font-heading text-2xl sm:text-4xl font-bold text-secondary dark:text-white mt-1">
                 {t("page.ourPartnerHospitalsDiagnostics")}
               </h2>
-              <p className="text-sm text-muted-foreground max-w-xl">
+              <p className="text-xs sm:text-sm text-muted-foreground max-w-xl">
                 {t("page.getSpecialDiscountsAtTop")}
               </p>
             </div>
@@ -187,18 +187,18 @@ export default async function Home() {
       </section>
 
       {/* 7. SAVINGS CALCULATOR SECTION */}
-      <section className="py-20 sm:py-28 bg-muted/40 dark:bg-slate-950/60 border-y border-border/60">
+      <section className="py-10 sm:py-20 lg:py-28 bg-muted/40 dark:bg-slate-950/60 border-y border-border/60">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SavingsCalculator />
         </div>
       </section>
 
       {/* 8. TESTIMONIALS SECTION */}
-      <section className="py-20 sm:py-28 bg-background">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
-          <div className="text-center space-y-3 max-w-xl mx-auto">
+      <section className="py-10 sm:py-20 lg:py-28 bg-background">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-3 sm:space-y-8">
+          <div className="text-center space-y-2 sm:space-y-3 max-w-xl mx-auto">
             <span className="section-label">{t("page.memberTestimonials")}</span>
-            <h2 className="font-heading text-3xl sm:text-4xl font-bold text-secondary dark:text-white mt-3">
+            <h2 className="font-heading text-2xl sm:text-4xl font-bold text-secondary dark:text-white mt-2">
               {t("page.ourMembersRealSavingsStories")}
             </h2>
           </div>
@@ -211,7 +211,7 @@ export default async function Home() {
       <LandingComparison t={t} />
 
       {/* CTA BANNER */}
-      <section className="py-16 sm:py-20 bg-gradient-to-r from-primary via-emerald-500 to-primary dark:from-primary-dark dark:via-emerald-600 dark:to-primary-dark animate-gradient relative overflow-hidden">
+      <section className="py-10 sm:py-20 bg-gradient-to-r from-primary via-emerald-500 to-primary dark:from-primary-dark dark:via-emerald-600 dark:to-primary-dark animate-gradient relative overflow-hidden">
         <div
           className="absolute inset-0 opacity-10"
           style={{
@@ -219,11 +219,11 @@ export default async function Home() {
             backgroundSize: "24px 24px",
           }}
         />
-        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center space-y-6">
-          <h2 className="font-heading text-3xl sm:text-4xl font-extrabold text-white leading-tight">
+        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center space-y-4 sm:space-y-6">
+          <h2 className="font-heading text-2xl sm:text-4xl font-extrabold text-white leading-tight">
             {t("page.cta.title")}
           </h2>
-          <p className="text-base sm:text-lg text-white/85 max-w-xl mx-auto">
+          <p className="text-sm sm:text-lg text-white/85 max-w-xl mx-auto">
             {t("page.cta.description")}
           </p>
           <Link href="/register">
@@ -239,14 +239,14 @@ export default async function Home() {
       </section>
 
       {/* 10. FAQ SECTION */}
-      <section id="faq" className="py-20 sm:py-28 bg-background">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
-          <div className="text-center space-y-3 max-w-xl mx-auto">
+      <section id="faq" className="py-10 sm:py-20 lg:py-28 bg-background">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-12">
+          <div className="text-center space-y-2 sm:space-y-3 max-w-xl mx-auto">
             <span className="section-label">{t("page.questionsAnswers")}</span>
-            <h2 className="font-heading text-3xl sm:text-4xl font-bold text-secondary dark:text-white mt-3">
+            <h2 className="font-heading text-2xl sm:text-4xl font-bold text-secondary dark:text-white mt-2">
               {t("page.frequentlyAskedQuestionsFaq")}
             </h2>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs sm:text-sm text-muted-foreground">
               {t("page.findTheAnswersToFrequently")}
             </p>
           </div>
@@ -256,14 +256,14 @@ export default async function Home() {
       </section>
 
       {/* 11. CONTACT SECTION */}
-      <section className="py-20 sm:py-28 bg-muted/40 dark:bg-slate-950/60 border-t border-border/60">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
-          <div className="text-center space-y-3 max-w-xl mx-auto">
+      <section className="py-10 sm:py-20 lg:py-28 bg-muted/40 dark:bg-slate-950/60 border-t border-border/60">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-12">
+          <div className="text-center space-y-2 sm:space-y-3 max-w-xl mx-auto">
             <span className="section-label">{t("page.contactUs")}</span>
-            <h2 className="font-heading text-3xl sm:text-4xl font-bold text-secondary dark:text-white mt-3">
+            <h2 className="font-heading text-2xl sm:text-4xl font-bold text-secondary dark:text-white mt-2">
               {t("page.letUsKnowAnyQueries")}
             </h2>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs sm:text-sm text-muted-foreground">
               {t("page.havingTroubleUnderstandingMembershipBenefits")}
             </p>
           </div>

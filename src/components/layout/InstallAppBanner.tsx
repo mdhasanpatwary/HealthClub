@@ -109,7 +109,7 @@ export default function InstallAppBanner() {
   return (
     <aside
       aria-label="App Install Banner"
-      className="fixed bottom-0 left-0 right-0 z-50 p-3 sm:p-4 md:hidden animate-in slide-in-from-bottom-5 duration-300"
+      className="fixed bottom-[calc(4.25rem+env(safe-area-inset-bottom,0px))] left-0 right-0 z-50 p-3 sm:p-4 min-[992px]:hidden animate-in slide-in-from-bottom-5 duration-300"
     >
       <div className="bg-slate-900/95 dark:bg-slate-900/95 text-white border border-slate-700/60 rounded-2xl p-4 shadow-2xl backdrop-blur-xl relative flex flex-col gap-3">
         {/* Top Close Button */}

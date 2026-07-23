@@ -490,3 +490,27 @@ label {
   cursor: grabbing;
   transform: scale(1.15);
 }
+
+/* ── Mobile PWA & Native App-like UI/UX Rules ── */
+html, body {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  overscroll-behavior-y: contain;
+}
+
+.touch-active {
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.touch-active:active {
+  transform: scale(0.93);
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.mb-safe {
+  margin-bottom: env(safe-area-inset-bottom, 0px);
+}

@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_Bengali } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import BottomNav from "@/components/layout/BottomNav";
 import InstallAppBanner from "@/components/layout/InstallAppBanner";
 import { Toaster } from "sonner";
 import { cookies } from "next/headers";
@@ -96,6 +97,18 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#16a34a" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f172a" },
+  ],
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -149,6 +162,7 @@ export default async function RootLayout({
             <Header />
             <main className="flex-grow">{children}</main>
             <Footer locale={locale} />
+            <BottomNav />
             <InstallAppBanner />
             <Toaster richColors position="top-right" />
           </LanguageProvider>

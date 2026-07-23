@@ -14,7 +14,7 @@ interface LandingHeroProps {
 
 export function LandingHero({ remainingSeats, sampleMember, t, locale }: LandingHeroProps) {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-primary-light/60 via-emerald-50/30 to-background dark:from-slate-950 dark:via-slate-900 dark:to-background py-20 sm:py-28">
+    <section className="relative overflow-hidden bg-gradient-to-br from-primary-light/60 via-emerald-50/30 to-background dark:from-slate-950 dark:via-slate-900 dark:to-background py-10 sm:py-20 lg:py-28">
 
       {/* Animated background orbs */}
       <div className="absolute -top-48 -right-48 w-[600px] h-[600px] bg-primary/8 dark:bg-primary/5 rounded-full blur-3xl -z-10 animate-gradient" />
@@ -31,10 +31,10 @@ export function LandingHero({ remainingSeats, sampleMember, t, locale }: Landing
       />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
 
           {/* Left Content Column */}
-          <div className="space-y-7 lg:col-span-7 text-center lg:text-left">
+          <div className="space-y-4 sm:space-y-7 lg:col-span-7 text-center lg:text-left">
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20 animate-fade-in shadow-sm">
               <Heart className="h-3.5 w-3.5 fill-primary" />
               {t("page.healthcareBenefitMembershipPlatform")}

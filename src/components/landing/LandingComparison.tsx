@@ -6,8 +6,8 @@ interface LandingComparisonProps {
 
 export function LandingComparison({ t }: LandingComparisonProps) {
   return (
-    <section className="py-20 sm:py-28 bg-muted/40 dark:bg-slate-950/60 border-y border-border/60">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
+    <section className="py-10 sm:py-20 lg:py-28 bg-muted/40 dark:bg-slate-950/60 border-y border-border/60">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-12">
 
         <div className="text-center space-y-3 max-w-2xl mx-auto">
           <span className="section-label">{t("page.comparisonStatement")}</span>

@@ -105,7 +105,7 @@ export default async function MembershipPage() {
       <JsonLd data={jsonLdData} />
 
       {/* Page Hero */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary-light/50 via-emerald-50/20 to-background dark:from-slate-950 dark:via-slate-900 dark:to-background py-16 sm:py-24 border-b border-border/60">
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary-light/50 via-emerald-50/20 to-background dark:from-slate-950 dark:via-slate-900 dark:to-background py-8 sm:py-20 border-b border-border/60">
         <div className="absolute -top-32 -right-32 w-80 h-80 bg-primary/8 rounded-full blur-3xl" />
         <div className="absolute -bottom-16 -left-32 w-80 h-80 bg-emerald-200/30 rounded-full blur-3xl" />
         <div
@@ -115,24 +115,24 @@ export default async function MembershipPage() {
             backgroundSize: "28px 28px",
           }}
         />
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-4">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-2 sm:space-y-4">
           <span className="section-label">{t("membership.page.plansDetails")}</span>
-          <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-secondary dark:text-white mt-3">
+          <h1 className="font-heading text-2xl sm:text-4xl md:text-5xl font-bold text-secondary dark:text-white mt-2">
             {t("membership.page.affordableHealthcareMembershipPlans")}
           </h1>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">
+          <p className="text-xs sm:text-base text-muted-foreground max-w-xl mx-auto">
             {t("membership.page.chooseTheRightPlanThat")}
           </p>
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24 space-y-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-20 space-y-10 sm:space-y-20">
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch max-w-3xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-stretch max-w-3xl mx-auto">
 
           {/* Founding Member */}
-          <div className="relative bg-gradient-to-b from-primary/10 via-primary/5 to-background dark:from-primary/15 dark:via-primary/8 dark:to-slate-900 border-2 border-primary rounded-3xl p-8 flex flex-col justify-between shadow-xl ring-4 ring-primary/10 overflow-hidden">
+          <div className="relative bg-gradient-to-b from-primary/10 via-primary/5 to-background dark:from-primary/15 dark:via-primary/8 dark:to-slate-900 border-2 border-primary rounded-3xl p-5 sm:p-8 flex flex-col justify-between shadow-xl ring-4 ring-primary/10 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/5 to-transparent rounded-3xl" />
             <div className="absolute top-4 right-4 bg-gradient-to-r from-primary to-emerald-500 text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-md">
               {t("membership.page.limitedOffer")}
@@ -176,7 +176,7 @@ export default async function MembershipPage() {
           </div>
 
           {/* Premium */}
-          <div className="bg-background dark:bg-slate-900 border border-border rounded-3xl p-8 flex flex-col justify-between shadow-md hover-lift">
+          <div className="bg-background dark:bg-slate-900 border border-border rounded-3xl p-5 sm:p-8 flex flex-col justify-between shadow-md hover-lift">
             <div className="space-y-6">
               <div>
                 <div className="h-10 w-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-3">
