@@ -640,4 +640,8 @@ export const bn = {
     "page.premiumMember": "প্রিমিয়াম মেম্বার",
     "membership.page.foundingMember": "ফাউন্ডিং মেম্বার",
     "membership.page.premiumMembership": "প্রিমিয়াম মেম্বারশিপ",
+    "pwa.installTitle": "হেলথ ক্লাব মোবাইল অ্যাপ",
+    "pwa.installDesc": "সহজে ডিসকাউন্ট পেতে হেলথ ক্লাব মোবাইল অ্যাপ ইনস্টল করুন",
+    "pwa.installBtn": "ইনস্টল করুন",
+    "pwa.iosInstructions": "Safari ব্রাউজারের Share (শেয়ার) বাটনে ট্যাপ করে 'Add to Home Screen' চাপুন",
 } as const;

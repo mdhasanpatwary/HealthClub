@@ -45,3 +45,12 @@ next-env.d.ts
 .npmrc
 
 /src/generated/prisma
+
+# PWA / Serwist generated files (built at deploy time)
+/public/sw.js
+/public/sw.js.map
+/public/workbox-*.js
+/public/workbox-*.js.map
+/public/serwist-*.js
+/public/serwist-*.js.map
+

@@ -3,6 +3,7 @@ import { Inter, Noto_Sans_Bengali } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import InstallAppBanner from "@/components/layout/InstallAppBanner";
 import { Toaster } from "sonner";
 import { cookies } from "next/headers";
 import { LanguageProvider } from "@/components/layout/LanguageProvider";
@@ -148,6 +149,7 @@ export default async function RootLayout({
             <Header />
             <main className="flex-grow">{children}</main>
             <Footer locale={locale} />
+            <InstallAppBanner />
             <Toaster richColors position="top-right" />
           </LanguageProvider>
         </ThemeProvider>

@@ -50,11 +50,13 @@ export function LanguageProvider({
   };
 
   const t = (key: TranslationKey | string, fallbackEn?: string): string => {
-    if (fallbackEn !== undefined) {
-      return locale === "en" ? fallbackEn : (key as string);
+    if (dict && dict[key]) {
+      return dict[key];
     }
-    // Use the active dict; fall back to the key itself so UI is never blank
-    return dict[key] || key;
+    if (fallbackEn !== undefined) {
+      return fallbackEn;
+    }
+    return key as string;
   };
 
   return (

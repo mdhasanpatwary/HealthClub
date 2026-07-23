@@ -640,6 +640,10 @@ export const en = {
     "page.premiumMember": "Premium Member",
     "membership.page.foundingMember": "Founding Member",
     "membership.page.premiumMembership": "Premium Membership",
+    "pwa.installTitle": "Health Club Mobile App",
+    "pwa.installDesc": "Install the app for instant access & exclusive discounts",
+    "pwa.installBtn": "Install App",
+    "pwa.iosInstructions": "Tap Share in Safari then select 'Add to Home Screen'",
 } as const;
 
 export type TranslationKey = keyof typeof en;
