@@ -43,7 +43,7 @@ export const getHomepageStats = unstable_cache(
     }
   },
   ["homepage-stats"],
-  { revalidate: 60, tags: ["homepage-stats"] }
+  { revalidate: 60, tags: ["homepage-stats", "partners"] }
 );
 
 /**
@@ -75,5 +75,5 @@ export const getHomepagePartners = unstable_cache(
     }
   },
   ["homepage-partners"],
-  { revalidate: 60, tags: ["homepage-partners"] }
+  { revalidate: 60, tags: ["homepage-partners", "partners"] }
 );

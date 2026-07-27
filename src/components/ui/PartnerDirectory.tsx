@@ -47,17 +47,25 @@ function PartnerCardBanner({
 }
 
 export default function PartnerDirectory({ partners: initialPartners, limit, showFilters = true }: PartnerDirectoryProps) {
+  const hasInitialData = Boolean(initialPartners && initialPartners.length > 0);
   const [partners, setPartners] = useState<Partner[]>(initialPartners ?? []);
-  const [loading, setLoading] = useState(!initialPartners);
+  const [loading, setLoading] = useState(!hasInitialData);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const { locale, t } = useLanguage();
 
   useEffect(() => {
-    // Skip client-side fetch when server-side data was provided as a prop
-    if (initialPartners) return;
+    if (initialPartners && initialPartners.length > 0) {
+      setPartners(initialPartners);
+      setLoading(false);
+      return;
+    }
+    // Fallback client-side fetch if initialPartners is missing or empty
+    setLoading(true);
     dbStore.getPartners().then((data) => {
-      setPartners(data);
+      if (data && data.length > 0) {
+        setPartners(data);
+      }
       setLoading(false);
     });
   }, [initialPartners]);
@@ -79,13 +87,13 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
   const getCategoryFallbackImage = (category: string) => {
     switch (category) {
       case "hospital":
-        return "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?q=80&w=800&auto=format&fit=crop";
+        return "/images/placeholders/hospital.png";
       case "diagnostic":
-        return "https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=800&auto=format&fit=crop";
+        return "/images/placeholders/diagnostic.png";
       case "pharmacy":
-        return "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?q=80&w=800&auto=format&fit=crop";
+        return "/images/placeholders/pharmacy.png";
       default:
-        return "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=800&auto=format&fit=crop";
+        return "/images/placeholders/default.png";
     }
   };
 

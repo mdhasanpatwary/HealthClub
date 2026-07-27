@@ -234,6 +234,8 @@ export async function updatePartnerRequestStatusAction(id: string, status: "appr
   } catch (error) {
     console.error("Error in updatePartnerRequestStatusAction:", error);
     return false;
+  } finally {
+    updateTag(PARTNERS_TAG);
   }
 }
 
