@@ -3,7 +3,7 @@
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Heart, ShieldCheck, AlertCircle } from "lucide-react";
+import { Heart, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
@@ -16,17 +16,16 @@ function VerifyEmailForm() {
   const email = searchParams.get("email") || "";
 
   const [code, setCode] = useState("");
-  const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [awaitingApproval, setAwaitingApproval] = useState(false);
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setIsSubmitting(true);
 
     if (code.length !== 6) {
-      setError("অনুগ্রহ করে ৬ সংখ্যার সঠিক ভেরিফিকেশন কোডটি দিন।");
+      const msg = "অনুগ্রহ করে ৬ সংখ্যার সঠিক ভেরিফিকেশন কোডটি দিন।";
+      toast.warning(msg);
       setIsSubmitting(false);
       return;
     }
@@ -47,10 +46,12 @@ function VerifyEmailForm() {
           router.push("/dashboard");
         }
       } else {
-        setError(res.message || "ভেরিফিকেশন সম্পন্ন করা যায়নি।");
+        const errMsg = res.message || "ভেরিফিকেশন সম্পন্ন করা যায়নি।";
+        toast.error(errMsg);
       }
     } catch {
-      setError("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
+      const errMsg = "সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।";
+      toast.error(errMsg);
     } finally {
       setIsSubmitting(false);
     }
@@ -103,13 +104,6 @@ function VerifyEmailForm() {
       </CardHeader>
 
       <CardContent className="space-y-6">
-        {error && (
-          <div className="bg-destructive/10 text-destructive text-xs p-3 rounded-lg border border-destructive/20 flex items-center gap-2">
-            <AlertCircle className="h-4 w-4 shrink-0" />
-            <span>{error}</span>
-          </div>
-        )}
-
         <form onSubmit={handleVerify} className="space-y-4">
           <div className="space-y-2">
             <label className="text-xs font-semibold text-secondary">ভেরিফিকেশন কোড (OTP) *</label>

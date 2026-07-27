@@ -77,18 +77,14 @@ export default function Header() {
 
   const navLinks = [
     { name: t("layout.header.home"), path: "/" },
-    { name: t("layout.header.benefits"), path: "/#benefits" },
     { name: t("layout.header.partnerHospitals"), path: "/partner-hospitals" },
     { name: t("layout.header.membershipPlans"), path: "/membership" },
     { name: t("layout.header.aboutUs"), path: "/about-us" },
     { name: t("layout.header.contact"), path: "/contact" },
   ];
 
-  const mobileNavLinks = navLinks.filter((link) => !link.path.includes("#"));
-
   const isActive = (path: string) => {
     if (path === "/") return pathname === "/";
-    if (path.startsWith("/#")) return false;
     return pathname.startsWith(path);
   };
 
@@ -267,7 +263,7 @@ export default function Header() {
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto">
           <div className="px-3 pt-3 pb-1 space-y-0.5">
-            {mobileNavLinks.map((link) => (
+            {navLinks.map((link) => (
               <Link
                 key={link.path}
                 href={link.path}

@@ -3,7 +3,7 @@
 import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Heart, Mail, AlertCircle, ArrowRight, ArrowLeft } from "lucide-react";
+import { Heart, Mail, ArrowRight, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { requestPasswordResetAction } from "@/app/actions/memberActions";
@@ -12,7 +12,6 @@ import { toast } from "sonner";
 
 function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -20,11 +19,10 @@ function ForgotPasswordForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
 
     if (!email) {
-      setError("অনুগ্রহ করে আপনার নিবন্ধিত ইমেইল অ্যাড্রেসটি লিখুন।");
+      toast.warning("অনুগ্রহ করে আপনার নিবন্ধিত ইমেইল অ্যাড্রেসটি লিখুন।");
       setLoading(false);
       return;
     }
@@ -38,10 +36,12 @@ function ForgotPasswordForm() {
         toast.success(res.message);
         router.push(`/forgot-password/reset?email=${encodeURIComponent(email)}${isPartner ? "&type=partner" : ""}`);
       } else {
-        setError(res.message || "পাসওয়ার্ড রিসেট ওটিপি পাঠানো যায়নি।");
+        const errMsg = res.message || "পাসওয়ার্ড রিসেট ওটিপি পাঠানো যায়নি।";
+        toast.error(errMsg);
       }
     } catch {
-      setError("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
+      const errMsg = "সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।";
+      toast.error(errMsg);
     } finally {
       setLoading(false);
     }
@@ -89,14 +89,6 @@ function ForgotPasswordForm() {
                   : "আপনার মেম্বার অ্যাকাউন্টের নিবন্ধিত ইমেইল লিখুন। আমরা আপনাকে পাসওয়ার্ড পরিবর্তন করার জন্য ৬ সংখ্যার ভেরিফিকেশন ওটিপি পাঠাব।"}
               </p>
             </div>
-
-            {/* Error Message */}
-            {error && (
-              <div className="mb-5 bg-destructive/8 text-destructive text-xs p-3.5 rounded-xl flex items-center gap-2.5 border border-destructive/15">
-                <AlertCircle className="h-4 w-4 shrink-0" />
-                <span>{error}</span>
-              </div>
-            )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">

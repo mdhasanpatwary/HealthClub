@@ -74,6 +74,11 @@ Always use the following color variables or class equivalents:
 - **Validation**: Always use **Zod** for schema validation.
 - **Form Management**: Always use **React Hook Form** for form state, submission handling, and validation binding.
 
+### Notification & Toast Standards
+- **Toast Notifications Mandatory**: All user-facing error, warning, and success feedback must be displayed using the application's Toaster library (`import { toast } from "sonner"`).
+- Always use standard toast methods: `toast.success(...)`, `toast.error(...)`, `toast.warning(...)`, and `toast.info(...)`.
+- **No Duplicate Error Banners**: Do NOT render duplicate inline error message banners inside card UI components; user notifications must be communicated strictly through the toaster.
+
 ### No Hallucinations
 - Do not guess or invent APIs, project structures, schemas, or routing configurations.
 - If any requirement, schema, or route is ambiguous, **stop and ask the user for clarification**.

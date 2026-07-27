@@ -25,6 +25,22 @@ function stripSensitive(m: Member): Member {
 export async function addMemberAction(
   member: Omit<Member, "id" | "status" | "joinedDate" | "expiryDate" | "totalSaved"> & { password?: string }
 ): Promise<Member> {
+  const existingPhone = await prisma.member.findUnique({
+    where: { phone: member.phone },
+  });
+  if (existingPhone) {
+    throw new Error("এই মোবাইল নম্বরটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।");
+  }
+
+  if (member.email) {
+    const existingEmail = await prisma.member.findUnique({
+      where: { email: member.email },
+    });
+    if (existingEmail) {
+      throw new Error("এই ইমেইল অ্যাড্রেসটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।");
+    }
+  }
+
   const year = new Date().getFullYear();
   const rand = crypto.randomUUID().slice(0, 8).toUpperCase();
   const newId = `HC-${year}-${rand}`;
@@ -77,8 +93,11 @@ export async function addMemberAction(
       profession: m.profession || undefined,
       profilePictureUrl: m.profilePictureUrl || undefined,
     } as Member;
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error in addMemberAction:", error);
+    if (typeof error === "object" && error !== null && "code" in error && (error as { code: string }).code === "P2002") {
+      throw new Error("এই মোবাইল নম্বর বা ইমেইল দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।");
+    }
     throw error;
   }
 }
@@ -107,33 +126,44 @@ export async function getMembersAction(): Promise<Member[]> {
   }
 }
 
-export async function getMemberByIdAction(id: string): Promise<Member | null> {
+export async function getMemberByIdAction(idOrPhone: string): Promise<Member | null> {
   try {
-    const m = await prisma.member.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        name: true,
-        phone: true,
-        email: true,
-        tier: true,
-        status: true,
-        joinedDate: true,
-        expiryDate: true,
-        qrCodeUrl: true,
-        totalSaved: true,
-        address: true,
-        birthDate: true,
-        profession: true,
-        profilePictureUrl: true,
-        emailVerified: true,
-        bkashSender: true,
-        bkashTxnId: true,
-        renewalStatus: true,
-        renewalBkashSender: true,
-        renewalBkashTxnId: true,
-      },
+    const selectFields = {
+      id: true,
+      name: true,
+      phone: true,
+      email: true,
+      tier: true,
+      status: true,
+      joinedDate: true,
+      expiryDate: true,
+      qrCodeUrl: true,
+      totalSaved: true,
+      address: true,
+      birthDate: true,
+      profession: true,
+      profilePictureUrl: true,
+      emailVerified: true,
+      bkashSender: true,
+      bkashTxnId: true,
+      renewalStatus: true,
+      renewalBkashSender: true,
+      renewalBkashTxnId: true,
+    };
+
+    let m = await prisma.member.findUnique({
+      where: { id: idOrPhone },
+      select: selectFields,
     });
+
+    if (!m) {
+      m = await prisma.member.findFirst({
+        where: {
+          OR: [{ phone: idOrPhone }, { email: idOrPhone }],
+        },
+        select: selectFields,
+      });
+    }
 
     if (!m) return null;
 

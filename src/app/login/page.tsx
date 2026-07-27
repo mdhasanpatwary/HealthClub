@@ -3,32 +3,33 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Heart, User, Lock, AlertCircle, ArrowRight } from "lucide-react";
+import { Heart, User, Lock, ArrowRight } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { loginMemberAction } from "@/app/actions/memberActions";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
 
     if (!identifier || !password) {
-      setError("মোবাইল নম্বর/ইমেইল এবং পাসওয়ার্ড দিন।");
+      const msg = "মোবাইল নম্বর/ইমেইল এবং পাসওয়ার্ড দিন।";
+      toast.warning(msg);
       setLoading(false);
       return;
     }
 
     if (identifier === "healthclubfeni@gmail.com") {
-      setError("এডমিন লগইন করতে /login/admin এ যান।");
+      const msg = "এডমিন লগইন করতে /login/admin এ যান।";
+      toast.warning(msg);
       setLoading(false);
       return;
     }
@@ -37,19 +38,23 @@ export default function LoginPage() {
       const res = await loginMemberAction(identifier, password);
       if (res.success && res.member) {
         if (res.error === "PENDING_VERIFICATION") {
-          setError("আপনার ইমেইল ভেরিফাই করা হয়নি। ভেরিফিকেশন পেজে পাঠানো হচ্ছে...");
+          const msg = "আপনার ইমেইল ভেরিফাই করা হয়নি। ভেরিফিকেশন পেজে পাঠানো হচ্ছে...";
+          toast.warning(msg);
           setTimeout(() => {
             router.push(`/register/verify-email?email=${encodeURIComponent(res.member!.email || "")}`);
           }, 2000);
           return;
         }
         dbStore.setCurrentUser(res.member);
+        toast.success("সফলভাবে লগইন করা হয়েছে!");
         router.push("/dashboard");
       } else {
-        setError(res.error || "ভুল মোবাইল নম্বর/ইমেইল অথবা পাসওয়ার্ড। অনুগ্রহ করে আবার চেষ্টা করুন।");
+        const errMsg = res.message || res.error || "ভুল মোবাইল নম্বর/ইমেইল অথবা পাসওয়ার্ড। অনুগ্রহ করে আবার চেষ্টা করুন।";
+        toast.error(errMsg);
       }
     } catch {
-      setError("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
+      const errMsg = "সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।";
+      toast.error(errMsg);
     } finally {
       setLoading(false);
     }
@@ -95,14 +100,6 @@ export default function LoginPage() {
                 আপনার মেম্বার আইডি দেখতে এবং ড্যাশবোর্ড অ্যাক্সেস করতে লগইন করুন।
               </p>
             </div>
-
-            {/* Error */}
-            {error && (
-              <div className="mb-5 bg-destructive/8 text-destructive text-xs p-3.5 rounded-xl flex items-center gap-2.5 border border-destructive/15">
-                <AlertCircle className="h-4 w-4 shrink-0" />
-                <span>{error}</span>
-              </div>
-            )}
 
             <form onSubmit={handleLogin} className="space-y-5">
               <div className="space-y-2">

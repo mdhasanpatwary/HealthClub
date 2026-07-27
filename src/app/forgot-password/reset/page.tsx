@@ -3,7 +3,7 @@
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Heart, Lock, ShieldCheck, AlertCircle, ArrowLeft } from "lucide-react";
+import { Heart, Lock, ShieldCheck, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
@@ -20,28 +20,29 @@ function ResetPasswordForm() {
   const [code, setCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setIsSubmitting(true);
 
     if (code.length !== 6) {
-      setError("অনুগ্রহ করে ৬ সংখ্যার সঠিক ওটিপি কোডটি দিন।");
+      const msg = "অনুগ্রহ করে ৬ সংখ্যার সঠিক ওটিপি কোডটি দিন।";
+      toast.warning(msg);
       setIsSubmitting(false);
       return;
     }
 
     if (newPassword.length < 6) {
-      setError("পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।");
+      const msg = "পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।";
+      toast.warning(msg);
       setIsSubmitting(false);
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setError("নতুন পাসওয়ার্ড দুটি মেলেনি।");
+      const msg = "নতুন পাসওয়ার্ড দুটি মেলেনি।";
+      toast.warning(msg);
       setIsSubmitting(false);
       return;
     }
@@ -55,10 +56,12 @@ function ResetPasswordForm() {
         toast.success(res.message);
         router.push(isPartner ? "/login/partner" : "/login");
       } else {
-        setError(res.message || "পাসওয়ার্ড পরিবর্তন করা যায়নি।");
+        const errMsg = res.message || "পাসওয়ার্ড পরিবর্তন করা যায়নি।";
+        toast.error(errMsg);
       }
     } catch {
-      setError("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
+      const errMsg = "সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।";
+      toast.error(errMsg);
     } finally {
       setIsSubmitting(false);
     }
@@ -82,13 +85,6 @@ function ResetPasswordForm() {
       </CardHeader>
 
       <CardContent className="space-y-6">
-        {error && (
-          <div className="bg-destructive/10 text-destructive text-xs p-3 rounded-lg border border-destructive/20 flex items-center gap-2">
-            <AlertCircle className="h-4 w-4 shrink-0" />
-            <span>{error}</span>
-          </div>
-        )}
-
         <form onSubmit={handleReset} className="space-y-4">
           <div className="space-y-2">
             <label className="text-xs font-semibold text-secondary">ভেরিফিকেশন কোড (OTP) *</label>

@@ -50,24 +50,37 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
   const hasInitialData = Boolean(initialPartners && initialPartners.length > 0);
   const [partners, setPartners] = useState<Partner[]>(initialPartners ?? []);
   const [loading, setLoading] = useState(!hasInitialData);
+  const [prevInitialPartners, setPrevInitialPartners] = useState(initialPartners);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const { locale, t } = useLanguage();
 
-  useEffect(() => {
+  if (initialPartners !== prevInitialPartners) {
+    setPrevInitialPartners(initialPartners);
     if (initialPartners && initialPartners.length > 0) {
       setPartners(initialPartners);
       setLoading(false);
+    } else {
+      setLoading(true);
+    }
+  }
+
+  useEffect(() => {
+    if (initialPartners && initialPartners.length > 0) {
       return;
     }
     // Fallback client-side fetch if initialPartners is missing or empty
-    setLoading(true);
+    let isMounted = true;
     dbStore.getPartners().then((data) => {
+      if (!isMounted) return;
       if (data && data.length > 0) {
         setPartners(data);
       }
       setLoading(false);
     });
+    return () => {
+      isMounted = false;
+    };
   }, [initialPartners]);
 
   // Filter partners

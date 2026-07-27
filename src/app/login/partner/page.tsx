@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Heart, Lock, AlertCircle, Building2 } from "lucide-react";
+import { Heart, Lock, Building2 } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,17 +14,15 @@ import { toast } from "sonner";
 export default function PartnerLoginPage() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handlePartnerLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
 
     if (!identifier || !password) {
-      setError("মোবাইল নম্বর/ইমেইল এবং পাসওয়ার্ড দিন।");
+      toast.warning("মোবাইল নম্বর/ইমেইল এবং পাসওয়ার্ড দিন।");
       setLoading(false);
       return;
     }
@@ -37,11 +35,11 @@ export default function PartnerLoginPage() {
         router.push("/partner/dashboard");
         return;
       } else {
-        setError(res.error || "ভুল ক্রেডেনশিয়ালস। অনুগ্রহ করে সঠিক তথ্য প্রদান করুন।");
+        toast.error(res.error || "ভুল ক্রেডেনশিয়ালস। অনুগ্রহ করে সঠিক তথ্য প্রদান করুন।");
       }
     } catch (err) {
       console.error(err);
-      setError("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
+      toast.error("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
     } finally {
       setLoading(false);
     }
@@ -70,13 +68,6 @@ export default function PartnerLoginPage() {
         </CardHeader>
 
         <CardContent className="space-y-6">
-          {error && (
-            <div className="bg-destructive/10 text-destructive text-xs p-3 rounded-lg flex items-center gap-2 border border-destructive/20">
-              <AlertCircle className="h-4 w-4 shrink-0" />
-              <span>{error}</span>
-            </div>
-          )}
-
           <form onSubmit={handlePartnerLogin} className="space-y-4">
             <div className="space-y-2">
               <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">

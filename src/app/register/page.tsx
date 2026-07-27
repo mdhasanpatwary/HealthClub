@@ -1,42 +1,35 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Heart, User, Phone, Mail, Lock, MapPin, Calendar, Briefcase,
-  AlertCircle, ArrowRight, Star, ShieldCheck
+  ArrowRight, Star, ShieldCheck
 } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ImageUpload } from "@/components/ui/ImageUpload";
+import { toast } from "sonner";
 
 function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const planParam = searchParams.get("plan");
 
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     email: "",
     password: "",
-    tier: "founding" as "founding" | "premium",
+    tier: (planParam === "premium" ? "premium" : "founding") as "founding" | "premium",
     address: "",
     birthDate: "",
     profession: "",
     profilePictureUrl: ""
   });
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const planParam = searchParams.get("plan");
-    if (planParam === "premium") {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setFormData(prev => ({ ...prev, tier: planParam }));
-    }
-  }, [searchParams]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -44,11 +37,11 @@ function RegisterForm() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
 
     if (!formData.name || !formData.phone || !formData.password || !formData.email || !formData.address || !formData.birthDate || !formData.profession || !formData.profilePictureUrl) {
-      setError("সবগুলো তারকাচিহ্নিত (*) ঘর পূরণ করুন।");
+      const msg = "সবগুলো তারকাচিহ্নিত (*) ঘর পূরণ করুন।";
+      toast.warning(msg);
       setLoading(false);
       return;
     }
@@ -56,7 +49,8 @@ function RegisterForm() {
     try {
       const existing = await dbStore.getMemberById(formData.phone);
       if (existing) {
-        setError("এই মোবাইল নম্বরটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।");
+        const msg = "এই মোবাইল নম্বরটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।";
+        toast.error(msg);
         setLoading(false);
         return;
       }
@@ -73,9 +67,11 @@ function RegisterForm() {
         profilePictureUrl: formData.profilePictureUrl
       });
 
+      toast.success("রেজিস্ট্রেশন সফল হয়েছে! অনুগ্রহ করে ইমেইল ভেরিফিকেশন সম্পন্ন করুন।");
       router.push(`/register/verify-email?email=${encodeURIComponent(formData.email)}`);
-    } catch {
-      setError("রেজিস্ট্রেশন করতে সমস্যা হচ্ছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "রেজিস্ট্রেশন করতে সমস্যা হচ্ছে। অনুগ্রহ করে আবার চেষ্টা করুন।";
+      toast.error(errorMessage);
       setLoading(false);
     }
   };
@@ -143,14 +139,6 @@ function RegisterForm() {
             <p className="text-[11px] text-muted-foreground font-semibold">৳৫০০ / বাৎসরিক</p>
           </button>
         </div>
-
-        {/* Error */}
-        {error && (
-          <div className="bg-destructive/8 text-destructive text-xs p-3.5 rounded-xl flex items-center gap-2.5 border border-destructive/15">
-            <AlertCircle className="h-4 w-4 shrink-0" />
-            <span>{error}</span>
-          </div>
-        )}
 
         <form onSubmit={handleRegister} className="space-y-4">
 

@@ -3,25 +3,25 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Heart, Lock, AlertCircle, Shield } from "lucide-react";
+import { Heart, Lock, Shield } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { loginAdminAction } from "@/app/actions/memberActions";
+import { toast } from "sonner";
 
 export default function AdminLoginPage() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
 
     if (!identifier || !password) {
-      setError("মোবাইল নম্বর/ইমেইল এবং পাসওয়ার্ড দিন।");
+      const msg = "মোবাইল নম্বর/ইমেইল এবং পাসওয়ার্ড দিন।";
+      toast.warning(msg);
       return;
     }
 
@@ -29,6 +29,7 @@ export default function AdminLoginPage() {
       const adminMember = await loginAdminAction(identifier, password);
       if (adminMember) {
         dbStore.setCurrentUser(adminMember);
+        toast.success("এডমিন পোর্টালে সফলভাবে লগইন করা হয়েছে!");
         router.push("/admin");
         return;
       }
@@ -36,7 +37,8 @@ export default function AdminLoginPage() {
       console.error(err);
     }
 
-    setError("ভুল এডমিন ক্রেডেনশিয়ালস। অনুগ্রহ করে সঠিক তথ্য প্রদান করুন।");
+    const errMsg = "ভুল এডমিন ক্রেডেনশিয়ালস। অনুগ্রহ করে সঠিক তথ্য প্রদান করুন।";
+    toast.error(errMsg);
   };
 
   return (
@@ -62,13 +64,6 @@ export default function AdminLoginPage() {
         </CardHeader>
 
         <CardContent className="space-y-6">
-          {error && (
-            <div className="bg-destructive/10 text-destructive text-xs p-3 rounded-lg flex items-center gap-2 border border-destructive/20">
-              <AlertCircle className="h-4 w-4 shrink-0" />
-              <span>{error}</span>
-            </div>
-          )}
-
           <form onSubmit={handleAdminLogin} className="space-y-4">
             <div className="space-y-2">
               <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
