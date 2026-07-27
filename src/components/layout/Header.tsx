@@ -91,18 +91,17 @@ export default function Header() {
   return (
     <>
       <header
-        className={`sticky top-0 z-50 w-full pt-[env(safe-area-inset-top,0px)] transition-all duration-300 ${
-          scrolled
-            ? "border-b border-border/60 bg-background/80 backdrop-blur-xl shadow-sm"
-            : "border-b border-transparent bg-background/60 backdrop-blur-md"
-        }`}
+        className={`sticky top-0 z-50 w-full pt-[env(safe-area-inset-top,0px)] transition-all duration-300 ${scrolled
+          ? "border-b border-border/60 bg-background/80 backdrop-blur-xl shadow-sm"
+          : "border-b border-transparent bg-background/60 backdrop-blur-md"
+          }`}
       >
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-14 min-[992px]:h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
 
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center space-x-2.5 group"
+            className="flex items-center space-x-2 group"
             onClick={() => setIsOpen(false)}
           >
             <div className="relative shrink-0">
@@ -112,10 +111,10 @@ export default function Header() {
                 width={36}
                 height={36}
                 priority
-                className="h-8 w-8 sm:h-9 sm:w-9 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.3)] transition-transform duration-300 group-hover:scale-110"
+                className="h-8 w-78sm:h-9 sm:w-9 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.3)] transition-transform duration-300 group-hover:scale-110"
               />
             </div>
-            <span className="font-heading text-xl font-bold tracking-tight text-secondary dark:text-white">
+            <span className="font-heading text-lg sm:text-xl font-bold tracking-tight text-secondary dark:text-white">
               {t("layout.header.health")}{" "}
               <span className="gradient-text">{t("layout.header.club")}</span>
             </span>
@@ -127,11 +126,10 @@ export default function Header() {
               <Link
                 key={link.path}
                 href={link.path}
-                className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
-                  isActive(link.path)
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
-                }`}
+                className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${isActive(link.path)
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                  }`}
               >
                 {link.name}
                 {isActive(link.path) && (
@@ -174,7 +172,7 @@ export default function Header() {
               <PartnerDropdown partner={partner} />
             ) : (
               <>
-                 <Link href="/login">
+                <Link href="/login">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -206,14 +204,12 @@ export default function Header() {
               <span className="sr-only">{isOpen ? "Close menu" : "Open menu"}</span>
               <div className="relative h-6 w-6">
                 <X
-                  className={`absolute inset-0 h-6 w-6 transition-all duration-200 ${
-                    isOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 rotate-90 scale-75"
-                  }`}
+                  className={`absolute inset-0 h-6 w-6 transition-all duration-200 ${isOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 rotate-90 scale-75"
+                    }`}
                 />
                 <Menu
-                  className={`absolute inset-0 h-6 w-6 transition-all duration-200 ${
-                    isOpen ? "opacity-0 -rotate-90 scale-75" : "opacity-100 rotate-0 scale-100"
-                  }`}
+                  className={`absolute inset-0 h-6 w-6 transition-all duration-200 ${isOpen ? "opacity-0 -rotate-90 scale-75" : "opacity-100 rotate-0 scale-100"
+                    }`}
                 />
               </div>
             </button>
@@ -225,15 +221,14 @@ export default function Header() {
       {/* Mobile Menu — fixed full-screen overlay */}
       <div
         id="mobile-menu"
-        className={`fixed inset-0 z-50 min-[992px]:hidden flex flex-col bg-background/98 backdrop-blur-xl transition-all duration-300 ease-in-out ${
-          isOpen
-            ? "opacity-100 translate-y-0 pointer-events-auto"
-            : "opacity-0 -translate-y-4 pointer-events-none"
-        }`}
+        className={`fixed inset-0 z-50 min-[992px]:hidden flex flex-col bg-background/98 backdrop-blur-xl transition-all duration-300 ease-in-out ${isOpen
+          ? "opacity-100 translate-y-0 pointer-events-auto"
+          : "opacity-0 -translate-y-4 pointer-events-none"
+          }`}
         aria-hidden={!isOpen}
       >
         {/* Menu Header */}
-        <div className="flex items-center justify-between px-4 h-16 border-b border-border/60 shrink-0">
+        <div className="flex items-center justify-between px-4 h-13 min-[992px]:h-16 border-b border-border/60 shrink-0">
           <Link
             href="/"
             className="flex items-center space-x-2.5"
@@ -268,11 +263,10 @@ export default function Header() {
                 key={link.path}
                 href={link.path}
                 onClick={() => setIsOpen(false)}
-                className={`flex items-center rounded-xl px-3 py-3 text-base font-medium transition-colors ${
-                  isActive(link.path)
-                    ? "bg-primary/10 text-primary font-semibold"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                }`}
+                className={`flex items-center rounded-xl px-3 py-3 text-base font-medium transition-colors ${isActive(link.path)
+                  ? "bg-primary/10 text-primary font-semibold"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  }`}
               >
                 {link.name}
               </Link>
@@ -417,9 +411,8 @@ export default function Header() {
 
       {/* Backdrop overlay */}
       <div
-        className={`fixed inset-0 z-40 bg-black/40 md:hidden backdrop-blur-sm transition-opacity duration-300 ${
-          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
+        className={`fixed inset-0 z-40 bg-black/40 md:hidden backdrop-blur-sm transition-opacity duration-300 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          }`}
         onClick={() => setIsOpen(false)}
         aria-hidden="true"
       />

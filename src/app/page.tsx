@@ -137,10 +137,8 @@ export default async function Home() {
 
       {/* 1. HERO SECTION */}
       <LandingHero
-        remainingSeats={remainingSeats}
         sampleMember={sampleMember}
         t={t}
-        locale={locale}
       />
 
       {/* 2. STATS SECTION */}

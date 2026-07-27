@@ -19,8 +19,8 @@ export function toBanglaNums(num: number | string): string {
 
 /**
  * Parses a discount string that may contain Bangla or English numerals
- * (e.g., "১০% ফ্ল্যাট ডিসকাউন্ট" or "10% Flat Discount") and returns
- * the rate as a decimal (0.10 for 10%).
+ * (e.g., "১০-২৫% ডিসকাউন্ট" or "10-25% Discount") and returns
+ * the rate as a decimal (0.25 for 25%).
  */
 export function parseDiscountPercentage(discountStr: string): number {
   const banglaToEnglishMap: { [key: string]: string } = {

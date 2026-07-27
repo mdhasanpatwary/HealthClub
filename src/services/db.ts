@@ -55,7 +55,7 @@ export const initialPartners: Partner[] = [
     name: "পপুলার ডায়াগনস্টিক সেন্টার",
     category: "diagnostic",
     address: "এসএসকে রোড, ফেনী",
-    discount: "১০% ফ্ল্যাট ডিসকাউন্ট",
+    discount: "১০-২৫% ডিসকাউন্ট",
     phone: "০৯৬১৩৭৮৭৮০১",
     logoText: "Popular",
     imageUrl: "https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=600&auto=format&fit=crop"
@@ -65,7 +65,7 @@ export const initialPartners: Partner[] = [
     name: "ল্যাবএইড স্পেশালাইজড হাসপাতাল",
     category: "hospital",
     address: "মিজান রোড, ফেনী",
-    discount: "১০% ফ্ল্যাট ডিসকাউন্ট",
+    discount: "১০-২৫% ডিসকাউন্ট",
     phone: "১০৬০৬",
     logoText: "Labaid",
     imageUrl: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?q=80&w=600&auto=format&fit=crop"
@@ -75,7 +75,7 @@ export const initialPartners: Partner[] = [
     name: "লাজ ফার্মা লিমিটেড",
     category: "pharmacy",
     address: "ট্রাঙ্ক রোড, ফেনী",
-    discount: "১০% ফ্ল্যাট ডিসকাউন্ট",
+    discount: "১০-২৫% ডিসকাউন্ট",
     phone: "০২-৯৩৪৩৫১৬",
     logoText: "Lazz",
     imageUrl: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?q=80&w=600&auto=format&fit=crop"
@@ -85,7 +85,7 @@ export const initialPartners: Partner[] = [
     name: "ইবনে সিনা ডায়াগনস্টিক সেন্টার",
     category: "diagnostic",
     address: "মহিপাল, ফেনী",
-    discount: "১০% ফ্ল্যাট ডিসকাউন্ট",
+    discount: "১০-২৫% ডিসকাউন্ট",
     phone: "০৯৬১০০০৯৬১০",
     logoText: "Ibn Sina",
     imageUrl: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=600&auto=format&fit=crop"
@@ -95,7 +95,7 @@ export const initialPartners: Partner[] = [
     name: "স্কয়ার হাসপাতাল (সিলেক্টেড সুবিধা)",
     category: "hospital",
     address: "গ্র্যান্ড ট্রাঙ্ক রোড, ফেনী",
-    discount: "১০% ফ্ল্যাট ডিসকাউন্ট",
+    discount: "১০-২৫% ডিসকাউন্ট",
     phone: "১০৬১৬",
     logoText: "Square",
     imageUrl: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=600&auto=format&fit=crop"

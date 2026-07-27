@@ -1,6 +1,6 @@
 # Health Club (হেলথ ক্লাব)
 
-> Health Club is a premium healthcare discount membership platform based in Feni, Bangladesh. It makes healthcare affordable by enabling members and their families to receive flat 10% to 50% discounts on hospital bills, diagnostic lab tests, and doctor consultation fees across a network of contracted hospitals, clinics, diagnostic centers, and model pharmacies.
+> Health Club is a premium healthcare discount membership platform based in Feni, Bangladesh. It makes healthcare affordable by enabling members and their families to receive 10-25% discounts on hospital bills, diagnostic lab tests, and doctor consultation fees across a network of contracted hospitals, clinics, diagnostic centers, and model pharmacies.
 
 ## Core Information & Services
 - **Website**: https://healthclubfeni.vercel.app
@@ -9,14 +9,14 @@
 - **Main Offerings**:
   - **Digital Membership Card**: Instantly accessible on mobile with a scannable QR code for instant hospital discount verification.
   - **Hospital & Surgery Discounts**: Up to 10%-20% discount on hospital admission and bed charges at contracted medical centers.
-  - **Diagnostic Test Discounts**: Flat 10%-30% discount on pathological tests, imaging, X-rays, MRI, CT scans, and blood tests.
+  - **Diagnostic Test Discounts**: 10-25% discount on pathological tests, imaging, X-rays, MRI, CT scans, and blood tests.
   - **Pharmacy Discounts**: 5% to 10% discount on medicines at partner model pharmacies.
   - **Free Health Camps**: Periodic free blood pressure, diabetes, and eye checkup camps for members.
 
 ## Membership Pricing Tiers
 - **Founding Member (ফাউন্ডিং মেম্বার)**:
   - **Price**: FREE (৳0 for 1 Year) for the first 100 registered members.
-  - **Benefits**: Full family coverage, instant digital card, 10% discount at all partner facilities.
+  - **Benefits**: Full family coverage, instant digital card, 10-25% discount at all partner facilities.
 - **Premium Member (প্রিমিয়াম মেম্বার)**:
   - **Price**: ৳500 / Year
   - **Benefits**: Annual subscription, family coverage, priority support, full partner network access.

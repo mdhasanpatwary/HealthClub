@@ -2,17 +2,14 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle2, Heart, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import HeroCardWrapper from "./HeroCardWrapper";
-import { formatNum, Locale } from "@/lib/i18n";
 import type { Member } from "@/services/db";
 
 interface LandingHeroProps {
-  remainingSeats: number;
   sampleMember: Member;
   t: (key: string) => string;
-  locale: Locale;
 }
 
-export function LandingHero({ remainingSeats, sampleMember, t, locale }: LandingHeroProps) {
+export function LandingHero({ sampleMember, t }: LandingHeroProps) {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-primary-light/60 via-emerald-50/30 to-background dark:from-slate-950 dark:via-slate-900 dark:to-background py-10 sm:py-20 lg:py-28">
 
@@ -64,23 +61,27 @@ export function LandingHero({ remainingSeats, sampleMember, t, locale }: Landing
               </Link>
             </div>
 
-            {/* Social Proof / Key Highlights */}
+            {/* Feature Highlights (distinct from Stats grid below) */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-6 border-t border-border/80 text-left">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
                 <span className="text-xs font-bold text-secondary dark:text-white">
-                  {t("page.seatsLeft").replace("{count}", formatNum(remainingSeats, locale))}
+                  {t("page.100PercentFreeFounding")}
                 </span>
               </div>
 
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
-                <span className="text-xs font-bold text-secondary dark:text-white">{t("page.10FlatDiscount")}</span>
+                <ShieldCheck className="h-4 w-4 text-primary shrink-0" />
+                <span className="text-xs font-bold text-secondary dark:text-white">
+                  {t("page.instantDigitalVerification")}
+                </span>
               </div>
 
               <div className="flex items-center gap-2 col-span-2 sm:col-span-1">
-                <ShieldCheck className="h-4 w-4 text-primary shrink-0" />
-                <span className="text-xs font-bold text-secondary dark:text-white">{t("page.instantDigitalVerification")}</span>
+                <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+                <span className="text-xs font-bold text-secondary dark:text-white">
+                  {t("page.validAcrossAllPartners")}
+                </span>
               </div>
             </div>
           </div>
