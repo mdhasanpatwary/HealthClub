@@ -8,14 +8,16 @@ const globalForPrisma = global as unknown as {
   pool: pg.Pool;
 };
 
-const connectionString = process.env.DIRECT_URL || process.env.DATABASE_URL;
+// Prefer DATABASE_URL (pgbouncer transaction-mode pooler, port 6543) for faster
+// connections. Fall back to DIRECT_URL (session-mode, port 5432) for migrations.
+const connectionString = process.env.DATABASE_URL || process.env.DIRECT_URL;
 
 // Reuse pool across hot-reloads (dev) AND serverless cold starts (prod)
 if (!globalForPrisma.pool) {
   globalForPrisma.pool = new pg.Pool({
     connectionString,
-    max: 10,              // raised from 5 for better concurrency under load
-    idleTimeoutMillis: 10_000,   // lowered from 30s — recycle idle connections faster
+    max: 5,               // pgbouncer manages its own pool; over-provisioning causes "too many clients"
+    idleTimeoutMillis: 10_000,   // recycle idle connections quickly
     connectionTimeoutMillis: 10_000,
     ssl: { rejectUnauthorized: false },
   });

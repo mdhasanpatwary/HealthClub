@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
+import { getPartnersAction } from "@/app/actions/partnerActions";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -13,7 +14,7 @@ export async function generateMetadata() {
   return {
     title: isEn
       ? "Partner Hospitals & Diagnostic Centers Directory - Health Club"
-      : "পার্টনার হাসপাতাল ও ডায়াগনস্টিকস তালিকা - হেলথ ক্লাব",
+      : "পার্টনার হাসপাতাল ও ডায়াগনস্টিকস তালিকা - হেলথ ক্লাব",
     description: isEn
       ? "Explore our full network of partner hospitals, diagnostic centers, and model pharmacies offering 10% to 50% discount to Health Club members."
       : "আমাদের মেম্বারশিপ কার্ড ব্যবহার করে দেশের যেসব হাসপাতাল, ল্যাব ও ফার্মেসিতে সর্বোচ্চ ডিসকাউন্ট পাবেন তার সম্পূর্ণ তালিকা দেখুন।",
@@ -23,10 +24,10 @@ export async function generateMetadata() {
     openGraph: {
       title: isEn
         ? "Partner Hospitals & Diagnostic Centers - Health Club"
-        : "পার্টনার হাসপাতাল ও ডায়াগনস্টিকস - হেলথ ক্লাব",
+        : "পার্টনার হাসপাতাল ও ডায়াগনস্টিকস - হেলথ ক্লাব",
       description: isEn
         ? "Find hospitals, diagnostic labs, and pharmacies with instant member discounts."
-        : "ফেনী ও আশপাশের চুক্তিভিত্তিক হাসপাতাল ও ডায়াগনস্টিক সেন্টারের বিস্তারিত তালিকা।",
+        : "ফেনী ও আশপাশের চুক্তিভিত্তিক হাসপাতাল ও ডায়াগনস্টিক সেন্টারের বিস্তারিত তালিকা।",
       url: "https://healthclubfeni.vercel.app/partner-hospitals",
     },
   };
@@ -36,6 +37,9 @@ export default async function PartnerHospitalsPage() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const t = (key: string) => tServer(locale, key);
+
+  // Fetch partners server-side (cached) — eliminates client-side loading spinner
+  const allPartners = await getPartnersAction();
 
   const jsonLdData = [
     {
@@ -85,9 +89,9 @@ export default async function PartnerHospitalsPage() {
           </p>
         </div>
 
-        {/* Directory Component */}
+        {/* Directory Component — server-fetched data, no client-side loading */}
         <div className="bg-muted/30 border border-border/80 rounded-3xl p-3.5 sm:p-8">
-          <PartnerDirectory />
+          <PartnerDirectory partners={allPartners} />
         </div>
 
         {/* Become Partner Banner */}

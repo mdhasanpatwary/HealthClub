@@ -5,6 +5,9 @@ import { Partner, Transaction } from "@/services/db";
 import { getSessionUser, setSessionUser } from "@/lib/session";
 import { hashPassword, verifyPassword } from "@/lib/crypto";
 import { sendPasswordResetEmail } from "@/lib/mail";
+import { unstable_cache, updateTag } from "next/cache";
+
+const PARTNERS_TAG = "partners";
 
 export interface PartnerRequest {
   id: string;
@@ -19,40 +22,47 @@ export interface PartnerRequest {
 
 // --- PARTNERS ACTIONS ---
 
-export async function getPartnersAction(): Promise<Partner[]> {
-  try {
-    // Use select to only fetch public-facing columns; exclude password, verificationCode, etc.
-    const data = await prisma.partner.findMany({
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        name: true,
-        category: true,
-        address: true,
-        discount: true,
-        phone: true,
-        logoText: true,
-        mapLink: true,
-        imageUrl: true,
-      },
-    });
+/**
+ * Cached partner list — avoids hitting the DB on every page that shows partners.
+ * Invalidated via "partners" tag on add/update/delete mutations.
+ */
+export const getPartnersAction = unstable_cache(
+  async (): Promise<Partner[]> => {
+    try {
+      const data = await prisma.partner.findMany({
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          name: true,
+          category: true,
+          address: true,
+          discount: true,
+          phone: true,
+          logoText: true,
+          mapLink: true,
+          imageUrl: true,
+        },
+      });
 
-    return data.map((p) => ({
-      id: p.id,
-      name: p.name,
-      category: p.category as Partner["category"],
-      address: p.address,
-      discount: p.discount,
-      phone: p.phone,
-      logoText: p.logoText,
-      mapLink: p.mapLink || undefined,
-      imageUrl: p.imageUrl || undefined,
-    }));
-  } catch (error) {
-    console.error("Error in getPartnersAction:", error);
-    return [];
-  }
-}
+      return data.map((p) => ({
+        id: p.id,
+        name: p.name,
+        category: p.category as Partner["category"],
+        address: p.address,
+        discount: p.discount,
+        phone: p.phone,
+        logoText: p.logoText,
+        mapLink: p.mapLink || undefined,
+        imageUrl: p.imageUrl || undefined,
+      }));
+    } catch (error) {
+      console.error("Error in getPartnersAction:", error);
+      return [];
+    }
+  },
+  ["partners-list"],
+  { revalidate: 60, tags: [PARTNERS_TAG] }
+);
 
 export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Partner> {
   const session = await getSessionUser();
@@ -88,6 +98,8 @@ export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Pa
   } catch (error) {
     console.error("Error in addPartnerAction:", error);
     throw error;
+  } finally {
+    updateTag(PARTNERS_TAG);
   }
 }
 
@@ -112,6 +124,8 @@ export async function updatePartnerAction(id: string, partner: Omit<Partner, "id
   } catch (error) {
     console.error("Error in updatePartnerAction:", error);
     return false;
+  } finally {
+    updateTag(PARTNERS_TAG);
   }
 }
 
@@ -126,6 +140,8 @@ export async function deletePartnerAction(id: string): Promise<boolean> {
   } catch (error) {
     console.error("Error in deletePartnerAction:", error);
     return false;
+  } finally {
+    updateTag(PARTNERS_TAG);
   }
 }
 

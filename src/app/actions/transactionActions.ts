@@ -4,6 +4,9 @@ import { prisma } from "@/lib/prisma";
 import { Transaction } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
 import { isMemberTxAllowedAction } from "./systemSettingsActions";
+import { unstable_cache, updateTag } from "next/cache";
+
+const ADMIN_STATS_TAG = "admin-stats";
 
 
 // --- TRANSACTIONS ACTIONS ---
@@ -16,6 +19,8 @@ export async function getTransactionsAction(memberId?: string): Promise<Transact
       // If memberId is provided, filter at DB level — avoids fetching all rows
       where: memberId ? { memberId } : undefined,
       orderBy: { createdAt: "desc" },
+      // Limit to latest 100 for admin view (no memberId) to prevent unbounded growth
+      ...(memberId ? {} : { take: 100 }),
     });
 
     return data.map((t) => ({
@@ -52,6 +57,8 @@ export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">)
 
 
   try {
+    // Invalidate admin stats cache when a new transaction is created
+    updateTag(ADMIN_STATS_TAG);
     const data = await prisma.$transaction(async (txPrisma) => {
       // 1. Create transaction
       const newTx = await txPrisma.transaction.create({
@@ -98,85 +105,87 @@ export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">)
 
 // --- ANALYTICS ACTION ---
 
-export async function getStatsAction() {
-  const defaultStats = {
-    totalMembers: 0,
-    activeMembers: 0,
-    inactiveMembers: 0,
-    foundingMembers: 0,
-    premiumMembers: 0,
-    expiringMembers: 0,
-    newMembersThisMonth: 0,
-    partnerCount: 0,
-    partnerHospitals: 0,
-    partnerDiagnostics: 0,
-    partnerPharmacies: 0,
-    pendingPartnerRequests: 0,
-    pendingRenewals: 0,
-    contactMessagesCount: 0,
-    totalSaved: 0,
-    thisMonthSaved: 0,
-    totalTransactions: 0,
-    thisMonthTransactions: 0,
-    revenue: 0,
-    topPartners: [] as Array<{ id: string; name: string; totalSaved: number; transactionCount: number }>,
-  };
+const DEFAULT_STATS = {
+  totalMembers: 0,
+  activeMembers: 0,
+  inactiveMembers: 0,
+  foundingMembers: 0,
+  premiumMembers: 0,
+  expiringMembers: 0,
+  newMembersThisMonth: 0,
+  partnerCount: 0,
+  partnerHospitals: 0,
+  partnerDiagnostics: 0,
+  partnerPharmacies: 0,
+  pendingPartnerRequests: 0,
+  pendingRenewals: 0,
+  contactMessagesCount: 0,
+  totalSaved: 0,
+  thisMonthSaved: 0,
+  totalTransactions: 0,
+  thisMonthTransactions: 0,
+  revenue: 0,
+  topPartners: [] as Array<{ id: string; name: string; totalSaved: number; transactionCount: number }>,
+};
 
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") return defaultStats;
-
-  try {
+/**
+ * Cached inner function that runs 2 SQL queries instead of 19 Prisma calls.
+ * Cached for 60s and invalidated via the "admin-stats" tag on mutations.
+ */
+const getCachedAdminStats = unstable_cache(
+  async () => {
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const in30Days = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
 
-    const [
-      totalMembers,
-      activeMembers,
-      foundingMembers,
-      premiumMembers,
-      expiringMembers,
-      newMembersThisMonth,
-      partnerCount,
-      partnerHospitals,
-      partnerDiagnostics,
-      partnerPharmacies,
-      pendingPartnerRequests,
-      pendingRenewals,
-      contactMessagesCount,
-      totalTransactions,
-      thisMonthTransactions,
-      totalSavedAgg,
-      thisMonthSavedAgg,
-      topPartnerGroups,
-      // Moved inside Promise.all — was a sequential 19th query before
-      activePremiumCount,
-    ] = await Promise.all([
-      prisma.member.count(),
-      prisma.member.count({ where: { status: "active" } }),
-      prisma.member.count({ where: { tier: "founding" } }),
-      prisma.member.count({ where: { tier: "premium" } }),
-      prisma.member.count({
-        where: {
-          status: "active",
-          expiryDate: { gte: now, lte: in30Days },
-        },
-      }),
-      prisma.member.count({ where: { createdAt: { gte: startOfMonth } } }),
-      prisma.partner.count(),
-      prisma.partner.count({ where: { category: "hospital" } }),
-      prisma.partner.count({ where: { category: "diagnostic" } }),
-      prisma.partner.count({ where: { category: "pharmacy" } }),
-      prisma.partnerRequest.count({ where: { status: "pending" } }),
-      prisma.member.count({ where: { renewalStatus: "pending" } }),
-      prisma.contactMessage.count(),
-      prisma.transaction.count(),
-      prisma.transaction.count({ where: { createdAt: { gte: startOfMonth } } }),
-      prisma.member.aggregate({ _sum: { totalSaved: true } }),
-      prisma.transaction.aggregate({
-        _sum: { saved: true },
-        where: { createdAt: { gte: startOfMonth } },
-      }),
+    // 1. Single SQL query for all scalar counts & aggregates (replaces 19 round-trips)
+    const [countsResult, topPartnerGroups] = await Promise.all([
+      prisma.$queryRawUnsafe<
+        Array<{
+          total_members: bigint;
+          active_members: bigint;
+          founding_members: bigint;
+          premium_members: bigint;
+          expiring_members: bigint;
+          new_members_this_month: bigint;
+          partner_count: bigint;
+          partner_hospitals: bigint;
+          partner_diagnostics: bigint;
+          partner_pharmacies: bigint;
+          pending_partner_requests: bigint;
+          pending_renewals: bigint;
+          contact_messages_count: bigint;
+          total_transactions: bigint;
+          this_month_transactions: bigint;
+          total_saved: bigint;
+          this_month_saved: bigint;
+          active_premium_count: bigint;
+        }>
+      >(
+        `SELECT
+          (SELECT COUNT(*) FROM members) AS total_members,
+          (SELECT COUNT(*) FROM members WHERE status = 'active') AS active_members,
+          (SELECT COUNT(*) FROM members WHERE tier = 'founding') AS founding_members,
+          (SELECT COUNT(*) FROM members WHERE tier = 'premium') AS premium_members,
+          (SELECT COUNT(*) FROM members WHERE status = 'active' AND expiry_date >= $1 AND expiry_date <= $2) AS expiring_members,
+          (SELECT COUNT(*) FROM members WHERE created_at >= $3) AS new_members_this_month,
+          (SELECT COUNT(*) FROM partners) AS partner_count,
+          (SELECT COUNT(*) FROM partners WHERE category = 'hospital') AS partner_hospitals,
+          (SELECT COUNT(*) FROM partners WHERE category = 'diagnostic') AS partner_diagnostics,
+          (SELECT COUNT(*) FROM partners WHERE category = 'pharmacy') AS partner_pharmacies,
+          (SELECT COUNT(*) FROM partner_requests WHERE status = 'pending') AS pending_partner_requests,
+          (SELECT COUNT(*) FROM members WHERE renewal_status = 'pending') AS pending_renewals,
+          (SELECT COUNT(*) FROM contact_messages) AS contact_messages_count,
+          (SELECT COUNT(*) FROM transactions) AS total_transactions,
+          (SELECT COUNT(*) FROM transactions WHERE created_at >= $3) AS this_month_transactions,
+          (SELECT COALESCE(SUM(total_saved), 0) FROM members) AS total_saved,
+          (SELECT COALESCE(SUM(saved), 0) FROM transactions WHERE created_at >= $3) AS this_month_saved,
+          (SELECT COUNT(*) FROM members WHERE tier = 'premium' AND status = 'active') AS active_premium_count`,
+        now,
+        in30Days,
+        startOfMonth
+      ),
+      // 2. Top partners query (groupBy is hard to inline in raw SQL cleanly)
       prisma.transaction.groupBy({
         by: ["partnerId", "partnerName"],
         _sum: { saved: true },
@@ -184,8 +193,11 @@ export async function getStatsAction() {
         orderBy: { _sum: { saved: "desc" } },
         take: 3,
       }),
-      prisma.member.count({ where: { tier: "premium", status: "active" } }),
     ]);
+
+    const row = countsResult[0];
+    const totalMembers = Number(row?.total_members ?? 0);
+    const activeMembers = Number(row?.active_members ?? 0);
 
     const topPartners = topPartnerGroups.map((p) => ({
       id: p.partnerId,
@@ -198,27 +210,38 @@ export async function getStatsAction() {
       totalMembers,
       activeMembers,
       inactiveMembers: totalMembers - activeMembers,
-      foundingMembers,
-      premiumMembers,
-      expiringMembers,
-      newMembersThisMonth,
-      partnerCount,
-      partnerHospitals,
-      partnerDiagnostics,
-      partnerPharmacies,
-      pendingPartnerRequests,
-      pendingRenewals,
-      contactMessagesCount,
-      totalSaved: totalSavedAgg._sum.totalSaved || 0,
-      thisMonthSaved: thisMonthSavedAgg._sum.saved || 0,
-      totalTransactions,
-      thisMonthTransactions,
-      revenue: activePremiumCount * 500,
+      foundingMembers: Number(row?.founding_members ?? 0),
+      premiumMembers: Number(row?.premium_members ?? 0),
+      expiringMembers: Number(row?.expiring_members ?? 0),
+      newMembersThisMonth: Number(row?.new_members_this_month ?? 0),
+      partnerCount: Number(row?.partner_count ?? 0),
+      partnerHospitals: Number(row?.partner_hospitals ?? 0),
+      partnerDiagnostics: Number(row?.partner_diagnostics ?? 0),
+      partnerPharmacies: Number(row?.partner_pharmacies ?? 0),
+      pendingPartnerRequests: Number(row?.pending_partner_requests ?? 0),
+      pendingRenewals: Number(row?.pending_renewals ?? 0),
+      contactMessagesCount: Number(row?.contact_messages_count ?? 0),
+      totalSaved: Number(row?.total_saved ?? 0),
+      thisMonthSaved: Number(row?.this_month_saved ?? 0),
+      totalTransactions: Number(row?.total_transactions ?? 0),
+      thisMonthTransactions: Number(row?.this_month_transactions ?? 0),
+      revenue: Number(row?.active_premium_count ?? 0) * 500,
       topPartners,
     };
+  },
+  ["admin-stats"],
+  { revalidate: 60, tags: [ADMIN_STATS_TAG] }
+);
+
+export async function getStatsAction() {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") return DEFAULT_STATS;
+
+  try {
+    return await getCachedAdminStats();
   } catch (error) {
     console.error("Error in getStatsAction:", error);
-    return defaultStats;
+    return DEFAULT_STATS;
   }
 }
 

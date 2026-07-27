@@ -9,22 +9,39 @@ function formatDate(date: Date): string {
   return date.toISOString().split("T")[0];
 }
 
-function stripSensitive(m: Member): Member {
-  const safe = { ...m } as Partial<Member>;
-  delete safe.password;
-  delete safe.verificationCode;
-  return safe as Member;
-}
+
 
 export async function getMembersAction(): Promise<Member[]> {
   const session = await getSessionUser();
   if (!session || session.role !== "admin") return [];
   try {
+    // Select only needed columns — excludes password, verificationCode at DB level
     const data = await prisma.member.findMany({
       orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        phone: true,
+        email: true,
+        tier: true,
+        status: true,
+        joinedDate: true,
+        expiryDate: true,
+        qrCodeUrl: true,
+        totalSaved: true,
+        address: true,
+        birthDate: true,
+        profession: true,
+        profilePictureUrl: true,
+        bkashSender: true,
+        bkashTxnId: true,
+        renewalStatus: true,
+        renewalBkashSender: true,
+        renewalBkashTxnId: true,
+      },
     });
 
-    return data.map((m) => stripSensitive({
+    return data.map((m) => ({
       id: m.id,
       name: m.name,
       phone: m.phone,
@@ -44,7 +61,7 @@ export async function getMembersAction(): Promise<Member[]> {
       renewalStatus: m.renewalStatus || undefined,
       renewalBkashSender: m.renewalBkashSender || undefined,
       renewalBkashTxnId: m.renewalBkashTxnId || undefined,
-    }));
+    } as Member));
   } catch (error) {
     console.error("Error in getMembersAction:", error);
     return [];

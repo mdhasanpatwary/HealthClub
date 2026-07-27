@@ -6,12 +6,30 @@ const adminRoutes = ["/admin"];
 const partnerRoutes = ["/partner"];
 const authRoutes = ["/login", "/register"];
 
+// Public routes that never need session checks — skip JWT decrypt entirely
+const publicRoutes = [
+  "/about-us",
+  "/partner-hospitals",
+  "/membership",
+  "/contact",
+  "/privacy-policy",
+  "/terms-conditions",
+  "/become-partner",
+  "/offline",
+  "/verify",
+];
+
 const matchRoute = (path: string, route: string) => {
   return path === route || path.startsWith(route + "/");
 };
 
 export async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;
+
+  // Fast path: skip JWT decrypt for public-only routes (saves ~20ms per request)
+  if (path === "/" || publicRoutes.some((r) => matchRoute(path, r))) {
+    return NextResponse.next();
+  }
 
   // Read session cookie directly (no DB call — optimistic check only)
   const sessionCookie = req.cookies.get("session")?.value;

@@ -111,20 +111,54 @@ export async function getMemberByIdAction(id: string): Promise<Member | null> {
   try {
     const m = await prisma.member.findUnique({
       where: { id },
+      select: {
+        id: true,
+        name: true,
+        phone: true,
+        email: true,
+        tier: true,
+        status: true,
+        joinedDate: true,
+        expiryDate: true,
+        qrCodeUrl: true,
+        totalSaved: true,
+        address: true,
+        birthDate: true,
+        profession: true,
+        profilePictureUrl: true,
+        emailVerified: true,
+        bkashSender: true,
+        bkashTxnId: true,
+        renewalStatus: true,
+        renewalBkashSender: true,
+        renewalBkashTxnId: true,
+      },
     });
 
     if (!m) return null;
 
-    return stripSensitive({
-      ...m,
+    return {
+      id: m.id,
+      name: m.name,
+      phone: m.phone,
       email: m.email || undefined,
+      tier: m.tier as Member["tier"],
+      status: m.status as Member["status"],
       joinedDate: formatDate(m.joinedDate),
       expiryDate: formatDate(m.expiryDate),
+      qrCodeUrl: m.qrCodeUrl || undefined,
+      totalSaved: m.totalSaved,
       address: m.address || undefined,
       birthDate: m.birthDate ? formatDate(m.birthDate) : undefined,
       profession: m.profession || undefined,
       profilePictureUrl: m.profilePictureUrl || undefined,
-    } as Member);
+      emailVerified: m.emailVerified,
+      bkashSender: m.bkashSender || undefined,
+      bkashTxnId: m.bkashTxnId || undefined,
+      renewalStatus: m.renewalStatus || undefined,
+      renewalBkashSender: m.renewalBkashSender || undefined,
+      renewalBkashTxnId: m.renewalBkashTxnId || undefined,
+    } as Member;
   } catch (error) {
     console.error("Error in getMemberByIdAction:", error);
     return null;
