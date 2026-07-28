@@ -13,6 +13,7 @@ import { Locale } from "@/lib/i18n";
 import { en } from "@/lib/translations.en";
 import { bn } from "@/lib/translations.bn";
 import JsonLd from "@/components/seo/JsonLd";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -165,6 +166,7 @@ export default async function RootLayout({
             <BottomNav />
             <InstallAppBanner />
             <Toaster richColors position="top-right" />
+            <Analytics />
           </LanguageProvider>
         </ThemeProvider>
       </body>
