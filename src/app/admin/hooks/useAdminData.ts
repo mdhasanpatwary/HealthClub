@@ -102,7 +102,8 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
       router.push("/login");
       return;
     }
-    const isAdmin = currentUser.email === "healthclubfeni@gmail.com";
+    const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "healthclubfeni@gmail.com";
+    const isAdmin = currentUser.email === adminEmail;
     if (!isAdmin) {
       router.push("/dashboard");
       return;
@@ -386,6 +387,13 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
   const handleToggleMemberStatus = async (id: string) => {
     const member = members.find((m) => m.id === id);
     if (!member) return;
+
+    // Guard: only allow toggling between active and inactive.
+    // Members with pending_approval or pending_payment require explicit admin approval.
+    if (member.status !== "active" && member.status !== "inactive") {
+      toast.error(t("admin.dashboard.memberStatusPendingError") || "এই মেম্বারের স্ট্যাটাস পরিবর্তন করতে নবায়ন অনুমোদন ট্যাব ব্যবহার করুন।");
+      return;
+    }
 
     const newStatus = member.status === "active" ? "inactive" : "active";
     const success = await dbStore.updateMemberStatus(id, newStatus);

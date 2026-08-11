@@ -12,6 +12,7 @@ import { dbStore } from "@/services/dbStore";
 import { Member } from "@/services/db";
 import { toast } from "sonner";
 import { useLanguage } from "@/components/layout/LanguageProvider";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function RenewalPage() {
   const router = useRouter();
@@ -104,15 +105,45 @@ export default function RenewalPage() {
     }
   };
 
-  if (loading) {
+  if (loading || !member) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center">
-        <div className="h-8 w-8 rounded-full border-4 border-primary border-t-transparent animate-spin" />
+      <div className="bg-muted/30 min-h-[85vh] py-10 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-xl space-y-5">
+          <Skeleton className="h-4 w-32" />
+          <Card className="border border-border shadow-xl bg-background/80 backdrop-blur rounded-3xl animate-pulse">
+            <CardHeader className="text-center space-y-3 pb-6 border-b border-border/60">
+              <Skeleton className="h-8 w-32 mx-auto rounded-lg" />
+              <Skeleton className="h-6 w-44 mx-auto" />
+              <Skeleton className="h-4 w-60 mx-auto" />
+            </CardHeader>
+            <CardContent className="pt-6 space-y-6">
+              <div className="bg-[#e2125d]/5 rounded-2xl p-5 border border-[#e2125d]/10 space-y-4">
+                <div className="flex items-center gap-3">
+                  <Skeleton className="h-9 w-9 rounded-lg" />
+                  <div className="space-y-1">
+                    <Skeleton className="h-4 w-28" />
+                    <Skeleton className="h-3 w-40" />
+                  </div>
+                </div>
+                <Skeleton className="h-12 w-full rounded-xl" />
+              </div>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Skeleton className="h-3.5 w-28" />
+                  <Skeleton className="h-11 w-full rounded-md" />
+                </div>
+                <div className="space-y-2">
+                  <Skeleton className="h-3.5 w-36" />
+                  <Skeleton className="h-11 w-full rounded-md" />
+                </div>
+                <Skeleton className="h-11 w-full rounded-xl mt-2" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
-
-  if (!member) return null;
 
   return (
     <div className="bg-muted/30 min-h-[85vh] py-10 px-4 sm:px-6 lg:px-8">

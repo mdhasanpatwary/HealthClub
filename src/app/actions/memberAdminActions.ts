@@ -4,9 +4,14 @@ import { prisma } from "@/lib/prisma";
 import { Member } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
 
-// Helper to format Date objects as YYYY-MM-DD
+// Helper to format Date objects as YYYY-MM-DD in local time (not UTC).
+// Using toISOString() would shift the date to UTC, causing off-by-one errors
+// for timezones ahead of UTC (e.g., BDT is UTC+6).
 function formatDate(date: Date): string {
-  return date.toISOString().split("T")[0];
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
 }
 
 

@@ -6,6 +6,7 @@ import { getSessionUser, setSessionUser } from "@/lib/session";
 import { hashPassword, verifyPassword } from "@/lib/crypto";
 import { sendPasswordResetEmail } from "@/lib/mail";
 import { unstable_cache, updateTag } from "next/cache";
+import { parseDiscountPercentage } from "@/lib/utils";
 
 const PARTNERS_TAG = "partners";
 
@@ -355,19 +356,8 @@ export async function addPartnerTransactionAction(tx: {
       return { success: false, message: "পার্টনার ডেটা খুঁজে পাওয়া যায়নি।" };
     }
 
-    let discountPercent = 10;
-    const bnDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
-    const enDigits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-    let discountStr = partner.discount;
-    for (let i = 0; i < 10; i++) {
-      discountStr = discountStr.replaceAll(bnDigits[i], enDigits[i]);
-    }
-    const match = discountStr.match(/(\d+)/);
-    if (match) {
-      discountPercent = parseInt(match[0]);
-    }
-
-    const saved = Math.round((tx.amount * discountPercent) / 100);
+    const discountRate = parseDiscountPercentage(partner.discount);
+    const saved = Math.round(tx.amount * discountRate);
     const txId = `tx_${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
 
     await prisma.$transaction([

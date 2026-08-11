@@ -14,6 +14,13 @@ const ADMIN_STATS_TAG = "admin-stats";
 export async function getTransactionsAction(memberId?: string): Promise<Transaction[]> {
   const session = await getSessionUser();
   if (!session) return [];
+
+  // Security check: non-admins can only fetch their own transactions
+  if (session.role !== "admin") {
+    if (!memberId || session.userId !== memberId) {
+      return [];
+    }
+  }
   try {
     const data = await prisma.transaction.findMany({
       // If memberId is provided, filter at DB level — avoids fetching all rows
@@ -55,10 +62,7 @@ export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">)
   const newTxId = `tx_${crypto.randomUUID()}`;
   const now = new Date();
 
-
   try {
-    // Invalidate admin stats cache when a new transaction is created
-    updateTag(ADMIN_STATS_TAG);
     const data = await prisma.$transaction(async (txPrisma) => {
       // 1. Create transaction
       const newTx = await txPrisma.transaction.create({
@@ -86,6 +90,9 @@ export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">)
 
       return newTx;
     });
+
+    // Invalidate admin stats cache AFTER the DB write succeeds
+    updateTag(ADMIN_STATS_TAG);
 
     return {
       id: data.id,
@@ -144,6 +151,7 @@ const getCachedAdminStats = unstable_cache(
         Array<{
           total_members: bigint;
           active_members: bigint;
+          inactive_members: bigint;
           founding_members: bigint;
           premium_members: bigint;
           expiring_members: bigint;
@@ -165,6 +173,7 @@ const getCachedAdminStats = unstable_cache(
         `SELECT
           (SELECT COUNT(*) FROM members) AS total_members,
           (SELECT COUNT(*) FROM members WHERE status = 'active') AS active_members,
+          (SELECT COUNT(*) FROM members WHERE status = 'inactive') AS inactive_members,
           (SELECT COUNT(*) FROM members WHERE tier = 'founding') AS founding_members,
           (SELECT COUNT(*) FROM members WHERE tier = 'premium') AS premium_members,
           (SELECT COUNT(*) FROM members WHERE status = 'active' AND expiry_date >= $1 AND expiry_date <= $2) AS expiring_members,
@@ -209,7 +218,7 @@ const getCachedAdminStats = unstable_cache(
     return {
       totalMembers,
       activeMembers,
-      inactiveMembers: totalMembers - activeMembers,
+      inactiveMembers: Number(row?.inactive_members ?? 0),
       foundingMembers: Number(row?.founding_members ?? 0),
       premiumMembers: Number(row?.premium_members ?? 0),
       expiringMembers: Number(row?.expiring_members ?? 0),

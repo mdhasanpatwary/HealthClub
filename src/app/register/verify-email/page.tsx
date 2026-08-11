@@ -7,6 +7,7 @@ import { Heart, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { verifyEmailOtpAction, resendVerificationCodeAction } from "@/app/actions/memberActions";
 import { toast } from "sonner";
 
@@ -155,14 +156,32 @@ function VerifyEmailForm() {
   );
 }
 
+function VerifyEmailSkeleton() {
+  return (
+    <Card className="w-full max-w-md border border-border shadow-xl bg-background/80 backdrop-blur rounded-3xl animate-pulse">
+      <CardHeader className="text-center space-y-3 pb-6">
+        <Skeleton className="h-8 w-32 mx-auto rounded-lg" />
+        <Skeleton className="h-6 w-44 mx-auto" />
+        <Skeleton className="h-4 w-60 mx-auto" />
+      </CardHeader>
+      <CardContent className="p-6 space-y-6">
+        <div className="space-y-2">
+          <Skeleton className="h-3.5 w-36" />
+          <Skeleton className="h-12 w-full rounded-xl" />
+        </div>
+        <Skeleton className="h-11 w-full rounded-xl mt-4" />
+        <div className="text-center border-t border-border pt-4">
+          <Skeleton className="h-4 w-32 mx-auto" />
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function VerifyEmailPage() {
   return (
     <div className="bg-muted/30 min-h-[85vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <Suspense fallback={
-        <div className="text-center py-12 text-muted-foreground">
-          লোড হচ্ছে...
-        </div>
-      }>
+      <Suspense fallback={<VerifyEmailSkeleton />}>
         <VerifyEmailForm />
       </Suspense>
     </div>

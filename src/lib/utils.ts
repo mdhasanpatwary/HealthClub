@@ -28,20 +28,17 @@ export function parseDiscountPercentage(discountStr: string): number {
     "৫": "5", "৬": "6", "৭": "7", "৮": "8", "৯": "9",
   };
 
-  let converted = discountStr;
+  let converted = discountStr || "";
   for (const [bangla, english] of Object.entries(banglaToEnglishMap)) {
     converted = converted.replaceAll(bangla, english);
   }
 
-  const match = converted.match(/(\d+(?:\.\d+)?)\s*%/);
-  if (match) {
-    return parseFloat(match[1]) / 100;
-  }
-
-  const fallbackMatch = converted.match(/(\d+(?:\.\d+)?)/);
-  if (fallbackMatch) {
-    const num = parseFloat(fallbackMatch[1]);
-    return num > 1 ? num / 100 : num;
+  const matches = [...converted.matchAll(/(\d+(?:\.\d+)?)/g)];
+  if (matches.length > 0) {
+    const nums = matches.map((m) => parseFloat(m[1]));
+    const maxNum = Math.max(...nums);
+    const rate = maxNum > 1 ? maxNum / 100 : maxNum;
+    return Math.min(rate, 0.30);
   }
 
   return 0.10;

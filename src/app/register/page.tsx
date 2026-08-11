@@ -11,6 +11,8 @@ import { dbStore } from "@/services/dbStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ImageUpload } from "@/components/ui/ImageUpload";
+import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 
 function RegisterForm() {
@@ -305,10 +307,29 @@ export default function RegisterPage() {
       />
 
       <Suspense fallback={
-        <div className="text-center py-12 text-muted-foreground">
-          <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin mx-auto mb-3" />
-          লোড হচ্ছে...
-        </div>
+        <Card className="relative bg-background/90 dark:bg-slate-900/90 backdrop-blur-xl border border-border/60 rounded-3xl shadow-2xl overflow-hidden w-full max-w-xl p-8 sm:p-10 space-y-6 animate-pulse">
+          <div className="text-center space-y-3">
+            <Skeleton className="h-10 w-36 mx-auto rounded-xl" />
+            <Skeleton className="h-6 w-52 mx-auto" />
+            <Skeleton className="h-4 w-72 mx-auto" />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <Card className="p-4 border-2 border-border/60 space-y-2">
+              <Skeleton className="h-5 w-5 rounded-md" />
+              <Skeleton className="h-4 w-20" />
+            </Card>
+            <Card className="p-4 border-2 border-border/60 space-y-2">
+              <Skeleton className="h-5 w-5 rounded-md" />
+              <Skeleton className="h-4 w-20" />
+            </Card>
+          </div>
+          <div className="space-y-4">
+            <Skeleton className="h-10 w-full rounded-xl" />
+            <Skeleton className="h-10 w-full rounded-xl" />
+            <Skeleton className="h-10 w-full rounded-xl" />
+            <Skeleton className="h-11 w-full rounded-xl mt-4" />
+          </div>
+        </Card>
       }>
         <RegisterForm />
       </Suspense>

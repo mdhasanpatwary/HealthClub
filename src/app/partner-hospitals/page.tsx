@@ -16,7 +16,7 @@ export async function generateMetadata() {
       ? "Partner Hospitals & Diagnostic Centers Directory - Health Club"
       : "পার্টনার হাসপাতাল ও ডায়াগনস্টিকস তালিকা - হেলথ ক্লাব",
     description: isEn
-      ? "Explore our full network of partner hospitals, diagnostic centers, and model pharmacies offering 10% to 50% discount to Health Club members."
+      ? "Explore our full network of partner hospitals, diagnostic centers, and model pharmacies offering 10% to 30% discount to Health Club members."
       : "আমাদের মেম্বারশিপ কার্ড ব্যবহার করে দেশের যেসব হাসপাতাল, ল্যাব ও ফার্মেসিতে সর্বোচ্চ ডিসকাউন্ট পাবেন তার সম্পূর্ণ তালিকা দেখুন।",
     alternates: {
       canonical: "https://healthclubfeni.vercel.app/partner-hospitals",

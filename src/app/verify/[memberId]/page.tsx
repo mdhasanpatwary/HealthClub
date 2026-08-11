@@ -73,8 +73,11 @@ export default function VerificationPage() {
           </CardContent>
         </Card>
       ) : member ? (
-        
-        member.status === "active" ? (
+        (() => {
+          const isExpired = new Date(member.expiryDate) < new Date();
+          const isActive = member.status === "active" && !isExpired;
+
+          return isActive ? (
           /* 1. VERIFIED SUCCESS SCREEN */
           <Card className="w-full max-w-md border-2 border-primary shadow-2xl bg-background/90 backdrop-blur text-center overflow-hidden">
             
@@ -146,15 +149,15 @@ export default function VerificationPage() {
 
           </Card>
         ) : (
-          /* PENDING / INACTIVE SCREEN */
+          /* PENDING / INACTIVE / EXPIRED SCREEN */
           <Card className="w-full max-w-md border-2 border-amber-500 shadow-2xl bg-background/90 backdrop-blur text-center overflow-hidden">
             <div className="bg-amber-500/10 py-6 border-b border-amber-500/20">
               <ShieldAlert className="h-16 w-16 text-amber-500 mx-auto animate-bounce" />
               <h1 className="font-heading text-2xl font-bold text-amber-600 mt-2">
-                মেম্বারশিপ সচল নয়
+                {isExpired ? "মেম্বারশিপের মেয়াদ উত্তীর্ণ" : "মেম্বারশিপ সচল নয়"}
               </h1>
               <p className="text-xs text-muted-foreground mt-1">
-                মেম্বারশিপ অ্যাকাউন্টটি বর্তমানে পেন্ডিং বা অনুমোদনের অপেক্ষায় রয়েছে
+                {isExpired ? "এই মেম্বারশিপ কার্ডটির মেয়াদ শেষ হয়ে গেছে। রিনিউ করুন।" : "মেম্বারশিপ অ্যাকাউন্টটি বর্তমানে পেন্ডিং বা অনুমোদনের অপেক্ষায় রয়েছে"}
               </p>
             </div>
             <CardContent className="p-6 md:p-8 space-y-6">
@@ -177,13 +180,19 @@ export default function VerificationPage() {
                   <div>
                     <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">স্ট্যাটাস</span>
                     <p className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200 inline-flex items-center gap-1 mt-0.5 uppercase">
-                      PENDING APPROVAL
+                      {isExpired ? "EXPIRED" : "PENDING APPROVAL"}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">মেয়াদ তারিখ</span>
+                    <p className="text-xs font-bold font-mono text-secondary mt-0.5">
+                      {member.expiryDate}
                     </p>
                   </div>
                 </div>
               </div>
               <div className="text-xs text-muted-foreground border-t border-border pt-4 text-center">
-                মেম্বারশিপটি সচল হওয়ার পর হাসপাতাল বা অংশীদার চিকিৎসাকেন্দ্রে ডিসকাউন্ট পাওয়া যাবে।
+                {isExpired ? "মেম্বারশিপ রিনিউ করার পর পার্টনার চিকিৎসাকেন্দ্রে ডিসকাউন্ট পাবেন।" : "মেম্বারশিপটি সচল হওয়ার পর হাসপাতাল বা অংশীদার চিকিৎসাকেন্দ্রে ডিসকাউন্ট পাওয়া যাবে।"}
               </div>
               <div className="pt-2">
                 <Link href="/">
@@ -195,7 +204,8 @@ export default function VerificationPage() {
               </div>
             </CardContent>
           </Card>
-        )
+        );
+      })()
       ) : (
         
         /* 2. INVALID CARD SCREEN */

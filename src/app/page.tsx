@@ -29,15 +29,15 @@ export async function generateMetadata() {
       ? "Health Club - Healthcare Discount Membership Platform in Bangladesh"
       : "হেলথ ক্লাব - স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী | ডিজিটাল স্বাস্থ্য মেম্বারশিপ",
     description: isEn
-      ? "Get instant discounts up to 50% on hospital admission, medical tests, labs, and pharmacies with Health Club digital membership card in Feni and Bangladesh."
+      ? "Get instant discounts up to 30% on hospital admission, medical tests, labs, and pharmacies with Health Club digital membership card in Feni and Bangladesh."
       : "হেলথ ক্লাবের ডিজিটাল মেম্বারশিপ কার্ড দিয়ে পার্টনার হাসপাতাল, ডায়াগনস্টিক ল্যাব ও মডেল ফার্মেসিতে পান আকর্ষণীয় ডিসকাউন্ট ও সাশ্রয়ী চিকিৎসা।",
     alternates: {
       canonical: "https://healthclubfeni.vercel.app",
     },
     openGraph: {
       title: isEn
-        ? "Health Club - Save Up to 50% on Healthcare & Hospital Bills"
-        : "হেলথ ক্লাব - চিকিৎসা ব্যয়ে ৫০% পর্যন্ত ডিসকাউন্ট পান",
+        ? "Health Club - Save Up to 30% on Healthcare & Hospital Bills"
+        : "হেলথ ক্লাব - চিকিৎসা ব্যয়ে ৩০% পর্যন্ত ডিসকাউন্ট পান",
       description: isEn
         ? "Join Health Club to get digital discount card for hospitals, labs, and medicines."
         : "নির্ধারিত হাসপাতাল ও ল্যাবে ডিসকাউন্ট পেতে আজই হেলথ ক্লাবের মেম্বারশিপ সংগ্রহ করুন।",

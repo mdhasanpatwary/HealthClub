@@ -74,7 +74,7 @@ export default async function MembershipPage() {
       "@context": "https://schema.org",
       "@type": "Product",
       "name": "Health Club Membership Card",
-      "description": "Digital health discount membership card offering 10% to 50% discount at partner hospitals, diagnostic centers, and pharmacies.",
+      "description": "Digital health discount membership card offering 10% to 30% discount at partner hospitals, diagnostic centers, and pharmacies.",
       "brand": {
         "@type": "Brand",
         "name": "Health Club"

@@ -111,6 +111,7 @@ export default function Header() {
                 width={36}
                 height={36}
                 priority
+                style={{ height: "auto" }}
                 className="h-8 w-78sm:h-9 sm:w-9 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.3)] transition-transform duration-300 group-hover:scale-110"
               />
             </div>
@@ -239,6 +240,7 @@ export default function Header() {
               alt="Health Club Logo"
               width={32}
               height={32}
+              style={{ height: "auto" }}
               className="h-8 w-8 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.3)] shrink-0"
             />
             <span className="font-heading text-xl font-bold tracking-tight text-secondary dark:text-white">

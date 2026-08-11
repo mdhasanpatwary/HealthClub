@@ -28,7 +28,7 @@ export default function UserDropdown({ user }: UserDropdownProps) {
     router.push("/");
   };
 
-  const isAdmin = user.email === "healthclubfeni@gmail.com";
+  const isAdmin = user.email === (process.env.NEXT_PUBLIC_ADMIN_EMAIL || "healthclubfeni@gmail.com");
   const avatarText = user.name ? user.name.charAt(0).toUpperCase() : "U";
 
   return (

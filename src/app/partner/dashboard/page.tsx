@@ -13,6 +13,8 @@ import { addPartnerTransactionAction, getPartnerTransactionsAction } from "@/app
 import { toast } from "sonner";
 import { Html5Qrcode } from "html5-qrcode";
 import { ChangePartnerPasswordDialog } from "./components/ChangePartnerPasswordDialog";
+import { PartnerDashboardSkeleton } from "./components/PartnerDashboardSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface VerifiedMember {
   id: string;
@@ -43,14 +45,17 @@ export default function PartnerDashboardPage() {
 
   // Transactions History
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-
+  const [loadingTransactions, setLoadingTransactions] = useState(true);
 
   const loadTransactions = async () => {
+    setLoadingTransactions(true);
     try {
       const data = await getPartnerTransactionsAction();
       setTransactions(data);
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoadingTransactions(false);
     }
   };
 
@@ -194,7 +199,9 @@ export default function PartnerDashboardPage() {
 
 
 
-  if (!partner) return null;
+  if (!partner) {
+    return <PartnerDashboardSkeleton />;
+  }
 
   const categoryLabels = {
     hospital: "হাসপাতাল",
@@ -347,7 +354,24 @@ export default function PartnerDashboardPage() {
                         <div className="bg-primary/5 border border-primary/15 rounded-xl p-3.5 flex justify-between items-center text-sm font-semibold text-primary">
                           <span>প্রাক্কলিত ডিসকাউন্ট ও সাশ্রয়:</span>
                           <span className="text-base font-extrabold font-mono">
-                            ৳{Math.round((Number(billAmount) * (partner.discount.match(/\d+/) ? parseInt(partner.discount.match(/\d+/)![0]) : 10)) / 100)}
+                        ৳{Math.round(Number(billAmount) * (partner.discount ? (() => {
+                            // Must match server-side calculation in addPartnerTransactionAction
+                            const banglaToEnglishMap: Record<string, string> = {
+                              "০": "0", "১": "1", "২": "2", "৩": "3", "৪": "4",
+                              "৫": "5", "৬": "6", "৭": "7", "৮": "8", "৯": "9",
+                            };
+                            let converted = partner.discount;
+                            for (const [bangla, english] of Object.entries(banglaToEnglishMap)) {
+                              converted = converted.replaceAll(bangla, english);
+                            }
+                            const matches = [...converted.matchAll(/(\d+(?:\.\d+)?)/g)];
+                            if (matches.length > 0) {
+                              const maxNum = Math.max(...matches.map(m => parseFloat(m[1])));
+                              const rate = maxNum > 1 ? maxNum / 100 : maxNum;
+                              return Math.min(rate, 0.30);
+                            }
+                            return 0.10;
+                          })() : 0.10))}
                           </span>
                         </div>
                       )}
@@ -383,7 +407,22 @@ export default function PartnerDashboardPage() {
               </div>
             </CardHeader>
             <CardContent className="px-0">
-              {transactions.length === 0 ? (
+              {loadingTransactions ? (
+                <div className="divide-y divide-border/60 p-4 space-y-4 animate-pulse">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} className="py-2 flex justify-between items-start">
+                      <div className="space-y-1.5">
+                        <Skeleton className="h-3.5 w-28" />
+                        <Skeleton className="h-2.5 w-16" />
+                      </div>
+                      <div className="space-y-1.5 text-right">
+                        <Skeleton className="h-3.5 w-14 ml-auto" />
+                        <Skeleton className="h-2.5 w-10 ml-auto" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : transactions.length === 0 ? (
                 <div className="py-12 text-center text-sm text-muted-foreground">
                   কোনো লেনদেন রেকর্ড করা হয়নি।
                 </div>

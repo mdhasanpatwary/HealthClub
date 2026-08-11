@@ -27,7 +27,7 @@ export default function LoginPage() {
       return;
     }
 
-    if (identifier === "healthclubfeni@gmail.com") {
+    if (identifier === (process.env.NEXT_PUBLIC_ADMIN_EMAIL || "healthclubfeni@gmail.com")) {
       const msg = "এডমিন লগইন করতে /login/admin এ যান।";
       toast.warning(msg);
       setLoading(false);

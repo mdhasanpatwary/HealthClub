@@ -8,9 +8,14 @@ import { sendOtpEmail, sendPasswordResetEmail } from "@/lib/mail";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "healthclubfeni@gmail.com";
 
-// Helper to format Date objects as YYYY-MM-DD
+// Helper to format Date objects as YYYY-MM-DD in local time (not UTC).
+// Using toISOString() would shift the date to UTC, causing off-by-one errors
+// for timezones ahead of UTC (e.g., BDT is UTC+6).
 function formatDate(date: Date): string {
-  return date.toISOString().split("T")[0];
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
 }
 
 function stripSensitive(m: Member): Member {
@@ -33,6 +38,9 @@ export async function addMemberAction(
   }
 
   if (member.email) {
+    if (member.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+      throw new Error("এই ইমেইল অ্যাড্রেসটি দিয়ে সাধারণ অ্যাকাউন্ট তৈরি করা যাবে না।");
+    }
     const existingEmail = await prisma.member.findUnique({
       where: { email: member.email },
     });
@@ -103,6 +111,8 @@ export async function addMemberAction(
 }
 
 export async function getMembersAction(): Promise<Member[]> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") return [];
   try {
     const members = await prisma.member.findMany({
       orderBy: { createdAt: "desc" },
@@ -199,6 +209,8 @@ export async function updateMemberStatusAction(
   id: string,
   status: Member["status"]
 ): Promise<boolean> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") return false;
   try {
     await prisma.member.update({
       where: { id },
@@ -217,10 +229,15 @@ export async function loginMemberAction(
 ): Promise<{ success: boolean; member?: Member; message?: string; error?: string }> {
   try {
     const isEmail = identifier.includes("@");
-    // Use findUnique for indexed unique columns to guarantee index usage
-    const m = isEmail
+    // Try email or phone lookup first (both are indexed unique columns)
+    let m = isEmail
       ? await prisma.member.findUnique({ where: { email: identifier } })
       : await prisma.member.findUnique({ where: { phone: identifier } });
+
+    // Fallback: try membership ID (e.g., HC-2026-ABCD1234) if phone lookup returned nothing
+    if (!m && !isEmail) {
+      m = await prisma.member.findUnique({ where: { id: identifier } });
+    }
 
     if (!m) {
       return { success: false, error: "INVALID_CREDENTIALS", message: "মেম্বারশিপ আইডি, ফোন নম্বর বা পাসওয়ার্ড সঠিক নয়।" };
@@ -251,8 +268,7 @@ export async function loginMemberAction(
       };
     }
 
-    const isAdmin = m.email === ADMIN_EMAIL;
-    await setSessionUser(safeMember.id, isAdmin ? "admin" : "user");
+    await setSessionUser(safeMember.id, "user");
 
     return { success: true, member: safeMember };
   } catch (error) {
@@ -262,11 +278,40 @@ export async function loginMemberAction(
 }
 
 export async function loginAdminAction(identifier: string, passwordInput: string): Promise<Member | null> {
-  const res = await loginMemberAction(identifier, passwordInput);
-  if (res.success && res.member && res.member.email === ADMIN_EMAIL) {
-    return res.member;
+  try {
+    // Do the lookup directly — avoids setting a "user" session just to overwrite it with "admin"
+    const isEmail = identifier.includes("@");
+    let m = isEmail
+      ? await prisma.member.findUnique({ where: { email: identifier } })
+      : await prisma.member.findUnique({ where: { phone: identifier } });
+
+    if (!m && !isEmail) {
+      m = await prisma.member.findUnique({ where: { id: identifier } });
+    }
+
+    if (!m || m.email !== ADMIN_EMAIL) return null;
+
+    const isValid = verifyPassword(passwordInput, m.password);
+    if (!isValid) return null;
+
+    const safeMember = stripSensitive({
+      ...m,
+      email: m.email || undefined,
+      joinedDate: formatDate(m.joinedDate),
+      expiryDate: formatDate(m.expiryDate),
+      address: m.address || undefined,
+      birthDate: m.birthDate ? formatDate(m.birthDate) : undefined,
+      profession: m.profession || undefined,
+      profilePictureUrl: m.profilePictureUrl || undefined,
+    } as Member);
+
+    // Set session once as admin — no intermediate "user" session write
+    await setSessionUser(safeMember.id, "admin");
+    return safeMember;
+  } catch (error) {
+    console.error("Error in loginAdminAction:", error);
+    return null;
   }
-  return null;
 }
 
 export async function logoutUserAction(): Promise<boolean> {
@@ -285,6 +330,8 @@ export async function updateMemberProfileAction(
   id: string,
   updates: Partial<Pick<Member, "name" | "phone" | "email" | "address" | "birthDate" | "profession" | "profilePictureUrl">>
 ): Promise<boolean> {
+  const session = await getSessionUser();
+  if (!session || (session.userId !== id && session.role !== "admin")) return false;
   try {
     await prisma.member.update({
       where: { id },
@@ -307,6 +354,8 @@ export async function updateMemberProfileAction(
   }
 }
 
+const MAX_OTP_ATTEMPTS = 5;
+
 export async function verifyEmailOtpAction(
   email: string,
   code: string
@@ -320,15 +369,41 @@ export async function verifyEmailOtpAction(
       return { success: false, message: "মেম্বার অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।" };
     }
 
-    if (member.verificationCode !== code) {
-      return { success: false, message: "ভুল ওটিপি কোড।" };
+    if (!member.verificationCode || !member.verificationCodeCreatedAt) {
+      return { success: false, message: "ভেরিফিকেশন অনুরোধ পাওয়া যায়নি বা কোড ইতিমধ্যে ব্যবহৃত হয়েছে।" };
     }
 
-    if (member.verificationCodeCreatedAt) {
-      const fifteenMinutes = 15 * 60 * 1000;
-      if (Date.now() - new Date(member.verificationCodeCreatedAt).getTime() > fifteenMinutes) {
-        return { success: false, message: "ওটিপি কোডের মেয়াদ শেষ হয়ে গেছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
+    // --- Brute-force protection: track failed attempts ---
+    // Store attempt count as prefix in verificationCode: "attempts:3:XXXXXX"
+    let storedCode = member.verificationCode;
+    let attempts = 0;
+    const attemptMatch = storedCode.match(/^attempts:(\d+):(.+)$/);
+    if (attemptMatch) {
+      attempts = parseInt(attemptMatch[1], 10);
+      storedCode = attemptMatch[2];
+    }
+
+    if (attempts >= MAX_OTP_ATTEMPTS) {
+      return { success: false, message: "অনেকবার ভুল কোড দেওয়া হয়েছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
+    }
+
+    const fifteenMinutes = 15 * 60 * 1000;
+    if (Date.now() - new Date(member.verificationCodeCreatedAt).getTime() > fifteenMinutes) {
+      return { success: false, message: "ওটিপি কোডের মেয়াদ শেষ হয়ে গেছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
+    }
+
+    if (storedCode !== code) {
+      // Increment attempt counter
+      const newAttempts = attempts + 1;
+      await prisma.member.update({
+        where: { id: member.id },
+        data: { verificationCode: `attempts:${newAttempts}:${storedCode}` },
+      });
+      const remaining = MAX_OTP_ATTEMPTS - newAttempts;
+      if (remaining <= 0) {
+        return { success: false, message: "অনেকবার ভুল কোড দেওয়া হয়েছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
       }
+      return { success: false, message: `ভুল ওটিপি কোড। আর ${remaining}টি সুযোগ বাকি।` };
     }
 
     const updated = await prisma.member.update({
@@ -351,8 +426,7 @@ export async function verifyEmailOtpAction(
       profilePictureUrl: updated.profilePictureUrl || undefined,
     } as Member);
 
-    const isAdmin = updated.email === ADMIN_EMAIL;
-    await setSessionUser(safeMember.id, isAdmin ? "admin" : "user");
+    await setSessionUser(safeMember.id, "user");
 
     const requiresPayment = updated.tier === "premium" && updated.status === "inactive" && !updated.bkashTxnId;
 
@@ -368,6 +442,8 @@ export async function submitBkashPaymentAction(
   bkashSender: string,
   bkashTxnId: string
 ): Promise<boolean> {
+  const session = await getSessionUser();
+  if (!session || (session.userId !== memberId && session.role !== "admin")) return false;
   try {
     // Skip the pre-check findUnique — update throws P2025 if not found, which we catch
     await prisma.member.update({
@@ -470,15 +546,17 @@ export async function resetPasswordAction(
       return { success: false, message: "মেম্বার অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।" };
     }
 
-    if (member.verificationCode !== code) {
-      return { success: false, message: "ভুল ওটিপি কোড।" };
+    if (!member.verificationCode || !member.verificationCodeCreatedAt) {
+      return { success: false, message: "রিসেট অনুরোধ পাওয়া যায়নি বা কোড ইতিমধ্যে ব্যবহৃত হয়েছে।" };
     }
 
-    if (member.verificationCodeCreatedAt) {
-      const fifteenMinutes = 15 * 60 * 1000;
-      if (Date.now() - new Date(member.verificationCodeCreatedAt).getTime() > fifteenMinutes) {
-        return { success: false, message: "ওটিপি কোডের মেয়াদ শেষ হয়ে গেছে (১৫ মিনিট পার হয়েছে)। অনুগ্রহ করে আবার নতুন কোড পাঠান।" };
-      }
+    const fifteenMinutes = 15 * 60 * 1000;
+    if (Date.now() - new Date(member.verificationCodeCreatedAt).getTime() > fifteenMinutes) {
+      return { success: false, message: "ওটিপি কোডের মেয়াদ শেষ হয়ে গেছে (১৫ মিনিট পার হয়েছে)। অনুগ্রহ করে আবার নতুন কোড পাঠান।" };
+    }
+
+    if (member.verificationCode !== code) {
+      return { success: false, message: "ভুল ওটিপি কোড।" };
     }
 
     const hashedPassword = hashPassword(rawNewPassword);

@@ -184,12 +184,12 @@ export const dbStore = {
     }
   },
 
-  logout(): void {
+  async logout(): Promise<void> {
     if (isClient) {
       localStorage.removeItem(KEYS.CURRENT_USER);
       window.dispatchEvent(new Event("auth-change"));
     }
-    logoutMemberAction(); // Clear server cookie session
+    await logoutMemberAction(); // Clear server cookie session
   },
 
   getCurrentPartner(): Partner | null {
@@ -208,12 +208,12 @@ export const dbStore = {
     }
   },
 
-  logoutPartner(): void {
+  async logoutPartner(): Promise<void> {
     if (isClient) {
       localStorage.removeItem(KEYS.CURRENT_PARTNER);
       window.dispatchEvent(new Event("auth-change"));
     }
-    logoutMemberAction(); // Clear server cookie session
+    await logoutMemberAction(); // Clear server cookie session
   },
 
   // --- ANALYTICS & SETTINGS ---

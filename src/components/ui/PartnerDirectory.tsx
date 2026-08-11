@@ -10,7 +10,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatDiscount } from "@/lib/i18n";
-import { Skeleton } from "@/components/ui/skeleton";
+import { PartnerCardSkeleton } from "@/components/ui/skeleton";
 
 interface PartnerDirectoryProps {
   partners?: Partner[];
@@ -186,19 +186,7 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-6">
           {Array.from({ length: limit || 6 }).map((_, i) => (
-            <Card key={i} className="p-0 gap-0 border-border bg-background/50 backdrop-blur group flex flex-col justify-between overflow-hidden rounded-2xl">
-              <Skeleton className="h-48 sm:h-52 w-full" />
-              <div className="p-4 sm:p-5 flex items-center justify-between border-t border-border">
-                <div className="space-y-1">
-                  <Skeleton className="h-3 w-16" />
-                  <Skeleton className="h-5 w-24" />
-                </div>
-                <div className="flex gap-2">
-                  <Skeleton className="h-9 w-20 rounded-lg" />
-                  <Skeleton className="h-9 w-16 rounded-lg" />
-                </div>
-              </div>
-            </Card>
+            <PartnerCardSkeleton key={i} />
           ))}
         </div>
       ) : displayedPartners.length > 0 ? (
