@@ -170,6 +170,7 @@ export const PartnerRequestScalarFieldEnum = {
   category: 'category',
   address: 'address',
   discount: 'discount',
+  contactName: 'contactName',
   phone: 'phone',
   email: 'email',
   status: 'status',

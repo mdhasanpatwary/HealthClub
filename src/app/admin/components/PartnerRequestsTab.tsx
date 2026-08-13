@@ -3,27 +3,29 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PartnerRequest } from "@/app/actions/partnerActions";
+import { PartnerRequest } from "@/services/db";
 
 interface PartnerRequestsTabProps {
   partnerRequests: PartnerRequest[];
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
+  t?: (key: string) => string;
 }
 
 export function PartnerRequestsTab({
   partnerRequests,
   onApprove,
   onReject,
+  t = (k) => k,
 }: PartnerRequestsTabProps) {
   return (
     <Card className="border-border shadow-md">
       <CardHeader>
         <CardTitle className="font-heading text-lg font-bold text-secondary">
-          অংশীদার হাসপাতাল ও ক্লিনিক আবেদন
+          {t("admin.partnerRequests.title")}
         </CardTitle>
         <CardDescription>
-          হেলথ ক্লাব প্ল্যাটফর্মে যুক্ত হতে ইচ্ছুক চিকিৎসাকেন্দ্র ও ফার্মেসিগুলোর আবেদনের তালিকা
+          {t("admin.partnerRequests.desc")}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -31,19 +33,19 @@ export function PartnerRequestsTab({
           <Table>
             <TableHeader className="bg-muted/40">
               <TableRow className="hover:bg-transparent border-b border-border">
-                <TableHead className="font-semibold text-secondary">প্রতিষ্ঠান / ঠিকানা</TableHead>
-                <TableHead className="font-semibold text-secondary">ক্যাটাগরি</TableHead>
-                <TableHead className="font-semibold text-secondary">ডিসকাউন্ট রেট</TableHead>
-                <TableHead className="font-semibold text-secondary">যোগাযোগ</TableHead>
-                <TableHead className="font-semibold text-secondary">স্ট্যাটাস</TableHead>
-                <TableHead className="font-semibold text-secondary text-right">অ্যাকশন</TableHead>
+                <TableHead className="font-semibold text-secondary">{t("admin.partnerRequests.orgAddress")}</TableHead>
+                <TableHead className="font-semibold text-secondary">{t("admin.partnerRequests.category")}</TableHead>
+                <TableHead className="font-semibold text-secondary">{t("admin.partnerRequests.discountRate")}</TableHead>
+                <TableHead className="font-semibold text-secondary">{t("admin.partnerRequests.contact")}</TableHead>
+                <TableHead className="font-semibold text-secondary">{t("admin.partnerRequests.status")}</TableHead>
+                <TableHead className="font-semibold text-secondary text-right">{t("admin.partnerRequests.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {partnerRequests.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                    কোনো নতুন আবেদন পাওয়া যায়নি।
+                    {t("admin.partnerRequests.noRequests")}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -60,6 +62,7 @@ export function PartnerRequestsTab({
                       {req.discount}
                     </TableCell>
                     <TableCell className="text-xs space-y-0.5">
+                      {req.contactName && <div className="font-semibold text-secondary dark:text-white">{req.contactName}</div>}
                       <div>মোবাইল: <span className="font-semibold">{req.phone}</span></div>
                       {req.email && <div className="text-muted-foreground">{req.email}</div>}
                     </TableCell>
@@ -82,7 +85,7 @@ export function PartnerRequestsTab({
                             onClick={() => onApprove(req.id)}
                             className="bg-primary hover:bg-primary-dark text-white text-xs h-7 py-1 px-3 animate-pulse"
                           >
-                            অনুমোদন
+                            {t("admin.partnerRequests.approve")}
                           </Button>
                           <Button
                             size="sm"
@@ -90,7 +93,7 @@ export function PartnerRequestsTab({
                             onClick={() => onReject(req.id)}
                             className="text-destructive border-destructive/20 hover:bg-destructive/10 text-xs h-7 py-1 px-3"
                           >
-                            বাতিল
+                            {t("admin.partnerRequests.reject")}
                           </Button>
                         </div>
                       )}

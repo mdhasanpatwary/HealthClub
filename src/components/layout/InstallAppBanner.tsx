@@ -5,6 +5,7 @@ import Image from "next/image";
 import { X, Download, Share2 } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -96,7 +97,7 @@ export default function InstallAppBanner() {
         setShowIosTip(!showIosTip);
       } else {
         // Fallback for browsers that don't support beforeinstallprompt directly
-        alert(
+        toast.info(
           t("pwa.iosInstructions") ||
             "আপনার ব্রাউজার মেনু থেকে 'Add to Home Screen' বা 'Install' বেছে নিন।"
         );

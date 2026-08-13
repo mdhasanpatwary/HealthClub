@@ -19,7 +19,7 @@ export const getDoctorsAction = unstable_cache(
         return initialDoctors;
       }
 
-      let data = await prisma.doctor.findMany({
+      const data = await prisma.doctor.findMany({
         where: { isActive: true },
         orderBy: { createdAt: "asc" },
         select: {
@@ -42,39 +42,8 @@ export const getDoctorsAction = unstable_cache(
         },
       });
 
-      // Auto-seed if database has 0 doctors
       if (data.length === 0) {
-        try {
-          await prisma.doctor.createMany({
-            data: initialDoctors.map((doc) => ({
-              id: doc.id,
-              name: doc.name,
-              specialty: doc.specialty,
-              department: doc.department,
-              degrees: doc.degrees,
-              designation: doc.designation,
-              chamberName: doc.chamberName,
-              chamberAddress: doc.chamberAddress,
-              roomNo: doc.roomNo || null,
-              visitingDays: doc.visitingDays,
-              visitingHours: doc.visitingHours,
-              serialPhone: doc.serialPhone,
-              consultationFee: doc.consultationFee || null,
-              imageUrl: doc.imageUrl || null,
-              partnerId: doc.partnerId || null,
-              isActive: doc.isActive ?? true,
-            })),
-            skipDuplicates: true,
-          });
-
-          data = await prisma.doctor.findMany({
-            where: { isActive: true },
-            orderBy: { createdAt: "asc" },
-          });
-        } catch (seedErr) {
-          console.error("Auto-seed doctors error:", seedErr);
-          return initialDoctors;
-        }
+        return initialDoctors;
       }
 
       return data.map((d) => ({
@@ -299,5 +268,45 @@ export async function deleteDoctorAction(id: string): Promise<{ success: boolean
     return { success: false, error: "ডাক্তার ডিলিট করতে সমস্যা হয়েছে।" };
   } finally {
     updateTag(DOCTORS_TAG);
+  }
+}
+
+/**
+ * Admin action to seed default doctors into the database if needed.
+ */
+export async function seedDoctorsAction(): Promise<{ success: boolean; count?: number; error?: string }> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") {
+    return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
+  }
+
+  try {
+    const res = await prisma.doctor.createMany({
+      data: initialDoctors.map((doc) => ({
+        id: doc.id,
+        name: doc.name,
+        specialty: doc.specialty,
+        department: doc.department,
+        degrees: doc.degrees,
+        designation: doc.designation,
+        chamberName: doc.chamberName,
+        chamberAddress: doc.chamberAddress,
+        roomNo: doc.roomNo || null,
+        visitingDays: doc.visitingDays,
+        visitingHours: doc.visitingHours,
+        serialPhone: doc.serialPhone,
+        consultationFee: doc.consultationFee || null,
+        imageUrl: doc.imageUrl || null,
+        partnerId: doc.partnerId || null,
+        isActive: doc.isActive ?? true,
+      })),
+      skipDuplicates: true,
+    });
+
+    updateTag(DOCTORS_TAG);
+    return { success: true, count: res.count };
+  } catch (error) {
+    console.error("Error in seedDoctorsAction:", error);
+    return { success: false, error: "ডাক্তার সিড করতে সমস্যা হয়েছে।" };
   }
 }

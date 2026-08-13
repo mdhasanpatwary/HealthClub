@@ -38,8 +38,6 @@ export default function AdminDashboardPage() {
     handleToggleMemberTx,
     newTx,
     setNewTx,
-    txSuccess,
-    txError,
     isTxOpen,
     setIsTxOpen,
     handleAddTransaction,
@@ -318,8 +316,6 @@ export default function AdminDashboardPage() {
           newTx={newTx}
           setNewTx={setNewTx}
           onSubmit={handleAddTransaction}
-          txSuccess={txSuccess}
-          txError={txError}
           t={t}
         />
       )}

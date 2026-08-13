@@ -24,8 +24,6 @@ export default function AdminTransactionsPage() {
   // Dialog States
   const [isTxOpen, setIsTxOpen] = useState(false);
   const [newTx, setNewTx] = useState({ memberId: "", partnerId: "", amount: "" });
-  const [txSuccess, setTxSuccess] = useState("");
-  const [txError, setTxError] = useState("");
 
   const loadData = useCallback(async () => {
     try {
@@ -59,37 +57,36 @@ export default function AdminTransactionsPage() {
 
   const handleAddTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
-    setTxError("");
-    setTxSuccess("");
 
     try {
       const member = members.find(
         (m) => m.id === newTx.memberId || m.phone === newTx.memberId
       );
       if (!member) {
-        setTxError(t("admin.dashboard.memberNotFound"));
+        toast.error(t("admin.dashboard.memberNotFound"));
         return;
       }
 
       if (member.status !== "active") {
-        setTxError(t("admin.dashboard.memberNotActive"));
+        toast.error(t("admin.dashboard.memberNotActive"));
         return;
       }
 
       const partner = partners.find((p) => p.id === newTx.partnerId);
       if (!partner) {
-        setTxError(t("admin.dashboard.selectedPartnerNotFound"));
+        toast.error(t("admin.dashboard.selectedPartnerNotFound"));
         return;
       }
 
       const billAmount = Number(newTx.amount);
       if (isNaN(billAmount) || billAmount <= 0) {
-        setTxError(t("admin.dashboard.enterValidBillAmount"));
+        toast.error(t("admin.dashboard.enterValidBillAmount"));
         return;
       }
 
       const discountRate = parseDiscountPercentage(partner.discount);
-      const saved = Math.round(billAmount * discountRate);
+      const safeRate = Math.min(discountRate, 0.70);
+      const saved = Math.round(billAmount * safeRate);
 
       await dbStore.addTransaction({
         memberId: member.id,
@@ -100,22 +97,17 @@ export default function AdminTransactionsPage() {
         saved: saved,
       });
 
-      setTxSuccess(
-        t("admin.dashboard.txLoggedSuccess").replace(
-          "${saved}",
-          formatNum(saved, locale)
-        )
+      const successMsg = t("admin.dashboard.txLoggedSuccess").replace(
+        "${saved}",
+        formatNum(saved, locale)
       );
+      toast.success(successMsg);
       setNewTx({ memberId: "", partnerId: "", amount: "" });
+      setIsTxOpen(false);
       await loadData();
       window.dispatchEvent(new Event("admin-data-change"));
-
-      setTimeout(() => {
-        setTxSuccess("");
-        setIsTxOpen(false);
-      }, 2000);
     } catch {
-      setTxError(t("admin.dashboard.txLogFailed"));
+      toast.error(t("admin.dashboard.txLogFailed"));
     }
   };
 
@@ -175,8 +167,6 @@ export default function AdminTransactionsPage() {
           newTx={newTx}
           setNewTx={setNewTx}
           onSubmit={handleAddTransaction}
-          txSuccess={txSuccess}
-          txError={txError}
           t={t}
         />
       )}

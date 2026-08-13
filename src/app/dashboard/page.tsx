@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { History, LayoutDashboard } from "lucide-react";
 import { toast } from "sonner";
 import { dbStore } from "@/services/dbStore";
@@ -17,8 +17,11 @@ import { DashboardHistoryTab } from "./components/DashboardHistoryTab";
 import { DashboardProfileTab } from "./components/DashboardProfileTab";
 import { AddMemberTxDialog } from "./components/AddMemberTxDialog";
 
-export default function DashboardPage() {
+function DashboardContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const requestedTab = searchParams.get("tab") === "profile" ? "profile" : "history";
+  const [activeTab, setActiveTab] = useState(requestedTab);
   const { t, locale } = useLanguage();
   const [user, setUser] = useState<Member | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -35,7 +38,6 @@ export default function DashboardPage() {
 
   const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
   const [isExpired, setIsExpired] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
 
   // Add Member Transaction States
   const [allowMemberTx, setAllowMemberTx] = useState(false);
@@ -210,7 +212,6 @@ export default function DashboardPage() {
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSaveSuccess(false);
 
     if (!user) return;
 
@@ -247,8 +248,6 @@ export default function DashboardPage() {
       console.error(err);
       toast.error(t("dashboard.profile.serverError"));
     }
-
-    setTimeout(() => setSaveSuccess(false), 3000);
   };
 
   if (!user) {
@@ -293,7 +292,7 @@ export default function DashboardPage() {
 
           {/* Right Column: Dynamic Tabs */}
           <div className="lg:col-span-7">
-            <Tabs defaultValue="history" className="w-full">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid w-full grid-cols-2 bg-muted/60 dark:bg-slate-900/60 p-1.5 rounded-xl border border-border/60">
                 <TabsTrigger value="history" className="rounded-lg text-xs font-semibold py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm">
                   <History className="h-3.5 w-3.5 mr-1.5" />
@@ -320,7 +319,6 @@ export default function DashboardPage() {
               {/* Profile Settings Tab */}
               <TabsContent value="profile" className="mt-4">
                 <DashboardProfileTab
-                  saveSuccess={saveSuccess}
                   handleUpdateProfile={handleUpdateProfile}
                   profilePictureUrl={profilePictureUrl}
                   setProfilePictureUrl={setProfilePictureUrl}
@@ -366,5 +364,13 @@ export default function DashboardPage() {
         />
       )}
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<DashboardSkeleton />}>
+      <DashboardContent />
+    </Suspense>
   );
 }

@@ -14,17 +14,18 @@ import { toast } from "sonner";
 export default function AdminLoginPage() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!identifier || !password) {
-      const msg = "মোবাইল নম্বর/ইমেইল এবং পাসওয়ার্ড দিন।";
-      toast.warning(msg);
+      toast.warning("মোবাইল নম্বর/ইমেইল এবং পাসওয়ার্ড দিন।");
       return;
     }
 
+    setLoading(true);
     try {
       const adminMember = await loginAdminAction(identifier, password);
       if (adminMember) {
@@ -35,10 +36,11 @@ export default function AdminLoginPage() {
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
 
-    const errMsg = "ভুল এডমিন ক্রেডেনশিয়ালস। অনুগ্রহ করে সঠিক তথ্য প্রদান করুন।";
-    toast.error(errMsg);
+    toast.error("ভুল এডমিন ক্রেডেনশিয়ালস। অনুগ্রহ করে সঠিক তথ্য প্রদান করুন।");
   };
 
   return (
@@ -95,8 +97,8 @@ export default function AdminLoginPage() {
               />
             </div>
 
-            <Button type="submit" className="w-full">
-              এডমিন হিসেবে প্রবেশ করুন
+            <Button type="submit" disabled={loading} className="w-full">
+              {loading ? "লগইন হচ্ছে..." : "এডমিন হিসেবে প্রবেশ করুন"}
             </Button>
           </form>
 

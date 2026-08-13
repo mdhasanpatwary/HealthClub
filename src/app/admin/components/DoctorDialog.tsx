@@ -41,6 +41,7 @@ interface DoctorDialogProps {
     imageUrl: string;
   }) => void;
   onSubmit: (e: React.FormEvent) => void;
+  t?: (key: string) => string;
 }
 
 const DEPT_OPTIONS = [
@@ -69,6 +70,7 @@ export function DoctorDialog({
   newDoctor,
   setNewDoctor,
   onSubmit,
+  t = (k) => k,
 }: DoctorDialogProps) {
   return (
     <Dialog
@@ -80,7 +82,7 @@ export function DoctorDialog({
       <DialogContent className="border-border bg-background max-h-[92vh] overflow-y-auto w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl p-5 sm:p-7">
         <DialogHeader>
           <DialogTitle className="font-heading font-bold text-secondary text-lg sm:text-xl">
-            {editingDoctor ? "ডাক্তার তথ্য পরিবর্তন করুন" : "নতুন ডাক্তার যুক্ত করুন"}
+            {editingDoctor ? t("admin.doctors.editTitle") : t("admin.doctors.addTitle")}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={onSubmit} className="space-y-4 pt-2">
@@ -164,7 +166,7 @@ export function DoctorDialog({
               <Input
                 type="text"
                 required
-                placeholder="যেমন: ডিডি ল্যাব ডায়াগনস্টিক সেন্টার"
+                placeholder="যেমন: পপুলার ডায়াগনস্টিক সেন্টার"
                 value={newDoctor.chamberName}
                 onChange={(e) => setNewDoctor({ ...newDoctor, chamberName: e.target.value })}
                 className="border-border bg-background"

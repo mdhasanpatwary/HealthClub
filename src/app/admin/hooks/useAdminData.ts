@@ -39,8 +39,6 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
 
   // Quick transaction modal states
   const [newTx, setNewTx] = useState({ memberId: "", partnerId: "", amount: "" });
-  const [txSuccess, setTxSuccess] = useState("");
-  const [txError, setTxError] = useState("");
   const [isTxOpen, setIsTxOpen] = useState(false);
 
   const loadData = useCallback(async () => {
@@ -99,36 +97,35 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
 
   const handleAddTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
-    setTxError("");
-    setTxSuccess("");
 
     try {
       const members = await dbStore.getMembers();
       const member = members.find((m) => m.id === newTx.memberId || m.phone === newTx.memberId);
       if (!member) {
-        setTxError(t("admin.dashboard.memberNotFound"));
+        toast.error(t("admin.dashboard.memberNotFound"));
         return;
       }
 
       if (member.status !== "active") {
-        setTxError(t("admin.dashboard.memberNotActive"));
+        toast.error(t("admin.dashboard.memberNotActive"));
         return;
       }
 
       const partner = partners.find((p) => p.id === newTx.partnerId);
       if (!partner) {
-        setTxError(t("admin.dashboard.selectedPartnerNotFound"));
+        toast.error(t("admin.dashboard.selectedPartnerNotFound"));
         return;
       }
 
       const billAmount = Number(newTx.amount);
       if (isNaN(billAmount) || billAmount <= 0) {
-        setTxError(t("admin.dashboard.enterValidBillAmount"));
+        toast.error(t("admin.dashboard.enterValidBillAmount"));
         return;
       }
 
       const discountRate = parseDiscountPercentage(partner.discount);
-      const saved = Math.round(billAmount * discountRate);
+      const safeRate = Math.min(discountRate, 0.70);
+      const saved = Math.round(billAmount * safeRate);
 
       await dbStore.addTransaction({
         memberId: member.id,
@@ -139,17 +136,13 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
         saved: saved,
       });
 
-      setTxSuccess(t("admin.dashboard.txLoggedSuccess").replace("${saved}", formatNum(saved, locale)));
+      toast.success(t("admin.dashboard.txLoggedSuccess").replace("${saved}", formatNum(saved, locale)));
       setNewTx({ memberId: "", partnerId: "", amount: "" });
+      setIsTxOpen(false);
       await loadData();
       window.dispatchEvent(new Event("admin-data-change"));
-
-      setTimeout(() => {
-        setTxSuccess("");
-        setIsTxOpen(false);
-      }, 2000);
     } catch {
-      setTxError(t("admin.dashboard.txLogFailed"));
+      toast.error(t("admin.dashboard.txLogFailed"));
     }
   };
 
@@ -162,8 +155,6 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
     handleToggleMemberTx,
     newTx,
     setNewTx,
-    txSuccess,
-    txError,
     isTxOpen,
     setIsTxOpen,
     handleAddTransaction,

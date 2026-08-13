@@ -87,11 +87,11 @@ export default function TestimonialCarousel() {
 
                     {/* Testimonial Story */}
                     <div className="text-center sm:text-left space-y-3">
-                      <p className="text-sm sm:text-base md:text-lg leading-relaxed text-secondary italic font-normal">
+                      <p className="text-sm sm:text-base md:text-lg leading-relaxed text-secondary dark:text-slate-200 italic font-normal">
                         &ldquo;{item.story}&rdquo;
                       </p>
                       <div>
-                        <h4 className="font-heading text-sm sm:text-base font-bold text-secondary">{item.name}</h4>
+                        <h4 className="font-heading text-sm sm:text-base font-bold text-secondary dark:text-white">{item.name}</h4>
                         <p className="text-xs text-muted-foreground">{item.location}</p>
                       </div>
                     </div>

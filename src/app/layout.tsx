@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Noto_Sans_Bengali } from "next/font/google";
+import { Inter, Hind_Siliguri, Noto_Sans_Bengali } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -18,6 +18,12 @@ import { Analytics } from "@vercel/analytics/next";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+});
+
+const hindSiliguri = Hind_Siliguri({
+  variable: "--font-hind-siliguri",
+  subsets: ["bengali"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 const notoSansBengali = Noto_Sans_Bengali({
@@ -155,7 +161,7 @@ export default async function RootLayout({
   ];
 
   return (
-    <html lang={locale} className={`${theme} ${inter.variable} ${notoSansBengali.variable}`}>
+    <html lang={locale} className={`${theme} ${inter.variable} ${hindSiliguri.variable} ${notoSansBengali.variable}`}>
       <body className="font-sans antialiased bg-background text-foreground min-h-screen flex flex-col">
         <JsonLd data={globalJsonLd} />
         <ThemeProvider initialTheme={theme}>

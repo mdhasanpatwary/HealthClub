@@ -1,4 +1,4 @@
-"use server";
+// Barrel file aggregating server actions and types
 
 export {
   getPartnersAction,
@@ -10,7 +10,7 @@ export {
   updatePartnerRequestStatusAction,
 } from "./partnerActions";
 
-export type { PartnerRequest } from "./partnerActions";
+export type { PartnerRequest } from "./partnerRequestActions";
 
 export {
   getTransactionsAction,
@@ -30,7 +30,7 @@ export {
   resendVerificationCodeAction,
 } from "./memberActions";
 
-export type { PublicMemberVerification } from "./memberActions";
+export type { PublicMemberVerification } from "@/services/db";
 
 export {
   getMembersAction,

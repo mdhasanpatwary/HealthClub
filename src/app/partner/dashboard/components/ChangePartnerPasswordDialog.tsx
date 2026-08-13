@@ -11,22 +11,20 @@ export function ChangePartnerPasswordDialog() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [changeError, setChangeError] = useState("");
   const [loadingChange, setLoadingChange] = useState(false);
 
   const handleChangePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setChangeError("");
     setLoadingChange(true);
 
     if (newPassword.length < 6) {
-      setChangeError("নতুন পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।");
+      toast.error("নতুন পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।");
       setLoadingChange(false);
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setChangeError("নতুন পাসওয়ার্ড দুটি মেলেনি।");
+      toast.error("নতুন পাসওয়ার্ড দুটি মেলেনি।");
       setLoadingChange(false);
       return;
     }
@@ -40,10 +38,10 @@ export function ChangePartnerPasswordDialog() {
         setNewPassword("");
         setConfirmPassword("");
       } else {
-        setChangeError(res.message || "পাসওয়ার্ড পরিবর্তন করা যায়নি।");
+        toast.error(res.message || "পাসওয়ার্ড পরিবর্তন করা যায়নি।");
       }
     } catch {
-      setChangeError("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
+      toast.error("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
     } finally {
       setLoadingChange(false);
     }
@@ -71,11 +69,6 @@ export function ChangePartnerPasswordDialog() {
         </DialogHeader>
 
         <form onSubmit={handleChangePasswordSubmit} className="space-y-4 pt-2">
-          {changeError && (
-            <div className="p-3 text-xs bg-rose-500/10 text-rose-500 border border-rose-500/20 rounded-xl font-medium">
-              {changeError}
-            </div>
-          )}
 
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-foreground">বর্তমান পাসওয়ার্ড</label>

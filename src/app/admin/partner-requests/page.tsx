@@ -5,13 +5,15 @@ import { toast } from "sonner";
 import {
   getPartnerRequestsAction,
   updatePartnerRequestStatusAction,
-  PartnerRequest,
 } from "@/app/actions/partnerActions";
+import { PartnerRequest } from "@/services/db";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { PartnerRequestsTab } from "../components/PartnerRequestsTab";
 
 export default function AdminPartnerRequestsPage() {
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [partnerRequests, setPartnerRequests] = useState<PartnerRequest[]>([]);
 
@@ -102,6 +104,7 @@ export default function AdminPartnerRequestsPage() {
         partnerRequests={partnerRequests}
         onApprove={handleApprove}
         onReject={handleReject}
+        t={t}
       />
     </div>
   );

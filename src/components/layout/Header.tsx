@@ -113,7 +113,7 @@ export default function Header() {
                 height={36}
                 priority
                 style={{ height: "auto" }}
-                className="h-8 w-78sm:h-9 sm:w-9 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.3)] transition-transform duration-300 group-hover:scale-110"
+                className="h-8 w-8 sm:h-9 sm:w-9 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.3)] transition-transform duration-300 group-hover:scale-110"
               />
             </div>
             <span className="font-heading text-lg sm:text-xl font-bold tracking-tight text-secondary dark:text-white">
@@ -230,7 +230,7 @@ export default function Header() {
         aria-hidden={!isOpen}
       >
         {/* Menu Header */}
-        <div className="flex items-center justify-between px-4 h-13 min-[992px]:h-16 border-b border-border/60 shrink-0">
+        <div className="flex items-center justify-between px-4 h-14 min-[992px]:h-16 border-b border-border/60 shrink-0">
           <Link
             href="/"
             className="flex items-center space-x-2.5"
@@ -328,7 +328,7 @@ export default function Header() {
                   )}
                   <span className="truncate">{user.name}</span>
                 </div>
-                {user.email === "healthclubfeni@gmail.com" ? (
+                {user.email === (process.env.NEXT_PUBLIC_ADMIN_EMAIL || "healthclubfeni@gmail.com") ? (
                   <Link href="/admin" className="block w-full" onClick={() => setIsOpen(false)}>
                     <Button variant="outline" className="w-full justify-start border-primary/30 text-primary hover:bg-primary/5">
                       <LayoutDashboard className="h-4 w-4" />
@@ -343,7 +343,7 @@ export default function Header() {
                     </Button>
                   </Link>
                 )}
-                <Link href="/profile" className="block w-full" onClick={() => setIsOpen(false)}>
+                <Link href="/dashboard?tab=profile" className="block w-full" onClick={() => setIsOpen(false)}>
                   <Button variant="outline" className="w-full justify-start border-primary/30 text-primary hover:bg-primary/5">
                     <Settings className="h-4 w-4" />
                     {t("profile.page.profileSettings")}
@@ -414,7 +414,7 @@ export default function Header() {
 
       {/* Backdrop overlay */}
       <div
-        className={`fixed inset-0 z-40 bg-black/40 md:hidden backdrop-blur-sm transition-opacity duration-300 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        className={`fixed inset-0 z-40 bg-black/40 min-[992px]:hidden backdrop-blur-sm transition-opacity duration-300 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
           }`}
         onClick={() => setIsOpen(false)}
         aria-hidden="true"

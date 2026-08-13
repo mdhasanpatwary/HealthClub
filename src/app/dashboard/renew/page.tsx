@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ShieldCheck, AlertCircle, CheckCircle2, Copy, Check, Smartphone, ArrowLeft, Heart, User } from "lucide-react";
+import { ShieldCheck, CheckCircle2, Copy, Check, Smartphone, ArrowLeft, Heart, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle, CardDescription, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -26,7 +26,6 @@ export default function RenewalPage() {
   const [senderNumber, setSenderNumber] = useState("");
   const [transactionId, setTransactionId] = useState("");
   const [profession, setProfession] = useState("");
-  const [formError, setFormError] = useState("");
   const [copied, setCopied] = useState(false);
 
   const bkashNumber = "01783721411";
@@ -55,23 +54,22 @@ export default function RenewalPage() {
 
   const handleRenewalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFormError("");
 
     if (!senderNumber || !transactionId) {
-      setFormError(t("dashboard.renew.errorAllFields"));
+      toast.error(t("dashboard.renew.errorAllFields"));
       return;
     }
 
     const cleanSender = senderNumber.trim();
     const bdPhoneRegex = /^(01)[3-9]\d{8}$/;
     if (!bdPhoneRegex.test(cleanSender)) {
-      setFormError(t("dashboard.renew.errorPhone"));
+      toast.error(t("dashboard.renew.errorPhone"));
       return;
     }
 
     const cleanTxnId = transactionId.trim().toUpperCase();
     if (cleanTxnId.length < 6 || cleanTxnId.length > 16) {
-      setFormError(t("dashboard.renew.errorTxn"));
+      toast.error(t("dashboard.renew.errorTxn"));
       return;
     }
 
@@ -96,10 +94,10 @@ export default function RenewalPage() {
           router.push("/dashboard");
         }, 3000);
       } else {
-        setFormError(res.message || t("dashboard.renew.errorFailed"));
+        toast.error(res.message || t("dashboard.renew.errorFailed"));
       }
     } catch {
-      setFormError(t("dashboard.renew.errorServerError"));
+      toast.error(t("dashboard.renew.errorServerError"));
     } finally {
       setIsSubmitting(false);
     }
@@ -175,7 +173,7 @@ export default function RenewalPage() {
                 <div className="h-16 w-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto border border-emerald-200">
                   <CheckCircle2 className="h-10 w-10" />
                 </div>
-                <h3 className="font-heading text-lg font-bold text-secondary">{t("dashboard.renew.successTitle")}</h3>
+                <h3 className="font-heading text-lg font-bold text-secondary dark:text-white">{t("dashboard.renew.successTitle")}</h3>
                 <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
                   {t("dashboard.renew.successDesc")}
                 </p>
@@ -183,13 +181,6 @@ export default function RenewalPage() {
               </div>
             ) : (
               <>
-                {formError && (
-                  <div className="bg-destructive/10 text-destructive text-xs p-3.5 rounded-xl flex items-center gap-2 border border-destructive/20">
-                    <AlertCircle className="h-4 w-4 shrink-0" />
-                    <span>{formError}</span>
-                  </div>
-                )}
-
                 {/* bkash steps */}
                 <div className="bg-[#e2125d]/5 rounded-2xl p-5 border border-[#e2125d]/10 space-y-4">
                   <div className="flex items-center gap-3">
@@ -247,7 +238,7 @@ export default function RenewalPage() {
                       required
                       value={transactionId}
                       onChange={(e) => setTransactionId(e.target.value)}
-                      placeholder={t("যেমন: BGA678UHG", "e.g., BGA678UHG")}
+                      placeholder={t("dashboard.renew.txnPlaceholder") || "e.g., BGA678UHG"}
                       className="h-11 border-border bg-background font-mono uppercase"
                     />
                   </div>

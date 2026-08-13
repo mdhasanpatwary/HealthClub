@@ -1,4 +1,4 @@
-import { Member, Partner, Transaction, Doctor } from "./db";
+import { Member, Partner, Transaction, Doctor, PublicMemberVerification } from "./db";
 import {
   getPartnersAction,
   addPartnerAction,
@@ -17,7 +17,6 @@ import {
   addMemberAction,
   getMemberByIdAction,
   getPublicMemberVerificationAction,
-  PublicMemberVerification,
   logoutMemberAction,
 } from "@/app/actions/memberActions";
 import {

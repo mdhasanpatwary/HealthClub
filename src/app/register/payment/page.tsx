@@ -25,7 +25,6 @@ function PaymentForm() {
   // Form states
   const [senderNumber, setSenderNumber] = useState("");
   const [transactionId, setTransactionId] = useState("");
-  const [formError, setFormError] = useState("");
   const [copied, setCopied] = useState(false);
 
   const bkashNumber = "01783721411";
@@ -53,24 +52,23 @@ function PaymentForm() {
 
   const handleSubmitPayment = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFormError("");
 
     // Validations
     if (!senderNumber || !transactionId) {
-      setFormError("অনুগ্রহ করে সবগুলো ঘর পূরণ করুন।");
+      toast.error("অনুগ্রহ করে সবগুলো ঘর পূরণ করুন।");
       return;
     }
 
     const cleanSender = senderNumber.trim();
     const bdPhoneRegex = /^(01)[3-9]\d{8}$/;
     if (!bdPhoneRegex.test(cleanSender)) {
-      setFormError("সঠিক ১১ সংখ্যার বাংলাদেশী বিকাশ নম্বর দিন (যেমন: 017XXXXXXXX)।");
+      toast.error("সঠিক ১১ সংখ্যার বাংলাদেশী বিকাশ নম্বর দিন (যেমন: 017XXXXXXXX)।");
       return;
     }
 
     const cleanTxnId = transactionId.trim().toUpperCase();
     if (cleanTxnId.length < 6 || cleanTxnId.length > 16) {
-      setFormError("সঠিক ট্রানজেকশন আইডি দিন (সাধারণত ৮ থেকে ১২ অক্ষরের হয়)।");
+      toast.error("সঠিক ট্রানজেকশন আইডি দিন (সাধারণত ৮ থেকে ১২ অক্ষরের হয়)।");
       return;
     }
 
@@ -177,19 +175,12 @@ function PaymentForm() {
 
               {/* Form Input Section */}
               <form onSubmit={handleSubmitPayment} className="space-y-4">
-                <h4 className="font-bold text-sm text-secondary font-heading border-b border-border pb-1">
+                <h4 className="font-bold text-sm text-secondary dark:text-white font-heading border-b border-border pb-1">
                   ধাপ ২: পেমেন্ট তথ্য দিন
                 </h4>
 
-                {formError && (
-                  <div className="bg-destructive/10 text-destructive text-xs p-3 rounded-lg border border-destructive/20 flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4 shrink-0" />
-                    <span>{formError}</span>
-                  </div>
-                )}
-
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-secondary flex items-center gap-1">
+                  <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1">
                     বিকাশ নম্বর (যে নম্বর থেকে পাঠিয়েছেন) *
                   </label>
                   <Input 

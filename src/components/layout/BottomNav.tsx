@@ -42,7 +42,7 @@ export default function BottomNav() {
   };
 
   const getProfilePath = () => {
-    if (user) return "/profile";
+    if (user) return "/dashboard?tab=profile";
     if (partner) return "/partner/dashboard";
     return "/login";
   };

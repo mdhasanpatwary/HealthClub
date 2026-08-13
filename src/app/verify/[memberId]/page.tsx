@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ShieldCheck, ShieldAlert, ArrowLeft } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
-import { PublicMemberVerification } from "@/app/actions/memberActions";
+import { PublicMemberVerification } from "@/services/db";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/components/layout/LanguageProvider";
@@ -101,29 +101,29 @@ export default function VerificationPage() {
                 
                 <div>
                   <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberName")}</span>
-                  <p className="text-base font-bold text-secondary">{member.name}</p>
+                  <p className="text-base font-bold text-secondary dark:text-white">{member.name}</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 border-t border-border/80 pt-3">
                   <div>
                     <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberId")}</span>
-                    <p className="text-sm font-semibold text-secondary font-mono">{member.id}</p>
+                    <p className="text-sm font-semibold text-primary font-mono">{member.id}</p>
                   </div>
                   <div>
                     <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberType")}</span>
-                    <p className="text-sm font-semibold text-secondary capitalize">{member.tier}</p>
+                    <p className="text-sm font-semibold text-secondary dark:text-white capitalize">{member.tier}</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 border-t border-border/80 pt-3">
                   <div>
                     <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.expiryDate")}</span>
-                    <p className="text-sm font-semibold text-secondary font-mono">{member.expiryDate}</p>
+                    <p className="text-sm font-semibold text-secondary dark:text-white font-mono">{member.expiryDate}</p>
                   </div>
                   <div>
                     <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.membershipStatus")}</span>
-                    <p className="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-200 inline-flex items-center gap-1 mt-0.5">
-                      <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+                    <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20 inline-flex items-center gap-1 mt-0.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                       {t("pages.verify.active")}
                     </p>
                   </div>
@@ -133,7 +133,7 @@ export default function VerificationPage() {
 
               {/* Guideline note for Hospital desk */}
               <div className="text-xs text-muted-foreground border-t border-border pt-4 text-center">
-                <p className="font-semibold text-secondary mb-1">{t("pages.verify.todoAtHospital")}</p>
+                <p className="font-semibold text-secondary dark:text-white mb-1">{t("pages.verify.todoAtHospital")}</p>
                 <p>{t("pages.verify.todoStep1")}</p>
                 <p className="mt-0.5">{t("pages.verify.todoStep2")}</p>
               </div>
@@ -166,28 +166,28 @@ export default function VerificationPage() {
               <div className="space-y-4 text-left bg-muted/40 p-4 rounded-2xl border border-border">
                 <div>
                   <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberName")}</span>
-                  <p className="text-base font-bold text-secondary">{member.name}</p>
+                  <p className="text-base font-bold text-secondary dark:text-white">{member.name}</p>
                 </div>
                 <div className="grid grid-cols-2 gap-4 border-t border-border/80 pt-3">
                   <div>
                     <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberId")}</span>
-                    <p className="text-sm font-semibold text-secondary font-mono">{member.id}</p>
+                    <p className="text-sm font-semibold text-secondary dark:text-white font-mono">{member.id}</p>
                   </div>
                   <div>
                     <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberType")}</span>
-                    <p className="text-sm font-semibold text-secondary capitalize">{member.tier}</p>
+                    <p className="text-sm font-semibold text-secondary dark:text-white capitalize">{member.tier}</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4 border-t border-border/80 pt-3">
                   <div>
                     <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">স্ট্যাটাস</span>
-                    <p className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200 inline-flex items-center gap-1 mt-0.5 uppercase">
+                    <p className="text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20 inline-flex items-center gap-1 mt-0.5 uppercase">
                       {isExpired ? "EXPIRED" : "PENDING APPROVAL"}
                     </p>
                   </div>
                   <div>
                     <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">মেয়াদ তারিখ</span>
-                    <p className="text-xs font-bold font-mono text-secondary mt-0.5">
+                    <p className="text-xs font-bold font-mono text-secondary dark:text-white mt-0.5">
                       {member.expiryDate}
                     </p>
                   </div>
@@ -225,7 +225,7 @@ export default function VerificationPage() {
 
           <CardContent className="p-6 md:p-8 space-y-6">
             <div className="p-4 bg-muted/40 rounded-2xl border border-border text-sm text-muted-foreground">
-              <p className="font-semibold text-secondary">{t("pages.verify.sorry")}</p>
+              <p className="font-semibold text-secondary dark:text-white">{t("pages.verify.sorry")}</p>
               <p className="mt-1">
                 {t("pages.verify.notFoundMessage")} (<span className="font-mono font-bold text-destructive">{decodeURIComponent(memberId)}</span>)
               </p>

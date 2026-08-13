@@ -201,8 +201,8 @@ export default async function Home() {
               </h3>
               <p className="text-xs sm:text-sm text-muted-foreground max-w-xl">
                 {locale === "en"
-                  ? "Find qualified specialist doctors across all departments, check visiting hours at DD Lab & partner hospitals, and get direct appointment serial numbers."
-                  : "ডিডি ল্যাব ও শীর্ষ ডায়াগনস্টিক সেন্টারের সকল বিভাগের বিশেষজ্ঞ চিকিৎসকদের তালিকা দেখুন ও সরাসরি সিরিয়াল বুক করুন।"}
+                  ? "Find qualified specialist doctors across all departments, check visiting hours at partner hospitals, and get direct appointment serial numbers."
+                  : "পার্টনার হাসপাতাল ও শীর্ষ ডায়াগনস্টিক সেন্টারের সকল বিভাগের বিশেষজ্ঞ চিকিৎসকদের তালিকা দেখুন ও সরাসরি সিরিয়াল বুক করুন।"}
               </p>
             </div>
             <Link href="/consultants" className="shrink-0">

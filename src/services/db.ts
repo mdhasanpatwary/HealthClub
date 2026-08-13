@@ -48,6 +48,27 @@ export interface Transaction {
   date: string;
 }
 
+export interface PartnerRequest {
+  id: string;
+  orgName: string;
+  category: 'hospital' | 'diagnostic' | 'pharmacy';
+  address: string;
+  discount: string;
+  contactName?: string | null;
+  phone: string;
+  email: string | null;
+  status: 'pending' | 'approved' | 'rejected';
+}
+
+export interface PublicMemberVerification {
+  id: string;
+  name: string;
+  tier: string;
+  status: string;
+  expiryDate: string;
+  isExpired: boolean;
+}
+
 // Initial seed data
 export const initialPartners: Partner[] = [
   {
@@ -189,7 +210,7 @@ export const initialDoctors: Doctor[] = [
     department: "psychiatry",
     degrees: "MBBS, BCS, MCPS, FCPS (Psychiatry)",
     designation: "সহকারী অধ্যাপক, জাতীয় মানসিক স্বাস্থ্য ইনস্টিটিউট ও হাসপাতাল (NIMH), ঢাকা",
-    chamberName: "ডিডি ল্যাব স্পেশালাইজড ডায়াগনস্টিক সেন্টার",
+    chamberName: "স্পেশালাইজড কনসালটেশন সেন্টার",
     chamberAddress: "মা প্লাজা (জিয়া মহিলা কলেজের বিপরীতে), শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",
     roomNo: "রুম নং: ২০৩ (২য় তলা)",
     visitingDays: "প্রতি শুক্রবার",
@@ -206,7 +227,7 @@ export const initialDoctors: Doctor[] = [
     department: "medicine",
     degrees: "MBBS, BCS, MCPS, FCPS (Medicine), ট্রেইন্ড ফেলো (গ্যাস্ট্রোএন্টারোলজি)",
     designation: "কনসালট্যান্ট - মেডিসিন ও গ্যাস্ট্রোএন্টারোলজি",
-    chamberName: "ডিডি ল্যাব স্পেশালাইজড ডায়াগনস্টিক সেন্টার",
+    chamberName: "সেন্ট্রাল ডায়াগনস্টিক সেন্টার",
     chamberAddress: "মা প্লাজা, শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",
     roomNo: "রুম নং: ১০৫",
     visitingDays: "শনিবার - বৃহস্পতিবার",
@@ -223,7 +244,7 @@ export const initialDoctors: Doctor[] = [
     department: "surgery",
     degrees: "MBBS, MS (Vascular Surgery)",
     designation: "সহকারী অধ্যাপক, ভাস্কুলার সার্জারি বিভাগ, বিএসএমএমইউ (পিজি হাসপাতাল), ঢাকা",
-    chamberName: "ডিডি ল্যাব স্পেশালাইজড কনসালটেশন সেন্টার",
+    chamberName: "স্পেশালাইজড কনসালটেশন সেন্টার",
     chamberAddress: "মা প্লাজা, শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",
     roomNo: "রুম নং: ২০১",
     visitingDays: "প্রতি শুক্রবার",
@@ -240,7 +261,7 @@ export const initialDoctors: Doctor[] = [
     department: "orthopedics",
     degrees: "MBBS, BCS, MS (Orthopaedic Surgery)",
     designation: "সহকারী অধ্যাপক, অর্থোপেডিক বিভাগ, কুমিল্লা মেডিকেল কলেজ হাসপাতাল",
-    chamberName: "ডিডি ল্যাব ডায়াগনস্টিক অ্যান্ড কনসালটেশন সেন্টার",
+    chamberName: "সিটি ডায়াগনস্টিক অ্যান্ড কনসালটেশন সেন্টার",
     chamberAddress: "মা প্লাজা, শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",
     roomNo: "রুম নং: ৩০২",
     visitingDays: "প্রতি শনিবার, সোমবার ও বুধবার",
@@ -257,7 +278,7 @@ export const initialDoctors: Doctor[] = [
     department: "nephrology",
     degrees: "MBBS, BCS, MD (Nephrology)",
     designation: "কনসালট্যান্ট - কিডনি রোগ বিভাগ, চট্টগ্রাম মেডিকেল কলেজ ও হাসপাতাল",
-    chamberName: "ডিডি ল্যাব স্পেশালাইজড কনসালটেশন সেন্টার",
+    chamberName: "সেন্ট্রাল কনসালটেশন সেন্টার",
     chamberAddress: "মা প্লাজা, শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",
     roomNo: "রুম নং: ১০২",
     visitingDays: "প্রতি শুক্রবার ও শনিবার",
@@ -274,7 +295,7 @@ export const initialDoctors: Doctor[] = [
     department: "hepatology",
     degrees: "MBBS, BCS, MD (Hepatology)",
     designation: "কনসালট্যান্ট, হেপাটোলজি বিভাগ, বিএসএমএমইউ (পিজি হাসপাতাল), ঢাকা",
-    chamberName: "ডিডি ল্যাব স্পেশালাইজড ডায়াগনস্টিক সেন্টার",
+    chamberName: "স্পেশালাইজড ডায়াগনস্টিক সেন্টার",
     chamberAddress: "মা প্লাজা, শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",
     roomNo: "রুম নং: ২০৪",
     visitingDays: "প্রতি শুক্রবার",
@@ -291,7 +312,7 @@ export const initialDoctors: Doctor[] = [
     department: "rheumatology",
     degrees: "MBBS, BCS, MD (Rheumatology), FACR (USA)",
     designation: "রেজিস্ট্রার, রিউমাটোলজি বিভাগ, কুর্মিটোলা জেনারেল হাসপাতাল, ঢাকা",
-    chamberName: "ডিডি ল্যাব স্পেশালাইজড কনসালটেশন সেন্টার",
+    chamberName: "স্পেশালাইজড কনসালটেশন সেন্টার",
     chamberAddress: "মা প্লাজা, শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",
     roomNo: "রুম নং: ৩০১",
     visitingDays: "প্রতি শুক্রবার",
@@ -308,7 +329,7 @@ export const initialDoctors: Doctor[] = [
     department: "nutrition",
     degrees: "MSc in Food & Nutrition, Certified Clinical Dietitian",
     designation: "চিফ কনসালট্যান্ট ডায়েটিশিয়ান ও নিউট্রিশন স্পেশালিস্ট",
-    chamberName: "ডিডি ল্যাব স্পেশালাইজড ডায়াগনস্টিক সেন্টার",
+    chamberName: "নিউট্রিশন ও ওয়েলনেস সেন্টার",
     chamberAddress: "মা প্লাজা, শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",
     roomNo: "রুম নং: ১০৪",
     visitingDays: "প্রতি রবি, মঙ্গল ও বৃহস্পতিবার",
@@ -325,7 +346,7 @@ export const initialDoctors: Doctor[] = [
     department: "medicine",
     degrees: "MBBS, CCD (BIRDEM), PGT (Medicine)",
     designation: "সিনিয়র মেডিকেল অফিসার ও ডায়াবেটোলজিস্ট",
-    chamberName: "ডিডি ল্যাব ডায়াগনস্টিক সেন্টার",
+    chamberName: "প্রাইম ডায়াগনস্টিক সেন্টার",
     chamberAddress: "মা প্লাজা, শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",
     roomNo: "রুম নং: ১০১",
     visitingDays: "প্রতিদিন (শুক্রবার বাদে)",

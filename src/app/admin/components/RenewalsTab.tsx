@@ -11,6 +11,7 @@ interface RenewalsTabProps {
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   locale: string;
+  t?: (key: string) => string;
 }
 
 export function RenewalsTab({
@@ -18,6 +19,7 @@ export function RenewalsTab({
   onApprove,
   onReject,
   locale,
+  t = (k) => k,
 }: RenewalsTabProps) {
   const pendingRenewals = members.filter((m) => m.renewalStatus === "pending");
 
@@ -38,12 +40,10 @@ export function RenewalsTab({
     <Card className="border-border shadow-md">
       <CardHeader>
         <CardTitle className="font-heading text-lg font-bold text-secondary">
-          {locale === "bn" ? "মেম্বারশিপ নবায়ন আবেদন" : "Membership Renewal Requests"}
+          {t("admin.renewals.title")}
         </CardTitle>
         <CardDescription>
-          {locale === "bn"
-            ? "নবায়ন ফি পরিশোধকারী মেম্বারদের আবেদনের তালিকা"
-            : "List of members requesting membership renewal"}
+          {t("admin.renewals.desc")}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -52,22 +52,22 @@ export function RenewalsTab({
             <TableHeader className="bg-muted/40">
               <TableRow className="hover:bg-transparent border-b border-border">
                 <TableHead className="font-semibold text-secondary w-[180px]">
-                  {locale === "bn" ? "মেম্বার নাম" : "Member Name"}
+                  {t("admin.renewals.memberName")}
                 </TableHead>
                 <TableHead className="font-semibold text-secondary w-[140px]">
-                  {locale === "bn" ? "মেম্বার আইডি" : "Member ID"}
+                  {t("admin.renewals.memberId")}
                 </TableHead>
                 <TableHead className="font-semibold text-secondary w-[140px]">
-                  {locale === "bn" ? "বিকাশ নম্বর" : "bKash Sender"}
+                  {t("admin.renewals.paymentDetails")}
                 </TableHead>
                 <TableHead className="font-semibold text-secondary w-[160px]">
-                  {locale === "bn" ? "ট্রানজেকশন আইডি" : "Transaction ID"}
+                  {t("admin.renewals.txnId")}
                 </TableHead>
                 <TableHead className="font-semibold text-secondary w-[150px]">
-                  {locale === "bn" ? "বর্তমান মেয়াদ" : "Current Expiry"}
+                  {t("admin.renewals.currentExpiry")}
                 </TableHead>
                 <TableHead className="font-semibold text-secondary text-right w-[150px]">
-                  {locale === "bn" ? "অ্যাকশন" : "Action"}
+                  {t("admin.renewals.actions")}
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -75,7 +75,7 @@ export function RenewalsTab({
               {pendingRenewals.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-10 text-muted-foreground text-sm">
-                    {locale === "bn" ? "কোনো পেন্ডিং নবায়ন আবেদন পাওয়া যায়নি।" : "No pending renewal requests found."}
+                    {t("admin.renewals.noPending")}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -94,7 +94,7 @@ export function RenewalsTab({
                           className="bg-primary hover:bg-primary-dark text-white font-bold h-8 text-[11px] gap-1 rounded-lg shadow-sm"
                         >
                           <Check className="h-3.5 w-3.5" />
-                          {locale === "bn" ? "অনুমোদন" : "Approve"}
+                          {t("admin.renewals.approve")}
                         </Button>
                         <Button
                           size="sm"
@@ -103,7 +103,7 @@ export function RenewalsTab({
                           className="h-8 text-[11px] gap-1 rounded-lg shadow-sm"
                         >
                           <X className="h-3.5 w-3.5" />
-                          {locale === "bn" ? "বাতিল" : "Reject"}
+                          {t("admin.renewals.reject")}
                         </Button>
                       </div>
                     </TableCell>

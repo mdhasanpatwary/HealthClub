@@ -30,6 +30,7 @@ export type PartnerRequestMinAggregateOutputType = {
   category: string | null
   address: string | null
   discount: string | null
+  contactName: string | null
   phone: string | null
   email: string | null
   status: string | null
@@ -42,6 +43,7 @@ export type PartnerRequestMaxAggregateOutputType = {
   category: string | null
   address: string | null
   discount: string | null
+  contactName: string | null
   phone: string | null
   email: string | null
   status: string | null
@@ -54,6 +56,7 @@ export type PartnerRequestCountAggregateOutputType = {
   category: number
   address: number
   discount: number
+  contactName: number
   phone: number
   email: number
   status: number
@@ -68,6 +71,7 @@ export type PartnerRequestMinAggregateInputType = {
   category?: true
   address?: true
   discount?: true
+  contactName?: true
   phone?: true
   email?: true
   status?: true
@@ -80,6 +84,7 @@ export type PartnerRequestMaxAggregateInputType = {
   category?: true
   address?: true
   discount?: true
+  contactName?: true
   phone?: true
   email?: true
   status?: true
@@ -92,6 +97,7 @@ export type PartnerRequestCountAggregateInputType = {
   category?: true
   address?: true
   discount?: true
+  contactName?: true
   phone?: true
   email?: true
   status?: true
@@ -177,6 +183,7 @@ export type PartnerRequestGroupByOutputType = {
   category: string
   address: string
   discount: string
+  contactName: string | null
   phone: string
   email: string | null
   status: string
@@ -210,6 +217,7 @@ export type PartnerRequestWhereInput = {
   category?: Prisma.StringFilter<"PartnerRequest"> | string
   address?: Prisma.StringFilter<"PartnerRequest"> | string
   discount?: Prisma.StringFilter<"PartnerRequest"> | string
+  contactName?: Prisma.StringNullableFilter<"PartnerRequest"> | string | null
   phone?: Prisma.StringFilter<"PartnerRequest"> | string
   email?: Prisma.StringNullableFilter<"PartnerRequest"> | string | null
   status?: Prisma.StringFilter<"PartnerRequest"> | string
@@ -222,6 +230,7 @@ export type PartnerRequestOrderByWithRelationInput = {
   category?: Prisma.SortOrder
   address?: Prisma.SortOrder
   discount?: Prisma.SortOrder
+  contactName?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -237,6 +246,7 @@ export type PartnerRequestWhereUniqueInput = Prisma.AtLeast<{
   category?: Prisma.StringFilter<"PartnerRequest"> | string
   address?: Prisma.StringFilter<"PartnerRequest"> | string
   discount?: Prisma.StringFilter<"PartnerRequest"> | string
+  contactName?: Prisma.StringNullableFilter<"PartnerRequest"> | string | null
   phone?: Prisma.StringFilter<"PartnerRequest"> | string
   email?: Prisma.StringNullableFilter<"PartnerRequest"> | string | null
   status?: Prisma.StringFilter<"PartnerRequest"> | string
@@ -249,6 +259,7 @@ export type PartnerRequestOrderByWithAggregationInput = {
   category?: Prisma.SortOrder
   address?: Prisma.SortOrder
   discount?: Prisma.SortOrder
+  contactName?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -267,6 +278,7 @@ export type PartnerRequestScalarWhereWithAggregatesInput = {
   category?: Prisma.StringWithAggregatesFilter<"PartnerRequest"> | string
   address?: Prisma.StringWithAggregatesFilter<"PartnerRequest"> | string
   discount?: Prisma.StringWithAggregatesFilter<"PartnerRequest"> | string
+  contactName?: Prisma.StringNullableWithAggregatesFilter<"PartnerRequest"> | string | null
   phone?: Prisma.StringWithAggregatesFilter<"PartnerRequest"> | string
   email?: Prisma.StringNullableWithAggregatesFilter<"PartnerRequest"> | string | null
   status?: Prisma.StringWithAggregatesFilter<"PartnerRequest"> | string
@@ -279,6 +291,7 @@ export type PartnerRequestCreateInput = {
   category: string
   address: string
   discount: string
+  contactName?: string | null
   phone: string
   email?: string | null
   status?: string
@@ -291,6 +304,7 @@ export type PartnerRequestUncheckedCreateInput = {
   category: string
   address: string
   discount: string
+  contactName?: string | null
   phone: string
   email?: string | null
   status?: string
@@ -303,6 +317,7 @@ export type PartnerRequestUpdateInput = {
   category?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   discount?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -315,6 +330,7 @@ export type PartnerRequestUncheckedUpdateInput = {
   category?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   discount?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -327,6 +343,7 @@ export type PartnerRequestCreateManyInput = {
   category: string
   address: string
   discount: string
+  contactName?: string | null
   phone: string
   email?: string | null
   status?: string
@@ -339,6 +356,7 @@ export type PartnerRequestUpdateManyMutationInput = {
   category?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   discount?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -351,6 +369,7 @@ export type PartnerRequestUncheckedUpdateManyInput = {
   category?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   discount?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -363,6 +382,7 @@ export type PartnerRequestCountOrderByAggregateInput = {
   category?: Prisma.SortOrder
   address?: Prisma.SortOrder
   discount?: Prisma.SortOrder
+  contactName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -375,6 +395,7 @@ export type PartnerRequestMaxOrderByAggregateInput = {
   category?: Prisma.SortOrder
   address?: Prisma.SortOrder
   discount?: Prisma.SortOrder
+  contactName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -387,6 +408,7 @@ export type PartnerRequestMinOrderByAggregateInput = {
   category?: Prisma.SortOrder
   address?: Prisma.SortOrder
   discount?: Prisma.SortOrder
+  contactName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -401,6 +423,7 @@ export type PartnerRequestSelect<ExtArgs extends runtime.Types.Extensions.Intern
   category?: boolean
   address?: boolean
   discount?: boolean
+  contactName?: boolean
   phone?: boolean
   email?: boolean
   status?: boolean
@@ -413,6 +436,7 @@ export type PartnerRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   category?: boolean
   address?: boolean
   discount?: boolean
+  contactName?: boolean
   phone?: boolean
   email?: boolean
   status?: boolean
@@ -425,6 +449,7 @@ export type PartnerRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   category?: boolean
   address?: boolean
   discount?: boolean
+  contactName?: boolean
   phone?: boolean
   email?: boolean
   status?: boolean
@@ -437,13 +462,14 @@ export type PartnerRequestSelectScalar = {
   category?: boolean
   address?: boolean
   discount?: boolean
+  contactName?: boolean
   phone?: boolean
   email?: boolean
   status?: boolean
   createdAt?: boolean
 }
 
-export type PartnerRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orgName" | "category" | "address" | "discount" | "phone" | "email" | "status" | "createdAt", ExtArgs["result"]["partnerRequest"]>
+export type PartnerRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orgName" | "category" | "address" | "discount" | "contactName" | "phone" | "email" | "status" | "createdAt", ExtArgs["result"]["partnerRequest"]>
 
 export type $PartnerRequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PartnerRequest"
@@ -454,6 +480,7 @@ export type $PartnerRequestPayload<ExtArgs extends runtime.Types.Extensions.Inte
     category: string
     address: string
     discount: string
+    contactName: string | null
     phone: string
     email: string | null
     status: string
@@ -886,6 +913,7 @@ export interface PartnerRequestFieldRefs {
   readonly category: Prisma.FieldRef<"PartnerRequest", 'String'>
   readonly address: Prisma.FieldRef<"PartnerRequest", 'String'>
   readonly discount: Prisma.FieldRef<"PartnerRequest", 'String'>
+  readonly contactName: Prisma.FieldRef<"PartnerRequest", 'String'>
   readonly phone: Prisma.FieldRef<"PartnerRequest", 'String'>
   readonly email: Prisma.FieldRef<"PartnerRequest", 'String'>
   readonly status: Prisma.FieldRef<"PartnerRequest", 'String'>

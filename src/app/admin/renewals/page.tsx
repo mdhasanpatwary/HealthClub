@@ -14,7 +14,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { RenewalsTab } from "../components/RenewalsTab";
 
 export default function AdminRenewalsPage() {
-  const { locale } = useLanguage();
+  const { t, locale } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [members, setMembers] = useState<Member[]>([]);
 
@@ -106,6 +106,7 @@ export default function AdminRenewalsPage() {
         onApprove={handleApproveRenewal}
         onReject={handleRejectRenewal}
         locale={locale}
+        t={t}
       />
     </div>
   );

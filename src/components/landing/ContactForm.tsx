@@ -65,7 +65,7 @@ export default function ContactForm() {
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">{t("landing.contactform.hotlineNumber")}</p>
-                <p className="text-sm font-bold text-secondary font-mono">{t("landing.contactform.8801783721411")}</p>
+                <p className="text-sm font-bold text-secondary dark:text-white font-mono">{t("landing.contactform.8801783721411")}</p>
               </div>
             </a>
 
@@ -75,7 +75,7 @@ export default function ContactForm() {
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">{t("landing.contactform.whatsappChat")}</p>
-                <p className="text-sm font-bold text-secondary font-mono">{t("landing.contactform.8801886763849")}</p>
+                <p className="text-sm font-bold text-secondary dark:text-white font-mono">{t("landing.contactform.8801886763849")}</p>
               </div>
             </a>
 
@@ -85,14 +85,19 @@ export default function ContactForm() {
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">{t("landing.contactform.officeAddress")}</p>
-                <p className="text-sm font-bold text-secondary">{t("landing.contactform.mizanRoadFeni3900")}</p>
+                <p className="text-sm font-bold text-secondary dark:text-white">{t("landing.contactform.mizanRoadFeni3900")}</p>
               </div>
             </div>
 
           </div>
         </div>
 
-        <a href="https://www.facebook.com/profile.php?id=61591616953090" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 p-3 bg-secondary text-white rounded-xl hover:bg-slate-800 transition-colors text-sm font-semibold">
+        <a
+          href={process.env.NEXT_PUBLIC_FACEBOOK_URL || "https://www.facebook.com/profile.php?id=61591616953090"}
+          target="_blank"
+          rel="noreferrer"
+          className="flex items-center justify-center gap-2 p-3 bg-secondary text-white rounded-xl hover:bg-slate-800 transition-colors text-sm font-semibold"
+        >
           <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
             <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z" />
           </svg>
@@ -106,7 +111,7 @@ export default function ContactForm() {
           {submitted ? (
             <div className="text-center py-12 space-y-4">
               <CheckCircle className="h-16 w-16 text-primary mx-auto animate-bounce" />
-              <h3 className="font-heading text-xl font-bold text-secondary">
+              <h3 className="font-heading text-xl font-bold text-secondary dark:text-white">
                 {t("landing.contactform.messageSentSuccessfully")}
               </h3>
               <p className="text-sm text-muted-foreground max-w-sm mx-auto">
@@ -123,7 +128,7 @@ export default function ContactForm() {
               </h3>
               
               <div className="space-y-2">
-                <label className="text-xs font-semibold text-secondary">{t("landing.contactform.yourName")}</label>
+                <label className="text-xs font-semibold text-secondary dark:text-white">{t("landing.contactform.yourName")}</label>
                 <Input
                   type="text"
                   name="name"
@@ -137,7 +142,7 @@ export default function ContactForm() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">{t("landing.contactform.mobileNumber")}</label>
+                  <label className="text-xs font-semibold text-secondary dark:text-white">{t("landing.contactform.mobileNumber")}</label>
                   <Input
                     type="tel"
                     name="phone"
@@ -149,7 +154,7 @@ export default function ContactForm() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary">{t("landing.contactform.emailAddress")}</label>
+                  <label className="text-xs font-semibold text-secondary dark:text-white">{t("landing.contactform.emailAddress")}</label>
                   <Input
                     type="email"
                     name="email"
@@ -162,7 +167,7 @@ export default function ContactForm() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-semibold text-secondary">{t("landing.contactform.yourMessage")}</label>
+                <label className="text-xs font-semibold text-secondary dark:text-white">{t("landing.contactform.yourMessage")}</label>
                 <textarea
                   name="message"
                   required

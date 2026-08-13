@@ -1,10 +1,12 @@
 "use client";
 
+import { useLanguage } from "@/components/layout/LanguageProvider";
 import { useAdminDoctors } from "../hooks/useAdminDoctors";
 import { DoctorsTab } from "../components/DoctorsTab";
 import { DoctorDialog } from "../components/DoctorDialog";
 
 export default function AdminDoctorsPage() {
+  const { t } = useLanguage();
   const {
     filteredDoctors,
     doctorSearch,
@@ -39,6 +41,7 @@ export default function AdminDoctorsPage() {
         onNewDoctorClick={handleOpenNewDoctor}
         onEditClick={handleEditDoctor}
         onDeleteClick={onDelete}
+        t={t}
       />
 
       {isDoctorOpen && (
@@ -49,6 +52,7 @@ export default function AdminDoctorsPage() {
           newDoctor={newDoctor}
           setNewDoctor={setNewDoctor}
           onSubmit={onSave}
+          t={t}
         />
       )}
     </div>

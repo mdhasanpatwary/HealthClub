@@ -77,9 +77,26 @@ export async function updateMemberStatusAction(id: string, status: Member["statu
   const session = await getSessionUser();
   if (!session || session.role !== "admin") throw new Error("Unauthorized");
   try {
+    const member = await prisma.member.findUnique({ where: { id } });
+    if (!member) return false;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const updateData: any = { status };
+
+    if (status === "active") {
+      const now = new Date();
+      updateData.joinedDate = now;
+      const expiry = new Date(now);
+      expiry.setFullYear(now.getFullYear() + 1);
+      updateData.expiryDate = expiry;
+      updateData.renewalStatus = null;
+      updateData.renewalBkashSender = null;
+      updateData.renewalBkashTxnId = null;
+    }
+
     await prisma.member.update({
       where: { id },
-      data: { status },
+      data: updateData,
     });
     return true;
   } catch (error) {
@@ -88,29 +105,51 @@ export async function updateMemberStatusAction(id: string, status: Member["statu
   }
 }
 
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "healthclubfeni@gmail.com";
+
 export async function updateMemberProfileAction(
   id: string,
-  name: string,
-  phone: string,
-  email: string,
+  nameOrUpdates: string | Partial<Pick<Member, "name" | "phone" | "email" | "address" | "birthDate" | "profession" | "profilePictureUrl">>,
+  phone?: string,
+  email?: string,
   address?: string,
   birthDate?: string,
   profession?: string,
   profilePictureUrl?: string
 ): Promise<boolean> {
   const session = await getSessionUser();
-  if (!session || (session.userId !== id && session.role !== "admin")) throw new Error("Unauthorized");
+  if (!session || (session.userId !== id && session.role !== "admin")) return false;
+
+  const updates = typeof nameOrUpdates === "object"
+    ? nameOrUpdates
+    : {
+        name: nameOrUpdates,
+        phone,
+        email,
+        address,
+        birthDate,
+        profession,
+        profilePictureUrl,
+      };
+
+  if (updates.email && updates.email.trim().toLowerCase() === ADMIN_EMAIL.toLowerCase() && session.role !== "admin") {
+    console.warn(`[SECURITY] Prevented non-admin user ${id} from claiming ADMIN_EMAIL ${ADMIN_EMAIL}`);
+    return false;
+  }
+
   try {
     await prisma.member.update({
       where: { id },
       data: {
-        name,
-        phone,
-        email: email || null,
-        address: address || null,
-        birthDate: birthDate ? new Date(birthDate) : null,
-        profession: profession || null,
-        profilePictureUrl: profilePictureUrl || null,
+        ...(updates.name && { name: updates.name }),
+        ...(updates.phone && { phone: updates.phone }),
+        ...(updates.email !== undefined && { email: updates.email || null }),
+        ...(updates.address !== undefined && { address: updates.address || null }),
+        ...(updates.birthDate !== undefined && {
+          birthDate: updates.birthDate ? new Date(updates.birthDate) : null,
+        }),
+        ...(updates.profession !== undefined && { profession: updates.profession || null }),
+        ...(updates.profilePictureUrl !== undefined && { profilePictureUrl: updates.profilePictureUrl || null }),
       },
     });
     return true;

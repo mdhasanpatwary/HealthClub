@@ -75,7 +75,7 @@ export default function UserDropdown({ user }: UserDropdownProps) {
         )}
         
         <DropdownMenuItem
-          render={<Link href="/profile" />}
+          render={<Link href="/dashboard?tab=profile" />}
           className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md hover:bg-muted text-foreground transition-colors"
         >
           <Settings className="h-4 w-4 text-primary" />

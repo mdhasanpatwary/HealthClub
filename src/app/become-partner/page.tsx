@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { addPartnerRequestAction } from "@/app/actions/partnerActions";
+import { toast } from "sonner";
 
 export default function BecomePartnerPage() {
   const [formData, setFormData] = useState({
@@ -27,10 +28,12 @@ export default function BecomePartnerPage() {
         category: formData.category as "hospital" | "diagnostic" | "pharmacy",
         address: formData.address,
         discount: formData.discount,
+        contactName: formData.contactName,
         phone: formData.phone,
         email: formData.email || null,
       });
       setSubmitted(true);
+      toast.success("আবেদনটি সফলভাবে জমা হয়েছে!");
       setFormData({
         orgName: "",
         category: "hospital",
@@ -42,7 +45,7 @@ export default function BecomePartnerPage() {
       });
     } catch (err) {
       console.error(err);
-      alert("আবেদনটি জমা দেওয়া সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।");
+      toast.error("আবেদনটি জমা দেওয়া সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।");
     }
   };
 
@@ -111,7 +114,7 @@ export default function BecomePartnerPage() {
             <div className="p-4 rounded-2xl bg-muted border border-border flex items-start gap-3">
               <HelpCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
               <div className="text-xs space-y-1">
-                <p className="font-bold text-secondary">সহায়তা প্রয়োজন?</p>
+                <p className="font-bold text-secondary dark:text-white">সহায়তা প্রয়োজন?</p>
                 <p className="text-muted-foreground">পার্টনার সম্পর্ক টিম হটলাইন:</p>
                 <p className="font-bold text-primary font-mono">+৮৮০ ১৭৮৩৭২১৪১১</p>
               </div>
@@ -124,7 +127,7 @@ export default function BecomePartnerPage() {
               {submitted ? (
                 <div className="text-center py-12 space-y-4">
                   <CheckCircle2 className="h-16 w-16 text-primary mx-auto animate-bounce" />
-                  <h3 className="font-heading text-xl font-bold text-secondary">
+                  <h3 className="font-heading text-xl font-bold text-secondary dark:text-white">
                     আবেদনটি সফলভাবে জমা হয়েছে!
                   </h3>
                   <p className="text-sm text-muted-foreground max-w-sm mx-auto">
@@ -142,7 +145,7 @@ export default function BecomePartnerPage() {
                   </h3>
                   
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary">প্রতিষ্ঠানের নাম (যেমন: ল্যাবএইড কুষ্টিয়া) *</label>
+                    <label className="text-xs font-semibold text-secondary dark:text-white">প্রতিষ্ঠানের নাম (যেমন: ল্যাবএইড কুষ্টিয়া) *</label>
                     <Input
                       type="text"
                       name="orgName"
@@ -156,7 +159,7 @@ export default function BecomePartnerPage() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-secondary">প্রতিষ্ঠানের ধরন *</label>
+                      <label className="text-xs font-semibold text-secondary dark:text-white">প্রতিষ্ঠানের ধরন *</label>
                       <select
                         name="category"
                         value={formData.category}
@@ -170,7 +173,7 @@ export default function BecomePartnerPage() {
                     </div>
                     
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-secondary">প্রস্তাবিত ডিসকাউন্টের হার *</label>
+                      <label className="text-xs font-semibold text-secondary dark:text-white">প্রস্তাবিত ডিসকাউন্টের হার *</label>
                       <Input
                         type="text"
                         name="discount"
@@ -184,7 +187,7 @@ export default function BecomePartnerPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary">প্রতিষ্ঠানের ঠিকানা *</label>
+                    <label className="text-xs font-semibold text-secondary dark:text-white">প্রতিষ্ঠানের ঠিকানা *</label>
                     <Input
                       type="text"
                       name="address"
@@ -197,7 +200,7 @@ export default function BecomePartnerPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary">যোগাযোগকারী ব্যক্তির নাম *</label>
+                    <label className="text-xs font-semibold text-secondary dark:text-white">যোগাযোগকারী ব্যক্তির নাম *</label>
                     <Input
                       type="text"
                       name="contactName"
@@ -211,7 +214,7 @@ export default function BecomePartnerPage() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-secondary">মোবাইল নম্বর *</label>
+                      <label className="text-xs font-semibold text-secondary dark:text-white">মোবাইল নম্বর *</label>
                       <Input
                         type="tel"
                         name="phone"
@@ -223,7 +226,7 @@ export default function BecomePartnerPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-secondary">ইমেইল ঠিকানা</label>
+                      <label className="text-xs font-semibold text-secondary dark:text-white">ইমেইল ঠিকানা</label>
                       <Input
                         type="email"
                         name="email"

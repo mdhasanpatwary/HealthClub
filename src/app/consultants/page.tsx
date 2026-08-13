@@ -17,16 +17,16 @@ export async function generateMetadata() {
       ? "Specialist Doctors & Consultants Directory in Feni - Health Club"
       : "বিশেষজ্ঞ ডাক্তার ও কনসালট্যান্ট তালিকা (ফেনী) - হেলথ ক্লাব",
     description: isEn
-      ? "Find specialist doctors in Feni, check chamber visiting hours, qualifications, and call direct serial numbers for appointments at DD Lab and partner hospitals."
-      : "ফেনীর বিশেষজ্ঞ ডাক্তারদের তালিকা, চেম্বার শিডিউল, রোগী দেখার সময় এবং সরাসরি সিরিয়াল বুকিংয়ের হটলাইন নম্বর জানুন। ডিডি ল্যাব ও পার্টনার ডায়াগনস্টিক সেন্টারের কনসালট্যান্ট তালিকা।",
+      ? "Find specialist doctors in Feni, check chamber visiting hours, qualifications, and call direct serial numbers for appointments at partner hospitals and clinics."
+      : "ফেনীর বিশেষজ্ঞ ডাক্তারদের তালিকা, চেম্বার শিডিউল, রোগী দেখার সময় এবং সরাসরি সিরিয়াল বুকিংয়ের হটলাইন নম্বর জানুন। পার্টনার হাসপাতাল ও ডায়াগনস্টিক সেন্টারের কনসালট্যান্ট তালিকা।",
     alternates: {
       canonical: "https://healthclubfeni.vercel.app/consultants",
     },
     keywords: [
       "Feni doctor list",
       "ফেনীর বিশেষজ্ঞ ডাক্তার",
-      "DD Lab consultant list",
-      "ডিডি ল্যাব ডাক্তার সিরিয়াল",
+      "Feni doctor serial number",
+      "ফেনী ডাক্তার সিরিয়াল",
       "Feni doctor appointment serial number",
       "Medicine specialist doctor in Feni",
       "Gynecologist in Feni",

@@ -10,11 +10,14 @@ const authRoutes = ["/login", "/register"];
 const publicRoutes = [
   "/about-us",
   "/partner-hospitals",
+  "/consultants",
+  "/doctors",
   "/membership",
   "/contact",
   "/privacy-policy",
   "/terms-conditions",
   "/become-partner",
+  "/forgot-password",
   "/offline",
   "/verify",
 ];

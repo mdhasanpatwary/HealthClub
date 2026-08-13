@@ -205,7 +205,9 @@ export function MemberDetailsDialog({
                       .map((tx) => (
                         <TableRow key={tx.id}>
                           <TableCell className="font-semibold text-secondary py-2">{tx.partnerName}</TableCell>
-                          <TableCell className="text-muted-foreground py-2 font-mono">{tx.date.split(" ")[0]}</TableCell>
+                          <TableCell className="text-muted-foreground py-2 font-mono">
+                            {tx.date.includes("T") ? tx.date.split("T")[0] : tx.date.split(" ")[0].replace(/,$/, "")}
+                          </TableCell>
                           <TableCell className="text-right font-mono py-2">৳{tx.amount}</TableCell>
                           <TableCell className="text-right font-mono text-primary font-bold py-2">৳{tx.saved}</TableCell>
                         </TableRow>

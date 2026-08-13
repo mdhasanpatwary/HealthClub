@@ -1,0 +1,103 @@
+# Health Club (হেলথ ক্লাব) — Consistency Fixes TODO List
+
+This document lists all tasks required to resolve the 21 architectural, data, API, business logic, and UI/UX inconsistencies discovered during the consistency audit.
+
+---
+
+## 🚀 Phase 1: P0 — Critical System Blockers (Data Integrity & Auth)
+
+- [x] **TODO-01**: **Fix Member Status Activation Bug & Ghost Expiry**
+  - **Files**: `src/app/actions/memberActions.ts`, `src/app/actions/memberAdminActions.ts`, `src/services/dbStore.ts`
+  - **Details**: When admin sets a member's status to `"active"`, ensure `joinedDate` is set to today (`now`), `expiryDate` is set to 1 year ahead (`now + 1 year`), and renewal fields (`renewalStatus`, `renewalBkashSender`, `renewalBkashTxnId`) are reset to `null`.
+
+- [x] **TODO-02**: **Consolidate Member Server Actions & Unify Function Signatures**
+  - **Files**: `src/app/actions/memberActions.ts`, `src/app/actions/memberAdminActions.ts`, `src/services/dbStore.ts`
+  - **Details**: Eliminate duplicate actions (`getMembersAction`, `updateMemberProfileAction`, `updateMemberStatusAction`). Standardize on unified object parameter signatures (`(id: string, updates: Partial<Member>)`) and consistent error/return contracts across the entire codebase.
+
+- [x] **TODO-03**: **Persist `contactName` in Partner Onboarding Application**
+  - **Files**: `prisma/schema.prisma`, `src/app/actions/partnerRequestActions.ts`, `src/app/become-partner/page.tsx`, `src/app/admin/components/PartnerRequestsTab.tsx`
+  - **Details**: Add `contactName String?` to the `PartnerRequest` model in Prisma. Update `addPartnerRequestAction` to save `contactName`, update `/become-partner` form payload, and render the contact name in the Admin Partner Requests table.
+
+---
+
+## ⚡ Phase 2: P1 — High-Priority Functional & Contract Alignments
+
+- [x] **TODO-04**: **Standardize Transaction Date Serialization (ISO-8601)**
+  - **Files**: `src/app/actions/transactionActions.ts`, `src/app/actions/partnerActions.ts`, `src/app/admin/components/MemberDetailsDialog.tsx`, `src/app/partner/dashboard/page.tsx`
+  - **Details**: Ensure all transaction queries output date as standard ISO-8601 strings (`.toISOString()`). Update consumer dialogs and partner dashboard to format dates safely using standard date utilities instead of fragile string splitting (`.split(" ")[0]`).
+
+- [x] **TODO-05**: **Connect Sonner Toast Notifications in Admin Quick Transactions**
+  - **Files**: `src/app/admin/hooks/useAdminData.ts`, `src/app/admin/components/TransactionDialog.tsx`
+  - **Details**: Call `toast.error(res.error)` and `toast.success(...)` directly inside `handleAddTransaction` in `useAdminData.ts`. Remove unused `txSuccess` and `txError` props from `TransactionDialog.tsx`.
+
+- [x] **TODO-06**: **Add Missing Public Routes to Proxy Fast-Path Whitelist**
+  - **Files**: `src/proxy.ts`
+  - **Details**: Add `"/forgot-password"`, `"/forgot-password/reset"`, `"/consultants"`, and `"/doctors"` to the `publicRoutes` fast-path array to eliminate unnecessary JWT decryption overhead on public pages.
+
+- [x] **TODO-07**: **Standardize Admin Role Check Across Client & Server**
+  - **Files**: `src/components/layout/Header.tsx`, `src/components/layout/UserDropdown.tsx`, `src/app/login/page.tsx`
+  - **Details**: Replace hardcoded literal `"healthclubfeni@gmail.com"` in `Header.tsx` mobile menu with `process.env.NEXT_PUBLIC_ADMIN_EMAIL` and `user.role === "admin"` check.
+
+- [x] **TODO-08**: **Deduplicate `/profile` Route and `/dashboard` Profile Tab**
+  - **Files**: `src/app/profile/page.tsx`, `src/app/dashboard/page.tsx`, `src/app/dashboard/components/DashboardProfileTab.tsx`, `src/components/layout/BottomNav.tsx`
+  - **Details**: Extract a shared `<ProfileForm />` component or redirect `/profile` to `/dashboard?tab=profile` to eliminate duplicated form state, dual data fetching, and split translation keys.
+
+- [x] **TODO-09**: **Align Member Profile Validation Rules Between User & Admin Creation**
+  - **Files**: `src/app/register/page.tsx`, `src/app/admin/components/MemberDialog.tsx`
+  - **Details**: Harmonize validation schemas so admin-created members and self-registered members have consistent default and required profile attributes.
+
+---
+
+## 🛠️ Phase 3: P2 — Medium-Priority UI/UX & Code Quality
+
+- [x] **TODO-10**: **Implement Proper i18n Dictionary Keys in Admin Tabs**
+  - **Files**: `src/app/admin/components/RenewalsTab.tsx`, `src/app/admin/components/PartnerRequestsTab.tsx`, `src/app/admin/components/DoctorsTab.tsx`, `src/app/admin/components/DoctorDialog.tsx`, `src/lib/translations.bn.ts`, `src/lib/translations.en.ts`
+  - **Details**: Replace ad-hoc ternary checks (`locale === "bn" ? ... : ...`) and hardcoded strings with dictionary keys accessed via `t(...)`.
+
+- [x] **TODO-11**: **Fix Malformed Translation Key in Member Renewal Page**
+  - **Files**: `src/app/dashboard/renew/page.tsx`, `src/lib/translations.bn.ts`, `src/lib/translations.en.ts`
+  - **Details**: Replace `t("যেমন: BGA678UHG", "e.g., BGA678UHG")` with proper key `t("dashboard.renew.txnPlaceholder")`. Remove unused `AlertCircle` import.
+
+- [x] **TODO-12**: **Remove Duplicate Inline Success Banner in Profile Form**
+  - **Files**: `src/app/dashboard/components/DashboardProfileTab.tsx`
+  - **Details**: Remove inline `<div className="mb-4 bg-emerald-50 ...">...</div>` success banner to conform to project notification standards (rely strictly on Sonner toast notifications).
+
+- [x] **TODO-13**: **Remove Phantom `"family"` Tier Fallbacks in Admin Tables**
+  - **Files**: `src/app/admin/components/MembersTab.tsx`, `src/app/admin/components/MemberDetailsDialog.tsx`
+  - **Details**: Remove legacy fallback checks for `"family"` tier and maintain strict union type `founding | premium`.
+
+- [x] **TODO-14**: **Add Suspense Loading Skeletons to Admin & Partner Login Pages**
+  - **Files**: `src/app/login/admin/page.tsx`, `src/app/login/partner/page.tsx`
+  - **Details**: Implement consistent loading skeletons and submit disabling during async authentication requests.
+
+- [x] **TODO-15**: **Harmonize Directory Search & Empty State Components**
+  - **Files**: `src/app/doctors/components/DoctorDirectory.tsx`, `src/app/partner-hospitals/components/PartnerDirectory.tsx`
+  - **Details**: Unify category filter pill styles, search input iconography, and empty state cards between the Doctor Directory and Partner Hospital Directory.
+
+- [x] **TODO-16**: **Standardize Number & Currency Formatting Across All Views**
+  - **Files**: `src/lib/i18n.ts`, `src/components/home/SavingsCalculator.tsx`, `src/components/home/LandingPricing.tsx`, `src/app/admin/components/RenewalsTab.tsx`
+  - **Details**: Consistently use `formatNum(val, locale)` to format numbers and currency symbols (৳) across both user-facing and admin interfaces.
+
+- [x] **TODO-17**: **Decouple Doctor Auto-Seeding from Query Action**
+  - **Files**: `src/app/actions/doctorActions.ts`
+  - **Details**: Separate auto-seeding logic from `getDoctorsAction` into an explicit seeder function (`seedDoctorsAction`) to eliminate side effects inside cached server action queries.
+
+---
+
+## 🎨 Phase 4: P3 — Low Priority: Polish & Code Hygiene
+
+- [x] **TODO-18**: **Resolve Unused Variable Warnings from ESLint**
+  - **Files**: `src/app/admin/components/TransactionDialog.tsx`, `src/app/dashboard/renew/page.tsx`
+  - **Details**: Remove unused `txSuccess`, `txError`, and `AlertCircle` imports/variables.
+
+- [x] **TODO-19**: **Unify Partner Transaction Discount Validation Limit**
+  - **Files**: `src/app/actions/transactionActions.ts`, `src/app/actions/partnerActions.ts`
+  - **Details**: Unify the discount capping rules (max 70%) across both admin transaction and partner transaction actions.
+
+- [x] **TODO-20**: **Standardize User Avatar Initials Fallback**
+  - **Files**: `src/components/layout/Header.tsx`, `src/components/layout/UserDropdown.tsx`
+  - **Details**: Standardize avatar initials casing (`.toUpperCase()`) and background gradient styles.
+
+- [x] **TODO-21**: **Source Social Links from System Settings**
+  - **Files**: `src/components/landing/ContactForm.tsx`, `src/app/actions/systemSettingsActions.ts`
+  - **Details**: Replace hardcoded Facebook page URL with dynamically configurable `SystemSetting` value.

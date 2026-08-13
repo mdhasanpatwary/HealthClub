@@ -14,6 +14,7 @@ interface DoctorsTabProps {
   onNewDoctorClick: () => void;
   onEditClick: (doc: Doctor) => void;
   onDeleteClick: (id: string, name: string) => void;
+  t?: (key: string) => string;
 }
 
 export function DoctorsTab({
@@ -23,6 +24,7 @@ export function DoctorsTab({
   onNewDoctorClick,
   onEditClick,
   onDeleteClick,
+  t = (k) => k,
 }: DoctorsTabProps) {
   return (
     <Card className="border-border shadow-md">
@@ -30,10 +32,10 @@ export function DoctorsTab({
         <div>
           <CardTitle className="font-heading text-lg font-bold text-secondary flex items-center gap-2">
             <Stethoscope className="h-5 w-5 text-primary" />
-            <span>ডাক্তার ও কনসালট্যান্ট তালিকা</span>
+            <span>{t("admin.doctors.title")}</span>
           </CardTitle>
           <CardDescription>
-            বিশেষজ্ঞ চিকিৎসকদের তালিকা, চেম্বার শিডিউল ও সিরিয়াল নম্বর ম্যানেজমেন্ট।
+            {t("admin.doctors.desc")}
           </CardDescription>
         </div>
 
@@ -42,7 +44,7 @@ export function DoctorsTab({
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="text"
-              placeholder="ডাক্তারের নাম বা বিভাগ খুঁজুন..."
+              placeholder={t("admin.doctors.searchPlaceholder")}
               value={doctorSearch}
               onChange={(e) => setDoctorSearch(e.target.value)}
               className="pl-9 h-9 border-border bg-background"
@@ -53,7 +55,7 @@ export function DoctorsTab({
             size="sm"
             className="bg-primary hover:bg-primary-dark text-white shrink-0 font-semibold"
           >
-            + নতুন ডাক্তার যুক্ত করুন
+            {t("admin.doctors.addNew")}
           </Button>
         </div>
       </CardHeader>
@@ -62,12 +64,12 @@ export function DoctorsTab({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="font-semibold text-secondary whitespace-nowrap">ডাক্তারের নাম</TableHead>
-                <TableHead className="font-semibold text-secondary whitespace-nowrap">স্পেশালিটি / বিভাগ</TableHead>
-                <TableHead className="font-semibold text-secondary">চেম্বার ও ঠিকানা</TableHead>
-                <TableHead className="font-semibold text-secondary whitespace-nowrap">রোগী দেখার দিন ও সময়</TableHead>
-                <TableHead className="font-semibold text-secondary whitespace-nowrap">সিরিয়াল নম্বর</TableHead>
-                <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">অ্যাকশন</TableHead>
+                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.doctors.nameSpecialty")}</TableHead>
+                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.category")}</TableHead>
+                <TableHead className="font-semibold text-secondary">{t("admin.doctors.chamber")}</TableHead>
+                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.doctors.visitingHours")}</TableHead>
+                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.doctors.serialPhone")}</TableHead>
+                <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">{t("admin.renewals.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className="text-xs sm:text-sm">
@@ -130,7 +132,7 @@ export function DoctorsTab({
               ) : (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                    কোনো ডাক্তারের তথ্য পাওয়া যায়নি।
+                    {t("admin.doctors.noDoctors")}
                   </TableCell>
                 </TableRow>
               )}

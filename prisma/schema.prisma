@@ -119,6 +119,7 @@ model PartnerRequest {
   category    String   // 'hospital' | 'diagnostic' | 'pharmacy'
   address     String
   discount    String
+  contactName String?  @map("contact_name")
   phone       String
   email       String?
   status      String   @default("pending") // 'pending' | 'approved' | 'rejected'

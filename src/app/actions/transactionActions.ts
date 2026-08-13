@@ -38,7 +38,7 @@ export async function getTransactionsAction(memberId?: string): Promise<Transact
       partnerName: t.partnerName,
       amount: t.amount,
       saved: t.saved,
-      date: t.date.toLocaleString("en-US", { hour12: true }),
+      date: t.date.toISOString(),
     }));
   } catch (error) {
     console.error("Error in getTransactionsAction:", error);
@@ -147,7 +147,7 @@ export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">)
       partnerName: data.partnerName,
       amount: data.amount,
       saved: data.saved,
-      date: data.date.toLocaleString("en-US", { hour12: true }),
+      date: data.date.toISOString(),
     };
   } catch (error) {
     console.error("Error in addTransactionAction:", error);

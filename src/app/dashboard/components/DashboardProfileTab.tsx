@@ -1,12 +1,11 @@
 import React from "react";
-import { LayoutDashboard, Save, CheckCircle2 } from "lucide-react";
+import { LayoutDashboard, Save } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ImageUpload } from "@/components/ui/ImageUpload";
 
 interface DashboardProfileTabProps {
-  saveSuccess: boolean;
   handleUpdateProfile: (e: React.FormEvent) => void;
   profilePictureUrl: string;
   setProfilePictureUrl: (url: string) => void;
@@ -26,7 +25,6 @@ interface DashboardProfileTabProps {
 }
 
 export function DashboardProfileTab({
-  saveSuccess,
   handleUpdateProfile,
   profilePictureUrl,
   setProfilePictureUrl,
@@ -56,13 +54,6 @@ export function DashboardProfileTab({
         </CardDescription>
       </CardHeader>
       <CardContent className="p-6">
-        {saveSuccess && (
-          <div className="mb-4 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 text-xs p-3 rounded-xl border border-emerald-200 dark:border-emerald-800 flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 shrink-0" />
-            <span>{t("dashboard.profile.success")}</span>
-          </div>
-        )}
-
         <form onSubmit={handleUpdateProfile} className="space-y-5">
 
           <ImageUpload
