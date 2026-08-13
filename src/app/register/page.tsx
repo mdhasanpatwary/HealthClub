@@ -49,14 +49,6 @@ function RegisterForm() {
     }
 
     try {
-      const existing = await dbStore.getMemberById(formData.phone);
-      if (existing) {
-        const msg = "এই মোবাইল নম্বরটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।";
-        toast.error(msg);
-        setLoading(false);
-        return;
-      }
-
       await dbStore.addMember({
         name: formData.name,
         phone: formData.phone,

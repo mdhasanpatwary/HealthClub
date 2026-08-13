@@ -1,5 +1,6 @@
 "use server";
 
+import { randomInt } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { Member } from "@/services/db";
 import { hashPassword, verifyPassword } from "@/lib/crypto";
@@ -59,7 +60,7 @@ export async function addMemberAction(
 
   const rawPassword = member.password || "123456";
   const hashedPassword = hashPassword(rawPassword);
-  const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+  const verificationCode = randomInt(100000, 1000000).toString();
 
   try {
     const m = await prisma.member.create({
@@ -136,8 +137,74 @@ export async function getMembersAction(): Promise<Member[]> {
   }
 }
 
-export async function getMemberByIdAction(idOrPhone: string): Promise<Member | null> {
+export interface PublicMemberVerification {
+  id: string;
+  name: string;
+  tier: "founding" | "premium";
+  status: "active" | "inactive" | "pending_payment" | "pending_approval";
+  expiryDate: string;
+  isExpired: boolean;
+}
+
+/**
+ * Publicly accessible endpoint for digital card / QR code verification.
+ * Strictly redacts and excludes all sensitive PII (phone, email, address, bKash transactions).
+ */
+export async function getPublicMemberVerificationAction(
+  memberId: string
+): Promise<PublicMemberVerification | null> {
   try {
+    const m = await prisma.member.findUnique({
+      where: { id: memberId },
+      select: {
+        id: true,
+        name: true,
+        tier: true,
+        status: true,
+        expiryDate: true,
+      },
+    });
+
+    if (!m) return null;
+
+    const expiryDate = new Date(m.expiryDate);
+    expiryDate.setHours(23, 59, 59, 999);
+    const isExpired = expiryDate < new Date();
+
+    return {
+      id: m.id,
+      name: m.name,
+      tier: m.tier as "founding" | "premium",
+      status: m.status as "active" | "inactive" | "pending_payment" | "pending_approval",
+      expiryDate: formatDate(m.expiryDate),
+      isExpired,
+    };
+  } catch (error) {
+    console.error("Error in getPublicMemberVerificationAction:", error);
+    return null;
+  }
+}
+
+/**
+ * Secure member retrieval.
+ * Requires authenticated session; only the user themselves or an admin can access full profile details.
+ */
+export async function getMemberByIdAction(idOrPhone: string): Promise<Member | null> {
+  const session = await getSessionUser();
+  if (!session) return null;
+
+  try {
+    // If regular user, only allow fetching their own profile
+    if (session.role === "user" && session.userId !== idOrPhone) {
+      const self = await prisma.member.findUnique({
+        where: { id: session.userId },
+        select: { phone: true, email: true },
+      });
+      if (self?.phone !== idOrPhone && self?.email !== idOrPhone) {
+        return null;
+      }
+    }
+
     const selectFields = {
       id: true,
       name: true,
@@ -332,6 +399,13 @@ export async function updateMemberProfileAction(
 ): Promise<boolean> {
   const session = await getSessionUser();
   if (!session || (session.userId !== id && session.role !== "admin")) return false;
+
+  // Security: Prevent regular users from setting their email to ADMIN_EMAIL
+  if (updates.email && updates.email.trim().toLowerCase() === ADMIN_EMAIL.toLowerCase() && session.role !== "admin") {
+    console.warn(`[SECURITY] Prevented non-admin user ${id} from claiming ADMIN_EMAIL ${ADMIN_EMAIL}`);
+    return false;
+  }
+
   try {
     await prisma.member.update({
       where: { id },
@@ -475,7 +549,7 @@ export async function resendVerificationCodeAction(email: string): Promise<{ suc
       return { success: false, message: "মেম্বার খুঁজে পাওয়া যায়নি।" };
     }
 
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const code = randomInt(100000, 1000000).toString();
     await prisma.member.update({
       where: { id: member.id },
       data: {
@@ -506,11 +580,12 @@ export async function requestPasswordResetAction(email: string): Promise<{ succe
       where: { email },
     });
 
+    // Prevent account enumeration by returning a neutral generic message even if email not found
     if (!member) {
-      return { success: false, message: "এই ইমেইল দিয়ে কোনো মেম্বার অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।" };
+      return { success: true, message: "যদি এই ইমেইলটি আমাদের সিস্টেমে নিবন্ধিত থাকে, তবে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
     }
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = randomInt(100000, 1000000).toString();
     await prisma.member.update({
       where: { id: member.id },
       data: {
@@ -523,7 +598,7 @@ export async function requestPasswordResetAction(email: string): Promise<{ succe
       console.error("Failed to send password reset OTP email:", err);
     });
 
-    return { success: true, message: "আপনার ইমেইলে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
+    return { success: true, message: "যদি এই ইমেইলটি আমাদের সিস্টেমে নিবন্ধিত থাকে, তবে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
   } catch (error) {
     console.error("Error in requestPasswordResetAction:", error);
     return { success: false, message: "পাসওয়ার্ড রিসেট অনুরোধ প্রক্রিয়া করতে সমস্যা হয়েছে।" };
@@ -552,13 +627,35 @@ export async function resetPasswordAction(
       return { success: false, message: "রিসেট অনুরোধ পাওয়া যায়নি বা কোড ইতিমধ্যে ব্যবহৃত হয়েছে।" };
     }
 
+    // --- Brute-force protection: track failed reset attempts ---
+    let storedCode = member.verificationCode;
+    let attempts = 0;
+    const attemptMatch = storedCode.match(/^attempts:(\d+):(.+)$/);
+    if (attemptMatch) {
+      attempts = parseInt(attemptMatch[1], 10);
+      storedCode = attemptMatch[2];
+    }
+
+    if (attempts >= MAX_OTP_ATTEMPTS) {
+      return { success: false, message: "অনেকবার ভুল কোড দেওয়া হয়েছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
+    }
+
     const fifteenMinutes = 15 * 60 * 1000;
     if (Date.now() - new Date(member.verificationCodeCreatedAt).getTime() > fifteenMinutes) {
       return { success: false, message: "ওটিপি কোডের মেয়াদ শেষ হয়ে গেছে (১৫ মিনিট পার হয়েছে)। অনুগ্রহ করে আবার নতুন কোড পাঠান।" };
     }
 
-    if (member.verificationCode !== code) {
-      return { success: false, message: "ভুল ওটিপি কোড।" };
+    if (storedCode !== code) {
+      const newAttempts = attempts + 1;
+      await prisma.member.update({
+        where: { id: member.id },
+        data: { verificationCode: `attempts:${newAttempts}:${storedCode}` },
+      });
+      const remaining = MAX_OTP_ATTEMPTS - newAttempts;
+      if (remaining <= 0) {
+        return { success: false, message: "অনেকবার ভুল কোড দেওয়া হয়েছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
+      }
+      return { success: false, message: `ভুল ওটিপি কোড। আর ${remaining}টি সুযোগ বাকি।` };
     }
 
     const hashedPassword = hashPassword(rawNewPassword);

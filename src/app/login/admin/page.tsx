@@ -68,14 +68,14 @@ export default function AdminLoginPage() {
             <div className="space-y-2">
               <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
                 <Shield className="h-3.5 w-3.5 text-primary" />
-                এডমিন মোবাইল বা ইমেইল
+                এডমিন ইমেইল বা মোবাইল নম্বর
               </label>
               <Input
                 type="text"
                 required
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
-                placeholder="যেমন: healthclubfeni@gmail.com বা 01700000000"
+                placeholder="যেমন: admin@healthclub.com বা 017XXXXXXXX"
                 className="border-border bg-background"
               />
             </div>

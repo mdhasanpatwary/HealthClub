@@ -105,14 +105,14 @@ export default function LoginPage() {
               <div className="space-y-2">
                 <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5">
                   <User className="h-3.5 w-3.5 text-primary" />
-                  মোবাইল নম্বর বা ইমেইল
+                  মেম্বার আইডি, মোবাইল নম্বর বা ইমেইল
                 </label>
                 <Input
                   type="text"
                   required
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
-                  placeholder="যেমন: 01711112222 বা test@example.com"
+                  placeholder="যেমন: HC-2026-XXXX বা 017XXXXXXXX"
                   className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-11 focus:border-primary/40"
                 />
               </div>

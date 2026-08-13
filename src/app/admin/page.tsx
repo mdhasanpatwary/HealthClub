@@ -1,24 +1,24 @@
 "use client";
 
+import Link from "next/link";
 import { useLanguage } from "@/components/layout/LanguageProvider";
-import { PlusCircle, Settings } from "lucide-react";
+import {
+  PlusCircle,
+  Settings,
+  Users,
+  Building2,
+  Stethoscope,
+  Receipt,
+  FileCheck,
+  RotateCcw,
+  Mail,
+  ArrowRight,
+} from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-
-import { MemberDialog } from "./components/MemberDialog";
-import { PartnerDialog } from "./components/PartnerDialog";
-import { DoctorDialog } from "./components/DoctorDialog";
+import { formatNum } from "@/lib/i18n";
 import { TransactionDialog } from "./components/TransactionDialog";
-import { MemberDetailsDialog } from "./components/MemberDetailsDialog";
-import { MembersTab } from "./components/MembersTab";
-import { PartnersTab } from "./components/PartnersTab";
-import { DoctorsTab } from "./components/DoctorsTab";
-import { TransactionsTab } from "./components/TransactionsTab";
-import { PartnerRequestsTab } from "./components/PartnerRequestsTab";
-import { ContactMessagesTab } from "./components/ContactMessagesTab";
-import { RenewalsTab } from "./components/RenewalsTab";
 import { AdminStatsGrid } from "./components/AdminStatsGrid";
 import { useAdminData } from "./hooks/useAdminData";
 import { useAdminDoctors } from "./hooks/useAdminDoctors";
@@ -27,401 +27,302 @@ export default function AdminDashboardPage() {
   const { t, locale } = useLanguage();
   const adminData = useAdminData(t, locale);
   const doctorData = useAdminDoctors();
-
+  const isBn = locale === "bn";
 
   const {
     loading,
-    activeTab,
-    setActiveTab,
     stats,
-    members,
     partners,
-    transactions,
-    partnerRequests,
-    contactMessages,
     allowMemberTx,
     togglingMemberTx,
     handleToggleMemberTx,
-    memberSearch,
-    setMemberSearch,
-    partnerSearch,
-    setPartnerSearch,
-    filteredMembers,
-    filteredPartners,
-    newMember,
-    setNewMember,
-    editingMember,
-    setEditingMember,
-    newPartner,
-    setNewPartner,
-    editingPartner,
-    setEditingPartner,
     newTx,
     setNewTx,
     txSuccess,
     txError,
-    isMemberOpen,
-    setIsMemberOpen,
-    isPartnerOpen,
-    setIsPartnerOpen,
     isTxOpen,
     setIsTxOpen,
-    viewingMember,
-    setViewingMember,
-    handleSaveMember,
-    handleDeleteMember,
-    handleSavePartner,
-    handleDeletePartner,
-    handleApprovePartnerRequest,
-    handleRejectPartnerRequest,
-    handleDeleteContactMessage,
     handleAddTransaction,
-    handleToggleMemberStatus,
-    handleApproveRenewal,
-    handleRejectRenewal,
   } = adminData;
+
+  const quickLinks = [
+    {
+      title: t("admin.dashboard.membersList") || "সদস্য তালিকা",
+      description: isBn
+        ? "নিবন্ধিত সদস্যদের তথ্য, স্ট্যাটাস ও কার্ড ম্যানেজমেন্ট"
+        : "Manage registered members, status and digital cards",
+      href: "/admin/members",
+      icon: Users,
+      count: stats.totalMembers,
+      countLabel: isBn ? "জন সদস্য" : "members",
+      badge: null,
+      color: "indigo",
+    },
+    {
+      title: t("admin.dashboard.partnerHospitals") || "পার্টনার হাসপাতাল",
+      description: isBn
+        ? "চুক্তিবদ্ধ হাসপাতাল, ল্যাব ও ডায়াগনস্টিক সেন্টারের তালিকা"
+        : "Contracted hospitals, labs and diagnostic centers",
+      href: "/admin/partners",
+      icon: Building2,
+      count: stats.partnerCount,
+      countLabel: isBn ? "টি প্রতিষ্ঠান" : "facilities",
+      badge: null,
+      color: "emerald",
+    },
+    {
+      title: isBn ? "ডাক্তার তালিকা" : "Doctors Directory",
+      description: isBn
+        ? "বিশেষজ্ঞ ডাক্তার ও কনসালট্যান্টদের তালিকা ও চেম্বার শিডিউল"
+        : "Specialist doctors, chamber info and serial phones",
+      href: "/admin/doctors",
+      icon: Stethoscope,
+      count: doctorData.doctors.length,
+      countLabel: isBn ? "জন ডাক্তার" : "doctors",
+      badge: null,
+      color: "blue",
+    },
+    {
+      title: t("admin.dashboard.transactionLog") || "লেনদেন লগ",
+      description: isBn
+        ? "সদস্যদের চিকিৎসা সেবায় প্রাপ্ত ডিসকাউন্ট ও সেভিংস রেকর্ড"
+        : "Track member discount savings and transaction histories",
+      href: "/admin/transactions",
+      icon: Receipt,
+      count: stats.totalTransactions,
+      countLabel: isBn ? "টি এন্ট্রি" : "transactions",
+      badge: null,
+      color: "teal",
+    },
+    {
+      title: isBn ? "অংশীদার আবেদন" : "Partner Requests",
+      description: isBn
+        ? "নতুন হাসপাতাল ও ক্লিনিকগুলোর অংশীদারিত্ব আবেদন পর্যালোচনা"
+        : "Review pending partner facility applications",
+      href: "/admin/partner-requests",
+      icon: FileCheck,
+      count: stats.pendingPartnerRequests,
+      countLabel: isBn ? "টি নতুন আবেদন" : "pending",
+      badge: stats.pendingPartnerRequests > 0 ? `${stats.pendingPartnerRequests}` : null,
+      badgeColor: "amber",
+      color: "amber",
+    },
+    {
+      title: isBn ? "নবায়ন আবেদন" : "Renewal Requests",
+      description: isBn
+        ? "মেম্বারদের বিকাশ ফি পরিশোধ সাপেক্ষে নবায়ন আবেদন অনুমোদন"
+        : "Approve and extend member annual subscriptions",
+      href: "/admin/renewals",
+      icon: RotateCcw,
+      count: stats.pendingRenewals,
+      countLabel: isBn ? "টি নবায়ন আবেদন" : "pending",
+      badge: stats.pendingRenewals > 0 ? `${stats.pendingRenewals}` : null,
+      badgeColor: "amber",
+      color: "purple",
+    },
+    {
+      title: t("admin.dashboard.contactMessages") || "যোগাযোগের বার্তা",
+      description: isBn
+        ? "ওয়েবসাইট থেকে আসা গ্রাহক ও দর্শনার্থীদের অনুসন্ধান বার্তা"
+        : "Review visitor feedback and general inquiries",
+      href: "/admin/messages",
+      icon: Mail,
+      count: stats.contactMessagesCount,
+      countLabel: isBn ? "টি বার্তা" : "messages",
+      badge: stats.contactMessagesCount > 0 ? `${stats.contactMessagesCount}` : null,
+      badgeColor: "indigo",
+      color: "rose",
+    },
+  ];
 
   if (loading) {
     return (
-      <div className="bg-muted/30 min-h-screen py-6 sm:py-10 animate-pulse">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border pb-6">
-            <div className="space-y-2">
-              <Skeleton className="h-8 w-64 animate-pulse" />
-              <Skeleton className="h-4 w-96 animate-pulse" />
-            </div>
-            <Skeleton className="h-9 w-32 rounded-md" />
+      <div className="space-y-6 sm:space-y-8 animate-pulse">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border pb-6">
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-64" />
+            <Skeleton className="h-4 w-96" />
           </div>
+          <Skeleton className="h-9 w-32 rounded-md" />
+        </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Card key={i} className="border-border shadow-sm bg-background dark:bg-slate-900">
-                <CardContent className="p-6 flex items-center justify-between">
-                  <div className="space-y-2 w-2/3">
-                    <Skeleton className="h-3 w-32 animate-pulse" />
-                    <Skeleton className="h-8 w-20 animate-pulse" />
-                    <Skeleton className="h-3.5 w-24 animate-pulse" />
-                  </div>
-                  <Skeleton className="h-12 w-12 rounded-xl" />
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          <div className="space-y-4">
-            <Skeleton className="h-10 w-full rounded-xl animate-pulse" />
-            <Card className="border-border shadow-md bg-background dark:bg-slate-900">
-              <CardContent className="p-6 space-y-4">
-                <div className="flex justify-between items-center pb-4 border-b border-border">
-                  <Skeleton className="h-9 w-48 rounded-md animate-pulse" />
-                  <Skeleton className="h-9 w-24 rounded-md animate-pulse" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Card key={i} className="border-border shadow-sm bg-background dark:bg-slate-900">
+              <CardContent className="p-6 flex items-center justify-between">
+                <div className="space-y-2 w-2/3">
+                  <Skeleton className="h-3 w-32" />
+                  <Skeleton className="h-8 w-20" />
+                  <Skeleton className="h-3.5 w-24" />
                 </div>
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <div key={i} className="flex justify-between items-center py-3 border-b border-border last:border-0">
-                    <div className="flex items-center gap-3">
-                      <Skeleton className="h-10 w-10 rounded-full" />
-                      <div className="space-y-1">
-                        <Skeleton className="h-4 w-32 animate-pulse" />
-                        <Skeleton className="h-3 w-24 animate-pulse" />
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <Skeleton className="h-8 w-16 rounded-md" />
-                      <Skeleton className="h-8 w-16 rounded-md" />
-                    </div>
-                  </div>
-                ))}
+                <Skeleton className="h-12 w-12 rounded-xl" />
               </CardContent>
             </Card>
-          </div>
+          ))}
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-muted/30 min-h-screen py-6 sm:py-10">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
-
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border pb-6">
-          <div>
-            <h1 className="font-heading text-2xl sm:text-3xl font-bold text-secondary dark:text-white">
-              {t("admin.dashboard.adminAnalyticsDashboard")}
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              {t("admin.dashboard.manageStatsDesc")}
-            </p>
-          </div>
-
-          <div className="flex flex-wrap gap-2 mt-1 sm:mt-0">
-            <Button onClick={() => setIsTxOpen(true)} className="bg-primary hover:bg-primary-dark text-white font-semibold gap-2" size="sm">
-              <PlusCircle className="h-4 w-4" />
-              {t("admin.dashboard.logMemberDiscountTitle")}
-            </Button>
-          </div>
+    <div className="space-y-6 sm:space-y-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border pb-6">
+        <div>
+          <h1 className="font-heading text-2xl sm:text-3xl font-bold text-secondary dark:text-white">
+            {t("admin.dashboard.adminAnalyticsDashboard")}
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            {t("admin.dashboard.manageStatsDesc")}
+          </p>
         </div>
 
-        {/* Admin Stats Grid & Alerts */}
-        <AdminStatsGrid
-          stats={stats}
-          onSelectTab={(tab) => setActiveTab(tab === "partnerRequests" ? "requests" : tab)}
-        />
+        <div className="flex flex-wrap gap-2 mt-1 sm:mt-0">
+          <Button
+            onClick={() => setIsTxOpen(true)}
+            className="bg-primary hover:bg-primary-dark text-white font-semibold gap-2 shadow-sm"
+            size="sm"
+          >
+            <PlusCircle className="h-4 w-4" />
+            {t("admin.dashboard.logMemberDiscountTitle")}
+          </Button>
+        </div>
+      </div>
 
-        {/* Feature Settings Card */}
-        <Card className="border-border shadow-sm bg-gradient-to-r from-slate-900 via-secondary to-slate-900 text-white overflow-hidden">
-          <CardContent className="p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3.5">
-              <div className={`h-11 w-11 rounded-2xl flex items-center justify-center border shrink-0 ${
+      {/* Admin Stats Grid & Alerts */}
+      <AdminStatsGrid stats={stats} />
+
+      {/* Feature Settings Card */}
+      <Card className="border-border shadow-sm bg-gradient-to-r from-slate-900 via-secondary to-slate-900 text-white overflow-hidden">
+        <CardContent className="p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div
+              className={`h-11 w-11 rounded-2xl flex items-center justify-center border shrink-0 ${
                 allowMemberTx
                   ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-400"
                   : "bg-slate-800 border-slate-700 text-slate-400"
-              }`}>
-                <Settings className="h-5 w-5" />
-              </div>
-              <div>
-                <h3 className="font-heading text-base font-bold text-white flex items-center gap-2">
-                  {t("admin.dashboard.memberTxToggleTitle")}
-                  <span className={`text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider ${
+              }`}
+            >
+              <Settings className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="font-heading text-base font-bold text-white flex items-center gap-2">
+                {t("admin.dashboard.memberTxToggleTitle")}
+                <span
+                  className={`text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider ${
                     allowMemberTx
                       ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
                       : "bg-slate-800 text-slate-400 border border-slate-700"
-                  }`}>
-                    {allowMemberTx ? (locale === "bn" ? "চালু রয়েছে" : "Enabled") : (locale === "bn" ? "বন্ধ রয়েছে" : "Disabled")}
-                  </span>
-                </h3>
-                <p className="text-xs text-slate-300 mt-0.5">
-                  {t("admin.dashboard.memberTxToggleDesc")}
-                </p>
-              </div>
+                  }`}
+                >
+                  {allowMemberTx
+                    ? isBn
+                      ? "চালু রয়েছে"
+                      : "Enabled"
+                    : isBn
+                    ? "বন্ধ রয়েছে"
+                    : "Disabled"}
+                </span>
+              </h3>
+              <p className="text-xs text-slate-300 mt-0.5">
+                {t("admin.dashboard.memberTxToggleDesc")}
+              </p>
             </div>
+          </div>
 
-            <Button
-              onClick={() => handleToggleMemberTx(!allowMemberTx)}
-              disabled={togglingMemberTx}
-              variant={allowMemberTx ? "destructive" : "default"}
-              size="sm"
-              className={!allowMemberTx ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-md font-semibold shrink-0" : "font-semibold shrink-0"}
-            >
-              {allowMemberTx
-                ? (locale === "bn" ? "সুবিধা বন্ধ করুন" : "Disable Feature")
-                : (locale === "bn" ? "সুবিধা চালু করুন" : "Enable Feature")
-              }
-            </Button>
-          </CardContent>
-        </Card>
+          <Button
+            onClick={() => handleToggleMemberTx(!allowMemberTx)}
+            disabled={togglingMemberTx}
+            variant={allowMemberTx ? "destructive" : "default"}
+            size="sm"
+            className={
+              !allowMemberTx
+                ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-md font-semibold shrink-0"
+                : "font-semibold shrink-0"
+            }
+          >
+            {allowMemberTx
+              ? isBn
+                ? "সুবিধা বন্ধ করুন"
+                : "Disable Feature"
+              : isBn
+              ? "সুবিধা চালু করুন"
+              : "Enable Feature"}
+          </Button>
+        </CardContent>
+      </Card>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 bg-muted p-1 rounded-xl h-auto gap-1">
-            <TabsTrigger value="members" className="rounded-lg text-xs font-semibold py-2">{t("admin.dashboard.membersList")}</TabsTrigger>
-            <TabsTrigger value="partners" className="rounded-lg text-xs font-semibold py-2">{t("admin.dashboard.partnerHospitals")}</TabsTrigger>
-            <TabsTrigger value="doctors" className="rounded-lg text-xs font-semibold py-2">ডাক্তার তালিকা ({doctorData.doctors.length})</TabsTrigger>
-            <TabsTrigger value="txs" className="rounded-lg text-xs font-semibold py-2">{t("admin.dashboard.transactionLog")}</TabsTrigger>
-            <TabsTrigger value="requests" className="rounded-lg text-xs font-semibold py-2">
-              অংশীদার আবেদন ({partnerRequests.filter(r => r.status === "pending").length})
-            </TabsTrigger>
-            <TabsTrigger value="renewals" className="rounded-lg text-xs font-semibold py-2">
-              নবায়ন আবেদন ({members.filter(m => m.renewalStatus === "pending").length})
-            </TabsTrigger>
-            <TabsTrigger value="messages" className="rounded-lg text-xs font-semibold py-2">
-              {t("admin.dashboard.contactMessages")} ({contactMessages.length})
-            </TabsTrigger>
-          </TabsList>
+      {/* Quick Management Hub */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="font-heading text-lg font-bold text-foreground">
+            {isBn ? "অ্যাডমিন ম্যানেজমেন্ট হাব" : "Management Sections"}
+          </h2>
+          <p className="text-xs text-muted-foreground">
+            {isBn
+              ? "যেকোনো সেকশনে দ্রুত যেতে ক্লিক করুন"
+              : "Click to navigate directly to any section"}
+          </p>
+        </div>
 
-          <TabsContent value="members" className="mt-4">
-            <MembersTab
-              filteredMembers={filteredMembers}
-              memberSearch={memberSearch}
-              setMemberSearch={setMemberSearch}
-              onNewMemberClick={() => {
-                setEditingMember(null);
-                setNewMember({ name: "", phone: "", email: "", tier: "founding", address: "", birthDate: "", profession: "", profilePictureUrl: "" });
-                setIsMemberOpen(true);
-              }}
-              onViewMemberClick={setViewingMember}
-              onToggleStatus={handleToggleMemberStatus}
-              onEditClick={(m) => {
-                setEditingMember(m);
-                setNewMember({
-                  name: m.name,
-                  phone: m.phone,
-                  email: m.email || "",
-                  tier: m.tier,
-                  address: m.address || "",
-                  birthDate: m.birthDate || "",
-                  profession: m.profession || "",
-                  profilePictureUrl: m.profilePictureUrl || ""
-                });
-                setIsMemberOpen(true);
-              }}
-              onDeleteClick={handleDeleteMember}
-              locale={locale}
-              t={t}
-            />
-          </TabsContent>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {quickLinks.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link key={item.href} href={item.href} className="block group">
+                <Card className="border-border shadow-sm group-hover:shadow-md group-hover:border-primary/40 transition-all h-full bg-card">
+                  <CardContent className="p-4 flex flex-col justify-between h-full space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="p-2.5 rounded-xl bg-primary/10 text-primary group-hover:scale-105 group-hover:bg-primary group-hover:text-white transition-all">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      {item.badge && (
+                        <span className="text-[11px] font-mono px-2 py-0.5 rounded-full font-bold bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30">
+                          {item.badge} {isBn ? "পেন্ডিং" : "pending"}
+                        </span>
+                      )}
+                    </div>
 
-          <TabsContent value="partners" className="mt-4">
-            <PartnersTab
-              filteredPartners={filteredPartners}
-              partnerSearch={partnerSearch}
-              setPartnerSearch={setPartnerSearch}
-              onNewPartnerClick={() => {
-                setEditingPartner(null);
-                setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "", mapLink: "", imageUrl: "" });
-                setIsPartnerOpen(true);
-              }}
-              onEditClick={(p) => {
-                setEditingPartner(p);
-                setNewPartner({
-                  name: p.name,
-                  category: p.category,
-                  address: p.address,
-                  discount: p.discount,
-                  phone: p.phone,
-                  logoText: p.logoText || "",
-                  mapLink: p.mapLink || "",
-                  imageUrl: p.imageUrl || ""
-                });
-                setIsPartnerOpen(true);
-              }}
-              onDeleteClick={handleDeletePartner}
-              t={t}
-            />
-          </TabsContent>
+                    <div>
+                      <h3 className="font-heading text-sm font-bold text-foreground group-hover:text-primary transition-colors flex items-center justify-between">
+                        <span>{item.title}</span>
+                        <ArrowRight className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all text-primary" />
+                      </h3>
+                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                        {item.description}
+                      </p>
+                    </div>
 
-          <TabsContent value="doctors" className="mt-4">
-            <DoctorsTab
-              filteredDoctors={doctorData.filteredDoctors}
-              doctorSearch={doctorData.doctorSearch}
-              setDoctorSearch={doctorData.setDoctorSearch}
-              onNewDoctorClick={doctorData.handleOpenNewDoctor}
-              onEditClick={doctorData.handleEditDoctor}
-              onDeleteClick={doctorData.handleDeleteDoctor}
-            />
-          </TabsContent>
-
-          <TabsContent value="txs" className="mt-4">
-            <TransactionsTab
-              transactions={transactions}
-              locale={locale}
-              t={t}
-            />
-          </TabsContent>
-
-          <TabsContent value="requests" className="mt-4">
-            <PartnerRequestsTab
-              partnerRequests={partnerRequests}
-              onApprove={handleApprovePartnerRequest}
-              onReject={handleRejectPartnerRequest}
-            />
-          </TabsContent>
-
-          <TabsContent value="messages" className="mt-4">
-            <ContactMessagesTab
-              messages={contactMessages}
-              onDelete={handleDeleteContactMessage}
-              t={t}
-              locale={locale}
-            />
-          </TabsContent>
-
-          <TabsContent value="renewals" className="mt-4">
-            <RenewalsTab
-              members={members}
-              onApprove={handleApproveRenewal}
-              onReject={handleRejectRenewal}
-              locale={locale}
-            />
-          </TabsContent>
-        </Tabs>
-
-        {/* --- MODAL DIALOGS --- */}
-
-        {isMemberOpen && (
-          <MemberDialog
-            isOpen={isMemberOpen}
-            onClose={() => {
-              setIsMemberOpen(false);
-              setEditingMember(null);
-              setNewMember({ name: "", phone: "", email: "", tier: "founding", address: "", birthDate: "", profession: "", profilePictureUrl: "" });
-            }}
-            editingMember={editingMember}
-            newMember={newMember}
-            setNewMember={setNewMember}
-            onSubmit={handleSaveMember}
-            t={t}
-          />
-        )}
-
-        {isPartnerOpen && (
-          <PartnerDialog
-            isOpen={isPartnerOpen}
-            onClose={() => {
-              setIsPartnerOpen(false);
-              setEditingPartner(null);
-              setNewPartner({ name: "", category: "hospital", address: "", discount: "", phone: "", logoText: "", mapLink: "", imageUrl: "" });
-            }}
-            editingPartner={editingPartner}
-            newPartner={newPartner}
-            setNewPartner={setNewPartner}
-            onSubmit={handleSavePartner}
-            t={t}
-          />
-        )}
-
-        {doctorData.isDoctorOpen && (
-          <DoctorDialog
-            isOpen={doctorData.isDoctorOpen}
-            onClose={() => doctorData.setIsDoctorOpen(false)}
-            editingDoctor={doctorData.editingDoctor}
-            newDoctor={doctorData.newDoctor}
-            setNewDoctor={doctorData.setNewDoctor}
-            onSubmit={doctorData.handleSaveDoctor}
-          />
-        )}
-
-
-        {isTxOpen && (
-          <TransactionDialog
-            isOpen={isTxOpen}
-            onClose={setIsTxOpen}
-            partners={partners}
-            newTx={newTx}
-            setNewTx={setNewTx}
-            onSubmit={handleAddTransaction}
-            txSuccess={txSuccess}
-            txError={txError}
-            t={t}
-          />
-        )}
-
-        {viewingMember && (
-          <MemberDetailsDialog
-            viewingMember={viewingMember}
-            onClose={() => setViewingMember(null)}
-            transactions={transactions}
-            onToggleStatus={handleToggleMemberStatus}
-            onEditClick={(m) => {
-              setEditingMember(m);
-              setNewMember({
-                name: m.name,
-                phone: m.phone,
-                email: m.email || "",
-                tier: m.tier,
-                address: m.address || "",
-                birthDate: m.birthDate || "",
-                profession: m.profession || "",
-                profilePictureUrl: m.profilePictureUrl || ""
-              });
-              setViewingMember(null);
-              setIsMemberOpen(true);
-            }}
-            locale={locale}
-            t={t}
-          />
-        )}
-
+                    <div className="pt-2 border-t border-border/50 flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground font-medium">
+                        {item.countLabel}:
+                      </span>
+                      <span className="font-mono font-bold text-foreground">
+                        {formatNum(item.count, locale)}
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            );
+          })}
+        </div>
       </div>
+
+      {/* Transaction Dialog */}
+      {isTxOpen && (
+        <TransactionDialog
+          isOpen={isTxOpen}
+          onClose={setIsTxOpen}
+          partners={partners}
+          newTx={newTx}
+          setNewTx={setNewTx}
+          onSubmit={handleAddTransaction}
+          txSuccess={txSuccess}
+          txError={txError}
+          t={t}
+        />
+      )}
     </div>
   );
 }

@@ -2,8 +2,19 @@ import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-const secretKey = process.env.SESSION_SECRET || "health-club-default-secret-change-in-production";
-const encodedKey = new TextEncoder().encode(secretKey);
+function getSessionSecret(): Uint8Array {
+  const secret = process.env.SESSION_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("CRITICAL SECURITY ERROR: SESSION_SECRET is not configured in production environment variables.");
+    }
+    console.warn("⚠️ [SECURITY WARNING] SESSION_SECRET is not set in .env. Please configure a 32+ byte secret key.");
+    return new TextEncoder().encode("health-club-dev-only-ephemeral-secret-32-chars!!");
+  }
+  return new TextEncoder().encode(secret);
+}
+
+const encodedKey = getSessionSecret();
 
 export interface SessionPayload {
   userId: string;

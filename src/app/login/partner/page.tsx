@@ -72,14 +72,14 @@ export default function PartnerLoginPage() {
             <div className="space-y-2">
               <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
                 <Building2 className="h-3.5 w-3.5 text-primary" />
-                পার্টনার মোবাইল বা ইমেইল
+                পার্টনার ইমেইল বা মোবাইল নম্বর
               </label>
               <Input
                 type="text"
                 required
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
-                placeholder="যেমন: popular@healthclub.com বা ০১৭০০০০০০০০"
+                placeholder="যেমন: partner@healthclub.com বা 017XXXXXXXX"
                 className="border-border bg-background"
               />
             </div>

@@ -1,5 +1,6 @@
 "use server";
 
+import { randomInt, randomBytes } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { Partner, Transaction } from "@/services/db";
 import { getSessionUser, setSessionUser } from "@/lib/session";
@@ -215,7 +216,9 @@ export async function updatePartnerRequestStatusAction(id: string, status: "appr
 
     if (status === "approved") {
       const partnerId = `p_${crypto.randomUUID()}`;
-      const defaultPassword = hashPassword("123456");
+      // Generate a secure random 8-character temporary password rather than static 123456
+      const tempPassword = randomBytes(4).toString("hex");
+      const defaultPassword = hashPassword(tempPassword);
       await prisma.partner.create({
         data: {
           id: partnerId,
@@ -457,11 +460,12 @@ export async function requestPartnerPasswordResetAction(
       where: { email }
     });
 
+    // Prevent partner account enumeration with generic response
     if (!partner) {
-      return { success: false, message: "এই ইমেইল দিয়ে কোনো পার্টনার অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।" };
+      return { success: true, message: "যদি এই ইমেইলটি আমাদের সিস্টেমে নিবন্ধিত থাকে, তবে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
     }
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = randomInt(100000, 1000000).toString();
     await prisma.partner.update({
       where: { id: partner.id },
       data: {
@@ -474,12 +478,14 @@ export async function requestPartnerPasswordResetAction(
       console.error("Failed to send partner password reset OTP email:", err);
     });
 
-    return { success: true, message: "আপনার ইমেইলে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
+    return { success: true, message: "যদি এই ইমেইলটি আমাদের সিস্টেমে নিবন্ধিত থাকে, তবে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
   } catch (error) {
     console.error("Error in requestPartnerPasswordResetAction:", error);
     return { success: false, message: "পাসওয়ার্ড রিসেট অনুরোধ প্রক্রিয়া করতে সমস্যা হয়েছে।" };
   }
 }
+
+const MAX_PARTNER_OTP_ATTEMPTS = 5;
 
 export async function resetPartnerPasswordAction(
   email: string,
@@ -503,17 +509,39 @@ export async function resetPartnerPasswordAction(
       return { success: false, message: "রিসেট অনুরোধ পাওয়া যায়নি বা কোড ইতিমধ্যে ব্যবহৃত হয়েছে।" };
     }
 
-    // Check OTP validity (10 minutes window)
+    // --- Brute-force protection: track failed reset attempts ---
+    let storedCode = partner.verificationCode;
+    let attempts = 0;
+    const attemptMatch = storedCode.match(/^attempts:(\d+):(.+)$/);
+    if (attemptMatch) {
+      attempts = parseInt(attemptMatch[1], 10);
+      storedCode = attemptMatch[2];
+    }
+
+    if (attempts >= MAX_PARTNER_OTP_ATTEMPTS) {
+      return { success: false, message: "অনেকবার ভুল কোড দেওয়া হয়েছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
+    }
+
+    // Check OTP validity (15 minutes window)
     const codeTime = new Date(partner.verificationCodeCreatedAt).getTime();
     const currentTime = new Date().getTime();
     const diffMinutes = (currentTime - codeTime) / (1000 * 60);
 
-    if (diffMinutes > 10) {
+    if (diffMinutes > 15) {
       return { success: false, message: "ভেরিফিকেশন কোডের মেয়াদ শেষ হয়ে গেছে। অনুগ্রহ করে আবার চেষ্টা করুন।" };
     }
 
-    if (partner.verificationCode !== code) {
-      return { success: false, message: "ভুল ভেরিফিকেশন কোড।" };
+    if (storedCode !== code) {
+      const newAttempts = attempts + 1;
+      await prisma.partner.update({
+        where: { id: partner.id },
+        data: { verificationCode: `attempts:${newAttempts}:${storedCode}` }
+      });
+      const remaining = MAX_PARTNER_OTP_ATTEMPTS - newAttempts;
+      if (remaining <= 0) {
+        return { success: false, message: "অনেকবার ভুল কোড দেওয়া হয়েছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
+      }
+      return { success: false, message: `ভুল ভেরিফিকেশন কোড। আর ${remaining}টি সুযোগ বাকি।` };
     }
 
     const hashedPassword = hashPassword(rawNewPassword);

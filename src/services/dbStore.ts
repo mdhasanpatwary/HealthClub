@@ -16,6 +16,8 @@ import {
 import {
   addMemberAction,
   getMemberByIdAction,
+  getPublicMemberVerificationAction,
+  PublicMemberVerification,
   logoutMemberAction,
 } from "@/app/actions/memberActions";
 import {
@@ -101,6 +103,10 @@ export const dbStore = {
   async getMemberById(id: string): Promise<Member | undefined> {
     const m = await getMemberByIdAction(id);
     return m ?? undefined;
+  },
+
+  async verifyMemberPublic(id: string): Promise<PublicMemberVerification | null> {
+    return getPublicMemberVerificationAction(id);
   },
 
   async updateMemberStatus(id: string, status: Member["status"]): Promise<boolean> {

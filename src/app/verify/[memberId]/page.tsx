@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ShieldCheck, ShieldAlert, ArrowLeft } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
-import { Member } from "@/services/db";
+import { PublicMemberVerification } from "@/app/actions/memberActions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/components/layout/LanguageProvider";
@@ -14,14 +14,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function VerificationPage() {
   const params = useParams();
   const memberId = params?.memberId as string;
-  const [member, setMember] = useState<Member | null>(null);
+  const [member, setMember] = useState<PublicMemberVerification | null>(null);
   const [loading, setLoading] = useState(true);
   const { t } = useLanguage();
 
   useEffect(() => {
     if (memberId) {
       const decodedId = decodeURIComponent(memberId);
-      dbStore.getMemberById(decodedId).then((found) => {
+      dbStore.verifyMemberPublic(decodedId).then((found) => {
         if (found) {
           setMember(found);
         }

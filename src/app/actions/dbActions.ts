@@ -21,6 +21,7 @@ export {
 export {
   addMemberAction,
   getMemberByIdAction,
+  getPublicMemberVerificationAction,
   loginMemberAction,
   loginAdminAction,
   verifyEmailOtpAction,
@@ -28,6 +29,8 @@ export {
   submitBkashPaymentAction,
   resendVerificationCodeAction,
 } from "./memberActions";
+
+export type { PublicMemberVerification } from "./memberActions";
 
 export {
   getMembersAction,

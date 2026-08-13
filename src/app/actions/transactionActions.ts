@@ -190,9 +190,9 @@ const getCachedAdminStats = unstable_cache(
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const in30Days = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
 
-    // 1. Single SQL query for all scalar counts & aggregates (replaces 19 round-trips)
+    // 1. Single parameterized SQL query for all scalar counts & aggregates (replaces 19 round-trips)
     const [countsResult, topPartnerGroups] = await Promise.all([
-      prisma.$queryRawUnsafe<
+      prisma.$queryRaw<
         Array<{
           total_members: bigint;
           active_members: bigint;
@@ -214,15 +214,14 @@ const getCachedAdminStats = unstable_cache(
           this_month_saved: bigint;
           active_premium_count: bigint;
         }>
-      >(
-        `SELECT
+      >`SELECT
           (SELECT COUNT(*) FROM members) AS total_members,
           (SELECT COUNT(*) FROM members WHERE status = 'active') AS active_members,
           (SELECT COUNT(*) FROM members WHERE status = 'inactive') AS inactive_members,
           (SELECT COUNT(*) FROM members WHERE tier = 'founding') AS founding_members,
           (SELECT COUNT(*) FROM members WHERE tier = 'premium') AS premium_members,
-          (SELECT COUNT(*) FROM members WHERE status = 'active' AND expiry_date >= $1 AND expiry_date <= $2) AS expiring_members,
-          (SELECT COUNT(*) FROM members WHERE created_at >= $3) AS new_members_this_month,
+          (SELECT COUNT(*) FROM members WHERE status = 'active' AND expiry_date >= ${now} AND expiry_date <= ${in30Days}) AS expiring_members,
+          (SELECT COUNT(*) FROM members WHERE created_at >= ${startOfMonth}) AS new_members_this_month,
           (SELECT COUNT(*) FROM partners) AS partner_count,
           (SELECT COUNT(*) FROM partners WHERE category = 'hospital') AS partner_hospitals,
           (SELECT COUNT(*) FROM partners WHERE category = 'diagnostic') AS partner_diagnostics,
@@ -231,14 +230,10 @@ const getCachedAdminStats = unstable_cache(
           (SELECT COUNT(*) FROM members WHERE renewal_status = 'pending') AS pending_renewals,
           (SELECT COUNT(*) FROM contact_messages) AS contact_messages_count,
           (SELECT COUNT(*) FROM transactions) AS total_transactions,
-          (SELECT COUNT(*) FROM transactions WHERE created_at >= $3) AS this_month_transactions,
+          (SELECT COUNT(*) FROM transactions WHERE created_at >= ${startOfMonth}) AS this_month_transactions,
           (SELECT COALESCE(SUM(saved), 0) FROM transactions) AS total_saved,
-          (SELECT COALESCE(SUM(saved), 0) FROM transactions WHERE created_at >= $3) AS this_month_saved,
+          (SELECT COALESCE(SUM(saved), 0) FROM transactions WHERE created_at >= ${startOfMonth}) AS this_month_saved,
           (SELECT COUNT(*) FROM members WHERE tier = 'premium' AND status = 'active') AS active_premium_count`,
-        now,
-        in30Days,
-        startOfMonth
-      ),
       // 2. Top partners query (groupBy is hard to inline in raw SQL cleanly)
       prisma.transaction.groupBy({
         by: ["partnerId", "partnerName"],

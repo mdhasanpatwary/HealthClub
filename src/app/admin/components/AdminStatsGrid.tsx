@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatNum } from "@/lib/i18n";
 import { Card, CardContent } from "@/components/ui/card";
@@ -53,12 +55,21 @@ export interface AdminStatsData {
 
 interface AdminStatsGridProps {
   stats: AdminStatsData;
-  onSelectTab: (tab: string) => void;
+  onSelectTab?: (tab: string) => void;
 }
 
 export function AdminStatsGrid({ stats, onSelectTab }: AdminStatsGridProps) {
+  const router = useRouter();
   const { locale } = useLanguage();
   const isBn = locale === "bn";
+
+  const handleNavigate = (path: string, legacyTabName?: string) => {
+    if (onSelectTab && legacyTabName) {
+      onSelectTab(legacyTabName);
+    } else {
+      router.push(path);
+    }
+  };
 
   const hasPendingAlerts =
     stats.pendingPartnerRequests > 0 ||
@@ -71,7 +82,7 @@ export function AdminStatsGrid({ stats, onSelectTab }: AdminStatsGridProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {stats.pendingPartnerRequests > 0 && (
             <Card
-              onClick={() => onSelectTab("partnerRequests")}
+              onClick={() => handleNavigate("/admin/partner-requests", "partnerRequests")}
               className="cursor-pointer border-amber-300 dark:border-amber-700/50 bg-amber-500/10 hover:bg-amber-500/15 transition-all shadow-sm group"
             >
               <CardContent className="p-4 flex items-center justify-between">
@@ -100,7 +111,7 @@ export function AdminStatsGrid({ stats, onSelectTab }: AdminStatsGridProps) {
 
           {stats.pendingRenewals > 0 && (
             <Card
-              onClick={() => onSelectTab("renewals")}
+              onClick={() => handleNavigate("/admin/renewals", "renewals")}
               className="cursor-pointer border-indigo-300 dark:border-indigo-700/50 bg-indigo-500/10 hover:bg-indigo-500/15 transition-all shadow-sm group"
             >
               <CardContent className="p-4 flex items-center justify-between">
@@ -132,96 +143,104 @@ export function AdminStatsGrid({ stats, onSelectTab }: AdminStatsGridProps) {
       {/* 2. Main High-Level Overview Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {/* Total Registered Members */}
-        <Card className="border-border shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="p-5 flex items-center justify-between">
-            <div className="space-y-1">
-              <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider font-semibold">
-                {isBn ? "মোট সদস্য" : "Total Members"}
-              </p>
-              <p className="text-3xl font-extrabold text-secondary dark:text-white font-mono">
-                {formatNum(stats.totalMembers, locale)}
-              </p>
-              <div className="flex items-center gap-2 pt-1">
-                <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-0.5">
-                  <UserCheck className="h-3 w-3" />
-                  {formatNum(stats.activeMembers, locale)} {isBn ? "সচল" : "active"}
-                </span>
-                {stats.inactiveMembers > 0 && (
-                  <span className="text-[11px] text-slate-500 font-medium flex items-center gap-0.5">
-                    <UserX className="h-3 w-3" />
-                    {formatNum(stats.inactiveMembers, locale)} {isBn ? "অচল" : "inactive"}
+        <Link href="/admin/members" className="block group">
+          <Card className="border-border shadow-sm group-hover:shadow-md group-hover:border-indigo-300 dark:group-hover:border-indigo-800 transition-all h-full">
+            <CardContent className="p-5 flex items-center justify-between">
+              <div className="space-y-1">
+                <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider font-semibold">
+                  {isBn ? "মোট সদস্য" : "Total Members"}
+                </p>
+                <p className="text-3xl font-extrabold text-secondary dark:text-white font-mono">
+                  {formatNum(stats.totalMembers, locale)}
+                </p>
+                <div className="flex items-center gap-2 pt-1">
+                  <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-0.5">
+                    <UserCheck className="h-3 w-3" />
+                    {formatNum(stats.activeMembers, locale)} {isBn ? "সচল" : "active"}
                   </span>
-                )}
+                  {stats.inactiveMembers > 0 && (
+                    <span className="text-[11px] text-slate-500 font-medium flex items-center gap-0.5">
+                      <UserX className="h-3 w-3" />
+                      {formatNum(stats.inactiveMembers, locale)} {isBn ? "অচল" : "inactive"}
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="h-12 w-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center border border-indigo-100 dark:border-indigo-900">
-              <Users className="h-6 w-6" />
-            </div>
-          </CardContent>
-        </Card>
+              <div className="h-12 w-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center border border-indigo-100 dark:border-indigo-900 group-hover:scale-105 transition-transform">
+                <Users className="h-6 w-6" />
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
 
         {/* Total Partner Facilities */}
-        <Card className="border-border shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="p-5 flex items-center justify-between">
-            <div className="space-y-1">
-              <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider font-semibold">
-                {isBn ? "পার্টনার নেটওয়ার্ক" : "Partner Network"}
-              </p>
-              <p className="text-3xl font-extrabold text-secondary dark:text-white font-mono">
-                {formatNum(stats.partnerCount, locale)}
-              </p>
-              <div className="flex items-center gap-1.5 pt-1 text-[11px] text-muted-foreground">
-                <span className="font-semibold text-emerald-600">{formatNum(stats.partnerHospitals, locale)}</span> {isBn ? "হাসপাতাল" : "hosp"} •{" "}
-                <span className="font-semibold text-blue-600">{formatNum(stats.partnerDiagnostics, locale)}</span> {isBn ? "ল্যাব" : "diag"} •{" "}
-                <span className="font-semibold text-purple-600">{formatNum(stats.partnerPharmacies, locale)}</span> {isBn ? "ফার্মেসি" : "pharm"}
+        <Link href="/admin/partners" className="block group">
+          <Card className="border-border shadow-sm group-hover:shadow-md group-hover:border-emerald-300 dark:group-hover:border-emerald-800 transition-all h-full">
+            <CardContent className="p-5 flex items-center justify-between">
+              <div className="space-y-1">
+                <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider font-semibold">
+                  {isBn ? "পার্টনার নেটওয়ার্ক" : "Partner Network"}
+                </p>
+                <p className="text-3xl font-extrabold text-secondary dark:text-white font-mono">
+                  {formatNum(stats.partnerCount, locale)}
+                </p>
+                <div className="flex items-center gap-1.5 pt-1 text-[11px] text-muted-foreground">
+                  <span className="font-semibold text-emerald-600">{formatNum(stats.partnerHospitals, locale)}</span> {isBn ? "হাসপাতাল" : "hosp"} •{" "}
+                  <span className="font-semibold text-blue-600">{formatNum(stats.partnerDiagnostics, locale)}</span> {isBn ? "ল্যাব" : "diag"} •{" "}
+                  <span className="font-semibold text-purple-600">{formatNum(stats.partnerPharmacies, locale)}</span> {isBn ? "ফার্মেসি" : "pharm"}
+                </div>
               </div>
-            </div>
-            <div className="h-12 w-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center border border-emerald-100 dark:border-emerald-900">
-              <Building className="h-6 w-6" />
-            </div>
-          </CardContent>
-        </Card>
+              <div className="h-12 w-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center border border-emerald-100 dark:border-emerald-900 group-hover:scale-105 transition-transform">
+                <Building className="h-6 w-6" />
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
 
         {/* Total Medical Savings */}
-        <Card className="border-border shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="p-5 flex items-center justify-between">
-            <div className="space-y-1">
-              <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider font-semibold">
-                {isBn ? "মোট চিকিৎসা ছাড়" : "Total Medical Savings"}
-              </p>
-              <p className="text-3xl font-extrabold text-primary font-mono">
-                ৳{formatNum(stats.totalSaved, locale)}
-              </p>
-              <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1 pt-1">
-                <TrendingUp className="h-3 w-3" />
-                {isBn ? "এই মাসে সেভ:" : "This month:"} ৳{formatNum(stats.thisMonthSaved, locale)}
-              </p>
-            </div>
-            <div className="h-12 w-12 rounded-xl bg-emerald-100/60 dark:bg-emerald-950/60 text-primary flex items-center justify-center border border-primary/20">
-              <Heart className="h-6 w-6 fill-primary/10" />
-            </div>
-          </CardContent>
-        </Card>
+        <Link href="/admin/transactions" className="block group">
+          <Card className="border-border shadow-sm group-hover:shadow-md group-hover:border-emerald-300 dark:group-hover:border-emerald-800 transition-all h-full">
+            <CardContent className="p-5 flex items-center justify-between">
+              <div className="space-y-1">
+                <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider font-semibold">
+                  {isBn ? "মোট চিকিৎসা ছাড়" : "Total Medical Savings"}
+                </p>
+                <p className="text-3xl font-extrabold text-primary font-mono">
+                  ৳{formatNum(stats.totalSaved, locale)}
+                </p>
+                <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1 pt-1">
+                  <TrendingUp className="h-3 w-3" />
+                  {isBn ? "এই মাসে সেভ:" : "This month:"} ৳{formatNum(stats.thisMonthSaved, locale)}
+                </p>
+              </div>
+              <div className="h-12 w-12 rounded-xl bg-emerald-100/60 dark:bg-emerald-950/60 text-primary flex items-center justify-center border border-primary/20 group-hover:scale-105 transition-transform">
+                <Heart className="h-6 w-6 fill-primary/10" />
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
 
         {/* Estimated Revenue */}
-        <Card className="border-border shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="p-5 flex items-center justify-between">
-            <div className="space-y-1">
-              <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider font-semibold">
-                {isBn ? "মেম্বারশিপ রাজস্ব" : "Est. Revenue"}
-              </p>
-              <p className="text-3xl font-extrabold text-secondary dark:text-white font-mono">
-                ৳{formatNum(stats.revenue, locale)}
-              </p>
-              <p className="text-[11px] text-muted-foreground pt-1">
-                {isBn ? "সক্রিয় প্রিমিয়াম ফি থেকে" : "From active premium tier"}
-              </p>
-            </div>
-            <div className="h-12 w-12 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center border border-amber-100 dark:border-amber-900">
-              <DollarSign className="h-6 w-6" />
-            </div>
-          </CardContent>
-        </Card>
+        <Link href="/admin/members" className="block group">
+          <Card className="border-border shadow-sm group-hover:shadow-md group-hover:border-amber-300 dark:group-hover:border-amber-800 transition-all h-full">
+            <CardContent className="p-5 flex items-center justify-between">
+              <div className="space-y-1">
+                <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider font-semibold">
+                  {isBn ? "মেম্বারশিপ রাজস্ব" : "Est. Revenue"}
+                </p>
+                <p className="text-3xl font-extrabold text-secondary dark:text-white font-mono">
+                  ৳{formatNum(stats.revenue, locale)}
+                </p>
+                <p className="text-[11px] text-muted-foreground pt-1">
+                  {isBn ? "সক্রিয় প্রিমিয়াম ফি থেকে" : "From active premium tier"}
+                </p>
+              </div>
+              <div className="h-12 w-12 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center border border-amber-100 dark:border-amber-900 group-hover:scale-105 transition-transform">
+                <DollarSign className="h-6 w-6" />
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
 
       {/* 3. Deep-Dive Sub-Analytics Cards */}
