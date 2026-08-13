@@ -54,6 +54,7 @@ export const ModelName = {
   Member: 'Member',
   Partner: 'Partner',
   Transaction: 'Transaction',
+  Doctor: 'Doctor',
   PartnerRequest: 'PartnerRequest',
   ContactMessage: 'ContactMessage',
   SystemSetting: 'SystemSetting'
@@ -138,6 +139,29 @@ export const TransactionScalarFieldEnum = {
 } as const
 
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
+
+
+export const DoctorScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  specialty: 'specialty',
+  department: 'department',
+  degrees: 'degrees',
+  designation: 'designation',
+  chamberName: 'chamberName',
+  chamberAddress: 'chamberAddress',
+  roomNo: 'roomNo',
+  visitingDays: 'visitingDays',
+  visitingHours: 'visitingHours',
+  serialPhone: 'serialPhone',
+  consultationFee: 'consultationFee',
+  imageUrl: 'imageUrl',
+  partnerId: 'partnerId',
+  isActive: 'isActive',
+  createdAt: 'createdAt'
+} as const
+
+export type DoctorScalarFieldEnum = (typeof DoctorScalarFieldEnum)[keyof typeof DoctorScalarFieldEnum]
 
 
 export const PartnerRequestScalarFieldEnum = {

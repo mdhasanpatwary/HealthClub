@@ -74,7 +74,9 @@ export default function VerificationPage() {
         </Card>
       ) : member ? (
         (() => {
-          const isExpired = new Date(member.expiryDate) < new Date();
+          const expiryDate = new Date(member.expiryDate);
+          expiryDate.setHours(23, 59, 59, 999);
+          const isExpired = expiryDate < new Date();
           const isActive = member.status === "active" && !isExpired;
 
           return isActive ? (

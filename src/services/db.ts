@@ -55,50 +55,50 @@ export const initialPartners: Partner[] = [
     name: "পপুলার ডায়াগনস্টিক সেন্টার",
     category: "diagnostic",
     address: "এসএসকে রোড, ফেনী",
-    discount: "১০-২৫% ডিসকাউন্ট",
+    discount: "১০-৩০% ডিসকাউন্ট",
     phone: "০৯৬১৩৭৮৭৮০১",
     logoText: "Popular",
-    imageUrl: "https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=600&auto=format&fit=crop"
+    imageUrl: "/images/placeholders/diagnostic.png"
   },
   {
     id: "p2",
     name: "ল্যাবএইড স্পেশালাইজড হাসপাতাল",
     category: "hospital",
     address: "মিজান রোড, ফেনী",
-    discount: "১০-২৫% ডিসকাউন্ট",
+    discount: "১০-৩০% ডিসকাউন্ট",
     phone: "১০৬০৬",
     logoText: "Labaid",
-    imageUrl: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?q=80&w=600&auto=format&fit=crop"
+    imageUrl: "/images/placeholders/hospital.png"
   },
   {
     id: "p3",
     name: "লাজ ফার্মা লিমিটেড",
     category: "pharmacy",
     address: "ট্রাঙ্ক রোড, ফেনী",
-    discount: "১০-২৫% ডিসকাউন্ট",
+    discount: "১০-৩০% ডিসকাউন্ট",
     phone: "০২-৯৩৪৩৫১৬",
     logoText: "Lazz",
-    imageUrl: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?q=80&w=600&auto=format&fit=crop"
+    imageUrl: "/images/placeholders/pharmacy.png"
   },
   {
     id: "p5",
     name: "ইবনে সিনা ডায়াগনস্টিক সেন্টার",
     category: "diagnostic",
     address: "মহিপাল, ফেনী",
-    discount: "১০-২৫% ডিসকাউন্ট",
+    discount: "১০-৩০% ডিসকাউন্ট",
     phone: "০৯৬১০০০৯৬১০",
     logoText: "Ibn Sina",
-    imageUrl: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=600&auto=format&fit=crop"
+    imageUrl: "/images/placeholders/diagnostic.png"
   },
   {
     id: "p6",
     name: "স্কয়ার হাসপাতাল (সিলেক্টেড সুবিধা)",
     category: "hospital",
     address: "গ্র্যান্ড ট্রাঙ্ক রোড, ফেনী",
-    discount: "১০-২৫% ডিসকাউন্ট",
+    discount: "১০-৩০% ডিসকাউন্ট",
     phone: "১০৬১৬",
     logoText: "Square",
-    imageUrl: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=600&auto=format&fit=crop"
+    imageUrl: "/images/placeholders/hospital.png"
   }
 ];
 
@@ -159,6 +159,232 @@ export const initialTransactions: Transaction[] = [
     amount: 15000,
     saved: 1500,
     date: "2026-07-10 11:45 AM"
+  }
+];
+
+export interface Doctor {
+  id: string;
+  name: string;
+  specialty: string;
+  department: string;
+  degrees: string;
+  designation: string;
+  chamberName: string;
+  chamberAddress: string;
+  roomNo?: string;
+  visitingDays: string;
+  visitingHours: string;
+  serialPhone: string;
+  consultationFee?: string;
+  imageUrl?: string;
+  partnerId?: string;
+  isActive: boolean;
+}
+
+export const initialDoctors: Doctor[] = [
+  {
+    id: "doc_1",
+    name: "ডাঃ মোহাম্মদ শাহাদাত হোসেন",
+    specialty: "মানসিক রোগ ও নিউরোসাইকিয়াট্রি বিশেষজ্ঞ",
+    department: "psychiatry",
+    degrees: "MBBS, BCS, MCPS, FCPS (Psychiatry)",
+    designation: "সহকারী অধ্যাপক, জাতীয় মানসিক স্বাস্থ্য ইনস্টিটিউট ও হাসপাতাল (NIMH), ঢাকা",
+    chamberName: "ডিডি ল্যাব স্পেশালাইজড ডায়াগনস্টিক সেন্টার",
+    chamberAddress: "মা প্লাজা (জিয়া মহিলা কলেজের বিপরীতে), শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",
+    roomNo: "রুম নং: ২০৩ (২য় তলা)",
+    visitingDays: "প্রতি শুক্রবার",
+    visitingHours: "সকাল ৯:০০ - বিকাল ৫:০০",
+    serialPhone: "01898221111, 01898445555, 09666747575",
+    consultationFee: "৳১,০০০ (প্রথম সাক্ষাৎ)",
+    imageUrl: "/images/placeholders/doctor-1.jpg",
+    isActive: true
+  },
+  {
+    id: "doc_2",
+    name: "ডাঃ রিয়াজ উদ্দিন চৌধুরী",
+    specialty: "মেডিসিন, লিভার ও পরিপাকতন্ত্র (গ্যাস্ট্রোএন্টারোলজি) বিশেষজ্ঞ",
+    department: "medicine",
+    degrees: "MBBS, BCS, MCPS, FCPS (Medicine), ট্রেইন্ড ফেলো (গ্যাস্ট্রোএন্টারোলজি)",
+    designation: "কনসালট্যান্ট - মেডিসিন ও গ্যাস্ট্রোএন্টারোলজি",
+    chamberName: "ডিডি ল্যাব স্পেশালাইজড ডায়াগনস্টিক সেন্টার",
+    chamberAddress: "মা প্লাজা, শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",
+    roomNo: "রুম নং: ১০৫",
+    visitingDays: "শনিবার - বৃহস্পতিবার",
+    visitingHours: "বিকাল ৫:০০ - রাত ৯:০০",
+    serialPhone: "01898221111, 01898445555",
+    consultationFee: "৳৮০০",
+    imageUrl: "/images/placeholders/doctor-2.jpg",
+    isActive: true
+  },
+  {
+    id: "doc_3",
+    name: "ডাঃ মইনুল মাহমুদ সানী",
+    specialty: "রক্তনালী ও ভাস্কুলার সার্জারি বিশেষজ্ঞ",
+    department: "surgery",
+    degrees: "MBBS, MS (Vascular Surgery)",
+    designation: "সহকারী অধ্যাপক, ভাস্কুলার সার্জারি বিভাগ, বিএসএমএমইউ (পিজি হাসপাতাল), ঢাকা",
+    chamberName: "ডিডি ল্যাব স্পেশালাইজড কনসালটেশন সেন্টার",
+    chamberAddress: "মা প্লাজা, শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",
+    roomNo: "রুম নং: ২০১",
+    visitingDays: "প্রতি শুক্রবার",
+    visitingHours: "বিকাল ৩:০০ - রাত ৮:০০",
+    serialPhone: "01898221111, 01898445555",
+    consultationFee: "৳১,০০০",
+    imageUrl: "/images/placeholders/doctor-3.jpg",
+    isActive: true
+  },
+  {
+    id: "doc_4",
+    name: "ডাঃ মোঃ তৌফিকুল হাসান ভূঁইয়া",
+    specialty: "হাড়ভাঙ্গা, বাতব্যাথা ও অর্থোপেডিক সার্জারি বিশেষজ্ঞ",
+    department: "orthopedics",
+    degrees: "MBBS, BCS, MS (Orthopaedic Surgery)",
+    designation: "সহকারী অধ্যাপক, অর্থোপেডিক বিভাগ, কুমিল্লা মেডিকেল কলেজ হাসপাতাল",
+    chamberName: "ডিডি ল্যাব ডায়াগনস্টিক অ্যান্ড কনসালটেশন সেন্টার",
+    chamberAddress: "মা প্লাজা, শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",
+    roomNo: "রুম নং: ৩০২",
+    visitingDays: "প্রতি শনিবার, সোমবার ও বুধবার",
+    visitingHours: "বিকাল ৪:০০ - রাত ৮:০০",
+    serialPhone: "01898221111, 01898445555",
+    consultationFee: "৳৮০০",
+    imageUrl: "/images/placeholders/doctor-4.jpg",
+    isActive: true
+  },
+  {
+    id: "doc_5",
+    name: "ডাঃ তুহিন শুভ্র দাস",
+    specialty: "কিডনি ও মূত্রথলি রোগ (নেফ্রোলজি) বিশেষজ্ঞ",
+    department: "nephrology",
+    degrees: "MBBS, BCS, MD (Nephrology)",
+    designation: "কনসালট্যান্ট - কিডনি রোগ বিভাগ, চট্টগ্রাম মেডিকেল কলেজ ও হাসপাতাল",
+    chamberName: "ডিডি ল্যাব স্পেশালাইজড কনসালটেশন সেন্টার",
+    chamberAddress: "মা প্লাজা, শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",
+    roomNo: "রুম নং: ১০২",
+    visitingDays: "প্রতি শুক্রবার ও শনিবার",
+    visitingHours: "সকাল ১০:০০ - বিকাল ৪:০০",
+    serialPhone: "01898221111, 01898445555",
+    consultationFee: "৳১,০০০",
+    imageUrl: "/images/placeholders/doctor-5.jpg",
+    isActive: true
+  },
+  {
+    id: "doc_6",
+    name: "ডাঃ মোঃ কামরুল হাসান",
+    specialty: "লিভার ও হেপাটোলজি রোগ বিশেষজ্ঞ",
+    department: "hepatology",
+    degrees: "MBBS, BCS, MD (Hepatology)",
+    designation: "কনসালট্যান্ট, হেপাটোলজি বিভাগ, বিএসএমএমইউ (পিজি হাসপাতাল), ঢাকা",
+    chamberName: "ডিডি ল্যাব স্পেশালাইজড ডায়াগনস্টিক সেন্টার",
+    chamberAddress: "মা প্লাজা, শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",
+    roomNo: "রুম নং: ২০৪",
+    visitingDays: "প্রতি শুক্রবার",
+    visitingHours: "বিকাল ২:০০ - রাত ৮:০০",
+    serialPhone: "01898221111, 01898445555",
+    consultationFee: "৳১,০০০",
+    imageUrl: "/images/placeholders/doctor-6.jpg",
+    isActive: true
+  },
+  {
+    id: "doc_7",
+    name: "ডাঃ মোঃ আতিকুর রহমান",
+    specialty: "বাত, ব্যাথা, প্যারালাইসিস ও রিউমাটোলজি বিশেষজ্ঞ",
+    department: "rheumatology",
+    degrees: "MBBS, BCS, MD (Rheumatology), FACR (USA)",
+    designation: "রেজিস্ট্রার, রিউমাটোলজি বিভাগ, কুর্মিটোলা জেনারেল হাসপাতাল, ঢাকা",
+    chamberName: "ডিডি ল্যাব স্পেশালাইজড কনসালটেশন সেন্টার",
+    chamberAddress: "মা প্লাজা, শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",
+    roomNo: "রুম নং: ৩০১",
+    visitingDays: "প্রতি শুক্রবার",
+    visitingHours: "সকাল ৯:০০ - বিকাল ৩:০০",
+    serialPhone: "01898221111, 01898445555",
+    consultationFee: "৳১,০০০",
+    imageUrl: "/images/placeholders/doctor-7.jpg",
+    isActive: true
+  },
+  {
+    id: "doc_8",
+    name: "ডাঃ সায়মা আক্তার",
+    specialty: "খাদ্য, পুষ্টি ও ডায়েট বিশেষজ্ঞ (ক্লিনিক্যাল নিউট্রিশনিস্ট)",
+    department: "nutrition",
+    degrees: "MSc in Food & Nutrition, Certified Clinical Dietitian",
+    designation: "চিফ কনসালট্যান্ট ডায়েটিশিয়ান ও নিউট্রিশন স্পেশালিস্ট",
+    chamberName: "ডিডি ল্যাব স্পেশালাইজড ডায়াগনস্টিক সেন্টার",
+    chamberAddress: "মা প্লাজা, শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",
+    roomNo: "রুম নং: ১০৪",
+    visitingDays: "প্রতি রবি, মঙ্গল ও বৃহস্পতিবার",
+    visitingHours: "বিকাল ৪:০০ - রাত ৮:০০",
+    serialPhone: "01898221111, 01898445555",
+    consultationFee: "৳৬০০",
+    imageUrl: "/images/placeholders/doctor-4.jpg",
+    isActive: true
+  },
+  {
+    id: "doc_9",
+    name: "ডাঃ মীর শওকত নেওয়াজ (নীরব)",
+    specialty: "জেনারেল মেডিসিন ও ডায়াবেটিস রোগ অভিজ্ঞ চিকিৎসক",
+    department: "medicine",
+    degrees: "MBBS, CCD (BIRDEM), PGT (Medicine)",
+    designation: "সিনিয়র মেডিকেল অফিসার ও ডায়াবেটোলজিস্ট",
+    chamberName: "ডিডি ল্যাব ডায়াগনস্টিক সেন্টার",
+    chamberAddress: "মা প্লাজা, শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",
+    roomNo: "রুম নং: ১০১",
+    visitingDays: "প্রতিদিন (শুক্রবার বাদে)",
+    visitingHours: "সন্ধ্যা ৬:০০ - রাত ৯:৩০",
+    serialPhone: "01898221111, 01898445555",
+    consultationFee: "৳৫০০",
+    imageUrl: "/images/placeholders/doctor-1.jpg",
+    isActive: true
+  },
+  {
+    id: "doc_10",
+    name: "ডাঃ নুসরাত জাহান চৌধুরী",
+    specialty: "স্ত্রী রোগ, প্রসূতি ও বন্ধ্যাত্ব বিশেষজ্ঞ সার্জন (গাইনী)",
+    department: "gynecology",
+    degrees: "MBBS, DGO, FCPS (Gynae & Obs)",
+    designation: "সহকারী অধ্যাপক ও গাইনী কনসালট্যান্ট, ২৫০ শয্যা জেনারেল হাসপাতাল, ফেনী",
+    chamberName: "পপুলার ডায়াগনস্টিক সেন্টার",
+    chamberAddress: "এসএসকে রোড, ফেনী",
+    roomNo: "রুম নং: ২০১",
+    visitingDays: "প্রতিদিন (শুক্রবার বাদে)",
+    visitingHours: "বিকাল ৫:০০ - রাত ৮:৩০",
+    serialPhone: "০৯৬১৩৭৮৭৮০১, 01811223344",
+    consultationFee: "৳৮০০",
+    imageUrl: "/images/placeholders/doctor-5.jpg",
+    isActive: true
+  },
+  {
+    id: "doc_11",
+    name: "ডাঃ মোঃ আবদুল্লাহ আল নোমান (তৌহিদ)",
+    specialty: "শিশু ও কিশোর রোগ বিশেষজ্ঞ (পেডিয়াট্রিক্স)",
+    department: "pediatrics",
+    degrees: "MBBS, DCH, MD (Pediatrics), FCPS (P)",
+    designation: "সহকারী অধ্যাপক - শিশু বিভাগ, কুমিল্লা মেডিকেল কলেজ",
+    chamberName: "ল্যাবএইড স্পেশালাইজড হাসপাতাল",
+    chamberAddress: "মিজান রোড, ফেনী",
+    roomNo: "রুম নং: ২০৫",
+    visitingDays: "শনিবার, সোমবার ও বুধবার",
+    visitingHours: "বিকাল ৫:০০ - রাত ৮:০০",
+    serialPhone: "১০৬০৬, 01711223344",
+    consultationFee: "৳৮০০",
+    imageUrl: "/images/placeholders/doctor-2.jpg",
+    isActive: true
+  },
+  {
+    id: "doc_12",
+    name: "ডাঃ ফারহানা বিনতে রশীদ",
+    specialty: "হৃদরোগ ও কার্ডিওলজি বিশেষজ্ঞ",
+    department: "cardiology",
+    degrees: "MBBS, BCS, MD (Cardiology), FCPS",
+    designation: "সহকারী অধ্যাপক - হৃদরোগ বিভাগ, জাতীয় হৃদরোগ ইনস্টিটিউট ও হাসপাতাল (NICVD), ঢাকা",
+    chamberName: "ইবনে সিনা ডায়াগনস্টিক সেন্টার",
+    chamberAddress: "মহিপাল, ফেনী",
+    roomNo: "রুম নং: ১০৮",
+    visitingDays: "প্রতি বৃহস্পতিবার ও শুক্রবার",
+    visitingHours: "সকাল ১০:০০ - বিকাল ৪:০০",
+    serialPhone: "০৯৬১০০০৯৬১০, 01822334455",
+    consultationFee: "৳১,০০০",
+    imageUrl: "/images/placeholders/doctor-4.jpg",
+    isActive: true
   }
 ];
 

@@ -81,8 +81,9 @@ export default function Footer({ locale = "bn" }: { locale?: string }) {
               <ul role="list" className="space-y-3">
                 {[
                   { href: "/", label: t("layout.footer.home") },
-                  { href: "/membership", label: t("layout.footer.membershipPlans") },
+                  { href: "/consultants", label: t("layout.footer.consultants") },
                   { href: "/partner-hospitals", label: t("layout.footer.partnerHospitals") },
+                  { href: "/membership", label: t("layout.footer.membershipPlans") },
                   { href: "/become-partner", label: t("layout.footer.becomeAPartner") },
                   { href: "/about-us", label: t("layout.footer.aboutUs") },
                 ].map((link) => (

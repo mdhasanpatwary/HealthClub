@@ -30,7 +30,7 @@ export function formatNum(num: number | string, locale: Locale): string {
 }
 
 /**
- * Format a discount string (e.g., "১০-২৫% ডিসকাউন্ট") to match the locale.
+ * Format a discount string (e.g., "১০-৩০% ডিসকাউন্ট" or "10-30% Discount") to match the locale.
  */
 export function formatDiscount(discount: string, locale: Locale): string {
   if (!discount) return "";
@@ -46,7 +46,23 @@ export function formatDiscount(discount: string, locale: Locale): string {
     return converted
       .replace(/ফ্ল্যাট/g, "Flat")
       .replace(/ডিসকাউন্ট/g, "Discount")
-      .replace(/ছাড়/g, "Discount");
+      .replace(/ছাড়/g, "Discount")
+      .replace(/থেকে/g, "to");
   }
-  return discount;
+
+  // Locale === "bn"
+  const englishToBanglaMap: { [key: string]: string } = {
+    "0": "০", "1": "১", "2": "২", "3": "৩", "4": "৪",
+    "5": "৫", "6": "৬", "7": "৭", "8": "৮", "9": "৯",
+  };
+  let converted = discount;
+  for (const [english, bangla] of Object.entries(englishToBanglaMap)) {
+    converted = converted.replaceAll(english, bangla);
+  }
+  return converted
+    .replace(/Flat/gi, "ফ্ল্যাট")
+    .replace(/Discount/gi, "ডিসকাউন্ট")
+    .replace(/Off/gi, "ছাড়")
+    .replace(/\bto\b/gi, "থেকে");
 }
+

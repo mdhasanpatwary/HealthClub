@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Stethoscope } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PartnerDirectory from "@/components/ui/PartnerDirectory";
 import SavingsCalculator from "@/components/ui/SavingsCalculator";
@@ -11,6 +11,7 @@ import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
 import type { Member } from "@/services/db";
 import JsonLd from "@/components/seo/JsonLd";
+
 
 import { LandingHero } from "@/components/landing/LandingHero";
 import { LandingStats } from "@/components/landing/LandingStats";
@@ -57,9 +58,9 @@ export default async function Home() {
     getHomepageStats(),
     getHomepagePartners(3),
   ]);
-  const { memberCount, hospitalCount, pharmacyCount } = stats;
+  const { memberCount, foundingCount, hospitalCount, pharmacyCount } = stats;
 
-  const remainingSeats = Math.max(0, 100 - memberCount);
+  const remainingSeats = Math.max(0, 100 - (foundingCount ?? memberCount));
 
   // Sample member data for the digital card visual in Hero
   const sampleMember: Member = {
@@ -181,6 +182,36 @@ export default async function Home() {
           </div>
 
           <PartnerDirectory partners={homepagePartners} limit={3} showFilters={false} />
+        </div>
+      </section>
+
+      {/* 6.5 DOCTORS & CONSULTANTS DIRECTORY SPOTLIGHT */}
+      <section className="py-8 sm:py-12 bg-gradient-to-r from-emerald-950/20 via-primary/5 to-slate-900/10 border-y border-border/60">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 p-6 sm:p-8 rounded-3xl bg-card border border-primary/20 shadow-md">
+            <div className="space-y-2 text-center md:text-left">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
+                <Stethoscope className="h-3.5 w-3.5" />
+                <span>{locale === "en" ? "Doctor & Serial Helpline" : "ডাক্তার ও সিরিয়াল হেল্পলাইন"}</span>
+              </div>
+              <h3 className="font-heading text-xl sm:text-2xl font-bold text-secondary dark:text-white">
+                {locale === "en"
+                  ? "Looking for Specialist Doctors in Feni?"
+                  : "ফেনীর বিশেষজ্ঞ ডাক্তার ও চেম্বার শিডিউল খুঁজছেন?"}
+              </h3>
+              <p className="text-xs sm:text-sm text-muted-foreground max-w-xl">
+                {locale === "en"
+                  ? "Find qualified specialist doctors across all departments, check visiting hours at DD Lab & partner hospitals, and get direct appointment serial numbers."
+                  : "ডিডি ল্যাব ও শীর্ষ ডায়াগনস্টিক সেন্টারের সকল বিভাগের বিশেষজ্ঞ চিকিৎসকদের তালিকা দেখুন ও সরাসরি সিরিয়াল বুক করুন।"}
+              </p>
+            </div>
+            <Link href="/consultants" className="shrink-0">
+              <Button size="lg" className="bg-primary hover:bg-primary-dark text-white rounded-2xl shadow-sm px-6 font-semibold">
+                {locale === "en" ? "Browse Doctor Directory" : "ডাক্তারদের তালিকা দেখুন"}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 

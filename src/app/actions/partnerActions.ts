@@ -326,6 +326,10 @@ export async function addPartnerTransactionAction(tx: {
     return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
   }
 
+  if (isNaN(tx.amount) || tx.amount <= 0) {
+    return { success: false, message: "সঠিক বিলের পরিমাণ ইনপুট দিন।" };
+  }
+
   try {
     const [member, partner] = await Promise.all([
       prisma.member.findUnique({
@@ -348,6 +352,7 @@ export async function addPartnerTransactionAction(tx: {
 
     const currentDate = new Date();
     const expiryDate = new Date(member.expiryDate);
+    expiryDate.setHours(23, 59, 59, 999);
     if (expiryDate < currentDate) {
       return { success: false, message: "এই মেম্বারশিপ কার্ডটির মেয়াদ শেষ হয়ে গেছে।" };
     }
@@ -381,6 +386,9 @@ export async function addPartnerTransactionAction(tx: {
         },
       }),
     ]);
+
+    // Invalidate admin stats cache
+    updateTag("admin-stats");
 
     return { success: true, message: `লেনদেন সফলভাবে সম্পন্ন হয়েছে! ছাড়ের পরিমাণ: ৳${saved}` };
   } catch (error) {

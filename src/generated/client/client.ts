@@ -57,6 +57,11 @@ export type Partner = Prisma.PartnerModel
  */
 export type Transaction = Prisma.TransactionModel
 /**
+ * Model Doctor
+ * 
+ */
+export type Doctor = Prisma.DoctorModel
+/**
  * Model PartnerRequest
  * 
  */

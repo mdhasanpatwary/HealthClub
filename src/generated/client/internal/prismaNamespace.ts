@@ -387,6 +387,7 @@ export const ModelName = {
   Member: 'Member',
   Partner: 'Partner',
   Transaction: 'Transaction',
+  Doctor: 'Doctor',
   PartnerRequest: 'PartnerRequest',
   ContactMessage: 'ContactMessage',
   SystemSetting: 'SystemSetting'
@@ -405,7 +406,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "member" | "partner" | "transaction" | "partnerRequest" | "contactMessage" | "systemSetting"
+    modelProps: "member" | "partner" | "transaction" | "doctor" | "partnerRequest" | "contactMessage" | "systemSetting"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -628,6 +629,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.TransactionCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.TransactionCountAggregateOutputType> | number
+        }
+      }
+    }
+    Doctor: {
+      payload: Prisma.$DoctorPayload<ExtArgs>
+      fields: Prisma.DoctorFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DoctorFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DoctorFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayload>
+        }
+        findFirst: {
+          args: Prisma.DoctorFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DoctorFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayload>
+        }
+        findMany: {
+          args: Prisma.DoctorFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayload>[]
+        }
+        create: {
+          args: Prisma.DoctorCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayload>
+        }
+        createMany: {
+          args: Prisma.DoctorCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DoctorCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayload>[]
+        }
+        delete: {
+          args: Prisma.DoctorDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayload>
+        }
+        update: {
+          args: Prisma.DoctorUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayload>
+        }
+        deleteMany: {
+          args: Prisma.DoctorDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DoctorUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DoctorUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayload>[]
+        }
+        upsert: {
+          args: Prisma.DoctorUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayload>
+        }
+        aggregate: {
+          args: Prisma.DoctorAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDoctor>
+        }
+        groupBy: {
+          args: Prisma.DoctorGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DoctorGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DoctorCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DoctorCountAggregateOutputType> | number
         }
       }
     }
@@ -957,6 +1032,29 @@ export const TransactionScalarFieldEnum = {
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
 
 
+export const DoctorScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  specialty: 'specialty',
+  department: 'department',
+  degrees: 'degrees',
+  designation: 'designation',
+  chamberName: 'chamberName',
+  chamberAddress: 'chamberAddress',
+  roomNo: 'roomNo',
+  visitingDays: 'visitingDays',
+  visitingHours: 'visitingHours',
+  serialPhone: 'serialPhone',
+  consultationFee: 'consultationFee',
+  imageUrl: 'imageUrl',
+  partnerId: 'partnerId',
+  isActive: 'isActive',
+  createdAt: 'createdAt'
+} as const
+
+export type DoctorScalarFieldEnum = (typeof DoctorScalarFieldEnum)[keyof typeof DoctorScalarFieldEnum]
+
+
 export const PartnerRequestScalarFieldEnum = {
   id: 'id',
   orgName: 'orgName',
@@ -1198,6 +1296,7 @@ export type GlobalOmitConfig = {
   member?: Prisma.MemberOmit
   partner?: Prisma.PartnerOmit
   transaction?: Prisma.TransactionOmit
+  doctor?: Prisma.DoctorOmit
   partnerRequest?: Prisma.PartnerRequestOmit
   contactMessage?: Prisma.ContactMessageOmit
   systemSetting?: Prisma.SystemSettingOmit

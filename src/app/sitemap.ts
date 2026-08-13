@@ -10,6 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/about-us",
     "/membership",
     "/partner-hospitals",
+    "/consultants",
     "/become-partner",
     "/contact",
     "/privacy-policy",
@@ -25,7 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (route === "") {
       priority = 1.0;
       changeFrequency = "daily";
-    } else if (route === "/partner-hospitals" || route === "/membership") {
+    } else if (route === "/partner-hospitals" || route === "/consultants" || route === "/membership") {
       priority = 0.9;
       changeFrequency = "daily";
     } else if (route === "/about-us" || route === "/contact" || route === "/become-partner") {

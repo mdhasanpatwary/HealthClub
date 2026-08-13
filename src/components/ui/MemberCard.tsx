@@ -30,7 +30,9 @@ const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCa
     member.qrCodeUrl ||
     `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verificationUrl)}&color=0f172a&bgcolor=ffffff`;
 
-  const isExpired = new Date(member.expiryDate) < new Date();
+  const expiryDate = new Date(member.expiryDate);
+  expiryDate.setHours(23, 59, 59, 999);
+  const isExpired = expiryDate < new Date();
 
   return (
     <div

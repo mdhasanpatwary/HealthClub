@@ -77,6 +77,7 @@ export default function Header() {
 
   const navLinks = [
     { name: t("layout.header.home"), path: "/" },
+    { name: t("layout.header.consultants"), path: "/consultants" },
     { name: t("layout.header.partnerHospitals"), path: "/partner-hospitals" },
     { name: t("layout.header.membershipPlans"), path: "/membership" },
     { name: t("layout.header.aboutUs"), path: "/about-us" },

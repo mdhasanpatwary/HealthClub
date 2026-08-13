@@ -15,6 +15,7 @@ import { Html5Qrcode } from "html5-qrcode";
 import { ChangePartnerPasswordDialog } from "./components/ChangePartnerPasswordDialog";
 import { PartnerDashboardSkeleton } from "./components/PartnerDashboardSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
+import { parseDiscountPercentage } from "@/lib/utils";
 
 interface VerifiedMember {
   id: string;
@@ -354,24 +355,7 @@ export default function PartnerDashboardPage() {
                         <div className="bg-primary/5 border border-primary/15 rounded-xl p-3.5 flex justify-between items-center text-sm font-semibold text-primary">
                           <span>প্রাক্কলিত ডিসকাউন্ট ও সাশ্রয়:</span>
                           <span className="text-base font-extrabold font-mono">
-                        ৳{Math.round(Number(billAmount) * (partner.discount ? (() => {
-                            // Must match server-side calculation in addPartnerTransactionAction
-                            const banglaToEnglishMap: Record<string, string> = {
-                              "০": "0", "১": "1", "২": "2", "৩": "3", "৪": "4",
-                              "৫": "5", "৬": "6", "৭": "7", "৮": "8", "৯": "9",
-                            };
-                            let converted = partner.discount;
-                            for (const [bangla, english] of Object.entries(banglaToEnglishMap)) {
-                              converted = converted.replaceAll(bangla, english);
-                            }
-                            const matches = [...converted.matchAll(/(\d+(?:\.\d+)?)/g)];
-                            if (matches.length > 0) {
-                              const maxNum = Math.max(...matches.map(m => parseFloat(m[1])));
-                              const rate = maxNum > 1 ? maxNum / 100 : maxNum;
-                              return Math.min(rate, 0.30);
-                            }
-                            return 0.10;
-                          })() : 0.10))}
+                            ৳{Math.round(Number(billAmount) * parseDiscountPercentage(partner.discount))}
                           </span>
                         </div>
                       )}

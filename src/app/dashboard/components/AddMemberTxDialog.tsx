@@ -66,7 +66,7 @@ export function AddMemberTxDialog({
                 if (selectedPartner) {
                   const rate = parseDiscountPercentage(selectedPartner.discount);
                   const percentVal = Math.round(rate * 100);
-                  setNewTxDiscountPercent(percentVal > 0 ? String(percentVal) : "10");
+                  setNewTxDiscountPercent(percentVal >= 0 ? String(percentVal) : "10");
                 } else {
                   setNewTxDiscountPercent("10");
                 }
@@ -105,7 +105,7 @@ export function AddMemberTxDialog({
               type="number"
               required
               min="0"
-              max="100"
+              max="30"
               placeholder="10"
               value={newTxDiscountPercent}
               onChange={(e) => setNewTxDiscountPercent(e.target.value)}
@@ -119,7 +119,8 @@ export function AddMemberTxDialog({
                 "{saved}",
                 formatNum(
                   Math.round(
-                    Number(newTxAmount) * ((Number(newTxDiscountPercent) || 0) / 100)
+                    Number(newTxAmount) *
+                      (Math.min(Math.max(0, Number(newTxDiscountPercent) || 0), 30) / 100)
                   ),
                   locale
                 )

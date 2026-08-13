@@ -406,9 +406,11 @@ export async function verifyEmailOtpAction(
       return { success: false, message: `ভুল ওটিপি কোড। আর ${remaining}টি সুযোগ বাকি।` };
     }
 
+    const nextStatus = member.tier === "founding" ? "active" : member.status;
     const updated = await prisma.member.update({
       where: { id: member.id },
       data: {
+        status: nextStatus,
         emailVerified: true,
         verificationCode: null,
         verificationCodeCreatedAt: null,
@@ -644,7 +646,9 @@ export async function verifyMemberForPartnerAction(
       return { success: false, message: "মেম্বারশিপ আইডি পাওয়া যায়নি।" };
     }
 
-    const isExpired = new Date(data.expiryDate) < new Date();
+    const expiryDate = new Date(data.expiryDate);
+    expiryDate.setHours(23, 59, 59, 999);
+    const isExpired = expiryDate < new Date();
 
     return {
       success: true,

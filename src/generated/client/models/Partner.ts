@@ -255,6 +255,7 @@ export type PartnerWhereInput = {
   verificationCodeCreatedAt?: Prisma.DateTimeNullableFilter<"Partner"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Partner"> | Date | string
   transactions?: Prisma.TransactionListRelationFilter
+  doctors?: Prisma.DoctorListRelationFilter
 }
 
 export type PartnerOrderByWithRelationInput = {
@@ -273,6 +274,7 @@ export type PartnerOrderByWithRelationInput = {
   verificationCodeCreatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   transactions?: Prisma.TransactionOrderByRelationAggregateInput
+  doctors?: Prisma.DoctorOrderByRelationAggregateInput
 }
 
 export type PartnerWhereUniqueInput = Prisma.AtLeast<{
@@ -294,6 +296,7 @@ export type PartnerWhereUniqueInput = Prisma.AtLeast<{
   verificationCodeCreatedAt?: Prisma.DateTimeNullableFilter<"Partner"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Partner"> | Date | string
   transactions?: Prisma.TransactionListRelationFilter
+  doctors?: Prisma.DoctorListRelationFilter
 }, "id" | "email">
 
 export type PartnerOrderByWithAggregationInput = {
@@ -352,6 +355,7 @@ export type PartnerCreateInput = {
   verificationCodeCreatedAt?: Date | string | null
   createdAt?: Date | string
   transactions?: Prisma.TransactionCreateNestedManyWithoutPartnerInput
+  doctors?: Prisma.DoctorCreateNestedManyWithoutPartnerInput
 }
 
 export type PartnerUncheckedCreateInput = {
@@ -370,6 +374,7 @@ export type PartnerUncheckedCreateInput = {
   verificationCodeCreatedAt?: Date | string | null
   createdAt?: Date | string
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutPartnerInput
+  doctors?: Prisma.DoctorUncheckedCreateNestedManyWithoutPartnerInput
 }
 
 export type PartnerUpdateInput = {
@@ -388,6 +393,7 @@ export type PartnerUpdateInput = {
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactions?: Prisma.TransactionUpdateManyWithoutPartnerNestedInput
+  doctors?: Prisma.DoctorUpdateManyWithoutPartnerNestedInput
 }
 
 export type PartnerUncheckedUpdateInput = {
@@ -406,6 +412,7 @@ export type PartnerUncheckedUpdateInput = {
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutPartnerNestedInput
+  doctors?: Prisma.DoctorUncheckedUpdateManyWithoutPartnerNestedInput
 }
 
 export type PartnerCreateManyInput = {
@@ -515,6 +522,11 @@ export type PartnerScalarRelationFilter = {
   isNot?: Prisma.PartnerWhereInput
 }
 
+export type PartnerNullableScalarRelationFilter = {
+  is?: Prisma.PartnerWhereInput | null
+  isNot?: Prisma.PartnerWhereInput | null
+}
+
 export type PartnerCreateNestedOneWithoutTransactionsInput = {
   create?: Prisma.XOR<Prisma.PartnerCreateWithoutTransactionsInput, Prisma.PartnerUncheckedCreateWithoutTransactionsInput>
   connectOrCreate?: Prisma.PartnerCreateOrConnectWithoutTransactionsInput
@@ -527,6 +539,22 @@ export type PartnerUpdateOneRequiredWithoutTransactionsNestedInput = {
   upsert?: Prisma.PartnerUpsertWithoutTransactionsInput
   connect?: Prisma.PartnerWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.PartnerUpdateToOneWithWhereWithoutTransactionsInput, Prisma.PartnerUpdateWithoutTransactionsInput>, Prisma.PartnerUncheckedUpdateWithoutTransactionsInput>
+}
+
+export type PartnerCreateNestedOneWithoutDoctorsInput = {
+  create?: Prisma.XOR<Prisma.PartnerCreateWithoutDoctorsInput, Prisma.PartnerUncheckedCreateWithoutDoctorsInput>
+  connectOrCreate?: Prisma.PartnerCreateOrConnectWithoutDoctorsInput
+  connect?: Prisma.PartnerWhereUniqueInput
+}
+
+export type PartnerUpdateOneWithoutDoctorsNestedInput = {
+  create?: Prisma.XOR<Prisma.PartnerCreateWithoutDoctorsInput, Prisma.PartnerUncheckedCreateWithoutDoctorsInput>
+  connectOrCreate?: Prisma.PartnerCreateOrConnectWithoutDoctorsInput
+  upsert?: Prisma.PartnerUpsertWithoutDoctorsInput
+  disconnect?: Prisma.PartnerWhereInput | boolean
+  delete?: Prisma.PartnerWhereInput | boolean
+  connect?: Prisma.PartnerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PartnerUpdateToOneWithWhereWithoutDoctorsInput, Prisma.PartnerUpdateWithoutDoctorsInput>, Prisma.PartnerUncheckedUpdateWithoutDoctorsInput>
 }
 
 export type PartnerCreateWithoutTransactionsInput = {
@@ -544,6 +572,7 @@ export type PartnerCreateWithoutTransactionsInput = {
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
   createdAt?: Date | string
+  doctors?: Prisma.DoctorCreateNestedManyWithoutPartnerInput
 }
 
 export type PartnerUncheckedCreateWithoutTransactionsInput = {
@@ -561,6 +590,7 @@ export type PartnerUncheckedCreateWithoutTransactionsInput = {
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
   createdAt?: Date | string
+  doctors?: Prisma.DoctorUncheckedCreateNestedManyWithoutPartnerInput
 }
 
 export type PartnerCreateOrConnectWithoutTransactionsInput = {
@@ -594,6 +624,7 @@ export type PartnerUpdateWithoutTransactionsInput = {
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  doctors?: Prisma.DoctorUpdateManyWithoutPartnerNestedInput
 }
 
 export type PartnerUncheckedUpdateWithoutTransactionsInput = {
@@ -611,6 +642,95 @@ export type PartnerUncheckedUpdateWithoutTransactionsInput = {
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  doctors?: Prisma.DoctorUncheckedUpdateManyWithoutPartnerNestedInput
+}
+
+export type PartnerCreateWithoutDoctorsInput = {
+  id: string
+  name: string
+  category: string
+  address: string
+  discount: string
+  phone: string
+  email?: string | null
+  password?: string | null
+  logoText: string
+  mapLink?: string | null
+  imageUrl?: string | null
+  verificationCode?: string | null
+  verificationCodeCreatedAt?: Date | string | null
+  createdAt?: Date | string
+  transactions?: Prisma.TransactionCreateNestedManyWithoutPartnerInput
+}
+
+export type PartnerUncheckedCreateWithoutDoctorsInput = {
+  id: string
+  name: string
+  category: string
+  address: string
+  discount: string
+  phone: string
+  email?: string | null
+  password?: string | null
+  logoText: string
+  mapLink?: string | null
+  imageUrl?: string | null
+  verificationCode?: string | null
+  verificationCodeCreatedAt?: Date | string | null
+  createdAt?: Date | string
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutPartnerInput
+}
+
+export type PartnerCreateOrConnectWithoutDoctorsInput = {
+  where: Prisma.PartnerWhereUniqueInput
+  create: Prisma.XOR<Prisma.PartnerCreateWithoutDoctorsInput, Prisma.PartnerUncheckedCreateWithoutDoctorsInput>
+}
+
+export type PartnerUpsertWithoutDoctorsInput = {
+  update: Prisma.XOR<Prisma.PartnerUpdateWithoutDoctorsInput, Prisma.PartnerUncheckedUpdateWithoutDoctorsInput>
+  create: Prisma.XOR<Prisma.PartnerCreateWithoutDoctorsInput, Prisma.PartnerUncheckedCreateWithoutDoctorsInput>
+  where?: Prisma.PartnerWhereInput
+}
+
+export type PartnerUpdateToOneWithWhereWithoutDoctorsInput = {
+  where?: Prisma.PartnerWhereInput
+  data: Prisma.XOR<Prisma.PartnerUpdateWithoutDoctorsInput, Prisma.PartnerUncheckedUpdateWithoutDoctorsInput>
+}
+
+export type PartnerUpdateWithoutDoctorsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  discount?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoText?: Prisma.StringFieldUpdateOperationsInput | string
+  mapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transactions?: Prisma.TransactionUpdateManyWithoutPartnerNestedInput
+}
+
+export type PartnerUncheckedUpdateWithoutDoctorsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  discount?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoText?: Prisma.StringFieldUpdateOperationsInput | string
+  mapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutPartnerNestedInput
 }
 
 
@@ -620,10 +740,12 @@ export type PartnerUncheckedUpdateWithoutTransactionsInput = {
 
 export type PartnerCountOutputType = {
   transactions: number
+  doctors: number
 }
 
 export type PartnerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactions?: boolean | PartnerCountOutputTypeCountTransactionsArgs
+  doctors?: boolean | PartnerCountOutputTypeCountDoctorsArgs
 }
 
 /**
@@ -643,6 +765,13 @@ export type PartnerCountOutputTypeCountTransactionsArgs<ExtArgs extends runtime.
   where?: Prisma.TransactionWhereInput
 }
 
+/**
+ * PartnerCountOutputType without action
+ */
+export type PartnerCountOutputTypeCountDoctorsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DoctorWhereInput
+}
+
 
 export type PartnerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -660,6 +789,7 @@ export type PartnerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   verificationCodeCreatedAt?: boolean
   createdAt?: boolean
   transactions?: boolean | Prisma.Partner$transactionsArgs<ExtArgs>
+  doctors?: boolean | Prisma.Partner$doctorsArgs<ExtArgs>
   _count?: boolean | Prisma.PartnerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["partner"]>
 
@@ -717,6 +847,7 @@ export type PartnerSelectScalar = {
 export type PartnerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "category" | "address" | "discount" | "phone" | "email" | "password" | "logoText" | "mapLink" | "imageUrl" | "verificationCode" | "verificationCodeCreatedAt" | "createdAt", ExtArgs["result"]["partner"]>
 export type PartnerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactions?: boolean | Prisma.Partner$transactionsArgs<ExtArgs>
+  doctors?: boolean | Prisma.Partner$doctorsArgs<ExtArgs>
   _count?: boolean | Prisma.PartnerCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PartnerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -726,6 +857,7 @@ export type $PartnerPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "Partner"
   objects: {
     transactions: Prisma.$TransactionPayload<ExtArgs>[]
+    doctors: Prisma.$DoctorPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1137,6 +1269,7 @@ readonly fields: PartnerFieldRefs;
 export interface Prisma__PartnerClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   transactions<T extends Prisma.Partner$transactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Partner$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  doctors<T extends Prisma.Partner$doctorsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Partner$doctorsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DoctorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1594,6 +1727,30 @@ export type Partner$transactionsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.TransactionScalarFieldEnum | Prisma.TransactionScalarFieldEnum[]
+}
+
+/**
+ * Partner.doctors
+ */
+export type Partner$doctorsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Doctor
+   */
+  select?: Prisma.DoctorSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Doctor
+   */
+  omit?: Prisma.DoctorOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DoctorInclude<ExtArgs> | null
+  where?: Prisma.DoctorWhereInput
+  orderBy?: Prisma.DoctorOrderByWithRelationInput | Prisma.DoctorOrderByWithRelationInput[]
+  cursor?: Prisma.DoctorWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DoctorScalarFieldEnum | Prisma.DoctorScalarFieldEnum[]
 }
 
 /**

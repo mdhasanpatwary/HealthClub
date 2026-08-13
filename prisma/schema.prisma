@@ -59,6 +59,7 @@ model Partner {
   verificationCodeCreatedAt DateTime?     @map("verification_code_created_at") @db.Timestamptz
   createdAt                 DateTime      @default(now()) @map("created_at") @db.Timestamptz
   transactions              Transaction[]
+  doctors                   Doctor[]
 
   @@index([category])
   @@map("partners")
@@ -83,6 +84,33 @@ model Transaction {
   @@index([partnerId], map: "transactions_partner_id_idx")
   @@index([createdAt(sort: Desc)], map: "transactions_created_at_idx")
   @@map("transactions")
+}
+
+model Doctor {
+  id              String   @id
+  name            String
+  specialty       String
+  department      String   // 'medicine' | 'cardiology' | 'gynecology' | 'orthopedics' | 'neurology' | 'pediatrics' | 'surgery' | 'dermatology' | 'ent' | 'eye' | 'psychiatry' | 'nephrology' | 'hepatology' | 'rheumatology' | 'nutrition' | 'dental' | 'other'
+  degrees         String
+  designation     String
+  chamberName     String   @map("chamber_name")
+  chamberAddress  String   @map("chamber_address")
+  roomNo          String?  @map("room_no")
+  visitingDays    String   @map("visiting_days")
+  visitingHours   String   @map("visiting_hours")
+  serialPhone     String   @map("serial_phone")
+  consultationFee String?  @map("consultation_fee")
+  imageUrl        String?  @map("image_url")
+  partnerId       String?  @map("partner_id")
+  isActive        Boolean  @default(true) @map("is_active")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  partner         Partner? @relation(fields: [partnerId], references: [id], onDelete: SetNull)
+
+  @@index([department], map: "doctors_department_idx")
+  @@index([isActive], map: "doctors_is_active_idx")
+  @@index([partnerId], map: "doctors_partner_id_idx")
+  @@map("doctors")
 }
 
 model PartnerRequest {
@@ -118,6 +146,7 @@ model SystemSetting {
 
   @@map("system_settings")
 }
+
 
 
 

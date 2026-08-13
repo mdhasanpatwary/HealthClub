@@ -9,20 +9,25 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { MemberDialog } from "./components/MemberDialog";
 import { PartnerDialog } from "./components/PartnerDialog";
+import { DoctorDialog } from "./components/DoctorDialog";
 import { TransactionDialog } from "./components/TransactionDialog";
 import { MemberDetailsDialog } from "./components/MemberDetailsDialog";
 import { MembersTab } from "./components/MembersTab";
 import { PartnersTab } from "./components/PartnersTab";
+import { DoctorsTab } from "./components/DoctorsTab";
 import { TransactionsTab } from "./components/TransactionsTab";
 import { PartnerRequestsTab } from "./components/PartnerRequestsTab";
 import { ContactMessagesTab } from "./components/ContactMessagesTab";
 import { RenewalsTab } from "./components/RenewalsTab";
 import { AdminStatsGrid } from "./components/AdminStatsGrid";
 import { useAdminData } from "./hooks/useAdminData";
+import { useAdminDoctors } from "./hooks/useAdminDoctors";
 
 export default function AdminDashboardPage() {
   const { t, locale } = useLanguage();
   const adminData = useAdminData(t, locale);
+  const doctorData = useAdminDoctors();
+
 
   const {
     loading,
@@ -207,9 +212,10 @@ export default function AdminDashboardPage() {
         </Card>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-6 bg-muted p-1 rounded-xl">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 bg-muted p-1 rounded-xl h-auto gap-1">
             <TabsTrigger value="members" className="rounded-lg text-xs font-semibold py-2">{t("admin.dashboard.membersList")}</TabsTrigger>
             <TabsTrigger value="partners" className="rounded-lg text-xs font-semibold py-2">{t("admin.dashboard.partnerHospitals")}</TabsTrigger>
+            <TabsTrigger value="doctors" className="rounded-lg text-xs font-semibold py-2">ডাক্তার তালিকা ({doctorData.doctors.length})</TabsTrigger>
             <TabsTrigger value="txs" className="rounded-lg text-xs font-semibold py-2">{t("admin.dashboard.transactionLog")}</TabsTrigger>
             <TabsTrigger value="requests" className="rounded-lg text-xs font-semibold py-2">
               অংশীদার আবেদন ({partnerRequests.filter(r => r.status === "pending").length})
@@ -283,6 +289,17 @@ export default function AdminDashboardPage() {
             />
           </TabsContent>
 
+          <TabsContent value="doctors" className="mt-4">
+            <DoctorsTab
+              filteredDoctors={doctorData.filteredDoctors}
+              doctorSearch={doctorData.doctorSearch}
+              setDoctorSearch={doctorData.setDoctorSearch}
+              onNewDoctorClick={doctorData.handleOpenNewDoctor}
+              onEditClick={doctorData.handleEditDoctor}
+              onDeleteClick={doctorData.handleDeleteDoctor}
+            />
+          </TabsContent>
+
           <TabsContent value="txs" className="mt-4">
             <TransactionsTab
               transactions={transactions}
@@ -351,6 +368,18 @@ export default function AdminDashboardPage() {
             t={t}
           />
         )}
+
+        {doctorData.isDoctorOpen && (
+          <DoctorDialog
+            isOpen={doctorData.isDoctorOpen}
+            onClose={() => doctorData.setIsDoctorOpen(false)}
+            editingDoctor={doctorData.editingDoctor}
+            newDoctor={doctorData.newDoctor}
+            setNewDoctor={doctorData.setNewDoctor}
+            onSubmit={doctorData.handleSaveDoctor}
+          />
+        )}
+
 
         {isTxOpen && (
           <TransactionDialog

@@ -1,10 +1,18 @@
-import { Member, Partner, Transaction } from "./db";
+import { Member, Partner, Transaction, Doctor } from "./db";
 import {
   getPartnersAction,
   addPartnerAction,
   updatePartnerAction,
   deletePartnerAction,
 } from "@/app/actions/partnerActions";
+import {
+  getDoctorsAction,
+  getAllDoctorsAdminAction,
+  getDoctorByIdAction,
+  addDoctorAction,
+  updateDoctorAction,
+  deleteDoctorAction,
+} from "@/app/actions/doctorActions";
 import {
   addMemberAction,
   getMemberByIdAction,
@@ -37,6 +45,31 @@ const KEYS = {
 };
 
 export const dbStore = {
+  // --- DOCTORS ---
+  async getDoctors(): Promise<Doctor[]> {
+    return getDoctorsAction();
+  },
+
+  async getAllDoctorsAdmin(): Promise<Doctor[]> {
+    return getAllDoctorsAdminAction();
+  },
+
+  async getDoctorById(id: string): Promise<Doctor | null> {
+    return getDoctorByIdAction(id);
+  },
+
+  async addDoctor(doctor: Omit<Doctor, "id">): Promise<{ success: boolean; doctor?: Doctor; error?: string }> {
+    return addDoctorAction(doctor);
+  },
+
+  async updateDoctor(id: string, doctor: Partial<Omit<Doctor, "id">>): Promise<{ success: boolean; error?: string }> {
+    return updateDoctorAction(id, doctor);
+  },
+
+  async deleteDoctor(id: string): Promise<{ success: boolean; error?: string }> {
+    return deleteDoctorAction(id);
+  },
+
   // --- PARTNERS ---
   async getPartners(): Promise<Partner[]> {
     return getPartnersAction();
@@ -119,27 +152,7 @@ export const dbStore = {
       profilePictureUrl?: string;
     }
   ): Promise<boolean> {
-    const success = await updateMemberAction(id, member);
-    
-    if (success) {
-      // Sync local storage user session if logged in
-      const currentUser = this.getCurrentUser();
-      if (currentUser && currentUser.id === id) {
-        this.setCurrentUser({
-          ...currentUser,
-          name: member.name,
-          phone: member.phone,
-          email: member.email,
-          tier: member.tier,
-          address: member.address,
-          birthDate: member.birthDate,
-          profession: member.profession,
-          profilePictureUrl: member.profilePictureUrl,
-        });
-      }
-    }
-    
-    return success;
+    return updateMemberAction(id, member);
   },
 
   async deleteMember(id: string): Promise<boolean> {
@@ -229,4 +242,3 @@ export const dbStore = {
     return setMemberTxAllowedAction(enabled);
   },
 };
-

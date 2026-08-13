@@ -38,14 +38,14 @@ export default async function MembershipPage() {
   const t = (key: string) => tServer(locale, key);
 
   const benefitDetails = locale === "en" ? [
-    { title: "Hospital Discount", desc: "10-25% discount on the total bill at any partner hospital simply by showing your digital membership card.", gradient: "from-emerald-500 to-green-600" },
-    { title: "Diagnostic Test Off", desc: "10-25% discount on all pathological and imaging tests including blood tests and X-rays.", gradient: "from-blue-500 to-cyan-600" },
+    { title: "Hospital Discount", desc: "10-30% discount on the total bill at any partner hospital simply by showing your digital membership card.", gradient: "from-emerald-500 to-green-600" },
+    { title: "Diagnostic Test Off", desc: "10-30% discount on all pathological and imaging tests including blood tests and X-rays.", gradient: "from-blue-500 to-cyan-600" },
     { title: "Model Pharmacy Offer", desc: "Get 5% to 10% discount on purchasing medicines from designated partner pharmacies.", gradient: "from-violet-500 to-purple-600" },
     { title: "Free Health Camps", desc: "Access to regularly organized free diabetes checkups, eye camps, and blood pressure tests.", gradient: "from-rose-500 to-pink-600" },
     { title: "1 Year Founding Status", desc: "Membership is completely free for 1 year for the first 100 founding members.", gradient: "from-amber-500 to-orange-600" }
   ] : [
-    { title: "হাসপাতাল ডিসকাউন্ট", desc: "যেকোনো অংশীদার হাসপাতালে শুধু ডিজিটাল মেম্বার কার্ড প্রদর্শন করে বিলের উপর ১০-২৫% ডিসকাউন্ট।", gradient: "from-emerald-500 to-green-600" },
-    { title: "ডায়াগনস্টিক টেস্ট ছাড়", desc: "রক্ত পরীক্ষা, এক্স-রে সহ সকল প্যাথলজিক্যাল ও ইমেজিং পরীক্ষায় ১০-২৫% ডিসকাউন্ট।", gradient: "from-blue-500 to-cyan-600" },
+    { title: "হাসপাতাল ডিসকাউন্ট", desc: "যেকোনো অংশীদার হাসপাতালে শুধু ডিজিটাল মেম্বার কার্ড প্রদর্শন করে বিলের উপর ১০-৩০% ডিসকাউন্ট।", gradient: "from-emerald-500 to-green-600" },
+    { title: "ডায়াগনস্টিক টেস্ট ছাড়", desc: "রক্ত পরীক্ষা, এক্স-রে সহ সকল প্যাথলজিক্যাল ও ইমেজিং পরীক্ষায় ১০-৩০% ডিসকাউন্ট।", gradient: "from-blue-500 to-cyan-600" },
     { title: "মডেল ফার্মেসি অফার", desc: "নির্ধারিত পার্টনার ফার্মেসিগুলো থেকে প্রয়োজনীয় ঔষধ ক্রয়ের ক্ষেত্রে ৫% থেকে ১০% ডিসকাউন্ট।", gradient: "from-violet-500 to-purple-600" },
     { title: "ফ্রি স্বাস্থ্য ক্যাম্প", desc: "নিয়মিত আয়োজিত ফ্রি ডায়াবেটিস চেকআপ, আই ক্যাম্প এবং রক্তচাপ পরীক্ষা।", gradient: "from-rose-500 to-pink-600" },
     { title: "১ বছর প্রতিষ্ঠাতা স্ট্যাটাস", desc: "প্রথম ১০০ ফাউন্ডিং মেম্বারদের জন্য মেম্বারশিপ ১ বছরের জন্য সম্পূর্ণ ফ্রি।", gradient: "from-amber-500 to-orange-600" }

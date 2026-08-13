@@ -102,7 +102,8 @@ export default function DashboardPage() {
       return;
     }
 
-    const discountRate = (Number(newTxDiscountPercent) || 10) / 100;
+    const parsedPercent = Number(newTxDiscountPercent);
+    const discountRate = isNaN(parsedPercent) ? 0.10 : Math.min(Math.max(0, parsedPercent), 30) / 100;
     const saved = Math.round(billAmount * discountRate);
 
     setAddTxSubmitting(true);

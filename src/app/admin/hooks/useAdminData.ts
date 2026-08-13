@@ -388,14 +388,18 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
     const member = members.find((m) => m.id === id);
     if (!member) return;
 
-    // Guard: only allow toggling between active and inactive.
-    // Members with pending_approval or pending_payment require explicit admin approval.
-    if (member.status !== "active" && member.status !== "inactive") {
+    let newStatus: Member["status"];
+    if (member.status === "pending_approval") {
+      newStatus = "active";
+    } else if (member.status === "active") {
+      newStatus = "inactive";
+    } else if (member.status === "inactive") {
+      newStatus = "active";
+    } else {
       toast.error(t("admin.dashboard.memberStatusPendingError") || "এই মেম্বারের স্ট্যাটাস পরিবর্তন করতে নবায়ন অনুমোদন ট্যাব ব্যবহার করুন।");
       return;
     }
 
-    const newStatus = member.status === "active" ? "inactive" : "active";
     const success = await dbStore.updateMemberStatus(id, newStatus);
     if (success) {
       toast.success(t("admin.dashboard.memberStatusUpdatedSuccess"));

@@ -50,6 +50,20 @@ export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">)
   const session = await getSessionUser();
   if (!session) throw new Error("Unauthorized");
 
+  const billAmount = Number(tx.amount);
+  if (isNaN(billAmount) || billAmount <= 0) {
+    throw new Error("Invalid bill amount");
+  }
+
+  const rawSaved = Number(tx.saved);
+  if (isNaN(rawSaved) || rawSaved < 0) {
+    throw new Error("Invalid savings amount");
+  }
+
+  // Enforce max 30% discount limit on platform transactions
+  const maxAllowedSaved = Math.round(billAmount * 0.30);
+  const validatedSaved = Math.min(rawSaved, maxAllowedSaved);
+
   if (session.role !== "admin") {
     const isAllowed = await isMemberTxAllowedAction();
     if (!isAllowed) throw new Error("Unauthorized: Member transaction entry is disabled");
@@ -57,6 +71,37 @@ export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">)
     if (session.userId !== tx.memberId) {
       throw new Error("Unauthorized: Cannot add transaction for another member");
     }
+  }
+
+  // Verify member validity and active status
+  const member = await prisma.member.findUnique({
+    where: { id: tx.memberId },
+    select: { id: true, name: true, status: true, expiryDate: true },
+  });
+
+  if (!member) {
+    throw new Error("Member not found");
+  }
+
+  if (session.role !== "admin") {
+    if (member.status !== "active") {
+      throw new Error("Membership is not active");
+    }
+    const currentDate = new Date();
+    const expiryDate = new Date(member.expiryDate);
+    expiryDate.setHours(23, 59, 59, 999);
+    if (expiryDate < currentDate) {
+      throw new Error("Membership card has expired");
+    }
+  }
+
+  const partner = await prisma.partner.findUnique({
+    where: { id: tx.partnerId },
+    select: { id: true, name: true },
+  });
+
+  if (!partner) {
+    throw new Error("Partner not found");
   }
 
   const newTxId = `tx_${crypto.randomUUID()}`;
@@ -68,22 +113,22 @@ export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">)
       const newTx = await txPrisma.transaction.create({
         data: {
           id: newTxId,
-          memberId: tx.memberId,
-          memberName: tx.memberName,
-          partnerId: tx.partnerId,
-          partnerName: tx.partnerName,
-          amount: tx.amount,
-          saved: tx.saved,
+          memberId: member.id,
+          memberName: member.name,
+          partnerId: partner.id,
+          partnerName: partner.name,
+          amount: billAmount,
+          saved: validatedSaved,
           date: now,
         },
       });
 
       // 2. Update member totalSaved
       await txPrisma.member.update({
-        where: { id: tx.memberId },
+        where: { id: member.id },
         data: {
           totalSaved: {
-            increment: tx.saved,
+            increment: validatedSaved,
           },
         },
       });
@@ -187,7 +232,7 @@ const getCachedAdminStats = unstable_cache(
           (SELECT COUNT(*) FROM contact_messages) AS contact_messages_count,
           (SELECT COUNT(*) FROM transactions) AS total_transactions,
           (SELECT COUNT(*) FROM transactions WHERE created_at >= $3) AS this_month_transactions,
-          (SELECT COALESCE(SUM(total_saved), 0) FROM members) AS total_saved,
+          (SELECT COALESCE(SUM(saved), 0) FROM transactions) AS total_saved,
           (SELECT COALESCE(SUM(saved), 0) FROM transactions WHERE created_at >= $3) AS this_month_saved,
           (SELECT COUNT(*) FROM members WHERE tier = 'premium' AND status = 'active') AS active_premium_count`,
         now,
