@@ -196,7 +196,7 @@ export const initialDoctors: Doctor[] = [
     visitingHours: "সকাল ৯:০০ - বিকাল ৫:০০",
     serialPhone: "01898221111, 01898445555, 09666747575",
     consultationFee: "৳১,০০০ (প্রথম সাক্ষাৎ)",
-    imageUrl: "/images/placeholders/doctor-1.jpg",
+    imageUrl: "",
     isActive: true
   },
   {
@@ -213,7 +213,7 @@ export const initialDoctors: Doctor[] = [
     visitingHours: "বিকাল ৫:০০ - রাত ৯:০০",
     serialPhone: "01898221111, 01898445555",
     consultationFee: "৳৮০০",
-    imageUrl: "/images/placeholders/doctor-2.jpg",
+    imageUrl: "",
     isActive: true
   },
   {
@@ -230,7 +230,7 @@ export const initialDoctors: Doctor[] = [
     visitingHours: "বিকাল ৩:০০ - রাত ৮:০০",
     serialPhone: "01898221111, 01898445555",
     consultationFee: "৳১,০০০",
-    imageUrl: "/images/placeholders/doctor-3.jpg",
+    imageUrl: "",
     isActive: true
   },
   {
@@ -247,7 +247,7 @@ export const initialDoctors: Doctor[] = [
     visitingHours: "বিকাল ৪:০০ - রাত ৮:০০",
     serialPhone: "01898221111, 01898445555",
     consultationFee: "৳৮০০",
-    imageUrl: "/images/placeholders/doctor-4.jpg",
+    imageUrl: "",
     isActive: true
   },
   {
@@ -264,7 +264,7 @@ export const initialDoctors: Doctor[] = [
     visitingHours: "সকাল ১০:০০ - বিকাল ৪:০০",
     serialPhone: "01898221111, 01898445555",
     consultationFee: "৳১,০০০",
-    imageUrl: "/images/placeholders/doctor-5.jpg",
+    imageUrl: "",
     isActive: true
   },
   {
@@ -281,7 +281,7 @@ export const initialDoctors: Doctor[] = [
     visitingHours: "বিকাল ২:০০ - রাত ৮:০০",
     serialPhone: "01898221111, 01898445555",
     consultationFee: "৳১,০০০",
-    imageUrl: "/images/placeholders/doctor-6.jpg",
+    imageUrl: "",
     isActive: true
   },
   {
@@ -298,7 +298,7 @@ export const initialDoctors: Doctor[] = [
     visitingHours: "সকাল ৯:০০ - বিকাল ৩:০০",
     serialPhone: "01898221111, 01898445555",
     consultationFee: "৳১,০০০",
-    imageUrl: "/images/placeholders/doctor-7.jpg",
+    imageUrl: "",
     isActive: true
   },
   {
@@ -315,7 +315,7 @@ export const initialDoctors: Doctor[] = [
     visitingHours: "বিকাল ৪:০০ - রাত ৮:০০",
     serialPhone: "01898221111, 01898445555",
     consultationFee: "৳৬০০",
-    imageUrl: "/images/placeholders/doctor-4.jpg",
+    imageUrl: "",
     isActive: true
   },
   {
@@ -332,7 +332,7 @@ export const initialDoctors: Doctor[] = [
     visitingHours: "সন্ধ্যা ৬:০০ - রাত ৯:৩০",
     serialPhone: "01898221111, 01898445555",
     consultationFee: "৳৫০০",
-    imageUrl: "/images/placeholders/doctor-1.jpg",
+    imageUrl: "",
     isActive: true
   },
   {
@@ -349,7 +349,7 @@ export const initialDoctors: Doctor[] = [
     visitingHours: "বিকাল ৫:০০ - রাত ৮:৩০",
     serialPhone: "০৯৬১৩৭৮৭৮০১, 01811223344",
     consultationFee: "৳৮০০",
-    imageUrl: "/images/placeholders/doctor-5.jpg",
+    imageUrl: "",
     isActive: true
   },
   {
@@ -366,7 +366,7 @@ export const initialDoctors: Doctor[] = [
     visitingHours: "বিকাল ৫:০০ - রাত ৮:০০",
     serialPhone: "১০৬০৬, 01711223344",
     consultationFee: "৳৮০০",
-    imageUrl: "/images/placeholders/doctor-2.jpg",
+    imageUrl: "",
     isActive: true
   },
   {
@@ -383,7 +383,7 @@ export const initialDoctors: Doctor[] = [
     visitingHours: "সকাল ১০:০০ - বিকাল ৪:০০",
     serialPhone: "০৯৬১০০০৯৬১০, 01822334455",
     consultationFee: "৳১,০০০",
-    imageUrl: "/images/placeholders/doctor-4.jpg",
+    imageUrl: "",
     isActive: true
   }
 ];

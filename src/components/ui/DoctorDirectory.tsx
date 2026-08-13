@@ -27,15 +27,13 @@ function DoctorAvatar({
   alt: string;
   className?: string;
 }) {
-  const fallback = "/images/placeholders/doctor-default.jpg";
-  const imgSrc = src || fallback;
   const [hasError, setHasError] = useState(false);
 
   return (
-    <div className={`relative shrink-0 rounded-2xl overflow-hidden bg-primary/10 border-2 border-primary/20 flex items-center justify-center ${className}`}>
-      {!hasError && imgSrc ? (
+    <div className={`relative shrink-0 rounded-2xl overflow-hidden bg-emerald-500/10 border-2 border-emerald-500/20 flex items-center justify-center ${className}`}>
+      {!hasError && src ? (
         <Image
-          src={imgSrc}
+          src={src}
           alt={alt}
           fill
           sizes="(max-width: 640px) 80px, 100px"
@@ -43,8 +41,8 @@ function DoctorAvatar({
           onError={() => setHasError(true)}
         />
       ) : (
-        <div className="flex items-center justify-center w-full h-full bg-primary/15 text-primary">
-          <Stethoscope className="h-7 w-7" />
+        <div className="flex items-center justify-center w-full h-full bg-emerald-500/10 text-primary">
+          <Stethoscope className="h-7 w-7 text-primary" />
         </div>
       )}
     </div>

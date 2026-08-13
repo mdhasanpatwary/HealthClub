@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { User, Building, Camera, Trash2 } from "lucide-react";
+import { User, Building, Camera, Trash2, Stethoscope } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -11,7 +11,7 @@ interface ImageUploadProps {
   value: string;
   onChange: (value: string) => void;
   label?: string;
-  fallbackType?: 'user' | 'building';
+  fallbackType?: 'user' | 'building' | 'doctor' | 'stethoscope';
 }
 
 export function ImageUpload({ value, onChange, label, fallbackType = 'user' }: ImageUploadProps) {
@@ -48,6 +48,8 @@ export function ImageUpload({ value, onChange, label, fallbackType = 'user' }: I
             />
           ) : fallbackType === 'building' ? (
             <Building className="h-8 w-8 text-muted-foreground" />
+          ) : fallbackType === 'doctor' || fallbackType === 'stethoscope' ? (
+            <Stethoscope className="h-8 w-8 text-primary" />
           ) : (
             <User className="h-8 w-8 text-muted-foreground" />
           )}

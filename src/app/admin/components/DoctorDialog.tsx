@@ -88,7 +88,7 @@ export function DoctorDialog({
             value={newDoctor.imageUrl || ""}
             onChange={(url) => setNewDoctor({ ...newDoctor, imageUrl: url })}
             label="ডাক্তারের ছবি"
-            fallbackType="user"
+            fallbackType="doctor"
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
