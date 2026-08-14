@@ -20,7 +20,13 @@ import {
 } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 
-export function HealthTipsDirectory() {
+interface HealthTipsDirectoryProps {
+  initialArticles?: HealthTipArticle[];
+}
+
+export function HealthTipsDirectory({
+  initialArticles = HEALTH_TIPS_ARTICLES,
+}: HealthTipsDirectoryProps) {
   const { locale } = useLanguage();
   const isEn = locale === "en";
 
@@ -28,7 +34,7 @@ export function HealthTipsDirectory() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredArticles = useMemo(() => {
-    return HEALTH_TIPS_ARTICLES.filter((article: HealthTipArticle) => {
+    return initialArticles.filter((article: HealthTipArticle) => {
       const matchCat =
         selectedCategory === "all" || article.category === selectedCategory;
       const query = searchQuery.toLowerCase().trim();
@@ -40,7 +46,7 @@ export function HealthTipsDirectory() {
         article.excerptEn.toLowerCase().includes(query);
       return matchCat && matchSearch;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [initialArticles, selectedCategory, searchQuery]);
 
   return (
     <div className="space-y-8">

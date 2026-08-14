@@ -3,6 +3,7 @@ import { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import { HealthTipsDirectory } from "./components/HealthTipsDirectory";
 import { BookOpen } from "lucide-react";
+import { getAllHealthTipsAction } from "@/app/actions/healthTipsAdminActions";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -34,6 +35,8 @@ export default async function HealthTipsPage() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
+
+  const articles = await getAllHealthTipsAction();
 
   const jsonLdData = [
     {
@@ -85,7 +88,7 @@ export default async function HealthTipsPage() {
 
       {/* Main Content Directory */}
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <HealthTipsDirectory />
+        <HealthTipsDirectory initialArticles={articles} />
       </main>
     </div>
   );

@@ -28,7 +28,7 @@ These rules apply specifically to coding the **Health Club (হেলথ ক্�
 
 ### Typography Rules
 - **English**: Use `Inter` font.
-- **Bangla**: Use `Hind Siliguri` font.
+- **Bangla**: Use `Noto Sans Bengali` font.
 - Apply high font weights for titles (700-800) and normal weights for body (400-500).
 - Set a readable line-height (e.g., `leading-relaxed` or `leading-loose`).
 - Restrict maximum content width to `max-w-7xl` (1280px) and center page sections.

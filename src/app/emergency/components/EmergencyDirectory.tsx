@@ -2,12 +2,14 @@
 
 import { useState, useMemo } from "react";
 import {
-  INITIAL_BLOOD_DONORS,
-  INITIAL_AMBULANCES,
-  INITIAL_EMERGENCY_HOTLINES,
   UPAZILAS_FENI,
   BLOOD_GROUPS,
   BloodDonor,
+  AmbulanceService,
+  EmergencyHotline,
+  INITIAL_BLOOD_DONORS,
+  INITIAL_AMBULANCES,
+  INITIAL_EMERGENCY_HOTLINES,
 } from "@/data/emergencyData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,7 +32,17 @@ import {
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { BloodDonorRegisterDialog } from "./BloodDonorRegisterDialog";
 
-export function EmergencyDirectory() {
+interface EmergencyDirectoryProps {
+  initialBloodDonors?: BloodDonor[];
+  initialAmbulances?: AmbulanceService[];
+  initialHotlines?: EmergencyHotline[];
+}
+
+export function EmergencyDirectory({
+  initialBloodDonors = INITIAL_BLOOD_DONORS,
+  initialAmbulances = INITIAL_AMBULANCES,
+  initialHotlines = INITIAL_EMERGENCY_HOTLINES,
+}: EmergencyDirectoryProps) {
   const { locale } = useLanguage();
   const isEn = locale === "en";
 
@@ -42,7 +54,7 @@ export function EmergencyDirectory() {
 
   // Filtered blood donors
   const filteredDonors = useMemo(() => {
-    return INITIAL_BLOOD_DONORS.filter((donor: BloodDonor) => {
+    return initialBloodDonors.filter((donor: BloodDonor) => {
       const matchGroup = selectedGroup === "all" || donor.bloodGroup === selectedGroup;
       const matchUpazila = selectedUpazila === "all" || donor.upazila === selectedUpazila;
       const matchSearch =
@@ -52,7 +64,7 @@ export function EmergencyDirectory() {
         donor.bloodGroup.toLowerCase().includes(searchQuery.toLowerCase());
       return matchGroup && matchUpazila && matchSearch;
     });
-  }, [selectedGroup, selectedUpazila, searchQuery]);
+  }, [initialBloodDonors, selectedGroup, selectedUpazila, searchQuery]);
 
   return (
     <div className="space-y-6 sm:space-y-8">
@@ -238,7 +250,7 @@ export function EmergencyDirectory() {
         {/* 2. Ambulances Tab */}
         <TabsContent value="ambulances" className="space-y-4 pt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {INITIAL_AMBULANCES.map((amb) => (
+            {initialAmbulances.map((amb) => (
               <Card
                 key={amb.id}
                 className="border border-border/80 bg-background hover:border-primary/30 transition-all duration-300 shadow-xs"
@@ -293,7 +305,7 @@ export function EmergencyDirectory() {
         {/* 3. Emergency Hotlines Tab */}
         <TabsContent value="hotlines" className="space-y-4 pt-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {INITIAL_EMERGENCY_HOTLINES.map((hotline) => (
+            {initialHotlines.map((hotline) => (
               <Card
                 key={hotline.id}
                 className="border border-border/80 bg-background hover:border-amber-500/40 transition-all duration-300 shadow-xs"

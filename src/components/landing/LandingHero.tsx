@@ -37,7 +37,7 @@ export function LandingHero({ sampleMember, t }: LandingHeroProps) {
               {t("page.healthcareBenefitMembershipPlatform")}
             </span>
 
-            <h1 className="font-heading text-4xl sm:text-5xl xl:text-6xl font-extrabold text-secondary dark:text-white leading-[1.12] tracking-tight">
+            <h1 className="font-heading text-4xl sm:text-5xl xl:text-6xl font-extrabold text-secondary dark:text-white leading-[1.3] tracking-tight">
               {t("page.healthcareIsNow")} <span className="gradient-text">{t("page.easyAndAffordable")}</span> {t("page.healthcareForYou")}
             </h1>
 

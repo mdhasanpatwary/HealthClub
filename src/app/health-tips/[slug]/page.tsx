@@ -3,7 +3,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
-import { HEALTH_TIPS_ARTICLES } from "@/data/healthTipsData";
+import { getHealthTipBySlugAction } from "@/app/actions/healthTipsAdminActions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +24,7 @@ interface ArticlePageProps {
 
 export async function generateMetadata({ params }: ArticlePageProps) {
   const { slug } = await params;
-  const article = HEALTH_TIPS_ARTICLES.find((a) => a.slug === slug);
+  const article = await getHealthTipBySlugAction(slug);
   if (!article) return { title: "Article Not Found - Health Club" };
 
   const cookieStore = await cookies();
@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: ArticlePageProps) {
 
 export default async function ArticleDetailPage({ params }: ArticlePageProps) {
   const { slug } = await params;
-  const article = HEALTH_TIPS_ARTICLES.find((a) => a.slug === slug);
+  const article = await getHealthTipBySlugAction(slug);
   if (!article) notFound();
 
   const cookieStore = await cookies();

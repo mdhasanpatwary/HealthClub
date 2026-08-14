@@ -3,6 +3,7 @@ import { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import { EmergencyDirectory } from "./components/EmergencyDirectory";
 import { Siren } from "lucide-react";
+import { getEmergencyDataAction } from "@/app/actions/emergencyAdminActions";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -35,6 +36,8 @@ export default async function EmergencyPage() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
+
+  const { bloodDonors, ambulances, hotlines } = await getEmergencyDataAction();
 
   const jsonLdData = [
     {
@@ -86,7 +89,11 @@ export default async function EmergencyPage() {
 
       {/* Main Content Directory */}
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <EmergencyDirectory />
+        <EmergencyDirectory
+          initialBloodDonors={bloodDonors}
+          initialAmbulances={ambulances}
+          initialHotlines={hotlines}
+        />
       </main>
     </div>
   );
