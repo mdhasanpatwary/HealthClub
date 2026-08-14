@@ -11,6 +11,7 @@ import {
   FileCheck,
   RotateCcw,
   Mail,
+  Settings,
 } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatNum } from "@/lib/i18n";
@@ -90,6 +91,14 @@ export function AdminNav() {
       isActive: pathname.startsWith("/admin/messages"),
       badge: contactMessagesCount,
       badgeVariant: contactMessagesCount > 0 ? "accent" : "neutral",
+    },
+    {
+      label: locale === "bn" ? "সেটিংস" : "Settings",
+      href: "/admin/settings",
+      icon: Settings,
+      isActive: pathname.startsWith("/admin/settings"),
+      badge: null,
+      badgeVariant: "default",
     },
   ];
 

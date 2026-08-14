@@ -1,12 +1,13 @@
 "use client";
 
-import { Search, User, Edit3, Trash2 } from "lucide-react";
+import { Search, User, Edit3, Trash2, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Member } from "@/services/db";
 import { formatNum, Locale } from "@/lib/i18n";
+import { exportToCsv } from "@/lib/exportUtils";
 
 interface MembersTabProps {
   filteredMembers: Member[];
@@ -52,6 +53,28 @@ export function MembersTab({
               className="pl-9 h-9 border-border bg-background"
             />
           </div>
+          <Button
+            onClick={() =>
+              exportToCsv(filteredMembers, "healthclub_members", [
+                { header: "Member ID", accessor: "id" },
+                { header: "Name", accessor: "name" },
+                { header: "Phone", accessor: "phone" },
+                { header: "Email", accessor: (m) => m.email || "" },
+                { header: "Tier", accessor: "tier" },
+                { header: "Status", accessor: "status" },
+                { header: "Joined Date", accessor: "joinedDate" },
+                { header: "Expiry Date", accessor: "expiryDate" },
+                { header: "Total Saved (BDT)", accessor: "totalSaved" },
+                { header: "Address", accessor: (m) => m.address || "" },
+              ])
+            }
+            variant="outline"
+            size="sm"
+            className="border-border gap-1.5 text-xs font-semibold"
+          >
+            <Download className="h-3.5 w-3.5" />
+            <span>{locale === "en" ? "Export CSV" : "এক্সপোর্ট"}</span>
+          </Button>
           <Button onClick={onNewMemberClick} size="sm" className="bg-primary hover:bg-primary-dark text-white">
             {t("admin.dashboard.newMember")}
           </Button>

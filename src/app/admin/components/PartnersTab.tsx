@@ -1,11 +1,12 @@
 "use client";
 
-import { Search, Edit3, Trash2 } from "lucide-react";
+import { Search, Edit3, Trash2, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Partner } from "@/services/db";
+import { exportToCsv } from "@/lib/exportUtils";
 
 interface PartnersTabProps {
   filteredPartners: Partner[];
@@ -45,6 +46,25 @@ export function PartnersTab({
               className="pl-9 h-9 border-border bg-background"
             />
           </div>
+          <Button
+            onClick={() =>
+              exportToCsv(filteredPartners, "healthclub_partners", [
+                { header: "Partner ID", accessor: "id" },
+                { header: "Name", accessor: "name" },
+                { header: "Category", accessor: "category" },
+                { header: "Discount Rate", accessor: "discount" },
+                { header: "Phone", accessor: "phone" },
+                { header: "Email", accessor: (p) => p.email || "" },
+                { header: "Address", accessor: "address" },
+              ])
+            }
+            variant="outline"
+            size="sm"
+            className="border-border gap-1.5 text-xs font-semibold"
+          >
+            <Download className="h-3.5 w-3.5" />
+            <span>এক্সপোর্ট</span>
+          </Button>
           <Button onClick={onNewPartnerClick} size="sm" className="bg-primary hover:bg-primary-dark text-white">
             {t("admin.dashboard.newPartnerTitle")}
           </Button>

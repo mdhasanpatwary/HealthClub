@@ -5,6 +5,10 @@ import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/com
 import { Transaction } from "@/services/db";
 import { formatNum, Locale } from "@/lib/i18n";
 
+import { Download } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { exportToCsv } from "@/lib/exportUtils";
+
 interface TransactionsTabProps {
   transactions: Transaction[];
   locale: Locale;
@@ -18,9 +22,31 @@ export function TransactionsTab({
 }: TransactionsTabProps) {
   return (
     <Card className="border-border shadow-md">
-      <CardHeader>
-        <CardTitle className="font-heading text-lg font-bold text-secondary">{t("admin.dashboard.recentTransactionsTitle")}</CardTitle>
-        <CardDescription>{t("admin.dashboard.txDescLabel")}</CardDescription>
+      <CardHeader className="flex flex-row justify-between items-center">
+        <div>
+          <CardTitle className="font-heading text-lg font-bold text-secondary">{t("admin.dashboard.recentTransactionsTitle")}</CardTitle>
+          <CardDescription>{t("admin.dashboard.txDescLabel")}</CardDescription>
+        </div>
+        <Button
+          onClick={() =>
+            exportToCsv(transactions, "healthclub_transactions", [
+              { header: "Transaction ID", accessor: "id" },
+              { header: "Member ID", accessor: "memberId" },
+              { header: "Member Name", accessor: "memberName" },
+              { header: "Partner ID", accessor: "partnerId" },
+              { header: "Partner Name", accessor: "partnerName" },
+              { header: "Bill Amount (BDT)", accessor: "amount" },
+              { header: "Saved Amount (BDT)", accessor: "saved" },
+              { header: "Date", accessor: "date" },
+            ])
+          }
+          variant="outline"
+          size="sm"
+          className="border-border gap-1.5 text-xs font-semibold"
+        >
+          <Download className="h-3.5 w-3.5" />
+          <span>{locale === "en" ? "Export CSV" : "এক্সপোর্ট"}</span>
+        </Button>
       </CardHeader>
       <CardContent className="p-0">
         <div className="overflow-x-auto">

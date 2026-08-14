@@ -60,6 +60,47 @@ const getCachedMemberTxSetting = unstable_cache(
   { revalidate: 60, tags: [SYSTEM_SETTINGS_TAG] }
 );
 
+export async function getAllSystemSettingsAction(): Promise<Record<string, string>> {
+  try {
+    const settings = await prisma.systemSetting.findMany();
+    const result: Record<string, string> = {};
+    for (const item of settings) {
+      result[item.key] = item.value;
+    }
+    return result;
+  } catch (error) {
+    console.error("Error fetching all system settings:", error);
+    return {};
+  }
+}
+
+export async function updateMultipleSystemSettingsAction(
+  settings: Record<string, string>
+): Promise<{ success: boolean; message: string }> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    const operations = Object.entries(settings).map(([key, value]) =>
+      prisma.systemSetting.upsert({
+        where: { key },
+        update: { value },
+        create: { key, value },
+      })
+    );
+
+    await prisma.$transaction(operations);
+    updateTag(SYSTEM_SETTINGS_TAG);
+
+    return { success: true, message: "সকল সেটিংস সফলভাবে সংরক্ষণ করা হয়েছে।" };
+  } catch (error) {
+    console.error("Error updating multiple system settings:", error);
+    return { success: false, message: "সেটিংস সংরক্ষণ করতে সমস্যা হয়েছে।" };
+  }
+}
+
 export async function isMemberTxAllowedAction(): Promise<boolean> {
   const value = await getCachedMemberTxSetting();
   return value === "true";
@@ -68,3 +109,4 @@ export async function isMemberTxAllowedAction(): Promise<boolean> {
 export async function setMemberTxAllowedAction(enabled: boolean): Promise<boolean> {
   return updateSystemSettingAction("allow_member_tx", enabled ? "true" : "false");
 }
+

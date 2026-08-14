@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Building2, Camera, LogOut, Search, CheckCircle, XCircle, AlertTriangle, Receipt, CreditCard, History } from "lucide-react";
+import { Building2, Camera, LogOut, Search, CheckCircle, XCircle, AlertTriangle, Receipt, CreditCard, History, Download } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Partner, Transaction } from "@/services/db";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ import { ChangePartnerPasswordDialog } from "./components/ChangePartnerPasswordD
 import { PartnerDashboardSkeleton } from "./components/PartnerDashboardSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { parseDiscountPercentage } from "@/lib/utils";
+import { exportToCsv } from "@/lib/exportUtils";
 
 interface VerifiedMember {
   id: string;
@@ -389,6 +390,26 @@ export default function PartnerDashboardPage() {
                   আপনার ফার্ম/প্রতিষ্ঠান থেকে প্রদানকৃত ছাড়।
                 </CardDescription>
               </div>
+              {transactions.length > 0 && (
+                <Button
+                  onClick={() =>
+                    exportToCsv(transactions, "partner_transactions", [
+                      { header: "Transaction ID", accessor: "id" },
+                      { header: "Member ID", accessor: "memberId" },
+                      { header: "Member Name", accessor: "memberName" },
+                      { header: "Bill Amount (BDT)", accessor: "amount" },
+                      { header: "Saved Amount (BDT)", accessor: "saved" },
+                      { header: "Date", accessor: "date" },
+                    ])
+                  }
+                  variant="outline"
+                  size="sm"
+                  className="border-border gap-1.5 text-xs font-semibold h-8"
+                >
+                  <Download className="h-3.5 w-3.5" />
+                  <span>এক্সপোর্ট</span>
+                </Button>
+              )}
             </CardHeader>
             <CardContent className="px-0">
               {loadingTransactions ? (

@@ -20,6 +20,9 @@ const publicRoutes = [
   "/forgot-password",
   "/offline",
   "/verify",
+  "/emergency",
+  "/health-tools",
+  "/health-tips",
 ];
 
 const matchRoute = (path: string, route: string) => {
