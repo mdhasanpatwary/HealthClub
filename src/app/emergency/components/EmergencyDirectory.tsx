@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { BloodDonorRegisterDialog } from "./BloodDonorRegisterDialog";
+import { AmbulanceRegisterDialog } from "./AmbulanceRegisterDialog";
 
 interface EmergencyDirectoryProps {
   initialBloodDonors?: BloodDonor[];
@@ -51,12 +52,26 @@ export function EmergencyDirectory({
   const [selectedUpazila, setSelectedUpazila] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [isAmbulanceRegisterOpen, setIsAmbulanceRegisterOpen] = useState(false);
 
-  // Ensure robust fallback to INITIAL_BLOOD_DONORS
+  const [selectedAmbulanceType, setSelectedAmbulanceType] = useState<string>("all");
+  const [ambulanceSearch, setAmbulanceSearch] = useState<string>("");
+
+  // Ensure robust fallback to INITIAL_BLOOD_DONORS and INITIAL_AMBULANCES
   const donorsList =
     initialBloodDonors && initialBloodDonors.length > 0
       ? initialBloodDonors
       : INITIAL_BLOOD_DONORS;
+
+  const ambulancesList =
+    initialAmbulances && initialAmbulances.length > 0
+      ? initialAmbulances
+      : INITIAL_AMBULANCES;
+
+  const hotlinesList =
+    initialHotlines && initialHotlines.length > 0
+      ? initialHotlines
+      : INITIAL_EMERGENCY_HOTLINES;
 
   // Filtered blood donors
   const filteredDonors = useMemo(() => {
@@ -71,6 +86,20 @@ export function EmergencyDirectory({
       return matchGroup && matchUpazila && matchSearch;
     });
   }, [donorsList, selectedGroup, selectedUpazila, searchQuery]);
+
+  // Filtered ambulances
+  const filteredAmbulances = useMemo(() => {
+    return ambulancesList.filter((amb: AmbulanceService) => {
+      const matchType = selectedAmbulanceType === "all" || amb.type === selectedAmbulanceType;
+      const matchSearch =
+        ambulanceSearch.trim() === "" ||
+        amb.name.toLowerCase().includes(ambulanceSearch.toLowerCase()) ||
+        amb.phone.includes(ambulanceSearch) ||
+        amb.location.toLowerCase().includes(ambulanceSearch.toLowerCase()) ||
+        amb.type.toLowerCase().includes(ambulanceSearch.toLowerCase());
+      return matchType && matchSearch;
+    });
+  }, [ambulancesList, selectedAmbulanceType, ambulanceSearch]);
 
   return (
     <div className="space-y-6 sm:space-y-8">
@@ -255,63 +284,148 @@ export function EmergencyDirectory({
 
         {/* 2. Ambulances Tab */}
         <TabsContent value="ambulances" className="space-y-4 pt-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {initialAmbulances.map((amb) => (
-              <Card
-                key={amb.id}
-                className="border border-border/80 bg-background hover:border-primary/30 transition-all duration-300 shadow-xs"
-              >
-                <CardContent className="p-4 sm:p-5 flex flex-col justify-between h-full space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="space-y-1">
-                        <h4 className="font-heading font-bold text-base text-secondary dark:text-white">
-                          {amb.name}
-                        </h4>
-                        <p className="text-xs text-muted-foreground flex items-center gap-1">
-                          <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
-                          {amb.location}
-                        </p>
-                      </div>
-                      <Badge
-                        variant="outline"
-                        className={`text-xs font-bold ${
-                          amb.type === "ICU"
-                            ? "bg-rose-500/10 text-rose-600 border-rose-500/30"
-                            : amb.type === "AC"
-                            ? "bg-primary/10 text-primary border-primary/30"
-                            : "bg-muted text-muted-foreground"
-                        }`}
-                      >
-                        {amb.type} {isEn ? "Ambulance" : "অ্যাম্বুলেন্স"}
-                      </Badge>
-                    </div>
-
-                    <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
-                      <CheckCircle2 className="h-3.5 w-3.5" />
-                      <span>{amb.availableHours}</span>
-                    </div>
-                  </div>
-
-                  <a
-                    href={`tel:${amb.phone}`}
-                    className="w-full inline-flex items-center justify-center gap-2 h-10 rounded-xl bg-primary hover:bg-primary-dark text-white font-bold text-sm shadow-sm transition-all"
-                  >
-                    <PhoneCall className="h-4 w-4" />
-                    <span>
-                      {isEn ? "Call Now:" : "সরাসরি কল দিন:"} {amb.phone}
-                    </span>
-                  </a>
-                </CardContent>
-              </Card>
-            ))}
+          {/* Header Action Banner */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/20">
+            <div className="space-y-1">
+              <h3 className="font-heading font-bold text-base sm:text-lg text-secondary dark:text-white flex items-center gap-2">
+                <Truck className="h-4 w-4 text-primary" />
+                {isEn ? "24/7 Verified Ambulance Fleet" : "২৪/৭ ভেরিফাইড অ্যাম্বুলেন্স তালিকা"}
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                {isEn
+                  ? "Find ICU, AC, and Non-AC ambulances in Feni or register your own vehicle."
+                  : "ফেনীর বিভিন্ন এলাকার অ্যাম্বুলেন্স খুঁজুন অথবা আপনার অ্যাম্বুলেন্স তালিকাভুক্ত করুন।"}
+              </p>
+            </div>
+            <Button
+              onClick={() => setIsAmbulanceRegisterOpen(true)}
+              className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold shrink-0 rounded-xl"
+              size="sm"
+            >
+              <PlusCircle className="mr-1.5 h-4 w-4" />
+              {isEn ? "Add Ambulance" : "অ্যাম্বুলেন্স যুক্ত করুন"}
+            </Button>
           </div>
+
+          {/* Ambulance Search & Filter Bar */}
+          <div className="p-3 sm:p-4 rounded-2xl bg-muted/40 border border-border/80 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder={
+                  isEn
+                    ? "Search ambulance, driver, area, or phone..."
+                    : "অ্যাম্বুলেন্সের নাম, ড্রাইভার, এলাকা বা ফোন নম্বর খুঁজুন..."
+                }
+                value={ambulanceSearch}
+                onChange={(e) => setAmbulanceSearch(e.target.value)}
+                className="pl-9.5 h-10 bg-background text-sm rounded-xl border-border"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <select
+                value={selectedAmbulanceType}
+                onChange={(e) => setSelectedAmbulanceType(e.target.value)}
+                className="h-10 px-3 rounded-xl border border-border bg-background text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20"
+              >
+                <option value="all">{isEn ? "All Ambulance Types" : "সকল অ্যাম্বুলেন্সের ধরন"}</option>
+                <option value="ICU">{isEn ? "ICU Life Support" : "আইসিইউ (ICU)"}</option>
+                <option value="AC">{isEn ? "AC Ambulance" : "এসি (AC)"}</option>
+                <option value="Non-AC">{isEn ? "Non-AC Ambulance" : "নন-এসি (Non-AC)"}</option>
+                <option value="Freezer">{isEn ? "Freezer / Dead Body Carrier" : "ফ্রিজার ভ্যান / লাশবাহী"}</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between px-1">
+            <p className="text-xs font-semibold text-muted-foreground">
+              {isEn
+                ? `Showing ${filteredAmbulances.length} ambulance service(s)`
+                : `মোট ${filteredAmbulances.length}টি অ্যাম্বুলেন্স সেবা পাওয়া গেছে`}
+            </p>
+          </div>
+
+          {filteredAmbulances.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {filteredAmbulances.map((amb) => (
+                <Card
+                  key={amb.id}
+                  className="border border-border/80 bg-background hover:border-primary/30 transition-all duration-300 shadow-xs"
+                >
+                  <CardContent className="p-4 sm:p-5 flex flex-col justify-between h-full space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="space-y-1">
+                          <h4 className="font-heading font-bold text-base text-secondary dark:text-white">
+                            {amb.name}
+                          </h4>
+                          <p className="text-xs text-muted-foreground flex items-center gap-1">
+                            <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
+                            {amb.location}
+                          </p>
+                        </div>
+                        <Badge
+                          variant="outline"
+                          className={`text-xs font-bold ${
+                            amb.type === "ICU"
+                              ? "bg-rose-500/10 text-rose-600 border-rose-500/30"
+                              : amb.type === "AC"
+                              ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/30"
+                              : amb.type === "Freezer"
+                              ? "bg-cyan-500/10 text-cyan-600 border-cyan-500/30"
+                              : "bg-muted text-muted-foreground border-border"
+                          }`}
+                        >
+                          {amb.type} {isEn ? "Ambulance" : "অ্যাম্বুলেন্স"}
+                        </Badge>
+                      </div>
+
+                      <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
+                        <CheckCircle2 className="h-3.5 w-3.5" />
+                        <span>{amb.availableHours}</span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-5 gap-2">
+                      <a
+                        href={`tel:${amb.phone}`}
+                        className="sm:col-span-3 inline-flex items-center justify-center gap-2 h-10 rounded-xl bg-primary hover:bg-primary-dark text-white font-bold text-sm shadow-sm transition-all"
+                      >
+                        <PhoneCall className="h-4 w-4" />
+                        <span>
+                          {isEn ? "Call:" : "কল দিন:"} {amb.phone}
+                        </span>
+                      </a>
+                      <a
+                        href={`https://wa.me/88${amb.phone.replace(/[^0-9]/g, "")}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="sm:col-span-2 inline-flex items-center justify-center gap-1.5 h-10 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-xs font-bold transition-colors"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                        <span>WhatsApp</span>
+                      </a>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="p-8 text-center bg-muted/40 rounded-2xl border border-dashed border-border space-y-2">
+              <Truck className="h-8 w-8 text-muted-foreground mx-auto" />
+              <p className="text-sm font-semibold text-muted-foreground">
+                {isEn
+                  ? "No ambulances found matching your search."
+                  : "আপনার অনুসন্ধানের সাথে মিলে এমন কোনো অ্যাম্বুলেন্স পাওয়া যায়নি।"}
+              </p>
+            </div>
+          )}
         </TabsContent>
 
         {/* 3. Emergency Hotlines Tab */}
         <TabsContent value="hotlines" className="space-y-4 pt-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {initialHotlines.map((hotline) => (
+            {hotlinesList.map((hotline) => (
               <Card
                 key={hotline.id}
                 className="border border-border/80 bg-background hover:border-amber-500/40 transition-all duration-300 shadow-xs"
@@ -342,8 +456,9 @@ export function EmergencyDirectory({
         </TabsContent>
       </Tabs>
 
-      {/* Registration Dialog */}
+      {/* Registration Dialogs */}
       <BloodDonorRegisterDialog open={isRegisterOpen} onOpenChange={setIsRegisterOpen} />
+      <AmbulanceRegisterDialog open={isAmbulanceRegisterOpen} onOpenChange={setIsAmbulanceRegisterOpen} />
     </div>
   );
 }

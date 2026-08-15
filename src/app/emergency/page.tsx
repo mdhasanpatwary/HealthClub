@@ -5,10 +5,9 @@ import { EmergencyDirectory } from "./components/EmergencyDirectory";
 import EmergencyGuide from "@/components/emergency/EmergencyGuide";
 import EmergencyProtocol from "@/components/emergency/EmergencyProtocol";
 import EmergencyFAQ from "@/components/emergency/EmergencyFAQ";
+import EmergencyCommunityCTA from "@/components/emergency/EmergencyCommunityCTA";
 import { Siren, ShieldCheck, HeartHandshake, PhoneCall } from "lucide-react";
 import { getEmergencyDataAction } from "@/app/actions/emergencyAdminActions";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -30,13 +29,20 @@ export async function generateMetadata() {
       },
     },
     keywords: [
-      "Feni blood donors",
-      "ফেনী রক্তদাতা",
-      "ফেনীর রক্তের গ্রুপ ডিরেক্টরি",
+      "feni ambulance",
+      "feni ambulance service",
       "Feni ambulance service",
-      "ফেনী এ্যাম্বুলেন্স",
+      "ফেনী এ্যাম্বুলেন্স সার্ভিস",
+      "ফেনী অ্যাম্বুলেন্স সেবা",
+      "ambulance service feni",
       "ICU ambulance in Feni",
       "আইসিইউ অ্যাম্বুলেন্স ফেনী",
+      "feni blood donor",
+      "feni blood donors",
+      "feni blood bank",
+      "ফেনী রক্তদাতা",
+      "ফেনী ব্লাড ব্যাংক",
+      "ফেনীর রক্তের গ্রুপ ডিরেক্টরি",
       "Emergency oxygen cylinder Feni",
       "ফেনী অক্সিজেন সিলিন্ডার সেবা",
       "Feni 250 bed hospital emergency hotline",
@@ -357,31 +363,8 @@ export default async function EmergencyPage() {
         {/* 4. Answer Engine Optimization (AEO) FAQ Section */}
         <EmergencyFAQ />
 
-        {/* 5. Bottom Callout / Community Assistance */}
-        <section className="bg-gradient-to-r from-rose-500/10 via-amber-500/5 to-primary/10 border border-rose-500/20 rounded-3xl p-5 sm:p-8 md:p-12 text-center space-y-4 sm:space-y-6 max-w-4xl mx-auto">
-          <h2 className="font-heading text-xl md:text-3xl font-bold text-secondary dark:text-white">
-            {isEn
-              ? "Are You an Ambulance Operator or Healthcare Provider in Feni?"
-              : "আপনি কি ফেনীর কোনো অ্যাম্বুলেন্স চালক, ব্লাড ব্যাংক বা স্বাস্থ্যসেবা প্রতিষ্ঠান?"}
-          </h2>
-          <p className="text-xs md:text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
-            {isEn
-              ? "Join Health Club's emergency support network to ensure life-saving assistance reaches patients across all upazilas of Feni."
-              : "হেলথ ক্লাবের জরুরি স্বাস্থ্য নেটওয়ার্কে যুক্ত হয়ে ফেনীর ৬টি উপজেলার মানুষের জীবন রক্ষায় পাশে থাকুন।"}
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <Link href="/contact">
-              <Button variant="outline" className="rounded-xl font-semibold">
-                {isEn ? "Contact Support" : "যোগাযোগ করুন"}
-              </Button>
-            </Link>
-            <Link href="/become-partner">
-              <Button className="bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-semibold">
-                {isEn ? "Join as Partner" : "পার্টনার হিসেবে যুক্ত হোন"}
-              </Button>
-            </Link>
-          </div>
-        </section>
+        {/* 5. Emergency Community Collaborations & Multi-Pathway CTA */}
+        <EmergencyCommunityCTA />
 
       </main>
     </div>

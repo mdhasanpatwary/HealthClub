@@ -35,6 +35,33 @@ export async function generateMetadata() {
     alternates: {
       canonical: "https://healthclubfeni.vercel.app",
     },
+    keywords: [
+      "feni doctor",
+      "feni doctors info",
+      "feni doctor list",
+      "feni hospital list",
+      "feni hospital",
+      "feni ambulance service",
+      "feni ambulance",
+      "feni blood donor",
+      "feni diagnostic center",
+      "feni pharmacy",
+      "feni medicine discount",
+      "feni pathology test discount",
+      "Health Club Feni",
+      "হেলথ ক্লাব ফেনী",
+      "ফেনী ডাক্তার",
+      "ফেনী ডাক্তারদের তথ্য",
+      "ফেনী হাসপাতাল তালিকা",
+      "ফেনী হাসপাতাল",
+      "ফেনী এ্যাম্বুলেন্স সার্ভিস",
+      "ফেনী রক্তদাতা",
+      "ফেনী ডায়াগনস্টিক সেন্টার",
+      "ফেনী ফার্মেসি",
+      "ফেনী ল্যাব টেস্ট",
+      "স্বাস্থ্য কার্ড",
+      "মেডিকেল ডিসকাউন্ট কার্ড",
+    ],
     openGraph: {
       title: isEn
         ? "Health Club - Save Up to 30% on Healthcare & Hospital Bills"

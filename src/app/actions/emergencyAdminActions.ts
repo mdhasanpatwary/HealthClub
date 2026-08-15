@@ -106,8 +106,8 @@ export const getEmergencyDataAction = unstable_cache(
       };
     }
   },
-  ["all-emergency-data-v2"],
-  { tags: [EMERGENCY_TAG] }
+  ["all-emergency-data-v4"],
+  { tags: [EMERGENCY_TAG], revalidate: 60 }
 );
 
 // --- BLOOD DONORS ---

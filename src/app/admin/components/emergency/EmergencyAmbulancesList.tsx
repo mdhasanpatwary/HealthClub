@@ -64,7 +64,17 @@ export function EmergencyAmbulancesList({
               paginatedAmbulances.map((a) => (
                 <TableRow key={a.id} className="hover:bg-muted/30">
                   <TableCell>
-                    <Badge className="bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 font-bold border-cyan-500/20 text-[10px]">
+                    <Badge
+                      className={`font-bold border text-[10px] ${
+                        a.type === "ICU"
+                          ? "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/20"
+                          : a.type === "AC"
+                          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20"
+                          : a.type === "Freezer"
+                          ? "bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border-cyan-500/20"
+                          : "bg-muted text-muted-foreground border-border"
+                      }`}
+                    >
                       {a.type}
                     </Badge>
                   </TableCell>

@@ -1,5 +1,7 @@
 import Link from "next/link";
 import PartnerDirectory from "@/components/ui/PartnerDirectory";
+import PartnerHospitalsGuide from "@/components/partner-hospitals/PartnerHospitalsGuide";
+import PartnerHospitalsFAQ from "@/components/partner-hospitals/PartnerHospitalsFAQ";
 import { Button } from "@/components/ui/button";
 import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
@@ -13,22 +15,57 @@ export async function generateMetadata() {
 
   return {
     title: isEn
-      ? "Partner Hospitals & Diagnostic Centers Directory - Health Club"
-      : "পার্টনার হাসপাতাল ও ডায়াগনস্টিকস তালিকা - হেলথ ক্লাব",
+      ? "Partner Hospitals, Diagnostic Centers & Pharmacies in Feni - Health Club"
+      : "ফেনীর পার্টনার হাসপাতাল, ডায়াগনস্টিক ও ফার্মেসি তালিকা - হেলথ ক্লাব",
     description: isEn
-      ? "Explore our full network of partner hospitals, diagnostic centers, and model pharmacies offering 10% to 30% discount to Health Club members."
-      : "আমাদের মেম্বারশিপ কার্ড ব্যবহার করে দেশের যেসব হাসপাতাল, ল্যাব ও ফার্মেসিতে সর্বোচ্চ ডিসকাউন্ট পাবেন তার সম্পূর্ণ তালিকা দেখুন।",
+      ? "Explore our full network of partner hospitals, diagnostic centers, pathology labs, and model pharmacies offering 10% to 30% discount to Health Club members in Feni."
+      : "ফেনীর শীর্ষ বেসরকারি হাসপাতাল, প্যাথলজি ল্যাব, ডায়াগনস্টিক সেন্টার ও মডেল ফার্মেসির তালিকা। হেলথ ক্লাব মেম্বার কার্ডে পান ১০% থেকে ৩০% নিশ্চিত ডিসকাউন্ট।",
     alternates: {
       canonical: "https://healthclubfeni.vercel.app/partner-hospitals",
+      languages: {
+        "bn-BD": "https://healthclubfeni.vercel.app/partner-hospitals",
+        "en-US": "https://healthclubfeni.vercel.app/partner-hospitals",
+      },
     },
+    keywords: [
+      "feni diagnostic center",
+      "feni hospital list",
+      "feni diagnostic center list",
+      "feni private hospital list",
+      "feni pharmacy discount",
+      "feni pathology lab",
+      "feni blood test price discount",
+      "ফেনী ডায়াগনস্টিক সেন্টার",
+      "ফেনী হাসপাতাল তালিকা",
+      "ফেনী ক্লিনিক ও ডায়াগনস্টিক",
+      "ফেনী মডেল ফার্মেসি",
+      "ফেনী প্যাথলজি ল্যাব",
+      "diagnostic center in Feni",
+      "hospitals in Feni",
+      "Health Club partner hospitals",
+      "মেডিকেল ডিসকাউন্ট হাসপাতাল ফেনী",
+      "ফেনী প্যাথলজি ও ল্যাব",
+    ],
     openGraph: {
       title: isEn
-        ? "Partner Hospitals & Diagnostic Centers - Health Club"
-        : "পার্টনার হাসপাতাল ও ডায়াগনস্টিকস - হেলথ ক্লাব",
+        ? "Partner Hospitals & Diagnostic Centers in Feni - Health Club"
+        : "ফেনীর পার্টনার হাসপাতাল, ডায়াগনস্টিক ও ফার্মেসি - হেলথ ক্লাব",
       description: isEn
-        ? "Find hospitals, diagnostic labs, and pharmacies with instant member discounts."
+        ? "Find hospitals, diagnostic labs, and pharmacies with instant member discounts in Feni."
         : "ফেনী ও আশপাশের চুক্তিভিত্তিক হাসপাতাল ও ডায়াগনস্টিক সেন্টারের বিস্তারিত তালিকা।",
       url: "https://healthclubfeni.vercel.app/partner-hospitals",
+      siteName: "হেলথ ক্লাব (Health Club)",
+      locale: isEn ? "en_US" : "bn_BD",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: isEn
+        ? "Partner Hospitals & Diagnostic Centers in Feni - Health Club"
+        : "ফেনীর পার্টনার হাসপাতাল, ডায়াগনস্টিক ও ফার্মেসি - হেলথ ক্লাব",
+      description: isEn
+        ? "Find hospitals, diagnostic labs, and pharmacies with instant member discounts in Feni."
+        : "ফেনী ও আশপাশের চুক্তিভিত্তিক হাসপাতাল ও ডায়াগনস্টিক সেন্টারের বিস্তারিত তালিকা।",
     },
   };
 }
@@ -36,6 +73,7 @@ export async function generateMetadata() {
 export default async function PartnerHospitalsPage() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
+  const isEn = locale === "en";
   const t = (key: string) => tServer(locale, key);
 
   // Fetch partners server-side (cached) — eliminates client-side loading spinner
@@ -49,13 +87,13 @@ export default async function PartnerHospitalsPage() {
         {
           "@type": "ListItem",
           "position": 1,
-          "name": locale === "en" ? "Home" : "হোম",
+          "name": isEn ? "Home" : "হোম",
           "item": "https://healthclubfeni.vercel.app"
         },
         {
           "@type": "ListItem",
           "position": 2,
-          "name": locale === "en" ? "Partner Hospitals" : "পার্টনার হাসপাতালসমূহ",
+          "name": isEn ? "Partner Hospitals" : "পার্টনার হাসপাতালসমূহ",
           "item": "https://healthclubfeni.vercel.app/partner-hospitals"
         }
       ]
@@ -63,18 +101,72 @@ export default async function PartnerHospitalsPage() {
     {
       "@context": "https://schema.org",
       "@type": "MedicalBusiness",
-      "name": "Health Club Partner Network",
+      "name": "Health Club Partner Network Feni",
       "url": "https://healthclubfeni.vercel.app/partner-hospitals",
-      "description": "Network of partner hospitals, diagnostic clinics, and model pharmacies offering healthcare discounts in Bangladesh.",
-      "areaServed": "Feni, Bangladesh",
-      "medicalSpecialty": "Healthcare Discount Membership Services"
+      "description": "Network of partner hospitals, diagnostic clinics, pathology labs, and model pharmacies offering healthcare discounts in Feni, Bangladesh.",
+      "areaServed": [
+        "Feni Sadar",
+        "Daganbhuiyan",
+        "Sonagazi",
+        "Chhagalnaiya",
+        "Parshuram",
+        "Fulgazi",
+        "Mohipal"
+      ],
+      "medicalSpecialty": "Healthcare Discount Membership & Diagnostic Partner Services"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": t("partnerHospitals.faq.q1"),
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": t("partnerHospitals.faq.a1")
+          }
+        },
+        {
+          "@type": "Question",
+          "name": t("partnerHospitals.faq.q2"),
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": t("partnerHospitals.faq.a2")
+          }
+        },
+        {
+          "@type": "Question",
+          "name": t("partnerHospitals.faq.q3"),
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": t("partnerHospitals.faq.a3")
+          }
+        },
+        {
+          "@type": "Question",
+          "name": t("partnerHospitals.faq.q4"),
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": t("partnerHospitals.faq.a4")
+          }
+        },
+        {
+          "@type": "Question",
+          "name": t("partnerHospitals.faq.q5"),
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": t("partnerHospitals.faq.a5")
+          }
+        }
+      ]
     }
   ];
 
   return (
     <div className="bg-background min-h-screen py-6 sm:py-12">
       <JsonLd data={jsonLdData} />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-14">
         
         {/* Header */}
         <div className="text-center space-y-2 sm:space-y-4 max-w-2xl mx-auto">
@@ -93,6 +185,12 @@ export default async function PartnerHospitalsPage() {
         <div className="bg-muted/30 border border-border/80 rounded-3xl p-3.5 sm:p-8">
           <PartnerDirectory partners={allPartners} />
         </div>
+
+        {/* Informational SEO Guide Component */}
+        <PartnerHospitalsGuide />
+
+        {/* FAQ Section with Rich SEO Accordion */}
+        <PartnerHospitalsFAQ />
 
         {/* Become Partner Banner */}
         <div className="bg-gradient-to-r from-primary/10 via-emerald-500/5 to-secondary/5 border border-primary/20 rounded-3xl p-5 sm:p-8 md:p-12 text-center space-y-4 sm:space-y-6 max-w-4xl mx-auto">
@@ -115,3 +213,4 @@ export default async function PartnerHospitalsPage() {
     </div>
   );
 }
+
