@@ -50,30 +50,28 @@ function DashboardContent() {
 
   // Load data on mount — all independent requests fire in parallel
   useEffect(() => {
-    const currentUser = dbStore.getCurrentUser();
-    if (!currentUser) {
-      router.push("/login");
-      return;
-    }
+    let isMounted = true;
 
-    Promise.all([
-      dbStore.getMemberById(currentUser.id),
-      dbStore.getTransactions(currentUser.id),
-      dbStore.isMemberTxAllowed(),
-      dbStore.getPartners(),
-    ]).then(([freshUser, userTx, allowed, pts]) => {
-      const activeUser = freshUser || currentUser;
-      setUser(activeUser);
-      setProfileName(activeUser.name);
-      setProfileEmail(activeUser.email || "");
-      setProfilePhone(activeUser.phone);
-      setProfileAddress(activeUser.address || "");
-      setProfileBirthDate(activeUser.birthDate || "");
-      setProfileProfession(activeUser.profession || "");
-      setProfilePictureUrl(activeUser.profilePictureUrl || "");
+    Promise.resolve().then(async () => {
+      if (!isMounted) return;
 
-      // Expiry checks
-      const expiry = new Date(activeUser.expiryDate);
+      const currentUser = dbStore.getCurrentUser();
+      if (!currentUser) {
+        router.push("/login");
+        return;
+      }
+
+      // Set initial cached state immediately for fast response
+      setUser(currentUser);
+      setProfileName(currentUser.name);
+      setProfileEmail(currentUser.email || "");
+      setProfilePhone(currentUser.phone);
+      setProfileAddress(currentUser.address || "");
+      setProfileBirthDate(currentUser.birthDate || "");
+      setProfileProfession(currentUser.profession || "");
+      setProfilePictureUrl(currentUser.profilePictureUrl || "");
+
+      const expiry = new Date(currentUser.expiryDate);
       const today = new Date();
       expiry.setHours(0, 0, 0, 0);
       today.setHours(0, 0, 0, 0);
@@ -82,10 +80,46 @@ function DashboardContent() {
       setDaysRemaining(diffDays);
       setIsExpired(diffDays < 0);
 
-      setTransactions(userTx);
-      setAllowMemberTx(allowed);
-      setPartners(pts);
+      try {
+        const [freshUser, userTx, allowed, pts] = await Promise.all([
+          dbStore.getMemberById(currentUser.id).catch(() => null),
+          dbStore.getTransactions(currentUser.id).catch(() => []),
+          dbStore.isMemberTxAllowed().catch(() => false),
+          dbStore.getPartners().catch(() => []),
+        ]);
+
+        if (!isMounted) return;
+        const activeUser = freshUser || currentUser;
+        setUser(activeUser);
+        setProfileName(activeUser.name);
+        setProfileEmail(activeUser.email || "");
+        setProfilePhone(activeUser.phone);
+        setProfileAddress(activeUser.address || "");
+        setProfileBirthDate(activeUser.birthDate || "");
+        setProfileProfession(activeUser.profession || "");
+        setProfilePictureUrl(activeUser.profilePictureUrl || "");
+
+        const freshExpiry = new Date(activeUser.expiryDate);
+        freshExpiry.setHours(0, 0, 0, 0);
+        const freshDiffTime = freshExpiry.getTime() - today.getTime();
+        const freshDiffDays = Math.ceil(freshDiffTime / (1000 * 60 * 60 * 24));
+        setDaysRemaining(freshDiffDays);
+        setIsExpired(freshDiffDays < 0);
+
+        setTransactions(userTx);
+        setAllowMemberTx(allowed);
+        setPartners(pts);
+      } catch (err) {
+        console.error("Dashboard fresh data fetch failed:", err);
+        if (isMounted) {
+          toast.error("ড্যাশবোর্ডের কিছু তথ্য আপডেট করতে সমস্যা হয়েছে। ক্যাশড তথ্য প্রদর্শিত হচ্ছে।");
+        }
+      }
     });
+
+    return () => {
+      isMounted = false;
+    };
   }, [router]);
 
   const handleAddMemberTransaction = async (e: React.FormEvent) => {

@@ -173,7 +173,10 @@ export async function updateMemberAction(
   }
 ): Promise<boolean> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") throw new Error("Unauthorized");
+  if (!session || session.role !== "admin") {
+    console.warn("Unauthorized attempt to update member");
+    return false;
+  }
   try {
     await prisma.member.update({
       where: { id },
@@ -197,7 +200,10 @@ export async function updateMemberAction(
 
 export async function deleteMemberAction(id: string): Promise<boolean> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") throw new Error("Unauthorized");
+  if (!session || session.role !== "admin") {
+    console.warn("Unauthorized attempt to delete member");
+    return false;
+  }
   try {
     await prisma.member.delete({
       where: { id },
@@ -211,7 +217,10 @@ export async function deleteMemberAction(id: string): Promise<boolean> {
 
 export async function approveMemberRenewalAction(memberId: string): Promise<boolean> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") throw new Error("Unauthorized");
+  if (!session || session.role !== "admin") {
+    console.warn("Unauthorized attempt to approve renewal");
+    return false;
+  }
 
   try {
     // Only fetch the single column needed to compute the new expiry date
@@ -247,7 +256,10 @@ export async function approveMemberRenewalAction(memberId: string): Promise<bool
 
 export async function rejectMemberRenewalAction(memberId: string): Promise<boolean> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") throw new Error("Unauthorized");
+  if (!session || session.role !== "admin") {
+    console.warn("Unauthorized attempt to reject renewal");
+    return false;
+  }
 
   try {
     await prisma.member.update({

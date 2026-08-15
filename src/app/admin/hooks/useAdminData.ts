@@ -53,6 +53,7 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
       setAllowMemberTx(allowTxRes);
     } catch (error) {
       console.error("Error loading data in admin dashboard:", error);
+      toast.error("ড্যাশবোর্ড ডেটা লোড করতে সমস্যা হয়েছে।");
     } finally {
       setLoading(false);
     }

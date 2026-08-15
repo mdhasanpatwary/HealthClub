@@ -1,4 +1,5 @@
 import { Member, Partner, Transaction, Doctor, PublicMemberVerification } from "./db";
+import { safeStorage } from "@/lib/safeStorage";
 import {
   getPartnersAction,
   addPartnerAction,
@@ -187,51 +188,49 @@ export const dbStore = {
 
   // --- CURRENT SESSION (Client LocalStorage Sync) ---
   getCurrentUser(): Member | null {
-    if (isClient) {
-      const stored = localStorage.getItem(KEYS.CURRENT_USER);
-      if (!stored) return null;
-      return JSON.parse(stored) as Member;
-    }
-    return null;
+    return safeStorage.getItem<Member | null>(KEYS.CURRENT_USER, null);
   },
 
   setCurrentUser(user: Member): void {
     if (isClient) {
-      localStorage.setItem(KEYS.CURRENT_USER, JSON.stringify(user));
+      safeStorage.setItem(KEYS.CURRENT_USER, user);
       window.dispatchEvent(new Event("auth-change"));
     }
   },
 
   async logout(): Promise<void> {
     if (isClient) {
-      localStorage.removeItem(KEYS.CURRENT_USER);
+      safeStorage.removeItem(KEYS.CURRENT_USER);
       window.dispatchEvent(new Event("auth-change"));
     }
-    await logoutMemberAction(); // Clear server cookie session
+    try {
+      await logoutMemberAction(); // Clear server cookie session
+    } catch (err) {
+      console.warn("[dbStore] Logout cookie clearance error:", err);
+    }
   },
 
   getCurrentPartner(): Partner | null {
-    if (isClient) {
-      const stored = localStorage.getItem(KEYS.CURRENT_PARTNER);
-      if (!stored) return null;
-      return JSON.parse(stored) as Partner;
-    }
-    return null;
+    return safeStorage.getItem<Partner | null>(KEYS.CURRENT_PARTNER, null);
   },
 
   setCurrentPartner(partner: Partner): void {
     if (isClient) {
-      localStorage.setItem(KEYS.CURRENT_PARTNER, JSON.stringify(partner));
+      safeStorage.setItem(KEYS.CURRENT_PARTNER, partner);
       window.dispatchEvent(new Event("auth-change"));
     }
   },
 
   async logoutPartner(): Promise<void> {
     if (isClient) {
-      localStorage.removeItem(KEYS.CURRENT_PARTNER);
+      safeStorage.removeItem(KEYS.CURRENT_PARTNER);
       window.dispatchEvent(new Event("auth-change"));
     }
-    await logoutMemberAction(); // Clear server cookie session
+    try {
+      await logoutMemberAction(); // Clear server cookie session
+    } catch (err) {
+      console.warn("[dbStore] Partner logout cookie clearance error:", err);
+    }
   },
 
   // --- ANALYTICS & SETTINGS ---

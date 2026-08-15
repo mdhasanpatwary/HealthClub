@@ -19,18 +19,86 @@ export function ImageUpload({ value, onChange, label, fallbackType = 'user' }: I
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        toast.error("ছবির সাইজ ২ মেগাবাইটের বেশি হওয়া যাবে না।");
-        e.target.value = "";
+    if (!file) return;
+
+    // Validate file type
+    const validMimeTypes = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
+    if (!validMimeTypes.includes(file.type.toLowerCase())) {
+      toast.error("শুধুমাত্র JPG, PNG বা WebP ফরম্যাটের ছবি আপলোড করা যাবে।");
+      e.target.value = "";
+      return;
+    }
+
+    // Validate file size (max 5MB raw before compression)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("ছবির সাইজ ৫ মেগাবাইটের বেশি হওয়া যাবে না।");
+      e.target.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onerror = () => {
+      console.error("[ImageUpload] FileReader encountered an error");
+      toast.error("ছবিটি পড়তে সমস্যা হয়েছে। অনুগ্রহ করে অন্য ছবি নির্বাচন করুন।");
+      e.target.value = "";
+    };
+
+    reader.onabort = () => {
+      console.warn("[ImageUpload] FileReader read was aborted");
+      e.target.value = "";
+    };
+
+    reader.onload = (loadEvent) => {
+      const result = loadEvent.target?.result;
+      if (typeof result !== "string") {
+        toast.error("ছবি প্রসেস করতে ব্যর্থ হয়েছে।");
         return;
       }
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        onChange(reader.result as string);
+
+      // Compress and resize image using offscreen canvas to prevent storage quota issues
+      const img = new window.Image();
+      img.onerror = () => {
+        toast.error("ছবির ডেটা লোড করা যায়নি।");
       };
-      reader.readAsDataURL(file);
-    }
+      img.onload = () => {
+        try {
+          const maxDim = 800; // 800px max width/height
+          let { width, height } = img;
+
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+
+          if (!ctx) {
+            // Fallback to original data URL if canvas 2D context fails
+            onChange(result);
+            return;
+          }
+
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.82);
+          onChange(compressedDataUrl);
+        } catch (canvasErr) {
+          console.warn("[ImageUpload] Canvas compression fallback:", canvasErr);
+          onChange(result);
+        }
+      };
+      img.src = result;
+    };
+
+    reader.readAsDataURL(file);
   };
 
   return (

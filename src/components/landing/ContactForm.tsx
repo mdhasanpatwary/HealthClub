@@ -22,12 +22,19 @@ export default function ContactForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (typeof window !== "undefined" && !navigator.onLine) {
+      toast.error(locale === "bn" ? "ইন্টারনেট সংযোগ নেই। অনুগ্রহ করে সংযোগ চেক করুন।" : "You are offline. Please check your internet connection.");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const res = await addContactMessageAction(formData);
       if (res.success) {
         setSubmitted(true);
         setFormData({ name: "", phone: "", email: "", message: "" });
+        toast.success(locale === "bn" ? "আপনার বার্তাটি সফলভাবে পাঠানো হয়েছে!" : "Message sent successfully!");
       } else {
         toast.error(res.error || (locale === "bn" ? "বার্তা পাঠাতে ব্যর্থ হয়েছে।" : "Failed to send message."));
       }

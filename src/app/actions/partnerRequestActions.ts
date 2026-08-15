@@ -84,29 +84,41 @@ export async function getPartnerRequestsAction(): Promise<PartnerRequest[]> {
 
 export async function updatePartnerRequestStatusAction(id: string, status: "approved" | "rejected"): Promise<boolean> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") throw new Error("Unauthorized");
-  try {
-    const req = await prisma.partnerRequest.update({
-      where: { id },
-      data: { status }
-    });
+  if (!session || session.role !== "admin") {
+    console.warn("Unauthorized attempt to update partner request status");
+    return false;
+  }
 
+  try {
     if (status === "approved") {
       const partnerId = `p_${crypto.randomUUID()}`;
       const tempPassword = randomBytes(4).toString("hex");
       const defaultPassword = hashPassword(tempPassword);
-      await prisma.partner.create({
-        data: {
-          id: partnerId,
-          name: req.orgName,
-          category: req.category,
-          address: req.address,
-          discount: req.discount,
-          phone: req.phone,
-          email: req.email || null,
-          password: defaultPassword,
-          logoText: req.orgName.substring(0, 5),
-        }
+
+      await prisma.$transaction(async (tx) => {
+        const req = await tx.partnerRequest.update({
+          where: { id },
+          data: { status: "approved" },
+        });
+
+        await tx.partner.create({
+          data: {
+            id: partnerId,
+            name: req.orgName,
+            category: req.category,
+            address: req.address,
+            discount: req.discount,
+            phone: req.phone,
+            email: req.email || null,
+            password: defaultPassword,
+            logoText: req.orgName.substring(0, 5),
+          },
+        });
+      });
+    } else {
+      await prisma.partnerRequest.update({
+        where: { id },
+        data: { status: "rejected" },
       });
     }
 
@@ -115,7 +127,11 @@ export async function updatePartnerRequestStatusAction(id: string, status: "appr
     console.error("Error in updatePartnerRequestStatusAction:", error);
     return false;
   } finally {
-    updateTag(PARTNERS_TAG);
+    try {
+      updateTag(PARTNERS_TAG);
+    } catch (err) {
+      console.warn("Failed to revalidate partners cache tag:", err);
+    }
   }
 }
 

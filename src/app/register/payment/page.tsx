@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { submitBkashPaymentAction, getMemberByIdAction } from "@/app/actions/memberActions";
 import { Member } from "@/services/db";
 import { Skeleton } from "@/components/ui/skeleton";
+import { safeStorage } from "@/lib/safeStorage";
 import { toast } from "sonner";
 
 function PaymentForm() {
@@ -30,17 +31,40 @@ function PaymentForm() {
   const bkashNumber = "01783721411";
 
   useEffect(() => {
-    if (memberId) {
-      getMemberByIdAction(memberId).then((m) => {
-        if (m) {
-          setMember(m);
+    let isMounted = true;
+
+    Promise.resolve().then(async () => {
+      if (!isMounted) return;
+
+      if (memberId) {
+        try {
+          const m = await getMemberByIdAction(memberId);
+          if (!isMounted) return;
+          if (m) {
+            setMember(m);
+          } else {
+            toast.error("সদস্যের তথ্য খুঁজে পাওয়া যায়নি।");
+          }
+        } catch (err) {
+          console.error("Failed to fetch member for payment:", err);
+          if (isMounted) {
+            toast.error("সদস্য তথ্য লোড করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
+          }
+        } finally {
+          if (isMounted) {
+            setLoading(false);
+          }
         }
-        setLoading(false);
-      });
-    } else {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setLoading(false);
-    }
+      } else {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
   }, [memberId]);
 
   const handleCopyNumber = () => {
@@ -87,7 +111,8 @@ function PaymentForm() {
           bkashSender: cleanSender,
           bkashTxnId: cleanTxnId
         };
-        localStorage.setItem("hc_current_user", JSON.stringify(updatedUser));
+        safeStorage.setItem("hc_current_user", updatedUser);
+        window.dispatchEvent(new Event("auth-change"));
         
         toast.success("পেমেন্ট তথ্য সফলভাবে সাবমিট করা হয়েছে!");
         setTimeout(() => {

@@ -21,6 +21,11 @@ if (!globalForPrisma.pool) {
     connectionTimeoutMillis: 10_000,
     ssl: { rejectUnauthorized: false },
   });
+
+  // Catch unhandled errors on idle clients to prevent Node process termination
+  globalForPrisma.pool.on("error", (err) => {
+    console.error("[Prisma:pg.Pool] Unexpected idle client error:", err);
+  });
 }
 
 const adapter = new PrismaPg(globalForPrisma.pool);

@@ -55,7 +55,8 @@ export default function PartnerDashboardPage() {
       const data = await getPartnerTransactionsAction();
       setTransactions(data);
     } catch (err) {
-      console.error(err);
+      console.error("Failed to load partner transactions:", err);
+      toast.error("লেনদেন তালিকা লোড করতে সমস্যা হয়েছে।");
     } finally {
       setLoadingTransactions(false);
     }

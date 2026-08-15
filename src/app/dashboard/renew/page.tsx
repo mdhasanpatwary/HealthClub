@@ -31,18 +31,39 @@ export default function RenewalPage() {
   const bkashNumber = "01783721411";
 
   useEffect(() => {
-    const currentUser = dbStore.getCurrentUser();
-    if (!currentUser) {
-      router.push("/login");
-      return;
-    }
-    
-    dbStore.getMemberById(currentUser.id).then((freshUser) => {
-      const activeUser = freshUser || currentUser;
-      setMember(activeUser);
-      setProfession(activeUser.profession || "");
-      setLoading(false);
+    let isMounted = true;
+
+    Promise.resolve().then(async () => {
+      if (!isMounted) return;
+
+      const currentUser = dbStore.getCurrentUser();
+      if (!currentUser) {
+        router.push("/login");
+        return;
+      }
+      
+      // Set cached user immediately
+      setMember(currentUser);
+      setProfession(currentUser.profession || "");
+
+      try {
+        const freshUser = await dbStore.getMemberById(currentUser.id);
+        if (!isMounted) return;
+        const activeUser = freshUser || currentUser;
+        setMember(activeUser);
+        setProfession(activeUser.profession || "");
+      } catch (err) {
+        console.error("Failed to fetch fresh member for renewal:", err);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
     });
+
+    return () => {
+      isMounted = false;
+    };
   }, [router]);
 
   const handleCopyNumber = () => {
