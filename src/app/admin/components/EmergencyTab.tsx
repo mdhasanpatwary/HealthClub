@@ -30,6 +30,9 @@ import {
   EmergencyHotline,
   UPAZILAS_FENI,
   BLOOD_GROUPS,
+  INITIAL_BLOOD_DONORS,
+  INITIAL_AMBULANCES,
+  INITIAL_EMERGENCY_HOTLINES,
 } from "@/data/emergencyData";
 import {
   getEmergencyDataAction,
@@ -65,17 +68,13 @@ export function EmergencyTab() {
   const [selectedGroup, setSelectedGroup] = useState<string>("all");
   const [selectedUpazila, setSelectedUpazila] = useState<string>("all");
 
-  // Dialog states
+  // Dialog & modal states
   const [donorDialogOpen, setDonorDialogOpen] = useState(false);
   const [editingDonor, setEditingDonor] = useState<BloodDonor | null>(null);
-
   const [ambulanceDialogOpen, setAmbulanceDialogOpen] = useState(false);
   const [editingAmbulance, setEditingAmbulance] = useState<AmbulanceService | null>(null);
-
   const [hotlineDialogOpen, setHotlineDialogOpen] = useState(false);
   const [editingHotline, setEditingHotline] = useState<EmergencyHotline | null>(null);
-
-  // Delete modal
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deletingItem, setDeletingItem] = useState<{
     id: string;
@@ -88,9 +87,9 @@ export function EmergencyTab() {
     setLoading(true);
     try {
       const res = await getEmergencyDataAction();
-      setDonors(res.bloodDonors);
-      setAmbulances(res.ambulances);
-      setHotlines(res.hotlines);
+      setDonors(res.bloodDonors && res.bloodDonors.length > 0 ? res.bloodDonors : INITIAL_BLOOD_DONORS);
+      setAmbulances(res.ambulances && res.ambulances.length > 0 ? res.ambulances : INITIAL_AMBULANCES);
+      setHotlines(res.hotlines && res.hotlines.length > 0 ? res.hotlines : INITIAL_EMERGENCY_HOTLINES);
     } catch (err) {
       console.error(err);
       toast.error(isEn ? "Failed to load emergency data" : "জরুরি সেবার তথ্য লোড করতে ব্যর্থ");

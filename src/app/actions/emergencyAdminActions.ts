@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
-import { unstable_cache, updateTag } from "next/cache";
+import { unstable_cache, updateTag, revalidateTag, revalidatePath } from "next/cache";
 import {
   BloodDonor,
   AmbulanceService,
@@ -56,25 +56,43 @@ export const getEmergencyDataAction = unstable_cache(
 
       if (map.has("emergency_donors")) {
         try {
-          bloodDonors = JSON.parse(map.get("emergency_donors")!);
+          const parsed = JSON.parse(map.get("emergency_donors")!);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            bloodDonors = parsed;
+          } else {
+            bloodDonors = INITIAL_BLOOD_DONORS;
+          }
         } catch (e) {
           console.error("Failed to parse emergency_donors", e);
+          bloodDonors = INITIAL_BLOOD_DONORS;
         }
       }
 
       if (map.has("emergency_ambulances")) {
         try {
-          ambulances = JSON.parse(map.get("emergency_ambulances")!);
+          const parsed = JSON.parse(map.get("emergency_ambulances")!);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            ambulances = parsed;
+          } else {
+            ambulances = INITIAL_AMBULANCES;
+          }
         } catch (e) {
           console.error("Failed to parse emergency_ambulances", e);
+          ambulances = INITIAL_AMBULANCES;
         }
       }
 
       if (map.has("emergency_hotlines")) {
         try {
-          hotlines = JSON.parse(map.get("emergency_hotlines")!);
+          const parsed = JSON.parse(map.get("emergency_hotlines")!);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            hotlines = parsed;
+          } else {
+            hotlines = INITIAL_EMERGENCY_HOTLINES;
+          }
         } catch (e) {
           console.error("Failed to parse emergency_hotlines", e);
+          hotlines = INITIAL_EMERGENCY_HOTLINES;
         }
       }
 
@@ -88,7 +106,7 @@ export const getEmergencyDataAction = unstable_cache(
       };
     }
   },
-  ["all-emergency-data"],
+  ["all-emergency-data-v2"],
   { tags: [EMERGENCY_TAG] }
 );
 
@@ -115,6 +133,9 @@ export async function saveBloodDonorAction(donor: BloodDonor) {
     });
 
     updateTag(EMERGENCY_TAG);
+    revalidateTag(EMERGENCY_TAG, "max");
+    revalidatePath("/emergency");
+    revalidatePath("/admin");
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -134,6 +155,9 @@ export async function deleteBloodDonorAction(id: string) {
     });
 
     updateTag(EMERGENCY_TAG);
+    revalidateTag(EMERGENCY_TAG, "max");
+    revalidatePath("/emergency");
+    revalidatePath("/admin");
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -155,6 +179,9 @@ export async function toggleBloodDonorAvailabilityAction(id: string) {
     });
 
     updateTag(EMERGENCY_TAG);
+    revalidateTag(EMERGENCY_TAG, "max");
+    revalidatePath("/emergency");
+    revalidatePath("/admin");
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -184,6 +211,9 @@ export async function saveAmbulanceAction(ambulance: AmbulanceService) {
     });
 
     updateTag(EMERGENCY_TAG);
+    revalidateTag(EMERGENCY_TAG, "max");
+    revalidatePath("/emergency");
+    revalidatePath("/admin");
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -203,6 +233,9 @@ export async function deleteAmbulanceAction(id: string) {
     });
 
     updateTag(EMERGENCY_TAG);
+    revalidateTag(EMERGENCY_TAG, "max");
+    revalidatePath("/emergency");
+    revalidatePath("/admin");
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -232,6 +265,9 @@ export async function saveHotlineAction(hotline: EmergencyHotline) {
     });
 
     updateTag(EMERGENCY_TAG);
+    revalidateTag(EMERGENCY_TAG, "max");
+    revalidatePath("/emergency");
+    revalidatePath("/admin");
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -251,6 +287,9 @@ export async function deleteHotlineAction(id: string) {
     });
 
     updateTag(EMERGENCY_TAG);
+    revalidateTag(EMERGENCY_TAG, "max");
+    revalidatePath("/emergency");
+    revalidatePath("/admin");
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };

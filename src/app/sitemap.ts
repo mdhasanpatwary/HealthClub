@@ -7,6 +7,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Public static routes
   const routes = [
     "",
+    "/emergency",
     "/about-us",
     "/membership",
     "/partner-hospitals",
@@ -25,6 +26,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     if (route === "") {
       priority = 1.0;
+      changeFrequency = "daily";
+    } else if (route === "/emergency") {
+      priority = 0.95;
       changeFrequency = "daily";
     } else if (route === "/partner-hospitals" || route === "/consultants" || route === "/membership") {
       priority = 0.9;

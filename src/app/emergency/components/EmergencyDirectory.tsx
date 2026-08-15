@@ -52,9 +52,15 @@ export function EmergencyDirectory({
   const [searchQuery, setSearchQuery] = useState("");
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
 
+  // Ensure robust fallback to INITIAL_BLOOD_DONORS
+  const donorsList =
+    initialBloodDonors && initialBloodDonors.length > 0
+      ? initialBloodDonors
+      : INITIAL_BLOOD_DONORS;
+
   // Filtered blood donors
   const filteredDonors = useMemo(() => {
-    return initialBloodDonors.filter((donor: BloodDonor) => {
+    return donorsList.filter((donor: BloodDonor) => {
       const matchGroup = selectedGroup === "all" || donor.bloodGroup === selectedGroup;
       const matchUpazila = selectedUpazila === "all" || donor.upazila === selectedUpazila;
       const matchSearch =
@@ -64,7 +70,7 @@ export function EmergencyDirectory({
         donor.bloodGroup.toLowerCase().includes(searchQuery.toLowerCase());
       return matchGroup && matchUpazila && matchSearch;
     });
-  }, [initialBloodDonors, selectedGroup, selectedUpazila, searchQuery]);
+  }, [donorsList, selectedGroup, selectedUpazila, searchQuery]);
 
   return (
     <div className="space-y-6 sm:space-y-8">

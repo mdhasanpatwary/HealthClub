@@ -1,9 +1,14 @@
 import { cookies } from "next/headers";
-import { Locale } from "@/lib/i18n";
+import { Locale, tServer } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import { EmergencyDirectory } from "./components/EmergencyDirectory";
-import { Siren } from "lucide-react";
+import EmergencyGuide from "@/components/emergency/EmergencyGuide";
+import EmergencyProtocol from "@/components/emergency/EmergencyProtocol";
+import EmergencyFAQ from "@/components/emergency/EmergencyFAQ";
+import { Siren, ShieldCheck, HeartHandshake, PhoneCall } from "lucide-react";
 import { getEmergencyDataAction } from "@/app/actions/emergencyAdminActions";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -15,20 +20,73 @@ export async function generateMetadata() {
       ? "24/7 Emergency Health Services, Blood Donors & Ambulances in Feni - Health Club"
       : "জরুরি স্বাস্থ্য সেবা, রক্তদাতা ও অ্যাম্বুলেন্স তালিকা (ফেনী) - হেলথ ক্লাব",
     description: isEn
-      ? "Emergency blood donor network by group, 24/7 ambulance contacts, oxygen cylinder suppliers, and national hospital hotlines in Feni."
-      : "ফেনীর ২৪/৭ জরুরি রক্তদাতা নেটওয়ার্ক, উপজেলাভিত্তিক রক্তের গ্রুপ সন্ধান, আইসিইউ ও এসি অ্যাম্বুলেন্স এবং জরুরি অক্সিজেন ও মেডিকেল হটলাইন নম্বর।",
+      ? "24/7 emergency medical support in Feni: voluntary blood donor directory by blood group, ICU & AC ambulance phone numbers, emergency oxygen cylinders, and hospital ER hotlines."
+      : "ফেনীর ২৪/৭ জরুরি স্বাস্থ্য সহায়তা: রক্তের গ্রুপ ও উপজেলাভিত্তিক রক্তদাতা তালিকা, আইসিইউ ও এসি অ্যাম্বুলেন্স নম্বর, জরুরি অক্সিজেন সিলিন্ডার এবং সদর হাসপাতাল মেডিকেল হটলাইন।",
     alternates: {
       canonical: "https://healthclubfeni.vercel.app/emergency",
+      languages: {
+        "bn-BD": "https://healthclubfeni.vercel.app/emergency",
+        "en-US": "https://healthclubfeni.vercel.app/emergency",
+      },
     },
     keywords: [
       "Feni blood donors",
       "ফেনী রক্তদাতা",
+      "ফেনীর রক্তের গ্রুপ ডিরেক্টরি",
       "Feni ambulance service",
       "ফেনী এ্যাম্বুলেন্স",
-      "Emergency oxygen Feni",
-      "Feni hospital hotline",
+      "ICU ambulance in Feni",
+      "আইসিইউ অ্যাম্বুলেন্স ফেনী",
+      "Emergency oxygen cylinder Feni",
+      "ফেনী অক্সিজেন সিলিন্ডার সেবা",
+      "Feni 250 bed hospital emergency hotline",
+      "ফেনী সদর হাসপাতাল জরুরি বিভাগ",
+      "Red Crescent blood bank Feni",
+      "রেড ক্রিসেন্ট রক্ত কেন্দ্র ফেনী",
       "Health Club emergency directory",
+      "Health Club Feni",
     ],
+    openGraph: {
+      title: isEn
+        ? "24/7 Emergency Health Services & Blood Directory in Feni - Health Club"
+        : "জরুরি স্বাস্থ্য সেবা, রক্তদাতা ও অ্যাম্বুলেন্স তালিকা (ফেনী) - হেলথ ক্লাব",
+      description: isEn
+        ? "Instant access to voluntary blood donors in Feni, 24/7 ICU/AC ambulance contacts, oxygen cylinder supplies, and critical hospital hotlines."
+        : "মুহূর্তেই রক্তের গ্রুপ অনুযায়ী ফেনীর স্বেচ্ছাসেবী রক্তদাতা, ২৪/৭ আইসিইউ অ্যাম্বুলেন্স, জরুরি অক্সিজেন ও মেডিকেল হটলাইনে সরাসরি যোগাযোগ করুন।",
+      url: "https://healthclubfeni.vercel.app/emergency",
+      siteName: "হেলথ ক্লাব (Health Club)",
+      locale: isEn ? "en_US" : "bn_BD",
+      type: "website",
+      images: [
+        {
+          url: "https://healthclubfeni.vercel.app/images/member-card-logo.png",
+          width: 800,
+          height: 600,
+          alt: isEn ? "Health Club Emergency Network Feni" : "হেলথ ক্লাব জরুরি স্বাস্থ্য সেবা নেটওয়ার্ক",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: isEn
+        ? "24/7 Emergency Health Services & Blood Directory - Health Club Feni"
+        : "জরুরি স্বাস্থ্য সেবা ও রক্তদাতা ডিরেক্টরি - হেলথ ক্লাব ফেনী",
+      description: isEn
+        ? "Find verified blood donors, ICU ambulances, oxygen cylinder delivery, and emergency hotlines in Feni."
+        : "ফেনীর ভেরিফাইড রক্তদাতা, আইসিইউ অ্যাম্বুলেন্স, অক্সিজেন সিলিন্ডার ও হাসপাতালের জরুরি হটলাইন নম্বর।",
+      images: ["https://healthclubfeni.vercel.app/images/member-card-logo.png"],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
   };
 }
 
@@ -36,25 +94,197 @@ export default async function EmergencyPage() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
+  const t = (key: string) => tServer(locale, key);
 
   const { bloodDonors, ambulances, hotlines } = await getEmergencyDataAction();
 
+  // Structured Data for SEO, AEO, and GEO Rich Snippets
   const jsonLdData = [
+    // 1. BreadcrumbList Schema
     {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
-      "itemListElement": [
+      itemListElement: [
         {
           "@type": "ListItem",
-          "position": 1,
-          "name": isEn ? "Home" : "হোম",
-          "item": "https://healthclubfeni.vercel.app",
+          position: 1,
+          name: isEn ? "Home" : "হোম",
+          item: "https://healthclubfeni.vercel.app",
         },
         {
           "@type": "ListItem",
-          "position": 2,
-          "name": isEn ? "Emergency Services" : "জরুরি সেবা",
-          "item": "https://healthclubfeni.vercel.app/emergency",
+          position: 2,
+          name: isEn ? "Emergency Health Services" : "জরুরি স্বাস্থ্য সেবা",
+          item: "https://healthclubfeni.vercel.app/emergency",
+        },
+      ],
+    },
+
+    // 2. EmergencyService & MedicalBusiness Schema
+    {
+      "@context": "https://schema.org",
+      "@type": ["EmergencyService", "MedicalBusiness"],
+      name: isEn
+        ? "Health Club 24/7 Emergency Health Network Feni"
+        : "হেলথ ক্লাব জরুরি স্বাস্থ্য সেবা ও রক্তদাতা নেটওয়ার্ক (ফেনী)",
+      url: "https://healthclubfeni.vercel.app/emergency",
+      logo: "https://healthclubfeni.vercel.app/images/member-card-logo.png",
+      description: isEn
+        ? "24/7 emergency medical directory in Feni, Bangladesh. Voluntary blood donor network, ICU/AC ambulances, oxygen supplies, and critical hospital ER dispatch."
+        : "ফেনীর ২৪/৭ জরুরি স্বাস্থ্য সহায়তা ডিরেক্টরি। রক্তের গ্রুপ অনুযায়ী ভেরিফাইড রক্তদাতা, আইসিইউ ও এসি অ্যাম্বুলেন্স, অক্সিজেন সিলিন্ডার এবং হাসপাতাল জরুরি হটলাইন।",
+      areaServed: [
+        "Feni Sadar",
+        "Daganbhuiyan",
+        "Chhagalnaiya",
+        "Sonagazi",
+        "Parshuram",
+        "Fulgazi",
+        "Feni, Bangladesh",
+      ],
+      openingHours: "Mo-Su 00:00-24:00",
+      telephone: "+8801783721411",
+      priceRange: "Free / Public Service",
+      availableService: [
+        "Voluntary Blood Donor Matching",
+        "24/7 Ambulance Dispatch",
+        "Emergency Oxygen Cylinder Coordination",
+        "Hospital ER Hotline Connection",
+      ],
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Feni",
+        addressRegion: "Chittagong",
+        addressCountry: "BD",
+      },
+    },
+
+    // 3. ItemList for Ambulance Fleet
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: isEn ? "Ambulance Services in Feni" : "ফেনীর জরুরি অ্যাম্বুলেন্স সেবা",
+      itemListElement: ambulances.map((amb, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "EmergencyService",
+          name: amb.name,
+          telephone: amb.phone,
+          description: `${amb.type} Ambulance Service in ${amb.location}`,
+          areaServed: amb.location,
+          openingHours: "Mo-Su 00:00-24:00",
+        },
+      })),
+    },
+
+    // 4. ItemList for Emergency Hotlines & Hospitals
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: isEn ? "Emergency Hotlines & Medical Centers in Feni" : "ফেনীর জরুরি মেডিকেল ও সরকারি হটলাইন",
+      itemListElement: hotlines.map((hotline, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "EmergencyService",
+          name: isEn ? hotline.titleEn : hotline.titleBn,
+          telephone: hotline.phone,
+          description: isEn ? hotline.descriptionEn : hotline.descriptionBn,
+          areaServed: "Feni, Bangladesh",
+        },
+      })),
+    },
+
+    // 5. FAQPage Schema for AEO & Voice Search Engines
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: t("emergency.faq.q1"),
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: t("emergency.faq.a1"),
+          },
+        },
+        {
+          "@type": "Question",
+          name: t("emergency.faq.q2"),
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: t("emergency.faq.a2"),
+          },
+        },
+        {
+          "@type": "Question",
+          name: t("emergency.faq.q3"),
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: t("emergency.faq.a3"),
+          },
+        },
+        {
+          "@type": "Question",
+          name: t("emergency.faq.q4"),
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: t("emergency.faq.a4"),
+          },
+        },
+        {
+          "@type": "Question",
+          name: t("emergency.faq.q5"),
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: t("emergency.faq.a5"),
+          },
+        },
+        {
+          "@type": "Question",
+          name: t("emergency.faq.q6"),
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: t("emergency.faq.a6"),
+          },
+        },
+      ],
+    },
+
+    // 6. HowTo Schema for Step-by-Step Emergency Response
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      name: isEn
+        ? "How to Handle a Medical Emergency in Feni Before Ambulance Arrival"
+        : "মেডিকেল ইমার্জেন্সিতে তাৎক্ষণিক করণীয় ৪টি জীবনরক্ষাকারী পদক্ষেপ",
+      description: isEn
+        ? "Follow these essential 4 steps during a medical emergency in Feni before ambulance arrival."
+        : "ফেনীতে জরুরি স্বাস্থ্য পরিস্থিতিতে অ্যাম্বুলেন্স আসার আগে বা হাসপাতালে যাওয়ার মুহূর্তে করণীয় ৪টি ধাপ।",
+      step: [
+        {
+          "@type": "HowToStep",
+          position: 1,
+          name: t("emergency.protocol.step1.title"),
+          text: t("emergency.protocol.step1.desc"),
+        },
+        {
+          "@type": "HowToStep",
+          position: 2,
+          name: t("emergency.protocol.step2.title"),
+          text: t("emergency.protocol.step2.desc"),
+        },
+        {
+          "@type": "HowToStep",
+          position: 3,
+          name: t("emergency.protocol.step3.title"),
+          text: t("emergency.protocol.step3.desc"),
+        },
+        {
+          "@type": "HowToStep",
+          position: 4,
+          name: t("emergency.protocol.step4.title"),
+          text: t("emergency.protocol.step4.desc"),
         },
       ],
     },
@@ -64,18 +294,18 @@ export default async function EmergencyPage() {
     <div className="bg-background min-h-screen">
       <JsonLd data={jsonLdData} />
 
-      {/* Page Hero */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-rose-500/10 via-amber-500/5 to-background dark:from-slate-950 dark:via-slate-900 dark:to-background py-8 sm:py-16 border-b border-border/60">
-        <div className="absolute -top-32 -right-32 w-80 h-80 bg-rose-500/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-16 -left-32 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl" />
+      {/* Page Hero Header */}
+      <header className="relative overflow-hidden bg-gradient-to-br from-rose-500/10 via-amber-500/5 to-background dark:from-slate-950 dark:via-slate-900 dark:to-background py-8 sm:py-16 border-b border-border/60">
+        <div className="absolute -top-32 -right-32 w-80 h-80 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-16 -left-32 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-600 text-xs font-bold">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-bold">
             <Siren className="h-3.5 w-3.5 animate-pulse" />
             <span>{isEn ? "24/7 Emergency Support Network" : "২৪/৭ জরুরি স্বাস্থ্য সহায়তা নেটওয়ার্ক"}</span>
           </div>
 
-          <h1 className="font-heading text-2xl sm:text-4xl md:text-5xl font-bold text-secondary dark:text-white">
+          <h1 className="font-heading text-2xl sm:text-4xl md:text-5xl font-bold text-secondary dark:text-white tracking-tight">
             {isEn ? "Emergency Services & Blood Directory" : "জরুরি স্বাস্থ্য সেবা ও রক্তদাতা ডিরেক্টরি"}
           </h1>
 
@@ -84,16 +314,75 @@ export default async function EmergencyPage() {
               ? "Instant access to voluntary blood donors in Feni, 24/7 ambulance services, emergency oxygen supplies, and critical medical hotlines."
               : "মুহূর্তেই রক্তের গ্রুপ অনুযায়ী ফেনীর স্বেচ্ছাসেবী রক্তদাতা, ২৪/৭ আইসিইউ অ্যাম্বুলেন্স, জরুরি অক্সিজেন ও মেডিকেল হটলাইনে সরাসরি যোগাযোগ করুন।"}
           </p>
-        </div>
-      </div>
 
-      {/* Main Content Directory */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <EmergencyDirectory
-          initialBloodDonors={bloodDonors}
-          initialAmbulances={ambulances}
-          initialHotlines={hotlines}
-        />
+          {/* Quick Highlight Feature Badges */}
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs font-semibold text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-card border border-border/70 shadow-2xs">
+              <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+              {isEn ? "Verified Donors" : "যাচাইকৃত রক্তদাতা"}
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-card border border-border/70 shadow-2xs">
+              <PhoneCall className="h-3.5 w-3.5 text-rose-600" />
+              {isEn ? "24/7 Direct Helpline" : "২৪/৭ সরাসরি কল"}
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-card border border-border/70 shadow-2xs">
+              <HeartHandshake className="h-3.5 w-3.5 text-amber-600" />
+              {isEn ? "100% Free Public Service" : "সম্পূর্ণ মধ্যস্বত্বভোগীমুক্ত"}
+            </span>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content Area */}
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-12 sm:space-y-16">
+        
+        {/* 1. Interactive Directory Component (Blood Donors, Ambulances, Hotlines) */}
+        <section aria-labelledby="emergency-directory-heading" className="space-y-4">
+          <h2 id="emergency-directory-heading" className="sr-only">
+            {isEn ? "Emergency Directory Search & Filters" : "জরুরি ডিরেক্টরি ও অনুসন্ধান"}
+          </h2>
+          <EmergencyDirectory
+            initialBloodDonors={bloodDonors}
+            initialAmbulances={ambulances}
+            initialHotlines={hotlines}
+          />
+        </section>
+
+        {/* 2. Generative Engine Optimization (GEO) Healthcare Authority & Stats Guide */}
+        <EmergencyGuide />
+
+        {/* 3. Emergency 4-Step Life-Saving Action Protocol */}
+        <EmergencyProtocol />
+
+        {/* 4. Answer Engine Optimization (AEO) FAQ Section */}
+        <EmergencyFAQ />
+
+        {/* 5. Bottom Callout / Community Assistance */}
+        <section className="bg-gradient-to-r from-rose-500/10 via-amber-500/5 to-primary/10 border border-rose-500/20 rounded-3xl p-5 sm:p-8 md:p-12 text-center space-y-4 sm:space-y-6 max-w-4xl mx-auto">
+          <h2 className="font-heading text-xl md:text-3xl font-bold text-secondary dark:text-white">
+            {isEn
+              ? "Are You an Ambulance Operator or Healthcare Provider in Feni?"
+              : "আপনি কি ফেনীর কোনো অ্যাম্বুলেন্স চালক, ব্লাড ব্যাংক বা স্বাস্থ্যসেবা প্রতিষ্ঠান?"}
+          </h2>
+          <p className="text-xs md:text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
+            {isEn
+              ? "Join Health Club's emergency support network to ensure life-saving assistance reaches patients across all upazilas of Feni."
+              : "হেলথ ক্লাবের জরুরি স্বাস্থ্য নেটওয়ার্কে যুক্ত হয়ে ফেনীর ৬টি উপজেলার মানুষের জীবন রক্ষায় পাশে থাকুন।"}
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <Link href="/contact">
+              <Button variant="outline" className="rounded-xl font-semibold">
+                {isEn ? "Contact Support" : "যোগাযোগ করুন"}
+              </Button>
+            </Link>
+            <Link href="/become-partner">
+              <Button className="bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-semibold">
+                {isEn ? "Join as Partner" : "পার্টনার হিসেবে যুক্ত হোন"}
+              </Button>
+            </Link>
+          </div>
+        </section>
+
       </main>
     </div>
   );
