@@ -30,6 +30,8 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
     totalTransactions: 0,
     thisMonthTransactions: 0,
     revenue: 0,
+    pwaInstalls: 0,
+    pwaActive: 0,
     topPartners: [],
   });
 
