@@ -20,6 +20,7 @@ import {
   BookOpen,
   Mail,
   Settings,
+  Smartphone,
   ExternalLink,
   Calculator,
 } from "lucide-react";
@@ -318,6 +319,21 @@ export default function MobileNavDrawer({
                         {formatNum(contactMessagesCount, locale)}
                       </span>
                     )}
+                  </Link>
+
+                  <Link
+                    href="/admin/pwa"
+                    onClick={onClose}
+                    className={`flex items-center justify-between p-2 rounded-xl text-xs font-semibold transition-colors ${
+                      isActive("/admin/pwa")
+                        ? "bg-primary/10 text-primary font-bold"
+                        : "text-foreground hover:bg-muted"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Smartphone className="h-4 w-4 text-emerald-500 shrink-0" />
+                      <span>{t("admin.nav.pwa") || "PWA অ্যানালিটিক্স"}</span>
+                    </div>
                   </Link>
 
                   <Link

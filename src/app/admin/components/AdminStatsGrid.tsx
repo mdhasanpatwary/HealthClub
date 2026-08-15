@@ -23,6 +23,8 @@ import {
   Award,
   Clock,
   ArrowRight,
+  Smartphone,
+  CheckCircle2,
 } from "lucide-react";
 
 export interface AdminStatsData {
@@ -45,6 +47,8 @@ export interface AdminStatsData {
   totalTransactions: number;
   thisMonthTransactions: number;
   revenue: number;
+  pwaInstalls?: number;
+  pwaActive?: number;
   topPartners: Array<{
     id: string;
     name: string;
@@ -244,14 +248,14 @@ export function AdminStatsGrid({ stats, onSelectTab }: AdminStatsGridProps) {
       </div>
 
       {/* 3. Deep-Dive Sub-Analytics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {/* Tier & Membership Growth Analytics */}
         <Card className="border-border shadow-sm bg-card">
           <CardContent className="p-5 space-y-3.5">
             <div className="flex items-center justify-between border-b border-border pb-3">
               <h3 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
                 <Crown className="h-4 w-4 text-amber-500" />
-                {isBn ? "মেম্বারশিপ টিয়ার ও অ্যাক্টিভিটি" : "Membership Tiers & Activity"}
+                {isBn ? "মেম্বারশিপ টিয়ার" : "Membership Tiers"}
               </h3>
             </div>
 
@@ -259,7 +263,7 @@ export function AdminStatsGrid({ stats, onSelectTab }: AdminStatsGridProps) {
               <div className="flex items-center justify-between py-1 border-b border-border/40">
                 <span className="text-muted-foreground flex items-center gap-1.5">
                   <Sparkles className="h-3.5 w-3.5 text-amber-500" />
-                  {isBn ? "ফাউন্ডিং মেম্বার:" : "Founding Members:"}
+                  {isBn ? "ফাউন্ডিং মেম্বার:" : "Founding:"}
                 </span>
                 <span className="font-bold font-mono text-foreground">{formatNum(stats.foundingMembers, locale)}</span>
               </div>
@@ -267,7 +271,7 @@ export function AdminStatsGrid({ stats, onSelectTab }: AdminStatsGridProps) {
               <div className="flex items-center justify-between py-1 border-b border-border/40">
                 <span className="text-muted-foreground flex items-center gap-1.5">
                   <Crown className="h-3.5 w-3.5 text-indigo-500" />
-                  {isBn ? "প্রিমিয়াম মেম্বার:" : "Premium Members:"}
+                  {isBn ? "প্রিমিয়াম মেম্বার:" : "Premium:"}
                 </span>
                 <span className="font-bold font-mono text-foreground">{formatNum(stats.premiumMembers, locale)}</span>
               </div>
@@ -275,7 +279,7 @@ export function AdminStatsGrid({ stats, onSelectTab }: AdminStatsGridProps) {
               <div className="flex items-center justify-between py-1 border-b border-border/40">
                 <span className="text-muted-foreground flex items-center gap-1.5">
                   <CalendarCheck className="h-3.5 w-3.5 text-emerald-500" />
-                  {isBn ? "এই মাসে নতুন মেম্বার:" : "Joined this month:"}
+                  {isBn ? "চলতি মাসে নতুন:" : "This month:"}
                 </span>
                 <span className="font-bold font-mono text-emerald-600 dark:text-emerald-400">+{formatNum(stats.newMembersThisMonth, locale)}</span>
               </div>
@@ -283,7 +287,7 @@ export function AdminStatsGrid({ stats, onSelectTab }: AdminStatsGridProps) {
               <div className="flex items-center justify-between py-1">
                 <span className="text-muted-foreground flex items-center gap-1.5">
                   <AlertCircle className="h-3.5 w-3.5 text-rose-500" />
-                  {isBn ? "মেয়াদ শেষ হবে (৩০ দিন):" : "Expiring in 30 days:"}
+                  {isBn ? "মেয়াদ শেষ হবে:" : "Expiring (30d):"}
                 </span>
                 <span className={`font-bold font-mono ${stats.expiringMembers > 0 ? "text-rose-600 dark:text-rose-400" : "text-foreground"}`}>
                   {formatNum(stats.expiringMembers, locale)}
@@ -299,28 +303,28 @@ export function AdminStatsGrid({ stats, onSelectTab }: AdminStatsGridProps) {
             <div className="flex items-center justify-between border-b border-border pb-3">
               <h3 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
                 <Receipt className="h-4 w-4 text-blue-500" />
-                {isBn ? "ট্রানজেকশন অ্যানালিটিক্স" : "Transaction Analytics"}
+                {isBn ? "ট্রানজেকশন হিসাব" : "Transactions"}
               </h3>
             </div>
 
             <div className="space-y-2 text-xs">
               <div className="flex items-center justify-between py-1 border-b border-border/40">
-                <span className="text-muted-foreground">{isBn ? "সর্বমোট ট্রানজেকশন এন্ট্রি:" : "Total logged transactions:"}</span>
+                <span className="text-muted-foreground">{isBn ? "মোট লেনদেন:" : "Total logged:"}</span>
                 <span className="font-bold font-mono text-foreground">{formatNum(stats.totalTransactions, locale)}</span>
               </div>
 
               <div className="flex items-center justify-between py-1 border-b border-border/40">
-                <span className="text-muted-foreground">{isBn ? "এই মাসের ট্রানজেকশন:" : "This month's transactions:"}</span>
+                <span className="text-muted-foreground">{isBn ? "চলতি মাসের:" : "This month:"}</span>
                 <span className="font-bold font-mono text-blue-600 dark:text-blue-400">{formatNum(stats.thisMonthTransactions, locale)}</span>
               </div>
 
               <div className="flex items-center justify-between py-1 border-b border-border/40">
-                <span className="text-muted-foreground">{isBn ? "চলতি মাসের মোট ডিসকাউন্ট:" : "This month's savings:"}</span>
+                <span className="text-muted-foreground">{isBn ? "চলতি মাসের ছাড়:" : "This mo saving:"}</span>
                 <span className="font-bold font-mono text-emerald-600 dark:text-emerald-400">৳{formatNum(stats.thisMonthSaved, locale)}</span>
               </div>
 
               <div className="flex items-center justify-between py-1">
-                <span className="text-muted-foreground">{isBn ? "গড় প্রতি ছাড় (Est.):" : "Avg savings per tx:"}</span>
+                <span className="text-muted-foreground">{isBn ? "গড় ছাড়/এন্ট্রি:" : "Avg savings:"}</span>
                 <span className="font-bold font-mono text-foreground">
                   ৳{formatNum(stats.totalTransactions > 0 ? Math.round(stats.totalSaved / stats.totalTransactions) : 0, locale)}
                 </span>
@@ -328,6 +332,57 @@ export function AdminStatsGrid({ stats, onSelectTab }: AdminStatsGridProps) {
             </div>
           </CardContent>
         </Card>
+
+        {/* PWA App Install Analytics Card */}
+        <Link href="/admin/pwa" className="block group">
+          <Card className="border-border shadow-sm bg-card group-hover:border-emerald-400 dark:group-hover:border-emerald-700 transition-all h-full">
+            <CardContent className="p-5 space-y-3.5">
+              <div className="flex items-center justify-between border-b border-border pb-3">
+                <h3 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
+                  <Smartphone className="h-4 w-4 text-emerald-500" />
+                  {isBn ? "PWA অ্যাপ ইনস্টল" : "PWA App Analytics"}
+                </h3>
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold group-hover:underline flex items-center gap-0.5">
+                  {isBn ? "ডিটেইলস" : "Details"}
+                  <ArrowRight className="h-2.5 w-2.5 group-hover:translate-x-0.5 transition-transform" />
+                </span>
+              </div>
+
+              <div className="space-y-2 text-xs">
+                <div className="flex items-center justify-between py-1 border-b border-border/40">
+                  <span className="text-muted-foreground">{isBn ? "সর্বমোট PWA ইনস্টল:" : "Total Installs:"}</span>
+                  <span className="font-bold font-mono text-foreground">{formatNum(stats.pwaInstalls ?? 0, locale)}</span>
+                </div>
+
+                <div className="flex items-center justify-between py-1 border-b border-border/40">
+                  <span className="text-muted-foreground flex items-center gap-1">
+                    <CheckCircle2 className="h-3 w-3 text-emerald-500" />
+                    {isBn ? "সক্রিয় PWA (৩০ দিন):" : "Active PWA (30d):"}
+                  </span>
+                  <span className="font-bold font-mono text-emerald-600 dark:text-emerald-400">
+                    {formatNum(stats.pwaActive ?? 0, locale)}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between py-1 border-b border-border/40">
+                  <span className="text-muted-foreground">{isBn ? "নিষ্ক্রিয়/আনইনস্টল:" : "Inactive/Uninstalled:"}</span>
+                  <span className="font-bold font-mono text-slate-500">
+                    {formatNum(Math.max(0, (stats.pwaInstalls ?? 0) - (stats.pwaActive ?? 0)), locale)}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between py-1">
+                  <span className="text-muted-foreground">{isBn ? "সক্রিয় রিটেনশন:" : "Active Retention:"}</span>
+                  <span className="font-bold font-mono text-foreground">
+                    {(stats.pwaInstalls ?? 0) > 0
+                      ? `${Math.round(((stats.pwaActive ?? 0) / (stats.pwaInstalls ?? 1)) * 100)}%`
+                      : "0%"}
+                  </span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
 
         {/* Top Performing Partners by Savings */}
         <Card className="border-border shadow-sm bg-card">
@@ -343,7 +398,7 @@ export function AdminStatsGrid({ stats, onSelectTab }: AdminStatsGridProps) {
               <div className="space-y-2 text-xs">
                 {stats.topPartners.map((partner, index) => (
                   <div key={partner.id || index} className="flex items-center justify-between py-1 border-b border-border/40 last:border-0">
-                    <div className="flex items-center gap-2 truncate max-w-[170px]">
+                    <div className="flex items-center gap-2 truncate max-w-[130px]">
                       <span className="h-4 w-4 rounded-full bg-purple-500/20 text-purple-600 dark:text-purple-400 font-bold text-[10px] flex items-center justify-center shrink-0">
                         {index + 1}
                       </span>

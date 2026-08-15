@@ -52,3 +52,8 @@ export type ContactMessage = Prisma.ContactMessageModel
  * 
  */
 export type SystemSetting = Prisma.SystemSettingModel
+/**
+ * Model PwaInstallation
+ * 
+ */
+export type PwaInstallation = Prisma.PwaInstallationModel

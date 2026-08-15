@@ -14,6 +14,7 @@ import {
   BookOpen,
   Mail,
   Settings,
+  Smartphone,
   ChevronDown,
 } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
@@ -52,7 +53,8 @@ export default function AdminHeaderNav() {
 
   const isSystemActive =
     pathname.startsWith("/admin/messages") ||
-    pathname.startsWith("/admin/settings");
+    pathname.startsWith("/admin/settings") ||
+    pathname.startsWith("/admin/pwa");
 
   return (
     <nav className="hidden min-[992px]:flex items-center space-x-1">
@@ -406,6 +408,30 @@ export default function AdminHeaderNav() {
                 </div>
                 <span className="block text-[11px] text-muted-foreground font-normal transition-colors truncate">
                   {t("admin.nav.messagesDesc") || "ভিজিটর অনুসন্ধান ও বার্তা"}
+                </span>
+              </div>
+            </Link>
+          </DropdownMenuItem>
+
+          {/* PWA Analytics */}
+          <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
+            <Link
+              href="/admin/pwa"
+              className={`flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 group ${
+                pathname.startsWith("/admin/pwa")
+                  ? "bg-primary/10 text-primary font-bold"
+                  : "hover:bg-muted/70 text-foreground"
+              }`}
+            >
+              <div className="h-8 w-8 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <Smartphone className="h-4 w-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <span className="block text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">
+                  {t("admin.nav.pwa") || "PWA অ্যানালিটিক্স"}
+                </span>
+                <span className="block text-[11px] text-muted-foreground font-normal transition-colors truncate">
+                  {t("admin.nav.pwaDesc") || "অ্যাপ ইনস্টল ও সক্রিয় ইউজার পরিসংখ্যান"}
                 </span>
               </div>
             </Link>

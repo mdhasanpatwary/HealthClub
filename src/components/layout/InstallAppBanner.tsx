@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { X, Download, Share2 } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { getClientDeviceInfo } from "@/lib/pwaTelemetry";
+import { recordPwaPromptAction, recordPwaInstallAction } from "@/app/actions/pwaActions";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -21,6 +23,7 @@ export default function InstallAppBanner() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [showIosTip, setShowIosTip] = useState(false);
+  const hasLoggedShown = useRef(false);
 
   useEffect(() => {
     // 1. Standalone / installed check
@@ -48,6 +51,19 @@ export default function InstallAppBanner() {
     if (isMobile) {
       requestAnimationFrame(() => {
         setIsVisible(true);
+        if (!hasLoggedShown.current) {
+          hasLoggedShown.current = true;
+          const info = getClientDeviceInfo();
+          if (info.deviceId) {
+            recordPwaPromptAction({
+              deviceId: info.deviceId,
+              outcome: "shown",
+              platform: info.platform,
+              browser: info.browser,
+              deviceType: info.deviceType,
+            }).catch(() => {});
+          }
+        }
       });
     }
 
@@ -57,14 +73,38 @@ export default function InstallAppBanner() {
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       if (isMobile) {
         setIsVisible(true);
+        if (!hasLoggedShown.current) {
+          hasLoggedShown.current = true;
+          const info = getClientDeviceInfo();
+          if (info.deviceId) {
+            recordPwaPromptAction({
+              deviceId: info.deviceId,
+              outcome: "shown",
+              platform: info.platform,
+              browser: info.browser,
+              deviceType: info.deviceType,
+            }).catch(() => {});
+          }
+        }
       }
     };
 
     // Listener for when app is installed
     const handleAppInstalled = () => {
-      localStorage.setItem(INSTALLED_KEY, "true");
+      try {
+        localStorage.setItem(INSTALLED_KEY, "true");
+      } catch {}
       setIsVisible(false);
       setDeferredPrompt(null);
+      const info = getClientDeviceInfo();
+      if (info.deviceId) {
+        recordPwaInstallAction({
+          deviceId: info.deviceId,
+          platform: info.platform,
+          browser: info.browser,
+          deviceType: info.deviceType,
+        }).catch(() => {});
+      }
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
@@ -77,17 +117,52 @@ export default function InstallAppBanner() {
   }, []);
 
   const handleDismiss = () => {
-    localStorage.setItem(DISMISSAL_KEY, Date.now().toString());
+    try {
+      localStorage.setItem(DISMISSAL_KEY, Date.now().toString());
+    } catch {}
     setIsVisible(false);
+
+    const info = getClientDeviceInfo();
+    if (info.deviceId) {
+      recordPwaPromptAction({
+        deviceId: info.deviceId,
+        outcome: "dismissed",
+        platform: info.platform,
+        browser: info.browser,
+        deviceType: info.deviceType,
+      }).catch(() => {});
+    }
   };
 
   const handleInstallClick = async () => {
+    const info = getClientDeviceInfo();
+
     if (deferredPrompt) {
       await deferredPrompt.prompt();
       const choiceResult = await deferredPrompt.userChoice;
       if (choiceResult.outcome === "accepted") {
-        localStorage.setItem(INSTALLED_KEY, "true");
+        try {
+          localStorage.setItem(INSTALLED_KEY, "true");
+        } catch {}
         setIsVisible(false);
+        if (info.deviceId) {
+          recordPwaInstallAction({
+            deviceId: info.deviceId,
+            platform: info.platform,
+            browser: info.browser,
+            deviceType: info.deviceType,
+          }).catch(() => {});
+        }
+      } else {
+        if (info.deviceId) {
+          recordPwaPromptAction({
+            deviceId: info.deviceId,
+            outcome: "dismissed",
+            platform: info.platform,
+            browser: info.browser,
+            deviceType: info.deviceType,
+          }).catch(() => {});
+        }
       }
       setDeferredPrompt(null);
     } else {

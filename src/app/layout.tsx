@@ -15,6 +15,7 @@ import { bn } from "@/lib/translations.bn";
 import JsonLd from "@/components/seo/JsonLd";
 import { Analytics } from "@vercel/analytics/next";
 import { SITE_URL } from "@/lib/siteConfig";
+import PwaTracker from "@/components/pwa/PwaTracker";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -209,6 +210,7 @@ export default async function RootLayout({
         <JsonLd data={globalJsonLd} />
         <ThemeProvider initialTheme={theme}>
           <LanguageProvider initialLocale={locale} initialDict={initialDict}>
+            <PwaTracker />
             <Header />
             <main className="flex-grow">{children}</main>
             <Footer locale={locale} />

@@ -57,7 +57,8 @@ export const ModelName = {
   Doctor: 'Doctor',
   PartnerRequest: 'PartnerRequest',
   ContactMessage: 'ContactMessage',
-  SystemSetting: 'SystemSetting'
+  SystemSetting: 'SystemSetting',
+  PwaInstallation: 'PwaInstallation'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -199,6 +200,26 @@ export const SystemSettingScalarFieldEnum = {
 } as const
 
 export type SystemSettingScalarFieldEnum = (typeof SystemSettingScalarFieldEnum)[keyof typeof SystemSettingScalarFieldEnum]
+
+
+export const PwaInstallationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  platform: 'platform',
+  browser: 'browser',
+  deviceType: 'deviceType',
+  isStandalone: 'isStandalone',
+  installedAt: 'installedAt',
+  lastActiveAt: 'lastActiveAt',
+  promptShown: 'promptShown',
+  promptDismissed: 'promptDismissed',
+  promptAccepted: 'promptAccepted',
+  sessionCount: 'sessionCount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PwaInstallationScalarFieldEnum = (typeof PwaInstallationScalarFieldEnum)[keyof typeof PwaInstallationScalarFieldEnum]
 
 
 export const SortOrder = {

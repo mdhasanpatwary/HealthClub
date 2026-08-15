@@ -177,6 +177,8 @@ const DEFAULT_STATS = {
   totalTransactions: 0,
   thisMonthTransactions: 0,
   revenue: 0,
+  pwaInstalls: 0,
+  pwaActive: 0,
   topPartners: [] as Array<{ id: string; name: string; totalSaved: number; transactionCount: number }>,
 };
 
@@ -189,6 +191,7 @@ const getCachedAdminStats = unstable_cache(
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const in30Days = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+    const past30Days = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
     // 1. Single parameterized SQL query for all scalar counts & aggregates (replaces 19 round-trips)
     const [countsResult, topPartnerGroups] = await Promise.all([
@@ -213,6 +216,8 @@ const getCachedAdminStats = unstable_cache(
           total_saved: bigint;
           this_month_saved: bigint;
           active_premium_count: bigint;
+          pwa_installs: bigint;
+          pwa_active: bigint;
         }>
       >`SELECT
           (SELECT COUNT(*) FROM members) AS total_members,
@@ -233,7 +238,9 @@ const getCachedAdminStats = unstable_cache(
           (SELECT COUNT(*) FROM transactions WHERE created_at >= ${startOfMonth}) AS this_month_transactions,
           (SELECT COALESCE(SUM(saved), 0) FROM transactions) AS total_saved,
           (SELECT COALESCE(SUM(saved), 0) FROM transactions WHERE created_at >= ${startOfMonth}) AS this_month_saved,
-          (SELECT COUNT(*) FROM members WHERE tier = 'premium' AND status = 'active') AS active_premium_count`,
+          (SELECT COUNT(*) FROM members WHERE tier = 'premium' AND status = 'active') AS active_premium_count,
+          (SELECT COUNT(*) FROM pwa_installations WHERE is_standalone = TRUE) AS pwa_installs,
+          (SELECT COUNT(*) FROM pwa_installations WHERE is_standalone = TRUE AND last_active_at >= ${past30Days}) AS pwa_active`,
       // 2. Top partners query (groupBy is hard to inline in raw SQL cleanly)
       prisma.transaction.groupBy({
         by: ["partnerId", "partnerName"],
@@ -275,6 +282,8 @@ const getCachedAdminStats = unstable_cache(
       totalTransactions: Number(row?.total_transactions ?? 0),
       thisMonthTransactions: Number(row?.this_month_transactions ?? 0),
       revenue: Number(row?.active_premium_count ?? 0) * 500,
+      pwaInstalls: Number(row?.pwa_installs ?? 0),
+      pwaActive: Number(row?.pwa_active ?? 0),
       topPartners,
     };
   },

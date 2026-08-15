@@ -390,7 +390,8 @@ export const ModelName = {
   Doctor: 'Doctor',
   PartnerRequest: 'PartnerRequest',
   ContactMessage: 'ContactMessage',
-  SystemSetting: 'SystemSetting'
+  SystemSetting: 'SystemSetting',
+  PwaInstallation: 'PwaInstallation'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -406,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "member" | "partner" | "transaction" | "doctor" | "partnerRequest" | "contactMessage" | "systemSetting"
+    modelProps: "member" | "partner" | "transaction" | "doctor" | "partnerRequest" | "contactMessage" | "systemSetting" | "pwaInstallation"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -928,6 +929,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PwaInstallation: {
+      payload: Prisma.$PwaInstallationPayload<ExtArgs>
+      fields: Prisma.PwaInstallationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PwaInstallationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PwaInstallationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PwaInstallationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PwaInstallationPayload>
+        }
+        findFirst: {
+          args: Prisma.PwaInstallationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PwaInstallationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PwaInstallationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PwaInstallationPayload>
+        }
+        findMany: {
+          args: Prisma.PwaInstallationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PwaInstallationPayload>[]
+        }
+        create: {
+          args: Prisma.PwaInstallationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PwaInstallationPayload>
+        }
+        createMany: {
+          args: Prisma.PwaInstallationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PwaInstallationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PwaInstallationPayload>[]
+        }
+        delete: {
+          args: Prisma.PwaInstallationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PwaInstallationPayload>
+        }
+        update: {
+          args: Prisma.PwaInstallationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PwaInstallationPayload>
+        }
+        deleteMany: {
+          args: Prisma.PwaInstallationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PwaInstallationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PwaInstallationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PwaInstallationPayload>[]
+        }
+        upsert: {
+          args: Prisma.PwaInstallationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PwaInstallationPayload>
+        }
+        aggregate: {
+          args: Prisma.PwaInstallationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePwaInstallation>
+        }
+        groupBy: {
+          args: Prisma.PwaInstallationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PwaInstallationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PwaInstallationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PwaInstallationCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1090,6 +1165,26 @@ export const SystemSettingScalarFieldEnum = {
 } as const
 
 export type SystemSettingScalarFieldEnum = (typeof SystemSettingScalarFieldEnum)[keyof typeof SystemSettingScalarFieldEnum]
+
+
+export const PwaInstallationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  platform: 'platform',
+  browser: 'browser',
+  deviceType: 'deviceType',
+  isStandalone: 'isStandalone',
+  installedAt: 'installedAt',
+  lastActiveAt: 'lastActiveAt',
+  promptShown: 'promptShown',
+  promptDismissed: 'promptDismissed',
+  promptAccepted: 'promptAccepted',
+  sessionCount: 'sessionCount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PwaInstallationScalarFieldEnum = (typeof PwaInstallationScalarFieldEnum)[keyof typeof PwaInstallationScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1301,6 +1396,7 @@ export type GlobalOmitConfig = {
   partnerRequest?: Prisma.PartnerRequestOmit
   contactMessage?: Prisma.ContactMessageOmit
   systemSetting?: Prisma.SystemSettingOmit
+  pwaInstallation?: Prisma.PwaInstallationOmit
 }
 
 /* Types for Logging */

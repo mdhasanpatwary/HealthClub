@@ -148,6 +148,25 @@ model SystemSetting {
   @@map("system_settings")
 }
 
+model PwaInstallation {
+  id              String   @id
+  userId          String?  @map("user_id")
+  platform        String
+  browser         String?
+  deviceType      String?  @map("device_type")
+  isStandalone    Boolean  @default(false) @map("is_standalone")
+  installedAt     DateTime @default(now()) @map("installed_at") @db.Timestamptz
+  lastActiveAt    DateTime @default(now()) @map("last_active_at") @db.Timestamptz
+  promptShown     Int      @default(0) @map("prompt_shown")
+  promptDismissed Int      @default(0) @map("prompt_dismissed")
+  promptAccepted  Int      @default(0) @map("prompt_accepted")
+  sessionCount    Int      @default(1) @map("session_count")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
 
-
-
+  @@index([isStandalone], map: "pwa_installations_is_standalone_idx")
+  @@index([lastActiveAt(sort: Desc)], map: "pwa_installations_last_active_idx")
+  @@index([installedAt(sort: Desc)], map: "pwa_installations_installed_at_idx")
+  @@index([platform], map: "pwa_installations_platform_idx")
+  @@map("pwa_installations")
+}
