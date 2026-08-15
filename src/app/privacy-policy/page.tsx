@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
+import { SITE_URL } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -9,7 +10,7 @@ export async function generateMetadata() {
     title: tServer(locale, "pages.privacyPolicy.metaTitle"),
     description: tServer(locale, "pages.privacyPolicy.metaDesc"),
     alternates: {
-      canonical: "https://healthclubfeni.vercel.app/privacy-policy",
+      canonical: `${SITE_URL}/privacy-policy`,
     },
   };
 }
@@ -28,13 +29,13 @@ export default async function PrivacyPolicyPage() {
           "@type": "ListItem",
           "position": 1,
           "name": locale === "en" ? "Home" : "হোম",
-          "item": "https://healthclubfeni.vercel.app"
+          "item": SITE_URL
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": locale === "en" ? "Privacy Policy" : "প্রাইভেসী পলিসি",
-          "item": "https://healthclubfeni.vercel.app/privacy-policy"
+          "item": `${SITE_URL}/privacy-policy`
         }
       ]
     }

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
+import { SITE_URL } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -18,7 +19,7 @@ export async function generateMetadata() {
       ? "Compare Founding Member (Free 1 year) and Premium Member plans to get instant discounts on medical bills across partner hospitals."
       : "ফাউন্ডিং মেম্বার (১ বছর সম্পূর্ণ ফ্রি) ও প্রিমিয়াম মেম্বারশিপের সুবিধা দেখে নিন এবং আপনার জন্য সেরা প্ল্যানটি বেছে নিন।",
     alternates: {
-      canonical: "https://healthclubfeni.vercel.app/membership",
+      canonical: `${SITE_URL}/membership`,
     },
     openGraph: {
       title: isEn
@@ -27,7 +28,7 @@ export async function generateMetadata() {
       description: isEn
         ? "Get 1 Year Free Founding Membership for first 100 users."
         : "প্রথম ১০০ জন সদস্য পাচ্ছেন ১ বছরের ফাউন্ডিং মেম্বারশিপ সম্পূর্ণ ফ্রি।",
-      url: "https://healthclubfeni.vercel.app/membership",
+      url: `${SITE_URL}/membership`,
     },
   };
 }
@@ -60,13 +61,13 @@ export default async function MembershipPage() {
           "@type": "ListItem",
           "position": 1,
           "name": locale === "en" ? "Home" : "হোম",
-          "item": "https://healthclubfeni.vercel.app"
+          "item": SITE_URL
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": locale === "en" ? "Membership" : "মেম্বারশিপ",
-          "item": "https://healthclubfeni.vercel.app/membership"
+          "item": `${SITE_URL}/membership`
         }
       ]
     },
@@ -86,7 +87,7 @@ export default async function MembershipPage() {
           "price": "0",
           "priceCurrency": "BDT",
           "availability": "https://schema.org/InStock",
-          "url": "https://healthclubfeni.vercel.app/membership"
+          "url": `${SITE_URL}/membership`
         },
         {
           "@type": "Offer",
@@ -94,7 +95,7 @@ export default async function MembershipPage() {
           "price": "500",
           "priceCurrency": "BDT",
           "availability": "https://schema.org/InStock",
-          "url": "https://healthclubfeni.vercel.app/membership"
+          "url": `${SITE_URL}/membership`
         }
       ]
     }

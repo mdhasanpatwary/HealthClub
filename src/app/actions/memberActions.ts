@@ -6,6 +6,7 @@ import { Member, PublicMemberVerification } from "@/services/db";
 import { hashPassword } from "@/lib/crypto";
 import { getSessionUser } from "@/lib/session";
 import { sendOtpEmail } from "@/lib/mail";
+import { SITE_URL } from "@/lib/siteConfig";
 import {
   loginMemberAction as _loginMemberAction,
   loginAdminAction as _loginAdminAction,
@@ -124,7 +125,7 @@ export async function addMemberAction(
         status: "inactive",
         joinedDate: joined,
         expiryDate: expiry,
-        qrCodeUrl: member.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`${process.env.NEXT_PUBLIC_APP_URL || "https://healthclubfeni.vercel.app"}/verify/${newId}`)}`,
+        qrCodeUrl: member.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`${SITE_URL}/verify/${newId}`)}`,
         totalSaved: 0,
         address: member.address || null,
         birthDate: member.birthDate ? new Date(member.birthDate) : null,

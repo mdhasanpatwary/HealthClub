@@ -3,7 +3,7 @@
 ## 1. Overview & Organization Details
 - **Organization Name**: Health Club (হেলথ ক্লাব)
 - **Tagline**: স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী (Making Healthcare Easy & Affordable)
-- **Official Website**: https://healthclubfeni.vercel.app
+- **Official Website**: https://healthclubfeni.com
 - **HQ Location**: Feni, Chittagong Division, Bangladesh
 - **Contact Hotline**: +880 1783-721411
 - **Official Email**: healthclubfeni@gmail.com
@@ -56,16 +56,16 @@ Health Club collaborates with premier hospitals and labs in Feni and nearby dist
 **Answer**: Yes, one Health Club membership card provides health discount coverage for the member, spouse, children, and parents.
 
 ### Q5: How can a hospital or clinic become a Health Club partner?
-**Answer**: Healthcare providers can submit an application via `https://healthclubfeni.vercel.app/become-partner` or call hotline `+8801783721411`.
+**Answer**: Healthcare providers can submit an application via `https://healthclubfeni.com/become-partner` or call hotline `+8801783721411`.
 
 ---
 
 ## 5. Website Architecture & Canonical Sitemap Routes
-- Home Page: `https://healthclubfeni.vercel.app/`
-- About Us: `https://healthclubfeni.vercel.app/about-us`
-- Membership Plans: `https://healthclubfeni.vercel.app/membership`
-- Partner Hospitals Directory: `https://healthclubfeni.vercel.app/partner-hospitals`
-- Apply as Partner: `https://healthclubfeni.vercel.app/become-partner`
-- Contact Us: `https://healthclubfeni.vercel.app/contact`
-- Privacy Policy: `https://healthclubfeni.vercel.app/privacy-policy`
-- Terms & Conditions: `https://healthclubfeni.vercel.app/terms-conditions`
+- Home Page: `https://healthclubfeni.com/`
+- About Us: `https://healthclubfeni.com/about-us`
+- Membership Plans: `https://healthclubfeni.com/membership`
+- Partner Hospitals Directory: `https://healthclubfeni.com/partner-hospitals`
+- Apply as Partner: `https://healthclubfeni.com/become-partner`
+- Contact Us: `https://healthclubfeni.com/contact`
+- Privacy Policy: `https://healthclubfeni.com/privacy-policy`
+- Terms & Conditions: `https://healthclubfeni.com/terms-conditions`

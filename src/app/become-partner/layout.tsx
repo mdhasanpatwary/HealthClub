@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
+import { SITE_URL } from "@/lib/siteConfig";
 
 export async function generateMetadata(): Promise<Metadata> {
   const cookieStore = await cookies();
@@ -16,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
       ? "Join the Health Club partner healthcare network to connect with thousands of active members and expand your hospital or clinic patient base."
       : "হেলথ ক্লাবের পার্টনার নেটওয়ার্কে আপনার হাসপাতাল, ল্যাব বা ফার্মেসি রেজিস্টার করুন এবং হাজারো মেম্বারদের চিকিৎসাসেবা প্রদান করুন।",
     alternates: {
-      canonical: "https://healthclubfeni.vercel.app/become-partner",
+      canonical: `${SITE_URL}/become-partner`,
     },
     openGraph: {
       title: isEn
@@ -25,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: isEn
         ? "Apply to become a partner medical center in Feni & Bangladesh."
         : "চিকিৎসাকেন্দ্র, ল্যাব বা ফার্মেসি পার্টনারশিপের জন্য আজই আবেদন করুন।",
-      url: "https://healthclubfeni.vercel.app/become-partner",
+      url: `${SITE_URL}/become-partner`,
     },
   };
 }
@@ -47,13 +48,13 @@ export default async function BecomePartnerLayout({
           "@type": "ListItem",
           "position": 1,
           "name": locale === "en" ? "Home" : "হোম",
-          "item": "https://healthclubfeni.vercel.app"
+          "item": SITE_URL
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": locale === "en" ? "Become a Partner" : "পার্টনার হোন",
-          "item": "https://healthclubfeni.vercel.app/become-partner"
+          "item": `${SITE_URL}/become-partner`
         }
       ]
     }

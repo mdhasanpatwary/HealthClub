@@ -7,6 +7,7 @@ import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import { getPartnersAction } from "@/app/actions/partnerActions";
+import { SITE_URL } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -21,10 +22,10 @@ export async function generateMetadata() {
       ? "Explore our full network of partner hospitals, diagnostic centers, pathology labs, and model pharmacies offering 10% to 30% discount to Health Club members in Feni."
       : "ফেনীর শীর্ষ বেসরকারি হাসপাতাল, প্যাথলজি ল্যাব, ডায়াগনস্টিক সেন্টার ও মডেল ফার্মেসির তালিকা। হেলথ ক্লাব মেম্বার কার্ডে পান ১০% থেকে ৩০% নিশ্চিত ডিসকাউন্ট।",
     alternates: {
-      canonical: "https://healthclubfeni.vercel.app/partner-hospitals",
+      canonical: `${SITE_URL}/partner-hospitals`,
       languages: {
-        "bn-BD": "https://healthclubfeni.vercel.app/partner-hospitals",
-        "en-US": "https://healthclubfeni.vercel.app/partner-hospitals",
+        "bn-BD": `${SITE_URL}/partner-hospitals`,
+        "en-US": `${SITE_URL}/partner-hospitals`,
       },
     },
     keywords: [
@@ -53,7 +54,7 @@ export async function generateMetadata() {
       description: isEn
         ? "Find hospitals, diagnostic labs, and pharmacies with instant member discounts in Feni."
         : "ফেনী ও আশপাশের চুক্তিভিত্তিক হাসপাতাল ও ডায়াগনস্টিক সেন্টারের বিস্তারিত তালিকা।",
-      url: "https://healthclubfeni.vercel.app/partner-hospitals",
+      url: `${SITE_URL}/partner-hospitals`,
       siteName: "হেলথ ক্লাব (Health Club)",
       locale: isEn ? "en_US" : "bn_BD",
       type: "website",
@@ -88,13 +89,13 @@ export default async function PartnerHospitalsPage() {
           "@type": "ListItem",
           "position": 1,
           "name": isEn ? "Home" : "হোম",
-          "item": "https://healthclubfeni.vercel.app"
+          "item": SITE_URL
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": isEn ? "Partner Hospitals" : "পার্টনার হাসপাতালসমূহ",
-          "item": "https://healthclubfeni.vercel.app/partner-hospitals"
+          "item": `${SITE_URL}/partner-hospitals`
         }
       ]
     },
@@ -102,7 +103,7 @@ export default async function PartnerHospitalsPage() {
       "@context": "https://schema.org",
       "@type": "MedicalBusiness",
       "name": "Health Club Partner Network Feni",
-      "url": "https://healthclubfeni.vercel.app/partner-hospitals",
+      "url": `${SITE_URL}/partner-hospitals`,
       "description": "Network of partner hospitals, diagnostic clinics, pathology labs, and model pharmacies offering healthcare discounts in Feni, Bangladesh.",
       "areaServed": [
         "Feni Sadar",

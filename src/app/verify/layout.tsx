@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
+import { SITE_URL } from "@/lib/siteConfig";
 
 export async function generateMetadata(): Promise<Metadata> {
   const cookieStore = await cookies();
@@ -47,13 +48,13 @@ export default async function VerifyLayout({
           "@type": "ListItem",
           position: 1,
           name: locale === "en" ? "Home" : "হোম",
-          item: "https://healthclubfeni.vercel.app",
+          item: SITE_URL,
         },
         {
           "@type": "ListItem",
           position: 2,
           name: locale === "en" ? "Verify Member" : "সদস্য যাচাই",
-          item: "https://healthclubfeni.vercel.app/verify",
+          item: `${SITE_URL}/verify`,
         },
       ],
     },

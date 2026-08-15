@@ -3,7 +3,7 @@
 > Health Club is a premium healthcare discount membership platform based in Feni, Bangladesh. It makes healthcare affordable by enabling members and their families to receive 10-30% discounts on hospital bills, diagnostic lab tests, and doctor consultation fees across a network of contracted hospitals, clinics, diagnostic centers, and model pharmacies.
 
 ## Core Information & Services
-- **Website**: https://healthclubfeni.vercel.app
+- **Website**: https://healthclubfeni.com
 - **Primary Service Area**: Feni & Greater Chittagong Division, Bangladesh
 - **Target Audience**: Middle-class families, students, senior citizens, and healthcare seekers in Bangladesh.
 - **Main Offerings**:
@@ -33,7 +33,7 @@
 - **Address**: Feni, Bangladesh
 
 ## Full Documentation & Knowledge Base
-- Full Details: [llms-full.txt](https://healthclubfeni.vercel.app/llms-full.txt)
-- Partner Hospitals Directory: [Partner Hospitals](https://healthclubfeni.vercel.app/partner-hospitals)
-- Membership Plans: [Membership](https://healthclubfeni.vercel.app/membership)
-- About Us: [About Us](https://healthclubfeni.vercel.app/about-us)
+- Full Details: [llms-full.txt](https://healthclubfeni.com/llms-full.txt)
+- Partner Hospitals Directory: [Partner Hospitals](https://healthclubfeni.com/partner-hospitals)
+- Membership Plans: [Membership](https://healthclubfeni.com/membership)
+- About Us: [About Us](https://healthclubfeni.com/about-us)

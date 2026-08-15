@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Locale } from "@/lib/i18n";
+import { SITE_URL } from "@/lib/siteConfig";
 
 export async function generateMetadata(): Promise<Metadata> {
   const cookieStore = await cookies();
@@ -15,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
       ? "Register for free Health Club founding membership card and start saving on hospital and lab bills."
       : "হেলথ ক্লাবের ফাউন্ডিং সদস্য হতে আজই ফ্রি রেজিস্ট্রেশন করুন এবং হাসপাতালে চিকিৎসায় সেরা ছাড় পান।",
     alternates: {
-      canonical: "https://healthclubfeni.vercel.app/register",
+      canonical: `${SITE_URL}/register`,
     },
   };
 }

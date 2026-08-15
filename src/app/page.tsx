@@ -19,6 +19,7 @@ import { LandingHowItWorks } from "@/components/landing/LandingHowItWorks";
 import { LandingBenefits } from "@/components/landing/LandingBenefits";
 import { LandingPricing } from "@/components/landing/LandingPricing";
 import { LandingComparison } from "@/components/landing/LandingComparison";
+import { SITE_URL } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -33,7 +34,7 @@ export async function generateMetadata() {
       ? "Get instant discounts up to 30% on hospital admission, medical tests, labs, and pharmacies with Health Club digital membership card in Feni and Bangladesh."
       : "হেলথ ক্লাবের ডিজিটাল মেম্বারশিপ কার্ড দিয়ে পার্টনার হাসপাতাল, ডায়াগনস্টিক ল্যাব ও মডেল ফার্মেসিতে পান আকর্ষণীয় ডিসকাউন্ট ও সাশ্রয়ী চিকিৎসা।",
     alternates: {
-      canonical: "https://healthclubfeni.vercel.app",
+      canonical: SITE_URL,
     },
     keywords: [
       "feni doctor",
@@ -69,7 +70,7 @@ export async function generateMetadata() {
       description: isEn
         ? "Join Health Club to get digital discount card for hospitals, labs, and medicines."
         : "নির্ধারিত হাসপাতাল ও ল্যাবে ডিসকাউন্ট পেতে আজই হেলথ ক্লাবের মেম্বারশিপ সংগ্রহ করুন।",
-      url: "https://healthclubfeni.vercel.app",
+      url: SITE_URL,
       type: "website",
     },
   };

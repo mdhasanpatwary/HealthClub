@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Calculator, Scale, Droplet, Flame, Stethoscope, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { SITE_URL } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -22,7 +23,7 @@ export async function generateMetadata() {
       ? "Calculate your Body Mass Index (BMI), ideal weight range, daily hydration target, and maintenance calorie needs for a healthier lifestyle."
       : "সহজেই আপনার বডি ম্যাস ইনডেক্স (BMI), আদর্শ ওজন, দৈনিক পানির প্রয়োজনীয়তা ও ক্যালোরি চাহিদা হিসাব করুন এবং বিশেষজ্ঞ চিকিৎসকের পরামর্শ নিন।",
     alternates: {
-      canonical: "https://healthclubfeni.vercel.app/health-tools",
+      canonical: `${SITE_URL}/health-tools`,
     },
     keywords: [
       "BMI calculator bangla",
@@ -49,13 +50,13 @@ export default async function HealthToolsPage() {
           "@type": "ListItem",
           "position": 1,
           "name": isEn ? "Home" : "হোম",
-          "item": "https://healthclubfeni.vercel.app",
+          "item": SITE_URL,
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": isEn ? "Health Tools" : "হেলথ ক্যালকুলেটরস",
-          "item": "https://healthclubfeni.vercel.app/health-tools",
+          "item": `${SITE_URL}/health-tools`,
         },
       ],
     },

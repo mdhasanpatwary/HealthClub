@@ -14,6 +14,7 @@ import { en } from "@/lib/translations.en";
 import { bn } from "@/lib/translations.bn";
 import JsonLd from "@/components/seo/JsonLd";
 import { Analytics } from "@vercel/analytics/next";
+import { SITE_URL } from "@/lib/siteConfig";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -27,7 +28,7 @@ const notoSansBengali = Noto_Sans_Bengali({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://healthclubfeni.vercel.app"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "হেলথ ক্লাব - স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী | Health Club",
     template: "%s | হেলথ ক্লাব",
@@ -79,7 +80,7 @@ export const metadata: Metadata = {
     "স্বাস্থ্য মেম্বারশিপ",
     "সাশ্রয়ী চিকিৎসা",
   ],
-  authors: [{ name: "Health Club Team", url: "https://healthclubfeni.vercel.app" }],
+  authors: [{ name: "Health Club Team", url: SITE_URL }],
   creator: "Health Club",
   publisher: "Health Club",
   formatDetection: {
@@ -125,7 +126,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "হেলথ ক্লাব - স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী",
     description: "নির্ধারিত হাসপাতাল ও ল্যাবে ডিসকাউন্ট পেতে আজই হেলথ ক্লাবের ডিজিটাল মেম্বার কার্ড সংগ্রহ করুন।",
-    url: "https://healthclubfeni.vercel.app",
+    url: SITE_URL,
     siteName: "হেলথ ক্লাব (Health Club)",
     locale: "bn_BD",
     type: "website",
@@ -175,8 +176,8 @@ export default async function RootLayout({
       "@type": "Organization",
       "name": "হেলথ ক্লাব",
       "alternateName": ["Health Club", "Health Club Feni"],
-      "url": "https://healthclubfeni.vercel.app",
-      "logo": "https://healthclubfeni.vercel.app/images/member-card-logo.png",
+      "url": SITE_URL,
+      "logo": `${SITE_URL}/images/member-card-logo.png`,
       "description": "স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী - একটি প্রিমিয়াম স্বাস্থ্য মেম্বারশিপ সার্ভিস।",
       "telephone": "+8801783721411",
       "email": "healthclubfeni@gmail.com",
@@ -197,7 +198,7 @@ export default async function RootLayout({
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "হেলথ ক্লাব (Health Club)",
-      "url": "https://healthclubfeni.vercel.app",
+      "url": SITE_URL,
       "inLanguage": ["bn-BD", "en-US"]
     }
   ];

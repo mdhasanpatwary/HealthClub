@@ -8,6 +8,7 @@ import EmergencyFAQ from "@/components/emergency/EmergencyFAQ";
 import EmergencyCommunityCTA from "@/components/emergency/EmergencyCommunityCTA";
 import { Siren, ShieldCheck, HeartHandshake, PhoneCall } from "lucide-react";
 import { getEmergencyDataAction } from "@/app/actions/emergencyAdminActions";
+import { SITE_URL } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -22,10 +23,10 @@ export async function generateMetadata() {
       ? "24/7 emergency medical support in Feni: voluntary blood donor directory by blood group, ICU & AC ambulance phone numbers, emergency oxygen cylinders, and hospital ER hotlines."
       : "ফেনীর ২৪/৭ জরুরি স্বাস্থ্য সহায়তা: রক্তের গ্রুপ ও উপজেলাভিত্তিক রক্তদাতা তালিকা, আইসিইউ ও এসি অ্যাম্বুলেন্স নম্বর, জরুরি অক্সিজেন সিলিন্ডার এবং সদর হাসপাতাল মেডিকেল হটলাইন।",
     alternates: {
-      canonical: "https://healthclubfeni.vercel.app/emergency",
+      canonical: `${SITE_URL}/emergency`,
       languages: {
-        "bn-BD": "https://healthclubfeni.vercel.app/emergency",
-        "en-US": "https://healthclubfeni.vercel.app/emergency",
+        "bn-BD": `${SITE_URL}/emergency`,
+        "en-US": `${SITE_URL}/emergency`,
       },
     },
     keywords: [
@@ -59,13 +60,13 @@ export async function generateMetadata() {
       description: isEn
         ? "Instant access to voluntary blood donors in Feni, 24/7 ICU/AC ambulance contacts, oxygen cylinder supplies, and critical hospital hotlines."
         : "মুহূর্তেই রক্তের গ্রুপ অনুযায়ী ফেনীর স্বেচ্ছাসেবী রক্তদাতা, ২৪/৭ আইসিইউ অ্যাম্বুলেন্স, জরুরি অক্সিজেন ও মেডিকেল হটলাইনে সরাসরি যোগাযোগ করুন।",
-      url: "https://healthclubfeni.vercel.app/emergency",
+      url: `${SITE_URL}/emergency`,
       siteName: "হেলথ ক্লাব (Health Club)",
       locale: isEn ? "en_US" : "bn_BD",
       type: "website",
       images: [
         {
-          url: "https://healthclubfeni.vercel.app/images/member-card-logo.png",
+          url: `${SITE_URL}/images/member-card-logo.png`,
           width: 800,
           height: 600,
           alt: isEn ? "Health Club Emergency Network Feni" : "হেলথ ক্লাব জরুরি স্বাস্থ্য সেবা নেটওয়ার্ক",
@@ -80,7 +81,7 @@ export async function generateMetadata() {
       description: isEn
         ? "Find verified blood donors, ICU ambulances, oxygen cylinder delivery, and emergency hotlines in Feni."
         : "ফেনীর ভেরিফাইড রক্তদাতা, আইসিইউ অ্যাম্বুলেন্স, অক্সিজেন সিলিন্ডার ও হাসপাতালের জরুরি হটলাইন নম্বর।",
-      images: ["https://healthclubfeni.vercel.app/images/member-card-logo.png"],
+      images: [`${SITE_URL}/images/member-card-logo.png`],
     },
     robots: {
       index: true,
@@ -115,13 +116,13 @@ export default async function EmergencyPage() {
           "@type": "ListItem",
           position: 1,
           name: isEn ? "Home" : "হোম",
-          item: "https://healthclubfeni.vercel.app",
+          item: SITE_URL,
         },
         {
           "@type": "ListItem",
           position: 2,
           name: isEn ? "Emergency Health Services" : "জরুরি স্বাস্থ্য সেবা",
-          item: "https://healthclubfeni.vercel.app/emergency",
+          item: `${SITE_URL}/emergency`,
         },
       ],
     },
@@ -133,8 +134,8 @@ export default async function EmergencyPage() {
       name: isEn
         ? "Health Club 24/7 Emergency Health Network Feni"
         : "হেলথ ক্লাব জরুরি স্বাস্থ্য সেবা ও রক্তদাতা নেটওয়ার্ক (ফেনী)",
-      url: "https://healthclubfeni.vercel.app/emergency",
-      logo: "https://healthclubfeni.vercel.app/images/member-card-logo.png",
+      url: `${SITE_URL}/emergency`,
+      logo: `${SITE_URL}/images/member-card-logo.png`,
       description: isEn
         ? "24/7 emergency medical directory in Feni, Bangladesh. Voluntary blood donor network, ICU/AC ambulances, oxygen supplies, and critical hospital ER dispatch."
         : "ফেনীর ২৪/৭ জরুরি স্বাস্থ্য সহায়তা ডিরেক্টরি। রক্তের গ্রুপ অনুযায়ী ভেরিফাইড রক্তদাতা, আইসিইউ ও এসি অ্যাম্বুলেন্স, অক্সিজেন সিলিন্ডার এবং হাসপাতাল জরুরি হটলাইন।",

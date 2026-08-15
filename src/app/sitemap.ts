@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
 import { HEALTH_TIPS_ARTICLES } from "@/data/healthTipsData";
+import { SITE_URL } from "@/lib/siteConfig";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://healthclubfeni.vercel.app";
+  const baseUrl = SITE_URL;
   const lastModified = new Date();
 
   // Public static routes
@@ -51,7 +52,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
 
     return {
-      url: `${baseUrl}${route}`,
+      url: route === "" ? `${baseUrl}/` : `${baseUrl}${route}`,
       lastModified,
       changeFrequency,
       priority,

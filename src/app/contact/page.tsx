@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cookies } from "next/headers";
 import { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
+import { SITE_URL } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -16,14 +17,14 @@ export async function generateMetadata() {
       ? "Get in touch with Health Club support team. Find our hotline number, support email, address, and online inquiry form."
       : "হেলথ ক্লাবের সাথে যোগাযোগ করুন। আমাদের ফোন নাম্বার (+8801783721411), ইমেইল, অফিস ঠিকানা ও সাপোর্ট সেন্টার।",
     alternates: {
-      canonical: "https://healthclubfeni.vercel.app/contact",
+      canonical: `${SITE_URL}/contact`,
     },
     openGraph: {
       title: isEn ? "Contact Health Club - Hotline +8801783721411" : "যোগাযোগ করুন - হেলথ ক্লাব",
       description: isEn
         ? "Contact our helpline for membership queries or hospital partnership applications."
         : "মেম্বারশিপ অথবা পার্টনারশিপ সংক্রান্ত যেকোনো প্রশ্ন নিয়ে আমাদের সাথে কথা বলুন।",
-      url: "https://healthclubfeni.vercel.app/contact",
+      url: `${SITE_URL}/contact`,
     },
   };
 }
@@ -41,13 +42,13 @@ export default async function ContactPage() {
           "@type": "ListItem",
           "position": 1,
           "name": locale === "en" ? "Home" : "হোম",
-          "item": "https://healthclubfeni.vercel.app"
+          "item": SITE_URL
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": locale === "en" ? "Contact Us" : "যোগাযোগ করুন",
-          "item": "https://healthclubfeni.vercel.app/contact"
+          "item": `${SITE_URL}/contact`
         }
       ]
     },
@@ -55,7 +56,7 @@ export default async function ContactPage() {
       "@context": "https://schema.org",
       "@type": "ContactPage",
       "name": locale === "en" ? "Contact Health Club" : "হেলথ ক্লাবের সাথে যোগাযোগ",
-      "url": "https://healthclubfeni.vercel.app/contact",
+      "url": `${SITE_URL}/contact`,
       "description": "Contact channel for Health Club members and partner healthcare facilities."
     }
   ];

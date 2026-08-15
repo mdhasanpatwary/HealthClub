@@ -8,6 +8,7 @@ import ConsultantsFAQ from "@/components/consultants/ConsultantsFAQ";
 import { Button } from "@/components/ui/button";
 import { getDoctorsAction } from "@/app/actions/doctorActions";
 import { Stethoscope, ShieldCheck, HeartHandshake, PhoneCall } from "lucide-react";
+import { SITE_URL } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -22,7 +23,7 @@ export async function generateMetadata() {
       ? "Find specialist doctors in Feni, check chamber visiting hours, qualifications, and call direct serial numbers for appointments at partner hospitals and clinics."
       : "ফেনীর বিশেষজ্ঞ ডাক্তারদের তালিকা, চেম্বার শিডিউল, রোগী দেখার সময় এবং সরাসরি সিরিয়াল বুকিংয়ের হটলাইন নম্বর জানুন। পার্টনার হাসপাতাল ও ডায়াগনস্টিক সেন্টারের কনসালট্যান্ট তালিকা।",
     alternates: {
-      canonical: "https://healthclubfeni.vercel.app/consultants",
+      canonical: `${SITE_URL}/consultants`,
     },
     keywords: [
       "feni doctor",
@@ -51,7 +52,7 @@ export async function generateMetadata() {
       description: isEn
         ? "Find specialist doctors, chamber schedules, and book appointment serials directly in Feni."
         : "ফেনীর বিশেষজ্ঞ ডাক্তারদের পূর্ণাঙ্গ তালিকা ও সরাসরি সিরিয়াল দেওয়ার নাম্বার।",
-      url: "https://healthclubfeni.vercel.app/consultants",
+      url: `${SITE_URL}/consultants`,
     },
     twitter: {
       card: "summary_large_image",
@@ -83,13 +84,13 @@ export default async function ConsultantsPage() {
           "@type": "ListItem",
           position: 1,
           name: locale === "en" ? "Home" : "হোম",
-          item: "https://healthclubfeni.vercel.app",
+          item: SITE_URL,
         },
         {
           "@type": "ListItem",
           position: 2,
           name: locale === "en" ? "Consultants & Doctors" : "ডাক্তার ও কনসালট্যান্টস",
-          item: "https://healthclubfeni.vercel.app/consultants",
+          item: `${SITE_URL}/consultants`,
         },
       ],
     },
@@ -97,7 +98,7 @@ export default async function ConsultantsPage() {
       "@context": "https://schema.org",
       "@type": "MedicalBusiness",
       name: "Health Club Specialist Doctors Network",
-      url: "https://healthclubfeni.vercel.app/consultants",
+      url: `${SITE_URL}/consultants`,
       description: "Directory of specialist doctors, consultants, chamber schedules, and appointment serial booking in Feni, Bangladesh.",
       areaServed: "Feni, Bangladesh",
       medicalSpecialty: [
@@ -171,7 +172,7 @@ export default async function ConsultantsPage() {
         item: {
           "@type": "Physician",
           name: doc.name,
-          image: doc.imageUrl || "https://healthclubfeni.vercel.app/og-image.png",
+          image: doc.imageUrl || `${SITE_URL}/og-image.png`,
           medicalSpecialty: doc.specialty,
           jobTitle: doc.designation,
           telephone: doc.serialPhone,

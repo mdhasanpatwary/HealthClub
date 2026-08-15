@@ -4,6 +4,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { HealthTipsDirectory } from "./components/HealthTipsDirectory";
 import { BookOpen } from "lucide-react";
 import { getAllHealthTipsAction } from "@/app/actions/healthTipsAdminActions";
+import { SITE_URL } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -18,7 +19,7 @@ export async function generateMetadata() {
       ? "Expert medical advice, disease prevention guidelines, nutrition recommendations, and lifestyle tips verified by registered doctors."
       : "অভিজ্ঞ চিকিৎসকদের পরামর্শ, ডায়াবেটিস ও উচ্চ রক্তচাপ নিয়ন্ত্রণ, ডেঙ্গু প্রতিরোধ, পুষ্টিকর খাদ্যতালিকা ও স্বাস্থ্যকর জীবনযাপনের নির্ভরযোগ্য গাইড।",
     alternates: {
-      canonical: "https://healthclubfeni.vercel.app/health-tips",
+      canonical: `${SITE_URL}/health-tips`,
     },
     keywords: [
       "Health tips bangla",
@@ -47,13 +48,13 @@ export default async function HealthTipsPage() {
           "@type": "ListItem",
           "position": 1,
           "name": isEn ? "Home" : "হোম",
-          "item": "https://healthclubfeni.vercel.app",
+          "item": SITE_URL,
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": isEn ? "Health Tips" : "স্বাস্থ্য টিপস",
-          "item": "https://healthclubfeni.vercel.app/health-tips",
+          "item": `${SITE_URL}/health-tips`,
         },
       ],
     },

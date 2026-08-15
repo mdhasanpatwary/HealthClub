@@ -1,6 +1,7 @@
 import { forwardRef } from "react";
 import { Member } from "@/services/db";
 import { Star, ShieldCheck, User } from "lucide-react";
+import { SITE_URL } from "@/lib/siteConfig";
 
 interface MemberCardProps {
   member: Member;
@@ -24,7 +25,7 @@ const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCa
   }
 
   // Use stored QR code URL from DB if available (avoids external API call on every render).
-  const appBaseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://healthclubfeni.vercel.app";
+  const appBaseUrl = SITE_URL;
   const verificationUrl = `${appBaseUrl}/verify/${member.id}`;
   const qrCodeSrc =
     member.qrCodeUrl ||

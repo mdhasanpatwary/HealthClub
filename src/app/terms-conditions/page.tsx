@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
+import { SITE_URL } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -9,7 +10,7 @@ export async function generateMetadata() {
     title: tServer(locale, "pages.termsConditions.metaTitle"),
     description: tServer(locale, "pages.termsConditions.metaDesc"),
     alternates: {
-      canonical: "https://healthclubfeni.vercel.app/terms-conditions",
+      canonical: `${SITE_URL}/terms-conditions`,
     },
   };
 }
@@ -28,13 +29,13 @@ export default async function TermsConditionsPage() {
           "@type": "ListItem",
           "position": 1,
           "name": locale === "en" ? "Home" : "হোম",
-          "item": "https://healthclubfeni.vercel.app"
+          "item": SITE_URL
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": locale === "en" ? "Terms & Conditions" : "টার্মস অ্যান্ড কন্ডিশনস",
-          "item": "https://healthclubfeni.vercel.app/terms-conditions"
+          "item": `${SITE_URL}/terms-conditions`
         }
       ]
     }

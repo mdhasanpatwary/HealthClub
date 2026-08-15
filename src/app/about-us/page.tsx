@@ -2,6 +2,7 @@ import { Heart, ShieldCheck, Users, Award, Target, Zap } from "lucide-react";
 import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
+import { SITE_URL } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -14,14 +15,14 @@ export async function generateMetadata() {
       ? "Learn about Health Club's mission to make healthcare affordable in Bangladesh through digital membership card discounts at top partner hospitals."
       : "হেলথ ক্লাবের লক্ষ্য, আমাদের ভিশন এবং কীভাবে আমরা চিকিৎসা খরচ কমিয়ে এনে দেশব্যাপী স্বাস্থ্যসেবা সহজলভ্য করছি তা জানুন।",
     alternates: {
-      canonical: "https://healthclubfeni.vercel.app/about-us",
+      canonical: `${SITE_URL}/about-us`,
     },
     openGraph: {
       title: isEn ? "About Health Club - Making Healthcare Affordable" : "আমাদের সম্পর্কে - হেলথ ক্লাব",
       description: isEn
         ? "Discover how Health Club brings medical discounts to middle-class families."
         : "চিকিৎসা ব্যয় সাশ্রয়ে হেলথ ক্লাবের উদ্যোগ ও লক্ষ্য সম্পর্কে বিস্তারিত জানুন।",
-      url: "https://healthclubfeni.vercel.app/about-us",
+      url: `${SITE_URL}/about-us`,
     },
   };
 }
@@ -64,13 +65,13 @@ export default async function AboutUsPage() {
           "@type": "ListItem",
           "position": 1,
           "name": locale === "en" ? "Home" : "হোম",
-          "item": "https://healthclubfeni.vercel.app"
+          "item": SITE_URL
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": locale === "en" ? "About Us" : "আমাদের সম্পর্কে",
-          "item": "https://healthclubfeni.vercel.app/about-us"
+          "item": `${SITE_URL}/about-us`
         }
       ]
     },
@@ -78,7 +79,7 @@ export default async function AboutUsPage() {
       "@context": "https://schema.org",
       "@type": "AboutPage",
       "name": locale === "en" ? "About Health Club" : "হেলথ ক্লাব সম্পর্কে",
-      "url": "https://healthclubfeni.vercel.app/about-us",
+      "url": `${SITE_URL}/about-us`,
       "description": "Health Club is a healthcare membership service in Bangladesh dedicated to reducing medical expenses through partner hospital discounts."
     }
   ];
