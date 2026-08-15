@@ -26,6 +26,9 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "images.unsplash.com" },
       // External QR code API (fallback when qrCodeUrl not in DB)
       { protocol: "https", hostname: "api.qrserver.com" },
+      // Fenir Doctor images
+      { protocol: "https", hostname: "fenirdoctor.com" },
+      { protocol: "https", hostname: "www.fenirdoctor.com" },
     ],
     // Serve modern formats (WebP/AVIF) where supported
     formats: ["image/avif", "image/webp"],

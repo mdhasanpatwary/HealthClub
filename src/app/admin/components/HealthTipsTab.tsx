@@ -50,15 +50,18 @@ import { exportToCsv } from "@/lib/exportUtils";
 import { toast } from "sonner";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { HealthTipArticleDialog } from "./HealthTipArticleDialog";
+import { Pagination } from "@/components/ui/pagination";
 
 export function HealthTipsTab() {
-  const { locale } = useLanguage();
+  const { locale, t } = useLanguage();
   const isEn = locale === "en";
 
   const [loading, setLoading] = useState(true);
   const [articles, setArticles] = useState<HealthTipArticle[]>([]);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   // Dialog & Delete Modal
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -104,6 +107,14 @@ export function HealthTipsTab() {
       return matchSearch && matchCat;
     });
   }, [articles, search, selectedCategory]);
+
+  const totalPages = Math.ceil(filteredArticles.length / pageSize) || 1;
+  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
+
+  const paginatedArticles = useMemo(() => {
+    const start = (safeCurrentPage - 1) * pageSize;
+    return filteredArticles.slice(start, start + pageSize);
+  }, [filteredArticles, safeCurrentPage, pageSize]);
 
   const confirmDelete = async () => {
     if (!deletingArticle) return;
@@ -163,14 +174,20 @@ export function HealthTipsTab() {
                 <Input
                   placeholder={isEn ? "Search by title, author..." : "শিরোনাম বা লেখক দিয়ে খুঁজুন..."}
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setCurrentPage(1);
+                  }}
                   className="pl-9 h-9 text-xs border-border bg-background"
                 />
               </div>
 
               <select
                 value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
+                onChange={(e) => {
+                  setSelectedCategory(e.target.value);
+                  setCurrentPage(1);
+                }}
                 className="h-9 px-2.5 text-xs rounded-md border border-border bg-background focus:outline-none"
               >
                 {HEALTH_CATEGORIES.map((c) => (
@@ -230,7 +247,7 @@ export function HealthTipsTab() {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    filteredArticles.map((art) => (
+                    paginatedArticles.map((art) => (
                       <TableRow key={art.slug} className="hover:bg-muted/30">
                         <TableCell>
                           <Badge className="bg-primary/10 text-primary font-bold border-primary/20 text-[10px]">
@@ -294,6 +311,25 @@ export function HealthTipsTab() {
                 </TableBody>
               </Table>
             </div>
+          )}
+
+          {/* Pagination Footer */}
+          {!loading && filteredArticles.length > 0 && (
+            <Pagination
+              currentPage={safeCurrentPage}
+              totalPages={totalPages}
+              pageSize={pageSize}
+              totalItems={filteredArticles.length}
+              onPageChange={setCurrentPage}
+              onPageSizeChange={(size) => {
+                setPageSize(size);
+                setCurrentPage(1);
+              }}
+              pageSizeOptions={[10, 20, 50, 100]}
+              locale={locale}
+              t={t}
+              itemLabel={isEn ? "articles" : "টি আর্টিকেল"}
+            />
           )}
         </CardContent>
       </Card>

@@ -32,6 +32,7 @@ export function HealthTipsDirectory({
 
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [visibleCount, setVisibleCount] = useState(12);
 
   const filteredArticles = useMemo(() => {
     return initialArticles.filter((article: HealthTipArticle) => {
@@ -48,6 +49,8 @@ export function HealthTipsDirectory({
     });
   }, [initialArticles, selectedCategory, searchQuery]);
 
+  const displayedArticles = filteredArticles.slice(0, visibleCount);
+
   return (
     <div className="space-y-8">
       {/* Category Pills & Search */}
@@ -59,7 +62,10 @@ export function HealthTipsDirectory({
             return (
               <button
                 key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
+                onClick={() => {
+                  setSelectedCategory(cat.id);
+                  setVisibleCount(12);
+                }}
                 className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold shrink-0 transition-all ${
                   active
                     ? "bg-primary text-white shadow-sm"
@@ -80,67 +86,93 @@ export function HealthTipsDirectory({
               isEn ? "Search health guides, diseases..." : "রোগ বা স্বাস্থ্য বিষয়ে খুঁজুন..."
             }
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setVisibleCount(12);
+            }}
             className="pl-10 bg-background rounded-xl"
           />
         </div>
       </div>
 
       {/* Articles Grid */}
-      {filteredArticles.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-          {filteredArticles.map((article) => (
-            <Card
-              key={article.slug}
-              className="border border-border/80 bg-background hover:border-primary/40 transition-all duration-300 shadow-xs flex flex-col justify-between group overflow-hidden rounded-3xl"
-            >
-              <CardContent className="p-6 space-y-4 flex-1 flex flex-col justify-between">
-                <div className="space-y-3">
-                  {/* Category & Read Time */}
-                  <div className="flex items-center justify-between gap-2">
-                    <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-xs font-bold px-2.5 py-0.5">
-                      {isEn ? article.categoryNameEn : article.categoryNameBn}
-                    </Badge>
-                    <div className="flex items-center gap-1 text-[11px] text-muted-foreground font-medium">
-                      <Clock className="h-3.5 w-3.5" />
-                      <span>{isEn ? article.readTimeEn : article.readTimeBn}</span>
+      {displayedArticles.length > 0 ? (
+        <div className="space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+            {displayedArticles.map((article) => (
+              <Card
+                key={article.slug}
+                className="border border-border/80 bg-background hover:border-primary/40 transition-all duration-300 shadow-xs flex flex-col justify-between group overflow-hidden rounded-3xl"
+              >
+                <CardContent className="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                  <div className="space-y-3">
+                    {/* Category & Read Time */}
+                    <div className="flex items-center justify-between gap-2">
+                      <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-xs font-bold px-2.5 py-0.5">
+                        {isEn ? article.categoryNameEn : article.categoryNameBn}
+                      </Badge>
+                      <div className="flex items-center gap-1 text-[11px] text-muted-foreground font-medium">
+                        <Clock className="h-3.5 w-3.5" />
+                        <span>{isEn ? article.readTimeEn : article.readTimeBn}</span>
+                      </div>
                     </div>
+
+                    {/* Title */}
+                    <Link href={`/health-tips/${article.slug}`}>
+                      <h3 className="font-heading font-bold text-lg sm:text-xl text-secondary dark:text-white group-hover:text-primary transition-colors leading-snug">
+                        {isEn ? article.titleEn : article.titleBn}
+                      </h3>
+                    </Link>
+
+                    {/* Excerpt */}
+                    <p className="text-xs sm:text-sm text-muted-foreground line-clamp-3 leading-relaxed">
+                      {isEn ? article.excerptEn : article.excerptBn}
+                    </p>
                   </div>
 
-                  {/* Title */}
-                  <Link href={`/health-tips/${article.slug}`}>
-                    <h3 className="font-heading font-bold text-lg sm:text-xl text-secondary dark:text-white group-hover:text-primary transition-colors leading-snug">
-                      {isEn ? article.titleEn : article.titleBn}
-                    </h3>
-                  </Link>
-
-                  {/* Excerpt */}
-                  <p className="text-xs sm:text-sm text-muted-foreground line-clamp-3 leading-relaxed">
-                    {isEn ? article.excerptEn : article.excerptBn}
-                  </p>
-                </div>
-
-                {/* Footer: Author & Read More */}
-                <div className="pt-4 border-t border-border/60 flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <div className="h-7 w-7 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                      <User className="h-3.5 w-3.5" />
+                  {/* Footer: Author & Read More */}
+                  <div className="pt-4 border-t border-border/60 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <div className="h-7 w-7 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                        <User className="h-3.5 w-3.5" />
+                      </div>
+                      <span className="truncate max-w-[180px] font-medium">
+                        {isEn ? article.authorEn : article.authorBn}
+                      </span>
                     </div>
-                    <span className="truncate max-w-[180px] font-medium">
-                      {isEn ? article.authorEn : article.authorBn}
-                    </span>
-                  </div>
 
-                  <Link href={`/health-tips/${article.slug}`}>
-                    <Button variant="ghost" size="sm" className="text-primary group-hover:bg-primary group-hover:text-white font-bold gap-1 rounded-xl text-xs transition-all">
-                      <span>{isEn ? "Read Guide" : "বিস্তারিত পড়ুন"}</span>
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                    <Link href={`/health-tips/${article.slug}`}>
+                      <Button variant="ghost" size="sm" className="text-primary group-hover:bg-primary group-hover:text-white font-bold gap-1 rounded-xl text-xs transition-all">
+                        <span>{isEn ? "Read Guide" : "বিস্তারিত পড়ুন"}</span>
+                        <ArrowRight className="h-3.5 w-3.5" />
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Load More Button */}
+          {filteredArticles.length > visibleCount && (
+            <div className="flex flex-col items-center justify-center pt-2 space-y-2">
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => setVisibleCount((prev) => prev + 12)}
+                className="rounded-2xl px-8 border-primary/30 text-primary hover:bg-primary hover:text-white font-semibold transition-all shadow-xs cursor-pointer"
+              >
+                {isEn
+                  ? `Load More Articles (${filteredArticles.length - visibleCount} remaining)`
+                  : `আরো আর্টিকেল দেখুন (বাকি ${filteredArticles.length - visibleCount} টি)`}
+              </Button>
+              <p className="text-xs text-muted-foreground">
+                {isEn
+                  ? `Showing ${Math.min(visibleCount, filteredArticles.length)} of ${filteredArticles.length} articles`
+                  : `মোট ${filteredArticles.length} টি আর্টিকেলের মধ্যে ${Math.min(visibleCount, filteredArticles.length)} টি প্রদর্শিত হচ্ছে`}
+              </p>
+            </div>
+          )}
         </div>
       ) : (
         <div className="p-12 text-center bg-muted/40 rounded-3xl border border-dashed border-border space-y-3">

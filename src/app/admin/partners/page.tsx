@@ -11,7 +11,7 @@ import { PartnersTab } from "../components/PartnersTab";
 import { PartnerDialog } from "../components/PartnerDialog";
 
 export default function AdminPartnersPage() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [partners, setPartners] = useState<Partner[]>([]);
   const [partnerSearch, setPartnerSearch] = useState("");
@@ -197,6 +197,7 @@ export default function AdminPartnersPage() {
           setIsPartnerOpen(true);
         }}
         onDeleteClick={handleDeletePartner}
+        locale={locale}
         t={t}
       />
 

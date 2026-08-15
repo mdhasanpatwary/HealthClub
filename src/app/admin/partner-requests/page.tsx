@@ -13,7 +13,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { PartnerRequestsTab } from "../components/PartnerRequestsTab";
 
 export default function AdminPartnerRequestsPage() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [partnerRequests, setPartnerRequests] = useState<PartnerRequest[]>([]);
 
@@ -104,6 +104,7 @@ export default function AdminPartnerRequestsPage() {
         partnerRequests={partnerRequests}
         onApprove={handleApprove}
         onReject={handleReject}
+        locale={locale}
         t={t}
       />
     </div>

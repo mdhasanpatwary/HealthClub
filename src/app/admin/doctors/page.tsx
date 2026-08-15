@@ -6,7 +6,7 @@ import { DoctorsTab } from "../components/DoctorsTab";
 import { DoctorDialog } from "../components/DoctorDialog";
 
 export default function AdminDoctorsPage() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const {
     filteredDoctors,
     doctorSearch,
@@ -41,6 +41,7 @@ export default function AdminDoctorsPage() {
         onNewDoctorClick={handleOpenNewDoctor}
         onEditClick={handleEditDoctor}
         onDeleteClick={onDelete}
+        locale={locale}
         t={t}
       />
 

@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import DoctorDirectory from "@/components/ui/DoctorDirectory";
+import ConsultantsGuide from "@/components/consultants/ConsultantsGuide";
+import ConsultantsFAQ from "@/components/consultants/ConsultantsFAQ";
 import { Button } from "@/components/ui/button";
 import { getDoctorsAction } from "@/app/actions/doctorActions";
 import { Stethoscope, ShieldCheck, HeartHandshake, PhoneCall } from "lucide-react";
@@ -43,6 +45,15 @@ export async function generateMetadata() {
         : "ফেনীর বিশেষজ্ঞ ডাক্তারদের পূর্ণাঙ্গ তালিকা ও সরাসরি সিরিয়াল দেওয়ার নাম্বার।",
       url: "https://healthclubfeni.vercel.app/consultants",
     },
+    twitter: {
+      card: "summary_large_image",
+      title: isEn
+        ? "Specialist Doctors & Consultants Directory - Health Club"
+        : "বিশেষজ্ঞ ডাক্তার ও কনসালট্যান্ট তালিকা - হেলথ ক্লাব",
+      description: isEn
+        ? "Find specialist doctors, chamber schedules, and book appointment serials directly in Feni."
+        : "ফেনীর বিশেষজ্ঞ ডাক্তারদের পূর্ণাঙ্গ তালিকা ও সরাসরি সিরিয়াল দেওয়ার নাম্বার।",
+    },
   };
 }
 
@@ -54,7 +65,7 @@ export default async function ConsultantsPage() {
   // Fetch doctors server-side (cached)
   const doctors = await getDoctorsAction();
 
-  // Structured Data for Google Rich Snippets
+  // Structured Data for Google Rich Snippets & AI Search Engines
   const jsonLdData = [
     {
       "@context": "https://schema.org",
@@ -62,15 +73,15 @@ export default async function ConsultantsPage() {
       itemListElement: [
         {
           "@type": "ListItem",
-          "position": 1,
-          "name": locale === "en" ? "Home" : "হোম",
-          "item": "https://healthclubfeni.vercel.app",
+          position: 1,
+          name: locale === "en" ? "Home" : "হোম",
+          item: "https://healthclubfeni.vercel.app",
         },
         {
           "@type": "ListItem",
-          "position": 2,
-          "name": locale === "en" ? "Consultants & Doctors" : "ডাক্তার ও কনসালট্যান্টস",
-          "item": "https://healthclubfeni.vercel.app/consultants",
+          position: 2,
+          name: locale === "en" ? "Consultants & Doctors" : "ডাক্তার ও কনসালট্যান্টস",
+          item: "https://healthclubfeni.vercel.app/consultants",
         },
       ],
     },
@@ -98,6 +109,52 @@ export default async function ConsultantsPage() {
     },
     {
       "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: t("consultants.faq.q1"),
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: t("consultants.faq.a1"),
+          },
+        },
+        {
+          "@type": "Question",
+          name: t("consultants.faq.q2"),
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: t("consultants.faq.a2"),
+          },
+        },
+        {
+          "@type": "Question",
+          name: t("consultants.faq.q3"),
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: t("consultants.faq.a3"),
+          },
+        },
+        {
+          "@type": "Question",
+          name: t("consultants.faq.q4"),
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: t("consultants.faq.a4"),
+          },
+        },
+        {
+          "@type": "Question",
+          name: t("consultants.faq.q5"),
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: t("consultants.faq.a5"),
+          },
+        },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
       "@type": "ItemList",
       name: "Specialist Doctors in Feni",
       itemListElement: doctors.slice(0, 20).map((doc, index) => ({
@@ -106,9 +163,14 @@ export default async function ConsultantsPage() {
         item: {
           "@type": "Physician",
           name: doc.name,
+          image: doc.imageUrl || "https://healthclubfeni.vercel.app/og-image.png",
           medicalSpecialty: doc.specialty,
           jobTitle: doc.designation,
           telephone: doc.serialPhone,
+          worksFor: {
+            "@type": "MedicalOrganization",
+            name: doc.chamberName,
+          },
           address: {
             "@type": "PostalAddress",
             streetAddress: doc.chamberAddress,
@@ -123,7 +185,7 @@ export default async function ConsultantsPage() {
   return (
     <div className="bg-background min-h-screen py-6 sm:py-12">
       <JsonLd data={jsonLdData} />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-14">
         
         {/* Page Header */}
         <div className="text-center space-y-2 sm:space-y-4 max-w-3xl mx-auto">
@@ -189,6 +251,12 @@ export default async function ConsultantsPage() {
           <DoctorDirectory doctors={doctors} />
         </div>
 
+        {/* Generative Engine Optimization (GEO) Healthcare Guide & Authority Block */}
+        <ConsultantsGuide />
+
+        {/* Answer Engine Optimization (AEO) FAQ Section */}
+        <ConsultantsFAQ />
+
         {/* Bottom CTA for Partner Hospitals & Doctors */}
         <div className="bg-gradient-to-r from-primary/10 via-emerald-500/5 to-secondary/5 border border-primary/20 rounded-3xl p-5 sm:p-8 md:p-12 text-center space-y-4 sm:space-y-6 max-w-4xl mx-auto">
           <h2 className="font-heading text-xl md:text-3xl font-bold text-secondary dark:text-white">
@@ -219,3 +287,4 @@ export default async function ConsultantsPage() {
     </div>
   );
 }
+

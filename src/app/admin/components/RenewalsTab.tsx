@@ -1,16 +1,19 @@
 "use client";
 
+import { useState, useMemo } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Pagination } from "@/components/ui/pagination";
 import { Check, X } from "lucide-react";
 import { Member } from "@/services/db";
+import { Locale } from "@/lib/i18n";
 
 interface RenewalsTabProps {
   members: Member[];
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
-  locale: string;
+  locale: Locale | string;
   t?: (key: string) => string;
 }
 
@@ -18,10 +21,25 @@ export function RenewalsTab({
   members,
   onApprove,
   onReject,
-  locale,
+  locale = "bn",
   t = (k) => k,
 }: RenewalsTabProps) {
-  const pendingRenewals = members.filter((m) => m.renewalStatus === "pending");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  const pendingRenewals = useMemo(() => {
+    return members.filter((m) => m.renewalStatus === "pending");
+  }, [members]);
+
+  const totalPages = Math.ceil(pendingRenewals.length / pageSize) || 1;
+  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
+
+  const paginatedRenewals = useMemo(() => {
+    const startIndex = (safeCurrentPage - 1) * pageSize;
+    return pendingRenewals.slice(startIndex, startIndex + pageSize);
+  }, [pendingRenewals, safeCurrentPage, pageSize]);
+
+  const isEn = locale === "en";
 
   const formatDate = (dateStr: string) => {
     try {
@@ -72,14 +90,14 @@ export function RenewalsTab({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {pendingRenewals.length === 0 ? (
+              {paginatedRenewals.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-10 text-muted-foreground text-sm">
                     {t("admin.renewals.noPending")}
                   </TableCell>
                 </TableRow>
               ) : (
-                pendingRenewals.map((m) => (
+                paginatedRenewals.map((m) => (
                   <TableRow key={m.id} className="hover:bg-muted/20 border-b border-border/60">
                     <TableCell className="font-bold text-secondary">{m.name}</TableCell>
                     <TableCell className="font-mono text-xs text-primary font-semibold">{m.id}</TableCell>
@@ -113,6 +131,25 @@ export function RenewalsTab({
             </TableBody>
           </Table>
         </div>
+
+        {/* Pagination Footer */}
+        {pendingRenewals.length > 0 && (
+          <Pagination
+            currentPage={safeCurrentPage}
+            totalPages={totalPages}
+            pageSize={pageSize}
+            totalItems={pendingRenewals.length}
+            onPageChange={setCurrentPage}
+            onPageSizeChange={(size) => {
+              setPageSize(size);
+              setCurrentPage(1);
+            }}
+            pageSizeOptions={[10, 20, 50, 100]}
+            locale={locale as Locale}
+            t={t}
+            itemLabel={isEn ? "renewals" : "টি নবায়ন আবেদন"}
+          />
+        )}
       </CardContent>
     </Card>
   );

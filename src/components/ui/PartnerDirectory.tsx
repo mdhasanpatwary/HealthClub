@@ -53,6 +53,7 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
   const [prevInitialPartners, setPrevInitialPartners] = useState(initialPartners);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [visibleCount, setVisibleCount] = useState(18);
   const { locale, t } = useLanguage();
 
   if (initialPartners !== prevInitialPartners) {
@@ -94,8 +95,8 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
     return matchesSearch && matchesCategory;
   });
 
-  // Apply limit if specified
-  const displayedPartners = limit ? filteredPartners.slice(0, limit) : filteredPartners;
+  // Apply limit or pagination slice
+  const displayedPartners = limit ? filteredPartners.slice(0, limit) : filteredPartners.slice(0, visibleCount);
 
   const getCategoryFallbackImage = (category: string) => {
     switch (category) {
@@ -157,7 +158,10 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
             type="text"
             placeholder={t("ui.partnerdirectory.searchByHospitalNameOr")}
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setVisibleCount(18);
+            }}
             className="pl-10 border-border bg-background"
           />
         </div>
@@ -168,7 +172,10 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
             {categories.map((cat) => (
               <button
                 key={cat.value}
-                onClick={() => setSelectedCategory(cat.value)}
+                onClick={() => {
+                  setSelectedCategory(cat.value);
+                  setVisibleCount(18);
+                }}
                 className={`px-4 py-2 rounded-full text-xs font-semibold border transition-all ${selectedCategory === cat.value
                     ? "bg-primary text-white border-primary shadow-sm"
                     : "bg-background text-muted-foreground border-border hover:bg-muted"
@@ -190,97 +197,120 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
           ))}
         </div>
       ) : displayedPartners.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-6">
-          {displayedPartners.map((partner) => {
-            const mapUrl = partner.mapLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(partner.name + " " + partner.address)}`;
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-6">
+            {displayedPartners.map((partner) => {
+              const mapUrl = partner.mapLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${partner.name}, ${partner.address}`)}`;
 
-            return (
-              <Card key={partner.id} className="p-0 gap-0 overflow-hidden hover:shadow-xl transition-all duration-300 border-border bg-background dark:bg-slate-900 group flex flex-col justify-between rounded-2xl border">
+              return (
+                <Card key={partner.id} className="group relative overflow-hidden rounded-2xl border-border bg-card shadow-xs hover:shadow-xl hover:border-primary/40 transition-all duration-300 flex flex-col justify-between">
 
-                {/* Full Image Banner with Overlay & Floating Info */}
-                <div className="relative h-52 sm:h-56 w-full bg-slate-900 overflow-hidden">
-                  <PartnerCardBanner
-                    partner={partner}
-                    fallbackImage={getCategoryFallbackImage(partner.category)}
-                  />
+                  {/* Full Image Banner with Overlay & Floating Info */}
+                  <div className="relative h-52 sm:h-56 w-full bg-slate-900 overflow-hidden">
+                    <PartnerCardBanner
+                      partner={partner}
+                      fallbackImage={getCategoryFallbackImage(partner.category)}
+                    />
 
-                  {/* Dark Gradient Overlay for optimal contrast */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/40 to-slate-950/10 group-hover:from-slate-950/90 transition-opacity duration-300" />
+                    {/* Dark Gradient Overlay for optimal contrast */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/40 to-slate-950/10 group-hover:from-slate-950/90 transition-opacity duration-300" />
 
-                  {/* Floating Category Badge Top-Right */}
-                  <div className="absolute top-3 right-3 z-10">
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-emerald-400 border border-emerald-500/30 shadow-xs flex items-center gap-1.5">
-                      {getCategoryIconSmall(partner.category)}
-                      {getCategoryLabel(partner.category)}
-                    </span>
-                  </div>
+                    {/* Floating Category Badge Top-Right */}
+                    <div className="absolute top-3 right-3 z-10">
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-emerald-400 border border-emerald-500/30 shadow-xs flex items-center gap-1.5">
+                        {getCategoryIconSmall(partner.category)}
+                        {getCategoryLabel(partner.category)}
+                      </span>
+                    </div>
 
-                  {/* Floating Name & Address at bottom of image overlay */}
-                  <div className="absolute bottom-3 left-4 right-4 z-10 space-y-1">
-                    <h3 className="font-heading text-base sm:text-lg font-bold text-white drop-shadow-md line-clamp-2 leading-snug group-hover:text-emerald-400 transition-colors">
-                      {partner.name}
-                    </h3>
-                    <a
-                      href={mapUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 text-xs text-slate-200 hover:text-emerald-300 transition-colors drop-shadow-sm w-fit"
-                    >
-                      <MapPin className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
-                      <span className="line-clamp-1">{partner.address}</span>
-                    </a>
-                  </div>
-                </div>
-
-                {/* Card Footer: Discount Rate & Action Buttons (Location & Call) */}
-                <div className="p-3.5 sm:p-4 bg-background dark:bg-slate-900 flex flex-wrap items-center justify-between gap-2 border-t border-border/60">
-                  <div className="shrink-0">
-                    <p className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">
-                      {t("ui.partnerdirectory.discountRate")}
-                    </p>
-                    <p className="text-sm sm:text-base font-bold text-primary font-heading">
-                      {formatDiscount(partner.discount, locale)}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-2 shrink-0">
-                    {/* Location / View Map Icon Button */}
-                    <a
-                      href={mapUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title={t("ui.partnerdirectory.viewMap")}
-                    >
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-8 w-8 rounded-lg border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary transition-colors"
-                        aria-label={t("ui.partnerdirectory.viewMap")}
+                    {/* Floating Name & Address at bottom of image overlay */}
+                    <div className="absolute bottom-3 left-4 right-4 z-10 space-y-1">
+                      <h3 className="font-heading text-base sm:text-lg font-bold text-white drop-shadow-md line-clamp-2 leading-snug group-hover:text-emerald-400 transition-colors">
+                        {partner.name}
+                      </h3>
+                      <a
+                        href={mapUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 text-xs text-slate-200 hover:text-emerald-300 transition-colors drop-shadow-sm w-fit"
                       >
-                        <MapPin className="h-4 w-4 text-primary shrink-0" />
-                      </Button>
-                    </a>
-
-                    {/* Call Icon Button */}
-                    <a
-                      href={`tel:${partner.phone}`}
-                      title={t("ui.partnerdirectory.call")}
-                    >
-                      <Button
-                        variant="default"
-                        size="icon"
-                        className="h-8 w-8 rounded-lg bg-primary hover:bg-primary-dark text-white shadow-xs transition-colors"
-                        aria-label={t("ui.partnerdirectory.call")}
-                      >
-                        <Phone className="h-4 w-4 shrink-0" />
-                      </Button>
-                    </a>
+                        <MapPin className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
+                        <span className="line-clamp-1">{partner.address}</span>
+                      </a>
+                    </div>
                   </div>
-                </div>
 
-              </Card>
-            );
-          })}
+                  {/* Card Footer: Discount Rate & Action Buttons (Location & Call) */}
+                  <div className="p-3.5 sm:p-4 bg-background dark:bg-slate-900 flex flex-wrap items-center justify-between gap-2 border-t border-border/60">
+                    <div className="shrink-0">
+                      <p className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">
+                        {t("ui.partnerdirectory.discountRate")}
+                      </p>
+                      <p className="text-sm sm:text-base font-bold text-primary font-heading">
+                        {formatDiscount(partner.discount, locale)}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      {/* Location / View Map Icon Button */}
+                      <a
+                        href={mapUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={t("ui.partnerdirectory.viewMap")}
+                      >
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-8 w-8 rounded-lg border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary transition-colors"
+                          aria-label={t("ui.partnerdirectory.viewMap")}
+                        >
+                          <MapPin className="h-4 w-4 text-primary shrink-0" />
+                        </Button>
+                      </a>
+
+                      {/* Call Icon Button */}
+                      <a
+                        href={`tel:${partner.phone}`}
+                        title={t("ui.partnerdirectory.call")}
+                      >
+                        <Button
+                          variant="default"
+                          size="icon"
+                          className="h-8 w-8 rounded-lg bg-primary hover:bg-primary-dark text-white shadow-xs transition-colors"
+                          aria-label={t("ui.partnerdirectory.call")}
+                        >
+                          <Phone className="h-4 w-4 shrink-0" />
+                        </Button>
+                      </a>
+                    </div>
+                  </div>
+
+                </Card>
+              );
+            })}
+          </div>
+
+          {/* Load More Button */}
+          {!limit && filteredPartners.length > visibleCount && (
+            <div className="flex flex-col items-center justify-center pt-4 pb-2 space-y-2">
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => setVisibleCount((prev) => prev + 18)}
+                className="rounded-2xl px-8 border-primary/30 text-primary hover:bg-primary hover:text-white font-semibold transition-all shadow-xs cursor-pointer"
+              >
+                {locale === "en"
+                  ? `Load More Facilities (${filteredPartners.length - visibleCount} remaining)`
+                  : `আরো প্রতিষ্ঠান দেখুন (বাকি ${filteredPartners.length - visibleCount} টি)`}
+              </Button>
+              <p className="text-xs text-muted-foreground">
+                {locale === "en"
+                  ? `Showing ${Math.min(visibleCount, filteredPartners.length)} of ${filteredPartners.length} facilities`
+                  : `মোট ${filteredPartners.length} টি প্রতিষ্ঠানের মধ্যে ${Math.min(visibleCount, filteredPartners.length)} টি প্রদর্শিত হচ্ছে`}
+              </p>
+            </div>
+          )}
         </div>
       ) : (
         <div className="text-center py-12 border border-dashed border-border rounded-xl">
