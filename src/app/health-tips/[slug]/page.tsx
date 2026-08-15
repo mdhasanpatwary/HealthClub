@@ -3,9 +3,13 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
-import { getHealthTipBySlugAction } from "@/app/actions/healthTipsAdminActions";
+import {
+  getHealthTipBySlugAction,
+  getAllHealthTipsAction,
+} from "@/app/actions/healthTipsAdminActions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Clock,
   User,
@@ -15,8 +19,10 @@ import {
   Stethoscope,
   ArrowRight,
   Sparkles,
+  BookOpen,
 } from "lucide-react";
 import { ArticleShareBar } from "./components/ArticleShareBar";
+import { MedicalDisclaimer } from "../components/MedicalDisclaimer";
 import { SITE_URL } from "@/lib/siteConfig";
 
 interface ArticlePageProps {
@@ -32,18 +38,38 @@ export async function generateMetadata({ params }: ArticlePageProps) {
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
 
+  const title = isEn ? `${article.titleEn} - Health Club` : `${article.titleBn} - হেলথ ক্লাব`;
+  const description = isEn ? article.excerptEn : article.excerptBn;
+
   return {
-    title: isEn ? `${article.titleEn} - Health Club` : `${article.titleBn} - হেলথ ক্লাব`,
-    description: isEn ? article.excerptEn : article.excerptBn,
+    title,
+    description,
     alternates: {
       canonical: `${SITE_URL}/health-tips/${article.slug}`,
     },
     openGraph: {
-      title: isEn ? article.titleEn : article.titleBn,
-      description: isEn ? article.excerptEn : article.excerptBn,
+      title,
+      description,
       url: `${SITE_URL}/health-tips/${article.slug}`,
       type: "article",
+      images: [
+        {
+          url: `${SITE_URL}/icon.png`,
+          width: 512,
+          height: 512,
+          alt: title,
+        },
+      ],
     },
+    keywords: [
+      article.titleBn,
+      article.titleEn,
+      article.categoryNameBn,
+      article.categoryNameEn,
+      "স্বাস্থ্য টিপস",
+      "ডাক্তারের পরামর্শ",
+      "Health Club tips",
+    ],
   };
 }
 
@@ -51,6 +77,16 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
   const { slug } = await params;
   const article = await getHealthTipBySlugAction(slug);
   if (!article) notFound();
+
+  const allArticles = await getAllHealthTipsAction();
+  const relatedArticles = allArticles
+    .filter((a) => a.slug !== article.slug)
+    .sort((a, b) => {
+      const aMatch = a.category === article.category ? 1 : 0;
+      const bMatch = b.category === article.category ? 1 : 0;
+      return bMatch - aMatch;
+    })
+    .slice(0, 2);
 
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
@@ -83,18 +119,27 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
     },
     {
       "@context": "https://schema.org",
-      "@type": "Article",
+      "@type": "MedicalWebPage",
       "headline": isEn ? article.titleEn : article.titleBn,
       "description": isEn ? article.excerptEn : article.excerptBn,
+      "url": `${SITE_URL}/health-tips/${article.slug}`,
+      "mainEntityOfPage": `${SITE_URL}/health-tips/${article.slug}`,
       "author": {
         "@type": "Person",
         "name": isEn ? article.authorEn : article.authorBn,
+        "jobTitle": "Physician / Medical Specialist",
       },
       "publisher": {
         "@type": "Organization",
         "name": "Health Club",
+        "url": SITE_URL,
+        "logo": {
+          "@type": "ImageObject",
+          "url": `${SITE_URL}/icon.png`,
+        },
       },
-      "datePublished": "2026-08-14",
+      "datePublished": "2026-08-10",
+      "dateModified": "2026-08-15",
     },
   ];
 
@@ -111,7 +156,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
           {/* Back button */}
           <Link
             href="/health-tips"
-            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-muted-foreground hover:text-primary transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-muted-foreground hover:text-primary transition-colors cursor-pointer"
           >
             <ChevronLeft className="h-4 w-4" />
             <span>{isEn ? "Back to all guides" : "সব টিপসে ফিরে যান"}</span>
@@ -147,7 +192,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
                 {isEn ? article.authorEn : article.authorBn}
               </p>
               <p className="text-[11px] text-muted-foreground">
-                {isEn ? "Medically Reviewed & Published" : "চিকিৎসক দ্বারা পর্যালোচিত ও প্রকাশিত"}
+                {isEn ? "Medically Reviewed & Verified" : "চিকিৎসক দ্বারা পর্যালোচিত ও প্রকাশিত"}
               </p>
             </div>
           </div>
@@ -177,7 +222,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
           {contentBlocks.map((block, idx) => (
             <div
               key={idx}
-              className="p-4 sm:p-6 rounded-2xl bg-background border border-border/70 shadow-xs space-y-2 whitespace-pre-line"
+              className="p-5 sm:p-6 rounded-2xl bg-card border border-border/70 shadow-xs space-y-2 whitespace-pre-line"
             >
               {block}
             </div>
@@ -191,6 +236,40 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
             slug={article.slug}
           />
         </div>
+
+        {/* Related Health Guides */}
+        {relatedArticles.length > 0 && (
+          <div className="space-y-4 pt-4 border-t border-border/80">
+            <div className="flex items-center gap-2">
+              <BookOpen className="h-4 w-4 text-primary" />
+              <h3 className="font-heading font-bold text-base sm:text-lg text-foreground">
+                {isEn ? "Related Health Guides" : "সম্পর্কিত অন্যান্য স্বাস্থ্য গাইড"}
+              </h3>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {relatedArticles.map((rel) => (
+                <Card
+                  key={rel.slug}
+                  className="border border-border/80 bg-card hover:border-primary/40 transition-all rounded-2xl group"
+                >
+                  <CardContent className="p-4 space-y-2.5">
+                    <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-[10px]">
+                      {isEn ? rel.categoryNameEn : rel.categoryNameBn}
+                    </Badge>
+                    <Link href={`/health-tips/${rel.slug}`}>
+                      <h4 className="font-heading font-bold text-sm text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                        {isEn ? rel.titleEn : rel.titleBn}
+                      </h4>
+                    </Link>
+                    <p className="text-[11px] text-muted-foreground line-clamp-2">
+                      {isEn ? rel.excerptEn : rel.excerptBn}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Specialist Doctor Call to Action */}
         <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-emerald-500/10 via-primary/5 to-transparent border border-primary/20 flex flex-col sm:flex-row items-center justify-between gap-6">
@@ -210,12 +289,15 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
             </div>
           </div>
           <Link href="/consultants" className="shrink-0 w-full sm:w-auto">
-            <Button className="w-full font-bold">
+            <Button className="w-full font-bold cursor-pointer">
               {isEn ? "View Doctors" : "ডাক্তার তালিকা"}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Link>
         </div>
+
+        {/* Medical Disclaimer */}
+        <MedicalDisclaimer />
       </main>
     </div>
   );

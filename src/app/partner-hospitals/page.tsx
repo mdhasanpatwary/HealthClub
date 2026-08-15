@@ -1,8 +1,7 @@
-import Link from "next/link";
 import PartnerDirectory from "@/components/ui/PartnerDirectory";
 import PartnerHospitalsGuide from "@/components/partner-hospitals/PartnerHospitalsGuide";
 import PartnerHospitalsFAQ from "@/components/partner-hospitals/PartnerHospitalsFAQ";
-import { Button } from "@/components/ui/button";
+import CommunityNetworkCTA from "@/components/common/CommunityNetworkCTA";
 import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
@@ -193,22 +192,8 @@ export default async function PartnerHospitalsPage() {
         {/* FAQ Section with Rich SEO Accordion */}
         <PartnerHospitalsFAQ />
 
-        {/* Become Partner Banner */}
-        <div className="bg-gradient-to-r from-primary/10 via-emerald-500/5 to-secondary/5 border border-primary/20 rounded-3xl p-5 sm:p-8 md:p-12 text-center space-y-4 sm:space-y-6 max-w-4xl mx-auto">
-          <h2 className="font-heading text-xl md:text-3xl font-bold text-secondary dark:text-white">
-            {t("partnerHospitals.page.doYouManageAHealthcare")}
-          </h2>
-          <p className="text-xs md:text-base text-muted-foreground max-w-xl mx-auto">
-            {t("partnerHospitals.page.joinOurHealthClubPartner")}
-          </p>
-          <div>
-            <Link href="/become-partner">
-              <Button size="lg" className="bg-primary hover:bg-primary-dark text-white font-semibold">
-                {t("partnerHospitals.page.applyAsAPartnerHospital")}
-              </Button>
-            </Link>
-          </div>
-        </div>
+        {/* Healthcare & Emergency Community Collaboration CTA */}
+        <CommunityNetworkCTA />
 
       </div>
     </div>

@@ -1,11 +1,10 @@
-import Link from "next/link";
 import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import DoctorDirectory from "@/components/ui/DoctorDirectory";
 import ConsultantsGuide from "@/components/consultants/ConsultantsGuide";
 import ConsultantsFAQ from "@/components/consultants/ConsultantsFAQ";
-import { Button } from "@/components/ui/button";
+import CommunityNetworkCTA from "@/components/common/CommunityNetworkCTA";
 import { getDoctorsAction } from "@/app/actions/doctorActions";
 import { Stethoscope, ShieldCheck, HeartHandshake, PhoneCall } from "lucide-react";
 import { SITE_URL } from "@/lib/siteConfig";
@@ -266,31 +265,8 @@ export default async function ConsultantsPage() {
         {/* Answer Engine Optimization (AEO) FAQ Section */}
         <ConsultantsFAQ />
 
-        {/* Bottom CTA for Partner Hospitals & Doctors */}
-        <div className="bg-gradient-to-r from-primary/10 via-emerald-500/5 to-secondary/5 border border-primary/20 rounded-3xl p-5 sm:p-8 md:p-12 text-center space-y-4 sm:space-y-6 max-w-4xl mx-auto">
-          <h2 className="font-heading text-xl md:text-3xl font-bold text-secondary dark:text-white">
-            {locale === "en"
-              ? "Are You a Healthcare Professional or Partner?"
-              : "আপনি কি একজন বিশেষজ্ঞ চিকিৎসক অথবা স্বাস্থ্যসেবা প্রতিষ্ঠান?"}
-          </h2>
-          <p className="text-xs md:text-base text-muted-foreground max-w-xl mx-auto">
-            {locale === "en"
-              ? "Join Health Club to expand your patient reach and deliver convenient healthcare access across Feni."
-              : "হেলথ ক্লাবের সাথে যুক্ত হয়ে আপনার চেম্বার বা ডায়াগনস্টিক সেবাকে মানুষের কাছে আরও সহজলভ্য করুন।"}
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <Link href="/partner-hospitals">
-              <Button variant="outline" className="rounded-xl font-semibold">
-                {locale === "en" ? "View Partner Hospitals" : "পার্টনার হাসপাতাল তালিকা"}
-              </Button>
-            </Link>
-            <Link href="/become-partner">
-              <Button className="bg-primary hover:bg-primary-dark text-white rounded-xl font-semibold">
-                {locale === "en" ? "Become a Partner" : "পার্টনার হিসেবে যুক্ত হোন"}
-              </Button>
-            </Link>
-          </div>
-        </div>
+        {/* Healthcare & Emergency Community Collaboration CTA */}
+        <CommunityNetworkCTA />
 
       </div>
     </div>

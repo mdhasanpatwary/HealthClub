@@ -5,7 +5,7 @@ import { EmergencyDirectory } from "./components/EmergencyDirectory";
 import EmergencyGuide from "@/components/emergency/EmergencyGuide";
 import EmergencyProtocol from "@/components/emergency/EmergencyProtocol";
 import EmergencyFAQ from "@/components/emergency/EmergencyFAQ";
-import EmergencyCommunityCTA from "@/components/emergency/EmergencyCommunityCTA";
+import CommunityNetworkCTA from "@/components/common/CommunityNetworkCTA";
 import { Siren, ShieldCheck, HeartHandshake, PhoneCall } from "lucide-react";
 import { getEmergencyDataAction } from "@/app/actions/emergencyAdminActions";
 import { SITE_URL } from "@/lib/siteConfig";
@@ -365,7 +365,7 @@ export default async function EmergencyPage() {
         <EmergencyFAQ />
 
         {/* 5. Emergency Community Collaborations & Multi-Pathway CTA */}
-        <EmergencyCommunityCTA />
+        <CommunityNetworkCTA />
 
       </main>
     </div>

@@ -15,7 +15,7 @@ async function verifyAdmin() {
 }
 
 /**
- * Fetch all health tips articles (database + initial fallback).
+ * Fetch all health tips articles (database + base articles merged).
  * Cached via Next.js ISR tags.
  */
 export const getAllHealthTipsAction = unstable_cache(
@@ -30,19 +30,53 @@ export const getAllHealthTipsAction = unstable_cache(
       });
 
       if (!setting?.value) {
+        await prisma.systemSetting
+          .upsert({
+            where: { key: "health_tips_articles" },
+            create: {
+              key: "health_tips_articles",
+              value: JSON.stringify(HEALTH_TIPS_ARTICLES),
+            },
+            update: { value: JSON.stringify(HEALTH_TIPS_ARTICLES) },
+          })
+          .catch(() => {});
         return HEALTH_TIPS_ARTICLES;
       }
 
-      const articles = JSON.parse(setting.value);
-      return Array.isArray(articles) && articles.length > 0
-        ? articles
-        : HEALTH_TIPS_ARTICLES;
+      const dbArticles = JSON.parse(setting.value);
+      if (!Array.isArray(dbArticles) || dbArticles.length === 0) {
+        return HEALTH_TIPS_ARTICLES;
+      }
+
+      // Merge: prioritize DB edits for existing slugs, include new base articles, and retain custom admin articles
+      const dbMap = new Map(dbArticles.map((a: HealthTipArticle) => [a.slug, a]));
+      const merged: HealthTipArticle[] = HEALTH_TIPS_ARTICLES.map((base) => {
+        return dbMap.get(base.slug) || base;
+      });
+
+      for (const dbArt of dbArticles) {
+        if (!HEALTH_TIPS_ARTICLES.some((b) => b.slug === dbArt.slug)) {
+          merged.push(dbArt);
+        }
+      }
+
+      // Keep DB synchronized if new articles were added
+      if (merged.length !== dbArticles.length) {
+        await prisma.systemSetting
+          .update({
+            where: { key: "health_tips_articles" },
+            data: { value: JSON.stringify(merged) },
+          })
+          .catch(() => {});
+      }
+
+      return merged;
     } catch (err) {
       console.error("Error in getAllHealthTipsAction:", err);
       return HEALTH_TIPS_ARTICLES;
     }
   },
-  ["all-health-tips-articles"],
+  ["all-health-tips-articles-v2"],
   { tags: [HEALTH_TIPS_TAG] }
 );
 
@@ -109,6 +143,27 @@ export async function deleteHealthTipAction(slug: string) {
 
     updateTag(HEALTH_TIPS_TAG);
     return { success: true };
+  } catch (err: unknown) {
+    return { success: false, error: (err as Error).message };
+  }
+}
+
+/**
+ * Sync / Reset database articles to include all 25 current health guides.
+ */
+export async function syncHealthTipsWithDatabaseAction() {
+  try {
+    const articles = await getAllHealthTipsAction();
+    await prisma.systemSetting.upsert({
+      where: { key: "health_tips_articles" },
+      create: {
+        key: "health_tips_articles",
+        value: JSON.stringify(articles),
+      },
+      update: { value: JSON.stringify(articles) },
+    });
+    updateTag(HEALTH_TIPS_TAG);
+    return { success: true, count: articles.length };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
   }
