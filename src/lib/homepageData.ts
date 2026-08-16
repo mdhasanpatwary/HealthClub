@@ -10,7 +10,7 @@ import type { Partner } from "@/services/db";
 export const getHomepageStats = unstable_cache(
   async () => {
     try {
-      const result = await prisma.$queryRawUnsafe<
+      const result = await prisma.$queryRaw<
         Array<{
           member_count: bigint;
           founding_count: bigint;
@@ -18,14 +18,14 @@ export const getHomepageStats = unstable_cache(
           diagnostic_count: bigint;
           pharmacy_count: bigint;
         }>
-      >(`
+      >`
         SELECT
           (SELECT COUNT(*) FROM members WHERE status = 'active') AS member_count,
           (SELECT COUNT(*) FROM members WHERE tier = 'founding') AS founding_count,
           (SELECT COUNT(*) FROM partners WHERE category = 'hospital') AS hospital_count,
           (SELECT COUNT(*) FROM partners WHERE category = 'diagnostic') AS diagnostic_count,
           (SELECT COUNT(*) FROM partners WHERE category = 'pharmacy') AS pharmacy_count
-      `);
+      `;
 
       const row = result[0];
       return {
@@ -38,11 +38,11 @@ export const getHomepageStats = unstable_cache(
     } catch (error) {
       console.error("Error fetching homepage stats:", error);
       return {
-        memberCount: 100,
-        foundingCount: 100,
-        hospitalCount: 10,
-        diagnosticCount: 20,
-        pharmacyCount: 5,
+        memberCount: 0,
+        foundingCount: 0,
+        hospitalCount: 0,
+        diagnosticCount: 0,
+        pharmacyCount: 0,
       };
     }
   },
