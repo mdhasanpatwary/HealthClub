@@ -123,7 +123,7 @@ export const initialPartners: Partner[] = [
   },
   {
     id: "p_ddlab",
-    name: "ঢাকা ডায়াগনস্টিক ল্যাব (ডিডি ল্যাব)",
+    name: "ডিডি ল্যাব",
     category: "diagnostic",
     address: "মা প্লাজা (জিয়া মহিলা কলেজের বিপরীতে), শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",
     discount: "১০-৩০% ডিসকাউন্ট",
