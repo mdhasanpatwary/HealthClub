@@ -46,18 +46,18 @@ export async function getTransactionsAction(memberId?: string): Promise<Transact
   }
 }
 
-export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">): Promise<Transaction> {
+export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">): Promise<Transaction | { error: string }> {
   const session = await getSessionUser();
-  if (!session) throw new Error("Unauthorized");
+  if (!session) return { error: "অননুমোদিত অ্যাক্সেস।" };
 
   const billAmount = Number(tx.amount);
   if (isNaN(billAmount) || billAmount <= 0) {
-    throw new Error("Invalid bill amount");
+    return { error: "সঠিক বিলের পরিমাণ ইনপুট দিন।" };
   }
 
   const rawSaved = Number(tx.saved);
   if (isNaN(rawSaved) || rawSaved < 0) {
-    throw new Error("Invalid savings amount");
+    return { error: "সঠিক ছাড়ের পরিমাণ ইনপুট দিন।" };
   }
 
   // Enforce max 30% discount limit on platform transactions
@@ -66,10 +66,10 @@ export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">)
 
   if (session.role !== "admin") {
     const isAllowed = await isMemberTxAllowedAction();
-    if (!isAllowed) throw new Error("Unauthorized: Member transaction entry is disabled");
+    if (!isAllowed) return { error: "মেম্বার ট্রানজেকশন বর্তমানে অক্ষম করা আছে।" };
 
     if (session.userId !== tx.memberId) {
-      throw new Error("Unauthorized: Cannot add transaction for another member");
+      return { error: "আপনি অন্য মেম্বারের জন্য ট্রানজেকশন যোগ করতে পারবেন না।" };
     }
   }
 
@@ -80,18 +80,18 @@ export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">)
   });
 
   if (!member) {
-    throw new Error("Member not found");
+    return { error: "মেম্বার খুঁজে পাওয়া যায়নি।" };
   }
 
   if (session.role !== "admin") {
     if (member.status !== "active") {
-      throw new Error("Membership is not active");
+      return { error: "মেম্বারশিপটি সক্রিয় নয়।" };
     }
     const currentDate = new Date();
     const expiryDate = new Date(member.expiryDate);
     expiryDate.setHours(23, 59, 59, 999);
     if (expiryDate < currentDate) {
-      throw new Error("Membership card has expired");
+      return { error: "মেম্বারশিপ কার্ডের মেয়াদ শেষ হয়ে গেছে।" };
     }
   }
 
@@ -101,7 +101,7 @@ export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">)
   });
 
   if (!partner) {
-    throw new Error("Partner not found");
+    return { error: "পার্টনার খুঁজে পাওয়া যায়নি।" };
   }
 
   const newTxId = `tx_${crypto.randomUUID()}`;
@@ -151,7 +151,7 @@ export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">)
     };
   } catch (error) {
     console.error("Error in addTransactionAction:", error);
-    throw error;
+    return { error: "ট্রানজেকশন সংরক্ষণ করতে সমস্যা হয়েছে।" };
   }
 }
 

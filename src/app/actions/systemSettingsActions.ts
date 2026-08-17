@@ -21,7 +21,7 @@ export async function getSystemSettingAction(key: string, defaultValue: string =
 export async function updateSystemSettingAction(key: string, value: string): Promise<boolean> {
   const session = await getSessionUser();
   if (!session || session.role !== "admin") {
-    throw new Error("Unauthorized");
+    return false;
   }
 
   try {
@@ -79,7 +79,7 @@ export async function updateMultipleSystemSettingsAction(
 ): Promise<{ success: boolean; message: string }> {
   const session = await getSessionUser();
   if (!session || session.role !== "admin") {
-    throw new Error("Unauthorized");
+    return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
   }
 
   try {

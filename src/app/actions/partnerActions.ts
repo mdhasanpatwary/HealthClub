@@ -89,9 +89,9 @@ export const getPartnersAction = unstable_cache(
   { revalidate: 60, tags: [PARTNERS_TAG] }
 );
 
-export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Partner> {
+export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Partner | { error: string }> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") throw new Error("Unauthorized");
+  if (!session || session.role !== "admin") return { error: "অননুমোদিত অ্যাক্সেস।" };
 
   const newPartnerId = `p_${crypto.randomUUID()}`;
   try {
@@ -122,7 +122,7 @@ export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Pa
     };
   } catch (error) {
     console.error("Error in addPartnerAction:", error);
-    throw error;
+    return { error: "পার্টনার যোগ করতে সমস্যা হয়েছে।" };
   } finally {
     updateTag(PARTNERS_TAG);
   }
@@ -130,7 +130,7 @@ export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Pa
 
 export async function updatePartnerAction(id: string, partner: Omit<Partner, "id">): Promise<boolean> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") throw new Error("Unauthorized");
+  if (!session || session.role !== "admin") return false;
 
   try {
     await prisma.partner.update({
@@ -157,7 +157,7 @@ export async function updatePartnerAction(id: string, partner: Omit<Partner, "id
 
 export async function deletePartnerAction(id: string): Promise<boolean> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") throw new Error("Unauthorized");
+  if (!session || session.role !== "admin") return false;
 
   try {
     await prisma.partner.delete({

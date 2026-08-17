@@ -77,7 +77,7 @@ export const dbStore = {
     return getPartnersAction();
   },
 
-  async addPartner(partner: Omit<Partner, "id">): Promise<Partner> {
+  async addPartner(partner: Omit<Partner, "id">): Promise<Partner | { error: string }> {
     return addPartnerAction(partner);
   },
 
@@ -170,8 +170,10 @@ export const dbStore = {
     return getTransactionsAction(memberId);
   },
 
-  async addTransaction(tx: Omit<Transaction, "id" | "date">): Promise<Transaction> {
+  async addTransaction(tx: Omit<Transaction, "id" | "date">): Promise<Transaction | { error: string }> {
     const newTx = await addTransactionAction(tx);
+
+    if ("error" in newTx) return newTx;
 
     // Sync totalSaved to localStorage without an extra DB round-trip.
     // We already know the saved amount from tx.saved — no need to refetch the member.

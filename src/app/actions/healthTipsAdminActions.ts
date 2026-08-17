@@ -7,11 +7,9 @@ import { HealthTipArticle, HEALTH_TIPS_ARTICLES } from "@/data/healthTipsData";
 
 const HEALTH_TIPS_TAG = "health-tips-data";
 
-async function verifyAdmin() {
+async function verifyAdmin(): Promise<boolean> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
-    throw new Error("Unauthorized: Admin access required");
-  }
+  return !!(session && session.role === "admin");
 }
 
 /**
@@ -95,7 +93,7 @@ export async function getHealthTipBySlugAction(
  */
 export async function saveHealthTipAction(article: HealthTipArticle) {
   try {
-    await verifyAdmin();
+    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
     const articles = await getAllHealthTipsAction();
     const existingIndex = articles.findIndex((a) => a.slug === article.slug);
     let updatedList: HealthTipArticle[];
@@ -128,7 +126,7 @@ export async function saveHealthTipAction(article: HealthTipArticle) {
  */
 export async function deleteHealthTipAction(slug: string) {
   try {
-    await verifyAdmin();
+    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
     const articles = await getAllHealthTipsAction();
     const updatedList = articles.filter((a) => a.slug !== slug);
 

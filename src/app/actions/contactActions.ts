@@ -76,7 +76,7 @@ export async function getContactMessagesAction(): Promise<ContactMessage[]> {
 export async function deleteContactMessageAction(id: string): Promise<boolean> {
   const session = await getSessionUser();
   if (!session || session.role !== "admin") {
-    throw new Error("Unauthorized");
+    return false;
   }
 
   try {

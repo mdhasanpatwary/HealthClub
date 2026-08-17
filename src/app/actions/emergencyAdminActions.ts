@@ -14,11 +14,9 @@ import {
 
 const EMERGENCY_TAG = "emergency-data";
 
-async function verifyAdmin() {
+async function verifyAdmin(): Promise<boolean> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
-    throw new Error("Unauthorized: Admin access required");
-  }
+  return !!(session && session.role === "admin");
 }
 
 /**
@@ -114,7 +112,7 @@ export const getEmergencyDataAction = unstable_cache(
 
 export async function saveBloodDonorAction(donor: BloodDonor) {
   try {
-    await verifyAdmin();
+    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
     const data = await getEmergencyDataAction();
     const existingIndex = data.bloodDonors.findIndex((d) => d.id === donor.id);
     let updatedList: BloodDonor[];
@@ -144,7 +142,7 @@ export async function saveBloodDonorAction(donor: BloodDonor) {
 
 export async function deleteBloodDonorAction(id: string) {
   try {
-    await verifyAdmin();
+    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
     const data = await getEmergencyDataAction();
     const updatedList = data.bloodDonors.filter((d) => d.id !== id);
 
@@ -166,7 +164,7 @@ export async function deleteBloodDonorAction(id: string) {
 
 export async function toggleBloodDonorAvailabilityAction(id: string) {
   try {
-    await verifyAdmin();
+    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
     const data = await getEmergencyDataAction();
     const updatedList = data.bloodDonors.map((d) =>
       d.id === id ? { ...d, isAvailable: !d.isAvailable } : d
@@ -192,7 +190,7 @@ export async function toggleBloodDonorAvailabilityAction(id: string) {
 
 export async function saveAmbulanceAction(ambulance: AmbulanceService) {
   try {
-    await verifyAdmin();
+    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
     const data = await getEmergencyDataAction();
     const existingIndex = data.ambulances.findIndex((a) => a.id === ambulance.id);
     let updatedList: AmbulanceService[];
@@ -222,7 +220,7 @@ export async function saveAmbulanceAction(ambulance: AmbulanceService) {
 
 export async function deleteAmbulanceAction(id: string) {
   try {
-    await verifyAdmin();
+    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
     const data = await getEmergencyDataAction();
     const updatedList = data.ambulances.filter((a) => a.id !== id);
 
@@ -246,7 +244,7 @@ export async function deleteAmbulanceAction(id: string) {
 
 export async function saveHotlineAction(hotline: EmergencyHotline) {
   try {
-    await verifyAdmin();
+    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
     const data = await getEmergencyDataAction();
     const existingIndex = data.hotlines.findIndex((h) => h.id === hotline.id);
     let updatedList: EmergencyHotline[];
@@ -276,7 +274,7 @@ export async function saveHotlineAction(hotline: EmergencyHotline) {
 
 export async function deleteHotlineAction(id: string) {
   try {
-    await verifyAdmin();
+    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
     const data = await getEmergencyDataAction();
     const updatedList = data.hotlines.filter((h) => h.id !== id);
 

@@ -75,7 +75,7 @@ export async function getMembersAction(): Promise<Member[]> {
 
 export async function updateMemberStatusAction(id: string, status: Member["status"]): Promise<boolean> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") throw new Error("Unauthorized");
+  if (!session || session.role !== "admin") return false;
   try {
     const member = await prisma.member.findUnique({ where: { id } });
     if (!member) return false;
