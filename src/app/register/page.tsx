@@ -49,7 +49,7 @@ function RegisterForm() {
     }
 
     try {
-      await dbStore.addMember({
+      const result = await dbStore.addMember({
         name: formData.name,
         phone: formData.phone,
         email: formData.email,
@@ -61,7 +61,13 @@ function RegisterForm() {
         profilePictureUrl: formData.profilePictureUrl
       });
 
-      toast.success("রেজিস্ট্রেশন সফল হয়েছে! অনুগ্রহ করে ইমেইল ভেরিফিকেশন সম্পন্ন করুন।");
+      if ("error" in result) {
+        toast.error(result.error);
+        setLoading(false);
+        return;
+      }
+
+      toast.success("রেজিস্ট্রেশন সফল হয়েছে! অনুগ্রহ করে ইমেইল ভেরিফিকেশন সম্পন্ন করুন।");
       router.push(`/register/verify-email?email=${encodeURIComponent(formData.email)}`);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "রেজিস্ট্রেশন করতে সমস্যা হচ্ছে। অনুগ্রহ করে আবার চেষ্টা করুন।";

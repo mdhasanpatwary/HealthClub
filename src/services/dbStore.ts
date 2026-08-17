@@ -96,7 +96,7 @@ export const dbStore = {
 
   async addMember(
     member: Omit<Member, "id" | "status" | "joinedDate" | "expiryDate" | "totalSaved"> & { password?: string }
-  ): Promise<Member> {
+  ): Promise<Member | { error: string }> {
     return addMemberAction(member);
   },
 

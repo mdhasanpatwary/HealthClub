@@ -81,23 +81,23 @@ function stripSensitive(m: Member): Member {
 
 export async function addMemberAction(
   member: Omit<Member, "id" | "status" | "joinedDate" | "expiryDate" | "totalSaved"> & { password?: string }
-): Promise<Member> {
+): Promise<Member | { error: string }> {
   const existingPhone = await prisma.member.findUnique({
     where: { phone: member.phone },
   });
   if (existingPhone) {
-    throw new Error("এই মোবাইল নম্বরটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।");
+    return { error: "এই মোবাইল নম্বরটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।" };
   }
 
   if (member.email) {
     if (member.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-      throw new Error("এই ইমেইল অ্যাড্রেসটি দিয়ে সাধারণ অ্যাকাউন্ট তৈরি করা যাবে না।");
+      return { error: "এই ইমেইল অ্যাড্রেসটি দিয়ে সাধারণ অ্যাকাউন্ট তৈরি করা যাবে না।" };
     }
     const existingEmail = await prisma.member.findUnique({
       where: { email: member.email },
     });
     if (existingEmail) {
-      throw new Error("এই ইমেইল অ্যাড্রেসটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।");
+      return { error: "এই ইমেইল অ্যাড্রেসটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।" };
     }
   }
 
@@ -156,9 +156,9 @@ export async function addMemberAction(
   } catch (error: unknown) {
     console.error("Error in addMemberAction:", error);
     if (typeof error === "object" && error !== null && "code" in error && (error as { code: string }).code === "P2002") {
-      throw new Error("এই মোবাইল নম্বর বা ইমেইল দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।");
+      return { error: "এই মোবাইল নম্বর বা ইমেইল দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।" };
     }
-    throw error;
+    return { error: "রেজিস্ট্রেশন করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।" };
   }
 }
 
