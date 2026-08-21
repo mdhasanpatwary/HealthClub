@@ -120,29 +120,26 @@ export function AdminNotificationBell() {
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger asChild>
-        <button
-          type="button"
-          aria-label={t("admin.nav.notifications") || "বিজ্ঞপ্তি"}
-          title={
-            unreadCount > 0
-              ? `${formatNum(unreadCount, locale)} ${t("admin.notifications.unreadCount") || "টি অপঠিত"}`
-              : t("admin.nav.notifications") || "বিজ্ঞপ্তি"
-          }
-          className="relative inline-flex items-center justify-center size-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-background/80 transition-all cursor-pointer outline-hidden focus-visible:ring-2 focus-visible:ring-primary/40"
-        >
-          <Bell className="h-4 w-4 transition-transform active:scale-90" />
+      <DropdownMenuTrigger
+        aria-label={t("admin.nav.notifications") || "বিজ্ঞপ্তি"}
+        title={
+          unreadCount > 0
+            ? `${formatNum(unreadCount, locale)} ${t("admin.notifications.unreadCount") || "টি অপঠিত"}`
+            : t("admin.nav.notifications") || "বিজ্ঞপ্তি"
+        }
+        className="relative inline-flex items-center justify-center size-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-background/80 transition-all cursor-pointer outline-hidden focus-visible:ring-2 focus-visible:ring-primary/40"
+      >
+        <Bell className="h-4 w-4 transition-transform active:scale-90" />
 
-          {unreadCount > 0 && (
-            <span
-              className={`absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold text-white shadow-xs transition-transform animate-in zoom-in ${
-                highPriorityCount > 0 ? "bg-rose-500 animate-pulse" : "bg-primary"
-              }`}
-            >
-              {unreadCount > 9 ? "9+" : formatNum(unreadCount, locale)}
-            </span>
-          )}
-        </button>
+        {unreadCount > 0 && (
+          <span
+            className={`absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold text-white shadow-xs transition-transform animate-in zoom-in ${
+              highPriorityCount > 0 ? "bg-rose-500 animate-pulse" : "bg-primary"
+            }`}
+          >
+            {unreadCount > 9 ? "9+" : formatNum(unreadCount, locale)}
+          </span>
+        )}
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
