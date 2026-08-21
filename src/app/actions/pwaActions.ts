@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
+import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag } from "next/cache";
 
 const PWA_STATS_TAG = "admin-pwa-stats";
@@ -115,7 +116,7 @@ export async function recordPwaSessionAction(payload: PwaTelemetryPayload): Prom
     updateTag(PWA_STATS_TAG);
     return { success: true };
   } catch (error) {
-    console.error("[pwaActions] recordPwaSessionAction error:", error);
+    logger.error("[pwaActions] recordPwaSessionAction error:", error);
     return { success: false };
   }
 }
@@ -168,7 +169,7 @@ export async function recordPwaInstallAction(
     updateTag(PWA_STATS_TAG);
     return { success: true };
   } catch (error) {
-    console.error("[pwaActions] recordPwaInstallAction error:", error);
+    logger.error("[pwaActions] recordPwaInstallAction error:", error);
     return { success: false };
   }
 }
@@ -217,7 +218,7 @@ export async function recordPwaPromptAction(payload: PwaPromptPayload): Promise<
     updateTag(PWA_STATS_TAG);
     return { success: true };
   } catch (error) {
-    console.error("[pwaActions] recordPwaPromptAction error:", error);
+    logger.error("[pwaActions] recordPwaPromptAction error:", error);
     return { success: false };
   }
 }
@@ -372,7 +373,7 @@ export async function getPwaStatsAction(): Promise<PwaStatsData> {
   try {
     return await getCachedPwaStats();
   } catch (error) {
-    console.error("[pwaActions] getPwaStatsAction error:", error);
+    logger.error("[pwaActions] getPwaStatsAction error:", error);
     return DEFAULT_PWA_STATS;
   }
 }

@@ -18,6 +18,10 @@ export default function AdminTransactionsPage() {
   const { t, locale } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [partners, setPartners] = useState<Partner[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
 
@@ -28,20 +32,25 @@ export default function AdminTransactionsPage() {
   const loadData = useCallback(async () => {
     try {
       const [txRes, partnersRes, membersRes] = await Promise.all([
-        dbStore.getTransactions(),
+        dbStore.getPaginatedTransactions({
+          page,
+          pageSize,
+        }),
         dbStore.getPartners(),
         dbStore.getMembers(),
       ]);
-      setTransactions(txRes);
+      setTransactions(txRes.data);
+      setTotalItems(txRes.totalItems);
+      setTotalPages(txRes.totalPages);
       setPartners(partnersRes);
       setMembers(membersRes);
-    } catch (err) {
-      console.error("Failed to load transactions:", err);
+    } catch {
       toast.error("লেনদেন লগ লোড করতে সমস্যা হয়েছে।");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page, pageSize]);
+
 
   useEffect(() => {
     let isMounted = true;
@@ -155,9 +164,20 @@ export default function AdminTransactionsPage() {
 
       <TransactionsTab
         transactions={transactions}
+        totalItems={totalItems}
+        totalPages={totalPages}
+        currentPage={page}
+        pageSize={pageSize}
+        onPageChange={setPage}
+        onPageSizeChange={(newSize) => {
+          setPageSize(newSize);
+          setPage(1);
+        }}
         locale={locale}
         t={t}
+        loading={loading}
       />
+
 
       {isTxOpen && (
         <TransactionDialog

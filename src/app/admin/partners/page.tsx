@@ -7,6 +7,7 @@ import { dbStore } from "@/services/dbStore";
 import { Partner } from "@/services/db";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
+import { useDebounce } from "@/hooks/useDebounce";
 import { PartnersTab } from "../components/PartnersTab";
 import { PartnerDialog } from "../components/PartnerDialog";
 
@@ -14,7 +15,12 @@ export default function AdminPartnersPage() {
   const { t, locale } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [partners, setPartners] = useState<Partner[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [partnerSearch, setPartnerSearch] = useState("");
+  const debouncedSearch = useDebounce(partnerSearch, 300);
 
   // Dialog States
   const [isPartnerOpen, setIsPartnerOpen] = useState(false);
@@ -32,15 +38,20 @@ export default function AdminPartnersPage() {
 
   const loadData = useCallback(async () => {
     try {
-      const data = await dbStore.getPartners();
-      setPartners(data);
-    } catch (err) {
-      console.error("Failed to load partners:", err);
+      const res = await dbStore.getPaginatedPartnersAdmin({
+        page,
+        pageSize,
+        search: debouncedSearch,
+      });
+      setPartners(res.data);
+      setTotalItems(res.totalItems);
+      setTotalPages(res.totalPages);
+    } catch {
       toast.error("পার্টনার হাসপাতালের তালিকা লোড করতে সমস্যা হয়েছে।");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page, pageSize, debouncedSearch]);
 
   useEffect(() => {
     let isMounted = true;
@@ -53,6 +64,7 @@ export default function AdminPartnersPage() {
       isMounted = false;
     };
   }, [loadData]);
+
 
   const notifyChange = () => {
     window.dispatchEvent(new Event("admin-data-change"));
@@ -128,12 +140,6 @@ export default function AdminPartnersPage() {
     }
   };
 
-  const filteredPartners = partners.filter(
-    (p) =>
-      p.name.toLowerCase().includes(partnerSearch.toLowerCase()) ||
-      p.address.toLowerCase().includes(partnerSearch.toLowerCase())
-  );
-
   if (loading) {
     return (
       <div className="space-y-4 animate-pulse">
@@ -144,15 +150,15 @@ export default function AdminPartnersPage() {
               <Skeleton className="h-9 w-48 rounded-md" />
               <Skeleton className="h-9 w-24 rounded-md" />
             </div>
-            {Array.from({ length: 5 }).map((_, i) => (
+            {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="flex justify-between items-center py-3 border-b border-border last:border-0">
                 <div className="space-y-1">
-                  <Skeleton className="h-4 w-48" />
-                  <Skeleton className="h-3 w-32" />
+                  <Skeleton className="h-4 w-40" />
+                  <Skeleton className="h-3 w-28" />
                 </div>
                 <div className="flex gap-2">
-                  <Skeleton className="h-8 w-8 rounded-md" />
-                  <Skeleton className="h-8 w-8 rounded-md" />
+                  <Skeleton className="h-8 w-16 rounded-md" />
+                  <Skeleton className="h-8 w-16 rounded-md" />
                 </div>
               </div>
             ))}
@@ -165,7 +171,16 @@ export default function AdminPartnersPage() {
   return (
     <div className="space-y-6">
       <PartnersTab
-        filteredPartners={filteredPartners}
+        partners={partners}
+        totalItems={totalItems}
+        totalPages={totalPages}
+        currentPage={page}
+        pageSize={pageSize}
+        onPageChange={setPage}
+        onPageSizeChange={(newSize) => {
+          setPageSize(newSize);
+          setPage(1);
+        }}
         partnerSearch={partnerSearch}
         setPartnerSearch={setPartnerSearch}
         onNewPartnerClick={() => {
@@ -182,6 +197,7 @@ export default function AdminPartnersPage() {
           });
           setIsPartnerOpen(true);
         }}
+
         onEditClick={(p) => {
           setEditingPartner(p);
           setNewPartner({
@@ -199,6 +215,7 @@ export default function AdminPartnersPage() {
         onDeleteClick={handleDeletePartner}
         locale={locale}
         t={t}
+        loading={loading}
       />
 
       {isPartnerOpen && (

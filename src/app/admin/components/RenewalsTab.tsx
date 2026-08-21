@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useMemo } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,37 +8,39 @@ import { Check, X } from "lucide-react";
 import { Member } from "@/services/db";
 import { Locale } from "@/lib/i18n";
 
+import { Skeleton } from "@/components/ui/skeleton";
+
 interface RenewalsTabProps {
   members: Member[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   locale: Locale | string;
   t?: (key: string) => string;
+  loading?: boolean;
 }
 
 export function RenewalsTab({
   members,
+  totalItems,
+  totalPages,
+  currentPage,
+  pageSize,
+  onPageChange,
+  onPageSizeChange,
   onApprove,
   onReject,
   locale = "bn",
   t = (k) => k,
+  loading = false,
 }: RenewalsTabProps) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-
-  const pendingRenewals = useMemo(() => {
-    return members.filter((m) => m.renewalStatus === "pending");
-  }, [members]);
-
-  const totalPages = Math.ceil(pendingRenewals.length / pageSize) || 1;
-  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
-
-  const paginatedRenewals = useMemo(() => {
-    const startIndex = (safeCurrentPage - 1) * pageSize;
-    return pendingRenewals.slice(startIndex, startIndex + pageSize);
-  }, [pendingRenewals, safeCurrentPage, pageSize]);
-
   const isEn = locale === "en";
+
 
   const formatDate = (dateStr: string) => {
     try {
@@ -90,14 +91,40 @@ export function RenewalsTab({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {paginatedRenewals.length === 0 ? (
+              {loading ? (
+                Array.from({ length: Math.min(pageSize, 10) }).map((_, i) => (
+                  <TableRow key={`skeleton-${i}`} className="hover:bg-transparent border-b border-border/60">
+                    <TableCell>
+                      <Skeleton className="h-4 w-28" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-20 font-mono" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-24 font-mono" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-28 font-mono" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-24" />
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex gap-2 justify-end">
+                        <Skeleton className="h-8 w-16 rounded-lg" />
+                        <Skeleton className="h-8 w-16 rounded-lg" />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : members.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-10 text-muted-foreground text-sm">
                     {t("admin.renewals.noPending")}
                   </TableCell>
                 </TableRow>
               ) : (
-                paginatedRenewals.map((m) => (
+                members.map((m) => (
                   <TableRow key={m.id} className="hover:bg-muted/20 border-b border-border/60">
                     <TableCell className="font-bold text-secondary">{m.name}</TableCell>
                     <TableCell className="font-mono text-xs text-primary font-semibold">{m.id}</TableCell>
@@ -133,17 +160,14 @@ export function RenewalsTab({
         </div>
 
         {/* Pagination Footer */}
-        {pendingRenewals.length > 0 && (
+        {totalItems > 0 && (
           <Pagination
-            currentPage={safeCurrentPage}
+            currentPage={currentPage}
             totalPages={totalPages}
             pageSize={pageSize}
-            totalItems={pendingRenewals.length}
-            onPageChange={setCurrentPage}
-            onPageSizeChange={(size) => {
-              setPageSize(size);
-              setCurrentPage(1);
-            }}
+            totalItems={totalItems}
+            onPageChange={onPageChange}
+            onPageSizeChange={onPageSizeChange}
             pageSizeOptions={[10, 20, 50, 100]}
             locale={locale as Locale}
             t={t}
@@ -154,3 +178,4 @@ export function RenewalsTab({
     </Card>
   );
 }
+

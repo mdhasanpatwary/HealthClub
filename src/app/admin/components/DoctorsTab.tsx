@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useMemo } from "react";
 import { Search, Edit3, Trash2, Phone, Stethoscope, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,8 +23,16 @@ import { Doctor } from "@/services/db";
 import { Locale } from "@/lib/i18n";
 import { exportToCsv } from "@/lib/exportUtils";
 
+import { Skeleton } from "@/components/ui/skeleton";
+
 interface DoctorsTabProps {
-  filteredDoctors: Doctor[];
+  doctors: Doctor[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   doctorSearch: string;
   setDoctorSearch: (val: string) => void;
   onNewDoctorClick: () => void;
@@ -33,10 +40,17 @@ interface DoctorsTabProps {
   onDeleteClick: (id: string, name: string) => void;
   locale?: Locale;
   t?: (key: string) => string;
+  loading?: boolean;
 }
 
 export function DoctorsTab({
-  filteredDoctors,
+  doctors,
+  totalItems,
+  totalPages,
+  currentPage,
+  pageSize,
+  onPageChange,
+  onPageSizeChange,
   doctorSearch,
   setDoctorSearch,
   onNewDoctorClick,
@@ -44,20 +58,10 @@ export function DoctorsTab({
   onDeleteClick,
   locale = "bn",
   t = (k) => k,
+  loading = false,
 }: DoctorsTabProps) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-
-  const totalPages = Math.ceil(filteredDoctors.length / pageSize) || 1;
-  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
-
-  // Paginated doctor list
-  const paginatedDoctors = useMemo(() => {
-    const startIndex = (safeCurrentPage - 1) * pageSize;
-    return filteredDoctors.slice(startIndex, startIndex + pageSize);
-  }, [filteredDoctors, safeCurrentPage, pageSize]);
-
   const isEn = locale === "en";
+
 
   return (
     <Card className="border-border shadow-md">
@@ -79,7 +83,7 @@ export function DoctorsTab({
               value={doctorSearch}
               onChange={(e) => {
                 setDoctorSearch(e.target.value);
-                setCurrentPage(1);
+                onPageChange(1);
               }}
               className="pl-9 h-9 border-border bg-background"
             />
@@ -87,7 +91,7 @@ export function DoctorsTab({
 
           <Button
             onClick={() =>
-              exportToCsv(filteredDoctors, "healthclub_doctors", [
+              exportToCsv(doctors, "healthclub_doctors", [
                 { header: "Doctor ID", accessor: "id" },
                 { header: "Name", accessor: "name" },
                 { header: "Specialty", accessor: "specialty" },
@@ -146,8 +150,43 @@ export function DoctorsTab({
               </TableRow>
             </TableHeader>
             <TableBody className="text-xs sm:text-sm">
-              {paginatedDoctors.length > 0 ? (
-                paginatedDoctors.map((doc) => (
+              {loading ? (
+                Array.from({ length: Math.min(pageSize, 10) }).map((_, i) => (
+                  <TableRow key={`skeleton-${i}`} className="hover:bg-transparent">
+                    <TableCell>
+                      <div className="space-y-1.5 py-1">
+                        <Skeleton className="h-4 w-36" />
+                        <Skeleton className="h-3 w-28" />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-5 w-20 rounded-full" />
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <Skeleton className="h-4 w-32" />
+                        <Skeleton className="h-3 w-24" />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <Skeleton className="h-4 w-28" />
+                        <Skeleton className="h-3 w-20" />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-24 font-mono" />
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-1">
+                        <Skeleton className="h-7 w-7 rounded-md" />
+                        <Skeleton className="h-7 w-7 rounded-md" />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : doctors.length > 0 ? (
+                doctors.map((doc) => (
                   <TableRow key={doc.id}>
                     <TableCell className="font-bold text-secondary whitespace-nowrap">
                       <div>
@@ -217,17 +256,14 @@ export function DoctorsTab({
         </div>
 
         {/* Pagination Footer */}
-        {filteredDoctors.length > 0 && (
+        {totalItems > 0 && (
           <Pagination
-            currentPage={safeCurrentPage}
+            currentPage={currentPage}
             totalPages={totalPages}
             pageSize={pageSize}
-            totalItems={filteredDoctors.length}
-            onPageChange={setCurrentPage}
-            onPageSizeChange={(size) => {
-              setPageSize(size);
-              setCurrentPage(1);
-            }}
+            totalItems={totalItems}
+            onPageChange={onPageChange}
+            onPageSizeChange={onPageSizeChange}
             pageSizeOptions={[10, 20, 50, 100]}
             locale={locale}
             t={t}
@@ -238,3 +274,4 @@ export function DoctorsTab({
     </Card>
   );
 }
+

@@ -1,13 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { dbStore } from "@/services/dbStore";
 import { Doctor } from "@/services/db";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export function useAdminDoctors() {
+  const [loading, setLoading] = useState(true);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [doctorSearch, setDoctorSearch] = useState("");
+  const debouncedSearch = useDebounce(doctorSearch, 300);
+
   const [isDoctorOpen, setIsDoctorOpen] = useState(false);
   const [editingDoctor, setEditingDoctor] = useState<Doctor | null>(null);
 
@@ -27,14 +35,22 @@ export function useAdminDoctors() {
     imageUrl: "",
   });
 
-  const loadDoctors = async () => {
+  const loadDoctors = useCallback(async () => {
     try {
-      const data = await dbStore.getAllDoctorsAdmin();
-      setDoctors(data);
-    } catch (err) {
-      console.error("Failed to load doctors:", err);
+      const res = await dbStore.getPaginatedDoctorsAdmin({
+        page,
+        pageSize,
+        search: debouncedSearch,
+      });
+      setDoctors(res.data);
+      setTotalItems(res.totalItems);
+      setTotalPages(res.totalPages);
+    } catch {
+      // Ignore load doctors errors silently
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [page, pageSize, debouncedSearch]);
 
   useEffect(() => {
     let isMounted = true;
@@ -46,18 +62,8 @@ export function useAdminDoctors() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [loadDoctors]);
 
-  const filteredDoctors = doctors.filter((d) => {
-    const q = doctorSearch.toLowerCase().trim();
-    return (
-      !q ||
-      d.name.toLowerCase().includes(q) ||
-      d.specialty.toLowerCase().includes(q) ||
-      d.department.toLowerCase().includes(q) ||
-      d.chamberName.toLowerCase().includes(q)
-    );
-  });
 
   const handleOpenNewDoctor = () => {
     setEditingDoctor(null);
@@ -129,8 +135,7 @@ export function useAdminDoctors() {
           toast.error(res.error || "যুক্ত করা ব্যর্থ হয়েছে।");
         }
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
       toast.error("প্রক্রিয়াটি সম্পন্ন করতে সমস্যা হয়েছে।");
     }
   };
@@ -146,17 +151,22 @@ export function useAdminDoctors() {
       } else {
         toast.error(res.error || "ডিলিট ব্যর্থ হয়েছে।");
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
       toast.error("ডিলিট করতে সমস্যা হয়েছে।");
     }
   };
 
   return {
+    loading,
     doctors,
+    totalItems,
+    totalPages,
+    page,
+    setPage,
+    pageSize,
+    setPageSize,
     doctorSearch,
     setDoctorSearch,
-    filteredDoctors,
     isDoctorOpen,
     setIsDoctorOpen,
     editingDoctor,
@@ -169,3 +179,4 @@ export function useAdminDoctors() {
     loadDoctors,
   };
 }
+

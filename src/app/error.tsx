@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { AlertTriangle, RefreshCw, Home } from "lucide-react";
+import { logger } from "@/lib/logger";
 
 export default function GlobalError({
   error,
@@ -13,7 +14,7 @@ export default function GlobalError({
 }) {
   useEffect(() => {
     // Log unexpected runtime errors for production monitoring
-    console.error("Unhandled runtime application error:", error);
+    logger.error("Unhandled runtime application error:", error);
   }, [error]);
 
   return (

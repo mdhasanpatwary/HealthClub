@@ -6,6 +6,7 @@ import { Member, PublicMemberVerification } from "@/services/db";
 import { hashPassword } from "@/lib/crypto";
 import { getSessionUser } from "@/lib/session";
 import { sendOtpEmail } from "@/lib/mail";
+import { logger } from "@/lib/logger";
 import { after } from "next/server";
 import { SITE_URL } from "@/lib/siteConfig";
 import {
@@ -146,7 +147,7 @@ export async function addMemberAction(
         try {
           await sendOtpEmail(emailTo, code, memberName);
         } catch (err) {
-          console.error("Failed to send signup OTP email:", err);
+          logger.error("Failed to send signup OTP email:", err);
         }
       });
     }
@@ -162,7 +163,7 @@ export async function addMemberAction(
       profilePictureUrl: m.profilePictureUrl || undefined,
     } as Member;
   } catch (error: unknown) {
-    console.error("Error in addMemberAction:", error);
+    logger.error("Error in addMemberAction:", error);
     if (typeof error === "object" && error !== null && "code" in error && (error as { code: string }).code === "P2002") {
       return { error: "এই মোবাইল নম্বর বা ইমেইল দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।" };
     }
@@ -214,7 +215,7 @@ export async function getPublicMemberVerificationAction(
       isExpired,
     };
   } catch (error) {
-    console.error("Error in getPublicMemberVerificationAction:", error);
+    logger.error("Error in getPublicMemberVerificationAction:", error);
     return null;
   }
 }
@@ -257,7 +258,7 @@ export async function getMemberByIdAction(idOrPhone: string): Promise<Member | n
       profilePictureUrl: m.profilePictureUrl || undefined,
     } as Member);
   } catch (error) {
-    console.error("Error in getMemberByIdAction:", error);
+    logger.error("Error in getMemberByIdAction:", error);
     return null;
   }
 }
@@ -282,7 +283,7 @@ export async function submitBkashPaymentAction(
     return true;
   } catch (error: unknown) {
     if ((error as { code?: string })?.code === "P2025") return false;
-    console.error("Error in submitBkashPaymentAction:", error);
+    logger.error("Error in submitBkashPaymentAction:", error);
     return false;
   }
 }
@@ -320,7 +321,7 @@ export async function requestRenewalAction(
 
     return { success: true, message: "রিনিউয়াল অনুরোধ সফলভাবে পাঠানো হয়েছে! এডমিন যাচাইয়ের পর অ্যাক্টিভ করা হবে।" };
   } catch (error) {
-    console.error("Error in requestRenewalAction:", error);
+    logger.error("Error in requestRenewalAction:", error);
     return { success: false, message: "রিনিউয়াল অনুরোধ পাঠাতে সমস্যা হয়েছে।" };
   }
 }
@@ -374,7 +375,7 @@ export async function verifyMemberForPartnerAction(
       },
     };
   } catch (error) {
-    console.error("Error in verifyMemberForPartnerAction:", error);
+    logger.error("Error in verifyMemberForPartnerAction:", error);
     return { success: false, message: "মেম্বার যাচাই করতে সমস্যা হয়েছে।" };
   }
 }

@@ -34,8 +34,8 @@ export default function AdminLoginPage() {
         router.push("/admin");
         return;
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
+      // Login failed handled by error toast below
     } finally {
       setLoading(false);
     }

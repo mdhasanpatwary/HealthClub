@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import {
-  getPartnerRequestsAction,
+  getPaginatedPartnerRequestsAction,
   updatePartnerRequestStatusAction,
 } from "@/app/actions/partnerActions";
 import { PartnerRequest } from "@/services/db";
@@ -16,18 +16,26 @@ export default function AdminPartnerRequestsPage() {
   const { t, locale } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [partnerRequests, setPartnerRequests] = useState<PartnerRequest[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   const loadData = useCallback(async () => {
     try {
-      const data = await getPartnerRequestsAction();
-      setPartnerRequests(data);
-    } catch (err) {
-      console.error("Failed to load partner requests:", err);
+      const res = await getPaginatedPartnerRequestsAction({
+        page,
+        pageSize,
+      });
+      setPartnerRequests(res.data);
+      setTotalItems(res.totalItems);
+      setTotalPages(res.totalPages);
+    } catch {
       toast.error("আবেদন তালিকা লোড করতে সমস্যা হয়েছে।");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page, pageSize]);
 
   useEffect(() => {
     let isMounted = true;
@@ -40,6 +48,7 @@ export default function AdminPartnerRequestsPage() {
       isMounted = false;
     };
   }, [loadData]);
+
 
   const handleApprove = async (id: string) => {
     try {
@@ -102,11 +111,22 @@ export default function AdminPartnerRequestsPage() {
     <div className="space-y-6">
       <PartnerRequestsTab
         partnerRequests={partnerRequests}
+        totalItems={totalItems}
+        totalPages={totalPages}
+        currentPage={page}
+        pageSize={pageSize}
+        onPageChange={setPage}
+        onPageSizeChange={(newSize) => {
+          setPageSize(newSize);
+          setPage(1);
+        }}
         onApprove={handleApprove}
         onReject={handleReject}
         locale={locale}
         t={t}
+        loading={loading}
       />
     </div>
   );
 }
+

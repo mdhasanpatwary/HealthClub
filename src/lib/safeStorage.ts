@@ -22,8 +22,7 @@ export const safeStorage = {
         return fallback;
       }
       return JSON.parse(raw) as T;
-    } catch (err) {
-      console.warn(`[safeStorage] Failed to read/parse key "${key}", clearing key:`, err);
+    } catch {
       try {
         window.localStorage.removeItem(key);
       } catch {
@@ -45,8 +44,7 @@ export const safeStorage = {
       const serialized = typeof value === "string" ? value : JSON.stringify(value);
       window.localStorage.setItem(key, serialized);
       return true;
-    } catch (err) {
-      console.warn(`[safeStorage] Failed to write key "${key}":`, err);
+    } catch {
       return false;
     }
   },
@@ -60,8 +58,8 @@ export const safeStorage = {
     }
     try {
       window.localStorage.removeItem(key);
-    } catch (err) {
-      console.warn(`[safeStorage] Failed to remove key "${key}":`, err);
+    } catch {
+      // Storage unavailable or blocked
     }
   },
 
@@ -78,8 +76,7 @@ export const safeStorage = {
         return fallback;
       }
       return JSON.parse(raw) as T;
-    } catch (err) {
-      console.warn(`[safeStorage] Failed to read/parse session key "${key}":`, err);
+    } catch {
       return fallback;
     }
   },
@@ -95,8 +92,7 @@ export const safeStorage = {
       const serialized = typeof value === "string" ? value : JSON.stringify(value);
       window.sessionStorage.setItem(key, serialized);
       return true;
-    } catch (err) {
-      console.warn(`[safeStorage] Failed to write session key "${key}":`, err);
+    } catch {
       return false;
     }
   },
@@ -110,8 +106,8 @@ export const safeStorage = {
     }
     try {
       window.sessionStorage.removeItem(key);
-    } catch (err) {
-      console.warn(`[safeStorage] Failed to remove session key "${key}":`, err);
+    } catch {
+      // Storage unavailable or blocked
     }
   },
 };

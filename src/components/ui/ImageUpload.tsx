@@ -39,13 +39,11 @@ export function ImageUpload({ value, onChange, label, fallbackType = 'user' }: I
     const reader = new FileReader();
 
     reader.onerror = () => {
-      console.error("[ImageUpload] FileReader encountered an error");
       toast.error("ছবিটি পড়তে সমস্যা হয়েছে। অনুগ্রহ করে অন্য ছবি নির্বাচন করুন।");
       e.target.value = "";
     };
 
     reader.onabort = () => {
-      console.warn("[ImageUpload] FileReader read was aborted");
       e.target.value = "";
     };
 
@@ -90,8 +88,7 @@ export function ImageUpload({ value, onChange, label, fallbackType = 'user' }: I
           ctx.drawImage(img, 0, 0, width, height);
           const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.82);
           onChange(compressedDataUrl);
-        } catch (canvasErr) {
-          console.warn("[ImageUpload] Canvas compression fallback:", canvasErr);
+        } catch {
           onChange(result);
         }
       };

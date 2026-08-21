@@ -7,6 +7,7 @@ import { dbStore } from "@/services/dbStore";
 import { Member, Transaction } from "@/services/db";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
+import { useDebounce } from "@/hooks/useDebounce";
 import { MembersTab } from "../components/MembersTab";
 import { MemberDialog } from "../components/MemberDialog";
 import { MemberDetailsDialog } from "../components/MemberDetailsDialog";
@@ -15,8 +16,13 @@ export default function AdminMembersPage() {
   const { t, locale } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [members, setMembers] = useState<Member[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [memberSearch, setMemberSearch] = useState("");
+  const debouncedSearch = useDebounce(memberSearch, 300);
 
   // Dialog States
   const [isMemberOpen, setIsMemberOpen] = useState(false);
@@ -36,18 +42,23 @@ export default function AdminMembersPage() {
   const loadData = useCallback(async () => {
     try {
       const [membersRes, txRes] = await Promise.all([
-        dbStore.getMembers(),
+        dbStore.getPaginatedMembers({
+          page,
+          pageSize,
+          search: debouncedSearch,
+        }),
         dbStore.getTransactions(),
       ]);
-      setMembers(membersRes);
+      setMembers(membersRes.data);
+      setTotalItems(membersRes.totalItems);
+      setTotalPages(membersRes.totalPages);
       setTransactions(txRes);
-    } catch (err) {
-      console.error("Failed to load members:", err);
+    } catch {
       toast.error("সদস্য তালিকা লোড করতে সমস্যা হয়েছে।");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page, pageSize, debouncedSearch]);
 
   useEffect(() => {
     let isMounted = true;
@@ -60,6 +71,7 @@ export default function AdminMembersPage() {
       isMounted = false;
     };
   }, [loadData]);
+
 
   const notifyChange = () => {
     window.dispatchEvent(new Event("admin-data-change"));
@@ -164,13 +176,6 @@ export default function AdminMembersPage() {
     }
   };
 
-  const filteredMembers = members.filter(
-    (m) =>
-      m.name.toLowerCase().includes(memberSearch.toLowerCase()) ||
-      m.id.toLowerCase().includes(memberSearch.toLowerCase()) ||
-      m.phone.includes(memberSearch)
-  );
-
   if (loading) {
     return (
       <div className="space-y-4 animate-pulse">
@@ -205,7 +210,16 @@ export default function AdminMembersPage() {
   return (
     <div className="space-y-6">
       <MembersTab
-        filteredMembers={filteredMembers}
+        members={members}
+        totalItems={totalItems}
+        totalPages={totalPages}
+        currentPage={page}
+        pageSize={pageSize}
+        onPageChange={setPage}
+        onPageSizeChange={(newSize) => {
+          setPageSize(newSize);
+          setPage(1);
+        }}
         memberSearch={memberSearch}
         setMemberSearch={setMemberSearch}
         onNewMemberClick={() => {
@@ -222,6 +236,7 @@ export default function AdminMembersPage() {
           });
           setIsMemberOpen(true);
         }}
+
         onViewMemberClick={setViewingMember}
         onToggleStatus={handleToggleMemberStatus}
         onEditClick={(m) => {
@@ -241,6 +256,7 @@ export default function AdminMembersPage() {
         onDeleteClick={handleDeleteMember}
         locale={locale}
         t={t}
+        loading={loading}
       />
 
       {isMemberOpen && (

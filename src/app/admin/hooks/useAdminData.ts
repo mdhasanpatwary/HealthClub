@@ -53,8 +53,7 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
       setStats(statsRes);
       setPartners(partnersRes);
       setAllowMemberTx(allowTxRes);
-    } catch (error) {
-      console.error("Error loading data in admin dashboard:", error);
+    } catch {
       toast.error("ড্যাশবোর্ড ডেটা লোড করতে সমস্যা হয়েছে।");
     } finally {
       setLoading(false);
@@ -90,8 +89,7 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
       } else {
         toast.error(t("admin.dashboard.txLogFailed"));
       }
-    } catch (err) {
-      console.error("Error toggling member tx setting:", err);
+    } catch {
       toast.error(t("admin.dashboard.txLogFailed"));
     } finally {
       setTogglingMemberTx(false);

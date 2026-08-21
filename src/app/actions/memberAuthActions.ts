@@ -6,6 +6,7 @@ import { Member } from "@/services/db";
 import { hashPassword, verifyPassword } from "@/lib/crypto";
 import { setSessionUser, clearSessionUser } from "@/lib/session";
 import { sendOtpEmail, sendPasswordResetEmail } from "@/lib/mail";
+import { logger } from "@/lib/logger";
 import { after } from "next/server";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "healthclubfeni@gmail.com";
@@ -72,7 +73,7 @@ export async function loginMemberAction(
 
     return { success: true, member: safeMember };
   } catch (error) {
-    console.error("Error in loginMemberAction:", error);
+    logger.error("Error in loginMemberAction:", error);
     return { success: false, error: "SERVER_ERROR", message: "লগইন করতে সমস্যা হয়েছে।" };
   }
 }
@@ -107,7 +108,7 @@ export async function loginAdminAction(identifier: string, passwordInput: string
     await setSessionUser(safeMember.id, "admin");
     return safeMember;
   } catch (error) {
-    console.error("Error in loginAdminAction:", error);
+    logger.error("Error in loginAdminAction:", error);
     return null;
   }
 }
@@ -117,7 +118,7 @@ export async function logoutUserAction(): Promise<boolean> {
     await clearSessionUser();
     return true;
   } catch (error) {
-    console.error("Error in logoutUserAction:", error);
+    logger.error("Error in logoutUserAction:", error);
     return false;
   }
 }
@@ -199,7 +200,7 @@ export async function verifyEmailOtpAction(
 
     return { success: true, member: safeMember, requiresPayment };
   } catch (error) {
-    console.error("Error in verifyEmailOtpAction:", error);
+    logger.error("Error in verifyEmailOtpAction:", error);
     return { success: false, message: "ইমেইল ভেরিফাই করতে সমস্যা হয়েছে।" };
   }
 }
@@ -231,13 +232,13 @@ export async function resendVerificationCodeAction(email: string): Promise<{ suc
         try {
           await sendOtpEmail(emailTo, otpCode, memberName);
         } catch (err) {
-          console.error("Failed to send resend OTP email:", err);
+          logger.error("Failed to send resend OTP email:", err);
         }
       });
     }
     return { success: true, message: "নতুন ওটিপি কোড পাঠানো হয়েছে!" };
   } catch (error) {
-    console.error("Error in resendVerificationCodeAction:", error);
+    logger.error("Error in resendVerificationCodeAction:", error);
     return { success: false, message: "কোড পুনরায় পাঠাতে সমস্যা হয়েছে।" };
   }
 }
@@ -272,13 +273,13 @@ export async function requestPasswordResetAction(email: string): Promise<{ succe
       try {
         await sendPasswordResetEmail(emailTo, otpCode, memberName);
       } catch (err) {
-        console.error("Failed to send password reset OTP email:", err);
+        logger.error("Failed to send password reset OTP email:", err);
       }
     });
 
     return { success: true, message: "যদি এই ইমেইলটি আমাদের সিস্টেমে নিবন্ধিত থাকে, তবে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
   } catch (error) {
-    console.error("Error in requestPasswordResetAction:", error);
+    logger.error("Error in requestPasswordResetAction:", error);
     return { success: false, message: "পাসওয়ার্ড রিসেট অনুরোধ প্রক্রিয়া করতে সমস্যা হয়েছে।" };
   }
 }
@@ -347,7 +348,7 @@ export async function resetPasswordAction(
 
     return { success: true, message: "পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে!" };
   } catch (error) {
-    console.error("Error in resetPasswordAction:", error);
+    logger.error("Error in resetPasswordAction:", error);
     return { success: false, message: "পাসওয়ার্ড রিসেট করতে সমস্যা হয়েছে।" };
   }
 }

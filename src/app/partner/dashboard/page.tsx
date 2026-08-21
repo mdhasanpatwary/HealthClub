@@ -54,8 +54,7 @@ export default function PartnerDashboardPage() {
     try {
       const data = await getPartnerTransactionsAction();
       setTransactions(data);
-    } catch (err) {
-      console.error("Failed to load partner transactions:", err);
+    } catch {
       toast.error("লেনদেন তালিকা লোড করতে সমস্যা হয়েছে।");
     } finally {
       setLoadingTransactions(false);
@@ -120,7 +119,6 @@ export default function PartnerDashboardPage() {
 
       const element = document.getElementById("qr-reader");
       if (!element) {
-        console.error("qr-reader element not found in DOM");
         toast.error("ক্যামেরা রিডারটি লোড করা যায়নি।");
         setScanning(false);
         return;
@@ -146,8 +144,7 @@ export default function PartnerDashboardPage() {
           }
         );
         isStarted = true;
-      } catch (err) {
-        console.error("Scanner failed:", err);
+      } catch {
         toast.error("ক্যামেরা চালু করতে সমস্যা হয়েছে। দয়া করে ম্যানুয়ালি মেম্বার আইডি টাইপ করুন।");
         setScanning(false);
       }
@@ -158,9 +155,7 @@ export default function PartnerDashboardPage() {
     return () => {
       if (html5QrCode && isStarted) {
         isStarted = false;
-        html5QrCode.stop().catch((err) => {
-          console.error("Failed to stop scanner in cleanup", err);
-        });
+        html5QrCode.stop().catch(() => {});
       }
     };
   }, [scanning]);

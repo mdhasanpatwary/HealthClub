@@ -32,9 +32,7 @@ export default function PwaTracker() {
           browser: info.browser,
           deviceType: info.deviceType,
           userId: activeUserId,
-        }).catch((err) => {
-          console.debug("[PwaTracker] install record error:", err);
-        });
+        }).catch(() => {});
       }
     };
 

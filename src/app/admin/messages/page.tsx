@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import {
-  getContactMessagesAction,
+  getPaginatedContactMessagesAction,
   deleteContactMessageAction,
   ContactMessage,
 } from "@/app/actions/contactActions";
@@ -26,21 +26,30 @@ export default function AdminMessagesPage() {
   const { t, locale } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
 
   const loadData = useCallback(async () => {
     try {
-      const data = await getContactMessagesAction();
-      setMessages(data);
-    } catch (err) {
-      console.error("Failed to load contact messages:", err);
+      const res = await getPaginatedContactMessagesAction({
+        page,
+        pageSize,
+      });
+      setMessages(res.data);
+      setTotalItems(res.totalItems);
+      setTotalPages(res.totalPages);
+    } catch {
       toast.error("যোগাযোগের বার্তা লোড করতে সমস্যা হয়েছে।");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page, pageSize]);
+
 
   useEffect(() => {
     let isMounted = true;
@@ -106,10 +115,21 @@ export default function AdminMessagesPage() {
     <div className="space-y-6">
       <ContactMessagesTab
         messages={messages}
+        totalItems={totalItems}
+        totalPages={totalPages}
+        currentPage={page}
+        pageSize={pageSize}
+        onPageChange={setPage}
+        onPageSizeChange={(newSize) => {
+          setPageSize(newSize);
+          setPage(1);
+        }}
         onDelete={handleDeleteRequest}
         t={t}
         locale={locale}
+        loading={loading}
       />
+
 
       {/* Delete Confirmation Modal */}
       <Dialog open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>

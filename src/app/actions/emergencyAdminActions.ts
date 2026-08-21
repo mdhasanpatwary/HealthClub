@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
+import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag, revalidateTag, revalidatePath } from "next/cache";
 import {
   BloodDonor,
@@ -11,6 +12,7 @@ import {
   INITIAL_AMBULANCES,
   INITIAL_EMERGENCY_HOTLINES,
 } from "@/data/emergencyData";
+import { PaginatedResult } from "@/types/pagination";
 
 const EMERGENCY_TAG = "emergency-data";
 
@@ -18,6 +20,169 @@ async function verifyAdmin(): Promise<boolean> {
   const session = await getSessionUser();
   return !!(session && session.role === "admin");
 }
+
+export interface GetPaginatedHotlinesAdminParams {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  category?: string;
+}
+
+export async function getPaginatedHotlinesAdminAction(
+  params?: GetPaginatedHotlinesAdminParams
+): Promise<PaginatedResult<EmergencyHotline>> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") {
+    return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize: params?.pageSize || 10 };
+  }
+
+  const { hotlines } = await getEmergencyDataAction();
+  const page = Math.max(1, params?.page || 1);
+  const pageSize = Math.max(1, params?.pageSize || 10);
+  const search = params?.search?.trim().toLowerCase();
+  const category = params?.category;
+
+  let filtered = hotlines;
+  if (category && category !== "all") {
+    filtered = filtered.filter((h) => h.category === category);
+  }
+  if (search) {
+    filtered = filtered.filter(
+      (h) =>
+        h.titleBn.toLowerCase().includes(search) ||
+        h.titleEn.toLowerCase().includes(search) ||
+        h.phone.toLowerCase().includes(search) ||
+        (h.descriptionBn && h.descriptionBn.toLowerCase().includes(search)) ||
+        (h.descriptionEn && h.descriptionEn.toLowerCase().includes(search))
+    );
+  }
+
+  const totalItems = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  const startIndex = (page - 1) * pageSize;
+  const data = filtered.slice(startIndex, startIndex + pageSize);
+
+  return {
+    data,
+    totalItems,
+    totalPages,
+    currentPage: page,
+    pageSize,
+  };
+}
+
+export interface GetPaginatedDonorsAdminParams {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  group?: string;
+  bloodGroup?: string;
+  upazila?: string;
+  area?: string;
+}
+
+export async function getPaginatedDonorsAdminAction(
+  params?: GetPaginatedDonorsAdminParams
+): Promise<PaginatedResult<BloodDonor>> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") {
+    return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize: params?.pageSize || 10 };
+  }
+
+  const { bloodDonors } = await getEmergencyDataAction();
+  const page = Math.max(1, params?.page || 1);
+  const pageSize = Math.max(1, params?.pageSize || 10);
+  const search = params?.search?.trim().toLowerCase();
+  const bloodGroup = params?.bloodGroup || params?.group;
+  const upazila = params?.upazila || params?.area;
+
+  let filtered = bloodDonors;
+  if (bloodGroup && bloodGroup !== "all") {
+    filtered = filtered.filter((d) => d.bloodGroup === bloodGroup);
+  }
+  if (upazila && upazila !== "all") {
+    filtered = filtered.filter((d) => d.upazila === upazila);
+  }
+  if (search) {
+    filtered = filtered.filter(
+      (d) =>
+        d.name.toLowerCase().includes(search) ||
+        d.phone.toLowerCase().includes(search) ||
+        d.upazila.toLowerCase().includes(search) ||
+        d.bloodGroup.toLowerCase().includes(search)
+    );
+  }
+
+  const totalItems = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  const startIndex = (page - 1) * pageSize;
+  const data = filtered.slice(startIndex, startIndex + pageSize);
+
+  return {
+    data,
+    totalItems,
+    totalPages,
+    currentPage: page,
+    pageSize,
+  };
+}
+
+export interface GetPaginatedAmbulancesAdminParams {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  location?: string;
+  area?: string;
+  type?: string;
+}
+
+export async function getPaginatedAmbulancesAdminAction(
+  params?: GetPaginatedAmbulancesAdminParams
+): Promise<PaginatedResult<AmbulanceService>> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") {
+    return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize: params?.pageSize || 10 };
+  }
+
+  const { ambulances } = await getEmergencyDataAction();
+  const page = Math.max(1, params?.page || 1);
+  const pageSize = Math.max(1, params?.pageSize || 10);
+  const search = params?.search?.trim().toLowerCase();
+  const location = params?.location || params?.area;
+  const type = params?.type;
+
+  let filtered = ambulances;
+  if (type && type !== "all") {
+    filtered = filtered.filter((a) => a.type === type);
+  }
+  if (location && location !== "all") {
+    filtered = filtered.filter((a) => a.location === location);
+  }
+  if (search) {
+    filtered = filtered.filter(
+      (a) =>
+        a.name.toLowerCase().includes(search) ||
+        a.location.toLowerCase().includes(search) ||
+        a.phone.toLowerCase().includes(search) ||
+        a.type.toLowerCase().includes(search)
+    );
+  }
+
+  const totalItems = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  const startIndex = (page - 1) * pageSize;
+  const data = filtered.slice(startIndex, startIndex + pageSize);
+
+  return {
+    data,
+    totalItems,
+    totalPages,
+    currentPage: page,
+    pageSize,
+  };
+
+}
+
 
 /**
  * Fetch all emergency data (blood donors, ambulances, hotlines).
@@ -61,7 +226,7 @@ export const getEmergencyDataAction = unstable_cache(
             bloodDonors = INITIAL_BLOOD_DONORS;
           }
         } catch (e) {
-          console.error("Failed to parse emergency_donors", e);
+          logger.error("Failed to parse emergency_donors", e);
           bloodDonors = INITIAL_BLOOD_DONORS;
         }
       }
@@ -75,7 +240,7 @@ export const getEmergencyDataAction = unstable_cache(
             ambulances = INITIAL_AMBULANCES;
           }
         } catch (e) {
-          console.error("Failed to parse emergency_ambulances", e);
+          logger.error("Failed to parse emergency_ambulances", e);
           ambulances = INITIAL_AMBULANCES;
         }
       }
@@ -89,14 +254,14 @@ export const getEmergencyDataAction = unstable_cache(
             hotlines = INITIAL_EMERGENCY_HOTLINES;
           }
         } catch (e) {
-          console.error("Failed to parse emergency_hotlines", e);
+          logger.error("Failed to parse emergency_hotlines", e);
           hotlines = INITIAL_EMERGENCY_HOTLINES;
         }
       }
 
       return { bloodDonors, ambulances, hotlines };
     } catch (err) {
-      console.error("Error in getEmergencyDataAction:", err);
+      logger.error("Error in getEmergencyDataAction:", err);
       return {
         bloodDonors: INITIAL_BLOOD_DONORS,
         ambulances: INITIAL_AMBULANCES,

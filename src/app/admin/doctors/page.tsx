@@ -8,7 +8,14 @@ import { DoctorDialog } from "../components/DoctorDialog";
 export default function AdminDoctorsPage() {
   const { t, locale } = useLanguage();
   const {
-    filteredDoctors,
+    loading,
+    doctors,
+    totalItems,
+    totalPages,
+    page,
+    setPage,
+    pageSize,
+    setPageSize,
     doctorSearch,
     setDoctorSearch,
     isDoctorOpen,
@@ -35,7 +42,16 @@ export default function AdminDoctorsPage() {
   return (
     <div className="space-y-6">
       <DoctorsTab
-        filteredDoctors={filteredDoctors}
+        doctors={doctors}
+        totalItems={totalItems}
+        totalPages={totalPages}
+        currentPage={page}
+        pageSize={pageSize}
+        onPageChange={setPage}
+        onPageSizeChange={(newSize) => {
+          setPageSize(newSize);
+          setPage(1);
+        }}
         doctorSearch={doctorSearch}
         setDoctorSearch={setDoctorSearch}
         onNewDoctorClick={handleOpenNewDoctor}
@@ -43,7 +59,9 @@ export default function AdminDoctorsPage() {
         onDeleteClick={onDelete}
         locale={locale}
         t={t}
+        loading={loading}
       />
+
 
       {isDoctorOpen && (
         <DoctorDialog

@@ -44,8 +44,7 @@ export function useAdminCounts() {
         contactMessagesCount: messagesRes.length,
         loading: false,
       });
-    } catch (err) {
-      console.error("Failed to fetch admin badge counts:", err);
+    } catch {
       setCounts((prev) => ({ ...prev, loading: false }));
     }
   }, []);

@@ -1,6 +1,7 @@
 import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import { logger } from "@/lib/logger";
 
 function getSessionSecret(): Uint8Array {
   const secret = process.env.SESSION_SECRET;
@@ -8,7 +9,7 @@ function getSessionSecret(): Uint8Array {
     if (process.env.NODE_ENV === "production") {
       throw new Error("CRITICAL SECURITY ERROR: SESSION_SECRET is not configured in production environment variables.");
     }
-    console.warn("⚠️ [SECURITY WARNING] SESSION_SECRET is not set in .env. Please configure a 32+ byte secret key.");
+    logger.warn("⚠️ [SECURITY WARNING] SESSION_SECRET is not set in .env. Please configure a 32+ byte secret key.");
     return new TextEncoder().encode("health-club-dev-only-ephemeral-secret-32-chars!!");
   }
   return new TextEncoder().encode(secret);

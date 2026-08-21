@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useMemo } from "react";
 import { Search, User, Edit3, Trash2, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,8 +10,16 @@ import { Member } from "@/services/db";
 import { formatNum, Locale } from "@/lib/i18n";
 import { exportToCsv } from "@/lib/exportUtils";
 
+import { Skeleton } from "@/components/ui/skeleton";
+
 interface MembersTabProps {
-  filteredMembers: Member[];
+  members: Member[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   memberSearch: string;
   setMemberSearch: (val: string) => void;
   onNewMemberClick: () => void;
@@ -22,10 +29,17 @@ interface MembersTabProps {
   onDeleteClick: (id: string, name: string) => void;
   locale: Locale;
   t: (key: string) => string;
+  loading?: boolean;
 }
 
 export function MembersTab({
-  filteredMembers,
+  members,
+  totalItems,
+  totalPages,
+  currentPage,
+  pageSize,
+  onPageChange,
+  onPageSizeChange,
   memberSearch,
   setMemberSearch,
   onNewMemberClick,
@@ -35,18 +49,8 @@ export function MembersTab({
   onDeleteClick,
   locale,
   t,
+  loading = false,
 }: MembersTabProps) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-
-  const totalPages = Math.ceil(filteredMembers.length / pageSize) || 1;
-  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
-
-  const paginatedMembers = useMemo(() => {
-    const startIndex = (safeCurrentPage - 1) * pageSize;
-    return filteredMembers.slice(startIndex, startIndex + pageSize);
-  }, [filteredMembers, safeCurrentPage, pageSize]);
-
   const isEn = locale === "en";
 
   return (
@@ -66,14 +70,14 @@ export function MembersTab({
               value={memberSearch}
               onChange={(e) => {
                 setMemberSearch(e.target.value);
-                setCurrentPage(1);
+                onPageChange(1);
               }}
               className="pl-9 h-9 border-border bg-background"
             />
           </div>
           <Button
             onClick={() =>
-              exportToCsv(filteredMembers, "healthclub_members", [
+              exportToCsv(members, "healthclub_members", [
                 { header: "Member ID", accessor: "id" },
                 { header: "Name", accessor: "name" },
                 { header: "Phone", accessor: "phone" },
@@ -98,6 +102,7 @@ export function MembersTab({
           </Button>
         </div>
       </CardHeader>
+
       <CardContent className="p-0">
         <div className="overflow-x-auto">
           <Table>
@@ -113,8 +118,43 @@ export function MembersTab({
               </TableRow>
             </TableHeader>
             <TableBody className="text-xs sm:text-sm">
-              {paginatedMembers.length > 0 ? (
-                paginatedMembers.map((m) => (
+              {loading ? (
+                Array.from({ length: Math.min(pageSize, 10) }).map((_, i) => (
+                  <TableRow key={`skeleton-${i}`} className="hover:bg-transparent">
+                    <TableCell>
+                      <Skeleton className="h-4 w-20 font-mono" />
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2.5">
+                        <Skeleton className="h-8 w-8 rounded-full shrink-0" />
+                        <div className="space-y-1">
+                          <Skeleton className="h-4 w-32" />
+                          <Skeleton className="h-3 w-20" />
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-24 font-mono" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-16" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-16 font-mono" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-5 w-16 rounded-full" />
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-1">
+                        <Skeleton className="h-7 w-7 rounded-md" />
+                        <Skeleton className="h-7 w-7 rounded-md" />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : members.length > 0 ? (
+                members.map((m) => (
                   <TableRow 
                     key={m.id} 
                     onClick={() => onViewMemberClick(m)} 
@@ -208,17 +248,14 @@ export function MembersTab({
         </div>
 
         {/* Pagination Footer */}
-        {filteredMembers.length > 0 && (
+        {totalItems > 0 && (
           <Pagination
-            currentPage={safeCurrentPage}
+            currentPage={currentPage}
             totalPages={totalPages}
             pageSize={pageSize}
-            totalItems={filteredMembers.length}
-            onPageChange={setCurrentPage}
-            onPageSizeChange={(size) => {
-              setPageSize(size);
-              setCurrentPage(1);
-            }}
+            totalItems={totalItems}
+            onPageChange={onPageChange}
+            onPageSizeChange={onPageSizeChange}
             pageSizeOptions={[10, 20, 50, 100]}
             locale={locale}
             t={t}
@@ -229,3 +266,4 @@ export function MembersTab({
     </Card>
   );
 }
+

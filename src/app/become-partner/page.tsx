@@ -43,8 +43,7 @@ export default function BecomePartnerPage() {
         phone: "",
         email: ""
       });
-    } catch (err) {
-      console.error(err);
+    } catch {
       toast.error("আবেদনটি জমা দেওয়া সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।");
     }
   };

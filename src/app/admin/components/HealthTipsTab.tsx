@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
   BookOpen,
@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -23,6 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
 import {
   Card,
   CardHeader,
@@ -42,8 +44,9 @@ import {
   HealthTipArticle,
   HEALTH_CATEGORIES,
 } from "@/data/healthTipsData";
+
 import {
-  getAllHealthTipsAction,
+  getPaginatedHealthTipsAdminAction,
   deleteHealthTipAction,
 } from "@/app/actions/healthTipsAdminActions";
 import { exportToCsv } from "@/lib/exportUtils";
@@ -51,6 +54,7 @@ import { toast } from "sonner";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { HealthTipArticleDialog } from "./HealthTipArticleDialog";
 import { Pagination } from "@/components/ui/pagination";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export function HealthTipsTab() {
   const { locale, t } = useLanguage();
@@ -58,7 +62,10 @@ export function HealthTipsTab() {
 
   const [loading, setLoading] = useState(true);
   const [articles, setArticles] = useState<HealthTipArticle[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 300);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -74,15 +81,21 @@ export function HealthTipsTab() {
   const loadArticles = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getAllHealthTipsAction();
-      setArticles(data);
-    } catch (err) {
-      console.error(err);
+      const res = await getPaginatedHealthTipsAdminAction({
+        page: currentPage,
+        pageSize,
+        search: debouncedSearch,
+        category: selectedCategory,
+      });
+      setArticles(res.data);
+      setTotalItems(res.totalItems);
+      setTotalPages(res.totalPages);
+    } catch {
       toast.error(isEn ? "Failed to load articles" : "আর্টিকেল লোড করতে সমস্যা হয়েছে");
     } finally {
       setLoading(false);
     }
-  }, [isEn]);
+  }, [currentPage, pageSize, debouncedSearch, selectedCategory, isEn]);
 
   useEffect(() => {
     let isMounted = true;
@@ -96,25 +109,6 @@ export function HealthTipsTab() {
     };
   }, [loadArticles]);
 
-  const filteredArticles = useMemo(() => {
-    return articles.filter((a) => {
-      const matchSearch =
-        a.titleBn.toLowerCase().includes(search.toLowerCase()) ||
-        a.titleEn.toLowerCase().includes(search.toLowerCase()) ||
-        a.slug.toLowerCase().includes(search.toLowerCase()) ||
-        a.authorBn.toLowerCase().includes(search.toLowerCase());
-      const matchCat = selectedCategory === "all" || a.category === selectedCategory;
-      return matchSearch && matchCat;
-    });
-  }, [articles, search, selectedCategory]);
-
-  const totalPages = Math.ceil(filteredArticles.length / pageSize) || 1;
-  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
-
-  const paginatedArticles = useMemo(() => {
-    const start = (safeCurrentPage - 1) * pageSize;
-    return filteredArticles.slice(start, start + pageSize);
-  }, [filteredArticles, safeCurrentPage, pageSize]);
 
   const confirmDelete = async () => {
     if (!deletingArticle) return;
@@ -129,8 +123,7 @@ export function HealthTipsTab() {
       } else {
         toast.error(res.error || (isEn ? "Failed to delete article" : "আর্টিকেল মোছা ব্যর্থ হয়েছে"));
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
       toast.error(isEn ? "Error deleting article" : "সমস্যা দেখা দিয়েছে");
     } finally {
       setDeleting(false);
@@ -203,7 +196,7 @@ export function HealthTipsTab() {
               variant="outline"
               size="sm"
               onClick={() =>
-                exportToCsv(filteredArticles, "healthclub_health_articles", [
+                exportToCsv(articles, "healthclub_health_articles", [
                   { header: "Slug", accessor: "slug" },
                   { header: "Title (BN)", accessor: "titleBn" },
                   { header: "Title (EN)", accessor: "titleEn" },
@@ -215,63 +208,96 @@ export function HealthTipsTab() {
               }
               className="text-xs h-9 font-semibold gap-1.5 border-border shrink-0"
             >
+
               <Download className="h-3.5 w-3.5" />
               <span>{isEn ? "Export Articles" : "এক্সপোর্ট"}</span>
             </Button>
           </div>
 
-          {/* Table */}
-          {loading ? (
-            <div className="py-12 flex justify-center items-center text-muted-foreground">
-              <Loader2 className="h-6 w-6 animate-spin mr-2" />
-              <span>{isEn ? "Loading articles..." : "আর্টিকেল লোড হচ্ছে..."}</span>
-            </div>
-          ) : (
-            <div className="rounded-xl border border-border overflow-hidden">
-              <Table>
+          {/* Table Container */}
+          <div className="rounded-xl border border-border overflow-hidden relative bg-card shadow-xs">
+            {/* Top Loading Progress Line */}
+            {loading && articles.length > 0 && (
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-primary/20 z-10 overflow-hidden">
+                <div className="h-full bg-primary animate-pulse w-full" />
+              </div>
+            )}
+
+            <div className="overflow-x-auto min-h-[420px]">
+              <Table className="table-fixed w-full">
                 <TableHeader className="bg-muted/40">
                   <TableRow>
                     <TableHead className="w-[120px]">{isEn ? "Category" : "ক্যাটাগরি"}</TableHead>
-                    <TableHead>{isEn ? "Article Title" : "শিরোনাম"}</TableHead>
-                    <TableHead>{isEn ? "Author" : "লেখক"}</TableHead>
-                    <TableHead>{isEn ? "Published" : "তারিখ"}</TableHead>
-                    <TableHead>{isEn ? "Read Time" : "পড়ার সময়"}</TableHead>
-                    <TableHead className="text-right">{isEn ? "Actions" : "অ্যাকশন"}</TableHead>
+                    <TableHead className="w-auto">{isEn ? "Article Title" : "শিরোনাম"}</TableHead>
+                    <TableHead className="w-[140px] hidden sm:table-cell">{isEn ? "Author" : "লেখক"}</TableHead>
+                    <TableHead className="w-[110px] hidden md:table-cell">{isEn ? "Published" : "তারিখ"}</TableHead>
+                    <TableHead className="w-[90px] hidden lg:table-cell">{isEn ? "Read Time" : "পড়ার সময়"}</TableHead>
+                    <TableHead className="w-[110px] text-right">{isEn ? "Actions" : "অ্যাকশন"}</TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody>
-                  {filteredArticles.length === 0 ? (
-                    <TableRow>
+                <TableBody className={loading && articles.length > 0 ? "opacity-50 pointer-events-none transition-opacity duration-150" : "transition-opacity duration-150"}>
+                  {loading && articles.length === 0 ? (
+                    Array.from({ length: Math.min(pageSize, 10) }).map((_, i) => (
+                      <TableRow key={`skeleton-${i}`} className="h-[64px] hover:bg-transparent">
+                        <TableCell className="w-[120px]">
+                          <Skeleton className="h-5 w-16 rounded-md" />
+                        </TableCell>
+                        <TableCell className="w-auto">
+                          <div className="space-y-1.5 py-1">
+                            <Skeleton className="h-4 w-3/4 max-w-sm" />
+                            <Skeleton className="h-3 w-1/2 max-w-xs" />
+                          </div>
+                        </TableCell>
+                        <TableCell className="w-[140px] hidden sm:table-cell">
+                          <Skeleton className="h-4 w-20" />
+                        </TableCell>
+                        <TableCell className="w-[110px] hidden md:table-cell">
+                          <Skeleton className="h-4 w-16" />
+                        </TableCell>
+                        <TableCell className="w-[90px] hidden lg:table-cell">
+                          <Skeleton className="h-4 w-14" />
+                        </TableCell>
+                        <TableCell className="w-[110px] text-right">
+                          <div className="flex items-center justify-end gap-1">
+                            <Skeleton className="h-7 w-7 rounded-md" />
+                            <Skeleton className="h-7 w-7 rounded-md" />
+                            <Skeleton className="h-7 w-7 rounded-md" />
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : articles.length === 0 ? (
+                    <TableRow className="h-[200px]">
                       <TableCell colSpan={6} className="text-center py-8 text-muted-foreground text-xs">
                         {isEn ? "No articles found." : "কোনো আর্টিকেল পাওয়া যায়নি।"}
                       </TableCell>
                     </TableRow>
                   ) : (
-                    paginatedArticles.map((art) => (
-                      <TableRow key={art.slug} className="hover:bg-muted/30">
-                        <TableCell>
-                          <Badge className="bg-primary/10 text-primary font-bold border-primary/20 text-[10px]">
+                    articles.map((art) => (
+                      <TableRow key={art.slug} className="h-[64px] hover:bg-muted/30">
+                        <TableCell className="w-[120px]">
+                          <Badge className="bg-primary/10 text-primary font-bold border-primary/20 text-[10px] truncate max-w-[100px]">
                             {isEn ? art.categoryNameEn : art.categoryNameBn}
                           </Badge>
                         </TableCell>
-                        <TableCell>
-                          <div className="font-bold text-xs text-foreground">
+                        <TableCell className="w-auto">
+                          <div className="font-bold text-xs text-foreground line-clamp-1">
                             {isEn ? art.titleEn : art.titleBn}
                           </div>
                           <div className="text-[11px] text-muted-foreground line-clamp-1">
                             {isEn ? art.excerptEn : art.excerptBn}
                           </div>
                         </TableCell>
-                        <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
+                        <TableCell className="w-[140px] hidden sm:table-cell text-xs text-muted-foreground truncate">
                           {isEn ? art.authorEn : art.authorBn}
                         </TableCell>
-                        <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
+                        <TableCell className="w-[110px] hidden md:table-cell text-xs text-muted-foreground whitespace-nowrap">
                           {art.publishedDate}
                         </TableCell>
-                        <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
+                        <TableCell className="w-[90px] hidden lg:table-cell text-xs text-muted-foreground whitespace-nowrap">
                           {isEn ? art.readTimeEn : art.readTimeBn}
                         </TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className="w-[110px] text-right">
                           <div className="flex items-center justify-end gap-1">
                             <Link
                               href={`/health-tips/${art.slug}`}
@@ -311,15 +337,16 @@ export function HealthTipsTab() {
                 </TableBody>
               </Table>
             </div>
-          )}
+          </div>
+
 
           {/* Pagination Footer */}
-          {!loading && filteredArticles.length > 0 && (
+          {totalItems > 0 && (
             <Pagination
-              currentPage={safeCurrentPage}
+              currentPage={currentPage}
               totalPages={totalPages}
               pageSize={pageSize}
-              totalItems={filteredArticles.length}
+              totalItems={totalItems}
               onPageChange={setCurrentPage}
               onPageSizeChange={(size) => {
                 setPageSize(size);
@@ -329,9 +356,12 @@ export function HealthTipsTab() {
               locale={locale}
               t={t}
               itemLabel={isEn ? "articles" : "টি আর্টিকেল"}
+              disabled={loading}
             />
           )}
+
         </CardContent>
+
       </Card>
 
       {/* Write / Edit Article Dialog */}

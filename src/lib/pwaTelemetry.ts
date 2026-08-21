@@ -135,8 +135,7 @@ export async function sendPwaSessionPing(userId?: string): Promise<void> {
       isStandalone: info.isStandalone,
       userId,
     });
-  } catch (err) {
+  } catch {
     // Fail silently so as not to interrupt user navigation
-    console.debug("[PwaTelemetry] ping failed:", err);
   }
 }

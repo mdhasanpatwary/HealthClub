@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useMemo } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
@@ -10,29 +9,35 @@ import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { exportToCsv } from "@/lib/exportUtils";
 
+import { Skeleton } from "@/components/ui/skeleton";
+
 interface TransactionsTabProps {
   transactions: Transaction[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   locale: Locale;
   t: (key: string) => string;
+  loading?: boolean;
 }
 
 export function TransactionsTab({
   transactions,
+  totalItems,
+  totalPages,
+  currentPage,
+  pageSize,
+  onPageChange,
+  onPageSizeChange,
   locale,
   t,
+  loading = false,
 }: TransactionsTabProps) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-
-  const totalPages = Math.ceil(transactions.length / pageSize) || 1;
-  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
-
-  const paginatedTransactions = useMemo(() => {
-    const startIndex = (safeCurrentPage - 1) * pageSize;
-    return transactions.slice(startIndex, startIndex + pageSize);
-  }, [transactions, safeCurrentPage, pageSize]);
-
   const isEn = locale === "en";
+
 
   return (
     <Card className="border-border shadow-md">
@@ -75,8 +80,31 @@ export function TransactionsTab({
               </TableRow>
             </TableHeader>
             <TableBody className="text-xs sm:text-sm">
-              {paginatedTransactions.length > 0 ? (
-                paginatedTransactions.map((tx) => (
+              {loading ? (
+                Array.from({ length: Math.min(pageSize, 10) }).map((_, i) => (
+                  <TableRow key={`skeleton-${i}`} className="hover:bg-transparent">
+                    <TableCell>
+                      <div className="space-y-1">
+                        <Skeleton className="h-4 w-28" />
+                        <Skeleton className="h-3 w-20 font-mono" />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-36" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-24" />
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Skeleton className="h-4 w-16 ml-auto font-mono" />
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Skeleton className="h-4 w-16 ml-auto font-mono" />
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : transactions.length > 0 ? (
+                transactions.map((tx) => (
                   <TableRow key={tx.id}>
                     <TableCell className="font-semibold text-secondary whitespace-nowrap">
                       {tx.memberName}
@@ -100,17 +128,14 @@ export function TransactionsTab({
         </div>
 
         {/* Pagination Footer */}
-        {transactions.length > 0 && (
+        {totalItems > 0 && (
           <Pagination
-            currentPage={safeCurrentPage}
+            currentPage={currentPage}
             totalPages={totalPages}
             pageSize={pageSize}
-            totalItems={transactions.length}
-            onPageChange={setCurrentPage}
-            onPageSizeChange={(size) => {
-              setPageSize(size);
-              setCurrentPage(1);
-            }}
+            totalItems={totalItems}
+            onPageChange={onPageChange}
+            onPageSizeChange={onPageSizeChange}
             pageSizeOptions={[10, 20, 50, 100]}
             locale={locale}
             t={t}
@@ -121,3 +146,4 @@ export function TransactionsTab({
     </Card>
   );
 }
+

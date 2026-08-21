@@ -3,6 +3,8 @@
 import { prisma } from "@/lib/prisma";
 import { Member } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
+import { logger } from "@/lib/logger";
+import { PaginatedResult } from "@/types/pagination";
 
 // Helper to format Date objects as YYYY-MM-DD in local time (not UTC).
 // Using toISOString() would shift the date to UTC, causing off-by-one errors
@@ -14,7 +16,230 @@ function formatDate(date: Date): string {
   return `${y}-${m}-${d}`;
 }
 
+export interface GetPaginatedMembersParams {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  status?: string;
+  tier?: string;
+}
 
+export async function getPaginatedMembersAction(
+  params?: GetPaginatedMembersParams
+): Promise<PaginatedResult<Member>> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") {
+    return {
+      data: [],
+      totalItems: 0,
+      totalPages: 1,
+      currentPage: 1,
+      pageSize: params?.pageSize || 10,
+    };
+  }
+
+  const page = Math.max(1, params?.page || 1);
+  const pageSize = Math.max(1, params?.pageSize || 10);
+  const search = params?.search?.trim();
+  const status = params?.status;
+  const tier = params?.tier;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const where: any = {};
+  if (status && status !== "all") {
+    where.status = status;
+  }
+  if (tier && tier !== "all") {
+    where.tier = tier;
+  }
+  if (search) {
+    where.OR = [
+      { name: { contains: search, mode: "insensitive" } },
+      { phone: { contains: search, mode: "insensitive" } },
+      { email: { contains: search, mode: "insensitive" } },
+      { address: { contains: search, mode: "insensitive" } },
+      { profession: { contains: search, mode: "insensitive" } },
+      { id: { contains: search, mode: "insensitive" } },
+    ];
+  }
+
+  try {
+    const [totalItems, data] = await Promise.all([
+      prisma.member.count({ where }),
+      prisma.member.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        select: {
+          id: true,
+          name: true,
+          phone: true,
+          email: true,
+          tier: true,
+          status: true,
+          joinedDate: true,
+          expiryDate: true,
+          qrCodeUrl: true,
+          totalSaved: true,
+          address: true,
+          birthDate: true,
+          profession: true,
+          profilePictureUrl: true,
+          bkashSender: true,
+          bkashTxnId: true,
+          renewalStatus: true,
+          renewalBkashSender: true,
+          renewalBkashTxnId: true,
+        },
+      }),
+    ]);
+
+    const members: Member[] = data.map((m) => ({
+      id: m.id,
+      name: m.name,
+      phone: m.phone,
+      email: m.email || "",
+      tier: m.tier as Member["tier"],
+      status: m.status as Member["status"],
+      joinedDate: formatDate(m.joinedDate),
+      expiryDate: formatDate(m.expiryDate),
+      qrCodeUrl: m.qrCodeUrl || undefined,
+      totalSaved: m.totalSaved,
+      address: m.address || "",
+      birthDate: m.birthDate ? formatDate(m.birthDate) : "",
+      profession: m.profession || "",
+      profilePictureUrl: m.profilePictureUrl || "",
+      bkashSender: m.bkashSender || undefined,
+      bkashTxnId: m.bkashTxnId || undefined,
+      renewalStatus: m.renewalStatus || undefined,
+      renewalBkashSender: m.renewalBkashSender || undefined,
+      renewalBkashTxnId: m.renewalBkashTxnId || undefined,
+    }));
+
+    return {
+      data: members,
+      totalItems,
+      totalPages: Math.max(1, Math.ceil(totalItems / pageSize)),
+      currentPage: page,
+      pageSize,
+    };
+  } catch (error) {
+    logger.error("Error in getPaginatedMembersAction:", error);
+    return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize };
+  }
+}
+
+export interface GetPaginatedRenewalsParams {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  status?: string;
+}
+
+export async function getPaginatedRenewalsAction(
+  params?: GetPaginatedRenewalsParams
+): Promise<PaginatedResult<Member>> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") {
+    return {
+      data: [],
+      totalItems: 0,
+      totalPages: 1,
+      currentPage: 1,
+      pageSize: params?.pageSize || 10,
+    };
+  }
+
+  const page = Math.max(1, params?.page || 1);
+  const pageSize = Math.max(1, params?.pageSize || 10);
+  const search = params?.search?.trim();
+  const status = params?.status;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const where: any = {};
+  if (status && status !== "all") {
+    where.renewalStatus = status;
+  } else {
+    // Default to members who have requested renewal
+    where.renewalStatus = { in: ["pending", "approved", "rejected"] };
+  }
+
+  if (search) {
+    where.OR = [
+      { name: { contains: search, mode: "insensitive" } },
+      { phone: { contains: search, mode: "insensitive" } },
+      { renewalBkashSender: { contains: search, mode: "insensitive" } },
+      { renewalBkashTxnId: { contains: search, mode: "insensitive" } },
+    ];
+  }
+
+  try {
+    const [totalItems, data] = await Promise.all([
+      prisma.member.count({ where }),
+      prisma.member.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        select: {
+          id: true,
+          name: true,
+          phone: true,
+          email: true,
+          tier: true,
+          status: true,
+          joinedDate: true,
+          expiryDate: true,
+          qrCodeUrl: true,
+          totalSaved: true,
+          address: true,
+          birthDate: true,
+          profession: true,
+          profilePictureUrl: true,
+          bkashSender: true,
+          bkashTxnId: true,
+          renewalStatus: true,
+          renewalBkashSender: true,
+          renewalBkashTxnId: true,
+        },
+      }),
+    ]);
+
+    const members: Member[] = data.map((m) => ({
+      id: m.id,
+      name: m.name,
+      phone: m.phone,
+      email: m.email || "",
+      tier: m.tier as Member["tier"],
+      status: m.status as Member["status"],
+      joinedDate: formatDate(m.joinedDate),
+      expiryDate: formatDate(m.expiryDate),
+      qrCodeUrl: m.qrCodeUrl || undefined,
+      totalSaved: m.totalSaved,
+      address: m.address || "",
+      birthDate: m.birthDate ? formatDate(m.birthDate) : "",
+      profession: m.profession || "",
+      profilePictureUrl: m.profilePictureUrl || "",
+      bkashSender: m.bkashSender || undefined,
+      bkashTxnId: m.bkashTxnId || undefined,
+      renewalStatus: m.renewalStatus || undefined,
+      renewalBkashSender: m.renewalBkashSender || undefined,
+      renewalBkashTxnId: m.renewalBkashTxnId || undefined,
+    }));
+
+    return {
+      data: members,
+      totalItems,
+      totalPages: Math.max(1, Math.ceil(totalItems / pageSize)),
+      currentPage: page,
+      pageSize,
+    };
+  } catch (error) {
+    logger.error("Error in getPaginatedRenewalsAction:", error);
+    return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize };
+  }
+}
 
 export async function getMembersAction(): Promise<Member[]> {
   const session = await getSessionUser();
@@ -68,7 +293,7 @@ export async function getMembersAction(): Promise<Member[]> {
       renewalBkashTxnId: m.renewalBkashTxnId || undefined,
     } as Member));
   } catch (error) {
-    console.error("Error in getMembersAction:", error);
+    logger.error("Error in getMembersAction:", error);
     return [];
   }
 }
@@ -100,7 +325,7 @@ export async function updateMemberStatusAction(id: string, status: Member["statu
     });
     return true;
   } catch (error) {
-    console.error("Error in updateMemberStatusAction:", error);
+    logger.error("Error in updateMemberStatusAction:", error);
     return false;
   }
 }
@@ -122,18 +347,10 @@ export async function updateMemberProfileAction(
 
   const updates = typeof nameOrUpdates === "object"
     ? nameOrUpdates
-    : {
-        name: nameOrUpdates,
-        phone,
-        email,
-        address,
-        birthDate,
-        profession,
-        profilePictureUrl,
-      };
+    : { name: nameOrUpdates, phone, email, address, birthDate, profession, profilePictureUrl };
 
   if (updates.email && updates.email.trim().toLowerCase() === ADMIN_EMAIL.toLowerCase() && session.role !== "admin") {
-    console.warn(`[SECURITY] Prevented non-admin user ${id} from claiming ADMIN_EMAIL ${ADMIN_EMAIL}`);
+    logger.warn(`[SECURITY] Prevented non-admin user ${id} from claiming ADMIN_EMAIL ${ADMIN_EMAIL}`);
     return false;
   }
 
@@ -145,16 +362,14 @@ export async function updateMemberProfileAction(
         ...(updates.phone && { phone: updates.phone }),
         ...(updates.email !== undefined && { email: updates.email || null }),
         ...(updates.address !== undefined && { address: updates.address || null }),
-        ...(updates.birthDate !== undefined && {
-          birthDate: updates.birthDate ? new Date(updates.birthDate) : null,
-        }),
+        ...(updates.birthDate !== undefined && { birthDate: updates.birthDate ? new Date(updates.birthDate) : null }),
         ...(updates.profession !== undefined && { profession: updates.profession || null }),
         ...(updates.profilePictureUrl !== undefined && { profilePictureUrl: updates.profilePictureUrl || null }),
       },
     });
     return true;
   } catch (error) {
-    console.error("Error in updateMemberProfileAction:", error);
+    logger.error("Error in updateMemberProfileAction:", error);
     return false;
   }
 }
@@ -174,7 +389,7 @@ export async function updateMemberAction(
 ): Promise<boolean> {
   const session = await getSessionUser();
   if (!session || session.role !== "admin") {
-    console.warn("Unauthorized attempt to update member");
+    logger.warn("Unauthorized attempt to update member");
     return false;
   }
   try {
@@ -193,7 +408,7 @@ export async function updateMemberAction(
     });
     return true;
   } catch (error) {
-    console.error("Error in updateMemberAction:", error);
+    logger.error("Error in updateMemberAction:", error);
     return false;
   }
 }
@@ -201,7 +416,7 @@ export async function updateMemberAction(
 export async function deleteMemberAction(id: string): Promise<boolean> {
   const session = await getSessionUser();
   if (!session || session.role !== "admin") {
-    console.warn("Unauthorized attempt to delete member");
+    logger.warn("Unauthorized attempt to delete member");
     return false;
   }
   try {
@@ -210,7 +425,7 @@ export async function deleteMemberAction(id: string): Promise<boolean> {
     });
     return true;
   } catch (error) {
-    console.error("Error in deleteMemberAction:", error);
+    logger.error("Error in deleteMemberAction:", error);
     return false;
   }
 }
@@ -218,7 +433,7 @@ export async function deleteMemberAction(id: string): Promise<boolean> {
 export async function approveMemberRenewalAction(memberId: string): Promise<boolean> {
   const session = await getSessionUser();
   if (!session || session.role !== "admin") {
-    console.warn("Unauthorized attempt to approve renewal");
+    logger.warn("Unauthorized attempt to approve renewal");
     return false;
   }
 
@@ -249,7 +464,7 @@ export async function approveMemberRenewalAction(memberId: string): Promise<bool
 
     return true;
   } catch (error) {
-    console.error("Error in approveMemberRenewalAction:", error);
+    logger.error("Error in approveMemberRenewalAction:", error);
     return false;
   }
 }
@@ -257,7 +472,7 @@ export async function approveMemberRenewalAction(memberId: string): Promise<bool
 export async function rejectMemberRenewalAction(memberId: string): Promise<boolean> {
   const session = await getSessionUser();
   if (!session || session.role !== "admin") {
-    console.warn("Unauthorized attempt to reject renewal");
+    logger.warn("Unauthorized attempt to reject renewal");
     return false;
   }
 
@@ -272,7 +487,7 @@ export async function rejectMemberRenewalAction(memberId: string): Promise<boole
     });
     return true;
   } catch (error) {
-    console.error("Error in rejectMemberRenewalAction:", error);
+    logger.error("Error in rejectMemberRenewalAction:", error);
     return false;
   }
 }

@@ -24,6 +24,7 @@ export interface PaginationProps {
   t?: (key: string) => string;
   itemLabel?: string;
   className?: string;
+  disabled?: boolean;
 }
 
 export function Pagination({
@@ -38,7 +39,9 @@ export function Pagination({
   t = (k) => k,
   itemLabel,
   className,
+  disabled = false,
 }: PaginationProps) {
+
   const safeTotalPages = Math.max(1, totalPages);
   const safeCurrentPage = Math.min(Math.max(1, currentPage), safeTotalPages);
 
@@ -133,8 +136,9 @@ export function Pagination({
             <select
               value={pageSize}
               onChange={(e) => onPageSizeChange(Number(e.target.value))}
+              disabled={disabled}
               aria-label={t("admin.pagination.perPage")}
-              className="h-8 px-2 rounded-lg border border-border bg-background text-xs font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer"
+              className="h-8 px-2 rounded-lg border border-border bg-background text-xs font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer disabled:opacity-50"
             >
               {pageSizeOptions.map((opt) => (
                 <option key={opt} value={opt}>
@@ -153,7 +157,7 @@ export function Pagination({
           variant="outline"
           size="icon-xs"
           onClick={() => onPageChange(1)}
-          disabled={safeCurrentPage <= 1}
+          disabled={disabled || safeCurrentPage <= 1}
           aria-label={t("admin.pagination.first")}
           title={t("admin.pagination.first")}
           className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground disabled:opacity-40"
@@ -166,7 +170,7 @@ export function Pagination({
           variant="outline"
           size="icon-xs"
           onClick={() => onPageChange(safeCurrentPage - 1)}
-          disabled={safeCurrentPage <= 1}
+          disabled={disabled || safeCurrentPage <= 1}
           aria-label={t("admin.pagination.prev")}
           title={t("admin.pagination.prev")}
           className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground disabled:opacity-40"
@@ -205,12 +209,14 @@ export function Pagination({
                 variant={isActive ? "default" : "outline"}
                 size="icon-xs"
                 onClick={() => onPageChange(page)}
+                disabled={disabled}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
                   "h-8 w-8 rounded-lg font-semibold text-xs transition-all",
                   isActive
                     ? "bg-primary text-white hover:bg-primary-dark font-bold shadow-xs"
-                    : "border-border text-foreground hover:bg-muted"
+                    : "border-border text-foreground hover:bg-muted",
+                  disabled && "opacity-50 cursor-not-allowed"
                 )}
               >
                 {formatNum(page, locale)}
@@ -224,7 +230,7 @@ export function Pagination({
           variant="outline"
           size="icon-xs"
           onClick={() => onPageChange(safeCurrentPage + 1)}
-          disabled={safeCurrentPage >= safeTotalPages}
+          disabled={disabled || safeCurrentPage >= safeTotalPages}
           aria-label={t("admin.pagination.next")}
           title={t("admin.pagination.next")}
           className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground disabled:opacity-40"
@@ -237,7 +243,7 @@ export function Pagination({
           variant="outline"
           size="icon-xs"
           onClick={() => onPageChange(safeTotalPages)}
-          disabled={safeCurrentPage >= safeTotalPages}
+          disabled={disabled || safeCurrentPage >= safeTotalPages}
           aria-label={t("admin.pagination.last")}
           title={t("admin.pagination.last")}
           className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground disabled:opacity-40"
@@ -245,6 +251,7 @@ export function Pagination({
           <ChevronsRight className="h-4 w-4" />
         </Button>
       </div>
+
     </div>
   );
 }

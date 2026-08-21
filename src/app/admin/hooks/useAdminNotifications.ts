@@ -77,8 +77,8 @@ export function useAdminNotifications(options?: UseAdminNotificationsOptions) {
       setTotalItems(result.totalItems);
       setTotalPages(result.totalPages);
       setSummary(result.summary);
-    } catch (err) {
-      console.error("Failed to fetch admin notifications:", err);
+    } catch {
+      // Ignore notifications fetch failure silently
     } finally {
       setLoading(false);
     }

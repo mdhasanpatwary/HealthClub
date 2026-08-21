@@ -36,8 +36,7 @@ export function usePwaAnalytics(locale: "bn" | "en") {
       if (isManualRefresh) {
         toast.success(isBn ? "PWA পরিসংখ্যান আপডেট হয়েছে" : "PWA stats refreshed");
       }
-    } catch (err) {
-      console.error("[usePwaAnalytics] fetch error:", err);
+    } catch {
       toast.error(isBn ? "অ্যানালিটিক্স লোড করতে সমস্যা হয়েছে" : "Failed to load analytics");
     } finally {
       setLoading(false);

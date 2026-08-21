@@ -3,10 +3,106 @@
 import { prisma } from "@/lib/prisma";
 import { Transaction } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
+import { logger } from "@/lib/logger";
 import { isMemberTxAllowedAction } from "./systemSettingsActions";
 import { unstable_cache, updateTag } from "next/cache";
+import { PaginatedResult } from "@/types/pagination";
 
 const ADMIN_STATS_TAG = "admin-stats";
+
+export interface GetPaginatedTransactionsParams {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  memberId?: string;
+  partnerId?: string;
+}
+
+export async function getPaginatedTransactionsAction(
+  params?: GetPaginatedTransactionsParams
+): Promise<PaginatedResult<Transaction>> {
+  const session = await getSessionUser();
+  if (!session) {
+    return {
+      data: [],
+      totalItems: 0,
+      totalPages: 1,
+      currentPage: 1,
+      pageSize: params?.pageSize || 10,
+    };
+  }
+
+  // Non-admins can only view their own transactions
+  if (session.role !== "admin") {
+    if (!params?.memberId || session.userId !== params.memberId) {
+      return {
+        data: [],
+        totalItems: 0,
+        totalPages: 1,
+        currentPage: 1,
+        pageSize: params?.pageSize || 10,
+      };
+    }
+  }
+
+  const page = Math.max(1, params?.page || 1);
+  const pageSize = Math.max(1, params?.pageSize || 10);
+  const search = params?.search?.trim();
+  const memberId = params?.memberId;
+  const partnerId = params?.partnerId;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const where: any = {};
+  if (memberId) {
+    where.memberId = memberId;
+  }
+  if (partnerId) {
+    where.partnerId = partnerId;
+  }
+  if (search) {
+    where.OR = [
+      { memberName: { contains: search, mode: "insensitive" } },
+      { memberId: { contains: search, mode: "insensitive" } },
+      { partnerName: { contains: search, mode: "insensitive" } },
+      { id: { contains: search, mode: "insensitive" } },
+    ];
+  }
+
+  try {
+    const [totalItems, data] = await Promise.all([
+      prisma.transaction.count({ where }),
+      prisma.transaction.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
+    ]);
+
+    const transactions: Transaction[] = data.map((t) => ({
+      id: t.id,
+      memberId: t.memberId,
+      memberName: t.memberName,
+      partnerId: t.partnerId,
+      partnerName: t.partnerName,
+      amount: t.amount,
+      saved: t.saved,
+      date: t.date.toISOString(),
+    }));
+
+    return {
+      data: transactions,
+      totalItems,
+      totalPages: Math.max(1, Math.ceil(totalItems / pageSize)),
+      currentPage: page,
+      pageSize,
+    };
+  } catch (error) {
+    logger.error("Error in getPaginatedTransactionsAction:", error);
+    return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize };
+  }
+}
+
 
 
 // --- TRANSACTIONS ACTIONS ---
@@ -41,7 +137,7 @@ export async function getTransactionsAction(memberId?: string): Promise<Transact
       date: t.date.toISOString(),
     }));
   } catch (error) {
-    console.error("Error in getTransactionsAction:", error);
+    logger.error("Error in getTransactionsAction:", error);
     return [];
   }
 }
@@ -150,7 +246,7 @@ export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">)
       date: data.date.toISOString(),
     };
   } catch (error) {
-    console.error("Error in addTransactionAction:", error);
+    logger.error("Error in addTransactionAction:", error);
     return { error: "ট্রানজেকশন সংরক্ষণ করতে সমস্যা হয়েছে।" };
   }
 }
@@ -298,7 +394,7 @@ export async function getStatsAction() {
   try {
     return await getCachedAdminStats();
   } catch (error) {
-    console.error("Error in getStatsAction:", error);
+    logger.error("Error in getStatsAction:", error);
     return DEFAULT_STATS;
   }
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useMemo } from "react";
 import { Search, Edit3, Trash2, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,41 +8,47 @@ import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/com
 import { Pagination } from "@/components/ui/pagination";
 import { Partner } from "@/services/db";
 import { exportToCsv } from "@/lib/exportUtils";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Locale } from "@/lib/i18n";
 
 interface PartnersTabProps {
-  filteredPartners: Partner[];
+  partners: Partner[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   partnerSearch: string;
   setPartnerSearch: (val: string) => void;
   onNewPartnerClick: () => void;
   onEditClick: (p: Partner) => void;
   onDeleteClick: (id: string, name: string) => void;
   locale?: Locale;
-  t: (key: string) => string;
+  t?: (key: string) => string;
+  loading?: boolean;
 }
 
 export function PartnersTab({
-  filteredPartners,
+  partners,
+  totalItems,
+  totalPages,
+  currentPage,
+  pageSize,
+  onPageChange,
+  onPageSizeChange,
   partnerSearch,
   setPartnerSearch,
   onNewPartnerClick,
   onEditClick,
   onDeleteClick,
   locale = "bn",
-  t,
+  t = (k) => k,
+  loading = false,
 }: PartnersTabProps) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-
-  const totalPages = Math.ceil(filteredPartners.length / pageSize) || 1;
-  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
-
-  const paginatedPartners = useMemo(() => {
-    const startIndex = (safeCurrentPage - 1) * pageSize;
-    return filteredPartners.slice(startIndex, startIndex + pageSize);
-  }, [filteredPartners, safeCurrentPage, pageSize]);
 
   const isEn = locale === "en";
+
 
   return (
     <Card className="border-border shadow-md">
@@ -58,18 +63,18 @@ export function PartnersTab({
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="text"
-              placeholder={t("admin.dashboard.searchPartnerPlaceholder")}
+              placeholder={t ? t("admin.dashboard.searchPartnerPlaceholder") : "Search partners..."}
               value={partnerSearch}
               onChange={(e) => {
                 setPartnerSearch(e.target.value);
-                setCurrentPage(1);
+                onPageChange(1);
               }}
               className="pl-9 h-9 border-border bg-background"
             />
           </div>
           <Button
             onClick={() =>
-              exportToCsv(filteredPartners, "healthclub_partners", [
+              exportToCsv(partners, "healthclub_partners", [
                 { header: "Partner ID", accessor: "id" },
                 { header: "Name", accessor: "name" },
                 { header: "Category", accessor: "category" },
@@ -87,7 +92,7 @@ export function PartnersTab({
             <span>{isEn ? "Export CSV" : "এক্সপোর্ট"}</span>
           </Button>
           <Button onClick={onNewPartnerClick} size="sm" className="bg-primary hover:bg-primary-dark text-white shrink-0">
-            {t("admin.dashboard.newPartnerTitle")}
+            {t ? t("admin.dashboard.newPartnerTitle") : "New Partner"}
           </Button>
         </div>
       </CardHeader>
@@ -96,21 +101,47 @@ export function PartnersTab({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.name")}</TableHead>
-                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.category")}</TableHead>
-                <TableHead className="font-semibold text-secondary">{t("admin.dashboard.addressLabel")}</TableHead>
-                <TableHead className="font-semibold text-primary whitespace-nowrap">{t("admin.dashboard.discountRate")}</TableHead>
-                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.hotline")}</TableHead>
-                <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">{t("admin.dashboard.action")}</TableHead>
+                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t ? t("admin.dashboard.name") : "Name"}</TableHead>
+                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t ? t("admin.dashboard.category") : "Category"}</TableHead>
+                <TableHead className="font-semibold text-secondary">{t ? t("admin.dashboard.addressLabel") : "Address"}</TableHead>
+                <TableHead className="font-semibold text-primary whitespace-nowrap">{t ? t("admin.dashboard.discountRate") : "Discount"}</TableHead>
+                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t ? t("admin.dashboard.hotline") : "Hotline"}</TableHead>
+                <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">{t ? t("admin.dashboard.action") : "Action"}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className="text-xs sm:text-sm">
-              {paginatedPartners.length > 0 ? (
-                paginatedPartners.map((p) => (
+              {loading ? (
+                Array.from({ length: Math.min(pageSize, 10) }).map((_, i) => (
+                  <TableRow key={`skeleton-${i}`} className="hover:bg-transparent">
+                    <TableCell>
+                      <Skeleton className="h-4 w-36" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-20" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-48" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-12" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-24 font-mono" />
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-1">
+                        <Skeleton className="h-7 w-7 rounded-md" />
+                        <Skeleton className="h-7 w-7 rounded-md" />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : partners.length > 0 ? (
+                partners.map((p) => (
                   <TableRow key={p.id}>
                     <TableCell className="font-bold text-secondary whitespace-nowrap">{p.name}</TableCell>
                     <TableCell className="capitalize text-xs font-semibold whitespace-nowrap">
-                      {p.category === "hospital" ? t("admin.dashboard.hospital") : p.category === "diagnostic" ? t("admin.dashboard.diagnostic") : t("admin.dashboard.pharmacy")}
+                      {p.category === "hospital" ? (t ? t("admin.dashboard.hospital") : "Hospital") : p.category === "diagnostic" ? (t ? t("admin.dashboard.diagnostic") : "Diagnostic") : (t ? t("admin.dashboard.pharmacy") : "Pharmacy")}
                     </TableCell>
                     <TableCell className="text-muted-foreground">{p.address}</TableCell>
                     <TableCell className="font-bold text-primary font-heading whitespace-nowrap">{p.discount}</TableCell>
@@ -149,17 +180,14 @@ export function PartnersTab({
         </div>
 
         {/* Pagination Footer */}
-        {filteredPartners.length > 0 && (
+        {totalItems > 0 && (
           <Pagination
-            currentPage={safeCurrentPage}
+            currentPage={currentPage}
             totalPages={totalPages}
             pageSize={pageSize}
-            totalItems={filteredPartners.length}
-            onPageChange={setCurrentPage}
-            onPageSizeChange={(size) => {
-              setPageSize(size);
-              setCurrentPage(1);
-            }}
+            totalItems={totalItems}
+            onPageChange={onPageChange}
+            onPageSizeChange={onPageSizeChange}
             pageSizeOptions={[10, 20, 50, 100]}
             locale={locale}
             t={t}
@@ -170,3 +198,4 @@ export function PartnersTab({
     </Card>
   );
 }
+

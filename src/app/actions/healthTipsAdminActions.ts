@@ -2,8 +2,10 @@
 
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
+import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag } from "next/cache";
 import { HealthTipArticle, HEALTH_TIPS_ARTICLES } from "@/data/healthTipsData";
+import { PaginatedResult } from "@/types/pagination";
 
 const HEALTH_TIPS_TAG = "health-tips-data";
 
@@ -11,6 +13,65 @@ async function verifyAdmin(): Promise<boolean> {
   const session = await getSessionUser();
   return !!(session && session.role === "admin");
 }
+
+export interface GetPaginatedHealthTipsAdminParams {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  category?: string;
+}
+
+export async function getPaginatedHealthTipsAdminAction(
+  params?: GetPaginatedHealthTipsAdminParams
+): Promise<PaginatedResult<HealthTipArticle>> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") {
+    return {
+      data: [],
+      totalItems: 0,
+      totalPages: 1,
+      currentPage: 1,
+      pageSize: params?.pageSize || 10,
+    };
+  }
+
+  const allArticles = await getAllHealthTipsAction();
+  const page = Math.max(1, params?.page || 1);
+  const pageSize = Math.max(1, params?.pageSize || 10);
+  const search = params?.search?.trim().toLowerCase();
+  const category = params?.category;
+
+  let filtered = allArticles;
+  if (category && category !== "all") {
+    filtered = filtered.filter((a) => a.category === category);
+  }
+  if (search) {
+    filtered = filtered.filter(
+      (a) =>
+        a.titleBn.toLowerCase().includes(search) ||
+        a.titleEn.toLowerCase().includes(search) ||
+        a.excerptBn.toLowerCase().includes(search) ||
+        a.excerptEn.toLowerCase().includes(search) ||
+        a.categoryNameBn.toLowerCase().includes(search) ||
+        a.category.toLowerCase().includes(search)
+    );
+  }
+
+
+  const totalItems = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  const startIndex = (page - 1) * pageSize;
+  const data = filtered.slice(startIndex, startIndex + pageSize);
+
+  return {
+    data,
+    totalItems,
+    totalPages,
+    currentPage: page,
+    pageSize,
+  };
+}
+
 
 /**
  * Fetch all health tips articles (database + base articles merged).
@@ -70,7 +131,7 @@ export const getAllHealthTipsAction = unstable_cache(
 
       return merged;
     } catch (err) {
-      console.error("Error in getAllHealthTipsAction:", err);
+      logger.error("Error in getAllHealthTipsAction:", err);
       return HEALTH_TIPS_ARTICLES;
     }
   },

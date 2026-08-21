@@ -3,22 +3,41 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Pagination } from "@/components/ui/pagination";
 import { Trash2 } from "lucide-react";
 import { ContactMessage } from "@/app/actions/contactActions";
+import { Locale } from "@/lib/i18n";
+
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ContactMessagesTabProps {
   messages: ContactMessage[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   onDelete: (id: string) => void;
   t: (key: string) => string;
   locale: string;
+  loading?: boolean;
 }
 
 export function ContactMessagesTab({
   messages,
+  totalItems,
+  totalPages,
+  currentPage,
+  pageSize,
+  onPageChange,
+  onPageSizeChange,
   onDelete,
   t,
   locale,
+  loading = false,
 }: ContactMessagesTabProps) {
+
   const formatDate = (isoString: string) => {
     try {
       const date = new Date(isoString);
@@ -72,7 +91,33 @@ export function ContactMessagesTab({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {messages.length === 0 ? (
+              {loading ? (
+                Array.from({ length: Math.min(pageSize, 10) }).map((_, i) => (
+                  <TableRow key={`skeleton-${i}`} className="hover:bg-transparent border-b border-border/60">
+                    <TableCell>
+                      <Skeleton className="h-4 w-28" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-24 font-mono" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-32 font-mono" />
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <Skeleton className="h-4 w-48" />
+                        <Skeleton className="h-3 w-36" />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-20" />
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Skeleton className="h-8 w-8 rounded-lg ml-auto" />
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : messages.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                     {t("admin.dashboard.noMessages")}
@@ -113,7 +158,24 @@ export function ContactMessagesTab({
             </TableBody>
           </Table>
         </div>
+
+        {/* Pagination Footer */}
+        {totalItems > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            pageSize={pageSize}
+            totalItems={totalItems}
+            onPageChange={onPageChange}
+            onPageSizeChange={onPageSizeChange}
+            pageSizeOptions={[10, 20, 50, 100]}
+            locale={locale as Locale}
+            t={t}
+            itemLabel={locale === "bn" ? "টি বার্তা" : "messages"}
+          />
+        )}
       </CardContent>
     </Card>
   );
 }
+

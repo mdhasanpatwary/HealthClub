@@ -105,8 +105,7 @@ export function EmergencyDonorDialog({
       } else {
         toast.error(res.error || (isEn ? "Failed to save donor" : "রক্তদাতা সংরক্ষণ ব্যর্থ হয়েছে"));
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
       toast.error(isEn ? "An unexpected error occurred" : "একটি সমস্যা দেখা দিয়েছে");
     } finally {
       setSaving(false);

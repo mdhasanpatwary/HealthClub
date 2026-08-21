@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { logger } from "@/lib/logger";
 
 export interface RegisterBloodDonorInput {
   name: string;
@@ -40,7 +41,7 @@ export async function registerBloodDonorAction(input: RegisterBloodDonorInput): 
       message: "রক্তদাতা হিসেবে আপনার নিবন্ধন সফল হয়েছে। ধন্যবাদ!",
     };
   } catch (error) {
-    console.error("Error registering blood donor:", error);
+    logger.error("Error registering blood donor:", error);
     return {
       success: false,
       message: "নিবন্ধন সম্পন্ন করা সম্ভব হয়নি। অনুগ্রহ করে পরে চেষ্টা করুন।",
@@ -71,7 +72,7 @@ export async function registerAmbulanceAction(input: RegisterAmbulanceInput): Pr
       message: "আপনার অ্যাম্বুলেন্সের তথ্য সফলভাবে জমা হয়েছে। যাচাইয়ের পর এটি তালিকায় যুক্ত করা হবে।",
     };
   } catch (error) {
-    console.error("Error registering ambulance service:", error);
+    logger.error("Error registering ambulance service:", error);
     return {
       success: false,
       message: "তথ্য জমা দেওয়া সম্ভব হয়নি। অনুগ্রহ করে পরে আবার চেষ্টা করুন।",

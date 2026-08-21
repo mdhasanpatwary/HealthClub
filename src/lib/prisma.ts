@@ -2,6 +2,7 @@
 import { PrismaClient } from "@/generated/client/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
+import { logger } from "@/lib/logger";
 
 const globalForPrisma = global as unknown as {
   prisma: PrismaClient;
@@ -24,7 +25,7 @@ if (!globalForPrisma.pool) {
 
   // Catch unhandled errors on idle clients to prevent Node process termination
   globalForPrisma.pool.on("error", (err) => {
-    console.error("[Prisma:pg.Pool] Unexpected idle client error:", err);
+    logger.error("[Prisma:pg.Pool] Unexpected idle client error:", err);
   });
 }
 

@@ -1,6 +1,7 @@
 import "server-only";
 import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
+import { logger } from "@/lib/logger";
 import type { Partner } from "@/services/db";
 
 /**
@@ -36,7 +37,7 @@ export const getHomepageStats = unstable_cache(
         pharmacyCount: Number(row?.pharmacy_count ?? 0),
       };
     } catch (error) {
-      console.error("Error fetching homepage stats:", error);
+      logger.error("Error fetching homepage stats:", error);
       return {
         memberCount: 0,
         foundingCount: 0,
@@ -74,7 +75,7 @@ export const getHomepagePartners = unstable_cache(
         imageUrl: p.imageUrl || undefined,
       }));
     } catch (error) {
-      console.error("Error fetching homepage partners:", error);
+      logger.error("Error fetching homepage partners:", error);
       return [];
     }
   },

@@ -17,18 +17,27 @@ export default function AdminRenewalsPage() {
   const { t, locale } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [members, setMembers] = useState<Member[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   const loadData = useCallback(async () => {
     try {
-      const data = await dbStore.getMembers();
-      setMembers(data);
-    } catch (err) {
-      console.error("Failed to load renewal requests:", err);
+      const res = await dbStore.getPaginatedRenewals({
+        page,
+        pageSize,
+      });
+      setMembers(res.data);
+      setTotalItems(res.totalItems);
+      setTotalPages(res.totalPages);
+    } catch {
       toast.error("নবায়ন আবেদন তালিকা লোড করতে সমস্যা হয়েছে।");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page, pageSize]);
+
 
   useEffect(() => {
     let isMounted = true;
@@ -52,8 +61,7 @@ export default function AdminRenewalsPage() {
       } else {
         toast.error("অনুমোদন করা যায়নি।");
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
       toast.error("সার্ভার ত্রুটি।");
     }
   };
@@ -68,8 +76,7 @@ export default function AdminRenewalsPage() {
       } else {
         toast.error("বাতিল করা যায়নি।");
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
       toast.error("সার্ভার ত্রুটি।");
     }
   };
@@ -103,11 +110,22 @@ export default function AdminRenewalsPage() {
     <div className="space-y-6">
       <RenewalsTab
         members={members}
+        totalItems={totalItems}
+        totalPages={totalPages}
+        currentPage={page}
+        pageSize={pageSize}
+        onPageChange={setPage}
+        onPageSizeChange={(newSize) => {
+          setPageSize(newSize);
+          setPage(1);
+        }}
         onApprove={handleApproveRenewal}
         onReject={handleRejectRenewal}
         locale={locale}
         t={t}
+        loading={loading}
       />
     </div>
   );
 }
+

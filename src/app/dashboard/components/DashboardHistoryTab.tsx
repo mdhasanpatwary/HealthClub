@@ -1,16 +1,17 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { History, PlusCircle, ReceiptText } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Pagination } from "@/components/ui/pagination";
 import { Transaction, Member } from "@/services/db";
+import { dbStore } from "@/services/dbStore";
 import { Locale } from "@/lib/i18n";
 
 interface DashboardHistoryTabProps {
-  transactions: Transaction[];
+  transactions?: Transaction[];
   allowMemberTx: boolean;
   user: Member;
   setIsAddTxOpen: (open: boolean) => void;
@@ -19,23 +20,50 @@ interface DashboardHistoryTabProps {
 }
 
 export function DashboardHistoryTab({
-  transactions,
   allowMemberTx,
   user,
   setIsAddTxOpen,
   t,
   locale,
 }: DashboardHistoryTabProps) {
+  const [paginatedTxs, setPaginatedTxs] = useState<Transaction[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [loading, setLoading] = useState(false);
 
-  const totalPages = Math.ceil(transactions.length / pageSize) || 1;
-  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
+  const userId = user?.id;
 
-  const paginatedTransactions = useMemo(() => {
-    const startIndex = (safeCurrentPage - 1) * pageSize;
-    return transactions.slice(startIndex, startIndex + pageSize);
-  }, [transactions, safeCurrentPage, pageSize]);
+  const loadData = useCallback(async () => {
+    if (!userId) return;
+    setLoading(true);
+    try {
+      const res = await dbStore.getPaginatedTransactions({
+        page: currentPage,
+        pageSize,
+        memberId: userId,
+      });
+      setPaginatedTxs(res.data);
+      setTotalItems(res.totalItems);
+      setTotalPages(res.totalPages);
+    } catch {
+      // Ignore user transactions load errors
+    } finally {
+      setLoading(false);
+    }
+  }, [userId, currentPage, pageSize]);
+
+  useEffect(() => {
+    let isMounted = true;
+    Promise.resolve().then(() => {
+      if (isMounted) loadData();
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [loadData]);
+
 
   const isEn = locale === "en";
 
@@ -63,7 +91,11 @@ export function DashboardHistoryTab({
         )}
       </CardHeader>
       <CardContent className="p-0">
-        {transactions.length > 0 ? (
+        {loading ? (
+          <div className="text-center py-16 text-muted-foreground text-xs">
+            {isEn ? "Loading history..." : "ইতিহাস লোড হচ্ছে..."}
+          </div>
+        ) : paginatedTxs.length > 0 ? (
           <div>
             <div className="overflow-x-auto">
               <Table>
@@ -76,7 +108,7 @@ export function DashboardHistoryTab({
                   </TableRow>
                 </TableHeader>
                 <TableBody className="text-xs sm:text-sm">
-                  {paginatedTransactions.map((tx) => (
+                  {paginatedTxs.map((tx) => (
                     <TableRow key={tx.id} className="hover:bg-muted/40 dark:hover:bg-slate-800/40 transition-colors">
                       <TableCell className="font-medium text-secondary dark:text-white">{tx.partnerName}</TableCell>
                       <TableCell className="text-muted-foreground">{tx.date}</TableCell>
@@ -89,12 +121,12 @@ export function DashboardHistoryTab({
             </div>
 
             {/* Pagination Footer */}
-            {transactions.length > 0 && (
+            {totalItems > 0 && (
               <Pagination
-                currentPage={safeCurrentPage}
+                currentPage={currentPage}
                 totalPages={totalPages}
                 pageSize={pageSize}
-                totalItems={transactions.length}
+                totalItems={totalItems}
                 onPageChange={setCurrentPage}
                 onPageSizeChange={(size) => {
                   setPageSize(size);
@@ -118,3 +150,4 @@ export function DashboardHistoryTab({
     </Card>
   );
 }
+

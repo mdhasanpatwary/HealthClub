@@ -3,9 +3,102 @@
 import { prisma } from "@/lib/prisma";
 import { Doctor, initialDoctors } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
+import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag } from "next/cache";
+import { PaginatedResult } from "@/types/pagination";
 
 const DOCTORS_TAG = "doctors";
+
+export interface GetPaginatedDoctorsAdminParams {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  department?: string;
+  isActive?: boolean;
+}
+
+export async function getPaginatedDoctorsAdminAction(
+  params?: GetPaginatedDoctorsAdminParams
+): Promise<PaginatedResult<Doctor>> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") {
+    return {
+      data: [],
+      totalItems: 0,
+      totalPages: 1,
+      currentPage: 1,
+      pageSize: params?.pageSize || 10,
+    };
+  }
+
+  const page = Math.max(1, params?.page || 1);
+  const pageSize = Math.max(1, params?.pageSize || 10);
+  const search = params?.search?.trim();
+  const department = params?.department;
+  const isActive = params?.isActive;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const where: any = {};
+  if (department && department !== "all") {
+    where.department = department;
+  }
+  if (isActive !== undefined) {
+    where.isActive = isActive;
+  }
+  if (search) {
+    where.OR = [
+      { name: { contains: search, mode: "insensitive" } },
+      { specialty: { contains: search, mode: "insensitive" } },
+      { department: { contains: search, mode: "insensitive" } },
+      { chamberName: { contains: search, mode: "insensitive" } },
+      { chamberAddress: { contains: search, mode: "insensitive" } },
+      { serialPhone: { contains: search, mode: "insensitive" } },
+    ];
+  }
+
+  try {
+    const [totalItems, data] = await Promise.all([
+      prisma.doctor.count({ where }),
+      prisma.doctor.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
+    ]);
+
+    const doctors: Doctor[] = data.map((d) => ({
+      id: d.id,
+      name: d.name,
+      specialty: d.specialty,
+      department: d.department,
+      degrees: d.degrees,
+      designation: d.designation,
+      chamberName: d.chamberName,
+      chamberAddress: d.chamberAddress,
+      roomNo: d.roomNo || undefined,
+      visitingDays: d.visitingDays,
+      visitingHours: d.visitingHours,
+      serialPhone: d.serialPhone,
+      consultationFee: d.consultationFee || undefined,
+      imageUrl: d.imageUrl || undefined,
+      partnerId: d.partnerId || undefined,
+      isActive: d.isActive,
+    }));
+
+    return {
+      data: doctors,
+      totalItems,
+      totalPages: Math.max(1, Math.ceil(totalItems / pageSize)),
+      currentPage: page,
+      pageSize,
+    };
+  } catch (error) {
+    logger.error("Error in getPaginatedDoctorsAdminAction:", error);
+    return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize };
+  }
+}
+
 
 /**
  * Server action to fetch all active doctors.
@@ -65,7 +158,7 @@ export const getDoctorsAction = unstable_cache(
         isActive: d.isActive,
       }));
     } catch (error) {
-      console.error("Error in getDoctorsAction:", error);
+      logger.error("Error in getDoctorsAction:", error);
       return initialDoctors;
     }
   },
@@ -104,7 +197,7 @@ export async function getAllDoctorsAdminAction(): Promise<Doctor[]> {
       isActive: d.isActive,
     }));
   } catch (error) {
-    console.error("Error in getAllDoctorsAdminAction:", error);
+    logger.error("Error in getAllDoctorsAdminAction:", error);
     return [];
   }
 }
@@ -138,7 +231,7 @@ export async function getDoctorByIdAction(id: string): Promise<Doctor | null> {
       isActive: d.isActive,
     };
   } catch (error) {
-    console.error("Error in getDoctorByIdAction:", error);
+    logger.error("Error in getDoctorByIdAction:", error);
     return null;
   }
 }
@@ -199,7 +292,7 @@ export async function addDoctorAction(
       },
     };
   } catch (error) {
-    console.error("Error in addDoctorAction:", error);
+    logger.error("Error in addDoctorAction:", error);
     return { success: false, error: "ডাক্তারের তথ্য যুক্ত করতে সমস্যা হয়েছে।" };
   } finally {
     updateTag(DOCTORS_TAG);
@@ -242,7 +335,7 @@ export async function updateDoctorAction(
 
     return { success: true };
   } catch (error) {
-    console.error("Error in updateDoctorAction:", error);
+    logger.error("Error in updateDoctorAction:", error);
     return { success: false, error: "তথ্য আপডেট করতে সমস্যা হয়েছে।" };
   } finally {
     updateTag(DOCTORS_TAG);
@@ -264,7 +357,7 @@ export async function deleteDoctorAction(id: string): Promise<{ success: boolean
     });
     return { success: true };
   } catch (error) {
-    console.error("Error in deleteDoctorAction:", error);
+    logger.error("Error in deleteDoctorAction:", error);
     return { success: false, error: "ডাক্তার ডিলিট করতে সমস্যা হয়েছে।" };
   } finally {
     updateTag(DOCTORS_TAG);
@@ -306,7 +399,7 @@ export async function seedDoctorsAction(): Promise<{ success: boolean; count?: n
     updateTag(DOCTORS_TAG);
     return { success: true, count: res.count };
   } catch (error) {
-    console.error("Error in seedDoctorsAction:", error);
+    logger.error("Error in seedDoctorsAction:", error);
     return { success: false, error: "ডাক্তার সিড করতে সমস্যা হয়েছে।" };
   }
 }

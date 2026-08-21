@@ -162,8 +162,7 @@ export function HealthTipArticleDialog({
       } else {
         toast.error(res.error || (isEn ? "Failed to save article" : "আর্টিকেল সংরক্ষণ ব্যর্থ"));
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
       toast.error(isEn ? "An unexpected error occurred" : "একটি সমস্যা দেখা দিয়েছে");
     } finally {
       setSaving(false);

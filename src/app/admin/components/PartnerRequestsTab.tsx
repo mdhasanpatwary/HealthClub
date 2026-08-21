@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useMemo } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,33 +7,39 @@ import { Pagination } from "@/components/ui/pagination";
 import { PartnerRequest } from "@/services/db";
 import { Locale } from "@/lib/i18n";
 
+import { Skeleton } from "@/components/ui/skeleton";
+
 interface PartnerRequestsTabProps {
   partnerRequests: PartnerRequest[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   locale?: Locale;
   t?: (key: string) => string;
+  loading?: boolean;
 }
 
 export function PartnerRequestsTab({
   partnerRequests,
+  totalItems,
+  totalPages,
+  currentPage,
+  pageSize,
+  onPageChange,
+  onPageSizeChange,
   onApprove,
   onReject,
   locale = "bn",
   t = (k) => k,
+  loading = false,
 }: PartnerRequestsTabProps) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-
-  const totalPages = Math.ceil(partnerRequests.length / pageSize) || 1;
-  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
-
-  const paginatedRequests = useMemo(() => {
-    const startIndex = (safeCurrentPage - 1) * pageSize;
-    return partnerRequests.slice(startIndex, startIndex + pageSize);
-  }, [partnerRequests, safeCurrentPage, pageSize]);
-
   const isEn = locale === "en";
+
 
   return (
     <Card className="border-border shadow-md">
@@ -60,14 +65,46 @@ export function PartnerRequestsTab({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {paginatedRequests.length === 0 ? (
+              {loading ? (
+                Array.from({ length: Math.min(pageSize, 10) }).map((_, i) => (
+                  <TableRow key={`skeleton-${i}`} className="hover:bg-transparent border-b border-border/60">
+                    <TableCell>
+                      <div className="space-y-1">
+                        <Skeleton className="h-4 w-36" />
+                        <Skeleton className="h-3 w-48" />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-20" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-12 font-bold" />
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <Skeleton className="h-3.5 w-24" />
+                        <Skeleton className="h-3 w-28 font-mono" />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-5 w-16 rounded-full" />
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <Skeleton className="h-7 w-16 rounded-md" />
+                        <Skeleton className="h-7 w-16 rounded-md" />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : partnerRequests.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-8 text-muted-foreground text-xs">
                     {t("admin.partnerRequests.noRequests")}
                   </TableCell>
                 </TableRow>
               ) : (
-                paginatedRequests.map((req) => (
+                partnerRequests.map((req) => (
                   <TableRow key={req.id} className="hover:bg-muted/20 border-b border-border/60">
                     <TableCell>
                       <div className="font-bold text-secondary">{req.orgName}</div>
@@ -124,17 +161,14 @@ export function PartnerRequestsTab({
         </div>
 
         {/* Pagination Footer */}
-        {partnerRequests.length > 0 && (
+        {totalItems > 0 && (
           <Pagination
-            currentPage={safeCurrentPage}
+            currentPage={currentPage}
             totalPages={totalPages}
             pageSize={pageSize}
-            totalItems={partnerRequests.length}
-            onPageChange={setCurrentPage}
-            onPageSizeChange={(size) => {
-              setPageSize(size);
-              setCurrentPage(1);
-            }}
+            totalItems={totalItems}
+            onPageChange={onPageChange}
+            onPageSizeChange={onPageSizeChange}
             pageSizeOptions={[10, 20, 50, 100]}
             locale={locale}
             t={t}
@@ -145,3 +179,4 @@ export function PartnerRequestsTab({
     </Card>
   );
 }
+

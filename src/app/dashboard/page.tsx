@@ -109,8 +109,7 @@ function DashboardContent() {
         setTransactions(userTx);
         setAllowMemberTx(allowed);
         setPartners(pts);
-      } catch (err) {
-        console.error("Dashboard fresh data fetch failed:", err);
+      } catch {
         if (isMounted) {
           toast.error("ড্যাশবোর্ডের কিছু তথ্য আপডেট করতে সমস্যা হয়েছে। ক্যাশড তথ্য প্রদর্শিত হচ্ছে।");
         }
@@ -164,8 +163,7 @@ function DashboardContent() {
       setTransactions(updatedTx);
       const freshUser = await dbStore.getMemberById(user.id);
       if (freshUser) setUser(freshUser);
-    } catch (err) {
-      console.error("Error adding member tx:", err);
+    } catch {
       toast.error(t("admin.dashboard.txLogFailed"));
     } finally {
       setAddTxSubmitting(false);
@@ -235,8 +233,7 @@ function DashboardContent() {
       toast.success(
         locale === "bn" ? "কার্ড সফলভাবে ডাউনলোড হয়েছে!" : "Card downloaded successfully!"
       );
-    } catch (error) {
-      console.error("Error downloading card:", error);
+    } catch {
       toast.dismiss(loadingToast);
       toast.error(
         locale === "bn" ? "ডাউনলোড ব্যর্থ হয়েছে। আবার চেষ্টা করুন।" : "Failed to download card. Please try again."
@@ -278,8 +275,7 @@ function DashboardContent() {
       } else {
         toast.error(t("dashboard.profile.error"));
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
       toast.error(t("dashboard.profile.serverError"));
     }
   };

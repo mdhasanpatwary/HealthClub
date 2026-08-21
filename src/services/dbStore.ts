@@ -2,6 +2,8 @@ import { Member, Partner, Transaction, Doctor, PublicMemberVerification } from "
 import { safeStorage } from "@/lib/safeStorage";
 import {
   getPartnersAction,
+  getPaginatedPartnersAdminAction,
+  GetPaginatedPartnersAdminParams,
   addPartnerAction,
   updatePartnerAction,
   deletePartnerAction,
@@ -9,6 +11,8 @@ import {
 import {
   getDoctorsAction,
   getAllDoctorsAdminAction,
+  getPaginatedDoctorsAdminAction,
+  GetPaginatedDoctorsAdminParams,
   getDoctorByIdAction,
   addDoctorAction,
   updateDoctorAction,
@@ -22,6 +26,10 @@ import {
 } from "@/app/actions/memberActions";
 import {
   getMembersAction,
+  getPaginatedMembersAction,
+  GetPaginatedMembersParams,
+  getPaginatedRenewalsAction,
+  GetPaginatedRenewalsParams,
   updateMemberStatusAction,
   updateMemberProfileAction,
   updateMemberAction,
@@ -29,6 +37,8 @@ import {
 } from "@/app/actions/memberAdminActions";
 import {
   getTransactionsAction,
+  getPaginatedTransactionsAction,
+  GetPaginatedTransactionsParams,
   addTransactionAction,
   getStatsAction,
 } from "@/app/actions/transactionActions";
@@ -41,6 +51,8 @@ import {
   GetAdminNotificationsParams,
   PaginatedAdminNotificationsResult,
 } from "@/app/actions/adminNotificationActions";
+import { PaginatedResult } from "@/types/pagination";
+
 
 // Helper to check if running on client side
 const isClient = typeof window !== "undefined";
@@ -59,6 +71,12 @@ export const dbStore = {
 
   async getAllDoctorsAdmin(): Promise<Doctor[]> {
     return getAllDoctorsAdminAction();
+  },
+
+  async getPaginatedDoctorsAdmin(
+    params?: GetPaginatedDoctorsAdminParams
+  ): Promise<PaginatedResult<Doctor>> {
+    return getPaginatedDoctorsAdminAction(params);
   },
 
   async getDoctorById(id: string): Promise<Doctor | null> {
@@ -82,6 +100,12 @@ export const dbStore = {
     return getPartnersAction();
   },
 
+  async getPaginatedPartnersAdmin(
+    params?: GetPaginatedPartnersAdminParams
+  ): Promise<PaginatedResult<Partner>> {
+    return getPaginatedPartnersAdminAction(params);
+  },
+
   async addPartner(partner: Omit<Partner, "id">): Promise<Partner | { error: string }> {
     return addPartnerAction(partner);
   },
@@ -98,6 +122,19 @@ export const dbStore = {
   async getMembers(): Promise<Member[]> {
     return getMembersAction();
   },
+
+  async getPaginatedMembers(
+    params?: GetPaginatedMembersParams
+  ): Promise<PaginatedResult<Member>> {
+    return getPaginatedMembersAction(params);
+  },
+
+  async getPaginatedRenewals(
+    params?: GetPaginatedRenewalsParams
+  ): Promise<PaginatedResult<Member>> {
+    return getPaginatedRenewalsAction(params);
+  },
+
 
   async addMember(
     member: Omit<Member, "id" | "status" | "joinedDate" | "expiryDate" | "totalSaved"> & { password?: string }
@@ -175,6 +212,13 @@ export const dbStore = {
     return getTransactionsAction(memberId);
   },
 
+  async getPaginatedTransactions(
+    params?: GetPaginatedTransactionsParams
+  ): Promise<PaginatedResult<Transaction>> {
+    return getPaginatedTransactionsAction(params);
+  },
+
+
   async addTransaction(tx: Omit<Transaction, "id" | "date">): Promise<Transaction | { error: string }> {
     const newTx = await addTransactionAction(tx);
 
@@ -212,8 +256,8 @@ export const dbStore = {
     }
     try {
       await logoutMemberAction(); // Clear server cookie session
-    } catch (err) {
-      console.warn("[dbStore] Logout cookie clearance error:", err);
+    } catch {
+      // Ignore client-side cookie clearance errors
     }
   },
 
@@ -235,8 +279,8 @@ export const dbStore = {
     }
     try {
       await logoutMemberAction(); // Clear server cookie session
-    } catch (err) {
-      console.warn("[dbStore] Partner logout cookie clearance error:", err);
+    } catch {
+      // Ignore client-side cookie clearance errors
     }
   },
 

@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
+import { logger } from "@/lib/logger";
 
 export type NotificationCategory =
   | "renewal"
@@ -389,7 +390,7 @@ export async function getAdminNotificationsAction(
       summary,
     };
   } catch (error) {
-    console.error("Error in getAdminNotificationsAction:", error);
+    logger.error("Error in getAdminNotificationsAction:", error);
     return {
       items: [],
       totalItems: 0,

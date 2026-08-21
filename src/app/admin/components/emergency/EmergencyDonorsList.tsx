@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
 import { BloodDonor, UPAZILAS_FENI } from "@/data/emergencyData";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -16,29 +16,34 @@ import { Edit3, Trash2, Phone } from "lucide-react";
 
 interface EmergencyDonorsListProps {
   donors: BloodDonor[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   isEn: boolean;
   onEdit: (donor: BloodDonor) => void;
   onDelete: (id: string, name: string) => void;
   onToggleStatus: (id: string) => void;
+  loading?: boolean;
 }
 
 export function EmergencyDonorsList({
   donors,
+  totalItems,
+  totalPages,
+  currentPage,
+  pageSize,
+  onPageChange,
+  onPageSizeChange,
   isEn,
   onEdit,
   onDelete,
   onToggleStatus,
+  loading = false,
 }: EmergencyDonorsListProps) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
 
-  const totalPages = Math.ceil(donors.length / pageSize) || 1;
-  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
-
-  const paginatedDonors = useMemo(() => {
-    const startIndex = (safeCurrentPage - 1) * pageSize;
-    return donors.slice(startIndex, startIndex + pageSize);
-  }, [donors, safeCurrentPage, pageSize]);
 
   return (
     <div className="space-y-3">
@@ -56,14 +61,44 @@ export function EmergencyDonorsList({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paginatedDonors.length === 0 ? (
+            {loading ? (
+              Array.from({ length: Math.min(pageSize, 10) }).map((_, i) => (
+                <TableRow key={`skeleton-${i}`} className="hover:bg-transparent">
+                  <TableCell>
+                    <Skeleton className="h-8 w-8 rounded-lg" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-32" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-24" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-28" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-20" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-5 w-16 rounded-full" />
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex items-center justify-end gap-1">
+                      <Skeleton className="h-7 w-7 rounded-md" />
+                      <Skeleton className="h-7 w-7 rounded-md" />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : donors.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={7} className="text-center py-8 text-muted-foreground text-xs">
                   {isEn ? "No blood donors found matching criteria." : "কোনো রক্তদাতার তথ্য পাওয়া যায়নি।"}
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedDonors.map((d) => {
+
+              donors.map((d) => {
                 const upazilaObj = UPAZILAS_FENI.find((u) => u.id === d.upazila);
                 return (
                   <TableRow key={d.id} className="hover:bg-muted/30">
@@ -129,22 +164,22 @@ export function EmergencyDonorsList({
       </div>
 
       {/* Pagination Footer */}
-      {donors.length > 0 && (
+      {totalItems > 0 && (
         <Pagination
-          currentPage={safeCurrentPage}
+          currentPage={currentPage}
           totalPages={totalPages}
           pageSize={pageSize}
-          totalItems={donors.length}
-          onPageChange={setCurrentPage}
-          onPageSizeChange={(size) => {
-            setPageSize(size);
-            setCurrentPage(1);
-          }}
+          totalItems={totalItems}
+          onPageChange={onPageChange}
+          onPageSizeChange={onPageSizeChange}
           pageSizeOptions={[10, 20, 50, 100]}
           locale={isEn ? "en" : "bn"}
           itemLabel={isEn ? "donors" : "জন রক্তদাতা"}
+          disabled={loading}
         />
       )}
+
     </div>
   );
 }
+

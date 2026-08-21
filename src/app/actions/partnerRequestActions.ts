@@ -6,7 +6,9 @@ import { Partner } from "@/services/db";
 import { getSessionUser, setSessionUser } from "@/lib/session";
 import { hashPassword, verifyPassword } from "@/lib/crypto";
 import { sendPasswordResetEmail } from "@/lib/mail";
+import { logger } from "@/lib/logger";
 import { updateTag } from "next/cache";
+import { PaginatedResult } from "@/types/pagination";
 
 const PARTNERS_TAG = "partners";
 const MAX_PARTNER_OTP_ATTEMPTS = 5;
@@ -22,6 +24,89 @@ export interface PartnerRequest {
   email: string | null;
   status: 'pending' | 'approved' | 'rejected';
 }
+
+export interface GetPaginatedPartnerRequestsParams {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  status?: string;
+  category?: string;
+}
+
+export async function getPaginatedPartnerRequestsAction(
+  params?: GetPaginatedPartnerRequestsParams
+): Promise<PaginatedResult<PartnerRequest>> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") {
+    return {
+      data: [],
+      totalItems: 0,
+      totalPages: 1,
+      currentPage: 1,
+      pageSize: params?.pageSize || 10,
+    };
+  }
+
+  const page = Math.max(1, params?.page || 1);
+  const pageSize = Math.max(1, params?.pageSize || 10);
+  const search = params?.search?.trim();
+  const status = params?.status;
+  const category = params?.category;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const where: any = {};
+  if (status && status !== "all") {
+    where.status = status;
+  }
+  if (category && category !== "all") {
+    where.category = category;
+  }
+  if (search) {
+    where.OR = [
+      { orgName: { contains: search, mode: "insensitive" } },
+      { contactName: { contains: search, mode: "insensitive" } },
+      { phone: { contains: search, mode: "insensitive" } },
+      { email: { contains: search, mode: "insensitive" } },
+      { address: { contains: search, mode: "insensitive" } },
+    ];
+  }
+
+  try {
+    const [totalItems, data] = await Promise.all([
+      prisma.partnerRequest.count({ where }),
+      prisma.partnerRequest.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
+    ]);
+
+    const requests: PartnerRequest[] = data.map((d) => ({
+      id: d.id,
+      orgName: d.orgName,
+      category: d.category as PartnerRequest["category"],
+      address: d.address,
+      discount: d.discount,
+      contactName: d.contactName,
+      phone: d.phone,
+      email: d.email,
+      status: d.status as PartnerRequest["status"],
+    }));
+
+    return {
+      data: requests,
+      totalItems,
+      totalPages: Math.max(1, Math.ceil(totalItems / pageSize)),
+      currentPage: page,
+      pageSize,
+    };
+  } catch (error) {
+    logger.error("Error in getPaginatedPartnerRequestsAction:", error);
+    return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize };
+  }
+}
+
 
 export async function addPartnerRequestAction(req: Omit<PartnerRequest, "id" | "status">): Promise<PartnerRequest> {
   const id = `req_${crypto.randomUUID()}`;
@@ -52,7 +137,7 @@ export async function addPartnerRequestAction(req: Omit<PartnerRequest, "id" | "
       status: data.status as PartnerRequest["status"]
     };
   } catch (error) {
-    console.error("Error in addPartnerRequestAction:", error);
+    logger.error("Error in addPartnerRequestAction:", error);
     throw error;
   }
 }
@@ -77,7 +162,7 @@ export async function getPartnerRequestsAction(): Promise<PartnerRequest[]> {
       status: d.status as PartnerRequest["status"]
     }));
   } catch (error) {
-    console.error("Error in getPartnerRequestsAction:", error);
+    logger.error("Error in getPartnerRequestsAction:", error);
     return [];
   }
 }
@@ -85,7 +170,7 @@ export async function getPartnerRequestsAction(): Promise<PartnerRequest[]> {
 export async function updatePartnerRequestStatusAction(id: string, status: "approved" | "rejected"): Promise<boolean> {
   const session = await getSessionUser();
   if (!session || session.role !== "admin") {
-    console.warn("Unauthorized attempt to update partner request status");
+    logger.warn("Unauthorized attempt to update partner request status");
     return false;
   }
 
@@ -124,13 +209,13 @@ export async function updatePartnerRequestStatusAction(id: string, status: "appr
 
     return true;
   } catch (error) {
-    console.error("Error in updatePartnerRequestStatusAction:", error);
+    logger.error("Error in updatePartnerRequestStatusAction:", error);
     return false;
   } finally {
     try {
       updateTag(PARTNERS_TAG);
     } catch (err) {
-      console.warn("Failed to revalidate partners cache tag:", err);
+      logger.warn("Failed to revalidate partners cache tag:", err);
     }
   }
 }
@@ -183,7 +268,7 @@ export async function loginPartnerAction(
       }
     };
   } catch (error) {
-    console.error("Error in loginPartnerAction:", error);
+    logger.error("Error in loginPartnerAction:", error);
     return { success: false, error: "লগইন করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।" };
   }
 }
@@ -231,7 +316,7 @@ export async function changePartnerPasswordAction(
 
     return { success: true, message: "পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে।" };
   } catch (error) {
-    console.error("Error in changePartnerPasswordAction:", error);
+    logger.error("Error in changePartnerPasswordAction:", error);
     return { success: false, message: "পাসওয়ার্ড পরিবর্তন করতে সমস্যা হয়েছে।" };
   }
 }
@@ -262,12 +347,12 @@ export async function requestPartnerPasswordResetAction(
     });
 
     sendPasswordResetEmail(partner.email || "", otp, partner.name).catch((err) => {
-      console.error("Failed to send partner password reset OTP email:", err);
+      logger.error("Failed to send partner password reset OTP email:", err);
     });
 
     return { success: true, message: "যদি এই ইমেইলটি আমাদের সিস্টেমে নিবন্ধিত থাকে, তবে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
   } catch (error) {
-    console.error("Error in requestPartnerPasswordResetAction:", error);
+    logger.error("Error in requestPartnerPasswordResetAction:", error);
     return { success: false, message: "পাসওয়ার্ড রিসেট অনুরোধ প্রক্রিয়া করতে সমস্যা হয়েছে।" };
   }
 }
@@ -340,7 +425,7 @@ export async function resetPartnerPasswordAction(
 
     return { success: true, message: "পাসওয়ার্ড সফলভাবে রিসেট করা হয়েছে।" };
   } catch (error) {
-    console.error("Error in resetPartnerPasswordAction:", error);
+    logger.error("Error in resetPartnerPasswordAction:", error);
     return { success: false, message: "পাসওয়ার্ড রিসেট করতে সমস্যা হয়েছে।" };
   }
 }

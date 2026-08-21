@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
+import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag, revalidatePath } from "next/cache";
 
 const SYSTEM_SETTINGS_TAG = "system-settings";
@@ -18,7 +19,7 @@ export async function getSystemSettingAction(key: string, defaultValue: string =
     });
     return setting ? setting.value : defaultValue;
   } catch (error) {
-    console.error(`Error fetching system setting '${key}':`, error);
+    logger.error(`Error fetching system setting '${key}':`, error);
     return defaultValue;
   }
 }
@@ -40,7 +41,7 @@ export async function updateSystemSettingAction(key: string, value: string): Pro
     revalidatePath("/", "layout");
     return true;
   } catch (error) {
-    console.error(`Error updating system setting '${key}':`, error);
+    logger.error(`Error updating system setting '${key}':`, error);
     return false;
   }
 }
@@ -88,7 +89,7 @@ export const getCachedNoticeSetting = unstable_cache(
         text: map["notice_text"] || "",
       };
     } catch (error) {
-      console.error("Error fetching notice setting:", error);
+      logger.error("Error fetching notice setting:", error);
       return { enabled: false, text: "" };
     }
   },
@@ -105,7 +106,7 @@ export async function getAllSystemSettingsAction(): Promise<Record<string, strin
     }
     return result;
   } catch (error) {
-    console.error("Error fetching all system settings:", error);
+    logger.error("Error fetching all system settings:", error);
     return {};
   }
 }
@@ -133,7 +134,7 @@ export async function updateMultipleSystemSettingsAction(
 
     return { success: true, message: "সকল সেটিংস সফলভাবে সংরক্ষণ করা হয়েছে।" };
   } catch (error) {
-    console.error("Error updating multiple system settings:", error);
+    logger.error("Error updating multiple system settings:", error);
     return { success: false, message: "সেটিংস সংরক্ষণ করতে সমস্যা হয়েছে।" };
   }
 }

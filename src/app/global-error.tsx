@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { AlertTriangle, RefreshCw, Home } from "lucide-react";
+import { logger } from "@/lib/logger";
 
 export default function RootGlobalError({
   error,
@@ -12,7 +13,7 @@ export default function RootGlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("Critical Root Layout Application Error:", error);
+    logger.error("Critical Root Layout Application Error:", error);
   }, [error]);
 
   return (

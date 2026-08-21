@@ -45,8 +45,7 @@ function PaymentForm() {
           } else {
             toast.error("সদস্যের তথ্য খুঁজে পাওয়া যায়নি।");
           }
-        } catch (err) {
-          console.error("Failed to fetch member for payment:", err);
+        } catch {
           if (isMounted) {
             toast.error("সদস্য তথ্য লোড করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
           }

@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import type { Transporter } from "nodemailer";
+import { logger } from "@/lib/logger";
 
 const smtpUser = process.env.SMTP_USER;
 const smtpPassword = process.env.SMTP_PASSWORD;
@@ -25,7 +26,7 @@ function getTransporter(): Transporter {
 export async function sendOtpEmail(email: string, otp: string, name: string): Promise<boolean> {
   // If SMTP credentials are not configured or are placeholder values, fall back to console logging
   if (!smtpUser || !smtpPassword || smtpPassword.includes("placeholder") || smtpPassword.includes("your-16-char")) {
-    console.log(`[EMAIL SIMULATOR] (SMTP Credentials Not Set) Verification email to ${email} with code: ${otp}`);
+    logger.info(`[EMAIL SIMULATOR] (SMTP Credentials Not Set) Verification email to ${email}`);
     return true;
   }
 
@@ -84,10 +85,10 @@ export async function sendOtpEmail(email: string, otp: string, name: string): Pr
 
   try {
     const info = await getTransporter().sendMail(mailOptions);
-    console.log(`[EMAIL SENT] OTP successfully sent to ${email}. MessageId: ${info.messageId}`);
+    logger.info(`[EMAIL SENT] OTP successfully sent to ${email}. MessageId: ${info.messageId}`);
     return true;
   } catch (error) {
-    console.error(`[EMAIL ERROR] Failed to send OTP to ${email}:`, error);
+    logger.error(`[EMAIL ERROR] Failed to send OTP to ${email}:`, error);
     return false;
   }
 }
@@ -95,7 +96,7 @@ export async function sendOtpEmail(email: string, otp: string, name: string): Pr
 export async function sendPasswordResetEmail(email: string, otp: string, name: string): Promise<boolean> {
   // If SMTP credentials are not configured or are placeholder values, fall back to console logging
   if (!smtpUser || !smtpPassword || smtpPassword.includes("placeholder") || smtpPassword.includes("your-16-char")) {
-    console.log(`[EMAIL SIMULATOR] (SMTP Credentials Not Set) Password reset email to ${email} with code: ${otp}`);
+    logger.info(`[EMAIL SIMULATOR] (SMTP Credentials Not Set) Password reset email to ${email}`);
     return true;
   }
 
@@ -154,10 +155,10 @@ export async function sendPasswordResetEmail(email: string, otp: string, name: s
 
   try {
     const info = await getTransporter().sendMail(mailOptions);
-    console.log(`[EMAIL SENT] Password reset OTP successfully sent to ${email}. MessageId: ${info.messageId}`);
+    logger.info(`[EMAIL SENT] Password reset OTP successfully sent to ${email}. MessageId: ${info.messageId}`);
     return true;
   } catch (error) {
-    console.error(`[EMAIL ERROR] Failed to send password reset OTP to ${email}:`, error);
+    logger.error(`[EMAIL ERROR] Failed to send password reset OTP to ${email}:`, error);
     return false;
   }
 }

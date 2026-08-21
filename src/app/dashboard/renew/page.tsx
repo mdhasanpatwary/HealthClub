@@ -52,8 +52,8 @@ export default function RenewalPage() {
         const activeUser = freshUser || currentUser;
         setMember(activeUser);
         setProfession(activeUser.profession || "");
-      } catch (err) {
-        console.error("Failed to fetch fresh member for renewal:", err);
+      } catch {
+        // Fallback to existing cached member state silently
       } finally {
         if (isMounted) {
           setLoading(false);

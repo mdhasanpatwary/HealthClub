@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
 import { AmbulanceService } from "@/data/emergencyData";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -17,28 +17,31 @@ import { Edit3, Trash2, Phone } from "lucide-react";
 
 interface EmergencyAmbulancesListProps {
   ambulances: AmbulanceService[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   isEn: boolean;
   onEdit: (ambulance: AmbulanceService) => void;
   onDelete: (id: string, name: string) => void;
+  loading?: boolean;
 }
 
 export function EmergencyAmbulancesList({
   ambulances,
+  totalItems,
+  totalPages,
+  currentPage,
+  pageSize,
+  onPageChange,
+  onPageSizeChange,
   isEn,
   onEdit,
   onDelete,
+  loading = false,
 }: EmergencyAmbulancesListProps) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-
-  const totalPages = Math.ceil(ambulances.length / pageSize) || 1;
-  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
-
-  const paginatedAmbulances = useMemo(() => {
-    const startIndex = (safeCurrentPage - 1) * pageSize;
-    return ambulances.slice(startIndex, startIndex + pageSize);
-  }, [ambulances, safeCurrentPage, pageSize]);
-
   return (
     <div className="space-y-3">
       <div className="rounded-xl border border-border overflow-hidden bg-background">
@@ -54,14 +57,41 @@ export function EmergencyAmbulancesList({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paginatedAmbulances.length === 0 ? (
+            {loading ? (
+              Array.from({ length: Math.min(pageSize, 10) }).map((_, i) => (
+                <TableRow key={`skeleton-${i}`} className="hover:bg-transparent">
+                  <TableCell>
+                    <Skeleton className="h-5 w-14 rounded-md" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-36" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-28" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-24" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-16" />
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex items-center justify-end gap-1">
+                      <Skeleton className="h-7 w-7 rounded-md" />
+                      <Skeleton className="h-7 w-7 rounded-md" />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : ambulances.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-8 text-muted-foreground text-xs">
                   {isEn ? "No ambulance services found." : "কোনো অ্যাম্বুলেন্স পাওয়া যায়নি।"}
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedAmbulances.map((a) => (
+
+              ambulances.map((a) => (
                 <TableRow key={a.id} className="hover:bg-muted/30">
                   <TableCell>
                     <Badge
@@ -121,22 +151,22 @@ export function EmergencyAmbulancesList({
       </div>
 
       {/* Pagination Footer */}
-      {ambulances.length > 0 && (
+      {totalItems > 0 && (
         <Pagination
-          currentPage={safeCurrentPage}
+          currentPage={currentPage}
           totalPages={totalPages}
           pageSize={pageSize}
-          totalItems={ambulances.length}
-          onPageChange={setCurrentPage}
-          onPageSizeChange={(size) => {
-            setPageSize(size);
-            setCurrentPage(1);
-          }}
+          totalItems={totalItems}
+          onPageChange={onPageChange}
+          onPageSizeChange={onPageSizeChange}
           pageSizeOptions={[10, 20, 50, 100]}
           locale={isEn ? "en" : "bn"}
           itemLabel={isEn ? "ambulances" : "টি অ্যাম্বুলেন্স"}
+          disabled={loading}
         />
       )}
+
     </div>
   );
 }
+

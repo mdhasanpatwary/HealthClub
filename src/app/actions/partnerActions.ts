@@ -3,11 +3,14 @@
 import { prisma } from "@/lib/prisma";
 import { Partner, Transaction } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
+import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag } from "next/cache";
 import { parseDiscountPercentage } from "@/lib/utils";
+import { PaginatedResult } from "@/types/pagination";
 import {
   addPartnerRequestAction as _addPartnerRequestAction,
   getPartnerRequestsAction as _getPartnerRequestsAction,
+  getPaginatedPartnerRequestsAction as _getPaginatedPartnerRequestsAction,
   updatePartnerRequestStatusAction as _updatePartnerRequestStatusAction,
   loginPartnerAction as _loginPartnerAction,
   changePartnerPasswordAction as _changePartnerPasswordAction,
@@ -22,6 +25,11 @@ export async function addPartnerRequestAction(...args: Parameters<typeof _addPar
 export async function getPartnerRequestsAction() {
   return _getPartnerRequestsAction();
 }
+
+export async function getPaginatedPartnerRequestsAction(...args: Parameters<typeof _getPaginatedPartnerRequestsAction>) {
+  return _getPaginatedPartnerRequestsAction(...args);
+}
+
 
 export async function updatePartnerRequestStatusAction(id: string, status: "approved" | "rejected") {
   return _updatePartnerRequestStatusAction(id, status);
@@ -44,6 +52,95 @@ export async function resetPartnerPasswordAction(email: string, code: string, ra
 }
 
 const PARTNERS_TAG = "partners";
+
+export interface GetPaginatedPartnersAdminParams {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  category?: string;
+}
+
+export async function getPaginatedPartnersAdminAction(
+  params?: GetPaginatedPartnersAdminParams
+): Promise<PaginatedResult<Partner>> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") {
+    return {
+      data: [],
+      totalItems: 0,
+      totalPages: 1,
+      currentPage: 1,
+      pageSize: params?.pageSize || 10,
+    };
+  }
+
+  const page = Math.max(1, params?.page || 1);
+  const pageSize = Math.max(1, params?.pageSize || 10);
+  const search = params?.search?.trim();
+  const category = params?.category;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const where: any = {};
+  if (category && category !== "all") {
+    where.category = category;
+  }
+  if (search) {
+    where.OR = [
+      { name: { contains: search, mode: "insensitive" } },
+      { address: { contains: search, mode: "insensitive" } },
+      { phone: { contains: search, mode: "insensitive" } },
+      { discount: { contains: search, mode: "insensitive" } },
+      { logoText: { contains: search, mode: "insensitive" } },
+    ];
+  }
+
+  try {
+    const [totalItems, data] = await Promise.all([
+      prisma.partner.count({ where }),
+      prisma.partner.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        select: {
+          id: true,
+          name: true,
+          category: true,
+          address: true,
+          discount: true,
+          phone: true,
+          logoText: true,
+          mapLink: true,
+          imageUrl: true,
+        },
+      }),
+    ]);
+
+    const partners: Partner[] = data.map((p) => ({
+      id: p.id,
+      name: p.name,
+      category: p.category as Partner["category"],
+      address: p.address,
+      discount: p.discount,
+      phone: p.phone,
+      logoText: p.logoText,
+      mapLink: p.mapLink || undefined,
+      imageUrl: p.imageUrl || undefined,
+    }));
+
+    return {
+      data: partners,
+      totalItems,
+      totalPages: Math.max(1, Math.ceil(totalItems / pageSize)),
+      currentPage: page,
+      pageSize,
+    };
+  } catch (error) {
+    logger.error("Error in getPaginatedPartnersAdminAction:", error);
+    return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize };
+  }
+}
+
 
 // --- PARTNERS ACTIONS ---
 
@@ -81,7 +178,7 @@ export const getPartnersAction = unstable_cache(
         imageUrl: p.imageUrl || undefined,
       }));
     } catch (error) {
-      console.error("Error in getPartnersAction:", error);
+      logger.error("Error in getPartnersAction:", error);
       return [];
     }
   },
@@ -121,7 +218,7 @@ export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Pa
       imageUrl: p.imageUrl || undefined,
     };
   } catch (error) {
-    console.error("Error in addPartnerAction:", error);
+    logger.error("Error in addPartnerAction:", error);
     return { error: "পার্টনার যোগ করতে সমস্যা হয়েছে।" };
   } finally {
     updateTag(PARTNERS_TAG);
@@ -148,7 +245,7 @@ export async function updatePartnerAction(id: string, partner: Omit<Partner, "id
     });
     return true;
   } catch (error) {
-    console.error("Error in updatePartnerAction:", error);
+    logger.error("Error in updatePartnerAction:", error);
     return false;
   } finally {
     updateTag(PARTNERS_TAG);
@@ -165,7 +262,7 @@ export async function deletePartnerAction(id: string): Promise<boolean> {
     });
     return true;
   } catch (error) {
-    console.error("Error in deletePartnerAction:", error);
+    logger.error("Error in deletePartnerAction:", error);
     return false;
   } finally {
     updateTag(PARTNERS_TAG);
@@ -193,7 +290,7 @@ export async function getPartnerTransactionsAction(): Promise<Transaction[]> {
       date: t.date.toISOString(),
     }));
   } catch (error) {
-    console.error("Error in getPartnerTransactionsAction:", error);
+    logger.error("Error in getPartnerTransactionsAction:", error);
     return [];
   }
 }
@@ -273,7 +370,7 @@ export async function addPartnerTransactionAction(tx: {
 
     return { success: true, message: `লেনদেন সফলভাবে সম্পন্ন হয়েছে! ছাড়ের পরিমাণ: ৳${saved}` };
   } catch (error) {
-    console.error("Error in addPartnerTransactionAction:", error);
+    logger.error("Error in addPartnerTransactionAction:", error);
     return { success: false, message: "লেনদেনটি সংরক্ষণ করতে সমস্যা হয়েছে।" };
   }
 }

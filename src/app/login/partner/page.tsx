@@ -37,8 +37,7 @@ export default function PartnerLoginPage() {
       } else {
         toast.error(res.error || "ভুল ক্রেডেনশিয়ালস। অনুগ্রহ করে সঠিক তথ্য প্রদান করুন।");
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
       toast.error("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
     } finally {
       setLoading(false);
