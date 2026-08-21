@@ -1,18 +1,26 @@
 import nodemailer from "nodemailer";
+import type { Transporter } from "nodemailer";
 
 const smtpUser = process.env.SMTP_USER;
 const smtpPassword = process.env.SMTP_PASSWORD;
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: smtpUser,
-    pass: smtpPassword ? smtpPassword.replace(/\s+/g, "") : "",
-  },
-  connectionTimeout: 8000,
-  greetingTimeout: 5000,
-  socketTimeout: 10000,
-});
+let _transporter: Transporter | null = null;
+
+function getTransporter(): Transporter {
+  if (!_transporter) {
+    _transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: smtpUser,
+        pass: smtpPassword ? smtpPassword.replace(/\s+/g, "") : "",
+      },
+      connectionTimeout: 15000,
+      greetingTimeout: 10000,
+      socketTimeout: 15000,
+    });
+  }
+  return _transporter;
+}
 
 export async function sendOtpEmail(email: string, otp: string, name: string): Promise<boolean> {
   // If SMTP credentials are not configured or are placeholder values, fall back to console logging
@@ -75,7 +83,7 @@ export async function sendOtpEmail(email: string, otp: string, name: string): Pr
   };
 
   try {
-    const info = await transporter.sendMail(mailOptions);
+    const info = await getTransporter().sendMail(mailOptions);
     console.log(`[EMAIL SENT] OTP successfully sent to ${email}. MessageId: ${info.messageId}`);
     return true;
   } catch (error) {
@@ -145,7 +153,7 @@ export async function sendPasswordResetEmail(email: string, otp: string, name: s
   };
 
   try {
-    const info = await transporter.sendMail(mailOptions);
+    const info = await getTransporter().sendMail(mailOptions);
     console.log(`[EMAIL SENT] Password reset OTP successfully sent to ${email}. MessageId: ${info.messageId}`);
     return true;
   } catch (error) {

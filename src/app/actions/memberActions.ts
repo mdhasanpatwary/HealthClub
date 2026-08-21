@@ -138,9 +138,11 @@ export async function addMemberAction(
     });
 
     if (member.email) {
-      sendOtpEmail(member.email, verificationCode, member.name).catch((err) => {
+      try {
+        await sendOtpEmail(member.email, verificationCode, member.name);
+      } catch (err) {
         console.error("Failed to send signup OTP email:", err);
-      });
+      }
     }
 
     return {

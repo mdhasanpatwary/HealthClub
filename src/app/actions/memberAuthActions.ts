@@ -223,9 +223,11 @@ export async function resendVerificationCodeAction(email: string): Promise<{ suc
     });
 
     if (member.email) {
-      sendOtpEmail(member.email, code, member.name).catch((err) => {
+      try {
+        await sendOtpEmail(member.email, code, member.name);
+      } catch (err) {
         console.error("Failed to send resend OTP email:", err);
-      });
+      }
     }
     return { success: true, message: "নতুন ওটিপি কোড পাঠানো হয়েছে!" };
   } catch (error) {
@@ -257,9 +259,11 @@ export async function requestPasswordResetAction(email: string): Promise<{ succe
       },
     });
 
-    sendPasswordResetEmail(member.email || "", otp, member.name).catch((err) => {
+    try {
+      await sendPasswordResetEmail(member.email || "", otp, member.name);
+    } catch (err) {
       console.error("Failed to send password reset OTP email:", err);
-    });
+    }
 
     return { success: true, message: "যদি এই ইমেইলটি আমাদের সিস্টেমে নিবন্ধিত থাকে, তবে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
   } catch (error) {
