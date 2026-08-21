@@ -103,11 +103,11 @@ export default function EmergencyFAQ() {
           </p>
         </div>
         <a
-          href="tel:+8801783721411"
+          href="tel:+8801886763849"
           className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary hover:bg-primary-dark text-white text-xs font-bold shrink-0 transition-colors shadow-xs"
         >
           <PhoneCall className="h-3.5 w-3.5" />
-          <span>+880 1783-721411</span>
+          <span>{locale === "en" ? "+880 1886763849" : "+৮৮০ ১৮৮৬৭৬৩৮৪৯"}</span>
         </a>
       </div>
     </section>

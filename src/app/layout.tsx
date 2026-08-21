@@ -182,7 +182,7 @@ export default async function RootLayout({
       "url": SITE_URL,
       "logo": `${SITE_URL}/images/member-card-logo.png`,
       "description": "স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী - একটি প্রিমিয়াম স্বাস্থ্য মেম্বারশিপ সার্ভিস।",
-      "telephone": "+8801783721411",
+      "telephone": "+8801886763849",
       "email": "healthclubfeni@gmail.com",
       "address": {
         "@type": "PostalAddress",
@@ -191,7 +191,7 @@ export default async function RootLayout({
       },
       "contactPoint": {
         "@type": "ContactPoint",
-        "telephone": "+8801783721411",
+        "telephone": "+8801886763849",
         "contactType": "customer service",
         "areaServed": "BD",
         "availableLanguage": ["Bengali", "English"]

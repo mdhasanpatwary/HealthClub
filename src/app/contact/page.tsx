@@ -15,12 +15,12 @@ export async function generateMetadata() {
     title: isEn ? "Contact Us - Health Club Hotline & Support" : "যোগাযোগ করুন - হেলথ ক্লাব হটলাইন ও অফিস",
     description: isEn
       ? "Get in touch with Health Club support team. Find our hotline number, support email, address, and online inquiry form."
-      : "হেলথ ক্লাবের সাথে যোগাযোগ করুন। আমাদের ফোন নাম্বার (+8801783721411), ইমেইল, অফিস ঠিকানা ও সাপোর্ট সেন্টার।",
+      : "হেলথ ক্লাবের সাথে যোগাযোগ করুন। আমাদের ফোন নাম্বার (+8801886763849), ইমেইল, অফিস ঠিকানা ও সাপোর্ট সেন্টার।",
     alternates: {
       canonical: `${SITE_URL}/contact`,
     },
     openGraph: {
-      title: isEn ? "Contact Health Club - Hotline +8801783721411" : "যোগাযোগ করুন - হেলথ ক্লাব",
+      title: isEn ? "Contact Health Club - Hotline +8801886763849" : "যোগাযোগ করুন - হেলথ ক্লাব",
       description: isEn
         ? "Contact our helpline for membership queries or hospital partnership applications."
         : "মেম্বারশিপ অথবা পার্টনারশিপ সংক্রান্ত যেকোনো প্রশ্ন নিয়ে আমাদের সাথে কথা বলুন।",

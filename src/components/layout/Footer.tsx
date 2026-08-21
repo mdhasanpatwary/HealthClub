@@ -119,8 +119,8 @@ export default function Footer({ locale = "bn" }: { locale?: string }) {
                   <div className="h-8 w-8 rounded-lg bg-slate-800 border border-slate-700/50 flex items-center justify-center shrink-0">
                     <Phone className="h-4 w-4 text-primary" />
                   </div>
-                  <a href="tel:+8801783721411" className="hover:text-white transition-colors">
-                    {t("layout.footer.8801783721411")}
+                  <a href="tel:+8801886763849" className="hover:text-white transition-colors">
+                    {t("layout.footer.8801886763849")}
                   </a>
                 </li>
                 <li className="flex items-center gap-3">

@@ -204,11 +204,11 @@ export default function CommunityNetworkCTA() {
 
         <div className="flex items-center gap-3">
           <a
-            href="tel:+8801783721411"
+            href="tel:+8801886763849"
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-card border border-border text-xs font-bold text-primary hover:bg-primary/10 transition-colors"
           >
             <PhoneCall className="h-3.5 w-3.5" />
-            <span>+৮৮০ ১৭৮৩৭২১৪১১</span>
+            <span>{isEn ? "+880 1886763849" : "+৮৮০ ১৮৮৬৭৬৩৮৪৯"}</span>
           </a>
           <Link href="/contact">
             <Button variant="ghost" size="sm" className="text-xs font-semibold rounded-xl">

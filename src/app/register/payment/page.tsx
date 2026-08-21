@@ -28,7 +28,7 @@ function PaymentForm() {
   const [transactionId, setTransactionId] = useState("");
   const [copied, setCopied] = useState(false);
 
-  const bkashNumber = "01783721411";
+  const bkashNumber = "01886763849";
 
   useEffect(() => {
     let isMounted = true;

@@ -36,7 +36,7 @@ export function SettingsTab() {
   const [paymentInstructions, setPaymentInstructions] = useState(
     "বিকাশ পার্সোনাল বা মার্চেন্ট নম্বরে সেন্ড মানি/পেমেন্ট সম্পন্ন করে TrxID ও প্রেরক নম্বর লিখুন।"
   );
-  const [hotlinePhone, setHotlinePhone] = useState("01783721411");
+  const [hotlinePhone, setHotlinePhone] = useState("01886763849");
   const [whatsappPhone, setWhatsappPhone] = useState("01886763849");
   const [officialEmail, setOfficialEmail] = useState("healthclubfeni@gmail.com");
   const [facebookUrl, setFacebookUrl] = useState("https://www.facebook.com/profile.php?id=61591616953090");

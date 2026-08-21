@@ -66,13 +66,13 @@ export default function ContactForm() {
 
           <div className="space-y-4">
             
-            <a href="tel:+8801783721411" className="flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors">
+            <a href="tel:+8801886763849" className="flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors">
               <div className="h-10 w-10 rounded-lg bg-primary-light text-primary flex items-center justify-center">
                 <Phone className="h-5 w-5" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">{t("landing.contactform.hotlineNumber")}</p>
-                <p className="text-sm font-bold text-secondary dark:text-white font-mono">{t("landing.contactform.8801783721411")}</p>
+                <p className="text-sm font-bold text-secondary dark:text-white font-mono">{t("landing.contactform.8801886763849")}</p>
               </div>
             </a>
 

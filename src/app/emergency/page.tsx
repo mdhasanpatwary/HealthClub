@@ -149,7 +149,7 @@ export default async function EmergencyPage() {
         "Feni, Bangladesh",
       ],
       openingHours: "Mo-Su 00:00-24:00",
-      telephone: "+8801783721411",
+      telephone: "+8801886763849",
       priceRange: "Free / Public Service",
       availableService: [
         "Voluntary Blood Donor Matching",
