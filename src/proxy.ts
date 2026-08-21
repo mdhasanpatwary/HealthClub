@@ -44,6 +44,9 @@ export async function proxy(req: NextRequest) {
   // If user is NOT authenticated and trying to access protected routes
   const isProtectedRoute = protectedRoutes.some((r) => matchRoute(path, r));
   if (isProtectedRoute && !session?.userId) {
+    if (matchRoute(path, "/admin")) {
+      return NextResponse.redirect(new URL("/login/admin", req.nextUrl));
+    }
     if (matchRoute(path, "/partner")) {
       return NextResponse.redirect(new URL("/login/partner", req.nextUrl));
     }

@@ -79,7 +79,7 @@ export const initialPartners: Partner[] = [
     discount: "১০-৩০% ডিসকাউন্ট",
     phone: "০৯৬১৩৭৮৭৮০১",
     logoText: "Popular",
-    imageUrl: "/images/placeholders/diagnostic.png"
+    imageUrl: "/images/placeholders/diagnostic.webp"
   },
   {
     id: "p2",
@@ -89,7 +89,7 @@ export const initialPartners: Partner[] = [
     discount: "১০-৩০% ডিসকাউন্ট",
     phone: "১০৬০৬",
     logoText: "Labaid",
-    imageUrl: "/images/placeholders/hospital.png"
+    imageUrl: "/images/placeholders/hospital.webp"
   },
   {
     id: "p3",
@@ -99,7 +99,7 @@ export const initialPartners: Partner[] = [
     discount: "১০-৩০% ডিসকাউন্ট",
     phone: "০২-৯৩৪৩৫১৬",
     logoText: "Lazz",
-    imageUrl: "/images/placeholders/pharmacy.png"
+    imageUrl: "/images/placeholders/pharmacy.webp"
   },
   {
     id: "p5",
@@ -109,7 +109,7 @@ export const initialPartners: Partner[] = [
     discount: "১০-৩০% ডিসকাউন্ট",
     phone: "০৯৬১০০০৯৬১০",
     logoText: "Ibn Sina",
-    imageUrl: "/images/placeholders/diagnostic.png"
+    imageUrl: "/images/placeholders/diagnostic.webp"
   },
   {
     id: "p6",
@@ -119,7 +119,7 @@ export const initialPartners: Partner[] = [
     discount: "১০-৩০% ডিসকাউন্ট",
     phone: "১০৬১৬",
     logoText: "Square",
-    imageUrl: "/images/placeholders/hospital.png"
+    imageUrl: "/images/placeholders/hospital.webp"
   },
   {
     id: "p_ddlab",
@@ -129,7 +129,7 @@ export const initialPartners: Partner[] = [
     discount: "১০-৩০% ডিসকাউন্ট",
     phone: "01898221111, 01898445555, 09666747575",
     logoText: "DD Lab",
-    imageUrl: "/images/partners/ddlab.jpg"
+    imageUrl: "/images/partners/ddlab.webp"
   }
 ];
 

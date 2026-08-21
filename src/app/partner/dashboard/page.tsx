@@ -11,7 +11,7 @@ import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/com
 import { verifyMemberForPartnerAction } from "@/app/actions/memberActions";
 import { addPartnerTransactionAction, getPartnerTransactionsAction } from "@/app/actions/partnerActions";
 import { toast } from "sonner";
-import { Html5Qrcode } from "html5-qrcode";
+import type { Html5Qrcode } from "html5-qrcode";
 import { ChangePartnerPasswordDialog } from "./components/ChangePartnerPasswordDialog";
 import { PartnerDashboardSkeleton } from "./components/PartnerDashboardSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";

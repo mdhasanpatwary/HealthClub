@@ -18,10 +18,13 @@ export const verifySession = cache(async (): Promise<SessionPayload> => {
 
 /**
  * Verifies that the current session user has admin role.
- * Redirects to /dashboard if not admin.
+ * Redirects to /login/admin if not authenticated, or /dashboard if not admin.
  */
 export const verifyAdmin = cache(async (): Promise<SessionPayload> => {
-  const session = await verifySession();
+  const session = await getSessionUser();
+  if (!session?.userId) {
+    redirect("/login/admin");
+  }
   if (session.role !== "admin") {
     redirect("/dashboard");
   }

@@ -101,13 +101,13 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
   const getCategoryFallbackImage = (category: string) => {
     switch (category) {
       case "hospital":
-        return "/images/placeholders/hospital.png";
+        return "/images/placeholders/hospital.webp";
       case "diagnostic":
-        return "/images/placeholders/diagnostic.png";
+        return "/images/placeholders/diagnostic.webp";
       case "pharmacy":
-        return "/images/placeholders/pharmacy.png";
+        return "/images/placeholders/pharmacy.webp";
       default:
-        return "/images/placeholders/default.png";
+        return "/images/placeholders/default.webp";
     }
   };
 

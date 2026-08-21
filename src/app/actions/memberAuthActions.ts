@@ -6,6 +6,7 @@ import { Member } from "@/services/db";
 import { hashPassword, verifyPassword } from "@/lib/crypto";
 import { setSessionUser, clearSessionUser } from "@/lib/session";
 import { sendOtpEmail, sendPasswordResetEmail } from "@/lib/mail";
+import { after } from "next/server";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "healthclubfeni@gmail.com";
 const MAX_OTP_ATTEMPTS = 5;
@@ -223,11 +224,16 @@ export async function resendVerificationCodeAction(email: string): Promise<{ suc
     });
 
     if (member.email) {
-      try {
-        await sendOtpEmail(member.email, code, member.name);
-      } catch (err) {
-        console.error("Failed to send resend OTP email:", err);
-      }
+      const emailTo = member.email;
+      const memberName = member.name;
+      const otpCode = code;
+      after(async () => {
+        try {
+          await sendOtpEmail(emailTo, otpCode, memberName);
+        } catch (err) {
+          console.error("Failed to send resend OTP email:", err);
+        }
+      });
     }
     return { success: true, message: "নতুন ওটিপি কোড পাঠানো হয়েছে!" };
   } catch (error) {
@@ -259,11 +265,16 @@ export async function requestPasswordResetAction(email: string): Promise<{ succe
       },
     });
 
-    try {
-      await sendPasswordResetEmail(member.email || "", otp, member.name);
-    } catch (err) {
-      console.error("Failed to send password reset OTP email:", err);
-    }
+    const emailTo = member.email || "";
+    const memberName = member.name;
+    const otpCode = otp;
+    after(async () => {
+      try {
+        await sendPasswordResetEmail(emailTo, otpCode, memberName);
+      } catch (err) {
+        console.error("Failed to send password reset OTP email:", err);
+      }
+    });
 
     return { success: true, message: "যদি এই ইমেইলটি আমাদের সিস্টেমে নিবন্ধিত থাকে, তবে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
   } catch (error) {

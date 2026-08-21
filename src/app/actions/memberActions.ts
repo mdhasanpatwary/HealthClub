@@ -6,6 +6,7 @@ import { Member, PublicMemberVerification } from "@/services/db";
 import { hashPassword } from "@/lib/crypto";
 import { getSessionUser } from "@/lib/session";
 import { sendOtpEmail } from "@/lib/mail";
+import { after } from "next/server";
 import { SITE_URL } from "@/lib/siteConfig";
 import {
   loginMemberAction as _loginMemberAction,
@@ -138,11 +139,16 @@ export async function addMemberAction(
     });
 
     if (member.email) {
-      try {
-        await sendOtpEmail(member.email, verificationCode, member.name);
-      } catch (err) {
-        console.error("Failed to send signup OTP email:", err);
-      }
+      const emailTo = member.email;
+      const code = verificationCode;
+      const memberName = member.name;
+      after(async () => {
+        try {
+          await sendOtpEmail(emailTo, code, memberName);
+        } catch (err) {
+          console.error("Failed to send signup OTP email:", err);
+        }
+      });
     }
 
     return {

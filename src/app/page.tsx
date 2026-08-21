@@ -2,16 +2,15 @@ import Link from "next/link";
 import { ArrowRight, Stethoscope } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PartnerDirectory from "@/components/ui/PartnerDirectory";
-import SavingsCalculator from "@/components/ui/SavingsCalculator";
-import TestimonialCarousel from "@/components/ui/TestimonialCarousel";
-import FAQSection from "@/components/landing/FAQSection";
-import ContactForm from "@/components/landing/ContactForm";
 import { getHomepageStats, getHomepagePartners } from "@/lib/homepageData";
 import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
 import type { Member } from "@/services/db";
 import JsonLd from "@/components/seo/JsonLd";
-
+import SavingsCalculator from "@/components/ui/SavingsCalculator";
+import TestimonialCarousel from "@/components/ui/TestimonialCarousel";
+import FAQSection from "@/components/landing/FAQSection";
+import ContactForm from "@/components/landing/ContactForm";
 
 import { LandingHero } from "@/components/landing/LandingHero";
 import { LandingStats } from "@/components/landing/LandingStats";

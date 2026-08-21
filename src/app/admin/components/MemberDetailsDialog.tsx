@@ -1,11 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { 
   User, Mail, Phone, Calendar, MapPin, Briefcase, CreditCard, ShieldCheck, Edit3, Heart,
-  History as HistoryIcon
+  History as HistoryIcon, ZoomIn, ExternalLink
 } from "lucide-react";
 import { Member, Transaction } from "@/services/db";
 import { formatNum, Locale } from "@/lib/i18n";
@@ -29,33 +30,62 @@ export function MemberDetailsDialog({
   locale,
   t,
 }: MemberDetailsDialogProps) {
+  const [isImagePreviewOpen, setIsImagePreviewOpen] = useState(false);
+
   if (!viewingMember) return null;
 
   return (
-    <Dialog open={!!viewingMember} onOpenChange={(open) => {
-      if (!open) onClose();
-    }}>
-      <DialogContent className="max-w-md md:max-w-lg border-border bg-background max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="border-b border-border pb-4">
-          <div className="flex items-center gap-4">
-            <div className="h-14 w-14 rounded-xl border border-border bg-muted/40 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
-              {viewingMember.profilePictureUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={viewingMember.profilePictureUrl} alt={viewingMember.name} className="h-full w-full object-cover object-left-top" />
-              ) : (
-                <User className="h-7 w-7 text-muted-foreground" />
-              )}
+    <>
+      <Dialog open={!!viewingMember} onOpenChange={(open) => {
+        if (!open) {
+          setIsImagePreviewOpen(false);
+          onClose();
+        }
+      }}>
+        <DialogContent className="max-w-md md:max-w-lg border-border bg-background max-h-[90vh] overflow-y-auto">
+          <DialogHeader className="border-b border-border pb-4">
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={() => {
+                  if (viewingMember.profilePictureUrl) {
+                    setIsImagePreviewOpen(true);
+                  }
+                }}
+                disabled={!viewingMember.profilePictureUrl}
+                aria-label={viewingMember.profilePictureUrl ? (locale === "bn" ? "প্রোফাইল ছবি বড় করে দেখুন" : "View profile picture") : undefined}
+                className={`h-14 w-14 rounded-xl border border-border bg-muted/40 overflow-hidden flex items-center justify-center shrink-0 shadow-sm relative group text-left ${
+                  viewingMember.profilePictureUrl 
+                    ? "cursor-pointer hover:ring-2 hover:ring-primary/60 hover:shadow-md transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" 
+                    : "cursor-default"
+                }`}
+              >
+                {viewingMember.profilePictureUrl ? (
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img 
+                      src={viewingMember.profilePictureUrl} 
+                      alt={viewingMember.name} 
+                      className="h-full w-full object-cover object-left-top transition-transform duration-200 group-hover:scale-105" 
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-xl">
+                      <ZoomIn className="h-5 w-5 text-white drop-shadow-md" />
+                    </div>
+                  </>
+                ) : (
+                  <User className="h-7 w-7 text-muted-foreground" />
+                )}
+              </button>
+              <div>
+                <DialogTitle className="font-heading font-bold text-lg text-secondary">
+                  {t("admin.dashboard.memberProfileDetailsTitle")}
+                </DialogTitle>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {t("admin.dashboard.memberIdLabel")} <span className="font-mono font-bold text-primary">{viewingMember.id}</span>
+                </p>
+              </div>
             </div>
-            <div>
-              <DialogTitle className="font-heading font-bold text-lg text-secondary">
-                {t("admin.dashboard.memberProfileDetailsTitle")}
-              </DialogTitle>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                {t("admin.dashboard.memberIdLabel")} <span className="font-mono font-bold text-primary">{viewingMember.id}</span>
-              </p>
-            </div>
-          </div>
-        </DialogHeader>
+          </DialogHeader>
 
         <div className="space-y-6 pt-4">
           {/* Status Badges */}
@@ -253,5 +283,48 @@ export function MemberDetailsDialog({
         </div>
       </DialogContent>
     </Dialog>
+
+    {/* Profile Picture Preview Modal */}
+    {viewingMember.profilePictureUrl && (
+      <Dialog open={isImagePreviewOpen} onOpenChange={setIsImagePreviewOpen}>
+        <DialogContent className="max-w-md sm:max-w-lg p-4 sm:p-5 border-border bg-background z-[60] overflow-hidden">
+          <DialogHeader className="border-b border-border pb-3">
+            <DialogTitle className="font-heading font-bold text-base text-secondary flex items-center gap-2">
+              <User className="h-4 w-4 text-primary" />
+              <span>{viewingMember.name}</span>
+              <span className="text-xs text-muted-foreground font-mono font-normal">({viewingMember.id})</span>
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="flex flex-col items-center justify-center pt-2 pb-1 gap-3">
+            <div className="relative w-full max-h-[65vh] rounded-xl overflow-hidden bg-muted/30 border border-border flex items-center justify-center p-1">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={viewingMember.profilePictureUrl}
+                alt={viewingMember.name}
+                className="w-full h-auto max-h-[62vh] object-contain rounded-lg shadow-sm"
+              />
+            </div>
+
+            <div className="flex items-center justify-between w-full pt-1 text-xs">
+              <span className="text-muted-foreground">
+                {locale === "bn" ? "সদস্যের ছবি" : "Member Photo"}
+              </span>
+              <a
+                href={viewingMember.profilePictureUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-primary hover:text-primary-dark font-semibold hover:underline"
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+                <span>{locale === "bn" ? "আসল ছবি দেখুন" : "View Full Resolution"}</span>
+              </a>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    )}
+    </>
   );
 }
+

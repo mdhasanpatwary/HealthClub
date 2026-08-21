@@ -2,10 +2,8 @@ import { verifyAdmin } from "@/lib/dal";
 
 /**
  * Admin layout — server-side auth guard.
- * verifyAdmin() reads the JWT cookie and redirects to /dashboard
- * if the session is missing or not role=admin. This runs on every
- * request before the admin page renders, preventing any client-side
- * localStorage manipulation from accessing admin UI.
+ * verifyAdmin() reads the JWT cookie and redirects to /login/admin
+ * if unauthenticated, or to /dashboard if role is not admin.
  */
 export default async function AdminLayout({
   children,
