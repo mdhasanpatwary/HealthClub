@@ -341,7 +341,7 @@ export function SettingsTab() {
             </div>
 
             {noticeEnabled && (
-              <div className="space-y-1.5 animate-in fade-in duration-200">
+              <div className="space-y-2 animate-in fade-in duration-200">
                 <Label htmlFor="notice-text" className="text-xs font-semibold">
                   {isEn ? "Notice Banner Message" : "ব্যানারের বার্তা (টেক্সট)"}
                 </Label>
@@ -351,6 +351,19 @@ export function SettingsTab() {
                   value={noticeText}
                   onChange={(e) => setNoticeText(e.target.value)}
                 />
+                {noticeText.trim() && (
+                  <div className="p-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 text-white text-xs flex items-center justify-between gap-2 shadow-xs border border-emerald-500/30">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="p-1 rounded bg-white/20 text-amber-200 shrink-0">
+                        <Megaphone className="size-3" />
+                      </span>
+                      <span className="truncate font-medium">{noticeText}</span>
+                    </div>
+                    <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-black/20 text-emerald-100 shrink-0">
+                      {isEn ? "Preview" : "প্রিভিউ"}
+                    </span>
+                  </div>
+                )}
               </div>
             )}
 

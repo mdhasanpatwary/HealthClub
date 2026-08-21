@@ -5,6 +5,8 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import BottomNav from "@/components/layout/BottomNav";
 import InstallAppBanner from "@/components/layout/InstallAppBanner";
+import GlobalNoticeBanner from "@/components/layout/GlobalNoticeBanner";
+import { getCachedNoticeSetting } from "@/app/actions/systemSettingsActions";
 import { Toaster } from "sonner";
 import { cookies } from "next/headers";
 import { LanguageProvider } from "@/components/layout/LanguageProvider";
@@ -172,6 +174,7 @@ export default async function RootLayout({
   const theme = (cookieStore.get("theme")?.value as "light" | "dark") || "light";
   // Serialize only the active locale's dictionary — halves the client JS bundle
   const initialDict = locale === "en" ? en : bn;
+  const notice = await getCachedNoticeSetting();
 
   const globalJsonLd = [
     {
@@ -213,6 +216,7 @@ export default async function RootLayout({
         <ThemeProvider initialTheme={theme}>
           <LanguageProvider initialLocale={locale} initialDict={initialDict}>
             <PwaTracker />
+            <GlobalNoticeBanner notice={notice} />
             <Header />
             <main className="flex-grow">{children}</main>
             <Footer locale={locale} />

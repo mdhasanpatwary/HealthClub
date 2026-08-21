@@ -2,9 +2,14 @@
 
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
-import { unstable_cache, updateTag } from "next/cache";
+import { unstable_cache, updateTag, revalidatePath } from "next/cache";
 
 const SYSTEM_SETTINGS_TAG = "system-settings";
+
+export interface GlobalNoticeSetting {
+  enabled: boolean;
+  text: string;
+}
 
 export async function getSystemSettingAction(key: string, defaultValue: string = "false"): Promise<string> {
   try {
@@ -32,6 +37,7 @@ export async function updateSystemSettingAction(key: string, value: string): Pro
     });
     // Bust the cache so the new value is visible immediately
     updateTag(SYSTEM_SETTINGS_TAG);
+    revalidatePath("/", "layout");
     return true;
   } catch (error) {
     console.error(`Error updating system setting '${key}':`, error);
@@ -42,7 +48,7 @@ export async function updateSystemSettingAction(key: string, value: string): Pro
 /**
  * Cached reader for allow_member_tx.
  * Hits the DB at most once per 60 seconds; instantly invalidated on writes
- * via revalidateTag(SYSTEM_SETTINGS_TAG).
+ * via updateTag(SYSTEM_SETTINGS_TAG).
  */
 const getCachedMemberTxSetting = unstable_cache(
   async (): Promise<string> => {
@@ -57,6 +63,36 @@ const getCachedMemberTxSetting = unstable_cache(
     }
   },
   ["allow_member_tx"],
+  { revalidate: 60, tags: [SYSTEM_SETTINGS_TAG] }
+);
+
+/**
+ * Cached reader for global website notice banner.
+ * Hits the DB at most once per 60 seconds; instantly invalidated on writes
+ * via updateTag(SYSTEM_SETTINGS_TAG).
+ */
+export const getCachedNoticeSetting = unstable_cache(
+  async (): Promise<GlobalNoticeSetting> => {
+    try {
+      const settings = await prisma.systemSetting.findMany({
+        where: {
+          key: { in: ["notice_enabled", "notice_text"] },
+        },
+      });
+      const map: Record<string, string> = {};
+      for (const s of settings) {
+        map[s.key] = s.value;
+      }
+      return {
+        enabled: map["notice_enabled"] === "true",
+        text: map["notice_text"] || "",
+      };
+    } catch (error) {
+      console.error("Error fetching notice setting:", error);
+      return { enabled: false, text: "" };
+    }
+  },
+  ["global_notice_setting"],
   { revalidate: 60, tags: [SYSTEM_SETTINGS_TAG] }
 );
 
@@ -93,6 +129,7 @@ export async function updateMultipleSystemSettingsAction(
 
     await prisma.$transaction(operations);
     updateTag(SYSTEM_SETTINGS_TAG);
+    revalidatePath("/", "layout");
 
     return { success: true, message: "সকল সেটিংস সফলভাবে সংরক্ষণ করা হয়েছে।" };
   } catch (error) {
