@@ -12,6 +12,7 @@ import {
   FileCheck,
   RotateCcw,
   Mail,
+  Bell,
   ArrowRight,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -22,11 +23,13 @@ import { TransactionDialog } from "./components/TransactionDialog";
 import { AdminStatsGrid } from "./components/AdminStatsGrid";
 import { useAdminData } from "./hooks/useAdminData";
 import { useAdminDoctors } from "./hooks/useAdminDoctors";
+import { useAdminNotifications } from "./hooks/useAdminNotifications";
 
 export default function AdminDashboardPage() {
   const { t, locale } = useLanguage();
   const adminData = useAdminData(t, locale);
   const doctorData = useAdminDoctors();
+  const notificationData = useAdminNotifications();
   const isBn = locale === "bn";
 
   const {
@@ -131,6 +134,23 @@ export default function AdminDashboardPage() {
       badgeColor: "indigo",
       color: "rose",
     },
+    {
+      title: isBn ? "বিজ্ঞপ্তি ও অ্যালার্ট" : "Notifications & Alerts",
+      description: isBn
+        ? "মেম্বারশিপ নবায়ন, পার্টনার আবেদন ও অনুসন্ধান নোটিফিকেশন"
+        : "Real-time alerts for renewals, partner requests and inquiries",
+      href: "/admin/notifications",
+      icon: Bell,
+      count: notificationData.unreadCount,
+      countLabel: isBn ? "টি অপঠিত" : "unread",
+      badge:
+        notificationData.unreadCount > 0
+          ? `${notificationData.unreadCount}`
+          : null,
+      badgeColor:
+        notificationData.highPriorityCount > 0 ? "rose" : "amber",
+      color: "amber",
+    },
   ];
 
   if (loading) {
@@ -176,9 +196,25 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="flex flex-wrap gap-2 mt-1 sm:mt-0">
+          <Link href="/admin/notifications">
+            <Button
+              variant="outline"
+              size="sm"
+              className="relative rounded-xl text-xs font-semibold gap-1.5 shadow-2xs cursor-pointer"
+            >
+              <Bell className="h-4 w-4 text-amber-500" />
+              <span>{t("admin.nav.notifications") || "বিজ্ঞপ্তি"}</span>
+              {notificationData.unreadCount > 0 && (
+                <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white shadow-xs">
+                  {formatNum(notificationData.unreadCount, locale)}
+                </span>
+              )}
+            </Button>
+          </Link>
+
           <Button
             onClick={() => setIsTxOpen(true)}
-            className="bg-primary hover:bg-primary-dark text-white font-semibold gap-2 shadow-sm"
+            className="bg-primary hover:bg-primary-dark text-white font-semibold gap-2 shadow-sm cursor-pointer"
             size="sm"
           >
             <PlusCircle className="h-4 w-4" />

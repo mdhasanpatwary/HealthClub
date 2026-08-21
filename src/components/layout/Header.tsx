@@ -15,6 +15,7 @@ import PartnerDropdown from "./PartnerDropdown";
 import PublicHeaderNav from "./PublicHeaderNav";
 import AdminHeaderNav from "./AdminHeaderNav";
 import MobileNavDrawer from "./MobileNavDrawer";
+import { AdminNotificationBell } from "./AdminNotificationBell";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -111,7 +112,7 @@ export default function Header() {
 
           {/* Desktop Actions */}
           <div className="hidden min-[992px]:flex items-center space-x-2 shrink-0">
-            {/* Utility Control Group (View Site, Language, Theme) */}
+            {/* Utility Control Group (View Site, Notifications, Language, Theme) */}
             <div className="flex items-center p-1 rounded-xl bg-muted/50 dark:bg-muted/30 border border-border/60 shadow-2xs gap-0.5">
               {/* View Public Website (Shown when in Admin Mode) */}
               {isAdminMode && (
@@ -124,6 +125,9 @@ export default function Header() {
                   <Globe className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                 </Link>
               )}
+
+              {/* Admin Notification Bell (Shown when in Admin Mode) */}
+              {isAdminMode && <AdminNotificationBell />}
 
               {/* Language Switcher Button */}
               <Button
@@ -178,8 +182,13 @@ export default function Header() {
             )}
           </div>
 
-          {/* Mobile Hamburger Toggle */}
+          {/* Mobile Actions & Hamburger Toggle */}
           <div className="flex min-[992px]:hidden items-center space-x-1">
+            {isAdminMode && (
+              <div className="mr-0.5">
+                <AdminNotificationBell />
+              </div>
+            )}
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="inline-flex items-center justify-center rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground focus:outline-hidden focus:ring-2 focus:ring-primary/30 transition-colors"

@@ -36,6 +36,11 @@ import {
   isMemberTxAllowedAction,
   setMemberTxAllowedAction,
 } from "@/app/actions/systemSettingsActions";
+import {
+  getAdminNotificationsAction,
+  GetAdminNotificationsParams,
+  PaginatedAdminNotificationsResult,
+} from "@/app/actions/adminNotificationActions";
 
 // Helper to check if running on client side
 const isClient = typeof window !== "undefined";
@@ -246,5 +251,12 @@ export const dbStore = {
 
   async setMemberTxAllowed(enabled: boolean): Promise<boolean> {
     return setMemberTxAllowedAction(enabled);
+  },
+
+  // --- NOTIFICATIONS ---
+  async getAdminNotifications(
+    params?: GetAdminNotificationsParams
+  ): Promise<PaginatedAdminNotificationsResult> {
+    return getAdminNotificationsAction(params);
   },
 };

@@ -19,6 +19,7 @@ import {
   Siren,
   BookOpen,
   Mail,
+  Bell,
   Settings,
   Smartphone,
   ExternalLink,
@@ -301,6 +302,21 @@ export default function MobileNavDrawer({
                   {t("admin.nav.system") || "সিস্টেম ও সাপোর্ট"}
                 </div>
                 <div className="space-y-1 pl-1">
+                  <Link
+                    href="/admin/notifications"
+                    onClick={onClose}
+                    className={`flex items-center justify-between p-2 rounded-xl text-xs font-semibold transition-colors ${
+                      isActive("/admin/notifications")
+                        ? "bg-primary/10 text-primary font-bold"
+                        : "text-foreground hover:bg-muted"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Bell className="h-4 w-4 text-amber-500 shrink-0" />
+                      <span>{t("admin.nav.notifications") || "বিজ্ঞপ্তি ও অ্যালার্ট"}</span>
+                    </div>
+                  </Link>
+
                   <Link
                     href="/admin/messages"
                     onClick={onClose}

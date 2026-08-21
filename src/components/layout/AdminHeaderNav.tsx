@@ -13,6 +13,7 @@ import {
   Siren,
   BookOpen,
   Mail,
+  Bell,
   Settings,
   Smartphone,
   ChevronDown,
@@ -52,6 +53,7 @@ export default function AdminHeaderNav() {
     pathname.startsWith("/admin/health-tips");
 
   const isSystemActive =
+    pathname.startsWith("/admin/notifications") ||
     pathname.startsWith("/admin/messages") ||
     pathname.startsWith("/admin/settings") ||
     pathname.startsWith("/admin/pwa");
@@ -382,6 +384,30 @@ export default function AdminHeaderNav() {
           align="start"
           className="w-64 p-1.5 bg-background dark:bg-slate-900 border border-border shadow-xl rounded-2xl space-y-1 z-50"
         >
+          {/* Notifications & Alerts */}
+          <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
+            <Link
+              href="/admin/notifications"
+              className={`flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 group ${
+                pathname.startsWith("/admin/notifications")
+                  ? "bg-primary/10 text-primary font-bold"
+                  : "hover:bg-muted/70 text-foreground"
+              }`}
+            >
+              <div className="h-8 w-8 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <Bell className="h-4 w-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <span className="block text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">
+                  {t("admin.nav.notifications") || "বিজ্ঞপ্তি ও অ্যালার্ট"}
+                </span>
+                <span className="block text-[11px] text-muted-foreground font-normal transition-colors truncate">
+                  {t("admin.nav.notificationsDesc") || "নতুন আবেদন, নবায়ন ও বার্তা অ্যালার্ট"}
+                </span>
+              </div>
+            </Link>
+          </DropdownMenuItem>
+
           {/* Contact Messages */}
           <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
             <Link
