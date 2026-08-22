@@ -7,7 +7,7 @@ import { dbStore } from "@/services/dbStore";
 import { Partner } from "@/services/db";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatDiscount } from "@/lib/i18n";
 import { PartnerCardSkeleton } from "@/components/ui/skeleton";
@@ -156,6 +156,7 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="text"
+            aria-label={t("ui.partnerdirectory.searchByHospitalNameOr") || "Search partner hospitals"}
             placeholder={t("ui.partnerdirectory.searchByHospitalNameOr")}
             value={searchQuery}
             onChange={(e) => {
@@ -171,12 +172,14 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
           <div className="flex flex-wrap gap-2 overflow-x-auto pb-1 md:pb-0">
             {categories.map((cat) => (
               <button
+                type="button"
                 key={cat.value}
+                aria-pressed={selectedCategory === cat.value}
                 onClick={() => {
                   setSelectedCategory(cat.value);
                   setVisibleCount(18);
                 }}
-                className={`px-4 py-2 rounded-full text-xs font-semibold border transition-all ${selectedCategory === cat.value
+                className={`px-4 py-2 rounded-full text-xs font-semibold border transition-all cursor-pointer ${selectedCategory === cat.value
                     ? "bg-primary text-white border-primary shadow-sm"
                     : "bg-background text-muted-foreground border-border hover:bg-muted"
                   }`}
@@ -258,30 +261,28 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
                         target="_blank"
                         rel="noopener noreferrer"
                         title={t("ui.partnerdirectory.viewMap")}
+                        aria-label={t("ui.partnerdirectory.viewMap")}
+                        className={buttonVariants({
+                          variant: "outline",
+                          size: "icon",
+                          className: "h-8 w-8 rounded-lg border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary transition-colors cursor-pointer",
+                        })}
                       >
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8 rounded-lg border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary transition-colors"
-                          aria-label={t("ui.partnerdirectory.viewMap")}
-                        >
-                          <MapPin className="h-4 w-4 text-primary shrink-0" />
-                        </Button>
+                        <MapPin className="h-4 w-4 text-primary shrink-0" />
                       </a>
 
                       {/* Call Icon Button */}
                       <a
                         href={`tel:${partner.phone}`}
                         title={t("ui.partnerdirectory.call")}
+                        aria-label={t("ui.partnerdirectory.call")}
+                        className={buttonVariants({
+                          variant: "default",
+                          size: "icon",
+                          className: "h-8 w-8 rounded-lg bg-primary hover:bg-primary-dark text-white shadow-xs transition-colors cursor-pointer",
+                        })}
                       >
-                        <Button
-                          variant="default"
-                          size="icon"
-                          className="h-8 w-8 rounded-lg bg-primary hover:bg-primary-dark text-white shadow-xs transition-colors"
-                          aria-label={t("ui.partnerdirectory.call")}
-                        >
-                          <Phone className="h-4 w-4 shrink-0" />
-                        </Button>
+                        <Phone className="h-4 w-4 shrink-0" />
                       </a>
                     </div>
                   </div>

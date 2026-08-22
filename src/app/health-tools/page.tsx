@@ -7,7 +7,7 @@ import { CalorieCalculator } from "./components/CalorieCalculator";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Calculator, Scale, Droplet, Flame, Stethoscope, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { SITE_URL } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
@@ -90,7 +90,7 @@ export default async function HealthToolsPage() {
       </div>
 
       {/* Main Hub Tabs */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-12">
         <Tabs defaultValue="bmi" className="w-full space-y-8">
           <div className="flex justify-center">
             <TabsList className="grid w-full max-w-xl grid-cols-3 h-12 p-1 bg-muted/80 rounded-2xl">
@@ -148,14 +148,18 @@ export default async function HealthToolsPage() {
               </p>
             </div>
           </div>
-          <Link href="/consultants" className="shrink-0 w-full sm:w-auto">
-            <Button size="lg" className="w-full font-bold">
-              {isEn ? "Browse Doctor Directory" : "ডাক্তারদের তালিকা দেখুন"}
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+          <Link
+            href="/consultants"
+            className={buttonVariants({
+              size: "lg",
+              className: "shrink-0 w-full sm:w-auto font-bold",
+            })}
+          >
+            <span>{isEn ? "Browse Doctor Directory" : "ডাক্তারদের তালিকা দেখুন"}</span>
+            <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

@@ -30,15 +30,20 @@ export default function FAQSection() {
     <div className="w-full max-w-3xl mx-auto space-y-4">
       {faqs.map((faq, idx) => {
         const isOpen = openIndex === idx;
+        const btnId = `landing-faq-btn-${idx}`;
+        const panelId = `landing-faq-ans-${idx}`;
+
         return (
           <div
             key={idx}
             className="border border-border rounded-xl bg-background hover:bg-muted/30 transition-colors overflow-hidden"
           >
             <button
+              id={btnId}
               onClick={() => toggleFAQ(idx)}
-              className="w-full flex justify-between items-center p-5 text-left font-heading font-bold text-secondary dark:text-white text-base md:text-lg focus:outline-none"
+              className="w-full flex justify-between items-center p-5 text-left font-heading font-bold text-secondary dark:text-white text-base md:text-lg focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset cursor-pointer"
               aria-expanded={isOpen}
+              aria-controls={panelId}
             >
               <span>{faq.question}</span>
               <ChevronDown
@@ -48,6 +53,9 @@ export default function FAQSection() {
               />
             </button>
             <div
+              id={panelId}
+              role="region"
+              aria-labelledby={btnId}
               className={`transition-all duration-300 ease-in-out ${
                 isOpen ? "max-h-[500px] border-t border-border opacity-100 p-5" : "max-h-0 opacity-0 overflow-hidden"
               }`}

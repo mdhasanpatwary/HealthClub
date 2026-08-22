@@ -103,11 +103,12 @@ export default function LoginPage() {
 
             <form onSubmit={handleLogin} className="space-y-5">
               <div className="space-y-2">
-                <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5">
+                <label htmlFor="login-identifier" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
                   <User className="h-3.5 w-3.5 text-primary" />
                   মেম্বার আইডি, মোবাইল নম্বর বা ইমেইল
                 </label>
                 <Input
+                  id="login-identifier"
                   type="text"
                   required
                   value={identifier}
@@ -118,11 +119,12 @@ export default function LoginPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5">
+                <label htmlFor="login-password" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
                   <Lock className="h-3.5 w-3.5 text-primary" />
                   পাসওয়ার্ড
                 </label>
                 <Input
+                  id="login-password"
                   type="password"
                   required
                   value={password}

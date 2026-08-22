@@ -94,11 +94,17 @@ export function CalorieCalculator() {
               <Label className="text-xs font-semibold">
                 {isEn ? "Gender" : "লিঙ্গ"}
               </Label>
-              <div className="grid grid-cols-2 gap-2">
+              <div
+                role="radiogroup"
+                aria-label={isEn ? "Gender" : "লিঙ্গ"}
+                className="grid grid-cols-2 gap-2"
+              >
                 <button
                   type="button"
+                  role="radio"
+                  aria-checked={gender === "male"}
                   onClick={() => setGender("male")}
-                  className={`py-2 text-xs font-bold rounded-xl border transition-all ${
+                  className={`py-2 text-xs font-bold rounded-xl border transition-all cursor-pointer ${
                     gender === "male"
                       ? "bg-orange-600 text-white border-orange-600 shadow-xs"
                       : "bg-background hover:bg-muted text-muted-foreground border-border"
@@ -108,8 +114,10 @@ export function CalorieCalculator() {
                 </button>
                 <button
                   type="button"
+                  role="radio"
+                  aria-checked={gender === "female"}
                   onClick={() => setGender("female")}
-                  className={`py-2 text-xs font-bold rounded-xl border transition-all ${
+                  className={`py-2 text-xs font-bold rounded-xl border transition-all cursor-pointer ${
                     gender === "female"
                       ? "bg-orange-600 text-white border-orange-600 shadow-xs"
                       : "bg-background hover:bg-muted text-muted-foreground border-border"
@@ -165,13 +173,14 @@ export function CalorieCalculator() {
 
             {/* Activity Level */}
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold">
+              <Label htmlFor="cal-activity" className="text-xs font-semibold">
                 {isEn ? "Activity Level" : "দৈনিক অ্যাক্টিভিটি লেভেল"}
               </Label>
               <select
+                id="cal-activity"
                 value={activity}
                 onChange={(e) => setActivity(e.target.value as typeof activity)}
-                className="w-full h-10 px-3 rounded-lg border border-border bg-background text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="w-full h-10 px-3 rounded-lg border border-border bg-background text-xs sm:text-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/20"
               >
                 <option value="sedentary">
                   {isEn ? "Sedentary (Desk job, minimal exercise)" : "ডেস্ক জব / স্বাভাবিক চলাফেরা"}
@@ -189,12 +198,19 @@ export function CalorieCalculator() {
             </div>
 
             <div className="flex gap-2 pt-2">
-              <Button type="submit" className="flex-1 bg-orange-600 hover:bg-orange-700 text-white font-bold">
+              <Button type="submit" className="flex-1 bg-orange-600 hover:bg-orange-700 text-white font-bold cursor-pointer">
                 <Flame className="mr-2 h-4 w-4 fill-white" />
                 {isEn ? "Calculate Calories" : "ক্যালোরি হিসেব করুন"}
               </Button>
               {result && (
-                <Button type="button" variant="outline" onClick={handleReset} size="icon">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleReset}
+                  size="icon"
+                  aria-label={isEn ? "Reset calculator" : "ক্যালকুলেটর রিসেট করুন"}
+                  className="cursor-pointer"
+                >
                   <RotateCcw className="h-4 w-4" />
                 </Button>
               )}

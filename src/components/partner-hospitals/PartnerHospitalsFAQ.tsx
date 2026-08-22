@@ -45,17 +45,21 @@ export default function PartnerHospitalsFAQ() {
       <div className="space-y-3">
         {faqs.map((faq, idx) => {
           const isOpen = openIndex === idx;
+          const btnId = `partner-faq-btn-${idx}`;
+          const panelId = `partner-faq-ans-${idx}`;
+
           return (
             <div
               key={idx}
               className="border border-border/80 rounded-2xl bg-card hover:border-primary/40 transition-all duration-200 shadow-xs overflow-hidden"
             >
               <button
+                id={btnId}
                 type="button"
                 onClick={() => toggleFAQ(idx)}
                 aria-expanded={isOpen}
-                aria-controls={`partner-faq-answer-${idx}`}
-                className="w-full flex justify-between items-center gap-3 p-4 sm:p-5 text-left font-heading font-bold text-secondary dark:text-white text-sm sm:text-base cursor-pointer focus:outline-none"
+                aria-controls={panelId}
+                className="w-full flex justify-between items-center gap-3 p-4 sm:p-5 text-left font-heading font-bold text-secondary dark:text-white text-sm sm:text-base cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
               >
                 <span className="leading-snug">{faq.question}</span>
                 <ChevronDown
@@ -65,7 +69,9 @@ export default function PartnerHospitalsFAQ() {
                 />
               </button>
               <div
-                id={`partner-faq-answer-${idx}`}
+                id={panelId}
+                role="region"
+                aria-labelledby={btnId}
                 className={`transition-all duration-300 ease-in-out ${
                   isOpen
                     ? "max-h-[500px] border-t border-border/60 opacity-100 p-4 sm:p-5 pt-3 sm:pt-4 bg-muted/20"

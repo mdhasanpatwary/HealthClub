@@ -8,7 +8,7 @@ import { dbStore } from "@/services/dbStore";
 import { Member, Partner } from "@/services/db";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import MemberCard from "@/components/ui/MemberCard";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 export default function BottomNav() {
   const pathname = usePathname();
@@ -29,6 +29,18 @@ export default function BottomNav() {
       window.removeEventListener("auth-change", syncUser);
     };
   }, [pathname]);
+
+  // Handle ESC key for modal
+  useEffect(() => {
+    if (!isCardModalOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsCardModalOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isCardModalOpen]);
 
   const isActive = (path: string) => {
     if (path === "/") return pathname === "/";
@@ -64,7 +76,7 @@ export default function BottomNav() {
 
   return (
     <>
-      <aside
+      <nav
         aria-label="Mobile Bottom Navigation"
         className="fixed bottom-0 left-0 right-0 z-40 min-[992px]:hidden bg-background/95 backdrop-blur-xl border-t border-border/80 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] transition-all duration-300"
       >
@@ -72,6 +84,7 @@ export default function BottomNav() {
           {/* 1. Home Tab */}
           <Link
             href="/"
+            aria-current={isActive("/") && !isCardActive && !isProfileActive ? "page" : undefined}
             className={`flex flex-1 flex-col items-center justify-center py-1 touch-active transition-colors ${
               isActive("/") && !isCardActive && !isProfileActive
                 ? "text-primary font-bold"
@@ -92,6 +105,7 @@ export default function BottomNav() {
           {/* 2. Partner Hospitals Tab */}
           <Link
             href="/partner-hospitals"
+            aria-current={isActive("/partner-hospitals") ? "page" : undefined}
             className={`flex flex-1 flex-col items-center justify-center py-1 touch-active transition-colors ${
               isActive("/partner-hospitals")
                 ? "text-primary font-bold"
@@ -113,6 +127,7 @@ export default function BottomNav() {
           <Link
             href={getCardPath()}
             onClick={handleCardClick}
+            aria-label={t("layout.bottomNav.card")}
             className="flex flex-1 flex-col items-center justify-center -mt-4 touch-active group"
           >
             <div
@@ -140,6 +155,7 @@ export default function BottomNav() {
           {/* 4. Profile / Account Tab */}
           <Link
             href={getProfilePath()}
+            aria-current={isProfileActive && !isCardActive ? "page" : undefined}
             className={`flex flex-1 flex-col items-center justify-center py-1 touch-active transition-colors ${
               isProfileActive && !isCardActive
                 ? "text-primary font-bold"
@@ -160,7 +176,7 @@ export default function BottomNav() {
           {/* 5. Menu Tab */}
           <button
             onClick={handleOpenMenu}
-            className="flex flex-1 flex-col items-center justify-center py-1 text-muted-foreground hover:text-foreground touch-active transition-colors"
+            className="flex flex-1 flex-col items-center justify-center py-1 text-muted-foreground hover:text-foreground touch-active transition-colors cursor-pointer"
             aria-label="Open navigation menu"
           >
             <Menu className="h-5 w-5 stroke-[2.2]" />
@@ -169,11 +185,16 @@ export default function BottomNav() {
             </span>
           </button>
         </div>
-      </aside>
+      </nav>
 
       {/* Quick Digital Card Bottom Sheet Modal */}
       {isCardModalOpen && user && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center min-[992px]:hidden">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="quick-card-modal-title"
+          className="fixed inset-0 z-50 flex items-end justify-center min-[992px]:hidden"
+        >
           {/* Backdrop */}
           <div
             className="fixed inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity animate-in fade-in duration-200"
@@ -188,7 +209,7 @@ export default function BottomNav() {
             {/* Sheet Header */}
             <div className="flex items-center justify-between mb-3 px-1">
               <div>
-                <h3 className="font-heading text-lg font-bold text-foreground">
+                <h3 id="quick-card-modal-title" className="font-heading text-lg font-bold text-foreground">
                   {t("layout.bottomNav.card")}
                 </h3>
                 <p className="text-xs text-muted-foreground">
@@ -197,7 +218,7 @@ export default function BottomNav() {
               </div>
               <button
                 onClick={() => setIsCardModalOpen(false)}
-                className="p-1.5 text-muted-foreground hover:text-foreground rounded-full hover:bg-muted transition-colors"
+                className="p-1.5 text-muted-foreground hover:text-foreground rounded-full hover:bg-muted transition-colors cursor-pointer"
                 aria-label="Close modal"
               >
                 <X className="h-5 w-5" />
@@ -214,17 +235,17 @@ export default function BottomNav() {
               <Link
                 href="/dashboard"
                 onClick={() => setIsCardModalOpen(false)}
-                className="flex-1"
+                className={buttonVariants({
+                  className: "flex-1 bg-primary hover:bg-primary-dark text-white font-semibold gap-1.5 shadow-md",
+                })}
               >
-                <Button className="w-full bg-primary hover:bg-primary-dark text-white font-semibold gap-1.5 shadow-md">
-                  <span>{t("layout.header.dashboard")}</span>
-                  <ArrowUpRight className="h-4 w-4" />
-                </Button>
+                <span>{t("layout.header.dashboard")}</span>
+                <ArrowUpRight className="h-4 w-4" />
               </Link>
               <Button
                 variant="outline"
                 onClick={() => setIsCardModalOpen(false)}
-                className="px-5 border-border"
+                className="px-5 border-border cursor-pointer"
               >
                 {t("admin.dashboard.closeButton")}
               </Button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   Phone, PhoneCall, Calendar, Building2,
@@ -28,13 +28,12 @@ export function DoctorAvatar({
           alt={alt}
           fill
           sizes="(max-width: 640px) 80px, 100px"
-          className="object-cover group-hover:scale-105 transition-transform duration-300"
+          unoptimized
+          className="object-cover object-top"
           onError={() => setHasError(true)}
         />
       ) : (
-        <div className="flex items-center justify-center w-full h-full bg-emerald-500/10 text-primary">
-          <Stethoscope className="h-7 w-7 text-primary" />
-        </div>
+        <Stethoscope className="h-1/2 w-1/2 text-primary/60" />
       )}
     </div>
   );
@@ -48,6 +47,16 @@ interface DoctorSerialModalProps {
 }
 
 export function DoctorSerialModal({ doctor, onClose, t, locale }: DoctorSerialModalProps) {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
   const parsePhones = (phoneStr: string) => {
     return phoneStr
       .split(/[,/|]+/)
@@ -56,11 +65,17 @@ export function DoctorSerialModal({ doctor, onClose, t, locale }: DoctorSerialMo
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="serial-modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200"
+    >
       <div className="relative w-full max-w-md bg-card border border-border rounded-3xl p-6 shadow-2xl space-y-5 animate-in zoom-in-95 duration-200">
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 p-1.5 text-muted-foreground hover:text-foreground rounded-full hover:bg-muted"
+          className="absolute right-4 top-4 p-1.5 text-muted-foreground hover:text-foreground rounded-full hover:bg-muted cursor-pointer"
+          aria-label="Close modal"
         >
           <X className="h-5 w-5" />
         </button>
@@ -70,7 +85,7 @@ export function DoctorSerialModal({ doctor, onClose, t, locale }: DoctorSerialMo
             <PhoneCall className="h-6 w-6" />
           </div>
           <div>
-            <h4 className="font-heading font-bold text-base text-foreground">
+            <h4 id="serial-modal-title" className="font-heading font-bold text-base text-foreground">
               {t("consultants.modal.serialModalTitle")}
             </h4>
             <p className="text-xs text-primary font-semibold">
@@ -122,7 +137,7 @@ export function DoctorSerialModal({ doctor, onClose, t, locale }: DoctorSerialMo
 
         <Button
           variant="outline"
-          className="w-full rounded-2xl"
+          className="w-full rounded-2xl cursor-pointer"
           onClick={onClose}
         >
           {t("consultants.modal.close")}
@@ -140,12 +155,28 @@ interface DoctorDetailsModalProps {
 }
 
 export function DoctorDetailsModal({ doctor, onClose, onCallSerial, t }: DoctorDetailsModalProps) {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200 overflow-y-auto">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="details-modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200 overflow-y-auto"
+    >
       <div className="relative w-full max-w-lg bg-card border border-border rounded-3xl p-5 sm:p-7 shadow-2xl space-y-5 my-8 animate-in zoom-in-95 duration-200">
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 p-1.5 text-muted-foreground hover:text-foreground rounded-full hover:bg-muted"
+          className="absolute right-4 top-4 p-1.5 text-muted-foreground hover:text-foreground rounded-full hover:bg-muted cursor-pointer"
+          aria-label="Close modal"
         >
           <X className="h-5 w-5" />
         </button>
@@ -158,7 +189,7 @@ export function DoctorDetailsModal({ doctor, onClose, onCallSerial, t }: DoctorD
             className="h-20 w-20"
           />
           <div className="space-y-1">
-            <h3 className="font-heading font-bold text-base sm:text-lg text-foreground">
+            <h3 id="details-modal-title" className="font-heading font-bold text-base sm:text-lg text-foreground">
               {doctor.name}
             </h3>
             <p className="text-xs sm:text-sm font-semibold text-primary">
@@ -234,7 +265,7 @@ export function DoctorDetailsModal({ doctor, onClose, onCallSerial, t }: DoctorD
         <div className="space-y-2">
           <Button
             onClick={() => onCallSerial(doctor)}
-            className="w-full bg-primary hover:bg-primary-dark text-white rounded-2xl h-11 font-semibold"
+            className="w-full bg-primary hover:bg-primary-dark text-white rounded-2xl h-11 font-semibold cursor-pointer"
           >
             <PhoneCall className="h-4 w-4 mr-2" />
             {t("consultants.card.callSerial")}

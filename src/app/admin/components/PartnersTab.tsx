@@ -152,7 +152,8 @@ export function PartnersTab({
                           variant="ghost"
                           size="icon"
                           onClick={() => onEditClick(p)}
-                          className="h-8 w-8 text-primary hover:text-primary-dark hover:bg-primary-light"
+                          aria-label={isEn ? `Edit ${p.name}` : `${p.name} এর তথ্য এডিট করুন`}
+                          className="h-8 w-8 text-primary hover:text-primary-dark hover:bg-primary-light cursor-pointer"
                         >
                           <Edit3 className="h-4 w-4" />
                         </Button>
@@ -160,7 +161,8 @@ export function PartnersTab({
                           variant="ghost"
                           size="icon"
                           onClick={() => onDeleteClick(p.id, p.name)}
-                          className="h-8 w-8 text-destructive hover:text-rose-600 hover:bg-rose-50"
+                          aria-label={isEn ? `Delete ${p.name}` : `${p.name} ডিলিট করুন`}
+                          className="h-8 w-8 text-destructive hover:text-rose-600 hover:bg-rose-50 cursor-pointer"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>

@@ -144,8 +144,9 @@ export default function BecomePartnerPage() {
                   </h3>
                   
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary dark:text-white">প্রতিষ্ঠানের নাম (যেমন: ল্যাবএইড কুষ্টিয়া) *</label>
+                    <label htmlFor="partner-orgName" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">প্রতিষ্ঠানের নাম (যেমন: ল্যাবএইড কুষ্টিয়া) *</label>
                     <Input
+                      id="partner-orgName"
                       type="text"
                       name="orgName"
                       required
@@ -158,12 +159,13 @@ export default function BecomePartnerPage() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-secondary dark:text-white">প্রতিষ্ঠানের ধরন *</label>
+                      <label htmlFor="partner-category" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">প্রতিষ্ঠানের ধরন *</label>
                       <select
+                        id="partner-category"
                         name="category"
                         value={formData.category}
                         onChange={handleChange}
-                        className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                        className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary"
                       >
                         <option value="hospital">হাসপাতাল (Hospital)</option>
                         <option value="diagnostic">ডায়াগনস্টিক সেন্টার</option>
@@ -172,8 +174,9 @@ export default function BecomePartnerPage() {
                     </div>
                     
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-secondary dark:text-white">প্রস্তাবিত ডিসকাউন্টের হার *</label>
+                      <label htmlFor="partner-discount" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">প্রস্তাবিত ডিসকাউন্টের হার *</label>
                       <Input
+                        id="partner-discount"
                         type="text"
                         name="discount"
                         required
@@ -186,8 +189,9 @@ export default function BecomePartnerPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary dark:text-white">প্রতিষ্ঠানের ঠিকানা *</label>
+                    <label htmlFor="partner-address" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">প্রতিষ্ঠানের ঠিকানা *</label>
                     <Input
+                      id="partner-address"
                       type="text"
                       name="address"
                       required
@@ -199,8 +203,9 @@ export default function BecomePartnerPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary dark:text-white">যোগাযোগকারী ব্যক্তির নাম *</label>
+                    <label htmlFor="partner-contactName" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">যোগাযোগকারী ব্যক্তির নাম *</label>
                     <Input
+                      id="partner-contactName"
                       type="text"
                       name="contactName"
                       required
@@ -213,8 +218,9 @@ export default function BecomePartnerPage() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-secondary dark:text-white">মোবাইল নম্বর *</label>
+                      <label htmlFor="partner-phone" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">মোবাইল নম্বর *</label>
                       <Input
+                        id="partner-phone"
                         type="tel"
                         name="phone"
                         required
@@ -225,8 +231,9 @@ export default function BecomePartnerPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-secondary dark:text-white">ইমেইল ঠিকানা</label>
+                      <label htmlFor="partner-email" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">ইমেইল ঠিকানা</label>
                       <Input
+                        id="partner-email"
                         type="email"
                         name="email"
                         value={formData.email}

@@ -304,28 +304,33 @@ export function HealthTipsTab() {
                               target="_blank"
                               className="p-1 rounded-md text-muted-foreground hover:text-primary hover:bg-muted/50"
                               title={isEn ? "View live article" : "আর্টিকেল দেখুন"}
+                              aria-label={isEn ? `View article ${art.titleEn}` : `আর্টিকেল দেখুন: ${art.titleBn}`}
                             >
                               <ExternalLink className="h-3.5 w-3.5" />
                             </Link>
                             <Button
+                              type="button"
                               variant="ghost"
                               size="icon-sm"
                               onClick={() => {
                                 setEditingArticle(art);
                                 setDialogOpen(true);
                               }}
-                              className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                              aria-label={isEn ? `Edit article ${art.titleEn}` : `আর্টিকেল এডিট করুন: ${art.titleBn}`}
+                              className="h-7 w-7 text-muted-foreground hover:text-foreground cursor-pointer"
                             >
                               <Edit3 className="h-3.5 w-3.5" />
                             </Button>
                             <Button
+                              type="button"
                               variant="ghost"
                               size="icon-sm"
                               onClick={() => {
                                 setDeletingArticle(art);
                                 setDeleteModalOpen(true);
                               }}
-                              className="h-7 w-7 text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30"
+                              aria-label={isEn ? `Delete article ${art.titleEn}` : `আর্টিকেল ডিলিট করুন: ${art.titleBn}`}
+                              className="h-7 w-7 text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </Button>

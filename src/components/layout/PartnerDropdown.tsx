@@ -31,7 +31,10 @@ export default function PartnerDropdown({ partner }: PartnerDropdownProps) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-2 rounded-full outline-hidden cursor-pointer focus-visible:ring-2 focus-visible:ring-primary/20 shrink-0 select-none">
+      <DropdownMenuTrigger
+        aria-label="Partner account menu"
+        className="flex items-center gap-2 rounded-full outline-hidden cursor-pointer focus-visible:ring-2 focus-visible:ring-primary/20 shrink-0 select-none"
+      >
         {partner.imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img

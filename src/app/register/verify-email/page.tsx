@@ -4,7 +4,7 @@ import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Heart, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -78,10 +78,13 @@ function VerifyEmailForm() {
           <p>২. অ্যাকাউন্ট অনুমোদিত হওয়ার পর আপনার ফোনে/ইমেইলে নিশ্চিতকরণ বার্তা পাঠানো হবে।</p>
           <p>৩. এরপর আপনি আপনার মেম্বার আইডি এবং পাসওয়ার্ড দিয়ে লগইন করে ড্যাশবোর্ড ও মেম্বারশিপ কার্ড ব্যবহার করতে পারবেন।</p>
         </div>
-        <Link href="/" className="block">
-          <Button className="w-full">
-            হোমপেজে ফিরে যান
-          </Button>
+        <Link
+          href="/"
+          className={buttonVariants({
+            className: "w-full",
+          })}
+        >
+          <span>হোমপেজে ফিরে যান</span>
         </Link>
       </Card>
     );
@@ -107,8 +110,11 @@ function VerifyEmailForm() {
       <CardContent className="space-y-6">
         <form onSubmit={handleVerify} className="space-y-4">
           <div className="space-y-2">
-            <label className="text-xs font-semibold text-secondary">ভেরিফিকেশন কোড (OTP) *</label>
+            <label htmlFor="verification-code" className="text-xs font-semibold text-secondary cursor-pointer">
+              ভেরিফিকেশন কোড (OTP) *
+            </label>
             <Input
+              id="verification-code"
               type="text"
               required
               maxLength={6}

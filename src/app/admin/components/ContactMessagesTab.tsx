@@ -146,8 +146,9 @@ export function ContactMessagesTab({
                         size="icon"
                         variant="ghost"
                         onClick={() => onDelete(msg.id)}
-                        className="text-destructive hover:bg-destructive/10 h-8 w-8 rounded-lg"
+                        className="text-destructive hover:bg-destructive/10 h-8 w-8 rounded-lg cursor-pointer"
                         title={t("admin.dashboard.delete")}
+                        aria-label={`${t("admin.dashboard.delete")} ${msg.name}`}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>

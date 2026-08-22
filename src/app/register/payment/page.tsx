@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ShieldCheck, AlertCircle, CheckCircle2, Copy, Check, Smartphone } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { submitBkashPaymentAction, getMemberByIdAction } from "@/app/actions/memberActions";
@@ -187,6 +187,8 @@ function PaymentForm() {
                     variant="ghost" 
                     size="icon-xs" 
                     onClick={handleCopyNumber}
+                    aria-label="Copy bKash number"
+                    className="cursor-pointer"
                   >
                     {copied ? <Check className="h-4 w-4 text-emerald-600" /> : <Copy className="h-4 w-4 text-muted-foreground" />}
                   </Button>
@@ -204,10 +206,11 @@ function PaymentForm() {
                 </h4>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1">
+                  <label htmlFor="bkash-sender-number" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1 cursor-pointer">
                     বিকাশ নম্বর (যে নম্বর থেকে পাঠিয়েছেন) *
                   </label>
                   <Input 
+                    id="bkash-sender-number"
                     type="tel"
                     required
                     value={senderNumber}
@@ -218,10 +221,11 @@ function PaymentForm() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-secondary flex items-center gap-1">
+                  <label htmlFor="bkash-txn-id" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1 cursor-pointer">
                     ট্রানজেকশন আইডি (Transaction ID / TxnID) *
                   </label>
                   <Input 
+                    id="bkash-txn-id"
                     type="text"
                     required
                     value={transactionId}
@@ -236,16 +240,21 @@ function PaymentForm() {
                     type="submit" 
                     disabled={isSubmitting}
                     size="lg"
-                    className="w-full"
+                    className="w-full cursor-pointer"
                   >
                     <ShieldCheck className="h-5 w-5" />
                     {isSubmitting ? "তথ্য সাবমিট করা হচ্ছে..." : "পেমেন্ট তথ্য সাবমিট করুন"}
                   </Button>
                   
-                  <Link href="/" className="block w-full">
-                    <Button variant="outline" size="lg" className="w-full text-muted-foreground">
-                      পরে সাবমিট করব
-                    </Button>
+                  <Link
+                    href="/"
+                    className={buttonVariants({
+                      variant: "outline",
+                      size: "lg",
+                      className: "w-full text-muted-foreground",
+                    })}
+                  >
+                    <span>পরে সাবমিট করব</span>
                   </Link>
                 </div>
               </form>

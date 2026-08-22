@@ -44,17 +44,21 @@ export function HealthTipsFAQ() {
       <div className="space-y-3">
         {HEALTH_TIPS_FAQS.map((faq) => {
           const isOpen = openId === faq.id;
+          const btnId = `healthtips-faq-btn-${faq.id}`;
+          const panelId = `healthtips-faq-ans-${faq.id}`;
+
           return (
             <div
               key={faq.id}
               className="border border-border/80 rounded-2xl bg-card hover:border-primary/40 transition-all duration-200 shadow-xs overflow-hidden"
             >
               <button
+                id={btnId}
                 type="button"
                 onClick={() => toggle(faq.id)}
                 aria-expanded={isOpen}
-                aria-controls={`faq-answer-${faq.id}`}
-                className="w-full flex justify-between items-center gap-3 p-4 sm:p-5 text-left font-heading font-bold text-secondary dark:text-white text-sm sm:text-base cursor-pointer focus:outline-none"
+                aria-controls={panelId}
+                className="w-full flex justify-between items-center gap-3 p-4 sm:p-5 text-left font-heading font-bold text-secondary dark:text-white text-sm sm:text-base cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
               >
                 <div className="flex items-center gap-2.5">
                   <Sparkles className="h-4 w-4 text-primary shrink-0" />
@@ -67,7 +71,9 @@ export function HealthTipsFAQ() {
                 />
               </button>
               <div
-                id={`faq-answer-${faq.id}`}
+                id={panelId}
+                role="region"
+                aria-labelledby={btnId}
                 className={`transition-all duration-300 ease-in-out ${
                   isOpen
                     ? "max-h-[600px] border-t border-border/60 opacity-100 p-4 sm:p-5 pt-3 sm:pt-4 bg-muted/20"

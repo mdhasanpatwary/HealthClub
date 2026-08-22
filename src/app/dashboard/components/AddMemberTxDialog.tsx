@@ -53,10 +53,11 @@ export function AddMemberTxDialog({
 
         <form onSubmit={handleAddMemberTransaction} className="space-y-4 pt-2">
           <div className="space-y-2">
-            <label className="text-xs font-semibold text-secondary dark:text-white">
+            <label htmlFor="member-tx-partner" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">
               {t("dashboard.history.selectPartner")} *
             </label>
             <select
+              id="member-tx-partner"
               required
               value={newTxPartnerId}
               onChange={(e) => {
@@ -71,7 +72,7 @@ export function AddMemberTxDialog({
                   setNewTxDiscountPercent("10");
                 }
               }}
-              className="w-full h-10 rounded-xl border border-border/60 bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+              className="w-full h-10 rounded-xl border border-border/60 bg-background px-3 text-sm focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary"
             >
               <option value="">{t("admin.dashboard.selectPartnerLabel")}</option>
               {partners.map((p) => (
@@ -83,10 +84,11 @@ export function AddMemberTxDialog({
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-semibold text-secondary dark:text-white">
+            <label htmlFor="member-tx-amount" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">
               {t("dashboard.history.billAmount")} *
             </label>
             <Input
+              id="member-tx-amount"
               type="number"
               required
               min="1"
@@ -98,10 +100,11 @@ export function AddMemberTxDialog({
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-semibold text-secondary dark:text-white">
+            <label htmlFor="member-tx-discount" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">
               {locale === "bn" ? "ডিসকাউন্ট (%) *" : "Discount (%) *"}
             </label>
             <Input
+              id="member-tx-discount"
               type="number"
               required
               min="0"

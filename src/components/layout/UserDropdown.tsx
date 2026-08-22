@@ -33,7 +33,10 @@ export default function UserDropdown({ user }: UserDropdownProps) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-2 rounded-full outline-hidden cursor-pointer focus-visible:ring-2 focus-visible:ring-primary/20 shrink-0 select-none">
+      <DropdownMenuTrigger
+        aria-label="User account menu"
+        className="flex items-center gap-2 rounded-full outline-hidden cursor-pointer focus-visible:ring-2 focus-visible:ring-primary/20 shrink-0 select-none"
+      >
         {user.profilePictureUrl ? (
           <Image
             src={user.profilePictureUrl}

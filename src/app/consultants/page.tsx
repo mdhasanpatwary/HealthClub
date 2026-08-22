@@ -216,9 +216,9 @@ export default async function ConsultantsPage() {
               <ShieldCheck className="h-5 w-5" />
             </div>
             <div>
-              <h4 className="text-xs sm:text-sm font-bold text-foreground">
+              <h2 className="text-xs sm:text-sm font-bold text-foreground">
                 {locale === "en" ? "Verified Specialists" : "যাচাইকৃত বিশেষজ্ঞ"}
-              </h4>
+              </h2>
               <p className="text-[11px] sm:text-xs text-muted-foreground">
                 {locale === "en" ? "Top hospitals & medical colleges" : "শীর্ষ হাসপাতাল ও মেডিকেল কলেজের চিকিৎসক"}
               </p>
@@ -230,9 +230,9 @@ export default async function ConsultantsPage() {
               <PhoneCall className="h-5 w-5" />
             </div>
             <div>
-              <h4 className="text-xs sm:text-sm font-bold text-foreground">
+              <h2 className="text-xs sm:text-sm font-bold text-foreground">
                 {locale === "en" ? "Direct Serial Call" : "সরাসরি সিরিয়াল সুবিধা"}
-              </h4>
+              </h2>
               <p className="text-[11px] sm:text-xs text-muted-foreground">
                 {locale === "en" ? "Direct helpline & phone serials" : "এক ক্লিকেই সিরিয়াল নম্বরে কল করার সুযোগ"}
               </p>
@@ -244,9 +244,9 @@ export default async function ConsultantsPage() {
               <HeartHandshake className="h-5 w-5" />
             </div>
             <div>
-              <h4 className="text-xs sm:text-sm font-bold text-foreground">
+              <h2 className="text-xs sm:text-sm font-bold text-foreground">
                 {locale === "en" ? "Member Benefits" : "মেম্বার ডিসকাউন্ট"}
-              </h4>
+              </h2>
               <p className="text-[11px] sm:text-xs text-muted-foreground">
                 {locale === "en" ? "Special discount on prescribed tests" : "প্রেসক্রিপশন টেস্টে ১০-৩০% পর্যন্ত ছাড়"}
               </p>

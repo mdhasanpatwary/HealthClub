@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Star, ShieldCheck, Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 
 interface LandingPricingProps {
   t: (key: string) => string;
@@ -21,31 +21,29 @@ export function LandingPricing({ t }: LandingPricingProps) {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-stretch max-w-3xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8 max-w-4xl mx-auto items-stretch">
 
-          {/* Plan 1: Founding (Highlighted) */}
-          <div className="relative bg-gradient-to-b from-primary/10 via-primary/5 to-background dark:from-primary/15 dark:via-primary/8 dark:to-slate-900 border-2 border-primary rounded-3xl p-5 sm:p-8 flex flex-col justify-between shadow-xl ring-4 ring-primary/10 overflow-hidden">
-            {/* Background shimmer element */}
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/5 to-transparent rounded-3xl" />
-            <div className="absolute top-4 right-4 bg-gradient-to-r from-primary to-emerald-500 text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-md">
-              {t("page.limitedOffer")}
+          {/* Plan 1: Founding (Free) */}
+          <div className="relative bg-background dark:bg-slate-900 border-2 border-primary rounded-3xl p-5 sm:p-8 flex flex-col justify-between shadow-xl shadow-primary/5">
+            <div className="absolute -top-3.5 right-6 bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+              {t("page.mostPopular")}
             </div>
-            <div className="relative space-y-6">
+            <div className="space-y-6">
               <div>
-                <div className="h-10 w-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-3">
-                  <Star className="h-5 w-5 text-primary fill-primary/20" />
+                <div className="h-10 w-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-3 text-primary">
+                  <Star className="h-5 w-5 fill-primary" />
                 </div>
                 <h3 className="font-heading text-xl font-bold text-secondary dark:text-white">{t("page.foundingMember")}</h3>
-                <p className="text-xs text-muted-foreground mt-1">{t("page.theFirst100MembersWill")}</p>
+                <p className="text-xs text-muted-foreground mt-1">{t("page.specialOfferForFirst100Members")}</p>
               </div>
-              <div className="flex items-baseline gap-2 text-secondary dark:text-white">
+              <div className="flex items-baseline gap-2 text-primary">
                 <span className="text-5xl font-extrabold font-mono">{t("page.0")}</span>
-                <span className="text-sm text-muted-foreground font-semibold">{t("page.1YearFree")}</span>
+                <span className="text-sm font-semibold text-muted-foreground">{t("page.foreverFree")}</span>
               </div>
               <ul className="space-y-3 text-sm">
                 {[
                   t("page.coverageForTheMemberFamily"),
-                  t("page.1YearMembership"),
+                  t("page.lifetimeValidityFoundingMember"),
                   t("page.discountsAtAllPartnerHospitals"),
                   t("page.digitalMembershipCardVerifiedQr"),
                 ].map((item, i) => (
@@ -59,10 +57,14 @@ export function LandingPricing({ t }: LandingPricingProps) {
               </ul>
             </div>
             <div className="relative pt-8">
-              <Link href="/register">
-                <Button size="lg" className="w-full">
-                  {t("page.joinForFree")}
-                </Button>
+              <Link
+                href="/register"
+                className={buttonVariants({
+                  size: "lg",
+                  className: "w-full",
+                })}
+              >
+                <span>{t("page.joinForFree")}</span>
               </Link>
             </div>
           </div>
@@ -99,10 +101,15 @@ export function LandingPricing({ t }: LandingPricingProps) {
               </ul>
             </div>
             <div className="pt-8">
-              <Link href="/register">
-                <Button variant="outline" size="lg" className="w-full">
-                  {t("page.getPremium")}
-                </Button>
+              <Link
+                href="/register"
+                className={buttonVariants({
+                  variant: "outline",
+                  size: "lg",
+                  className: "w-full",
+                })}
+              >
+                <span>{t("page.getPremium")}</span>
               </Link>
             </div>
           </div>

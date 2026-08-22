@@ -69,7 +69,8 @@ export default function PrintCardPage() {
             variant="ghost" 
             size="icon" 
             onClick={handleClose} 
-            className="h-8 w-8 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full"
+            aria-label="Close print preview"
+            className="h-8 w-8 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full cursor-pointer"
           >
             <X className="h-4 w-4" />
           </Button>

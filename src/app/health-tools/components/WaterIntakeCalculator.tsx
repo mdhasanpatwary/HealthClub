@@ -96,7 +96,11 @@ export function WaterIntakeCalculator() {
               <Label className="text-xs font-semibold">
                 {isEn ? "Daily Physical Activity" : "দৈনিক কাজের / শারীরিক সক্রিয়তার মাত্রা"}
               </Label>
-              <div className="grid grid-cols-3 gap-2">
+              <div
+                role="radiogroup"
+                aria-label={isEn ? "Physical activity level" : "শারীরিক সক্রিয়তার মাত্রা"}
+                className="grid grid-cols-3 gap-2"
+              >
                 {[
                   { id: "sedentary", bn: "স্বাভাবিক / কম", en: "Light" },
                   { id: "moderate", bn: "মাঝারি পরিশ্রম", en: "Moderate" },
@@ -104,9 +108,11 @@ export function WaterIntakeCalculator() {
                 ].map((item) => (
                   <button
                     type="button"
+                    role="radio"
+                    aria-checked={activityLevel === item.id}
                     key={item.id}
                     onClick={() => setActivityLevel(item.id as typeof activityLevel)}
-                    className={`py-2 px-1 text-xs font-bold rounded-xl border transition-all text-center ${
+                    className={`py-2 px-1 text-xs font-bold rounded-xl border transition-all text-center cursor-pointer ${
                       activityLevel === item.id
                         ? "bg-cyan-600 text-white border-cyan-600 shadow-xs"
                         : "bg-background hover:bg-muted text-muted-foreground border-border"
@@ -123,11 +129,17 @@ export function WaterIntakeCalculator() {
               <Label className="text-xs font-semibold">
                 {isEn ? "Climate / Season" : "আবহাওয়া ও পরিবেশ"}
               </Label>
-              <div className="grid grid-cols-2 gap-2">
+              <div
+                role="radiogroup"
+                aria-label={isEn ? "Climate and season" : "আবহাওয়া ও পরিবেশ"}
+                className="grid grid-cols-2 gap-2"
+              >
                 <button
                   type="button"
+                  role="radio"
+                  aria-checked={weather === "normal"}
                   onClick={() => setWeather("normal")}
-                  className={`py-2 text-xs font-bold rounded-xl border transition-all ${
+                  className={`py-2 text-xs font-bold rounded-xl border transition-all cursor-pointer ${
                     weather === "normal"
                       ? "bg-cyan-600 text-white border-cyan-600 shadow-xs"
                       : "bg-background hover:bg-muted text-muted-foreground border-border"
@@ -137,8 +149,10 @@ export function WaterIntakeCalculator() {
                 </button>
                 <button
                   type="button"
+                  role="radio"
+                  aria-checked={weather === "hot"}
                   onClick={() => setWeather("hot")}
-                  className={`py-2 text-xs font-bold rounded-xl border transition-all ${
+                  className={`py-2 text-xs font-bold rounded-xl border transition-all cursor-pointer ${
                     weather === "hot"
                       ? "bg-cyan-600 text-white border-cyan-600 shadow-xs"
                       : "bg-background hover:bg-muted text-muted-foreground border-border"
@@ -150,12 +164,19 @@ export function WaterIntakeCalculator() {
             </div>
 
             <div className="flex gap-2 pt-2">
-              <Button type="submit" className="flex-1 bg-cyan-600 hover:bg-cyan-700 text-white font-bold">
+              <Button type="submit" className="flex-1 bg-cyan-600 hover:bg-cyan-700 text-white font-bold cursor-pointer">
                 <Droplet className="mr-2 h-4 w-4 fill-white" />
                 {isEn ? "Calculate Water" : "পানির পরিমাণ হিসেব করুন"}
               </Button>
               {result && (
-                <Button type="button" variant="outline" onClick={handleReset} size="icon">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleReset}
+                  size="icon"
+                  aria-label={isEn ? "Reset calculator" : "ক্যালকুলেটর রিসেট করুন"}
+                  className="cursor-pointer"
+                >
                   <RotateCcw className="h-4 w-4" />
                 </Button>
               )}

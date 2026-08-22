@@ -94,11 +94,12 @@ function ForgotPasswordForm() {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5">
+                <label htmlFor="forgot-email" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
                   <Mail className="h-3.5 w-3.5 text-primary" />
                   নিবন্ধিত ইমেইল অ্যাড্রেস
                 </label>
                 <Input
+                  id="forgot-email"
                   type="email"
                   required
                   value={email}

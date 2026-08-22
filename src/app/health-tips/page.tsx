@@ -8,7 +8,7 @@ import { HealthTipsFAQ } from "./components/HealthTipsFAQ";
 import { HEALTH_TIPS_FAQS } from "@/data/health-tips/healthTipsFaqs";
 import { MedicalDisclaimer } from "./components/MedicalDisclaimer";
 import { BookOpen, Stethoscope, ArrowRight, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { getAllHealthTipsAction } from "@/app/actions/healthTipsAdminActions";
 import { SITE_URL } from "@/lib/siteConfig";
 
@@ -157,7 +157,7 @@ export default async function HealthTipsPage() {
       </div>
 
       {/* Main Content Sections */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12 sm:space-y-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12 sm:space-y-16">
         {/* Quick Emergency & Symptom Decision Matrix */}
         <HealthTipsQuickMatrix />
 
@@ -192,17 +192,20 @@ export default async function HealthTipsPage() {
               </p>
             </div>
           </div>
-          <Link href="/consultants" className="shrink-0 w-full sm:w-auto">
-            <Button className="w-full sm:w-auto font-bold h-11 px-6 rounded-xl cursor-pointer">
-              {isEn ? "Find Specialist Doctors" : "ডাক্তারদের তালিকা দেখুন"}
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+          <Link
+            href="/consultants"
+            className={buttonVariants({
+              className: "shrink-0 w-full sm:w-auto font-bold h-11 px-6 rounded-xl cursor-pointer",
+            })}
+          >
+            <span>{isEn ? "Find Specialist Doctors" : "ডাক্তারদের তালিকা দেখুন"}</span>
+            <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </div>
 
         {/* Medical E-E-A-T Disclaimer */}
         <MedicalDisclaimer />
-      </main>
+      </div>
     </div>
   );
 }

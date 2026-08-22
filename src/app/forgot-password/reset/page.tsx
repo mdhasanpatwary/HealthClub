@@ -88,8 +88,11 @@ function ResetPasswordForm() {
       <CardContent className="space-y-6">
         <form onSubmit={handleReset} className="space-y-4">
           <div className="space-y-2">
-            <label className="text-xs font-semibold text-secondary">ভেরিফিকেশন কোড (OTP) *</label>
+            <label htmlFor="reset-code" className="text-xs font-semibold text-secondary cursor-pointer">
+              ভেরিফিকেশন কোড (OTP) *
+            </label>
             <Input
+              id="reset-code"
               type="text"
               required
               maxLength={6}
@@ -101,11 +104,12 @@ function ResetPasswordForm() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-semibold text-secondary flex items-center gap-1">
+            <label htmlFor="reset-new-password" className="text-xs font-semibold text-secondary flex items-center gap-1 cursor-pointer">
               <Lock className="h-3.5 w-3.5 text-primary" />
               নতুন পাসওয়ার্ড *
             </label>
             <Input
+              id="reset-new-password"
               type="password"
               required
               value={newPassword}
@@ -116,11 +120,12 @@ function ResetPasswordForm() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-semibold text-secondary flex items-center gap-1">
+            <label htmlFor="reset-confirm-password" className="text-xs font-semibold text-secondary flex items-center gap-1 cursor-pointer">
               <Lock className="h-3.5 w-3.5 text-primary" />
               নতুন পাসওয়ার্ড নিশ্চিত করুন *
             </label>
             <Input
+              id="reset-confirm-password"
               type="password"
               required
               value={confirmPassword}

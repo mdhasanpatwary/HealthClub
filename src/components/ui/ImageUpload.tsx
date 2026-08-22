@@ -106,7 +106,7 @@ export function ImageUpload({ value, onChange, label, fallbackType = 'user' }: I
           {value ? (
             <Image
               src={value}
-              alt="Preview"
+              alt={label ? `${label} Preview` : "Image Preview"}
               fill
               unoptimized
               className="object-cover object-left-top"
@@ -118,18 +118,21 @@ export function ImageUpload({ value, onChange, label, fallbackType = 'user' }: I
           ) : (
             <User className="h-8 w-8 text-muted-foreground" />
           )}
-          <div 
+          <button
+            type="button"
+            aria-label={label ? `${label} পরিবর্তন করুন` : "ছবি আপলোড করুন"}
             onClick={() => fileInputRef.current?.click()}
-            className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer duration-200"
+            className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity cursor-pointer duration-200 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
           >
             <Camera className="h-4 w-4 text-white" />
-          </div>
+          </button>
         </div>
         <div className="flex-1">
           <Input
             ref={fileInputRef}
             type="file"
             accept="image/*"
+            aria-label={label || "ছবি আপলোড করুন"}
             onChange={handleFileChange}
             className="border-border bg-background text-xs cursor-pointer file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
           />

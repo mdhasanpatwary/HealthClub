@@ -7,7 +7,7 @@ import { Menu, X, Languages, Globe, Sun, Moon } from "lucide-react";
 import Image from "next/image";
 import { dbStore } from "@/services/dbStore";
 import { Member, Partner } from "@/services/db";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { useTheme } from "@/components/layout/ThemeProvider";
 import UserDropdown from "./UserDropdown";
@@ -164,19 +164,24 @@ export default function Header() {
               <PartnerDropdown partner={partner} />
             ) : (
               <>
-                <Link href="/login">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-muted-foreground hover:text-foreground rounded-xl font-semibold"
-                  >
-                    {t("layout.header.login")}
-                  </Button>
+                <Link
+                  href="/login"
+                  className={buttonVariants({
+                    variant: "ghost",
+                    size: "sm",
+                    className: "text-muted-foreground hover:text-foreground rounded-xl font-semibold",
+                  })}
+                >
+                  {t("layout.header.login")}
                 </Link>
-                <Link href="/register">
-                  <Button size="sm" className="rounded-xl font-bold">
-                    {t("layout.header.becomeMember")}
-                  </Button>
+                <Link
+                  href="/register"
+                  className={buttonVariants({
+                    size: "sm",
+                    className: "rounded-xl font-bold",
+                  })}
+                >
+                  {t("layout.header.becomeMember")}
                 </Link>
               </>
             )}

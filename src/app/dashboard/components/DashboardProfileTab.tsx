@@ -63,8 +63,9 @@ export function DashboardProfileTab({
           />
 
           <div className="space-y-2">
-            <label className="text-xs font-semibold text-secondary dark:text-white">{t("dashboard.profile.name")}</label>
+            <label htmlFor="profile-name" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("dashboard.profile.name")}</label>
             <Input
+              id="profile-name"
               type="text"
               required
               value={profileName}
@@ -75,8 +76,9 @@ export function DashboardProfileTab({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-secondary dark:text-white">{t("dashboard.profile.phone")}</label>
+              <label htmlFor="profile-phone" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("dashboard.profile.phone")}</label>
               <Input
+                id="profile-phone"
                 type="tel"
                 required
                 value={profilePhone}
@@ -85,8 +87,9 @@ export function DashboardProfileTab({
               />
             </div>
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-secondary dark:text-white">{t("dashboard.profile.email")}</label>
+              <label htmlFor="profile-email" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("dashboard.profile.email")}</label>
               <Input
+                id="profile-email"
                 type="email"
                 value={profileEmail}
                 onChange={(e) => setProfileEmail(e.target.value)}
@@ -96,8 +99,9 @@ export function DashboardProfileTab({
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-semibold text-secondary dark:text-white">{t("dashboard.profile.address")}</label>
+            <label htmlFor="profile-address" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("dashboard.profile.address")}</label>
             <Input
+              id="profile-address"
               type="text"
               value={profileAddress}
               onChange={(e) => setProfileAddress(e.target.value)}
@@ -108,8 +112,9 @@ export function DashboardProfileTab({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-secondary dark:text-white">{t("dashboard.profile.dob")}</label>
+              <label htmlFor="profile-dob" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("dashboard.profile.dob")}</label>
               <Input
+                id="profile-dob"
                 type="date"
                 value={profileBirthDate}
                 onChange={(e) => setProfileBirthDate(e.target.value)}
@@ -117,8 +122,9 @@ export function DashboardProfileTab({
               />
             </div>
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-secondary dark:text-white">{t("dashboard.profile.profession")}</label>
+              <label htmlFor="profile-profession" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("dashboard.profile.profession")}</label>
               <Input
+                id="profile-profession"
                 type="text"
                 value={profileProfession}
                 onChange={(e) => setProfileProfession(e.target.value)}

@@ -341,7 +341,7 @@ export default async function EmergencyPage() {
       </header>
 
       {/* Main Content Area */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-12 sm:space-y-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-12 sm:space-y-16">
         
         {/* 1. Interactive Directory Component (Blood Donors, Ambulances, Hotlines) */}
         <section aria-labelledby="emergency-directory-heading" className="space-y-4">
@@ -367,7 +367,7 @@ export default async function EmergencyPage() {
         {/* 5. Emergency Community Collaborations & Multi-Pathway CTA */}
         <CommunityNetworkCTA />
 
-      </main>
+      </div>
     </div>
   );
 }

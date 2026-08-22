@@ -14,7 +14,7 @@ import {
   Check,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatNum, Locale } from "@/lib/i18n";
 import {
@@ -195,33 +195,36 @@ export function NotificationCard({
           <Link
             href={item.actionUrl}
             onClick={() => onMarkRead(item.id)}
+            className={buttonVariants({
+              size: "sm",
+              className: "rounded-xl text-xs font-bold gap-1.5 shadow-2xs cursor-pointer",
+            })}
           >
-            <Button
-              size="sm"
-              className="rounded-xl text-xs font-bold gap-1.5 shadow-2xs cursor-pointer"
-            >
-              <span>{actionLabel}</span>
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Button>
+            <span>{actionLabel}</span>
+            <ArrowRight className="h-3.5 w-3.5" />
           </Link>
 
           {isRead ? (
             <Button
+              type="button"
               variant="ghost"
               size="icon-sm"
               onClick={() => onDismiss(item.id)}
               className="rounded-xl text-muted-foreground hover:text-rose-600 cursor-pointer"
               title={dismissText}
+              aria-label={`${dismissText}: ${title}`}
             >
               <Trash2 className="h-3.5 w-3.5" />
             </Button>
           ) : (
             <Button
+              type="button"
               variant="outline"
               size="icon-sm"
               onClick={() => onMarkRead(item.id)}
               className="rounded-xl text-muted-foreground hover:text-foreground cursor-pointer"
               title={markAsReadText}
+              aria-label={`${markAsReadText}: ${title}`}
             >
               <Check className="h-3.5 w-3.5" />
             </Button>

@@ -14,7 +14,7 @@ export default function HealthToolsLoading() {
       </div>
 
       {/* Main Hub Tabs Skeleton */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-12">
         <div className="flex justify-center">
           <Skeleton className="h-12 w-full max-w-xl rounded-2xl" />
         </div>
@@ -47,7 +47,7 @@ export default function HealthToolsLoading() {
             </div>
           </Card>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

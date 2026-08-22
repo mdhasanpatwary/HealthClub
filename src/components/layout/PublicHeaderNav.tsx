@@ -24,10 +24,11 @@ export default function PublicHeaderNav() {
     isActive("/emergency") || isActive("/health-tools") || isActive("/health-tips");
 
   return (
-    <nav className="hidden min-[992px]:flex items-center space-x-1">
+    <nav aria-label="Main Navigation" className="hidden min-[992px]:flex items-center space-x-1">
       {/* 1. Home */}
       <Link
         href="/"
+        aria-current={isActive("/") ? "page" : undefined}
         className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
           isActive("/")
             ? "text-primary font-bold"
@@ -43,6 +44,7 @@ export default function PublicHeaderNav() {
       {/* 2. Consultants / Doctors */}
       <Link
         href="/consultants"
+        aria-current={isActive("/consultants") ? "page" : undefined}
         className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
           isActive("/consultants")
             ? "text-primary font-bold"
@@ -58,6 +60,7 @@ export default function PublicHeaderNav() {
       {/* 3. Partner Hospitals */}
       <Link
         href="/partner-hospitals"
+        aria-current={isActive("/partner-hospitals") ? "page" : undefined}
         className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
           isActive("/partner-hospitals")
             ? "text-primary font-bold"
@@ -92,6 +95,7 @@ export default function PublicHeaderNav() {
           <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
             <Link
               href="/emergency"
+              aria-current={isActive("/emergency") ? "page" : undefined}
               className="flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 hover:bg-rose-500/10 dark:hover:bg-rose-950/40 text-foreground group"
             >
               <div className="h-8 w-8 rounded-xl bg-rose-500/15 dark:bg-rose-500/25 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
@@ -111,6 +115,7 @@ export default function PublicHeaderNav() {
           <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
             <Link
               href="/health-tools"
+              aria-current={isActive("/health-tools") ? "page" : undefined}
               className="flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 hover:bg-cyan-500/10 dark:hover:bg-cyan-950/40 text-foreground group"
             >
               <div className="h-8 w-8 rounded-xl bg-cyan-500/15 dark:bg-cyan-500/25 text-cyan-600 dark:text-cyan-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
@@ -130,6 +135,7 @@ export default function PublicHeaderNav() {
           <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
             <Link
               href="/health-tips"
+              aria-current={isActive("/health-tips") ? "page" : undefined}
               className="flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 hover:bg-primary/10 dark:hover:bg-primary/20 text-foreground group"
             >
               <div className="h-8 w-8 rounded-xl bg-primary/15 dark:bg-primary/25 text-primary flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
@@ -151,6 +157,7 @@ export default function PublicHeaderNav() {
       {/* 5. Membership */}
       <Link
         href="/membership"
+        aria-current={isActive("/membership") ? "page" : undefined}
         className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
           isActive("/membership")
             ? "text-primary font-bold"
@@ -166,6 +173,7 @@ export default function PublicHeaderNav() {
       {/* 6. Contact */}
       <Link
         href="/contact"
+        aria-current={isActive("/contact") ? "page" : undefined}
         className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
           isActive("/contact")
             ? "text-primary font-bold"

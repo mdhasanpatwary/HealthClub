@@ -25,7 +25,7 @@ export default function ArticleDetailLoading() {
       </div>
 
       {/* Main Content Area Skeleton */}
-      <main className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Key Takeaways Box Skeleton */}
         <div className="p-5 sm:p-6 rounded-3xl bg-primary/5 border border-primary/20 space-y-3">
           <Skeleton className="h-5 w-48 rounded-md" />
@@ -74,7 +74,7 @@ export default function ArticleDetailLoading() {
             ))}
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

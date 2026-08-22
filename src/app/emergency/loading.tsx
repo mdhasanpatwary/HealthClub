@@ -19,7 +19,7 @@ export default function EmergencyLoading() {
       </div>
 
       {/* Main Content Skeleton */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-8">
         {/* Tab Switcher Skeleton */}
         <Skeleton className="h-12 w-full max-w-xl mx-auto rounded-2xl" />
 
@@ -64,7 +64,7 @@ export default function EmergencyLoading() {
             </Card>
           ))}
         </div>
-      </main>
+      </div>
     </div>
   );
 }

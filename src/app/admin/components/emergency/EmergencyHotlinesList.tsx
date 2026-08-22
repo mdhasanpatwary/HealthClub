@@ -108,18 +108,22 @@ export function EmergencyHotlinesList({
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
                       <Button
+                        type="button"
                         variant="ghost"
                         size="icon-sm"
                         onClick={() => onEdit(h)}
-                        className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                        aria-label={isEn ? `Edit hotline ${h.titleEn}` : `হটলাইন ${h.titleBn} এর তথ্য এডিট করুন`}
+                        className="h-7 w-7 text-muted-foreground hover:text-foreground cursor-pointer"
                       >
                         <Edit3 className="h-3.5 w-3.5" />
                       </Button>
                       <Button
+                        type="button"
                         variant="ghost"
                         size="icon-sm"
                         onClick={() => onDelete(h.id, isEn ? h.titleEn : h.titleBn)}
-                        className="h-7 w-7 text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30"
+                        aria-label={isEn ? `Delete hotline ${h.titleEn}` : `হটলাইন ${h.titleBn} ডিলিট করুন`}
+                        className="h-7 w-7 text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </Button>

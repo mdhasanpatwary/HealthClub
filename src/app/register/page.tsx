@@ -100,12 +100,18 @@ function RegisterForm() {
           </p>
         </div>
 
-        {/* Plan selection pills */}
-        <div className="grid grid-cols-2 gap-3">
+        {/* Plan Selector */}
+        <div
+          role="radiogroup"
+          aria-label="মেম্বারশিপ প্ল্যান নির্বাচন"
+          className="grid grid-cols-2 gap-3 mb-6"
+        >
           <button
             type="button"
+            role="radio"
+            aria-checked={formData.tier === "founding"}
             onClick={() => setFormData(p => ({ ...p, tier: "founding" }))}
-            className={`relative p-4 rounded-2xl border-2 text-left transition-all duration-200 ${
+            className={`relative p-4 rounded-2xl border-2 text-left transition-all duration-200 cursor-pointer ${
               formData.tier === "founding"
                 ? "border-primary bg-primary/5 dark:bg-primary/10"
                 : "border-border/60 hover:border-primary/30"
@@ -122,8 +128,10 @@ function RegisterForm() {
           </button>
           <button
             type="button"
+            role="radio"
+            aria-checked={formData.tier === "premium"}
             onClick={() => setFormData(p => ({ ...p, tier: "premium" }))}
-            className={`relative p-4 rounded-2xl border-2 text-left transition-all duration-200 ${
+            className={`relative p-4 rounded-2xl border-2 text-left transition-all duration-200 cursor-pointer ${
               formData.tier === "premium"
                 ? "border-primary bg-primary/5 dark:bg-primary/10"
                 : "border-border/60 hover:border-primary/30"
@@ -149,11 +157,12 @@ function RegisterForm() {
           />
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5">
+            <label htmlFor="reg-name" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
               <User className="h-3.5 w-3.5 text-primary" />
               আপনার নাম *
             </label>
             <Input
+              id="reg-name"
               type="text"
               name="name"
               required
@@ -166,11 +175,12 @@ function RegisterForm() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5">
+              <label htmlFor="reg-phone" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
                 <Phone className="h-3.5 w-3.5 text-primary" />
                 মোবাইল নম্বর *
               </label>
               <Input
+                id="reg-phone"
                 type="tel"
                 name="phone"
                 required
@@ -181,11 +191,12 @@ function RegisterForm() {
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5">
+              <label htmlFor="reg-email" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
                 <Mail className="h-3.5 w-3.5 text-primary" />
                 ইমেইল ঠিকানা *
               </label>
               <Input
+                id="reg-email"
                 type="email"
                 name="email"
                 required
@@ -198,11 +209,12 @@ function RegisterForm() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5">
+            <label htmlFor="reg-address" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
               <MapPin className="h-3.5 w-3.5 text-primary" />
               ঠিকানা *
             </label>
             <Input
+              id="reg-address"
               type="text"
               name="address"
               required
@@ -215,11 +227,12 @@ function RegisterForm() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5">
+              <label htmlFor="reg-birthDate" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
                 <Calendar className="h-3.5 w-3.5 text-primary" />
                 জন্ম তারিখ *
               </label>
               <Input
+                id="reg-birthDate"
                 type="date"
                 name="birthDate"
                 required
@@ -229,11 +242,12 @@ function RegisterForm() {
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5">
+              <label htmlFor="reg-profession" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
                 <Briefcase className="h-3.5 w-3.5 text-primary" />
                 পেশা *
               </label>
               <Input
+                id="reg-profession"
                 type="text"
                 name="profession"
                 required
@@ -246,11 +260,12 @@ function RegisterForm() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5">
+            <label htmlFor="reg-password" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
               <Lock className="h-3.5 w-3.5 text-primary" />
               পাসওয়ার্ড *
             </label>
             <Input
+              id="reg-password"
               type="password"
               name="password"
               required

@@ -8,7 +8,7 @@ import {
   getAllHealthTipsAction,
 } from "@/app/actions/healthTipsAdminActions";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Clock,
@@ -200,7 +200,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
       </div>
 
       {/* Main Content Area */}
-      <main className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Key Takeaways Box */}
         <div className="p-5 sm:p-6 rounded-3xl bg-primary/5 border border-primary/20 space-y-3">
           <div className="flex items-center gap-2 text-primary font-bold text-sm sm:text-base font-heading">
@@ -288,17 +288,20 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
               </p>
             </div>
           </div>
-          <Link href="/consultants" className="shrink-0 w-full sm:w-auto">
-            <Button className="w-full font-bold cursor-pointer">
-              {isEn ? "View Doctors" : "ডাক্তার তালিকা"}
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+          <Link
+            href="/consultants"
+            className={buttonVariants({
+              className: "shrink-0 w-full sm:w-auto font-bold cursor-pointer",
+            })}
+          >
+            <span>{isEn ? "View Doctors" : "ডাক্তার তালিকা"}</span>
+            <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </div>
 
         {/* Medical Disclaimer */}
         <MedicalDisclaimer />
-      </main>
+      </div>
     </div>
   );
 }

@@ -219,7 +219,14 @@ export default function RenewalPage() {
                       <p className="text-[10px] text-slate-400 tracking-wider font-mono">BKASH PERSONAL NUMBER</p>
                       <p className="text-sm font-extrabold text-secondary dark:text-white font-mono">{bkashNumber}</p>
                     </div>
-                    <Button onClick={handleCopyNumber} variant="ghost" size="sm" className="hover:bg-slate-100 text-xs">
+                    <Button
+                      type="button"
+                      onClick={handleCopyNumber}
+                      variant="ghost"
+                      size="sm"
+                      aria-label="Copy bKash personal number"
+                      className="hover:bg-slate-100 text-xs cursor-pointer"
+                    >
                       {copied ? <Check className="h-3.5 w-3.5 text-primary" /> : <Copy className="h-3.5 w-3.5" />}
                       {copied ? t("dashboard.renew.copied") : t("dashboard.renew.copy")}
                     </Button>
@@ -235,11 +242,12 @@ export default function RenewalPage() {
                 {/* Form inputs */}
                 <form onSubmit={handleRenewalSubmit} className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
+                    <label htmlFor="renew-sender" className="text-xs font-semibold text-secondary flex items-center gap-1.5 cursor-pointer">
                       <Smartphone className="h-3.5 w-3.5 text-primary" />
                       {t("dashboard.renew.senderLabel")}
                     </label>
                     <Input
+                      id="renew-sender"
                       type="text"
                       required
                       value={senderNumber}
@@ -250,11 +258,12 @@ export default function RenewalPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
+                    <label htmlFor="renew-txn" className="text-xs font-semibold text-secondary flex items-center gap-1.5 cursor-pointer">
                       <ShieldCheck className="h-3.5 w-3.5 text-primary" />
                       {t("dashboard.renew.txnLabel")}
                     </label>
                     <Input
+                      id="renew-txn"
                       type="text"
                       required
                       value={transactionId}
@@ -265,11 +274,12 @@ export default function RenewalPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
+                    <label htmlFor="renew-profession" className="text-xs font-semibold text-secondary flex items-center gap-1.5 cursor-pointer">
                       <User className="h-3.5 w-3.5 text-primary" />
                       {t("dashboard.renew.professionLabel")}
                     </label>
                     <Input
+                      id="renew-profession"
                       type="text"
                       value={profession}
                       onChange={(e) => setProfession(e.target.value)}
@@ -278,7 +288,7 @@ export default function RenewalPage() {
                     />
                   </div>
 
-                  <Button type="submit" disabled={isSubmitting} size="lg" className="w-full active:scale-[0.99]">
+                  <Button type="submit" disabled={isSubmitting} size="lg" className="w-full active:scale-[0.99] cursor-pointer">
                     {isSubmitting ? t("dashboard.renew.submittingButton") : t("dashboard.renew.submitButton")}
                   </Button>
                 </form>

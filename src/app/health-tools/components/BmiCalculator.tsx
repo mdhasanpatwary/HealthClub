@@ -141,11 +141,17 @@ export function BmiCalculator() {
             </div>
 
             {/* Unit Toggle */}
-            <div className="flex bg-muted p-1 rounded-xl text-xs font-semibold">
+            <div
+              role="radiogroup"
+              aria-label={isEn ? "Height measurement unit" : "উচ্চতা পরিমাপের একক"}
+              className="flex bg-muted p-1 rounded-xl text-xs font-semibold"
+            >
               <button
                 type="button"
+                role="radio"
+                aria-checked={unit === "ft"}
                 onClick={() => setUnit("ft")}
-                className={`px-3 py-1 rounded-lg transition-all ${
+                className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
                   unit === "ft" ? "bg-background text-foreground shadow-xs font-bold" : "text-muted-foreground"
                 }`}
               >
@@ -153,8 +159,10 @@ export function BmiCalculator() {
               </button>
               <button
                 type="button"
+                role="radio"
+                aria-checked={unit === "cm"}
                 onClick={() => setUnit("cm")}
-                className={`px-3 py-1 rounded-lg transition-all ${
+                className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
                   unit === "cm" ? "bg-background text-foreground shadow-xs font-bold" : "text-muted-foreground"
                 }`}
               >
@@ -173,6 +181,8 @@ export function BmiCalculator() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <Input
+                      id="height-feet"
+                      aria-label={isEn ? "Height in feet" : "উচ্চতা ফিটে"}
                       type="number"
                       step="1"
                       min="1"
@@ -185,6 +195,8 @@ export function BmiCalculator() {
                   </div>
                   <div>
                     <Input
+                      id="height-inches"
+                      aria-label={isEn ? "Height in inches" : "উচ্চতা ইঞ্চিতে"}
                       type="number"
                       step="1"
                       min="0"
@@ -239,7 +251,13 @@ export function BmiCalculator() {
                 {isEn ? "Calculate BMI" : "বিএমআই হিসেব করুন"}
               </Button>
               {bmiResult && (
-                <Button type="button" variant="outline" onClick={handleReset} size="icon">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleReset}
+                  size="icon"
+                  aria-label={isEn ? "Reset calculator" : "ক্যালকুলেটর রিসেট করুন"}
+                >
                   <RotateCcw className="h-4 w-4" />
                 </Button>
               )}

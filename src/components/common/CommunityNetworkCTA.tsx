@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Truck, Heart, Building2, PhoneCall, ArrowRight, ShieldCheck, Sparkles } from "lucide-react";
@@ -176,14 +176,15 @@ export default function CommunityNetworkCTA() {
               </ul>
             </div>
 
-            <Link href="/become-partner" className="w-full mt-2 block">
-              <Button
-                variant="outline"
-                className="w-full border-blue-500/30 hover:bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold rounded-xl"
-              >
-                <span>{isEn ? "Partner Application" : "পার্টনার আবেদন ফরম"}</span>
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+            <Link
+              href="/become-partner"
+              className={buttonVariants({
+                variant: "outline",
+                className: "w-full border-blue-500/30 hover:bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold rounded-xl mt-2",
+              })}
+            >
+              <span>{isEn ? "Partner Application" : "পার্টনার আবেদন ফরম"}</span>
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </CardContent>
         </Card>

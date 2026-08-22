@@ -217,7 +217,8 @@ export function MembersTab({
                             e.stopPropagation();
                             onEditClick(m);
                           }}
-                          className="h-8 w-8 text-primary hover:text-primary-dark hover:bg-primary-light"
+                          aria-label={isEn ? `Edit ${m.name}` : `${m.name} এর তথ্য এডিট করুন`}
+                          className="h-8 w-8 text-primary hover:text-primary-dark hover:bg-primary-light cursor-pointer"
                         >
                           <Edit3 className="h-4 w-4" />
                         </Button>
@@ -228,7 +229,8 @@ export function MembersTab({
                             e.stopPropagation();
                             onDeleteClick(m.id, m.name);
                           }}
-                          className="h-8 w-8 text-destructive hover:text-rose-600 hover:bg-rose-50"
+                          aria-label={isEn ? `Delete ${m.name}` : `${m.name} ডিলিট করুন`}
+                          className="h-8 w-8 text-destructive hover:text-rose-600 hover:bg-rose-50 cursor-pointer"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>

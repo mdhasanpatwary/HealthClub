@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, TrendingDown, Sparkles, CheckCircle2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 
 export default function SavingsCalculator() {
@@ -49,24 +49,21 @@ export default function SavingsCalculator() {
             </span>
             <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
           </div>
-          <p className="text-[10px] text-muted-foreground">
-            {t("ui.savingscalculator.excluding500AnnualFee")}
-          </p>
         </div>
 
-        {/* Mobile: slider card */}
-        <div className="bg-background dark:bg-slate-900 rounded-2xl border border-border/80 p-5 space-y-5">
-
-          {/* Expense display */}
-          <div>
-            <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+        {/* Mobile: Expense input card */}
+        <div className="bg-background dark:bg-slate-900 rounded-2xl border border-border/80 p-5 space-y-4 shadow-sm">
+          <div className="space-y-1">
+            <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
               {t("ui.savingscalculator.monthlyExpenseLabel")}
             </p>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-3xl font-extrabold text-secondary dark:text-white font-mono tabular-nums">
+            <div className="flex items-baseline gap-2">
+              <span className="text-4xl font-extrabold text-secondary dark:text-white font-mono tabular-nums">
                 ৳{fmt(expense)}
               </span>
-              <span className="text-xs text-muted-foreground">{t("ui.savingscalculator.bdt")}</span>
+              <span className="text-xs text-muted-foreground font-medium">
+                {t("ui.savingscalculator.bdt")}
+              </span>
             </div>
           </div>
 
@@ -79,6 +76,11 @@ export default function SavingsCalculator() {
               step="1000"
               value={expense}
               onChange={(e) => setExpense(Number(e.target.value))}
+              aria-label={t("ui.savingscalculator.monthlyExpenseLabel") || "Monthly Medical Expense"}
+              aria-valuemin={1000}
+              aria-valuemax={50000}
+              aria-valuenow={expense}
+              aria-valuetext={`৳${fmt(expense)} BDT`}
               className="range-slider touch-pan-x"
             />
             <div className="flex justify-between text-[10px] text-muted-foreground font-mono select-none">
@@ -96,6 +98,7 @@ export default function SavingsCalculator() {
                 <button
                   key={val}
                   onClick={() => setExpense(val)}
+                  aria-pressed={expense === val}
                   className={`py-3 rounded-xl text-xs font-bold border transition-all duration-150 cursor-pointer min-h-[44px] ${
                     expense === val
                       ? "bg-primary text-white border-primary shadow-sm"
@@ -148,14 +151,15 @@ export default function SavingsCalculator() {
           </div>
         </div>
 
-        <Link href="/register">
-          <Button
-            size="xl"
-            className="w-full"
-          >
-            {t("ui.savingscalculator.becomeAMemberTodayFree")}
-            <ArrowRight className="h-4 w-4" />
-          </Button>
+        <Link
+          href="/register"
+          className={buttonVariants({
+            size: "xl",
+            className: "w-full",
+          })}
+        >
+          <span>{t("ui.savingscalculator.becomeAMemberTodayFree")}</span>
+          <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
 
@@ -188,6 +192,11 @@ export default function SavingsCalculator() {
                 step="1000"
                 value={expense}
                 onChange={(e) => setExpense(Number(e.target.value))}
+                aria-label={t("ui.savingscalculator.monthlyExpenseLabel") || "Monthly Medical Expense"}
+                aria-valuemin={1000}
+                aria-valuemax={50000}
+                aria-valuenow={expense}
+                aria-valuetext={`৳${fmt(expense)} BDT`}
                 className="range-slider"
               />
               <div className="flex justify-between text-xs text-muted-foreground font-mono select-none">
@@ -196,24 +205,25 @@ export default function SavingsCalculator() {
                 <span>{t("ui.savingscalculator.50000")}</span>
               </div>
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <p className="text-xs text-muted-foreground">{t("ui.savingscalculator.quickSelect")}</p>
-            <div className="flex flex-wrap gap-2">
-              {presets.map((val) => (
-                <button
-                  key={val}
-                  onClick={() => setExpense(val)}
-                  className={`px-4 py-2 rounded-full text-xs font-bold border transition-all duration-150 cursor-pointer ${
-                    expense === val
-                      ? "bg-primary text-white border-primary shadow-sm"
-                      : "bg-muted/60 text-muted-foreground border-border/60 hover:border-primary/40 hover:text-primary"
-                  }`}
-                >
-                  ৳{fmt(val)}
-                </button>
-              ))}
+            <div className="space-y-2 pt-2">
+              <p className="text-xs text-muted-foreground">{t("ui.savingscalculator.quickSelect")}</p>
+              <div className="flex gap-2">
+                {presets.map((val) => (
+                  <button
+                    key={val}
+                    onClick={() => setExpense(val)}
+                    aria-pressed={expense === val}
+                    className={`flex-1 py-2 rounded-xl text-xs font-bold border transition-all duration-150 cursor-pointer ${
+                      expense === val
+                        ? "bg-primary text-white border-primary shadow-sm"
+                        : "bg-muted text-muted-foreground border-border hover:text-foreground"
+                    }`}
+                  >
+                    ৳{fmt(val)}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -228,33 +238,26 @@ export default function SavingsCalculator() {
           </div>
         </div>
 
-        {/* Right: Receipt Breakdown */}
-        <div className="bg-background dark:bg-slate-900 rounded-3xl border border-border/80 shadow-sm overflow-hidden flex flex-col">
-
-          <div className="bg-gradient-to-br from-primary/10 via-emerald-500/5 to-transparent dark:from-primary/15 dark:via-emerald-500/10 p-7 border-b border-border/60">
-            <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">
-              {t("ui.savingscalculator.youSaveLabel")}
-            </p>
-            <div className="flex items-baseline gap-2">
-              <span className="text-5xl font-extrabold text-primary font-mono tabular-nums leading-none">
-                ৳{fmt(netSavings)}
-              </span>
-              <CheckCircle2 className="h-6 w-6 text-primary mb-1" />
+        {/* Right: Output Receipt */}
+        <div className="bg-background dark:bg-slate-900 rounded-3xl border border-border/80 shadow-sm flex flex-col justify-between overflow-hidden">
+          <div className="p-7 space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-border">
+              <div>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  {t("ui.savingscalculator.savingsProjection")}
+                </p>
+                <p className="font-heading text-lg font-bold text-secondary dark:text-white mt-0.5">
+                  {t("ui.savingscalculator.estimated1YearSavings")}
+                </p>
+              </div>
+              <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                <TrendingDown className="h-5 w-5" />
+              </div>
             </div>
-            <p className="text-xs text-muted-foreground mt-2">
-              {t("ui.savingscalculator.excluding500AnnualFee")}
-            </p>
-          </div>
 
-          <div className="flex-1 p-6 space-y-0">
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2">
-              <TrendingDown className="h-3.5 w-3.5" />
-              {t("ui.savingscalculator.breakdownTitle")}
-            </p>
-
-            <div className="space-y-0 font-mono text-sm">
+            <div className="font-mono space-y-0 text-sm">
               <div className="flex items-center justify-between py-3 border-b border-dashed border-border/60">
-                <span className="text-secondary/80 dark:text-slate-300 text-sm">
+                <span className="text-muted-foreground">
                   {t("ui.savingscalculator.annualExpenseRow")}
                 </span>
                 <span className="font-semibold text-secondary dark:text-white tabular-nums">
@@ -262,7 +265,7 @@ export default function SavingsCalculator() {
                 </span>
               </div>
               <div className="flex items-center justify-between py-3 border-b border-dashed border-border/60">
-                <span className="text-emerald-600 dark:text-emerald-400 text-sm font-medium">
+                <span className="text-emerald-600 dark:text-emerald-400 font-medium">
                   {t("ui.savingscalculator.discountRow")}
                 </span>
                 <span className="font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
@@ -270,14 +273,14 @@ export default function SavingsCalculator() {
                 </span>
               </div>
               <div className="flex items-center justify-between py-3 border-b border-border/60">
-                <span className="text-rose-500 dark:text-rose-400 text-sm">
+                <span className="text-rose-500 dark:text-rose-400">
                   {t("ui.savingscalculator.membershipFeeRow")}
                 </span>
                 <span className="font-semibold text-rose-500 dark:text-rose-400 tabular-nums">
                   − ৳{fmt(membershipFee)}
                 </span>
               </div>
-              <div className="flex items-center justify-between py-4 rounded-xl bg-primary/5 dark:bg-primary/10 border border-primary/20 px-3 mt-2">
+              <div className="flex items-center justify-between py-4 rounded-xl bg-primary/5 dark:bg-primary/10 border border-primary/20 px-3 mt-4">
                 <span className="font-bold text-primary text-base">
                   ✅ {t("ui.savingscalculator.netSavingsRow")}
                 </span>
@@ -293,14 +296,15 @@ export default function SavingsCalculator() {
           </div>
 
           <div className="p-6 pt-0">
-            <Link href="/register">
-              <Button
-                size="xl"
-                className="w-full"
-              >
-                {t("ui.savingscalculator.becomeAMemberTodayFree")}
-                <ArrowRight className="h-4 w-4" />
-              </Button>
+            <Link
+              href="/register"
+              className={buttonVariants({
+                size: "xl",
+                className: "w-full",
+              })}
+            >
+              <span>{t("ui.savingscalculator.becomeAMemberTodayFree")}</span>
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>

@@ -69,11 +69,12 @@ export default function PartnerLoginPage() {
         <CardContent className="space-y-6">
           <form onSubmit={handlePartnerLogin} className="space-y-4">
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
+              <label htmlFor="partner-identifier" className="text-xs font-semibold text-secondary flex items-center gap-1.5 cursor-pointer">
                 <Building2 className="h-3.5 w-3.5 text-primary" />
                 পার্টনার ইমেইল বা মোবাইল নম্বর
               </label>
               <Input
+                id="partner-identifier"
                 type="text"
                 required
                 value={identifier}
@@ -85,7 +86,7 @@ export default function PartnerLoginPage() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
+                <label htmlFor="partner-password" className="text-xs font-semibold text-secondary flex items-center gap-1.5 cursor-pointer">
                   <Lock className="h-3.5 w-3.5 text-primary" />
                   পাসওয়ার্ড
                 </label>
@@ -94,6 +95,7 @@ export default function PartnerLoginPage() {
                 </Link>
               </div>
               <Input
+                id="partner-password"
                 type="password"
                 required
                 value={password}

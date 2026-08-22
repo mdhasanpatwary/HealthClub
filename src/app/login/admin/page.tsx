@@ -68,11 +68,12 @@ export default function AdminLoginPage() {
         <CardContent className="space-y-6">
           <form onSubmit={handleAdminLogin} className="space-y-4">
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
+              <label htmlFor="admin-identifier" className="text-xs font-semibold text-secondary flex items-center gap-1.5 cursor-pointer">
                 <Shield className="h-3.5 w-3.5 text-primary" />
                 এডমিন ইমেইল বা মোবাইল নম্বর
               </label>
               <Input
+                id="admin-identifier"
                 type="text"
                 required
                 value={identifier}
@@ -83,11 +84,12 @@ export default function AdminLoginPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
+              <label htmlFor="admin-password" className="text-xs font-semibold text-secondary flex items-center gap-1.5 cursor-pointer">
                 <Lock className="h-3.5 w-3.5 text-primary" />
                 পাসওয়ার্ড
               </label>
               <Input
+                id="admin-password"
                 type="password"
                 required
                 value={password}

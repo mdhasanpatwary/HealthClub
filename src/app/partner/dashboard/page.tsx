@@ -272,13 +272,14 @@ export default function PartnerDashboardPage() {
                   <Input
                     type="text"
                     required
+                    aria-label="মেম্বার আইডি লিখুন"
                     value={memberId}
                     onChange={(e) => setMemberId(e.target.value)}
                     placeholder="যেমন: HC-2026-F578E"
                     className="pl-10 h-11 border-border"
                   />
                 </div>
-                <Button type="submit" disabled={loadingVerify} className="h-11 bg-secondary text-white hover:bg-slate-800">
+                <Button type="submit" disabled={loadingVerify} className="h-11 bg-secondary text-white hover:bg-slate-800 cursor-pointer">
                   {loadingVerify ? "যাচাই হচ্ছে..." : "যাচাই করুন"}
                 </Button>
               </form>
@@ -289,7 +290,7 @@ export default function PartnerDashboardPage() {
                   <div className="flex items-start gap-4">
                     {verifiedMember.profilePictureUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={verifiedMember.profilePictureUrl} alt="" className="h-14 w-14 rounded-full object-cover object-left-top border border-border shadow-sm" />
+                      <img src={verifiedMember.profilePictureUrl} alt={verifiedMember.name} className="h-14 w-14 rounded-full object-cover object-left-top border border-border shadow-sm" />
                     ) : (
                       <div className="h-14 w-14 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-500 font-bold uppercase border border-border">
                         {verifiedMember.name.substring(0, 2)}
@@ -334,11 +335,12 @@ export default function PartnerDashboardPage() {
                   {!verifiedMember.isExpired && verifiedMember.status === "active" ? (
                     <form onSubmit={handleTransactionSubmit} className="pt-4 border-t border-border space-y-4">
                       <div className="space-y-2">
-                        <label className="text-xs font-semibold text-secondary flex items-center gap-1.5">
+                        <label htmlFor="partner-bill-amount" className="text-xs font-semibold text-secondary flex items-center gap-1.5 cursor-pointer">
                           <Receipt className="h-3.5 w-3.5 text-primary" />
                           মোট বিলের পরিমাণ (টাকা)
                         </label>
                         <Input
+                          id="partner-bill-amount"
                           type="number"
                           required
                           min="1"

@@ -135,8 +135,9 @@ export default function ContactForm() {
               </h3>
               
               <div className="space-y-2">
-                <label className="text-xs font-semibold text-secondary dark:text-white">{t("landing.contactform.yourName")}</label>
+                <label htmlFor="contact-name" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("landing.contactform.yourName")}</label>
                 <Input
+                  id="contact-name"
                   type="text"
                   name="name"
                   required
@@ -149,8 +150,9 @@ export default function ContactForm() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary dark:text-white">{t("landing.contactform.mobileNumber")}</label>
+                  <label htmlFor="contact-phone" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("landing.contactform.mobileNumber")}</label>
                   <Input
+                    id="contact-phone"
                     type="tel"
                     name="phone"
                     required
@@ -161,8 +163,9 @@ export default function ContactForm() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-secondary dark:text-white">{t("landing.contactform.emailAddress")}</label>
+                  <label htmlFor="contact-email" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("landing.contactform.emailAddress")}</label>
                   <Input
+                    id="contact-email"
                     type="email"
                     name="email"
                     value={formData.email}
@@ -174,15 +177,16 @@ export default function ContactForm() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-semibold text-secondary dark:text-white">{t("landing.contactform.yourMessage")}</label>
+                <label htmlFor="contact-message" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("landing.contactform.yourMessage")}</label>
                 <textarea
+                  id="contact-message"
                   name="message"
                   required
                   rows={4}
                   value={formData.message}
                   onChange={handleChange}
                   placeholder={t("landing.contactform.writeYourQuestionOrMessage")}
-                  className="w-full rounded-md border border-border bg-background p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                  className="w-full rounded-md border border-border bg-background p-3 text-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary"
                 />
               </div>
 

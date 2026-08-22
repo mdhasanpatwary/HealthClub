@@ -232,8 +232,9 @@ export function EmergencyDonorDialog({
               type="button"
               role="switch"
               aria-checked={isAvailable}
+              aria-label={isEn ? "Availability Status" : "রক্তদানের জন্য প্রস্তুত"}
               onClick={() => setIsAvailable(!isAvailable)}
-              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary ${
                 isAvailable ? "bg-emerald-600" : "bg-muted-foreground/30"
               }`}
             >

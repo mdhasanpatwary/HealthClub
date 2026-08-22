@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Heart, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import HeroCardWrapper from "./HeroCardWrapper";
 import type { Member } from "@/services/db";
 
@@ -47,17 +47,26 @@ export function LandingHero({ sampleMember, t }: LandingHeroProps) {
 
             {/* CTA Group */}
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
-              <Link href="/register" className="w-full sm:w-auto">
-                <Button size="xl" className="w-full sm:w-auto">
-                  {t("page.joinNowFree")}
-                  <ArrowRight className="h-5 w-5" />
-                </Button>
+              <Link
+                href="/register"
+                className={buttonVariants({
+                  size: "xl",
+                  className: "w-full sm:w-auto",
+                })}
+              >
+                <span>{t("page.joinNowFree")}</span>
+                <ArrowRight className="h-5 w-5" />
               </Link>
 
-              <Link href="/partner-hospitals" className="w-full sm:w-auto">
-                <Button variant="outline" size="xl" className="w-full sm:w-auto">
-                  {t("page.partnerHospitals")}
-                </Button>
+              <Link
+                href="/partner-hospitals"
+                className={buttonVariants({
+                  variant: "outline",
+                  size: "xl",
+                  className: "w-full sm:w-auto",
+                })}
+              >
+                <span>{t("page.partnerHospitals")}</span>
               </Link>
             </div>
 

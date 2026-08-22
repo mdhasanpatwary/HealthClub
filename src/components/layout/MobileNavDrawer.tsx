@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -27,7 +28,7 @@ import {
 } from "lucide-react";
 import { Member, Partner } from "@/services/db";
 import { dbStore } from "@/services/dbStore";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { useTheme } from "@/components/layout/ThemeProvider";
 import { formatNum } from "@/lib/i18n";
@@ -72,6 +73,17 @@ export default function MobileNavDrawer({
     router.push("/");
   };
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   const isActive = (path: string) => {
     if (path === "/" || path === "/admin") return pathname === path;
     return pathname.startsWith(path);
@@ -82,6 +94,9 @@ export default function MobileNavDrawer({
       {/* Mobile Drawer */}
       <div
         id="mobile-menu"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Mobile Navigation Menu"
         className={`fixed inset-0 z-50 min-[992px]:hidden flex flex-col bg-background/98 backdrop-blur-xl transition-all duration-300 ease-in-out ${
           isOpen
             ? "opacity-100 translate-y-0 pointer-events-auto"
@@ -530,30 +545,26 @@ export default function MobileNavDrawer({
                   "healthclubfeni@gmail.com") ? (
                   <Link
                     href="/admin"
-                    className="block w-full"
                     onClick={onClose}
+                    className={buttonVariants({
+                      variant: "outline",
+                      className: "w-full justify-start text-xs border-primary/30 text-primary",
+                    })}
                   >
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start text-xs border-primary/30 text-primary"
-                    >
-                      <LayoutDashboard className="h-4 w-4 mr-2" />
-                      {t("layout.header.adminPanel")}
-                    </Button>
+                    <LayoutDashboard className="h-4 w-4 mr-2" />
+                    <span>{t("layout.header.adminPanel")}</span>
                   </Link>
                 ) : (
                   <Link
                     href="/dashboard"
-                    className="block w-full"
                     onClick={onClose}
+                    className={buttonVariants({
+                      variant: "outline",
+                      className: "w-full justify-start text-xs border-primary/30 text-primary",
+                    })}
                   >
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start text-xs border-primary/30 text-primary"
-                    >
-                      <LayoutDashboard className="h-4 w-4 mr-2" />
-                      {t("layout.header.dashboard")}
-                    </Button>
+                    <LayoutDashboard className="h-4 w-4 mr-2" />
+                    <span>{t("layout.header.dashboard")}</span>
                   </Link>
                 )}
                 <Button
@@ -569,16 +580,14 @@ export default function MobileNavDrawer({
               <div className="pt-2 border-t border-border/60 space-y-2">
                 <Link
                   href="/partner/dashboard"
-                  className="block w-full"
                   onClick={onClose}
+                  className={buttonVariants({
+                    variant: "outline",
+                    className: "w-full justify-start text-xs border-emerald-500/30 text-emerald-600",
+                  })}
                 >
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start text-xs border-emerald-500/30 text-emerald-600"
-                  >
-                    <LayoutDashboard className="h-4 w-4 mr-2" />
-                    ড্যাশবোর্ড
-                  </Button>
+                  <LayoutDashboard className="h-4 w-4 mr-2" />
+                  <span>ড্যাশবোর্ড</span>
                 </Link>
                 <Button
                   variant="ghost"
@@ -591,18 +600,24 @@ export default function MobileNavDrawer({
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-2 pt-2 border-t border-border/60">
-                <Link href="/login" onClick={onClose}>
-                  <Button
-                    variant="outline"
-                    className="w-full text-xs font-semibold"
-                  >
-                    {t("layout.header.login")}
-                  </Button>
+                <Link
+                  href="/login"
+                  onClick={onClose}
+                  className={buttonVariants({
+                    variant: "outline",
+                    className: "w-full text-xs font-semibold",
+                  })}
+                >
+                  {t("layout.header.login")}
                 </Link>
-                <Link href="/register" onClick={onClose}>
-                  <Button className="w-full text-xs font-bold">
-                    {t("layout.header.becomeMember")}
-                  </Button>
+                <Link
+                  href="/register"
+                  onClick={onClose}
+                  className={buttonVariants({
+                    className: "w-full text-xs font-bold",
+                  })}
+                >
+                  {t("layout.header.becomeMember")}
                 </Link>
               </div>
             )}

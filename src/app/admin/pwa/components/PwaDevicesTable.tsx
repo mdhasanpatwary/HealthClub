@@ -136,6 +136,7 @@ export function PwaDevicesTable({ devices }: PwaDevicesTableProps) {
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              aria-label={t("admin.pwa.searchPlaceholder") || "ডিভাইস আইডি, ওএস বা ব্রাউজার খুঁজুন"}
               placeholder={t("admin.pwa.searchPlaceholder") || "ডিভাইস আইডি, ওএস বা ব্রাউজার খুঁজুন..."}
               className="pl-9 h-9 text-xs bg-background"
             />
@@ -143,8 +144,11 @@ export function PwaDevicesTable({ devices }: PwaDevicesTableProps) {
 
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
             <button
+              type="button"
+              role="button"
+              aria-pressed={statusFilter === "all"}
               onClick={() => setStatusFilter("all")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                 statusFilter === "all"
                   ? "bg-primary text-white"
                   : "bg-muted hover:bg-muted/80 text-muted-foreground"
@@ -153,8 +157,11 @@ export function PwaDevicesTable({ devices }: PwaDevicesTableProps) {
               {t("admin.pwa.filterAll") || "সকল"}
             </button>
             <button
+              type="button"
+              role="button"
+              aria-pressed={statusFilter === "active"}
               onClick={() => setStatusFilter("active")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                 statusFilter === "active"
                   ? "bg-emerald-600 text-white"
                   : "bg-muted hover:bg-muted/80 text-muted-foreground"
@@ -163,8 +170,11 @@ export function PwaDevicesTable({ devices }: PwaDevicesTableProps) {
               {t("admin.pwa.filterActive") || "সক্রিয় স্ট্যান্ডঅ্যালোন"}
             </button>
             <button
+              type="button"
+              role="button"
+              aria-pressed={statusFilter === "inactive"}
               onClick={() => setStatusFilter("inactive")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                 statusFilter === "inactive"
                   ? "bg-slate-700 text-white"
                   : "bg-muted hover:bg-muted/80 text-muted-foreground"
@@ -173,8 +183,11 @@ export function PwaDevicesTable({ devices }: PwaDevicesTableProps) {
               {t("admin.pwa.filterInactive") || "নিষ্ক্রিয় / আনইনস্টল"}
             </button>
             <button
+              type="button"
+              role="button"
+              aria-pressed={statusFilter === "browser"}
               onClick={() => setStatusFilter("browser")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                 statusFilter === "browser"
                   ? "bg-blue-600 text-white"
                   : "bg-muted hover:bg-muted/80 text-muted-foreground"
@@ -207,9 +220,11 @@ export function PwaDevicesTable({ devices }: PwaDevicesTableProps) {
                       <div className="flex items-center gap-1.5">
                         <span className="truncate max-w-[130px] sm:max-w-[180px]">{device.id}</span>
                         <button
+                          type="button"
                           onClick={() => handleCopyId(device.id)}
-                          className="p-1 text-muted-foreground hover:text-foreground rounded transition-colors"
+                          className="p-1 text-muted-foreground hover:text-foreground rounded transition-colors cursor-pointer"
                           title="Copy ID"
+                          aria-label={`Copy device ID ${device.id}`}
                         >
                           {copiedId === device.id ? (
                             <Check className="h-3 w-3 text-emerald-500" />

@@ -155,8 +155,6 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   viewportFit: "cover",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#16a34a" },
@@ -212,13 +210,22 @@ export default async function RootLayout({
   return (
     <html lang={locale} className={`${theme} ${inter.variable} ${notoSansBengali.variable}`}>
       <body className="font-sans antialiased bg-background text-foreground min-h-screen flex flex-col">
+        {/* Skip to Main Content Link for Keyboard / Screen Reader users */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:rounded-xl focus:shadow-2xl focus:font-bold focus:outline-hidden focus:ring-2 focus:ring-ring"
+        >
+          {locale === "en" ? "Skip to main content" : "মূল বিষয়বস্তুতে যান"}
+        </a>
         <JsonLd data={globalJsonLd} />
         <ThemeProvider initialTheme={theme}>
           <LanguageProvider initialLocale={locale} initialDict={initialDict}>
             <PwaTracker />
             <GlobalNoticeBanner notice={notice} />
             <Header />
-            <main className="flex-grow">{children}</main>
+            <main id="main-content" tabIndex={-1} className="flex-grow focus:outline-hidden">
+              {children}
+            </main>
             <Footer locale={locale} />
             <BottomNav />
             <InstallAppBanner />

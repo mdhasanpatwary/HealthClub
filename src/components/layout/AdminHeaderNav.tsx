@@ -59,10 +59,11 @@ export default function AdminHeaderNav() {
     pathname.startsWith("/admin/pwa");
 
   return (
-    <nav className="hidden min-[992px]:flex items-center space-x-1">
+    <nav aria-label="Admin Navigation" className="hidden min-[992px]:flex items-center space-x-1">
       {/* 1. Dashboard Link */}
       <Link
         href="/admin"
+        aria-current={pathname === "/admin" ? "page" : undefined}
         className={`relative inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 ${
           pathname === "/admin"
             ? "text-primary font-bold bg-primary/10"

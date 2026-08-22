@@ -95,8 +95,9 @@ export function DoctorDialog({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-secondary">ডাক্তারের নাম *</label>
+              <label htmlFor="admin-doc-name" className="text-xs font-semibold text-secondary cursor-pointer">ডাক্তারের নাম *</label>
               <Input
+                id="admin-doc-name"
                 type="text"
                 required
                 placeholder="যেমন: ডাঃ মোঃ শাহাদাত হোসেন"
@@ -107,11 +108,12 @@ export function DoctorDialog({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-secondary">বিভাগ (Department) *</label>
+              <label htmlFor="admin-doc-dept" className="text-xs font-semibold text-secondary cursor-pointer">বিভাগ (Department) *</label>
               <select
+                id="admin-doc-dept"
                 value={newDoctor.department}
                 onChange={(e) => setNewDoctor({ ...newDoctor, department: e.target.value })}
-                className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary"
               >
                 {DEPT_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -124,8 +126,9 @@ export function DoctorDialog({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-secondary">স্পেশালিটি / পদ *</label>
+              <label htmlFor="admin-doc-specialty" className="text-xs font-semibold text-secondary cursor-pointer">স্পেশালিটি / পদ *</label>
               <Input
+                id="admin-doc-specialty"
                 type="text"
                 required
                 placeholder="যেমন: মেডিসিন ও পরিপাকতন্ত্র বিশেষজ্ঞ"
@@ -136,8 +139,9 @@ export function DoctorDialog({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-secondary">ডিগ্রি ও যোগ্যতা *</label>
+              <label htmlFor="admin-doc-degrees" className="text-xs font-semibold text-secondary cursor-pointer">ডিগ্রি ও যোগ্যতা *</label>
               <Input
+                id="admin-doc-degrees"
                 type="text"
                 required
                 placeholder="যেমন: MBBS, BCS, FCPS (Medicine)"
@@ -149,8 +153,9 @@ export function DoctorDialog({
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-secondary">বর্তমান কর্মস্থল / পদবি *</label>
+            <label htmlFor="admin-doc-designation" className="text-xs font-semibold text-secondary cursor-pointer">বর্তমান কর্মস্থল / পদবি *</label>
             <Input
+              id="admin-doc-designation"
               type="text"
               required
               placeholder="যেমন: সহকারী অধ্যাপক, বিএসএমএমইউ (পিজি হাসপাতাল), ঢাকা"
@@ -162,8 +167,9 @@ export function DoctorDialog({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-secondary">চেম্বারের নাম *</label>
+              <label htmlFor="admin-doc-chambername" className="text-xs font-semibold text-secondary cursor-pointer">চেম্বারের নাম *</label>
               <Input
+                id="admin-doc-chambername"
                 type="text"
                 required
                 placeholder="যেমন: পপুলার ডায়াগনস্টিক সেন্টার"
@@ -174,8 +180,9 @@ export function DoctorDialog({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-secondary">চেম্বারের ঠিকানা *</label>
+              <label htmlFor="admin-doc-chamberaddress" className="text-xs font-semibold text-secondary cursor-pointer">চেম্বারের ঠিকানা *</label>
               <Input
+                id="admin-doc-chamberaddress"
                 type="text"
                 required
                 placeholder="যেমন: মা প্লাজা, শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী"
@@ -188,8 +195,9 @@ export function DoctorDialog({
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-secondary">রোগী দেখার দিন *</label>
+              <label htmlFor="admin-doc-visitingdays" className="text-xs font-semibold text-secondary cursor-pointer">রোগী দেখার দিন *</label>
               <Input
+                id="admin-doc-visitingdays"
                 type="text"
                 required
                 placeholder="যেমন: শনি থেকে বৃহস্পতি"
@@ -200,8 +208,9 @@ export function DoctorDialog({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-secondary">রোগী দেখার সময় *</label>
+              <label htmlFor="admin-doc-visitinghours" className="text-xs font-semibold text-secondary cursor-pointer">রোগী দেখার সময় *</label>
               <Input
+                id="admin-doc-visitinghours"
                 type="text"
                 required
                 placeholder="যেমন: বিকাল ৫:০০ - রাত ৯:০০"
@@ -212,8 +221,9 @@ export function DoctorDialog({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-secondary">রুম নম্বর</label>
+              <label htmlFor="admin-doc-roomno" className="text-xs font-semibold text-secondary cursor-pointer">রুম নম্বর</label>
               <Input
+                id="admin-doc-roomno"
                 type="text"
                 placeholder="যেমন: রুম নং: ২০৩"
                 value={newDoctor.roomNo}
@@ -225,8 +235,9 @@ export function DoctorDialog({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-secondary">সিরিয়াল হটলাইন নম্বর *</label>
+              <label htmlFor="admin-doc-serialphone" className="text-xs font-semibold text-secondary cursor-pointer">সিরিয়াল হটলাইন নম্বর *</label>
               <Input
+                id="admin-doc-serialphone"
                 type="text"
                 required
                 placeholder="যেমন: 01898221111, 01898445555"
@@ -237,8 +248,9 @@ export function DoctorDialog({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-secondary">ভিজিট ফি</label>
+              <label htmlFor="admin-doc-fee" className="text-xs font-semibold text-secondary cursor-pointer">ভিজিট ফি</label>
               <Input
+                id="admin-doc-fee"
                 type="text"
                 placeholder="যেমন: ৳৮০০"
                 value={newDoctor.consultationFee}

@@ -163,8 +163,11 @@ export function EmergencyDirectory({
             {/* Blood Group Filter Pills */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
               <button
+                type="button"
+                role="button"
+                aria-pressed={selectedGroup === "all"}
                 onClick={() => setSelectedGroup("all")}
-                className={`px-3 py-1.5 rounded-full text-xs font-bold shrink-0 transition-all ${
+                className={`px-3 py-1.5 rounded-full text-xs font-bold shrink-0 transition-all cursor-pointer ${
                   selectedGroup === "all"
                     ? "bg-rose-600 text-white shadow-sm"
                     : "bg-muted text-muted-foreground hover:text-foreground"
@@ -174,9 +177,12 @@ export function EmergencyDirectory({
               </button>
               {BLOOD_GROUPS.map((bg) => (
                 <button
+                  type="button"
+                  role="button"
                   key={bg}
+                  aria-pressed={selectedGroup === bg}
                   onClick={() => setSelectedGroup(bg)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold shrink-0 transition-all ${
+                  className={`px-3 py-1.5 rounded-full text-xs font-bold shrink-0 transition-all cursor-pointer ${
                     selectedGroup === bg
                       ? "bg-rose-600 text-white shadow-sm"
                       : "bg-muted text-muted-foreground hover:text-foreground border border-border/50"
@@ -192,6 +198,7 @@ export function EmergencyDirectory({
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
+                  aria-label={isEn ? "Search by donor name" : "নাম দিয়ে রক্তদাতা খুঁজুন"}
                   placeholder={isEn ? "Search by donor name..." : "নাম দিয়ে রক্তদাতা খুঁজুন..."}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -199,9 +206,10 @@ export function EmergencyDirectory({
                 />
               </div>
               <select
+                aria-label={isEn ? "Filter donors by upazila" : "উপজেলা অনুযায়ী ফিল্টার"}
                 value={selectedUpazila}
                 onChange={(e) => setSelectedUpazila(e.target.value)}
-                className="h-10 px-3 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="h-10 px-3 rounded-lg border border-border bg-background text-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/20 cursor-pointer"
               >
                 {UPAZILAS_FENI.map((u) => (
                   <option key={u.id} value={u.id}>
@@ -312,6 +320,11 @@ export function EmergencyDirectory({
             <div className="relative flex-1">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
+                aria-label={
+                  isEn
+                    ? "Search ambulance, driver, area, or phone"
+                    : "অ্যাম্বুলেন্সের নাম, ড্রাইভার, এলাকা বা ফোন নম্বর খুঁজুন"
+                }
                 placeholder={
                   isEn
                     ? "Search ambulance, driver, area, or phone..."
@@ -324,9 +337,10 @@ export function EmergencyDirectory({
             </div>
             <div className="flex items-center gap-2">
               <select
+                aria-label={isEn ? "Filter by ambulance type" : "সকল অ্যাম্বুলেন্সের ধরন"}
                 value={selectedAmbulanceType}
                 onChange={(e) => setSelectedAmbulanceType(e.target.value)}
-                className="h-10 px-3 rounded-xl border border-border bg-background text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="h-10 px-3 rounded-xl border border-border bg-background text-sm font-medium focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/20 cursor-pointer"
               >
                 <option value="all">{isEn ? "All Ambulance Types" : "সকল অ্যাম্বুলেন্সের ধরন"}</option>
                 <option value="ICU">{isEn ? "ICU Life Support" : "আইসিইউ (ICU)"}</option>

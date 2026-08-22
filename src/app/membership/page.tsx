@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Check, Star, ShieldCheck, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
@@ -167,11 +167,15 @@ export default async function MembershipPage() {
               </ul>
             </div>
             <div className="relative pt-8">
-              <Link href="/register">
-                <Button size="lg" className="w-full">
-                  {t("membership.page.joinForFree")}
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
+              <Link
+                href="/register"
+                className={buttonVariants({
+                  size: "lg",
+                  className: "w-full",
+                })}
+              >
+                <span>{t("membership.page.joinForFree")}</span>
+                <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </div>
@@ -207,11 +211,16 @@ export default async function MembershipPage() {
               </ul>
             </div>
             <div className="pt-8">
-              <Link href="/register?plan=premium">
-                <Button variant="outline" size="lg" className="w-full">
-                  {t("membership.page.buyPlan")}
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
+              <Link
+                href="/register?plan=premium"
+                className={buttonVariants({
+                  variant: "outline",
+                  size: "lg",
+                  className: "w-full",
+                })}
+              >
+                <span>{t("membership.page.buyPlan")}</span>
+                <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </div>

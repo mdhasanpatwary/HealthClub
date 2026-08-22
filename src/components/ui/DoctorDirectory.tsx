@@ -73,6 +73,7 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         <Input
           type="text"
+          aria-label={t("consultants.search.placeholder") || "Search doctors by name, specialty, degree, chamber, or serial phone"}
           placeholder={t("consultants.search.placeholder")}
           value={searchQuery}
           onChange={(e) => {
@@ -83,11 +84,13 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
         />
         {searchQuery && (
           <button
+            type="button"
+            aria-label="Clear search"
             onClick={() => {
               setSearchQuery("");
               setVisibleCount(24);
             }}
-            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1"
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 cursor-pointer"
           >
             <X className="h-4 w-4" />
           </button>
@@ -108,7 +111,7 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
               setSelectedDept(e.target.value);
               setVisibleCount(24);
             }}
-            className="w-full appearance-none pl-10 pr-10 py-3 text-sm font-semibold rounded-2xl border border-border/80 bg-background text-foreground shadow-xs focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all cursor-pointer"
+            className="w-full appearance-none pl-10 pr-10 py-3 text-sm font-semibold rounded-2xl border border-border/80 bg-background text-foreground shadow-xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all cursor-pointer"
           >
             {DEPARTMENTS.map((dept) => {
               const count =
@@ -138,11 +141,13 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
           return (
             <button
               key={dept.id}
+              type="button"
+              aria-pressed={isSelected}
               onClick={() => {
                 setSelectedDept(dept.id);
                 setVisibleCount(24);
               }}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap shrink-0 ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                 isSelected
                   ? "bg-primary text-white shadow-sm ring-2 ring-primary/20"
                   : "bg-background hover:bg-muted text-muted-foreground border border-border/70"

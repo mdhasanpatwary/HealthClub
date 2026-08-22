@@ -74,6 +74,11 @@ export function HealthTipsDirectory({
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
+              aria-label={
+                isEn
+                  ? "Search health guides, diseases, symptoms"
+                  : "রোগ, লক্ষণ বা স্বাস্থ্য বিষয়ে খুঁজুন"
+              }
               placeholder={
                 isEn
                   ? "Search health guides, diseases, symptoms..."
@@ -90,7 +95,7 @@ export function HealthTipsDirectory({
               <button
                 type="button"
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
                 aria-label="Clear search"
               >
                 <X className="h-4 w-4" />
@@ -112,12 +117,13 @@ export function HealthTipsDirectory({
               <Filter className="h-3.5 w-3.5 text-primary" />
             </div>
             <select
+              aria-label={isEn ? "Filter health guides by category" : "ক্যাটাগরি অনুযায়ী ফিল্টার"}
               value={selectedCategory}
               onChange={(e) => {
                 setSelectedCategory(e.target.value);
                 setVisibleCount(12);
               }}
-              className="w-full h-11 pl-9 pr-10 text-xs font-bold rounded-xl border border-border/80 bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none shadow-xs"
+              className="w-full h-11 pl-9 pr-10 text-xs font-bold rounded-xl border border-border/80 bg-card text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/20 appearance-none shadow-xs cursor-pointer"
             >
               {HEALTH_CATEGORIES.map((cat) => {
                 const count = categoryCounts[cat.id] || 0;
@@ -142,6 +148,9 @@ export function HealthTipsDirectory({
 
             return (
               <button
+                type="button"
+                role="button"
+                aria-pressed={active}
                 key={cat.id}
                 onClick={() => {
                   setSelectedCategory(cat.id);

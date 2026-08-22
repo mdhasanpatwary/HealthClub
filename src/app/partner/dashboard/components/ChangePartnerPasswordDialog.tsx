@@ -71,8 +71,9 @@ export function ChangePartnerPasswordDialog() {
         <form onSubmit={handleChangePasswordSubmit} className="space-y-4 pt-2">
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-foreground">বর্তমান পাসওয়ার্ড</label>
+            <label htmlFor="partner-current-pw" className="text-xs font-semibold text-foreground cursor-pointer">বর্তমান পাসওয়ার্ড</label>
             <Input
+              id="partner-current-pw"
               type="password"
               required
               placeholder="••••••••"
@@ -83,8 +84,9 @@ export function ChangePartnerPasswordDialog() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-foreground">নতুন পাসওয়ার্ড</label>
+            <label htmlFor="partner-new-pw" className="text-xs font-semibold text-foreground cursor-pointer">নতুন পাসওয়ার্ড</label>
             <Input
+              id="partner-new-pw"
               type="password"
               required
               placeholder="অন্তত ৬ অক্ষর"
@@ -95,8 +97,9 @@ export function ChangePartnerPasswordDialog() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-foreground">নতুন পাসওয়ার্ড পুনরায় লিখুন</label>
+            <label htmlFor="partner-confirm-pw" className="text-xs font-semibold text-foreground cursor-pointer">নতুন পাসওয়ার্ড পুনরায় লিখুন</label>
             <Input
+              id="partner-confirm-pw"
               type="password"
               required
               placeholder="••••••••"

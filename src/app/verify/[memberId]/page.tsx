@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { ShieldCheck, ShieldAlert, ArrowLeft } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { PublicMemberVerification } from "@/services/db";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -235,15 +235,22 @@ export default function VerificationPage() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <Link href="/">
-                <Button className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
-                  {t("pages.verify.goToHome")}
-                </Button>
+              <Link
+                href="/"
+                className={buttonVariants({
+                  className: "w-full bg-primary hover:bg-primary-dark text-white font-semibold",
+                })}
+              >
+                <span>{t("pages.verify.goToHome")}</span>
               </Link>
-              <Link href="/contact">
-                <Button variant="ghost" className="w-full text-primary hover:bg-primary-light">
-                  {t("pages.verify.contactCustomerSupport")}
-                </Button>
+              <Link
+                href="/contact"
+                className={buttonVariants({
+                  variant: "ghost",
+                  className: "w-full text-primary hover:bg-primary-light",
+                })}
+              >
+                <span>{t("pages.verify.contactCustomerSupport")}</span>
               </Link>
             </div>
 
