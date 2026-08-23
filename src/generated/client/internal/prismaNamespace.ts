@@ -386,6 +386,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Member: 'Member',
   Partner: 'Partner',
+  PartnerStaff: 'PartnerStaff',
   Transaction: 'Transaction',
   Doctor: 'Doctor',
   PartnerRequest: 'PartnerRequest',
@@ -408,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "member" | "partner" | "transaction" | "doctor" | "partnerRequest" | "contactMessage" | "systemSetting" | "pwaInstallation" | "memberNotification"
+    modelProps: "member" | "partner" | "partnerStaff" | "transaction" | "doctor" | "partnerRequest" | "contactMessage" | "systemSetting" | "pwaInstallation" | "memberNotification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -557,6 +558,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.PartnerCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.PartnerCountAggregateOutputType> | number
+        }
+      }
+    }
+    PartnerStaff: {
+      payload: Prisma.$PartnerStaffPayload<ExtArgs>
+      fields: Prisma.PartnerStaffFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PartnerStaffFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerStaffPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PartnerStaffFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerStaffPayload>
+        }
+        findFirst: {
+          args: Prisma.PartnerStaffFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerStaffPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PartnerStaffFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerStaffPayload>
+        }
+        findMany: {
+          args: Prisma.PartnerStaffFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerStaffPayload>[]
+        }
+        create: {
+          args: Prisma.PartnerStaffCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerStaffPayload>
+        }
+        createMany: {
+          args: Prisma.PartnerStaffCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PartnerStaffCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerStaffPayload>[]
+        }
+        delete: {
+          args: Prisma.PartnerStaffDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerStaffPayload>
+        }
+        update: {
+          args: Prisma.PartnerStaffUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerStaffPayload>
+        }
+        deleteMany: {
+          args: Prisma.PartnerStaffDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PartnerStaffUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PartnerStaffUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerStaffPayload>[]
+        }
+        upsert: {
+          args: Prisma.PartnerStaffUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerStaffPayload>
+        }
+        aggregate: {
+          args: Prisma.PartnerStaffAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePartnerStaff>
+        }
+        groupBy: {
+          args: Prisma.PartnerStaffGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PartnerStaffGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PartnerStaffCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PartnerStaffCountAggregateOutputType> | number
         }
       }
     }
@@ -1170,12 +1245,32 @@ export const PartnerScalarFieldEnum = {
 export type PartnerScalarFieldEnum = (typeof PartnerScalarFieldEnum)[keyof typeof PartnerScalarFieldEnum]
 
 
+export const PartnerStaffScalarFieldEnum = {
+  id: 'id',
+  partnerId: 'partnerId',
+  name: 'name',
+  username: 'username',
+  phone: 'phone',
+  deskName: 'deskName',
+  password: 'password',
+  role: 'role',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PartnerStaffScalarFieldEnum = (typeof PartnerStaffScalarFieldEnum)[keyof typeof PartnerStaffScalarFieldEnum]
+
+
 export const TransactionScalarFieldEnum = {
   id: 'id',
   memberId: 'memberId',
   memberName: 'memberName',
   partnerId: 'partnerId',
   partnerName: 'partnerName',
+  staffId: 'staffId',
+  staffName: 'staffName',
+  deskName: 'deskName',
   amount: 'amount',
   saved: 'saved',
   date: 'date',
@@ -1485,6 +1580,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   member?: Prisma.MemberOmit
   partner?: Prisma.PartnerOmit
+  partnerStaff?: Prisma.PartnerStaffOmit
   transaction?: Prisma.TransactionOmit
   doctor?: Prisma.DoctorOmit
   partnerRequest?: Prisma.PartnerRequestOmit

@@ -1026,6 +1026,14 @@ export const en = {
     "partner.profile.updateSuccess": "Hospital profile & discounts updated successfully.",
     "partner.profile.updateFailed": "Failed to update hospital profile.",
     "partner.profile.noDepartmentDiscounts": "No department discounts configured yet. Click presets above or add a custom department.",
+    "partner.dashboard.tabs.staff": "Staff & Counters",
+    "partner.staff.title": "Counter & Cashier Staff Accounts",
+    "partner.staff.subtitle": "Manage individual cashier sub-logins for billing desks, pharmacy counters, and track transaction processing per desk.",
+    "partner.staff.addNew": "Add New Cashier / Staff",
+    "partner.staff.kpiTotalStaff": "Total Cashier Staff",
+    "partner.staff.kpiActiveDesks": "Active Desks & Counters",
+    "partner.staff.kpiStaffTxns": "Staff-Processed Txns",
+    "partner.staff.kpiStaffSavings": "Staff Discounts Dispensed",
 } as const;
 
 

@@ -175,7 +175,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Details**: Build partner analytics dashboard with monthly patient volume charts, total discount dispensed, peak visiting days, and downloadable monthly billing statement summaries in CSV/PDF.
 
 
-- [ ] **TODO-37** (2.4): **Partner Multi-Cashier & Counter Staff Accounts**
+- [x] **TODO-37** (2.4): **Partner Multi-Cashier & Counter Staff Accounts**
   - **Files**: `prisma/schema.prisma`, `src/app/actions/partnerStaffActions.ts`, `src/app/partner/dashboard/components/PartnerStaffTab.tsx`, `src/proxy.ts`
   - **Details**: Allow hospital admin accounts to create individual cashier/counter sub-logins with desk identifiers (e.g., "Counter 1 - Billing", "Pharmacy Desk") to track who processed each discount transaction.
 

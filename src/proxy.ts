@@ -57,13 +57,13 @@ export async function proxy(req: NextRequest) {
   if (session?.userId) {
     // 1. Partners cannot access standard user routes (/dashboard or /profile)
     const isUserRoute = ["/dashboard", "/profile"].some((r) => matchRoute(path, r));
-    if (isUserRoute && session.role === "partner") {
+    if (isUserRoute && (session.role === "partner" || session.role === "partner_staff")) {
       return NextResponse.redirect(new URL("/partner/dashboard", req.nextUrl));
     }
 
-    // 2. Only partners can access partner routes
+    // 2. Only partners and partner staff can access partner routes
     const isPartnerRoute = partnerRoutes.some((r) => matchRoute(path, r));
-    if (isPartnerRoute && session.role !== "partner") {
+    if (isPartnerRoute && session.role !== "partner" && session.role !== "partner_staff") {
       if (session.role === "admin") {
         return NextResponse.redirect(new URL("/admin", req.nextUrl));
       }
@@ -73,7 +73,7 @@ export async function proxy(req: NextRequest) {
     // 3. Only admins can access admin routes
     const isAdminRoute = adminRoutes.some((r) => matchRoute(path, r));
     if (isAdminRoute && session.role !== "admin") {
-      if (session.role === "partner") {
+      if (session.role === "partner" || session.role === "partner_staff") {
         return NextResponse.redirect(new URL("/partner/dashboard", req.nextUrl));
       }
       return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
@@ -87,7 +87,7 @@ export async function proxy(req: NextRequest) {
       }
       if (session.role === "admin") {
         return NextResponse.redirect(new URL("/admin", req.nextUrl));
-      } else if (session.role === "partner") {
+      } else if (session.role === "partner" || session.role === "partner_staff") {
         return NextResponse.redirect(new URL("/partner/dashboard", req.nextUrl));
       } else {
         return NextResponse.redirect(new URL("/dashboard", req.nextUrl));

@@ -52,6 +52,11 @@ export type Member = Prisma.MemberModel
  */
 export type Partner = Prisma.PartnerModel
 /**
+ * Model PartnerStaff
+ * 
+ */
+export type PartnerStaff = Prisma.PartnerStaffModel
+/**
  * Model Transaction
  * 
  */

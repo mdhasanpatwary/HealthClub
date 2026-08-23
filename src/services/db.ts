@@ -68,12 +68,31 @@ export interface Partner {
   departmentDiscounts?: string;
 }
 
+export interface PartnerStaff {
+  id: string;
+  partnerId: string;
+  name: string;
+  username: string;
+  phone?: string;
+  deskName: string;
+  role: 'cashier' | 'manager';
+  isActive: boolean;
+  createdAt: string;
+  updatedAt?: string;
+  transactionCount?: number;
+  totalSavedAmount?: number;
+  totalBillAmount?: number;
+}
+
 export interface Transaction {
   id: string;
   memberId: string;
   memberName: string;
   partnerId: string;
   partnerName: string;
+  staffId?: string;
+  staffName?: string;
+  deskName?: string;
   amount: number;
   saved: number;
   date: string;

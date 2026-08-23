@@ -1,5 +1,16 @@
-import { Member, Partner, Transaction, Doctor, PublicMemberVerification } from "./db";
+import { Member, Partner, Transaction, Doctor, PublicMemberVerification, PartnerStaff } from "./db";
 import { safeStorage } from "@/lib/safeStorage";
+import {
+  getPartnerStaffListAction,
+  createPartnerStaffAction,
+  updatePartnerStaffAction,
+  resetPartnerStaffPasswordAction,
+  togglePartnerStaffStatusAction,
+  deletePartnerStaffAction,
+  getCurrentPartnerStaffSessionAction,
+  CreatePartnerStaffInput,
+  UpdatePartnerStaffInput,
+} from "@/app/actions/partnerStaffActions";
 import {
   getPartnersAction,
   getPaginatedPartnersAdminAction,
@@ -87,6 +98,7 @@ const isClient = typeof window !== "undefined";
 const KEYS = {
   CURRENT_USER: "hc_current_user",
   CURRENT_PARTNER: "hc_current_partner",
+  CURRENT_STAFF: "hc_current_staff",
 };
 
 export const dbStore = {
@@ -352,9 +364,28 @@ export const dbStore = {
     }
   },
 
+  getCurrentStaff(): { id: string; name: string; deskName: string; role: string; username: string } | null {
+    return safeStorage.getItem<{ id: string; name: string; deskName: string; role: string; username: string } | null>(
+      KEYS.CURRENT_STAFF,
+      null
+    );
+  },
+
+  setCurrentStaff(staff: { id: string; name: string; deskName: string; role: string; username: string } | null): void {
+    if (isClient) {
+      if (staff) {
+        safeStorage.setItem(KEYS.CURRENT_STAFF, staff);
+      } else {
+        safeStorage.removeItem(KEYS.CURRENT_STAFF);
+      }
+      window.dispatchEvent(new Event("auth-change"));
+    }
+  },
+
   async logoutPartner(): Promise<void> {
     if (isClient) {
       safeStorage.removeItem(KEYS.CURRENT_PARTNER);
+      safeStorage.removeItem(KEYS.CURRENT_STAFF);
       window.dispatchEvent(new Event("auth-change"));
     }
     try {
@@ -362,6 +393,35 @@ export const dbStore = {
     } catch {
       // Ignore client-side cookie clearance errors
     }
+  },
+
+  // --- PARTNER STAFF / CASHIER ACCOUNTS ---
+  async getPartnerStaffList(): Promise<PartnerStaff[]> {
+    return getPartnerStaffListAction();
+  },
+
+  async createPartnerStaff(input: CreatePartnerStaffInput) {
+    return createPartnerStaffAction(input);
+  },
+
+  async updatePartnerStaff(id: string, input: UpdatePartnerStaffInput) {
+    return updatePartnerStaffAction(id, input);
+  },
+
+  async resetPartnerStaffPassword(id: string, newPass: string) {
+    return resetPartnerStaffPasswordAction(id, newPass);
+  },
+
+  async togglePartnerStaffStatus(id: string, isActive: boolean) {
+    return togglePartnerStaffStatusAction(id, isActive);
+  },
+
+  async deletePartnerStaff(id: string) {
+    return deletePartnerStaffAction(id);
+  },
+
+  async getCurrentStaffSession() {
+    return getCurrentPartnerStaffSessionAction();
   },
 
   // --- ANALYTICS & SETTINGS ---

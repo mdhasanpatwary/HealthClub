@@ -1026,5 +1026,13 @@ export const bn = {
     "partner.profile.updateSuccess": "আপনার হাসপাতালের প্রোফাইল ও ডিসকাউন্ট তথ্য সফলভাবে আপডেট করা হয়েছে।",
     "partner.profile.updateFailed": "প্রোফাইল আপডেট করতে সমস্যা হয়েছে।",
     "partner.profile.noDepartmentDiscounts": "কোনো বিভাগভিত্তিক ছাড় যোগ করা হয়নি। উপরের প্রিসেট থেকে ক্লিক করুন অথবা নতুন বিভাগ যোগ করুন।",
+    "partner.dashboard.tabs.staff": "স্টাফ ও কাউন্টার",
+    "partner.staff.title": "কাউন্টার ও ক্যাশিয়ার স্টাফ একাউন্টস",
+    "partner.staff.subtitle": "বিলিং ডেস্ক, ফার্মেসি ও ইমার্জেন্সি কাউন্টারে কর্মরত স্টাফদের স্বতন্ত্র সাব-লগইন পরিচালনা করুন এবং লেনদেন ট্র্যাক করুন।",
+    "partner.staff.addNew": "নতুন স্টাফ / ক্যাশিয়ার যুক্ত করুন",
+    "partner.staff.kpiTotalStaff": "মোট ক্যাশিয়ার স্টাফ",
+    "partner.staff.kpiActiveDesks": "সক্রিয় ডেস্ক ও কাউন্টার",
+    "partner.staff.kpiStaffTxns": "স্টাফদের মোট লেনদেন",
+    "partner.staff.kpiStaffSavings": "প্রদত্ত ডিসকাউন্ট ছাড়",
 } as const;
 

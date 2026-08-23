@@ -42,6 +42,9 @@ export type TransactionMinAggregateOutputType = {
   memberName: string | null
   partnerId: string | null
   partnerName: string | null
+  staffId: string | null
+  staffName: string | null
+  deskName: string | null
   amount: number | null
   saved: number | null
   date: Date | null
@@ -54,6 +57,9 @@ export type TransactionMaxAggregateOutputType = {
   memberName: string | null
   partnerId: string | null
   partnerName: string | null
+  staffId: string | null
+  staffName: string | null
+  deskName: string | null
   amount: number | null
   saved: number | null
   date: Date | null
@@ -66,6 +72,9 @@ export type TransactionCountAggregateOutputType = {
   memberName: number
   partnerId: number
   partnerName: number
+  staffId: number
+  staffName: number
+  deskName: number
   amount: number
   saved: number
   date: number
@@ -90,6 +99,9 @@ export type TransactionMinAggregateInputType = {
   memberName?: true
   partnerId?: true
   partnerName?: true
+  staffId?: true
+  staffName?: true
+  deskName?: true
   amount?: true
   saved?: true
   date?: true
@@ -102,6 +114,9 @@ export type TransactionMaxAggregateInputType = {
   memberName?: true
   partnerId?: true
   partnerName?: true
+  staffId?: true
+  staffName?: true
+  deskName?: true
   amount?: true
   saved?: true
   date?: true
@@ -114,6 +129,9 @@ export type TransactionCountAggregateInputType = {
   memberName?: true
   partnerId?: true
   partnerName?: true
+  staffId?: true
+  staffName?: true
+  deskName?: true
   amount?: true
   saved?: true
   date?: true
@@ -213,6 +231,9 @@ export type TransactionGroupByOutputType = {
   memberName: string
   partnerId: string
   partnerName: string
+  staffId: string | null
+  staffName: string | null
+  deskName: string | null
   amount: number
   saved: number
   date: Date
@@ -248,12 +269,16 @@ export type TransactionWhereInput = {
   memberName?: Prisma.StringFilter<"Transaction"> | string
   partnerId?: Prisma.StringFilter<"Transaction"> | string
   partnerName?: Prisma.StringFilter<"Transaction"> | string
+  staffId?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  staffName?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  deskName?: Prisma.StringNullableFilter<"Transaction"> | string | null
   amount?: Prisma.IntFilter<"Transaction"> | number
   saved?: Prisma.IntFilter<"Transaction"> | number
   date?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   member?: Prisma.XOR<Prisma.MemberScalarRelationFilter, Prisma.MemberWhereInput>
   partner?: Prisma.XOR<Prisma.PartnerScalarRelationFilter, Prisma.PartnerWhereInput>
+  staff?: Prisma.XOR<Prisma.PartnerStaffNullableScalarRelationFilter, Prisma.PartnerStaffWhereInput> | null
 }
 
 export type TransactionOrderByWithRelationInput = {
@@ -262,12 +287,16 @@ export type TransactionOrderByWithRelationInput = {
   memberName?: Prisma.SortOrder
   partnerId?: Prisma.SortOrder
   partnerName?: Prisma.SortOrder
+  staffId?: Prisma.SortOrderInput | Prisma.SortOrder
+  staffName?: Prisma.SortOrderInput | Prisma.SortOrder
+  deskName?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
   saved?: Prisma.SortOrder
   date?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   member?: Prisma.MemberOrderByWithRelationInput
   partner?: Prisma.PartnerOrderByWithRelationInput
+  staff?: Prisma.PartnerStaffOrderByWithRelationInput
 }
 
 export type TransactionWhereUniqueInput = Prisma.AtLeast<{
@@ -279,12 +308,16 @@ export type TransactionWhereUniqueInput = Prisma.AtLeast<{
   memberName?: Prisma.StringFilter<"Transaction"> | string
   partnerId?: Prisma.StringFilter<"Transaction"> | string
   partnerName?: Prisma.StringFilter<"Transaction"> | string
+  staffId?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  staffName?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  deskName?: Prisma.StringNullableFilter<"Transaction"> | string | null
   amount?: Prisma.IntFilter<"Transaction"> | number
   saved?: Prisma.IntFilter<"Transaction"> | number
   date?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   member?: Prisma.XOR<Prisma.MemberScalarRelationFilter, Prisma.MemberWhereInput>
   partner?: Prisma.XOR<Prisma.PartnerScalarRelationFilter, Prisma.PartnerWhereInput>
+  staff?: Prisma.XOR<Prisma.PartnerStaffNullableScalarRelationFilter, Prisma.PartnerStaffWhereInput> | null
 }, "id">
 
 export type TransactionOrderByWithAggregationInput = {
@@ -293,6 +326,9 @@ export type TransactionOrderByWithAggregationInput = {
   memberName?: Prisma.SortOrder
   partnerId?: Prisma.SortOrder
   partnerName?: Prisma.SortOrder
+  staffId?: Prisma.SortOrderInput | Prisma.SortOrder
+  staffName?: Prisma.SortOrderInput | Prisma.SortOrder
+  deskName?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
   saved?: Prisma.SortOrder
   date?: Prisma.SortOrder
@@ -313,6 +349,9 @@ export type TransactionScalarWhereWithAggregatesInput = {
   memberName?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
   partnerId?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
   partnerName?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
+  staffId?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
+  staffName?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
+  deskName?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
   amount?: Prisma.IntWithAggregatesFilter<"Transaction"> | number
   saved?: Prisma.IntWithAggregatesFilter<"Transaction"> | number
   date?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
@@ -323,12 +362,15 @@ export type TransactionCreateInput = {
   id: string
   memberName: string
   partnerName: string
+  staffName?: string | null
+  deskName?: string | null
   amount: number
   saved: number
   date?: Date | string
   createdAt?: Date | string
   member: Prisma.MemberCreateNestedOneWithoutTransactionsInput
   partner: Prisma.PartnerCreateNestedOneWithoutTransactionsInput
+  staff?: Prisma.PartnerStaffCreateNestedOneWithoutTransactionsInput
 }
 
 export type TransactionUncheckedCreateInput = {
@@ -337,6 +379,9 @@ export type TransactionUncheckedCreateInput = {
   memberName: string
   partnerId: string
   partnerName: string
+  staffId?: string | null
+  staffName?: string | null
+  deskName?: string | null
   amount: number
   saved: number
   date?: Date | string
@@ -347,12 +392,15 @@ export type TransactionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   memberName?: Prisma.StringFieldUpdateOperationsInput | string
   partnerName?: Prisma.StringFieldUpdateOperationsInput | string
+  staffName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deskName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   saved?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   member?: Prisma.MemberUpdateOneRequiredWithoutTransactionsNestedInput
   partner?: Prisma.PartnerUpdateOneRequiredWithoutTransactionsNestedInput
+  staff?: Prisma.PartnerStaffUpdateOneWithoutTransactionsNestedInput
 }
 
 export type TransactionUncheckedUpdateInput = {
@@ -361,6 +409,9 @@ export type TransactionUncheckedUpdateInput = {
   memberName?: Prisma.StringFieldUpdateOperationsInput | string
   partnerId?: Prisma.StringFieldUpdateOperationsInput | string
   partnerName?: Prisma.StringFieldUpdateOperationsInput | string
+  staffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staffName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deskName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   saved?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -373,6 +424,9 @@ export type TransactionCreateManyInput = {
   memberName: string
   partnerId: string
   partnerName: string
+  staffId?: string | null
+  staffName?: string | null
+  deskName?: string | null
   amount: number
   saved: number
   date?: Date | string
@@ -383,6 +437,8 @@ export type TransactionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   memberName?: Prisma.StringFieldUpdateOperationsInput | string
   partnerName?: Prisma.StringFieldUpdateOperationsInput | string
+  staffName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deskName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   saved?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -395,6 +451,9 @@ export type TransactionUncheckedUpdateManyInput = {
   memberName?: Prisma.StringFieldUpdateOperationsInput | string
   partnerId?: Prisma.StringFieldUpdateOperationsInput | string
   partnerName?: Prisma.StringFieldUpdateOperationsInput | string
+  staffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staffName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deskName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   saved?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -417,6 +476,9 @@ export type TransactionCountOrderByAggregateInput = {
   memberName?: Prisma.SortOrder
   partnerId?: Prisma.SortOrder
   partnerName?: Prisma.SortOrder
+  staffId?: Prisma.SortOrder
+  staffName?: Prisma.SortOrder
+  deskName?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   saved?: Prisma.SortOrder
   date?: Prisma.SortOrder
@@ -434,6 +496,9 @@ export type TransactionMaxOrderByAggregateInput = {
   memberName?: Prisma.SortOrder
   partnerId?: Prisma.SortOrder
   partnerName?: Prisma.SortOrder
+  staffId?: Prisma.SortOrder
+  staffName?: Prisma.SortOrder
+  deskName?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   saved?: Prisma.SortOrder
   date?: Prisma.SortOrder
@@ -446,6 +511,9 @@ export type TransactionMinOrderByAggregateInput = {
   memberName?: Prisma.SortOrder
   partnerId?: Prisma.SortOrder
   partnerName?: Prisma.SortOrder
+  staffId?: Prisma.SortOrder
+  staffName?: Prisma.SortOrder
+  deskName?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   saved?: Prisma.SortOrder
   date?: Prisma.SortOrder
@@ -541,15 +609,60 @@ export type TransactionUncheckedUpdateManyWithoutPartnerNestedInput = {
   deleteMany?: Prisma.TransactionScalarWhereInput | Prisma.TransactionScalarWhereInput[]
 }
 
+export type TransactionCreateNestedManyWithoutStaffInput = {
+  create?: Prisma.XOR<Prisma.TransactionCreateWithoutStaffInput, Prisma.TransactionUncheckedCreateWithoutStaffInput> | Prisma.TransactionCreateWithoutStaffInput[] | Prisma.TransactionUncheckedCreateWithoutStaffInput[]
+  connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutStaffInput | Prisma.TransactionCreateOrConnectWithoutStaffInput[]
+  createMany?: Prisma.TransactionCreateManyStaffInputEnvelope
+  connect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+}
+
+export type TransactionUncheckedCreateNestedManyWithoutStaffInput = {
+  create?: Prisma.XOR<Prisma.TransactionCreateWithoutStaffInput, Prisma.TransactionUncheckedCreateWithoutStaffInput> | Prisma.TransactionCreateWithoutStaffInput[] | Prisma.TransactionUncheckedCreateWithoutStaffInput[]
+  connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutStaffInput | Prisma.TransactionCreateOrConnectWithoutStaffInput[]
+  createMany?: Prisma.TransactionCreateManyStaffInputEnvelope
+  connect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+}
+
+export type TransactionUpdateManyWithoutStaffNestedInput = {
+  create?: Prisma.XOR<Prisma.TransactionCreateWithoutStaffInput, Prisma.TransactionUncheckedCreateWithoutStaffInput> | Prisma.TransactionCreateWithoutStaffInput[] | Prisma.TransactionUncheckedCreateWithoutStaffInput[]
+  connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutStaffInput | Prisma.TransactionCreateOrConnectWithoutStaffInput[]
+  upsert?: Prisma.TransactionUpsertWithWhereUniqueWithoutStaffInput | Prisma.TransactionUpsertWithWhereUniqueWithoutStaffInput[]
+  createMany?: Prisma.TransactionCreateManyStaffInputEnvelope
+  set?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  disconnect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  delete?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  connect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  update?: Prisma.TransactionUpdateWithWhereUniqueWithoutStaffInput | Prisma.TransactionUpdateWithWhereUniqueWithoutStaffInput[]
+  updateMany?: Prisma.TransactionUpdateManyWithWhereWithoutStaffInput | Prisma.TransactionUpdateManyWithWhereWithoutStaffInput[]
+  deleteMany?: Prisma.TransactionScalarWhereInput | Prisma.TransactionScalarWhereInput[]
+}
+
+export type TransactionUncheckedUpdateManyWithoutStaffNestedInput = {
+  create?: Prisma.XOR<Prisma.TransactionCreateWithoutStaffInput, Prisma.TransactionUncheckedCreateWithoutStaffInput> | Prisma.TransactionCreateWithoutStaffInput[] | Prisma.TransactionUncheckedCreateWithoutStaffInput[]
+  connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutStaffInput | Prisma.TransactionCreateOrConnectWithoutStaffInput[]
+  upsert?: Prisma.TransactionUpsertWithWhereUniqueWithoutStaffInput | Prisma.TransactionUpsertWithWhereUniqueWithoutStaffInput[]
+  createMany?: Prisma.TransactionCreateManyStaffInputEnvelope
+  set?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  disconnect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  delete?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  connect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  update?: Prisma.TransactionUpdateWithWhereUniqueWithoutStaffInput | Prisma.TransactionUpdateWithWhereUniqueWithoutStaffInput[]
+  updateMany?: Prisma.TransactionUpdateManyWithWhereWithoutStaffInput | Prisma.TransactionUpdateManyWithWhereWithoutStaffInput[]
+  deleteMany?: Prisma.TransactionScalarWhereInput | Prisma.TransactionScalarWhereInput[]
+}
+
 export type TransactionCreateWithoutMemberInput = {
   id: string
   memberName: string
   partnerName: string
+  staffName?: string | null
+  deskName?: string | null
   amount: number
   saved: number
   date?: Date | string
   createdAt?: Date | string
   partner: Prisma.PartnerCreateNestedOneWithoutTransactionsInput
+  staff?: Prisma.PartnerStaffCreateNestedOneWithoutTransactionsInput
 }
 
 export type TransactionUncheckedCreateWithoutMemberInput = {
@@ -557,6 +670,9 @@ export type TransactionUncheckedCreateWithoutMemberInput = {
   memberName: string
   partnerId: string
   partnerName: string
+  staffId?: string | null
+  staffName?: string | null
+  deskName?: string | null
   amount: number
   saved: number
   date?: Date | string
@@ -598,6 +714,9 @@ export type TransactionScalarWhereInput = {
   memberName?: Prisma.StringFilter<"Transaction"> | string
   partnerId?: Prisma.StringFilter<"Transaction"> | string
   partnerName?: Prisma.StringFilter<"Transaction"> | string
+  staffId?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  staffName?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  deskName?: Prisma.StringNullableFilter<"Transaction"> | string | null
   amount?: Prisma.IntFilter<"Transaction"> | number
   saved?: Prisma.IntFilter<"Transaction"> | number
   date?: Prisma.DateTimeFilter<"Transaction"> | Date | string
@@ -608,11 +727,14 @@ export type TransactionCreateWithoutPartnerInput = {
   id: string
   memberName: string
   partnerName: string
+  staffName?: string | null
+  deskName?: string | null
   amount: number
   saved: number
   date?: Date | string
   createdAt?: Date | string
   member: Prisma.MemberCreateNestedOneWithoutTransactionsInput
+  staff?: Prisma.PartnerStaffCreateNestedOneWithoutTransactionsInput
 }
 
 export type TransactionUncheckedCreateWithoutPartnerInput = {
@@ -620,6 +742,9 @@ export type TransactionUncheckedCreateWithoutPartnerInput = {
   memberId: string
   memberName: string
   partnerName: string
+  staffId?: string | null
+  staffName?: string | null
+  deskName?: string | null
   amount: number
   saved: number
   date?: Date | string
@@ -652,11 +777,68 @@ export type TransactionUpdateManyWithWhereWithoutPartnerInput = {
   data: Prisma.XOR<Prisma.TransactionUpdateManyMutationInput, Prisma.TransactionUncheckedUpdateManyWithoutPartnerInput>
 }
 
+export type TransactionCreateWithoutStaffInput = {
+  id: string
+  memberName: string
+  partnerName: string
+  staffName?: string | null
+  deskName?: string | null
+  amount: number
+  saved: number
+  date?: Date | string
+  createdAt?: Date | string
+  member: Prisma.MemberCreateNestedOneWithoutTransactionsInput
+  partner: Prisma.PartnerCreateNestedOneWithoutTransactionsInput
+}
+
+export type TransactionUncheckedCreateWithoutStaffInput = {
+  id: string
+  memberId: string
+  memberName: string
+  partnerId: string
+  partnerName: string
+  staffName?: string | null
+  deskName?: string | null
+  amount: number
+  saved: number
+  date?: Date | string
+  createdAt?: Date | string
+}
+
+export type TransactionCreateOrConnectWithoutStaffInput = {
+  where: Prisma.TransactionWhereUniqueInput
+  create: Prisma.XOR<Prisma.TransactionCreateWithoutStaffInput, Prisma.TransactionUncheckedCreateWithoutStaffInput>
+}
+
+export type TransactionCreateManyStaffInputEnvelope = {
+  data: Prisma.TransactionCreateManyStaffInput | Prisma.TransactionCreateManyStaffInput[]
+  skipDuplicates?: boolean
+}
+
+export type TransactionUpsertWithWhereUniqueWithoutStaffInput = {
+  where: Prisma.TransactionWhereUniqueInput
+  update: Prisma.XOR<Prisma.TransactionUpdateWithoutStaffInput, Prisma.TransactionUncheckedUpdateWithoutStaffInput>
+  create: Prisma.XOR<Prisma.TransactionCreateWithoutStaffInput, Prisma.TransactionUncheckedCreateWithoutStaffInput>
+}
+
+export type TransactionUpdateWithWhereUniqueWithoutStaffInput = {
+  where: Prisma.TransactionWhereUniqueInput
+  data: Prisma.XOR<Prisma.TransactionUpdateWithoutStaffInput, Prisma.TransactionUncheckedUpdateWithoutStaffInput>
+}
+
+export type TransactionUpdateManyWithWhereWithoutStaffInput = {
+  where: Prisma.TransactionScalarWhereInput
+  data: Prisma.XOR<Prisma.TransactionUpdateManyMutationInput, Prisma.TransactionUncheckedUpdateManyWithoutStaffInput>
+}
+
 export type TransactionCreateManyMemberInput = {
   id: string
   memberName: string
   partnerId: string
   partnerName: string
+  staffId?: string | null
+  staffName?: string | null
+  deskName?: string | null
   amount: number
   saved: number
   date?: Date | string
@@ -667,11 +849,14 @@ export type TransactionUpdateWithoutMemberInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   memberName?: Prisma.StringFieldUpdateOperationsInput | string
   partnerName?: Prisma.StringFieldUpdateOperationsInput | string
+  staffName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deskName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   saved?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   partner?: Prisma.PartnerUpdateOneRequiredWithoutTransactionsNestedInput
+  staff?: Prisma.PartnerStaffUpdateOneWithoutTransactionsNestedInput
 }
 
 export type TransactionUncheckedUpdateWithoutMemberInput = {
@@ -679,6 +864,9 @@ export type TransactionUncheckedUpdateWithoutMemberInput = {
   memberName?: Prisma.StringFieldUpdateOperationsInput | string
   partnerId?: Prisma.StringFieldUpdateOperationsInput | string
   partnerName?: Prisma.StringFieldUpdateOperationsInput | string
+  staffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staffName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deskName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   saved?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -690,6 +878,9 @@ export type TransactionUncheckedUpdateManyWithoutMemberInput = {
   memberName?: Prisma.StringFieldUpdateOperationsInput | string
   partnerId?: Prisma.StringFieldUpdateOperationsInput | string
   partnerName?: Prisma.StringFieldUpdateOperationsInput | string
+  staffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staffName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deskName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   saved?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -701,6 +892,9 @@ export type TransactionCreateManyPartnerInput = {
   memberId: string
   memberName: string
   partnerName: string
+  staffId?: string | null
+  staffName?: string | null
+  deskName?: string | null
   amount: number
   saved: number
   date?: Date | string
@@ -711,11 +905,14 @@ export type TransactionUpdateWithoutPartnerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   memberName?: Prisma.StringFieldUpdateOperationsInput | string
   partnerName?: Prisma.StringFieldUpdateOperationsInput | string
+  staffName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deskName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   saved?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   member?: Prisma.MemberUpdateOneRequiredWithoutTransactionsNestedInput
+  staff?: Prisma.PartnerStaffUpdateOneWithoutTransactionsNestedInput
 }
 
 export type TransactionUncheckedUpdateWithoutPartnerInput = {
@@ -723,6 +920,9 @@ export type TransactionUncheckedUpdateWithoutPartnerInput = {
   memberId?: Prisma.StringFieldUpdateOperationsInput | string
   memberName?: Prisma.StringFieldUpdateOperationsInput | string
   partnerName?: Prisma.StringFieldUpdateOperationsInput | string
+  staffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staffName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deskName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   saved?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -734,6 +934,65 @@ export type TransactionUncheckedUpdateManyWithoutPartnerInput = {
   memberId?: Prisma.StringFieldUpdateOperationsInput | string
   memberName?: Prisma.StringFieldUpdateOperationsInput | string
   partnerName?: Prisma.StringFieldUpdateOperationsInput | string
+  staffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staffName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deskName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
+  saved?: Prisma.IntFieldUpdateOperationsInput | number
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TransactionCreateManyStaffInput = {
+  id: string
+  memberId: string
+  memberName: string
+  partnerId: string
+  partnerName: string
+  staffName?: string | null
+  deskName?: string | null
+  amount: number
+  saved: number
+  date?: Date | string
+  createdAt?: Date | string
+}
+
+export type TransactionUpdateWithoutStaffInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  memberName?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerName?: Prisma.StringFieldUpdateOperationsInput | string
+  staffName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deskName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
+  saved?: Prisma.IntFieldUpdateOperationsInput | number
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  member?: Prisma.MemberUpdateOneRequiredWithoutTransactionsNestedInput
+  partner?: Prisma.PartnerUpdateOneRequiredWithoutTransactionsNestedInput
+}
+
+export type TransactionUncheckedUpdateWithoutStaffInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  memberId?: Prisma.StringFieldUpdateOperationsInput | string
+  memberName?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerId?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerName?: Prisma.StringFieldUpdateOperationsInput | string
+  staffName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deskName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
+  saved?: Prisma.IntFieldUpdateOperationsInput | number
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TransactionUncheckedUpdateManyWithoutStaffInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  memberId?: Prisma.StringFieldUpdateOperationsInput | string
+  memberName?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerId?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerName?: Prisma.StringFieldUpdateOperationsInput | string
+  staffName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deskName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   saved?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -748,12 +1007,16 @@ export type TransactionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   memberName?: boolean
   partnerId?: boolean
   partnerName?: boolean
+  staffId?: boolean
+  staffName?: boolean
+  deskName?: boolean
   amount?: boolean
   saved?: boolean
   date?: boolean
   createdAt?: boolean
   member?: boolean | Prisma.MemberDefaultArgs<ExtArgs>
   partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
+  staff?: boolean | Prisma.Transaction$staffArgs<ExtArgs>
 }, ExtArgs["result"]["transaction"]>
 
 export type TransactionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -762,12 +1025,16 @@ export type TransactionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   memberName?: boolean
   partnerId?: boolean
   partnerName?: boolean
+  staffId?: boolean
+  staffName?: boolean
+  deskName?: boolean
   amount?: boolean
   saved?: boolean
   date?: boolean
   createdAt?: boolean
   member?: boolean | Prisma.MemberDefaultArgs<ExtArgs>
   partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
+  staff?: boolean | Prisma.Transaction$staffArgs<ExtArgs>
 }, ExtArgs["result"]["transaction"]>
 
 export type TransactionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -776,12 +1043,16 @@ export type TransactionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   memberName?: boolean
   partnerId?: boolean
   partnerName?: boolean
+  staffId?: boolean
+  staffName?: boolean
+  deskName?: boolean
   amount?: boolean
   saved?: boolean
   date?: boolean
   createdAt?: boolean
   member?: boolean | Prisma.MemberDefaultArgs<ExtArgs>
   partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
+  staff?: boolean | Prisma.Transaction$staffArgs<ExtArgs>
 }, ExtArgs["result"]["transaction"]>
 
 export type TransactionSelectScalar = {
@@ -790,24 +1061,30 @@ export type TransactionSelectScalar = {
   memberName?: boolean
   partnerId?: boolean
   partnerName?: boolean
+  staffId?: boolean
+  staffName?: boolean
+  deskName?: boolean
   amount?: boolean
   saved?: boolean
   date?: boolean
   createdAt?: boolean
 }
 
-export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "memberId" | "memberName" | "partnerId" | "partnerName" | "amount" | "saved" | "date" | "createdAt", ExtArgs["result"]["transaction"]>
+export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "memberId" | "memberName" | "partnerId" | "partnerName" | "staffId" | "staffName" | "deskName" | "amount" | "saved" | "date" | "createdAt", ExtArgs["result"]["transaction"]>
 export type TransactionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   member?: boolean | Prisma.MemberDefaultArgs<ExtArgs>
   partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
+  staff?: boolean | Prisma.Transaction$staffArgs<ExtArgs>
 }
 export type TransactionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   member?: boolean | Prisma.MemberDefaultArgs<ExtArgs>
   partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
+  staff?: boolean | Prisma.Transaction$staffArgs<ExtArgs>
 }
 export type TransactionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   member?: boolean | Prisma.MemberDefaultArgs<ExtArgs>
   partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
+  staff?: boolean | Prisma.Transaction$staffArgs<ExtArgs>
 }
 
 export type $TransactionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -815,6 +1092,7 @@ export type $TransactionPayload<ExtArgs extends runtime.Types.Extensions.Interna
   objects: {
     member: Prisma.$MemberPayload<ExtArgs>
     partner: Prisma.$PartnerPayload<ExtArgs>
+    staff: Prisma.$PartnerStaffPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -822,6 +1100,9 @@ export type $TransactionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     memberName: string
     partnerId: string
     partnerName: string
+    staffId: string | null
+    staffName: string | null
+    deskName: string | null
     amount: number
     saved: number
     date: Date
@@ -1222,6 +1503,7 @@ export interface Prisma__TransactionClient<T, Null = never, ExtArgs extends runt
   readonly [Symbol.toStringTag]: "PrismaPromise"
   member<T extends Prisma.MemberDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MemberDefaultArgs<ExtArgs>>): Prisma.Prisma__MemberClient<runtime.Types.Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   partner<T extends Prisma.PartnerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PartnerDefaultArgs<ExtArgs>>): Prisma.Prisma__PartnerClient<runtime.Types.Result.GetResult<Prisma.$PartnerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  staff<T extends Prisma.Transaction$staffArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$staffArgs<ExtArgs>>): Prisma.Prisma__PartnerStaffClient<runtime.Types.Result.GetResult<Prisma.$PartnerStaffPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1256,6 +1538,9 @@ export interface TransactionFieldRefs {
   readonly memberName: Prisma.FieldRef<"Transaction", 'String'>
   readonly partnerId: Prisma.FieldRef<"Transaction", 'String'>
   readonly partnerName: Prisma.FieldRef<"Transaction", 'String'>
+  readonly staffId: Prisma.FieldRef<"Transaction", 'String'>
+  readonly staffName: Prisma.FieldRef<"Transaction", 'String'>
+  readonly deskName: Prisma.FieldRef<"Transaction", 'String'>
   readonly amount: Prisma.FieldRef<"Transaction", 'Int'>
   readonly saved: Prisma.FieldRef<"Transaction", 'Int'>
   readonly date: Prisma.FieldRef<"Transaction", 'DateTime'>
@@ -1658,6 +1943,25 @@ export type TransactionDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Limit how many Transactions to delete.
    */
   limit?: number
+}
+
+/**
+ * Transaction.staff
+ */
+export type Transaction$staffArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PartnerStaff
+   */
+  select?: Prisma.PartnerStaffSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PartnerStaff
+   */
+  omit?: Prisma.PartnerStaffOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PartnerStaffInclude<ExtArgs> | null
+  where?: Prisma.PartnerStaffWhereInput
 }
 
 /**

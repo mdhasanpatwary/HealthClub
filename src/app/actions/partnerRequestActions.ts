@@ -223,54 +223,113 @@ export async function updatePartnerRequestStatusAction(id: string, status: "appr
 export async function loginPartnerAction(
   identifier: string,
   password: string
-): Promise<{ success: boolean; partner?: Partner; error?: string }> {
+): Promise<{
+  success: boolean;
+  partner?: Partner;
+  staff?: { id: string; name: string; deskName: string; role: string; username: string };
+  error?: string;
+}> {
   try {
-    if (!identifier || !password) {
-      return { success: false, error: "মোবাইল নম্বর/ইমেইল এবং পাসওয়ার্ড দিন।" };
+    const cleanIdentifier = identifier?.trim();
+    if (!cleanIdentifier || !password) {
+      return { success: false, error: "মোবাইল নম্বর/ইউজারনেম এবং পাসওয়ার্ড দিন।" };
     }
 
-    const data = await prisma.partner.findFirst({
+    // 1. Try matching primary partner hospital account
+    const partnerData = await prisma.partner.findFirst({
       where: {
         OR: [
-          { phone: identifier },
-          { email: identifier }
+          { phone: cleanIdentifier },
+          { email: cleanIdentifier }
         ]
       }
     });
 
-    if (!data) {
-      return { success: false, error: "ভুল মোবাইল নম্বর/ইমেইল অথবা পাসওয়ার্ড।" };
-    }
+    if (partnerData && partnerData.password) {
+      const isValid = verifyPassword(password, partnerData.password);
+      if (isValid) {
+        await setSessionUser(partnerData.id, "partner");
 
-    if (!data.password) {
-      return { success: false, error: "আপনার পাসওয়ার্ড সেট করা নেই। দয়া করে অ্যাডমিনের সাথে যোগাযোগ করুন।" };
-    }
-
-    const isValid = verifyPassword(password, data.password);
-    if (!isValid) {
-      return { success: false, error: "ভুল মোবাইল নম্বর/ইমেইল অথবা পাসওয়ার্ড।" };
-    }
-
-    await setSessionUser(data.id, "partner");
-
-    return {
-      success: true,
-      partner: {
-        id: data.id,
-        name: data.name,
-        category: data.category as Partner["category"],
-        address: data.address,
-        discount: data.discount,
-        phone: data.phone,
-        email: data.email || undefined,
-        logoText: data.logoText,
-        mapLink: data.mapLink || undefined,
-        imageUrl: data.imageUrl || undefined,
-        emergencyPhone: data.emergencyPhone || undefined,
-        workingHours: data.workingHours || undefined,
-        departmentDiscounts: data.departmentDiscounts || undefined,
+        return {
+          success: true,
+          partner: {
+            id: partnerData.id,
+            name: partnerData.name,
+            category: partnerData.category as Partner["category"],
+            address: partnerData.address,
+            discount: partnerData.discount,
+            phone: partnerData.phone,
+            email: partnerData.email || undefined,
+            logoText: partnerData.logoText,
+            mapLink: partnerData.mapLink || undefined,
+            imageUrl: partnerData.imageUrl || undefined,
+            emergencyPhone: partnerData.emergencyPhone || undefined,
+            workingHours: partnerData.workingHours || undefined,
+            departmentDiscounts: partnerData.departmentDiscounts || undefined,
+          }
+        };
       }
-    };
+    }
+
+    // 2. Try matching partner cashier / counter staff account
+    const staffData = await prisma.partnerStaff.findFirst({
+      where: {
+        OR: [
+          { username: cleanIdentifier.toLowerCase() },
+          { phone: cleanIdentifier }
+        ]
+      },
+      include: {
+        partner: true,
+      }
+    });
+
+    if (staffData) {
+      if (!staffData.isActive) {
+        return {
+          success: false,
+          error: "এই স্টাফ অ্যাকাউন্টটি নিষ্ক্রিয় করা হয়েছে। আপনার হাসপাতাল অ্যাডমিনের সাথে যোগাযোগ করুন।",
+        };
+      }
+
+      const isValid = verifyPassword(password, staffData.password);
+      if (isValid && staffData.partner) {
+        await setSessionUser(staffData.partnerId, "partner_staff", {
+          staffId: staffData.id,
+          staffName: staffData.name,
+          deskName: staffData.deskName,
+          partnerId: staffData.partnerId,
+        });
+
+        return {
+          success: true,
+          partner: {
+            id: staffData.partner.id,
+            name: staffData.partner.name,
+            category: staffData.partner.category as Partner["category"],
+            address: staffData.partner.address,
+            discount: staffData.partner.discount,
+            phone: staffData.partner.phone,
+            email: staffData.partner.email || undefined,
+            logoText: staffData.partner.logoText,
+            mapLink: staffData.partner.mapLink || undefined,
+            imageUrl: staffData.partner.imageUrl || undefined,
+            emergencyPhone: staffData.partner.emergencyPhone || undefined,
+            workingHours: staffData.partner.workingHours || undefined,
+            departmentDiscounts: staffData.partner.departmentDiscounts || undefined,
+          },
+          staff: {
+            id: staffData.id,
+            name: staffData.name,
+            deskName: staffData.deskName,
+            role: staffData.role,
+            username: staffData.username,
+          },
+        };
+      }
+    }
+
+    return { success: false, error: "ভুল ইউজারনেম/মোবাইল নম্বর অথবা পাসওয়ার্ড।" };
   } catch (error) {
     logger.error("Error in loginPartnerAction:", error);
     return { success: false, error: "লগইন করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।" };

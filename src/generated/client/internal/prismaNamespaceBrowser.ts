@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Member: 'Member',
   Partner: 'Partner',
+  PartnerStaff: 'PartnerStaff',
   Transaction: 'Transaction',
   Doctor: 'Doctor',
   PartnerRequest: 'PartnerRequest',
@@ -131,12 +132,32 @@ export const PartnerScalarFieldEnum = {
 export type PartnerScalarFieldEnum = (typeof PartnerScalarFieldEnum)[keyof typeof PartnerScalarFieldEnum]
 
 
+export const PartnerStaffScalarFieldEnum = {
+  id: 'id',
+  partnerId: 'partnerId',
+  name: 'name',
+  username: 'username',
+  phone: 'phone',
+  deskName: 'deskName',
+  password: 'password',
+  role: 'role',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PartnerStaffScalarFieldEnum = (typeof PartnerStaffScalarFieldEnum)[keyof typeof PartnerStaffScalarFieldEnum]
+
+
 export const TransactionScalarFieldEnum = {
   id: 'id',
   memberId: 'memberId',
   memberName: 'memberName',
   partnerId: 'partnerId',
   partnerName: 'partnerName',
+  staffId: 'staffId',
+  staffName: 'staffName',
+  deskName: 'deskName',
   amount: 'amount',
   saved: 'saved',
   date: 'date',

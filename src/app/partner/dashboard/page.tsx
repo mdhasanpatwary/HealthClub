@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Receipt, Building2, Stethoscope, BarChart3 } from "lucide-react";
+import { Receipt, Building2, Stethoscope, BarChart3, Users } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Partner, Transaction } from "@/services/db";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,6 +13,7 @@ import { PartnerBillingTab } from "./components/PartnerBillingTab";
 import { PartnerDoctorsTab } from "./components/PartnerDoctorsTab";
 import { PartnerProfileSettingsTab } from "./components/PartnerProfileSettingsTab";
 import { PartnerAnalyticsTab } from "./components/PartnerAnalyticsTab";
+import { PartnerStaffTab } from "./components/PartnerStaffTab";
 import { toast } from "sonner";
 
 export default function PartnerDashboardPage() {
@@ -26,6 +27,8 @@ export default function PartnerDashboardPage() {
       ? "doctors"
       : tabParam === "analytics"
       ? "analytics"
+      : tabParam === "staff"
+      ? "staff"
       : "billing";
 
   const [activeTab, setActiveTab] = useState(initialTab);
@@ -91,7 +94,7 @@ export default function PartnerDashboardPage() {
 
       {/* Main Tabbed Navigation */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 max-w-3xl bg-muted/70 dark:bg-slate-900/70 p-1.5 rounded-2xl border border-border/60 gap-1">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 max-w-4xl bg-muted/70 dark:bg-slate-900/70 p-1.5 rounded-2xl border border-border/60 gap-1">
           <TabsTrigger
             value="billing"
             className="rounded-xl text-xs sm:text-sm font-semibold py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm cursor-pointer"
@@ -115,6 +118,14 @@ export default function PartnerDashboardPage() {
             <BarChart3 className="h-4 w-4 mr-1.5 text-amber-500" />
             <span className="hidden sm:inline">{t("partner.dashboard.tabs.analytics")}</span>
             <span className="sm:hidden">অ্যানালিটিক্স</span>
+          </TabsTrigger>
+          <TabsTrigger
+            value="staff"
+            className="rounded-xl text-xs sm:text-sm font-semibold py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm cursor-pointer"
+          >
+            <Users className="h-4 w-4 mr-1.5 text-blue-500" />
+            <span className="hidden sm:inline">{t("partner.dashboard.tabs.staff") || "স্টাফ ও কাউন্টার"}</span>
+            <span className="sm:hidden">স্টাফ</span>
           </TabsTrigger>
           <TabsTrigger
             value="profile"
@@ -146,7 +157,12 @@ export default function PartnerDashboardPage() {
           <PartnerAnalyticsTab partner={partner} />
         </TabsContent>
 
-        {/* Tab 4: Hospital Profile, Emergency Contact & Department Discounts */}
+        {/* Tab 4: Hospital Multi-Cashier & Counter Staff Accounts */}
+        <TabsContent value="staff" className="space-y-6 focus-visible:outline-none">
+          <PartnerStaffTab partner={partner} />
+        </TabsContent>
+
+        {/* Tab 5: Hospital Profile, Emergency Contact & Department Discounts */}
         <TabsContent value="profile" className="space-y-6 focus-visible:outline-none">
           <PartnerProfileSettingsTab
             partner={partner}

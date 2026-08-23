@@ -31,7 +31,12 @@ export default function PartnerLoginPage() {
       const res = await loginPartnerAction(identifier, password);
       if (res.success && res.partner) {
         dbStore.setCurrentPartner(res.partner);
-        toast.success("পার্টনার ড্যাশবোর্ডে সফলভাবে লগইন হয়েছে!");
+        dbStore.setCurrentStaff(res.staff || null);
+        if (res.staff) {
+          toast.success(`স্বাগতম ${res.staff.name}! "${res.staff.deskName}" ডেস্কে সফলভাবে লগইন হয়েছে।`);
+        } else {
+          toast.success("পার্টনার ড্যাশবোর্ডে সফলভাবে লগইন হয়েছে!");
+        }
         router.push("/partner/dashboard");
         return;
       } else {
@@ -56,13 +61,13 @@ export default function PartnerLoginPage() {
           </Link>
           <div className="inline-flex items-center gap-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-500 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mx-auto">
             <Building2 className="h-3 w-3" />
-            পার্টনার পোর্টাল
+            পার্টনার ও কাউন্টার পোর্টাল
           </div>
           <CardTitle className="font-heading text-xl font-bold text-secondary pt-1">
-            পার্টনার লগইন
+            পার্টনার ও ক্যাশিয়ার লগইন
           </CardTitle>
           <CardDescription>
-            লেনদেন যাচাই ও রেকর্ড করতে আপনার পার্টনার অ্যাকাউন্ট দিয়ে প্রবেশ করুন।
+            লেনদেন যাচাই ও ছাড় রেকর্ড করতে আপনার পার্টনার বা কাউন্টার অ্যাকাউন্ট দিয়ে প্রবেশ করুন।
           </CardDescription>
         </CardHeader>
 
@@ -71,7 +76,7 @@ export default function PartnerLoginPage() {
             <div className="space-y-2">
               <label htmlFor="partner-identifier" className="text-xs font-semibold text-secondary flex items-center gap-1.5 cursor-pointer">
                 <Building2 className="h-3.5 w-3.5 text-primary" />
-                পার্টনার ইমেইল বা মোবাইল নম্বর
+                ইমেইল, মোবাইল নম্বর বা স্টাফ ইউজারনেম
               </label>
               <Input
                 id="partner-identifier"
@@ -79,7 +84,7 @@ export default function PartnerLoginPage() {
                 required
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
-                placeholder="যেমন: partner@healthclub.com বা 017XXXXXXXX"
+                placeholder="যেমন: partner@hospital.com, 017XXXXXXXX বা counter1"
                 className="border-border bg-background"
               />
             </div>

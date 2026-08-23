@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Camera, Search, CheckCircle, XCircle, AlertTriangle, Receipt, CreditCard, History, Download } from "lucide-react";
 import { Partner, Transaction } from "@/services/db";
+import { dbStore } from "@/services/dbStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
@@ -167,18 +168,30 @@ export function PartnerBillingTab({
     }
   };
 
+  const currentStaff = typeof window !== "undefined" ? dbStore.getCurrentStaff() : null;
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
       {/* Left 2 Cols: Scanner and validation */}
       <div className="lg:col-span-2 space-y-6">
         <Card className="border-border shadow-sm rounded-3xl">
           <CardHeader className="p-5 sm:p-6 pb-2 sm:pb-4">
-            <CardTitle className="font-heading text-lg sm:text-xl font-bold text-secondary dark:text-white">
-              মেম্বার ভেরিফিকেশন ও ডিসকাউন্ট এন্ট্রি
-            </CardTitle>
-            <CardDescription className="text-xs sm:text-sm">
-              ডিজিটাল কার্ডের কিউআর কোড স্ক্যান করুন অথবা মেম্বার আইডি টাইপ করে ছাড়ের লেনদেন রেকর্ড করুন।
-            </CardDescription>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <CardTitle className="font-heading text-lg sm:text-xl font-bold text-secondary dark:text-white">
+                  মেম্বার ভেরিফিকেশন ও ডিসকাউন্ট এন্ট্রি
+                </CardTitle>
+                <CardDescription className="text-xs sm:text-sm">
+                  ডিজিটাল কার্ডের কিউআর কোড স্ক্যান করুন অথবা মেম্বার আইডি টাইপ করে ছাড়ের লেনদেন রেকর্ড করুন।
+                </CardDescription>
+              </div>
+              {currentStaff && (
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-xs text-emerald-800 dark:text-emerald-300 font-semibold self-start sm:self-auto shrink-0">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span>{currentStaff.deskName}</span>
+                </div>
+              )}
+            </div>
           </CardHeader>
           <CardContent className="p-5 sm:p-6 pt-0 space-y-6">
             {/* QR Reader Area */}
@@ -331,6 +344,8 @@ export function PartnerBillingTab({
                     { header: "Transaction ID", accessor: "id" },
                     { header: "Member ID", accessor: "memberId" },
                     { header: "Member Name", accessor: "memberName" },
+                    { header: "Counter Desk", accessor: "deskName" },
+                    { header: "Processed By", accessor: "staffName" },
                     { header: "Bill Amount (BDT)", accessor: "amount" },
                     { header: "Saved Amount (BDT)", accessor: "saved" },
                     { header: "Date", accessor: "date" },
@@ -371,7 +386,14 @@ export function PartnerBillingTab({
                   <div key={tx.id} className="p-4 flex justify-between items-start text-xs hover:bg-slate-50/50 dark:hover:bg-slate-900/30 transition-colors">
                     <div className="space-y-0.5">
                       <p className="font-bold text-secondary dark:text-white">{tx.memberName}</p>
-                      <p className="text-[10px] text-muted-foreground">আইডি: {tx.memberId}</p>
+                      <div className="flex items-center gap-1.5 flex-wrap text-[10px] text-muted-foreground">
+                        <span>আইডি: {tx.memberId}</span>
+                        {tx.deskName && (
+                          <span className="bg-primary/10 text-primary font-medium px-1.5 py-0.2 rounded">
+                            {tx.deskName}
+                          </span>
+                        )}
+                      </div>
                       <p className="text-[10px] text-muted-foreground font-mono">
                         {new Date(tx.date).toLocaleDateString("bn-BD", {
                           year: "numeric",

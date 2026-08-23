@@ -7,13 +7,17 @@ import { Badge } from "@/components/ui/badge";
 import { ChangePartnerPasswordDialog } from "./ChangePartnerPasswordDialog";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 
+import { dbStore } from "@/services/dbStore";
+
 interface PartnerDashboardHeaderProps {
   partner: Partner;
+  currentStaff?: { id: string; name: string; deskName: string } | null;
   onLogout: () => void;
 }
 
-export function PartnerDashboardHeader({ partner, onLogout }: PartnerDashboardHeaderProps) {
+export function PartnerDashboardHeader({ partner, currentStaff: propStaff, onLogout }: PartnerDashboardHeaderProps) {
   const { t } = useLanguage();
+  const currentStaff = propStaff !== undefined ? propStaff : dbStore.getCurrentStaff();
 
   const getCategoryLabel = (category: Partner["category"]) => {
     switch (category) {
@@ -49,6 +53,14 @@ export function PartnerDashboardHeader({ partner, onLogout }: PartnerDashboardHe
             <span className="flex items-center gap-1">
               {t("admin.dashboard.discountRate")}: <strong className="text-primary font-bold">{partner.discount}</strong>
             </span>
+            {currentStaff && (
+              <span className="inline-flex items-center gap-1.5 text-emerald-300 font-semibold bg-emerald-500/15 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+                <span>{currentStaff.deskName}</span>
+                <span className="text-slate-400">|</span>
+                <span className="text-white font-normal">{currentStaff.name}</span>
+              </span>
+            )}
             {partner.emergencyPhone && (
               <span className="inline-flex items-center gap-1 text-amber-300 font-medium bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
                 <PhoneCall className="h-3 w-3" />

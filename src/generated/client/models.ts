@@ -10,6 +10,7 @@
  */
 export type * from './models/Member'
 export type * from './models/Partner'
+export type * from './models/PartnerStaff'
 export type * from './models/Transaction'
 export type * from './models/Doctor'
 export type * from './models/PartnerRequest'

@@ -10,10 +10,13 @@ import { createMemberNotification } from "./memberNotificationActions";
 
 export async function getPartnerTransactionsAction(): Promise<Transaction[]> {
   const session = await getSessionUser();
-  if (!session || session.role !== "partner") return [];
+  if (!session || (session.role !== "partner" && session.role !== "partner_staff")) return [];
+
+  const partnerId = session.role === "partner_staff" ? session.partnerId || session.userId : session.userId;
+
   try {
     const data = await prisma.transaction.findMany({
-      where: { partnerId: session.userId },
+      where: { partnerId },
       orderBy: { date: "desc" },
     });
     return data.map((t) => ({
@@ -22,6 +25,9 @@ export async function getPartnerTransactionsAction(): Promise<Transaction[]> {
       memberName: t.memberName,
       partnerId: t.partnerId,
       partnerName: t.partnerName,
+      staffId: t.staffId || undefined,
+      staffName: t.staffName || undefined,
+      deskName: t.deskName || undefined,
       amount: t.amount,
       saved: t.saved,
       date: t.date.toISOString(),
@@ -37,13 +43,19 @@ export async function addPartnerTransactionAction(tx: {
   amount: number;
 }): Promise<{ success: boolean; message: string }> {
   const session = await getSessionUser();
-  if (!session || session.role !== "partner") {
+  if (!session || (session.role !== "partner" && session.role !== "partner_staff")) {
     return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
   }
 
   if (isNaN(tx.amount) || tx.amount <= 0) {
     return { success: false, message: "সঠিক বিলের পরিমাণ ইনপুট দিন।" };
   }
+
+  const partnerId = session.role === "partner_staff" ? session.partnerId || session.userId : session.userId;
+  const isStaff = session.role === "partner_staff";
+  const staffId = isStaff ? session.staffId || null : null;
+  const staffName = isStaff ? session.staffName || "ক্যাশিয়ার" : "হাসপাতাল অ্যাডমিন";
+  const deskName = isStaff ? session.deskName || "কাউন্টার ডেস্ক" : "মূল কাউন্টার / অ্যাডমিন";
 
   try {
     const [member, partner] = await Promise.all([
@@ -52,7 +64,7 @@ export async function addPartnerTransactionAction(tx: {
         select: { id: true, name: true, status: true, expiryDate: true },
       }),
       prisma.partner.findUnique({
-        where: { id: session.userId },
+        where: { id: partnerId },
         select: { id: true, name: true, discount: true },
       }),
     ]);
@@ -89,6 +101,9 @@ export async function addPartnerTransactionAction(tx: {
           memberName: member.name,
           partnerId: partner.id,
           partnerName: partner.name,
+          staffId,
+          staffName,
+          deskName,
           amount: tx.amount,
           saved: saved,
         },
