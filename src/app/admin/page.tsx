@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import {
   PlusCircle,
-  Settings,
   Users,
   Building2,
   Stethoscope,
@@ -14,6 +13,11 @@ import {
   Mail,
   Bell,
   ArrowRight,
+  Activity,
+  Pill,
+  Siren,
+  BookOpen,
+  Smartphone,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -36,9 +40,6 @@ export default function AdminDashboardPage() {
     loading,
     stats,
     partners,
-    allowMemberTx,
-    togglingMemberTx,
-    handleToggleMemberTx,
     newTx,
     setNewTx,
     isTxOpen,
@@ -60,16 +61,40 @@ export default function AdminDashboardPage() {
       color: "indigo",
     },
     {
-      title: t("admin.dashboard.partnerHospitals") || "পার্টনার হাসপাতাল",
+      title: isBn ? "পার্টনার হাসপাতাল" : "Partner Hospitals",
       description: isBn
-        ? "চুক্তিবদ্ধ হাসপাতাল, ল্যাব ও ডায়াগনস্টিক সেন্টারের তালিকা"
-        : "Contracted hospitals, labs and diagnostic centers",
-      href: "/admin/partners",
+        ? "চুক্তিবদ্ধ হাসপাতাল ও ক্লিনিকগুলোর তালিকা ও ছাড়ের হার"
+        : "Contracted hospitals, clinic network and discount rates",
+      href: "/admin/partners?category=hospital",
       icon: Building2,
-      count: stats.partnerCount,
-      countLabel: isBn ? "টি প্রতিষ্ঠান" : "facilities",
+      count: stats.partnerHospitals,
+      countLabel: isBn ? "টি হাসপাতাল" : "hospitals",
       badge: null,
       color: "emerald",
+    },
+    {
+      title: isBn ? "ডায়াগনস্টিক ও ল্যাব" : "Diagnostic Centers",
+      description: isBn
+        ? "চুক্তিবদ্ধ ডায়াগনস্টিক সেন্টার ও প্যাথলজি ল্যাব নেটওয়ার্ক"
+        : "Contracted pathology labs and diagnostic test centers",
+      href: "/admin/partners?category=diagnostic",
+      icon: Activity,
+      count: stats.partnerDiagnostics,
+      countLabel: isBn ? "টি ডায়াগনস্টিক" : "diagnostics",
+      badge: null,
+      color: "sky",
+    },
+    {
+      title: isBn ? "ফার্মেসি নেটওয়ার্ক" : "Partner Pharmacies",
+      description: isBn
+        ? "চুক্তিবদ্ধ ঔষধের দোকান ও ডিসকাউন্ট সুবিধা"
+        : "Contracted retail pharmacy network and medicine discounts",
+      href: "/admin/partners?category=pharmacy",
+      icon: Pill,
+      count: stats.partnerPharmacies,
+      countLabel: isBn ? "টি ফার্মেসি" : "pharmacies",
+      badge: null,
+      color: "purple",
     },
     {
       title: isBn ? "ডাক্তার তালিকা" : "Doctors Directory",
@@ -151,6 +176,44 @@ export default function AdminDashboardPage() {
         notificationData.highPriorityCount > 0 ? "rose" : "amber",
       color: "amber",
     },
+    {
+      title: isBn ? "জরুরি সেবা নেটওয়ার্ক" : "Emergency Services",
+      description: isBn
+        ? "রক্তদাতা তালিকা, অ্যাম্বুলেন্স সার্ভিস ও অক্সিজেন হটলাইন"
+        : "Blood donor registry, ambulance fleet & hotlines",
+      href: "/admin/emergency",
+      icon: Siren,
+      count: stats.emergencyDonorsCount ?? 0,
+      countLabel: isBn ? "জন রক্তদাতা" : "blood donors",
+      badge:
+        (stats.pendingDonorsCount ?? 0) > 0
+          ? `${stats.pendingDonorsCount}`
+          : null,
+      badgeColor: "rose",
+      color: "rose",
+    },
+    {
+      title: isBn ? "স্বাস্থ্য টিপস ও গাইড" : "Health Tips & Guides",
+      description: isBn
+        ? "স্বাস্থ্য সচেতনতামূলক ব্লগ ও চিকিৎসা পরামর্শ আর্টিকেল"
+        : "Health awareness blogs, guides & medical articles",
+      href: "/admin/health-tips",
+      icon: BookOpen,
+      count: stats.healthTipsCount ?? 0,
+      countLabel: isBn ? "টি আর্টিকেল" : "articles",
+      color: "emerald",
+    },
+    {
+      title: isBn ? "PWA অ্যাপ অ্যানালিটিক্স" : "PWA App Analytics",
+      description: isBn
+        ? "মোবাইল অ্যাপ ইনস্টল, অ্যাক্টিভেশন ও প্ল্যাটফর্ম পরিসংখ্যান"
+        : "App installs, user retention & platform analytics",
+      href: "/admin/pwa",
+      icon: Smartphone,
+      count: stats.pwaInstalls ?? 0,
+      countLabel: isBn ? "টি ইনস্টল" : "installs",
+      color: "teal",
+    },
   ];
 
   if (loading) {
@@ -225,66 +288,6 @@ export default function AdminDashboardPage() {
 
       {/* Admin Stats Grid & Alerts */}
       <AdminStatsGrid stats={stats} />
-
-      {/* Feature Settings Card */}
-      <Card className="border-border shadow-sm bg-gradient-to-r from-slate-900 via-secondary to-slate-900 text-white overflow-hidden">
-        <CardContent className="p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3.5">
-            <div
-              className={`h-11 w-11 rounded-2xl flex items-center justify-center border shrink-0 ${
-                allowMemberTx
-                  ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-400"
-                  : "bg-slate-800 border-slate-700 text-slate-400"
-              }`}
-            >
-              <Settings className="h-5 w-5" />
-            </div>
-            <div>
-              <h3 className="font-heading text-base font-bold text-white flex items-center gap-2">
-                {t("admin.dashboard.memberTxToggleTitle")}
-                <span
-                  className={`text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider ${
-                    allowMemberTx
-                      ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                      : "bg-slate-800 text-slate-400 border border-slate-700"
-                  }`}
-                >
-                  {allowMemberTx
-                    ? isBn
-                      ? "চালু রয়েছে"
-                      : "Enabled"
-                    : isBn
-                    ? "বন্ধ রয়েছে"
-                    : "Disabled"}
-                </span>
-              </h3>
-              <p className="text-xs text-slate-300 mt-0.5">
-                {t("admin.dashboard.memberTxToggleDesc")}
-              </p>
-            </div>
-          </div>
-
-          <Button
-            onClick={() => handleToggleMemberTx(!allowMemberTx)}
-            disabled={togglingMemberTx}
-            variant={allowMemberTx ? "destructive" : "default"}
-            size="sm"
-            className={
-              !allowMemberTx
-                ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-md font-semibold shrink-0"
-                : "font-semibold shrink-0"
-            }
-          >
-            {allowMemberTx
-              ? isBn
-                ? "সুবিধা বন্ধ করুন"
-                : "Disable Feature"
-              : isBn
-              ? "সুবিধা চালু করুন"
-              : "Enable Feature"}
-          </Button>
-        </CardContent>
-      </Card>
 
       {/* Quick Management Hub */}
       <div className="space-y-4">

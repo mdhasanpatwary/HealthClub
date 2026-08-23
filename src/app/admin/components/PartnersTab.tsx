@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Edit3, Trash2, Download } from "lucide-react";
+import { Search, Edit3, Trash2, Download, Building2, Activity, Pill, LayoutGrid } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -9,7 +9,7 @@ import { Pagination } from "@/components/ui/pagination";
 import { Partner } from "@/services/db";
 import { exportToCsv } from "@/lib/exportUtils";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Locale } from "@/lib/i18n";
+import { formatNum, Locale } from "@/lib/i18n";
 
 interface PartnersTabProps {
   partners: Partner[];
@@ -21,6 +21,14 @@ interface PartnersTabProps {
   onPageSizeChange: (size: number) => void;
   partnerSearch: string;
   setPartnerSearch: (val: string) => void;
+  activeCategory: string;
+  onCategoryChange: (category: string) => void;
+  categoryCounts?: {
+    all: number;
+    hospital: number;
+    diagnostic: number;
+    pharmacy: number;
+  };
   onNewPartnerClick: () => void;
   onEditClick: (p: Partner) => void;
   onDeleteClick: (id: string, name: string) => void;
@@ -39,6 +47,9 @@ export function PartnersTab({
   onPageSizeChange,
   partnerSearch,
   setPartnerSearch,
+  activeCategory,
+  onCategoryChange,
+  categoryCounts,
   onNewPartnerClick,
   onEditClick,
   onDeleteClick,
@@ -46,16 +57,45 @@ export function PartnersTab({
   t = (k) => k,
   loading = false,
 }: PartnersTabProps) {
-
   const isEn = locale === "en";
 
+  const categories = [
+    {
+      id: "all",
+      label: isEn ? "All Facilities" : "সকল প্রতিষ্ঠান",
+      icon: LayoutGrid,
+      count: categoryCounts?.all,
+    },
+    {
+      id: "hospital",
+      label: isEn ? "Hospitals" : "হাসপাতাল",
+      icon: Building2,
+      count: categoryCounts?.hospital,
+    },
+    {
+      id: "diagnostic",
+      label: isEn ? "Diagnostic Centers" : "ডায়াগনস্টিক",
+      icon: Activity,
+      count: categoryCounts?.diagnostic,
+    },
+    {
+      id: "pharmacy",
+      label: isEn ? "Pharmacies" : "ফার্মেসি",
+      icon: Pill,
+      count: categoryCounts?.pharmacy,
+    },
+  ];
 
   return (
     <Card className="border-border shadow-md">
-      <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-3">
         <div>
-          <CardTitle className="font-heading text-lg font-bold text-secondary">{t("admin.dashboard.partnerHealthcareDirectory")}</CardTitle>
-          <CardDescription>{t("admin.dashboard.contractedFacilitiesDesc")}</CardDescription>
+          <CardTitle className="font-heading text-lg font-bold text-secondary">
+            {t("admin.dashboard.partnerHealthcareDirectory")}
+          </CardTitle>
+          <CardDescription>
+            {t("admin.dashboard.contractedFacilitiesDesc")}
+          </CardDescription>
         </div>
 
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
@@ -96,6 +136,44 @@ export function PartnersTab({
           </Button>
         </div>
       </CardHeader>
+
+      {/* Category Filter Tabs */}
+      <div className="px-6 py-2.5 border-y border-border/60 bg-muted/20 flex flex-wrap items-center gap-2">
+        {categories.map((cat) => {
+          const Icon = cat.icon;
+          const isActive = activeCategory === cat.id;
+          return (
+            <button
+              key={cat.id}
+              type="button"
+              onClick={() => {
+                onCategoryChange(cat.id);
+                onPageChange(1);
+              }}
+              className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer select-none ${
+                isActive
+                  ? "bg-primary text-white shadow-xs"
+                  : "bg-background hover:bg-muted text-muted-foreground hover:text-foreground border border-border/70"
+              }`}
+            >
+              <Icon className="h-3.5 w-3.5" />
+              <span>{cat.label}</span>
+              {cat.count !== undefined && (
+                <span
+                  className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full font-bold ${
+                    isActive
+                      ? "bg-white/20 text-white"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  {formatNum(cat.count, locale)}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
       <CardContent className="p-0">
         <div className="overflow-x-auto">
           <Table>
@@ -141,7 +219,22 @@ export function PartnersTab({
                   <TableRow key={p.id}>
                     <TableCell className="font-bold text-secondary whitespace-nowrap">{p.name}</TableCell>
                     <TableCell className="capitalize text-xs font-semibold whitespace-nowrap">
-                      {p.category === "hospital" ? (t ? t("admin.dashboard.hospital") : "Hospital") : p.category === "diagnostic" ? (t ? t("admin.dashboard.diagnostic") : "Diagnostic") : (t ? t("admin.dashboard.pharmacy") : "Pharmacy")}
+                      {p.category === "hospital" ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 text-xs font-medium">
+                          <Building2 className="h-3 w-3" />
+                          {t ? t("admin.dashboard.hospital") : "Hospital"}
+                        </span>
+                      ) : p.category === "diagnostic" ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-700 dark:text-sky-300 border border-sky-500/20 text-xs font-medium">
+                          <Activity className="h-3 w-3" />
+                          {t ? t("admin.dashboard.diagnostic") : "Diagnostic"}
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20 text-xs font-medium">
+                          <Pill className="h-3 w-3" />
+                          {t ? t("admin.dashboard.pharmacy") : "Pharmacy"}
+                        </span>
+                      )}
                     </TableCell>
                     <TableCell className="text-muted-foreground">{p.address}</TableCell>
                     <TableCell className="font-bold text-primary font-heading whitespace-nowrap">{p.discount}</TableCell>
@@ -173,7 +266,7 @@ export function PartnersTab({
               ) : (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-8 text-muted-foreground text-xs">
-                    {isEn ? "No partners found." : "কোনো পার্টনার প্রতিষ্ঠান পাওয়া যায়নি।"}
+                    {isEn ? "No facilities found." : "কোনো চিকিৎসাকেন্দ্র বা পার্টনার পাওয়া যায়নি।"}
                   </TableCell>
                 </TableRow>
               )}
@@ -200,4 +293,5 @@ export function PartnersTab({
     </Card>
   );
 }
+
 

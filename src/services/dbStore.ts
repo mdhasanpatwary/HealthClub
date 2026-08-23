@@ -7,6 +7,10 @@ import {
   addPartnerAction,
   updatePartnerAction,
   deletePartnerAction,
+  getPartnerProfileAction,
+  updatePartnerProfileAction,
+  UpdatePartnerProfileInput,
+  getPartnerTransactionsAction,
 } from "@/app/actions/partnerActions";
 import {
   getDoctorsAction,
@@ -18,6 +22,20 @@ import {
   updateDoctorAction,
   deleteDoctorAction,
 } from "@/app/actions/doctorActions";
+import {
+  getPartnerDoctorsAction,
+  getAvailableDoctorsToLinkAction,
+  linkDoctorToPartnerAction,
+  unlinkDoctorFromPartnerAction,
+  addPartnerDoctorAction,
+  updatePartnerDoctorChamberAction,
+  deletePartnerDoctorAction,
+} from "@/app/actions/partnerDoctorActions";
+import type {
+  PartnerDoctorChamberInput,
+  AddPartnerDoctorInput,
+  UpdatePartnerDoctorInput,
+} from "@/app/actions/partnerDoctorActions";
 import {
   addMemberAction,
   getMemberByIdAction,
@@ -51,6 +69,14 @@ import {
   GetAdminNotificationsParams,
   PaginatedAdminNotificationsResult,
 } from "@/app/actions/adminNotificationActions";
+import {
+  getMemberNotificationsAction,
+  GetMemberNotificationsParams,
+  MemberNotificationSummary,
+  markMemberNotificationReadAction,
+  markAllMemberNotificationsReadAction,
+  deleteMemberNotificationAction,
+} from "@/app/actions/memberNotificationActions";
 import { PaginatedResult } from "@/types/pagination";
 
 
@@ -95,6 +121,42 @@ export const dbStore = {
     return deleteDoctorAction(id);
   },
 
+  async getPartnerDoctors(): Promise<{ success: boolean; doctors: Doctor[]; error?: string }> {
+    return getPartnerDoctorsAction();
+  },
+
+  async getAvailableDoctorsToLink(search?: string): Promise<{ success: boolean; doctors: Doctor[]; error?: string }> {
+    return getAvailableDoctorsToLinkAction(search);
+  },
+
+  async linkDoctorToPartner(
+    doctorId: string,
+    chamberData: PartnerDoctorChamberInput
+  ): Promise<{ success: boolean; error?: string }> {
+    return linkDoctorToPartnerAction(doctorId, chamberData);
+  },
+
+  async unlinkDoctorFromPartner(doctorId: string): Promise<{ success: boolean; error?: string }> {
+    return unlinkDoctorFromPartnerAction(doctorId);
+  },
+
+  async addPartnerDoctor(
+    input: AddPartnerDoctorInput
+  ): Promise<{ success: boolean; doctor?: Doctor; error?: string }> {
+    return addPartnerDoctorAction(input);
+  },
+
+  async updatePartnerDoctorChamber(
+    doctorId: string,
+    input: UpdatePartnerDoctorInput
+  ): Promise<{ success: boolean; error?: string }> {
+    return updatePartnerDoctorChamberAction(doctorId, input);
+  },
+
+  async deletePartnerDoctor(doctorId: string): Promise<{ success: boolean; error?: string }> {
+    return deletePartnerDoctorAction(doctorId);
+  },
+
   // --- PARTNERS ---
   async getPartners(): Promise<Partner[]> {
     return getPartnersAction();
@@ -116,6 +178,20 @@ export const dbStore = {
 
   async deletePartner(id: string): Promise<boolean> {
     return deletePartnerAction(id);
+  },
+
+  async getPartnerProfile(): Promise<{ success: boolean; partner?: Partner; error?: string }> {
+    return getPartnerProfileAction();
+  },
+
+  async updatePartnerProfile(
+    input: UpdatePartnerProfileInput
+  ): Promise<{ success: boolean; partner?: Partner; error?: string }> {
+    const res = await updatePartnerProfileAction(input);
+    if (res.success && res.partner) {
+      this.setCurrentPartner(res.partner);
+    }
+    return res;
   },
 
   // --- MEMBERS ---
@@ -218,6 +294,10 @@ export const dbStore = {
     return getPaginatedTransactionsAction(params);
   },
 
+  async getPartnerTransactions(): Promise<Transaction[]> {
+    return getPartnerTransactionsAction();
+  },
+
 
   async addTransaction(tx: Omit<Transaction, "id" | "date">): Promise<Transaction | { error: string }> {
     const newTx = await addTransactionAction(tx);
@@ -302,5 +382,27 @@ export const dbStore = {
     params?: GetAdminNotificationsParams
   ): Promise<PaginatedAdminNotificationsResult> {
     return getAdminNotificationsAction(params);
+  },
+
+  async getMemberNotifications(
+    params?: GetMemberNotificationsParams
+  ): Promise<MemberNotificationSummary> {
+    return getMemberNotificationsAction(params);
+  },
+
+  async markMemberNotificationRead(
+    notificationId: string
+  ): Promise<{ success: boolean; error?: string }> {
+    return markMemberNotificationReadAction(notificationId);
+  },
+
+  async markAllMemberNotificationsRead(): Promise<{ success: boolean; count?: number; error?: string }> {
+    return markAllMemberNotificationsReadAction();
+  },
+
+  async deleteMemberNotification(
+    notificationId: string
+  ): Promise<{ success: boolean; error?: string }> {
+    return deleteMemberNotificationAction(notificationId);
   },
 };

@@ -5,6 +5,7 @@ import { Member } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { PaginatedResult } from "@/types/pagination";
+import { createMemberNotification } from "./memberNotificationActions";
 
 // Helper to format Date objects as YYYY-MM-DD in local time (not UTC).
 // Using toISOString() would shift the date to UTC, causing off-by-one errors
@@ -14,6 +15,31 @@ function formatDate(date: Date): string {
   const m = String(date.getMonth() + 1).padStart(2, "0");
   const d = String(date.getDate()).padStart(2, "0");
   return `${y}-${m}-${d}`;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapPrismaMember(m: any): Member {
+  return {
+    id: m.id,
+    name: m.name,
+    phone: m.phone,
+    email: m.email || "",
+    tier: m.tier as Member["tier"],
+    status: m.status as Member["status"],
+    joinedDate: formatDate(m.joinedDate),
+    expiryDate: formatDate(m.expiryDate),
+    qrCodeUrl: m.qrCodeUrl || undefined,
+    totalSaved: m.totalSaved,
+    address: m.address || "",
+    birthDate: m.birthDate ? formatDate(m.birthDate) : "",
+    profession: m.profession || "",
+    profilePictureUrl: m.profilePictureUrl || "",
+    bkashSender: m.bkashSender || undefined,
+    bkashTxnId: m.bkashTxnId || undefined,
+    renewalStatus: m.renewalStatus || undefined,
+    renewalBkashSender: m.renewalBkashSender || undefined,
+    renewalBkashTxnId: m.renewalBkashTxnId || undefined,
+  };
 }
 
 export interface GetPaginatedMembersParams {
@@ -95,27 +121,7 @@ export async function getPaginatedMembersAction(
       }),
     ]);
 
-    const members: Member[] = data.map((m) => ({
-      id: m.id,
-      name: m.name,
-      phone: m.phone,
-      email: m.email || "",
-      tier: m.tier as Member["tier"],
-      status: m.status as Member["status"],
-      joinedDate: formatDate(m.joinedDate),
-      expiryDate: formatDate(m.expiryDate),
-      qrCodeUrl: m.qrCodeUrl || undefined,
-      totalSaved: m.totalSaved,
-      address: m.address || "",
-      birthDate: m.birthDate ? formatDate(m.birthDate) : "",
-      profession: m.profession || "",
-      profilePictureUrl: m.profilePictureUrl || "",
-      bkashSender: m.bkashSender || undefined,
-      bkashTxnId: m.bkashTxnId || undefined,
-      renewalStatus: m.renewalStatus || undefined,
-      renewalBkashSender: m.renewalBkashSender || undefined,
-      renewalBkashTxnId: m.renewalBkashTxnId || undefined,
-    }));
+    const members: Member[] = data.map(mapPrismaMember);
 
     return {
       data: members,
@@ -206,27 +212,7 @@ export async function getPaginatedRenewalsAction(
       }),
     ]);
 
-    const members: Member[] = data.map((m) => ({
-      id: m.id,
-      name: m.name,
-      phone: m.phone,
-      email: m.email || "",
-      tier: m.tier as Member["tier"],
-      status: m.status as Member["status"],
-      joinedDate: formatDate(m.joinedDate),
-      expiryDate: formatDate(m.expiryDate),
-      qrCodeUrl: m.qrCodeUrl || undefined,
-      totalSaved: m.totalSaved,
-      address: m.address || "",
-      birthDate: m.birthDate ? formatDate(m.birthDate) : "",
-      profession: m.profession || "",
-      profilePictureUrl: m.profilePictureUrl || "",
-      bkashSender: m.bkashSender || undefined,
-      bkashTxnId: m.bkashTxnId || undefined,
-      renewalStatus: m.renewalStatus || undefined,
-      renewalBkashSender: m.renewalBkashSender || undefined,
-      renewalBkashTxnId: m.renewalBkashTxnId || undefined,
-    }));
+    const members: Member[] = data.map(mapPrismaMember);
 
     return {
       data: members,
@@ -271,27 +257,7 @@ export async function getMembersAction(): Promise<Member[]> {
       },
     });
 
-    return data.map((m) => ({
-      id: m.id,
-      name: m.name,
-      phone: m.phone,
-      email: m.email || "",
-      tier: m.tier as Member["tier"],
-      status: m.status as Member["status"],
-      joinedDate: formatDate(m.joinedDate),
-      expiryDate: formatDate(m.expiryDate),
-      qrCodeUrl: m.qrCodeUrl || undefined,
-      totalSaved: m.totalSaved,
-      address: m.address || "",
-      birthDate: m.birthDate ? formatDate(m.birthDate) : "",
-      profession: m.profession || "",
-      profilePictureUrl: m.profilePictureUrl || "",
-      bkashSender: m.bkashSender || undefined,
-      bkashTxnId: m.bkashTxnId || undefined,
-      renewalStatus: m.renewalStatus || undefined,
-      renewalBkashSender: m.renewalBkashSender || undefined,
-      renewalBkashTxnId: m.renewalBkashTxnId || undefined,
-    } as Member));
+    return data.map(mapPrismaMember);
   } catch (error) {
     logger.error("Error in getMembersAction:", error);
     return [];
@@ -462,6 +428,27 @@ export async function approveMemberRenewalAction(memberId: string): Promise<bool
       }
     });
 
+    const expDateBn = newExpiry.toLocaleDateString("bn-BD", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    const expDateEn = newExpiry.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+
+    await createMemberNotification({
+      memberId,
+      type: "renewal_approved",
+      titleBn: "মেম্বারশিপ নবায়ন অনুমোদিত হয়েছে",
+      titleEn: "Membership Renewal Approved",
+      messageBn: `আপনার মেম্বারশিপ সফলভাবে ১ বছরের জন্য নবায়ন করা হয়েছে। নতুন মেয়াদ: ${expDateBn}।`,
+      messageEn: `Your membership has been successfully renewed for 1 year. New expiry: ${expDateEn}.`,
+      link: "/dashboard",
+    });
+
     return true;
   } catch (error) {
     logger.error("Error in approveMemberRenewalAction:", error);
@@ -485,6 +472,17 @@ export async function rejectMemberRenewalAction(memberId: string): Promise<boole
         renewalBkashTxnId: null,
       }
     });
+
+    await createMemberNotification({
+      memberId,
+      type: "renewal_rejected",
+      titleBn: "মেম্বারশিপ নবায়ন আবেদন বাতিল হয়েছে",
+      titleEn: "Membership Renewal Request Rejected",
+      messageBn: "আপনার মেম্বারশিপ নবায়ন আবেদনটি অনুমোদিত হয়নি। অনুগ্রহ করে বিকাশ ট্রানজেকশন তথ্য যাচাই করে পুনরায় আবেদন করুন।",
+      messageEn: "Your membership renewal request was not approved. Please verify your payment transaction details and reapply.",
+      link: "/dashboard/renew",
+    });
+
     return true;
   } catch (error) {
     logger.error("Error in rejectMemberRenewalAction:", error);

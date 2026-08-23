@@ -18,6 +18,7 @@ import {
   Coins,
   Loader2,
   RotateCcw,
+  Receipt,
 } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -331,15 +332,15 @@ export function SettingsTab() {
           </CardContent>
         </Card>
 
-        {/* 4. Announcements & Permissions */}
+        {/* 4. Announcements & Website Banner */}
         <Card className="border border-border shadow-xs">
           <CardHeader className="pb-3">
             <CardTitle className="text-base font-bold flex items-center gap-2">
               <Megaphone className="h-4 w-4 text-primary" />
-              <span>{isEn ? "Announcements & Permissions" : "ঘোষণা ও পারমিশন কন্ট্রোল"}</span>
+              <span>{isEn ? "Website Notice Banner" : "ওয়েবসাইট নোটিশ ও ব্যানার"}</span>
             </CardTitle>
             <CardDescription className="text-xs">
-              {isEn ? "Global site notices and member features" : "ওয়েবসাইট ব্যানার ও মেম্বার ট্রানজেকশন কন্ট্রোল"}
+              {isEn ? "Show announcement bar on top of all pages" : "ওয়েবসাইটের শীর্ষে বিশেষ অফার বা জরুরি নোটিশ প্রদর্শন"}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -349,7 +350,7 @@ export function SettingsTab() {
                   {isEn ? "Enable Global Notice Banner" : "ওয়েবসাইট নোটিশ ব্যানার চালু"}
                 </Label>
                 <p className="text-[11px] text-muted-foreground">
-                  {isEn ? "Show announcement bar on top of all pages" : "ওয়েবসাইটের শীর্ষে বিশেষ অফার বা নোটিশ প্রদর্শন"}
+                  {isEn ? "Show announcement bar to all visitors" : "চালু থাকলে ভিজিটররা সাইটের উপরে নোটিশ দেখতে পাবে"}
                 </p>
               </div>
               <button
@@ -395,14 +396,49 @@ export function SettingsTab() {
                 )}
               </div>
             )}
+          </CardContent>
+        </Card>
 
-            <div className="flex items-center justify-between p-3 rounded-xl bg-muted/50 border border-border">
-              <div className="space-y-0.5">
+        {/* 5. Member Self-Transaction Entry */}
+        <Card className="border border-border shadow-xs">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between gap-2">
+              <CardTitle className="text-base font-bold flex items-center gap-2">
+                <Receipt className="h-4 w-4 text-primary" />
+                <span>{isEn ? "Member Self-Transaction Entry" : "মেম্বারদের স্বয়ংক্রিয় লেনদেন এন্ট্রি সুবিধা"}</span>
+              </CardTitle>
+              <span
+                className={`text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider ${
+                  allowMemberTx
+                    ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700"
+                }`}
+              >
+                {allowMemberTx
+                  ? isEn
+                    ? "Enabled"
+                    : "চালু রয়েছে"
+                  : isEn
+                  ? "Disabled"
+                  : "বন্ধ রয়েছে"}
+              </span>
+            </div>
+            <CardDescription className="text-xs">
+              {isEn
+                ? "Allow members to record discount transactions directly from their own dashboard"
+                : "চালু থাকলে মেম্বাররা তাদের নিজ ড্যাশবোর্ড থেকে ডিসকাউন্ট লেনদেন যুক্ত করতে পারবেন।"}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between p-3.5 rounded-xl bg-muted/50 border border-border">
+              <div className="space-y-0.5 pr-3">
                 <Label className="text-xs font-bold text-foreground">
-                  {isEn ? "Allow Member Self-Transactions" : "মেম্বারদের সেলফ-ট্রানজেকশন অনুমতি"}
+                  {isEn ? "Allow Member Self-Transactions" : "মেম্বার স্বয়ংক্রিয় লেনদেন অনুমতি"}
                 </Label>
                 <p className="text-[11px] text-muted-foreground">
-                  {isEn ? "Allows members to add discounts manually from dashboard" : "মেম্বাররা নিজে ড্যাশবোর্ড থেকে ডিসকাউন্ট এন্ট্রি দিতে পারবে কি না"}
+                  {isEn
+                    ? "Allows members to add discounts manually from member dashboard"
+                    : "মেম্বাররা নিজে ড্যাশবোর্ড থেকে ডিসকাউন্ট লেনদেন এন্ট্রি দিতে পারবে"}
                 </p>
               </div>
               <button

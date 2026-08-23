@@ -23,6 +23,34 @@ export interface Member {
   renewalBkashTxnId?: string;
 }
 
+export type MemberNotificationType =
+  | 'renewal_approved'
+  | 'renewal_rejected'
+  | 'transaction_recorded'
+  | 'expiring_soon'
+  | 'welcome'
+  | 'system';
+
+export interface MemberNotification {
+  id: string;
+  memberId: string;
+  type: MemberNotificationType;
+  titleBn: string;
+  titleEn: string;
+  messageBn: string;
+  messageEn: string;
+  isRead: boolean;
+  link?: string;
+  createdAt: string;
+}
+
+export interface DepartmentDiscount {
+  id?: string;
+  name: string;
+  discount: string;
+  description?: string;
+}
+
 export interface Partner {
   id: string;
   name: string;
@@ -35,6 +63,9 @@ export interface Partner {
   imageUrl?: string;
   email?: string;
   password?: string;
+  emergencyPhone?: string;
+  workingHours?: string;
+  departmentDiscounts?: string;
 }
 
 export interface Transaction {

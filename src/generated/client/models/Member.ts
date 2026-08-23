@@ -369,6 +369,7 @@ export type MemberWhereInput = {
   renewalBkashSender?: Prisma.StringNullableFilter<"Member"> | string | null
   renewalBkashTxnId?: Prisma.StringNullableFilter<"Member"> | string | null
   transactions?: Prisma.TransactionListRelationFilter
+  notifications?: Prisma.MemberNotificationListRelationFilter
 }
 
 export type MemberOrderByWithRelationInput = {
@@ -397,6 +398,7 @@ export type MemberOrderByWithRelationInput = {
   renewalBkashSender?: Prisma.SortOrderInput | Prisma.SortOrder
   renewalBkashTxnId?: Prisma.SortOrderInput | Prisma.SortOrder
   transactions?: Prisma.TransactionOrderByRelationAggregateInput
+  notifications?: Prisma.MemberNotificationOrderByRelationAggregateInput
 }
 
 export type MemberWhereUniqueInput = Prisma.AtLeast<{
@@ -428,6 +430,7 @@ export type MemberWhereUniqueInput = Prisma.AtLeast<{
   renewalBkashSender?: Prisma.StringNullableFilter<"Member"> | string | null
   renewalBkashTxnId?: Prisma.StringNullableFilter<"Member"> | string | null
   transactions?: Prisma.TransactionListRelationFilter
+  notifications?: Prisma.MemberNotificationListRelationFilter
 }, "id" | "phone" | "email">
 
 export type MemberOrderByWithAggregationInput = {
@@ -518,6 +521,7 @@ export type MemberCreateInput = {
   renewalBkashSender?: string | null
   renewalBkashTxnId?: string | null
   transactions?: Prisma.TransactionCreateNestedManyWithoutMemberInput
+  notifications?: Prisma.MemberNotificationCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateInput = {
@@ -546,6 +550,7 @@ export type MemberUncheckedCreateInput = {
   renewalBkashSender?: string | null
   renewalBkashTxnId?: string | null
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutMemberInput
+  notifications?: Prisma.MemberNotificationUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUpdateInput = {
@@ -574,6 +579,7 @@ export type MemberUpdateInput = {
   renewalBkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   renewalBkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactions?: Prisma.TransactionUpdateManyWithoutMemberNestedInput
+  notifications?: Prisma.MemberNotificationUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateInput = {
@@ -602,6 +608,7 @@ export type MemberUncheckedUpdateInput = {
   renewalBkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   renewalBkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutMemberNestedInput
+  notifications?: Prisma.MemberNotificationUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberCreateManyInput = {
@@ -821,6 +828,20 @@ export type MemberUpdateOneRequiredWithoutTransactionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutTransactionsInput, Prisma.MemberUpdateWithoutTransactionsInput>, Prisma.MemberUncheckedUpdateWithoutTransactionsInput>
 }
 
+export type MemberCreateNestedOneWithoutNotificationsInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutNotificationsInput, Prisma.MemberUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutNotificationsInput
+  connect?: Prisma.MemberWhereUniqueInput
+}
+
+export type MemberUpdateOneRequiredWithoutNotificationsNestedInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutNotificationsInput, Prisma.MemberUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutNotificationsInput
+  upsert?: Prisma.MemberUpsertWithoutNotificationsInput
+  connect?: Prisma.MemberWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutNotificationsInput, Prisma.MemberUpdateWithoutNotificationsInput>, Prisma.MemberUncheckedUpdateWithoutNotificationsInput>
+}
+
 export type MemberCreateWithoutTransactionsInput = {
   id: string
   name: string
@@ -846,6 +867,7 @@ export type MemberCreateWithoutTransactionsInput = {
   renewalStatus?: string | null
   renewalBkashSender?: string | null
   renewalBkashTxnId?: string | null
+  notifications?: Prisma.MemberNotificationCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateWithoutTransactionsInput = {
@@ -873,6 +895,7 @@ export type MemberUncheckedCreateWithoutTransactionsInput = {
   renewalStatus?: string | null
   renewalBkashSender?: string | null
   renewalBkashTxnId?: string | null
+  notifications?: Prisma.MemberNotificationUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberCreateOrConnectWithoutTransactionsInput = {
@@ -916,6 +939,7 @@ export type MemberUpdateWithoutTransactionsInput = {
   renewalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   renewalBkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   renewalBkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifications?: Prisma.MemberNotificationUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutTransactionsInput = {
@@ -943,6 +967,135 @@ export type MemberUncheckedUpdateWithoutTransactionsInput = {
   renewalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   renewalBkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   renewalBkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifications?: Prisma.MemberNotificationUncheckedUpdateManyWithoutMemberNestedInput
+}
+
+export type MemberCreateWithoutNotificationsInput = {
+  id: string
+  name: string
+  phone: string
+  email?: string | null
+  password: string
+  tier: string
+  status: string
+  joinedDate: Date | string
+  expiryDate: Date | string
+  qrCodeUrl?: string | null
+  totalSaved?: number
+  address?: string | null
+  birthDate?: Date | string | null
+  profession?: string | null
+  profilePictureUrl?: string | null
+  emailVerified?: boolean
+  verificationCode?: string | null
+  verificationCodeCreatedAt?: Date | string | null
+  createdAt?: Date | string
+  bkashSender?: string | null
+  bkashTxnId?: string | null
+  renewalStatus?: string | null
+  renewalBkashSender?: string | null
+  renewalBkashTxnId?: string | null
+  transactions?: Prisma.TransactionCreateNestedManyWithoutMemberInput
+}
+
+export type MemberUncheckedCreateWithoutNotificationsInput = {
+  id: string
+  name: string
+  phone: string
+  email?: string | null
+  password: string
+  tier: string
+  status: string
+  joinedDate: Date | string
+  expiryDate: Date | string
+  qrCodeUrl?: string | null
+  totalSaved?: number
+  address?: string | null
+  birthDate?: Date | string | null
+  profession?: string | null
+  profilePictureUrl?: string | null
+  emailVerified?: boolean
+  verificationCode?: string | null
+  verificationCodeCreatedAt?: Date | string | null
+  createdAt?: Date | string
+  bkashSender?: string | null
+  bkashTxnId?: string | null
+  renewalStatus?: string | null
+  renewalBkashSender?: string | null
+  renewalBkashTxnId?: string | null
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutMemberInput
+}
+
+export type MemberCreateOrConnectWithoutNotificationsInput = {
+  where: Prisma.MemberWhereUniqueInput
+  create: Prisma.XOR<Prisma.MemberCreateWithoutNotificationsInput, Prisma.MemberUncheckedCreateWithoutNotificationsInput>
+}
+
+export type MemberUpsertWithoutNotificationsInput = {
+  update: Prisma.XOR<Prisma.MemberUpdateWithoutNotificationsInput, Prisma.MemberUncheckedUpdateWithoutNotificationsInput>
+  create: Prisma.XOR<Prisma.MemberCreateWithoutNotificationsInput, Prisma.MemberUncheckedCreateWithoutNotificationsInput>
+  where?: Prisma.MemberWhereInput
+}
+
+export type MemberUpdateToOneWithWhereWithoutNotificationsInput = {
+  where?: Prisma.MemberWhereInput
+  data: Prisma.XOR<Prisma.MemberUpdateWithoutNotificationsInput, Prisma.MemberUncheckedUpdateWithoutNotificationsInput>
+}
+
+export type MemberUpdateWithoutNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  tier?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  joinedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalSaved?: Prisma.IntFieldUpdateOperationsInput | number
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  renewalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  renewalBkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  renewalBkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactions?: Prisma.TransactionUpdateManyWithoutMemberNestedInput
+}
+
+export type MemberUncheckedUpdateWithoutNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  tier?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  joinedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalSaved?: Prisma.IntFieldUpdateOperationsInput | number
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  renewalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  renewalBkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  renewalBkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 
@@ -952,10 +1105,12 @@ export type MemberUncheckedUpdateWithoutTransactionsInput = {
 
 export type MemberCountOutputType = {
   transactions: number
+  notifications: number
 }
 
 export type MemberCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactions?: boolean | MemberCountOutputTypeCountTransactionsArgs
+  notifications?: boolean | MemberCountOutputTypeCountNotificationsArgs
 }
 
 /**
@@ -973,6 +1128,13 @@ export type MemberCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exten
  */
 export type MemberCountOutputTypeCountTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TransactionWhereInput
+}
+
+/**
+ * MemberCountOutputType without action
+ */
+export type MemberCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MemberNotificationWhereInput
 }
 
 
@@ -1002,6 +1164,7 @@ export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   renewalBkashSender?: boolean
   renewalBkashTxnId?: boolean
   transactions?: boolean | Prisma.Member$transactionsArgs<ExtArgs>
+  notifications?: boolean | Prisma.Member$notificationsArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["member"]>
 
@@ -1089,6 +1252,7 @@ export type MemberSelectScalar = {
 export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "phone" | "email" | "password" | "tier" | "status" | "joinedDate" | "expiryDate" | "qrCodeUrl" | "totalSaved" | "address" | "birthDate" | "profession" | "profilePictureUrl" | "emailVerified" | "verificationCode" | "verificationCodeCreatedAt" | "createdAt" | "bkashSender" | "bkashTxnId" | "renewalStatus" | "renewalBkashSender" | "renewalBkashTxnId", ExtArgs["result"]["member"]>
 export type MemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactions?: boolean | Prisma.Member$transactionsArgs<ExtArgs>
+  notifications?: boolean | Prisma.Member$notificationsArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MemberIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1098,6 +1262,7 @@ export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   name: "Member"
   objects: {
     transactions: Prisma.$TransactionPayload<ExtArgs>[]
+    notifications: Prisma.$MemberNotificationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1519,6 +1684,7 @@ readonly fields: MemberFieldRefs;
 export interface Prisma__MemberClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   transactions<T extends Prisma.Member$transactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notifications<T extends Prisma.Member$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemberNotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1986,6 +2152,30 @@ export type Member$transactionsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.TransactionScalarFieldEnum | Prisma.TransactionScalarFieldEnum[]
+}
+
+/**
+ * Member.notifications
+ */
+export type Member$notificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MemberNotification
+   */
+  select?: Prisma.MemberNotificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MemberNotification
+   */
+  omit?: Prisma.MemberNotificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MemberNotificationInclude<ExtArgs> | null
+  where?: Prisma.MemberNotificationWhereInput
+  orderBy?: Prisma.MemberNotificationOrderByWithRelationInput | Prisma.MemberNotificationOrderByWithRelationInput[]
+  cursor?: Prisma.MemberNotificationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MemberNotificationScalarFieldEnum | Prisma.MemberNotificationScalarFieldEnum[]
 }
 
 /**

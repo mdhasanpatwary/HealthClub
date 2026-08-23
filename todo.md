@@ -154,4 +154,117 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/components/layout/Header.tsx`, `src/components/layout/AdminHeaderNav.tsx`, `src/components/layout/PublicHeaderNav.tsx`, `src/components/layout/MobileNavDrawer.tsx`, `src/lib/translations.bn.ts`, `src/lib/translations.en.ts`
   - **Details**: Modernized main header with context-aware desktop navigation displaying categorized Menu > Submenu dropdowns (Dashboard, Members & Billing, Medical Network, Services & Content, System & Support, Live Website Switcher), live badge counters, and grouped mobile drawer. Split header components to strictly respect the 500-line limit.
 
+---
+
+## 🌟 Phase 7: Member & Partner Portal Enhancements (TODO-33 to TODO-37)
+
+- [x] **TODO-33** (1.6): **Member In-App Notification Center & Real-Time Alerts**
+  - **Files**: `prisma/schema.prisma`, `src/app/actions/memberNotificationActions.ts`, `src/app/dashboard/components/MemberNotificationBell.tsx`, `src/app/dashboard/page.tsx`, `src/lib/translations.bn.ts`, `src/lib/translations.en.ts`
+  - **Details**: Implement an in-app notification center for registered members to receive real-time alerts when renewals are approved/rejected, when hospital partner records discount transactions, or when membership approaches expiration.
+
+- [x] **TODO-34** (2.1): **Partner Profile, Contact & Department Discount Branding Editor**
+  - **Files**: `src/app/partner/dashboard/page.tsx`, `src/app/partner/dashboard/components/PartnerProfileSettingsTab.tsx`, `src/app/actions/partnerActions.ts`, `src/lib/translations.bn.ts`, `src/lib/translations.en.ts`
+  - **Details**: Enable partner hospitals and diagnostic centers to update their own address, contact numbers, emergency helpline, working hours, and detailed department discount breakdown (e.g. Pathology, Radiology, Bed charge, Pharmacy).
+
+- [x] **TODO-35** (2.2): **Partner Hospital Doctor Roster & Chamber Management**
+  - **Files**: `src/app/partner/dashboard/doctors/page.tsx`, `src/app/partner/dashboard/components/PartnerDoctorsTab.tsx`, `src/app/actions/doctorActions.ts`, `src/app/actions/partnerActions.ts`
+  - **Details**: Provide a dedicated tab in partner dashboard allowing hospitals to view, link/unlink, and manage specialist doctors practicing in their chambers, updating room numbers and visiting schedules.
+
+- [ ] **TODO-36** (2.3): **Partner Monthly Settlement Statements & Analytics**
+  - **Files**: `src/app/partner/dashboard/analytics/page.tsx`, `src/app/partner/dashboard/components/PartnerAnalyticsTab.tsx`, `src/app/actions/partnerActions.ts`, `src/lib/exportUtils.ts`
+  - **Details**: Build partner analytics dashboard with monthly patient volume charts, total discount dispensed, peak visiting days, and downloadable monthly billing statement summaries in CSV/PDF.
+
+- [ ] **TODO-37** (2.4): **Partner Multi-Cashier & Counter Staff Accounts**
+  - **Files**: `prisma/schema.prisma`, `src/app/actions/partnerStaffActions.ts`, `src/app/partner/dashboard/components/PartnerStaffTab.tsx`, `src/proxy.ts`
+  - **Details**: Allow hospital admin accounts to create individual cashier/counter sub-logins with desk identifiers (e.g., "Counter 1 - Billing", "Pharmacy Desk") to track who processed each discount transaction.
+
+---
+
+## 🌟 Phase 8: Admin Operations, Analytics & Management (TODO-38 to TODO-42)
+
+- [ ] **TODO-38** (3.2): **Admin Broadcast SMS & Email Campaign Manager**
+  - **Files**: `src/app/admin/broadcast/page.tsx`, `src/app/admin/components/BroadcastTab.tsx`, `src/app/actions/broadcastActions.ts`, `src/lib/mail.ts`, `src/app/admin/components/AdminNav.tsx`
+  - **Details**: Build broadcast messaging tool in Admin Portal to draft and send mass announcements (Free Health Camps, new hospital discounts, blood donation appeals) to segmented user groups (All Members, Active only, Blood Donors, Partners).
+
+- [ ] **TODO-39** (3.3): **Admin Financial & Revenue Analytics Dashboard**
+  - **Files**: `src/app/admin/analytics/page.tsx`, `src/app/admin/components/RevenueAnalyticsTab.tsx`, `src/app/actions/analyticsActions.ts`, `src/app/admin/components/AdminNav.tsx`
+  - **Details**: Implement visual revenue charts and KPIs tracking membership subscription revenue, renewal retention rates, monthly transaction volumes, and top-performing partner hospitals.
+
+- [ ] **TODO-40** (3.4): **Admin Bulk Data Operations & Excel/CSV Importer**
+  - **Files**: `src/app/admin/import/page.tsx`, `src/app/admin/components/BulkImportDialog.tsx`, `src/app/actions/bulkImportActions.ts`, `src/app/admin/components/DoctorsTab.tsx`, `src/app/admin/components/PartnersTab.tsx`
+  - **Details**: Build bulk data importer supporting `.xlsx` and `.csv` files to import doctors, hospitals, and emergency contacts in batches with column auto-mapping and validation error reporting.
+
+- [ ] **TODO-41** (3.5): **Admin Role-Based Access Control (RBAC) & Staff Management**
+  - **Files**: `prisma/schema.prisma`, `src/app/actions/adminUserActions.ts`, `src/app/admin/staff/page.tsx`, `src/app/admin/components/AdminStaffTab.tsx`, `src/proxy.ts`, `src/lib/session.ts`
+  - **Details**: Replace single hardcoded admin email with database-backed `AdminUser` model supporting granular roles (`super_admin`, `content_moderator`, `support_staff`) with permissions matrix.
+
+- [ ] **TODO-42** (3.6): **Database Snapshot & Automated Backup Management**
+  - **Files**: `src/app/admin/settings/backup/page.tsx`, `src/app/actions/dbBackupActions.ts`, `src/app/admin/components/SettingsTab.tsx`
+  - **Details**: Implement one-click admin database backup export (JSON/SQL dump) and snapshot management with retention controls for disaster recovery.
+
+---
+
+## 🌟 Phase 9: Medical Network, Discovery & Directory (TODO-43 to TODO-48)
+
+- [ ] **TODO-43** (4.1): **Dedicated SEO Doctor Profile Detail Pages (`/consultants/[id]`)**
+  - **Files**: `src/app/consultants/[id]/page.tsx`, `src/components/consultants/DoctorProfileView.tsx`, `src/app/actions/doctorActions.ts`, `src/proxy.ts`
+  - **Details**: Create dynamic, SEO-optimized individual profile pages for specialist doctors with qualifications, chamber schedules, appointment serial button, Google Maps chamber directions, and JSON-LD schema.
+
+- [ ] **TODO-44** (4.2): **Dedicated Partner Hospital & Clinic Profile Pages (`/partner-hospitals/[id]`)**
+  - **Files**: `src/app/partner-hospitals/[id]/page.tsx`, `src/components/partner-hospitals/HospitalProfileView.tsx`, `src/app/actions/partnerActions.ts`, `src/proxy.ts`
+  - **Details**: Build comprehensive hospital profile pages showcasing facility badges (ICU, CCU, 24/7 Emergency, Dialysis, Ambulance), photo gallery, itemized department discounts, and resident doctor roster.
+
+- [ ] **TODO-45** (4.3): **Upazila & Area Location Filtering for Doctors & Hospitals**
+  - **Files**: `prisma/schema.prisma`, `src/app/consultants/page.tsx`, `src/app/partner-hospitals/page.tsx`, `src/components/ui/DoctorDirectory.tsx`, `src/app/partner-hospitals/components/PartnerDirectory.tsx`
+  - **Details**: Add `upazila` / `area` field to Doctor and Partner schemas and introduce area filtering pills (Feni Sadar, Chhagalnaiya, Daganbhuiyan, Sonagazi, Parshuram, Fulgazi) across directories.
+
+- [ ] **TODO-46** (4.4): **Doctor Chamber Availability Status & Schedule Notices**
+  - **Files**: `prisma/schema.prisma`, `src/app/actions/doctorActions.ts`, `src/app/admin/components/DoctorDialog.tsx`, `src/components/ui/DoctorDirectory.tsx`, `src/app/consultants/[id]/page.tsx`
+  - **Details**: Add chamber availability toggle (`available_today`, `on_leave_until`, `notice`) to Doctor model with visual badges ("Available Today", "Chamber Closed", "On Leave until Date") on directory cards.
+
+- [ ] **TODO-47** (4.5): **Verified Member Reviews & Rating System**
+  - **Files**: `prisma/schema.prisma`, `src/app/actions/reviewActions.ts`, `src/components/reviews/ReviewSection.tsx`, `src/app/admin/components/ReviewsTab.tsx`, `src/app/partner-hospitals/[id]/page.tsx`
+  - **Details**: Allow verified active members who completed a discount transaction at a partner hospital to submit star ratings and service feedback with admin moderation controls.
+
+- [ ] **TODO-48** (5.3): **Ambulance Type Classification & Filtering**
+  - **Files**: `src/data/emergencyData.ts`, `src/app/actions/emergencyAdminActions.ts`, `src/app/emergency/components/EmergencyDirectory.tsx`, `src/app/admin/components/EmergencyAmbulanceDialog.tsx`
+  - **Details**: Classify ambulances by vehicle type (AC Ambulance, Non-AC Ambulance, ICU Support Ambulance, Freezing Carrier) with filter chips on `/emergency` and type badges.
+
+---
+
+## 🌟 Phase 10: Health Tools & Wellness Knowledge (TODO-49 to TODO-52)
+
+- [ ] **TODO-49** (6.1): **Pregnancy Due Date (EDD) & Trimester Progress Calculator**
+  - **Files**: `src/app/health-tools/page.tsx`, `src/app/health-tools/components/PregnancyCalculator.tsx`, `src/lib/translations.bn.ts`, `src/lib/translations.en.ts`
+  - **Details**: Build an interactive Pregnancy Due Date (EDD) calculator based on Last Menstrual Period (LMP) or Ultrasound date, displaying current trimester progress, baby size milestones, and maternal nutrition advice.
+
+- [ ] **TODO-50** (6.2): **Blood Pressure & Diabetes Range Clinical Evaluator**
+  - **Files**: `src/app/health-tools/page.tsx`, `src/app/health-tools/components/BpDiabetesEvaluator.tsx`, `src/lib/translations.bn.ts`, `src/lib/translations.en.ts`
+  - **Details**: Implement interactive clinical evaluation tools for Systolic/Diastolic blood pressure categories (Normal, Elevated, Stage 1/2 Hypertension) and Fasting/2-hour post-meal blood sugar levels.
+
+- [ ] **TODO-51** (6.3): **Unified Health Assessment PDF Report Generator**
+  - **Files**: `src/app/health-tools/components/HealthReportExportButton.tsx`, `src/lib/healthReportPdf.ts`, `src/app/health-tools/page.tsx`
+  - **Details**: Enable users to generate and download a branded, comprehensive PDF Health Assessment Summary combining BMI, Daily Calorie target, Water intake requirement, and clinical indicators with health tips.
+
+- [ ] **TODO-52** (6.4): **Health Tips Estimated Reading Time & Reader Reactions**
+  - **Files**: `src/app/health-tips/[slug]/page.tsx`, `src/app/actions/healthTipsAdminActions.ts`, `src/components/health-tips/ArticleReactions.tsx`, `src/lib/readingTime.ts`
+  - **Details**: Add automated reading time calculation badge (e.g. "৩ মিনিট পড়ার সময়") and reader feedback reactions ("Was this article helpful? 👍 Helpful / 👎 Not really") with dynamic count updates.
+
+---
+
+## 🌟 Phase 11: PWA, Offline Caching & Infrastructure Security (TODO-53 to TODO-55)
+
+- [ ] **TODO-53** (7.1): **PWA Web Push Notifications Engine**
+  - **Files**: `src/sw.ts`, `src/app/actions/pushNotificationActions.ts`, `src/components/pwa/PushNotificationPrompt.tsx`, `src/app/admin/notifications/page.tsx`
+  - **Details**: Implement Web Push API with VAPID subscription keys in Service Worker to broadcast browser push alerts for membership renewal reminders, emergency blood drives, and platform health advisories.
+
+- [ ] **TODO-54** (7.2): **Offline Caching for Digital Member Card & Emergency Contacts**
+  - **Files**: `src/sw.ts`, `src/app/dashboard/components/OfflineCardBanner.tsx`, `src/lib/safeStorage.ts`
+  - **Details**: Configure CacheStorage & IndexedDB offline strategies in Service Worker to ensure members can view and present their digital ID card and call emergency ambulances even with zero network connectivity.
+
+- [ ] **TODO-55** (7.3): **Rate Limiting Protection on Sensitive Public Forms & Auth Actions**
+  - **Files**: `src/lib/rateLimit.ts`, `src/app/actions/memberAuthActions.ts`, `src/app/actions/contactActions.ts`, `src/app/actions/partnerRequestActions.ts`
+  - **Details**: Implement sliding-window rate limiting on login, registration, contact message, and partner onboarding actions to safeguard server endpoints against brute-force attempts and automated spam submissions.
+
+
 

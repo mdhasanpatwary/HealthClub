@@ -33,6 +33,7 @@ model Member {
   renewalBkashSender String?      @map("renewal_bkash_sender")
   renewalBkashTxnId  String?      @map("renewal_bkash_txn_id")
   transactions      Transaction[]
+  notifications     MemberNotification[]
 
   // Indexes for frequent filter/sort patterns
   @@index([status])
@@ -55,6 +56,9 @@ model Partner {
   logoText                  String        @map("logo_text")
   mapLink                   String?       @map("map_link")
   imageUrl                  String?       @map("image_url")
+  emergencyPhone            String?       @map("emergency_phone")
+  workingHours              String?       @map("working_hours")
+  departmentDiscounts       String?       @map("department_discounts")
   verificationCode          String?       @map("verification_code")
   verificationCodeCreatedAt DateTime?     @map("verification_code_created_at") @db.Timestamptz
   createdAt                 DateTime      @default(now()) @map("created_at") @db.Timestamptz
@@ -169,4 +173,24 @@ model PwaInstallation {
   @@index([installedAt(sort: Desc)], map: "pwa_installations_installed_at_idx")
   @@index([platform], map: "pwa_installations_platform_idx")
   @@map("pwa_installations")
+}
+
+model MemberNotification {
+  id        String   @id @default(uuid())
+  memberId  String   @map("member_id")
+  type      String   // 'renewal_approved' | 'renewal_rejected' | 'transaction_recorded' | 'expiring_soon' | 'welcome' | 'system'
+  titleBn   String   @map("title_bn")
+  titleEn   String   @map("title_en")
+  messageBn String   @map("message_bn")
+  messageEn String   @map("message_en")
+  isRead    Boolean  @default(false) @map("is_read")
+  link      String?  @map("link")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([memberId], map: "member_notifications_member_id_idx")
+  @@index([memberId, isRead], map: "member_notifications_member_is_read_idx")
+  @@index([createdAt(sort: Desc)], map: "member_notifications_created_at_idx")
+  @@map("member_notifications")
 }

@@ -3,6 +3,7 @@ import { Heart, Clock, AlertTriangle } from "lucide-react";
 import { Member } from "@/services/db";
 import { Button } from "@/components/ui/button";
 import { formatNum, Locale } from "@/lib/i18n";
+import { MemberNotificationBell } from "./MemberNotificationBell";
 
 interface DashboardWelcomeHeaderProps {
   user: Member;
@@ -97,12 +98,15 @@ export function DashboardWelcomeHeader({
             </div>
           </div>
 
-          {/* Status badge */}
-          <div className="flex items-center gap-2">
-            <span className={`h-2 w-2 rounded-full ${status.dot}`} />
-            <span className={`text-xs font-bold px-3.5 py-1.5 rounded-full border ${status.badge}`}>
-              {status.label}
-            </span>
+          {/* Status badge & Notification Bell */}
+          <div className="flex items-center gap-3 self-end sm:self-center">
+            <MemberNotificationBell />
+            <div className="flex items-center gap-2">
+              <span className={`h-2 w-2 rounded-full ${status.dot}`} />
+              <span className={`text-xs font-bold px-3.5 py-1.5 rounded-full border ${status.badge}`}>
+                {status.label}
+              </span>
+            </div>
           </div>
         </div>
       </div>

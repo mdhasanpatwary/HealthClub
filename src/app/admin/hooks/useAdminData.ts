@@ -36,8 +36,6 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
   });
 
   const [partners, setPartners] = useState<Partner[]>([]);
-  const [allowMemberTx, setAllowMemberTx] = useState<boolean>(false);
-  const [togglingMemberTx, setTogglingMemberTx] = useState<boolean>(false);
 
   // Quick transaction modal states
   const [newTx, setNewTx] = useState({ memberId: "", partnerId: "", amount: "" });
@@ -45,14 +43,12 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
 
   const loadData = useCallback(async () => {
     try {
-      const [statsRes, partnersRes, allowTxRes] = await Promise.all([
+      const [statsRes, partnersRes] = await Promise.all([
         dbStore.getStats(),
         dbStore.getPartners(),
-        dbStore.isMemberTxAllowed(),
       ]);
       setStats(statsRes);
       setPartners(partnersRes);
-      setAllowMemberTx(allowTxRes);
     } catch {
       toast.error("ড্যাশবোর্ড ডেটা লোড করতে সমস্যা হয়েছে।");
     } finally {
@@ -78,23 +74,6 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
       window.removeEventListener("admin-data-change", handleDataChange);
     };
   }, [loadData]);
-
-  const handleToggleMemberTx = async (newVal: boolean) => {
-    setTogglingMemberTx(true);
-    try {
-      const success = await dbStore.setMemberTxAllowed(newVal);
-      if (success) {
-        setAllowMemberTx(newVal);
-        toast.success(newVal ? t("admin.dashboard.memberTxEnabled") : t("admin.dashboard.memberTxDisabled"));
-      } else {
-        toast.error(t("admin.dashboard.txLogFailed"));
-      }
-    } catch {
-      toast.error(t("admin.dashboard.txLogFailed"));
-    } finally {
-      setTogglingMemberTx(false);
-    }
-  };
 
   const handleAddTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -151,9 +130,6 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
     loading,
     stats,
     partners,
-    allowMemberTx,
-    togglingMemberTx,
-    handleToggleMemberTx,
     newTx,
     setNewTx,
     isTxOpen,

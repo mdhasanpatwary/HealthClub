@@ -1,11 +1,10 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { Partner, Transaction } from "@/services/db";
+import { Partner } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag } from "next/cache";
-import { parseDiscountPercentage } from "@/lib/utils";
 import { PaginatedResult } from "@/types/pagination";
 import {
   addPartnerRequestAction as _addPartnerRequestAction,
@@ -17,6 +16,10 @@ import {
   requestPartnerPasswordResetAction as _requestPartnerPasswordResetAction,
   resetPartnerPasswordAction as _resetPartnerPasswordAction,
 } from "./partnerRequestActions";
+import {
+  getPartnerTransactionsAction as _getPartnerTransactionsAction,
+  addPartnerTransactionAction as _addPartnerTransactionAction,
+} from "./partnerTransactionActions";
 
 export async function addPartnerRequestAction(...args: Parameters<typeof _addPartnerRequestAction>) {
   return _addPartnerRequestAction(...args);
@@ -109,9 +112,13 @@ export async function getPaginatedPartnersAdminAction(
           address: true,
           discount: true,
           phone: true,
+          email: true,
           logoText: true,
           mapLink: true,
           imageUrl: true,
+          emergencyPhone: true,
+          workingHours: true,
+          departmentDiscounts: true,
         },
       }),
     ]);
@@ -123,9 +130,13 @@ export async function getPaginatedPartnersAdminAction(
       address: p.address,
       discount: p.discount,
       phone: p.phone,
+      email: p.email || undefined,
       logoText: p.logoText,
       mapLink: p.mapLink || undefined,
       imageUrl: p.imageUrl || undefined,
+      emergencyPhone: p.emergencyPhone || undefined,
+      workingHours: p.workingHours || undefined,
+      departmentDiscounts: p.departmentDiscounts || undefined,
     }));
 
     return {
@@ -160,9 +171,13 @@ export const getPartnersAction = unstable_cache(
           address: true,
           discount: true,
           phone: true,
+          email: true,
           logoText: true,
           mapLink: true,
           imageUrl: true,
+          emergencyPhone: true,
+          workingHours: true,
+          departmentDiscounts: true,
         },
       });
 
@@ -173,9 +188,13 @@ export const getPartnersAction = unstable_cache(
         address: p.address,
         discount: p.discount,
         phone: p.phone,
+        email: p.email || undefined,
         logoText: p.logoText,
         mapLink: p.mapLink || undefined,
         imageUrl: p.imageUrl || undefined,
+        emergencyPhone: p.emergencyPhone || undefined,
+        workingHours: p.workingHours || undefined,
+        departmentDiscounts: p.departmentDiscounts || undefined,
       }));
     } catch (error) {
       logger.error("Error in getPartnersAction:", error);
@@ -200,9 +219,13 @@ export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Pa
         address: partner.address,
         discount: partner.discount,
         phone: partner.phone,
+        email: partner.email || null,
         logoText: partner.logoText,
         mapLink: partner.mapLink || null,
         imageUrl: partner.imageUrl || null,
+        emergencyPhone: partner.emergencyPhone || null,
+        workingHours: partner.workingHours || null,
+        departmentDiscounts: partner.departmentDiscounts || null,
       },
     });
 
@@ -213,15 +236,20 @@ export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Pa
       address: p.address,
       discount: p.discount,
       phone: p.phone,
+      email: p.email || undefined,
       logoText: p.logoText,
       mapLink: p.mapLink || undefined,
       imageUrl: p.imageUrl || undefined,
+      emergencyPhone: p.emergencyPhone || undefined,
+      workingHours: p.workingHours || undefined,
+      departmentDiscounts: p.departmentDiscounts || undefined,
     };
   } catch (error) {
     logger.error("Error in addPartnerAction:", error);
     return { error: "পার্টনার যোগ করতে সমস্যা হয়েছে।" };
   } finally {
     updateTag(PARTNERS_TAG);
+    updateTag("homepage-partners");
   }
 }
 
@@ -238,9 +266,13 @@ export async function updatePartnerAction(id: string, partner: Omit<Partner, "id
         address: partner.address,
         discount: partner.discount,
         phone: partner.phone,
+        email: partner.email || null,
         logoText: partner.logoText,
         mapLink: partner.mapLink || null,
         imageUrl: partner.imageUrl || null,
+        emergencyPhone: partner.emergencyPhone || null,
+        workingHours: partner.workingHours || null,
+        departmentDiscounts: partner.departmentDiscounts || null,
       },
     });
     return true;
@@ -249,6 +281,7 @@ export async function updatePartnerAction(id: string, partner: Omit<Partner, "id
     return false;
   } finally {
     updateTag(PARTNERS_TAG);
+    updateTag("homepage-partners");
   }
 }
 
@@ -266,111 +299,161 @@ export async function deletePartnerAction(id: string): Promise<boolean> {
     return false;
   } finally {
     updateTag(PARTNERS_TAG);
+    updateTag("homepage-partners");
   }
 }
 
-// --- PARTNER TRANSACTIONS ---
+// --- PARTNER PROFILE ACTIONS (Self Management) ---
 
-export async function getPartnerTransactionsAction(): Promise<Transaction[]> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "partner") return [];
-  try {
-    const data = await prisma.transaction.findMany({
-      where: { partnerId: session.userId },
-      orderBy: { date: "desc" },
-    });
-    return data.map((t) => ({
-      id: t.id,
-      memberId: t.memberId,
-      memberName: t.memberName,
-      partnerId: t.partnerId,
-      partnerName: t.partnerName,
-      amount: t.amount,
-      saved: t.saved,
-      date: t.date.toISOString(),
-    }));
-  } catch (error) {
-    logger.error("Error in getPartnerTransactionsAction:", error);
-    return [];
-  }
-}
-
-export async function addPartnerTransactionAction(tx: {
-  memberId: string;
-  amount: number;
-}): Promise<{ success: boolean; message: string }> {
+export async function getPartnerProfileAction(): Promise<{
+  success: boolean;
+  partner?: Partner;
+  error?: string;
+}> {
   const session = await getSessionUser();
   if (!session || session.role !== "partner") {
-    return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
-  }
-
-  if (isNaN(tx.amount) || tx.amount <= 0) {
-    return { success: false, message: "সঠিক বিলের পরিমাণ ইনপুট দিন।" };
+    return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
   }
 
   try {
-    const [member, partner] = await Promise.all([
-      prisma.member.findUnique({
-        where: { id: tx.memberId },
-        select: { id: true, name: true, status: true, expiryDate: true },
-      }),
-      prisma.partner.findUnique({
-        where: { id: session.userId },
-        select: { id: true, name: true, discount: true },
-      }),
-    ]);
+    const data = await prisma.partner.findUnique({
+      where: { id: session.userId },
+      select: {
+        id: true,
+        name: true,
+        category: true,
+        address: true,
+        discount: true,
+        phone: true,
+        email: true,
+        logoText: true,
+        mapLink: true,
+        imageUrl: true,
+        emergencyPhone: true,
+        workingHours: true,
+        departmentDiscounts: true,
+      },
+    });
 
-    if (!member) {
-      return { success: false, message: "মেম্বার আইডিটি খুঁজে পাওয়া যায়নি।" };
+    if (!data) {
+      return { success: false, error: "পার্টনার খুঁজে পাওয়া যায়নি।" };
     }
 
-    if (member.status !== "active") {
-      return { success: false, message: "এই মেম্বারশিপটি সক্রিয় নয়।" };
-    }
-
-    const currentDate = new Date();
-    const expiryDate = new Date(member.expiryDate);
-    expiryDate.setHours(23, 59, 59, 999);
-    if (expiryDate < currentDate) {
-      return { success: false, message: "এই মেম্বারশিপ কার্ডটির মেয়াদ শেষ হয়ে গেছে।" };
-    }
-
-    if (!partner) {
-      return { success: false, message: "পার্টনার ডেটা খুঁজে পাওয়া যায়নি।" };
-    }
-
-    const discountRate = parseDiscountPercentage(partner.discount);
-    const safeRate = Math.min(discountRate, 0.70);
-    const saved = Math.round(tx.amount * safeRate);
-    const txId = `tx_${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
-
-    await prisma.$transaction([
-      prisma.transaction.create({
-        data: {
-          id: txId,
-          memberId: member.id,
-          memberName: member.name,
-          partnerId: partner.id,
-          partnerName: partner.name,
-          amount: tx.amount,
-          saved: saved,
-        },
-      }),
-      prisma.member.update({
-        where: { id: member.id },
-        data: {
-          totalSaved: {
-            increment: saved,
-          },
-        },
-      }),
-    ]);
-
-    updateTag("admin-stats");
-
-    return { success: true, message: `লেনদেন সফলভাবে সম্পন্ন হয়েছে! ছাড়ের পরিমাণ: ৳${saved}` };
+    return {
+      success: true,
+      partner: {
+        id: data.id,
+        name: data.name,
+        category: data.category as Partner["category"],
+        address: data.address,
+        discount: data.discount,
+        phone: data.phone,
+        email: data.email || undefined,
+        logoText: data.logoText,
+        mapLink: data.mapLink || undefined,
+        imageUrl: data.imageUrl || undefined,
+        emergencyPhone: data.emergencyPhone || undefined,
+        workingHours: data.workingHours || undefined,
+        departmentDiscounts: data.departmentDiscounts || undefined,
+      },
+    };
   } catch (error) {
-    logger.error("Error in addPartnerTransactionAction:", error);
-    return { success: false, message: "লেনদেনটি সংরক্ষণ করতে সমস্যা হয়েছে।" };
+    logger.error("Error in getPartnerProfileAction:", error);
+    return { success: false, error: "পার্টনার প্রোফাইল লোড করতে সমস্যা হয়েছে।" };
   }
 }
+
+export interface UpdatePartnerProfileInput {
+  name: string;
+  address: string;
+  phone: string;
+  discount: string;
+  emergencyPhone?: string;
+  workingHours?: string;
+  logoText?: string;
+  mapLink?: string;
+  imageUrl?: string;
+  departmentDiscounts?: string;
+}
+
+export async function updatePartnerProfileAction(
+  input: UpdatePartnerProfileInput
+): Promise<{ success: boolean; partner?: Partner; error?: string }> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "partner") {
+    return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
+  }
+
+  if (!input.name?.trim() || !input.address?.trim() || !input.phone?.trim() || !input.discount?.trim()) {
+    return { success: false, error: "প্রয়োজনীয় ফিল্ডগুলো পূরণ করুন।" };
+  }
+
+  try {
+    const updated = await prisma.partner.update({
+      where: { id: session.userId },
+      data: {
+        name: input.name.trim(),
+        address: input.address.trim(),
+        phone: input.phone.trim(),
+        discount: input.discount.trim(),
+        logoText: input.logoText?.trim() || input.name.trim().slice(0, 15),
+        mapLink: input.mapLink?.trim() || null,
+        imageUrl: input.imageUrl?.trim() || null,
+        emergencyPhone: input.emergencyPhone?.trim() || null,
+        workingHours: input.workingHours?.trim() || null,
+        departmentDiscounts: input.departmentDiscounts || null,
+      },
+      select: {
+        id: true,
+        name: true,
+        category: true,
+        address: true,
+        discount: true,
+        phone: true,
+        email: true,
+        logoText: true,
+        mapLink: true,
+        imageUrl: true,
+        emergencyPhone: true,
+        workingHours: true,
+        departmentDiscounts: true,
+      },
+    });
+
+    return {
+      success: true,
+      partner: {
+        id: updated.id,
+        name: updated.name,
+        category: updated.category as Partner["category"],
+        address: updated.address,
+        discount: updated.discount,
+        phone: updated.phone,
+        email: updated.email || undefined,
+        logoText: updated.logoText,
+        mapLink: updated.mapLink || undefined,
+        imageUrl: updated.imageUrl || undefined,
+        emergencyPhone: updated.emergencyPhone || undefined,
+        workingHours: updated.workingHours || undefined,
+        departmentDiscounts: updated.departmentDiscounts || undefined,
+      },
+    };
+  } catch (error) {
+    logger.error("Error in updatePartnerProfileAction:", error);
+    return { success: false, error: "প্রোফাইল আপডেট করতে সমস্যা হয়েছে।" };
+  } finally {
+    updateTag(PARTNERS_TAG);
+    updateTag("homepage-partners");
+  }
+}
+
+export async function getPartnerTransactionsAction() {
+  return _getPartnerTransactionsAction();
+}
+
+export async function addPartnerTransactionAction(
+  ...args: Parameters<typeof _addPartnerTransactionAction>
+) {
+  return _addPartnerTransactionAction(...args);
+}
+

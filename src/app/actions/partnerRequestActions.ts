@@ -262,9 +262,13 @@ export async function loginPartnerAction(
         address: data.address,
         discount: data.discount,
         phone: data.phone,
+        email: data.email || undefined,
         logoText: data.logoText,
         mapLink: data.mapLink || undefined,
         imageUrl: data.imageUrl || undefined,
+        emergencyPhone: data.emergencyPhone || undefined,
+        workingHours: data.workingHours || undefined,
+        departmentDiscounts: data.departmentDiscounts || undefined,
       }
     };
   } catch (error) {

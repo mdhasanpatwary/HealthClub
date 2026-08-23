@@ -16,6 +16,7 @@ import PublicHeaderNav from "./PublicHeaderNav";
 import AdminHeaderNav from "./AdminHeaderNav";
 import MobileNavDrawer from "./MobileNavDrawer";
 import { AdminNotificationBell } from "./AdminNotificationBell";
+import { MemberNotificationBell } from "@/app/dashboard/components/MemberNotificationBell";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -129,6 +130,9 @@ export default function Header() {
               {/* Admin Notification Bell (Shown when in Admin Mode) */}
               {isAdminMode && <AdminNotificationBell />}
 
+              {/* Member Notification Bell (Shown when logged in as member in public/dashboard mode) */}
+              {!isAdminMode && user && <MemberNotificationBell />}
+
               {/* Language Switcher Button */}
               <Button
                 variant="ghost"
@@ -192,6 +196,11 @@ export default function Header() {
             {isAdminMode && (
               <div className="mr-0.5">
                 <AdminNotificationBell />
+              </div>
+            )}
+            {!isAdminMode && user && (
+              <div className="mr-0.5">
+                <MemberNotificationBell />
               </div>
             )}
             <button

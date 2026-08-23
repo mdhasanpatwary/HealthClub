@@ -7,6 +7,9 @@ import { logger } from "@/lib/logger";
 import { isMemberTxAllowedAction } from "./systemSettingsActions";
 import { unstable_cache, updateTag } from "next/cache";
 import { PaginatedResult } from "@/types/pagination";
+import { INITIAL_BLOOD_DONORS, INITIAL_AMBULANCES } from "@/data/emergencyData";
+import { HEALTH_TIPS_ARTICLES } from "@/data/healthTipsData";
+import { createMemberNotification } from "./memberNotificationActions";
 
 const ADMIN_STATS_TAG = "admin-stats";
 
@@ -235,6 +238,17 @@ export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">)
     // Invalidate admin stats cache AFTER the DB write succeeds
     updateTag(ADMIN_STATS_TAG);
 
+    // Send in-app notification to the member
+    await createMemberNotification({
+      memberId: member.id,
+      type: "transaction_recorded",
+      titleBn: "নতুন ডিসকাউন্ট ট্রানজেকশন যুক্ত হয়েছে",
+      titleEn: "New Discount Transaction Recorded",
+      messageBn: `"${partner.name}" এ ৳${billAmount} টাকার বিলে আপনি ৳${validatedSaved} সাশ্রয় করেছেন!`,
+      messageEn: `You saved ৳${validatedSaved} on a ৳${billAmount} bill at "${partner.name}"!`,
+      link: "/dashboard?tab=history",
+    });
+
     return {
       id: data.id,
       memberId: data.memberId,
@@ -275,11 +289,17 @@ const DEFAULT_STATS = {
   revenue: 0,
   pwaInstalls: 0,
   pwaActive: 0,
+  doctorsCount: 0,
+  activeDoctorsCount: 0,
+  emergencyDonorsCount: 0,
+  pendingDonorsCount: 0,
+  ambulancesCount: 0,
+  healthTipsCount: 0,
   topPartners: [] as Array<{ id: string; name: string; totalSaved: number; transactionCount: number }>,
 };
 
 /**
- * Cached inner function that runs 2 SQL queries instead of 19 Prisma calls.
+ * Cached inner function that runs queries and parses settings.
  * Cached for 60s and invalidated via the "admin-stats" tag on mutations.
  */
 const getCachedAdminStats = unstable_cache(
@@ -289,8 +309,8 @@ const getCachedAdminStats = unstable_cache(
     const in30Days = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
     const past30Days = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-    // 1. Single parameterized SQL query for all scalar counts & aggregates (replaces 19 round-trips)
-    const [countsResult, topPartnerGroups] = await Promise.all([
+    // 1. Single parameterized SQL query for all scalar counts & aggregates
+    const [countsResult, topPartnerGroups, emergencySettings, healthTipsSetting] = await Promise.all([
       prisma.$queryRaw<
         Array<{
           total_members: bigint;
@@ -314,6 +334,8 @@ const getCachedAdminStats = unstable_cache(
           active_premium_count: bigint;
           pwa_installs: bigint;
           pwa_active: bigint;
+          doctors_count: bigint;
+          active_doctors_count: bigint;
         }>
       >`SELECT
           (SELECT COUNT(*) FROM members) AS total_members,
@@ -336,14 +358,24 @@ const getCachedAdminStats = unstable_cache(
           (SELECT COALESCE(SUM(saved), 0) FROM transactions WHERE created_at >= ${startOfMonth}) AS this_month_saved,
           (SELECT COUNT(*) FROM members WHERE tier = 'premium' AND status = 'active') AS active_premium_count,
           (SELECT COUNT(*) FROM pwa_installations WHERE is_standalone = TRUE) AS pwa_installs,
-          (SELECT COUNT(*) FROM pwa_installations WHERE is_standalone = TRUE AND last_active_at >= ${past30Days}) AS pwa_active`,
-      // 2. Top partners query (groupBy is hard to inline in raw SQL cleanly)
+          (SELECT COUNT(*) FROM pwa_installations WHERE is_standalone = TRUE AND last_active_at >= ${past30Days}) AS pwa_active,
+          (SELECT COUNT(*) FROM doctors) AS doctors_count,
+          (SELECT COUNT(*) FROM doctors WHERE is_active = TRUE) AS active_doctors_count`,
+      // 2. Top partners query
       prisma.transaction.groupBy({
         by: ["partnerId", "partnerName"],
         _sum: { saved: true },
         _count: { id: true },
         orderBy: { _sum: { saved: "desc" } },
         take: 3,
+      }),
+      // 3. Emergency settings
+      prisma.systemSetting.findMany({
+        where: { key: { in: ["emergency_donors", "emergency_ambulances"] } },
+      }),
+      // 4. Health tips settings
+      prisma.systemSetting.findUnique({
+        where: { key: "health_tips_articles" },
       }),
     ]);
 
@@ -357,6 +389,49 @@ const getCachedAdminStats = unstable_cache(
       totalSaved: p._sum.saved || 0,
       transactionCount: p._count.id || 0,
     }));
+
+    // Calculate Emergency Donors count & Pending Donors
+    let emergencyDonorsCount = INITIAL_BLOOD_DONORS.length;
+    let pendingDonorsCount = INITIAL_BLOOD_DONORS.filter((d) => d.status === "pending").length;
+    const donorsSetting = emergencySettings.find((s) => s.key === "emergency_donors");
+    if (donorsSetting?.value) {
+      try {
+        const parsed = JSON.parse(donorsSetting.value);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          emergencyDonorsCount = parsed.length;
+          pendingDonorsCount = parsed.filter((d: { status?: string }) => d.status === "pending").length;
+        }
+      } catch (e) {
+        logger.error("Failed to parse emergency_donors stats", e);
+      }
+    }
+
+    // Calculate Ambulances count
+    let ambulancesCount = INITIAL_AMBULANCES.length;
+    const ambSetting = emergencySettings.find((s) => s.key === "emergency_ambulances");
+    if (ambSetting?.value) {
+      try {
+        const parsed = JSON.parse(ambSetting.value);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          ambulancesCount = parsed.length;
+        }
+      } catch (e) {
+        logger.error("Failed to parse emergency_ambulances stats", e);
+      }
+    }
+
+    // Calculate Health Tips count
+    let healthTipsCount = HEALTH_TIPS_ARTICLES.length;
+    if (healthTipsSetting?.value) {
+      try {
+        const parsed = JSON.parse(healthTipsSetting.value);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          healthTipsCount = parsed.length;
+        }
+      } catch (e) {
+        logger.error("Failed to parse health_tips stats", e);
+      }
+    }
 
     return {
       totalMembers,
@@ -380,6 +455,12 @@ const getCachedAdminStats = unstable_cache(
       revenue: Number(row?.active_premium_count ?? 0) * 500,
       pwaInstalls: Number(row?.pwa_installs ?? 0),
       pwaActive: Number(row?.pwa_active ?? 0),
+      doctorsCount: Number(row?.doctors_count ?? 0),
+      activeDoctorsCount: Number(row?.active_doctors_count ?? 0),
+      emergencyDonorsCount,
+      pendingDonorsCount,
+      ambulancesCount,
+      healthTipsCount,
       topPartners,
     };
   },

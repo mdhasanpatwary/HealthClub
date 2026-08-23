@@ -391,7 +391,8 @@ export const ModelName = {
   PartnerRequest: 'PartnerRequest',
   ContactMessage: 'ContactMessage',
   SystemSetting: 'SystemSetting',
-  PwaInstallation: 'PwaInstallation'
+  PwaInstallation: 'PwaInstallation',
+  MemberNotification: 'MemberNotification'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "member" | "partner" | "transaction" | "doctor" | "partnerRequest" | "contactMessage" | "systemSetting" | "pwaInstallation"
+    modelProps: "member" | "partner" | "transaction" | "doctor" | "partnerRequest" | "contactMessage" | "systemSetting" | "pwaInstallation" | "memberNotification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1003,6 +1004,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    MemberNotification: {
+      payload: Prisma.$MemberNotificationPayload<ExtArgs>
+      fields: Prisma.MemberNotificationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MemberNotificationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberNotificationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MemberNotificationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberNotificationPayload>
+        }
+        findFirst: {
+          args: Prisma.MemberNotificationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberNotificationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MemberNotificationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberNotificationPayload>
+        }
+        findMany: {
+          args: Prisma.MemberNotificationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberNotificationPayload>[]
+        }
+        create: {
+          args: Prisma.MemberNotificationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberNotificationPayload>
+        }
+        createMany: {
+          args: Prisma.MemberNotificationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MemberNotificationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberNotificationPayload>[]
+        }
+        delete: {
+          args: Prisma.MemberNotificationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberNotificationPayload>
+        }
+        update: {
+          args: Prisma.MemberNotificationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberNotificationPayload>
+        }
+        deleteMany: {
+          args: Prisma.MemberNotificationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MemberNotificationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MemberNotificationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberNotificationPayload>[]
+        }
+        upsert: {
+          args: Prisma.MemberNotificationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberNotificationPayload>
+        }
+        aggregate: {
+          args: Prisma.MemberNotificationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMemberNotification>
+        }
+        groupBy: {
+          args: Prisma.MemberNotificationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MemberNotificationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MemberNotificationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MemberNotificationCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1084,6 +1159,9 @@ export const PartnerScalarFieldEnum = {
   logoText: 'logoText',
   mapLink: 'mapLink',
   imageUrl: 'imageUrl',
+  emergencyPhone: 'emergencyPhone',
+  workingHours: 'workingHours',
+  departmentDiscounts: 'departmentDiscounts',
   verificationCode: 'verificationCode',
   verificationCodeCreatedAt: 'verificationCodeCreatedAt',
   createdAt: 'createdAt'
@@ -1185,6 +1263,22 @@ export const PwaInstallationScalarFieldEnum = {
 } as const
 
 export type PwaInstallationScalarFieldEnum = (typeof PwaInstallationScalarFieldEnum)[keyof typeof PwaInstallationScalarFieldEnum]
+
+
+export const MemberNotificationScalarFieldEnum = {
+  id: 'id',
+  memberId: 'memberId',
+  type: 'type',
+  titleBn: 'titleBn',
+  titleEn: 'titleEn',
+  messageBn: 'messageBn',
+  messageEn: 'messageEn',
+  isRead: 'isRead',
+  link: 'link',
+  createdAt: 'createdAt'
+} as const
+
+export type MemberNotificationScalarFieldEnum = (typeof MemberNotificationScalarFieldEnum)[keyof typeof MemberNotificationScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1397,6 +1491,7 @@ export type GlobalOmitConfig = {
   contactMessage?: Prisma.ContactMessageOmit
   systemSetting?: Prisma.SystemSettingOmit
   pwaInstallation?: Prisma.PwaInstallationOmit
+  memberNotification?: Prisma.MemberNotificationOmit
 }
 
 /* Types for Logging */

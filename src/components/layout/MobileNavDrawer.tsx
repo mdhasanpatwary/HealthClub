@@ -25,6 +25,8 @@ import {
   Smartphone,
   ExternalLink,
   Calculator,
+  Activity,
+  Pill,
 } from "lucide-react";
 import { Member, Partner } from "@/services/db";
 import { dbStore } from "@/services/dbStore";
@@ -237,17 +239,39 @@ export default function MobileNavDrawer({
                   </Link>
 
                   <Link
-                    href="/admin/partners"
+                    href="/admin/partners?category=hospital"
                     onClick={onClose}
                     className={`flex items-center justify-between p-2 rounded-xl text-xs font-semibold transition-colors ${
-                      isActive("/admin/partners")
+                      pathname === "/admin/partners" || pathname.startsWith("/admin/partners")
                         ? "bg-primary/10 text-primary font-bold"
                         : "text-foreground hover:bg-muted"
                     }`}
                   >
                     <div className="flex items-center gap-2.5">
                       <Building2 className="h-4 w-4 text-emerald-500 shrink-0" />
-                      <span>{t("admin.nav.partners") || "পার্টনার হাসপাতাল"}</span>
+                      <span>{isBn ? "পার্টনার হাসপাতাল" : "Partner Hospitals"}</span>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href="/admin/partners?category=diagnostic"
+                    onClick={onClose}
+                    className="flex items-center justify-between p-2 rounded-xl text-xs font-semibold transition-colors text-foreground hover:bg-muted"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Activity className="h-4 w-4 text-sky-500 shrink-0" />
+                      <span>{isBn ? "ডায়াগনস্টিক সেন্টার" : "Diagnostic Centers"}</span>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href="/admin/partners?category=pharmacy"
+                    onClick={onClose}
+                    className="flex items-center justify-between p-2 rounded-xl text-xs font-semibold transition-colors text-foreground hover:bg-muted"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Pill className="h-4 w-4 text-purple-500 shrink-0" />
+                      <span>{isBn ? "ফার্মেসি নেটওয়ার্ক" : "Partner Pharmacies"}</span>
                     </div>
                   </Link>
 

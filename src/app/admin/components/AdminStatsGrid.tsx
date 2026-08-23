@@ -26,6 +26,7 @@ import {
   Smartphone,
   CheckCircle2,
 } from "lucide-react";
+import { AdminEcosystemGrid } from "./AdminEcosystemGrid";
 
 export interface AdminStatsData {
   totalMembers: number;
@@ -49,6 +50,12 @@ export interface AdminStatsData {
   revenue: number;
   pwaInstalls?: number;
   pwaActive?: number;
+  doctorsCount?: number;
+  activeDoctorsCount?: number;
+  emergencyDonorsCount?: number;
+  pendingDonorsCount?: number;
+  ambulancesCount?: number;
+  healthTipsCount?: number;
   topPartners: Array<{
     id: string;
     name: string;
@@ -188,13 +195,19 @@ export function AdminStatsGrid({ stats, onSelectTab }: AdminStatsGridProps) {
                 <p className="text-3xl font-extrabold text-secondary dark:text-white font-mono">
                   {formatNum(stats.partnerCount, locale)}
                 </p>
-                <div className="flex items-center gap-1.5 pt-1 text-[11px] text-muted-foreground">
-                  <span className="font-semibold text-emerald-600">{formatNum(stats.partnerHospitals, locale)}</span> {isBn ? "হাসপাতাল" : "hosp"} •{" "}
-                  <span className="font-semibold text-blue-600">{formatNum(stats.partnerDiagnostics, locale)}</span> {isBn ? "ল্যাব" : "diag"} •{" "}
-                  <span className="font-semibold text-purple-600">{formatNum(stats.partnerPharmacies, locale)}</span> {isBn ? "ফার্মেসি" : "pharm"}
+                <div className="flex flex-wrap items-center gap-1.5 pt-1 text-[11px]">
+                  <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-semibold">
+                    {formatNum(stats.partnerHospitals, locale)} {isBn ? "হাসপাতাল" : "hosp"}
+                  </span>
+                  <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-sky-500/10 text-sky-700 dark:text-sky-300 font-semibold">
+                    {formatNum(stats.partnerDiagnostics, locale)} {isBn ? "ডায়াগনস্টিক" : "diag"}
+                  </span>
+                  <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-purple-500/10 text-purple-700 dark:text-purple-300 font-semibold">
+                    {formatNum(stats.partnerPharmacies, locale)} {isBn ? "ফার্মেসি" : "pharm"}
+                  </span>
                 </div>
               </div>
-              <div className="h-12 w-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center border border-emerald-100 dark:border-emerald-900 group-hover:scale-105 transition-transform">
+              <div className="h-12 w-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center border border-emerald-100 dark:border-emerald-900 group-hover:scale-105 transition-transform shrink-0">
                 <Building className="h-6 w-6" />
               </div>
             </CardContent>
@@ -423,6 +436,9 @@ export function AdminStatsGrid({ stats, onSelectTab }: AdminStatsGridProps) {
           </CardContent>
         </Card>
       </div>
+
+      {/* 4. Ecosystem Quick Stats (Doctors, Blood Donors, Ambulances, Health Tips) */}
+      <AdminEcosystemGrid stats={stats} locale={locale} />
     </div>
   );
 }

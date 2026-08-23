@@ -85,7 +85,7 @@ export default async function Home() {
     getHomepageStats(),
     getHomepagePartners(3),
   ]);
-  const { memberCount, foundingCount, hospitalCount, pharmacyCount } = stats;
+  const { memberCount, foundingCount, hospitalCount, diagnosticCount, pharmacyCount } = stats;
 
   const remainingSeats = Math.max(0, 100 - (foundingCount ?? memberCount));
 
@@ -173,6 +173,7 @@ export default async function Home() {
       <LandingStats
         remainingSeats={remainingSeats}
         hospitalCount={hospitalCount}
+        diagnosticCount={diagnosticCount}
         pharmacyCount={pharmacyCount}
         t={t}
         locale={locale}

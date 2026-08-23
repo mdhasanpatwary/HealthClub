@@ -58,7 +58,8 @@ export const ModelName = {
   PartnerRequest: 'PartnerRequest',
   ContactMessage: 'ContactMessage',
   SystemSetting: 'SystemSetting',
-  PwaInstallation: 'PwaInstallation'
+  PwaInstallation: 'PwaInstallation',
+  MemberNotification: 'MemberNotification'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -119,6 +120,9 @@ export const PartnerScalarFieldEnum = {
   logoText: 'logoText',
   mapLink: 'mapLink',
   imageUrl: 'imageUrl',
+  emergencyPhone: 'emergencyPhone',
+  workingHours: 'workingHours',
+  departmentDiscounts: 'departmentDiscounts',
   verificationCode: 'verificationCode',
   verificationCodeCreatedAt: 'verificationCodeCreatedAt',
   createdAt: 'createdAt'
@@ -220,6 +224,22 @@ export const PwaInstallationScalarFieldEnum = {
 } as const
 
 export type PwaInstallationScalarFieldEnum = (typeof PwaInstallationScalarFieldEnum)[keyof typeof PwaInstallationScalarFieldEnum]
+
+
+export const MemberNotificationScalarFieldEnum = {
+  id: 'id',
+  memberId: 'memberId',
+  type: 'type',
+  titleBn: 'titleBn',
+  titleEn: 'titleEn',
+  messageBn: 'messageBn',
+  messageEn: 'messageEn',
+  isRead: 'isRead',
+  link: 'link',
+  createdAt: 'createdAt'
+} as const
+
+export type MemberNotificationScalarFieldEnum = (typeof MemberNotificationScalarFieldEnum)[keyof typeof MemberNotificationScalarFieldEnum]
 
 
 export const SortOrder = {

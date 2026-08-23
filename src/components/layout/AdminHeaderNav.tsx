@@ -17,6 +17,8 @@ import {
   Settings,
   Smartphone,
   ChevronDown,
+  Activity,
+  Pill,
 } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatNum } from "@/lib/i18n";
@@ -28,9 +30,76 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+interface AdminNavItemProps {
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  iconBg: string;
+  iconColor: string;
+  title: string;
+  description: string;
+  badge?: string | number | null;
+  badgeVariant?: "primary" | "amber" | "muted";
+  active: boolean;
+}
+
+function AdminNavDropdownItem({
+  href,
+  icon: Icon,
+  iconBg,
+  iconColor,
+  title,
+  description,
+  badge,
+  badgeVariant = "muted",
+  active,
+}: AdminNavItemProps) {
+  return (
+    <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
+      <Link
+        href={href}
+        className={`flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 group ${
+          active
+            ? "bg-primary/10 text-primary font-bold"
+            : "hover:bg-muted/70 text-foreground"
+        }`}
+      >
+        <div
+          className={`h-8 w-8 rounded-xl ${iconBg} ${iconColor} flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform`}
+        >
+          <Icon className="h-4 w-4" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between gap-1">
+            <span className="block text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">
+              {title}
+            </span>
+            {badge !== undefined && badge !== null && (
+              <span
+                className={`text-[10px] font-mono px-1.5 py-0.5 rounded-full font-bold ${
+                  badgeVariant === "amber"
+                    ? "bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30"
+                    : badgeVariant === "primary"
+                    ? "bg-primary/15 text-primary border border-primary/20"
+                    : "bg-muted text-muted-foreground"
+                }`}
+              >
+                {badge}
+              </span>
+            )}
+          </div>
+          <span className="block text-[11px] text-muted-foreground font-normal transition-colors truncate">
+            {description}
+          </span>
+        </div>
+      </Link>
+    </DropdownMenuItem>
+  );
+}
+
 export default function AdminHeaderNav() {
   const pathname = usePathname();
   const { t, locale } = useLanguage();
+  const isBn = locale === "bn";
   const {
     doctorsCount,
     pendingPartnerRequests,
@@ -100,84 +169,35 @@ export default function AdminHeaderNav() {
           align="start"
           className="w-64 p-1.5 bg-background dark:bg-slate-900 border border-border shadow-xl rounded-2xl space-y-1 z-50"
         >
-          {/* Member List */}
-          <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
-            <Link
-              href="/admin/members"
-              className={`flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 group ${
-                pathname.startsWith("/admin/members")
-                  ? "bg-primary/10 text-primary font-bold"
-                  : "hover:bg-muted/70 text-foreground"
-              }`}
-            >
-              <div className="h-8 w-8 rounded-xl bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <Users className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <span className="block text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">
-                  {t("admin.nav.membersList") || "সদস্য তালিকা"}
-                </span>
-                <span className="block text-[11px] text-muted-foreground font-normal transition-colors truncate">
-                  {t("admin.nav.membersListDesc") || "নিবন্ধিত সদস্যদের তথ্য ও কার্ড"}
-                </span>
-              </div>
-            </Link>
-          </DropdownMenuItem>
-
-          {/* Renewal Requests */}
-          <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
-            <Link
-              href="/admin/renewals"
-              className={`flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 group ${
-                pathname.startsWith("/admin/renewals")
-                  ? "bg-primary/10 text-primary font-bold"
-                  : "hover:bg-muted/70 text-foreground"
-              }`}
-            >
-              <div className="h-8 w-8 rounded-xl bg-purple-500/15 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <RotateCcw className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-1">
-                  <span className="block text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">
-                    {t("admin.nav.renewals") || "নবায়ন আবেদন"}
-                  </span>
-                  {pendingRenewals > 0 && (
-                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full font-bold bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30">
-                      {formatNum(pendingRenewals, locale)}
-                    </span>
-                  )}
-                </div>
-                <span className="block text-[11px] text-muted-foreground font-normal transition-colors truncate">
-                  {t("admin.nav.renewalsDesc") || "মেম্বারশিপ নবায়ন আবেদন অনুমোদন"}
-                </span>
-              </div>
-            </Link>
-          </DropdownMenuItem>
-
-          {/* Transaction Log */}
-          <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
-            <Link
-              href="/admin/transactions"
-              className={`flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 group ${
-                pathname.startsWith("/admin/transactions")
-                  ? "bg-primary/10 text-primary font-bold"
-                  : "hover:bg-muted/70 text-foreground"
-              }`}
-            >
-              <div className="h-8 w-8 rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <Receipt className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <span className="block text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">
-                  {t("admin.nav.transactions") || "লেনদেন লগ"}
-                </span>
-                <span className="block text-[11px] text-muted-foreground font-normal transition-colors truncate">
-                  {t("admin.nav.transactionsDesc") || "ডিসকাউন্ট ও সেভিংস ট্রানজেকশন"}
-                </span>
-              </div>
-            </Link>
-          </DropdownMenuItem>
+          <AdminNavDropdownItem
+            href="/admin/members"
+            icon={Users}
+            iconBg="bg-indigo-500/15"
+            iconColor="text-indigo-600 dark:text-indigo-400"
+            title={t("admin.nav.membersList") || "সদস্য তালিকা"}
+            description={t("admin.nav.membersListDesc") || "নিবন্ধিত সদস্যদের তথ্য ও কার্ড"}
+            active={pathname.startsWith("/admin/members")}
+          />
+          <AdminNavDropdownItem
+            href="/admin/renewals"
+            icon={RotateCcw}
+            iconBg="bg-purple-500/15"
+            iconColor="text-purple-600 dark:text-purple-400"
+            title={t("admin.nav.renewals") || "নবায়ন আবেদন"}
+            description={t("admin.nav.renewalsDesc") || "মেম্বারশিপ নবায়ন অনুমোদন"}
+            badge={pendingRenewals > 0 ? formatNum(pendingRenewals, locale) : null}
+            badgeVariant="amber"
+            active={pathname.startsWith("/admin/renewals")}
+          />
+          <AdminNavDropdownItem
+            href="/admin/transactions"
+            icon={Receipt}
+            iconBg="bg-teal-500/15"
+            iconColor="text-teal-600 dark:text-teal-400"
+            title={t("admin.nav.transactions") || "লেনদেন লগ"}
+            description={t("admin.nav.transactionsDesc") || "ডিসকাউন্ট ও সেভিংস ট্রানজেকশন"}
+            active={pathname.startsWith("/admin/transactions")}
+          />
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -202,93 +222,56 @@ export default function AdminHeaderNav() {
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="start"
-          className="w-64 p-1.5 bg-background dark:bg-slate-900 border border-border shadow-xl rounded-2xl space-y-1 z-50"
+          className="w-68 p-1.5 bg-background dark:bg-slate-900 border border-border shadow-xl rounded-2xl space-y-1 z-50"
         >
-          {/* Doctors Directory */}
-          <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
-            <Link
-              href="/admin/doctors"
-              className={`flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 group ${
-                pathname.startsWith("/admin/doctors")
-                  ? "bg-primary/10 text-primary font-bold"
-                  : "hover:bg-muted/70 text-foreground"
-              }`}
-            >
-              <div className="h-8 w-8 rounded-xl bg-blue-500/15 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <Stethoscope className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-1">
-                  <span className="block text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">
-                    {t("admin.nav.doctors") || "ডাক্তার তালিকা"}
-                  </span>
-                  {doctorsCount > 0 && (
-                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full font-bold bg-muted text-muted-foreground">
-                      {formatNum(doctorsCount, locale)}
-                    </span>
-                  )}
-                </div>
-                <span className="block text-[11px] text-muted-foreground font-normal transition-colors truncate">
-                  {t("admin.nav.doctorsDesc") || "বিশেষজ্ঞ ডাক্তার ও চেম্বার শিডিউল"}
-                </span>
-              </div>
-            </Link>
-          </DropdownMenuItem>
-
-          {/* Partner Hospitals */}
-          <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
-            <Link
-              href="/admin/partners"
-              className={`flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 group ${
-                pathname.startsWith("/admin/partners")
-                  ? "bg-primary/10 text-primary font-bold"
-                  : "hover:bg-muted/70 text-foreground"
-              }`}
-            >
-              <div className="h-8 w-8 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <Building2 className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <span className="block text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">
-                  {t("admin.nav.partners") || "পার্টনার হাসপাতাল"}
-                </span>
-                <span className="block text-[11px] text-muted-foreground font-normal transition-colors truncate">
-                  {t("admin.nav.partnersDesc") || "চুক্তিবদ্ধ হাসপাতাল ও ল্যাব"}
-                </span>
-              </div>
-            </Link>
-          </DropdownMenuItem>
-
-          {/* Partner Requests */}
-          <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
-            <Link
-              href="/admin/partner-requests"
-              className={`flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 group ${
-                pathname.startsWith("/admin/partner-requests")
-                  ? "bg-primary/10 text-primary font-bold"
-                  : "hover:bg-muted/70 text-foreground"
-              }`}
-            >
-              <div className="h-8 w-8 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <FileCheck className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-1">
-                  <span className="block text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">
-                    {t("admin.nav.partnerRequests") || "অংশীদার আবেদন"}
-                  </span>
-                  {pendingPartnerRequests > 0 && (
-                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full font-bold bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30">
-                      {formatNum(pendingPartnerRequests, locale)}
-                    </span>
-                  )}
-                </div>
-                <span className="block text-[11px] text-muted-foreground font-normal transition-colors truncate">
-                  {t("admin.nav.partnerRequestsDesc") || "নতুন ক্লিনিক ও ল্যাবের আবেদন"}
-                </span>
-              </div>
-            </Link>
-          </DropdownMenuItem>
+          <AdminNavDropdownItem
+            href="/admin/doctors"
+            icon={Stethoscope}
+            iconBg="bg-blue-500/15"
+            iconColor="text-blue-600 dark:text-blue-400"
+            title={t("admin.nav.doctors") || "ডাক্তার তালিকা"}
+            description={t("admin.nav.doctorsDesc") || "বিশেষজ্ঞ ডাক্তার ও চেম্বার শিডিউল"}
+            badge={doctorsCount > 0 ? formatNum(doctorsCount, locale) : null}
+            active={pathname.startsWith("/admin/doctors")}
+          />
+          <AdminNavDropdownItem
+            href="/admin/partners?category=hospital"
+            icon={Building2}
+            iconBg="bg-emerald-500/15"
+            iconColor="text-emerald-600 dark:text-emerald-400"
+            title={isBn ? "পার্টনার হাসপাতাল" : "Partner Hospitals"}
+            description={isBn ? "চুক্তিবদ্ধ হাসপাতাল ও ক্লিনিক নেটওয়ার্ক" : "Contracted hospitals & clinics"}
+            active={pathname.startsWith("/admin/partners")}
+          />
+          <AdminNavDropdownItem
+            href="/admin/partners?category=diagnostic"
+            icon={Activity}
+            iconBg="bg-sky-500/15"
+            iconColor="text-sky-600 dark:text-sky-400"
+            title={isBn ? "ডায়াগনস্টিক সেন্টার" : "Diagnostic Centers"}
+            description={isBn ? "ল্যাব ও প্যাথলজি টেস্ট সুবিধা" : "Pathology labs & test centers"}
+            active={false}
+          />
+          <AdminNavDropdownItem
+            href="/admin/partners?category=pharmacy"
+            icon={Pill}
+            iconBg="bg-purple-500/15"
+            iconColor="text-purple-600 dark:text-purple-400"
+            title={isBn ? "ফার্মেসি নেটওয়ার্ক" : "Partner Pharmacies"}
+            description={isBn ? "চুক্তিবদ্ধ ঔষধের দোকান ও ডিসকাউন্ট" : "Contracted retail pharmacy network"}
+            active={false}
+          />
+          <AdminNavDropdownItem
+            href="/admin/partner-requests"
+            icon={FileCheck}
+            iconBg="bg-amber-500/15"
+            iconColor="text-amber-600 dark:text-amber-400"
+            title={t("admin.nav.partnerRequests") || "অংশীদার আবেদন"}
+            description={t("admin.nav.partnerRequestsDesc") || "নতুন চিকিৎসাকেন্দ্রের আবেদন"}
+            badge={pendingPartnerRequests > 0 ? formatNum(pendingPartnerRequests, locale) : null}
+            badgeVariant="amber"
+            active={pathname.startsWith("/admin/partner-requests")}
+          />
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -312,53 +295,24 @@ export default function AdminHeaderNav() {
           align="start"
           className="w-64 p-1.5 bg-background dark:bg-slate-900 border border-border shadow-xl rounded-2xl space-y-1 z-50"
         >
-          {/* Emergency Services */}
-          <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
-            <Link
-              href="/admin/emergency"
-              className={`flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 group ${
-                pathname.startsWith("/admin/emergency")
-                  ? "bg-primary/10 text-primary font-bold"
-                  : "hover:bg-muted/70 text-foreground"
-              }`}
-            >
-              <div className="h-8 w-8 rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <Siren className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <span className="block text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">
-                  {t("admin.nav.emergency") || "জরুরি সেবা"}
-                </span>
-                <span className="block text-[11px] text-muted-foreground font-normal transition-colors truncate">
-                  {t("admin.nav.emergencyDesc") || "রক্তদাতা, অ্যাম্বুলেন্স ও অক্সিজেন"}
-                </span>
-              </div>
-            </Link>
-          </DropdownMenuItem>
-
-          {/* Health Tips & Blog */}
-          <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
-            <Link
-              href="/admin/health-tips"
-              className={`flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 group ${
-                pathname.startsWith("/admin/health-tips")
-                  ? "bg-primary/10 text-primary font-bold"
-                  : "hover:bg-muted/70 text-foreground"
-              }`}
-            >
-              <div className="h-8 w-8 rounded-xl bg-primary/15 text-primary flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <BookOpen className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <span className="block text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">
-                  {t("admin.nav.healthTips") || "স্বাস্থ্য টিপস"}
-                </span>
-                <span className="block text-[11px] text-muted-foreground font-normal transition-colors truncate">
-                  {t("admin.nav.healthTipsDesc") || "স্বাস্থ্য বিষয়ক ব্লগ ও আর্টিকেল"}
-                </span>
-              </div>
-            </Link>
-          </DropdownMenuItem>
+          <AdminNavDropdownItem
+            href="/admin/emergency"
+            icon={Siren}
+            iconBg="bg-rose-500/15"
+            iconColor="text-rose-600 dark:text-rose-400"
+            title={t("admin.nav.emergency") || "জরুরি সেবা"}
+            description={t("admin.nav.emergencyDesc") || "রক্তদাতা, অ্যাম্বুলেন্স ও অক্সিজেন"}
+            active={pathname.startsWith("/admin/emergency")}
+          />
+          <AdminNavDropdownItem
+            href="/admin/health-tips"
+            icon={BookOpen}
+            iconBg="bg-primary/15"
+            iconColor="text-primary"
+            title={t("admin.nav.healthTips") || "স্বাস্থ্য টিপস"}
+            description={t("admin.nav.healthTipsDesc") || "স্বাস্থ্য বিষয়ক ব্লগ ও আর্টিকেল"}
+            active={pathname.startsWith("/admin/health-tips")}
+          />
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -385,108 +339,44 @@ export default function AdminHeaderNav() {
           align="start"
           className="w-64 p-1.5 bg-background dark:bg-slate-900 border border-border shadow-xl rounded-2xl space-y-1 z-50"
         >
-          {/* Notifications & Alerts */}
-          <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
-            <Link
-              href="/admin/notifications"
-              className={`flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 group ${
-                pathname.startsWith("/admin/notifications")
-                  ? "bg-primary/10 text-primary font-bold"
-                  : "hover:bg-muted/70 text-foreground"
-              }`}
-            >
-              <div className="h-8 w-8 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <Bell className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <span className="block text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">
-                  {t("admin.nav.notifications") || "বিজ্ঞপ্তি ও অ্যালার্ট"}
-                </span>
-                <span className="block text-[11px] text-muted-foreground font-normal transition-colors truncate">
-                  {t("admin.nav.notificationsDesc") || "নতুন আবেদন, নবায়ন ও বার্তা অ্যালার্ট"}
-                </span>
-              </div>
-            </Link>
-          </DropdownMenuItem>
-
-          {/* Contact Messages */}
-          <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
-            <Link
-              href="/admin/messages"
-              className={`flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 group ${
-                pathname.startsWith("/admin/messages")
-                  ? "bg-primary/10 text-primary font-bold"
-                  : "hover:bg-muted/70 text-foreground"
-              }`}
-            >
-              <div className="h-8 w-8 rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <Mail className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-1">
-                  <span className="block text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">
-                    {t("admin.nav.messages") || "যোগাযোগের বার্তা"}
-                  </span>
-                  {contactMessagesCount > 0 && (
-                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full font-bold bg-primary/15 text-primary border border-primary/20">
-                      {formatNum(contactMessagesCount, locale)}
-                    </span>
-                  )}
-                </div>
-                <span className="block text-[11px] text-muted-foreground font-normal transition-colors truncate">
-                  {t("admin.nav.messagesDesc") || "ভিজিটর অনুসন্ধান ও বার্তা"}
-                </span>
-              </div>
-            </Link>
-          </DropdownMenuItem>
-
-          {/* PWA Analytics */}
-          <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
-            <Link
-              href="/admin/pwa"
-              className={`flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 group ${
-                pathname.startsWith("/admin/pwa")
-                  ? "bg-primary/10 text-primary font-bold"
-                  : "hover:bg-muted/70 text-foreground"
-              }`}
-            >
-              <div className="h-8 w-8 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <Smartphone className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <span className="block text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">
-                  {t("admin.nav.pwa") || "PWA অ্যানালিটিক্স"}
-                </span>
-                <span className="block text-[11px] text-muted-foreground font-normal transition-colors truncate">
-                  {t("admin.nav.pwaDesc") || "অ্যাপ ইনস্টল ও সক্রিয় ইউজার পরিসংখ্যান"}
-                </span>
-              </div>
-            </Link>
-          </DropdownMenuItem>
-
-          {/* System Settings */}
-          <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
-            <Link
-              href="/admin/settings"
-              className={`flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 group ${
-                pathname.startsWith("/admin/settings")
-                  ? "bg-primary/10 text-primary font-bold"
-                  : "hover:bg-muted/70 text-foreground"
-              }`}
-            >
-              <div className="h-8 w-8 rounded-xl bg-slate-500/15 text-slate-600 dark:text-slate-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <Settings className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <span className="block text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">
-                  {t("admin.nav.settings") || "সিস্টেম সেটিংস"}
-                </span>
-                <span className="block text-[11px] text-muted-foreground font-normal transition-colors truncate">
-                  {t("admin.nav.settingsDesc") || "ফি, পেমেন্ট নম্বর ও নোটিশ"}
-                </span>
-              </div>
-            </Link>
-          </DropdownMenuItem>
+          <AdminNavDropdownItem
+            href="/admin/notifications"
+            icon={Bell}
+            iconBg="bg-amber-500/15"
+            iconColor="text-amber-600 dark:text-amber-400"
+            title={t("admin.nav.notifications") || "বিজ্ঞপ্তি ও অ্যালার্ট"}
+            description={t("admin.nav.notificationsDesc") || "নতুন আবেদন ও নোটিফিকেশন"}
+            active={pathname.startsWith("/admin/notifications")}
+          />
+          <AdminNavDropdownItem
+            href="/admin/messages"
+            icon={Mail}
+            iconBg="bg-rose-500/15"
+            iconColor="text-rose-600 dark:text-rose-400"
+            title={t("admin.nav.messages") || "যোগাযোগের বার্তা"}
+            description={t("admin.nav.messagesDesc") || "ভিজিটর অনুসন্ধান ও বার্তা"}
+            badge={contactMessagesCount > 0 ? formatNum(contactMessagesCount, locale) : null}
+            badgeVariant="primary"
+            active={pathname.startsWith("/admin/messages")}
+          />
+          <AdminNavDropdownItem
+            href="/admin/pwa"
+            icon={Smartphone}
+            iconBg="bg-emerald-500/15"
+            iconColor="text-emerald-600 dark:text-emerald-400"
+            title={t("admin.nav.pwa") || "PWA অ্যানালিটিক্স"}
+            description={t("admin.nav.pwaDesc") || "অ্যাপ ইনস্টল ও সক্রিয় পরিসংখ্যান"}
+            active={pathname.startsWith("/admin/pwa")}
+          />
+          <AdminNavDropdownItem
+            href="/admin/settings"
+            icon={Settings}
+            iconBg="bg-slate-500/15"
+            iconColor="text-slate-600 dark:text-slate-400"
+            title={t("admin.nav.settings") || "সিস্টেম সেটিংস"}
+            description={t("admin.nav.settingsDesc") || "ফি, পেমেন্ট নম্বর ও নোটিশ"}
+            active={pathname.startsWith("/admin/settings")}
+          />
         </DropdownMenuContent>
       </DropdownMenu>
     </nav>

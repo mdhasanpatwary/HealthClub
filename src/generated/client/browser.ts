@@ -57,3 +57,8 @@ export type SystemSetting = Prisma.SystemSettingModel
  * 
  */
 export type PwaInstallation = Prisma.PwaInstallationModel
+/**
+ * Model MemberNotification
+ * 
+ */
+export type MemberNotification = Prisma.MemberNotificationModel

@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Search, MapPin, Phone, Hospital, ShieldAlert, Pill, HeartHandshake } from "lucide-react";
+import { Search, MapPin, Phone, PhoneCall, Clock, Hospital, ShieldAlert, Pill, HeartHandshake, Tag } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
-import { Partner } from "@/services/db";
+import { Partner, DepartmentDiscount } from "@/services/db";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -231,17 +231,57 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
                       <h3 className="font-heading text-base sm:text-lg font-bold text-white drop-shadow-md line-clamp-2 leading-snug group-hover:text-emerald-400 transition-colors">
                         {partner.name}
                       </h3>
-                      <a
-                        href={mapUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-xs text-slate-200 hover:text-emerald-300 transition-colors drop-shadow-sm w-fit"
-                      >
-                        <MapPin className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
-                        <span className="line-clamp-1">{partner.address}</span>
-                      </a>
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                        <a
+                          href={mapUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1.5 text-xs text-slate-200 hover:text-emerald-300 transition-colors drop-shadow-sm w-fit"
+                        >
+                          <MapPin className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
+                          <span className="line-clamp-1">{partner.address}</span>
+                        </a>
+                        {partner.workingHours && (
+                          <span className="inline-flex items-center gap-1 text-[11px] text-slate-300">
+                            <Clock className="h-3 w-3 text-emerald-400" />
+                            {partner.workingHours}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
+
+                  {/* Department Discounts Breakdown Pills (if configured) */}
+                  {(() => {
+                    let deptList: DepartmentDiscount[] = [];
+                    if (partner.departmentDiscounts) {
+                      try {
+                        const parsed = JSON.parse(partner.departmentDiscounts);
+                        if (Array.isArray(parsed)) deptList = parsed;
+                      } catch {}
+                    }
+                    if (deptList.length === 0) return null;
+                    return (
+                      <div className="px-3.5 sm:px-4 py-2.5 bg-slate-50/80 dark:bg-slate-900/50 border-t border-border/40 space-y-1.5">
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+                          <Tag className="h-3 w-3 text-primary" />
+                          {locale === "en" ? "Department Discounts:" : "বিভাগভিত্তিক ছাড়:"}
+                        </p>
+                        <div className="flex flex-wrap gap-1.5 max-h-20 overflow-y-auto">
+                          {deptList.map((dept, idx) => (
+                            <span
+                              key={idx}
+                              className="text-[10px] bg-background text-secondary dark:text-slate-200 border border-border px-2 py-0.5 rounded-md font-medium flex items-center gap-1 shadow-2xs"
+                              title={dept.description}
+                            >
+                              <span>{dept.name}</span>
+                              <strong className="text-primary font-mono font-bold">({dept.discount})</strong>
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
 
                   {/* Card Footer: Discount Rate & Action Buttons (Location & Call) */}
                   <div className="p-3.5 sm:p-4 bg-background dark:bg-slate-900 flex flex-wrap items-center justify-between gap-2 border-t border-border/60">
@@ -254,7 +294,23 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      {/* Emergency Call Icon Button (if configured) */}
+                      {partner.emergencyPhone && (
+                        <a
+                          href={`tel:${partner.emergencyPhone}`}
+                          title={`${locale === "en" ? "Emergency Helpline" : "জরুরি হেল্পলাইন"}: ${partner.emergencyPhone}`}
+                          aria-label={`${locale === "en" ? "Emergency Helpline" : "জরুরি হেল্পলাইন"}: ${partner.emergencyPhone}`}
+                          className={buttonVariants({
+                            variant: "outline",
+                            size: "icon",
+                            className: "h-8 w-8 rounded-lg border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 transition-colors cursor-pointer",
+                          })}
+                        >
+                          <PhoneCall className="h-4 w-4 shrink-0" />
+                        </a>
+                      )}
+
                       {/* Location / View Map Icon Button */}
                       <a
                         href={mapUrl}

@@ -73,6 +73,9 @@ export const getHomepagePartners = unstable_cache(
         logoText: p.logoText,
         mapLink: p.mapLink || undefined,
         imageUrl: p.imageUrl || undefined,
+        emergencyPhone: p.emergencyPhone || undefined,
+        workingHours: p.workingHours || undefined,
+        departmentDiscounts: p.departmentDiscounts || undefined,
       }));
     } catch (error) {
       logger.error("Error fetching homepage partners:", error);

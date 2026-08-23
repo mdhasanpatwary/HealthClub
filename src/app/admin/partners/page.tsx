@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { dbStore } from "@/services/dbStore";
@@ -11,8 +12,18 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { PartnersTab } from "../components/PartnersTab";
 import { PartnerDialog } from "../components/PartnerDialog";
 
-export default function AdminPartnersPage() {
+function AdminPartnersContent() {
   const { t, locale } = useLanguage();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const urlCategory = searchParams.get("category");
+  const initialCategory =
+    urlCategory && ["hospital", "diagnostic", "pharmacy"].includes(urlCategory)
+      ? urlCategory
+      : "all";
+
+  const [activeCategory, setActiveCategory] = useState<string>(initialCategory);
   const [loading, setLoading] = useState(true);
   const [partners, setPartners] = useState<Partner[]>([]);
   const [totalItems, setTotalItems] = useState(0);
@@ -21,6 +32,13 @@ export default function AdminPartnersPage() {
   const [pageSize, setPageSize] = useState(10);
   const [partnerSearch, setPartnerSearch] = useState("");
   const debouncedSearch = useDebounce(partnerSearch, 300);
+
+  const [categoryCounts, setCategoryCounts] = useState({
+    all: 0,
+    hospital: 0,
+    diagnostic: 0,
+    pharmacy: 0,
+  });
 
   // Dialog States
   const [isPartnerOpen, setIsPartnerOpen] = useState(false);
@@ -36,38 +54,78 @@ export default function AdminPartnersPage() {
     imageUrl: "",
   });
 
+  // Sync category if URL parameter changes
+  useEffect(() => {
+    if (urlCategory && ["hospital", "diagnostic", "pharmacy"].includes(urlCategory)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setActiveCategory(urlCategory);
+      setPage(1);
+    } else if (!urlCategory) {
+      setActiveCategory("all");
+    }
+  }, [urlCategory]);
+
+  const loadCounts = useCallback(async () => {
+    try {
+      const stats = await dbStore.getStats();
+      setCategoryCounts({
+        all: stats.partnerCount,
+        hospital: stats.partnerHospitals,
+        diagnostic: stats.partnerDiagnostics,
+        pharmacy: stats.partnerPharmacies,
+      });
+    } catch {
+      // Ignore background counts error
+    }
+  }, []);
+
   const loadData = useCallback(async () => {
     try {
       const res = await dbStore.getPaginatedPartnersAdmin({
         page,
         pageSize,
         search: debouncedSearch,
+        category: activeCategory !== "all" ? activeCategory : undefined,
       });
       setPartners(res.data);
       setTotalItems(res.totalItems);
       setTotalPages(res.totalPages);
     } catch {
-      toast.error("পার্টনার হাসপাতালের তালিকা লোড করতে সমস্যা হয়েছে।");
+      toast.error("পার্টনারদের তালিকা লোড করতে সমস্যা হয়েছে।");
     } finally {
       setLoading(false);
     }
-  }, [page, pageSize, debouncedSearch]);
+  }, [page, pageSize, debouncedSearch, activeCategory]);
 
   useEffect(() => {
     let isMounted = true;
     Promise.resolve().then(() => {
       if (isMounted) {
         loadData();
+        loadCounts();
       }
     });
     return () => {
       isMounted = false;
     };
-  }, [loadData]);
+  }, [loadData, loadCounts]);
 
+  const handleCategoryChange = (cat: string) => {
+    setActiveCategory(cat);
+    setPage(1);
+    const newParams = new URLSearchParams(searchParams.toString());
+    if (cat === "all") {
+      newParams.delete("category");
+    } else {
+      newParams.set("category", cat);
+    }
+    const qs = newParams.toString();
+    router.replace(`/admin/partners${qs ? `?${qs}` : ""}`, { scroll: false });
+  };
 
   const notifyChange = () => {
     window.dispatchEvent(new Event("admin-data-change"));
+    loadCounts();
   };
 
   const handleSavePartner = async (e: React.FormEvent) => {
@@ -105,7 +163,7 @@ export default function AdminPartnersPage() {
 
       setNewPartner({
         name: "",
-        category: "hospital",
+        category: (activeCategory !== "all" ? activeCategory : "hospital") as Partner["category"],
         address: "",
         discount: "",
         phone: "",
@@ -117,9 +175,17 @@ export default function AdminPartnersPage() {
       setIsPartnerOpen(false);
       await loadData();
       notifyChange();
-      toast.success(editingPartner ? t("admin.dashboard.partnerUpdatedSuccess") : t("admin.dashboard.partnerAddedSuccess"));
+      toast.success(
+        editingPartner
+          ? t("admin.dashboard.partnerUpdatedSuccess")
+          : t("admin.dashboard.partnerAddedSuccess")
+      );
     } catch {
-      toast.error(editingPartner ? t("admin.dashboard.partnerUpdatedFailed") : t("admin.dashboard.partnerAddedFailed"));
+      toast.error(
+        editingPartner
+          ? t("admin.dashboard.partnerUpdatedFailed")
+          : t("admin.dashboard.partnerAddedFailed")
+      );
     }
   };
 
@@ -183,11 +249,14 @@ export default function AdminPartnersPage() {
         }}
         partnerSearch={partnerSearch}
         setPartnerSearch={setPartnerSearch}
+        activeCategory={activeCategory}
+        onCategoryChange={handleCategoryChange}
+        categoryCounts={categoryCounts}
         onNewPartnerClick={() => {
           setEditingPartner(null);
           setNewPartner({
             name: "",
-            category: "hospital",
+            category: (activeCategory !== "all" ? activeCategory : "hospital") as Partner["category"],
             address: "",
             discount: "",
             phone: "",
@@ -197,7 +266,6 @@ export default function AdminPartnersPage() {
           });
           setIsPartnerOpen(true);
         }}
-
         onEditClick={(p) => {
           setEditingPartner(p);
           setNewPartner({
@@ -245,3 +313,19 @@ export default function AdminPartnersPage() {
     </div>
   );
 }
+
+export default function AdminPartnersPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="space-y-4 animate-pulse">
+          <Skeleton className="h-10 w-48 rounded-lg" />
+          <Skeleton className="h-64 w-full rounded-xl" />
+        </div>
+      }
+    >
+      <AdminPartnersContent />
+    </Suspense>
+  );
+}
+
