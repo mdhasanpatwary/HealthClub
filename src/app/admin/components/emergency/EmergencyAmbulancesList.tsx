@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Pagination } from "@/components/ui/pagination";
-import { Edit3, Trash2, Phone } from "lucide-react";
+import { Edit3, Trash2, Phone, CheckCircle2 } from "lucide-react";
 
 interface EmergencyAmbulancesListProps {
   ambulances: AmbulanceService[];
@@ -26,6 +26,7 @@ interface EmergencyAmbulancesListProps {
   isEn: boolean;
   onEdit: (ambulance: AmbulanceService) => void;
   onDelete: (id: string, name: string) => void;
+  onApprove?: (id: string) => void;
   loading?: boolean;
 }
 
@@ -40,6 +41,7 @@ export function EmergencyAmbulancesList({
   isEn,
   onEdit,
   onDelete,
+  onApprove,
   loading = false,
 }: EmergencyAmbulancesListProps) {
   return (
@@ -53,6 +55,7 @@ export function EmergencyAmbulancesList({
               <TableHead>{isEn ? "Stand / Location" : "স্ট্যান্ড / এলাকা"}</TableHead>
               <TableHead>{isEn ? "Phone" : "মোবাইল"}</TableHead>
               <TableHead>{isEn ? "Hours" : "সময়"}</TableHead>
+              <TableHead>{isEn ? "Status" : "স্ট্যাটাস"}</TableHead>
               <TableHead className="text-right">{isEn ? "Actions" : "অ্যাকশন"}</TableHead>
             </TableRow>
           </TableHeader>
@@ -75,6 +78,9 @@ export function EmergencyAmbulancesList({
                   <TableCell>
                     <Skeleton className="h-4 w-16" />
                   </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-5 w-16 rounded-full" />
+                  </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
                       <Skeleton className="h-7 w-7 rounded-md" />
@@ -85,70 +91,97 @@ export function EmergencyAmbulancesList({
               ))
             ) : ambulances.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground text-xs">
+                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground text-xs">
                   {isEn ? "No ambulance services found." : "কোনো অ্যাম্বুলেন্স পাওয়া যায়নি।"}
                 </TableCell>
               </TableRow>
             ) : (
+              ambulances.map((a) => {
+                const isPending = a.status === "pending";
 
-              ambulances.map((a) => (
-                <TableRow key={a.id} className="hover:bg-muted/30">
-                  <TableCell>
-                    <Badge
-                      className={`font-bold border text-[10px] ${
-                        a.type === "ICU"
-                          ? "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/20"
-                          : a.type === "AC"
-                          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20"
-                          : a.type === "Freezer"
-                          ? "bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border-cyan-500/20"
-                          : "bg-muted text-muted-foreground border-border"
-                      }`}
-                    >
-                      {a.type}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="font-bold text-xs text-foreground">
-                    {a.name}
-                  </TableCell>
-                  <TableCell className="text-xs text-muted-foreground">
-                    {a.location}
-                  </TableCell>
-                  <TableCell className="text-xs font-mono">
-                    <a href={`tel:${a.phone}`} className="text-primary hover:underline flex items-center gap-1">
-                      <Phone className="h-3 w-3" />
-                      {a.phone}
-                    </a>
-                  </TableCell>
-                  <TableCell className="text-xs text-muted-foreground">
-                    {a.availableHours}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon-sm"
-                        onClick={() => onEdit(a)}
-                        aria-label={isEn ? `Edit ambulance ${a.name}` : `অ্যাম্বুলেন্স ${a.name} এর তথ্য এডিট করুন`}
-                        className="h-7 w-7 text-muted-foreground hover:text-foreground cursor-pointer"
+                return (
+                  <TableRow key={a.id} className="hover:bg-muted/30">
+                    <TableCell>
+                      <Badge
+                        className={`font-bold border text-[10px] ${
+                          a.type === "ICU"
+                            ? "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/20"
+                            : a.type === "AC"
+                            ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20"
+                            : a.type === "Freezer"
+                            ? "bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border-cyan-500/20"
+                            : "bg-muted text-muted-foreground border-border"
+                        }`}
                       >
-                        <Edit3 className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon-sm"
-                        onClick={() => onDelete(a.id, a.name)}
-                        aria-label={isEn ? `Delete ambulance ${a.name}` : `অ্যাম্বুলেন্স ${a.name} ডিলিট করুন`}
-                        className="h-7 w-7 text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
+                        {a.type}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="font-bold text-xs text-foreground">
+                      {a.name}
+                    </TableCell>
+                    <TableCell className="text-xs text-muted-foreground">
+                      {a.location}
+                    </TableCell>
+                    <TableCell className="text-xs font-mono">
+                      <a href={`tel:${a.phone}`} className="text-primary hover:underline flex items-center gap-1">
+                        <Phone className="h-3 w-3" />
+                        {a.phone}
+                      </a>
+                    </TableCell>
+                    <TableCell className="text-xs text-muted-foreground">
+                      {a.availableHours}
+                    </TableCell>
+                    <TableCell>
+                      {isPending ? (
+                        <Badge variant="outline" className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 text-[10px] font-bold">
+                          {isEn ? "Pending" : "অপেক্ষমাণ"}
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 text-[10px] font-bold">
+                          {isEn ? "Approved" : "অনুমোদিত"}
+                        </Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        {isPending && onApprove && (
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon-sm"
+                            onClick={() => onApprove(a.id)}
+                            title={isEn ? "Approve Ambulance" : "অনুমোদন করুন"}
+                            aria-label={isEn ? `Approve ambulance ${a.name}` : `অ্যাম্বুলেন্স ${a.name} অনুমোদন করুন`}
+                            className="h-7 w-7 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 cursor-pointer"
+                          >
+                            <CheckCircle2 className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon-sm"
+                          onClick={() => onEdit(a)}
+                          aria-label={isEn ? `Edit ambulance ${a.name}` : `অ্যাম্বুলেন্স ${a.name} এর তথ্য এডিট করুন`}
+                          className="h-7 w-7 text-muted-foreground hover:text-foreground cursor-pointer"
+                        >
+                          <Edit3 className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon-sm"
+                          onClick={() => onDelete(a.id, a.name)}
+                          aria-label={isEn ? `Delete ambulance ${a.name}` : `অ্যাম্বুলেন্স ${a.name} ডিলিট করুন`}
+                          className="h-7 w-7 text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
             )}
           </TableBody>
         </Table>

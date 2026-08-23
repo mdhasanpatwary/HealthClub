@@ -208,7 +208,7 @@ export default async function RootLayout({
   ];
 
   return (
-    <html lang={locale} className={`${theme} ${inter.variable} ${notoSansBengali.variable}`}>
+    <html lang={locale} data-scroll-behavior="smooth" className={`${theme} ${inter.variable} ${notoSansBengali.variable}`}>
       <body className="font-sans antialiased bg-background text-foreground min-h-screen flex flex-col">
         {/* Skip to Main Content Link for Keyboard / Screen Reader users */}
         <a

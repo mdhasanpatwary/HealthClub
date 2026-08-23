@@ -2,6 +2,7 @@
 
 import { BloodDonor, UPAZILAS_FENI } from "@/data/emergencyData";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -12,7 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Pagination } from "@/components/ui/pagination";
-import { Edit3, Trash2, Phone } from "lucide-react";
+import { Edit3, Trash2, Phone, CheckCircle2 } from "lucide-react";
 
 interface EmergencyDonorsListProps {
   donors: BloodDonor[];
@@ -26,6 +27,7 @@ interface EmergencyDonorsListProps {
   onEdit: (donor: BloodDonor) => void;
   onDelete: (id: string, name: string) => void;
   onToggleStatus: (id: string) => void;
+  onApprove?: (id: string) => void;
   loading?: boolean;
 }
 
@@ -41,10 +43,9 @@ export function EmergencyDonorsList({
   onEdit,
   onDelete,
   onToggleStatus,
+  onApprove,
   loading = false,
 }: EmergencyDonorsListProps) {
-
-
   return (
     <div className="space-y-3">
       <div className="rounded-xl border border-border overflow-hidden bg-background">
@@ -56,7 +57,8 @@ export function EmergencyDonorsList({
               <TableHead>{isEn ? "Upazila" : "উপজেলা"}</TableHead>
               <TableHead>{isEn ? "Phone" : "মোবাইল"}</TableHead>
               <TableHead>{isEn ? "Last Donated" : "সর্বশেষ দান"}</TableHead>
-              <TableHead>{isEn ? "Status" : "স্ট্যাটাস"}</TableHead>
+              <TableHead>{isEn ? "Available" : "প্রস্তুত"}</TableHead>
+              <TableHead>{isEn ? "Approval" : "অনুমোদন"}</TableHead>
               <TableHead className="text-right">{isEn ? "Actions" : "অ্যাকশন"}</TableHead>
             </TableRow>
           </TableHeader>
@@ -82,6 +84,9 @@ export function EmergencyDonorsList({
                   <TableCell>
                     <Skeleton className="h-5 w-16 rounded-full" />
                   </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-5 w-16 rounded-full" />
+                  </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
                       <Skeleton className="h-7 w-7 rounded-md" />
@@ -92,14 +97,15 @@ export function EmergencyDonorsList({
               ))
             ) : donors.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground text-xs">
+                <TableCell colSpan={8} className="text-center py-8 text-muted-foreground text-xs">
                   {isEn ? "No blood donors found matching criteria." : "কোনো রক্তদাতার তথ্য পাওয়া যায়নি।"}
                 </TableCell>
               </TableRow>
             ) : (
-
               donors.map((d) => {
                 const upazilaObj = UPAZILAS_FENI.find((u) => u.id === d.upazila);
+                const isPending = d.status === "pending";
+
                 return (
                   <TableRow key={d.id} className="hover:bg-muted/30">
                     <TableCell>
@@ -135,8 +141,32 @@ export function EmergencyDonorsList({
                         {d.isAvailable ? (isEn ? "Available" : "প্রস্তুত") : (isEn ? "Unavailable" : "অপ্রস্তুত")}
                       </button>
                     </TableCell>
+                    <TableCell>
+                      {isPending ? (
+                        <Badge variant="outline" className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 text-[10px] font-bold">
+                          {isEn ? "Pending" : "অপেক্ষমাণ"}
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 text-[10px] font-bold">
+                          {isEn ? "Approved" : "অনুমোদিত"}
+                        </Badge>
+                      )}
+                    </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1">
+                        {isPending && onApprove && (
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon-sm"
+                            onClick={() => onApprove(d.id)}
+                            title={isEn ? "Approve Donor" : "অনুমোদন করুন"}
+                            aria-label={isEn ? `Approve donor ${d.name}` : `রক্তদাতা ${d.name} অনুমোদন করুন`}
+                            className="h-7 w-7 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 cursor-pointer"
+                          >
+                            <CheckCircle2 className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
                         <Button
                           type="button"
                           variant="ghost"

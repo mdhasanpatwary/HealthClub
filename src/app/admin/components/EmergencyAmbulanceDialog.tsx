@@ -46,6 +46,7 @@ export function EmergencyAmbulanceDialog({
   const [location, setLocation] = useState("");
   const [phone, setPhone] = useState("");
   const [availableHours, setAvailableHours] = useState("২৪/৭ সার্বক্ষণিক");
+  const [status, setStatus] = useState<"approved" | "pending">("approved");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -58,12 +59,14 @@ export function EmergencyAmbulanceDialog({
         setLocation(ambulance.location);
         setPhone(ambulance.phone);
         setAvailableHours(ambulance.availableHours);
+        setStatus(ambulance.status || "approved");
       } else {
         setName("");
         setType("AC");
         setLocation("ফেনী সদর");
         setPhone("");
         setAvailableHours("২৪/৭ সার্বক্ষণিক");
+        setStatus("approved");
       }
     });
     return () => {
@@ -87,6 +90,7 @@ export function EmergencyAmbulanceDialog({
         location: location.trim(),
         phone: phone.trim(),
         availableHours: availableHours.trim(),
+        status,
       };
 
       const res = await saveAmbulanceAction(payload);
@@ -200,6 +204,30 @@ export function EmergencyAmbulanceDialog({
                 placeholder={isEn ? "24/7 Hours" : "২৪/৭ সার্বক্ষণিক"}
               />
             </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="amb-status" className="text-xs font-semibold">
+              {isEn ? "Approval Status" : "অনুমোদন স্ট্যাটাস"}
+            </Label>
+            <Select
+              value={status}
+              onValueChange={(val) => {
+                if (val) setStatus(val as "approved" | "pending");
+              }}
+            >
+              <SelectTrigger id="amb-status" className="h-9 text-xs">
+                <SelectValue placeholder={isEn ? "Select Status" : "স্ট্যাটাস নির্বাচন করুন"} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="approved" className="text-xs">
+                  {isEn ? "Approved (Live in Directory)" : "অনুমোদিত (পাবলিক ডিরেক্টরিতে দৃশ্যমান)"}
+                </SelectItem>
+                <SelectItem value="pending" className="text-xs">
+                  {isEn ? "Pending Approval (Hidden from public)" : "অনুমোদন অপেক্ষমাণ (পাবলিক থেকে লুকানো)"}
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <DialogFooter className="pt-2 gap-2">

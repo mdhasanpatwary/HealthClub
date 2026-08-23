@@ -48,7 +48,11 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
       });
 
       if (res.success) {
-        toast.success(isEn ? "Successfully registered as a blood donor!" : res.message);
+        toast.success(
+          isEn
+            ? "Registration submitted! It will appear in the directory once approved by admin."
+            : res.message
+        );
         setName("");
         setPhone("");
         setLastDonated("");

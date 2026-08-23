@@ -2,6 +2,15 @@
 
 import { prisma } from "@/lib/prisma";
 import { logger } from "@/lib/logger";
+import { updateTag, revalidateTag, revalidatePath } from "next/cache";
+import {
+  BloodDonor,
+  AmbulanceService,
+  INITIAL_BLOOD_DONORS,
+  INITIAL_AMBULANCES,
+} from "@/data/emergencyData";
+
+const EMERGENCY_TAG = "emergency-data";
 
 export interface RegisterBloodDonorInput {
   name: string;
@@ -21,24 +30,68 @@ export interface RegisterAmbulanceInput {
   coverage?: string;
 }
 
-export async function registerBloodDonorAction(input: RegisterBloodDonorInput): Promise<{ success: boolean; message: string }> {
+export async function registerBloodDonorAction(
+  input: RegisterBloodDonorInput
+): Promise<{ success: boolean; message: string }> {
   try {
     if (!input.name || !input.phone || !input.bloodGroup || !input.upazila) {
       return { success: false, message: "সকল প্রয়োজনীয় তথ্য পূরণ করুন।" };
     }
 
-    // Persist as a contact message / blood donor registration note
+    const newDonor: BloodDonor = {
+      id: `donor-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      name: input.name.trim(),
+      phone: input.phone.trim(),
+      bloodGroup: input.bloodGroup as BloodDonor["bloodGroup"],
+      upazila: input.upazila,
+      lastDonated: input.lastDonated?.trim() || "তথ্য নেই",
+      isAvailable: true,
+      status: "pending",
+      createdAt: new Date().toISOString(),
+    };
+
+    // Load existing donors
+    let donorsList = INITIAL_BLOOD_DONORS;
+    const setting = await prisma.systemSetting.findUnique({
+      where: { key: "emergency_donors" },
+    });
+    if (setting?.value) {
+      try {
+        const parsed = JSON.parse(setting.value);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          donorsList = parsed;
+        }
+      } catch (e) {
+        logger.error("Failed to parse existing emergency_donors", e);
+      }
+    }
+
+    const updatedDonors = [newDonor, ...donorsList];
+
+    await prisma.systemSetting.upsert({
+      where: { key: "emergency_donors" },
+      create: { key: "emergency_donors", value: JSON.stringify(updatedDonors) },
+      update: { value: JSON.stringify(updatedDonors) },
+    });
+
+    // Optional audit note in contact messages
     await prisma.contactMessage.create({
       data: {
         name: input.name,
         phone: input.phone,
-        message: `[রক্তদাতা নিবন্ধন] রক্তের গ্রুপ: ${input.bloodGroup} | উপজেলা: ${input.upazila} | শেষ রক্তদান: ${input.lastDonated || "তথ্য নেই"}`,
+        message: `[রক্তদাতা নিবন্ধন (অপেক্ষমাণ)] রক্তের গ্রুপ: ${input.bloodGroup} | উপজেলা: ${input.upazila} | শেষ রক্তদান: ${input.lastDonated || "তথ্য নেই"}`,
       },
-    });
+    }).catch((err) => logger.warn("Failed to create audit contact message", err));
+
+    updateTag(EMERGENCY_TAG);
+    revalidateTag(EMERGENCY_TAG, "max");
+    revalidatePath("/emergency");
+    revalidatePath("/admin");
+    revalidatePath("/admin/emergency");
 
     return {
       success: true,
-      message: "রক্তদাতা হিসেবে আপনার নিবন্ধন সফল হয়েছে। ধন্যবাদ!",
+      message: "রক্তদাতা হিসেবে আপনার নিবন্ধন সফলভাবে জমা হয়েছে। এডমিন অনুমোদনের পর এটি তালিকায় যুক্ত হবে।",
     };
   } catch (error) {
     logger.error("Error registering blood donor:", error);
@@ -49,27 +102,70 @@ export async function registerBloodDonorAction(input: RegisterBloodDonorInput): 
   }
 }
 
-export async function registerAmbulanceAction(input: RegisterAmbulanceInput): Promise<{ success: boolean; message: string }> {
+export async function registerAmbulanceAction(
+  input: RegisterAmbulanceInput
+): Promise<{ success: boolean; message: string }> {
   try {
     if (!input.operatorName || !input.serviceName || !input.phone || !input.type || !input.location) {
       return { success: false, message: "সকল প্রয়োজনীয় তথ্য পূরণ করুন।" };
     }
 
     const altInfo = input.altPhone ? ` | বিকল্প ফোন: ${input.altPhone}` : "";
-    const coverageInfo = input.coverage ? ` | কভারেজ রুট: ${input.coverage}` : "";
+    const coverageInfo = input.coverage ? ` | কভারেজ: ${input.coverage}` : "";
 
-    // Persist as a contact message / ambulance registration note for admin review
+    const newAmbulance: AmbulanceService = {
+      id: `amb-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      name: `${input.serviceName.trim()}${input.operatorName ? ` (${input.operatorName.trim()})` : ""}`,
+      type: input.type as AmbulanceService["type"],
+      location: `${input.location.trim()}${coverageInfo}`,
+      phone: input.phone.trim(),
+      availableHours: "২৪/৭ সার্বক্ষণিক",
+      status: "pending",
+      createdAt: new Date().toISOString(),
+    };
+
+    // Load existing ambulances
+    let ambulancesList = INITIAL_AMBULANCES;
+    const setting = await prisma.systemSetting.findUnique({
+      where: { key: "emergency_ambulances" },
+    });
+    if (setting?.value) {
+      try {
+        const parsed = JSON.parse(setting.value);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          ambulancesList = parsed;
+        }
+      } catch (e) {
+        logger.error("Failed to parse existing emergency_ambulances", e);
+      }
+    }
+
+    const updatedAmbulances = [newAmbulance, ...ambulancesList];
+
+    await prisma.systemSetting.upsert({
+      where: { key: "emergency_ambulances" },
+      create: { key: "emergency_ambulances", value: JSON.stringify(updatedAmbulances) },
+      update: { value: JSON.stringify(updatedAmbulances) },
+    });
+
+    // Optional audit note in contact messages
     await prisma.contactMessage.create({
       data: {
         name: `${input.serviceName} (${input.operatorName})`,
         phone: input.phone,
-        message: `[অ্যাম্বুলেন্স নিবন্ধন] সেবা/গাড়ির নাম: ${input.serviceName} | চালক/মালিক: ${input.operatorName} | ধরন: ${input.type} | স্ট্যান্ড/এলাকা: ${input.location}${altInfo}${coverageInfo}`,
+        message: `[অ্যাম্বুলেন্স নিবন্ধন (অপেক্ষমাণ)] সেবা/গাড়ির নাম: ${input.serviceName} | চালক/মালিক: ${input.operatorName} | ধরন: ${input.type} | স্ট্যান্ড/এলাকা: ${input.location}${altInfo}${coverageInfo}`,
       },
-    });
+    }).catch((err) => logger.warn("Failed to create audit contact message", err));
+
+    updateTag(EMERGENCY_TAG);
+    revalidateTag(EMERGENCY_TAG, "max");
+    revalidatePath("/emergency");
+    revalidatePath("/admin");
+    revalidatePath("/admin/emergency");
 
     return {
       success: true,
-      message: "আপনার অ্যাম্বুলেন্সের তথ্য সফলভাবে জমা হয়েছে। যাচাইয়ের পর এটি তালিকায় যুক্ত করা হবে।",
+      message: "আপনার অ্যাম্বুলেন্সের তথ্য সফলভাবে জমা হয়েছে। এডমিন অনুমোদনের পর এটি তালিকায় যুক্ত হবে।",
     };
   } catch (error) {
     logger.error("Error registering ambulance service:", error);

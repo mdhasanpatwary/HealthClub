@@ -125,6 +125,7 @@ export default function AdminMessagesPage() {
           setPage(1);
         }}
         onDelete={handleDeleteRequest}
+        onRefresh={loadData}
         t={t}
         locale={locale}
         loading={loading}

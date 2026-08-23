@@ -76,6 +76,7 @@ export function EmergencyDirectory({
   // Filtered blood donors
   const filteredDonors = useMemo(() => {
     return donorsList.filter((donor: BloodDonor) => {
+      if (donor.status === "pending") return false;
       const matchGroup = selectedGroup === "all" || donor.bloodGroup === selectedGroup;
       const matchUpazila = selectedUpazila === "all" || donor.upazila === selectedUpazila;
       const matchSearch =
@@ -90,6 +91,7 @@ export function EmergencyDirectory({
   // Filtered ambulances
   const filteredAmbulances = useMemo(() => {
     return ambulancesList.filter((amb: AmbulanceService) => {
+      if (amb.status === "pending") return false;
       const matchType = selectedAmbulanceType === "all" || amb.type === selectedAmbulanceType;
       const matchSearch =
         ambulanceSearch.trim() === "" ||

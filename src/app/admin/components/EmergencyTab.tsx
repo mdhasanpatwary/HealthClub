@@ -1,20 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import {
-  Siren,
-  Search,
-  Plus,
-  Droplet,
-  Truck,
-  PhoneCall,
-  Download,
-} from "lucide-react";
+import { Siren, Search, Plus, Droplet, Truck, PhoneCall, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
-
 import {
   BloodDonor,
   AmbulanceService,
@@ -26,6 +17,8 @@ import {
   getPaginatedDonorsAdminAction,
   getPaginatedAmbulancesAdminAction,
   getPaginatedHotlinesAdminAction,
+  approveBloodDonorAction,
+  approveAmbulanceAction,
   deleteBloodDonorAction,
   toggleBloodDonorAvailabilityAction,
   deleteAmbulanceAction,
@@ -35,7 +28,6 @@ import { exportEmergencyData } from "@/lib/emergencyExport";
 import { toast } from "sonner";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { useDebounce } from "@/hooks/useDebounce";
-
 import { EmergencyDonorDialog } from "./EmergencyDonorDialog";
 import { EmergencyAmbulanceDialog } from "./EmergencyAmbulanceDialog";
 import { EmergencyHotlineDialog } from "./EmergencyHotlineDialog";
@@ -43,9 +35,6 @@ import { EmergencyDeleteDialog } from "./emergency/EmergencyDeleteDialog";
 import { EmergencyDonorsList } from "./emergency/EmergencyDonorsList";
 import { EmergencyAmbulancesList } from "./emergency/EmergencyAmbulancesList";
 import { EmergencyHotlinesList } from "./emergency/EmergencyHotlinesList";
-
-
-
 
 export function EmergencyTab() {
   const { locale } = useLanguage();
@@ -70,6 +59,7 @@ export function EmergencyTab() {
   const debouncedSearch = useDebounce(search, 300);
   const [selectedGroup, setSelectedGroup] = useState<string>("all");
   const [selectedUpazila, setSelectedUpazila] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
 
   // Dialog & modal states
   const [donorDialogOpen, setDonorDialogOpen] = useState(false);
@@ -96,6 +86,7 @@ export function EmergencyTab() {
           search: debouncedSearch,
           group: selectedGroup,
           upazila: selectedUpazila,
+          status: statusFilter,
         });
         setDonors(res.data);
         setTotalItems(res.totalItems);
@@ -105,6 +96,7 @@ export function EmergencyTab() {
           page,
           pageSize,
           search: debouncedSearch,
+          status: statusFilter,
         });
         setAmbulances(res.data);
         setTotalItems(res.totalItems);
@@ -124,7 +116,7 @@ export function EmergencyTab() {
     } finally {
       setLoading(false);
     }
-  }, [activeSubTab, page, pageSize, debouncedSearch, selectedGroup, selectedUpazila, isEn]);
+  }, [activeSubTab, page, pageSize, debouncedSearch, selectedGroup, selectedUpazila, statusFilter, isEn]);
 
   useEffect(() => {
     let isMounted = true;
@@ -136,7 +128,6 @@ export function EmergencyTab() {
     };
   }, [loadData]);
 
-
   const handleToggleAvailability = async (id: string) => {
     const res = await toggleBloodDonorAvailabilityAction(id);
     if (res.success) {
@@ -144,6 +135,26 @@ export function EmergencyTab() {
       loadData();
     } else {
       toast.error(res.error || (isEn ? "Failed to update status" : "আপডেট ব্যর্থ হয়েছে"));
+    }
+  };
+
+  const handleApproveDonor = async (id: string) => {
+    const res = await approveBloodDonorAction(id);
+    if (res.success) {
+      toast.success(isEn ? "Blood donor approved & live in directory!" : "রক্তদাতা সফলভাবে অনুমোদিত হয়েছে!");
+      loadData();
+    } else {
+      toast.error(res.error || (isEn ? "Failed to approve donor" : "অনুমোদন ব্যর্থ হয়েছে"));
+    }
+  };
+
+  const handleApproveAmbulance = async (id: string) => {
+    const res = await approveAmbulanceAction(id);
+    if (res.success) {
+      toast.success(isEn ? "Ambulance service approved & live in directory!" : "অ্যাম্বুলেন্স সার্ভিস অনুমোদিত হয়েছে!");
+      loadData();
+    } else {
+      toast.error(res.error || (isEn ? "Failed to approve ambulance" : "অনুমোদন ব্যর্থ হয়েছে"));
     }
   };
 
@@ -182,7 +193,6 @@ export function EmergencyTab() {
   return (
     <div className="space-y-6">
       <Card className="border-border shadow-xs">
-
         <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4">
           <div>
             <CardTitle className="font-heading text-lg font-bold text-secondary dark:text-white flex items-center gap-2">
@@ -284,9 +294,7 @@ export function EmergencyTab() {
                   >
                     <option value="all">{isEn ? "All Blood Groups" : "সকল রক্তের গ্রুপ"}</option>
                     {BLOOD_GROUPS.map((bg) => (
-                      <option key={bg} value={bg}>
-                        {bg}
-                      </option>
+                      <option key={bg} value={bg}>{bg}</option>
                     ))}
                   </select>
 
@@ -305,6 +313,21 @@ export function EmergencyTab() {
                     ))}
                   </select>
                 </>
+              )}
+
+              {(activeSubTab === "donors" || activeSubTab === "ambulances") && (
+                <select
+                  value={statusFilter}
+                  onChange={(e) => {
+                    setStatusFilter(e.target.value);
+                    setPage(1);
+                  }}
+                  className="h-9 px-2.5 text-xs rounded-md border border-border bg-background focus:outline-none font-medium"
+                >
+                  <option value="all">{isEn ? "All Status" : "সকল স্ট্যাটাস"}</option>
+                  <option value="approved">{isEn ? "Approved Only" : "অনুমোদিত"}</option>
+                  <option value="pending">{isEn ? "Pending Approval" : "অপেক্ষমাণ"}</option>
+                </select>
               )}
             </div>
 
@@ -385,6 +408,7 @@ export function EmergencyTab() {
                 setDeleteModalOpen(true);
               }}
               onToggleStatus={handleToggleAvailability}
+              onApprove={handleApproveDonor}
               loading={loading}
             />
           ) : activeSubTab === "ambulances" ? (
@@ -408,6 +432,7 @@ export function EmergencyTab() {
                 setDeletingItem({ id, name, type: "ambulance" });
                 setDeleteModalOpen(true);
               }}
+              onApprove={handleApproveAmbulance}
               loading={loading}
             />
           ) : (
@@ -434,10 +459,8 @@ export function EmergencyTab() {
               loading={loading}
             />
           )}
-
         </CardContent>
       </Card>
-
 
       {/* Dialogs */}
       <EmergencyDonorDialog
@@ -446,21 +469,18 @@ export function EmergencyTab() {
         donor={editingDonor}
         onSuccess={loadData}
       />
-
       <EmergencyAmbulanceDialog
         open={ambulanceDialogOpen}
         onOpenChange={setAmbulanceDialogOpen}
         ambulance={editingAmbulance}
         onSuccess={loadData}
       />
-
       <EmergencyHotlineDialog
         open={hotlineDialogOpen}
         onOpenChange={setHotlineDialogOpen}
         hotline={editingHotline}
         onSuccess={loadData}
       />
-
       <EmergencyDeleteDialog
         open={deleteModalOpen}
         onOpenChange={setDeleteModalOpen}
@@ -472,4 +492,3 @@ export function EmergencyTab() {
     </div>
   );
 }
-

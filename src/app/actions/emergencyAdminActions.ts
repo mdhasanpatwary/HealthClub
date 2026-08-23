@@ -21,6 +21,19 @@ async function verifyAdmin(): Promise<boolean> {
   return !!(session && session.role === "admin");
 }
 
+async function saveEmergencySetting(key: string, data: unknown) {
+  await prisma.systemSetting.upsert({
+    where: { key },
+    create: { key, value: JSON.stringify(data) },
+    update: { value: JSON.stringify(data) },
+  });
+  updateTag(EMERGENCY_TAG);
+  revalidateTag(EMERGENCY_TAG, "max");
+  revalidatePath("/emergency");
+  revalidatePath("/admin");
+  revalidatePath("/admin/emergency");
+}
+
 export interface GetPaginatedHotlinesAdminParams {
   page?: number;
   pageSize?: number;
@@ -79,6 +92,7 @@ export interface GetPaginatedDonorsAdminParams {
   bloodGroup?: string;
   upazila?: string;
   area?: string;
+  status?: string;
 }
 
 export async function getPaginatedDonorsAdminAction(
@@ -95,8 +109,16 @@ export async function getPaginatedDonorsAdminAction(
   const search = params?.search?.trim().toLowerCase();
   const bloodGroup = params?.bloodGroup || params?.group;
   const upazila = params?.upazila || params?.area;
+  const status = params?.status;
 
   let filtered = bloodDonors;
+  if (status && status !== "all") {
+    if (status === "pending") {
+      filtered = filtered.filter((d) => d.status === "pending");
+    } else if (status === "approved") {
+      filtered = filtered.filter((d) => d.status !== "pending");
+    }
+  }
   if (bloodGroup && bloodGroup !== "all") {
     filtered = filtered.filter((d) => d.bloodGroup === bloodGroup);
   }
@@ -134,6 +156,7 @@ export interface GetPaginatedAmbulancesAdminParams {
   location?: string;
   area?: string;
   type?: string;
+  status?: string;
 }
 
 export async function getPaginatedAmbulancesAdminAction(
@@ -150,8 +173,16 @@ export async function getPaginatedAmbulancesAdminAction(
   const search = params?.search?.trim().toLowerCase();
   const location = params?.location || params?.area;
   const type = params?.type;
+  const status = params?.status;
 
   let filtered = ambulances;
+  if (status && status !== "all") {
+    if (status === "pending") {
+      filtered = filtered.filter((a) => a.status === "pending");
+    } else if (status === "approved") {
+      filtered = filtered.filter((a) => a.status !== "pending");
+    }
+  }
   if (type && type !== "all") {
     filtered = filtered.filter((a) => a.type === type);
   }
@@ -180,9 +211,7 @@ export async function getPaginatedAmbulancesAdminAction(
     currentPage: page,
     pageSize,
   };
-
 }
-
 
 /**
  * Fetch all emergency data (blood donors, ambulances, hotlines).
@@ -222,12 +251,9 @@ export const getEmergencyDataAction = unstable_cache(
           const parsed = JSON.parse(map.get("emergency_donors")!);
           if (Array.isArray(parsed) && parsed.length > 0) {
             bloodDonors = parsed;
-          } else {
-            bloodDonors = INITIAL_BLOOD_DONORS;
           }
         } catch (e) {
           logger.error("Failed to parse emergency_donors", e);
-          bloodDonors = INITIAL_BLOOD_DONORS;
         }
       }
 
@@ -236,12 +262,9 @@ export const getEmergencyDataAction = unstable_cache(
           const parsed = JSON.parse(map.get("emergency_ambulances")!);
           if (Array.isArray(parsed) && parsed.length > 0) {
             ambulances = parsed;
-          } else {
-            ambulances = INITIAL_AMBULANCES;
           }
         } catch (e) {
           logger.error("Failed to parse emergency_ambulances", e);
-          ambulances = INITIAL_AMBULANCES;
         }
       }
 
@@ -250,12 +273,9 @@ export const getEmergencyDataAction = unstable_cache(
           const parsed = JSON.parse(map.get("emergency_hotlines")!);
           if (Array.isArray(parsed) && parsed.length > 0) {
             hotlines = parsed;
-          } else {
-            hotlines = INITIAL_EMERGENCY_HOTLINES;
           }
         } catch (e) {
           logger.error("Failed to parse emergency_hotlines", e);
-          hotlines = INITIAL_EMERGENCY_HOTLINES;
         }
       }
 
@@ -282,23 +302,33 @@ export async function saveBloodDonorAction(donor: BloodDonor) {
     const existingIndex = data.bloodDonors.findIndex((d) => d.id === donor.id);
     let updatedList: BloodDonor[];
 
+    const donorToSave: BloodDonor = {
+      ...donor,
+      status: donor.status || "approved",
+    };
+
     if (existingIndex >= 0) {
       updatedList = [...data.bloodDonors];
-      updatedList[existingIndex] = donor;
+      updatedList[existingIndex] = donorToSave;
     } else {
-      updatedList = [donor, ...data.bloodDonors];
+      updatedList = [donorToSave, ...data.bloodDonors];
     }
 
-    await prisma.systemSetting.upsert({
-      where: { key: "emergency_donors" },
-      create: { key: "emergency_donors", value: JSON.stringify(updatedList) },
-      update: { value: JSON.stringify(updatedList) },
-    });
+    await saveEmergencySetting("emergency_donors", updatedList);
+    return { success: true };
+  } catch (err: unknown) {
+    return { success: false, error: (err as Error).message };
+  }
+}
 
-    updateTag(EMERGENCY_TAG);
-    revalidateTag(EMERGENCY_TAG, "max");
-    revalidatePath("/emergency");
-    revalidatePath("/admin");
+export async function approveBloodDonorAction(id: string) {
+  try {
+    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
+    const data = await getEmergencyDataAction();
+    const updatedList = data.bloodDonors.map((d) =>
+      d.id === id ? { ...d, status: "approved" as const } : d
+    );
+    await saveEmergencySetting("emergency_donors", updatedList);
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -310,17 +340,7 @@ export async function deleteBloodDonorAction(id: string) {
     if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
     const data = await getEmergencyDataAction();
     const updatedList = data.bloodDonors.filter((d) => d.id !== id);
-
-    await prisma.systemSetting.upsert({
-      where: { key: "emergency_donors" },
-      create: { key: "emergency_donors", value: JSON.stringify(updatedList) },
-      update: { value: JSON.stringify(updatedList) },
-    });
-
-    updateTag(EMERGENCY_TAG);
-    revalidateTag(EMERGENCY_TAG, "max");
-    revalidatePath("/emergency");
-    revalidatePath("/admin");
+    await saveEmergencySetting("emergency_donors", updatedList);
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -334,17 +354,7 @@ export async function toggleBloodDonorAvailabilityAction(id: string) {
     const updatedList = data.bloodDonors.map((d) =>
       d.id === id ? { ...d, isAvailable: !d.isAvailable } : d
     );
-
-    await prisma.systemSetting.upsert({
-      where: { key: "emergency_donors" },
-      create: { key: "emergency_donors", value: JSON.stringify(updatedList) },
-      update: { value: JSON.stringify(updatedList) },
-    });
-
-    updateTag(EMERGENCY_TAG);
-    revalidateTag(EMERGENCY_TAG, "max");
-    revalidatePath("/emergency");
-    revalidatePath("/admin");
+    await saveEmergencySetting("emergency_donors", updatedList);
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -360,23 +370,33 @@ export async function saveAmbulanceAction(ambulance: AmbulanceService) {
     const existingIndex = data.ambulances.findIndex((a) => a.id === ambulance.id);
     let updatedList: AmbulanceService[];
 
+    const ambulanceToSave: AmbulanceService = {
+      ...ambulance,
+      status: ambulance.status || "approved",
+    };
+
     if (existingIndex >= 0) {
       updatedList = [...data.ambulances];
-      updatedList[existingIndex] = ambulance;
+      updatedList[existingIndex] = ambulanceToSave;
     } else {
-      updatedList = [ambulance, ...data.ambulances];
+      updatedList = [ambulanceToSave, ...data.ambulances];
     }
 
-    await prisma.systemSetting.upsert({
-      where: { key: "emergency_ambulances" },
-      create: { key: "emergency_ambulances", value: JSON.stringify(updatedList) },
-      update: { value: JSON.stringify(updatedList) },
-    });
+    await saveEmergencySetting("emergency_ambulances", updatedList);
+    return { success: true };
+  } catch (err: unknown) {
+    return { success: false, error: (err as Error).message };
+  }
+}
 
-    updateTag(EMERGENCY_TAG);
-    revalidateTag(EMERGENCY_TAG, "max");
-    revalidatePath("/emergency");
-    revalidatePath("/admin");
+export async function approveAmbulanceAction(id: string) {
+  try {
+    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
+    const data = await getEmergencyDataAction();
+    const updatedList = data.ambulances.map((a) =>
+      a.id === id ? { ...a, status: "approved" as const } : a
+    );
+    await saveEmergencySetting("emergency_ambulances", updatedList);
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -388,17 +408,7 @@ export async function deleteAmbulanceAction(id: string) {
     if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
     const data = await getEmergencyDataAction();
     const updatedList = data.ambulances.filter((a) => a.id !== id);
-
-    await prisma.systemSetting.upsert({
-      where: { key: "emergency_ambulances" },
-      create: { key: "emergency_ambulances", value: JSON.stringify(updatedList) },
-      update: { value: JSON.stringify(updatedList) },
-    });
-
-    updateTag(EMERGENCY_TAG);
-    revalidateTag(EMERGENCY_TAG, "max");
-    revalidatePath("/emergency");
-    revalidatePath("/admin");
+    await saveEmergencySetting("emergency_ambulances", updatedList);
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -421,16 +431,7 @@ export async function saveHotlineAction(hotline: EmergencyHotline) {
       updatedList = [hotline, ...data.hotlines];
     }
 
-    await prisma.systemSetting.upsert({
-      where: { key: "emergency_hotlines" },
-      create: { key: "emergency_hotlines", value: JSON.stringify(updatedList) },
-      update: { value: JSON.stringify(updatedList) },
-    });
-
-    updateTag(EMERGENCY_TAG);
-    revalidateTag(EMERGENCY_TAG, "max");
-    revalidatePath("/emergency");
-    revalidatePath("/admin");
+    await saveEmergencySetting("emergency_hotlines", updatedList);
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -442,17 +443,7 @@ export async function deleteHotlineAction(id: string) {
     if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
     const data = await getEmergencyDataAction();
     const updatedList = data.hotlines.filter((h) => h.id !== id);
-
-    await prisma.systemSetting.upsert({
-      where: { key: "emergency_hotlines" },
-      create: { key: "emergency_hotlines", value: JSON.stringify(updatedList) },
-      update: { value: JSON.stringify(updatedList) },
-    });
-
-    updateTag(EMERGENCY_TAG);
-    revalidateTag(EMERGENCY_TAG, "max");
-    revalidatePath("/emergency");
-    revalidatePath("/admin");
+    await saveEmergencySetting("emergency_hotlines", updatedList);
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };

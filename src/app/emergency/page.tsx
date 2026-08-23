@@ -104,6 +104,8 @@ export default async function EmergencyPage() {
   const t = (key: string) => tServer(locale, key);
 
   const { bloodDonors, ambulances, hotlines } = await getEmergencyDataAction();
+  const approvedDonors = bloodDonors.filter((d) => d.status !== "pending");
+  const approvedAmbulances = ambulances.filter((a) => a.status !== "pending");
 
   // Structured Data for SEO, AEO, and GEO Rich Snippets
   const jsonLdData = [
@@ -298,25 +300,34 @@ export default async function EmergencyPage() {
   ];
 
   return (
-    <div className="bg-background min-h-screen">
+    <div className="min-h-screen bg-background text-foreground">
       <JsonLd data={jsonLdData} />
 
-      {/* Page Hero Header */}
-      <header className="relative overflow-hidden bg-gradient-to-br from-rose-500/10 via-amber-500/5 to-background dark:from-slate-950 dark:via-slate-900 dark:to-background py-8 sm:py-16 border-b border-border/60">
-        <div className="absolute -top-32 -right-32 w-80 h-80 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-16 -left-32 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-bold">
-            <Siren className="h-3.5 w-3.5 animate-pulse" />
-            <span>{isEn ? "24/7 Emergency Support Network" : "২৪/৭ জরুরি স্বাস্থ্য সহায়তা নেটওয়ার্ক"}</span>
+      {/* Hero Header Section */}
+      <header className="relative overflow-hidden border-b border-border/40 bg-linear-to-b from-primary/5 via-background to-background py-10 sm:py-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-4">
+          
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 text-rose-700 dark:text-rose-400 text-xs font-bold border border-rose-500/20 shadow-2xs">
+            <Siren className="h-3.5 w-3.5 animate-pulse text-rose-600" />
+            <span>{isEn ? "24/7 Feni Emergency Medical Support" : "২৪/৭ ফেনী জরুরি স্বাস্থ্য সহায়তা"}</span>
           </div>
 
-          <h1 className="font-heading text-2xl sm:text-4xl md:text-5xl font-bold text-secondary dark:text-white tracking-tight">
-            {isEn ? "Emergency Services & Blood Directory" : "জরুরি স্বাস্থ্য সেবা ও রক্তদাতা ডিরেক্টরি"}
+          {/* Heading */}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-foreground font-heading">
+            {isEn ? (
+              <>
+                Emergency Healthcare & <span className="text-rose-600 dark:text-rose-500">Blood Directory</span>
+              </>
+            ) : (
+              <>
+                জরুরি স্বাস্থ্য সেবা ও <span className="text-rose-600 dark:text-rose-500">রক্তদাতা ডিরেক্টরি</span>
+              </>
+            )}
           </h1>
 
-          <p className="text-xs sm:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          {/* Subtitle */}
+          <p className="mx-auto max-w-2xl text-xs sm:text-sm md:text-base text-muted-foreground leading-relaxed">
             {isEn
               ? "Instant access to voluntary blood donors in Feni, 24/7 ambulance services, emergency oxygen supplies, and critical medical hotlines."
               : "মুহূর্তেই রক্তের গ্রুপ অনুযায়ী ফেনীর স্বেচ্ছাসেবী রক্তদাতা, ২৪/৭ আইসিইউ অ্যাম্বুলেন্স, জরুরি অক্সিজেন ও মেডিকেল হটলাইনে সরাসরি যোগাযোগ করুন।"}
@@ -349,8 +360,8 @@ export default async function EmergencyPage() {
             {isEn ? "Emergency Directory Search & Filters" : "জরুরি ডিরেক্টরি ও অনুসন্ধান"}
           </h2>
           <EmergencyDirectory
-            initialBloodDonors={bloodDonors}
-            initialAmbulances={ambulances}
+            initialBloodDonors={approvedDonors}
+            initialAmbulances={approvedAmbulances}
             initialHotlines={hotlines}
           />
         </section>

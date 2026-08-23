@@ -6,6 +6,8 @@ export interface BloodDonor {
   phone: string;
   lastDonated: string;
   isAvailable: boolean;
+  status?: "approved" | "pending";
+  createdAt?: string;
 }
 
 export interface AmbulanceService {
@@ -15,6 +17,8 @@ export interface AmbulanceService {
   location: string;
   phone: string;
   availableHours: string;
+  status?: "approved" | "pending";
+  createdAt?: string;
 }
 
 export interface EmergencyHotline {
