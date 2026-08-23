@@ -20,6 +20,7 @@ import {
   getPartnerTransactionsAction as _getPartnerTransactionsAction,
   addPartnerTransactionAction as _addPartnerTransactionAction,
 } from "./partnerTransactionActions";
+import { getPartnerAnalyticsAction as _getPartnerAnalyticsAction } from "./partnerAnalyticsActions";
 
 export async function addPartnerRequestAction(...args: Parameters<typeof _addPartnerRequestAction>) {
   return _addPartnerRequestAction(...args);
@@ -456,4 +457,10 @@ export async function addPartnerTransactionAction(
 ) {
   return _addPartnerTransactionAction(...args);
 }
+
+export async function getPartnerAnalyticsAction() {
+  return _getPartnerAnalyticsAction();
+}
+
+
 

@@ -170,9 +170,10 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/partner/dashboard/doctors/page.tsx`, `src/app/partner/dashboard/components/PartnerDoctorsTab.tsx`, `src/app/actions/doctorActions.ts`, `src/app/actions/partnerActions.ts`
   - **Details**: Provide a dedicated tab in partner dashboard allowing hospitals to view, link/unlink, and manage specialist doctors practicing in their chambers, updating room numbers and visiting schedules.
 
-- [ ] **TODO-36** (2.3): **Partner Monthly Settlement Statements & Analytics**
+- [x] **TODO-36** (2.3): **Partner Monthly Settlement Statements & Analytics**
   - **Files**: `src/app/partner/dashboard/analytics/page.tsx`, `src/app/partner/dashboard/components/PartnerAnalyticsTab.tsx`, `src/app/actions/partnerActions.ts`, `src/lib/exportUtils.ts`
   - **Details**: Build partner analytics dashboard with monthly patient volume charts, total discount dispensed, peak visiting days, and downloadable monthly billing statement summaries in CSV/PDF.
+
 
 - [ ] **TODO-37** (2.4): **Partner Multi-Cashier & Counter Staff Accounts**
   - **Files**: `prisma/schema.prisma`, `src/app/actions/partnerStaffActions.ts`, `src/app/partner/dashboard/components/PartnerStaffTab.tsx`, `src/proxy.ts`
