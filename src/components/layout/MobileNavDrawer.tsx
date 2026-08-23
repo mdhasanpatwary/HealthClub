@@ -27,6 +27,7 @@ import {
   Calculator,
   Activity,
   Pill,
+  Radio,
 } from "lucide-react";
 import { Member, Partner } from "@/services/db";
 import { dbStore } from "@/services/dbStore";
@@ -341,6 +342,21 @@ export default function MobileNavDrawer({
                   {t("admin.nav.system") || "সিস্টেম ও সাপোর্ট"}
                 </div>
                 <div className="space-y-1 pl-1">
+                  <Link
+                    href="/admin/broadcast"
+                    onClick={onClose}
+                    className={`flex items-center justify-between p-2 rounded-xl text-xs font-semibold transition-colors ${
+                      isActive("/admin/broadcast")
+                        ? "bg-primary/10 text-primary font-bold"
+                        : "text-foreground hover:bg-muted"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Radio className="h-4 w-4 text-primary shrink-0" />
+                      <span>{t("admin.nav.broadcast") || "ব্রডকাস্ট ক্যাম্পেইন"}</span>
+                    </div>
+                  </Link>
+
                   <Link
                     href="/admin/notifications"
                     onClick={onClose}

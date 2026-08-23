@@ -19,6 +19,7 @@ import {
   ChevronDown,
   Activity,
   Pill,
+  Radio,
 } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatNum } from "@/lib/i18n";
@@ -122,6 +123,7 @@ export default function AdminHeaderNav() {
     pathname.startsWith("/admin/health-tips");
 
   const isSystemActive =
+    pathname.startsWith("/admin/broadcast") ||
     pathname.startsWith("/admin/notifications") ||
     pathname.startsWith("/admin/messages") ||
     pathname.startsWith("/admin/settings") ||
@@ -339,6 +341,15 @@ export default function AdminHeaderNav() {
           align="start"
           className="w-64 p-1.5 bg-background dark:bg-slate-900 border border-border shadow-xl rounded-2xl space-y-1 z-50"
         >
+          <AdminNavDropdownItem
+            href="/admin/broadcast"
+            icon={Radio}
+            iconBg="bg-primary/15"
+            iconColor="text-primary"
+            title={t("admin.nav.broadcast") || "ব্রডকাস্ট ক্যাম্পেইন"}
+            description={t("admin.nav.broadcastDesc") || "এসএমএস ও ইমেইল নোটিশ প্রেরণ"}
+            active={pathname.startsWith("/admin/broadcast")}
+          />
           <AdminNavDropdownItem
             href="/admin/notifications"
             icon={Bell}

@@ -18,6 +18,7 @@ import {
   Siren,
   BookOpen,
   Smartphone,
+  Radio,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -213,6 +214,17 @@ export default function AdminDashboardPage() {
       count: stats.pwaInstalls ?? 0,
       countLabel: isBn ? "টি ইনস্টল" : "installs",
       color: "teal",
+    },
+    {
+      title: isBn ? "ব্রডকাস্ট মেসেজিং" : "Broadcast Campaigns",
+      description: isBn
+        ? "সকল সদস্য, পার্টনার ও রক্তদাতাদের গণ এসএমএস ও ইমেইল নোটিশ"
+        : "Mass SMS, email & in-app announcements to user segments",
+      href: "/admin/broadcast",
+      icon: Radio,
+      count: stats.totalMembers,
+      countLabel: isBn ? "জন সম্ভাব্য প্রাপক" : "reach",
+      color: "emerald",
     },
   ];
 
