@@ -54,6 +54,7 @@ export const ROLE_CONFIGS: Record<AdminRole, RoleConfig> = {
       "/admin/pwa",
       "/admin/import",
       "/admin/settings",
+      "/admin/settings/backup",
       "/admin/staff",
     ],
     permissions: [

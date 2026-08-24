@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +20,8 @@ import {
   Loader2,
   RotateCcw,
   Receipt,
+  Database,
+  ArrowRight,
 } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -79,18 +82,12 @@ export function SettingsTab() {
     setSaving(true);
     try {
       const payload: Record<string, string> = {
-        founding_fee: foundingFee,
-        premium_fee: premiumFee,
-        bkash_personal_number: bkashPersonal,
-        bkash_merchant_number: bkashMerchant,
-        payment_instructions: paymentInstructions,
-        hotline_phone: hotlinePhone,
-        whatsapp_phone: whatsappPhone,
-        official_email: officialEmail,
-        facebook_url: facebookUrl,
-        notice_enabled: noticeEnabled ? "true" : "false",
-        notice_text: noticeText,
-        allow_member_tx: allowMemberTx ? "true" : "false",
+        founding_fee: foundingFee, premium_fee: premiumFee,
+        bkash_personal_number: bkashPersonal, bkash_merchant_number: bkashMerchant,
+        payment_instructions: paymentInstructions, hotline_phone: hotlinePhone,
+        whatsapp_phone: whatsappPhone, official_email: officialEmail,
+        facebook_url: facebookUrl, notice_enabled: noticeEnabled ? "true" : "false",
+        notice_text: noticeText, allow_member_tx: allowMemberTx ? "true" : "false",
       };
 
       const res = await updateMultipleSystemSettingsAction(payload);
@@ -128,14 +125,8 @@ export function SettingsTab() {
                 <Skeleton className="h-3.5 w-64 rounded-md" />
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Skeleton className="h-3.5 w-28 rounded-md" />
-                  <Skeleton className="h-10 w-full rounded-md" />
-                </div>
-                <div className="space-y-2">
-                  <Skeleton className="h-3.5 w-32 rounded-md" />
-                  <Skeleton className="h-10 w-full rounded-md" />
-                </div>
+                <Skeleton className="h-10 w-full rounded-md" />
+                <Skeleton className="h-10 w-full rounded-md" />
               </CardContent>
             </Card>
           ))}
@@ -414,13 +405,7 @@ export function SettingsTab() {
                     : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700"
                 }`}
               >
-                {allowMemberTx
-                  ? isEn
-                    ? "Enabled"
-                    : "চালু রয়েছে"
-                  : isEn
-                  ? "Disabled"
-                  : "বন্ধ রয়েছে"}
+                {allowMemberTx ? (isEn ? "Enabled" : "চালু রয়েছে") : isEn ? "Disabled" : "বন্ধ রয়েছে"}
               </span>
             </div>
             <CardDescription className="text-xs">
@@ -456,6 +441,37 @@ export function SettingsTab() {
                   }`}
                 />
               </button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 6. Database Backup & Disaster Recovery */}
+        <Card className="border border-border shadow-xs">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base font-bold flex items-center gap-2">
+              <Database className="h-4 w-4 text-primary" />
+              <span>{isEn ? "Database Backup & Snapshots" : "ডাটাবেস ব্যাকআপ ও স্ন্যাপশট"}</span>
+            </CardTitle>
+            <CardDescription className="text-xs">
+              {isEn
+                ? "One-click JSON/SQL backup export, snapshot registry, and retention policies"
+                : "ওয়ান-ক্লিক ব্যাকআপ ডাম্প, সার্ভার স্ন্যাপশট ও স্বয়ংক্রিয় রিটেনশন পলিসি"}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {isEn
+                ? "Export complete database records, schedule automated snapshots, and manage retention for disaster recovery."
+                : "সম্পূর্ণ ডাটাবেসের ব্যাকআপ এক্সপোর্ট, পয়েন্ট-ইন-টাইম স্ন্যাপশট এবং অটো রিটেনশন পলিসি নিয়ন্ত্রণ করুন।"}
+            </p>
+            <div className="pt-1">
+              <Link
+                href="/admin/settings/backup"
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors"
+              >
+                <span>{isEn ? "Manage Backups & Snapshots" : "ব্যাকআপ ও স্ন্যাপশট ব্যবস্থাপনা"}</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
             </div>
           </CardContent>
         </Card>

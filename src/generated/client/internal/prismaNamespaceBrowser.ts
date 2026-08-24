@@ -61,7 +61,8 @@ export const ModelName = {
   SystemSetting: 'SystemSetting',
   PwaInstallation: 'PwaInstallation',
   MemberNotification: 'MemberNotification',
-  AdminUser: 'AdminUser'
+  AdminUser: 'AdminUser',
+  DatabaseSnapshot: 'DatabaseSnapshot'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -278,6 +279,23 @@ export const AdminUserScalarFieldEnum = {
 } as const
 
 export type AdminUserScalarFieldEnum = (typeof AdminUserScalarFieldEnum)[keyof typeof AdminUserScalarFieldEnum]
+
+
+export const DatabaseSnapshotScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  format: 'format',
+  fileSize: 'fileSize',
+  tableStats: 'tableStats',
+  dataPayload: 'dataPayload',
+  trigger: 'trigger',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt'
+} as const
+
+export type DatabaseSnapshotScalarFieldEnum = (typeof DatabaseSnapshotScalarFieldEnum)[keyof typeof DatabaseSnapshotScalarFieldEnum]
 
 
 export const SortOrder = {

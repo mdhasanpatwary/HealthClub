@@ -72,3 +72,8 @@ export type MemberNotification = Prisma.MemberNotificationModel
  * 
  */
 export type AdminUser = Prisma.AdminUserModel
+/**
+ * Model DatabaseSnapshot
+ * 
+ */
+export type DatabaseSnapshot = Prisma.DatabaseSnapshotModel

@@ -199,7 +199,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `prisma/schema.prisma`, `src/app/actions/adminUserActions.ts`, `src/app/admin/staff/page.tsx`, `src/app/admin/components/AdminStaffTab.tsx`, `src/proxy.ts`, `src/lib/session.ts`
   - **Details**: Replace single hardcoded admin email with database-backed `AdminUser` model supporting granular roles (`super_admin`, `content_moderator`, `support_staff`) with permissions matrix.
 
-- [ ] **TODO-42** (3.6): **Database Snapshot & Automated Backup Management**
+- [x] **TODO-42** (3.6): **Database Snapshot & Automated Backup Management**
   - **Files**: `src/app/admin/settings/backup/page.tsx`, `src/app/actions/dbBackupActions.ts`, `src/app/admin/components/SettingsTab.tsx`
   - **Details**: Implement one-click admin database backup export (JSON/SQL dump) and snapshot management with retention controls for disaster recovery.
 

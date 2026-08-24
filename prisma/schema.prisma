@@ -239,3 +239,20 @@ model AdminUser {
   @@index([isActive], map: "admin_users_is_active_idx")
   @@map("admin_users")
 }
+
+model DatabaseSnapshot {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  format      String    // 'json' | 'sql'
+  fileSize    Int       @map("file_size") // size in bytes
+  tableStats  String    @map("table_stats") // JSON string of record counts per table
+  dataPayload String?   @map("data_payload") // Stored backup payload for server-side snapshots
+  trigger     String    @default("manual") // 'manual' | 'automated'
+  createdBy   String?   @map("created_by") // Admin name / email
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  expiresAt   DateTime? @map("expires_at") @db.Timestamptz
+
+  @@index([createdAt(sort: Desc)], map: "database_snapshots_created_at_idx")
+  @@map("database_snapshots")
+}

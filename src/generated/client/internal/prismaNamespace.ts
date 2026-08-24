@@ -394,7 +394,8 @@ export const ModelName = {
   SystemSetting: 'SystemSetting',
   PwaInstallation: 'PwaInstallation',
   MemberNotification: 'MemberNotification',
-  AdminUser: 'AdminUser'
+  AdminUser: 'AdminUser',
+  DatabaseSnapshot: 'DatabaseSnapshot'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -410,7 +411,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "member" | "partner" | "partnerStaff" | "transaction" | "doctor" | "partnerRequest" | "contactMessage" | "systemSetting" | "pwaInstallation" | "memberNotification" | "adminUser"
+    modelProps: "member" | "partner" | "partnerStaff" | "transaction" | "doctor" | "partnerRequest" | "contactMessage" | "systemSetting" | "pwaInstallation" | "memberNotification" | "adminUser" | "databaseSnapshot"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1228,6 +1229,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DatabaseSnapshot: {
+      payload: Prisma.$DatabaseSnapshotPayload<ExtArgs>
+      fields: Prisma.DatabaseSnapshotFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DatabaseSnapshotFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DatabaseSnapshotPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DatabaseSnapshotFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DatabaseSnapshotPayload>
+        }
+        findFirst: {
+          args: Prisma.DatabaseSnapshotFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DatabaseSnapshotPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DatabaseSnapshotFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DatabaseSnapshotPayload>
+        }
+        findMany: {
+          args: Prisma.DatabaseSnapshotFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DatabaseSnapshotPayload>[]
+        }
+        create: {
+          args: Prisma.DatabaseSnapshotCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DatabaseSnapshotPayload>
+        }
+        createMany: {
+          args: Prisma.DatabaseSnapshotCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DatabaseSnapshotCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DatabaseSnapshotPayload>[]
+        }
+        delete: {
+          args: Prisma.DatabaseSnapshotDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DatabaseSnapshotPayload>
+        }
+        update: {
+          args: Prisma.DatabaseSnapshotUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DatabaseSnapshotPayload>
+        }
+        deleteMany: {
+          args: Prisma.DatabaseSnapshotDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DatabaseSnapshotUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DatabaseSnapshotUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DatabaseSnapshotPayload>[]
+        }
+        upsert: {
+          args: Prisma.DatabaseSnapshotUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DatabaseSnapshotPayload>
+        }
+        aggregate: {
+          args: Prisma.DatabaseSnapshotAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDatabaseSnapshot>
+        }
+        groupBy: {
+          args: Prisma.DatabaseSnapshotGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DatabaseSnapshotGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DatabaseSnapshotCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DatabaseSnapshotCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1467,6 +1542,23 @@ export const AdminUserScalarFieldEnum = {
 export type AdminUserScalarFieldEnum = (typeof AdminUserScalarFieldEnum)[keyof typeof AdminUserScalarFieldEnum]
 
 
+export const DatabaseSnapshotScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  format: 'format',
+  fileSize: 'fileSize',
+  tableStats: 'tableStats',
+  dataPayload: 'dataPayload',
+  trigger: 'trigger',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt'
+} as const
+
+export type DatabaseSnapshotScalarFieldEnum = (typeof DatabaseSnapshotScalarFieldEnum)[keyof typeof DatabaseSnapshotScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1680,6 +1772,7 @@ export type GlobalOmitConfig = {
   pwaInstallation?: Prisma.PwaInstallationOmit
   memberNotification?: Prisma.MemberNotificationOmit
   adminUser?: Prisma.AdminUserOmit
+  databaseSnapshot?: Prisma.DatabaseSnapshotOmit
 }
 
 /* Types for Logging */

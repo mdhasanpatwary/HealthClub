@@ -276,4 +276,42 @@ export interface Doctor {
   isActive: boolean;
 }
 
+export interface DatabaseSnapshot {
+  id: string;
+  name: string;
+  description?: string | null;
+  format: "json" | "sql";
+  fileSize: number;
+  tableStats: Record<string, number>;
+  dataPayload?: string | null;
+  trigger: "manual" | "automated";
+  createdBy?: string | null;
+  createdAt: string;
+  expiresAt?: string | null;
+}
+
+export interface BackupTableStats {
+  members: number;
+  partners: number;
+  partnerStaff: number;
+  transactions: number;
+  doctors: number;
+  partnerRequests: number;
+  contactMessages: number;
+  systemSettings: number;
+  pwaInstallations: number;
+  memberNotifications: number;
+  adminUsers: number;
+  databaseSnapshots: number;
+  totalRecords: number;
+}
+
+export interface BackupSettings {
+  autoSchedule: "disabled" | "daily" | "weekly" | "monthly";
+  retentionDays: number;
+  maxSnapshots: number;
+  lastRunAt?: string | null;
+  notifyOnBackup: boolean;
+}
+
 export { initialDoctors } from "./initialDoctors";
