@@ -191,7 +191,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/admin/analytics/page.tsx`, `src/app/admin/components/RevenueAnalyticsTab.tsx`, `src/app/actions/analyticsActions.ts`, `src/app/admin/components/AdminNav.tsx`
   - **Details**: Implement visual revenue charts and KPIs tracking membership subscription revenue, renewal retention rates, monthly transaction volumes, and top-performing partner hospitals.
 
-- [ ] **TODO-40** (3.4): **Admin Bulk Data Operations & Excel/CSV Importer**
+- [x] **TODO-40** (3.4): **Admin Bulk Data Operations & Excel/CSV Importer**
   - **Files**: `src/app/admin/import/page.tsx`, `src/app/admin/components/BulkImportDialog.tsx`, `src/app/actions/bulkImportActions.ts`, `src/app/admin/components/DoctorsTab.tsx`, `src/app/admin/components/PartnersTab.tsx`
   - **Details**: Build bulk data importer supporting `.xlsx` and `.csv` files to import doctors, hospitals, and emergency contacts in batches with column auto-mapping and validation error reporting.
 

@@ -1,6 +1,7 @@
 "use client";
 
-import { Search, Edit3, Trash2, Phone, Stethoscope, Download } from "lucide-react";
+import { useState } from "react";
+import { Search, Edit3, Trash2, Phone, Stethoscope, Download, UploadCloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -22,6 +23,7 @@ import { Pagination } from "@/components/ui/pagination";
 import { Doctor } from "@/services/db";
 import { Locale } from "@/lib/i18n";
 import { exportToCsv } from "@/lib/exportUtils";
+import { BulkImportDialog } from "./BulkImportDialog";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -61,68 +63,79 @@ export function DoctorsTab({
   loading = false,
 }: DoctorsTabProps) {
   const isEn = locale === "en";
-
+  const [isImportOpen, setIsImportOpen] = useState(false);
 
   return (
-    <Card className="border-border shadow-md">
-      <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <CardTitle className="font-heading text-lg font-bold text-secondary flex items-center gap-2">
-            <Stethoscope className="h-5 w-5 text-primary" />
-            <span>{t("admin.doctors.title")}</span>
-          </CardTitle>
-          <CardDescription>{t("admin.doctors.desc")}</CardDescription>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-          <div className="relative flex-1 sm:w-64 min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder={t("admin.doctors.searchPlaceholder")}
-              value={doctorSearch}
-              onChange={(e) => {
-                setDoctorSearch(e.target.value);
-                onPageChange(1);
-              }}
-              className="pl-9 h-9 border-border bg-background"
-            />
+    <>
+      <Card className="border-border shadow-md">
+        <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <CardTitle className="font-heading text-lg font-bold text-secondary flex items-center gap-2">
+              <Stethoscope className="h-5 w-5 text-primary" />
+              <span>{t("admin.doctors.title")}</span>
+            </CardTitle>
+            <CardDescription>{t("admin.doctors.desc")}</CardDescription>
           </div>
 
-          <Button
-            onClick={() =>
-              exportToCsv(doctors, "healthclub_doctors", [
-                { header: "Doctor ID", accessor: "id" },
-                { header: "Name", accessor: "name" },
-                { header: "Specialty", accessor: "specialty" },
-                { header: "Department", accessor: "department" },
-                { header: "Degrees", accessor: "degrees" },
-                { header: "Designation", accessor: (d) => d.designation || "" },
-                { header: "Chamber Name", accessor: "chamberName" },
-                { header: "Chamber Address", accessor: "chamberAddress" },
-                { header: "Visiting Days", accessor: "visitingDays" },
-                { header: "Visiting Hours", accessor: "visitingHours" },
-                { header: "Serial Phone", accessor: "serialPhone" },
-                { header: "Fee", accessor: (d) => d.consultationFee || "" },
-              ])
-            }
-            variant="outline"
-            size="sm"
-            className="border-border gap-1.5 text-xs font-semibold shrink-0"
-          >
-            <Download className="h-3.5 w-3.5" />
-            <span>{isEn ? "Export CSV" : "এক্সপোর্ট"}</span>
-          </Button>
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+            <div className="relative flex-1 sm:w-64 min-w-[200px]">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder={t("admin.doctors.searchPlaceholder")}
+                value={doctorSearch}
+                onChange={(e) => {
+                  setDoctorSearch(e.target.value);
+                  onPageChange(1);
+                }}
+                className="pl-9 h-9 border-border bg-background"
+              />
+            </div>
 
-          <Button
-            onClick={onNewDoctorClick}
-            size="sm"
-            className="bg-primary hover:bg-primary-dark text-white shrink-0 font-semibold"
-          >
-            {t("admin.doctors.addNew")}
-          </Button>
-        </div>
-      </CardHeader>
+            <Button
+              onClick={() => setIsImportOpen(true)}
+              variant="outline"
+              size="sm"
+              className="border-border gap-1.5 text-xs font-semibold shrink-0"
+            >
+              <UploadCloud className="h-3.5 w-3.5 text-primary" />
+              <span>{isEn ? "Bulk Import" : "বাল্ক ইম্পোর্ট"}</span>
+            </Button>
+
+            <Button
+              onClick={() =>
+                exportToCsv(doctors, "healthclub_doctors", [
+                  { header: "Doctor ID", accessor: "id" },
+                  { header: "Name", accessor: "name" },
+                  { header: "Specialty", accessor: "specialty" },
+                  { header: "Department", accessor: "department" },
+                  { header: "Degrees", accessor: "degrees" },
+                  { header: "Designation", accessor: (d) => d.designation || "" },
+                  { header: "Chamber Name", accessor: "chamberName" },
+                  { header: "Chamber Address", accessor: "chamberAddress" },
+                  { header: "Visiting Days", accessor: "visitingDays" },
+                  { header: "Visiting Hours", accessor: "visitingHours" },
+                  { header: "Serial Phone", accessor: "serialPhone" },
+                  { header: "Fee", accessor: (d) => d.consultationFee || "" },
+                ])
+              }
+              variant="outline"
+              size="sm"
+              className="border-border gap-1.5 text-xs font-semibold shrink-0"
+            >
+              <Download className="h-3.5 w-3.5" />
+              <span>{isEn ? "Export CSV" : "এক্সপোর্ট"}</span>
+            </Button>
+
+            <Button
+              onClick={onNewDoctorClick}
+              size="sm"
+              className="bg-primary hover:bg-primary-dark text-white shrink-0 font-semibold"
+            >
+              {t("admin.doctors.addNew")}
+            </Button>
+          </div>
+        </CardHeader>
 
       <CardContent className="p-0">
         <div className="overflow-x-auto">
@@ -274,6 +287,19 @@ export function DoctorsTab({
         )}
       </CardContent>
     </Card>
+
+    {isImportOpen && (
+      <BulkImportDialog
+        isOpen={isImportOpen}
+        onClose={() => setIsImportOpen(false)}
+        entityType="doctors"
+        onSuccess={() => {
+          onPageChange(1);
+          window.dispatchEvent(new Event("admin-data-change"));
+        }}
+      />
+    )}
+  </>
   );
 }
 

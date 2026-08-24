@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Siren, Search, Plus, Droplet, Truck, PhoneCall, Download } from "lucide-react";
+import { Siren, Search, Plus, Droplet, Truck, PhoneCall, Download, UploadCloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -35,6 +35,7 @@ import { EmergencyDeleteDialog } from "./emergency/EmergencyDeleteDialog";
 import { EmergencyDonorsList } from "./emergency/EmergencyDonorsList";
 import { EmergencyAmbulancesList } from "./emergency/EmergencyAmbulancesList";
 import { EmergencyHotlinesList } from "./emergency/EmergencyHotlinesList";
+import { BulkImportDialog } from "./BulkImportDialog";
 
 export function EmergencyTab() {
   const { locale } = useLanguage();
@@ -68,6 +69,7 @@ export function EmergencyTab() {
   const [editingAmbulance, setEditingAmbulance] = useState<AmbulanceService | null>(null);
   const [hotlineDialogOpen, setHotlineDialogOpen] = useState(false);
   const [editingHotline, setEditingHotline] = useState<EmergencyHotline | null>(null);
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deletingItem, setDeletingItem] = useState<{
     id: string;
@@ -335,6 +337,16 @@ export function EmergencyTab() {
               <Button
                 variant="outline"
                 size="sm"
+                onClick={() => setImportDialogOpen(true)}
+                className="text-xs h-9 font-semibold gap-1.5 border-border"
+              >
+                <UploadCloud className="h-3.5 w-3.5 text-primary" />
+                <span>{isEn ? "Bulk Import" : "বাল্ক ইম্পোর্ট"}</span>
+              </Button>
+
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={handleExport}
                 className="text-xs h-9 font-semibold gap-1.5 border-border"
               >
@@ -463,32 +475,18 @@ export function EmergencyTab() {
       </Card>
 
       {/* Dialogs */}
-      <EmergencyDonorDialog
-        open={donorDialogOpen}
-        onOpenChange={setDonorDialogOpen}
-        donor={editingDonor}
-        onSuccess={loadData}
-      />
-      <EmergencyAmbulanceDialog
-        open={ambulanceDialogOpen}
-        onOpenChange={setAmbulanceDialogOpen}
-        ambulance={editingAmbulance}
-        onSuccess={loadData}
-      />
-      <EmergencyHotlineDialog
-        open={hotlineDialogOpen}
-        onOpenChange={setHotlineDialogOpen}
-        hotline={editingHotline}
-        onSuccess={loadData}
-      />
-      <EmergencyDeleteDialog
-        open={deleteModalOpen}
-        onOpenChange={setDeleteModalOpen}
-        itemName={deletingItem?.name}
-        isEn={isEn}
-        deleting={deleting}
-        onConfirm={confirmDelete}
-      />
+      <EmergencyDonorDialog open={donorDialogOpen} onOpenChange={setDonorDialogOpen} donor={editingDonor} onSuccess={loadData} />
+      <EmergencyAmbulanceDialog open={ambulanceDialogOpen} onOpenChange={setAmbulanceDialogOpen} ambulance={editingAmbulance} onSuccess={loadData} />
+      <EmergencyHotlineDialog open={hotlineDialogOpen} onOpenChange={setHotlineDialogOpen} hotline={editingHotline} onSuccess={loadData} />
+      <EmergencyDeleteDialog open={deleteModalOpen} onOpenChange={setDeleteModalOpen} itemName={deletingItem?.name} isEn={isEn} deleting={deleting} onConfirm={confirmDelete} />
+      {importDialogOpen && (
+        <BulkImportDialog
+          isOpen={importDialogOpen}
+          onClose={() => setImportDialogOpen(false)}
+          entityType={activeSubTab}
+          onSuccess={loadData}
+        />
+      )}
     </div>
   );
 }

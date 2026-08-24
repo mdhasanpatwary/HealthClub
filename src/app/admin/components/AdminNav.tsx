@@ -17,6 +17,7 @@ import {
   Bell,
   Mail,
   Smartphone,
+  UploadCloud,
   Settings,
 } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
@@ -112,6 +113,12 @@ export const ADMIN_NAV_LINKS: AdminNavLink[] = [
     labelBn: "PWA অ্যানালিটিক্স",
     labelEn: "PWA",
     icon: Smartphone,
+  },
+  {
+    href: "/admin/import",
+    labelBn: "বাল্ক ইম্পোর্ট",
+    labelEn: "Bulk Import",
+    icon: UploadCloud,
   },
   {
     href: "/admin/settings",

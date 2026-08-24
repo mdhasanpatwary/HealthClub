@@ -1,6 +1,7 @@
 "use client";
 
-import { Search, Edit3, Trash2, Download, Building2, Activity, Pill, LayoutGrid } from "lucide-react";
+import { useState } from "react";
+import { Search, Edit3, Trash2, Download, Building2, Activity, Pill, LayoutGrid, UploadCloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -10,6 +11,7 @@ import { Partner } from "@/services/db";
 import { exportToCsv } from "@/lib/exportUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatNum, Locale } from "@/lib/i18n";
+import { BulkImportDialog } from "./BulkImportDialog";
 
 interface PartnersTabProps {
   partners: Partner[];
@@ -58,6 +60,7 @@ export function PartnersTab({
   loading = false,
 }: PartnersTabProps) {
   const isEn = locale === "en";
+  const [isImportOpen, setIsImportOpen] = useState(false);
 
   const categories = [
     {
@@ -87,55 +90,67 @@ export function PartnersTab({
   ];
 
   return (
-    <Card className="border-border shadow-md">
-      <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-3">
-        <div>
-          <CardTitle className="font-heading text-lg font-bold text-secondary">
-            {t("admin.dashboard.partnerHealthcareDirectory")}
-          </CardTitle>
-          <CardDescription>
-            {t("admin.dashboard.contractedFacilitiesDesc")}
-          </CardDescription>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-          <div className="relative flex-1 sm:w-60 min-w-[180px]">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder={t ? t("admin.dashboard.searchPartnerPlaceholder") : "Search partners..."}
-              value={partnerSearch}
-              onChange={(e) => {
-                setPartnerSearch(e.target.value);
-                onPageChange(1);
-              }}
-              className="pl-9 h-9 border-border bg-background"
-            />
+    <>
+      <Card className="border-border shadow-md">
+        <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-3">
+          <div>
+            <CardTitle className="font-heading text-lg font-bold text-secondary">
+              {t("admin.dashboard.partnerHealthcareDirectory")}
+            </CardTitle>
+            <CardDescription>
+              {t("admin.dashboard.contractedFacilitiesDesc")}
+            </CardDescription>
           </div>
-          <Button
-            onClick={() =>
-              exportToCsv(partners, "healthclub_partners", [
-                { header: "Partner ID", accessor: "id" },
-                { header: "Name", accessor: "name" },
-                { header: "Category", accessor: "category" },
-                { header: "Discount Rate", accessor: "discount" },
-                { header: "Phone", accessor: "phone" },
-                { header: "Email", accessor: (p) => p.email || "" },
-                { header: "Address", accessor: "address" },
-              ])
-            }
-            variant="outline"
-            size="sm"
-            className="border-border gap-1.5 text-xs font-semibold shrink-0"
-          >
-            <Download className="h-3.5 w-3.5" />
-            <span>{isEn ? "Export CSV" : "এক্সপোর্ট"}</span>
-          </Button>
-          <Button onClick={onNewPartnerClick} size="sm" className="bg-primary hover:bg-primary-dark text-white shrink-0">
-            {t ? t("admin.dashboard.newPartnerTitle") : "New Partner"}
-          </Button>
-        </div>
-      </CardHeader>
+
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+            <div className="relative flex-1 sm:w-60 min-w-[180px]">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder={t ? t("admin.dashboard.searchPartnerPlaceholder") : "Search partners..."}
+                value={partnerSearch}
+                onChange={(e) => {
+                  setPartnerSearch(e.target.value);
+                  onPageChange(1);
+                }}
+                className="pl-9 h-9 border-border bg-background"
+              />
+            </div>
+
+            <Button
+              onClick={() => setIsImportOpen(true)}
+              variant="outline"
+              size="sm"
+              className="border-border gap-1.5 text-xs font-semibold shrink-0"
+            >
+              <UploadCloud className="h-3.5 w-3.5 text-primary" />
+              <span>{isEn ? "Bulk Import" : "বাল্ক ইম্পোর্ট"}</span>
+            </Button>
+
+            <Button
+              onClick={() =>
+                exportToCsv(partners, "healthclub_partners", [
+                  { header: "Partner ID", accessor: "id" },
+                  { header: "Name", accessor: "name" },
+                  { header: "Category", accessor: "category" },
+                  { header: "Discount Rate", accessor: "discount" },
+                  { header: "Phone", accessor: "phone" },
+                  { header: "Email", accessor: (p) => p.email || "" },
+                  { header: "Address", accessor: "address" },
+                ])
+              }
+              variant="outline"
+              size="sm"
+              className="border-border gap-1.5 text-xs font-semibold shrink-0"
+            >
+              <Download className="h-3.5 w-3.5" />
+              <span>{isEn ? "Export CSV" : "এক্সপোর্ট"}</span>
+            </Button>
+            <Button onClick={onNewPartnerClick} size="sm" className="bg-primary hover:bg-primary-dark text-white shrink-0">
+              {t ? t("admin.dashboard.newPartnerTitle") : "New Partner"}
+            </Button>
+          </div>
+        </CardHeader>
 
       {/* Category Filter Tabs */}
       <div className="px-6 py-2.5 border-y border-border/60 bg-muted/20 flex flex-wrap items-center gap-2">
@@ -291,6 +306,19 @@ export function PartnersTab({
         )}
       </CardContent>
     </Card>
+
+    {isImportOpen && (
+      <BulkImportDialog
+        isOpen={isImportOpen}
+        onClose={() => setIsImportOpen(false)}
+        entityType="partners"
+        onSuccess={() => {
+          onPageChange(1);
+          window.dispatchEvent(new Event("admin-data-change"));
+        }}
+      />
+    )}
+  </>
   );
 }
 
