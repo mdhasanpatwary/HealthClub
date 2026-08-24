@@ -131,7 +131,7 @@ export function useAdminNotifications(options?: UseAdminNotificationsOptions) {
         if (prev.includes(id)) return prev;
         const next = [...prev, id];
         safeStorage.setItem(STORAGE_KEYS.READ_IDS, next);
-        window.dispatchEvent(new Event("admin-notifications-change"));
+        queueMicrotask(() => window.dispatchEvent(new Event("admin-notifications-change")));
         return next;
       });
     },
@@ -143,7 +143,7 @@ export function useAdminNotifications(options?: UseAdminNotificationsOptions) {
     const merged = Array.from(new Set([...readIds, ...allIds]));
     setReadIds(merged);
     safeStorage.setItem(STORAGE_KEYS.READ_IDS, merged);
-    window.dispatchEvent(new Event("admin-notifications-change"));
+    queueMicrotask(() => window.dispatchEvent(new Event("admin-notifications-change")));
   }, [summary.items, readIds]);
 
   const dismissNotification = useCallback(
@@ -152,7 +152,7 @@ export function useAdminNotifications(options?: UseAdminNotificationsOptions) {
         if (prev.includes(id)) return prev;
         const next = [...prev, id];
         safeStorage.setItem(STORAGE_KEYS.DISMISSED_IDS, next);
-        window.dispatchEvent(new Event("admin-notifications-change"));
+        queueMicrotask(() => window.dispatchEvent(new Event("admin-notifications-change")));
         return next;
       });
     },
@@ -165,7 +165,7 @@ export function useAdminNotifications(options?: UseAdminNotificationsOptions) {
     const merged = Array.from(new Set([...dismissedIds, ...toDismiss]));
     setDismissedIds(merged);
     safeStorage.setItem(STORAGE_KEYS.DISMISSED_IDS, merged);
-    window.dispatchEvent(new Event("admin-notifications-change"));
+    queueMicrotask(() => window.dispatchEvent(new Event("admin-notifications-change")));
   }, [summary.items, readSet, dismissedIds]);
 
   const handlePageChange = useCallback((page: number) => {
