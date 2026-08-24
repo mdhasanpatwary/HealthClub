@@ -2,6 +2,7 @@ import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { logger } from "@/lib/logger";
+import { AdminRole } from "@/services/db";
 
 function getSessionSecret(): Uint8Array {
   const secret = process.env.SESSION_SECRET;
@@ -20,6 +21,9 @@ const encodedKey = getSessionSecret();
 export interface SessionPayload {
   userId: string;
   role: "user" | "admin" | "partner" | "partner_staff";
+  adminRole?: AdminRole;
+  adminName?: string;
+  adminEmail?: string;
   staffId?: string;
   staffName?: string;
   deskName?: string;
@@ -50,6 +54,9 @@ export async function decrypt(session: string | undefined = ""): Promise<Session
     return {
       userId: payload.userId as string,
       role: payload.role as "user" | "admin" | "partner" | "partner_staff",
+      adminRole: payload.adminRole as AdminRole | undefined,
+      adminName: payload.adminName as string | undefined,
+      adminEmail: payload.adminEmail as string | undefined,
       staffId: payload.staffId as string | undefined,
       staffName: payload.staffName as string | undefined,
       deskName: payload.deskName as string | undefined,
@@ -68,6 +75,9 @@ export async function setSessionUser(
   userId: string,
   role: "user" | "admin" | "partner" | "partner_staff" = "user",
   metadata?: {
+    adminRole?: AdminRole;
+    adminName?: string;
+    adminEmail?: string;
     staffId?: string;
     staffName?: string;
     deskName?: string;

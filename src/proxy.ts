@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "@/lib/session";
+import { canAccessAdminRoute } from "@/lib/permissions";
 
 const protectedRoutes = ["/dashboard", "/admin", "/profile", "/partner"];
 const adminRoutes = ["/admin"];
@@ -72,11 +73,19 @@ export async function proxy(req: NextRequest) {
 
     // 3. Only admins can access admin routes
     const isAdminRoute = adminRoutes.some((r) => matchRoute(path, r));
-    if (isAdminRoute && session.role !== "admin") {
-      if (session.role === "partner" || session.role === "partner_staff") {
-        return NextResponse.redirect(new URL("/partner/dashboard", req.nextUrl));
+    if (isAdminRoute) {
+      if (session.role !== "admin") {
+        if (session.role === "partner" || session.role === "partner_staff") {
+          return NextResponse.redirect(new URL("/partner/dashboard", req.nextUrl));
+        }
+        return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
       }
-      return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+
+      // Check granular RBAC permissions for admin sub-routes
+      const adminRole = session.adminRole || "super_admin";
+      if (!canAccessAdminRoute(adminRole, path)) {
+        return NextResponse.redirect(new URL("/admin", req.nextUrl));
+      }
     }
 
     // 4. Authenticated users trying to access login/register routes → redirect to dashboards

@@ -21,6 +21,7 @@ import {
   Activity,
   Pill,
   Radio,
+  ShieldCheck,
 } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatNum } from "@/lib/i18n";
@@ -125,6 +126,7 @@ export default function AdminHeaderNav() {
     pathname.startsWith("/admin/health-tips");
 
   const isSystemActive =
+    pathname.startsWith("/admin/staff") ||
     pathname.startsWith("/admin/broadcast") ||
     pathname.startsWith("/admin/notifications") ||
     pathname.startsWith("/admin/messages") ||
@@ -389,6 +391,15 @@ export default function AdminHeaderNav() {
             title={t("admin.nav.pwa") || "PWA অ্যানালিটিক্স"}
             description={t("admin.nav.pwaDesc") || "অ্যাপ ইনস্টল ও সক্রিয় পরিসংখ্যান"}
             active={pathname.startsWith("/admin/pwa")}
+          />
+          <AdminNavDropdownItem
+            href="/admin/staff"
+            icon={ShieldCheck}
+            iconBg="bg-purple-500/15"
+            iconColor="text-purple-600 dark:text-purple-400"
+            title={isBn ? "এডমিন ও স্টাফ (RBAC)" : "Staff & RBAC"}
+            description={isBn ? "রোল পারমিশন ও এক্সেস কন্ট্রোল" : "Role permissions & access control"}
+            active={pathname.startsWith("/admin/staff")}
           />
           <AdminNavDropdownItem
             href="/admin/settings"

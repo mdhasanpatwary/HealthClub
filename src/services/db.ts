@@ -68,6 +68,20 @@ export interface Partner {
   departmentDiscounts?: string;
 }
 
+export type AdminRole = 'super_admin' | 'content_moderator' | 'support_staff';
+
+export interface AdminUser {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  role: AdminRole;
+  isActive: boolean;
+  lastLoginAt?: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
 export interface PartnerStaff {
   id: string;
   partnerId: string;

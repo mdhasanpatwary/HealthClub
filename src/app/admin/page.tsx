@@ -20,6 +20,7 @@ import {
   BookOpen,
   Smartphone,
   Radio,
+  ShieldCheck,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -238,6 +239,17 @@ export default function AdminDashboardPage() {
       count: stats.totalMembers,
       countLabel: isBn ? "জন সম্ভাব্য প্রাপক" : "reach",
       color: "emerald",
+    },
+    {
+      title: isBn ? "এডমিন ও স্টাফ (RBAC)" : "Staff & RBAC",
+      description: isBn
+        ? "সুপার এডমিন, কন্টেন্ট মডারেটর ও সাপোর্ট স্টাফ পারমিশন পরিচালনা"
+        : "Manage admin users, granular access control and permissions",
+      href: "/admin/staff",
+      icon: ShieldCheck,
+      count: 0,
+      countLabel: isBn ? "রোল পারমিশন" : "access control",
+      color: "purple",
     },
   ];
 

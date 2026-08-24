@@ -91,3 +91,8 @@ export type PwaInstallation = Prisma.PwaInstallationModel
  * 
  */
 export type MemberNotification = Prisma.MemberNotificationModel
+/**
+ * Model AdminUser
+ * 
+ */
+export type AdminUser = Prisma.AdminUserModel

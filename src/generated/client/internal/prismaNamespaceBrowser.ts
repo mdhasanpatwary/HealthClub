@@ -60,7 +60,8 @@ export const ModelName = {
   ContactMessage: 'ContactMessage',
   SystemSetting: 'SystemSetting',
   PwaInstallation: 'PwaInstallation',
-  MemberNotification: 'MemberNotification'
+  MemberNotification: 'MemberNotification',
+  AdminUser: 'AdminUser'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -261,6 +262,22 @@ export const MemberNotificationScalarFieldEnum = {
 } as const
 
 export type MemberNotificationScalarFieldEnum = (typeof MemberNotificationScalarFieldEnum)[keyof typeof MemberNotificationScalarFieldEnum]
+
+
+export const AdminUserScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  password: 'password',
+  role: 'role',
+  isActive: 'isActive',
+  lastLoginAt: 'lastLoginAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdminUserScalarFieldEnum = (typeof AdminUserScalarFieldEnum)[keyof typeof AdminUserScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -19,6 +19,7 @@ import {
   Smartphone,
   UploadCloud,
   Settings,
+  ShieldCheck,
 } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 
@@ -119,6 +120,12 @@ export const ADMIN_NAV_LINKS: AdminNavLink[] = [
     labelBn: "বাল্ক ইম্পোর্ট",
     labelEn: "Bulk Import",
     icon: UploadCloud,
+  },
+  {
+    href: "/admin/staff",
+    labelBn: "এডমিন ও স্টাফ",
+    labelEn: "Staff & RBAC",
+    icon: ShieldCheck,
   },
   {
     href: "/admin/settings",

@@ -222,3 +222,20 @@ model MemberNotification {
   @@index([createdAt(sort: Desc)], map: "member_notifications_created_at_idx")
   @@map("member_notifications")
 }
+
+model AdminUser {
+  id          String    @id
+  name        String
+  email       String    @unique
+  phone       String?   @unique
+  password    String
+  role        String    @default("super_admin") // 'super_admin' | 'content_moderator' | 'support_staff'
+  isActive    Boolean   @default(true) @map("is_active")
+  lastLoginAt DateTime? @map("last_login_at") @db.Timestamptz
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([role], map: "admin_users_role_idx")
+  @@index([isActive], map: "admin_users_is_active_idx")
+  @@map("admin_users")
+}

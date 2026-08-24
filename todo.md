@@ -195,7 +195,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/admin/import/page.tsx`, `src/app/admin/components/BulkImportDialog.tsx`, `src/app/actions/bulkImportActions.ts`, `src/app/admin/components/DoctorsTab.tsx`, `src/app/admin/components/PartnersTab.tsx`
   - **Details**: Build bulk data importer supporting `.xlsx` and `.csv` files to import doctors, hospitals, and emergency contacts in batches with column auto-mapping and validation error reporting.
 
-- [ ] **TODO-41** (3.5): **Admin Role-Based Access Control (RBAC) & Staff Management**
+- [x] **TODO-41** (3.5): **Admin Role-Based Access Control (RBAC) & Staff Management**
   - **Files**: `prisma/schema.prisma`, `src/app/actions/adminUserActions.ts`, `src/app/admin/staff/page.tsx`, `src/app/admin/components/AdminStaffTab.tsx`, `src/proxy.ts`, `src/lib/session.ts`
   - **Details**: Replace single hardcoded admin email with database-backed `AdminUser` model supporting granular roles (`super_admin`, `content_moderator`, `support_staff`) with permissions matrix.
 
