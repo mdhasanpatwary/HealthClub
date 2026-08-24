@@ -13,6 +13,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { DoctorAvatar, DoctorSerialModal, DoctorDetailsModal } from "./doctors/DoctorModals";
+import { DoctorAvailabilityBadge, DoctorNoticeBanner } from "./doctors/DoctorAvailabilityBadge";
 import { FENI_UPAZILAS, getUpazilaLabel, detectUpazilaFromText } from "@/data/feniLocations";
 
 interface DoctorDirectoryProps {
@@ -288,53 +289,63 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
                     </div>
                   </div>
 
-                  {/* Designation (Fixed Equal Height with Line Clamp & Overflow Hidden) */}
-                  <div className="bg-muted/40 rounded-xl px-2.5 py-1.5 sm:py-2 text-xs text-muted-foreground h-11 flex items-center overflow-hidden">
-                    <p
-                      className="font-medium leading-tight line-clamp-2 overflow-hidden break-words"
-                      title={doc.designation}
-                    >
-                      {doc.designation || "বিশেষজ্ঞ চিকিৎসক"}
-                    </p>
-                  </div>
+                    {/* Designation & Availability Row */}
+                    <div className="flex flex-col gap-1.5">
+                      <div className="bg-muted/40 rounded-xl px-2.5 py-1.5 sm:py-2 text-xs text-muted-foreground min-h-10 flex items-center overflow-hidden">
+                        <p
+                          className="font-medium leading-tight line-clamp-2 overflow-hidden break-words"
+                          title={doc.designation}
+                        >
+                          {doc.designation || "বিশেষজ্ঞ চিকিৎসক"}
+                        </p>
+                      </div>
+                      <div className="flex items-center justify-between gap-1.5">
+                        <DoctorAvailabilityBadge doctor={doc} locale={locale} size="sm" />
+                      </div>
+                    </div>
 
-                  {/* Chamber Schedule & Address with Upazila Badge */}
-                  <div className="space-y-1 text-xs pt-0.5">
-                    <div className="flex items-center justify-between gap-2 text-foreground font-medium min-w-0">
-                      <div className="flex items-center gap-2 min-w-0 flex-1">
-                        <Building2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary shrink-0" />
-                        <span className="flex-1 truncate leading-snug" title={doc.chamberName}>
-                          {doc.chamberName}
+                    {/* Notice Banner if present */}
+                    {doc.notice && (
+                      <DoctorNoticeBanner notice={doc.notice} locale={locale} compact />
+                    )}
+
+                    {/* Chamber Schedule & Address with Upazila Badge */}
+                    <div className="space-y-1 text-xs pt-0.5">
+                      <div className="flex items-center justify-between gap-2 text-foreground font-medium min-w-0">
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
+                          <Building2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary shrink-0" />
+                          <span className="flex-1 truncate leading-snug" title={doc.chamberName}>
+                            {doc.chamberName}
+                          </span>
+                        </div>
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-primary/10 text-primary border border-primary/20 shrink-0">
+                          <MapPin className="h-2.5 w-2.5" />
+                          {getUpazilaLabel(doc.resolvedUpazila, locale)}
                         </span>
                       </div>
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-primary/10 text-primary border border-primary/20 shrink-0">
-                        <MapPin className="h-2.5 w-2.5" />
-                        {getUpazilaLabel(doc.resolvedUpazila, locale)}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 text-muted-foreground min-w-0">
-                      <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground/80 shrink-0" />
-                      <span className="flex-1 truncate leading-snug" title={doc.chamberAddress}>
-                        {doc.chamberAddress}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between gap-1.5 text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 px-2.5 py-1.5 rounded-lg font-medium text-[11px] sm:text-xs overflow-hidden">
-                      <div className="inline-flex items-center gap-1.5 truncate min-w-0 flex-1">
-                        <Calendar className="h-3.5 w-3.5 shrink-0" />
-                        <span className="truncate" title={doc.visitingDays}>
-                          {doc.visitingDays}
+                      <div className="flex items-center gap-2 text-muted-foreground min-w-0">
+                        <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground/80 shrink-0" />
+                        <span className="flex-1 truncate leading-snug" title={doc.chamberAddress}>
+                          {doc.chamberAddress}
                         </span>
                       </div>
-                      <span className="text-emerald-400/80 dark:text-emerald-600 shrink-0">•</span>
-                      <div className="inline-flex items-center gap-1.5 truncate shrink-0 max-w-[45%]">
-                        <Clock className="h-3.5 w-3.5 shrink-0" />
-                        <span className="truncate" title={doc.visitingHours}>
-                          {doc.visitingHours}
-                        </span>
+                      <div className="flex items-center justify-between gap-1.5 text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 px-2.5 py-1.5 rounded-lg font-medium text-[11px] sm:text-xs overflow-hidden">
+                        <div className="inline-flex items-center gap-1.5 truncate min-w-0 flex-1">
+                          <Calendar className="h-3.5 w-3.5 shrink-0" />
+                          <span className="truncate" title={doc.visitingDays}>
+                            {doc.visitingDays}
+                          </span>
+                        </div>
+                        <span className="text-emerald-400/80 dark:text-emerald-600 shrink-0">•</span>
+                        <div className="inline-flex items-center gap-1.5 truncate shrink-0 max-w-[45%]">
+                          <Clock className="h-3.5 w-3.5 shrink-0" />
+                          <span className="truncate" title={doc.visitingHours}>
+                            {doc.visitingHours}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
                 {/* Action Buttons */}
                 <div className="border-t border-border/60 bg-muted/20 p-2 sm:p-2.5 grid grid-cols-2 gap-2 mt-auto">
@@ -345,7 +356,7 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
                     className="h-8 sm:h-9 text-xs font-semibold rounded-xl border-border/80 hover:bg-muted cursor-pointer"
                   >
                     <Info className="h-3.5 w-3.5 mr-1" />
-                    {t("consultants.button.details")}
+                    {t("consultants.button.details") || (isEn ? "Details" : "বিস্তারিত")}
                   </Button>
                   <Button
                     size="sm"
@@ -353,7 +364,7 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
                     className="h-8 sm:h-9 text-xs font-semibold rounded-xl bg-primary hover:bg-primary/90 text-white shadow-xs cursor-pointer"
                   >
                     <PhoneCall className="h-3.5 w-3.5 mr-1" />
-                    {t("consultants.button.serial")}
+                    {t("consultants.button.serial") || (isEn ? "Call Serial" : "সিরিয়াল কল")}
                   </Button>
                 </div>
               </Card>
@@ -368,7 +379,7 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
                 onClick={() => setVisibleCount((prev) => prev + 24)}
                 className="px-6 py-2.5 rounded-xl text-sm font-semibold border-border hover:bg-muted cursor-pointer"
               >
-                {t("consultants.button.loadMore")} ({filteredDoctors.length - displayedDoctors.length} {t("consultants.button.remaining")})
+                {t("consultants.button.loadMore") || (isEn ? "Load More Doctors" : "আরও ডাক্তার দেখুন")} ({filteredDoctors.length - displayedDoctors.length} {t("consultants.button.remaining") || (isEn ? "remaining" : "জন বাকি")})
               </Button>
             </div>
           )}
@@ -377,10 +388,10 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
         <Card className="p-8 sm:p-12 text-center rounded-2xl border-dashed border-2 border-border/80 bg-muted/10">
           <Stethoscope className="h-12 w-12 mx-auto text-muted-foreground/50 mb-3" />
           <h3 className="font-heading font-bold text-base sm:text-lg text-secondary dark:text-white mb-1">
-            {t("consultants.empty.title")}
+            {t("consultants.empty.title") || (isEn ? "No doctors found" : "কোনো ডাক্তার পাওয়া যায়নি")}
           </h3>
           <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto mb-4">
-            {t("consultants.empty.desc")}
+            {t("consultants.empty.desc") || (isEn ? "Please try another search keyword or select a different department." : "অনুগ্রহ করে অন্য কোনো কি-ওয়ার্ড বা বিভাগ দিয়ে পুনরায় চেষ্টা করুন।")}
           </p>
           <Button
             variant="outline"
@@ -392,7 +403,7 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
             }}
             className="rounded-xl cursor-pointer"
           >
-            {t("consultants.empty.reset")}
+            {t("consultants.empty.reset") || (isEn ? "Reset Filters" : "ফিল্টার রিসেট করুন")}
           </Button>
         </Card>
       )}

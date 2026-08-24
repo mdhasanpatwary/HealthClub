@@ -30,6 +30,13 @@ function formatDoctor(d: any): Doctor {
     partnerId: d.partnerId || undefined,
     upazila: d.upazila || "feni-sadar",
     isActive: d.isActive,
+    availableToday: d.availableToday ?? true,
+    onLeaveUntil: d.onLeaveUntil
+      ? typeof d.onLeaveUntil === "string"
+        ? d.onLeaveUntil
+        : d.onLeaveUntil.toISOString().slice(0, 10)
+      : undefined,
+    notice: d.notice || undefined,
   };
 }
 
@@ -142,6 +149,9 @@ export const getDoctorsAction = unstable_cache(
           partnerId: true,
           upazila: true,
           isActive: true,
+          availableToday: true,
+          onLeaveUntil: true,
+          notice: true,
         },
       });
 
@@ -299,6 +309,9 @@ export async function addDoctorAction(
         partnerId: doctor.partnerId || null,
         upazila: doctor.upazila || "feni-sadar",
         isActive: doctor.isActive ?? true,
+        availableToday: doctor.availableToday ?? true,
+        onLeaveUntil: doctor.onLeaveUntil ? new Date(doctor.onLeaveUntil) : null,
+        notice: doctor.notice ? doctor.notice.trim() || null : null,
       },
     });
 
@@ -346,6 +359,11 @@ export async function updateDoctorAction(
         ...(doctor.partnerId !== undefined && { partnerId: doctor.partnerId || null }),
         ...(doctor.upazila !== undefined && { upazila: doctor.upazila || "feni-sadar" }),
         ...(doctor.isActive !== undefined && { isActive: doctor.isActive }),
+        ...(doctor.availableToday !== undefined && { availableToday: doctor.availableToday }),
+        ...(doctor.onLeaveUntil !== undefined && {
+          onLeaveUntil: doctor.onLeaveUntil ? new Date(doctor.onLeaveUntil) : null,
+        }),
+        ...(doctor.notice !== undefined && { notice: doctor.notice ? doctor.notice.trim() || null : null }),
       },
     });
 
@@ -409,6 +427,9 @@ export async function seedDoctorsAction(): Promise<{ success: boolean; count?: n
         partnerId: doc.partnerId || null,
         upazila: doc.upazila || "feni-sadar",
         isActive: doc.isActive ?? true,
+        availableToday: doc.availableToday ?? true,
+        onLeaveUntil: doc.onLeaveUntil ? new Date(doc.onLeaveUntil) : null,
+        notice: doc.notice || null,
       })),
       skipDuplicates: true,
     });

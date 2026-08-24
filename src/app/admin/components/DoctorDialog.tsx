@@ -25,6 +25,9 @@ interface DoctorDialogProps {
     consultationFee: string;
     imageUrl: string;
     upazila: string;
+    availableToday: boolean;
+    onLeaveUntil: string;
+    notice: string;
   };
   setNewDoctor: (doc: {
     name: string;
@@ -41,6 +44,9 @@ interface DoctorDialogProps {
     consultationFee: string;
     imageUrl: string;
     upazila: string;
+    availableToday: boolean;
+    onLeaveUntil: string;
+    notice: string;
   }) => void;
   onSubmit: (e: React.FormEvent) => void;
   t?: (key: string) => string;
@@ -274,6 +280,60 @@ export function DoctorDialog({
                 placeholder="যেমন: ৳৮০০"
                 value={newDoctor.consultationFee}
                 onChange={(e) => setNewDoctor({ ...newDoctor, consultationFee: e.target.value })}
+                className="border-border bg-background"
+              />
+            </div>
+          </div>
+
+          {/* Availability & Chamber Notices Section */}
+          <div className="p-4 bg-muted/20 border border-border/80 rounded-2xl space-y-4">
+            <h4 className="text-xs font-bold text-secondary uppercase tracking-wider">
+              {t("admin.doctors.status") || "চেম্বার উপস্থিতি ও বিশেষ বিজ্ঞপ্তি"}
+            </h4>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+              <div className="flex items-center justify-between p-3 bg-background border border-border/80 rounded-xl">
+                <div>
+                  <label htmlFor="admin-doc-available-today" className="text-xs font-bold text-foreground block cursor-pointer">
+                    {t("admin.doctors.availableToday") || "আজ চেম্বার খোলা আছে"}
+                  </label>
+                  <span className="text-[10px] text-muted-foreground">
+                    {newDoctor.availableToday ? "রোগীদের জন্য আজ চেম্বার খোলা দেখাবে" : "আজ চেম্বার বন্ধ দেখাবে"}
+                  </span>
+                </div>
+                <input
+                  id="admin-doc-available-today"
+                  type="checkbox"
+                  checked={newDoctor.availableToday}
+                  onChange={(e) => setNewDoctor({ ...newDoctor, availableToday: e.target.checked })}
+                  className="h-5 w-5 rounded border-border text-primary focus:ring-primary cursor-pointer accent-primary"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label htmlFor="admin-doc-onleaveuntil" className="text-xs font-semibold text-secondary cursor-pointer">
+                  {t("admin.doctors.onLeaveUntil") || "ছুটির শেষ তারিখ (ঐচ্ছিক)"}
+                </label>
+                <Input
+                  id="admin-doc-onleaveuntil"
+                  type="date"
+                  value={newDoctor.onLeaveUntil}
+                  onChange={(e) => setNewDoctor({ ...newDoctor, onLeaveUntil: e.target.value })}
+                  className="border-border bg-background"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label htmlFor="admin-doc-notice" className="text-xs font-semibold text-secondary cursor-pointer">
+                {t("admin.doctors.notice") || "চেম্বার সংক্রান্ত বিশেষ বিজ্ঞপ্তি (ঐচ্ছিক)"}
+              </label>
+              <Input
+                id="admin-doc-notice"
+                type="text"
+                placeholder="যেমন: শুধুমাত্র পূর্বনির্ধারিত সিরিয়াল গ্রহণ করা হবে অথবা চেম্বার সন্ধ্যা ৬টায় শুরু হবে"
+                value={newDoctor.notice}
+                onChange={(e) => setNewDoctor({ ...newDoctor, notice: e.target.value })}
                 className="border-border bg-background"
               />
             </div>

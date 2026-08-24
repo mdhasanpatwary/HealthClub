@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Doctor } from "@/services/db";
 import { Button } from "@/components/ui/button";
+import { DoctorAvailabilityBadge, DoctorNoticeBanner } from "./DoctorAvailabilityBadge";
 
 export function DoctorAvatar({
   src,
@@ -85,15 +86,22 @@ export function DoctorSerialModal({ doctor, onClose, t, locale }: DoctorSerialMo
           <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
             <PhoneCall className="h-6 w-6" />
           </div>
-          <div>
+          <div className="space-y-1">
             <h4 id="serial-modal-title" className="font-heading font-bold text-base text-foreground">
               {t("consultants.modal.serialModalTitle")}
             </h4>
             <p className="text-xs text-primary font-semibold">
               {doctor.name}
             </p>
+            <div className="pt-0.5">
+              <DoctorAvailabilityBadge doctor={doctor} locale={locale} size="sm" />
+            </div>
           </div>
         </div>
+
+        {doctor.notice && (
+          <DoctorNoticeBanner notice={doctor.notice} locale={locale} />
+        )}
 
         <div className="bg-muted/40 p-3.5 rounded-2xl space-y-2 text-xs text-muted-foreground">
           <div className="flex items-center gap-2 font-medium text-foreground">
@@ -189,7 +197,7 @@ export function DoctorDetailsModal({ doctor, onClose, onCallSerial, t }: DoctorD
             alt={doctor.name}
             className="h-20 w-20"
           />
-          <div className="space-y-1">
+          <div className="space-y-1 min-w-0 flex-1">
             <h3 id="details-modal-title" className="font-heading font-bold text-base sm:text-lg text-foreground">
               {doctor.name}
             </h3>
@@ -199,8 +207,15 @@ export function DoctorDetailsModal({ doctor, onClose, onCallSerial, t }: DoctorD
             <p className="text-xs text-muted-foreground font-mono">
               {doctor.degrees}
             </p>
+            <div className="pt-1">
+              <DoctorAvailabilityBadge doctor={doctor} size="sm" />
+            </div>
           </div>
         </div>
+
+        {doctor.notice && (
+          <DoctorNoticeBanner notice={doctor.notice} />
+        )}
 
         {/* Workplace / Designation */}
         <div className="space-y-1 bg-muted/40 p-3.5 rounded-2xl text-xs">

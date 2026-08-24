@@ -28,6 +28,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { exportToCsv } from "@/lib/exportUtils";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { DoctorAvatar } from "@/components/ui/doctors/DoctorModals";
+import { DoctorAvailabilityBadge, DoctorNoticeBanner } from "@/components/ui/doctors/DoctorAvailabilityBadge";
 import {
   AddPartnerDoctorModal,
   LinkDoctorModal,
@@ -335,6 +336,10 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
                         </Badge>
                       </div>
 
+                      <div className="flex items-center gap-1.5 pt-0.5">
+                        <DoctorAvailabilityBadge doctor={doc} size="sm" />
+                      </div>
+
                       <p className="text-xs font-medium text-slate-600 dark:text-slate-300 line-clamp-1">
                         {doc.specialty}
                       </p>
@@ -347,6 +352,10 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
                       )}
                     </div>
                   </div>
+
+                  {doc.notice && (
+                    <DoctorNoticeBanner notice={doc.notice} compact />
+                  )}
 
                   {/* Chamber Details Badge Box */}
                   <div className="rounded-xl bg-muted/40 dark:bg-slate-900/50 p-3 border border-border/50 space-y-2 text-xs">

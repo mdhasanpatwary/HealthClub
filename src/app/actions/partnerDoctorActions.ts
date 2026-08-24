@@ -29,6 +29,13 @@ function formatDoctor(d: any): Doctor {
     partnerId: d.partnerId || undefined,
     upazila: d.upazila || "feni-sadar",
     isActive: d.isActive,
+    availableToday: d.availableToday ?? true,
+    onLeaveUntil: d.onLeaveUntil
+      ? typeof d.onLeaveUntil === "string"
+        ? d.onLeaveUntil
+        : d.onLeaveUntil.toISOString().slice(0, 10)
+      : undefined,
+    notice: d.notice || undefined,
   };
 }
 
@@ -54,6 +61,9 @@ export interface AddPartnerDoctorInput {
   imageUrl?: string;
   upazila?: string;
   isActive?: boolean;
+  availableToday?: boolean;
+  onLeaveUntil?: string;
+  notice?: string;
 }
 
 export interface UpdatePartnerDoctorInput {
@@ -70,6 +80,9 @@ export interface UpdatePartnerDoctorInput {
   imageUrl?: string;
   upazila?: string;
   isActive?: boolean;
+  availableToday?: boolean;
+  onLeaveUntil?: string;
+  notice?: string;
 }
 
 /**
@@ -283,6 +296,9 @@ export async function addPartnerDoctorAction(
         partnerId: session.userId,
         upazila: input.upazila || partner.upazila || "feni-sadar",
         isActive: input.isActive ?? true,
+        availableToday: input.availableToday ?? true,
+        onLeaveUntil: input.onLeaveUntil ? new Date(input.onLeaveUntil) : null,
+        notice: input.notice ? input.notice.trim() || null : null,
       },
     });
 
@@ -339,6 +355,13 @@ export async function updatePartnerDoctorChamberAction(
         ...(input.imageUrl !== undefined && { imageUrl: input.imageUrl.trim() || null }),
         ...(input.upazila !== undefined && { upazila: input.upazila || "feni-sadar" }),
         ...(input.isActive !== undefined && { isActive: input.isActive }),
+        ...(input.availableToday !== undefined && { availableToday: input.availableToday }),
+        ...(input.onLeaveUntil !== undefined && {
+          onLeaveUntil: input.onLeaveUntil ? new Date(input.onLeaveUntil) : null,
+        }),
+        ...(input.notice !== undefined && {
+          notice: input.notice ? input.notice.trim() || null : null,
+        }),
       },
     });
 

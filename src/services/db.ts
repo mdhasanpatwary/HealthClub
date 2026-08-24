@@ -282,6 +282,9 @@ export interface Doctor {
   partnerId?: string;
   upazila?: string;
   isActive: boolean;
+  availableToday?: boolean;
+  onLeaveUntil?: string;
+  notice?: string;
 }
 
 export interface DatabaseSnapshot {

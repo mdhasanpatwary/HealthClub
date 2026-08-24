@@ -24,6 +24,7 @@ import { Doctor } from "@/services/db";
 import { Locale } from "@/lib/i18n";
 import { exportToCsv } from "@/lib/exportUtils";
 import { BulkImportDialog } from "./BulkImportDialog";
+import { DoctorAvailabilityBadge } from "@/components/ui/doctors/DoctorAvailabilityBadge";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -213,9 +214,14 @@ export function DoctorsTab({
                       </div>
                     </TableCell>
                     <TableCell className="whitespace-nowrap">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary">
-                        {doc.specialty}
-                      </span>
+                      <div className="space-y-1.5">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary">
+                          {doc.specialty}
+                        </span>
+                        <div>
+                          <DoctorAvailabilityBadge doctor={doc} locale={locale} size="sm" />
+                        </div>
+                      </div>
                     </TableCell>
                     <TableCell>
                       <div>

@@ -80,6 +80,9 @@ export function AddPartnerDoctorModal({
     serialPhone: partnerPhone || "",
     consultationFee: "৳৮০০",
     imageUrl: "",
+    availableToday: true,
+    onLeaveUntil: "",
+    notice: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -104,6 +107,9 @@ export function AddPartnerDoctorModal({
         consultationFee: formData.consultationFee.trim() || undefined,
         imageUrl: formData.imageUrl || undefined,
         isActive: true,
+        availableToday: formData.availableToday,
+        onLeaveUntil: formData.onLeaveUntil || undefined,
+        notice: formData.notice.trim() || undefined,
       });
 
       if (res.success) {
@@ -270,6 +276,56 @@ export function AddPartnerDoctorModal({
                 onChange={(e) => setFormData({ ...formData, serialPhone: e.target.value })}
                 placeholder="যেমন: 017XXXXXXXX, 018XXXXXXXX"
                 className="h-10 text-sm"
+              />
+            </div>
+          </div>
+
+          {/* Availability & Notices in Add Modal */}
+          <div className="p-3.5 bg-muted/20 border border-border/80 rounded-2xl space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+              <div className="flex items-center justify-between p-2.5 bg-background border border-border/80 rounded-xl">
+                <div>
+                  <label htmlFor="add-doc-available" className="text-xs font-bold text-foreground block cursor-pointer">
+                    আজ চেম্বার খোলা আছে
+                  </label>
+                  <span className="text-[10px] text-muted-foreground">
+                    {formData.availableToday ? "আজ চেম্বার খোলা দেখাবে" : "আজ চেম্বার বন্ধ দেখাবে"}
+                  </span>
+                </div>
+                <input
+                  id="add-doc-available"
+                  type="checkbox"
+                  checked={formData.availableToday}
+                  onChange={(e) => setFormData({ ...formData, availableToday: e.target.checked })}
+                  className="h-5 w-5 rounded border-border text-primary focus:ring-primary cursor-pointer accent-primary"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label htmlFor="add-doc-leave" className="text-xs font-semibold text-foreground cursor-pointer">
+                  ছুটির শেষ তারিখ (ঐচ্ছিক)
+                </label>
+                <Input
+                  id="add-doc-leave"
+                  type="date"
+                  value={formData.onLeaveUntil}
+                  onChange={(e) => setFormData({ ...formData, onLeaveUntil: e.target.value })}
+                  className="h-9 text-xs"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <label htmlFor="add-doc-notice" className="text-xs font-semibold text-foreground cursor-pointer">
+                চেম্বার সংক্রান্ত বিশেষ বিজ্ঞপ্তি (ঐচ্ছিক)
+              </label>
+              <Input
+                id="add-doc-notice"
+                type="text"
+                placeholder="যেমন: শুধুমাত্র অ্যাপয়েন্টমেন্ট সাপেক্ষে সিরিয়াল নেওয়া হবে"
+                value={formData.notice}
+                onChange={(e) => setFormData({ ...formData, notice: e.target.value })}
+                className="h-9 text-xs"
               />
             </div>
           </div>
@@ -584,6 +640,9 @@ function EditChamberForm({
     serialPhone: doctor.serialPhone || "",
     consultationFee: doctor.consultationFee || "",
     isActive: doctor.isActive ?? true,
+    availableToday: doctor.availableToday !== false,
+    onLeaveUntil: doctor.onLeaveUntil ? doctor.onLeaveUntil.slice(0, 10) : "",
+    notice: doctor.notice || "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -602,6 +661,9 @@ function EditChamberForm({
         serialPhone: formData.serialPhone.trim(),
         consultationFee: formData.consultationFee.trim() || undefined,
         isActive: formData.isActive,
+        availableToday: formData.availableToday,
+        onLeaveUntil: formData.onLeaveUntil || undefined,
+        notice: formData.notice.trim() || undefined,
       });
 
       if (res.success) {
@@ -732,6 +794,56 @@ function EditChamberForm({
               value={formData.serialPhone}
               onChange={(e) => setFormData({ ...formData, serialPhone: e.target.value })}
               className="h-10 text-sm"
+            />
+          </div>
+        </div>
+
+        {/* Availability & Notices in Edit Modal */}
+        <div className="p-3.5 bg-muted/20 border border-border/80 rounded-2xl space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+            <div className="flex items-center justify-between p-2.5 bg-background border border-border/80 rounded-xl">
+              <div>
+                <label htmlFor="edit-doc-available" className="text-xs font-bold text-foreground block cursor-pointer">
+                  আজ চেম্বার খোলা আছে
+                </label>
+                <span className="text-[10px] text-muted-foreground">
+                  {formData.availableToday ? "আজ চেম্বার খোলা দেখাবে" : "আজ চেম্বার বন্ধ দেখাবে"}
+                </span>
+              </div>
+              <input
+                id="edit-doc-available"
+                type="checkbox"
+                checked={formData.availableToday}
+                onChange={(e) => setFormData({ ...formData, availableToday: e.target.checked })}
+                className="h-5 w-5 rounded border-border text-primary focus:ring-primary cursor-pointer accent-primary"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label htmlFor="edit-doc-leave" className="text-xs font-semibold text-foreground cursor-pointer">
+                ছুটির শেষ তারিখ (ঐচ্ছিক)
+              </label>
+              <Input
+                id="edit-doc-leave"
+                type="date"
+                value={formData.onLeaveUntil}
+                onChange={(e) => setFormData({ ...formData, onLeaveUntil: e.target.value })}
+                className="h-9 text-xs"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label htmlFor="edit-doc-notice" className="text-xs font-semibold text-foreground cursor-pointer">
+              চেম্বার সংক্রান্ত বিশেষ বিজ্ঞপ্তি (ঐচ্ছিক)
+            </label>
+            <Input
+              id="edit-doc-notice"
+              type="text"
+              placeholder="যেমন: শুধুমাত্র অ্যাপয়েন্টমেন্ট সাপেক্ষে সিরিয়াল নেওয়া হবে"
+              value={formData.notice}
+              onChange={(e) => setFormData({ ...formData, notice: e.target.value })}
+              className="h-9 text-xs"
             />
           </div>
         </div>

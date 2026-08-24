@@ -136,16 +136,20 @@ model Doctor {
   consultationFee String?  @map("consultation_fee")
   imageUrl        String?  @map("image_url")
   partnerId       String?  @map("partner_id")
-  upazila         String?  @default("feni-sadar") @map("upazila")
-  isActive        Boolean  @default(true) @map("is_active")
-  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
+  upazila         String?   @default("feni-sadar") @map("upazila")
+  isActive        Boolean   @default(true) @map("is_active")
+  availableToday  Boolean   @default(true) @map("available_today")
+  onLeaveUntil    DateTime? @map("on_leave_until") @db.Date
+  notice          String?   @map("notice")
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz
 
-  partner         Partner? @relation(fields: [partnerId], references: [id], onDelete: SetNull)
+  partner         Partner?  @relation(fields: [partnerId], references: [id], onDelete: SetNull)
 
   @@index([department], map: "doctors_department_idx")
   @@index([upazila], map: "doctors_upazila_idx")
   @@index([isActive], map: "doctors_is_active_idx")
   @@index([partnerId], map: "doctors_partner_id_idx")
+  @@index([availableToday], map: "doctors_available_today_idx")
   @@map("doctors")
 }
 

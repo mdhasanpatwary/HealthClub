@@ -42,6 +42,9 @@ export type DoctorMinAggregateOutputType = {
   partnerId: string | null
   upazila: string | null
   isActive: boolean | null
+  availableToday: boolean | null
+  onLeaveUntil: Date | null
+  notice: string | null
   createdAt: Date | null
 }
 
@@ -63,6 +66,9 @@ export type DoctorMaxAggregateOutputType = {
   partnerId: string | null
   upazila: string | null
   isActive: boolean | null
+  availableToday: boolean | null
+  onLeaveUntil: Date | null
+  notice: string | null
   createdAt: Date | null
 }
 
@@ -84,6 +90,9 @@ export type DoctorCountAggregateOutputType = {
   partnerId: number
   upazila: number
   isActive: number
+  availableToday: number
+  onLeaveUntil: number
+  notice: number
   createdAt: number
   _all: number
 }
@@ -107,6 +116,9 @@ export type DoctorMinAggregateInputType = {
   partnerId?: true
   upazila?: true
   isActive?: true
+  availableToday?: true
+  onLeaveUntil?: true
+  notice?: true
   createdAt?: true
 }
 
@@ -128,6 +140,9 @@ export type DoctorMaxAggregateInputType = {
   partnerId?: true
   upazila?: true
   isActive?: true
+  availableToday?: true
+  onLeaveUntil?: true
+  notice?: true
   createdAt?: true
 }
 
@@ -149,6 +164,9 @@ export type DoctorCountAggregateInputType = {
   partnerId?: true
   upazila?: true
   isActive?: true
+  availableToday?: true
+  onLeaveUntil?: true
+  notice?: true
   createdAt?: true
   _all?: true
 }
@@ -243,6 +261,9 @@ export type DoctorGroupByOutputType = {
   partnerId: string | null
   upazila: string | null
   isActive: boolean
+  availableToday: boolean
+  onLeaveUntil: Date | null
+  notice: string | null
   createdAt: Date
   _count: DoctorCountAggregateOutputType | null
   _min: DoctorMinAggregateOutputType | null
@@ -285,6 +306,9 @@ export type DoctorWhereInput = {
   partnerId?: Prisma.StringNullableFilter<"Doctor"> | string | null
   upazila?: Prisma.StringNullableFilter<"Doctor"> | string | null
   isActive?: Prisma.BoolFilter<"Doctor"> | boolean
+  availableToday?: Prisma.BoolFilter<"Doctor"> | boolean
+  onLeaveUntil?: Prisma.DateTimeNullableFilter<"Doctor"> | Date | string | null
+  notice?: Prisma.StringNullableFilter<"Doctor"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Doctor"> | Date | string
   partner?: Prisma.XOR<Prisma.PartnerNullableScalarRelationFilter, Prisma.PartnerWhereInput> | null
 }
@@ -307,6 +331,9 @@ export type DoctorOrderByWithRelationInput = {
   partnerId?: Prisma.SortOrderInput | Prisma.SortOrder
   upazila?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  availableToday?: Prisma.SortOrder
+  onLeaveUntil?: Prisma.SortOrderInput | Prisma.SortOrder
+  notice?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   partner?: Prisma.PartnerOrderByWithRelationInput
 }
@@ -332,6 +359,9 @@ export type DoctorWhereUniqueInput = Prisma.AtLeast<{
   partnerId?: Prisma.StringNullableFilter<"Doctor"> | string | null
   upazila?: Prisma.StringNullableFilter<"Doctor"> | string | null
   isActive?: Prisma.BoolFilter<"Doctor"> | boolean
+  availableToday?: Prisma.BoolFilter<"Doctor"> | boolean
+  onLeaveUntil?: Prisma.DateTimeNullableFilter<"Doctor"> | Date | string | null
+  notice?: Prisma.StringNullableFilter<"Doctor"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Doctor"> | Date | string
   partner?: Prisma.XOR<Prisma.PartnerNullableScalarRelationFilter, Prisma.PartnerWhereInput> | null
 }, "id">
@@ -354,6 +384,9 @@ export type DoctorOrderByWithAggregationInput = {
   partnerId?: Prisma.SortOrderInput | Prisma.SortOrder
   upazila?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  availableToday?: Prisma.SortOrder
+  onLeaveUntil?: Prisma.SortOrderInput | Prisma.SortOrder
+  notice?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.DoctorCountOrderByAggregateInput
   _max?: Prisma.DoctorMaxOrderByAggregateInput
@@ -381,6 +414,9 @@ export type DoctorScalarWhereWithAggregatesInput = {
   partnerId?: Prisma.StringNullableWithAggregatesFilter<"Doctor"> | string | null
   upazila?: Prisma.StringNullableWithAggregatesFilter<"Doctor"> | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"Doctor"> | boolean
+  availableToday?: Prisma.BoolWithAggregatesFilter<"Doctor"> | boolean
+  onLeaveUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"Doctor"> | Date | string | null
+  notice?: Prisma.StringNullableWithAggregatesFilter<"Doctor"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Doctor"> | Date | string
 }
 
@@ -401,6 +437,9 @@ export type DoctorCreateInput = {
   imageUrl?: string | null
   upazila?: string | null
   isActive?: boolean
+  availableToday?: boolean
+  onLeaveUntil?: Date | string | null
+  notice?: string | null
   createdAt?: Date | string
   partner?: Prisma.PartnerCreateNestedOneWithoutDoctorsInput
 }
@@ -423,6 +462,9 @@ export type DoctorUncheckedCreateInput = {
   partnerId?: string | null
   upazila?: string | null
   isActive?: boolean
+  availableToday?: boolean
+  onLeaveUntil?: Date | string | null
+  notice?: string | null
   createdAt?: Date | string
 }
 
@@ -443,6 +485,9 @@ export type DoctorUpdateInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  availableToday?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onLeaveUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   partner?: Prisma.PartnerUpdateOneWithoutDoctorsNestedInput
 }
@@ -465,6 +510,9 @@ export type DoctorUncheckedUpdateInput = {
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  availableToday?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onLeaveUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -486,6 +534,9 @@ export type DoctorCreateManyInput = {
   partnerId?: string | null
   upazila?: string | null
   isActive?: boolean
+  availableToday?: boolean
+  onLeaveUntil?: Date | string | null
+  notice?: string | null
   createdAt?: Date | string
 }
 
@@ -506,6 +557,9 @@ export type DoctorUpdateManyMutationInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  availableToday?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onLeaveUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -527,6 +581,9 @@ export type DoctorUncheckedUpdateManyInput = {
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  availableToday?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onLeaveUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -558,6 +615,9 @@ export type DoctorCountOrderByAggregateInput = {
   partnerId?: Prisma.SortOrder
   upazila?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  availableToday?: Prisma.SortOrder
+  onLeaveUntil?: Prisma.SortOrder
+  notice?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -579,6 +639,9 @@ export type DoctorMaxOrderByAggregateInput = {
   partnerId?: Prisma.SortOrder
   upazila?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  availableToday?: Prisma.SortOrder
+  onLeaveUntil?: Prisma.SortOrder
+  notice?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -600,6 +663,9 @@ export type DoctorMinOrderByAggregateInput = {
   partnerId?: Prisma.SortOrder
   upazila?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  availableToday?: Prisma.SortOrder
+  onLeaveUntil?: Prisma.SortOrder
+  notice?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -662,6 +728,9 @@ export type DoctorCreateWithoutPartnerInput = {
   imageUrl?: string | null
   upazila?: string | null
   isActive?: boolean
+  availableToday?: boolean
+  onLeaveUntil?: Date | string | null
+  notice?: string | null
   createdAt?: Date | string
 }
 
@@ -682,6 +751,9 @@ export type DoctorUncheckedCreateWithoutPartnerInput = {
   imageUrl?: string | null
   upazila?: string | null
   isActive?: boolean
+  availableToday?: boolean
+  onLeaveUntil?: Date | string | null
+  notice?: string | null
   createdAt?: Date | string
 }
 
@@ -732,6 +804,9 @@ export type DoctorScalarWhereInput = {
   partnerId?: Prisma.StringNullableFilter<"Doctor"> | string | null
   upazila?: Prisma.StringNullableFilter<"Doctor"> | string | null
   isActive?: Prisma.BoolFilter<"Doctor"> | boolean
+  availableToday?: Prisma.BoolFilter<"Doctor"> | boolean
+  onLeaveUntil?: Prisma.DateTimeNullableFilter<"Doctor"> | Date | string | null
+  notice?: Prisma.StringNullableFilter<"Doctor"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Doctor"> | Date | string
 }
 
@@ -752,6 +827,9 @@ export type DoctorCreateManyPartnerInput = {
   imageUrl?: string | null
   upazila?: string | null
   isActive?: boolean
+  availableToday?: boolean
+  onLeaveUntil?: Date | string | null
+  notice?: string | null
   createdAt?: Date | string
 }
 
@@ -772,6 +850,9 @@ export type DoctorUpdateWithoutPartnerInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  availableToday?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onLeaveUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -792,6 +873,9 @@ export type DoctorUncheckedUpdateWithoutPartnerInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  availableToday?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onLeaveUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -812,6 +896,9 @@ export type DoctorUncheckedUpdateManyWithoutPartnerInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  availableToday?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  onLeaveUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -835,6 +922,9 @@ export type DoctorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   partnerId?: boolean
   upazila?: boolean
   isActive?: boolean
+  availableToday?: boolean
+  onLeaveUntil?: boolean
+  notice?: boolean
   createdAt?: boolean
   partner?: boolean | Prisma.Doctor$partnerArgs<ExtArgs>
 }, ExtArgs["result"]["doctor"]>
@@ -857,6 +947,9 @@ export type DoctorSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   partnerId?: boolean
   upazila?: boolean
   isActive?: boolean
+  availableToday?: boolean
+  onLeaveUntil?: boolean
+  notice?: boolean
   createdAt?: boolean
   partner?: boolean | Prisma.Doctor$partnerArgs<ExtArgs>
 }, ExtArgs["result"]["doctor"]>
@@ -879,6 +972,9 @@ export type DoctorSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   partnerId?: boolean
   upazila?: boolean
   isActive?: boolean
+  availableToday?: boolean
+  onLeaveUntil?: boolean
+  notice?: boolean
   createdAt?: boolean
   partner?: boolean | Prisma.Doctor$partnerArgs<ExtArgs>
 }, ExtArgs["result"]["doctor"]>
@@ -901,10 +997,13 @@ export type DoctorSelectScalar = {
   partnerId?: boolean
   upazila?: boolean
   isActive?: boolean
+  availableToday?: boolean
+  onLeaveUntil?: boolean
+  notice?: boolean
   createdAt?: boolean
 }
 
-export type DoctorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "specialty" | "department" | "degrees" | "designation" | "chamberName" | "chamberAddress" | "roomNo" | "visitingDays" | "visitingHours" | "serialPhone" | "consultationFee" | "imageUrl" | "partnerId" | "upazila" | "isActive" | "createdAt", ExtArgs["result"]["doctor"]>
+export type DoctorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "specialty" | "department" | "degrees" | "designation" | "chamberName" | "chamberAddress" | "roomNo" | "visitingDays" | "visitingHours" | "serialPhone" | "consultationFee" | "imageUrl" | "partnerId" | "upazila" | "isActive" | "availableToday" | "onLeaveUntil" | "notice" | "createdAt", ExtArgs["result"]["doctor"]>
 export type DoctorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   partner?: boolean | Prisma.Doctor$partnerArgs<ExtArgs>
 }
@@ -938,6 +1037,9 @@ export type $DoctorPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     partnerId: string | null
     upazila: string | null
     isActive: boolean
+    availableToday: boolean
+    onLeaveUntil: Date | null
+    notice: string | null
     createdAt: Date
   }, ExtArgs["result"]["doctor"]>
   composites: {}
@@ -1380,6 +1482,9 @@ export interface DoctorFieldRefs {
   readonly partnerId: Prisma.FieldRef<"Doctor", 'String'>
   readonly upazila: Prisma.FieldRef<"Doctor", 'String'>
   readonly isActive: Prisma.FieldRef<"Doctor", 'Boolean'>
+  readonly availableToday: Prisma.FieldRef<"Doctor", 'Boolean'>
+  readonly onLeaveUntil: Prisma.FieldRef<"Doctor", 'DateTime'>
+  readonly notice: Prisma.FieldRef<"Doctor", 'String'>
   readonly createdAt: Prisma.FieldRef<"Doctor", 'DateTime'>
 }
     

@@ -188,6 +188,9 @@ export const DoctorScalarFieldEnum = {
   partnerId: 'partnerId',
   upazila: 'upazila',
   isActive: 'isActive',
+  availableToday: 'availableToday',
+  onLeaveUntil: 'onLeaveUntil',
+  notice: 'notice',
   createdAt: 'createdAt'
 } as const
 

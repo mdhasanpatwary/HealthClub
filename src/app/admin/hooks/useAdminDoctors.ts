@@ -34,6 +34,9 @@ export function useAdminDoctors() {
     consultationFee: "",
     imageUrl: "",
     upazila: "feni-sadar",
+    availableToday: true,
+    onLeaveUntil: "",
+    notice: "",
   });
 
   const loadDoctors = useCallback(async () => {
@@ -83,6 +86,9 @@ export function useAdminDoctors() {
       consultationFee: "",
       imageUrl: "",
       upazila: "feni-sadar",
+      availableToday: true,
+      onLeaveUntil: "",
+      notice: "",
     });
     setIsDoctorOpen(true);
   };
@@ -104,6 +110,9 @@ export function useAdminDoctors() {
       consultationFee: doc.consultationFee || "",
       imageUrl: doc.imageUrl || "",
       upazila: doc.upazila || "feni-sadar",
+      availableToday: doc.availableToday !== false,
+      onLeaveUntil: doc.onLeaveUntil ? doc.onLeaveUntil.slice(0, 10) : "",
+      notice: doc.notice || "",
     });
     setIsDoctorOpen(true);
   };
