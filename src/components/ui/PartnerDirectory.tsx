@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Search, MapPin, Phone, PhoneCall, Clock, Hospital, ShieldAlert, Pill, HeartHandshake, Tag } from "lucide-react";
+import Link from "next/link";
+import { Search, MapPin, Phone, PhoneCall, Clock, Hospital, ShieldAlert, Pill, HeartHandshake, Tag, ChevronRight } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Partner, DepartmentDiscount } from "@/services/db";
 import { Input } from "@/components/ui/input";
@@ -228,9 +229,11 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
 
                     {/* Floating Name & Address at bottom of image overlay */}
                     <div className="absolute bottom-3 left-4 right-4 z-10 space-y-1">
-                      <h3 className="font-heading text-base sm:text-lg font-bold text-white drop-shadow-md line-clamp-2 leading-snug group-hover:text-emerald-400 transition-colors">
-                        {partner.name}
-                      </h3>
+                      <Link href={`/partner-hospitals/${partner.id}`} className="block">
+                        <h3 className="font-heading text-base sm:text-lg font-bold text-white drop-shadow-md line-clamp-2 leading-snug group-hover:text-emerald-400 transition-colors">
+                          {partner.name}
+                        </h3>
+                      </Link>
                       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                         <a
                           href={mapUrl}
@@ -283,7 +286,7 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
                     );
                   })()}
 
-                  {/* Card Footer: Discount Rate & Action Buttons (Location & Call) */}
+                  {/* Card Footer: Discount Rate & Action Buttons (Profile, Location & Call) */}
                   <div className="p-3.5 sm:p-4 bg-background dark:bg-slate-900 flex flex-wrap items-center justify-between gap-2 border-t border-border/60">
                     <div className="shrink-0">
                       <p className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">
@@ -295,6 +298,21 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
                     </div>
 
                     <div className="flex items-center gap-1.5 shrink-0">
+                      {/* View Hospital Profile Details Button */}
+                      <Link
+                        href={`/partner-hospitals/${partner.id}`}
+                        title={locale === "en" ? "View Full Profile & Doctor List" : "বিস্তারিত প্রোফাইল ও ডাক্তার তালিকা দেখুন"}
+                        aria-label={locale === "en" ? "View Full Profile & Doctor List" : "বিস্তারিত প্রোফাইল ও ডাক্তার তালিকা দেখুন"}
+                        className={buttonVariants({
+                          variant: "outline",
+                          size: "sm",
+                          className: "h-8 px-2 sm:px-2.5 text-xs rounded-lg border-primary/30 text-primary hover:bg-primary hover:text-white font-semibold transition-all cursor-pointer",
+                        })}
+                      >
+                        <span>{locale === "en" ? "Profile" : "প্রোফাইল"}</span>
+                        <ChevronRight className="h-3.5 w-3.5 ml-0.5" />
+                      </Link>
+
                       {/* Emergency Call Icon Button (if configured) */}
                       {partner.emergencyPhone && (
                         <a

@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { HEALTH_TIPS_ARTICLES } from "@/data/healthTipsData";
 import { SITE_URL } from "@/lib/siteConfig";
 import { getDoctorsAction } from "@/app/actions/doctorActions";
+import { getPartnersAction } from "@/app/actions/partnerActions";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = SITE_URL;
@@ -82,6 +83,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     doctorEntries = [];
   }
 
-  return [...staticEntries, ...articleEntries, ...doctorEntries];
+  // Dynamic partner hospital & clinic profiles
+  let partnerEntries: MetadataRoute.Sitemap = [];
+  try {
+    const partners = await getPartnersAction();
+    partnerEntries = partners.map((partner) => ({
+      url: `${baseUrl}/partner-hospitals/${partner.id}`,
+      lastModified,
+      changeFrequency: "daily",
+      priority: 0.85,
+    }));
+  } catch {
+    partnerEntries = [];
+  }
+
+  return [...staticEntries, ...articleEntries, ...doctorEntries, ...partnerEntries];
 }
 

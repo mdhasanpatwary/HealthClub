@@ -21,6 +21,27 @@ import {
   addPartnerTransactionAction as _addPartnerTransactionAction,
 } from "./partnerTransactionActions";
 import { getPartnerAnalyticsAction as _getPartnerAnalyticsAction } from "./partnerAnalyticsActions";
+import {
+  getPartnerByIdAction as _getPartnerByIdAction,
+  getDoctorsByPartnerIdAction as _getDoctorsByPartnerIdAction,
+  getRelatedPartnersAction as _getRelatedPartnersAction,
+} from "./partnerProfileQueryActions";
+
+export async function getPartnerByIdAction(id: string) {
+  return _getPartnerByIdAction(id);
+}
+
+export async function getDoctorsByPartnerIdAction(partnerId: string) {
+  return _getDoctorsByPartnerIdAction(partnerId);
+}
+
+export async function getRelatedPartnersAction(
+  category: string,
+  currentId: string,
+  limit?: number
+) {
+  return _getRelatedPartnersAction(category, currentId, limit);
+}
 
 export async function addPartnerRequestAction(...args: Parameters<typeof _addPartnerRequestAction>) {
   return _addPartnerRequestAction(...args);

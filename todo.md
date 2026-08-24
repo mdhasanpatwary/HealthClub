@@ -211,7 +211,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/consultants/[id]/page.tsx`, `src/components/consultants/DoctorProfileView.tsx`, `src/app/actions/doctorActions.ts`, `src/proxy.ts`
   - **Details**: Create dynamic, SEO-optimized individual profile pages for specialist doctors with qualifications, chamber schedules, appointment serial button, Google Maps chamber directions, and JSON-LD schema.
 
-- [ ] **TODO-44** (4.2): **Dedicated Partner Hospital & Clinic Profile Pages (`/partner-hospitals/[id]`)**
+- [x] **TODO-44** (4.2): **Dedicated Partner Hospital & Clinic Profile Pages (`/partner-hospitals/[id]`)**
   - **Files**: `src/app/partner-hospitals/[id]/page.tsx`, `src/components/partner-hospitals/HospitalProfileView.tsx`, `src/app/actions/partnerActions.ts`, `src/proxy.ts`
   - **Details**: Build comprehensive hospital profile pages showcasing facility badges (ICU, CCU, 24/7 Emergency, Dialysis, Ambulance), photo gallery, itemized department discounts, and resident doctor roster.
 
