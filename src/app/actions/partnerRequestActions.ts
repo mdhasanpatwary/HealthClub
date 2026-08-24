@@ -409,11 +409,13 @@ export async function requestPartnerPasswordResetAction(
       }
     });
 
-    sendPasswordResetEmail(partner.email || "", otp, partner.name).catch((err) => {
-      logger.error("Failed to send partner password reset OTP email:", err);
-    });
+    const sent = await sendPasswordResetEmail(partner.email || "", otp, partner.name);
+    if (!sent) {
+      logger.error(`[PARTNER PASSWORD RESET] Email send failed for ${email}`);
+      return { success: false, message: "পাসওয়ার্ড রিসেট ওটিপি পাঠাতে সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।" };
+    }
 
-    return { success: true, message: "যদি এই ইমেইলটি আমাদের সিস্টেমে নিবন্ধিত থাকে, তবে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
+    return { success: true, message: "যদি এই ইমেইলটি আমাদের সিস্টেমে নিবন্ধিত থাকে, তবে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
   } catch (error) {
     logger.error("Error in requestPartnerPasswordResetAction:", error);
     return { success: false, message: "পাসওয়ার্ড রিসেট অনুরোধ প্রক্রিয়া করতে সমস্যা হয়েছে।" };

@@ -1,26 +1,82 @@
 import nodemailer from "nodemailer";
 import type { Transporter } from "nodemailer";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { logger } from "@/lib/logger";
 
 const smtpUser = process.env.SMTP_USER;
 const smtpPassword = process.env.SMTP_PASSWORD;
 
-let _transporter: Transporter | null = null;
+const MAX_RETRIES = 2;
+const RETRY_DELAY_MS = 1500;
 
-function getTransporter(): Transporter {
-  if (!_transporter) {
-    _transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: smtpUser,
-        pass: smtpPassword ? smtpPassword.replace(/\s+/g, "") : "",
-      },
-      connectionTimeout: 15000,
-      greetingTimeout: 10000,
-      socketTimeout: 15000,
-    });
+let _transporter: Transporter | null = null;
+let _transporterCreatedAt = 0;
+const TRANSPORTER_MAX_AGE_MS = 5 * 60 * 1000; // 5 minutes
+
+function createTransporter(): Transporter {
+  const options: SMTPTransport.Options = {
+    service: "gmail",
+    auth: {
+      user: smtpUser,
+      pass: smtpPassword ? smtpPassword.replace(/\s+/g, "") : "",
+    },
+    connectionTimeout: 15000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
+  };
+  return nodemailer.createTransport(options);
+}
+
+async function getVerifiedTransporter(): Promise<Transporter> {
+  const now = Date.now();
+  const isStale = !_transporter || now - _transporterCreatedAt > TRANSPORTER_MAX_AGE_MS;
+
+  if (isStale) {
+    // Close existing transporter if any
+    if (_transporter) {
+      try { _transporter.close(); } catch { /* ignore */ }
+    }
+    _transporter = createTransporter();
+    _transporterCreatedAt = now;
   }
-  return _transporter;
+
+  try {
+    await _transporter!.verify();
+  } catch {
+    // Connection is dead — create a fresh one
+    logger.warn("[EMAIL] Transporter verification failed, creating fresh connection");
+    try { _transporter!.close(); } catch { /* ignore */ }
+    _transporter = createTransporter();
+    _transporterCreatedAt = Date.now();
+    await _transporter.verify();
+  }
+
+  return _transporter!;
+}
+
+async function sendWithRetry(
+  mailOptions: nodemailer.SendMailOptions
+): Promise<{ success: boolean; messageId?: string }> {
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const transporter = await getVerifiedTransporter();
+      const info = await transporter.sendMail(mailOptions);
+      return { success: true, messageId: info.messageId };
+    } catch (error) {
+      const isLastAttempt = attempt === MAX_RETRIES;
+      if (isLastAttempt) {
+        logger.error(`[EMAIL ERROR] All ${MAX_RETRIES + 1} attempts failed:`, error);
+        // Force transporter refresh on next call
+        _transporter = null;
+        return { success: false };
+      }
+      logger.warn(`[EMAIL RETRY] Attempt ${attempt + 1} failed, retrying in ${RETRY_DELAY_MS}ms...`);
+      // Force a fresh transporter for retry
+      _transporter = null;
+      await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS * (attempt + 1)));
+    }
+  }
+  return { success: false };
 }
 
 export async function sendOtpEmail(email: string, otp: string, name: string): Promise<boolean> {
@@ -83,14 +139,13 @@ export async function sendOtpEmail(email: string, otp: string, name: string): Pr
     `,
   };
 
-  try {
-    const info = await getTransporter().sendMail(mailOptions);
-    logger.info(`[EMAIL SENT] OTP successfully sent to ${email}. MessageId: ${info.messageId}`);
-    return true;
-  } catch (error) {
-    logger.error(`[EMAIL ERROR] Failed to send OTP to ${email}:`, error);
-    return false;
+  const result = await sendWithRetry(mailOptions);
+  if (result.success) {
+    logger.info(`[EMAIL SENT] OTP successfully sent to ${email}. MessageId: ${result.messageId}`);
+  } else {
+    logger.error(`[EMAIL ERROR] Failed to send OTP to ${email} after retries`);
   }
+  return result.success;
 }
 
 export async function sendPasswordResetEmail(email: string, otp: string, name: string): Promise<boolean> {
@@ -153,14 +208,13 @@ export async function sendPasswordResetEmail(email: string, otp: string, name: s
     `,
   };
 
-  try {
-    const info = await getTransporter().sendMail(mailOptions);
-    logger.info(`[EMAIL SENT] Password reset OTP successfully sent to ${email}. MessageId: ${info.messageId}`);
-    return true;
-  } catch (error) {
-    logger.error(`[EMAIL ERROR] Failed to send password reset OTP to ${email}:`, error);
-    return false;
+  const result = await sendWithRetry(mailOptions);
+  if (result.success) {
+    logger.info(`[EMAIL SENT] Password reset OTP successfully sent to ${email}. MessageId: ${result.messageId}`);
+  } else {
+    logger.error(`[EMAIL ERROR] Failed to send password reset OTP to ${email} after retries`);
   }
+  return result.success;
 }
 
 export interface BroadcastEmailOptions {
@@ -257,14 +311,13 @@ export async function sendBroadcastEmail(options: BroadcastEmailOptions): Promis
     `,
   };
 
-  try {
-    const info = await getTransporter().sendMail(mailOptions);
-    logger.info(`[BROADCAST EMAIL SENT] To: ${to}. MessageId: ${info.messageId}`);
-    return true;
-  } catch (error) {
-    logger.error(`[BROADCAST EMAIL ERROR] Failed to send to ${to}:`, error);
-    return false;
+  const result = await sendWithRetry(mailOptions);
+  if (result.success) {
+    logger.info(`[BROADCAST EMAIL SENT] To: ${to}. MessageId: ${result.messageId}`);
+  } else {
+    logger.error(`[BROADCAST EMAIL ERROR] Failed to send to ${to} after retries`);
   }
+  return result.success;
 }
 
 export async function sendBulkBroadcastEmails(

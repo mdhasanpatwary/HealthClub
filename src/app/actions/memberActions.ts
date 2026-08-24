@@ -7,7 +7,6 @@ import { hashPassword } from "@/lib/crypto";
 import { getSessionUser } from "@/lib/session";
 import { sendOtpEmail } from "@/lib/mail";
 import { logger } from "@/lib/logger";
-import { after } from "next/server";
 import { SITE_URL } from "@/lib/siteConfig";
 import {
   loginMemberAction as _loginMemberAction,
@@ -140,16 +139,10 @@ export async function addMemberAction(
     });
 
     if (member.email) {
-      const emailTo = member.email;
-      const code = verificationCode;
-      const memberName = member.name;
-      after(async () => {
-        try {
-          await sendOtpEmail(emailTo, code, memberName);
-        } catch (err) {
-          logger.error("Failed to send signup OTP email:", err);
-        }
-      });
+      const sent = await sendOtpEmail(member.email, verificationCode, member.name);
+      if (!sent) {
+        logger.error(`[SIGNUP] OTP email send failed for ${member.email}, member ${newId} created but unverified`);
+      }
     }
 
     return {
