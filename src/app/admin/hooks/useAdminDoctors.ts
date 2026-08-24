@@ -33,6 +33,7 @@ export function useAdminDoctors() {
     serialPhone: "",
     consultationFee: "",
     imageUrl: "",
+    upazila: "feni-sadar",
   });
 
   const loadDoctors = useCallback(async () => {
@@ -81,6 +82,7 @@ export function useAdminDoctors() {
       serialPhone: "",
       consultationFee: "",
       imageUrl: "",
+      upazila: "feni-sadar",
     });
     setIsDoctorOpen(true);
   };
@@ -101,6 +103,7 @@ export function useAdminDoctors() {
       serialPhone: doc.serialPhone,
       consultationFee: doc.consultationFee || "",
       imageUrl: doc.imageUrl || "",
+      upazila: doc.upazila || "feni-sadar",
     });
     setIsDoctorOpen(true);
   };

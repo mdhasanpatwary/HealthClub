@@ -8,6 +8,26 @@ import { unstable_cache } from "next/cache";
 const PARTNERS_TAG = "partners";
 const DOCTORS_TAG = "doctors";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function formatPartner(p: any): Partner {
+  return {
+    id: p.id,
+    name: p.name,
+    category: p.category as Partner["category"],
+    address: p.address,
+    discount: p.discount,
+    phone: p.phone,
+    email: p.email || undefined,
+    logoText: p.logoText,
+    mapLink: p.mapLink || undefined,
+    imageUrl: p.imageUrl || undefined,
+    emergencyPhone: p.emergencyPhone || undefined,
+    workingHours: p.workingHours || undefined,
+    departmentDiscounts: p.departmentDiscounts || undefined,
+    upazila: p.upazila || "feni-sadar",
+  };
+}
+
 /**
  * Fetch a single partner by ID.
  * Falls back to initialPartners if not found in database.
@@ -35,6 +55,7 @@ export async function getPartnerByIdAction(id: string): Promise<Partner | null> 
         emergencyPhone: true,
         workingHours: true,
         departmentDiscounts: true,
+        upazila: true,
       },
     });
 
@@ -43,21 +64,7 @@ export async function getPartnerByIdAction(id: string): Promise<Partner | null> 
       return fallback || null;
     }
 
-    return {
-      id: p.id,
-      name: p.name,
-      category: p.category as Partner["category"],
-      address: p.address,
-      discount: p.discount,
-      phone: p.phone,
-      email: p.email || undefined,
-      logoText: p.logoText,
-      mapLink: p.mapLink || undefined,
-      imageUrl: p.imageUrl || undefined,
-      emergencyPhone: p.emergencyPhone || undefined,
-      workingHours: p.workingHours || undefined,
-      departmentDiscounts: p.departmentDiscounts || undefined,
-    };
+    return formatPartner(p);
   } catch (error) {
     logger.error("Error in getPartnerByIdAction:", error);
     const fallback = initialPartners.find((item) => item.id === id);
@@ -98,6 +105,7 @@ export const getDoctorsByPartnerIdAction = unstable_cache(
           consultationFee: true,
           imageUrl: true,
           partnerId: true,
+          upazila: true,
           isActive: true,
         },
       });
@@ -122,6 +130,7 @@ export const getDoctorsByPartnerIdAction = unstable_cache(
         consultationFee: d.consultationFee || undefined,
         imageUrl: d.imageUrl || undefined,
         partnerId: d.partnerId || undefined,
+        upazila: d.upazila || "feni-sadar",
         isActive: d.isActive,
       }));
     } catch (error) {
@@ -169,6 +178,7 @@ export async function getRelatedPartnersAction(
         emergencyPhone: true,
         workingHours: true,
         departmentDiscounts: true,
+        upazila: true,
       },
     });
 
@@ -194,6 +204,7 @@ export async function getRelatedPartnersAction(
           emergencyPhone: true,
           workingHours: true,
           departmentDiscounts: true,
+          upazila: true,
         },
       });
       data.push(...extra);
@@ -205,21 +216,7 @@ export async function getRelatedPartnersAction(
         .slice(0, limit);
     }
 
-    return data.map((p) => ({
-      id: p.id,
-      name: p.name,
-      category: p.category as Partner["category"],
-      address: p.address,
-      discount: p.discount,
-      phone: p.phone,
-      email: p.email || undefined,
-      logoText: p.logoText,
-      mapLink: p.mapLink || undefined,
-      imageUrl: p.imageUrl || undefined,
-      emergencyPhone: p.emergencyPhone || undefined,
-      workingHours: p.workingHours || undefined,
-      departmentDiscounts: p.departmentDiscounts || undefined,
-    }));
+    return data.map(formatPartner);
   } catch (error) {
     logger.error("Error in getRelatedPartnersAction:", error);
     return initialPartners

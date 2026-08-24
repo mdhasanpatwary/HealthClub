@@ -73,6 +73,7 @@ export async function bulkImportDoctorsAction(
     serialPhone: string;
     consultationFee: string | null;
     imageUrl: string | null;
+    upazila: string;
     isActive: boolean;
   }[] = [];
   const errors: string[] = [];
@@ -96,6 +97,7 @@ export async function bulkImportDoctorsAction(
         serialPhone: doc.serialPhone,
         consultationFee: doc.consultationFee || null,
         imageUrl: doc.imageUrl || null,
+        upazila: doc.upazila || "feni-sadar",
         isActive: true,
       });
     } else {
@@ -179,6 +181,7 @@ export async function bulkImportPartnersAction(
     imageUrl: string | null;
     emergencyPhone: string | null;
     workingHours: string | null;
+    upazila: string;
   }[] = [];
   const errors: string[] = [];
 
@@ -199,6 +202,7 @@ export async function bulkImportPartnersAction(
         imageUrl: p.imageUrl || null,
         emergencyPhone: p.emergencyPhone || null,
         workingHours: p.workingHours || null,
+        upazila: p.upazila || "feni-sadar",
       });
     } else {
       errors.push(`Row ${index + 1}: ${result.error.issues.map((e) => e.message).join(", ")}`);

@@ -66,6 +66,7 @@ export interface Partner {
   emergencyPhone?: string;
   workingHours?: string;
   departmentDiscounts?: string;
+  upazila?: string;
 }
 
 export type AdminRole = 'super_admin' | 'content_moderator' | 'support_staff';
@@ -143,7 +144,8 @@ export const initialPartners: Partner[] = [
     discount: "১০-৩০% ডিসকাউন্ট",
     phone: "০৯৬১৩৭৮৭৮০১",
     logoText: "Popular",
-    imageUrl: "/images/placeholders/diagnostic.webp"
+    imageUrl: "/images/placeholders/diagnostic.webp",
+    upazila: "feni-sadar"
   },
   {
     id: "p2",
@@ -153,7 +155,8 @@ export const initialPartners: Partner[] = [
     discount: "১০-৩০% ডিসকাউন্ট",
     phone: "১০৬০৬",
     logoText: "Labaid",
-    imageUrl: "/images/placeholders/hospital.webp"
+    imageUrl: "/images/placeholders/hospital.webp",
+    upazila: "feni-sadar"
   },
   {
     id: "p3",
@@ -163,7 +166,8 @@ export const initialPartners: Partner[] = [
     discount: "১০-৩০% ডিসকাউন্ট",
     phone: "০২-৯৩৪৩৫১৬",
     logoText: "Lazz",
-    imageUrl: "/images/placeholders/pharmacy.webp"
+    imageUrl: "/images/placeholders/pharmacy.webp",
+    upazila: "feni-sadar"
   },
   {
     id: "p5",
@@ -173,7 +177,8 @@ export const initialPartners: Partner[] = [
     discount: "১০-৩০% ডিসকাউন্ট",
     phone: "০৯৬১০০০৯৬১০",
     logoText: "Ibn Sina",
-    imageUrl: "/images/placeholders/diagnostic.webp"
+    imageUrl: "/images/placeholders/diagnostic.webp",
+    upazila: "feni-sadar"
   },
   {
     id: "p6",
@@ -183,7 +188,8 @@ export const initialPartners: Partner[] = [
     discount: "১০-৩০% ডিসকাউন্ট",
     phone: "১০৬১৬",
     logoText: "Square",
-    imageUrl: "/images/placeholders/hospital.webp"
+    imageUrl: "/images/placeholders/hospital.webp",
+    upazila: "feni-sadar"
   },
   {
     id: "p_ddlab",
@@ -193,7 +199,8 @@ export const initialPartners: Partner[] = [
     discount: "১০-৩০% ডিসকাউন্ট",
     phone: "01898221111, 01898445555, 09666747575",
     logoText: "DD Lab",
-    imageUrl: "/images/partners/ddlab.webp"
+    imageUrl: "/images/partners/ddlab.webp",
+    upazila: "feni-sadar"
   }
 ];
 
@@ -273,6 +280,7 @@ export interface Doctor {
   consultationFee?: string;
   imageUrl?: string;
   partnerId?: string;
+  upazila?: string;
   isActive: boolean;
 }
 

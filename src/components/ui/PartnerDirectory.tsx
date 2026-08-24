@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, MapPin, Phone, PhoneCall, Clock, Hospital, ShieldAlert, Pill, HeartHandshake, Tag, ChevronRight } from "lucide-react";
+import { Search, MapPin, Phone, Clock, Hospital, ShieldAlert, Pill, HeartHandshake, Tag, ChevronRight, X } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { Partner, DepartmentDiscount } from "@/services/db";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatDiscount } from "@/lib/i18n";
 import { PartnerCardSkeleton } from "@/components/ui/skeleton";
+import { FENI_UPAZILAS, getUpazilaLabel, detectUpazilaFromText } from "@/data/feniLocations";
 
 interface PartnerDirectoryProps {
   partners?: Partner[];
@@ -54,8 +55,10 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
   const [prevInitialPartners, setPrevInitialPartners] = useState(initialPartners);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedUpazila, setSelectedUpazila] = useState<string>("all");
   const [visibleCount, setVisibleCount] = useState(18);
   const { locale, t } = useLanguage();
+  const isEn = locale === "en";
 
   if (initialPartners !== prevInitialPartners) {
     setPrevInitialPartners(initialPartners);
@@ -71,7 +74,6 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
     if (initialPartners && initialPartners.length > 0) {
       return;
     }
-    // Fallback client-side fetch if initialPartners is missing or empty
     let isMounted = true;
     dbStore.getPartners().then((data) => {
       if (!isMounted) return;
@@ -85,16 +87,29 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
     };
   }, [initialPartners]);
 
+  // Precompute upazila for each partner
+  const partnersWithUpazila = useMemo(() => {
+    return partners.map((p) => ({
+      ...p,
+      resolvedUpazila: p.upazila || detectUpazilaFromText(p.address),
+    }));
+  }, [partners]);
+
   // Filter partners
-  const filteredPartners = partners.filter((p) => {
-    const matchesSearch =
-      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.address.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredPartners = useMemo(() => {
+    return partnersWithUpazila.filter((p) => {
+      const q = searchQuery.toLowerCase().trim();
+      const matchesSearch =
+        !q ||
+        p.name.toLowerCase().includes(q) ||
+        p.address.toLowerCase().includes(q);
 
-    const matchesCategory = selectedCategory === "all" || p.category === selectedCategory;
+      const matchesCategory = selectedCategory === "all" || p.category === selectedCategory;
+      const matchesUpazila = selectedUpazila === "all" || p.resolvedUpazila === selectedUpazila;
 
-    return matchesSearch && matchesCategory;
-  });
+      return matchesSearch && matchesCategory && matchesUpazila;
+    });
+  }, [partnersWithUpazila, searchQuery, selectedCategory, selectedUpazila]);
 
   // Apply limit or pagination slice
   const displayedPartners = limit ? filteredPartners.slice(0, limit) : filteredPartners.slice(0, visibleCount);
@@ -125,7 +140,6 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
     }
   };
 
-  // Category Label translation
   const getCategoryLabel = (category: string) => {
     switch (category) {
       case "hospital":
@@ -148,49 +162,122 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
 
   return (
     <div className="space-y-6">
-
       {/* Search and Filters Section */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-
-        {/* Search Input */}
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            type="text"
-            aria-label={t("ui.partnerdirectory.searchByHospitalNameOr") || "Search partner hospitals"}
-            placeholder={t("ui.partnerdirectory.searchByHospitalNameOr")}
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setVisibleCount(18);
-            }}
-            className="pl-10 border-border bg-background"
-          />
-        </div>
-
-        {/* Category Filter Pills */}
-        {showFilters && (
-          <div className="flex flex-wrap gap-2 overflow-x-auto pb-1 md:pb-0">
-            {categories.map((cat) => (
+      <div className="space-y-4">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          {/* Search Input */}
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              type="text"
+              aria-label={t("ui.partnerdirectory.searchByHospitalNameOr") || "Search partner hospitals"}
+              placeholder={t("ui.partnerdirectory.searchByHospitalNameOr")}
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setVisibleCount(18);
+              }}
+              className="pl-10 pr-10 border-border bg-background"
+            />
+            {searchQuery && (
               <button
                 type="button"
-                key={cat.value}
-                aria-pressed={selectedCategory === cat.value}
-                onClick={() => {
-                  setSelectedCategory(cat.value);
-                  setVisibleCount(18);
-                }}
-                className={`px-4 py-2 rounded-full text-xs font-semibold border transition-all cursor-pointer ${selectedCategory === cat.value
-                    ? "bg-primary text-white border-primary shadow-sm"
-                    : "bg-background text-muted-foreground border-border hover:bg-muted"
-                  }`}
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
               >
-                {cat.label}
+                <X className="h-4 w-4" />
               </button>
-            ))}
+            )}
+          </div>
+
+          {/* Category Filter Pills */}
+          {showFilters && (
+            <div className="flex flex-wrap gap-2 overflow-x-auto pb-1 md:pb-0">
+              {categories.map((cat) => (
+                <button
+                  type="button"
+                  key={cat.value}
+                  aria-pressed={selectedCategory === cat.value}
+                  onClick={() => {
+                    setSelectedCategory(cat.value);
+                    setVisibleCount(18);
+                  }}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
+                    selectedCategory === cat.value
+                      ? "bg-primary text-white border-primary shadow-sm"
+                      : "bg-background text-muted-foreground border-border hover:bg-muted"
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Upazila / Area Pills Bar */}
+        {showFilters && (
+          <div className="space-y-1.5 pt-1 border-t border-border/50">
+            <div className="flex items-center justify-between px-1">
+              <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                <MapPin className="h-3 w-3 text-primary" />
+                <span>{t("ui.partnerdirectory.locationUpazila")}</span>
+              </span>
+              {(selectedUpazila !== "all" || selectedCategory !== "all" || searchQuery) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedUpazila("all");
+                    setSelectedCategory("all");
+                    setSearchQuery("");
+                    setVisibleCount(18);
+                  }}
+                  className="text-xs text-primary hover:underline font-semibold cursor-pointer"
+                >
+                  {t("ui.partnerdirectory.resetFilters")}
+                </button>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none sm:flex-wrap">
+              {FENI_UPAZILAS.map((upz) => {
+                const isSelected = selectedUpazila === upz.id;
+                const count =
+                  upz.id === "all"
+                    ? partnersWithUpazila.length
+                    : partnersWithUpazila.filter((p) => p.resolvedUpazila === upz.id).length;
+
+                return (
+                  <button
+                    key={upz.id}
+                    type="button"
+                    aria-pressed={isSelected}
+                    onClick={() => {
+                      setSelectedUpazila(upz.id);
+                      setVisibleCount(18);
+                    }}
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border transition-all whitespace-nowrap shrink-0 cursor-pointer ${
+                      isSelected
+                        ? "bg-secondary text-white border-secondary shadow-xs"
+                        : "bg-background text-muted-foreground border-border/80 hover:bg-muted"
+                    }`}
+                  >
+                    <span>{isEn ? upz.nameEn : upz.nameBn}</span>
+                    {count > 0 && (
+                      <span
+                        className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                          isSelected ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"
+                        }`}
+                      >
+                        {count}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         )}
-
       </div>
 
       {/* Directory Grid */}
@@ -207,8 +294,7 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
               const mapUrl = partner.mapLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${partner.name}, ${partner.address}`)}`;
 
               return (
-                <Card key={partner.id} className="group relative overflow-hidden rounded-2xl border-border bg-card shadow-xs hover:shadow-xl hover:border-primary/40 transition-all duration-300 flex flex-col justify-between">
-
+                <Card key={partner.id} className="group relative overflow-hidden rounded-2xl border-border bg-card shadow-xs hover:shadow-xl hover:border-primary/40 transition-all duration-300 flex flex-col justify-between p-0 py-0 gap-0">
                   {/* Full Image Banner with Overlay & Floating Info */}
                   <div className="relative h-52 sm:h-56 w-full bg-slate-900 overflow-hidden">
                     <PartnerCardBanner
@@ -218,6 +304,14 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
 
                     {/* Dark Gradient Overlay for optimal contrast */}
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/40 to-slate-950/10 group-hover:from-slate-950/90 transition-opacity duration-300" />
+
+                    {/* Floating Upazila Badge Top-Left */}
+                    <div className="absolute top-3 left-3 z-10">
+                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/20 shadow-xs flex items-center gap-1">
+                        <MapPin className="h-3 w-3 text-emerald-400" />
+                        {getUpazilaLabel(partner.resolvedUpazila, locale)}
+                      </span>
+                    </div>
 
                     {/* Floating Category Badge Top-Right */}
                     <div className="absolute top-3 right-3 z-10">
@@ -268,7 +362,7 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
                       <div className="px-3.5 sm:px-4 py-2.5 bg-slate-50/80 dark:bg-slate-900/50 border-t border-border/40 space-y-1.5">
                         <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
                           <Tag className="h-3 w-3 text-primary" />
-                          {locale === "en" ? "Department Discounts:" : "বিভাগভিত্তিক ছাড়:"}
+                          {t("ui.partnerdirectory.departmentDiscounts")}
                         </p>
                         <div className="flex flex-wrap gap-1.5 max-h-20 overflow-y-auto">
                           {deptList.map((dept, idx) => (
@@ -298,103 +392,87 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
                     </div>
 
                     <div className="flex items-center gap-1.5 shrink-0">
-                      {/* View Hospital Profile Details Button */}
                       <Link
                         href={`/partner-hospitals/${partner.id}`}
-                        title={locale === "en" ? "View Full Profile & Doctor List" : "বিস্তারিত প্রোফাইল ও ডাক্তার তালিকা দেখুন"}
-                        aria-label={locale === "en" ? "View Full Profile & Doctor List" : "বিস্তারিত প্রোফাইল ও ডাক্তার তালিকা দেখুন"}
                         className={buttonVariants({
                           variant: "outline",
                           size: "sm",
-                          className: "h-8 px-2 sm:px-2.5 text-xs rounded-lg border-primary/30 text-primary hover:bg-primary hover:text-white font-semibold transition-all cursor-pointer",
+                          className: "h-8 px-2.5 text-xs font-semibold rounded-lg border-border/80 hover:bg-muted text-foreground gap-1",
                         })}
                       >
-                        <span>{locale === "en" ? "Profile" : "প্রোফাইল"}</span>
-                        <ChevronRight className="h-3.5 w-3.5 ml-0.5" />
+                        <span>{t("ui.partnerdirectory.details")}</span>
+                        <ChevronRight className="h-3.5 w-3.5" />
                       </Link>
 
-                      {/* Emergency Call Icon Button (if configured) */}
-                      {partner.emergencyPhone && (
-                        <a
-                          href={`tel:${partner.emergencyPhone}`}
-                          title={`${locale === "en" ? "Emergency Helpline" : "জরুরি হেল্পলাইন"}: ${partner.emergencyPhone}`}
-                          aria-label={`${locale === "en" ? "Emergency Helpline" : "জরুরি হেল্পলাইন"}: ${partner.emergencyPhone}`}
-                          className={buttonVariants({
-                            variant: "outline",
-                            size: "icon",
-                            className: "h-8 w-8 rounded-lg border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 transition-colors cursor-pointer",
-                          })}
-                        >
-                          <PhoneCall className="h-4 w-4 shrink-0" />
-                        </a>
-                      )}
-
-                      {/* Location / View Map Icon Button */}
                       <a
                         href={mapUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        title={t("ui.partnerdirectory.viewMap")}
-                        aria-label={t("ui.partnerdirectory.viewMap")}
                         className={buttonVariants({
-                          variant: "outline",
+                          variant: "ghost",
                           size: "icon",
-                          className: "h-8 w-8 rounded-lg border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary transition-colors cursor-pointer",
+                          className: "h-8 w-8 text-muted-foreground hover:text-emerald-500 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-950/30",
                         })}
+                        title="Google Map Location"
+                        aria-label="Google Map Location"
                       >
-                        <MapPin className="h-4 w-4 text-primary shrink-0" />
+                        <MapPin className="h-4 w-4" />
                       </a>
 
-                      {/* Call Icon Button */}
                       <a
                         href={`tel:${partner.phone}`}
-                        title={t("ui.partnerdirectory.call")}
-                        aria-label={t("ui.partnerdirectory.call")}
                         className={buttonVariants({
                           variant: "default",
-                          size: "icon",
-                          className: "h-8 w-8 rounded-lg bg-primary hover:bg-primary-dark text-white shadow-xs transition-colors cursor-pointer",
+                          size: "sm",
+                          className: "h-8 px-3 text-xs bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg gap-1.5 shadow-2xs",
                         })}
                       >
-                        <Phone className="h-4 w-4 shrink-0" />
+                        <Phone className="h-3.5 w-3.5" />
+                        <span>{t("ui.partnerdirectory.call")}</span>
                       </a>
                     </div>
                   </div>
-
                 </Card>
               );
             })}
           </div>
 
           {/* Load More Button */}
-          {!limit && filteredPartners.length > visibleCount && (
-            <div className="flex flex-col items-center justify-center pt-4 pb-2 space-y-2">
+          {!limit && displayedPartners.length < filteredPartners.length && (
+            <div className="text-center pt-4">
               <Button
                 variant="outline"
-                size="lg"
                 onClick={() => setVisibleCount((prev) => prev + 18)}
-                className="rounded-2xl px-8 border-primary/30 text-primary hover:bg-primary hover:text-white font-semibold transition-all shadow-xs cursor-pointer"
+                className="px-6 py-2.5 rounded-xl text-sm font-semibold border-border hover:bg-muted cursor-pointer"
               >
-                {locale === "en"
-                  ? `Load More Facilities (${filteredPartners.length - visibleCount} remaining)`
-                  : `আরো প্রতিষ্ঠান দেখুন (বাকি ${filteredPartners.length - visibleCount} টি)`}
+                {t("ui.partnerdirectory.loadMorePartners")} ({filteredPartners.length - displayedPartners.length} {t("consultants.button.remaining")})
               </Button>
-              <p className="text-xs text-muted-foreground">
-                {locale === "en"
-                  ? `Showing ${Math.min(visibleCount, filteredPartners.length)} of ${filteredPartners.length} facilities`
-                  : `মোট ${filteredPartners.length} টি প্রতিষ্ঠানের মধ্যে ${Math.min(visibleCount, filteredPartners.length)} টি প্রদর্শিত হচ্ছে`}
-              </p>
             </div>
           )}
         </div>
       ) : (
-        <div className="text-center py-12 border border-dashed border-border rounded-xl">
-          <p className="text-muted-foreground text-sm">
-            {t("ui.partnerdirectory.noPartnerHospitalOrLab")}
+        <Card className="p-8 sm:p-12 text-center rounded-2xl border-dashed border-2 border-border/80 bg-muted/10">
+          <Hospital className="h-12 w-12 mx-auto text-muted-foreground/50 mb-3" />
+          <h3 className="font-heading font-bold text-base sm:text-lg text-secondary dark:text-white mb-1">
+            {t("ui.partnerdirectory.noPartnersFound")}
+          </h3>
+          <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto mb-4">
+            {t("ui.partnerdirectory.noPartnersFoundDesc")}
           </p>
-        </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setSearchQuery("");
+              setSelectedCategory("all");
+              setSelectedUpazila("all");
+            }}
+            className="rounded-xl cursor-pointer"
+          >
+            {t("ui.partnerdirectory.viewAllPartners")}
+          </Button>
+        </Card>
       )}
-
     </div>
   );
 }

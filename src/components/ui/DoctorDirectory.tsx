@@ -13,6 +13,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { DoctorAvatar, DoctorSerialModal, DoctorDetailsModal } from "./doctors/DoctorModals";
+import { FENI_UPAZILAS, getUpazilaLabel, detectUpazilaFromText } from "@/data/feniLocations";
 
 interface DoctorDirectoryProps {
   doctors?: Doctor[];
@@ -42,13 +43,24 @@ const DEPARTMENTS = [
 export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectoryProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDept, setSelectedDept] = useState("all");
+  const [selectedUpazila, setSelectedUpazila] = useState("all");
   const [visibleCount, setVisibleCount] = useState(24);
   const [activeSerialDoctor, setActiveSerialDoctor] = useState<Doctor | null>(null);
   const [activeDetailsDoctor, setActiveDetailsDoctor] = useState<Doctor | null>(null);
   const { t, locale } = useLanguage();
 
+  const isEn = locale === "en";
+
+  // Precompute upazila for each doctor
+  const doctorsWithUpazila = useMemo(() => {
+    return doctors.map((doc) => ({
+      ...doc,
+      resolvedUpazila: doc.upazila || detectUpazilaFromText(doc.chamberAddress),
+    }));
+  }, [doctors]);
+
   const filteredDoctors = useMemo(() => {
-    return doctors.filter((doc) => {
+    return doctorsWithUpazila.filter((doc) => {
       const q = searchQuery.toLowerCase().trim();
       const matchesSearch =
         !q ||
@@ -60,10 +72,11 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
         doc.chamberAddress.toLowerCase().includes(q);
 
       const matchesDept = selectedDept === "all" || doc.department === selectedDept;
+      const matchesUpazila = selectedUpazila === "all" || doc.resolvedUpazila === selectedUpazila;
 
-      return matchesSearch && matchesDept;
+      return matchesSearch && matchesDept && matchesUpazila;
     });
-  }, [doctors, searchQuery, selectedDept]);
+  }, [doctorsWithUpazila, searchQuery, selectedDept, selectedUpazila]);
 
   const displayedDoctors = limit ? filteredDoctors.slice(0, limit) : filteredDoctors.slice(0, visibleCount);
 
@@ -96,6 +109,70 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
             <X className="h-4 w-4" />
           </button>
         )}
+      </div>
+
+      {/* Upazila / Area Location Filter Bar */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between px-1">
+          <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+            <MapPin className="h-3.5 w-3.5 text-primary" />
+            <span>{isEn ? "Filter by Upazila / Area" : "উপজেলা / এলাকা অনুযায়ী খুঁজুন"}</span>
+          </span>
+          {(selectedUpazila !== "all" || selectedDept !== "all" || searchQuery) && (
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedUpazila("all");
+                setSelectedDept("all");
+                setSearchQuery("");
+                setVisibleCount(24);
+              }}
+              className="text-xs text-primary hover:underline font-semibold cursor-pointer"
+            >
+              {isEn ? "Reset Filters" : "ফিল্টার মুছুন"}
+            </button>
+          )}
+        </div>
+
+        {/* Upazila Pills - Horizontal Scroll on Mobile, Flex Wrap on Desktop */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1.5 sm:pb-0 scrollbar-none sm:flex-wrap sm:justify-center">
+          {FENI_UPAZILAS.map((upz) => {
+            const isSelected = selectedUpazila === upz.id;
+            const count =
+              upz.id === "all"
+                ? doctorsWithUpazila.length
+                : doctorsWithUpazila.filter((d) => d.resolvedUpazila === upz.id).length;
+
+            return (
+              <button
+                key={upz.id}
+                type="button"
+                aria-pressed={isSelected}
+                onClick={() => {
+                  setSelectedUpazila(upz.id);
+                  setVisibleCount(24);
+                }}
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
+                  isSelected
+                    ? "bg-primary text-white shadow-sm ring-2 ring-primary/20"
+                    : "bg-background hover:bg-muted text-muted-foreground border border-border/80"
+                }`}
+              >
+                <MapPin className={`h-3 w-3 ${isSelected ? "text-white" : "text-primary"}`} />
+                <span>{isEn ? upz.nameEn : upz.nameBn}</span>
+                {count > 0 && (
+                  <span
+                    className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                      isSelected ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {count}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Mobile Department Select Field */}
@@ -148,9 +225,9 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
                 setSelectedDept(dept.id);
                 setVisibleCount(24);
               }}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                 isSelected
-                  ? "bg-primary text-white shadow-sm ring-2 ring-primary/20"
+                  ? "bg-secondary text-white shadow-sm ring-2 ring-secondary/20"
                   : "bg-background hover:bg-muted text-muted-foreground border border-border/70"
               }`}
             >
@@ -221,12 +298,18 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
                     </p>
                   </div>
 
-                  {/* Chamber Schedule & Address (Clean Truncation) */}
+                  {/* Chamber Schedule & Address with Upazila Badge */}
                   <div className="space-y-1 text-xs pt-0.5">
-                    <div className="flex items-center gap-2 text-foreground font-medium min-w-0">
-                      <Building2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary shrink-0" />
-                      <span className="flex-1 truncate leading-snug" title={doc.chamberName}>
-                        {doc.chamberName}
+                    <div className="flex items-center justify-between gap-2 text-foreground font-medium min-w-0">
+                      <div className="flex items-center gap-2 min-w-0 flex-1">
+                        <Building2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary shrink-0" />
+                        <span className="flex-1 truncate leading-snug" title={doc.chamberName}>
+                          {doc.chamberName}
+                        </span>
+                      </div>
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-primary/10 text-primary border border-primary/20 shrink-0">
+                        <MapPin className="h-2.5 w-2.5" />
+                        {getUpazilaLabel(doc.resolvedUpazila, locale)}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground min-w-0">
@@ -259,18 +342,18 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
                     size="sm"
                     variant="outline"
                     onClick={() => setActiveDetailsDoctor(doc)}
-                    className="w-full text-xs font-semibold rounded-xl h-9 hover:bg-muted inline-flex items-center justify-center gap-1.5"
+                    className="h-8 sm:h-9 text-xs font-semibold rounded-xl border-border/80 hover:bg-muted cursor-pointer"
                   >
-                    <Info className="h-3.5 w-3.5 shrink-0" />
-                    <span>{t("consultants.card.viewDetails")}</span>
+                    <Info className="h-3.5 w-3.5 mr-1" />
+                    {t("consultants.button.details")}
                   </Button>
                   <Button
                     size="sm"
                     onClick={() => setActiveSerialDoctor(doc)}
-                    className="w-full bg-primary hover:bg-primary-dark text-white text-xs font-semibold rounded-xl h-9 shadow-xs inline-flex items-center justify-center gap-1.5"
+                    className="h-8 sm:h-9 text-xs font-semibold rounded-xl bg-primary hover:bg-primary/90 text-white shadow-xs cursor-pointer"
                   >
-                    <PhoneCall className="h-3.5 w-3.5 shrink-0 animate-pulse" />
-                    <span>{t("consultants.card.callSerial")}</span>
+                    <PhoneCall className="h-3.5 w-3.5 mr-1" />
+                    {t("consultants.button.serial")}
                   </Button>
                 </div>
               </Card>
@@ -278,33 +361,25 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
           </div>
 
           {/* Load More Button */}
-          {!limit && filteredDoctors.length > visibleCount && (
-            <div className="flex flex-col items-center justify-center pt-4 pb-2 space-y-2">
+          {!limit && displayedDoctors.length < filteredDoctors.length && (
+            <div className="text-center pt-4">
               <Button
                 variant="outline"
-                size="lg"
                 onClick={() => setVisibleCount((prev) => prev + 24)}
-                className="rounded-2xl px-8 border-primary/30 text-primary hover:bg-primary hover:text-white font-semibold transition-all shadow-xs cursor-pointer"
+                className="px-6 py-2.5 rounded-xl text-sm font-semibold border-border hover:bg-muted cursor-pointer"
               >
-                {locale === "en"
-                  ? `Load More Doctors (${filteredDoctors.length - visibleCount} remaining)`
-                  : `আরো ডাক্তার দেখুন (বাকি ${filteredDoctors.length - visibleCount} জন)`}
+                {t("consultants.button.loadMore")} ({filteredDoctors.length - displayedDoctors.length} {t("consultants.button.remaining")})
               </Button>
-              <p className="text-xs text-muted-foreground">
-                {locale === "en"
-                  ? `Showing ${Math.min(visibleCount, filteredDoctors.length)} of ${filteredDoctors.length} doctors`
-                  : `মোট ${filteredDoctors.length} জন ডাক্তারের মধ্যে ${Math.min(visibleCount, filteredDoctors.length)} জন প্রদর্শিত হচ্ছে`}
-              </p>
             </div>
           )}
         </div>
       ) : (
-        <div className="text-center py-12 px-4 bg-muted/20 rounded-3xl border border-dashed border-border/80 max-w-md mx-auto space-y-3">
-          <Stethoscope className="h-10 w-10 text-muted-foreground/50 mx-auto" />
-          <h3 className="font-heading font-bold text-base text-foreground">
+        <Card className="p-8 sm:p-12 text-center rounded-2xl border-dashed border-2 border-border/80 bg-muted/10">
+          <Stethoscope className="h-12 w-12 mx-auto text-muted-foreground/50 mb-3" />
+          <h3 className="font-heading font-bold text-base sm:text-lg text-secondary dark:text-white mb-1">
             {t("consultants.empty.title")}
           </h3>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto mb-4">
             {t("consultants.empty.desc")}
           </p>
           <Button
@@ -313,15 +388,16 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
             onClick={() => {
               setSearchQuery("");
               setSelectedDept("all");
-              setVisibleCount(24);
+              setSelectedUpazila("all");
             }}
+            className="rounded-xl cursor-pointer"
           >
-            {locale === "en" ? "Clear Filters" : "ফিল্টার ক্লিয়ার করুন"}
+            {t("consultants.empty.reset")}
           </Button>
-        </div>
+        </Card>
       )}
 
-      {/* Serial Phone Booking Modal */}
+      {/* Modals */}
       {activeSerialDoctor && (
         <DoctorSerialModal
           doctor={activeSerialDoctor}
@@ -331,7 +407,6 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
         />
       )}
 
-      {/* Doctor Details Modal */}
       {activeDetailsDoctor && (
         <DoctorDetailsModal
           doctor={activeDetailsDoctor}

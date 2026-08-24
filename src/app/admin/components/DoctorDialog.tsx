@@ -24,6 +24,7 @@ interface DoctorDialogProps {
     serialPhone: string;
     consultationFee: string;
     imageUrl: string;
+    upazila: string;
   };
   setNewDoctor: (doc: {
     name: string;
@@ -39,6 +40,7 @@ interface DoctorDialogProps {
     serialPhone: string;
     consultationFee: string;
     imageUrl: string;
+    upazila: string;
   }) => void;
   onSubmit: (e: React.FormEvent) => void;
   t?: (key: string) => string;
@@ -165,7 +167,7 @@ export function DoctorDialog({
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="space-y-1.5">
               <label htmlFor="admin-doc-chambername" className="text-xs font-semibold text-secondary cursor-pointer">চেম্বারের নাম *</label>
               <Input
@@ -190,6 +192,23 @@ export function DoctorDialog({
                 onChange={(e) => setNewDoctor({ ...newDoctor, chamberAddress: e.target.value })}
                 className="border-border bg-background"
               />
+            </div>
+
+            <div className="space-y-1.5">
+              <label htmlFor="admin-doc-upazila" className="text-xs font-semibold text-secondary cursor-pointer">উপজেলা / এলাকা *</label>
+              <select
+                id="admin-doc-upazila"
+                value={newDoctor.upazila || "feni-sadar"}
+                onChange={(e) => setNewDoctor({ ...newDoctor, upazila: e.target.value })}
+                className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary"
+              >
+                <option value="feni-sadar">ফেনী সদর (Feni Sadar)</option>
+                <option value="chhagalnaiya">ছাগলনাইয়া (Chhagalnaiya)</option>
+                <option value="daganbhuiyan">দাগনভূঞা (Daganbhuiyan)</option>
+                <option value="sonagazi">সোনাগাজী (Sonagazi)</option>
+                <option value="parshuram">পরশুরাম (Parshuram)</option>
+                <option value="fulgazi">ফুলগাজী (Fulgazi)</option>
+              </select>
             </div>
           </div>
 

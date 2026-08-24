@@ -9,6 +9,29 @@ import { updateTag } from "next/cache";
 const DOCTORS_TAG = "doctors";
 const PARTNERS_TAG = "partners";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function formatDoctor(d: any): Doctor {
+  return {
+    id: d.id,
+    name: d.name,
+    specialty: d.specialty,
+    department: d.department,
+    degrees: d.degrees,
+    designation: d.designation,
+    chamberName: d.chamberName,
+    chamberAddress: d.chamberAddress,
+    roomNo: d.roomNo || undefined,
+    visitingDays: d.visitingDays,
+    visitingHours: d.visitingHours,
+    serialPhone: d.serialPhone,
+    consultationFee: d.consultationFee || undefined,
+    imageUrl: d.imageUrl || undefined,
+    partnerId: d.partnerId || undefined,
+    upazila: d.upazila || "feni-sadar",
+    isActive: d.isActive,
+  };
+}
+
 export interface PartnerDoctorChamberInput {
   roomNo?: string;
   visitingDays?: string;
@@ -29,6 +52,7 @@ export interface AddPartnerDoctorInput {
   serialPhone: string;
   consultationFee?: string;
   imageUrl?: string;
+  upazila?: string;
   isActive?: boolean;
 }
 
@@ -44,6 +68,7 @@ export interface UpdatePartnerDoctorInput {
   serialPhone?: string;
   consultationFee?: string;
   imageUrl?: string;
+  upazila?: string;
   isActive?: boolean;
 }
 
@@ -66,26 +91,7 @@ export async function getPartnerDoctorsAction(): Promise<{
       orderBy: { createdAt: "desc" },
     });
 
-    const doctors: Doctor[] = data.map((d) => ({
-      id: d.id,
-      name: d.name,
-      specialty: d.specialty,
-      department: d.department,
-      degrees: d.degrees,
-      designation: d.designation,
-      chamberName: d.chamberName,
-      chamberAddress: d.chamberAddress,
-      roomNo: d.roomNo || undefined,
-      visitingDays: d.visitingDays,
-      visitingHours: d.visitingHours,
-      serialPhone: d.serialPhone,
-      consultationFee: d.consultationFee || undefined,
-      imageUrl: d.imageUrl || undefined,
-      partnerId: d.partnerId || undefined,
-      isActive: d.isActive,
-    }));
-
-    return { success: true, doctors };
+    return { success: true, doctors: data.map(formatDoctor) };
   } catch (error) {
     logger.error("Error in getPartnerDoctorsAction:", error);
     return { success: false, doctors: [], error: "ডাক্তারদের তালিকা লোড করতে সমস্যা হয়েছে।" };
@@ -128,26 +134,7 @@ export async function getAvailableDoctorsToLinkAction(search?: string): Promise<
       take: 20,
     });
 
-    const doctors: Doctor[] = data.map((d) => ({
-      id: d.id,
-      name: d.name,
-      specialty: d.specialty,
-      department: d.department,
-      degrees: d.degrees,
-      designation: d.designation,
-      chamberName: d.chamberName,
-      chamberAddress: d.chamberAddress,
-      roomNo: d.roomNo || undefined,
-      visitingDays: d.visitingDays,
-      visitingHours: d.visitingHours,
-      serialPhone: d.serialPhone,
-      consultationFee: d.consultationFee || undefined,
-      imageUrl: d.imageUrl || undefined,
-      partnerId: d.partnerId || undefined,
-      isActive: d.isActive,
-    }));
-
-    return { success: true, doctors };
+    return { success: true, doctors: data.map(formatDoctor) };
   } catch (error) {
     logger.error("Error in getAvailableDoctorsToLinkAction:", error);
     return { success: false, doctors: [], error: "ডাক্তারদের তালিকা পেতে সমস্যা হয়েছে।" };
@@ -169,7 +156,7 @@ export async function linkDoctorToPartnerAction(
   try {
     const partner = await prisma.partner.findUnique({
       where: { id: session.userId },
-      select: { name: true, address: true, phone: true },
+      select: { name: true, address: true, phone: true, upazila: true },
     });
 
     if (!partner) {
@@ -182,6 +169,7 @@ export async function linkDoctorToPartnerAction(
         partnerId: session.userId,
         chamberName: partner.name,
         chamberAddress: partner.address,
+        upazila: partner.upazila || "feni-sadar",
         roomNo: chamberData.roomNo?.trim() || null,
         ...(chamberData.visitingDays?.trim() && { visitingDays: chamberData.visitingDays.trim() }),
         ...(chamberData.visitingHours?.trim() && { visitingHours: chamberData.visitingHours.trim() }),
@@ -268,7 +256,7 @@ export async function addPartnerDoctorAction(
   try {
     const partner = await prisma.partner.findUnique({
       where: { id: session.userId },
-      select: { name: true, address: true },
+      select: { name: true, address: true, upazila: true },
     });
 
     if (!partner) {
@@ -293,30 +281,14 @@ export async function addPartnerDoctorAction(
         consultationFee: input.consultationFee?.trim() || null,
         imageUrl: input.imageUrl?.trim() || null,
         partnerId: session.userId,
+        upazila: input.upazila || partner.upazila || "feni-sadar",
         isActive: input.isActive ?? true,
       },
     });
 
     return {
       success: true,
-      doctor: {
-        id: created.id,
-        name: created.name,
-        specialty: created.specialty,
-        department: created.department,
-        degrees: created.degrees,
-        designation: created.designation,
-        chamberName: created.chamberName,
-        chamberAddress: created.chamberAddress,
-        roomNo: created.roomNo || undefined,
-        visitingDays: created.visitingDays,
-        visitingHours: created.visitingHours,
-        serialPhone: created.serialPhone,
-        consultationFee: created.consultationFee || undefined,
-        imageUrl: created.imageUrl || undefined,
-        partnerId: created.partnerId || undefined,
-        isActive: created.isActive,
-      },
+      doctor: formatDoctor(created),
     };
   } catch (error) {
     logger.error("Error in addPartnerDoctorAction:", error);
@@ -365,6 +337,7 @@ export async function updatePartnerDoctorChamberAction(
           consultationFee: input.consultationFee.trim() || null,
         }),
         ...(input.imageUrl !== undefined && { imageUrl: input.imageUrl.trim() || null }),
+        ...(input.upazila !== undefined && { upazila: input.upazila || "feni-sadar" }),
         ...(input.isActive !== undefined && { isActive: input.isActive }),
       },
     });

@@ -52,6 +52,7 @@ function AdminPartnersContent() {
     logoText: "",
     mapLink: "",
     imageUrl: "",
+    upazila: "feni-sadar",
   });
 
   // Sync category if URL parameter changes
@@ -146,6 +147,7 @@ function AdminPartnersContent() {
           logoText: newPartner.logoText || newPartner.name.substring(0, 5),
           mapLink: newPartner.mapLink,
           imageUrl: newPartner.imageUrl,
+          upazila: newPartner.upazila || "feni-sadar",
         });
         if (!success) throw new Error("Update failed");
       } else {
@@ -158,6 +160,7 @@ function AdminPartnersContent() {
           logoText: newPartner.logoText || newPartner.name.substring(0, 5),
           mapLink: newPartner.mapLink,
           imageUrl: newPartner.imageUrl,
+          upazila: newPartner.upazila || "feni-sadar",
         });
       }
 
@@ -170,6 +173,7 @@ function AdminPartnersContent() {
         logoText: "",
         mapLink: "",
         imageUrl: "",
+        upazila: "feni-sadar",
       });
       setEditingPartner(null);
       setIsPartnerOpen(false);
@@ -263,6 +267,7 @@ function AdminPartnersContent() {
             logoText: "",
             mapLink: "",
             imageUrl: "",
+            upazila: "feni-sadar",
           });
           setIsPartnerOpen(true);
         }}
@@ -277,6 +282,7 @@ function AdminPartnersContent() {
             logoText: p.logoText || "",
             mapLink: p.mapLink || "",
             imageUrl: p.imageUrl || "",
+            upazila: p.upazila || "feni-sadar",
           });
           setIsPartnerOpen(true);
         }}
@@ -301,6 +307,7 @@ function AdminPartnersContent() {
               logoText: "",
               mapLink: "",
               imageUrl: "",
+              upazila: "feni-sadar",
             });
           }}
           editingPartner={editingPartner}

@@ -1,12 +1,11 @@
-
 import { PrismaClient } from "@/generated/client/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 import { logger } from "@/lib/logger";
 
 const globalForPrisma = global as unknown as {
-  prisma: PrismaClient;
-  pool: pg.Pool;
+  prisma?: PrismaClient;
+  pool?: pg.Pool;
 };
 
 // Prefer DATABASE_URL (pgbouncer transaction-mode pooler, port 6543) for faster
@@ -30,12 +29,19 @@ if (!globalForPrisma.pool) {
 }
 
 const adapter = new PrismaPg(globalForPrisma.pool);
-if (!globalForPrisma.prisma || !("systemSetting" in globalForPrisma.prisma)) {
-  globalForPrisma.prisma = new PrismaClient({
+
+const createPrismaClient = () => {
+  return new PrismaClient({
     adapter,
     log: process.env.NODE_ENV === "production" ? ["error"] : ["error", "warn"],
   });
+};
+
+// Ensure fresh PrismaClient is instantiated so newly generated schema fields (such as upazila)
+// are immediately reflected without stale client caching in dev mode.
+globalForPrisma.prisma = globalForPrisma.prisma || createPrismaClient();
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = createPrismaClient();
 }
 
 export const prisma = globalForPrisma.prisma;
-

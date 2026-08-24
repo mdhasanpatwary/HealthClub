@@ -55,7 +55,6 @@ export async function getPaginatedPartnerRequestsAction(...args: Parameters<type
   return _getPaginatedPartnerRequestsAction(...args);
 }
 
-
 export async function updatePartnerRequestStatusAction(id: string, status: "approved" | "rejected") {
   return _updatePartnerRequestStatusAction(id, status);
 }
@@ -78,11 +77,32 @@ export async function resetPartnerPasswordAction(email: string, code: string, ra
 
 const PARTNERS_TAG = "partners";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function formatPartner(p: any): Partner {
+  return {
+    id: p.id,
+    name: p.name,
+    category: p.category as Partner["category"],
+    address: p.address,
+    discount: p.discount,
+    phone: p.phone,
+    email: p.email || undefined,
+    logoText: p.logoText,
+    mapLink: p.mapLink || undefined,
+    imageUrl: p.imageUrl || undefined,
+    emergencyPhone: p.emergencyPhone || undefined,
+    workingHours: p.workingHours || undefined,
+    departmentDiscounts: p.departmentDiscounts || undefined,
+    upazila: p.upazila || "feni-sadar",
+  };
+}
+
 export interface GetPaginatedPartnersAdminParams {
   page?: number;
   pageSize?: number;
   search?: string;
   category?: string;
+  upazila?: string;
 }
 
 export async function getPaginatedPartnersAdminAction(
@@ -103,11 +123,15 @@ export async function getPaginatedPartnersAdminAction(
   const pageSize = Math.max(1, params?.pageSize || 10);
   const search = params?.search?.trim();
   const category = params?.category;
+  const upazila = params?.upazila;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const where: any = {};
   if (category && category !== "all") {
     where.category = category;
+  }
+  if (upazila && upazila !== "all") {
+    where.upazila = upazila;
   }
   if (search) {
     where.OR = [
@@ -141,28 +165,13 @@ export async function getPaginatedPartnersAdminAction(
           emergencyPhone: true,
           workingHours: true,
           departmentDiscounts: true,
+          upazila: true,
         },
       }),
     ]);
 
-    const partners: Partner[] = data.map((p) => ({
-      id: p.id,
-      name: p.name,
-      category: p.category as Partner["category"],
-      address: p.address,
-      discount: p.discount,
-      phone: p.phone,
-      email: p.email || undefined,
-      logoText: p.logoText,
-      mapLink: p.mapLink || undefined,
-      imageUrl: p.imageUrl || undefined,
-      emergencyPhone: p.emergencyPhone || undefined,
-      workingHours: p.workingHours || undefined,
-      departmentDiscounts: p.departmentDiscounts || undefined,
-    }));
-
     return {
-      data: partners,
+      data: data.map(formatPartner),
       totalItems,
       totalPages: Math.max(1, Math.ceil(totalItems / pageSize)),
       currentPage: page,
@@ -174,13 +183,8 @@ export async function getPaginatedPartnersAdminAction(
   }
 }
 
-
 // --- PARTNERS ACTIONS ---
 
-/**
- * Cached partner list — avoids hitting the DB on every page that shows partners.
- * Invalidated via "partners" tag on add/update/delete mutations.
- */
 export const getPartnersAction = unstable_cache(
   async (): Promise<Partner[]> => {
     try {
@@ -200,24 +204,11 @@ export const getPartnersAction = unstable_cache(
           emergencyPhone: true,
           workingHours: true,
           departmentDiscounts: true,
+          upazila: true,
         },
       });
 
-      return data.map((p) => ({
-        id: p.id,
-        name: p.name,
-        category: p.category as Partner["category"],
-        address: p.address,
-        discount: p.discount,
-        phone: p.phone,
-        email: p.email || undefined,
-        logoText: p.logoText,
-        mapLink: p.mapLink || undefined,
-        imageUrl: p.imageUrl || undefined,
-        emergencyPhone: p.emergencyPhone || undefined,
-        workingHours: p.workingHours || undefined,
-        departmentDiscounts: p.departmentDiscounts || undefined,
-      }));
+      return data.map(formatPartner);
     } catch (error) {
       logger.error("Error in getPartnersAction:", error);
       return [];
@@ -248,24 +239,11 @@ export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Pa
         emergencyPhone: partner.emergencyPhone || null,
         workingHours: partner.workingHours || null,
         departmentDiscounts: partner.departmentDiscounts || null,
+        upazila: partner.upazila || "feni-sadar",
       },
     });
 
-    return {
-      id: p.id,
-      name: p.name,
-      category: p.category as Partner["category"],
-      address: p.address,
-      discount: p.discount,
-      phone: p.phone,
-      email: p.email || undefined,
-      logoText: p.logoText,
-      mapLink: p.mapLink || undefined,
-      imageUrl: p.imageUrl || undefined,
-      emergencyPhone: p.emergencyPhone || undefined,
-      workingHours: p.workingHours || undefined,
-      departmentDiscounts: p.departmentDiscounts || undefined,
-    };
+    return formatPartner(p);
   } catch (error) {
     logger.error("Error in addPartnerAction:", error);
     return { error: "পার্টনার যোগ করতে সমস্যা হয়েছে।" };
@@ -295,6 +273,7 @@ export async function updatePartnerAction(id: string, partner: Omit<Partner, "id
         emergencyPhone: partner.emergencyPhone || null,
         workingHours: partner.workingHours || null,
         departmentDiscounts: partner.departmentDiscounts || null,
+        upazila: partner.upazila || "feni-sadar",
       },
     });
     return true;
@@ -354,6 +333,7 @@ export async function getPartnerProfileAction(): Promise<{
         emergencyPhone: true,
         workingHours: true,
         departmentDiscounts: true,
+        upazila: true,
       },
     });
 
@@ -363,21 +343,7 @@ export async function getPartnerProfileAction(): Promise<{
 
     return {
       success: true,
-      partner: {
-        id: data.id,
-        name: data.name,
-        category: data.category as Partner["category"],
-        address: data.address,
-        discount: data.discount,
-        phone: data.phone,
-        email: data.email || undefined,
-        logoText: data.logoText,
-        mapLink: data.mapLink || undefined,
-        imageUrl: data.imageUrl || undefined,
-        emergencyPhone: data.emergencyPhone || undefined,
-        workingHours: data.workingHours || undefined,
-        departmentDiscounts: data.departmentDiscounts || undefined,
-      },
+      partner: formatPartner(data),
     };
   } catch (error) {
     logger.error("Error in getPartnerProfileAction:", error);
@@ -396,6 +362,7 @@ export interface UpdatePartnerProfileInput {
   mapLink?: string;
   imageUrl?: string;
   departmentDiscounts?: string;
+  upazila?: string;
 }
 
 export async function updatePartnerProfileAction(
@@ -424,6 +391,7 @@ export async function updatePartnerProfileAction(
         emergencyPhone: input.emergencyPhone?.trim() || null,
         workingHours: input.workingHours?.trim() || null,
         departmentDiscounts: input.departmentDiscounts || null,
+        ...(input.upazila !== undefined && { upazila: input.upazila || "feni-sadar" }),
       },
       select: {
         id: true,
@@ -439,26 +407,13 @@ export async function updatePartnerProfileAction(
         emergencyPhone: true,
         workingHours: true,
         departmentDiscounts: true,
+        upazila: true,
       },
     });
 
     return {
       success: true,
-      partner: {
-        id: updated.id,
-        name: updated.name,
-        category: updated.category as Partner["category"],
-        address: updated.address,
-        discount: updated.discount,
-        phone: updated.phone,
-        email: updated.email || undefined,
-        logoText: updated.logoText,
-        mapLink: updated.mapLink || undefined,
-        imageUrl: updated.imageUrl || undefined,
-        emergencyPhone: updated.emergencyPhone || undefined,
-        workingHours: updated.workingHours || undefined,
-        departmentDiscounts: updated.departmentDiscounts || undefined,
-      },
+      partner: formatPartner(updated),
     };
   } catch (error) {
     logger.error("Error in updatePartnerProfileAction:", error);
@@ -482,6 +437,3 @@ export async function addPartnerTransactionAction(
 export async function getPartnerAnalyticsAction() {
   return _getPartnerAnalyticsAction();
 }
-
-
-

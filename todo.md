@@ -215,7 +215,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/partner-hospitals/[id]/page.tsx`, `src/components/partner-hospitals/HospitalProfileView.tsx`, `src/app/actions/partnerActions.ts`, `src/proxy.ts`
   - **Details**: Build comprehensive hospital profile pages showcasing facility badges (ICU, CCU, 24/7 Emergency, Dialysis, Ambulance), photo gallery, itemized department discounts, and resident doctor roster.
 
-- [ ] **TODO-45** (4.3): **Upazila & Area Location Filtering for Doctors & Hospitals**
+- [x] **TODO-45** (4.3): **Upazila & Area Location Filtering for Doctors & Hospitals**
   - **Files**: `prisma/schema.prisma`, `src/app/consultants/page.tsx`, `src/app/partner-hospitals/page.tsx`, `src/components/ui/DoctorDirectory.tsx`, `src/app/partner-hospitals/components/PartnerDirectory.tsx`
   - **Details**: Add `upazila` / `area` field to Doctor and Partner schemas and introduce area filtering pills (Feni Sadar, Chhagalnaiya, Daganbhuiyan, Sonagazi, Parshuram, Fulgazi) across directories.
 

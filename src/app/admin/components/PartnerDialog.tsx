@@ -19,6 +19,7 @@ interface PartnerDialogProps {
     logoText: string;
     mapLink: string;
     imageUrl: string;
+    upazila: string;
   };
   setNewPartner: (partner: {
     name: string;
@@ -29,6 +30,7 @@ interface PartnerDialogProps {
     logoText: string;
     mapLink: string;
     imageUrl: string;
+    upazila: string;
   }) => void;
   onSubmit: (e: React.FormEvent) => void;
   t: (key: string) => string;
@@ -78,9 +80,27 @@ export function PartnerDialog({
               <Input id="admin-partner-discount" type="text" required placeholder={t("admin.dashboard.egDiscount")} value={newPartner.discount} onChange={e => setNewPartner({ ...newPartner, discount: e.target.value })} className="border-border bg-background" />
             </div>
           </div>
-          <div className="space-y-2">
-            <label htmlFor="admin-partner-address" className="text-xs font-semibold text-secondary cursor-pointer">{t("admin.dashboard.addressLabelReq")}</label>
-            <Input id="admin-partner-address" type="text" required placeholder={t("admin.dashboard.egAddress")} value={newPartner.address} onChange={e => setNewPartner({ ...newPartner, address: e.target.value })} className="border-border bg-background" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label htmlFor="admin-partner-address" className="text-xs font-semibold text-secondary cursor-pointer">{t("admin.dashboard.addressLabelReq")}</label>
+              <Input id="admin-partner-address" type="text" required placeholder={t("admin.dashboard.egAddress")} value={newPartner.address} onChange={e => setNewPartner({ ...newPartner, address: e.target.value })} className="border-border bg-background" />
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="admin-partner-upazila" className="text-xs font-semibold text-secondary cursor-pointer">উপজেলা / এলাকা *</label>
+              <select
+                id="admin-partner-upazila"
+                value={newPartner.upazila || "feni-sadar"}
+                onChange={(e) => setNewPartner({ ...newPartner, upazila: e.target.value })}
+                className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary"
+              >
+                <option value="feni-sadar">ফেনী সদর (Feni Sadar)</option>
+                <option value="chhagalnaiya">ছাগলনাইয়া (Chhagalnaiya)</option>
+                <option value="daganbhuiyan">দাগনভূঞা (Daganbhuiyan)</option>
+                <option value="sonagazi">সোনাগাজী (Sonagazi)</option>
+                <option value="parshuram">পরশুরাম (Parshuram)</option>
+                <option value="fulgazi">ফুলগাজী (Fulgazi)</option>
+              </select>
+            </div>
           </div>
           <div className="space-y-2">
             <label htmlFor="admin-partner-maplink" className="text-xs font-semibold text-secondary cursor-pointer">{t("admin.dashboard.googleMapLinkLabel")}</label>

@@ -1387,6 +1387,7 @@ export const PartnerScalarFieldEnum = {
   emergencyPhone: 'emergencyPhone',
   workingHours: 'workingHours',
   departmentDiscounts: 'departmentDiscounts',
+  upazila: 'upazila',
   verificationCode: 'verificationCode',
   verificationCodeCreatedAt: 'verificationCodeCreatedAt',
   createdAt: 'createdAt'
@@ -1446,6 +1447,7 @@ export const DoctorScalarFieldEnum = {
   consultationFee: 'consultationFee',
   imageUrl: 'imageUrl',
   partnerId: 'partnerId',
+  upazila: 'upazila',
   isActive: 'isActive',
   createdAt: 'createdAt'
 } as const

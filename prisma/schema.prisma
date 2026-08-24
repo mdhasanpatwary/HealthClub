@@ -59,6 +59,7 @@ model Partner {
   emergencyPhone            String?       @map("emergency_phone")
   workingHours              String?       @map("working_hours")
   departmentDiscounts       String?       @map("department_discounts")
+  upazila                   String?       @default("feni-sadar") @map("upazila")
   verificationCode          String?       @map("verification_code")
   verificationCodeCreatedAt DateTime?     @map("verification_code_created_at") @db.Timestamptz
   createdAt                 DateTime      @default(now()) @map("created_at") @db.Timestamptz
@@ -67,6 +68,7 @@ model Partner {
   staff                     PartnerStaff[]
 
   @@index([category])
+  @@index([upazila], map: "partners_upazila_idx")
   @@map("partners")
 }
 
@@ -134,12 +136,14 @@ model Doctor {
   consultationFee String?  @map("consultation_fee")
   imageUrl        String?  @map("image_url")
   partnerId       String?  @map("partner_id")
+  upazila         String?  @default("feni-sadar") @map("upazila")
   isActive        Boolean  @default(true) @map("is_active")
   createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
 
   partner         Partner? @relation(fields: [partnerId], references: [id], onDelete: SetNull)
 
   @@index([department], map: "doctors_department_idx")
+  @@index([upazila], map: "doctors_upazila_idx")
   @@index([isActive], map: "doctors_is_active_idx")
   @@index([partnerId], map: "doctors_partner_id_idx")
   @@map("doctors")

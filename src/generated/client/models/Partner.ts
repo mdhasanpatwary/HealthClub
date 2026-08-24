@@ -39,6 +39,7 @@ export type PartnerMinAggregateOutputType = {
   emergencyPhone: string | null
   workingHours: string | null
   departmentDiscounts: string | null
+  upazila: string | null
   verificationCode: string | null
   verificationCodeCreatedAt: Date | null
   createdAt: Date | null
@@ -59,6 +60,7 @@ export type PartnerMaxAggregateOutputType = {
   emergencyPhone: string | null
   workingHours: string | null
   departmentDiscounts: string | null
+  upazila: string | null
   verificationCode: string | null
   verificationCodeCreatedAt: Date | null
   createdAt: Date | null
@@ -79,6 +81,7 @@ export type PartnerCountAggregateOutputType = {
   emergencyPhone: number
   workingHours: number
   departmentDiscounts: number
+  upazila: number
   verificationCode: number
   verificationCodeCreatedAt: number
   createdAt: number
@@ -101,6 +104,7 @@ export type PartnerMinAggregateInputType = {
   emergencyPhone?: true
   workingHours?: true
   departmentDiscounts?: true
+  upazila?: true
   verificationCode?: true
   verificationCodeCreatedAt?: true
   createdAt?: true
@@ -121,6 +125,7 @@ export type PartnerMaxAggregateInputType = {
   emergencyPhone?: true
   workingHours?: true
   departmentDiscounts?: true
+  upazila?: true
   verificationCode?: true
   verificationCodeCreatedAt?: true
   createdAt?: true
@@ -141,6 +146,7 @@ export type PartnerCountAggregateInputType = {
   emergencyPhone?: true
   workingHours?: true
   departmentDiscounts?: true
+  upazila?: true
   verificationCode?: true
   verificationCodeCreatedAt?: true
   createdAt?: true
@@ -234,6 +240,7 @@ export type PartnerGroupByOutputType = {
   emergencyPhone: string | null
   workingHours: string | null
   departmentDiscounts: string | null
+  upazila: string | null
   verificationCode: string | null
   verificationCodeCreatedAt: Date | null
   createdAt: Date
@@ -275,6 +282,7 @@ export type PartnerWhereInput = {
   emergencyPhone?: Prisma.StringNullableFilter<"Partner"> | string | null
   workingHours?: Prisma.StringNullableFilter<"Partner"> | string | null
   departmentDiscounts?: Prisma.StringNullableFilter<"Partner"> | string | null
+  upazila?: Prisma.StringNullableFilter<"Partner"> | string | null
   verificationCode?: Prisma.StringNullableFilter<"Partner"> | string | null
   verificationCodeCreatedAt?: Prisma.DateTimeNullableFilter<"Partner"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Partner"> | Date | string
@@ -298,6 +306,7 @@ export type PartnerOrderByWithRelationInput = {
   emergencyPhone?: Prisma.SortOrderInput | Prisma.SortOrder
   workingHours?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentDiscounts?: Prisma.SortOrderInput | Prisma.SortOrder
+  upazila?: Prisma.SortOrderInput | Prisma.SortOrder
   verificationCode?: Prisma.SortOrderInput | Prisma.SortOrder
   verificationCodeCreatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -324,6 +333,7 @@ export type PartnerWhereUniqueInput = Prisma.AtLeast<{
   emergencyPhone?: Prisma.StringNullableFilter<"Partner"> | string | null
   workingHours?: Prisma.StringNullableFilter<"Partner"> | string | null
   departmentDiscounts?: Prisma.StringNullableFilter<"Partner"> | string | null
+  upazila?: Prisma.StringNullableFilter<"Partner"> | string | null
   verificationCode?: Prisma.StringNullableFilter<"Partner"> | string | null
   verificationCodeCreatedAt?: Prisma.DateTimeNullableFilter<"Partner"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Partner"> | Date | string
@@ -347,6 +357,7 @@ export type PartnerOrderByWithAggregationInput = {
   emergencyPhone?: Prisma.SortOrderInput | Prisma.SortOrder
   workingHours?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentDiscounts?: Prisma.SortOrderInput | Prisma.SortOrder
+  upazila?: Prisma.SortOrderInput | Prisma.SortOrder
   verificationCode?: Prisma.SortOrderInput | Prisma.SortOrder
   verificationCodeCreatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -373,6 +384,7 @@ export type PartnerScalarWhereWithAggregatesInput = {
   emergencyPhone?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
   workingHours?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
   departmentDiscounts?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  upazila?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
   verificationCode?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
   verificationCodeCreatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Partner"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Partner"> | Date | string
@@ -393,6 +405,7 @@ export type PartnerCreateInput = {
   emergencyPhone?: string | null
   workingHours?: string | null
   departmentDiscounts?: string | null
+  upazila?: string | null
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
   createdAt?: Date | string
@@ -416,6 +429,7 @@ export type PartnerUncheckedCreateInput = {
   emergencyPhone?: string | null
   workingHours?: string | null
   departmentDiscounts?: string | null
+  upazila?: string | null
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
   createdAt?: Date | string
@@ -439,6 +453,7 @@ export type PartnerUpdateInput = {
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -462,6 +477,7 @@ export type PartnerUncheckedUpdateInput = {
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -485,6 +501,7 @@ export type PartnerCreateManyInput = {
   emergencyPhone?: string | null
   workingHours?: string | null
   departmentDiscounts?: string | null
+  upazila?: string | null
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
   createdAt?: Date | string
@@ -505,6 +522,7 @@ export type PartnerUpdateManyMutationInput = {
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -525,6 +543,7 @@ export type PartnerUncheckedUpdateManyInput = {
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -545,6 +564,7 @@ export type PartnerCountOrderByAggregateInput = {
   emergencyPhone?: Prisma.SortOrder
   workingHours?: Prisma.SortOrder
   departmentDiscounts?: Prisma.SortOrder
+  upazila?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrder
   verificationCodeCreatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -565,6 +585,7 @@ export type PartnerMaxOrderByAggregateInput = {
   emergencyPhone?: Prisma.SortOrder
   workingHours?: Prisma.SortOrder
   departmentDiscounts?: Prisma.SortOrder
+  upazila?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrder
   verificationCodeCreatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -585,6 +606,7 @@ export type PartnerMinOrderByAggregateInput = {
   emergencyPhone?: Prisma.SortOrder
   workingHours?: Prisma.SortOrder
   departmentDiscounts?: Prisma.SortOrder
+  upazila?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrder
   verificationCodeCreatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -659,6 +681,7 @@ export type PartnerCreateWithoutStaffInput = {
   emergencyPhone?: string | null
   workingHours?: string | null
   departmentDiscounts?: string | null
+  upazila?: string | null
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
   createdAt?: Date | string
@@ -681,6 +704,7 @@ export type PartnerUncheckedCreateWithoutStaffInput = {
   emergencyPhone?: string | null
   workingHours?: string | null
   departmentDiscounts?: string | null
+  upazila?: string | null
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
   createdAt?: Date | string
@@ -719,6 +743,7 @@ export type PartnerUpdateWithoutStaffInput = {
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -741,6 +766,7 @@ export type PartnerUncheckedUpdateWithoutStaffInput = {
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -763,6 +789,7 @@ export type PartnerCreateWithoutTransactionsInput = {
   emergencyPhone?: string | null
   workingHours?: string | null
   departmentDiscounts?: string | null
+  upazila?: string | null
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
   createdAt?: Date | string
@@ -785,6 +812,7 @@ export type PartnerUncheckedCreateWithoutTransactionsInput = {
   emergencyPhone?: string | null
   workingHours?: string | null
   departmentDiscounts?: string | null
+  upazila?: string | null
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
   createdAt?: Date | string
@@ -823,6 +851,7 @@ export type PartnerUpdateWithoutTransactionsInput = {
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -845,6 +874,7 @@ export type PartnerUncheckedUpdateWithoutTransactionsInput = {
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -867,6 +897,7 @@ export type PartnerCreateWithoutDoctorsInput = {
   emergencyPhone?: string | null
   workingHours?: string | null
   departmentDiscounts?: string | null
+  upazila?: string | null
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
   createdAt?: Date | string
@@ -889,6 +920,7 @@ export type PartnerUncheckedCreateWithoutDoctorsInput = {
   emergencyPhone?: string | null
   workingHours?: string | null
   departmentDiscounts?: string | null
+  upazila?: string | null
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
   createdAt?: Date | string
@@ -927,6 +959,7 @@ export type PartnerUpdateWithoutDoctorsInput = {
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -949,6 +982,7 @@ export type PartnerUncheckedUpdateWithoutDoctorsInput = {
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1020,6 +1054,7 @@ export type PartnerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   emergencyPhone?: boolean
   workingHours?: boolean
   departmentDiscounts?: boolean
+  upazila?: boolean
   verificationCode?: boolean
   verificationCodeCreatedAt?: boolean
   createdAt?: boolean
@@ -1044,6 +1079,7 @@ export type PartnerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   emergencyPhone?: boolean
   workingHours?: boolean
   departmentDiscounts?: boolean
+  upazila?: boolean
   verificationCode?: boolean
   verificationCodeCreatedAt?: boolean
   createdAt?: boolean
@@ -1064,6 +1100,7 @@ export type PartnerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   emergencyPhone?: boolean
   workingHours?: boolean
   departmentDiscounts?: boolean
+  upazila?: boolean
   verificationCode?: boolean
   verificationCodeCreatedAt?: boolean
   createdAt?: boolean
@@ -1084,12 +1121,13 @@ export type PartnerSelectScalar = {
   emergencyPhone?: boolean
   workingHours?: boolean
   departmentDiscounts?: boolean
+  upazila?: boolean
   verificationCode?: boolean
   verificationCodeCreatedAt?: boolean
   createdAt?: boolean
 }
 
-export type PartnerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "category" | "address" | "discount" | "phone" | "email" | "password" | "logoText" | "mapLink" | "imageUrl" | "emergencyPhone" | "workingHours" | "departmentDiscounts" | "verificationCode" | "verificationCodeCreatedAt" | "createdAt", ExtArgs["result"]["partner"]>
+export type PartnerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "category" | "address" | "discount" | "phone" | "email" | "password" | "logoText" | "mapLink" | "imageUrl" | "emergencyPhone" | "workingHours" | "departmentDiscounts" | "upazila" | "verificationCode" | "verificationCodeCreatedAt" | "createdAt", ExtArgs["result"]["partner"]>
 export type PartnerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactions?: boolean | Prisma.Partner$transactionsArgs<ExtArgs>
   doctors?: boolean | Prisma.Partner$doctorsArgs<ExtArgs>
@@ -1121,6 +1159,7 @@ export type $PartnerPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     emergencyPhone: string | null
     workingHours: string | null
     departmentDiscounts: string | null
+    upazila: string | null
     verificationCode: string | null
     verificationCodeCreatedAt: Date | null
     createdAt: Date
@@ -1564,6 +1603,7 @@ export interface PartnerFieldRefs {
   readonly emergencyPhone: Prisma.FieldRef<"Partner", 'String'>
   readonly workingHours: Prisma.FieldRef<"Partner", 'String'>
   readonly departmentDiscounts: Prisma.FieldRef<"Partner", 'String'>
+  readonly upazila: Prisma.FieldRef<"Partner", 'String'>
   readonly verificationCode: Prisma.FieldRef<"Partner", 'String'>
   readonly verificationCodeCreatedAt: Prisma.FieldRef<"Partner", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Partner", 'DateTime'>

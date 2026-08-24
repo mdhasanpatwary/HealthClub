@@ -9,11 +9,36 @@ import { PaginatedResult } from "@/types/pagination";
 
 const DOCTORS_TAG = "doctors";
 
+// Helper to format Prisma Doctor record to Doctor interface
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function formatDoctor(d: any): Doctor {
+  return {
+    id: d.id,
+    name: d.name,
+    specialty: d.specialty,
+    department: d.department,
+    degrees: d.degrees,
+    designation: d.designation,
+    chamberName: d.chamberName,
+    chamberAddress: d.chamberAddress,
+    roomNo: d.roomNo || undefined,
+    visitingDays: d.visitingDays,
+    visitingHours: d.visitingHours,
+    serialPhone: d.serialPhone,
+    consultationFee: d.consultationFee || undefined,
+    imageUrl: d.imageUrl || undefined,
+    partnerId: d.partnerId || undefined,
+    upazila: d.upazila || "feni-sadar",
+    isActive: d.isActive,
+  };
+}
+
 export interface GetPaginatedDoctorsAdminParams {
   page?: number;
   pageSize?: number;
   search?: string;
   department?: string;
+  upazila?: string;
   isActive?: boolean;
 }
 
@@ -35,12 +60,16 @@ export async function getPaginatedDoctorsAdminAction(
   const pageSize = Math.max(1, params?.pageSize || 10);
   const search = params?.search?.trim();
   const department = params?.department;
+  const upazila = params?.upazila;
   const isActive = params?.isActive;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const where: any = {};
   if (department && department !== "all") {
     where.department = department;
+  }
+  if (upazila && upazila !== "all") {
+    where.upazila = upazila;
   }
   if (isActive !== undefined) {
     where.isActive = isActive;
@@ -67,27 +96,8 @@ export async function getPaginatedDoctorsAdminAction(
       }),
     ]);
 
-    const doctors: Doctor[] = data.map((d) => ({
-      id: d.id,
-      name: d.name,
-      specialty: d.specialty,
-      department: d.department,
-      degrees: d.degrees,
-      designation: d.designation,
-      chamberName: d.chamberName,
-      chamberAddress: d.chamberAddress,
-      roomNo: d.roomNo || undefined,
-      visitingDays: d.visitingDays,
-      visitingHours: d.visitingHours,
-      serialPhone: d.serialPhone,
-      consultationFee: d.consultationFee || undefined,
-      imageUrl: d.imageUrl || undefined,
-      partnerId: d.partnerId || undefined,
-      isActive: d.isActive,
-    }));
-
     return {
-      data: doctors,
+      data: data.map(formatDoctor),
       totalItems,
       totalPages: Math.max(1, Math.ceil(totalItems / pageSize)),
       currentPage: page,
@@ -98,7 +108,6 @@ export async function getPaginatedDoctorsAdminAction(
     return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize };
   }
 }
-
 
 /**
  * Server action to fetch all active doctors.
@@ -131,6 +140,7 @@ export const getDoctorsAction = unstable_cache(
           consultationFee: true,
           imageUrl: true,
           partnerId: true,
+          upazila: true,
           isActive: true,
         },
       });
@@ -139,24 +149,7 @@ export const getDoctorsAction = unstable_cache(
         return initialDoctors;
       }
 
-      return data.map((d) => ({
-        id: d.id,
-        name: d.name,
-        specialty: d.specialty,
-        department: d.department,
-        degrees: d.degrees,
-        designation: d.designation,
-        chamberName: d.chamberName,
-        chamberAddress: d.chamberAddress,
-        roomNo: d.roomNo || undefined,
-        visitingDays: d.visitingDays,
-        visitingHours: d.visitingHours,
-        serialPhone: d.serialPhone,
-        consultationFee: d.consultationFee || undefined,
-        imageUrl: d.imageUrl || undefined,
-        partnerId: d.partnerId || undefined,
-        isActive: d.isActive,
-      }));
+      return data.map(formatDoctor);
     } catch (error) {
       logger.error("Error in getDoctorsAction:", error);
       return initialDoctors;
@@ -178,24 +171,7 @@ export async function getAllDoctorsAdminAction(): Promise<Doctor[]> {
       orderBy: { createdAt: "desc" },
     });
 
-    return data.map((d) => ({
-      id: d.id,
-      name: d.name,
-      specialty: d.specialty,
-      department: d.department,
-      degrees: d.degrees,
-      designation: d.designation,
-      chamberName: d.chamberName,
-      chamberAddress: d.chamberAddress,
-      roomNo: d.roomNo || undefined,
-      visitingDays: d.visitingDays,
-      visitingHours: d.visitingHours,
-      serialPhone: d.serialPhone,
-      consultationFee: d.consultationFee || undefined,
-      imageUrl: d.imageUrl || undefined,
-      partnerId: d.partnerId || undefined,
-      isActive: d.isActive,
-    }));
+    return data.map(formatDoctor);
   } catch (error) {
     logger.error("Error in getAllDoctorsAdminAction:", error);
     return [];
@@ -225,22 +201,7 @@ export async function getDoctorByIdAction(
     }
 
     return {
-      id: d.id,
-      name: d.name,
-      specialty: d.specialty,
-      department: d.department,
-      degrees: d.degrees,
-      designation: d.designation,
-      chamberName: d.chamberName,
-      chamberAddress: d.chamberAddress,
-      roomNo: d.roomNo || undefined,
-      visitingDays: d.visitingDays,
-      visitingHours: d.visitingHours,
-      serialPhone: d.serialPhone,
-      consultationFee: d.consultationFee || undefined,
-      imageUrl: d.imageUrl || undefined,
-      partnerId: d.partnerId || undefined,
-      isActive: d.isActive,
+      ...formatDoctor(d),
       partner: d.partner
         ? {
             id: d.partner.id,
@@ -255,6 +216,7 @@ export async function getDoctorByIdAction(
             emergencyPhone: d.partner.emergencyPhone || undefined,
             workingHours: d.partner.workingHours || undefined,
             departmentDiscounts: d.partner.departmentDiscounts || undefined,
+            upazila: d.partner.upazila || "feni-sadar",
           }
         : undefined,
     };
@@ -296,24 +258,7 @@ export async function getRelatedDoctorsAction(
         .slice(0, limit);
     }
 
-    return data.map((d) => ({
-      id: d.id,
-      name: d.name,
-      specialty: d.specialty,
-      department: d.department,
-      degrees: d.degrees,
-      designation: d.designation,
-      chamberName: d.chamberName,
-      chamberAddress: d.chamberAddress,
-      roomNo: d.roomNo || undefined,
-      visitingDays: d.visitingDays,
-      visitingHours: d.visitingHours,
-      serialPhone: d.serialPhone,
-      consultationFee: d.consultationFee || undefined,
-      imageUrl: d.imageUrl || undefined,
-      partnerId: d.partnerId || undefined,
-      isActive: d.isActive,
-    }));
+    return data.map(formatDoctor);
   } catch (error) {
     logger.error("Error in getRelatedDoctorsAction:", error);
     return initialDoctors
@@ -352,30 +297,14 @@ export async function addDoctorAction(
         consultationFee: doctor.consultationFee || null,
         imageUrl: doctor.imageUrl || null,
         partnerId: doctor.partnerId || null,
+        upazila: doctor.upazila || "feni-sadar",
         isActive: doctor.isActive ?? true,
       },
     });
 
     return {
       success: true,
-      doctor: {
-        id: d.id,
-        name: d.name,
-        specialty: d.specialty,
-        department: d.department,
-        degrees: d.degrees,
-        designation: d.designation,
-        chamberName: d.chamberName,
-        chamberAddress: d.chamberAddress,
-        roomNo: d.roomNo || undefined,
-        visitingDays: d.visitingDays,
-        visitingHours: d.visitingHours,
-        serialPhone: d.serialPhone,
-        consultationFee: d.consultationFee || undefined,
-        imageUrl: d.imageUrl || undefined,
-        partnerId: d.partnerId || undefined,
-        isActive: d.isActive,
-      },
+      doctor: formatDoctor(d),
     };
   } catch (error) {
     logger.error("Error in addDoctorAction:", error);
@@ -415,6 +344,7 @@ export async function updateDoctorAction(
         ...(doctor.consultationFee !== undefined && { consultationFee: doctor.consultationFee || null }),
         ...(doctor.imageUrl !== undefined && { imageUrl: doctor.imageUrl || null }),
         ...(doctor.partnerId !== undefined && { partnerId: doctor.partnerId || null }),
+        ...(doctor.upazila !== undefined && { upazila: doctor.upazila || "feni-sadar" }),
         ...(doctor.isActive !== undefined && { isActive: doctor.isActive }),
       },
     });
@@ -477,6 +407,7 @@ export async function seedDoctorsAction(): Promise<{ success: boolean; count?: n
         consultationFee: doc.consultationFee || null,
         imageUrl: doc.imageUrl || null,
         partnerId: doc.partnerId || null,
+        upazila: doc.upazila || "feni-sadar",
         isActive: doc.isActive ?? true,
       })),
       skipDuplicates: true,
@@ -489,4 +420,3 @@ export async function seedDoctorsAction(): Promise<{ success: boolean; count?: n
     return { success: false, error: "ডাক্তার সিড করতে সমস্যা হয়েছে।" };
   }
 }
-

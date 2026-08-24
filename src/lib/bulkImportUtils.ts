@@ -112,6 +112,14 @@ export const ENTITY_CONFIGS: Record<ImportEntityType, EntityConfig> = {
         aliases: ["consultationfee", "consultation_fee", "fee", "ভিজিট", "ফি", "পরামর্শ ফি"],
         exampleValue: "৮০০ টাকা (নতুন), ৫০০ টাকা (পুরাতন)",
       },
+      {
+        key: "upazila",
+        labelBn: "উপজেলা / এলাকা",
+        labelEn: "Upazila / Area",
+        required: false,
+        aliases: ["upazila", "area", "উপজেলা", "এলাকা", "থানা"],
+        exampleValue: "feni-sadar",
+      },
     ],
   },
   partners: {
@@ -176,6 +184,14 @@ export const ENTITY_CONFIGS: Record<ImportEntityType, EntityConfig> = {
         required: true,
         aliases: ["logotext", "logo_text", "short_name", "লোগো টেক্সট", "সংক্ষিপ্ত নাম"],
         exampleValue: "Popular",
+      },
+      {
+        key: "upazila",
+        labelBn: "উপজেলা / এলাকা",
+        labelEn: "Upazila / Area",
+        required: false,
+        aliases: ["upazila", "area", "উপজেলা", "এলাকা", "থানা"],
+        exampleValue: "feni-sadar",
       },
       {
         key: "emergencyPhone",
@@ -368,6 +384,7 @@ export const doctorImportSchema = z.object({
   serialPhone: z.string().min(5, "Serial phone number is required"),
   consultationFee: z.string().optional().default(""),
   imageUrl: z.string().optional().default(""),
+  upazila: z.string().optional().default("feni-sadar"),
 });
 
 export const partnerImportSchema = z.object({
@@ -384,6 +401,7 @@ export const partnerImportSchema = z.object({
   workingHours: z.string().optional().default(""),
   mapLink: z.string().optional().default(""),
   imageUrl: z.string().optional().default(""),
+  upazila: z.string().optional().default("feni-sadar"),
 });
 
 export const bloodDonorImportSchema = z.object({
