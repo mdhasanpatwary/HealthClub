@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   Phone, PhoneCall, Calendar, Building2,
   Stethoscope, X
@@ -261,15 +262,22 @@ export function DoctorDetailsModal({ doctor, onClose, onCallSerial, t }: DoctorD
           )}
         </div>
 
-        {/* Serial action */}
-        <div className="space-y-2">
+        {/* Serial action & Full Profile */}
+        <div className="space-y-2 pt-1">
           <Button
             onClick={() => onCallSerial(doctor)}
-            className="w-full bg-primary hover:bg-primary-dark text-white rounded-2xl h-11 font-semibold cursor-pointer"
+            className="w-full bg-primary hover:bg-primary-dark text-white rounded-2xl h-11 font-semibold cursor-pointer shadow-xs"
           >
             <PhoneCall className="h-4 w-4 mr-2" />
             {t("consultants.card.callSerial")}
           </Button>
+
+          <Link
+            href={`/consultants/${doctor.id}`}
+            className="inline-flex items-center justify-center w-full h-10 rounded-2xl border border-border bg-muted/40 hover:bg-muted text-xs font-bold text-foreground transition-colors"
+          >
+            {t("consultants.profile.viewAllDoctors") ? "পূর্ণাঙ্গ প্রোফাইল ও ম্যাপ দেখুন" : "View Full Profile & Map"}
+          </Link>
         </div>
       </div>
     </div>

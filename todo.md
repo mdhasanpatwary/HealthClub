@@ -207,7 +207,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
 
 ## 🌟 Phase 9: Medical Network, Discovery & Directory (TODO-43 to TODO-48)
 
-- [ ] **TODO-43** (4.1): **Dedicated SEO Doctor Profile Detail Pages (`/consultants/[id]`)**
+- [x] **TODO-43** (4.1): **Dedicated SEO Doctor Profile Detail Pages (`/consultants/[id]`)**
   - **Files**: `src/app/consultants/[id]/page.tsx`, `src/components/consultants/DoctorProfileView.tsx`, `src/app/actions/doctorActions.ts`, `src/proxy.ts`
   - **Details**: Create dynamic, SEO-optimized individual profile pages for specialist doctors with qualifications, chamber schedules, appointment serial button, Google Maps chamber directions, and JSON-LD schema.
 

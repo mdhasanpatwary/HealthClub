@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { HEALTH_TIPS_ARTICLES } from "@/data/healthTipsData";
 import { SITE_URL } from "@/lib/siteConfig";
+import { getDoctorsAction } from "@/app/actions/doctorActions";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = SITE_URL;
@@ -67,6 +68,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...staticEntries, ...articleEntries];
+  // Dynamic doctor profiles
+  let doctorEntries: MetadataRoute.Sitemap = [];
+  try {
+    const doctors = await getDoctorsAction();
+    doctorEntries = doctors.map((doc) => ({
+      url: `${baseUrl}/consultants/${doc.id}`,
+      lastModified,
+      changeFrequency: "daily",
+      priority: 0.85,
+    }));
+  } catch {
+    doctorEntries = [];
+  }
+
+  return [...staticEntries, ...articleEntries, ...doctorEntries];
 }
 

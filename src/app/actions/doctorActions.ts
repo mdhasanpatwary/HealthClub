@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { Doctor, initialDoctors } from "@/services/db";
+import { Doctor, initialDoctors, Partner } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag } from "next/cache";
@@ -203,14 +203,26 @@ export async function getAllDoctorsAdminAction(): Promise<Doctor[]> {
 }
 
 /**
- * Fetch single doctor by ID.
+ * Fetch single doctor by ID with partner hospital details and initialDoctors fallback.
  */
-export async function getDoctorByIdAction(id: string): Promise<Doctor | null> {
+export async function getDoctorByIdAction(
+  id: string
+): Promise<(Doctor & { partner?: Partner | null }) | null> {
   try {
+    if (!prisma?.doctor) {
+      const fallback = initialDoctors.find((item) => item.id === id);
+      return fallback || null;
+    }
+
     const d = await prisma.doctor.findUnique({
       where: { id },
+      include: { partner: true },
     });
-    if (!d) return null;
+
+    if (!d) {
+      const fallback = initialDoctors.find((item) => item.id === id);
+      return fallback || null;
+    }
 
     return {
       id: d.id,
@@ -229,10 +241,84 @@ export async function getDoctorByIdAction(id: string): Promise<Doctor | null> {
       imageUrl: d.imageUrl || undefined,
       partnerId: d.partnerId || undefined,
       isActive: d.isActive,
+      partner: d.partner
+        ? {
+            id: d.partner.id,
+            name: d.partner.name,
+            category: d.partner.category as "hospital" | "diagnostic" | "pharmacy",
+            address: d.partner.address,
+            discount: d.partner.discount,
+            phone: d.partner.phone,
+            logoText: d.partner.logoText,
+            mapLink: d.partner.mapLink || undefined,
+            imageUrl: d.partner.imageUrl || undefined,
+            emergencyPhone: d.partner.emergencyPhone || undefined,
+            workingHours: d.partner.workingHours || undefined,
+            departmentDiscounts: d.partner.departmentDiscounts || undefined,
+          }
+        : undefined,
     };
   } catch (error) {
     logger.error("Error in getDoctorByIdAction:", error);
-    return null;
+    const fallback = initialDoctors.find((item) => item.id === id);
+    return fallback || null;
+  }
+}
+
+/**
+ * Fetch related specialist doctors in the same department.
+ */
+export async function getRelatedDoctorsAction(
+  department: string,
+  excludeDoctorId: string,
+  limit = 3
+): Promise<Doctor[]> {
+  try {
+    if (!prisma?.doctor) {
+      return initialDoctors
+        .filter((d) => d.department === department && d.id !== excludeDoctorId && d.isActive)
+        .slice(0, limit);
+    }
+
+    const data = await prisma.doctor.findMany({
+      where: {
+        department,
+        id: { not: excludeDoctorId },
+        isActive: true,
+      },
+      take: limit,
+      orderBy: { createdAt: "asc" },
+    });
+
+    if (data.length === 0) {
+      return initialDoctors
+        .filter((d) => d.department === department && d.id !== excludeDoctorId && d.isActive)
+        .slice(0, limit);
+    }
+
+    return data.map((d) => ({
+      id: d.id,
+      name: d.name,
+      specialty: d.specialty,
+      department: d.department,
+      degrees: d.degrees,
+      designation: d.designation,
+      chamberName: d.chamberName,
+      chamberAddress: d.chamberAddress,
+      roomNo: d.roomNo || undefined,
+      visitingDays: d.visitingDays,
+      visitingHours: d.visitingHours,
+      serialPhone: d.serialPhone,
+      consultationFee: d.consultationFee || undefined,
+      imageUrl: d.imageUrl || undefined,
+      partnerId: d.partnerId || undefined,
+      isActive: d.isActive,
+    }));
+  } catch (error) {
+    logger.error("Error in getRelatedDoctorsAction:", error);
+    return initialDoctors
+      .filter((d) => d.department === department && d.id !== excludeDoctorId && d.isActive)
+      .slice(0, limit);
   }
 }
 

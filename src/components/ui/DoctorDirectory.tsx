@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import {
   Search, PhoneCall, Calendar, Clock, MapPin, Building2,
   Stethoscope, HeartPulse, Brain, Bone, Baby, Sparkles, ShieldCheck,
@@ -177,19 +178,22 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
                 <div className="p-3.5 sm:p-4 pb-2 sm:pb-2.5 space-y-2.5 sm:space-y-3 flex-1 flex flex-col justify-between">
                   {/* Doctor Header (Image + Basic Info) */}
                   <div className="flex items-start gap-3">
-                    <DoctorAvatar
-                      src={doc.imageUrl}
-                      alt={doc.name}
-                      className="h-16 w-16 sm:h-18 sm:w-18 shrink-0"
-                    />
+                    <Link href={`/consultants/${doc.id}`} className="shrink-0 hover:opacity-90 transition-opacity">
+                      <DoctorAvatar
+                        src={doc.imageUrl}
+                        alt={doc.name}
+                        className="h-16 w-16 sm:h-18 sm:w-18"
+                      />
+                    </Link>
                     <div className="space-y-0.5 sm:space-y-1 min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 min-w-0">
-                        <h3
-                          className="font-heading font-bold text-sm sm:text-base text-secondary dark:text-white leading-snug line-clamp-1"
+                        <Link
+                          href={`/consultants/${doc.id}`}
+                          className="font-heading font-bold text-sm sm:text-base text-secondary dark:text-white leading-snug line-clamp-1 hover:text-primary transition-colors"
                           title={doc.name}
                         >
                           {doc.name}
-                        </h3>
+                        </Link>
                         <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
                       </div>
                       <p
