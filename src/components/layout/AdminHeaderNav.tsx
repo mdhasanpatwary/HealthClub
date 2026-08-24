@@ -7,6 +7,7 @@ import {
   Users,
   RotateCcw,
   Receipt,
+  TrendingUp,
   Stethoscope,
   Building2,
   FileCheck,
@@ -111,7 +112,8 @@ export default function AdminHeaderNav() {
   const isMembersActive =
     pathname.startsWith("/admin/members") ||
     pathname.startsWith("/admin/renewals") ||
-    pathname.startsWith("/admin/transactions");
+    pathname.startsWith("/admin/transactions") ||
+    pathname.startsWith("/admin/analytics");
 
   const isNetworkActive =
     pathname.startsWith("/admin/doctors") ||
@@ -169,7 +171,7 @@ export default function AdminHeaderNav() {
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="start"
-          className="w-64 p-1.5 bg-background dark:bg-slate-900 border border-border shadow-xl rounded-2xl space-y-1 z-50"
+          className="w-68 p-1.5 bg-background dark:bg-slate-900 border border-border shadow-xl rounded-2xl space-y-1 z-50"
         >
           <AdminNavDropdownItem
             href="/admin/members"
@@ -199,6 +201,15 @@ export default function AdminHeaderNav() {
             title={t("admin.nav.transactions") || "লেনদেন লগ"}
             description={t("admin.nav.transactionsDesc") || "ডিসকাউন্ট ও সেভিংস ট্রানজেকশন"}
             active={pathname.startsWith("/admin/transactions")}
+          />
+          <AdminNavDropdownItem
+            href="/admin/analytics"
+            icon={TrendingUp}
+            iconBg="bg-emerald-500/15"
+            iconColor="text-emerald-600 dark:text-emerald-400"
+            title={isBn ? "আর্থিক ও রাজস্ব অ্যানালিটিক্স" : "Revenue Analytics"}
+            description={isBn ? "সাবস্ক্রিপশন ফি, রিটেনশন ও পার্টনার সাশ্রয়" : "Subscription revenue & hospital metrics"}
+            active={pathname.startsWith("/admin/analytics")}
           />
         </DropdownMenuContent>
       </DropdownMenu>

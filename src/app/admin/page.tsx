@@ -10,6 +10,7 @@ import {
   Receipt,
   FileCheck,
   RotateCcw,
+  TrendingUp,
   Mail,
   Bell,
   ArrowRight,
@@ -120,6 +121,18 @@ export default function AdminDashboardPage() {
       countLabel: isBn ? "টি এন্ট্রি" : "transactions",
       badge: null,
       color: "teal",
+    },
+    {
+      title: isBn ? "আর্থিক ও রাজস্ব অ্যানালিটিক্স" : "Revenue Analytics",
+      description: isBn
+        ? "সাবস্ক্রিপশন রাজস্ব, নবায়ন রিটেনশন রেট ও পার্টনার সেভিংস রিপোর্ট"
+        : "Subscription revenue, retention rate and hospital performance",
+      href: "/admin/analytics",
+      icon: TrendingUp,
+      count: stats.revenue,
+      countLabel: isBn ? "টাকা রাজস্ব" : "BDT revenue",
+      badge: null,
+      color: "emerald",
     },
     {
       title: isBn ? "অংশীদার আবেদন" : "Partner Requests",

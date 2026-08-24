@@ -14,6 +14,7 @@ import {
   Users,
   RotateCcw,
   Receipt,
+  TrendingUp,
   Stethoscope,
   Building2,
   FileCheck,
@@ -208,6 +209,21 @@ export default function MobileNavDrawer({
                     <div className="flex items-center gap-2.5">
                       <Receipt className="h-4 w-4 text-teal-500 shrink-0" />
                       <span>{t("admin.nav.transactions") || "লেনদেন লগ"}</span>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href="/admin/analytics"
+                    onClick={onClose}
+                    className={`flex items-center justify-between p-2 rounded-xl text-xs font-semibold transition-colors ${
+                      isActive("/admin/analytics")
+                        ? "bg-primary/10 text-primary font-bold"
+                        : "text-foreground hover:bg-muted"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <TrendingUp className="h-4 w-4 text-emerald-500 shrink-0" />
+                      <span>{isBn ? "আর্থিক ও রাজস্ব অ্যানালিটিক্স" : "Revenue Analytics"}</span>
                     </div>
                   </Link>
                 </div>
