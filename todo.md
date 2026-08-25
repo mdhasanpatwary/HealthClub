@@ -299,7 +299,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/consultants/[id]/page.tsx`, `src/app/partner-hospitals/[id]/page.tsx`
   - **Details**: Expand `Physician` schema with `isAcceptingNewPatients: true`, `availableService`, `currenciesAccepted: "BDT"`, `paymentAccepted`, and `hasCredential`. Enrich `Hospital` / `MedicalBusiness` schema with `hasOfferCatalog` specifying department discount rates.
 
-- [ ] **TODO-63**: **SoftwareApplication & WebApplication Schema for Interactive Health Tools**
+- [x] **TODO-63**: **SoftwareApplication & WebApplication Schema for Interactive Health Tools**
   - **Files**: `src/app/health-tools/page.tsx`
   - **Details**: Add `SoftwareApplication` / `WebApplication` JSON-LD schema with `applicationCategory: "HealthApplication"`, `operatingSystem: "All"`, free tier offers, and `HowTo` structured data for the BMI, Water, and Calorie health calculators.
 

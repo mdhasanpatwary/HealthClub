@@ -69,6 +69,165 @@ export default async function HealthToolsPage() {
         },
       ],
     },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": isEn ? "Health Club Interactive Health Calculators" : "হেলথ ক্লাব ইন্টারেক্টিভ স্বাস্থ্য ক্যালকুলেটর",
+      "url": `${SITE_URL}/health-tools`,
+      "applicationCategory": "HealthApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "BDT",
+        "availability": "https://schema.org/InStock",
+        "name": isEn ? "Free Health Assessment Tools" : "ফ্রি স্বাস্থ্য মূল্যায়ন ক্যালকুলেটর",
+      },
+      "description": isEn
+        ? "Free interactive suite of health calculators including BMI Calculator, Daily Water Intake, Daily Calorie Needs, BP & Diabetes Evaluator, and Pregnancy Due Date (EDD) Calculator."
+        : "বিএমআই (BMI), রক্তচাপ ও ডায়াবেটিস মূল্যায়ন, দৈনিক পানির চাহিদা, ক্যালোরি পরিমাপ ও গর্ভকালীন প্রসবের সম্ভাব্য তারিখ হিসাবের ফ্রি ডিজিটাল স্বাস্থ্য টুলস।",
+      "provider": {
+        "@type": "Organization",
+        "name": "Health Club",
+        "url": SITE_URL,
+      },
+      "featureList": isEn
+        ? [
+            "Body Mass Index (BMI) & Ideal Weight Range Calculator",
+            "Blood Pressure & Blood Sugar / Diabetes Range Evaluator",
+            "Daily Water Intake & Hydration Needs Calculator",
+            "Daily Caloric Maintenance, Weight Loss & Weight Gain Calculator",
+            "Pregnancy Due Date (EDD) & Gestational Age Tracker",
+          ]
+        : [
+            "বডি ম্যাস ইনডেক্স (BMI) ও আদর্শ ওজন নির্ণয়",
+            "রক্তচাপ ও রক্তের শর্করা / ডায়াবেটিস রেঞ্জ মূল্যায়ন",
+            "দৈনিক পানির প্রয়োজনীয় পরিমাণ নির্ণয়",
+            "ক্যালোরি চাহিদা, ওজন হ্রাস ও বৃদ্ধির পরিমাপক",
+            "গর্ভকালীন প্রসবের সম্ভাব্য তারিখ (EDD) ও শিশুর বর্তমান অবস্থা",
+          ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": isEn ? "How to Calculate Your Body Mass Index (BMI)" : "কিভাবে আপনার বিএমআই (BMI) বা বডি ম্যাস ইনডেক্স হিসাব করবেন",
+      "description": isEn
+        ? "Step-by-step guide to calculating your BMI and checking whether your weight is in the healthy, underweight, or overweight range using Health Club's BMI Calculator."
+        : "হেলথ ক্লাবের বিএমআই ক্যালকুলেটর ব্যবহার করে আপনার বডি ম্যাস ইনডেক্স নির্ণয় এবং ওজন সঠিক রেঞ্জে আছে কিনা তা জানার সহজ ধাপ।",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": isEn ? "Select Height Unit & Input Height" : "উচ্চতার একক নির্বাচন ও মান দিন",
+          "text": isEn
+            ? "Choose between Feet/Inches (ft/in) or Centimeters (cm) and input your height."
+            : "ফিট/ইঞ্চি বা সেন্টিমিটার একক বেছে নিন এবং আপনার উচ্চতা লিখুন।",
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": isEn ? "Input Body Weight" : "শরীরের ওজন লিখুন",
+          "text": isEn
+            ? "Enter your current body weight in kilograms (kg)."
+            : "কিলোগ্রাম (কেজি) এককে আপনার বর্তমান ওজন লিখুন।",
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": isEn ? "Calculate & View Health Status" : "হিসাব করুন ও ফলাফল দেখুন",
+          "text": isEn
+            ? "Click 'Calculate BMI' to see your BMI score, weight category, and ideal healthy weight range."
+            : "'হিসাব করুন' বাটনে চাপ দিয়ে আপনার বিএমআই স্কোর, স্বাস্থ্যগত অবস্থা এবং আপনার জন্য আদর্শ স্বাস্থ্যকর ওজন জেনে নিন।",
+        },
+      ],
+      "tool": [
+        {
+          "@type": "HowToTool",
+          "name": isEn ? "Health Club BMI Calculator" : "হেলথ ক্লাব বিএমআই ক্যালকুলেটর",
+        },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": isEn ? "How to Calculate Daily Water Intake Target" : "কিভাবে দৈনিক পানির প্রয়োজনীয় চাহিদা হিসাব করবেন",
+      "description": isEn
+        ? "Step-by-step guide to calculating your personalized daily hydration requirement based on weight, physical activity, and climate."
+        : "শরীরের ওজন, শারীরিক পরিশ্রমের মাত্রা এবং আবহাওয়ার ওপর ভিত্তি করে দৈনিক কত লিটার পানি পান করা উচিত তা জানার নিয়ম।",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": isEn ? "Enter Body Weight" : "শরীরের ওজন দিন",
+          "text": isEn
+            ? "Input your current weight in kilograms (kg)."
+            : "আপনার বর্তমান ওজন কেজি (kg) এককে লিখুন।",
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": isEn ? "Select Activity Level & Climate" : "পরিশ্রমের মাত্রা ও আবহাওয়া নির্বাচন",
+          "text": isEn
+            ? "Select your daily physical activity level (Sedentary, Moderate, Heavy) and current weather (Normal or Hot/Humid)."
+            : "আপনার দৈনিক শারীরিক পরিশ্রমের মাত্রা (হালকা, মাঝারি, ভারী) এবং বর্তমান আবহাওয়া (স্বাভাবিক বা গরম/আর্দ্র) নির্বাচন করুন।",
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": isEn ? "Calculate Daily Hydration Goal" : "দৈনিক পানির লক্ষ্যমাত্রা দেখুন",
+          "text": isEn
+            ? "Click 'Calculate Water Target' to receive your daily water intake recommendation in liters and standard glasses (250ml)."
+            : "'পানির পরিমাণ দেখুন' বাটনে ক্লিক করে দৈনিক কত লিটার ও কত গ্লাস পানি পান করা প্রয়োজন তা জেনে নিন।",
+        },
+      ],
+      "tool": [
+        {
+          "@type": "HowToTool",
+          "name": isEn ? "Health Club Water Intake Calculator" : "হেলথ ক্লাব ওয়াটার ইনটেক ক্যালকুলেটর",
+        },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": isEn ? "How to Calculate Daily Maintenance & Calorie Needs" : "কিভাবে দৈনিক ক্যালোরি চাহিদা হিসাব করবেন",
+      "description": isEn
+        ? "Step-by-step guide to calculating your Basal Metabolic Rate (BMR) and total daily calorie expenditure for weight maintenance, weight loss, or weight gain."
+        : "মিফলিন-সেন্ট জিওর ফর্মুলায় আপনার বিএমআর (BMR) এবং ওজন বজায় রাখা, কমানো বা বাড়ানোর জন্য প্রয়োজনীয় দৈনিক ক্যালোরি নির্ণয়ের নিয়ম।",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": isEn ? "Input Personal Health Data" : "ব্যক্তিগত তথ্য প্রদান",
+          "text": isEn
+            ? "Select your gender and enter your age in years, height in cm, and weight in kg."
+            : "লিঙ্গ নির্বাচন করুন এবং আপনার বয়স (বছর), উচ্চতা (সেমি) ও ওজন (কেজি) লিখুন।",
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": isEn ? "Select Daily Activity Level" : "দৈনিক শারীরিক সক্রিয়তার মাত্রা নির্বাচন",
+          "text": isEn
+            ? "Choose your activity routine: Sedentary, Light Exercise, Moderate, or Very Active."
+            : "আপনার জীবনযাপনের সক্রিয়তার ধরন (ব্যায়ামহীন, হালকা ব্যায়াম, মাঝারি বা বেশি সক্রিয়) নির্বাচন করুন।",
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": isEn ? "Calculate Calorie Targets" : "ক্যালোরি লক্ষ্যমাত্রা নির্ণয়",
+          "text": isEn
+            ? "Click 'Calculate Calories' to view your BMR, daily maintenance calories, safe weight loss target (-500 kcal), and weight gain target (+400 kcal)."
+            : "'ক্যালোরি হিসাব করুন' বাটনে ক্লিক করে বিএমআর, দৈনিক মেইনটেন্যান্স ক্যালোরি, ওজন কমানোর নিরাপদ ক্যালোরি এবং ওজন বাড়ানোর ক্যালোরি হিসাব দেখে নিন।",
+        },
+      ],
+      "tool": [
+        {
+          "@type": "HowToTool",
+          "name": isEn ? "Health Club Calorie Calculator" : "হেলথ ক্লাব ক্যালোরি ক্যালকুলেটর",
+        },
+      ],
+    },
   ];
 
   return (
