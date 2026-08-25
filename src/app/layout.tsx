@@ -105,6 +105,12 @@ export const metadata: Metadata = {
       "bn-BD": "/",
       "en-US": "/",
     },
+    types: {
+      "text/markdown": [
+        { url: "/llms.txt", title: "Health Club LLM Knowledge Base (llms.txt)" },
+        { url: "/llms-full.txt", title: "Health Club Full Knowledge Base (llms-full.txt)" },
+      ],
+    },
   },
   verification: {
     google:

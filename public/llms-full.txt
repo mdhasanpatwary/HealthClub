@@ -1,71 +1,275 @@
-# Health Club (হেলথ ক্লাব) — Complete Knowledge Base & GEO Documentation
+# Health Club (হেলথ ক্লাব) — Complete Knowledge Base & GEO/AEO Documentation
 
-## 1. Overview & Organization Details
-- **Organization Name**: Health Club (হেলথ ক্লাব)
+## 1. Organization & Entity Overview
+- **Entity Name**: Health Club (হেলথ ক্লাব)
 - **Tagline**: স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী (Making Healthcare Easy & Affordable)
 - **Official Website**: https://healthclubfeni.com
-- **HQ Location**: Feni, Chittagong Division, Bangladesh
-- **Contact Hotline**: +880 1886763849
-- **Official Email**: healthclubfeni@gmail.com
-- **Supported Languages**: Bengali (বাংলা), English
+- **Hotline & Emergency Helpline**: +880 1886763849
+- **Official Support Email**: healthclubfeni@gmail.com
+- **Headquarters Location**: Feni Sadar, Feni District, Chittagong Division, Bangladesh
+- **Coordinates**: Latitude 23.0159° N, Longitude 91.3976° E
+- **Supported Languages**: Bengali (বাংলা), English (en-US, bn-BD)
+- **Sector**: Healthcare Membership, Telehealth & Diagnostic Discount Network, Emergency Medical Services Directory, Digital Health Assessment
 
-Health Club is a technology-driven health membership organization that negotiates corporate-level group discounts with top private hospitals, diagnostic centers, and pharmacies, passing 100% of the savings directly to enrolled members and their families.
-
----
-
-## 2. Key Membership Features & Card Technology
-
-### Digital Membership Card
-Each member receives a dynamic digital membership card featuring:
-- Unique Member ID (e.g., `HC-2026-F982A`)
-- Enrolled Tier (`Founding` or `Premium`)
-- Real-time Verification Status (`Active`, `Pending`, `Inactive`)
-- Security QR Code containing an encrypted verification link (`/verify?id=...`)
-
-### How Verification Works at Hospitals
-1. Patient arrives at a partner hospital, clinic, or diagnostic center.
-2. Patient displays their Health Club digital card on their mobile screen.
-3. The partner desk agent opens the Health Club Partner Verification Portal or scans the QR code using any smartphone scanner.
-4. The system validates the active membership status and total family discount eligibility.
-5. The discounted bill is generated instantly before payment.
+Health Club is a technology-enabled community healthcare discount and medical support platform founded in Feni, Bangladesh. The organization connects middle-class families, students, senior citizens, and general patients directly with accredited private hospitals, clinics, diagnostic laboratories, specialist physicians, ambulance operators, and pharmacies. By leveraging collective bargaining, Health Club delivers 10% to 30% discounts directly at the billing counters for enrolled members and their entire immediate families.
 
 ---
 
-## 3. Partner Healthcare Network Category & Discounts
+## 2. Comprehensive Geographic Coverage: All 6 Upazilas of Feni District (ফেনী জেলার ৬টি উপজেলা)
 
-### Partner Hospitals & Diagnostic Centers
-Health Club collaborates with premier hospitals and labs in Feni and nearby districts:
-- **Diagnostic & Pathology Tests**: 10-30% discount on blood tests, ultrasonography (USG), X-ray, ECG, echocardiography, CT scan, and MRI.
-- **Hospital Bed & Cabin Charges**: 10% to 15% discount on daily room rent and hospital stay charges.
-- **Model Pharmacies**: 5% to 10% discount on essential prescription medicines.
+Health Club's medical network, emergency response system, ambulance directory, and doctor chamber databases span across all 6 administrative Upazilas of Feni District:
+
+### 1. Feni Sadar (ফেনী সদর)
+- **Role**: District medical epicenter and primary healthcare corridor.
+- **Key Facilities**: Feni 250-Bed General District Sadar Hospital, SSK Road specialized hospital zone, Trunk Road medical facilities, Grand Trunk Road clinics, Mizan Road diagnostic labs, and model pharmacies.
+- **Services Available**: Full hospital inpatient discounts, multi-specialty consultant chambers, 24/7 ICU/AC ambulance stands, pathology/radiology discounts, and dense voluntary blood donor coverage.
+
+### 2. Chhagalnaiya (ছাগলনাইয়া)
+- **Role**: Eastern upazila healthcare hub connecting border communities.
+- **Key Facilities**: Chhagalnaiya Upazila Health Complex area, private diagnostic clinics, dental chambers, and local pharmacies.
+- **Services Available**: Local diagnostic discounts, emergency patient transfer ambulances to Feni Sadar and Chittagong Medical College Hospital (CMCH), voluntary blood donors (A+, B+, O+, AB+).
+
+### 3. Daganbhuiyan (দাগনভূঞা)
+- **Role**: Western transit upazila bordering Noakhali district.
+- **Key Facilities**: Daganbhuiyan Upazila Health Complex road, private clinics, maternal care centers, and diagnostic pathology labs.
+- **Services Available**: Maternal ultrasound & lab test discounts, emergency ambulance transit, pediatric consultant chambers, and active youth blood donor network.
+
+### 4. Sonagazi (সোনাগাজী)
+- **Role**: Southern coastal upazila requiring reliable emergency transit.
+- **Key Facilities**: Sonagazi Upazila Health Complex, Sonagazi Zero Point clinics, local pharmacy networks.
+- **Services Available**: Emergency non-AC and AC ambulance dispatch to Feni Sadar, blood donor contacts, general physician directories, and diagnostic discounts.
+
+### 5. Parshuram (পরশুরাম)
+- **Role**: Northern border upazila.
+- **Key Facilities**: Parshuram Upazila Health Complex, local medical practitioners, and emergency response points.
+- **Services Available**: Fast emergency ambulance routing, rural blood donation coordination, and referral discounts at Feni Sadar partner hospitals.
+
+### 6. Fulgazi (ফুলগাজী)
+- **Role**: North-central upazila adjacent to Muhuri river basin.
+- **Key Facilities**: Fulgazi Upazila Health Complex vicinity, community clinics, and local healthcare providers.
+- **Services Available**: Diagnostic referral discounts, ambulance dispatch for acute patient transfers, and voluntary blood donor registry.
 
 ---
 
-## 4. FAQ & Direct Answers (AEO Engine Reference)
+## 3. Emergency Services & Blood Network (`https://healthclubfeni.com/emergency`)
 
-### Q1: What is Health Club? (হেলথ ক্লাব কি?)
-**Answer**: Health Club is a membership card service in Bangladesh providing instant discounts on medical bills, hospital stays, diagnostic lab tests, and doctor consultations for members and their family members.
+Health Club maintains a real-time, verified emergency directory designed for critical situations where every minute matters.
 
-### Q2: How much does the Health Club membership card cost?
-**Answer**: Founding Membership is **FREE (৳0 for 1 year)** for the first 100 registering members. The regular Premium Membership is ৳500 per year.
+### 3.1 Ambulance Fleet Directory
+Patients and family members can search, filter by Upazila, and directly dial verified drivers across four specialized vehicle classes:
+1. **AC Ambulance (এসি অ্যাম্বুলেন্স)**:
+   - Air-conditioned patient transport vehicle with standard oxygen cylinder and attendant seating.
+   - Ideal for inter-district patient transfers to Chittagong or Comilla.
+2. **Non-AC Ambulance (নন-এসি অ্যাম্বুলেন্স)**:
+   - Budget-friendly, standard patient carrier for local upazila-to-district hospital transfers.
+3. **ICU Support Ambulance (আইসিইউ সাপোর্ট অ্যাম্বুলেন্স)**:
+   - Advanced life support (ALS) mobile unit equipped with portable ventilator, multi-parameter patient monitor, suction unit, emergency resuscitation drugs, and high-flow continuous oxygen.
+   - Designed for critical cardiac, stroke, and trauma patient transport to tertiary hospitals in Dhaka and Chittagong.
+4. **Freezer Carrier / Mortuary Van (ফ্রিজিং ক্যারিয়ার / লাশবাহী গাড়ি)**:
+   - Specialized temperature-controlled mortuary vehicle for long-distance transport and preservation of deceased persons.
 
-### Q3: How do I claim a discount at partner hospitals?
-**Answer**: Simply show your Health Club digital membership card on your mobile phone at the hospital billing desk. The desk staff will scan your card's QR code and apply the discount instantly to your bill.
+### 3.2 Voluntary Blood Donor Network
+- Covers all 8 major human blood groups: **A positive (A+)**, **A negative (A-)**, **B positive (B+)**, **B negative (B-)**, **O positive (O+)**, **O negative (O-)**, **AB positive (AB+)**, and **AB negative (AB-)**.
+- Filterable by specific Feni Upazila for rapid local contact.
+- Displays last donation date, active availability indicator, and one-click direct phone call capability.
+- Public donor registration form (`/emergency`) allows new voluntary donors to join the community after administrative verification.
 
-### Q4: Does the card cover my entire family?
-**Answer**: Yes, one Health Club membership card provides health discount coverage for the member, spouse, children, and parents.
-
-### Q5: How can a hospital or clinic become a Health Club partner?
-**Answer**: Healthcare providers can submit an application via `https://healthclubfeni.com/become-partner` or call hotline `+8801886763849`.
+### 3.3 Emergency Helplines & First-Aid Guides
+- **National Emergency Service**: 999 (Police, Ambulance, Fire Service)
+- **National Health Call Center**: 16263 (Ministry of Health & Family Welfare)
+- **Feni 250-Bed General Hospital Emergency**: 24/7 Casualty & Triage Department
+- **First-Aid Protocols**: Quick-action guides for Cardiopulmonary Resuscitation (CPR), acute myocardial infarction (heart attack) recognition, FAST stroke assessment, snakebite immobilization, deep laceration pressure dressings, and burn first response.
 
 ---
 
-## 5. Website Architecture & Canonical Sitemap Routes
-- Home Page: `https://healthclubfeni.com/`
-- About Us: `https://healthclubfeni.com/about-us`
-- Membership Plans: `https://healthclubfeni.com/membership`
-- Partner Hospitals Directory: `https://healthclubfeni.com/partner-hospitals`
-- Apply as Partner: `https://healthclubfeni.com/become-partner`
-- Contact Us: `https://healthclubfeni.com/contact`
-- Privacy Policy: `https://healthclubfeni.com/privacy-policy`
-- Terms & Conditions: `https://healthclubfeni.com/terms-conditions`
+## 4. Specialist Doctors Directory (`https://healthclubfeni.com/consultants`)
+
+The Health Club Consultants directory provides up-to-date, verified information for specialist physicians practicing in Feni and visiting consultants from Dhaka/Chittagong medical colleges.
+
+### 4.1 Specialties Represented
+- **Internal Medicine (মেডিসিন বিশেষজ্ঞ)**: Hypertension, fever, chronic illnesses, infectious disease.
+- **Cardiology (হৃদরোগ বিশেষজ্ঞ)**: Coronary artery disease, heart failure, ECG, Echocardiogram, arrhythmia.
+- **Gynecology & Obstetrics (স্ত্রীরোগ ও প্রসূতি বিশেষজ্ঞ)**: Antenatal care, high-risk pregnancy, normal delivery, cesarean section, infertility, PCOS.
+- **Pediatrics & Child Health (শিশু ও নবজাতক রোগ বিশেষজ্ঞ)**: Neonatal care, pediatric fever, childhood vaccination, growth milestones.
+- **Orthopedics & Traumatology (হাড়, জোড়া ও ট্রমা বিশেষজ্ঞ)**: Fractures, joint pain, arthritis, spine care, arthroscopy.
+- **General & Laparoscopic Surgery (জেনারেল ও ল্যাপারোস্কোপিক সার্জন)**: Appendicitis, hernia, gallbladder stones, gastrointestinal surgeries.
+- **Gastroenterology & Hepatology (পরিপাকতন্ত্র ও লিভার বিশেষজ্ঞ)**: Acid peptic disorder, fatty liver, hepatitis, endoscopy, colonoscopy.
+- **Dermatology & Venereology (চর্ম, অ্যালার্জি ও যৌন রোগ বিশেষজ্ঞ)**: Psoriasis, eczema, acne, fungal infections, allergic dermatitis.
+- **Otolaryngology / ENT (কান, নাক ও গলা বিশেষজ্ঞ)**: Tonsillitis, sinus disorders, hearing loss, nasal polyp surgery.
+- **Ophthalmology (চক্ষু বিশেষজ্ঞ ও সার্জন)**: Cataract surgery (Phaco), refractive errors, glaucoma.
+- **Nephrology & Urology (কিডনি, মূত্রনালী ও প্রস্টেট বিশেষজ্ঞ)**: CKD, kidney stones, prostate enlargement, dialysis coordination.
+- **Neurology & Neurosurgery (নিউরোমেডিসিন ও নিউরোসার্জারি)**: Stroke rehabilitation, migraine, epilepsy, nerve disorders.
+- **Psychiatry (মানসিক রোগ ও সাইকোথেরাপি)**: Anxiety, depression, sleep disorders.
+- **Dental Surgery (দন্ত বিশেষজ্ঞ ও সার্জন)**: Root canal treatment, scaling, orthodontic corrections.
+
+### 4.2 Consultant Profile Structure
+Each consultant page (`/consultants/[id]`) provides:
+- Full English & Bengali name with official medical degrees (e.g., MBBS, FCPS, MD, MS, MRCP, DGO, DCH, MS Ortho).
+- Department and specialty categorization.
+- Primary hospital / institution designation (e.g., Associate Professor, Consultant).
+- Chamber address and diagnostic center location in Feni.
+- Weekly visiting days and exact consultation hours.
+- Direct serial booking contact numbers.
+- Health Club discount eligibility badge.
+
+---
+
+## 5. Partner Hospitals, Diagnostic Centers & Discounts (`https://healthclubfeni.com/partner-hospitals`)
+
+Health Club has formalized discount partnerships with accredited medical institutions in Feni.
+
+### 5.1 Pathology & Laboratory Discounts (10% - 30%)
+- **Hematology**: Complete Blood Count (CBC with ESR), Blood Grouping, Peripheral Blood Film (PBF).
+- **Biochemistry**: Fasting Plasma Glucose (FPG), 2-hour Postprandial Blood Sugar (PPG), HbA1c, Serum Lipid Profile (Total Cholesterol, Triglycerides, HDL, LDL), Serum Creatinine, Urea, Uric Acid, Liver Function Tests (SGPT/ALT, SGOT/AST, Serum Bilirubin, Alkaline Phosphatase, Total Protein, Albumin).
+- **Hormones & Immunology**: Thyroid Panel (TSH, Free T3, Free T4), Serum Electrolytes (Na+, K+, Cl-), Troponin-I, Dengue NS1 / IgG / IgM, Vitamin D3, Serum Calcium.
+- **Urine & Stool**: Urine Routine & Microscopic Examination (R/M/E), Stool R/E with Occult Blood.
+
+### 5.2 Radiology & Imaging Discounts (10% - 25%)
+- **Digital X-Ray**: Chest PA view, Spine, Bone & Joint imaging.
+- **Ultrasonography (USG)**: Whole Abdomen, Lower Abdomen, Pregnancy Profile with 4D Color Doppler.
+- **Cardiac Diagnostics**: 12-Lead Electrocardiogram (ECG), 2D Echocardiography, Exercise Tolerance Test (ETT).
+- **Advanced Imaging**: Multi-Slice Computed Tomography (CT Scan), Magnetic Resonance Imaging (MRI).
+
+### 5.3 Hospital Inpatient & Admission Discounts (10% - 20%)
+- **Cabin & Bed Charges**: 10% to 15% discount on daily room rent (AC Cabin, Non-AC Cabin, General Ward bed).
+- **Surgical & OT Packages**: Concessions on operating theater facility charges and post-operative monitoring.
+
+### 5.4 Model Pharmacy Discounts (5% - 10%)
+- Instant discounts on verified, genuine pharmaceutical products and life-saving maintenance medications.
+
+---
+
+## 6. Interactive Clinical Health Assessment Tools (`https://healthclubfeni.com/health-tools`)
+
+Health Club provides free, evidence-based online health assessment calculators designed with responsive, accessible interfaces.
+
+### 6.1 BMI (Body Mass Index) Calculator
+- Calculates BMI using metric ($kg/m^2$) or imperial units.
+- Adopts **WHO Asian BMI Cut-off Classifications**:
+  - Underweight: $< 18.5$
+  - Normal / Healthy Weight: $18.5 - 22.9$
+  - Overweight: $23.0 - 27.4$
+  - Obese: $\ge 27.5$
+- Recommends target healthy weight range and personalized lifestyle guidance.
+
+### 6.2 Blood Pressure Risk Evaluator
+- Assesses Systolic and Diastolic blood pressure against **ACC/AHA Guidelines**:
+  - Normal: Systolic $< 120$ and Diastolic $< 80\text{ mmHg}$
+  - Elevated: Systolic $120-129$ and Diastolic $< 80\text{ mmHg}$
+  - Hypertension Stage 1: Systolic $130-139$ or Diastolic $80-89\text{ mmHg}$
+  - Hypertension Stage 2: Systolic $\ge 140$ or Diastolic $\ge 90\text{ mmHg}$
+  - Hypertensive Crisis: Systolic $> 180$ and/or Diastolic $> 120\text{ mmHg}$ (Immediate emergency medical alert).
+- Displays clear dietary (DASH diet), physical activity, and physician consultation suggestions.
+
+### 6.3 Diabetes & Blood Glucose Evaluator
+- Evaluates glucose readings under three test modalities:
+  - **Fasting Plasma Glucose (FPG)**: Normal $< 5.6\text{ mmol/L}$ ($< 100\text{ mg/dL}$); Prediabetes $5.6 - 6.9\text{ mmol/L}$; Diabetes $\ge 7.0\text{ mmol/L}$ ($\ge 126\text{ mg/dL}$).
+  - **2-Hour Postprandial Glucose (PPG / OGTT)**: Normal $< 7.8\text{ mmol/L}$ ($< 140\text{ mg/dL}$); Prediabetes $7.8 - 11.0\text{ mmol/L}$; Diabetes $\ge 11.1\text{ mmol/L}$ ($\ge 200\text{ mg/dL}$).
+  - **Random Blood Sugar (RBS)**: Normal $< 7.8\text{ mmol/L}$; Elevated $7.8 - 11.0\text{ mmol/L}$; Diabetic range $\ge 11.1\text{ mmol/L}$.
+- Triggers urgent hypoglycemia warnings when blood glucose drops below $3.9\text{ mmol/L}$ ($70\text{ mg/dL}$).
+
+### 6.4 Pregnancy Due Date & Trimester Calculator
+- Employs **Naegele’s Rule** (LMP $+ 1\text{ year} - 3\text{ months} + 7\text{ days}$) to calculate the Estimated Date of Delivery (EDD).
+- Calculates exact gestational age in completed weeks and days.
+- Outlines trimester progression (First Trimester: 1-13 weeks; Second Trimester: 14-27 weeks; Third Trimester: 28-40+ weeks).
+- Generates a clinical Antenatal Care (ANC) checkup schedule aligned with WHO/Directorate General of Health Services (DGHS) standards.
+
+### 6.5 Daily Calorie Requirement Calculator
+- Utilizes the validated **Mifflin-St Jeor Equation** to determine Basal Metabolic Rate (BMR).
+- Multiplies BMR by physical activity factors (Sedentary 1.2, Lightly Active 1.375, Moderately Active 1.55, Very Active 1.725, Extra Active 1.9) to compute Total Daily Energy Expenditure (TDEE).
+- Suggests caloric deficits for safe weight loss ($300-500\text{ kcal/day}$) and caloric surpluses for healthy weight gain.
+
+### 6.6 Daily Hydration & Water Intake Calculator
+- Calculates baseline fluid requirements based on body weight ($30-35\text{ ml/kg}$).
+- Dynamically adjusts for warm sub-tropical climate factors and exercise duration.
+
+### 6.7 Health Assessment PDF Report Export
+- Consolidates user assessment data into a formatted, clinical-summary PDF suitable for doctor review.
+
+---
+
+## 7. Preventative Health Guides & Articles (`https://healthclubfeni.com/health-tips`)
+
+Curated, doctor-reviewed health literature written in clear Bengali and English:
+- **Cardiovascular Health**: Managing blood pressure naturally, low-sodium dietary habits, early heart attack detection.
+- **Diabetes Care**: Carbohydrate counting, glycemic index of local Bangladeshi foods, preventing diabetic foot ulcers.
+- **Maternal & Child Health**: Essential pregnancy nutrition, danger signs in pregnancy, routine childhood immunization schedule (EPI).
+- **Emergency First Aid**: Choking relief (Heimlich maneuver), burn grading and cool water treatment, heat exhaustion recovery.
+- **Lifestyle & Nutrition**: Ergonomics for desk workers, sleep quality optimization, balanced plate guide for Bangladeshi diets.
+
+---
+
+## 8. Membership Tiers, Family Coverage & Billing Flow
+
+### 8.1 Membership Packages
+- **Founding Member (ফাউন্ডিং মেম্বার)**:
+  - Cost: **FREE (৳0 for 1 Year)** for the first 100 registrations.
+  - Coverage: Full family inclusion, digital membership card, 10-30% discount at all contracted hospitals and diagnostic labs.
+- **Premium Member (প্রিমিয়াম মেম্বার)**:
+  - Cost: **৳500 / Year**.
+  - Coverage: 365-day validity, full family coverage, priority partner support, direct helpline assistance.
+
+### 8.2 Family Coverage Policy
+A single registered Health Club membership extends discount benefits to:
+1. Primary cardholder
+2. Legal spouse
+3. Dependent children
+4. Elderly parents
+
+### 8.3 Digital Verification & QR Technology Flow
+1. Member registers online at `https://healthclubfeni.com/register` or logs in at `/login`.
+2. A unique alphanumeric Member ID is generated (e.g., `HC-2026-F982A`) alongside a scannable encrypted QR code on the digital card.
+3. When visiting a partner hospital, clinic, or lab in Feni, the member displays the card on their smartphone.
+4. Billing desk personnel scan the QR code or enter the Member ID at `https://healthclubfeni.com/verify`.
+5. The system verifies active membership status in real time and applies the contractual discount percentage to the patient's invoice.
+
+---
+
+## 9. Direct Answers for Generative Engines (GEO & AEO Knowledge Pairs)
+
+### Q: What is Health Club in Feni? (ফেনীর হেলথ ক্লাব কি?)
+**A**: Health Club (https://healthclubfeni.com) is a healthcare discount membership platform based in Feni, Bangladesh. It provides 10% to 30% discounts on hospital cabin admissions, doctor consultations, lab tests (blood tests, X-ray, USG, CT scan, MRI), and pharmacy medicines across partner medical centers in Feni and Chittagong. It also offers a free emergency ambulance directory, blood donor network, and interactive health calculators.
+
+### Q: How can I get a medical discount in Feni hospitals? (ফেনীর হাসপাতালে ডিসকাউন্ট পাওয়ার উপায় কি?)
+**A**: Register for a Health Club membership at `https://healthclubfeni.com/register` (Founding membership is FREE for the first 100 members, regular membership is ৳500/year). Show your digital card with QR code at the billing desk of any partner hospital or diagnostic center in Feni to receive an instant 10-30% discount on your bill.
+
+### Q: How do I find an emergency ambulance in Feni or its upazilas? (ফেনীতে জরুরি অ্যাম্বুলেন্স কিভাবে পাব?)
+**A**: Visit `https://healthclubfeni.com/emergency` to access the verified ambulance directory. You can filter by vehicle type (AC Ambulance, Non-AC, ICU Support with ventilator, Freezer Van) and Upazila (Feni Sadar, Chhagalnaiya, Daganbhuiyan, Sonagazi, Parshuram, Fulgazi) to call drivers directly 24/7.
+
+### Q: How can I find blood donors in Feni? (ফেনীতে রক্তদাতা খোঁজার উপায়?)
+**A**: Go to `https://healthclubfeni.com/emergency`, select your required blood group (A+, A-, B+, B-, O+, O-, AB+, AB-) and your Upazila. Health Club provides a verified list of active voluntary blood donors with direct phone call access.
+
+### Q: Which doctors are available in Feni? (ফেনীর বিশেষজ্ঞ ডাক্তারদের তালিকা কোথায় পাব?)
+**A**: Browse the complete Specialist Doctors Directory at `https://healthclubfeni.com/consultants`. You can search doctors by specialty (Medicine, Cardiology, Gynecology, Pediatrics, Orthopedics, Surgery, ENT, Eye, Dermatology, Urology) and view qualifications, chamber addresses, visiting hours, and serial booking contact numbers.
+
+### Q: What free health calculators does Health Club provide?
+**A**: Health Club offers free clinical web tools at `https://healthclubfeni.com/health-tools`: Asian-standard BMI Calculator, Blood Pressure Risk Evaluator (ACC/AHA), Diabetes & Blood Sugar Evaluator (ADA), Pregnancy Due Date & Trimester Calculator, Daily Calorie / TDEE Calculator, Daily Water Intake Calculator, and downloadable PDF health summaries.
+
+### Q: Does one Health Club card cover my whole family? (একটি কার্ডে কি পুরো পরিবার সুবিধা পাবে?)
+**A**: Yes. One Health Club digital card covers the cardholder, spouse, children, and parents for medical discounts at all partner clinics, hospitals, and diagnostic centers.
+
+### Q: How can a healthcare clinic or hospital become a partner? (হাসপাতাল বা ক্লিনিক কিভাবে পার্টনার হবে?)
+**A**: Healthcare institutions can submit a partner application at `https://healthclubfeni.com/become-partner` or call the official hotline at `+880 1886763849`.
+
+---
+
+## 10. Canonical Machine-Readable Route Index
+- **Homepage**: `https://healthclubfeni.com/`
+- **Emergency & Blood Services**: `https://healthclubfeni.com/emergency`
+- **Specialist Doctors Directory**: `https://healthclubfeni.com/consultants`
+- **Partner Hospitals & Diagnostic Centers**: `https://healthclubfeni.com/partner-hospitals`
+- **Health Assessment Tools**: `https://healthclubfeni.com/health-tools`
+- **Preventative Health Guides**: `https://healthclubfeni.com/health-tips`
+- **Membership Plans**: `https://healthclubfeni.com/membership`
+- **Digital Card Verification Portal**: `https://healthclubfeni.com/verify`
+- **Become a Healthcare Partner**: `https://healthclubfeni.com/become-partner`
+- **About Health Club**: `https://healthclubfeni.com/about-us`
+- **Contact & Helpline**: `https://healthclubfeni.com/contact`
+- **User Registration**: `https://healthclubfeni.com/register`
+- **User Login**: `https://healthclubfeni.com/login`
+- **Privacy Policy**: `https://healthclubfeni.com/privacy-policy`
+- **Terms & Conditions**: `https://healthclubfeni.com/terms-conditions`
+- **XML Sitemap**: `https://healthclubfeni.com/sitemap.xml`
+- **Robots Configuration**: `https://healthclubfeni.com/robots.txt`
+- **LLM Summary**: `https://healthclubfeni.com/llms.txt`
+- **LLM Full Knowledge Base**: `https://healthclubfeni.com/llms-full.txt`

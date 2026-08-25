@@ -287,7 +287,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/sitemap.ts`
   - **Details**: Update `sitemap.ts` to fetch published health tip articles dynamically via `getAllHealthTipsAction()` rather than static array, provide stable `lastModified` dates instead of dynamic `new Date()`, and include multi-lingual alternate language tags (`alternates.languages`).
 
-- [ ] **TODO-60**: **Generative Engine Optimization (GEO): Overhaul `llms.txt` and `llms-full.txt`**
+- [x] **TODO-60**: **Generative Engine Optimization (GEO): Overhaul `llms.txt` and `llms-full.txt`**
   - **Files**: `public/llms.txt`, `public/llms-full.txt`, `src/app/layout.tsx`
   - **Details**: Update `llms.txt` and `llms-full.txt` knowledge bases with comprehensive information on Emergency Services & Blood Network (`/emergency`), Specialist Doctors Directory (`/consultants`), Health Assessment Tools (`/health-tools`), Preventative Health Guides (`/health-tips`), and all 6 Feni Upazilas coverage. Add `<link rel="alternate" type="text/markdown">` head tags in `layout.tsx`.
 
