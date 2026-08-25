@@ -11,6 +11,7 @@ import {
   Stethoscope,
   Building2,
   FileCheck,
+  Star,
   Siren,
   BookOpen,
   Radio,
@@ -78,6 +79,12 @@ export const ADMIN_NAV_LINKS: AdminNavLink[] = [
     labelBn: "অংশীদার আবেদন",
     labelEn: "Partner Requests",
     icon: FileCheck,
+  },
+  {
+    href: "/admin/reviews",
+    labelBn: "রিভিউ ও রেটিং",
+    labelEn: "Reviews",
+    icon: Star,
   },
   {
     href: "/admin/emergency",

@@ -21,6 +21,7 @@ import {
   Smartphone,
   Radio,
   ShieldCheck,
+  Star,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -160,6 +161,17 @@ export default function AdminDashboardPage() {
       badge: stats.pendingRenewals > 0 ? `${stats.pendingRenewals}` : null,
       badgeColor: "amber",
       color: "purple",
+    },
+    {
+      title: isBn ? "সদস্যদের রিভিউ ও রেটিং" : "Member Reviews & Ratings",
+      description: isBn
+        ? "পার্টনার হাসপাতালসমূহের জন্য সদস্যদের দেওয়া রেটিং ও রিভিউ মডারেশন"
+        : "Moderate member ratings & healthcare reviews for partner hospitals",
+      href: "/admin/reviews",
+      icon: Star,
+      count: 0,
+      countLabel: isBn ? "রিভিউ মডারেশন" : "reviews",
+      color: "amber",
     },
     {
       title: t("admin.dashboard.contactMessages") || "যোগাযোগের বার্তা",

@@ -325,4 +325,51 @@ export interface BackupSettings {
   notifyOnBackup: boolean;
 }
 
+export type ReviewStatus = 'pending' | 'approved' | 'rejected';
+
+export interface Review {
+  id: string;
+  memberId: string;
+  partnerId: string;
+  rating: number;
+  comment?: string | null;
+  status: ReviewStatus;
+  adminFeedback?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  member?: {
+    id: string;
+    name: string;
+    tier: string;
+    profilePictureUrl?: string | null;
+    phone?: string;
+  };
+  partner?: {
+    id: string;
+    name: string;
+    category: string;
+  };
+}
+
+export interface PartnerReviewStats {
+  averageRating: number;
+  totalReviews: number;
+  distribution: {
+    1: number;
+    2: number;
+    3: number;
+    4: number;
+    5: number;
+  };
+}
+
+export interface AdminReviewSummary {
+  total: number;
+  pending: number;
+  approved: number;
+  rejected: number;
+  averageRating: number;
+}
+
 export { initialDoctors } from "./initialDoctors";
+

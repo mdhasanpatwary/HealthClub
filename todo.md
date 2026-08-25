@@ -223,7 +223,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `prisma/schema.prisma`, `src/app/actions/doctorActions.ts`, `src/app/admin/components/DoctorDialog.tsx`, `src/components/ui/DoctorDirectory.tsx`, `src/app/consultants/[id]/page.tsx`
   - **Details**: Add chamber availability toggle (`available_today`, `on_leave_until`, `notice`) to Doctor model with visual badges ("Available Today", "Chamber Closed", "On Leave until Date") on directory cards.
 
-- [ ] **TODO-47** (4.5): **Verified Member Reviews & Rating System**
+- [x] **TODO-47** (4.5): **Verified Member Reviews & Rating System**
   - **Files**: `prisma/schema.prisma`, `src/app/actions/reviewActions.ts`, `src/components/reviews/ReviewSection.tsx`, `src/app/admin/components/ReviewsTab.tsx`, `src/app/partner-hospitals/[id]/page.tsx`
   - **Details**: Allow verified active members who completed a discount transaction at a partner hospital to submit star ratings and service feedback with admin moderation controls.
 

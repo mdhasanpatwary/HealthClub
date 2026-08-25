@@ -34,6 +34,7 @@ model Member {
   renewalBkashTxnId  String?      @map("renewal_bkash_txn_id")
   transactions      Transaction[]
   notifications     MemberNotification[]
+  reviews           Review[]
 
   // Indexes for frequent filter/sort patterns
   @@index([status])
@@ -66,6 +67,7 @@ model Partner {
   transactions              Transaction[]
   doctors                   Doctor[]
   staff                     PartnerStaff[]
+  reviews                   Review[]
 
   @@index([category])
   @@index([upazila], map: "partners_upazila_idx")
@@ -264,3 +266,26 @@ model DatabaseSnapshot {
   @@index([createdAt(sort: Desc)], map: "database_snapshots_created_at_idx")
   @@map("database_snapshots")
 }
+
+model Review {
+  id            String    @id @default(uuid())
+  memberId      String    @map("member_id")
+  partnerId     String    @map("partner_id")
+  rating        Int       // 1 to 5
+  comment       String?   @db.Text
+  status        String    @default("pending") // 'pending' | 'approved' | 'rejected'
+  adminFeedback String?   @map("admin_feedback") @db.Text
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  member        Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  partner       Partner   @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
+  @@index([partnerId], map: "reviews_partner_id_idx")
+  @@index([memberId], map: "reviews_member_id_idx")
+  @@index([status], map: "reviews_status_idx")
+  @@index([partnerId, status], map: "reviews_partner_id_status_idx")
+  @@index([createdAt(sort: Desc)], map: "reviews_created_at_idx")
+  @@map("reviews")
+}
+

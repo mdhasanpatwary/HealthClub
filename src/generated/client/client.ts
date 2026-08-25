@@ -101,3 +101,8 @@ export type AdminUser = Prisma.AdminUserModel
  * 
  */
 export type DatabaseSnapshot = Prisma.DatabaseSnapshotModel
+/**
+ * Model Review
+ * 
+ */
+export type Review = Prisma.ReviewModel

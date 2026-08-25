@@ -8,6 +8,7 @@ import {
   getDoctorsByPartnerIdAction,
   getRelatedPartnersAction,
 } from "@/app/actions/partnerActions";
+import { getPartnerReviewsAction } from "@/app/actions/reviewActions";
 import { SITE_URL } from "@/lib/siteConfig";
 
 interface PageProps {
@@ -103,9 +104,10 @@ export default async function PartnerHospitalDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  const [doctors, relatedPartners] = await Promise.all([
+  const [doctors, relatedPartners, reviewData] = await Promise.all([
     getDoctorsByPartnerIdAction(partner.id),
     getRelatedPartnersAction(partner.category, partner.id, 3),
+    getPartnerReviewsAction(partner.id),
   ]);
 
   const cookieStore = await cookies();
@@ -153,6 +155,17 @@ export default async function PartnerHospitalDetailPage({ params }: PageProps) {
       priceRange: partner.discount,
       url: `${SITE_URL}/partner-hospitals/${partner.id}`,
       description: `${partner.name} is a partner ${partner.category} in Feni offering healthcare discounts for Health Club members.`,
+      ...(reviewData.stats.totalReviews > 0
+        ? {
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue: reviewData.stats.averageRating,
+              reviewCount: reviewData.stats.totalReviews,
+              bestRating: "5",
+              worstRating: "1",
+            },
+          }
+        : {}),
       address: {
         "@type": "PostalAddress",
         streetAddress: partner.address,
@@ -191,6 +204,8 @@ export default async function PartnerHospitalDetailPage({ params }: PageProps) {
         partner={partner}
         doctors={doctors}
         relatedPartners={relatedPartners}
+        initialStats={reviewData.stats}
+        initialReviews={reviewData.reviews}
       />
     </>
   );

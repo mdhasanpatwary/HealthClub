@@ -14,29 +14,35 @@ import {
   CheckCircle2,
   Tag,
   Image as ImageIcon,
+  Star,
 } from "lucide-react";
-import { Doctor, Partner } from "@/services/db";
+import { Doctor, Partner, Review, PartnerReviewStats } from "@/services/db";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/layout/LanguageProvider";
-import { formatDiscount } from "@/lib/i18n";
+import { formatDiscount, formatNum } from "@/lib/i18n";
 import HospitalFacilityBadges from "./HospitalFacilityBadges";
 import HospitalDiscountsSection from "./HospitalDiscountsSection";
 import HospitalDoctorRoster from "./HospitalDoctorRoster";
 import HospitalContactSidebar from "./HospitalContactSidebar";
 import HospitalGalleryModal from "./HospitalGalleryModal";
+import ReviewSection from "@/components/reviews/ReviewSection";
 
 interface HospitalProfileViewProps {
   partner: Partner;
   doctors: Doctor[];
   relatedPartners?: Partner[];
+  initialStats?: PartnerReviewStats;
+  initialReviews?: Review[];
 }
 
 export default function HospitalProfileView({
   partner,
   doctors,
   relatedPartners = [],
+  initialStats,
+  initialReviews,
 }: HospitalProfileViewProps) {
-  const { locale } = useLanguage();
+  const { t, locale } = useLanguage();
   const isEn = locale === "en";
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
@@ -137,6 +143,15 @@ export default function HospitalProfileView({
                   <CheckCircle2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                   <span>{isEn ? "Verified Partner" : "ভেরিফাইড পার্টনার"}</span>
                 </span>
+                {initialStats && initialStats.totalReviews > 0 && (
+                  <span className="px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-bold bg-background/95 text-amber-600 dark:text-amber-400 backdrop-blur-md shadow-xs flex items-center gap-1 border border-border/60">
+                    <Star className="h-3 w-3 fill-amber-400 text-amber-500" />
+                    <span>{formatNum(initialStats.averageRating, locale)}</span>
+                    <span className="text-[10px] text-muted-foreground font-normal">
+                      ({formatNum(initialStats.totalReviews, locale)} {t("reviews.totalReviews")})
+                    </span>
+                  </span>
+                )}
               </div>
 
               <Button
@@ -207,6 +222,15 @@ export default function HospitalProfileView({
             {/* Section 3: Resident Consultant Doctors Roster */}
             <div className="p-4 sm:p-6 rounded-3xl border border-border/80 bg-card shadow-2xs">
               <HospitalDoctorRoster doctors={doctors} partner={partner} />
+            </div>
+
+            {/* Section 4: Verified Member Reviews & Rating System */}
+            <div className="p-4 sm:p-6 rounded-3xl border border-border/80 bg-card shadow-2xs">
+              <ReviewSection
+                partner={partner}
+                initialStats={initialStats}
+                initialReviews={initialReviews}
+              />
             </div>
 
           </div>
