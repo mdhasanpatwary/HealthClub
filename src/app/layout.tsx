@@ -138,10 +138,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/member-card-logo.png",
-        width: 800,
-        height: 600,
-        alt: "Health Club Digital Membership Card Logo",
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "হেলথ ক্লাব - স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী | Health Club",
       },
     ],
   },
@@ -149,7 +149,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "হেলথ ক্লাব - স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী",
     description: "নির্ধারিত হাসপাতাল ও ল্যাবে ডিসকাউন্ট পেতে আজই হেলথ ক্লাবের ডিজিটাল মেম্বার কার্ড সংগ্রহ করুন।",
-    images: ["/images/member-card-logo.png"],
+    images: ["/og-image.png"],
   },
 };
 

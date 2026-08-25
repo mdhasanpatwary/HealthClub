@@ -23,13 +23,33 @@ export async function generateMetadata({ params }: PageProps) {
   const isEn = locale === "en";
 
   if (!partner) {
+    const notFoundTitle = isEn
+      ? "Partner Facility Not Found - Health Club"
+      : "পার্টনার প্রতিষ্ঠান পাওয়া যায়নি - হেলথ ক্লাব";
+    const notFoundDesc = isEn
+      ? "The requested partner hospital or clinic could not be found in Health Club directory."
+      : "অনুরোধকৃত হাসপাতাল বা ডায়াগনস্টিক সেন্টার হেলথ ক্লাব ডিরেক্টরিতে পাওয়া যায়নি।";
     return {
-      title: isEn
-        ? "Partner Facility Not Found - Health Club"
-        : "পার্টনার প্রতিষ্ঠান পাওয়া যায়নি - হেলথ ক্লাব",
-      description: isEn
-        ? "The requested partner hospital or clinic could not be found in Health Club directory."
-        : "অনুরোধকৃত হাসপাতাল বা ডায়াগনস্টিক সেন্টার হেলথ ক্লাব ডিরেক্টরিতে পাওয়া যায়নি।",
+      title: notFoundTitle,
+      description: notFoundDesc,
+      openGraph: {
+        title: notFoundTitle,
+        description: notFoundDesc,
+        images: [
+          {
+            url: `${SITE_URL}/og-image.png`,
+            width: 1200,
+            height: 630,
+            alt: "Health Club",
+          },
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: notFoundTitle,
+        description: notFoundDesc,
+        images: [`${SITE_URL}/og-image.png`],
+      },
     };
   }
 
@@ -49,7 +69,15 @@ export async function generateMetadata({ params }: PageProps) {
     : `${partner.name}, ${partner.address}, ফেনী। হেলথ ক্লাব মেম্বার কার্ডে পান ${partner.discount}। আধুনিক স্বাস্থ্যসেবা, বিশেষজ্ঞ ডাক্তারদের চেম্বার শিডিউল ও হটলাইন: ${partner.phone}।`;
 
   const canonicalUrl = `${SITE_URL}/partner-hospitals/${partner.id}`;
-  const ogImage = partner.imageUrl || `${SITE_URL}/og-image.png`;
+  const rawImage = partner.imageUrl?.trim();
+  const hasValidImage = Boolean(rawImage && rawImage.length > 0);
+  const ogImage = hasValidImage
+    ? (rawImage!.startsWith("http") ? rawImage! : `${SITE_URL}${rawImage!.startsWith("/") ? "" : "/"}${rawImage!}`)
+    : `${SITE_URL}/og-image.png`;
+
+  const imageDimensions = hasValidImage
+    ? { width: 800, height: 800 }
+    : { width: 1200, height: 630 };
 
   return {
     title: pageTitle,
@@ -81,8 +109,8 @@ export async function generateMetadata({ params }: PageProps) {
       images: [
         {
           url: ogImage,
-          width: 800,
-          height: 800,
+          width: imageDimensions.width,
+          height: imageDimensions.height,
           alt: partner.name,
         },
       ],

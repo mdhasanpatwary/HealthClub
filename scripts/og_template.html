@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap');
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+      font-family: 'Noto Sans Bengali', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #090e17;
+      color: #f8fafc;
+      position: relative;
+    }
+
+    /* Ambient glow backgrounds */
+    .bg-canvas {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 85% 30%, rgba(34, 197, 94, 0.25) 0%, transparent 55%),
+                  radial-gradient(circle at 15% 85%, rgba(13, 148, 136, 0.2) 0%, transparent 50%),
+                  radial-gradient(circle at 10% 10%, rgba(22, 163, 74, 0.2) 0%, transparent 45%),
+                  linear-gradient(135deg, #090e17 0%, #0c1824 50%, #061e18 100%);
+    }
+
+    /* Subtle grid overlay */
+    .grid-overlay {
+      position: absolute;
+      inset: 0;
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+
+    /* Outer glowing border frame */
+    .frame-border {
+      position: absolute;
+      inset: 12px;
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      border-radius: 20px;
+      pointer-events: none;
+    }
+
+    .main-container {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      width: 100%;
+      height: 100%;
+      padding: 48px 56px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Left Section */
+    .left-col {
+      width: 580px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .brand-bar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .brand-logo-img {
+      height: 60px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 12px rgba(22, 163, 74, 0.3));
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(22, 163, 74, 0.15);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      border-radius: 9999px;
+      color: #86efac;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    .hero-title {
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 19px;
+      font-weight: 500;
+      color: #94a3b8;
+      line-height: 1.45;
+      margin-bottom: 26px;
+    }
+
+    /* 4-Feature Grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 26px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 10px 14px;
+      backdrop-filter: blur(8px);
+    }
+
+    .feature-icon-box {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .feature-text-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #f1f5f9;
+      line-height: 1.2;
+    }
+
+    .feature-text-desc {
+      font-size: 11px;
+      font-weight: 500;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+
+    .footer-url-bar {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      background: rgba(6, 78, 59, 0.5);
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      border-radius: 10px;
+      width: fit-content;
+    }
+
+    .footer-url-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #4ade80;
+      letter-spacing: 0.5px;
+    }
+
+    /* Right Section (Card Mockup) */
+    .right-col {
+      width: 480px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .card-mockup-wrapper {
+      position: relative;
+      width: 460px;
+      height: 280px;
+    }
+
+    .card-glow {
+      position: absolute;
+      inset: -15px;
+      background: radial-gradient(circle, rgba(34, 197, 94, 0.4) 0%, transparent 70%);
+      filter: blur(25px);
+      z-index: 1;
+    }
+
+    .member-card {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      border-radius: 20px;
+      background: linear-gradient(140deg, #0b2e25 0%, #061c16 60%, #03100c 100%);
+      border: 1.5px solid rgba(234, 179, 8, 0.6);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8),
+                  0 0 0 1px rgba(34, 197, 94, 0.2);
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .card-pattern-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 90% 10%, rgba(234, 179, 8, 0.12) 0%, transparent 60%),
+                  radial-gradient(circle at 10% 90%, rgba(34, 197, 94, 0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: relative;
+      z-index: 5;
+    }
+
+    .card-brand {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-brand-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-brand-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #86efac;
+      letter-spacing: 1.5px;
+      margin-top: 2px;
+    }
+
+    .card-emblem {
+      height: 48px;
+      width: 48px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+    }
+
+    .card-middle {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: relative;
+      z-index: 5;
+      margin: 10px 0;
+    }
+
+    .chip-graphic {
+      width: 46px;
+      height: 36px;
+      background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      border-radius: 6px;
+      border: 1px solid #fef08a;
+      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4), 0 2px 4px rgba(0,0,0,0.3);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .chip-line-h {
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      background: #b45309;
+    }
+
+    .chip-line-v {
+      position: absolute;
+      height: 100%;
+      width: 1px;
+      background: #b45309;
+    }
+
+    .contactless-icon {
+      font-size: 20px;
+      color: rgba(255, 255, 255, 0.7);
+      transform: rotate(90deg);
+    }
+
+    .card-id-text {
+      font-family: 'Inter', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: #f1f5f9;
+      letter-spacing: 2px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    }
+
+    .card-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      position: relative;
+      z-index: 5;
+    }
+
+    .member-info-col {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .info-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 9.5px;
+      font-weight: 600;
+      color: #94a3b8;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .info-value-name {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-top: 1px;
+    }
+
+    .tier-badge-gold {
+      display: inline-block;
+      padding: 4px 10px;
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.2) 0%, rgba(202, 138, 4, 0.3) 100%);
+      border: 1px solid rgba(250, 204, 21, 0.5);
+      border-radius: 6px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fde047;
+      letter-spacing: 0.5px;
+    }
+
+    /* Floating Badges */
+    .float-badge-top {
+      position: absolute;
+      top: -18px;
+      right: 20px;
+      z-index: 10;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid #22c55e;
+      border-radius: 9999px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #86efac;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .float-badge-bottom {
+      position: absolute;
+      bottom: -16px;
+      left: 10px;
+      z-index: 10;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid #eab308;
+      border-radius: 9999px;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fef08a;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-canvas"></div>
+  <div class="grid-overlay"></div>
+  <div class="frame-border"></div>
+
+  <div class="main-container">
+    <!-- Left Section -->
+    <div class="left-col">
+      <div class="brand-bar">
+        <img src="../public/images/health-club-logo.png" alt="Health Club" class="brand-logo-img">
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <div class="badge-pill">
+          <span>✨</span>
+          <span>ফেনী ও দেশজুড়ে ডিজিটাল স্বাস্থ্য মেম্বারশিপ</span>
+        </div>
+      </div>
+
+      <h1 class="hero-title">
+        স্বাস্থ্য সেবা হোক<br>
+        <span>সহজ ও সাশ্রয়ী</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        ডিজিটাল স্বাস্থ্য কার্ডে পান সর্বোচ্চ ছাড়, বিশেষজ্ঞ ডাক্তার ও সার্বক্ষণিক জরুরি স্বাস্থ্য সহায়তা।
+      </p>
+
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon-box">🏥</div>
+          <div>
+            <div class="feature-text-title">হাসপাতালে ৩০% ছাড়</div>
+            <div class="feature-text-desc">ক্যাবিনেট, ভর্তি ও সার্জারিতে</div>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon-box">👨‍⚕️</div>
+          <div>
+            <div class="feature-text-title">বিশেষজ্ঞ ডাক্তার সিরিয়াল</div>
+            <div class="feature-text-desc">শীর্ষ কনসালট্যান্ট শিডিউল</div>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon-box">🧪</div>
+          <div>
+            <div class="feature-text-title">ডায়াগনস্টিক ল্যাব টেস্ট</div>
+            <div class="feature-text-desc">প্যাথলজি ও রেডিওলজি টেস্ট</div>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon-box">🚑</div>
+          <div>
+            <div class="feature-text-title">জরুরি রক্ত ও অ্যাম্বুলেন্স</div>
+            <div class="feature-text-desc">২৪/৭ জরুরি হটলাইন সাপোর্ট</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-url-bar">
+        <span style="font-size: 16px;">🌐</span>
+        <span class="footer-url-text">healthclubfeni.com</span>
+      </div>
+    </div>
+
+    <!-- Right Section -->
+    <div class="right-col">
+      <div class="card-mockup-wrapper">
+        <div class="card-glow"></div>
+        
+        <!-- Floating Top Badge -->
+        <div class="float-badge-top">
+          <span>✓</span>
+          <span>১০০% ভেরিফাইড ডিসকাউন্ট</span>
+        </div>
+
+        <!-- The Member Card Mockup -->
+        <div class="member-card">
+          <div class="card-pattern-overlay"></div>
+
+          <div class="card-top">
+            <div class="card-brand">
+              <div class="card-brand-title">
+                <span>HEALTH CLUB</span>
+              </div>
+              <div class="card-brand-sub">DIGITAL HEALTH CARD</div>
+            </div>
+            <img src="../public/logo/v_logo_transparent.png" alt="Logo" class="card-emblem">
+          </div>
+
+          <div class="card-middle">
+            <div class="chip-graphic">
+              <div class="chip-line-h"></div>
+              <div class="chip-line-v"></div>
+            </div>
+            <div class="contactless-icon">)))</div>
+            <div class="card-id-text">HC • 2026 • 8849 • VIP</div>
+          </div>
+
+          <div class="card-bottom">
+            <div class="member-info-col">
+              <span class="info-label">Card Holder</span>
+              <span class="info-value-name">MD. ASHRAFUL ALAM</span>
+            </div>
+
+            <div class="member-info-col" style="align-items: flex-end;">
+              <span class="info-label" style="margin-bottom: 2px;">Membership</span>
+              <span class="tier-badge-gold">FOUNDING MEMBER</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating Bottom Badge -->
+        <div class="float-badge-bottom">
+          <span>⚡</span>
+          <span>ইনস্ট্যান্ট QR কোড ভেরিফিকেশন</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

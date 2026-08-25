@@ -18,11 +18,31 @@ export async function generateMetadata({ params }: PageProps) {
   const isEn = locale === "en";
 
   if (!doctor) {
+    const notFoundTitle = isEn ? "Doctor Not Found - Health Club" : "ডাক্তার পাওয়া যায়নি - হেলথ ক্লাব";
+    const notFoundDesc = isEn
+      ? "The requested doctor profile could not be found in Health Club directory."
+      : "অনুরোধকৃত ডাক্তারের প্রোফাইল হেলথ ক্লাব ডিরেক্টরিতে পাওয়া যায়নি।";
     return {
-      title: isEn ? "Doctor Not Found - Health Club" : "ডাক্তার পাওয়া যায়নি - হেলথ ক্লাব",
-      description: isEn
-        ? "The requested doctor profile could not be found in Health Club directory."
-        : "অনুরোধকৃত ডাক্তারের প্রোফাইল হেলথ ক্লাব ডিরেক্টরিতে পাওয়া যায়নি।",
+      title: notFoundTitle,
+      description: notFoundDesc,
+      openGraph: {
+        title: notFoundTitle,
+        description: notFoundDesc,
+        images: [
+          {
+            url: `${SITE_URL}/og-image.png`,
+            width: 1200,
+            height: 630,
+            alt: "Health Club",
+          },
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: notFoundTitle,
+        description: notFoundDesc,
+        images: [`${SITE_URL}/og-image.png`],
+      },
     };
   }
 
@@ -35,7 +55,15 @@ export async function generateMetadata({ params }: PageProps) {
     : `${doctor.name}, ${doctor.specialty}, ${doctor.degrees}। চেম্বার: ${doctor.chamberName}, ${doctor.chamberAddress}। রোগী দেখার সময়: ${doctor.visitingDays} (${doctor.visitingHours})। সরাসরি সিরিয়াল কল করুন: ${doctor.serialPhone}।`;
 
   const canonicalUrl = `${SITE_URL}/consultants/${doctor.id}`;
-  const ogImage = doctor.imageUrl || `${SITE_URL}/og-image.png`;
+  const rawImage = doctor.imageUrl?.trim();
+  const hasValidImage = Boolean(rawImage && rawImage.length > 0);
+  const ogImage = hasValidImage
+    ? (rawImage!.startsWith("http") ? rawImage! : `${SITE_URL}${rawImage!.startsWith("/") ? "" : "/"}${rawImage!}`)
+    : `${SITE_URL}/og-image.png`;
+
+  const imageDimensions = hasValidImage
+    ? { width: 800, height: 800 }
+    : { width: 1200, height: 630 };
 
   return {
     title: pageTitle,
@@ -66,8 +94,8 @@ export async function generateMetadata({ params }: PageProps) {
       images: [
         {
           url: ogImage,
-          width: 800,
-          height: 800,
+          width: imageDimensions.width,
+          height: imageDimensions.height,
           alt: doctor.name,
         },
       ],

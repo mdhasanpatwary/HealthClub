@@ -35,11 +35,32 @@ interface ArticlePageProps {
 export async function generateMetadata({ params }: ArticlePageProps) {
   const { slug } = await params;
   const article = await getHealthTipBySlugAction(slug);
-  if (!article) return { title: "Article Not Found - Health Club" };
-
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
+
+  if (!article) {
+    const notFoundTitle = isEn ? "Article Not Found - Health Club" : "নিবন্ধ পাওয়া যায়নি - হেলথ ক্লাব";
+    return {
+      title: notFoundTitle,
+      openGraph: {
+        title: notFoundTitle,
+        images: [
+          {
+            url: `${SITE_URL}/og-image.png`,
+            width: 1200,
+            height: 630,
+            alt: "Health Club",
+          },
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: notFoundTitle,
+        images: [`${SITE_URL}/og-image.png`],
+      },
+    };
+  }
 
   const title = isEn ? `${article.titleEn} - Health Club` : `${article.titleBn} - হেলথ ক্লাব`;
   const description = isEn ? article.excerptEn : article.excerptBn;
@@ -57,12 +78,18 @@ export async function generateMetadata({ params }: ArticlePageProps) {
       type: "article",
       images: [
         {
-          url: `${SITE_URL}/icon.png`,
-          width: 512,
-          height: 512,
+          url: `${SITE_URL}/og-image.png`,
+          width: 1200,
+          height: 630,
           alt: title,
         },
       ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`${SITE_URL}/og-image.png`],
     },
     keywords: [
       article.titleBn,

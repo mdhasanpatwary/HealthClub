@@ -271,7 +271,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
 
 ## 🌟 Phase 12: SEO, AEO (Ask Engines) & GEO (Generative Engine Optimization) (TODO-56 to TODO-65)
 
-- [ ] **TODO-56**: **Fallback OpenGraph Image & Standard 1200x630 Social Cards**
+- [x] **TODO-56**: **Fallback OpenGraph Image & Standard 1200x630 Social Cards**
   - **Files**: `public/og-image.png`, `src/app/layout.tsx`, `src/app/consultants/[id]/page.tsx`, `src/app/partner-hospitals/[id]/page.tsx`
   - **Details**: Generate and provide standard 1200x630 OpenGraph and Twitter card asset (`/og-image.png`) with proper `og:image:width: 1200`, `og:image:height: 630`, and update dynamic consultant/partner profile fallbacks to prevent 404 social previews.
 
