@@ -7,6 +7,7 @@ import {
   Trash2,
   RefreshCw,
   SlidersHorizontal,
+  Radio,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ import { useAdminNotifications } from "@/app/admin/hooks/useAdminNotifications";
 import { AdminNotificationItem } from "@/app/actions/adminNotificationActions";
 import { NotificationCard } from "./components/NotificationCard";
 import { NotificationKpiGrid } from "./components/NotificationKpiGrid";
+import { PushBroadcastModal } from "./components/PushBroadcastModal";
 
 export default function AdminNotificationsPage() {
   const { locale, t } = useLanguage();
@@ -29,6 +31,7 @@ export default function AdminNotificationsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [filterUnreadOnly, setFilterUnreadOnly] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [isPushModalOpen, setIsPushModalOpen] = useState(false);
 
   const {
     loading,
@@ -127,6 +130,16 @@ export default function AdminNotificationsPage() {
 
         {/* Global Controls */}
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <Button
+            variant="default"
+            size="sm"
+            onClick={() => setIsPushModalOpen(true)}
+            className="rounded-xl text-xs font-bold gap-1.5 shadow-sm bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer"
+          >
+            <Radio className="h-4 w-4 animate-pulse" />
+            <span>{isBn ? "ওয়েব পুশ পাঠান" : "Broadcast Push"}</span>
+          </Button>
+
           {unreadCount > 0 && (
             <Button
               variant="outline"
@@ -287,6 +300,13 @@ export default function AdminNotificationsPage() {
           className="rounded-2xl border border-border/80 shadow-xs bg-card/60"
         />
       )}
+
+      {/* Push Broadcast Modal */}
+      <PushBroadcastModal
+        open={isPushModalOpen}
+        onOpenChange={setIsPushModalOpen}
+        locale={locale}
+      />
     </div>
   );
 }

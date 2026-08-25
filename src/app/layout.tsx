@@ -18,6 +18,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { Analytics } from "@vercel/analytics/next";
 import { SITE_URL } from "@/lib/siteConfig";
 import PwaTracker from "@/components/pwa/PwaTracker";
+import PushNotificationPrompt from "@/components/pwa/PushNotificationPrompt";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -229,6 +230,7 @@ export default async function RootLayout({
             <Footer locale={locale} />
             <BottomNav />
             <InstallAppBanner />
+            <PushNotificationPrompt />
             <Toaster richColors position="top-right" />
             <Analytics />
           </LanguageProvider>

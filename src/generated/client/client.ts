@@ -106,3 +106,8 @@ export type DatabaseSnapshot = Prisma.DatabaseSnapshotModel
  * 
  */
 export type Review = Prisma.ReviewModel
+/**
+ * Model PushSubscription
+ * 
+ */
+export type PushSubscription = Prisma.PushSubscriptionModel

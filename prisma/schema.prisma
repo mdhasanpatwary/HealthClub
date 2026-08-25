@@ -289,3 +289,21 @@ model Review {
   @@map("reviews")
 }
 
+model PushSubscription {
+  id          String   @id @default(uuid())
+  endpoint    String   @unique
+  p256dh      String
+  auth        String
+  userId      String?  @map("user_id")
+  userRole    String?  @map("user_role") // 'member' | 'partner' | 'admin' | 'guest'
+  userAgent   String?  @map("user_agent")
+  platform    String?
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([userId], map: "push_subscriptions_user_id_idx")
+  @@index([userRole], map: "push_subscriptions_user_role_idx")
+  @@index([createdAt(sort: Desc)], map: "push_subscriptions_created_at_idx")
+  @@map("push_subscriptions")
+}
+
