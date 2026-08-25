@@ -43,8 +43,9 @@ export default function BecomePartnerPage() {
         phone: "",
         email: ""
       });
-    } catch {
-      toast.error("আবেদনটি জমা দেওয়া সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "আবেদনটি জমা দেওয়া সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।";
+      toast.error(msg);
     }
   };
 

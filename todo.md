@@ -263,7 +263,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/sw.ts`, `src/app/dashboard/components/OfflineCardBanner.tsx`, `src/lib/safeStorage.ts`
   - **Details**: Configure CacheStorage & IndexedDB offline strategies in Service Worker to ensure members can view and present their digital ID card and call emergency ambulances even with zero network connectivity.
 
-- [ ] **TODO-55** (7.3): **Rate Limiting Protection on Sensitive Public Forms & Auth Actions**
+- [x] **TODO-55** (7.3): **Rate Limiting Protection on Sensitive Public Forms & Auth Actions**
   - **Files**: `src/lib/rateLimit.ts`, `src/app/actions/memberAuthActions.ts`, `src/app/actions/contactActions.ts`, `src/app/actions/partnerRequestActions.ts`
   - **Details**: Implement sliding-window rate limiting on login, registration, contact message, and partner onboarding actions to safeguard server endpoints against brute-force attempts and automated spam submissions.
 

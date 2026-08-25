@@ -4,6 +4,11 @@ import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { PaginatedResult } from "@/types/pagination";
+import {
+  checkRateLimit,
+  getClientIp,
+  RATE_LIMIT_RULES,
+} from "@/lib/rateLimit";
 
 export interface ContactMessage {
   id: string;
@@ -93,6 +98,19 @@ export async function addContactMessageAction(data: {
   message: string;
 }): Promise<{ success: boolean; error?: string }> {
   try {
+    const ip = await getClientIp();
+    const rateLimit = checkRateLimit(
+      `contact:${ip}`,
+      RATE_LIMIT_RULES.CONTACT_MESSAGE_PER_IP.limit,
+      RATE_LIMIT_RULES.CONTACT_MESSAGE_PER_IP.windowMs
+    );
+    if (!rateLimit.success) {
+      return {
+        success: false,
+        error: rateLimit.message || "আপনি খুব দ্রুত বার্তা পাঠাচ্ছেন। অনুগ্রহ করে কিছুক্ষণ পর চেষ্টা করুন।",
+      };
+    }
+
     if (!data.name || !data.phone || !data.message) {
       return { success: false, error: "Name, phone, and message are required." };
     }

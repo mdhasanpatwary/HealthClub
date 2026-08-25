@@ -9,6 +9,12 @@ import { sendPasswordResetEmail } from "@/lib/mail";
 import { logger } from "@/lib/logger";
 import { updateTag } from "next/cache";
 import { PaginatedResult } from "@/types/pagination";
+import {
+  checkRateLimit,
+  resetRateLimit,
+  getClientIp,
+  RATE_LIMIT_RULES,
+} from "@/lib/rateLimit";
 
 const PARTNERS_TAG = "partners";
 const MAX_PARTNER_OTP_ATTEMPTS = 5;
@@ -16,13 +22,13 @@ const MAX_PARTNER_OTP_ATTEMPTS = 5;
 export interface PartnerRequest {
   id: string;
   orgName: string;
-  category: 'hospital' | 'diagnostic' | 'pharmacy';
+  category: "hospital" | "diagnostic" | "pharmacy";
   address: string;
   discount: string;
   contactName: string | null;
   phone: string;
   email: string | null;
-  status: 'pending' | 'approved' | 'rejected';
+  status: "pending" | "approved" | "rejected";
 }
 
 export interface GetPaginatedPartnerRequestsParams {
@@ -33,18 +39,46 @@ export interface GetPaginatedPartnerRequestsParams {
   category?: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function toPartner(p: any): Partner {
+  return {
+    id: p.id,
+    name: p.name,
+    category: p.category as Partner["category"],
+    address: p.address,
+    discount: p.discount,
+    phone: p.phone,
+    email: p.email || undefined,
+    logoText: p.logoText,
+    mapLink: p.mapLink || undefined,
+    imageUrl: p.imageUrl || undefined,
+    emergencyPhone: p.emergencyPhone || undefined,
+    workingHours: p.workingHours || undefined,
+    departmentDiscounts: p.departmentDiscounts || undefined,
+  };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function toPartnerRequest(d: any): PartnerRequest {
+  return {
+    id: d.id,
+    orgName: d.orgName,
+    category: d.category as PartnerRequest["category"],
+    address: d.address,
+    discount: d.discount,
+    contactName: d.contactName,
+    phone: d.phone,
+    email: d.email,
+    status: d.status as PartnerRequest["status"],
+  };
+}
+
 export async function getPaginatedPartnerRequestsAction(
   params?: GetPaginatedPartnerRequestsParams
 ): Promise<PaginatedResult<PartnerRequest>> {
   const session = await getSessionUser();
   if (!session || session.role !== "admin") {
-    return {
-      data: [],
-      totalItems: 0,
-      totalPages: 1,
-      currentPage: 1,
-      pageSize: params?.pageSize || 10,
-    };
+    return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize: params?.pageSize || 10 };
   }
 
   const page = Math.max(1, params?.page || 1);
@@ -55,12 +89,8 @@ export async function getPaginatedPartnerRequestsAction(
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const where: any = {};
-  if (status && status !== "all") {
-    where.status = status;
-  }
-  if (category && category !== "all") {
-    where.category = category;
-  }
+  if (status && status !== "all") where.status = status;
+  if (category && category !== "all") where.category = category;
   if (search) {
     where.OR = [
       { orgName: { contains: search, mode: "insensitive" } },
@@ -82,20 +112,8 @@ export async function getPaginatedPartnerRequestsAction(
       }),
     ]);
 
-    const requests: PartnerRequest[] = data.map((d) => ({
-      id: d.id,
-      orgName: d.orgName,
-      category: d.category as PartnerRequest["category"],
-      address: d.address,
-      discount: d.discount,
-      contactName: d.contactName,
-      phone: d.phone,
-      email: d.email,
-      status: d.status as PartnerRequest["status"],
-    }));
-
     return {
-      data: requests,
+      data: data.map(toPartnerRequest),
       totalItems,
       totalPages: Math.max(1, Math.ceil(totalItems / pageSize)),
       currentPage: page,
@@ -107,8 +125,19 @@ export async function getPaginatedPartnerRequestsAction(
   }
 }
 
+export async function addPartnerRequestAction(
+  req: Omit<PartnerRequest, "id" | "status">
+): Promise<PartnerRequest> {
+  const ip = await getClientIp();
+  const rateLimit = checkRateLimit(
+    `partner_req:${ip}`,
+    RATE_LIMIT_RULES.PARTNER_REQUEST_PER_IP.limit,
+    RATE_LIMIT_RULES.PARTNER_REQUEST_PER_IP.windowMs
+  );
+  if (!rateLimit.success) {
+    throw new Error(rateLimit.message || "খুব বেশি পার্টনার আবেদন জমা দেওয়ার চেষ্টা করা হয়েছে।");
+  }
 
-export async function addPartnerRequestAction(req: Omit<PartnerRequest, "id" | "status">): Promise<PartnerRequest> {
   const id = `req_${crypto.randomUUID()}`;
   try {
     const data = await prisma.partnerRequest.create({
@@ -121,21 +150,11 @@ export async function addPartnerRequestAction(req: Omit<PartnerRequest, "id" | "
         contactName: req.contactName || null,
         phone: req.phone,
         email: req.email || null,
-        status: "pending"
-      }
+        status: "pending",
+      },
     });
 
-    return {
-      id: data.id,
-      orgName: data.orgName,
-      category: data.category as PartnerRequest["category"],
-      address: data.address,
-      discount: data.discount,
-      contactName: data.contactName,
-      phone: data.phone,
-      email: data.email,
-      status: data.status as PartnerRequest["status"]
-    };
+    return toPartnerRequest(data);
   } catch (error) {
     logger.error("Error in addPartnerRequestAction:", error);
     throw error;
@@ -147,27 +166,19 @@ export async function getPartnerRequestsAction(): Promise<PartnerRequest[]> {
   if (!session || session.role !== "admin") return [];
   try {
     const data = await prisma.partnerRequest.findMany({
-      orderBy: { createdAt: "desc" }
+      orderBy: { createdAt: "desc" },
     });
-
-    return data.map((d) => ({
-      id: d.id,
-      orgName: d.orgName,
-      category: d.category as PartnerRequest["category"],
-      address: d.address,
-      discount: d.discount,
-      contactName: d.contactName,
-      phone: d.phone,
-      email: d.email,
-      status: d.status as PartnerRequest["status"]
-    }));
+    return data.map(toPartnerRequest);
   } catch (error) {
     logger.error("Error in getPartnerRequestsAction:", error);
     return [];
   }
 }
 
-export async function updatePartnerRequestStatusAction(id: string, status: "approved" | "rejected"): Promise<boolean> {
+export async function updatePartnerRequestStatusAction(
+  id: string,
+  status: "approved" | "rejected"
+): Promise<boolean> {
   const session = await getSessionUser();
   if (!session || session.role !== "admin") {
     logger.warn("Unauthorized attempt to update partner request status");
@@ -230,58 +241,45 @@ export async function loginPartnerAction(
   error?: string;
 }> {
   try {
+    const ip = await getClientIp();
+
+    const ipLimit = checkRateLimit(
+      `partner_login_ip:${ip}`,
+      RATE_LIMIT_RULES.PARTNER_LOGIN_PER_IP.limit,
+      RATE_LIMIT_RULES.PARTNER_LOGIN_PER_IP.windowMs
+    );
+    if (!ipLimit.success) return { success: false, error: ipLimit.message };
+
     const cleanIdentifier = identifier?.trim();
     if (!cleanIdentifier || !password) {
       return { success: false, error: "মোবাইল নম্বর/ইউজারনেম এবং পাসওয়ার্ড দিন।" };
     }
 
+    const idLimit = checkRateLimit(
+      `partner_login_id:${cleanIdentifier.toLowerCase()}`,
+      RATE_LIMIT_RULES.PARTNER_LOGIN_PER_IDENTIFIER.limit,
+      RATE_LIMIT_RULES.PARTNER_LOGIN_PER_IDENTIFIER.windowMs
+    );
+    if (!idLimit.success) return { success: false, error: idLimit.message };
+
     // 1. Try matching primary partner hospital account
     const partnerData = await prisma.partner.findFirst({
-      where: {
-        OR: [
-          { phone: cleanIdentifier },
-          { email: cleanIdentifier }
-        ]
-      }
+      where: { OR: [{ phone: cleanIdentifier }, { email: cleanIdentifier }] },
     });
 
     if (partnerData && partnerData.password) {
       const isValid = verifyPassword(password, partnerData.password);
       if (isValid) {
+        resetRateLimit(`partner_login_id:${cleanIdentifier.toLowerCase()}`);
         await setSessionUser(partnerData.id, "partner");
-
-        return {
-          success: true,
-          partner: {
-            id: partnerData.id,
-            name: partnerData.name,
-            category: partnerData.category as Partner["category"],
-            address: partnerData.address,
-            discount: partnerData.discount,
-            phone: partnerData.phone,
-            email: partnerData.email || undefined,
-            logoText: partnerData.logoText,
-            mapLink: partnerData.mapLink || undefined,
-            imageUrl: partnerData.imageUrl || undefined,
-            emergencyPhone: partnerData.emergencyPhone || undefined,
-            workingHours: partnerData.workingHours || undefined,
-            departmentDiscounts: partnerData.departmentDiscounts || undefined,
-          }
-        };
+        return { success: true, partner: toPartner(partnerData) };
       }
     }
 
-    // 2. Try matching partner cashier / counter staff account
+    // 2. Try matching partner staff account
     const staffData = await prisma.partnerStaff.findFirst({
-      where: {
-        OR: [
-          { username: cleanIdentifier.toLowerCase() },
-          { phone: cleanIdentifier }
-        ]
-      },
-      include: {
-        partner: true,
-      }
+      where: { OR: [{ username: cleanIdentifier.toLowerCase() }, { phone: cleanIdentifier }] },
+      include: { partner: true },
     });
 
     if (staffData) {
@@ -294,6 +292,7 @@ export async function loginPartnerAction(
 
       const isValid = verifyPassword(password, staffData.password);
       if (isValid && staffData.partner) {
+        resetRateLimit(`partner_login_id:${cleanIdentifier.toLowerCase()}`);
         await setSessionUser(staffData.partnerId, "partner_staff", {
           staffId: staffData.id,
           staffName: staffData.name,
@@ -303,21 +302,7 @@ export async function loginPartnerAction(
 
         return {
           success: true,
-          partner: {
-            id: staffData.partner.id,
-            name: staffData.partner.name,
-            category: staffData.partner.category as Partner["category"],
-            address: staffData.partner.address,
-            discount: staffData.partner.discount,
-            phone: staffData.partner.phone,
-            email: staffData.partner.email || undefined,
-            logoText: staffData.partner.logoText,
-            mapLink: staffData.partner.mapLink || undefined,
-            imageUrl: staffData.partner.imageUrl || undefined,
-            emergencyPhone: staffData.partner.emergencyPhone || undefined,
-            workingHours: staffData.partner.workingHours || undefined,
-            departmentDiscounts: staffData.partner.departmentDiscounts || undefined,
-          },
+          partner: toPartner(staffData.partner),
           staff: {
             id: staffData.id,
             name: staffData.name,
@@ -344,39 +329,25 @@ export async function changePartnerPasswordAction(
   if (!session || session.role !== "partner") {
     return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
   }
-
   if (!currentPassword || !newPassword) {
     return { success: false, message: "সকল তথ্য প্রদান করুন।" };
   }
-
   if (newPassword.length < 6) {
     return { success: false, message: "নতুন পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।" };
   }
 
   try {
-    const partner = await prisma.partner.findUnique({
-      where: { id: session.userId }
-    });
-
-    if (!partner) {
-      return { success: false, message: "পার্টনার খুঁজে পাওয়া যায়নি।" };
-    }
-
+    const partner = await prisma.partner.findUnique({ where: { id: session.userId } });
+    if (!partner) return { success: false, message: "পার্টনার খুঁজে পাওয়া যায়নি।" };
     if (!partner.password) {
-      return { success: false, message: "পূর্বে কোনো পাসওয়ার্ড সেট করা নেই। অনুগ্রহ করে অ্যাডমিনের সাথে যোগাযোগ করুন।" };
+      return { success: false, message: "পূর্বে কোনো পাসওয়ার্ড সেট করা নেই। অ্যাডমিনের সাথে যোগাযোগ করুন।" };
     }
 
     const isValid = verifyPassword(currentPassword, partner.password);
-    if (!isValid) {
-      return { success: false, message: "বর্তমান পাসওয়ার্ডটি সঠিক নয়।" };
-    }
+    if (!isValid) return { success: false, message: "বর্তমান পাসওয়ার্ডটি সঠিক নয়।" };
 
     const hashed = hashPassword(newPassword);
-    await prisma.partner.update({
-      where: { id: partner.id },
-      data: { password: hashed }
-    });
-
+    await prisma.partner.update({ where: { id: partner.id }, data: { password: hashed } });
     return { success: true, message: "পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে।" };
   } catch (error) {
     logger.error("Error in changePartnerPasswordAction:", error);
@@ -388,34 +359,35 @@ export async function requestPartnerPasswordResetAction(
   email: string
 ): Promise<{ success: boolean; message: string }> {
   try {
-    if (!email) {
-      return { success: false, message: "অনুগ্রহ করে ইমেইল অ্যাড্রেসটি দিন।" };
-    }
+    if (!email) return { success: false, message: "অনুগ্রহ করে ইমেইল অ্যাড্রেসটি দিন।" };
 
-    const partner = await prisma.partner.findFirst({
-      where: { email }
-    });
+    const ip = await getClientIp();
+    const cleanEmail = email.trim().toLowerCase();
+    const rateLimit = checkRateLimit(
+      `partner_reset_req:${ip}:${cleanEmail}`,
+      RATE_LIMIT_RULES.PASSWORD_RESET_REQ.limit,
+      RATE_LIMIT_RULES.PASSWORD_RESET_REQ.windowMs
+    );
+    if (!rateLimit.success) return { success: false, message: rateLimit.message };
 
+    const partner = await prisma.partner.findFirst({ where: { email } });
     if (!partner) {
-      return { success: true, message: "যদি এই ইমেইলটি আমাদের সিস্টেমে নিবন্ধিত থাকে, তবে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
+      return { success: true, message: "যদি এই ইমেইলটি নিবন্ধিত থাকে, তবে ওটিপি কোড পাঠানো হয়েছে।" };
     }
 
     const otp = randomInt(100000, 1000000).toString();
     await prisma.partner.update({
       where: { id: partner.id },
-      data: {
-        verificationCode: otp,
-        verificationCodeCreatedAt: new Date(),
-      }
+      data: { verificationCode: otp, verificationCodeCreatedAt: new Date() },
     });
 
     const sent = await sendPasswordResetEmail(partner.email || "", otp, partner.name);
     if (!sent) {
       logger.error(`[PARTNER PASSWORD RESET] Email send failed for ${email}`);
-      return { success: false, message: "পাসওয়ার্ড রিসেট ওটিপি পাঠাতে সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।" };
+      return { success: false, message: "পাসওয়ার্ড রিসেট ওটিপি পাঠাতে সমস্যা হয়েছে। কিছুক্ষণ পর চেষ্টা করুন।" };
     }
 
-    return { success: true, message: "যদি এই ইমেইলটি আমাদের সিস্টেমে নিবন্ধিত থাকে, তবে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
+    return { success: true, message: "যদি এই ইমেইলটি নিবন্ধিত থাকে, তবে ওটিপি কোড পাঠানো হয়েছে।" };
   } catch (error) {
     logger.error("Error in requestPartnerPasswordResetAction:", error);
     return { success: false, message: "পাসওয়ার্ড রিসেট অনুরোধ প্রক্রিয়া করতে সমস্যা হয়েছে।" };
@@ -428,18 +400,19 @@ export async function resetPartnerPasswordAction(
   rawNewPassword: string
 ): Promise<{ success: boolean; message: string }> {
   try {
-    if (!email || !code || !rawNewPassword) {
-      return { success: false, message: "সব তথ্য প্রদান করুন।" };
-    }
+    if (!email || !code || !rawNewPassword) return { success: false, message: "সব তথ্য প্রদান করুন।" };
 
-    const partner = await prisma.partner.findFirst({
-      where: { email }
-    });
+    const ip = await getClientIp();
+    const cleanEmail = email.trim().toLowerCase();
+    const rateLimit = checkRateLimit(
+      `partner_reset_confirm:${ip}:${cleanEmail}`,
+      RATE_LIMIT_RULES.PASSWORD_RESET_CONFIRM.limit,
+      RATE_LIMIT_RULES.PASSWORD_RESET_CONFIRM.windowMs
+    );
+    if (!rateLimit.success) return { success: false, message: rateLimit.message };
 
-    if (!partner) {
-      return { success: false, message: "পার্টনার অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।" };
-    }
-
+    const partner = await prisma.partner.findFirst({ where: { email } });
+    if (!partner) return { success: false, message: "পার্টনার অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।" };
     if (!partner.verificationCode || !partner.verificationCodeCreatedAt) {
       return { success: false, message: "রিসেট অনুরোধ পাওয়া যায়নি বা কোড ইতিমধ্যে ব্যবহৃত হয়েছে।" };
     }
@@ -456,36 +429,26 @@ export async function resetPartnerPasswordAction(
       return { success: false, message: "অনেকবার ভুল কোড দেওয়া হয়েছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
     }
 
-    const codeTime = new Date(partner.verificationCodeCreatedAt).getTime();
-    const currentTime = new Date().getTime();
-    const diffMinutes = (currentTime - codeTime) / (1000 * 60);
-
+    const diffMinutes = (Date.now() - new Date(partner.verificationCodeCreatedAt).getTime()) / (1000 * 60);
     if (diffMinutes > 15) {
-      return { success: false, message: "ভেরিফিকেশন কোডের মেয়াদ শেষ হয়ে গেছে। অনুগ্রহ করে আবার চেষ্টা করুন।" };
+      return { success: false, message: "ভেরিফিকেশন কোডের মেয়াদ শেষ হয়ে গেছে। আবার চেষ্টা করুন।" };
     }
 
     if (storedCode !== code) {
       const newAttempts = attempts + 1;
       await prisma.partner.update({
         where: { id: partner.id },
-        data: { verificationCode: `attempts:${newAttempts}:${storedCode}` }
+        data: { verificationCode: `attempts:${newAttempts}:${storedCode}` },
       });
       const remaining = MAX_PARTNER_OTP_ATTEMPTS - newAttempts;
-      if (remaining <= 0) {
-        return { success: false, message: "অনেকবার ভুল কোড দেওয়া হয়েছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
-      }
+      if (remaining <= 0) return { success: false, message: "অনেকবার ভুল কোড দেওয়া হয়েছে। নতুন কোড পাঠান।" };
       return { success: false, message: `ভুল ভেরিফিকেশন কোড। আর ${remaining}টি সুযোগ বাকি।` };
     }
 
     const hashedPassword = hashPassword(rawNewPassword);
-
     await prisma.partner.update({
       where: { id: partner.id },
-      data: {
-        password: hashedPassword,
-        verificationCode: null,
-        verificationCodeCreatedAt: null
-      }
+      data: { password: hashedPassword, verificationCode: null, verificationCodeCreatedAt: null },
     });
 
     return { success: true, message: "পাসওয়ার্ড সফলভাবে রিসেট করা হয়েছে।" };

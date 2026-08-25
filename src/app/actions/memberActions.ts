@@ -9,6 +9,11 @@ import { sendOtpEmail } from "@/lib/mail";
 import { logger } from "@/lib/logger";
 import { SITE_URL } from "@/lib/siteConfig";
 import {
+  checkRateLimit,
+  getClientIp,
+  RATE_LIMIT_RULES,
+} from "@/lib/rateLimit";
+import {
   loginMemberAction as _loginMemberAction,
   loginAdminAction as _loginAdminAction,
   logoutUserAction as _logoutUserAction,
@@ -83,6 +88,16 @@ function stripSensitive(m: Member): Member {
 export async function addMemberAction(
   member: Omit<Member, "id" | "status" | "joinedDate" | "expiryDate" | "totalSaved"> & { password?: string }
 ): Promise<Member | { error: string }> {
+  const ip = await getClientIp();
+  const rateLimit = checkRateLimit(
+    `register:${ip}`,
+    RATE_LIMIT_RULES.REGISTRATION_PER_IP.limit,
+    RATE_LIMIT_RULES.REGISTRATION_PER_IP.windowMs
+  );
+  if (!rateLimit.success) {
+    return { error: rateLimit.message || "খুব বেশি রেজিস্ট্রেশন অনুরোধ করা হয়েছে। অনুগ্রহ করে কিছুক্ষণ অপেক্ষা করুন।" };
+  }
+
   const existingPhone = await prisma.member.findUnique({
     where: { phone: member.phone },
   });

@@ -7,6 +7,12 @@ import { hashPassword, verifyPassword } from "@/lib/crypto";
 import { setSessionUser, clearSessionUser } from "@/lib/session";
 import { sendOtpEmail, sendPasswordResetEmail } from "@/lib/mail";
 import { logger } from "@/lib/logger";
+import {
+  checkRateLimit,
+  resetRateLimit,
+  getClientIp,
+  RATE_LIMIT_RULES,
+} from "@/lib/rateLimit";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "healthclubfeni@gmail.com";
 const MAX_OTP_ATTEMPTS = 5;
@@ -30,6 +36,29 @@ export async function loginMemberAction(
   passwordInput: string
 ): Promise<{ success: boolean; member?: Member; message?: string; error?: string }> {
   try {
+    const ip = await getClientIp();
+    const cleanId = identifier.trim().toLowerCase();
+
+    // 1. IP-level rate limiting (15 attempts / 10 mins)
+    const ipLimit = checkRateLimit(
+      `login_ip:${ip}`,
+      RATE_LIMIT_RULES.LOGIN_PER_IP.limit,
+      RATE_LIMIT_RULES.LOGIN_PER_IP.windowMs
+    );
+    if (!ipLimit.success) {
+      return { success: false, error: "RATE_LIMITED", message: ipLimit.message };
+    }
+
+    // 2. Account-level rate limiting (5 attempts / 10 mins)
+    const idLimit = checkRateLimit(
+      `login_id:${cleanId}`,
+      RATE_LIMIT_RULES.LOGIN_PER_IDENTIFIER.limit,
+      RATE_LIMIT_RULES.LOGIN_PER_IDENTIFIER.windowMs
+    );
+    if (!idLimit.success) {
+      return { success: false, error: "RATE_LIMITED", message: idLimit.message };
+    }
+
     const isEmail = identifier.includes("@");
     let m = isEmail
       ? await prisma.member.findUnique({ where: { email: identifier } })
@@ -47,6 +76,8 @@ export async function loginMemberAction(
     if (!isValid) {
       return { success: false, error: "INVALID_CREDENTIALS", message: "মেম্বারশিপ আইডি, ফোন নম্বর বা পাসওয়ার্ড সঠিক নয়।" };
     }
+
+    resetRateLimit(`login_id:${cleanId}`);
 
     const safeMember = stripSensitive({
       ...m,
@@ -69,7 +100,6 @@ export async function loginMemberAction(
     }
 
     await setSessionUser(safeMember.id, "user");
-
     return { success: true, member: safeMember };
   } catch (error) {
     logger.error("Error in loginMemberAction:", error);
@@ -79,8 +109,32 @@ export async function loginMemberAction(
 
 export async function loginAdminAction(identifier: string, passwordInput: string): Promise<Member | null> {
   try {
-    const isEmail = identifier.includes("@");
+    const ip = await getClientIp();
     const normalizedIdentifier = identifier.trim().toLowerCase();
+
+    // 1. IP-level rate limiting for admin login
+    const ipLimit = checkRateLimit(
+      `admin_login_ip:${ip}`,
+      RATE_LIMIT_RULES.ADMIN_LOGIN_PER_IP.limit,
+      RATE_LIMIT_RULES.ADMIN_LOGIN_PER_IP.windowMs
+    );
+    if (!ipLimit.success) {
+      logger.warn(`Admin login rate limit exceeded for IP: ${ip}`);
+      return null;
+    }
+
+    // 2. Account-level rate limiting for admin login
+    const idLimit = checkRateLimit(
+      `admin_login_id:${normalizedIdentifier}`,
+      RATE_LIMIT_RULES.ADMIN_LOGIN_PER_IDENTIFIER.limit,
+      RATE_LIMIT_RULES.ADMIN_LOGIN_PER_IDENTIFIER.windowMs
+    );
+    if (!idLimit.success) {
+      logger.warn(`Admin login rate limit exceeded for identifier: ${normalizedIdentifier}`);
+      return null;
+    }
+
+    const isEmail = identifier.includes("@");
 
     // 1. Search AdminUser table first
     let adminUser = isEmail
@@ -95,10 +149,7 @@ export async function loginAdminAction(identifier: string, passwordInput: string
     if (!adminUser) {
       const totalAdminUsers = await prisma.adminUser.count();
       if (totalAdminUsers === 0 && (normalizedIdentifier === ADMIN_EMAIL.toLowerCase() || identifier.trim() === "01711112222")) {
-        const existingMember = await prisma.member.findFirst({
-          where: { email: ADMIN_EMAIL },
-        });
-
+        const existingMember = await prisma.member.findFirst({ where: { email: ADMIN_EMAIL } });
         const isValid = existingMember
           ? verifyPassword(passwordInput, existingMember.password)
           : passwordInput === "admin123" || passwordInput === "123456";
@@ -120,14 +171,13 @@ export async function loginAdminAction(identifier: string, passwordInput: string
       }
     }
 
-    if (!adminUser || !adminUser.isActive) {
-      return null;
-    }
+    if (!adminUser || !adminUser.isActive) return null;
 
     const isValid = verifyPassword(passwordInput, adminUser.password);
     if (!isValid) return null;
 
-    // Update last login time
+    resetRateLimit(`admin_login_id:${normalizedIdentifier}`);
+
     await prisma.adminUser.update({
       where: { id: adminUser.id },
       data: { lastLoginAt: new Date() },
@@ -140,7 +190,7 @@ export async function loginAdminAction(identifier: string, passwordInput: string
     });
 
     const nowStr = formatDate(new Date());
-    const safeAdminMember: Member = {
+    return {
       id: adminUser.id,
       name: adminUser.name,
       phone: adminUser.phone || "",
@@ -151,9 +201,7 @@ export async function loginAdminAction(identifier: string, passwordInput: string
       expiryDate: "2099-12-31",
       totalSaved: 0,
       emailVerified: true,
-    };
-
-    return safeAdminMember;
+    } as Member;
   } catch (error) {
     logger.error("Error in loginAdminAction:", error);
     return null;
@@ -177,10 +225,19 @@ export async function verifyEmailOtpAction(
   code: string
 ): Promise<{ success: boolean; member?: Member; message?: string; requiresPayment?: boolean }> {
   try {
-    const member = await prisma.member.findFirst({
-      where: { email },
-    });
+    const ip = await getClientIp();
+    const cleanEmail = email?.trim().toLowerCase() || "";
 
+    const rateLimit = checkRateLimit(
+      `verify_otp:${ip}:${cleanEmail}`,
+      RATE_LIMIT_RULES.OTP_VERIFY_PER_IP_ACCOUNT.limit,
+      RATE_LIMIT_RULES.OTP_VERIFY_PER_IP_ACCOUNT.windowMs
+    );
+    if (!rateLimit.success) {
+      return { success: false, message: rateLimit.message };
+    }
+
+    const member = await prisma.member.findFirst({ where: { email } });
     if (!member) {
       return { success: false, message: "মেম্বার অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।" };
     }
@@ -242,7 +299,6 @@ export async function verifyEmailOtpAction(
     } as Member);
 
     await setSessionUser(safeMember.id, "user");
-
     const requiresPayment = updated.tier === "premium" && updated.status === "inactive" && !updated.bkashTxnId;
 
     return { success: true, member: safeMember, requiresPayment };
@@ -254,10 +310,19 @@ export async function verifyEmailOtpAction(
 
 export async function resendVerificationCodeAction(email: string): Promise<{ success: boolean; message: string }> {
   try {
-    const member = await prisma.member.findFirst({
-      where: { email },
-    });
+    const ip = await getClientIp();
+    const cleanEmail = email?.trim().toLowerCase() || "";
 
+    const rateLimit = checkRateLimit(
+      `resend_otp:${ip}:${cleanEmail}`,
+      RATE_LIMIT_RULES.OTP_RESEND_PER_IP_ACCOUNT.limit,
+      RATE_LIMIT_RULES.OTP_RESEND_PER_IP_ACCOUNT.windowMs
+    );
+    if (!rateLimit.success) {
+      return { success: false, message: rateLimit.message };
+    }
+
+    const member = await prisma.member.findFirst({ where: { email } });
     if (!member) {
       return { success: false, message: "মেম্বার খুঁজে পাওয়া যায়নি।" };
     }
@@ -291,10 +356,19 @@ export async function requestPasswordResetAction(email: string): Promise<{ succe
       return { success: false, message: "অনুগ্রহ করে ইমেইল অ্যাড্রেসটি দিন।" };
     }
 
-    const member = await prisma.member.findFirst({
-      where: { email },
-    });
+    const ip = await getClientIp();
+    const cleanEmail = email.trim().toLowerCase();
 
+    const rateLimit = checkRateLimit(
+      `reset_req:${ip}:${cleanEmail}`,
+      RATE_LIMIT_RULES.PASSWORD_RESET_REQ.limit,
+      RATE_LIMIT_RULES.PASSWORD_RESET_REQ.windowMs
+    );
+    if (!rateLimit.success) {
+      return { success: false, message: rateLimit.message };
+    }
+
+    const member = await prisma.member.findFirst({ where: { email } });
     if (!member) {
       return { success: true, message: "যদি এই ইমেইলটি আমাদের সিস্টেমে নিবন্ধিত থাকে, তবে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
     }
@@ -331,10 +405,19 @@ export async function resetPasswordAction(
       return { success: false, message: "সব তথ্য প্রদান করুন।" };
     }
 
-    const member = await prisma.member.findFirst({
-      where: { email },
-    });
+    const ip = await getClientIp();
+    const cleanEmail = email.trim().toLowerCase();
 
+    const rateLimit = checkRateLimit(
+      `reset_confirm:${ip}:${cleanEmail}`,
+      RATE_LIMIT_RULES.PASSWORD_RESET_CONFIRM.limit,
+      RATE_LIMIT_RULES.PASSWORD_RESET_CONFIRM.windowMs
+    );
+    if (!rateLimit.success) {
+      return { success: false, message: rateLimit.message };
+    }
+
+    const member = await prisma.member.findFirst({ where: { email } });
     if (!member) {
       return { success: false, message: "মেম্বার অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।" };
     }
