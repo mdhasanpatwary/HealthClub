@@ -303,10 +303,10 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/health-tools/page.tsx`
   - **Details**: Add `SoftwareApplication` / `WebApplication` JSON-LD schema with `applicationCategory: "HealthApplication"`, `operatingSystem: "All"`, free tier offers, and `HowTo` structured data for the BMI, Water, and Calorie health calculators.
 
-- [ ] **TODO-64**: **Dynamic Publication & Modification Timestamps in Health Tip Articles Schema**
+- [x] **TODO-64**: **Dynamic Publication & Modification Timestamps in Health Tip Articles Schema**
   - **Files**: `src/app/health-tips/[slug]/page.tsx`
   - **Details**: Dynamically derive `datePublished` and `dateModified` in `MedicalWebPage` JSON-LD from `article.publishedDate` or article timestamps to maintain accurate E-E-A-T freshness signals.
 
-- [ ] **TODO-65**: **Explicit Meta Robots Configuration for Utility, Auth & Private Subpages**
+- [x] **TODO-65**: **Explicit Meta Robots Configuration for Utility, Auth & Private Subpages**
   - **Files**: `src/app/forgot-password/page.tsx`, `src/app/forgot-password/reset/page.tsx`, `src/app/register/payment/page.tsx`, `src/app/register/verify-email/page.tsx`
   - **Details**: Add explicit `robots: { index: false, follow: false }` metadata to transactional, authentication, and reset password routes to prevent duplicate or thin-content indexing.

@@ -27,6 +27,7 @@ import { ArticleReactions } from "@/components/health-tips/ArticleReactions";
 import { MedicalDisclaimer } from "../components/MedicalDisclaimer";
 import { getArticleReadingTime } from "@/lib/readingTime";
 import { SITE_URL } from "@/lib/siteConfig";
+import { getArticleIsoDate } from "@/lib/dateUtils";
 
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;
@@ -64,6 +65,7 @@ export async function generateMetadata({ params }: ArticlePageProps) {
 
   const title = isEn ? `${article.titleEn} - Health Club` : `${article.titleBn} - হেলথ ক্লাব`;
   const description = isEn ? article.excerptEn : article.excerptBn;
+  const articleIsoDate = getArticleIsoDate(article.publishedDate);
 
   return {
     title,
@@ -76,6 +78,8 @@ export async function generateMetadata({ params }: ArticlePageProps) {
       description,
       url: `${SITE_URL}/health-tips/${article.slug}`,
       type: "article",
+      publishedTime: articleIsoDate,
+      modifiedTime: articleIsoDate,
       images: [
         {
           url: `${SITE_URL}/og-image.png`,
@@ -128,6 +132,8 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
   // Fetch reader reactions from database
   const reactionStats = await getArticleReactionsAction(article.slug);
 
+  const articleIsoDate = getArticleIsoDate(article.publishedDate);
+
   const jsonLdData = [
     {
       "@context": "https://schema.org",
@@ -174,8 +180,8 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
           "url": `${SITE_URL}/icon.png`,
         },
       },
-      "datePublished": "2026-08-10",
-      "dateModified": "2026-08-15",
+      "datePublished": articleIsoDate,
+      "dateModified": articleIsoDate,
     },
   ];
 
