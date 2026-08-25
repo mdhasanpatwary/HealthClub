@@ -20,6 +20,7 @@ import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatDiscount } from "@/lib/i18n";
 import { toast } from "sonner";
 import { SITE_URL } from "@/lib/siteConfig";
+import { trackEvent } from "@/lib/analytics";
 
 interface HospitalContactSidebarProps {
   partner: Partner;
@@ -108,6 +109,14 @@ export default function HospitalContactSidebar({
         <div className="space-y-2">
           <a
             href={`tel:${partner.phone}`}
+            onClick={() => {
+              trackEvent("hospital_contact_click", {
+                partner_id: partner.id,
+                partner_name: partner.name,
+                upazila: partner.upazila,
+                phone: partner.phone,
+              });
+            }}
             className={buttonVariants({
               variant: "default",
               size: "lg",
@@ -122,6 +131,14 @@ export default function HospitalContactSidebar({
           {partner.emergencyPhone && (
             <a
               href={`tel:${partner.emergencyPhone}`}
+              onClick={() => {
+                trackEvent("emergency_dial", {
+                  service_type: "hospital",
+                  target_name: `${partner.name} (Emergency 24/7)`,
+                  phone: partner.emergencyPhone!,
+                  upazila: partner.upazila,
+                });
+              }}
               className={buttonVariants({
                 variant: "outline",
                 size: "lg",

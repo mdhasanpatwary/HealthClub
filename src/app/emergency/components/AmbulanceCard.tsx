@@ -13,6 +13,7 @@ import {
   Truck,
   Wind,
 } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 interface AmbulanceCardProps {
   ambulance: AmbulanceService;
@@ -91,6 +92,14 @@ export function AmbulanceCard({ ambulance, isEn }: AmbulanceCardProps) {
         <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 pt-2 border-t border-border/40">
           <a
             href={`tel:${ambulance.phone}`}
+            onClick={() => {
+              trackEvent("emergency_dial", {
+                service_type: "ambulance",
+                target_name: `${ambulance.name} (${ambulance.type})`,
+                phone: ambulance.phone,
+                upazila: ambulance.location,
+              });
+            }}
             className="sm:col-span-3 inline-flex items-center justify-center gap-2 h-10 rounded-xl bg-primary hover:bg-primary-dark text-white font-bold text-xs sm:text-sm shadow-xs transition-all active:scale-[0.98]"
           >
             <PhoneCall className="h-4 w-4" />

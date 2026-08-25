@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Flame, Sparkles, RotateCcw } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatNum } from "@/lib/i18n";
+import { trackEvent } from "@/lib/analytics";
 
 export function CalorieCalculator() {
   const { locale } = useLanguage();
@@ -58,6 +59,11 @@ export function CalorieCalculator() {
       maintenance,
       weightLoss,
       weightGain,
+    });
+
+    trackEvent("health_tool_used", {
+      tool_name: "calorie",
+      result_status: `${maintenance}kcal`,
     });
   };
 

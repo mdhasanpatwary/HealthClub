@@ -27,6 +27,7 @@ import {
   evaluateBloodPressure,
   BpEvaluationResult,
 } from "@/data/clinicalEvaluatorData";
+import { trackEvent } from "@/lib/analytics";
 
 export function BpEvaluatorTab() {
   const { locale } = useLanguage();
@@ -82,6 +83,10 @@ export function BpEvaluatorTab() {
 
     const evaluation = evaluateBloodPressure(sys, dia);
     setResult(evaluation);
+    trackEvent("health_tool_used", {
+      tool_name: "bp_diabetes",
+      result_status: `BP_${evaluation.category}`,
+    });
     toast.success(
       isEn ? "Blood pressure evaluated successfully!" : "রক্তচাপের মূল্যায়ন সম্পন্ন হয়েছে!"
     );

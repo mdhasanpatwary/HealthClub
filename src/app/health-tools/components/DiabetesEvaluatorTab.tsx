@@ -30,6 +30,7 @@ import {
   GlucoseUnit,
   GlucoseEvaluationResult,
 } from "@/data/clinicalEvaluatorData";
+import { trackEvent } from "@/lib/analytics";
 
 export function DiabetesEvaluatorTab() {
   const { locale } = useLanguage();
@@ -111,6 +112,10 @@ export function DiabetesEvaluatorTab() {
 
     const evaluation = evaluateBloodGlucose(val, context, unit);
     setResult(evaluation);
+    trackEvent("health_tool_used", {
+      tool_name: "bp_diabetes",
+      result_status: `GLUCOSE_${evaluation.category}`,
+    });
     toast.success(
       isEn ? "Blood sugar evaluated successfully!" : "রক্তের শর্করার মূল্যায়ন সম্পন্ন হয়েছে!"
     );

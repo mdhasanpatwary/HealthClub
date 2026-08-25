@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { AlertTriangle, RefreshCw, Home } from "lucide-react";
-import { logger } from "@/lib/logger";
+import { telemetry } from "@/lib/telemetry";
 
 export default function RootGlobalError({
   error,
@@ -13,7 +13,7 @@ export default function RootGlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    logger.error("Critical Root Layout Application Error:", error);
+    telemetry.captureException(error, { digest: error.digest, boundary: "app/global-error" });
   }, [error]);
 
   return (

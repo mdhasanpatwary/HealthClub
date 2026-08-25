@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Activity, Scale, Sparkles, RotateCcw } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatNum } from "@/lib/i18n";
+import { trackEvent } from "@/lib/analytics";
 
 export function BmiCalculator() {
   const { locale } = useLanguage();
@@ -61,6 +62,11 @@ export function BmiCalculator() {
       category,
       idealMin: Math.round(idealMin),
       idealMax: Math.round(idealMax),
+    });
+
+    trackEvent("health_tool_used", {
+      tool_name: "bmi",
+      result_status: category,
     });
   };
 

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { getClientDeviceInfo } from "@/lib/pwaTelemetry";
 import { recordPwaPromptAction, recordPwaInstallAction } from "@/app/actions/pwaActions";
+import { trackEvent } from "@/lib/analytics";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -122,6 +123,8 @@ export default function InstallAppBanner() {
     } catch {}
     setIsVisible(false);
 
+    trackEvent("pwa_action", { action: "install_dismissed" });
+
     const info = getClientDeviceInfo();
     if (info.deviceId) {
       recordPwaPromptAction({
@@ -145,6 +148,7 @@ export default function InstallAppBanner() {
           localStorage.setItem(INSTALLED_KEY, "true");
         } catch {}
         setIsVisible(false);
+        trackEvent("pwa_action", { action: "install_accepted" });
         if (info.deviceId) {
           recordPwaInstallAction({
             deviceId: info.deviceId,
@@ -154,6 +158,7 @@ export default function InstallAppBanner() {
           }).catch(() => {});
         }
       } else {
+        trackEvent("pwa_action", { action: "install_dismissed" });
         if (info.deviceId) {
           recordPwaPromptAction({
             deviceId: info.deviceId,

@@ -36,6 +36,7 @@ import { useLanguage } from "@/components/layout/LanguageProvider";
 import { BloodDonorRegisterDialog } from "./BloodDonorRegisterDialog";
 import { AmbulanceRegisterDialog } from "./AmbulanceRegisterDialog";
 import { AmbulanceCard } from "./AmbulanceCard";
+import { trackEvent } from "@/lib/analytics";
 
 interface EmergencyDirectoryProps {
   initialBloodDonors?: BloodDonor[];
@@ -277,6 +278,14 @@ export function EmergencyDirectory({
                       <div className="grid grid-cols-2 gap-2 pt-1">
                         <a
                           href={`tel:${donor.phone}`}
+                          onClick={() => {
+                            trackEvent("emergency_dial", {
+                              service_type: "blood_donor",
+                              target_name: `${donor.name} (${donor.bloodGroup})`,
+                              phone: donor.phone,
+                              upazila: donor.upazila,
+                            });
+                          }}
                           className="inline-flex items-center justify-center gap-1.5 h-8 px-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors"
                         >
                           <PhoneCall className="h-3.5 w-3.5" />
@@ -462,6 +471,13 @@ export function EmergencyDirectory({
 
                   <a
                     href={`tel:${hotline.phone}`}
+                    onClick={() => {
+                      trackEvent("emergency_dial", {
+                        service_type: "hotline",
+                        target_name: hotline.titleEn || hotline.titleBn,
+                        phone: hotline.phone,
+                      });
+                    }}
                     className="w-full inline-flex items-center justify-center gap-2 h-10 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm shadow-sm transition-all"
                   >
                     <PhoneCall className="h-4 w-4" />

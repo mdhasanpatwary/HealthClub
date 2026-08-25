@@ -10,6 +10,7 @@ import {
 import { Doctor } from "@/services/db";
 import { Button } from "@/components/ui/button";
 import { DoctorAvailabilityBadge, DoctorNoticeBanner } from "./DoctorAvailabilityBadge";
+import { trackEvent } from "@/lib/analytics";
 
 export function DoctorAvatar({
   src,
@@ -129,6 +130,15 @@ export function DoctorSerialModal({ doctor, onClose, t, locale }: DoctorSerialMo
             <a
               key={idx}
               href={`tel:${phone.replace(/\s+/g, "")}`}
+              onClick={() => {
+                trackEvent("doctor_serial_click", {
+                  doctor_id: doctor.id,
+                  doctor_name: doctor.name,
+                  specialty: doctor.specialty,
+                  hospital: doctor.chamberName,
+                  phone: phone.trim(),
+                });
+              }}
               className="flex items-center justify-between p-3.5 rounded-2xl border-2 border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors group"
             >
               <div className="flex items-center gap-3">

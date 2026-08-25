@@ -34,6 +34,7 @@ import {
   generateHealthAssessmentReport,
   printHealthAssessmentReport,
 } from "@/lib/healthReportPdf";
+import { trackEvent } from "@/lib/analytics";
 
 export function HealthReportExportButton() {
   const { locale } = useLanguage();
@@ -99,6 +100,9 @@ export function HealthReportExportButton() {
   const handlePrintReport = () => {
     try {
       printHealthAssessmentReport(currentReport, locale);
+      trackEvent("health_report_downloaded", {
+        report_type: "full_health_assessment",
+      });
       toast.success(
         isEn
           ? "Health Assessment report ready for print / PDF export!"

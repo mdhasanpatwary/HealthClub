@@ -10,6 +10,7 @@ import {
   getVapidPublicKeyAction,
   savePushSubscriptionAction,
 } from "@/app/actions/pushNotificationActions";
+import { trackEvent } from "@/lib/analytics";
 
 const PROMPT_DISMISS_KEY = "hc_push_prompt_dismissed_at";
 const REPROMPT_DAYS = 7;
@@ -157,6 +158,9 @@ export function PushNotificationPrompt() {
         if (saveRes.success) {
           setIsSubscribed(true);
           setIsVisible(false);
+          trackEvent("pwa_action", {
+            action: "push_subscribed",
+          });
           toast.success(
             isBn
               ? "🔔 পুশ নোটিফিকেশন সফলভাবে চালু করা হয়েছে!"

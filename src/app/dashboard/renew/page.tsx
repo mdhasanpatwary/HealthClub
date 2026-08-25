@@ -13,6 +13,7 @@ import { Member } from "@/services/db";
 import { toast } from "sonner";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Skeleton } from "@/components/ui/skeleton";
+import { trackEvent } from "@/lib/analytics";
 
 export default function RenewalPage() {
   const router = useRouter();
@@ -100,6 +101,10 @@ export default function RenewalPage() {
       const res = await requestRenewalAction(cleanSender, cleanTxnId, profession || undefined);
       if (res.success) {
         setPaymentSuccess(true);
+        trackEvent("membership_funnel", {
+          step: "renew_submit",
+          tier: member?.tier,
+        });
         if (member) {
           const updatedUser = {
             ...member,

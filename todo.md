@@ -310,3 +310,28 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
 - [x] **TODO-65**: **Explicit Meta Robots Configuration for Utility, Auth & Private Subpages**
   - **Files**: `src/app/forgot-password/page.tsx`, `src/app/forgot-password/reset/page.tsx`, `src/app/register/payment/page.tsx`, `src/app/register/verify-email/page.tsx`
   - **Details**: Add explicit `robots: { index: false, follow: false }` metadata to transactional, authentication, and reset password routes to prevent duplicate or thin-content indexing.
+
+---
+
+## 🌟 Phase 13: Analytics, Monitoring & Observability Suite (TODO-66 to TODO-70)
+
+- [x] **TODO-66**: **Unified Analytics & Event Tracking Engine (`src/lib/analytics.ts`)**
+  - **Files**: `src/lib/analytics.ts`
+  - **Details**: Strongly-typed event dispatcher supporting Google Analytics 4 (GA4 `gtag`), Vercel Analytics, and development environment structured event debugging.
+
+- [x] **TODO-67**: **Google Analytics 4 & App Router Dynamic Pageview Tracker**
+  - **Files**: `src/components/analytics/GoogleAnalytics.tsx`, `src/app/layout.tsx`
+  - **Details**: Asynchronous GA4 script loader supporting `NEXT_PUBLIC_GA_MEASUREMENT_ID` with route change tracking in Next.js App Router wrapped in Suspense boundary.
+
+- [x] **TODO-68**: **Core Web Vitals Performance Monitor**
+  - **Files**: `src/components/analytics/WebVitalsTracker.tsx`, `src/app/layout.tsx`
+  - **Details**: Real-user performance metric capturing (LCP, FID/INP, CLS, TTFB, FCP) via `next/web-vitals` with automated GA4 dispatch.
+
+- [x] **TODO-69**: **High-Value User Engagement & Conversion Instrumentation**
+  - **Files**: `src/app/emergency/components/EmergencyDirectory.tsx`, `src/app/emergency/components/AmbulanceCard.tsx`, `src/components/ui/doctors/DoctorModals.tsx`, `src/components/partner-hospitals/HospitalContactSidebar.tsx`, `src/app/health-tools/components/BmiCalculator.tsx`, `src/app/health-tools/components/PregnancyCalculator.tsx`, `src/app/health-tools/components/BpEvaluatorTab.tsx`, `src/app/health-tools/components/DiabetesEvaluatorTab.tsx`, `src/app/health-tools/components/WaterIntakeCalculator.tsx`, `src/app/health-tools/components/CalorieCalculator.tsx`, `src/app/health-tools/components/HealthReportExportButton.tsx`, `src/components/health-tips/ArticleReactions.tsx`, `src/components/pwa/PushNotificationPrompt.tsx`, `src/components/layout/InstallAppBanner.tsx`, `src/app/register/payment/page.tsx`, `src/app/dashboard/renew/page.tsx`
+  - **Details**: Instrument all critical conversion actions: blood donor calls, ambulance calls, emergency hotlines, doctor serial bookings, hospital helplines, health tool calculations, health report PDF downloads, article helpfulness votes, PWA install prompts, and membership payment/renewal submissions.
+
+- [x] **TODO-70**: **Production Error Telemetry & Exception Boundary Integration**
+  - **Files**: `src/lib/telemetry.ts`, `src/app/error.tsx`, `src/app/global-error.tsx`
+  - **Details**: Centralized exception capturing utility with Sentry/OpenTelemetry plug-and-play hook, integrated into root and segment error boundaries to capture unhandled runtime exceptions safely with PII sanitization.
+

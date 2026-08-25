@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Droplet, Sparkles, GlassWater, RotateCcw } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatNum } from "@/lib/i18n";
+import { trackEvent } from "@/lib/analytics";
 
 export function WaterIntakeCalculator() {
   const { locale } = useLanguage();
@@ -43,6 +44,11 @@ export function WaterIntakeCalculator() {
     setResult({
       liters: parseFloat(liters.toFixed(1)),
       glasses,
+    });
+
+    trackEvent("health_tool_used", {
+      tool_name: "water",
+      result_status: `${liters.toFixed(1)}L`,
     });
   };
 

@@ -16,6 +16,8 @@ import { en } from "@/lib/translations.en";
 import { bn } from "@/lib/translations.bn";
 import JsonLd from "@/components/seo/JsonLd";
 import { Analytics } from "@vercel/analytics/next";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
+import WebVitalsTracker from "@/components/analytics/WebVitalsTracker";
 import { SITE_URL } from "@/lib/siteConfig";
 import PwaTracker from "@/components/pwa/PwaTracker";
 import PushNotificationPrompt from "@/components/pwa/PushNotificationPrompt";
@@ -252,6 +254,8 @@ export default async function RootLayout({
             <PushNotificationPrompt />
             <Toaster richColors position="top-right" />
             <Analytics />
+            <GoogleAnalytics />
+            <WebVitalsTracker />
           </LanguageProvider>
         </ThemeProvider>
       </body>

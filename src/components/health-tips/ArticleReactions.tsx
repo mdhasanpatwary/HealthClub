@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toBanglaNums } from "@/lib/utils";
 import { submitArticleReactionAction } from "@/app/actions/healthTipsAdminActions";
+import { trackEvent } from "@/lib/analytics";
 
 interface ArticleReactionsProps {
   slug: string;
@@ -104,6 +105,10 @@ export function ArticleReactions({
       if (res.success && res.stats) {
         setHelpfulCount(res.stats.helpful);
         setNotHelpfulCount(res.stats.notHelpful);
+        trackEvent("health_tip_feedback", {
+          slug,
+          helpful: reaction === "helpful",
+        });
         toast.success(
           isEn
             ? "Thank you for your valuable feedback!"

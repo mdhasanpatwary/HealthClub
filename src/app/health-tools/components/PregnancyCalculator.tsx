@@ -28,6 +28,7 @@ import {
   calculateEddFromUltrasound,
   PregnancyCalculationResult,
 } from "@/data/pregnancyMilestones";
+import { trackEvent } from "@/lib/analytics";
 
 export function PregnancyCalculator() {
   const { locale } = useLanguage();
@@ -80,6 +81,10 @@ export function PregnancyCalculator() {
 
       const calcResult = calculateEddFromLmp(lmp, cycle);
       setResult(calcResult);
+      trackEvent("health_tool_used", {
+        tool_name: "pregnancy_edd",
+        result_status: `LMP_T${calcResult.trimester}`,
+      });
       toast.success(isEn ? "Due date calculated successfully!" : "প্রসবের সম্ভাব্য তারিখ হিসাব সম্পন্ন হয়েছে!");
     } else {
       // Ultrasound
@@ -112,6 +117,10 @@ export function PregnancyCalculator() {
 
       const calcResult = calculateEddFromUltrasound(scan, w, d);
       setResult(calcResult);
+      trackEvent("health_tool_used", {
+        tool_name: "pregnancy_edd",
+        result_status: `USG_T${calcResult.trimester}`,
+      });
       toast.success(isEn ? "Due date calculated from ultrasound!" : "আল্ট্রাসনোগ্রাম অনুযায়ী সম্ভাব্য তারিখ হিসাব করা হয়েছে!");
     }
   };

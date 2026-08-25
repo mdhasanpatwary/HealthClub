@@ -12,6 +12,7 @@ import { Member } from "@/services/db";
 import { Skeleton } from "@/components/ui/skeleton";
 import { safeStorage } from "@/lib/safeStorage";
 import { toast } from "sonner";
+import { trackEvent } from "@/lib/analytics";
 
 function PaymentForm() {
   const router = useRouter();
@@ -103,6 +104,10 @@ function PaymentForm() {
       
       if (success) {
         setPaymentSuccess(true);
+        trackEvent("membership_funnel", {
+          step: "payment_submit",
+          tier: member.tier,
+        });
         // Sync local storage user state
         const updatedUser = { 
           ...member, 
