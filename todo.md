@@ -279,7 +279,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/doctors/page.tsx`, `src/app/doctors/[id]/page.tsx`, `next.config.ts`
   - **Details**: Replace Next.js `redirect()` (HTTP 307 temporary) with `permanentRedirect()` from `next/navigation` (HTTP 308 permanent) or configure `redirects()` in `next.config.ts` so search engine crawlers properly transfer PageRank and link equity to `/consultants`.
 
-- [ ] **TODO-58**: **Robots.txt Security & AI Search Crawlers Optimization**
+- [x] **TODO-58**: **Robots.txt Security & AI Search Crawlers Optimization**
   - **Files**: `src/app/robots.ts`
   - **Details**: Apply strict `disallow` paths (`/admin/`, `/dashboard/`, `/partner/`, `/profile/`, `/api/`) to AI user-agents (`GPTBot`, `ClaudeBot`, `PerplexityBot`), and add support for modern AI search bots (`OAI-SearchBot`, `ChatGPT-User`, `Google-Extended`, `Applebot-Extended`, `cohere-ai`, `Bingbot`).
 
