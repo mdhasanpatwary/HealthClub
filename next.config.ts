@@ -33,6 +33,20 @@ const nextConfig: NextConfig = {
     // Serve modern formats (WebP/AVIF) where supported
     formats: ["image/avif", "image/webp"],
   },
+  async redirects() {
+    return [
+      {
+        source: "/doctors",
+        destination: "/consultants",
+        permanent: true,
+      },
+      {
+        source: "/doctors/:path*",
+        destination: "/consultants/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       // Partner dashboard: allow camera for QR scanning, deny microphone & geolocation

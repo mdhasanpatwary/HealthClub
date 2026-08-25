@@ -275,7 +275,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `public/og-image.png`, `src/app/layout.tsx`, `src/app/consultants/[id]/page.tsx`, `src/app/partner-hospitals/[id]/page.tsx`
   - **Details**: Generate and provide standard 1200x630 OpenGraph and Twitter card asset (`/og-image.png`) with proper `og:image:width: 1200`, `og:image:height: 630`, and update dynamic consultant/partner profile fallbacks to prevent 404 social previews.
 
-- [ ] **TODO-57**: **Convert Legacy `/doctors` Redirects to HTTP 308 Permanent Redirects**
+- [x] **TODO-57**: **Convert Legacy `/doctors` Redirects to HTTP 308 Permanent Redirects**
   - **Files**: `src/app/doctors/page.tsx`, `src/app/doctors/[id]/page.tsx`, `next.config.ts`
   - **Details**: Replace Next.js `redirect()` (HTTP 307 temporary) with `permanentRedirect()` from `next/navigation` (HTTP 308 permanent) or configure `redirects()` in `next.config.ts` so search engine crawlers properly transfer PageRank and link equity to `/consultants`.
 
