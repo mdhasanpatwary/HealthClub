@@ -291,7 +291,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `public/llms.txt`, `public/llms-full.txt`, `src/app/layout.tsx`
   - **Details**: Update `llms.txt` and `llms-full.txt` knowledge bases with comprehensive information on Emergency Services & Blood Network (`/emergency`), Specialist Doctors Directory (`/consultants`), Health Assessment Tools (`/health-tools`), Preventative Health Guides (`/health-tips`), and all 6 Feni Upazilas coverage. Add `<link rel="alternate" type="text/markdown">` head tags in `layout.tsx`.
 
-- [ ] **TODO-61**: **Organization & WebSite Schema: Add Social Entity Graph (`sameAs`) & SiteLinks Searchbox**
+- [x] **TODO-61**: **Organization & WebSite Schema: Add Social Entity Graph (`sameAs`) & SiteLinks Searchbox**
   - **Files**: `src/app/layout.tsx`
   - **Details**: Add `sameAs` array (official Facebook page, WhatsApp hotline, YouTube) to the global `Organization` JSON-LD schema, and attach `potentialAction: SearchAction` (Sitelinks Searchbox target `${SITE_URL}/consultants?search={search_term_string}`) to the `WebSite` schema.
 

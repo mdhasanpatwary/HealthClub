@@ -192,6 +192,11 @@ export default async function RootLayout({
       "description": "স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী - একটি প্রিমিয়াম স্বাস্থ্য মেম্বারশিপ সার্ভিস।",
       "telephone": "+8801886763849",
       "email": "healthclubfeni@gmail.com",
+      "sameAs": [
+        "https://www.facebook.com/profile.php?id=61591616953090",
+        "https://wa.me/8801886763849",
+        "https://youtube.com"
+      ],
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Feni",
@@ -210,7 +215,15 @@ export default async function RootLayout({
       "@type": "WebSite",
       "name": "হেলথ ক্লাব (Health Club)",
       "url": SITE_URL,
-      "inLanguage": ["bn-BD", "en-US"]
+      "inLanguage": ["bn-BD", "en-US"],
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": `${SITE_URL}/consultants?search={search_term_string}`
+        },
+        "query-input": "required name=search_term_string"
+      }
     }
   ];
 
