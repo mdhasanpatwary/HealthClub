@@ -10,9 +10,11 @@ import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import { resetPasswordAction } from "@/app/actions/memberActions";
 import { resetPartnerPasswordAction } from "@/app/actions/partnerActions";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toast } from "sonner";
 
 function ResetPasswordForm() {
+  const { t } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
@@ -28,22 +30,19 @@ function ResetPasswordForm() {
     setIsSubmitting(true);
 
     if (code.length !== 6) {
-      const msg = "অনুগ্রহ করে ৬ সংখ্যার সঠিক ওটিপি কোডটি দিন।";
-      toast.warning(msg);
+      toast.warning(t("auth.verifyEmail.invalidOtp"));
       setIsSubmitting(false);
       return;
     }
 
     if (newPassword.length < 6) {
-      const msg = "পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।";
-      toast.warning(msg);
+      toast.warning(t("auth.register.passwordMinLength"));
       setIsSubmitting(false);
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      const msg = "নতুন পাসওয়ার্ড দুটি মেলেনি।";
-      toast.warning(msg);
+      toast.warning(t("auth.register.passwordMismatch"));
       setIsSubmitting(false);
       return;
     }
@@ -57,12 +56,11 @@ function ResetPasswordForm() {
         toast.success(res.message);
         router.push(isPartner ? "/login/partner" : "/login");
       } else {
-        const errMsg = res.message || "পাসওয়ার্ড পরিবর্তন করা যায়নি।";
+        const errMsg = res.message || t("auth.login.serverError");
         toast.error(errMsg);
       }
     } catch {
-      const errMsg = "সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।";
-      toast.error(errMsg);
+      toast.error(t("auth.login.serverError"));
     } finally {
       setIsSubmitting(false);
     }
@@ -73,23 +71,23 @@ function ResetPasswordForm() {
       <CardHeader className="text-center space-y-2">
         <Link href="/" className="flex items-center justify-center space-x-2 text-primary mx-auto">
           <Heart className="h-7 w-7 fill-primary" />
-          <span className="font-heading text-2xl font-bold text-secondary">
-            হেলথ <span className="text-primary">ক্লাব</span>
+          <span className="font-heading text-2xl font-bold text-secondary dark:text-white">
+            {t("layout.header.health")} <span className="text-primary">{t("layout.header.club")}</span>
           </span>
         </Link>
-        <CardTitle className="font-heading text-xl font-bold text-secondary pt-2">
-          পাসওয়ার্ড রিসেট করুন
+        <CardTitle className="font-heading text-xl font-bold text-secondary dark:text-white pt-2">
+          {t("auth.forgotPassword.resetTitle")}
         </CardTitle>
         <CardDescription>
-          ইমেইল <span className="font-semibold text-secondary">{email}</span> এ পাঠানো ওটিপি কোড এবং নতুন পাসওয়ার্ডটি দিন।
+          {t("auth.forgotPassword.resetSubtitle").replace("{email}", email)}
         </CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-6">
         <form onSubmit={handleReset} className="space-y-4">
           <div className="space-y-2">
-            <label htmlFor="reset-code" className="text-xs font-semibold text-secondary cursor-pointer">
-              ভেরিফিকেশন কোড (OTP) *
+            <label htmlFor="reset-code" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">
+              {t("auth.verifyEmail.otpLabel")}
             </label>
             <Input
               id="reset-code"
@@ -98,15 +96,15 @@ function ResetPasswordForm() {
               maxLength={6}
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-              placeholder="যেমন: ১২৩৪৫৬"
+              placeholder="123456"
               className="text-center text-xl tracking-[0.75em] font-mono h-12 border-border bg-background"
             />
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="reset-new-password" className="text-xs font-semibold text-secondary flex items-center gap-1 cursor-pointer">
+            <label htmlFor="reset-new-password" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1 cursor-pointer">
               <Lock className="h-3.5 w-3.5 text-primary" />
-              নতুন পাসওয়ার্ড *
+              {t("auth.forgotPassword.newPasswordLabel")}
             </label>
             <Input
               id="reset-new-password"
@@ -114,15 +112,15 @@ function ResetPasswordForm() {
               required
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="অন্তত ৬ অক্ষরের পাসওয়ার্ড"
+              placeholder="••••••••"
               className="border-border bg-background focus:border-primary/40 h-11"
             />
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="reset-confirm-password" className="text-xs font-semibold text-secondary flex items-center gap-1 cursor-pointer">
+            <label htmlFor="reset-confirm-password" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1 cursor-pointer">
               <Lock className="h-3.5 w-3.5 text-primary" />
-              নতুন পাসওয়ার্ড নিশ্চিত করুন *
+              {t("auth.forgotPassword.confirmNewPasswordLabel")}
             </label>
             <Input
               id="reset-confirm-password"
@@ -130,7 +128,7 @@ function ResetPasswordForm() {
               required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="আবার টাইপ করুন"
+              placeholder="••••••••"
               className="border-border bg-background focus:border-primary/40 h-11"
             />
           </div>
@@ -142,7 +140,11 @@ function ResetPasswordForm() {
             className="w-full mt-2"
           >
             <ShieldCheck className="h-4 w-4" />
-            {isSubmitting ? "রিসেট করা হচ্ছে..." : "পাসওয়ার্ড সংরক্ষণ করুন"}
+            {isSubmitting ? (
+              <div className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+            ) : (
+              t("auth.forgotPassword.resetButton")
+            )}
           </Button>
         </form>
 
@@ -152,7 +154,7 @@ function ResetPasswordForm() {
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-primary transition-colors"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            লগইন পেজে ফিরে যান
+            {t("auth.forgotPassword.backToLogin")}
           </Link>
         </div>
       </CardContent>

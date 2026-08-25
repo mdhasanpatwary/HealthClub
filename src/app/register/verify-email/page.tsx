@@ -9,9 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { verifyEmailOtpAction, resendVerificationCodeAction } from "@/app/actions/memberActions";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toast } from "sonner";
 
 function VerifyEmailForm() {
+  const { t } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
@@ -25,8 +27,7 @@ function VerifyEmailForm() {
     setIsSubmitting(true);
 
     if (code.length !== 6) {
-      const msg = "অনুগ্রহ করে ৬ সংখ্যার সঠিক ভেরিফিকেশন কোডটি দিন।";
-      toast.warning(msg);
+      toast.warning(t("auth.verifyEmail.invalidOtp"));
       setIsSubmitting(false);
       return;
     }
@@ -37,7 +38,7 @@ function VerifyEmailForm() {
         // Sync local storage session
         localStorage.setItem("hc_current_user", JSON.stringify(res.member));
         
-        toast.success("ইমেইল সফলভাবে ভেরিফাই করা হয়েছে!");
+        toast.success(t("auth.verifyEmail.successTitle"));
         
         if (res.requiresPayment) {
           router.push(`/register/payment?memberId=${res.member.id}`);
@@ -47,12 +48,11 @@ function VerifyEmailForm() {
           router.push("/dashboard");
         }
       } else {
-        const errMsg = res.message || "ভেরিফিকেশন সম্পন্ন করা যায়নি।";
+        const errMsg = res.message || t("auth.verifyEmail.resendError");
         toast.error(errMsg);
       }
     } catch {
-      const errMsg = "সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।";
-      toast.error(errMsg);
+      toast.error(t("auth.login.serverError"));
     } finally {
       setIsSubmitting(false);
     }
@@ -66,17 +66,17 @@ function VerifyEmailForm() {
         </div>
         <div className="space-y-2">
           <CardTitle className="font-heading text-2xl font-bold text-secondary dark:text-white">
-            রেজিস্ট্রেশন সম্পূর্ণ হয়েছে!
+            {t("auth.verifyEmail.successTitle")}
           </CardTitle>
           <CardDescription className="text-sm text-muted-foreground pt-1 leading-relaxed">
-            আপনার ইমেইল ভেরিফিকেশন সফলভাবে সম্পন্ন হয়েছে। আপনার মেম্বারশিপ অ্যাকাউন্টটি বর্তমানে <strong>এডমিন অনুমোদনের জন্য অপেক্ষমাণ</strong> রয়েছে।
+            {t("auth.verifyEmail.successDesc")}
           </CardDescription>
         </div>
         <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl text-left border border-border text-xs text-muted-foreground space-y-2 leading-relaxed">
-          <p className="font-semibold text-secondary dark:text-white text-center text-sm mb-1">পরবর্তী ধাপসমূহ:</p>
-          <p>১. হেলথ ক্লাব এডমিন আপনার তথ্য যাচাই করবেন।</p>
-          <p>২. অ্যাকাউন্ট অনুমোদিত হওয়ার পর আপনার ফোনে/ইমেইলে নিশ্চিতকরণ বার্তা পাঠানো হবে।</p>
-          <p>৩. এরপর আপনি আপনার মেম্বার আইডি এবং পাসওয়ার্ড দিয়ে লগইন করে ড্যাশবোর্ড ও মেম্বারশিপ কার্ড ব্যবহার করতে পারবেন।</p>
+          <p className="font-semibold text-secondary dark:text-white text-center text-sm mb-1">{t("auth.verifyEmail.nextStepsTitle")}</p>
+          <p>{t("auth.verifyEmail.step1")}</p>
+          <p>{t("auth.verifyEmail.step2")}</p>
+          <p>{t("auth.verifyEmail.step3")}</p>
         </div>
         <Link
           href="/"
@@ -84,7 +84,7 @@ function VerifyEmailForm() {
             className: "w-full",
           })}
         >
-          <span>হোমপেজে ফিরে যান</span>
+          <span>{t("auth.verifyEmail.backHome")}</span>
         </Link>
       </Card>
     );
@@ -95,23 +95,23 @@ function VerifyEmailForm() {
       <CardHeader className="text-center space-y-2">
         <Link href="/" className="flex items-center justify-center space-x-2 text-primary mx-auto">
           <Heart className="h-7 w-7 fill-primary" />
-          <span className="font-heading text-2xl font-bold text-secondary">
-            হেলথ <span className="text-primary">ক্লাব</span>
+          <span className="font-heading text-2xl font-bold text-secondary dark:text-white">
+            {t("layout.header.health")} <span className="text-primary">{t("layout.header.club")}</span>
           </span>
         </Link>
-        <CardTitle className="font-heading text-xl font-bold text-secondary pt-2">
-          ইমেইল ভেরিফিকেশন
+        <CardTitle className="font-heading text-xl font-bold text-secondary dark:text-white pt-2">
+          {t("auth.verifyEmail.title")}
         </CardTitle>
         <CardDescription>
-          আপনার নিবন্ধিত ইমেইল <span className="font-semibold text-secondary">{email}</span> এ পাঠানো ৬-সংখ্যার কোডটি লিখুন।
+          {t("auth.verifyEmail.subtitle").replace("{email}", email)}
         </CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-6">
         <form onSubmit={handleVerify} className="space-y-4">
           <div className="space-y-2">
-            <label htmlFor="verification-code" className="text-xs font-semibold text-secondary cursor-pointer">
-              ভেরিফিকেশন কোড (OTP) *
+            <label htmlFor="verification-code" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">
+              {t("auth.verifyEmail.otpLabel")}
             </label>
             <Input
               id="verification-code"
@@ -120,7 +120,7 @@ function VerifyEmailForm() {
               maxLength={6}
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-              placeholder="যেমন: ১২৩৪৫৬"
+              placeholder="123456"
               className="text-center text-xl tracking-[0.75em] font-mono h-12 border-border bg-background"
             />
           </div>
@@ -131,12 +131,16 @@ function VerifyEmailForm() {
             className="w-full"
           >
             <ShieldCheck className="h-4 w-4" />
-            {isSubmitting ? "যাচাই করা হচ্ছে..." : "কোড যাচাই করুন"}
+            {isSubmitting ? (
+              <div className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+            ) : (
+              t("auth.verifyEmail.verifyButton")
+            )}
           </Button>
         </form>
 
         <div className="text-center text-sm text-muted-foreground border-t border-border pt-4">
-          কোড পাননি?{" "}
+          {t("auth.verifyEmail.noCode")}{" "}
           <button 
             disabled={isSubmitting}
             onClick={async () => {
@@ -144,17 +148,17 @@ function VerifyEmailForm() {
               try {
                 const res = await resendVerificationCodeAction(email);
                 if (res.success) {
-                  toast.success(res.message);
+                  toast.success(res.message || t("auth.verifyEmail.resendSuccess"));
                 } else {
-                  toast.error(res.message);
+                  toast.error(res.message || t("auth.verifyEmail.resendError"));
                 }
               } catch {
-                toast.error("কোড পুনরায় পাঠাতে সমস্যা হয়েছে।");
+                toast.error(t("auth.verifyEmail.resendError"));
               }
             }}
             className="text-primary hover:underline font-semibold bg-transparent border-0 cursor-pointer disabled:opacity-50"
           >
-            পুনরায় কোড পাঠান
+            {t("auth.verifyEmail.resendCode")}
           </button>
         </div>
       </CardContent>

@@ -13,8 +13,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { safeStorage } from "@/lib/safeStorage";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 
 function PaymentForm() {
+  const { t } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
   const memberId = searchParams.get("memberId") || "";
@@ -44,11 +46,11 @@ function PaymentForm() {
           if (m) {
             setMember(m);
           } else {
-            toast.error("সদস্যের তথ্য খুঁজে পাওয়া যায়নি।");
+            toast.error(t("auth.payment.notFoundDesc"));
           }
         } catch {
           if (isMounted) {
-            toast.error("সদস্য তথ্য লোড করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
+            toast.error(t("auth.login.serverError"));
           }
         } finally {
           if (isMounted) {
@@ -65,12 +67,12 @@ function PaymentForm() {
     return () => {
       isMounted = false;
     };
-  }, [memberId]);
+  }, [memberId, t]);
 
   const handleCopyNumber = () => {
     navigator.clipboard.writeText(bkashNumber);
     setCopied(true);
-    toast.success("বিকাশ নম্বরটি কপি করা হয়েছে!");
+    toast.success(t("dashboard.card.copySuccess"));
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -79,20 +81,20 @@ function PaymentForm() {
 
     // Validations
     if (!senderNumber || !transactionId) {
-      toast.error("অনুগ্রহ করে সবগুলো ঘর পূরণ করুন।");
+      toast.error(t("auth.login.fillAll"));
       return;
     }
 
     const cleanSender = senderNumber.trim();
     const bdPhoneRegex = /^(01)[3-9]\d{8}$/;
     if (!bdPhoneRegex.test(cleanSender)) {
-      toast.error("সঠিক ১১ সংখ্যার বাংলাদেশী বিকাশ নম্বর দিন (যেমন: 017XXXXXXXX)।");
+      toast.error(t("auth.register.phoneLabel"));
       return;
     }
 
     const cleanTxnId = transactionId.trim().toUpperCase();
     if (cleanTxnId.length < 6 || cleanTxnId.length > 16) {
-      toast.error("সঠিক ট্রানজেকশন আইডি দিন (সাধারণত ৮ থেকে ১২ অক্ষরের হয়)।");
+      toast.error(t("auth.payment.txnIdLabel"));
       return;
     }
 
@@ -118,15 +120,15 @@ function PaymentForm() {
         safeStorage.setItem("hc_current_user", updatedUser);
         window.dispatchEvent(new Event("auth-change"));
         
-        toast.success("পেমেন্ট তথ্য সফলভাবে সাবমিট করা হয়েছে!");
+        toast.success(t("auth.payment.successTitle"));
         setTimeout(() => {
           router.push("/");
         }, 3000);
       } else {
-        toast.error("পেমেন্ট তথ্য সাবমিট করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।");
+        toast.error(t("auth.login.serverError"));
       }
     } catch {
-      toast.error("সার্ভার ত্রুটি।");
+      toast.error(t("auth.login.serverError"));
     } finally {
       setIsSubmitting(false);
     }
@@ -140,10 +142,10 @@ function PaymentForm() {
     return (
       <Card className="w-full max-w-md border border-border shadow-xl text-center p-6 bg-background">
         <AlertCircle className="h-12 w-12 text-destructive mx-auto" />
-        <CardTitle className="mt-4 text-secondary">ত্রুটি</CardTitle>
-        <CardDescription className="mt-2">নিবন্ধিত সদস্যের তথ্য পাওয়া যায়নি।</CardDescription>
+        <CardTitle className="mt-4 text-secondary dark:text-white">{t("auth.payment.notFoundTitle")}</CardTitle>
+        <CardDescription className="mt-2">{t("auth.payment.notFoundDesc")}</CardDescription>
         <Link href="/register" className="mt-4 inline-block">
-          <Button variant="outline">আবার চেষ্টা করুন</Button>
+          <Button variant="outline">{t("auth.payment.tryAgain")}</Button>
         </Link>
       </Card>
     );
@@ -157,19 +159,19 @@ function PaymentForm() {
           Offline Mode
         </div>
         <Smartphone className="h-12 w-12 mx-auto animate-pulse" />
-        <h2 className="font-heading text-xl font-bold">বিকাশ অফলাইন পেমেন্ট</h2>
-        <p className="text-xs text-pink-100">নিরাপদ বিকাশ পেমেন্ট ভেরিফিকেশন</p>
+        <h2 className="font-heading text-xl font-bold">{t("auth.payment.title")}</h2>
+        <p className="text-xs text-pink-100">{t("auth.payment.subtitle")}</p>
       </div>
 
       <CardContent className="p-6 space-y-6">
         {paymentSuccess ? (
           <div className="text-center py-8 space-y-4">
             <CheckCircle2 className="h-16 w-16 text-emerald-500 mx-auto animate-bounce" />
-            <h3 className="font-heading text-lg font-bold text-secondary">পেমেন্ট তথ্য সাবমিট করা হয়েছে!</h3>
+            <h3 className="font-heading text-lg font-bold text-secondary dark:text-white">{t("auth.payment.successTitle")}</h3>
             <p className="text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed">
-              আপনার পেমেন্ট সফলভাবে প্রাপ্ত হয়েছে। এডমিন ম্যানুয়ালি যাচাই করে আপনার অ্যাকাউন্টটি ২৪ ঘণ্টার মধ্যে সক্রিয় করবে।
+              {t("auth.payment.successDesc")}
             </p>
-            <p className="text-xs text-primary font-semibold">আপনাকে হোমপেজে রিডাইরেক্ট করা হচ্ছে...</p>
+            <p className="text-xs text-primary font-semibold">{t("auth.payment.redirecting")}</p>
           </div>
         ) : (
           <>
@@ -177,15 +179,15 @@ function PaymentForm() {
             <div className="space-y-4">
               <div className="bg-[#e2125d]/5 border border-[#e2125d]/20 rounded-xl p-4 space-y-3">
                 <h4 className="font-bold text-sm text-[#e2125d] font-heading flex items-center gap-1.5">
-                  ধাপ ১: টাকা পাঠানোর নিয়ম
+                  {t("auth.payment.step1Title")}
                 </h4>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  আপনার বিকাশ অ্যাপ বা ডায়াল কোড ব্যবহার করে নিচে দেওয়া নম্বরে <strong>৳৫০০</strong> সেন্ড মানি (Send Money) করুন:
+                  {t("auth.payment.step1Desc").replace("{amount}", "500")}
                 </p>
                 <div className="flex items-center justify-between bg-white dark:bg-slate-900 border border-border p-2.5 rounded-xl">
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-[10px] text-muted-foreground">বিকাশ পার্সোনাল নম্বর:</span>
-                    <span className="font-mono font-bold text-secondary">{bkashNumber}</span>
+                    <span className="text-[10px] text-muted-foreground">{t("auth.payment.bkashNumberLabel")}</span>
+                    <span className="font-mono font-bold text-secondary dark:text-white">{bkashNumber}</span>
                   </div>
                   <Button 
                     type="button" 
@@ -199,20 +201,20 @@ function PaymentForm() {
                   </Button>
                 </div>
                 <div className="flex justify-between text-xs pt-1">
-                  <span className="text-muted-foreground">টাকার পরিমাণ:</span>
-                  <span className="font-bold text-secondary">৳৫০০ (বাৎসরিক ফি)</span>
+                  <span className="text-muted-foreground">{t("auth.payment.amountLabel")}</span>
+                  <span className="font-bold text-secondary dark:text-white">{t("auth.payment.amountValue")}</span>
                 </div>
               </div>
 
               {/* Form Input Section */}
               <form onSubmit={handleSubmitPayment} className="space-y-4">
                 <h4 className="font-bold text-sm text-secondary dark:text-white font-heading border-b border-border pb-1">
-                  ধাপ ২: পেমেন্ট তথ্য দিন
+                  {t("auth.payment.step2Title")}
                 </h4>
 
                 <div className="space-y-1.5">
                   <label htmlFor="bkash-sender-number" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1 cursor-pointer">
-                    বিকাশ নম্বর (যে নম্বর থেকে পাঠিয়েছেন) *
+                    {t("auth.payment.senderNumberLabel")}
                   </label>
                   <Input 
                     id="bkash-sender-number"
@@ -220,14 +222,14 @@ function PaymentForm() {
                     required
                     value={senderNumber}
                     onChange={(e) => setSenderNumber(e.target.value.replace(/\D/g, ""))}
-                    placeholder="যেমন: 01711112222"
+                    placeholder={t("auth.payment.senderNumberPlaceholder")}
                     className="border-border bg-background"
                   />
                 </div>
 
                 <div className="space-y-1.5">
                   <label htmlFor="bkash-txn-id" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1 cursor-pointer">
-                    ট্রানজেকশন আইডি (Transaction ID / TxnID) *
+                    {t("auth.payment.txnIdLabel")}
                   </label>
                   <Input 
                     id="bkash-txn-id"
@@ -235,7 +237,7 @@ function PaymentForm() {
                     required
                     value={transactionId}
                     onChange={(e) => setTransactionId(e.target.value)}
-                    placeholder="যেমন: 9I4A1B2C3D"
+                    placeholder={t("auth.payment.txnIdPlaceholder")}
                     className="border-border bg-background uppercase font-mono"
                   />
                 </div>
@@ -248,7 +250,7 @@ function PaymentForm() {
                     className="w-full cursor-pointer"
                   >
                     <ShieldCheck className="h-5 w-5" />
-                    {isSubmitting ? "তথ্য সাবমিট করা হচ্ছে..." : "পেমেন্ট তথ্য সাবমিট করুন"}
+                    {isSubmitting ? t("auth.payment.submitting") : t("auth.payment.submitButton")}
                   </Button>
                   
                   <Link
@@ -259,7 +261,7 @@ function PaymentForm() {
                       className: "w-full text-muted-foreground",
                     })}
                   >
-                    <span>পরে সাবমিট করব</span>
+                    <span>{t("auth.payment.skipLater")}</span>
                   </Link>
                 </div>
               </form>

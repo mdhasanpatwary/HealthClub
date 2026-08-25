@@ -241,7 +241,7 @@ export function MembersTab({
               ) : (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center py-8 text-muted-foreground text-xs">
-                    {t("admin.dashboard.noMembersFound") || (isEn ? "No members found." : "কোনো সদস্য পাওয়া যায়নি।")}
+                    {t("admin.dashboard.noMembersFound")}
                   </TableCell>
                 </TableRow>
               )}

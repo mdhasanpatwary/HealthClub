@@ -92,7 +92,14 @@ export function DashboardWelcomeHeader({
                 <span className="font-mono font-semibold text-primary">{user.id}</span>
                 <span className="mx-1.5 text-slate-600">·</span>
                 <span className="capitalize font-semibold text-slate-300">
-                  {t("dashboard.welcome.memberTier").replace("{tier}", user.tier)}
+                  {t("dashboard.welcome.memberTier").replace(
+                    "{tier}",
+                    user.tier?.toLowerCase() === "founding"
+                      ? t("dashboard.welcome.tierFounding")
+                      : user.tier?.toLowerCase() === "premium"
+                      ? t("dashboard.welcome.tierPremium")
+                      : t("dashboard.welcome.tierGeneral")
+                  )}
                 </span>
               </p>
             </div>

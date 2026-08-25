@@ -159,7 +159,7 @@ export default function AdminMembersPage() {
     } else if (member.status === "inactive") {
       newStatus = "active";
     } else {
-      toast.error(t("admin.dashboard.memberStatusPendingError") || "এই মেম্বারের স্ট্যাটাস পরিবর্তন করতে নবায়ন অনুমোদন ট্যাব ব্যবহার করুন।");
+      toast.error(t("admin.dashboard.memberStatusPendingError"));
       return;
     }
 

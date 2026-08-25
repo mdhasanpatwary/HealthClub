@@ -10,9 +10,11 @@ import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { requestPasswordResetAction } from "@/app/actions/memberActions";
 import { requestPartnerPasswordResetAction } from "@/app/actions/partnerActions";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toast } from "sonner";
 
 function ForgotPasswordForm() {
+  const { t } = useLanguage();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -24,7 +26,7 @@ function ForgotPasswordForm() {
     setLoading(true);
 
     if (!email) {
-      toast.warning("অনুগ্রহ করে আপনার নিবন্ধিত ইমেইল অ্যাড্রেসটি লিখুন।");
+      toast.warning(t("auth.forgotPassword.emailLabel"));
       setLoading(false);
       return;
     }
@@ -38,12 +40,11 @@ function ForgotPasswordForm() {
         toast.success(res.message);
         router.push(`/forgot-password/reset?email=${encodeURIComponent(email)}${isPartner ? "&type=partner" : ""}`);
       } else {
-        const errMsg = res.message || "পাসওয়ার্ড রিসেট ওটিপি পাঠানো যায়নি।";
+        const errMsg = res.message || t("auth.login.serverError");
         toast.error(errMsg);
       }
     } catch {
-      const errMsg = "সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।";
-      toast.error(errMsg);
+      toast.error(t("auth.login.serverError"));
     } finally {
       setLoading(false);
     }
@@ -79,16 +80,14 @@ function ForgotPasswordForm() {
                   <span className="absolute inset-0 h-8 w-8 rounded-full bg-primary/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
                 <span className="font-heading text-2xl font-bold text-secondary dark:text-white">
-                  হেলথ <span className="gradient-text">ক্লাব</span>
+                  {t("layout.header.health")} <span className="gradient-text">{t("layout.header.club")}</span>
                 </span>
               </Link>
               <h1 className="font-heading text-xl font-bold text-secondary dark:text-white">
-                {isPartner ? "পার্টনার পাসওয়ার্ড রিসেট" : "পাসওয়ার্ড ভুলে গেছেন?"}
+                {t("auth.forgotPassword.title")}
               </h1>
               <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-                {isPartner
-                  ? "আপনার পার্টনার অ্যাকাউন্টের নিবন্ধিত ইমেইল লিখুন। আমরা আপনাকে পাসওয়ার্ড পরিবর্তন করার জন্য ৬ সংখ্যার ভেরিফিকেশন ওটিপি পাঠাব।"
-                  : "আপনার মেম্বার অ্যাকাউন্টের নিবন্ধিত ইমেইল লিখুন। আমরা আপনাকে পাসওয়ার্ড পরিবর্তন করার জন্য ৬ সংখ্যার ভেরিফিকেশন ওটিপি পাঠাব।"}
+                {t("auth.forgotPassword.subtitle")}
               </p>
             </div>
 
@@ -96,7 +95,7 @@ function ForgotPasswordForm() {
               <div className="space-y-2">
                 <label htmlFor="forgot-email" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
                   <Mail className="h-3.5 w-3.5 text-primary" />
-                  নিবন্ধিত ইমেইল অ্যাড্রেস
+                  {t("auth.forgotPassword.emailLabel")}
                 </label>
                 <Input
                   id="forgot-email"
@@ -104,7 +103,7 @@ function ForgotPasswordForm() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="যেমন: name@domain.com"
+                  placeholder={t("auth.forgotPassword.emailPlaceholder")}
                   className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-11 focus:border-primary/40"
                 />
               </div>
@@ -119,7 +118,7 @@ function ForgotPasswordForm() {
                   <div className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
                 ) : (
                   <>
-                    ওটিপি কোড পাঠান
+                    {t("auth.forgotPassword.sendOtp")}
                     <ArrowRight className="h-4 w-4" />
                   </>
                 )}
@@ -132,7 +131,7 @@ function ForgotPasswordForm() {
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-primary transition-colors"
               >
                 <ArrowLeft className="h-3.5 w-3.5" />
-                লগইন পেজে ফিরে যান
+                {t("auth.forgotPassword.backToLogin")}
               </Link>
             </div>
           </div>

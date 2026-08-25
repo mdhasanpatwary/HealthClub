@@ -121,7 +121,7 @@ export default function DoctorProfileView({
                 <DoctorAvailabilityBadge doctor={doctor} locale={locale} size="md" />
                 <Badge variant="outline" className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 border-emerald-500/30 bg-emerald-50/50 dark:bg-emerald-950/20 px-2.5 py-0.5 rounded-full gap-1">
                   <ShieldCheck className="h-3.5 w-3.5" />
-                  <span>{t("consultants.profile.verifiedSpecialist") || "BMDC Verified"}</span>
+                  <span>{t("consultants.profile.verifiedSpecialist")}</span>
                 </Badge>
               </div>
 

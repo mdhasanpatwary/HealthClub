@@ -24,8 +24,10 @@ import {
 } from "@/lib/safeStorage";
 import { Member } from "@/services/db";
 import { INITIAL_AMBULANCES, INITIAL_EMERGENCY_HOTLINES } from "@/data/emergencyData";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 
 export default function OfflinePage() {
+  const { t, locale } = useLanguage();
   const [offlineMember, setOfflineMember] = useState<Member | null>(null);
   const [offlineDir, setOfflineDir] = useState<OfflineEmergencyDirectory | null>(null);
 
@@ -60,7 +62,7 @@ export default function OfflinePage() {
           <div className="space-y-2">
             <div className="flex items-center justify-center gap-2">
               <h1 className="text-xl sm:text-2xl font-bold font-heading text-secondary dark:text-white">
-                আপনি অফলাইনে আছেন
+                {t("offline.title")}
               </h1>
               <Badge
                 variant="outline"
@@ -70,7 +72,7 @@ export default function OfflinePage() {
               </Badge>
             </div>
             <p className="text-muted-foreground text-xs sm:text-sm max-w-md mx-auto leading-relaxed">
-              ইন্টারনেট সংযোগ নেই, তবে আপনার সংরক্ষিত ডিজিটাল মেম্বার কার্ড ও জরুরি মেডিকেল নম্বর নিচে প্রস্তুত রয়েছে।
+              {t("offline.subtitle")}
             </p>
           </div>
 
@@ -81,12 +83,12 @@ export default function OfflinePage() {
               className="bg-primary hover:bg-primary/90 text-white rounded-xl gap-2 font-semibold shadow-sm text-xs"
             >
               <RotateCw className="h-3.5 w-3.5" />
-              পুনরায় সংযোগ চেষ্টা করুন
+              {t("offline.retry")}
             </Button>
             <Link href="/dashboard">
               <Button variant="outline" size="sm" className="rounded-xl gap-2 text-xs">
                 <LayoutDashboard className="h-3.5 w-3.5 text-primary" />
-                ড্যাশবোর্ড
+                {t("offline.dashboard")}
               </Button>
             </Link>
           </div>
@@ -99,10 +101,10 @@ export default function OfflinePage() {
               <div className="space-y-0.5">
                 <CardTitle className="font-heading text-sm sm:text-base font-bold flex items-center gap-2 text-secondary dark:text-white">
                   <CreditCard className="h-4 w-4 text-emerald-500" />
-                  ডিজিটাল মেম্বার আইডি কার্ড (অফলাইন)
+                  {t("offline.cardTitle")}
                 </CardTitle>
                 <p className="text-[11px] text-muted-foreground">
-                  হাসপাতাল ডিসকাউন্ট পেতে এই কার্ডটি প্রদর্শন করুন
+                  {t("offline.cardDesc")}
                 </p>
               </div>
               <Badge
@@ -125,10 +127,10 @@ export default function OfflinePage() {
             <div className="space-y-0.5">
               <CardTitle className="font-heading text-sm sm:text-base font-bold text-rose-700 dark:text-rose-400 flex items-center gap-2">
                 <Ambulance className="h-4 w-4 text-rose-600" />
-                জরুরি অ্যাম্বুলেন্স ও হটলাইন (ট্যাপ-টু-কল)
+                {t("offline.emergencyTitle")}
               </CardTitle>
               <p className="text-[11px] text-muted-foreground">
-                ইন্টারনেট ছাড়াই সাধারণ মোবাইল নেটওয়ার্কে সরাসরি কল দিন
+                {t("offline.emergencyDesc")}
               </p>
             </div>
             <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-widest bg-rose-500/10 px-2 py-1 rounded-md border border-rose-500/20">
@@ -140,10 +142,10 @@ export default function OfflinePage() {
             <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 flex items-center justify-between gap-3">
               <div>
                 <p className="text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wide">
-                  জাতীয় জরুরি সেবা
+                  {t("offline.nationalEmergency")}
                 </p>
                 <p className="text-sm font-bold text-secondary dark:text-white">
-                  ৯৯৯ (অ্যাম্বুলেন্স ও পুলিশ)
+                  {t("offline.nationalEmergencyDesc")}
                 </p>
               </div>
               <a
@@ -151,7 +153,7 @@ export default function OfflinePage() {
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-sm active:scale-95 transition-transform"
               >
                 <Phone className="h-3.5 w-3.5" />
-                ৯৯৯ ডায়াল
+                {t("offline.dial999")}
               </a>
             </div>
 
@@ -159,7 +161,7 @@ export default function OfflinePage() {
             <div className="space-y-2">
               <p className="text-xs font-bold text-secondary dark:text-white flex items-center gap-1.5">
                 <Ambulance className="h-3.5 w-3.5 text-primary" />
-                ফেনী অ্যাম্বুলেন্স সেবা
+                {t("offline.ambulanceTitle")}
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {ambulances.map((amb) => (
@@ -180,7 +182,7 @@ export default function OfflinePage() {
                       className="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-primary hover:bg-primary/90 text-white text-[11px] font-semibold active:scale-95"
                     >
                       <PhoneCall className="h-3 w-3" />
-                      কল
+                      {t("offline.call")}
                     </a>
                   </div>
                 ))}
@@ -191,7 +193,7 @@ export default function OfflinePage() {
             <div className="space-y-2">
               <p className="text-xs font-bold text-secondary dark:text-white flex items-center gap-1.5">
                 <Heart className="h-3.5 w-3.5 text-rose-500" />
-                হাসপাতাল জরুরি বিভাগ ও ব্লাড ব্যাংক
+                {t("offline.hotlineTitle")}
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {hotlines.map((hotline) => (
@@ -201,10 +203,10 @@ export default function OfflinePage() {
                   >
                     <div className="min-w-0">
                       <p className="text-xs font-bold truncate text-secondary dark:text-white">
-                        {hotline.titleBn}
+                        {locale === "en" ? (hotline.titleEn || hotline.titleBn) : (hotline.titleBn || hotline.titleEn)}
                       </p>
                       <p className="text-[10px] text-muted-foreground truncate">
-                        {hotline.descriptionBn}
+                        {locale === "en" ? (hotline.descriptionEn || hotline.descriptionBn) : (hotline.descriptionBn || hotline.descriptionEn)}
                       </p>
                     </div>
                     <a
@@ -212,7 +214,7 @@ export default function OfflinePage() {
                       className="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-secondary hover:bg-secondary/90 text-white text-[11px] font-semibold active:scale-95"
                     >
                       <PhoneCall className="h-3 w-3" />
-                      কল
+                      {t("offline.call")}
                     </a>
                   </div>
                 ))}

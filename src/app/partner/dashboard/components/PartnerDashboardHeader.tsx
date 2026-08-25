@@ -87,7 +87,7 @@ export function PartnerDashboardHeader({ partner, currentStaff: propStaff, onLog
           className="gap-1.5 rounded-xl font-semibold shadow-sm cursor-pointer"
         >
           <LogOut className="h-4 w-4" />
-          <span>{t("admin.dashboard.logout") || "লগআউট"}</span>
+          <span>{t("layout.header.logout")}</span>
         </Button>
       </div>
     </div>

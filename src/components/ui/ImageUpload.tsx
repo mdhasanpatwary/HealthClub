@@ -5,6 +5,7 @@ import Image from "next/image";
 import { User, Building, Camera, Trash2, Stethoscope } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toast } from "sonner";
 
 interface ImageUploadProps {
@@ -15,6 +16,7 @@ interface ImageUploadProps {
 }
 
 export function ImageUpload({ value, onChange, label, fallbackType = 'user' }: ImageUploadProps) {
+  const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,14 +26,14 @@ export function ImageUpload({ value, onChange, label, fallbackType = 'user' }: I
     // Validate file type
     const validMimeTypes = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
     if (!validMimeTypes.includes(file.type.toLowerCase())) {
-      toast.error("শুধুমাত্র JPG, PNG বা WebP ফরম্যাটের ছবি আপলোড করা যাবে।");
+      toast.error(t("ui.imageUpload.invalidFormat"));
       e.target.value = "";
       return;
     }
 
     // Validate file size (max 5MB raw before compression)
     if (file.size > 5 * 1024 * 1024) {
-      toast.error("ছবির সাইজ ৫ মেগাবাইটের বেশি হওয়া যাবে না।");
+      toast.error(t("ui.imageUpload.sizeLimit"));
       e.target.value = "";
       return;
     }
@@ -39,7 +41,7 @@ export function ImageUpload({ value, onChange, label, fallbackType = 'user' }: I
     const reader = new FileReader();
 
     reader.onerror = () => {
-      toast.error("ছবিটি পড়তে সমস্যা হয়েছে। অনুগ্রহ করে অন্য ছবি নির্বাচন করুন।");
+      toast.error(t("ui.imageUpload.readError"));
       e.target.value = "";
     };
 
@@ -50,14 +52,14 @@ export function ImageUpload({ value, onChange, label, fallbackType = 'user' }: I
     reader.onload = (loadEvent) => {
       const result = loadEvent.target?.result;
       if (typeof result !== "string") {
-        toast.error("ছবি প্রসেস করতে ব্যর্থ হয়েছে।");
+        toast.error(t("ui.imageUpload.processError"));
         return;
       }
 
       // Compress and resize image using offscreen canvas to prevent storage quota issues
       const img = new window.Image();
       img.onerror = () => {
-        toast.error("ছবির ডেটা লোড করা যায়নি।");
+        toast.error(t("ui.imageUpload.processError"));
       };
       img.onload = () => {
         try {
@@ -120,7 +122,7 @@ export function ImageUpload({ value, onChange, label, fallbackType = 'user' }: I
           )}
           <button
             type="button"
-            aria-label={label ? `${label} পরিবর্তন করুন` : "ছবি আপলোড করুন"}
+            aria-label={label ? `${label} ${t("ui.imageUpload.changeImage")}` : t("ui.imageUpload.uploadImage")}
             onClick={() => fileInputRef.current?.click()}
             className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity cursor-pointer duration-200 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
           >
@@ -132,7 +134,7 @@ export function ImageUpload({ value, onChange, label, fallbackType = 'user' }: I
             ref={fileInputRef}
             type="file"
             accept="image/*"
-            aria-label={label || "ছবি আপলোড করুন"}
+            aria-label={label || t("ui.imageUpload.uploadImage")}
             onChange={handleFileChange}
             className="border-border bg-background text-xs cursor-pointer file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
           />
@@ -149,7 +151,7 @@ export function ImageUpload({ value, onChange, label, fallbackType = 'user' }: I
               className="text-[10px] text-rose-600 hover:text-rose-700 p-0 h-auto mt-1 flex items-center gap-1 hover:bg-transparent"
             >
               <Trash2 className="h-3 w-3" />
-              ছবি মুছে ফেলুন
+              {t("ui.imageUpload.deleteImage")}
             </Button>
           )}
         </div>

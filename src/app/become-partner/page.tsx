@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { addPartnerRequestAction } from "@/app/actions/partnerActions";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toast } from "sonner";
 
 export default function BecomePartnerPage() {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     orgName: "",
     category: "hospital",
@@ -33,7 +35,7 @@ export default function BecomePartnerPage() {
         email: formData.email || null,
       });
       setSubmitted(true);
-      toast.success("আবেদনটি সফলভাবে জমা হয়েছে!");
+      toast.success(t("becomePartner.successTitle"));
       setFormData({
         orgName: "",
         category: "hospital",
@@ -44,7 +46,7 @@ export default function BecomePartnerPage() {
         email: ""
       });
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "আবেদনটি জমা দেওয়া সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।";
+      const msg = err instanceof Error ? err.message : t("auth.login.serverError");
       toast.error(msg);
     }
   };
@@ -59,12 +61,12 @@ export default function BecomePartnerPage() {
         
         {/* Header */}
         <div className="text-center space-y-4 max-w-2xl mx-auto">
-          <span className="text-xs font-extrabold text-primary tracking-widest uppercase font-mono">For Healthcare Providers</span>
+          <span className="text-xs font-extrabold text-primary tracking-widest uppercase font-mono">{t("becomePartner.tagline")}</span>
           <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-secondary dark:text-white">
-            হেলথ ক্লাব পার্টনার নেটওয়ার্কে যুক্ত হোন
+            {t("becomePartner.heroTitle")}
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground">
-            আপনার চিকিৎসাকেন্দ্র, ডায়াগনস্টিক ল্যাব বা ফার্মেসিকে আমাদের প্ল্যাটফর্মে রেজিস্টার করে নতুন পেশেন্ট বেস তৈরি করুন।
+            {t("becomePartner.heroSubtitle")}
           </p>
         </div>
 
@@ -75,7 +77,7 @@ export default function BecomePartnerPage() {
           <div className="md:col-span-2 space-y-6 flex flex-col justify-between">
             <div className="space-y-6">
               <h3 className="font-heading text-xl font-bold text-secondary dark:text-white">
-                অংশীদারিত্বের সুবিধাসমূহ
+                {t("becomePartner.perksTitle")}
               </h3>
               
               <ul className="space-y-4 text-sm text-muted-foreground">
@@ -84,8 +86,8 @@ export default function BecomePartnerPage() {
                     <span className="text-xs font-bold">✓</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-secondary dark:text-slate-300">নতুন পেশেন্ট আগমন</h4>
-                    <p className="text-xs mt-0.5">আমাদের ১০০+ মেম্বারদের কাছে আপনার ব্র্যান্ড প্রমোট হবে।</p>
+                    <h4 className="font-semibold text-secondary dark:text-slate-300">{t("becomePartner.perk1Title")}</h4>
+                    <p className="text-xs mt-0.5">{t("becomePartner.perk1Desc")}</p>
                   </div>
                 </li>
                 
@@ -94,8 +96,8 @@ export default function BecomePartnerPage() {
                     <span className="text-xs font-bold">✓</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-secondary dark:text-slate-300">ডিজিটাল প্রচার ও ব্র্যান্ডিং</h4>
-                    <p className="text-xs mt-0.5">আমাদের ওয়েবসাইট ও মোবাইল অ্যাপ ডিরেক্টরিতে আপনার সেন্টারের ফ্রি লিস্টিং পাবেন।</p>
+                    <h4 className="font-semibold text-secondary dark:text-slate-300">{t("becomePartner.perk2Title")}</h4>
+                    <p className="text-xs mt-0.5">{t("becomePartner.perk2Desc")}</p>
                   </div>
                 </li>
 
@@ -104,8 +106,8 @@ export default function BecomePartnerPage() {
                     <span className="text-xs font-bold">✓</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-secondary dark:text-slate-300">পেশেন্ট লয়্যালটি</h4>
-                    <p className="text-xs mt-0.5">ডিজিটাল ভেরিফিকেশন পোর্টালে পেশেন্ট ভ্যালিডেশন অত্যন্ত নিখুঁত ও ক্যাশলেস।</p>
+                    <h4 className="font-semibold text-secondary dark:text-slate-300">{t("becomePartner.perk3Title")}</h4>
+                    <p className="text-xs mt-0.5">{t("becomePartner.perk3Desc")}</p>
                   </div>
                 </li>
               </ul>
@@ -114,9 +116,9 @@ export default function BecomePartnerPage() {
             <div className="p-4 rounded-2xl bg-muted border border-border flex items-start gap-3">
               <HelpCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
               <div className="text-xs space-y-1">
-                <p className="font-bold text-secondary dark:text-white">সহায়তা প্রয়োজন?</p>
-                <p className="text-muted-foreground">পার্টনার সম্পর্ক টিম হটলাইন:</p>
-                <p className="font-bold text-primary font-mono">+৮৮০ ১৮৮৬৭৬৩৮৪৯</p>
+                <p className="font-bold text-secondary dark:text-white">{t("becomePartner.helpTitle")}</p>
+                <p className="text-muted-foreground">{t("becomePartner.helpDesc")}</p>
+                <p className="font-bold text-primary font-mono">+880 1886763849</p>
               </div>
             </div>
           </div>
@@ -128,24 +130,24 @@ export default function BecomePartnerPage() {
                 <div className="text-center py-12 space-y-4">
                   <CheckCircle2 className="h-16 w-16 text-primary mx-auto animate-bounce" />
                   <h3 className="font-heading text-xl font-bold text-secondary dark:text-white">
-                    আবেদনটি সফলভাবে জমা হয়েছে!
+                    {t("becomePartner.successTitle")}
                   </h3>
                   <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-                    আমাদের পার্টনারশিপ রিলেশন প্রতিনিধি আপনার সাথে যোগাযোগ করে ও চুক্তি স্বাক্ষর প্রক্রিয়া সম্পন্ন করতে পরবর্তী ২৪ ঘণ্টার মধ্যে ফোন করবেন।
+                    {t("becomePartner.successDesc")}
                   </p>
                   <Button onClick={() => setSubmitted(false)} variant="outline" className="mt-4 border-primary text-primary hover:bg-primary-light">
-                    নতুন আবেদন করুন
+                    {t("becomePartner.newApplication")}
                   </Button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <h3 className="font-heading text-xl font-bold text-secondary dark:text-white mb-2 flex items-center gap-2">
                     <Building2 className="h-5 w-5 text-primary" />
-                    পার্টনারশিপ আবেদন ফরম
+                    {t("becomePartner.formTitle")}
                   </h3>
                   
                   <div className="space-y-2">
-                    <label htmlFor="partner-orgName" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">প্রতিষ্ঠানের নাম (যেমন: ল্যাবএইড কুষ্টিয়া) *</label>
+                    <label htmlFor="partner-orgName" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("becomePartner.hospitalName")}</label>
                     <Input
                       id="partner-orgName"
                       type="text"
@@ -153,14 +155,14 @@ export default function BecomePartnerPage() {
                       required
                       value={formData.orgName}
                       onChange={handleChange}
-                      placeholder="প্রতিষ্ঠানের সম্পূর্ণ নাম লিখুন"
+                      placeholder={t("becomePartner.orgNamePlaceholder")}
                       className="border-border bg-background"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label htmlFor="partner-category" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">প্রতিষ্ঠানের ধরন *</label>
+                      <label htmlFor="partner-category" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("becomePartner.category")}</label>
                       <select
                         id="partner-category"
                         name="category"
@@ -168,14 +170,14 @@ export default function BecomePartnerPage() {
                         onChange={handleChange}
                         className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary"
                       >
-                        <option value="hospital">হাসপাতাল (Hospital)</option>
-                        <option value="diagnostic">ডায়াগনস্টিক সেন্টার</option>
-                        <option value="pharmacy">ফার্মেসি (Pharmacy)</option>
+                        <option value="hospital">{t("becomePartner.categoryHospital")}</option>
+                        <option value="diagnostic">{t("becomePartner.categoryDiagnostic")}</option>
+                        <option value="pharmacy">{t("becomePartner.categoryPharmacy")}</option>
                       </select>
                     </div>
                     
                     <div className="space-y-2">
-                      <label htmlFor="partner-discount" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">প্রস্তাবিত ডিসকাউন্টের হার *</label>
+                      <label htmlFor="partner-discount" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("becomePartner.discountOffer")}</label>
                       <Input
                         id="partner-discount"
                         type="text"
@@ -183,14 +185,14 @@ export default function BecomePartnerPage() {
                         required
                         value={formData.discount}
                         onChange={handleChange}
-                        placeholder="যেমন: ১৫% ল্যাব টেস্টে"
+                        placeholder={t("becomePartner.discountPlaceholder")}
                         className="border-border bg-background"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="partner-address" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">প্রতিষ্ঠানের ঠিকানা *</label>
+                    <label htmlFor="partner-address" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("becomePartner.address")}</label>
                     <Input
                       id="partner-address"
                       type="text"
@@ -198,13 +200,13 @@ export default function BecomePartnerPage() {
                       required
                       value={formData.address}
                       onChange={handleChange}
-                      placeholder="যেমন: হরিশপুর রোড, কুষ্টিয়া সদর"
+                      placeholder={t("becomePartner.addressPlaceholder")}
                       className="border-border bg-background"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="partner-contactName" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">যোগাযোগকারী ব্যক্তির নাম *</label>
+                    <label htmlFor="partner-contactName" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("becomePartner.contactPerson")}</label>
                     <Input
                       id="partner-contactName"
                       type="text"
@@ -212,14 +214,14 @@ export default function BecomePartnerPage() {
                       required
                       value={formData.contactName}
                       onChange={handleChange}
-                      placeholder="যেমন: মোঃ আশরাফুল কবির"
+                      placeholder={t("becomePartner.contactNamePlaceholder")}
                       className="border-border bg-background"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label htmlFor="partner-phone" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">মোবাইল নম্বর *</label>
+                      <label htmlFor="partner-phone" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("becomePartner.phone")}</label>
                       <Input
                         id="partner-phone"
                         type="tel"
@@ -227,26 +229,26 @@ export default function BecomePartnerPage() {
                         required
                         value={formData.phone}
                         onChange={handleChange}
-                        placeholder="যেমন: 017XXXXXXXX"
+                        placeholder="017XXXXXXXX"
                         className="border-border bg-background"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label htmlFor="partner-email" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">ইমেইল ঠিকানা</label>
+                      <label htmlFor="partner-email" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("becomePartner.email")}</label>
                       <Input
                         id="partner-email"
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        placeholder="যেমন: partner@hospital.com"
+                        placeholder="partner@hospital.com"
                         className="border-border bg-background"
                       />
                     </div>
                   </div>
 
                   <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
-                    আবেদন সাবমিট করুন
+                    {t("becomePartner.submit")}
                   </Button>
                 </form>
               )}

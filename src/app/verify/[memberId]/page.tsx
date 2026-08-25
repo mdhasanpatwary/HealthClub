@@ -156,10 +156,10 @@ export default function VerificationPage() {
             <div className="bg-amber-500/10 py-6 border-b border-amber-500/20">
               <ShieldAlert className="h-16 w-16 text-amber-500 mx-auto animate-bounce" />
               <h1 className="font-heading text-2xl font-bold text-amber-600 mt-2">
-                {isExpired ? "মেম্বারশিপের মেয়াদ উত্তীর্ণ" : "মেম্বারশিপ সচল নয়"}
+                {isExpired ? t("verifyMember.expiredTitle") : t("verifyMember.inactiveTitle")}
               </h1>
               <p className="text-xs text-muted-foreground mt-1">
-                {isExpired ? "এই মেম্বারশিপ কার্ডটির মেয়াদ শেষ হয়ে গেছে। রিনিউ করুন।" : "মেম্বারশিপ অ্যাকাউন্টটি বর্তমানে পেন্ডিং বা অনুমোদনের অপেক্ষায় রয়েছে"}
+                {isExpired ? t("verifyMember.expiredDesc") : t("verifyMember.pendingDesc")}
               </p>
             </div>
             <CardContent className="p-6 md:p-8 space-y-6">
@@ -180,13 +180,13 @@ export default function VerificationPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-4 border-t border-border/80 pt-3">
                   <div>
-                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">স্ট্যাটাস</span>
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.membershipStatus")}</span>
                     <p className="text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20 inline-flex items-center gap-1 mt-0.5 uppercase">
                       {isExpired ? "EXPIRED" : "PENDING APPROVAL"}
                     </p>
                   </div>
                   <div>
-                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">মেয়াদ তারিখ</span>
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.expiryDate")}</span>
                     <p className="text-xs font-bold font-mono text-secondary dark:text-white mt-0.5">
                       {member.expiryDate}
                     </p>
@@ -194,7 +194,7 @@ export default function VerificationPage() {
                 </div>
               </div>
               <div className="text-xs text-muted-foreground border-t border-border pt-4 text-center">
-                {isExpired ? "মেম্বারশিপ রিনিউ করার পর পার্টনার চিকিৎসাকেন্দ্রে ডিসকাউন্ট পাবেন।" : "মেম্বারশিপটি সচল হওয়ার পর হাসপাতাল বা অংশীদার চিকিৎসাকেন্দ্রে ডিসকাউন্ট পাওয়া যাবে।"}
+                {isExpired ? t("verifyMember.expiredNote") : t("verifyMember.pendingNote")}
               </div>
               <div className="pt-2">
                 <Link href="/">

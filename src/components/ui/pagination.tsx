@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatNum, Locale } from "@/lib/i18n";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 import { cn } from "@/lib/utils";
 
 export interface PaginationProps {
@@ -35,12 +36,15 @@ export function Pagination({
   onPageChange,
   onPageSizeChange,
   pageSizeOptions = [10, 20, 50, 100],
-  locale = "bn",
-  t = (k) => k,
+  locale: propLocale,
+  t: propT,
   itemLabel,
   className,
   disabled = false,
 }: PaginationProps) {
+  const lang = useLanguage();
+  const locale = propLocale || lang.locale || "bn";
+  const t = propT || lang.t;
 
   const safeTotalPages = Math.max(1, totalPages);
   const safeCurrentPage = Math.min(Math.max(1, currentPage), safeTotalPages);

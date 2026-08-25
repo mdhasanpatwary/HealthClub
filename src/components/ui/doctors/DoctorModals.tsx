@@ -301,7 +301,7 @@ export function DoctorDetailsModal({ doctor, onClose, onCallSerial, t }: DoctorD
             href={`/consultants/${doctor.id}`}
             className="inline-flex items-center justify-center w-full h-10 rounded-2xl border border-border bg-muted/40 hover:bg-muted text-xs font-bold text-foreground transition-colors"
           >
-            {t("consultants.profile.viewAllDoctors") ? "পূর্ণাঙ্গ প্রোফাইল ও ম্যাপ দেখুন" : "View Full Profile & Map"}
+            {t("consultants.profile.viewFullProfile")}
           </Link>
         </div>
       </div>
