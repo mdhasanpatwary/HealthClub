@@ -259,7 +259,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/sw.ts`, `src/app/actions/pushNotificationActions.ts`, `src/components/pwa/PushNotificationPrompt.tsx`, `src/app/admin/notifications/page.tsx`
   - **Details**: Implement Web Push API with VAPID subscription keys in Service Worker to broadcast browser push alerts for membership renewal reminders, emergency blood drives, and platform health advisories.
 
-- [ ] **TODO-54** (7.2): **Offline Caching for Digital Member Card & Emergency Contacts**
+- [x] **TODO-54** (7.2): **Offline Caching for Digital Member Card & Emergency Contacts**
   - **Files**: `src/sw.ts`, `src/app/dashboard/components/OfflineCardBanner.tsx`, `src/lib/safeStorage.ts`
   - **Details**: Configure CacheStorage & IndexedDB offline strategies in Service Worker to ensure members can view and present their digital ID card and call emergency ambulances even with zero network connectivity.
 

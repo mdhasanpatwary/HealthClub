@@ -1,8 +1,13 @@
 /// <reference lib="webworker" />
 
 import { defaultCache } from "@serwist/next/worker";
-import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
-import { Serwist } from "serwist";
+import type { PrecacheEntry, SerwistGlobalConfig, RuntimeCaching } from "serwist";
+import {
+  Serwist,
+  NetworkFirst,
+  CacheFirst,
+  ExpirationPlugin,
+} from "serwist";
 
 // This declares the value of `injectionPoint` to TypeScript.
 // `injectionPoint` is the string that will be replaced by the
@@ -16,12 +21,75 @@ declare global {
 
 declare const self: ServiceWorkerGlobalScope;
 
+// ---------------------------------------------------------------------------
+// High-Priority Offline Caching Strategies
+// ---------------------------------------------------------------------------
+
+const customOfflineCache: RuntimeCaching[] = [
+  // 1. Digital Member Card & Emergency Pages - Network First with Fast Timeout Fallback
+  {
+    matcher: ({ url: { pathname }, sameOrigin }) =>
+      sameOrigin &&
+      (pathname === "/dashboard" ||
+        pathname.startsWith("/dashboard/") ||
+        pathname === "/emergency" ||
+        pathname.startsWith("/emergency/") ||
+        pathname === "/offline"),
+    handler: new NetworkFirst({
+      cacheName: "hc-critical-offline-pages",
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: 32,
+          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+          maxAgeFrom: "last-used",
+        }),
+      ],
+      networkTimeoutSeconds: 3,
+    }),
+  },
+
+  // 2. Member Card QR Code Generator Service - Cache First with long TTL
+  {
+    matcher: ({ url }) =>
+      url.hostname === "api.qrserver.com" && url.pathname.startsWith("/v1/create-qr-code"),
+    handler: new CacheFirst({
+      cacheName: "hc-member-qr-cache",
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: 64,
+          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+          maxAgeFrom: "last-used",
+        }),
+      ],
+    }),
+  },
+
+  // 3. Member Card Assets, Logos, and Background Textures - Cache First
+  {
+    matcher: ({ url: { pathname }, sameOrigin }) =>
+      sameOrigin &&
+      (pathname.startsWith("/images/member-card-") ||
+        pathname.startsWith("/icons/") ||
+        pathname.startsWith("/images/logo")),
+    handler: new CacheFirst({
+      cacheName: "hc-card-branding-assets",
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: 32,
+          maxAgeSeconds: 60 * 24 * 60 * 60, // 60 days
+          maxAgeFrom: "last-used",
+        }),
+      ],
+    }),
+  },
+];
+
 const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
   skipWaiting: true,
   clientsClaim: true,
   navigationPreload: true,
-  runtimeCaching: defaultCache,
+  runtimeCaching: [...customOfflineCache, ...defaultCache],
   fallbacks: {
     entries: [
       {

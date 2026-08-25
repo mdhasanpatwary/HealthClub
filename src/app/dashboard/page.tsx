@@ -16,6 +16,13 @@ import { DashboardCardSection } from "./components/DashboardCardSection";
 import { DashboardHistoryTab } from "./components/DashboardHistoryTab";
 import { DashboardProfileTab } from "./components/DashboardProfileTab";
 import { AddMemberTxDialog } from "./components/AddMemberTxDialog";
+import { OfflineCardBanner } from "./components/OfflineCardBanner";
+import {
+  saveOfflineMemberCard,
+  getOfflineMemberCard,
+  saveOfflineEmergencyDirectory,
+} from "@/lib/safeStorage";
+import { INITIAL_AMBULANCES, INITIAL_EMERGENCY_HOTLINES } from "@/data/emergencyData";
 
 function DashboardContent() {
   const router = useRouter();
@@ -55,10 +62,16 @@ function DashboardContent() {
     Promise.resolve().then(async () => {
       if (!isMounted) return;
 
-      const currentUser = dbStore.getCurrentUser();
+      let currentUser = dbStore.getCurrentUser();
+      // If not in local storage (e.g. offline cold start), attempt to recover from IndexedDB
       if (!currentUser) {
-        router.push("/login");
-        return;
+        const offlineCard = await getOfflineMemberCard();
+        if (offlineCard) {
+          currentUser = offlineCard;
+        } else {
+          router.push("/login");
+          return;
+        }
       }
 
       // Set initial cached state immediately for fast response
@@ -70,6 +83,13 @@ function DashboardContent() {
       setProfileBirthDate(currentUser.birthDate || "");
       setProfileProfession(currentUser.profession || "");
       setProfilePictureUrl(currentUser.profilePictureUrl || "");
+
+      // Ensure active member card and emergency directory are safely cached in IndexedDB
+      saveOfflineMemberCard(currentUser).catch(() => {});
+      saveOfflineEmergencyDirectory({
+        ambulances: INITIAL_AMBULANCES,
+        hotlines: INITIAL_EMERGENCY_HOTLINES,
+      }).catch(() => {});
 
       const expiry = new Date(currentUser.expiryDate);
       const today = new Date();
@@ -91,6 +111,8 @@ function DashboardContent() {
         if (!isMounted) return;
         const activeUser = freshUser || currentUser;
         setUser(activeUser);
+        saveOfflineMemberCard(activeUser).catch(() => {});
+
         setProfileName(activeUser.name);
         setProfileEmail(activeUser.email || "");
         setProfilePhone(activeUser.phone);
@@ -290,6 +312,9 @@ function DashboardContent() {
   return (
     <div className="bg-muted/30 dark:bg-slate-950/50 min-h-screen py-6 sm:py-10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
+
+        {/* Offline Status & Emergency Call Banner */}
+        <OfflineCardBanner locale={locale} />
 
         {/* Welcome Banner */}
         <DashboardWelcomeHeader
