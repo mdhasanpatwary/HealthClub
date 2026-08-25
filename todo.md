@@ -239,7 +239,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/health-tools/page.tsx`, `src/app/health-tools/components/PregnancyCalculator.tsx`, `src/data/pregnancyMilestones.ts`, `src/lib/translations.bn.ts`, `src/lib/translations.en.ts`
   - **Details**: Build an interactive Pregnancy Due Date (EDD) calculator based on Last Menstrual Period (LMP) or Ultrasound date, displaying current trimester progress, baby size milestones, and maternal nutrition advice.
 
-- [ ] **TODO-50** (6.2): **Blood Pressure & Diabetes Range Clinical Evaluator**
+- [x] **TODO-50** (6.2): **Blood Pressure & Diabetes Range Clinical Evaluator**
   - **Files**: `src/app/health-tools/page.tsx`, `src/app/health-tools/components/BpDiabetesEvaluator.tsx`, `src/lib/translations.bn.ts`, `src/lib/translations.en.ts`
   - **Details**: Implement interactive clinical evaluation tools for Systolic/Diastolic blood pressure categories (Normal, Elevated, Stage 1/2 Hypertension) and Fasting/2-hour post-meal blood sugar levels.
 
