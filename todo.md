@@ -295,7 +295,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/layout.tsx`
   - **Details**: Add `sameAs` array (official Facebook page, WhatsApp hotline, YouTube) to the global `Organization` JSON-LD schema, and attach `potentialAction: SearchAction` (Sitelinks Searchbox target `${SITE_URL}/consultants?search={search_term_string}`) to the `WebSite` schema.
 
-- [ ] **TODO-62**: **Answer Engine Optimization (AEO): Granular Medical Schema for Doctors & Hospitals**
+- [x] **TODO-62**: **Answer Engine Optimization (AEO): Granular Medical Schema for Doctors & Hospitals**
   - **Files**: `src/app/consultants/[id]/page.tsx`, `src/app/partner-hospitals/[id]/page.tsx`
   - **Details**: Expand `Physician` schema with `isAcceptingNewPatients: true`, `availableService`, `currenciesAccepted: "BDT"`, `paymentAccepted`, and `hasCredential`. Enrich `Hospital` / `MedicalBusiness` schema with `hasOfferCatalog` specifying department discount rates.
 

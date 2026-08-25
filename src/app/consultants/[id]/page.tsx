@@ -157,8 +157,36 @@ export default async function DoctorDetailPage({ params }: PageProps) {
       jobTitle: doctor.designation,
       telephone: doctor.serialPhone,
       priceRange: doctor.consultationFee || "৳৳",
+      currenciesAccepted: "BDT",
+      paymentAccepted: "Cash, bKash, Nagad, Mobile Banking",
+      isAcceptingNewPatients: doctor.isActive !== false,
       url: `${SITE_URL}/consultants/${doctor.id}`,
       description: `${doctor.name} is a specialist in ${doctor.specialty} practicing at ${doctor.chamberName}, Feni.`,
+      ...(doctor.degrees
+        ? {
+            hasCredential: [
+              {
+                "@type": "EducationalOccupationalCredential",
+                credentialCategory: "degree",
+                name: doctor.degrees,
+              },
+            ],
+          }
+        : {}),
+      availableService: [
+        {
+          "@type": "MedicalService",
+          name: isEn ? `${doctor.specialty} Consultation` : `${doctor.specialty} কনসাল্টেশন`,
+          serviceType: doctor.department || doctor.specialty,
+          description: isEn
+            ? `${doctor.specialty} specialist consultation and clinical care by ${doctor.name} (${doctor.degrees}). Chamber at ${doctor.chamberName}.`
+            : `${doctor.name} (${doctor.degrees}) কর্তৃক ${doctor.specialty} বিশেষজ্ঞ চিকিৎসা ও স্বাস্থ্য পরামর্শ সেবা। চেম্বার: ${doctor.chamberName}।`,
+          provider: {
+            "@type": "Physician",
+            name: doctor.name,
+          },
+        },
+      ],
       worksFor: {
         "@type": "MedicalOrganization",
         name: doctor.chamberName,
