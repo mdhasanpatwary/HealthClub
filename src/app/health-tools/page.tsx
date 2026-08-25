@@ -6,6 +6,7 @@ import { WaterIntakeCalculator } from "./components/WaterIntakeCalculator";
 import { CalorieCalculator } from "./components/CalorieCalculator";
 import { PregnancyCalculator } from "./components/PregnancyCalculator";
 import { BpDiabetesEvaluator } from "./components/BpDiabetesEvaluator";
+import { HealthReportExportButton } from "./components/HealthReportExportButton";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Calculator, Scale, Droplet, Flame, Baby, HeartPulse, Stethoscope, ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -79,7 +80,7 @@ export default async function HealthToolsPage() {
         <div className="absolute -top-32 -right-32 w-80 h-80 bg-primary/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-16 -left-32 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl" />
 
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-3">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold">
             <Calculator className="h-3.5 w-3.5" />
             <span>{isEn ? "Smart Health Assessment Tools" : "স্মার্ট স্বাস্থ্য মূল্যায়ন টুলস"}</span>
@@ -94,6 +95,10 @@ export default async function HealthToolsPage() {
               ? "Track your essential health metrics with scientifically backed tools designed to help you make informed lifestyle decisions."
               : "আপনার শরীরের বিএমআই, রক্তচাপ ও ডায়াবেটিস রেঞ্জ, দৈনিক পানির প্রয়োজনীয়তা, ক্যালোরি চাহিদা ও গর্ভকালীন অগ্রগতি সহজে জেনে নিন।"}
           </p>
+
+          <div className="flex justify-center pt-2">
+            <HealthReportExportButton />
+          </div>
         </div>
       </div>
 
