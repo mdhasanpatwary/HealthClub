@@ -3,7 +3,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { MemberNotification } from "@/services/db";
 import { dbStore } from "@/services/dbStore";
+import { safeStorage } from "@/lib/safeStorage";
 import { toast } from "sonner";
+
+const STORAGE_KEY = "hc_member_read_notifications";
 
 export interface UseMemberNotificationsOptions {
   autoRefreshInterval?: number; // In milliseconds (default 30000ms = 30s)
@@ -28,9 +31,28 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
         type,
       });
 
-      setItems(res.items);
-      setUnreadCount(res.unreadCount);
-      setHighPriorityCount(res.highPriorityCount);
+      const localReadIds = new Set(safeStorage.getItem<string[]>(STORAGE_KEY, []) || []);
+
+      // Merge server items with local read cache to prevent race-condition reverts
+      const mergedItems = res.items.map((item) => {
+        if (localReadIds.has(item.id)) {
+          return { ...item, isRead: true };
+        }
+        return item;
+      });
+
+      const calculatedUnread = mergedItems.filter((i) => !i.isRead).length;
+      const calculatedHighPriority = mergedItems.filter(
+        (n) =>
+          !n.isRead &&
+          (n.type === "renewal_approved" ||
+            n.type === "renewal_rejected" ||
+            n.type === "expiring_soon")
+      ).length;
+
+      setItems(mergedItems);
+      setUnreadCount(calculatedUnread);
+      setHighPriorityCount(calculatedHighPriority);
     } catch {
       // Graceful fallback for non-fatal notification fetch errors
     } finally {
@@ -49,87 +71,104 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
     let timer: NodeJS.Timeout | null = null;
     if (autoRefreshInterval > 0) {
       timer = setInterval(() => {
-        fetchNotifications();
+        if (isMounted) {
+          fetchNotifications();
+        }
       }, autoRefreshInterval);
     }
 
-    const handleWindowFocus = () => {
+    const handleDataChange = () => {
+      if (!isMounted) return;
       fetchNotifications();
     };
 
-    const handleCustomChange = () => {
-      fetchNotifications();
-    };
-
-    window.addEventListener("focus", handleWindowFocus);
-    window.addEventListener("member-notification-change", handleCustomChange);
-    window.addEventListener("auth-change", handleCustomChange);
+    window.addEventListener("focus", handleDataChange);
+    window.addEventListener("member-notification-change", handleDataChange);
+    window.addEventListener("auth-change", handleDataChange);
 
     return () => {
       isMounted = false;
       if (timer) clearInterval(timer);
-      window.removeEventListener("focus", handleWindowFocus);
-      window.removeEventListener("member-notification-change", handleCustomChange);
-      window.removeEventListener("auth-change", handleCustomChange);
+      window.removeEventListener("focus", handleDataChange);
+      window.removeEventListener("member-notification-change", handleDataChange);
+      window.removeEventListener("auth-change", handleDataChange);
     };
   }, [fetchNotifications, autoRefreshInterval]);
 
-  const markAsRead = useCallback(async (notificationId: string) => {
-    // Optimistic UI update
-    setItems((prev) =>
-      prev.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n))
-    );
-    setUnreadCount((prev) => Math.max(0, prev - 1));
-
-    try {
-      const res = await dbStore.markMemberNotificationRead(notificationId);
-      if (!res.success) {
-        fetchNotifications();
-      } else {
-        window.dispatchEvent(new Event("member-notification-change"));
+  const markAsRead = useCallback(
+    async (notificationId: string) => {
+      // 1. Immediately persist to local read cache
+      const currentRead = safeStorage.getItem<string[]>(STORAGE_KEY, []) || [];
+      if (!currentRead.includes(notificationId)) {
+        safeStorage.setItem(STORAGE_KEY, [...currentRead, notificationId]);
       }
-    } catch {
-      fetchNotifications();
-    }
-  }, [fetchNotifications]);
+
+      // 2. Optimistic UI update
+      setItems((prev) =>
+        prev.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n))
+      );
+      setUnreadCount((prev) => Math.max(0, prev - 1));
+
+      // 3. Broadcast to other mounted instances
+      window.dispatchEvent(new Event("member-notification-change"));
+
+      // 4. Persist to server database
+      try {
+        await dbStore.markMemberNotificationRead(notificationId);
+      } catch {
+        // Retain local read status even if network glitch occurs
+      }
+    },
+    []
+  );
 
   const markAllAsRead = useCallback(async () => {
-    // Optimistic UI update
+    // 1. Persist all IDs to local read cache
+    const allIds = items.map((item) => item.id);
+    const currentRead = safeStorage.getItem<string[]>(STORAGE_KEY, []) || [];
+    const merged = Array.from(new Set([...currentRead, ...allIds]));
+    safeStorage.setItem(STORAGE_KEY, merged);
+
+    // 2. Optimistic UI update
     setItems((prev) => prev.map((n) => ({ ...n, isRead: true })));
     setUnreadCount(0);
     setHighPriorityCount(0);
 
+    // 3. Broadcast to other mounted instances
+    window.dispatchEvent(new Event("member-notification-change"));
+
+    // 4. Persist to server database
     try {
       const res = await dbStore.markAllMemberNotificationsRead();
       if (res.success) {
         toast.success("সব বিজ্ঞপ্তি পঠিত হিসেবে চিহ্নিত করা হয়েছে।");
-        window.dispatchEvent(new Event("member-notification-change"));
-      } else {
-        fetchNotifications();
       }
     } catch {
-      fetchNotifications();
+      // Local state remains read
     }
-  }, [fetchNotifications]);
+  }, [items]);
 
-  const deleteNotification = useCallback(async (notificationId: string) => {
-    // Optimistic UI update
-    setItems((prev) => prev.filter((n) => n.id !== notificationId));
+  const deleteNotification = useCallback(
+    async (notificationId: string) => {
+      // Optimistic UI update
+      setItems((prev) => prev.filter((n) => n.id !== notificationId));
 
-    try {
-      const res = await dbStore.deleteMemberNotification(notificationId);
-      if (res.success) {
-        toast.success("বিজ্ঞপ্তিটি মুছে ফেলা হয়েছে।");
-        window.dispatchEvent(new Event("member-notification-change"));
-      } else {
-        toast.error(res.error || "বিজ্ঞপ্তি মুছে ফেলা সম্ভব হয়নি।");
+      try {
+        const res = await dbStore.deleteMemberNotification(notificationId);
+        if (res.success) {
+          toast.success("বিজ্ঞপ্তিটি মুছে ফেলা হয়েছে।");
+          window.dispatchEvent(new Event("member-notification-change"));
+        } else {
+          toast.error(res.error || "বিজ্ঞপ্তি মুছে ফেলা সম্ভব হয়নি।");
+          fetchNotifications();
+        }
+      } catch {
+        toast.error("বিজ্ঞপ্তি মুছে ফেলা সম্ভব হয়নি।");
         fetchNotifications();
       }
-    } catch {
-      toast.error("বিজ্ঞপ্তি মুছে ফেলা সম্ভব হয়নি।");
-      fetchNotifications();
-    }
-  }, [fetchNotifications]);
+    },
+    [fetchNotifications]
+  );
 
   return {
     items,

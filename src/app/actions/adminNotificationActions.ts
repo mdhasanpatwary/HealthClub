@@ -313,12 +313,24 @@ export async function getAdminNotificationsAction(
       (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
 
-    const highPriorityCount =
-      pendingRenewals.length + pendingPartnerRequests.length;
+    // Filter sets for dismissed and read notifications
+    const dismissedSet = new Set(params?.dismissedIds || []);
+    const readSet = new Set(params?.readIds || []);
+
+    const unreadCount = allNotifications.filter(
+      (item) => !dismissedSet.has(item.id) && !readSet.has(item.id)
+    ).length;
+
+    const highPriorityCount = allNotifications.filter(
+      (item) =>
+        item.severity === "high" &&
+        !dismissedSet.has(item.id) &&
+        !readSet.has(item.id)
+    ).length;
 
     const summary: AdminNotificationSummary = {
       items: allNotifications,
-      unreadCount: allNotifications.length,
+      unreadCount,
       highPriorityCount,
       pendingRenewalsCount: pendingRenewals.length,
       pendingPartnerRequestsCount: pendingPartnerRequests.length,
@@ -328,7 +340,6 @@ export async function getAdminNotificationsAction(
     };
 
     // Filter by dismissed
-    const dismissedSet = new Set(params?.dismissedIds || []);
     let filtered = allNotifications.filter((item) => !dismissedSet.has(item.id));
 
     // Filter by Category
@@ -344,7 +355,6 @@ export async function getAdminNotificationsAction(
 
     // Filter by Unread Only
     if (params?.unreadOnly) {
-      const readSet = new Set(params.readIds || []);
       filtered = filtered.filter((item) => !readSet.has(item.id));
     }
 

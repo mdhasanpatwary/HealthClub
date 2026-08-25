@@ -95,14 +95,14 @@ export async function getMemberNotificationsAction(
       const diffMs = expiry.getTime() - now.getTime();
       const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
 
-      // If expiring within 30 days or already expired, verify if an expiring notification exists within the last 7 days
+      // If expiring within 30 days or already expired, verify if an expiring notification exists for this cycle (within 30 days)
       if (diffDays <= 30) {
-        const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
         const existingAlert = await prisma.memberNotification.findFirst({
           where: {
             memberId,
             type: "expiring_soon",
-            createdAt: { gte: sevenDaysAgo },
+            createdAt: { gte: thirtyDaysAgo },
           },
         });
 

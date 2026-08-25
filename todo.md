@@ -267,5 +267,46 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/lib/rateLimit.ts`, `src/app/actions/memberAuthActions.ts`, `src/app/actions/contactActions.ts`, `src/app/actions/partnerRequestActions.ts`
   - **Details**: Implement sliding-window rate limiting on login, registration, contact message, and partner onboarding actions to safeguard server endpoints against brute-force attempts and automated spam submissions.
 
+---
 
+## 🌟 Phase 12: SEO, AEO (Ask Engines) & GEO (Generative Engine Optimization) (TODO-56 to TODO-65)
 
+- [ ] **TODO-56**: **Fallback OpenGraph Image & Standard 1200x630 Social Cards**
+  - **Files**: `public/og-image.png`, `src/app/layout.tsx`, `src/app/consultants/[id]/page.tsx`, `src/app/partner-hospitals/[id]/page.tsx`
+  - **Details**: Generate and provide standard 1200x630 OpenGraph and Twitter card asset (`/og-image.png`) with proper `og:image:width: 1200`, `og:image:height: 630`, and update dynamic consultant/partner profile fallbacks to prevent 404 social previews.
+
+- [ ] **TODO-57**: **Convert Legacy `/doctors` Redirects to HTTP 308 Permanent Redirects**
+  - **Files**: `src/app/doctors/page.tsx`, `src/app/doctors/[id]/page.tsx`, `next.config.ts`
+  - **Details**: Replace Next.js `redirect()` (HTTP 307 temporary) with `permanentRedirect()` from `next/navigation` (HTTP 308 permanent) or configure `redirects()` in `next.config.ts` so search engine crawlers properly transfer PageRank and link equity to `/consultants`.
+
+- [ ] **TODO-58**: **Robots.txt Security & AI Search Crawlers Optimization**
+  - **Files**: `src/app/robots.ts`
+  - **Details**: Apply strict `disallow` paths (`/admin/`, `/dashboard/`, `/partner/`, `/profile/`, `/api/`) to AI user-agents (`GPTBot`, `ClaudeBot`, `PerplexityBot`), and add support for modern AI search bots (`OAI-SearchBot`, `ChatGPT-User`, `Google-Extended`, `Applebot-Extended`, `cohere-ai`, `Bingbot`).
+
+- [ ] **TODO-59**: **Sitemap.xml Database Synchronization & Stable Modification Timestamps**
+  - **Files**: `src/app/sitemap.ts`
+  - **Details**: Update `sitemap.ts` to fetch published health tip articles dynamically via `getAllHealthTipsAction()` rather than static array, provide stable `lastModified` dates instead of dynamic `new Date()`, and include multi-lingual alternate language tags (`alternates.languages`).
+
+- [ ] **TODO-60**: **Generative Engine Optimization (GEO): Overhaul `llms.txt` and `llms-full.txt`**
+  - **Files**: `public/llms.txt`, `public/llms-full.txt`, `src/app/layout.tsx`
+  - **Details**: Update `llms.txt` and `llms-full.txt` knowledge bases with comprehensive information on Emergency Services & Blood Network (`/emergency`), Specialist Doctors Directory (`/consultants`), Health Assessment Tools (`/health-tools`), Preventative Health Guides (`/health-tips`), and all 6 Feni Upazilas coverage. Add `<link rel="alternate" type="text/markdown">` head tags in `layout.tsx`.
+
+- [ ] **TODO-61**: **Organization & WebSite Schema: Add Social Entity Graph (`sameAs`) & SiteLinks Searchbox**
+  - **Files**: `src/app/layout.tsx`
+  - **Details**: Add `sameAs` array (official Facebook page, WhatsApp hotline, YouTube) to the global `Organization` JSON-LD schema, and attach `potentialAction: SearchAction` (Sitelinks Searchbox target `${SITE_URL}/consultants?search={search_term_string}`) to the `WebSite` schema.
+
+- [ ] **TODO-62**: **Answer Engine Optimization (AEO): Granular Medical Schema for Doctors & Hospitals**
+  - **Files**: `src/app/consultants/[id]/page.tsx`, `src/app/partner-hospitals/[id]/page.tsx`
+  - **Details**: Expand `Physician` schema with `isAcceptingNewPatients: true`, `availableService`, `currenciesAccepted: "BDT"`, `paymentAccepted`, and `hasCredential`. Enrich `Hospital` / `MedicalBusiness` schema with `hasOfferCatalog` specifying department discount rates.
+
+- [ ] **TODO-63**: **SoftwareApplication & WebApplication Schema for Interactive Health Tools**
+  - **Files**: `src/app/health-tools/page.tsx`
+  - **Details**: Add `SoftwareApplication` / `WebApplication` JSON-LD schema with `applicationCategory: "HealthApplication"`, `operatingSystem: "All"`, free tier offers, and `HowTo` structured data for the BMI, Water, and Calorie health calculators.
+
+- [ ] **TODO-64**: **Dynamic Publication & Modification Timestamps in Health Tip Articles Schema**
+  - **Files**: `src/app/health-tips/[slug]/page.tsx`
+  - **Details**: Dynamically derive `datePublished` and `dateModified` in `MedicalWebPage` JSON-LD from `article.publishedDate` or article timestamps to maintain accurate E-E-A-T freshness signals.
+
+- [ ] **TODO-65**: **Explicit Meta Robots Configuration for Utility, Auth & Private Subpages**
+  - **Files**: `src/app/forgot-password/page.tsx`, `src/app/forgot-password/reset/page.tsx`, `src/app/register/payment/page.tsx`, `src/app/register/verify-email/page.tsx`
+  - **Details**: Add explicit `robots: { index: false, follow: false }` metadata to transactional, authentication, and reset password routes to prevent duplicate or thin-content indexing.

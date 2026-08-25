@@ -29,13 +29,16 @@ export const safeStorage = {
       if (raw === null || raw === undefined) {
         return fallback;
       }
-      return JSON.parse(raw) as T;
-    } catch {
       try {
-        window.localStorage.removeItem(key);
+        return JSON.parse(raw) as T;
       } catch {
-        // Suppress secondary errors if storage is completely blocked
+        // If it was stored as a raw string and fallback is a string, return raw
+        if (typeof fallback === "string") {
+          return raw as unknown as T;
+        }
+        return fallback;
       }
+    } catch {
       return fallback;
     }
   },
@@ -49,7 +52,7 @@ export const safeStorage = {
       return false;
     }
     try {
-      const serialized = typeof value === "string" ? value : JSON.stringify(value);
+      const serialized = JSON.stringify(value);
       window.localStorage.setItem(key, serialized);
       return true;
     } catch {
@@ -83,7 +86,14 @@ export const safeStorage = {
       if (raw === null || raw === undefined) {
         return fallback;
       }
-      return JSON.parse(raw) as T;
+      try {
+        return JSON.parse(raw) as T;
+      } catch {
+        if (typeof fallback === "string") {
+          return raw as unknown as T;
+        }
+        return fallback;
+      }
     } catch {
       return fallback;
     }
@@ -97,7 +107,7 @@ export const safeStorage = {
       return false;
     }
     try {
-      const serialized = typeof value === "string" ? value : JSON.stringify(value);
+      const serialized = JSON.stringify(value);
       window.sessionStorage.setItem(key, serialized);
       return true;
     } catch {

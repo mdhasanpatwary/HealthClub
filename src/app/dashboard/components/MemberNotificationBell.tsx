@@ -247,7 +247,10 @@ export function MemberNotificationBell() {
               return (
                 <div
                   key={item.id}
-                  className={`p-3 sm:p-3.5 transition-colors relative flex gap-3 items-start group ${
+                  onClick={() => {
+                    if (!isRead) markAsRead(item.id);
+                  }}
+                  className={`p-3 sm:p-3.5 transition-colors relative flex gap-3 items-start group cursor-pointer ${
                     isRead
                       ? "bg-background hover:bg-muted/40 opacity-85"
                       : "bg-primary/5 hover:bg-primary/10"

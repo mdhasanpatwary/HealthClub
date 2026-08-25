@@ -45,8 +45,12 @@ export function useAdminNotifications(options?: UseAdminNotificationsOptions) {
   const [unreadOnly, setUnreadOnly] = useState(options?.unreadOnly || false);
   const [summary, setSummary] = useState<AdminNotificationSummary>(DEFAULT_SUMMARY);
 
-  const [readIds, setReadIds] = useState<string[]>([]);
-  const [dismissedIds, setDismissedIds] = useState<string[]>([]);
+  const [readIds, setReadIds] = useState<string[]>(() => {
+    return safeStorage.getItem<string[]>(STORAGE_KEYS.READ_IDS, []) || [];
+  });
+  const [dismissedIds, setDismissedIds] = useState<string[]>(() => {
+    return safeStorage.getItem<string[]>(STORAGE_KEYS.DISMISSED_IDS, []) || [];
+  });
 
   // Load read and dismissed IDs from safeStorage
   const loadLocalStates = useCallback(() => {
@@ -95,6 +99,7 @@ export function useAdminNotifications(options?: UseAdminNotificationsOptions) {
     });
 
     const handleDataChange = () => {
+      if (!isMounted) return;
       loadLocalStates();
       fetchNotifications();
     };
@@ -127,34 +132,41 @@ export function useAdminNotifications(options?: UseAdminNotificationsOptions) {
 
   const markAsRead = useCallback(
     (id: string) => {
+      const currentRead = safeStorage.getItem<string[]>(STORAGE_KEYS.READ_IDS, []) || [];
+      if (!currentRead.includes(id)) {
+        const next = [...currentRead, id];
+        safeStorage.setItem(STORAGE_KEYS.READ_IDS, next);
+      }
       setReadIds((prev) => {
         if (prev.includes(id)) return prev;
-        const next = [...prev, id];
-        safeStorage.setItem(STORAGE_KEYS.READ_IDS, next);
-        queueMicrotask(() => window.dispatchEvent(new Event("admin-notifications-change")));
-        return next;
+        return [...prev, id];
       });
+      window.dispatchEvent(new Event("admin-notifications-change"));
     },
     []
   );
 
   const markAllAsRead = useCallback(() => {
     const allIds = summary.items.map((item) => item.id);
-    const merged = Array.from(new Set([...readIds, ...allIds]));
+    const currentRead = safeStorage.getItem<string[]>(STORAGE_KEYS.READ_IDS, []) || [];
+    const merged = Array.from(new Set([...currentRead, ...readIds, ...allIds]));
     setReadIds(merged);
     safeStorage.setItem(STORAGE_KEYS.READ_IDS, merged);
-    queueMicrotask(() => window.dispatchEvent(new Event("admin-notifications-change")));
+    window.dispatchEvent(new Event("admin-notifications-change"));
   }, [summary.items, readIds]);
 
   const dismissNotification = useCallback(
     (id: string) => {
+      const currentDismissed = safeStorage.getItem<string[]>(STORAGE_KEYS.DISMISSED_IDS, []) || [];
+      if (!currentDismissed.includes(id)) {
+        const next = [...currentDismissed, id];
+        safeStorage.setItem(STORAGE_KEYS.DISMISSED_IDS, next);
+      }
       setDismissedIds((prev) => {
         if (prev.includes(id)) return prev;
-        const next = [...prev, id];
-        safeStorage.setItem(STORAGE_KEYS.DISMISSED_IDS, next);
-        queueMicrotask(() => window.dispatchEvent(new Event("admin-notifications-change")));
-        return next;
+        return [...prev, id];
       });
+      window.dispatchEvent(new Event("admin-notifications-change"));
     },
     []
   );
@@ -162,10 +174,11 @@ export function useAdminNotifications(options?: UseAdminNotificationsOptions) {
   const clearAllRead = useCallback(() => {
     const readItems = summary.items.filter((item) => readSet.has(item.id));
     const toDismiss = readItems.map((item) => item.id);
-    const merged = Array.from(new Set([...dismissedIds, ...toDismiss]));
+    const currentDismissed = safeStorage.getItem<string[]>(STORAGE_KEYS.DISMISSED_IDS, []) || [];
+    const merged = Array.from(new Set([...currentDismissed, ...dismissedIds, ...toDismiss]));
     setDismissedIds(merged);
     safeStorage.setItem(STORAGE_KEYS.DISMISSED_IDS, merged);
-    queueMicrotask(() => window.dispatchEvent(new Event("admin-notifications-change")));
+    window.dispatchEvent(new Event("admin-notifications-change"));
   }, [summary.items, readSet, dismissedIds]);
 
   const handlePageChange = useCallback((page: number) => {

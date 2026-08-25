@@ -74,15 +74,6 @@ export async function registerBloodDonorAction(
       update: { value: JSON.stringify(updatedDonors) },
     });
 
-    // Optional audit note in contact messages
-    await prisma.contactMessage.create({
-      data: {
-        name: input.name,
-        phone: input.phone,
-        message: `[রক্তদাতা নিবন্ধন (অপেক্ষমাণ)] রক্তের গ্রুপ: ${input.bloodGroup} | উপজেলা: ${input.upazila} | শেষ রক্তদান: ${input.lastDonated || "তথ্য নেই"}`,
-      },
-    }).catch((err) => logger.warn("Failed to create audit contact message", err));
-
     updateTag(EMERGENCY_TAG);
     revalidateTag(EMERGENCY_TAG, "max");
     revalidatePath("/emergency");
@@ -110,7 +101,6 @@ export async function registerAmbulanceAction(
       return { success: false, message: "সকল প্রয়োজনীয় তথ্য পূরণ করুন।" };
     }
 
-    const altInfo = input.altPhone ? ` | বিকল্প ফোন: ${input.altPhone}` : "";
     const coverageInfo = input.coverage ? ` | কভারেজ: ${input.coverage}` : "";
 
     const newAmbulance: AmbulanceService = {
@@ -147,15 +137,6 @@ export async function registerAmbulanceAction(
       create: { key: "emergency_ambulances", value: JSON.stringify(updatedAmbulances) },
       update: { value: JSON.stringify(updatedAmbulances) },
     });
-
-    // Optional audit note in contact messages
-    await prisma.contactMessage.create({
-      data: {
-        name: `${input.serviceName} (${input.operatorName})`,
-        phone: input.phone,
-        message: `[অ্যাম্বুলেন্স নিবন্ধন (অপেক্ষমাণ)] সেবা/গাড়ির নাম: ${input.serviceName} | চালক/মালিক: ${input.operatorName} | ধরন: ${input.type} | স্ট্যান্ড/এলাকা: ${input.location}${altInfo}${coverageInfo}`,
-      },
-    }).catch((err) => logger.warn("Failed to create audit contact message", err));
 
     updateTag(EMERGENCY_TAG);
     revalidateTag(EMERGENCY_TAG, "max");
