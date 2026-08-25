@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import {
   UPAZILAS_FENI,
   BLOOD_GROUPS,
+  AMBULANCE_TYPES,
   BloodDonor,
   AmbulanceService,
   EmergencyHotline,
@@ -26,12 +27,15 @@ import {
   PlusCircle,
   Clock,
   MapPin,
-  CheckCircle2,
   Sparkles,
+  Activity,
+  Wind,
+  Snowflake,
 } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { BloodDonorRegisterDialog } from "./BloodDonorRegisterDialog";
 import { AmbulanceRegisterDialog } from "./AmbulanceRegisterDialog";
+import { AmbulanceCard } from "./AmbulanceCard";
 
 interface EmergencyDirectoryProps {
   initialBloodDonors?: BloodDonor[];
@@ -102,6 +106,19 @@ export function EmergencyDirectory({
       return matchType && matchSearch;
     });
   }, [ambulancesList, selectedAmbulanceType, ambulanceSearch]);
+
+  const ambulanceCounts = useMemo(() => {
+    const counts: Record<string, number> = { all: 0, AC: 0, "Non-AC": 0, ICU: 0, Freezer: 0 };
+    ambulancesList.forEach((amb) => {
+      if (amb.status !== "pending") {
+        counts.all = (counts.all || 0) + 1;
+        if (counts[amb.type] !== undefined) {
+          counts[amb.type] += 1;
+        }
+      }
+    });
+    return counts;
+  }, [ambulancesList]);
 
   return (
     <div className="space-y-6 sm:space-y-8">
@@ -303,8 +320,8 @@ export function EmergencyDirectory({
               </h3>
               <p className="text-xs text-muted-foreground">
                 {isEn
-                  ? "Find ICU, AC, and Non-AC ambulances in Feni or register your own vehicle."
-                  : "ফেনীর বিভিন্ন এলাকার অ্যাম্বুলেন্স খুঁজুন অথবা আপনার অ্যাম্বুলেন্স তালিকাভুক্ত করুন।"}
+                  ? "Find ICU, AC, Non-AC & Freezing ambulances in Feni or register your own vehicle."
+                  : "ফেনীর এসি, নন-এসি, আইসিইউ ও ফ্রিজিং অ্যাম্বুলেন্স খুঁজুন অথবা আপনার অ্যাম্বুলেন্স তালিকাভুক্ত করুন।"}
               </p>
             </div>
             <Button
@@ -317,39 +334,85 @@ export function EmergencyDirectory({
             </Button>
           </div>
 
-          {/* Ambulance Search & Filter Bar */}
-          <div className="p-3 sm:p-4 rounded-2xl bg-muted/40 border border-border/80 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-            <div className="relative flex-1">
+          {/* Vehicle Type Filter Chips */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1.5 scrollbar-none">
+              <button
+                type="button"
+                role="button"
+                aria-pressed={selectedAmbulanceType === "all"}
+                onClick={() => setSelectedAmbulanceType("all")}
+                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold shrink-0 transition-all cursor-pointer ${
+                  selectedAmbulanceType === "all"
+                    ? "bg-primary text-primary-foreground shadow-xs"
+                    : "bg-muted text-muted-foreground hover:text-foreground border border-border/50"
+                }`}
+              >
+                <Truck className="h-3.5 w-3.5" />
+                <span>{isEn ? "All Ambulances" : "সকল অ্যাম্বুলেন্স"}</span>
+                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-black/15 dark:bg-white/15">
+                  {ambulanceCounts.all}
+                </span>
+              </button>
+
+              {AMBULANCE_TYPES.map((typeObj) => {
+                const isSelected = selectedAmbulanceType === typeObj.id;
+                const TypeIcon =
+                  typeObj.id === "ICU"
+                    ? Activity
+                    : typeObj.id === "AC"
+                    ? Wind
+                    : typeObj.id === "Freezer"
+                    ? Snowflake
+                    : Truck;
+
+                return (
+                  <button
+                    type="button"
+                    role="button"
+                    key={typeObj.id}
+                    aria-pressed={isSelected}
+                    onClick={() => setSelectedAmbulanceType(typeObj.id)}
+                    className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold shrink-0 transition-all cursor-pointer ${
+                      isSelected
+                        ? typeObj.id === "ICU"
+                          ? "bg-rose-600 text-white shadow-xs"
+                          : typeObj.id === "AC"
+                          ? "bg-emerald-600 text-white shadow-xs"
+                          : typeObj.id === "Freezer"
+                          ? "bg-cyan-600 text-white shadow-xs"
+                          : "bg-slate-700 text-white shadow-xs"
+                        : "bg-muted text-muted-foreground hover:text-foreground border border-border/50"
+                    }`}
+                  >
+                    <TypeIcon className="h-3.5 w-3.5" />
+                    <span>{isEn ? typeObj.nameEn : typeObj.nameBn}</span>
+                    <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-black/15 dark:bg-white/15">
+                      {ambulanceCounts[typeObj.id] || 0}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Ambulance Search Input */}
+            <div className="relative">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 aria-label={
                   isEn
                     ? "Search ambulance, driver, area, or phone"
-                    : "অ্যাম্বুলেন্সের নাম, ড্রাইভার, এলাকা বা ফোন নম্বর খুঁজুন"
+                    : "অ্যাম্বুলেন্সের নাম, চালক, এলাকা বা ফোন নম্বর দিয়ে খুঁজুন"
                 }
                 placeholder={
                   isEn
-                    ? "Search ambulance, driver, area, or phone..."
-                    : "অ্যাম্বুলেন্সের নাম, ড্রাইভার, এলাকা বা ফোন নম্বর খুঁজুন..."
+                    ? "Search ambulance, driver, location, or phone..."
+                    : "অ্যাম্বুলেন্সের নাম, চালক, এলাকা বা ফোন নম্বর দিয়ে খুঁজুন..."
                 }
                 value={ambulanceSearch}
                 onChange={(e) => setAmbulanceSearch(e.target.value)}
                 className="pl-9.5 h-10 bg-background text-sm rounded-xl border-border"
               />
-            </div>
-            <div className="flex items-center gap-2">
-              <select
-                aria-label={isEn ? "Filter by ambulance type" : "সকল অ্যাম্বুলেন্সের ধরন"}
-                value={selectedAmbulanceType}
-                onChange={(e) => setSelectedAmbulanceType(e.target.value)}
-                className="h-10 px-3 rounded-xl border border-border bg-background text-sm font-medium focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/20 cursor-pointer"
-              >
-                <option value="all">{isEn ? "All Ambulance Types" : "সকল অ্যাম্বুলেন্সের ধরন"}</option>
-                <option value="ICU">{isEn ? "ICU Life Support" : "আইসিইউ (ICU)"}</option>
-                <option value="AC">{isEn ? "AC Ambulance" : "এসি (AC)"}</option>
-                <option value="Non-AC">{isEn ? "Non-AC Ambulance" : "নন-এসি (Non-AC)"}</option>
-                <option value="Freezer">{isEn ? "Freezer / Dead Body Carrier" : "ফ্রিজার ভ্যান / লাশবাহী"}</option>
-              </select>
             </div>
           </div>
 
@@ -364,66 +427,7 @@ export function EmergencyDirectory({
           {filteredAmbulances.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {filteredAmbulances.map((amb) => (
-                <Card
-                  key={amb.id}
-                  className="border border-border/80 bg-background hover:border-primary/30 transition-all duration-300 shadow-xs"
-                >
-                  <CardContent className="p-4 sm:p-5 flex flex-col justify-between h-full space-y-4">
-                    <div className="space-y-2">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="space-y-1">
-                          <h4 className="font-heading font-bold text-base text-secondary dark:text-white">
-                            {amb.name}
-                          </h4>
-                          <p className="text-xs text-muted-foreground flex items-center gap-1">
-                            <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
-                            {amb.location}
-                          </p>
-                        </div>
-                        <Badge
-                          variant="outline"
-                          className={`text-xs font-bold ${
-                            amb.type === "ICU"
-                              ? "bg-rose-500/10 text-rose-600 border-rose-500/30"
-                              : amb.type === "AC"
-                              ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/30"
-                              : amb.type === "Freezer"
-                              ? "bg-cyan-500/10 text-cyan-600 border-cyan-500/30"
-                              : "bg-muted text-muted-foreground border-border"
-                          }`}
-                        >
-                          {amb.type} {isEn ? "Ambulance" : "অ্যাম্বুলেন্স"}
-                        </Badge>
-                      </div>
-
-                      <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
-                        <CheckCircle2 className="h-3.5 w-3.5" />
-                        <span>{amb.availableHours}</span>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-5 gap-2">
-                      <a
-                        href={`tel:${amb.phone}`}
-                        className="sm:col-span-3 inline-flex items-center justify-center gap-2 h-10 rounded-xl bg-primary hover:bg-primary-dark text-white font-bold text-sm shadow-sm transition-all"
-                      >
-                        <PhoneCall className="h-4 w-4" />
-                        <span>
-                          {isEn ? "Call:" : "কল দিন:"} {amb.phone}
-                        </span>
-                      </a>
-                      <a
-                        href={`https://wa.me/88${amb.phone.replace(/[^0-9]/g, "")}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="sm:col-span-2 inline-flex items-center justify-center gap-1.5 h-10 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-xs font-bold transition-colors"
-                      >
-                        <MessageCircle className="h-4 w-4" />
-                        <span>WhatsApp</span>
-                      </a>
-                    </div>
-                  </CardContent>
-                </Card>
+                <AmbulanceCard key={amb.id} ambulance={amb} isEn={isEn} />
               ))}
             </div>
           ) : (
@@ -431,7 +435,7 @@ export function EmergencyDirectory({
               <Truck className="h-8 w-8 text-muted-foreground mx-auto" />
               <p className="text-sm font-semibold text-muted-foreground">
                 {isEn
-                  ? "No ambulances found matching your search."
+                  ? "No ambulances found matching your criteria."
                   : "আপনার অনুসন্ধানের সাথে মিলে এমন কোনো অ্যাম্বুলেন্স পাওয়া যায়নি।"}
               </p>
             </div>

@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { UPAZILAS_FENI } from "@/data/emergencyData";
+import { UPAZILAS_FENI, AMBULANCE_TYPES } from "@/data/emergencyData";
 import { registerAmbulanceAction } from "@/app/actions/emergencyActions";
 import { toast } from "sonner";
 import { Truck, Loader2, ShieldCheck } from "lucide-react";
@@ -21,13 +21,6 @@ interface AmbulanceRegisterDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
-
-const AMBULANCE_TYPES = [
-  { id: "AC", nameEn: "AC Ambulance", nameBn: "এসি অ্যাম্বুলেন্স" },
-  { id: "Non-AC", nameEn: "Non-AC Ambulance", nameBn: "নন-এসি অ্যাম্বুলেন্স" },
-  { id: "ICU", nameEn: "ICU Life Support", nameBn: "আইসিইউ (ICU)" },
-  { id: "Freezer", nameEn: "Freezer Van (Corpse)", nameBn: "ফ্রিজার ভ্যান (লাশবাহী)" },
-];
 
 export function AmbulanceRegisterDialog({
   open,

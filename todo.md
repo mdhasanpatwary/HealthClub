@@ -227,7 +227,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `prisma/schema.prisma`, `src/app/actions/reviewActions.ts`, `src/components/reviews/ReviewSection.tsx`, `src/app/admin/components/ReviewsTab.tsx`, `src/app/partner-hospitals/[id]/page.tsx`
   - **Details**: Allow verified active members who completed a discount transaction at a partner hospital to submit star ratings and service feedback with admin moderation controls.
 
-- [ ] **TODO-48** (5.3): **Ambulance Type Classification & Filtering**
+- [x] **TODO-48** (5.3): **Ambulance Type Classification & Filtering**
   - **Files**: `src/data/emergencyData.ts`, `src/app/actions/emergencyAdminActions.ts`, `src/app/emergency/components/EmergencyDirectory.tsx`, `src/app/admin/components/EmergencyAmbulanceDialog.tsx`
   - **Details**: Classify ambulances by vehicle type (AC Ambulance, Non-AC Ambulance, ICU Support Ambulance, Freezing Carrier) with filter chips on `/emergency` and type badges.
 

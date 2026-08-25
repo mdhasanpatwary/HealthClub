@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AmbulanceService } from "@/data/emergencyData";
+import { AmbulanceService, AMBULANCE_TYPES } from "@/data/emergencyData";
 import { saveAmbulanceAction } from "@/app/actions/emergencyAdminActions";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -157,10 +157,11 @@ export function EmergencyAmbulanceDialog({
                   <SelectValue placeholder="ধরন" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ICU">ICU অ্যাম্বুলেন্স</SelectItem>
-                  <SelectItem value="AC">AC অ্যাম্বুলেন্স</SelectItem>
-                  <SelectItem value="Non-AC">Non-AC অ্যাম্বুলেন্স</SelectItem>
-                  <SelectItem value="Freezer">ফ্রিজার ভ্যান (মৃতদেহ)</SelectItem>
+                  {AMBULANCE_TYPES.map((t) => (
+                    <SelectItem key={t.id} value={t.id} className="text-xs">
+                      {isEn ? t.nameEn : t.nameBn}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

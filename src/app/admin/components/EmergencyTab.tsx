@@ -12,6 +12,7 @@ import {
   EmergencyHotline,
   UPAZILAS_FENI,
   BLOOD_GROUPS,
+  AMBULANCE_TYPES,
 } from "@/data/emergencyData";
 import {
   getPaginatedDonorsAdminAction,
@@ -60,6 +61,7 @@ export function EmergencyTab() {
   const debouncedSearch = useDebounce(search, 300);
   const [selectedGroup, setSelectedGroup] = useState<string>("all");
   const [selectedUpazila, setSelectedUpazila] = useState<string>("all");
+  const [ambulanceTypeFilter, setAmbulanceTypeFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
   // Dialog & modal states
@@ -98,6 +100,7 @@ export function EmergencyTab() {
           page,
           pageSize,
           search: debouncedSearch,
+          type: ambulanceTypeFilter,
           status: statusFilter,
         });
         setAmbulances(res.data);
@@ -118,7 +121,7 @@ export function EmergencyTab() {
     } finally {
       setLoading(false);
     }
-  }, [activeSubTab, page, pageSize, debouncedSearch, selectedGroup, selectedUpazila, statusFilter, isEn]);
+  }, [activeSubTab, page, pageSize, debouncedSearch, selectedGroup, selectedUpazila, ambulanceTypeFilter, statusFilter, isEn]);
 
   useEffect(() => {
     let isMounted = true;
@@ -212,11 +215,7 @@ export function EmergencyTab() {
             <Button
               size="sm"
               variant={activeSubTab === "donors" ? "default" : "ghost"}
-              onClick={() => {
-                setActiveSubTab("donors");
-                setSearch("");
-                setPage(1);
-              }}
+              onClick={() => { setActiveSubTab("donors"); setSearch(""); setPage(1); }}
               className="text-xs h-8 rounded-lg font-bold gap-1.5"
             >
               <Droplet className="h-3.5 w-3.5" />
@@ -229,11 +228,7 @@ export function EmergencyTab() {
             <Button
               size="sm"
               variant={activeSubTab === "ambulances" ? "default" : "ghost"}
-              onClick={() => {
-                setActiveSubTab("ambulances");
-                setSearch("");
-                setPage(1);
-              }}
+              onClick={() => { setActiveSubTab("ambulances"); setSearch(""); setPage(1); }}
               className="text-xs h-8 rounded-lg font-bold gap-1.5"
             >
               <Truck className="h-3.5 w-3.5" />
@@ -246,11 +241,7 @@ export function EmergencyTab() {
             <Button
               size="sm"
               variant={activeSubTab === "hotlines" ? "default" : "ghost"}
-              onClick={() => {
-                setActiveSubTab("hotlines");
-                setSearch("");
-                setPage(1);
-              }}
+              onClick={() => { setActiveSubTab("hotlines"); setSearch(""); setPage(1); }}
               className="text-xs h-8 rounded-lg font-bold gap-1.5"
             >
               <PhoneCall className="h-3.5 w-3.5" />
@@ -317,6 +308,22 @@ export function EmergencyTab() {
                 </>
               )}
 
+              {activeSubTab === "ambulances" && (
+                <select
+                  value={ambulanceTypeFilter}
+                  onChange={(e) => {
+                    setAmbulanceTypeFilter(e.target.value);
+                    setPage(1);
+                  }}
+                  className="h-9 px-2.5 text-xs rounded-md border border-border bg-background focus:outline-none"
+                >
+                  <option value="all">{isEn ? "All Types" : "সকল ধরন"}</option>
+                  {AMBULANCE_TYPES.map((t) => (
+                    <option key={t.id} value={t.id}>{isEn ? t.nameEn : t.nameBn}</option>
+                  ))}
+                </select>
+              )}
+
               {(activeSubTab === "donors" || activeSubTab === "ambulances") && (
                 <select
                   value={statusFilter}
@@ -357,10 +364,7 @@ export function EmergencyTab() {
               {activeSubTab === "donors" && (
                 <Button
                   size="sm"
-                  onClick={() => {
-                    setEditingDonor(null);
-                    setDonorDialogOpen(true);
-                  }}
+                  onClick={() => { setEditingDonor(null); setDonorDialogOpen(true); }}
                   className="bg-rose-600 hover:bg-rose-700 text-white text-xs h-9 font-bold gap-1"
                 >
                   <Plus className="h-4 w-4" />
@@ -371,10 +375,7 @@ export function EmergencyTab() {
               {activeSubTab === "ambulances" && (
                 <Button
                   size="sm"
-                  onClick={() => {
-                    setEditingAmbulance(null);
-                    setAmbulanceDialogOpen(true);
-                  }}
+                  onClick={() => { setEditingAmbulance(null); setAmbulanceDialogOpen(true); }}
                   className="bg-cyan-600 hover:bg-cyan-700 text-white text-xs h-9 font-bold gap-1"
                 >
                   <Plus className="h-4 w-4" />
@@ -385,10 +386,7 @@ export function EmergencyTab() {
               {activeSubTab === "hotlines" && (
                 <Button
                   size="sm"
-                  onClick={() => {
-                    setEditingHotline(null);
-                    setHotlineDialogOpen(true);
-                  }}
+                  onClick={() => { setEditingHotline(null); setHotlineDialogOpen(true); }}
                   className="bg-primary hover:bg-primary-dark text-white text-xs h-9 font-bold gap-1"
                 >
                   <Plus className="h-4 w-4" />
