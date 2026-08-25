@@ -6,6 +6,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import {
   getHealthTipBySlugAction,
   getAllHealthTipsAction,
+  getArticleReactionsAction,
 } from "@/app/actions/healthTipsAdminActions";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
@@ -22,7 +23,9 @@ import {
   BookOpen,
 } from "lucide-react";
 import { ArticleShareBar } from "./components/ArticleShareBar";
+import { ArticleReactions } from "@/components/health-tips/ArticleReactions";
 import { MedicalDisclaimer } from "../components/MedicalDisclaimer";
+import { getArticleReadingTime } from "@/lib/readingTime";
 import { SITE_URL } from "@/lib/siteConfig";
 
 interface ArticlePageProps {
@@ -91,6 +94,12 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
+
+  // Automated reading time calculation
+  const readingTimeText = getArticleReadingTime(article, isEn ? "en" : "bn");
+
+  // Fetch reader reactions from database
+  const reactionStats = await getArticleReactionsAction(article.slug);
 
   const jsonLdData = [
     {
@@ -163,13 +172,13 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
           </Link>
 
           {/* Category & Read Time */}
-          <div className="flex items-center gap-3 pt-1">
+          <div className="flex flex-wrap items-center gap-3 pt-1">
             <Badge className="bg-primary text-white font-bold text-xs">
               {isEn ? article.categoryNameEn : article.categoryNameBn}
             </Badge>
             <div className="flex items-center gap-1 text-xs text-muted-foreground font-medium">
               <Clock className="h-3.5 w-3.5" />
-              <span>{isEn ? article.readTimeEn : article.readTimeBn}</span>
+              <span>{readingTimeText}</span>
             </div>
             <div className="flex items-center gap-1 text-xs text-muted-foreground font-medium">
               <Calendar className="h-3.5 w-3.5" />
@@ -229,8 +238,15 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
           ))}
         </article>
 
+        {/* Reader Feedback Reactions */}
+        <ArticleReactions
+          slug={article.slug}
+          initialHelpful={reactionStats.helpful}
+          initialNotHelpful={reactionStats.notHelpful}
+        />
+
         {/* Share Bar */}
-        <div className="pt-4 border-t border-border/80">
+        <div className="pt-2 border-t border-border/80">
           <ArticleShareBar
             title={isEn ? article.titleEn : article.titleBn}
             slug={article.slug}

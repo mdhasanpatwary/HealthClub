@@ -227,3 +227,116 @@ export async function syncHealthTipsWithDatabaseAction() {
     return { success: false, error: (err as Error).message };
   }
 }
+
+export interface ArticleReactionStats {
+  helpful: number;
+  notHelpful: number;
+}
+
+const REACTIONS_SETTING_KEY = "health_tips_reactions";
+
+/**
+ * Fetch reader reaction counts for a health tip article.
+ */
+export async function getArticleReactionsAction(
+  slug: string
+): Promise<ArticleReactionStats> {
+  try {
+    if (!prisma?.systemSetting) {
+      return { helpful: 0, notHelpful: 0 };
+    }
+
+    const setting = await prisma.systemSetting.findUnique({
+      where: { key: REACTIONS_SETTING_KEY },
+    });
+
+    if (!setting?.value) {
+      return { helpful: 0, notHelpful: 0 };
+    }
+
+    const reactionsMap: Record<string, ArticleReactionStats> = JSON.parse(
+      setting.value
+    );
+    const stats = reactionsMap[slug];
+
+    return {
+      helpful: Math.max(0, stats?.helpful || 0),
+      notHelpful: Math.max(0, stats?.notHelpful || 0),
+    };
+  } catch (err) {
+    logger.error("Error fetching article reactions:", err);
+    return { helpful: 0, notHelpful: 0 };
+  }
+}
+
+/**
+ * Submit or update a reader feedback reaction for an article.
+ */
+export async function submitArticleReactionAction(
+  slug: string,
+  reaction: "helpful" | "not_helpful",
+  previousReaction?: "helpful" | "not_helpful" | null
+): Promise<{ success: boolean; stats?: ArticleReactionStats; error?: string }> {
+  try {
+    if (!prisma?.systemSetting) {
+      return { success: false, error: "ডাটাবেজ সংযোগ পাওয়া যায়নি।" };
+    }
+
+    const setting = await prisma.systemSetting.findUnique({
+      where: { key: REACTIONS_SETTING_KEY },
+    });
+
+    let reactionsMap: Record<string, ArticleReactionStats> = {};
+    if (setting?.value) {
+      try {
+        reactionsMap = JSON.parse(setting.value);
+      } catch {
+        reactionsMap = {};
+      }
+    }
+
+    const currentStats: ArticleReactionStats = reactionsMap[slug] || {
+      helpful: 0,
+      notHelpful: 0,
+    };
+
+    // Revert previous reaction if user is switching
+    if (previousReaction === "helpful") {
+      currentStats.helpful = Math.max(0, currentStats.helpful - 1);
+    } else if (previousReaction === "not_helpful") {
+      currentStats.notHelpful = Math.max(0, currentStats.notHelpful - 1);
+    }
+
+    // Apply new reaction
+    if (reaction === "helpful") {
+      currentStats.helpful += 1;
+    } else if (reaction === "not_helpful") {
+      currentStats.notHelpful += 1;
+    }
+
+    reactionsMap[slug] = currentStats;
+
+    await prisma.systemSetting.upsert({
+      where: { key: REACTIONS_SETTING_KEY },
+      create: {
+        key: REACTIONS_SETTING_KEY,
+        value: JSON.stringify(reactionsMap),
+      },
+      update: {
+        value: JSON.stringify(reactionsMap),
+      },
+    });
+
+    return {
+      success: true,
+      stats: {
+        helpful: currentStats.helpful,
+        notHelpful: currentStats.notHelpful,
+      },
+    };
+  } catch (err: unknown) {
+    logger.error("Error saving article reaction:", err);
+    return { success: false, error: (err as Error).message };
+  }
+}
+
