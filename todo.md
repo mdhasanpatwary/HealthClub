@@ -283,7 +283,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/robots.ts`
   - **Details**: Apply strict `disallow` paths (`/admin/`, `/dashboard/`, `/partner/`, `/profile/`, `/api/`) to AI user-agents (`GPTBot`, `ClaudeBot`, `PerplexityBot`), and add support for modern AI search bots (`OAI-SearchBot`, `ChatGPT-User`, `Google-Extended`, `Applebot-Extended`, `cohere-ai`, `Bingbot`).
 
-- [ ] **TODO-59**: **Sitemap.xml Database Synchronization & Stable Modification Timestamps**
+- [x] **TODO-59**: **Sitemap.xml Database Synchronization & Stable Modification Timestamps**
   - **Files**: `src/app/sitemap.ts`
   - **Details**: Update `sitemap.ts` to fetch published health tip articles dynamically via `getAllHealthTipsAction()` rather than static array, provide stable `lastModified` dates instead of dynamic `new Date()`, and include multi-lingual alternate language tags (`alternates.languages`).
 
