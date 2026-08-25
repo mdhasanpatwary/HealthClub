@@ -1,6 +1,7 @@
 import ContactForm from "@/components/landing/ContactForm";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { cookies } from "next/headers";
 import { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
@@ -97,10 +98,14 @@ export default async function ContactPage() {
               : "রেজিস্ট্রেশন, ভেরিফিকেশন এবং ডিসকাউন্ট নিয়ে বিস্তারিত ও সচরাচর জিজ্ঞাসিত প্রশ্নগুলোর দ্রুত উত্তর জানতে FAQ পেজটি দেখতে পারেন।"}
           </p>
           <div>
-            <Link href="/#faq">
-              <Button variant="outline" className="border-primary text-primary hover:bg-primary-light">
-                {locale === "en" ? "View FAQ" : "জিজ্ঞাসা ও উত্তরমালা (FAQ) দেখুন"}
-              </Button>
+            <Link
+              href="/#faq"
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                "border-primary text-primary hover:bg-primary-light"
+              )}
+            >
+              {locale === "en" ? "View FAQ" : "জিজ্ঞাসা ও উত্তরমালা (FAQ) দেখুন"}
             </Link>
           </div>
         </div>

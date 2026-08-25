@@ -24,9 +24,10 @@ import {
   Star,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatNum } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 import { TransactionDialog } from "./components/TransactionDialog";
 import { AdminStatsGrid } from "./components/AdminStatsGrid";
 import { useAdminData } from "./hooks/useAdminData";
@@ -308,20 +309,20 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="flex flex-wrap gap-2 mt-1 sm:mt-0">
-          <Link href="/admin/notifications">
-            <Button
-              variant="outline"
-              size="sm"
-              className="relative rounded-xl text-xs font-semibold gap-1.5 shadow-2xs cursor-pointer"
-            >
-              <Bell className="h-4 w-4 text-amber-500" />
-              <span>{t("admin.nav.notifications") || "বিজ্ঞপ্তি"}</span>
-              {notificationData.unreadCount > 0 && (
-                <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white shadow-xs">
-                  {formatNum(notificationData.unreadCount, locale)}
-                </span>
-              )}
-            </Button>
+          <Link
+            href="/admin/notifications"
+            className={cn(
+              buttonVariants({ variant: "outline", size: "sm" }),
+              "relative rounded-xl text-xs font-semibold gap-1.5 shadow-2xs cursor-pointer"
+            )}
+          >
+            <Bell className="h-4 w-4 text-amber-500" />
+            <span>{t("admin.nav.notifications") || "বিজ্ঞপ্তি"}</span>
+            {notificationData.unreadCount > 0 && (
+              <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white shadow-xs">
+                {formatNum(notificationData.unreadCount, locale)}
+              </span>
+            )}
           </Link>
 
           <Button

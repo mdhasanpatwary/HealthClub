@@ -10,7 +10,8 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   BookOpen,
   Search,
@@ -225,15 +226,15 @@ export function HealthTipsDirectory({
                       </span>
                     </div>
 
-                    <Link href={`/health-tips/${article.slug}`}>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-primary group-hover:bg-primary group-hover:text-white font-bold gap-1 rounded-xl text-xs h-8 px-2.5 transition-all cursor-pointer"
-                      >
-                        <span>{isEn ? "Read" : "পড়ুন"}</span>
-                        <ArrowRight className="h-3 w-3" />
-                      </Button>
+                    <Link
+                      href={`/health-tips/${article.slug}`}
+                      className={cn(
+                        buttonVariants({ variant: "ghost", size: "sm" }),
+                        "text-primary group-hover:bg-primary group-hover:text-white font-bold gap-1 rounded-xl text-xs h-8 px-2.5 transition-all cursor-pointer"
+                      )}
+                    >
+                      <span>{isEn ? "Read" : "পড়ুন"}</span>
+                      <ArrowRight className="h-3 w-3" />
                     </Link>
                   </div>
                 </CardContent>

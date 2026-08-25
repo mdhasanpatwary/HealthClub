@@ -181,11 +181,22 @@ function PaymentForm() {
         <CardTitle className="mt-4 text-secondary dark:text-white">{t("auth.payment.notFoundTitle")}</CardTitle>
         <CardDescription className="mt-2">{t("auth.payment.notFoundDesc")}</CardDescription>
         <div className="mt-5 flex flex-col sm:flex-row items-center justify-center gap-3">
-          <Link href="/register" className="w-full sm:w-auto">
-            <Button variant="outline" className="w-full">{t("auth.payment.tryAgain")}</Button>
+          <Link
+            href="/register"
+            className={buttonVariants({
+              variant: "outline",
+              className: "w-full sm:w-auto",
+            })}
+          >
+            {t("auth.payment.tryAgain")}
           </Link>
-          <Link href="/login" className="w-full sm:w-auto">
-            <Button className="w-full">{t("auth.register.loginLink")}</Button>
+          <Link
+            href="/login"
+            className={buttonVariants({
+              className: "w-full sm:w-auto",
+            })}
+          >
+            {t("auth.register.loginLink")}
           </Link>
         </div>
       </Card>

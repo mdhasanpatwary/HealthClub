@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Stethoscope } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import PartnerDirectory from "@/components/ui/PartnerDirectory";
 import { getHomepageStats, getHomepagePartners } from "@/lib/homepageData";
 import { cookies } from "next/headers";
@@ -201,11 +202,15 @@ export default async function Home() {
                 {t("page.getSpecialDiscountsAtTop")}
               </p>
             </div>
-            <Link href="/partner-hospitals" className="shrink-0 self-center md:self-end">
-              <Button variant="outline" className="border-primary/40 text-primary hover:bg-primary/5">
-                {t("page.viewAllPartnersDetails")}
-                <ArrowRight className="h-4 w-4" />
-              </Button>
+            <Link
+              href="/partner-hospitals"
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                "border-primary/40 text-primary hover:bg-primary/5 shrink-0 self-center md:self-end"
+              )}
+            >
+              {t("page.viewAllPartnersDetails")}
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
 
@@ -233,11 +238,15 @@ export default async function Home() {
                   : "পার্টনার হাসপাতাল ও শীর্ষ ডায়াগনস্টিক সেন্টারের সকল বিভাগের বিশেষজ্ঞ চিকিৎসকদের তালিকা দেখুন ও সরাসরি সিরিয়াল বুক করুন।"}
               </p>
             </div>
-            <Link href="/consultants" className="shrink-0">
-              <Button size="lg" className="bg-primary hover:bg-primary-dark text-white rounded-2xl shadow-sm px-6 font-semibold">
-                {locale === "en" ? "Browse Doctor Directory" : "ডাক্তারদের তালিকা দেখুন"}
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+            <Link
+              href="/consultants"
+              className={cn(
+                buttonVariants({ size: "lg" }),
+                "bg-primary hover:bg-primary-dark text-white rounded-2xl shadow-sm px-6 font-semibold shrink-0"
+              )}
+            >
+              {locale === "en" ? "Browse Doctor Directory" : "ডাক্তারদের তালিকা দেখুন"}
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </div>
         </div>
@@ -283,14 +292,15 @@ export default async function Home() {
           <p className="text-sm sm:text-lg text-white/85 max-w-xl mx-auto">
             {t("page.cta.description")}
           </p>
-          <Link href="/register">
-            <Button
-              size="lg"
-              className="bg-white text-primary hover:bg-white/90 px-8 shadow-xl hover:shadow-2xl hover:-translate-y-0.5"
-            >
-              {t("page.cta.button")}
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+          <Link
+            href="/register"
+            className={cn(
+              buttonVariants({ size: "lg" }),
+              "bg-white text-primary hover:bg-white/90 px-8 shadow-xl hover:shadow-2xl hover:-translate-y-0.5"
+            )}
+          >
+            {t("page.cta.button")}
+            <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </div>
       </section>

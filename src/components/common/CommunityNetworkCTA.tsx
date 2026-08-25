@@ -211,10 +211,15 @@ export default function CommunityNetworkCTA() {
             <PhoneCall className="h-3.5 w-3.5" />
             <span>{isEn ? "+880 1886763849" : "+৮৮০ ১৮৮৬৭৬৩৮৪৯"}</span>
           </a>
-          <Link href="/contact">
-            <Button variant="ghost" size="sm" className="text-xs font-semibold rounded-xl">
-              {isEn ? "Contact Us" : "যোগাযোগ পেইজ"}
-            </Button>
+          <Link
+            href="/contact"
+            className={buttonVariants({
+              variant: "ghost",
+              size: "sm",
+              className: "text-xs font-semibold rounded-xl",
+            })}
+          >
+            {isEn ? "Contact Us" : "যোগাযোগ পেইজ"}
           </Link>
         </div>
       </div>

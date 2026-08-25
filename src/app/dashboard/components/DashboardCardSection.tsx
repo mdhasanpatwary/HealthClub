@@ -2,7 +2,8 @@ import React from "react";
 import Link from "next/link";
 import { CreditCard, Download } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import MemberCard from "@/components/ui/MemberCard";
 import { Member } from "@/services/db";
 
@@ -58,10 +59,14 @@ export function DashboardCardSection({
               <p className="z-10 text-[11px] text-slate-300 max-w-xs leading-relaxed">
                 {t("dashboard.card.payFeeDesc")}
               </p>
-              <Link href={`/register/payment?memberId=${user.id}`} className="z-10">
-                <Button size="xs" className="bg-[#e2125d] hover:bg-[#c20f4f] text-white shadow-md cursor-pointer">
-                  {t("dashboard.card.payButton")}
-                </Button>
+              <Link
+                href={`/register/payment?memberId=${user.id}`}
+                className={cn(
+                  buttonVariants({ size: "xs" }),
+                  "bg-[#e2125d] hover:bg-[#c20f4f] text-white shadow-md cursor-pointer z-10"
+                )}
+              >
+                {t("dashboard.card.payButton")}
               </Link>
             </div>
           ) : (

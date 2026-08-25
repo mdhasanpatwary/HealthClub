@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Heart, Clock, AlertTriangle, CreditCard } from "lucide-react";
 import { Member } from "@/services/db";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { formatNum, Locale } from "@/lib/i18n";
 import { MemberNotificationBell } from "./MemberNotificationBell";
 
@@ -137,11 +138,15 @@ export function DashboardWelcomeHeader({
               </p>
             </div>
           </div>
-          <Link href={`/register/payment?memberId=${user.id}`} className="shrink-0">
-            <Button size="sm" className="bg-[#e2125d] hover:bg-[#c00f4f] text-white font-bold shadow-md w-full sm:w-auto cursor-pointer">
-              <CreditCard className="h-4 w-4 mr-1.5" />
-              {t("dashboard.payment.payNowButton")}
-            </Button>
+          <Link
+            href={`/register/payment?memberId=${user.id}`}
+            className={cn(
+              buttonVariants({ size: "sm" }),
+              "bg-[#e2125d] hover:bg-[#c00f4f] text-white font-bold shadow-md w-full sm:w-auto cursor-pointer shrink-0"
+            )}
+          >
+            <CreditCard className="h-4 w-4 mr-1.5" />
+            {t("dashboard.payment.payNowButton")}
           </Link>
         </div>
       )}
@@ -172,10 +177,11 @@ export function DashboardWelcomeHeader({
               {t("dashboard.renewal.expired")}
             </div>
           </div>
-          <Link href="/dashboard/renew">
-            <Button variant="destructive" size="sm" className="shrink-0">
-              {t("dashboard.renewal.renewButton")}
-            </Button>
+          <Link
+            href="/dashboard/renew"
+            className={cn(buttonVariants({ variant: "destructive", size: "sm" }), "shrink-0")}
+          >
+            {t("dashboard.renewal.renewButton")}
           </Link>
         </div>
       ) : daysRemaining !== null && daysRemaining <= 30 && daysRemaining >= 0 ? (
@@ -186,10 +192,14 @@ export function DashboardWelcomeHeader({
               {t("dashboard.renewal.warning").replace("{daysRemaining}", formatNum(daysRemaining, locale))}
             </div>
           </div>
-          <Link href="/dashboard/renew">
-            <Button size="sm" className="bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700 shrink-0">
-              {t("dashboard.renewal.renewButtonShort")}
-            </Button>
+          <Link
+            href="/dashboard/renew"
+            className={cn(
+              buttonVariants({ size: "sm" }),
+              "bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700 shrink-0"
+            )}
+          >
+            {t("dashboard.renewal.renewButtonShort")}
           </Link>
         </div>
       ) : null}

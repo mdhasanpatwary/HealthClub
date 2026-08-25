@@ -7,7 +7,7 @@ import { Partner } from "@/services/db";
 import { PartnerDashboardSkeleton } from "../components/PartnerDashboardSkeleton";
 import { PartnerDashboardHeader } from "../components/PartnerDashboardHeader";
 import { PartnerAnalyticsTab } from "../components/PartnerAnalyticsTab";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -56,11 +56,16 @@ export default function PartnerAnalyticsPage() {
 
       {/* Navigation Breadcrumb / Back Button */}
       <div className="flex items-center justify-between">
-        <Link href="/partner/dashboard">
-          <Button variant="ghost" size="sm" className="gap-2 text-xs font-semibold rounded-xl text-muted-foreground hover:text-foreground cursor-pointer">
-            <ArrowLeft className="h-4 w-4" />
-            <span>ড্যাশবোর্ডে ফিরে যান</span>
-          </Button>
+        <Link
+          href="/partner/dashboard"
+          className={buttonVariants({
+            variant: "ghost",
+            size: "sm",
+            className: "gap-2 text-xs font-semibold rounded-xl text-muted-foreground hover:text-foreground cursor-pointer",
+          })}
+        >
+          <ArrowLeft className="h-4 w-4" />
+          <span>ড্যাশবোর্ডে ফিরে যান</span>
         </Link>
       </div>
 

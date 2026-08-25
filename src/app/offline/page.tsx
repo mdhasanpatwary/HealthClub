@@ -13,7 +13,7 @@ import {
   LayoutDashboard,
   Heart,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import MemberCard from "@/components/ui/MemberCard";
@@ -25,6 +25,7 @@ import {
 import { Member } from "@/services/db";
 import { INITIAL_AMBULANCES, INITIAL_EMERGENCY_HOTLINES } from "@/data/emergencyData";
 import { useLanguage } from "@/components/layout/LanguageProvider";
+import { cn } from "@/lib/utils";
 
 export default function OfflinePage() {
   const { t, locale } = useLanguage();
@@ -85,11 +86,15 @@ export default function OfflinePage() {
               <RotateCw className="h-3.5 w-3.5" />
               {t("offline.retry")}
             </Button>
-            <Link href="/dashboard">
-              <Button variant="outline" size="sm" className="rounded-xl gap-2 text-xs">
-                <LayoutDashboard className="h-3.5 w-3.5 text-primary" />
-                {t("offline.dashboard")}
-              </Button>
+            <Link
+              href="/dashboard"
+              className={cn(
+                buttonVariants({ variant: "outline", size: "sm" }),
+                "rounded-xl gap-2 text-xs"
+              )}
+            >
+              <LayoutDashboard className="h-3.5 w-3.5 text-primary" />
+              {t("offline.dashboard")}
             </Link>
           </div>
         </div>

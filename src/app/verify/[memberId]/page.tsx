@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { ShieldCheck, ShieldAlert, ArrowLeft } from "lucide-react";
 import { dbStore } from "@/services/dbStore";
 import { PublicMemberVerification } from "@/services/db";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -139,11 +139,15 @@ export default function VerificationPage() {
               </div>
 
               <div className="pt-2">
-                <Link href="/">
-                  <Button variant="outline" className="w-full gap-2">
-                    <ArrowLeft className="h-4 w-4" />
-                    {t("pages.verify.backToHome")}
-                  </Button>
+                <Link
+                  href="/"
+                  className={buttonVariants({
+                    variant: "outline",
+                    className: "w-full gap-2",
+                  })}
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  {t("pages.verify.backToHome")}
                 </Link>
               </div>
 
@@ -197,11 +201,15 @@ export default function VerificationPage() {
                 {isExpired ? t("verifyMember.expiredNote") : t("verifyMember.pendingNote")}
               </div>
               <div className="pt-2">
-                <Link href="/">
-                  <Button variant="outline" className="w-full gap-2">
-                    <ArrowLeft className="h-4 w-4" />
-                    {t("pages.verify.backToHome")}
-                  </Button>
+                <Link
+                  href="/"
+                  className={buttonVariants({
+                    variant: "outline",
+                    className: "w-full gap-2",
+                  })}
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  {t("pages.verify.backToHome")}
                 </Link>
               </div>
             </CardContent>
