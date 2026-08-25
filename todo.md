@@ -235,8 +235,8 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
 
 ## 🌟 Phase 10: Health Tools & Wellness Knowledge (TODO-49 to TODO-52)
 
-- [ ] **TODO-49** (6.1): **Pregnancy Due Date (EDD) & Trimester Progress Calculator**
-  - **Files**: `src/app/health-tools/page.tsx`, `src/app/health-tools/components/PregnancyCalculator.tsx`, `src/lib/translations.bn.ts`, `src/lib/translations.en.ts`
+- [x] **TODO-49** (6.1): **Pregnancy Due Date (EDD) & Trimester Progress Calculator**
+  - **Files**: `src/app/health-tools/page.tsx`, `src/app/health-tools/components/PregnancyCalculator.tsx`, `src/data/pregnancyMilestones.ts`, `src/lib/translations.bn.ts`, `src/lib/translations.en.ts`
   - **Details**: Build an interactive Pregnancy Due Date (EDD) calculator based on Last Menstrual Period (LMP) or Ultrasound date, displaying current trimester progress, baby size milestones, and maternal nutrition advice.
 
 - [ ] **TODO-50** (6.2): **Blood Pressure & Diabetes Range Clinical Evaluator**

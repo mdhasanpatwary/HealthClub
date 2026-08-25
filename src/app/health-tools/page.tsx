@@ -4,8 +4,9 @@ import JsonLd from "@/components/seo/JsonLd";
 import { BmiCalculator } from "./components/BmiCalculator";
 import { WaterIntakeCalculator } from "./components/WaterIntakeCalculator";
 import { CalorieCalculator } from "./components/CalorieCalculator";
+import { PregnancyCalculator } from "./components/PregnancyCalculator";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Calculator, Scale, Droplet, Flame, Stethoscope, ArrowRight } from "lucide-react";
+import { Calculator, Scale, Droplet, Flame, Baby, Stethoscope, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { SITE_URL } from "@/lib/siteConfig";
@@ -17,11 +18,11 @@ export async function generateMetadata() {
 
   return {
     title: isEn
-      ? "Free Health Calculators: BMI, Ideal Weight, Water Intake & Calories - Health Club"
-      : "ফ্রি স্বাস্থ্য ক্যালকুলেটর: বিএমআই (BMI), পানির চাহিদা ও ক্যালোরি - হেলথ ক্লাব",
+      ? "Free Health Calculators: BMI, Water Intake, Calories & Pregnancy Due Date - Health Club"
+      : "ফ্রি স্বাস্থ্য ক্যালকুলেটর: বিএমআই (BMI), ক্যালোরি, পানির চাহিদা ও গর্ভকালীন ইডিডি - হেলথ ক্লাব",
     description: isEn
-      ? "Calculate your Body Mass Index (BMI), ideal weight range, daily hydration target, and maintenance calorie needs for a healthier lifestyle."
-      : "সহজেই আপনার বডি ম্যাস ইনডেক্স (BMI), আদর্শ ওজন, দৈনিক পানির প্রয়োজনীয়তা ও ক্যালোরি চাহিদা হিসাব করুন এবং বিশেষজ্ঞ চিকিৎসকের পরামর্শ নিন।",
+      ? "Calculate your Body Mass Index (BMI), ideal weight range, daily hydration target, maintenance calorie needs, and pregnancy due date (EDD) with trimester tracking."
+      : "সহজেই আপনার বডি ম্যাস ইনডেক্স (BMI), আদর্শ ওজন, দৈনিক পানির প্রয়োজনীয়তা, ক্যালোরি চাহিদা ও গর্ভকালীন প্রসবের সম্ভাব্য তারিখ (EDD) হিসাব করুন।",
     alternates: {
       canonical: `${SITE_URL}/health-tools`,
     },
@@ -31,6 +32,8 @@ export async function generateMetadata() {
       "Water intake calculator",
       "দৈনিক পানির পরিমাণ",
       "Calorie calculator",
+      "Pregnancy due date calculator bangla",
+      "গর্ভকালীন প্রসবের তারিখ ইডিডি",
       "Health Club health tools",
     ],
   };
@@ -84,7 +87,7 @@ export default async function HealthToolsPage() {
           <p className="text-xs sm:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             {isEn
               ? "Track your essential health metrics with scientifically backed tools designed to help you make informed lifestyle decisions."
-              : "আপনার শরীরের বিএমআই, আদর্শ ওজন, দৈনিক পানির প্রয়োজনীয়তা ও ক্যালোরি চাহিদা সহজেই জেনে নিন এবং নিজেকে সুস্থ রাখুন।"}
+              : "আপনার শরীরের বিএমআই, আদর্শ ওজন, দৈনিক পানির প্রয়োজনীয়তা, ক্যালোরি চাহিদা ও গর্ভকালীন অগ্রগতি সহজে জেনে নিন।"}
           </p>
         </div>
       </div>
@@ -93,27 +96,34 @@ export default async function HealthToolsPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-12">
         <Tabs defaultValue="bmi" className="w-full space-y-8">
           <div className="flex justify-center">
-            <TabsList className="grid w-full max-w-xl grid-cols-3 h-12 p-1 bg-muted/80 rounded-2xl">
+            <TabsList className="grid w-full max-w-2xl grid-cols-2 sm:grid-cols-4 h-auto sm:h-12 p-1.5 bg-muted/80 rounded-2xl gap-1">
               <TabsTrigger
                 value="bmi"
-                className="rounded-xl text-xs sm:text-sm font-bold data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-sm flex items-center justify-center gap-1.5"
+                className="rounded-xl text-xs sm:text-sm font-bold data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-sm flex items-center justify-center gap-1.5 py-2 sm:py-0"
               >
-                <Scale className="h-4 w-4" />
-                <span>{isEn ? "BMI" : "বিএমআই"}</span>
+                <Scale className="h-4 w-4 shrink-0" />
+                <span className="truncate">{isEn ? "BMI" : "বিএমআই"}</span>
               </TabsTrigger>
               <TabsTrigger
                 value="water"
-                className="rounded-xl text-xs sm:text-sm font-bold data-[state=active]:bg-background data-[state=active]:text-cyan-600 data-[state=active]:shadow-sm flex items-center justify-center gap-1.5"
+                className="rounded-xl text-xs sm:text-sm font-bold data-[state=active]:bg-background data-[state=active]:text-cyan-600 data-[state=active]:shadow-sm flex items-center justify-center gap-1.5 py-2 sm:py-0"
               >
-                <Droplet className="h-4 w-4" />
-                <span>{isEn ? "Water Intake" : "পানির চাহিদা"}</span>
+                <Droplet className="h-4 w-4 shrink-0" />
+                <span className="truncate">{isEn ? "Water" : "পানির চাহিদা"}</span>
               </TabsTrigger>
               <TabsTrigger
                 value="calories"
-                className="rounded-xl text-xs sm:text-sm font-bold data-[state=active]:bg-background data-[state=active]:text-orange-600 data-[state=active]:shadow-sm flex items-center justify-center gap-1.5"
+                className="rounded-xl text-xs sm:text-sm font-bold data-[state=active]:bg-background data-[state=active]:text-orange-600 data-[state=active]:shadow-sm flex items-center justify-center gap-1.5 py-2 sm:py-0"
               >
-                <Flame className="h-4 w-4" />
-                <span>{isEn ? "Calories" : "ক্যালোরি"}</span>
+                <Flame className="h-4 w-4 shrink-0" />
+                <span className="truncate">{isEn ? "Calories" : "ক্যালোরি"}</span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="pregnancy"
+                className="rounded-xl text-xs sm:text-sm font-bold data-[state=active]:bg-background data-[state=active]:text-pink-600 data-[state=active]:shadow-sm flex items-center justify-center gap-1.5 py-2 sm:py-0"
+              >
+                <Baby className="h-4 w-4 shrink-0" />
+                <span className="truncate">{isEn ? "Pregnancy (EDD)" : "গর্ভকালীন ইডিডি"}</span>
               </TabsTrigger>
             </TabsList>
           </div>
@@ -128,6 +138,10 @@ export default async function HealthToolsPage() {
 
           <TabsContent value="calories" className="pt-2">
             <CalorieCalculator />
+          </TabsContent>
+
+          <TabsContent value="pregnancy" className="pt-2">
+            <PregnancyCalculator />
           </TabsContent>
         </Tabs>
 

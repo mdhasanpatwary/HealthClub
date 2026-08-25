@@ -1133,7 +1133,15 @@ export const en = {
     "admin.reviews.feedbackPrompt": "Moderation Note (Reason for rejection or internal remarks):",
     "admin.reviews.confirmDelete": "Are you sure you want to permanently delete this review?",
     "admin.reviews.noReviewsFound": "No reviews found matching the criteria.",
+    "healthTools.pregnancy.title": "Pregnancy Due Date (EDD) Calculator",
+    "healthTools.pregnancy.subtitle": "Expected Delivery Date & Progress",
+    "healthTools.pregnancy.methodLmp": "By LMP Date",
+    "healthTools.pregnancy.methodScan": "By Ultrasound",
+    "healthTools.pregnancy.eddTitle": "Expected Delivery Date (EDD)",
+    "healthTools.pregnancy.gestationalAge": "Current Gestational Age",
+    "healthTools.pregnancy.calculate": "Calculate Due Date",
 } as const;
+
 
 
 export type TranslationKey = keyof typeof en;

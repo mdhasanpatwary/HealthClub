@@ -1133,5 +1133,12 @@ export const bn = {
     "admin.reviews.feedbackPrompt": "মডারেশন নোট (বাতিল করার কারণ বা মন্তব্য):",
     "admin.reviews.confirmDelete": "আপনি কি নিশ্চিতভাবে এই রিভিউটি স্থায়ীভাবে মুছে ফেলতে চান?",
     "admin.reviews.noReviewsFound": "কোনো রিভিউ খুঁজে পাওয়া যায়নি।",
+    "healthTools.pregnancy.title": "গর্ভকালীন ইডিডি (EDD) ক্যালকুলেটর",
+    "healthTools.pregnancy.subtitle": "প্রসবের সম্ভাব্য তারিখ ও সাপ্তাহিক অগ্রগতি",
+    "healthTools.pregnancy.methodLmp": "শেষ মাসিক (LMP)",
+    "healthTools.pregnancy.methodScan": "আল্ট্রাসনোগ্রাম স্ক্যান",
+    "healthTools.pregnancy.eddTitle": "প্রসবের সম্ভাব্য তারিখ (ইডিডি)",
+    "healthTools.pregnancy.gestationalAge": "গর্ভকালীন বর্তমান বয়স",
+    "healthTools.pregnancy.calculate": "প্রসবের তারিখ দেখুন",
 } as const;
 
