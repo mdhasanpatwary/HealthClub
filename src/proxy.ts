@@ -24,6 +24,7 @@ const publicRoutes = [
   "/emergency",
   "/health-tools",
   "/health-tips",
+  "/register/payment",
 ];
 
 const matchRoute = (path: string, route: string) => {

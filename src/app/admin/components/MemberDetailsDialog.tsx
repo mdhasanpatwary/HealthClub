@@ -260,7 +260,7 @@ export function MemberDetailsDialog({
                 className="bg-green-600 hover:bg-green-700 text-white font-semibold gap-1.5 flex-1"
               >
                 <ShieldCheck className="h-4 w-4" />
-                অনুমোদন ও সক্রিয় করুন (Approve & Activate)
+                {locale === "bn" ? "অনুমোদন" : "Approve"}
               </Button>
             )}
             <div className="flex gap-2 flex-1 w-full">
