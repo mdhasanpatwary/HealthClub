@@ -48,7 +48,7 @@ export function DashboardCardSection({
                 {t("dashboard.card.printButton")}
               </Button>
             </div>
-          ) : user.status === "pending_payment" ? (
+          ) : user.status === "pending_payment" || (user.status === "inactive" && user.tier === "premium") ? (
             <div className="relative w-full max-w-md mx-auto aspect-[1.586/1] rounded-2xl p-6 overflow-hidden border border-rose-500/20 bg-gradient-to-br from-slate-900 to-slate-950 flex flex-col justify-center items-center text-center space-y-3 shadow-lg">
               <div className="absolute inset-0 bg-background/50 backdrop-blur-[3px]" />
               <div className="z-10 bg-rose-500/10 p-2.5 rounded-full border border-rose-500/20">
@@ -59,7 +59,7 @@ export function DashboardCardSection({
                 {t("dashboard.card.payFeeDesc")}
               </p>
               <Link href={`/register/payment?memberId=${user.id}`} className="z-10">
-                <Button size="xs" className="bg-[#e2125d] hover:bg-[#c20f4f] text-white shadow-md">
+                <Button size="xs" className="bg-[#e2125d] hover:bg-[#c20f4f] text-white shadow-md cursor-pointer">
                   {t("dashboard.card.payButton")}
                 </Button>
               </Link>

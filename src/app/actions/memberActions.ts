@@ -4,7 +4,7 @@ import { randomInt } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { Member, PublicMemberVerification } from "@/services/db";
 import { hashPassword } from "@/lib/crypto";
-import { getSessionUser } from "@/lib/session";
+import { getSessionUser, setSessionUser } from "@/lib/session";
 import { sendOtpEmail } from "@/lib/mail";
 import { logger } from "@/lib/logger";
 import { SITE_URL } from "@/lib/siteConfig";
@@ -272,22 +272,87 @@ export async function getMemberByIdAction(idOrPhone: string): Promise<Member | n
 }
 
 
+export async function getMemberForPaymentAction(memberId: string): Promise<{
+  id: string;
+  name: string;
+  phone: string;
+  email?: string;
+  tier: string;
+  status: string;
+  bkashTxnId?: string;
+  bkashSender?: string;
+} | null> {
+  try {
+    const cleanId = memberId.trim();
+    if (!cleanId) return null;
+    const m = await prisma.member.findUnique({
+      where: { id: cleanId },
+      select: {
+        id: true,
+        name: true,
+        phone: true,
+        email: true,
+        tier: true,
+        status: true,
+        bkashTxnId: true,
+        bkashSender: true,
+      },
+    });
+    if (!m) return null;
+    return {
+      id: m.id,
+      name: m.name,
+      phone: m.phone,
+      email: m.email || undefined,
+      tier: m.tier,
+      status: m.status,
+      bkashTxnId: m.bkashTxnId || undefined,
+      bkashSender: m.bkashSender || undefined,
+    };
+  } catch (error) {
+    logger.error("Error in getMemberForPaymentAction:", error);
+    return null;
+  }
+}
+
 export async function submitBkashPaymentAction(
   memberId: string,
   bkashSender: string,
   bkashTxnId: string
 ): Promise<boolean> {
-  const session = await getSessionUser();
-  if (!session || (session.userId !== memberId && session.role !== "admin")) return false;
   try {
+    const cleanId = memberId.trim();
+    const cleanSender = bkashSender.trim();
+    const cleanTxnId = bkashTxnId.trim().toUpperCase();
+
+    const member = await prisma.member.findUnique({
+      where: { id: cleanId },
+    });
+
+    if (!member) return false;
+
+    // Verify permission: session match or pending/inactive member completing payment
+    const session = await getSessionUser();
+    const isAuthorized =
+      session?.role === "admin" ||
+      session?.userId === cleanId ||
+      member.status === "inactive" ||
+      member.status === "pending_approval";
+
+    if (!isAuthorized) return false;
+
     await prisma.member.update({
-      where: { id: memberId },
+      where: { id: cleanId },
       data: {
-        bkashSender,
-        bkashTxnId,
+        bkashSender: cleanSender,
+        bkashTxnId: cleanTxnId,
         status: "pending_approval",
       },
     });
+
+    // Set session user so user stays logged in
+    await setSessionUser(cleanId, "user");
+
     return true;
   } catch (error: unknown) {
     if ((error as { code?: string })?.code === "P2025") return false;

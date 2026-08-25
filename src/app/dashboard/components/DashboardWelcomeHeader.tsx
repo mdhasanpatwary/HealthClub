@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Heart, Clock, AlertTriangle } from "lucide-react";
+import { Heart, Clock, AlertTriangle, CreditCard } from "lucide-react";
 import { Member } from "@/services/db";
 import { Button } from "@/components/ui/button";
 import { formatNum, Locale } from "@/lib/i18n";
@@ -117,6 +117,44 @@ export function DashboardWelcomeHeader({
           </div>
         </div>
       </div>
+
+      {/* Inactive Premium Member Offline Payment Banner */}
+      {user.status === "inactive" && user.tier === "premium" && (
+        <div className="bg-gradient-to-r from-rose-500/10 via-pink-500/5 to-amber-500/10 border-2 border-rose-500/30 dark:border-rose-500/40 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm animate-in fade-in duration-200">
+          <div className="flex items-start sm:items-center gap-3.5">
+            <div className="h-10 w-10 rounded-xl bg-[#e2125d] text-white flex items-center justify-center shrink-0 shadow-md font-bold text-xs">
+              bKash
+            </div>
+            <div className="space-y-0.5">
+              <h3 className="text-sm font-bold text-secondary dark:text-white flex items-center gap-2">
+                <span>{t("dashboard.payment.inactivePremiumTitle")}</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 font-extrabold uppercase tracking-wide">
+                  {t("dashboard.welcome.statusInactive")}
+                </span>
+              </h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                {t("dashboard.payment.inactivePremiumDesc")}
+              </p>
+            </div>
+          </div>
+          <Link href={`/register/payment?memberId=${user.id}`} className="shrink-0">
+            <Button size="sm" className="bg-[#e2125d] hover:bg-[#c00f4f] text-white font-bold shadow-md w-full sm:w-auto cursor-pointer">
+              <CreditCard className="h-4 w-4 mr-1.5" />
+              {t("dashboard.payment.payNowButton")}
+            </Button>
+          </Link>
+        </div>
+      )}
+
+      {/* Pending Approval Banner */}
+      {user.status === "pending_approval" && (
+        <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 flex items-center gap-3.5 text-amber-800 dark:text-amber-300 animate-in fade-in duration-200">
+          <Clock className="h-5 w-5 shrink-0 animate-pulse text-amber-600 dark:text-amber-400" />
+          <div className="text-xs sm:text-sm font-semibold flex-1">
+            {t("dashboard.payment.pendingApprovalDesc")}
+          </div>
+        </div>
+      )}
 
       {/* Expiry / Renewal Banners */}
       {user.renewalStatus === "pending" ? (

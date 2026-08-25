@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle, CardDescription, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { requestRenewalAction } from "@/app/actions/memberActions";
+import { getPublicPaymentSettingsAction, PublicPaymentSettings } from "@/app/actions/systemSettingsActions";
 import { dbStore } from "@/services/dbStore";
 import { Member } from "@/services/db";
 import { toast } from "sonner";
@@ -23,19 +24,38 @@ export default function RenewalPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
+  // Dynamic Payment Settings
+  const [paymentSettings, setPaymentSettings] = useState<PublicPaymentSettings>({
+    bkashPersonal: "01886763849",
+    bkashMerchant: "01886763849",
+    premiumFee: "500",
+    foundingFee: "0",
+    paymentInstructions: "",
+  });
+
   // Form states
   const [senderNumber, setSenderNumber] = useState("");
   const [transactionId, setTransactionId] = useState("");
   const [profession, setProfession] = useState("");
   const [copied, setCopied] = useState(false);
 
-  const bkashNumber = "01886763849";
+  const bkashNumber = paymentSettings.bkashPersonal || "01886763849";
 
   useEffect(() => {
     let isMounted = true;
 
     Promise.resolve().then(async () => {
       if (!isMounted) return;
+
+      // 1. Fetch dynamic settings
+      try {
+        const settings = await getPublicPaymentSettingsAction();
+        if (isMounted && settings) {
+          setPaymentSettings(settings);
+        }
+      } catch {
+        // Silent fallback
+      }
 
       const currentUser = dbStore.getCurrentUser();
       if (!currentUser) {

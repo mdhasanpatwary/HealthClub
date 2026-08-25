@@ -139,6 +139,63 @@ export async function updateMultipleSystemSettingsAction(
   }
 }
 
+export interface PublicPaymentSettings {
+  bkashPersonal: string;
+  bkashMerchant: string;
+  premiumFee: string;
+  foundingFee: string;
+  paymentInstructions: string;
+}
+
+export const getCachedPaymentSettings = unstable_cache(
+  async (): Promise<PublicPaymentSettings> => {
+    try {
+      const settings = await prisma.systemSetting.findMany({
+        where: {
+          key: {
+            in: [
+              "bkash_personal_number",
+              "bkash_merchant_number",
+              "premium_fee",
+              "founding_fee",
+              "payment_instructions",
+            ],
+          },
+        },
+      });
+      const map: Record<string, string> = {};
+      for (const s of settings) {
+        map[s.key] = s.value;
+      }
+      return {
+        bkashPersonal: map["bkash_personal_number"] || "01886763849",
+        bkashMerchant: map["bkash_merchant_number"] || "01886763849",
+        premiumFee: map["premium_fee"] || "500",
+        foundingFee: map["founding_fee"] || "0",
+        paymentInstructions:
+          map["payment_instructions"] ||
+          "বিকাশ পার্সোনাল বা মার্চেন্ট নম্বরে সেন্ড মানি/পেমেন্ট সম্পন্ন করে TrxID ও প্রেরক নম্বর লিখুন।",
+      };
+    } catch (error) {
+      logger.error("Error fetching payment settings:", error);
+      return {
+        bkashPersonal: "01886763849",
+        bkashMerchant: "01886763849",
+        premiumFee: "500",
+        foundingFee: "0",
+        paymentInstructions:
+          "বিকাশ পার্সোনাল বা মার্চেন্ট নম্বরে সেন্ড মানি/পেমেন্ট সম্পন্ন করে TrxID ও প্রেরক নম্বর লিখুন।",
+      };
+    }
+  },
+  ["public_payment_settings"],
+  { revalidate: 60, tags: [SYSTEM_SETTINGS_TAG] }
+);
+
+export async function getPublicPaymentSettingsAction(): Promise<PublicPaymentSettings> {
+  return getCachedPaymentSettings();
+}
+
 export async function isMemberTxAllowedAction(): Promise<boolean> {
   const value = await getCachedMemberTxSetting();
   return value === "true";
