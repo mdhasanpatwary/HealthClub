@@ -335,3 +335,77 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/lib/telemetry.ts`, `src/app/error.tsx`, `src/app/global-error.tsx`
   - **Details**: Centralized exception capturing utility with Sentry/OpenTelemetry plug-and-play hook, integrated into root and segment error boundaries to capture unhandled runtime exceptions safely with PII sanitization.
 
+---
+
+## ⚡ Phase 14: Performance Optimization & Bundle Size (TODO-71 to TODO-86)
+
+### 🔴 P0 — Critical Performance Issues
+
+- [x] **TODO-71**: **Optimize Doctor Images — Convert 35 MB of PNGs to WebP**
+  - **Files**: `public/images/doctors/*.png` (~50 files, 35 MB total)
+  - **Details**: Doctor profile images are uncompressed PNGs ranging from 918 KB to 3.3 MB each. Convert all to WebP/AVIF format and resize to max ~400×400px for thumbnails. Target total directory size reduction from 35 MB → ~5 MB (~85% reduction). This directly impacts LCP and mobile bandwidth for users on 3G/4G in Bangladesh.
+
+- [ ] **TODO-72**: **Move Analytics Aggregation from In-Memory Loops to SQL**
+  - **Files**: `src/app/actions/analyticsActions.ts`
+  - **Details**: `getAdminRevenueAnalyticsAction` fetches ALL members and ALL transactions into Node.js memory, then aggregates with `for` loops. As data grows, this risks OOM crashes and severe latency. Refactor to use `prisma.$queryRaw` with SQL `GROUP BY`, `COUNT`, `SUM`, and date functions for tier breakdowns, monthly financials, and partner performance metrics.
+
+- [ ] **TODO-73**: **Compress `og-image.png` (620 KB → <100 KB)**
+  - **Files**: `public/og-image.png`
+  - **Details**: OpenGraph image is 620 KB — should be <100 KB for fast social sharing previews. Compress to optimized WebP or JPEG at 1200×630, targeting ~50-80 KB.
+
+- [ ] **TODO-74**: **Reduce `favicon.ico` Size (104 KB → <10 KB)**
+  - **Files**: `public/favicon.ico`
+  - **Details**: Favicon is 104 KB — standard favicons should be <10 KB. Regenerate at standard sizes (16×16, 32×32, 48×48) and target ~5-10 KB.
+
+- [ ] **TODO-75**: **Split Translation Files by Route Namespace**
+  - **Files**: `src/lib/translations.bn.ts` (183 KB, 1378 lines), `src/lib/translations.en.ts` (101 KB, 1378 lines), `src/components/layout/LanguageProvider.tsx`, `src/app/layout.tsx`
+  - **Details**: The entire active locale dictionary (~100-183 KB of strings) is serialized into the RSC payload on every page navigation. Split translations by route namespace (e.g., `landing`, `admin`, `dashboard`, `consultants`, `emergency`, `health-tools`) and load only the keys needed per page. Target 60-80% reduction in per-page translation payload.
+
+### 🟠 P1 — High-Priority Performance Issues
+
+- [ ] **TODO-76**: **Add `next/dynamic` Code Splitting for Below-Fold Homepage Components**
+  - **Files**: `src/app/page.tsx`, `src/components/ui/SavingsCalculator.tsx`, `src/components/ui/TestimonialCarousel.tsx`, `src/components/landing/FAQSection.tsx`, `src/components/landing/ContactForm.tsx`
+  - **Details**: No uses of `next/dynamic` or `React.lazy` exist in the project. Heavy client components (SavingsCalculator: 316 lines, TestimonialCarousel: 147 lines, FAQSection, ContactForm) are eagerly loaded on the homepage even when below the fold. Wrap with `next/dynamic({ loading: () => <Skeleton /> })` to defer loading.
+
+- [ ] **TODO-77**: **Replace Raw `<img>` Tags with `next/image`**
+  - **Files**: `src/app/admin/components/MemberDetailsDialog.tsx`, `src/app/admin/components/MembersTab.tsx`, `src/app/partner/dashboard/components/PartnerBillingTab.tsx`, `src/app/partner/dashboard/components/PartnerCardPreview.tsx`
+  - **Details**: 4 files use raw `<img>` tags which bypass Next.js image optimization (no WebP/AVIF conversion, no lazy loading, no responsive sizes, no blur placeholder). Replace with `<Image>` from `next/image` with appropriate `width`/`height` and `sizes` props.
+
+- [ ] **TODO-78**: **Optimize Header Component — Consolidate 5 useEffect Hooks**
+  - **Files**: `src/components/layout/Header.tsx`
+  - **Details**: Header has 5 separate `useEffect` hooks that fire on mount and several on pathname change. The scroll listener creates a new function on every mount and `dbStore.getCurrentUser()` parses localStorage JSON on every pathname change. Consolidate effects, debounce scroll listener, and remove unnecessary `pathname` dependency from auth-sync effect (auth changes already fire via custom `auth-change` event).
+
+- [ ] **TODO-79**: **Slim Down `dbStore` — Remove Pass-Through Abstraction**
+  - **Files**: `src/services/dbStore.ts` (468 lines)
+  - **Details**: `dbStore` is a pass-through layer that re-exports server actions with zero added value for most methods (e.g., `async getDoctors() { return getDoctorsAction(); }`). This imports every server action file regardless of which page loads, hurting client bundle parse time and tree-shaking. Refactor: import server actions directly where needed. Keep only the localStorage session helpers (`getCurrentUser`, `setCurrentUser`, `logout`, etc.) in a slim `authStore` module.
+
+- [ ] **TODO-80**: **Refactor Files Exceeding 500-Line Limit**
+  - **Files**: `src/app/partner/dashboard/components/PartnerDoctorModals.tsx` (952 lines), `src/data/clinicalEvaluatorData.ts` (718 lines), `src/app/health-tools/components/DiabetesEvaluatorTab.tsx` (650 lines), `src/app/admin/components/broadcast/BroadcastComposer.tsx` (647 lines), `src/lib/bulkImportUtils.ts` (621 lines), `src/app/health-tools/components/PregnancyCalculator.tsx` (596 lines), `src/app/health-tools/components/HealthReportExportButton.tsx` (589 lines), `src/app/actions/dbBackupActions.ts` (561 lines)
+  - **Details**: 8 files exceed the project's 500-line limit. `PartnerDoctorModals.tsx` at 952 lines is nearly 2× the limit. Large files hurt parse times, tree-shaking, and maintainability. Split into smaller, focused subcomponents, hooks, or helper modules.
+
+### 🟡 P2/P3 — Medium-Priority Performance Issues
+
+- [ ] **TODO-81**: **Fix Dev-Mode PrismaClient Recreation on Every Module Load**
+  - **Files**: `src/lib/prisma.ts`
+  - **Details**: In dev mode, a new `PrismaClient` is created on every module load (lines 43-45), overriding the cached instance. While the `pg.Pool` is reused, PrismaClient instance overhead (internal caches, type maps) adds unnecessary latency. Remove the dev-mode override and rely on server restart after `prisma generate`.
+
+- [ ] **TODO-82**: **Fix Double `.filter()` in MemberDetailsDialog**
+  - **Files**: `src/app/admin/components/MemberDetailsDialog.tsx`
+  - **Details**: The same `transactions.filter(t => t.memberId === viewingMember.id)` runs twice — once to check `.length > 0` and again to `.map()`. Extract to a single `const memberTxs = ...` variable and reuse.
+
+- [ ] **TODO-83**: **Add Database Indexes for Text Search Queries**
+  - **Files**: `prisma/schema.prisma`
+  - **Details**: Transaction search uses `OR` with `contains` (case-insensitive LIKE) on `memberName`, `memberId`, `partnerName`, `id` — causing full table scans as data grows. Consider adding PostgreSQL `pg_trgm` extension with GIN indexes for text search columns, or at minimum add a composite `@@index([memberId, partnerId])` for filtered queries.
+
+- [ ] **TODO-84**: **Lazy-Load `xlsx` Library (Admin-Only Bulk Import)**
+  - **Files**: `package.json`, `src/lib/bulkImportUtils.ts`
+  - **Details**: The `xlsx` package (~1 MB minified) is a top-level dependency but only used in admin bulk import. Ensure it's only imported server-side or behind dynamic import to prevent client bundle bloat.
+
+- [ ] **TODO-85**: **Lazy-Load `html-to-image` and `html5-qrcode` Libraries**
+  - **Files**: `package.json`, related component files
+  - **Details**: `html5-qrcode` (~350 KB) is only used for QR scanning (partner dashboard) and `html-to-image` only for card exports. If imported at top level, they bloat the initial JS bundle. Use dynamic `import()` only when the user clicks "Scan QR" or "Export Card".
+
+- [ ] **TODO-86**: **Add Route-Specific `loading.tsx` for Key Routes**
+  - **Files**: `src/app/admin/loading.tsx` (new), `src/app/dashboard/loading.tsx` (new), `src/app/partner/dashboard/loading.tsx` (new), `src/app/consultants/loading.tsx` (new)
+  - **Details**: Only the root `loading.tsx` exists. Routes like `/admin`, `/dashboard`, `/partner/dashboard`, `/consultants` lack their own loading states, causing users to see the homepage skeleton when navigating to admin. Add route-specific `loading.tsx` files with contextually appropriate skeleton UIs.
+
