@@ -5,12 +5,17 @@ import { cn } from "@/lib/utils";
 import { cookies } from "next/headers";
 import { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
-import { SITE_URL } from "@/lib/siteConfig";
+import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
+
+  const ogTitle = isEn ? "Contact Health Club - Hotline +8801886763849" : "যোগাযোগ করুন - হেলথ ক্লাব";
+  const ogDesc = isEn
+    ? "Contact our helpline for membership queries or hospital partnership applications."
+    : "মেম্বারশিপ অথবা পার্টনারশিপ সংক্রান্ত যেকোনো প্রশ্ন নিয়ে আমাদের সাথে কথা বলুন।";
 
   return {
     title: isEn ? "Contact Us - Health Club Hotline & Support" : "যোগাযোগ করুন - হেলথ ক্লাব হটলাইন ও অফিস",
@@ -21,11 +26,19 @@ export async function generateMetadata() {
       canonical: `${SITE_URL}/contact`,
     },
     openGraph: {
-      title: isEn ? "Contact Health Club - Hotline +8801886763849" : "যোগাযোগ করুন - হেলথ ক্লাব",
-      description: isEn
-        ? "Contact our helpline for membership queries or hospital partnership applications."
-        : "মেম্বারশিপ অথবা পার্টনারশিপ সংক্রান্ত যেকোনো প্রশ্ন নিয়ে আমাদের সাথে কথা বলুন।",
+      title: ogTitle,
+      description: ogDesc,
       url: `${SITE_URL}/contact`,
+      siteName: "হেলথ ক্লাব (Health Club)",
+      locale: isEn ? "en_US" : "bn_BD",
+      type: "website",
+      images: DEFAULT_OG_IMAGES,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: ogTitle,
+      description: ogDesc,
+      images: DEFAULT_TWITTER_IMAGES,
     },
   };
 }

@@ -6,12 +6,19 @@ import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import { getPartnersAction } from "@/app/actions/partnerActions";
-import { SITE_URL } from "@/lib/siteConfig";
+import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
+
+  const ogTitle = isEn
+    ? "Partner Hospitals & Diagnostic Centers in Feni - Health Club"
+    : "ফেনীর পার্টনার হাসপাতাল, ডায়াগনস্টিক ও ফার্মেসি - হেলথ ক্লাব";
+  const ogDesc = isEn
+    ? "Find hospitals, diagnostic labs, and pharmacies with instant member discounts in Feni."
+    : "ফেনী ও আশপাশের চুক্তিভিত্তিক হাসপাতাল ও ডায়াগনস্টিক সেন্টারের বিস্তারিত তালিকা।";
 
   return {
     title: isEn
@@ -47,25 +54,19 @@ export async function generateMetadata() {
       "ফেনী প্যাথলজি ও ল্যাব",
     ],
     openGraph: {
-      title: isEn
-        ? "Partner Hospitals & Diagnostic Centers in Feni - Health Club"
-        : "ফেনীর পার্টনার হাসপাতাল, ডায়াগনস্টিক ও ফার্মেসি - হেলথ ক্লাব",
-      description: isEn
-        ? "Find hospitals, diagnostic labs, and pharmacies with instant member discounts in Feni."
-        : "ফেনী ও আশপাশের চুক্তিভিত্তিক হাসপাতাল ও ডায়াগনস্টিক সেন্টারের বিস্তারিত তালিকা।",
+      title: ogTitle,
+      description: ogDesc,
       url: `${SITE_URL}/partner-hospitals`,
       siteName: "হেলথ ক্লাব (Health Club)",
       locale: isEn ? "en_US" : "bn_BD",
       type: "website",
+      images: DEFAULT_OG_IMAGES,
     },
     twitter: {
       card: "summary_large_image",
-      title: isEn
-        ? "Partner Hospitals & Diagnostic Centers in Feni - Health Club"
-        : "ফেনীর পার্টনার হাসপাতাল, ডায়াগনস্টিক ও ফার্মেসি - হেলথ ক্লাব",
-      description: isEn
-        ? "Find hospitals, diagnostic labs, and pharmacies with instant member discounts in Feni."
-        : "ফেনী ও আশপাশের চুক্তিভিত্তিক হাসপাতাল ও ডায়াগনস্টিক সেন্টারের বিস্তারিত তালিকা।",
+      title: ogTitle,
+      description: ogDesc,
+      images: DEFAULT_TWITTER_IMAGES,
     },
   };
 }

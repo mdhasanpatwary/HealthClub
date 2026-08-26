@@ -4,12 +4,19 @@ import { buttonVariants } from "@/components/ui/button";
 import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
-import { SITE_URL } from "@/lib/siteConfig";
+import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
+
+  const ogTitle = isEn
+    ? "Health Club Membership Plans & Benefits"
+    : "মেম্বারশিপ প্ল্যান - হেলথ ক্লাব";
+  const ogDesc = isEn
+    ? "Get 1 Year Free Founding Membership for first 100 users."
+    : "প্রথম ১০০ জন সদস্য পাচ্ছেন ১ বছরের ফাউন্ডিং মেম্বারশিপ সম্পূর্ণ ফ্রি।";
 
   return {
     title: isEn
@@ -22,13 +29,19 @@ export async function generateMetadata() {
       canonical: `${SITE_URL}/membership`,
     },
     openGraph: {
-      title: isEn
-        ? "Health Club Membership Plans & Benefits"
-        : "মেম্বারশিপ প্ল্যান - হেলথ ক্লাব",
-      description: isEn
-        ? "Get 1 Year Free Founding Membership for first 100 users."
-        : "প্রথম ১০০ জন সদস্য পাচ্ছেন ১ বছরের ফাউন্ডিং মেম্বারশিপ সম্পূর্ণ ফ্রি।",
+      title: ogTitle,
+      description: ogDesc,
       url: `${SITE_URL}/membership`,
+      siteName: "হেলথ ক্লাব (Health Club)",
+      locale: isEn ? "en_US" : "bn_BD",
+      type: "website",
+      images: DEFAULT_OG_IMAGES,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: ogTitle,
+      description: ogDesc,
+      images: DEFAULT_TWITTER_IMAGES,
     },
   };
 }

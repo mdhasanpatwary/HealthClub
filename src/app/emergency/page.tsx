@@ -8,7 +8,7 @@ import EmergencyFAQ from "@/components/emergency/EmergencyFAQ";
 import CommunityNetworkCTA from "@/components/common/CommunityNetworkCTA";
 import { Siren, ShieldCheck, HeartHandshake, PhoneCall } from "lucide-react";
 import { getEmergencyDataAction } from "@/app/actions/emergencyAdminActions";
-import { SITE_URL } from "@/lib/siteConfig";
+import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -64,14 +64,7 @@ export async function generateMetadata() {
       siteName: "হেলথ ক্লাব (Health Club)",
       locale: isEn ? "en_US" : "bn_BD",
       type: "website",
-      images: [
-        {
-          url: `${SITE_URL}/images/member-card-logo.png`,
-          width: 800,
-          height: 600,
-          alt: isEn ? "Health Club Emergency Network Feni" : "হেলথ ক্লাব জরুরি স্বাস্থ্য সেবা নেটওয়ার্ক",
-        },
-      ],
+      images: DEFAULT_OG_IMAGES,
     },
     twitter: {
       card: "summary_large_image",
@@ -81,7 +74,7 @@ export async function generateMetadata() {
       description: isEn
         ? "Find verified blood donors, ICU ambulances, oxygen cylinder delivery, and emergency hotlines in Feni."
         : "ফেনীর ভেরিফাইড রক্তদাতা, আইসিইউ অ্যাম্বুলেন্স, অক্সিজেন সিলিন্ডার ও হাসপাতালের জরুরি হটলাইন নম্বর।",
-      images: [`${SITE_URL}/images/member-card-logo.png`],
+      images: DEFAULT_TWITTER_IMAGES,
     },
     robots: {
       index: true,

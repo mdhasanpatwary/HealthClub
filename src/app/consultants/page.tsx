@@ -7,12 +7,19 @@ import ConsultantsFAQ from "@/components/consultants/ConsultantsFAQ";
 import CommunityNetworkCTA from "@/components/common/CommunityNetworkCTA";
 import { getDoctorsAction } from "@/app/actions/doctorActions";
 import { Stethoscope, ShieldCheck, HeartHandshake, PhoneCall } from "lucide-react";
-import { SITE_URL } from "@/lib/siteConfig";
+import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
+
+  const ogTitle = isEn
+    ? "Specialist Doctors & Consultants Directory - Health Club"
+    : "বিশেষজ্ঞ ডাক্তার ও কনসালট্যান্ট তালিকা - হেলথ ক্লাব";
+  const ogDesc = isEn
+    ? "Find specialist doctors, chamber schedules, and book appointment serials directly in Feni."
+    : "ফেনীর বিশেষজ্ঞ ডাক্তারদের পূর্ণাঙ্গ তালিকা ও সরাসরি সিরিয়াল দেওয়ার নাম্বার।";
 
   return {
     title: isEn
@@ -45,22 +52,19 @@ export async function generateMetadata() {
       "Health Club doctor directory",
     ],
     openGraph: {
-      title: isEn
-        ? "Specialist Doctors & Consultants Directory - Health Club"
-        : "বিশেষজ্ঞ ডাক্তার ও কনসালট্যান্ট তালিকা - হেলথ ক্লাব",
-      description: isEn
-        ? "Find specialist doctors, chamber schedules, and book appointment serials directly in Feni."
-        : "ফেনীর বিশেষজ্ঞ ডাক্তারদের পূর্ণাঙ্গ তালিকা ও সরাসরি সিরিয়াল দেওয়ার নাম্বার।",
+      title: ogTitle,
+      description: ogDesc,
       url: `${SITE_URL}/consultants`,
+      siteName: "হেলথ ক্লাব (Health Club)",
+      locale: isEn ? "en_US" : "bn_BD",
+      type: "website",
+      images: DEFAULT_OG_IMAGES,
     },
     twitter: {
       card: "summary_large_image",
-      title: isEn
-        ? "Specialist Doctors & Consultants Directory - Health Club"
-        : "বিশেষজ্ঞ ডাক্তার ও কনসালট্যান্ট তালিকা - হেলথ ক্লাব",
-      description: isEn
-        ? "Find specialist doctors, chamber schedules, and book appointment serials directly in Feni."
-        : "ফেনীর বিশেষজ্ঞ ডাক্তারদের পূর্ণাঙ্গ তালিকা ও সরাসরি সিরিয়াল দেওয়ার নাম্বার।",
+      title: ogTitle,
+      description: ogDesc,
+      images: DEFAULT_TWITTER_IMAGES,
     },
   };
 }

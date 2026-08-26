@@ -2,12 +2,17 @@ import { Heart, ShieldCheck, Users, Award, Target, Zap } from "lucide-react";
 import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
-import { SITE_URL } from "@/lib/siteConfig";
+import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
+
+  const ogTitle = isEn ? "About Health Club - Making Healthcare Affordable" : "আমাদের সম্পর্কে - হেলথ ক্লাব";
+  const ogDesc = isEn
+    ? "Discover how Health Club brings medical discounts to middle-class families."
+    : "চিকিৎসা ব্যয় সাশ্রয়ে হেলথ ক্লাবের উদ্যোগ ও লক্ষ্য সম্পর্কে বিস্তারিত জানুন।";
 
   return {
     title: isEn ? "About Us - Health Club Mission & Story" : "আমাদের সম্পর্কে - হেলথ ক্লাব ভিশন ও মিশন",
@@ -18,11 +23,19 @@ export async function generateMetadata() {
       canonical: `${SITE_URL}/about-us`,
     },
     openGraph: {
-      title: isEn ? "About Health Club - Making Healthcare Affordable" : "আমাদের সম্পর্কে - হেলথ ক্লাব",
-      description: isEn
-        ? "Discover how Health Club brings medical discounts to middle-class families."
-        : "চিকিৎসা ব্যয় সাশ্রয়ে হেলথ ক্লাবের উদ্যোগ ও লক্ষ্য সম্পর্কে বিস্তারিত জানুন।",
+      title: ogTitle,
+      description: ogDesc,
       url: `${SITE_URL}/about-us`,
+      siteName: "হেলথ ক্লাব (Health Club)",
+      locale: isEn ? "en_US" : "bn_BD",
+      type: "website",
+      images: DEFAULT_OG_IMAGES,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: ogTitle,
+      description: ogDesc,
+      images: DEFAULT_TWITTER_IMAGES,
     },
   };
 }

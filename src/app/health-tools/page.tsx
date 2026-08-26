@@ -11,22 +11,41 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Calculator, Scale, Droplet, Flame, Baby, HeartPulse, Stethoscope, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
-import { SITE_URL } from "@/lib/siteConfig";
+import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
 
+  const pageTitle = isEn
+    ? "Free Health Calculators: BMI, BP & Diabetes, Water Intake, Calories & Pregnancy EDD - Health Club"
+    : "ফ্রি স্বাস্থ্য ক্যালকুলেটর: বিএমআই (BMI), রক্তচাপ ও ডায়াবেটিস, পানির চাহিদা, ক্যালোরি ও গর্ভকালীন ইডিডি - হেলথ ক্লাব";
+
+  const pageDesc = isEn
+    ? "Calculate your Body Mass Index (BMI), evaluate blood pressure and blood sugar ranges, daily hydration target, maintenance calories, and pregnancy due date (EDD)."
+    : "সহজেই আপনার বডি ম্যাস ইনডেক্স (BMI), রক্তচাপ ও ডায়াবেটিস মাত্রা মূল্যায়ন, দৈনিক পানির প্রয়োজনীয়তা, ক্যালোরি চাহিদা ও গর্ভকালীন প্রসবের সম্ভাব্য তারিখ (EDD) হিসাব করুন।";
+
   return {
-    title: isEn
-      ? "Free Health Calculators: BMI, BP & Diabetes, Water Intake, Calories & Pregnancy EDD - Health Club"
-      : "ফ্রি স্বাস্থ্য ক্যালকুলেটর: বিএমআই (BMI), রক্তচাপ ও ডায়াবেটিস, পানির চাহিদা, ক্যালোরি ও গর্ভকালীন ইডিডি - হেলথ ক্লাব",
-    description: isEn
-      ? "Calculate your Body Mass Index (BMI), evaluate blood pressure and blood sugar ranges, daily hydration target, maintenance calories, and pregnancy due date (EDD)."
-      : "সহজেই আপনার বডি ম্যাস ইনডেক্স (BMI), রক্তচাপ ও ডায়াবেটিস মাত্রা মূল্যায়ন, দৈনিক পানির প্রয়োজনীয়তা, ক্যালোরি চাহিদা ও গর্ভকালীন প্রসবের সম্ভাব্য তারিখ (EDD) হিসাব করুন।",
+    title: pageTitle,
+    description: pageDesc,
     alternates: {
       canonical: `${SITE_URL}/health-tools`,
+    },
+    openGraph: {
+      title: isEn ? "Free Health & Fitness Calculators - Health Club" : "ফ্রি স্বাস্থ্য ক্যালকুলেটর টুলস - হেলথ ক্লাব",
+      description: pageDesc,
+      url: `${SITE_URL}/health-tools`,
+      siteName: "হেলথ ক্লাব (Health Club)",
+      locale: isEn ? "en_US" : "bn_BD",
+      type: "website",
+      images: DEFAULT_OG_IMAGES,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: isEn ? "Free Health & Fitness Calculators - Health Club" : "ফ্রি স্বাস্থ্য ক্যালকুলেটর টুলস - হেলথ ক্লাব",
+      description: pageDesc,
+      images: DEFAULT_TWITTER_IMAGES,
     },
     keywords: [
       "BMI calculator bangla",

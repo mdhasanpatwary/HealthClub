@@ -17,7 +17,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { Analytics } from "@vercel/analytics/next";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import WebVitalsTracker from "@/components/analytics/WebVitalsTracker";
-import { SITE_URL } from "@/lib/siteConfig";
+import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 import PwaTracker from "@/components/pwa/PwaTracker";
 import PushNotificationPrompt from "@/components/pwa/PushNotificationPrompt";
 
@@ -143,20 +143,13 @@ export const metadata: Metadata = {
     siteName: "হেলথ ক্লাব (Health Club)",
     locale: "bn_BD",
     type: "website",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "হেলথ ক্লাব - স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী | Health Club",
-      },
-    ],
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: "summary_large_image",
     title: "হেলথ ক্লাব - স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী",
     description: "নির্ধারিত হাসপাতাল ও ল্যাবে ডিসকাউন্ট পেতে আজই হেলথ ক্লাবের ডিজিটাল মেম্বার কার্ড সংগ্রহ করুন।",
-    images: ["/og-image.png"],
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 

@@ -10,12 +10,19 @@ import { MedicalDisclaimer } from "./components/MedicalDisclaimer";
 import { BookOpen, Stethoscope, ArrowRight, ShieldCheck } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { getAllHealthTipsAction } from "@/app/actions/healthTipsAdminActions";
-import { SITE_URL } from "@/lib/siteConfig";
+import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
+
+  const ogTitle = isEn
+    ? "Doctor-Verified Health Tips & Disease Prevention Guides | Health Club"
+    : "ডাক্তারদের পরামর্শ ও স্বাস্থ্য গাইড | হেলথ ক্লাব";
+  const ogDesc = isEn
+    ? "Actionable medical advice, nutrition recommendations, and emergency first-aid protocols."
+    : "নিয়মিত স্বাস্থ্য সচেতনতা, খাদ্যতালিকা ও বিভিন্ন রোগ প্রতিরোধের কার্যকরী চিকিৎসকের পরামর্শ।";
 
   return {
     title: isEn
@@ -28,22 +35,19 @@ export async function generateMetadata() {
       canonical: `${SITE_URL}/health-tips`,
     },
     openGraph: {
-      title: isEn
-        ? "Doctor-Verified Health Tips & Disease Prevention Guides | Health Club"
-        : "ডাক্তারদের পরামর্শ ও স্বাস্থ্য গাইড | হেলথ ক্লাব",
-      description: isEn
-        ? "Actionable medical advice, nutrition recommendations, and emergency first-aid protocols."
-        : "নিয়মিত স্বাস্থ্য সচেতনতা, খাদ্যতালিকা ও বিভিন্ন রোগ প্রতিরোধের কার্যকরী চিকিৎসকের পরামর্শ।",
+      title: ogTitle,
+      description: ogDesc,
       url: `${SITE_URL}/health-tips`,
+      siteName: "হেলথ ক্লাব (Health Club)",
+      locale: isEn ? "en_US" : "bn_BD",
       type: "website",
-      images: [
-        {
-          url: `${SITE_URL}/icon.png`,
-          width: 512,
-          height: 512,
-          alt: "Health Club Health Tips & Medical Guides",
-        },
-      ],
+      images: DEFAULT_OG_IMAGES,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: ogTitle,
+      description: ogDesc,
+      images: DEFAULT_TWITTER_IMAGES,
     },
     keywords: [
       "Health tips bangla",

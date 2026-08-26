@@ -1,16 +1,34 @@
 import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
-import { SITE_URL } from "@/lib/siteConfig";
+import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
+  const title = tServer(locale, "pages.privacyPolicy.metaTitle");
+  const description = tServer(locale, "pages.privacyPolicy.metaDesc");
+
   return {
-    title: tServer(locale, "pages.privacyPolicy.metaTitle"),
-    description: tServer(locale, "pages.privacyPolicy.metaDesc"),
+    title,
+    description,
     alternates: {
       canonical: `${SITE_URL}/privacy-policy`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: `${SITE_URL}/privacy-policy`,
+      siteName: "হেলথ ক্লাব (Health Club)",
+      locale: locale === "en" ? "en_US" : "bn_BD",
+      type: "website",
+      images: DEFAULT_OG_IMAGES,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: DEFAULT_TWITTER_IMAGES,
     },
   };
 }

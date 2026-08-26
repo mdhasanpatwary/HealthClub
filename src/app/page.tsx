@@ -35,12 +35,20 @@ import { LandingHowItWorks } from "@/components/landing/LandingHowItWorks";
 import { LandingBenefits } from "@/components/landing/LandingBenefits";
 import { LandingPricing } from "@/components/landing/LandingPricing";
 import { LandingComparison } from "@/components/landing/LandingComparison";
-import { SITE_URL } from "@/lib/siteConfig";
+import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
+
+  const ogTitle = isEn
+    ? "Health Club - Save Up to 30% on Healthcare & Hospital Bills"
+    : "হেলথ ক্লাব - চিকিৎসা ব্যয়ে ৩০% পর্যন্ত ডিসকাউন্ট পান";
+
+  const ogDescription = isEn
+    ? "Join Health Club to get digital discount card for hospitals, labs, and medicines."
+    : "নির্ধারিত হাসপাতাল ও ল্যাবে ডিসকাউন্ট পেতে আজই হেলথ ক্লাবের মেম্বারশিপ সংগ্রহ করুন।";
 
   return {
     title: isEn
@@ -80,14 +88,19 @@ export async function generateMetadata() {
       "মেডিকেল ডিসকাউন্ট কার্ড",
     ],
     openGraph: {
-      title: isEn
-        ? "Health Club - Save Up to 30% on Healthcare & Hospital Bills"
-        : "হেলথ ক্লাব - চিকিৎসা ব্যয়ে ৩০% পর্যন্ত ডিসকাউন্ট পান",
-      description: isEn
-        ? "Join Health Club to get digital discount card for hospitals, labs, and medicines."
-        : "নির্ধারিত হাসপাতাল ও ল্যাবে ডিসকাউন্ট পেতে আজই হেলথ ক্লাবের মেম্বারশিপ সংগ্রহ করুন।",
+      title: ogTitle,
+      description: ogDescription,
       url: SITE_URL,
+      siteName: "হেলথ ক্লাব (Health Club)",
+      locale: isEn ? "en_US" : "bn_BD",
       type: "website",
+      images: DEFAULT_OG_IMAGES,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: ogTitle,
+      description: ogDescription,
+      images: DEFAULT_TWITTER_IMAGES,
     },
   };
 }

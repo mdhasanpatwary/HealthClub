@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap');
     
     * {
       box-sizing: border-box;
@@ -16,7 +16,7 @@
       height: 630px;
       overflow: hidden;
       font-family: 'Noto Sans Bengali', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #090e17;
+      background: #060d16;
       color: #f8fafc;
       position: relative;
     }
@@ -25,13 +25,15 @@
     .bg-canvas {
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 85% 30%, rgba(34, 197, 94, 0.25) 0%, transparent 55%),
-                  radial-gradient(circle at 15% 85%, rgba(13, 148, 136, 0.2) 0%, transparent 50%),
-                  radial-gradient(circle at 10% 10%, rgba(22, 163, 74, 0.2) 0%, transparent 45%),
-                  linear-gradient(135deg, #090e17 0%, #0c1824 50%, #061e18 100%);
+      background: 
+        radial-gradient(circle at 50% 15%, rgba(34, 197, 94, 0.25) 0%, transparent 60%),
+        radial-gradient(circle at 85% 65%, rgba(13, 148, 136, 0.2) 0%, transparent 55%),
+        radial-gradient(circle at 15% 75%, rgba(22, 163, 74, 0.22) 0%, transparent 50%),
+        radial-gradient(circle at 85% 15%, rgba(234, 179, 8, 0.15) 0%, transparent 45%),
+        linear-gradient(145deg, #070e17 0%, #081622 40%, #041c14 100%);
     }
 
-    /* Subtle grid overlay */
+    /* Subtle high-tech grid overlay */
     .grid-overlay {
       position: absolute;
       inset: 0;
@@ -44,10 +46,11 @@
     /* Outer glowing border frame */
     .frame-border {
       position: absolute;
-      inset: 12px;
-      border: 1px solid rgba(34, 197, 94, 0.2);
-      border-radius: 20px;
+      inset: 14px;
+      border: 1.5px solid rgba(34, 197, 94, 0.28);
+      border-radius: 22px;
       pointer-events: none;
+      box-shadow: inset 0 0 30px rgba(34, 197, 94, 0.05);
     }
 
     .main-container {
@@ -56,44 +59,82 @@
       display: flex;
       width: 100%;
       height: 100%;
-      padding: 48px 56px;
+      padding: 44px 56px;
       align-items: center;
       justify-content: space-between;
     }
 
-    /* Left Section */
+    /* Left Column */
     .left-col {
       width: 580px;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      z-index: 2;
     }
 
+    /* Brand Bar with Safe-Zone Padding */
     .brand-bar {
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 22px;
+      gap: 16px;
+      margin-bottom: 18px;
     }
 
-    .brand-logo-img {
-      height: 60px;
+    .brand-icon-wrap {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: #ffffff;
+      border: 2px solid #22c55e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      box-shadow: 0 8px 24px rgba(22, 163, 74, 0.35);
+    }
+
+    .brand-icon-wrap img {
+      width: 100%;
+      height: 100%;
       object-fit: contain;
-      filter: drop-shadow(0 4px 12px rgba(22, 163, 74, 0.3));
+    }
+
+    .brand-text-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title-bn {
+      font-size: 28px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-title-en {
+      font-family: 'Inter', sans-serif;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #4ade80;
+      letter-spacing: 2px;
+      margin-top: 2px;
     }
 
     .badge-pill {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 14px;
-      background: rgba(22, 163, 74, 0.15);
+      padding: 5px 14px;
+      background: rgba(22, 163, 74, 0.16);
       border: 1px solid rgba(34, 197, 94, 0.4);
       border-radius: 9999px;
       color: #86efac;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 600;
-      letter-spacing: 0.2px;
+      margin-bottom: 12px;
+      width: fit-content;
     }
 
     .hero-title {
@@ -102,73 +143,87 @@
       line-height: 1.25;
       margin-bottom: 12px;
       letter-spacing: -0.5px;
+      color: #ffffff;
     }
 
-    .hero-title span {
-      background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+    .hero-title .highlight {
+      background: linear-gradient(135deg, #4ade80 0%, #22c55e 60%, #16a34a 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
+    .hero-title .discount-tag {
+      display: inline-block;
+      padding: 2px 12px;
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.25) 0%, rgba(202, 138, 4, 0.35) 100%);
+      border: 1.5px solid rgba(250, 204, 21, 0.7);
+      border-radius: 8px;
+      color: #fde047;
+      -webkit-text-fill-color: #fde047;
+      font-size: 38px;
+      font-weight: 900;
+      box-shadow: 0 4px 16px rgba(234, 179, 8, 0.25);
+    }
+
     .hero-subtitle {
-      font-size: 19px;
+      font-size: 18px;
       font-weight: 500;
       color: #94a3b8;
       line-height: 1.45;
-      margin-bottom: 26px;
+      margin-bottom: 22px;
     }
 
     /* 4-Feature Grid */
     .features-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 26px;
+      gap: 10px;
+      margin-bottom: 22px;
     }
 
     .feature-item {
       display: flex;
       align-items: center;
       gap: 10px;
-      background: rgba(15, 23, 42, 0.7);
+      background: rgba(15, 23, 42, 0.75);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 12px;
-      padding: 10px 14px;
+      padding: 9px 12px;
       backdrop-filter: blur(8px);
     }
 
     .feature-icon-box {
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       border-radius: 8px;
       background: rgba(34, 197, 94, 0.15);
       color: #4ade80;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 15px;
       flex-shrink: 0;
     }
 
     .feature-text-title {
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 700;
       color: #f1f5f9;
       line-height: 1.2;
     }
 
     .feature-text-desc {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 500;
       color: #94a3b8;
-      margin-top: 2px;
+      margin-top: 1px;
     }
 
     .footer-url-bar {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 18px;
+      padding: 7px 16px;
       background: rgba(6, 78, 59, 0.5);
       border: 1px solid rgba(34, 197, 94, 0.35);
       border-radius: 10px;
@@ -177,7 +232,7 @@
 
     .footer-url-text {
       font-family: 'Inter', sans-serif;
-      font-size: 15px;
+      font-size: 14.5px;
       font-weight: 700;
       color: #4ade80;
       letter-spacing: 0.5px;
@@ -213,10 +268,10 @@
       width: 100%;
       height: 100%;
       border-radius: 20px;
-      background: linear-gradient(140deg, #0b2e25 0%, #061c16 60%, #03100c 100%);
-      border: 1.5px solid rgba(234, 179, 8, 0.6);
+      background: linear-gradient(140deg, #0c3329 0%, #061c16 60%, #03120d 100%);
+      border: 1.5px solid rgba(234, 179, 8, 0.65);
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8),
-                  0 0 0 1px rgba(34, 197, 94, 0.2);
+                  0 0 0 1px rgba(34, 197, 94, 0.25);
       padding: 24px 28px;
       display: flex;
       flex-direction: column;
@@ -227,8 +282,8 @@
     .card-pattern-overlay {
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 90% 10%, rgba(234, 179, 8, 0.12) 0%, transparent 60%),
-                  radial-gradient(circle at 10% 90%, rgba(34, 197, 94, 0.15) 0%, transparent 60%);
+      background: radial-gradient(circle at 90% 10%, rgba(234, 179, 8, 0.15) 0%, transparent 60%),
+                  radial-gradient(circle at 10% 90%, rgba(34, 197, 94, 0.18) 0%, transparent 60%);
       pointer-events: none;
     }
 
@@ -258,18 +313,30 @@
 
     .card-brand-sub {
       font-family: 'Inter', sans-serif;
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 600;
       color: #86efac;
       letter-spacing: 1.5px;
       margin-top: 2px;
     }
 
+    .card-emblem-wrap {
+      width: 44px;
+      height: 44px;
+      padding: 5px;
+      background: #ffffff;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
     .card-emblem {
-      height: 48px;
-      width: 48px;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
-      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
     }
 
     .card-middle {
@@ -356,8 +423,8 @@
     .tier-badge-gold {
       display: inline-block;
       padding: 4px 10px;
-      background: linear-gradient(135deg, rgba(234, 179, 8, 0.2) 0%, rgba(202, 138, 4, 0.3) 100%);
-      border: 1px solid rgba(250, 204, 21, 0.5);
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.25) 0%, rgba(202, 138, 4, 0.35) 100%);
+      border: 1px solid rgba(250, 204, 21, 0.6);
       border-radius: 6px;
       font-family: 'Inter', sans-serif;
       font-size: 11px;
@@ -372,14 +439,14 @@
       top: -18px;
       right: 20px;
       z-index: 10;
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(15, 23, 42, 0.95);
       border: 1px solid #22c55e;
       border-radius: 9999px;
       padding: 6px 14px;
       font-size: 13px;
       font-weight: 700;
       color: #86efac;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.5);
       display: flex;
       align-items: center;
       gap: 6px;
@@ -390,14 +457,14 @@
       bottom: -16px;
       left: 10px;
       z-index: 10;
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(15, 23, 42, 0.95);
       border: 1px solid #eab308;
       border-radius: 9999px;
       padding: 6px 16px;
       font-size: 13px;
       font-weight: 700;
       color: #fef08a;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.5);
       display: flex;
       align-items: center;
       gap: 6px;
@@ -413,23 +480,27 @@
     <!-- Left Section -->
     <div class="left-col">
       <div class="brand-bar">
-        <img src="../public/images/health-club-logo.png" alt="Health Club" class="brand-logo-img">
-      </div>
-
-      <div style="margin-bottom: 14px;">
-        <div class="badge-pill">
-          <span>✨</span>
-          <span>ফেনী ও দেশজুড়ে ডিজিটাল স্বাস্থ্য মেম্বারশিপ</span>
+        <div class="brand-icon-wrap">
+          <img src="../public/logo/v_logo_icon_transparent.png" alt="Logo">
+        </div>
+        <div class="brand-text-block">
+          <div class="brand-title-bn">হেলথ ক্লাব</div>
+          <div class="brand-title-en">HEALTH CLUB</div>
         </div>
       </div>
 
+      <div class="badge-pill">
+        <span>✨</span>
+        <span>ফেনী ও দেশজুড়ে ডিজিটাল স্বাস্থ্য মেম্বারশিপ</span>
+      </div>
+
       <h1 class="hero-title">
-        স্বাস্থ্য সেবা হোক<br>
-        <span>সহজ ও সাশ্রয়ী</span>
+        চিকিৎসা ব্যয়ে <span class="discount-tag">৩০%</span><br>
+        <span class="highlight">পর্যন্ত বিশেষ ছাড় পান</span>
       </h1>
 
       <p class="hero-subtitle">
-        ডিজিটাল স্বাস্থ্য কার্ডে পান সর্বোচ্চ ছাড়, বিশেষজ্ঞ ডাক্তার ও সার্বক্ষণিক জরুরি স্বাস্থ্য সহায়তা।
+        ডিজিটাল স্বাস্থ্য কার্ডে পান সেরা হাসপাতালে ডিসকাউন্ট, বিশেষজ্ঞ ডাক্তার ও সার্বক্ষণিক জরুরি সহায়তা।
       </p>
 
       <div class="features-grid">
@@ -437,7 +508,7 @@
           <div class="feature-icon-box">🏥</div>
           <div>
             <div class="feature-text-title">হাসপাতালে ৩০% ছাড়</div>
-            <div class="feature-text-desc">ক্যাবিনেট, ভর্তি ও সার্জারিতে</div>
+            <div class="feature-text-desc">কেবিন, ভর্তি ও অপারেশনে</div>
           </div>
         </div>
 
@@ -445,7 +516,7 @@
           <div class="feature-icon-box">👨‍⚕️</div>
           <div>
             <div class="feature-text-title">বিশেষজ্ঞ ডাক্তার সিরিয়াল</div>
-            <div class="feature-text-desc">শীর্ষ কনসালট্যান্ট শিডিউল</div>
+            <div class="feature-text-desc">সহজ ও দ্রুত শিডিউলিং</div>
           </div>
         </div>
 
@@ -453,7 +524,7 @@
           <div class="feature-icon-box">🧪</div>
           <div>
             <div class="feature-text-title">ডায়াগনস্টিক ল্যাব টেস্ট</div>
-            <div class="feature-text-desc">প্যাথলজি ও রেডিওলজি টেস্ট</div>
+            <div class="feature-text-desc">প্যাথলজি ও রেডিওলজিতে ছাড়</div>
           </div>
         </div>
 
@@ -461,13 +532,13 @@
           <div class="feature-icon-box">🚑</div>
           <div>
             <div class="feature-text-title">জরুরি রক্ত ও অ্যাম্বুলেন্স</div>
-            <div class="feature-text-desc">২৪/৭ জরুরি হটলাইন সাপোর্ট</div>
+            <div class="feature-text-desc">২৪/৭ হটলাইন সহায়তা</div>
           </div>
         </div>
       </div>
 
       <div class="footer-url-bar">
-        <span style="font-size: 16px;">🌐</span>
+        <span style="font-size: 15px;">🌐</span>
         <span class="footer-url-text">healthclubfeni.com</span>
       </div>
     </div>
@@ -494,7 +565,9 @@
               </div>
               <div class="card-brand-sub">DIGITAL HEALTH CARD</div>
             </div>
-            <img src="../public/logo/v_logo_transparent.png" alt="Logo" class="card-emblem">
+            <div class="card-emblem-wrap">
+              <img src="../public/logo/v_logo_icon_transparent.png" alt="Logo" class="card-emblem">
+            </div>
           </div>
 
           <div class="card-middle">

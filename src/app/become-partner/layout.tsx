@@ -2,12 +2,19 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
-import { SITE_URL } from "@/lib/siteConfig";
+import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 export async function generateMetadata(): Promise<Metadata> {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
+
+  const ogTitle = isEn
+    ? "Healthcare Partner Application - Health Club"
+    : "হেলথ ক্লাব পার্টনারশিপ আবেদন";
+  const ogDesc = isEn
+    ? "Apply to become a partner medical center in Feni & Bangladesh."
+    : "চিকিৎসাকেন্দ্র, ল্যাব বা ফার্মেসি পার্টনারশিপের জন্য আজই আবেদন করুন।";
 
   return {
     title: isEn
@@ -20,13 +27,19 @@ export async function generateMetadata(): Promise<Metadata> {
       canonical: `${SITE_URL}/become-partner`,
     },
     openGraph: {
-      title: isEn
-        ? "Healthcare Partner Application - Health Club"
-        : "হেলথ ক্লাব পার্টনারশিপ আবেদন",
-      description: isEn
-        ? "Apply to become a partner medical center in Feni & Bangladesh."
-        : "চিকিৎসাকেন্দ্র, ল্যাব বা ফার্মেসি পার্টনারশিপের জন্য আজই আবেদন করুন।",
+      title: ogTitle,
+      description: ogDesc,
       url: `${SITE_URL}/become-partner`,
+      siteName: "হেলথ ক্লাব (Health Club)",
+      locale: isEn ? "en_US" : "bn_BD",
+      type: "website",
+      images: DEFAULT_OG_IMAGES,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: ogTitle,
+      description: ogDesc,
+      images: DEFAULT_TWITTER_IMAGES,
     },
   };
 }
