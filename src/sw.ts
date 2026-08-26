@@ -84,8 +84,13 @@ const customOfflineCache: RuntimeCaching[] = [
   },
 ];
 
+const precacheEntries: (PrecacheEntry | string)[] = [
+  ...(self.__SW_MANIFEST || []),
+  { url: "/offline", revision: "1.0.0" },
+];
+
 const serwist = new Serwist({
-  precacheEntries: self.__SW_MANIFEST,
+  precacheEntries,
   skipWaiting: true,
   clientsClaim: true,
   navigationPreload: true,
