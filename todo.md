@@ -357,7 +357,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `public/favicon.ico`
   - **Details**: Favicon is 104 KB — standard favicons should be <10 KB. Regenerate at standard sizes (16×16, 32×32, 48×48) and target ~5-10 KB.
 
-- [ ] **TODO-75**: **Split Translation Files by Route Namespace**
+- [x] **TODO-75**: **Split Translation Files by Route Namespace**
   - **Files**: `src/lib/translations.bn.ts` (183 KB, 1378 lines), `src/lib/translations.en.ts` (101 KB, 1378 lines), `src/components/layout/LanguageProvider.tsx`, `src/app/layout.tsx`
   - **Details**: The entire active locale dictionary (~100-183 KB of strings) is serialized into the RSC payload on every page navigation. Split translations by route namespace (e.g., `landing`, `admin`, `dashboard`, `consultants`, `emergency`, `health-tools`) and load only the keys needed per page. Target 60-80% reduction in per-page translation payload.
 

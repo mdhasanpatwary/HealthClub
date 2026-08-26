@@ -1,0 +1,23 @@
+export const membershipEn = {
+  "membership.page.0": "৳0",
+  "membership.page.1YearFree": "/ 1 Year Free",
+  "membership.page.1YearMembership": "1 Year Membership",
+  "membership.page.500": "৳500",
+  "membership.page.affordableHealthcareMembershipPlans": "Affordable Healthcare Membership Plans",
+  "membership.page.allOfOurMembershipPlans": "All of our membership plans include the fundamental health benefits and cashless discount coverage detailed below.",
+  "membership.page.annualCardAndBenefitsFor": "Annual card and benefits for premium members.",
+  "membership.page.annualSubscription": "/ Annual Subscription",
+  "membership.page.buyPlan": "Buy Plan",
+  "membership.page.chooseTheRightPlanThat": "Choose the right plan that fits your needs and budget.",
+  "membership.page.coverageForTheMemberFamily": "Coverage for entire family & relatives with 1 card",
+  "membership.page.detailedMembershipBenefits": "Detailed Membership Benefits",
+  "membership.page.digitalMembershipCardVerifiedQr": "Digital membership card & verified QR code",
+  "membership.page.discountsAtAllPartnerHospitals": "Discounts at all partner hospitals",
+  "membership.page.joinForFree": "Join for Free",
+  "membership.page.limitedOffer": "Limited Offer",
+  "membership.page.plansDetails": "Plans & Details",
+  "membership.page.renewalOnAnAnnualBasis": "Renewal on an annual basis",
+  "membership.page.theFirst100MembersWill": "The first 100 members will receive Founding membership.",
+  "membership.page.foundingMember": "Founding Member",
+  "membership.page.premiumMembership": "Premium Membership"
+} as const;

@@ -33,10 +33,16 @@ const matchRoute = (path: string, route: string) => {
 
 export async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set("x-pathname", path);
 
   // Fast path: skip JWT decrypt for public-only routes (saves ~20ms per request)
   if (path === "/" || publicRoutes.some((r) => matchRoute(path, r))) {
-    return NextResponse.next();
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
   }
 
   // Read session cookie directly (no DB call — optimistic check only)
@@ -93,7 +99,11 @@ export async function proxy(req: NextRequest) {
     const isAuthRoute = authRoutes.some((r) => matchRoute(path, r));
     if (isAuthRoute) {
       if (path === "/login/admin" || path === "/login/partner") {
-        return NextResponse.next();
+        return NextResponse.next({
+          request: {
+            headers: requestHeaders,
+          },
+        });
       }
       if (session.role === "admin") {
         return NextResponse.redirect(new URL("/admin", req.nextUrl));
@@ -105,7 +115,11 @@ export async function proxy(req: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 }
 
 // Run proxy on all routes except static assets and API routes

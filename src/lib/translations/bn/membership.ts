@@ -1,0 +1,23 @@
+export const membershipBn = {
+  "membership.page.0": "৳০",
+  "membership.page.1YearFree": "/ ১ বছর ফ্রি",
+  "membership.page.1YearMembership": "১ বছর মেম্বারশিপ",
+  "membership.page.500": "৳৫০০",
+  "membership.page.affordableHealthcareMembershipPlans": "সাশ্রয়ী স্বাস্থ্য মেম্বারশিপ প্ল্যান",
+  "membership.page.allOfOurMembershipPlans": "আমাদের সকল মেম্বারশিপ প্ল্যানেই নিচে উল্লেখ করা মৌলিক স্বাস্থ্য সুবিধা ও ক্যাশলেস ডিসকাউন্ট কভারেজ অন্তর্ভুক্ত থাকে।",
+  "membership.page.annualCardAndBenefitsFor": "প্রিমিয়াম সদস্যদের বাৎসরিক কার্ড ও সুবিধা।",
+  "membership.page.annualSubscription": "/ বাৎসরিক সাবস্ক্রিপশন",
+  "membership.page.buyPlan": "প্ল্যান কিনুন",
+  "membership.page.chooseTheRightPlanThat": "আপনার পরিবারের প্রয়োজন ও বাজেট অনুযায়ী মানানসই প্ল্যানটি বেছে নিন।",
+  "membership.page.coverageForTheMemberFamily": "১টি কার্ডে পরিবার ও সকল আত্মীয়দের ডিসকাউন্ট কভারেজ",
+  "membership.page.detailedMembershipBenefits": "বিস্তারিত মেম্বারশিপের সুবিধাসমূহ",
+  "membership.page.digitalMembershipCardVerifiedQr": "ডিজিটাল মেম্বারশিপ কার্ড ও ভেরিফাইড কিউআর",
+  "membership.page.discountsAtAllPartnerHospitals": "সকল পার্টনার হাসপাতালে ডিসকাউন্ট",
+  "membership.page.joinForFree": "ফ্রি জয়েন করুন",
+  "membership.page.limitedOffer": "সীমিত অফার",
+  "membership.page.plansDetails": "প্ল্যান ও বিবরণী",
+  "membership.page.renewalOnAnAnnualBasis": "বাৎসরিক রিনিউয়াল সাপেক্ষে মেয়াদ বৃদ্ধি",
+  "membership.page.theFirst100MembersWill": "প্রথম ১০০ জন ফাউন্ডিং মেম্বারশিপ পাবেন।",
+  "membership.page.foundingMember": "ফাউন্ডিং মেম্বার",
+  "membership.page.premiumMembership": "প্রিমিয়াম মেম্বারশিপ"
+} as const;

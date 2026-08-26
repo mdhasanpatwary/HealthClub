@@ -8,12 +8,11 @@ import InstallAppBanner from "@/components/layout/InstallAppBanner";
 import GlobalNoticeBanner from "@/components/layout/GlobalNoticeBanner";
 import { getCachedNoticeSetting } from "@/app/actions/systemSettingsActions";
 import { Toaster } from "sonner";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { LanguageProvider } from "@/components/layout/LanguageProvider";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Locale } from "@/lib/i18n";
-import { en } from "@/lib/translations.en";
-import { bn } from "@/lib/translations.bn";
+import { getDictionary, getNamespacesForRoute } from "@/lib/translations";
 import JsonLd from "@/components/seo/JsonLd";
 import { Analytics } from "@vercel/analytics/next";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
@@ -177,10 +176,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = await cookies();
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname") || "/";
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const theme = (cookieStore.get("theme")?.value as "light" | "dark") || "light";
-  // Serialize only the active locale's dictionary — halves the client JS bundle
-  const initialDict = locale === "en" ? en : bn;
+
+  // Serialize only the active route's translation namespaces (e.g. common + landing)
+  const initialNamespaces = getNamespacesForRoute(pathname);
+  const initialDict = getDictionary(locale, initialNamespaces);
   const notice = await getCachedNoticeSetting();
 
   const globalJsonLd = [
@@ -241,7 +244,11 @@ export default async function RootLayout({
         </a>
         <JsonLd data={globalJsonLd} />
         <ThemeProvider initialTheme={theme}>
-          <LanguageProvider initialLocale={locale} initialDict={initialDict}>
+          <LanguageProvider
+            initialLocale={locale}
+            initialDict={initialDict}
+            initialNamespaces={initialNamespaces}
+          >
             <PwaTracker />
             <GlobalNoticeBanner notice={notice} />
             <Header />

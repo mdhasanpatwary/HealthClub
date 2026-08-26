@@ -1,8 +1,9 @@
 /**
- * Re-exports translation dictionaries and types.
- * Client components should NOT import this directly — use LanguageProvider
- * which dynamically imports only the active locale's dictionary.
+ * Re-exports translation dictionaries, utilities, and types.
  */
-export { en } from "./translations.en";
-export { bn } from "./translations.bn";
-export type { TranslationKey } from "./translations.en";
+export * from "./translations/types";
+export * from "./translations/routeMap";
+export * from "./translations/getDictionary";
+export { en } from "./translations/en/index";
+export { bn } from "./translations/bn/index";
+export type { TranslationKey } from "./translations/en/index";

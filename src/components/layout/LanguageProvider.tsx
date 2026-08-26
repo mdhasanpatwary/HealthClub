@@ -1,12 +1,15 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { createContext, useContext, useState, useEffect, useRef } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { Locale } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/translations.en";
-
-// Type for a locale dictionary
-type Dict = Record<string, string>;
+import {
+  TranslationNamespace,
+  Dict,
+  getNamespacesForRoute,
+  namespaceLoaders,
+} from "@/lib/translations";
 
 interface LanguageContextType {
   locale: Locale;
@@ -20,29 +23,62 @@ export function LanguageProvider({
   children,
   initialLocale,
   initialDict,
+  initialNamespaces = ["common", "landing"],
 }: {
   children: React.ReactNode;
   initialLocale: Locale;
   /**
-   * The active locale's dictionary, serialized server-side and passed as a prop.
-   * Only the active locale is shipped to the client — cuts bundle by ~50%.
+   * Active route's translation dictionary slice serialized server-side.
+   * Only the route namespaces are sent across the wire, cutting payload by 60-80%.
    */
   initialDict: Dict;
+  initialNamespaces?: TranslationNamespace[];
 }) {
   const [locale, setLocaleState] = useState<Locale>(initialLocale);
   const [dict, setDict] = useState<Dict>(initialDict);
+  const loadedNamespacesRef = useRef<Set<TranslationNamespace>>(
+    new Set(initialNamespaces)
+  );
   const router = useRouter();
+  const pathname = usePathname();
+
+  // Dynamically load additional namespaces on client-side route navigation
+  useEffect(() => {
+    if (!pathname) return;
+    const required = getNamespacesForRoute(pathname);
+    const missing = required.filter((ns: TranslationNamespace) => !loadedNamespacesRef.current.has(ns));
+    if (missing.length === 0) return;
+
+    let isMounted = true;
+    Promise.all(missing.map((ns: TranslationNamespace) => namespaceLoaders[locale][ns]())).then(
+      (results: Dict[]) => {
+        if (!isMounted) return;
+        const merged: Dict = {};
+        for (const res of results) {
+          Object.assign(merged, res);
+        }
+        missing.forEach((ns: TranslationNamespace) => loadedNamespacesRef.current.add(ns));
+        setDict((prev: Dict) => ({ ...prev, ...merged }));
+      }
+    );
+
+    return () => {
+      isMounted = false;
+    };
+  }, [pathname, locale]);
 
   const setLocale = async (newLocale: Locale) => {
-    // Dynamically import only the newly requested locale dictionary
     if (newLocale !== locale) {
-      if (newLocale === "en") {
-        const { en } = await import("@/lib/translations.en");
-        setDict(en as unknown as Dict);
-      } else {
-        const { bn } = await import("@/lib/translations.bn");
-        setDict(bn as unknown as Dict);
+      // Fetch all currently active namespaces in the new locale
+      const activeNamespaces = Array.from(loadedNamespacesRef.current);
+      const results = await Promise.all(
+        activeNamespaces.map((ns: TranslationNamespace) => namespaceLoaders[newLocale][ns]())
+      );
+      const newDict: Dict = {};
+      for (const res of results) {
+        Object.assign(newDict, res);
       }
+      setDict(newDict);
     }
     setLocaleState(newLocale);
     document.cookie = `locale=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
