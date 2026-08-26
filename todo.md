@@ -379,7 +379,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/services/dbStore.ts` (468 lines) -> Replaced by `src/services/authStore.ts`
   - **Details**: `dbStore` is a pass-through layer that re-exports server actions with zero added value for most methods (e.g., `async getDoctors() { return getDoctorsAction(); }`). This imports every server action file regardless of which page loads, hurting client bundle parse time and tree-shaking. Refactor: import server actions directly where needed. Keep only the localStorage session helpers (`getCurrentUser`, `setCurrentUser`, `logout`, etc.) in a slim `authStore` module.
 
-- [ ] **TODO-80**: **Refactor Files Exceeding 500-Line Limit**
+- [x] **TODO-80**: **Refactor Files Exceeding 500-Line Limit**
   - **Files**: `src/app/partner/dashboard/components/PartnerDoctorModals.tsx` (952 lines), `src/data/clinicalEvaluatorData.ts` (718 lines), `src/app/health-tools/components/DiabetesEvaluatorTab.tsx` (650 lines), `src/app/admin/components/broadcast/BroadcastComposer.tsx` (647 lines), `src/lib/bulkImportUtils.ts` (621 lines), `src/app/health-tools/components/PregnancyCalculator.tsx` (596 lines), `src/app/health-tools/components/HealthReportExportButton.tsx` (589 lines), `src/app/actions/dbBackupActions.ts` (561 lines)
   - **Details**: 8 files exceed the project's 500-line limit. `PartnerDoctorModals.tsx` at 952 lines is nearly 2× the limit. Large files hurt parse times, tree-shaking, and maintainability. Split into smaller, focused subcomponents, hooks, or helper modules.
 
