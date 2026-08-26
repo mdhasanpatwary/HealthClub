@@ -363,7 +363,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
 
 ### 🟠 P1 — High-Priority Performance Issues
 
-- [ ] **TODO-76**: **Add `next/dynamic` Code Splitting for Below-Fold Homepage Components**
+- [x] **TODO-76**: **Add `next/dynamic` Code Splitting for Below-Fold Homepage Components**
   - **Files**: `src/app/page.tsx`, `src/components/ui/SavingsCalculator.tsx`, `src/components/ui/TestimonialCarousel.tsx`, `src/components/landing/FAQSection.tsx`, `src/components/landing/ContactForm.tsx`
   - **Details**: No uses of `next/dynamic` or `React.lazy` exist in the project. Heavy client components (SavingsCalculator: 316 lines, TestimonialCarousel: 147 lines, FAQSection, ContactForm) are eagerly loaded on the homepage even when below the fold. Wrap with `next/dynamic({ loading: () => <Skeleton /> })` to defer loading.
 

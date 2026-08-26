@@ -8,10 +8,26 @@ import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
 import type { Member } from "@/services/db";
 import JsonLd from "@/components/seo/JsonLd";
-import SavingsCalculator from "@/components/ui/SavingsCalculator";
-import TestimonialCarousel from "@/components/ui/TestimonialCarousel";
-import FAQSection from "@/components/landing/FAQSection";
-import ContactForm from "@/components/landing/ContactForm";
+import dynamic from "next/dynamic";
+import {
+  SavingsCalculatorSkeleton,
+  TestimonialSkeleton,
+  FAQSkeleton,
+  ContactFormSkeleton,
+} from "@/components/ui/skeleton";
+
+const SavingsCalculator = dynamic(() => import("@/components/ui/SavingsCalculator"), {
+  loading: () => <SavingsCalculatorSkeleton />,
+});
+const TestimonialCarousel = dynamic(() => import("@/components/ui/TestimonialCarousel"), {
+  loading: () => <TestimonialSkeleton />,
+});
+const FAQSection = dynamic(() => import("@/components/landing/FAQSection"), {
+  loading: () => <FAQSkeleton />,
+});
+const ContactForm = dynamic(() => import("@/components/landing/ContactForm"), {
+  loading: () => <ContactFormSkeleton />,
+});
 
 import { LandingHero } from "@/components/landing/LandingHero";
 import { LandingStats } from "@/components/landing/LandingStats";
