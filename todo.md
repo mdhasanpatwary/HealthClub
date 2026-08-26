@@ -353,7 +353,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `public/og-image.png`
   - **Details**: OpenGraph image is 620 KB — should be <100 KB for fast social sharing previews. Compress to optimized WebP or JPEG at 1200×630, targeting ~50-80 KB.
 
-- [ ] **TODO-74**: **Reduce `favicon.ico` Size (104 KB → <10 KB)**
+- [x] **TODO-74**: **Reduce `favicon.ico` Size (104 KB → <10 KB)**
   - **Files**: `public/favicon.ico`
   - **Details**: Favicon is 104 KB — standard favicons should be <10 KB. Regenerate at standard sizes (16×16, 32×32, 48×48) and target ~5-10 KB.
 
