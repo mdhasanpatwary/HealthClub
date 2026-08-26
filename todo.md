@@ -345,7 +345,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `public/images/doctors/*.png` (~50 files, 35 MB total)
   - **Details**: Doctor profile images are uncompressed PNGs ranging from 918 KB to 3.3 MB each. Convert all to WebP/AVIF format and resize to max ~400×400px for thumbnails. Target total directory size reduction from 35 MB → ~5 MB (~85% reduction). This directly impacts LCP and mobile bandwidth for users on 3G/4G in Bangladesh.
 
-- [ ] **TODO-72**: **Move Analytics Aggregation from In-Memory Loops to SQL**
+- [x] **TODO-72**: **Move Analytics Aggregation from In-Memory Loops to SQL**
   - **Files**: `src/app/actions/analyticsActions.ts`
   - **Details**: `getAdminRevenueAnalyticsAction` fetches ALL members and ALL transactions into Node.js memory, then aggregates with `for` loops. As data grows, this risks OOM crashes and severe latency. Refactor to use `prisma.$queryRaw` with SQL `GROUP BY`, `COUNT`, `SUM`, and date functions for tier breakdowns, monthly financials, and partner performance metrics.
 
