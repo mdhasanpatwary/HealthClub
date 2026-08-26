@@ -371,7 +371,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/admin/components/MemberDetailsDialog.tsx`, `src/app/admin/components/MembersTab.tsx`, `src/app/partner/dashboard/components/PartnerBillingTab.tsx`, `src/app/partner/dashboard/components/PartnerCardPreview.tsx`
   - **Details**: 4 files use raw `<img>` tags which bypass Next.js image optimization (no WebP/AVIF conversion, no lazy loading, no responsive sizes, no blur placeholder). Replace with `<Image>` from `next/image` with appropriate `width`/`height` and `sizes` props.
 
-- [ ] **TODO-78**: **Optimize Header Component — Consolidate 5 useEffect Hooks**
+- [x] **TODO-78**: **Optimize Header Component — Consolidate 5 useEffect Hooks**
   - **Files**: `src/components/layout/Header.tsx`
   - **Details**: Header has 5 separate `useEffect` hooks that fire on mount and several on pathname change. The scroll listener creates a new function on every mount and `dbStore.getCurrentUser()` parses localStorage JSON on every pathname change. Consolidate effects, debounce scroll listener, and remove unnecessary `pathname` dependency from auth-sync effect (auth changes already fire via custom `auth-change` event).
 

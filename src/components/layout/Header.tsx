@@ -29,6 +29,7 @@ export default function Header() {
 
   const isAdminMode = pathname.startsWith("/admin");
 
+  // 1. Mount effect: window event listeners (auth sync, scroll detection with RAF throttle, mobile menu trigger)
   useEffect(() => {
     const syncUser = () => {
       setUser(dbStore.getCurrentUser());
@@ -36,40 +37,41 @@ export default function Header() {
     };
     syncUser();
 
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const isScrolled = window.scrollY > 10;
+          setScrolled((prev) => (prev !== isScrolled ? isScrolled : prev));
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    handleScroll();
+
+    const handleOpenMenu = () => setIsOpen(true);
+
     window.addEventListener("auth-change", syncUser);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("open-mobile-menu", handleOpenMenu);
+
     return () => {
       window.removeEventListener("auth-change", syncUser);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("open-mobile-menu", handleOpenMenu);
     };
-  }, [pathname]);
+  }, []);
 
+  // 2. Route change effect: close mobile drawer on navigation
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsOpen(false);
   }, [pathname]);
 
+  // 3. Body scroll lock effect when mobile drawer is open
   useEffect(() => {
-    const handleScroll = () => {
-      const isScrolled = window.scrollY > 10;
-      setScrolled((prev) => (prev !== isScrolled ? isScrolled : prev));
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const handleOpenMenu = () => setIsOpen(true);
-    window.addEventListener("open-mobile-menu", handleOpenMenu);
-    return () => {
-      window.removeEventListener("open-mobile-menu", handleOpenMenu);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = isOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
