@@ -3,8 +3,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Receipt, Building2, Stethoscope, BarChart3, Users } from "lucide-react";
-import { dbStore } from "@/services/dbStore";
+import { authStore } from "@/services/authStore";
 import { Partner, Transaction } from "@/services/db";
+import { getPartnerTransactionsAction, getPartnerProfileAction } from "@/app/actions/partnerActions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { PartnerDashboardSkeleton } from "./components/PartnerDashboardSkeleton";
@@ -40,7 +41,7 @@ export default function PartnerDashboardPage() {
   const loadTransactions = useCallback(async () => {
     setLoadingTransactions(true);
     try {
-      const data = await dbStore.getPartnerTransactions();
+      const data = await getPartnerTransactionsAction();
       setTransactions(data);
     } catch {
       toast.error("লেনদেন তালিকা লোড করতে সমস্যা হয়েছে।");
@@ -51,10 +52,10 @@ export default function PartnerDashboardPage() {
 
   const refreshPartnerProfile = useCallback(async () => {
     try {
-      const res = await dbStore.getPartnerProfile();
+      const res = await getPartnerProfileAction();
       if (res.success && res.partner) {
         setPartner(res.partner);
-        dbStore.setCurrentPartner(res.partner);
+        authStore.setCurrentPartner(res.partner);
       }
     } catch {
       // Fallback to cached partner session
@@ -62,7 +63,7 @@ export default function PartnerDashboardPage() {
   }, []);
 
   useEffect(() => {
-    const currentPartner = dbStore.getCurrentPartner();
+    const currentPartner = authStore.getCurrentPartner();
     if (!currentPartner) {
       router.push("/login/partner");
       return;
@@ -74,7 +75,7 @@ export default function PartnerDashboardPage() {
   }, [router, loadTransactions, refreshPartnerProfile]);
 
   const handleLogout = () => {
-    dbStore.logoutPartner();
+    authStore.logoutPartner();
     toast.success("সফলভাবে লগআউট করা হয়েছে।");
     router.push("/login/partner");
   };

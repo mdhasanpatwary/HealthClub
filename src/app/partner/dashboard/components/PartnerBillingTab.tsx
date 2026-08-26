@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Camera, Search, CheckCircle, XCircle, AlertTriangle, Receipt, CreditCard, History, Download } from "lucide-react";
 import { Partner, Transaction } from "@/services/db";
-import { dbStore } from "@/services/dbStore";
+import { authStore } from "@/services/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
@@ -169,7 +169,7 @@ export function PartnerBillingTab({
     }
   };
 
-  const currentStaff = typeof window !== "undefined" ? dbStore.getCurrentStaff() : null;
+  const currentStaff = typeof window !== "undefined" ? authStore.getCurrentStaff() : null;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">

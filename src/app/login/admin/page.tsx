@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Heart, Lock, Shield } from "lucide-react";
-import { dbStore } from "@/services/dbStore";
+import { authStore } from "@/services/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
@@ -31,7 +31,7 @@ export default function AdminLoginPage() {
     try {
       const adminMember = await loginAdminAction(identifier, password);
       if (adminMember) {
-        dbStore.setCurrentUser(adminMember);
+        authStore.setCurrentUser(adminMember);
         toast.success(t("auth.login.success"));
         router.push("/admin");
         return;

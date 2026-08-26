@@ -3,15 +3,15 @@
 import { useEffect } from "react";
 import { getClientDeviceInfo, sendPwaSessionPing } from "@/lib/pwaTelemetry";
 import { recordPwaInstallAction } from "@/app/actions/pwaActions";
-import { dbStore } from "@/services/dbStore";
+import { authStore } from "@/services/authStore";
 
 const INSTALLED_KEY = "hc_app_installed";
 
 export default function PwaTracker() {
   useEffect(() => {
     // 1. Initial Session Ping
-    const currentUser = dbStore.getCurrentUser();
-    const currentPartner = dbStore.getCurrentPartner();
+    const currentUser = authStore.getCurrentUser();
+    const currentPartner = authStore.getCurrentPartner();
     const activeUserId = currentUser?.id || currentPartner?.id || undefined;
 
     sendPwaSessionPing(activeUserId);

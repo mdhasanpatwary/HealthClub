@@ -19,7 +19,7 @@ import {
   Layers,
 } from "lucide-react";
 import { Doctor, Partner } from "@/services/db";
-import { dbStore } from "@/services/dbStore";
+import { getPartnerDoctorsAction } from "@/app/actions/partnerDoctorActions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
@@ -57,7 +57,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
 
   const fetchRoster = useCallback(async () => {
     try {
-      const res = await dbStore.getPartnerDoctors();
+      const res = await getPartnerDoctorsAction();
       if (res.success) {
         setDoctors(res.doctors);
       } else {

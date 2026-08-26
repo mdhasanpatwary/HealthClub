@@ -4,8 +4,14 @@ import { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useLanguage } from "@/components/layout/LanguageProvider";
-import { dbStore } from "@/services/dbStore";
 import { Partner } from "@/services/db";
+import {
+  getPaginatedPartnersAdminAction,
+  updatePartnerAction,
+  addPartnerAction,
+  deletePartnerAction,
+} from "@/app/actions/partnerActions";
+import { getStatsAction } from "@/app/actions/transactionActions";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -68,7 +74,7 @@ function AdminPartnersContent() {
 
   const loadCounts = useCallback(async () => {
     try {
-      const stats = await dbStore.getStats();
+      const stats = await getStatsAction();
       setCategoryCounts({
         all: stats.partnerCount,
         hospital: stats.partnerHospitals,
@@ -82,7 +88,7 @@ function AdminPartnersContent() {
 
   const loadData = useCallback(async () => {
     try {
-      const res = await dbStore.getPaginatedPartnersAdmin({
+      const res = await getPaginatedPartnersAdminAction({
         page,
         pageSize,
         search: debouncedSearch,
@@ -138,7 +144,7 @@ function AdminPartnersContent() {
 
     try {
       if (editingPartner) {
-        const success = await dbStore.updatePartner(editingPartner.id, {
+        const success = await updatePartnerAction(editingPartner.id, {
           name: newPartner.name,
           category: newPartner.category,
           address: newPartner.address,
@@ -151,7 +157,7 @@ function AdminPartnersContent() {
         });
         if (!success) throw new Error("Update failed");
       } else {
-        await dbStore.addPartner({
+        await addPartnerAction({
           name: newPartner.name,
           category: newPartner.category,
           address: newPartner.address,
@@ -196,7 +202,7 @@ function AdminPartnersContent() {
   const handleDeletePartner = async (id: string, name: string) => {
     if (confirm(t("admin.dashboard.confirmDeletePartner").replace("${name}", name))) {
       try {
-        const success = await dbStore.deletePartner(id);
+        const success = await deletePartnerAction(id);
         if (success) {
           toast.success(t("admin.dashboard.partnerDeletedSuccess"));
           await loadData();

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, Building2, CreditCard, User, Menu, X, ArrowUpRight } from "lucide-react";
-import { dbStore } from "@/services/dbStore";
+import { authStore } from "@/services/authStore";
 import { Member, Partner } from "@/services/db";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import MemberCard from "@/components/ui/MemberCard";
@@ -19,8 +19,8 @@ export default function BottomNav() {
 
   useEffect(() => {
     const syncUser = () => {
-      setUser(dbStore.getCurrentUser());
-      setPartner(dbStore.getCurrentPartner());
+      setUser(authStore.getCurrentUser());
+      setPartner(authStore.getCurrentPartner());
     };
     syncUser();
 

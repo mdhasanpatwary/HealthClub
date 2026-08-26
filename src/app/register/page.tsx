@@ -7,7 +7,7 @@ import {
   Heart, User, Phone, Mail, Lock, MapPin, Calendar, Briefcase,
   ArrowRight, Star, ShieldCheck
 } from "lucide-react";
-import { dbStore } from "@/services/dbStore";
+import { addMemberAction } from "@/app/actions/memberActions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ImageUpload } from "@/components/ui/ImageUpload";
@@ -50,7 +50,7 @@ function RegisterForm() {
     }
 
     try {
-      const result = await dbStore.addMember({
+      const result = await addMemberAction({
         name: formData.name,
         phone: formData.phone,
         email: formData.email,

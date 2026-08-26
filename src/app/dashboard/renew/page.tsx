@@ -7,9 +7,9 @@ import { ShieldCheck, CheckCircle2, Copy, Check, Smartphone, ArrowLeft, Heart, U
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle, CardDescription, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { requestRenewalAction } from "@/app/actions/memberActions";
+import { requestRenewalAction, getMemberByIdAction } from "@/app/actions/memberActions";
 import { getPublicPaymentSettingsAction, PublicPaymentSettings } from "@/app/actions/systemSettingsActions";
-import { dbStore } from "@/services/dbStore";
+import { authStore } from "@/services/authStore";
 import { Member } from "@/services/db";
 import { toast } from "sonner";
 import { useLanguage } from "@/components/layout/LanguageProvider";
@@ -23,30 +23,18 @@ export default function RenewalPage() {
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
-
-  // Dynamic Payment Settings
-  const [paymentSettings, setPaymentSettings] = useState<PublicPaymentSettings>({
-    bkashPersonal: "01886763849",
-    bkashMerchant: "01886763849",
-    premiumFee: "500",
-    foundingFee: "0",
-    paymentInstructions: "",
-  });
-
-  // Form states
+  const [copied, setCopied] = useState(false);
   const [senderNumber, setSenderNumber] = useState("");
   const [transactionId, setTransactionId] = useState("");
   const [profession, setProfession] = useState("");
-  const [copied, setCopied] = useState(false);
+  const [paymentSettings, setPaymentSettings] = useState<PublicPaymentSettings | null>(null);
 
-  const bkashNumber = paymentSettings.bkashPersonal || "01886763849";
+  const bkashNumber = paymentSettings?.bkashPersonal || "01886763849";
 
   useEffect(() => {
     let isMounted = true;
 
     Promise.resolve().then(async () => {
-      if (!isMounted) return;
-
       // 1. Fetch dynamic settings
       try {
         const settings = await getPublicPaymentSettingsAction();
@@ -57,7 +45,7 @@ export default function RenewalPage() {
         // Silent fallback
       }
 
-      const currentUser = dbStore.getCurrentUser();
+      const currentUser = authStore.getCurrentUser();
       if (!currentUser) {
         router.push("/login");
         return;
@@ -68,7 +56,7 @@ export default function RenewalPage() {
       setProfession(currentUser.profession || "");
 
       try {
-        const freshUser = await dbStore.getMemberById(currentUser.id);
+        const freshUser = await getMemberByIdAction(currentUser.id);
         if (!isMounted) return;
         const activeUser = freshUser || currentUser;
         setMember(activeUser);
@@ -133,7 +121,7 @@ export default function RenewalPage() {
             renewalBkashTxnId: cleanTxnId,
             profession: profession || member.profession,
           };
-          dbStore.setCurrentUser(updatedUser);
+          authStore.setCurrentUser(updatedUser);
         }
         toast.success(res.message);
         setTimeout(() => {

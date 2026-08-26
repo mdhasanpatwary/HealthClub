@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Building2, PhoneCall, Clock, Percent, Plus, Trash2, Globe, Image as ImageIcon, Sparkles, ShieldCheck, Tag } from "lucide-react";
 import { Partner, DepartmentDiscount } from "@/services/db";
-import { dbStore } from "@/services/dbStore";
+import { authStore } from "@/services/authStore";
+import { updatePartnerProfileAction } from "@/app/actions/partnerActions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
@@ -117,7 +118,7 @@ export function PartnerProfileSettingsTab({
 
     setSaving(true);
     try {
-      const res = await dbStore.updatePartnerProfile({
+      const res = await updatePartnerProfileAction({
         name: name.trim(),
         address: address.trim(),
         phone: phone.trim(),
@@ -130,6 +131,7 @@ export function PartnerProfileSettingsTab({
       });
 
       if (res.success && res.partner) {
+        authStore.setCurrentPartner(res.partner);
         toast.success(t("partner.profile.updateSuccess"));
         onProfileUpdated(res.partner);
       } else {

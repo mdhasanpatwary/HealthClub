@@ -14,7 +14,13 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ImageUpload } from "@/components/ui/ImageUpload";
 import { Doctor } from "@/services/db";
-import { dbStore } from "@/services/dbStore";
+import {
+  addPartnerDoctorAction,
+  getAvailableDoctorsToLinkAction,
+  linkDoctorToPartnerAction,
+  updatePartnerDoctorChamberAction,
+  unlinkDoctorFromPartnerAction,
+} from "@/app/actions/partnerDoctorActions";
 import { toast } from "sonner";
 import {
   Search,
@@ -94,7 +100,7 @@ export function AddPartnerDoctorModal({
 
     setSubmitting(true);
     try {
-      const res = await dbStore.addPartnerDoctor({
+      const res = await addPartnerDoctorAction({
         name: formData.name.trim(),
         specialty: formData.specialty.trim(),
         department: formData.department,
@@ -386,7 +392,7 @@ export function LinkDoctorModal({
     const fetchAvailable = async () => {
       setSearching(true);
       try {
-        const res = await dbStore.getAvailableDoctorsToLink(searchTerm);
+        const res = await getAvailableDoctorsToLinkAction(searchTerm);
         if (res.success) {
           setAvailableDoctors(res.doctors);
         }
@@ -421,7 +427,7 @@ export function LinkDoctorModal({
 
     setSubmitting(true);
     try {
-      const res = await dbStore.linkDoctorToPartner(selectedDoctor.id, {
+      const res = await linkDoctorToPartnerAction(selectedDoctor.id, {
         roomNo: chamberData.roomNo.trim() || undefined,
         visitingDays: chamberData.visitingDays.trim() || undefined,
         visitingHours: chamberData.visitingHours.trim() || undefined,
@@ -649,7 +655,7 @@ function EditChamberForm({
     e.preventDefault();
     setSubmitting(true);
     try {
-      const res = await dbStore.updatePartnerDoctorChamber(doctor.id, {
+      const res = await updatePartnerDoctorChamberAction(doctor.id, {
         name: formData.name.trim(),
         specialty: formData.specialty.trim(),
         department: formData.department,
@@ -902,7 +908,7 @@ export function UnlinkDoctorDialog({
   const handleUnlink = async () => {
     setSubmitting(true);
     try {
-      const res = await dbStore.unlinkDoctorFromPartner(doctor.id);
+      const res = await unlinkDoctorFromPartnerAction(doctor.id);
       if (res.success) {
         toast.success(`${doctor.name} সফলভাবে আনলিঙ্ক করা হয়েছে।`);
         onSuccess();

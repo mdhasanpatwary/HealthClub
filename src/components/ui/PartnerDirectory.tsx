@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Search, MapPin, Phone, Clock, Hospital, ShieldAlert, Pill, HeartHandshake, Tag, ChevronRight, X } from "lucide-react";
-import { dbStore } from "@/services/dbStore";
+import { getPartnersAction } from "@/app/actions/partnerActions";
 import { Partner, DepartmentDiscount } from "@/services/db";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -75,7 +75,7 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
       return;
     }
     let isMounted = true;
-    dbStore.getPartners().then((data) => {
+    getPartnersAction().then((data) => {
       if (!isMounted) return;
       if (data && data.length > 0) {
         setPartners(data);

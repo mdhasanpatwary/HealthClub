@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Languages, Globe, Sun, Moon } from "lucide-react";
 import Image from "next/image";
-import { dbStore } from "@/services/dbStore";
+import { authStore } from "@/services/authStore";
 import { Member, Partner } from "@/services/db";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useLanguage } from "@/components/layout/LanguageProvider";
@@ -32,8 +32,8 @@ export default function Header() {
   // 1. Mount effect: window event listeners (auth sync, scroll detection with RAF throttle, mobile menu trigger)
   useEffect(() => {
     const syncUser = () => {
-      setUser(dbStore.getCurrentUser());
-      setPartner(dbStore.getCurrentPartner());
+      setUser(authStore.getCurrentUser());
+      setPartner(authStore.getCurrentPartner());
     };
     syncUser();
 

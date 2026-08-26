@@ -3,8 +3,15 @@
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { useLanguage } from "@/components/layout/LanguageProvider";
-import { dbStore } from "@/services/dbStore";
 import { Member, Transaction } from "@/services/db";
+import {
+  getPaginatedMembersAction,
+  updateMemberAction,
+  deleteMemberAction,
+  updateMemberStatusAction,
+} from "@/app/actions/memberAdminActions";
+import { addMemberAction } from "@/app/actions/memberActions";
+import { getTransactionsAction } from "@/app/actions/transactionActions";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -42,12 +49,12 @@ export default function AdminMembersPage() {
   const loadData = useCallback(async () => {
     try {
       const [membersRes, txRes] = await Promise.all([
-        dbStore.getPaginatedMembers({
+        getPaginatedMembersAction({
           page,
           pageSize,
           search: debouncedSearch,
         }),
-        dbStore.getTransactions(),
+        getTransactionsAction(),
       ]);
       setMembers(membersRes.data);
       setTotalItems(membersRes.totalItems);
@@ -86,7 +93,7 @@ export default function AdminMembersPage() {
 
     try {
       if (editingMember) {
-        const success = await dbStore.updateMember(editingMember.id, {
+        const success = await updateMemberAction(editingMember.id, {
           name: newMember.name,
           phone: newMember.phone,
           email: newMember.email,
@@ -98,7 +105,7 @@ export default function AdminMembersPage() {
         });
         if (!success) throw new Error("Update failed");
       } else {
-        await dbStore.addMember({
+        await addMemberAction({
           name: newMember.name,
           phone: newMember.phone,
           email: newMember.email,
@@ -133,7 +140,7 @@ export default function AdminMembersPage() {
   const handleDeleteMember = async (id: string, name: string) => {
     if (confirm(t("admin.dashboard.confirmDeleteMember").replace("${name}", name))) {
       try {
-        const success = await dbStore.deleteMember(id);
+        const success = await deleteMemberAction(id);
         if (success) {
           toast.success(t("admin.dashboard.memberDeletedSuccess"));
           await loadData();
@@ -163,7 +170,7 @@ export default function AdminMembersPage() {
       return;
     }
 
-    const success = await dbStore.updateMemberStatus(id, newStatus);
+    const success = await updateMemberStatusAction(id, newStatus);
     if (success) {
       toast.success(t("admin.dashboard.memberStatusUpdatedSuccess"));
       if (viewingMember && viewingMember.id === id) {

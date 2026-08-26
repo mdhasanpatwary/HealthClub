@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Heart, User, Lock, ArrowRight } from "lucide-react";
-import { dbStore } from "@/services/dbStore";
+import { authStore } from "@/services/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { loginMemberAction } from "@/app/actions/memberActions";
@@ -44,7 +44,7 @@ export default function LoginPage() {
           }, 2000);
           return;
         }
-        dbStore.setCurrentUser(res.member);
+        authStore.setCurrentUser(res.member);
         toast.success(t("auth.login.success"));
         router.push("/dashboard");
       } else {

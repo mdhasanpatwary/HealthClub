@@ -4,8 +4,13 @@ import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { PlusCircle } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
-import { dbStore } from "@/services/dbStore";
 import { Member, Partner, Transaction } from "@/services/db";
+import {
+  getPaginatedTransactionsAction,
+  addTransactionAction,
+} from "@/app/actions/transactionActions";
+import { getPartnersAction } from "@/app/actions/partnerActions";
+import { getMembersAction } from "@/app/actions/memberAdminActions";
 import { parseDiscountPercentage } from "@/lib/utils";
 import { formatNum } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
@@ -32,12 +37,12 @@ export default function AdminTransactionsPage() {
   const loadData = useCallback(async () => {
     try {
       const [txRes, partnersRes, membersRes] = await Promise.all([
-        dbStore.getPaginatedTransactions({
+        getPaginatedTransactionsAction({
           page,
           pageSize,
         }),
-        dbStore.getPartners(),
-        dbStore.getMembers(),
+        getPartnersAction(),
+        getMembersAction(),
       ]);
       setTransactions(txRes.data);
       setTotalItems(txRes.totalItems);
@@ -97,7 +102,7 @@ export default function AdminTransactionsPage() {
       const safeRate = Math.min(discountRate, 0.70);
       const saved = Math.round(billAmount * safeRate);
 
-      await dbStore.addTransaction({
+      await addTransactionAction({
         memberId: member.id,
         memberName: member.name,
         partnerId: partner.id,

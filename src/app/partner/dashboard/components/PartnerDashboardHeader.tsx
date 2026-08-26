@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { ChangePartnerPasswordDialog } from "./ChangePartnerPasswordDialog";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 
-import { dbStore } from "@/services/dbStore";
+import { authStore } from "@/services/authStore";
 
 interface PartnerDashboardHeaderProps {
   partner: Partner;
@@ -17,7 +17,7 @@ interface PartnerDashboardHeaderProps {
 
 export function PartnerDashboardHeader({ partner, currentStaff: propStaff, onLogout }: PartnerDashboardHeaderProps) {
   const { t } = useLanguage();
-  const currentStaff = propStaff !== undefined ? propStaff : dbStore.getCurrentStaff();
+  const currentStaff = propStaff !== undefined ? propStaff : authStore.getCurrentStaff();
 
   const getCategoryLabel = (category: Partner["category"]) => {
     switch (category) {

@@ -18,7 +18,10 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { Partner, PartnerStaff } from "@/services/db";
-import { dbStore } from "@/services/dbStore";
+import {
+  getPartnerStaffListAction,
+  togglePartnerStaffStatusAction,
+} from "@/app/actions/partnerStaffActions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
@@ -51,7 +54,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
   const loadStaff = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await dbStore.getPartnerStaffList();
+      const data = await getPartnerStaffListAction();
       setStaffList(data);
     } catch {
       toast.error("স্টাফ তালিকা লোড করতে সমস্যা হয়েছে।");
@@ -99,7 +102,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
   const handleToggleStatus = async (staff: PartnerStaff) => {
     const newStatus = !staff.isActive;
     try {
-      const res = await dbStore.togglePartnerStaffStatus(staff.id, newStatus);
+      const res = await togglePartnerStaffStatusAction(staff.id, newStatus);
       if (res.success) {
         toast.success(res.message);
         setStaffList((prev) =>

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ShieldCheck, ShieldAlert, ArrowLeft } from "lucide-react";
-import { dbStore } from "@/services/dbStore";
+import { getPublicMemberVerificationAction } from "@/app/actions/memberActions";
 import { PublicMemberVerification } from "@/services/db";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -21,7 +21,7 @@ export default function VerificationPage() {
   useEffect(() => {
     if (memberId) {
       const decodedId = decodeURIComponent(memberId);
-      dbStore.verifyMemberPublic(decodedId).then((found) => {
+      getPublicMemberVerificationAction(decodedId).then((found) => {
         if (found) {
           setMember(found);
         }

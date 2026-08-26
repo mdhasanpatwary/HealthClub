@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { dbStore } from "@/services/dbStore";
+import { authStore } from "@/services/authStore";
+import { getMemberByIdAction } from "@/app/actions/memberActions";
 import { Member } from "@/services/db";
 import MemberCard from "@/components/ui/MemberCard";
 import { Button } from "@/components/ui/button";
@@ -17,13 +18,13 @@ export default function PrintCardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const currentUser = dbStore.getCurrentUser();
+    const currentUser = authStore.getCurrentUser();
     if (!currentUser) {
       router.push("/login");
       return;
     }
 
-    dbStore.getMemberById(currentUser.id).then((freshUser) => {
+    getMemberByIdAction(currentUser.id).then((freshUser) => {
       const activeUser = freshUser || currentUser;
       setMember(activeUser);
       setLoading(false);

@@ -3,9 +3,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { useLanguage } from "@/components/layout/LanguageProvider";
-import { dbStore } from "@/services/dbStore";
 import { Member } from "@/services/db";
 import {
+  getPaginatedRenewalsAction,
   approveMemberRenewalAction,
   rejectMemberRenewalAction,
 } from "@/app/actions/memberAdminActions";
@@ -24,7 +24,7 @@ export default function AdminRenewalsPage() {
 
   const loadData = useCallback(async () => {
     try {
-      const res = await dbStore.getPaginatedRenewals({
+      const res = await getPaginatedRenewalsAction({
         page,
         pageSize,
       });

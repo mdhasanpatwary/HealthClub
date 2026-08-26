@@ -13,7 +13,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { PartnerStaff } from "@/services/db";
-import { dbStore } from "@/services/dbStore";
+import {
+  updatePartnerStaffAction,
+  createPartnerStaffAction,
+} from "@/app/actions/partnerStaffActions";
 import { toast } from "sonner";
 import {
   UserCheck,
@@ -106,7 +109,7 @@ export function AddEditStaffModal({
     setLoading(true);
     try {
       if (isEditing && staffToEdit) {
-        const res = await dbStore.updatePartnerStaff(staffToEdit.id, {
+        const res = await updatePartnerStaffAction(staffToEdit.id, {
           name: name.trim(),
           phone: phone.trim() || undefined,
           deskName: deskName.trim(),
@@ -122,7 +125,7 @@ export function AddEditStaffModal({
           toast.error(res.error || "তথ্য আপডেট করা যায়নি।");
         }
       } else {
-        const res = await dbStore.createPartnerStaff({
+        const res = await createPartnerStaffAction({
           name: name.trim(),
           username: username.trim(),
           phone: phone.trim() || undefined,

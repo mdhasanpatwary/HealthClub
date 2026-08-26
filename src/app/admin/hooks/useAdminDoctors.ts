@@ -2,8 +2,13 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
-import { dbStore } from "@/services/dbStore";
 import { Doctor } from "@/services/db";
+import {
+  getPaginatedDoctorsAdminAction,
+  updateDoctorAction,
+  addDoctorAction,
+  deleteDoctorAction,
+} from "@/app/actions/doctorActions";
 import { useDebounce } from "@/hooks/useDebounce";
 
 export function useAdminDoctors() {
@@ -41,7 +46,7 @@ export function useAdminDoctors() {
 
   const loadDoctors = useCallback(async () => {
     try {
-      const res = await dbStore.getPaginatedDoctorsAdmin({
+      const res = await getPaginatedDoctorsAdminAction({
         page,
         pageSize,
         search: debouncedSearch,
@@ -126,7 +131,7 @@ export function useAdminDoctors() {
 
     try {
       if (editingDoctor) {
-        const res = await dbStore.updateDoctor(editingDoctor.id, newDoctor);
+        const res = await updateDoctorAction(editingDoctor.id, newDoctor);
         if (res.success) {
           toast.success("ডাক্তারের তথ্য সফলভাবে আপডেট হয়েছে!");
           setIsDoctorOpen(false);
@@ -135,7 +140,7 @@ export function useAdminDoctors() {
           toast.error(res.error || "আপডেট ব্যর্থ হয়েছে।");
         }
       } else {
-        const res = await dbStore.addDoctor({
+        const res = await addDoctorAction({
           ...newDoctor,
           isActive: true,
         });
@@ -156,7 +161,7 @@ export function useAdminDoctors() {
     if (!confirm(`আপনি কি নিশ্চিতভাবে "${name}" ডাক্তারকে ডিলিট করতে চান?`)) return;
 
     try {
-      const res = await dbStore.deleteDoctor(id);
+      const res = await deleteDoctorAction(id);
       if (res.success) {
         toast.success("ডাক্তার সফলভাবে ডিলিট হয়েছে!");
         await loadDoctors();

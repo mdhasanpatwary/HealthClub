@@ -375,8 +375,8 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/components/layout/Header.tsx`
   - **Details**: Header has 5 separate `useEffect` hooks that fire on mount and several on pathname change. The scroll listener creates a new function on every mount and `dbStore.getCurrentUser()` parses localStorage JSON on every pathname change. Consolidate effects, debounce scroll listener, and remove unnecessary `pathname` dependency from auth-sync effect (auth changes already fire via custom `auth-change` event).
 
-- [ ] **TODO-79**: **Slim Down `dbStore` — Remove Pass-Through Abstraction**
-  - **Files**: `src/services/dbStore.ts` (468 lines)
+- [x] **TODO-79**: **Slim Down `dbStore` — Remove Pass-Through Abstraction**
+  - **Files**: `src/services/dbStore.ts` (468 lines) -> Replaced by `src/services/authStore.ts`
   - **Details**: `dbStore` is a pass-through layer that re-exports server actions with zero added value for most methods (e.g., `async getDoctors() { return getDoctorsAction(); }`). This imports every server action file regardless of which page loads, hurting client bundle parse time and tree-shaking. Refactor: import server actions directly where needed. Keep only the localStorage session helpers (`getCurrentUser`, `setCurrentUser`, `logout`, etc.) in a slim `authStore` module.
 
 - [ ] **TODO-80**: **Refactor Files Exceeding 500-Line Limit**

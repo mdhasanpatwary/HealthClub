@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { dbStore } from "@/services/dbStore";
+import { authStore } from "@/services/authStore";
+import { getMemberByIdAction } from "@/app/actions/memberActions";
 import { Member } from "@/services/db";
 import MemberCard from "@/components/ui/MemberCard";
 
@@ -17,7 +18,7 @@ export default function HeroCardWrapper({ demoMember }: HeroCardWrapperProps) {
 
   useEffect(() => {
     const syncUser = () => {
-      const currentUser = dbStore.getCurrentUser();
+      const currentUser = authStore.getCurrentUser();
       if (!currentUser) {
         setMember(null);
         return;
@@ -29,7 +30,7 @@ export default function HeroCardWrapper({ demoMember }: HeroCardWrapperProps) {
         Promise.resolve(currentUser).then(setMember);
       } else {
         // qrCodeUrl missing: fetch fresh data from DB
-        dbStore.getMemberById(currentUser.id).then((freshUser) => {
+        getMemberByIdAction(currentUser.id).then((freshUser) => {
           setMember(freshUser ?? null);
         });
       }

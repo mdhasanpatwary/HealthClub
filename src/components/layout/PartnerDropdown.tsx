@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { LogOut, LayoutDashboard } from "lucide-react";
 import { Partner } from "@/services/db";
-import { dbStore } from "@/services/dbStore";
+import { authStore } from "@/services/authStore";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import {
   DropdownMenu,
@@ -24,7 +24,7 @@ export default function PartnerDropdown({ partner }: PartnerDropdownProps) {
   const { t } = useLanguage();
 
   const handleLogout = () => {
-    dbStore.logoutPartner();
+    authStore.logoutPartner();
     router.push("/");
   };
 

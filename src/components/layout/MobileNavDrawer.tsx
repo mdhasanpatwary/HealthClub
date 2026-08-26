@@ -13,7 +13,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { Member, Partner } from "@/services/db";
-import { dbStore } from "@/services/dbStore";
+import { authStore } from "@/services/authStore";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { useTheme } from "@/components/layout/ThemeProvider";
@@ -48,13 +48,13 @@ export default function MobileNavDrawer({
   const isAdminMode = pathname.startsWith("/admin");
 
   const handleLogout = () => {
-    dbStore.logout();
+    authStore.logout();
     onClose();
     router.push("/");
   };
 
   const handlePartnerLogout = () => {
-    dbStore.logoutPartner();
+    authStore.logoutPartner();
     onClose();
     router.push("/");
   };

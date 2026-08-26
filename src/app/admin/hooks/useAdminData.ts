@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
-import { dbStore } from "@/services/dbStore";
+import { getStatsAction, addTransactionAction } from "@/app/actions/transactionActions";
+import { getPartnersAction } from "@/app/actions/partnerActions";
+import { getMembersAction } from "@/app/actions/memberAdminActions";
 import { Partner } from "@/services/db";
 import { parseDiscountPercentage } from "@/lib/utils";
 import { formatNum, Locale } from "@/lib/i18n";
@@ -44,8 +46,8 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
   const loadData = useCallback(async () => {
     try {
       const [statsRes, partnersRes] = await Promise.all([
-        dbStore.getStats(),
-        dbStore.getPartners(),
+        getStatsAction(),
+        getPartnersAction(),
       ]);
       setStats(statsRes);
       setPartners(partnersRes);
@@ -79,7 +81,7 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
     e.preventDefault();
 
     try {
-      const members = await dbStore.getMembers();
+      const members = await getMembersAction();
       const member = members.find((m) => m.id === newTx.memberId || m.phone === newTx.memberId);
       if (!member) {
         toast.error(t("admin.dashboard.memberNotFound"));
@@ -107,7 +109,7 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
       const safeRate = Math.min(discountRate, 0.70);
       const saved = Math.round(billAmount * safeRate);
 
-      await dbStore.addTransaction({
+      await addTransactionAction({
         memberId: member.id,
         memberName: member.name,
         partnerId: partner.id,

@@ -2,8 +2,9 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { dbStore } from "@/services/dbStore";
+import { authStore } from "@/services/authStore";
 import { Partner } from "@/services/db";
+import { getPartnerProfileAction } from "@/app/actions/partnerActions";
 import { PartnerDashboardSkeleton } from "../components/PartnerDashboardSkeleton";
 import { PartnerDashboardHeader } from "../components/PartnerDashboardHeader";
 import { PartnerDoctorsTab } from "../components/PartnerDoctorsTab";
@@ -18,10 +19,10 @@ export default function PartnerDoctorsPage() {
 
   const refreshPartnerProfile = useCallback(async () => {
     try {
-      const res = await dbStore.getPartnerProfile();
+      const res = await getPartnerProfileAction();
       if (res.success && res.partner) {
         setPartner(res.partner);
-        dbStore.setCurrentPartner(res.partner);
+        authStore.setCurrentPartner(res.partner);
       }
     } catch {
       // Fallback
@@ -29,7 +30,7 @@ export default function PartnerDoctorsPage() {
   }, []);
 
   useEffect(() => {
-    const currentPartner = dbStore.getCurrentPartner();
+    const currentPartner = authStore.getCurrentPartner();
     if (!currentPartner) {
       router.push("/login/partner");
       return;
@@ -40,7 +41,7 @@ export default function PartnerDoctorsPage() {
   }, [router, refreshPartnerProfile]);
 
   const handleLogout = () => {
-    dbStore.logoutPartner();
+    authStore.logoutPartner();
     toast.success("সফলভাবে লগআউট করা হয়েছে।");
     router.push("/login/partner");
   };

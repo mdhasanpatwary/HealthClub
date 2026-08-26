@@ -12,7 +12,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PartnerStaff } from "@/services/db";
-import { dbStore } from "@/services/dbStore";
+import {
+  resetPartnerStaffPasswordAction,
+  deletePartnerStaffAction,
+} from "@/app/actions/partnerStaffActions";
 import { toast } from "sonner";
 import { KeyRound, Trash2 } from "lucide-react";
 
@@ -56,7 +59,7 @@ export function ResetStaffPasswordModal({
 
     setLoading(true);
     try {
-      const res = await dbStore.resetPartnerStaffPassword(staff.id, newPassword);
+      const res = await resetPartnerStaffPasswordAction(staff.id, newPassword);
       if (res.success) {
         toast.success(res.message);
         onSuccess();
@@ -158,7 +161,7 @@ export function DeleteStaffConfirmModal({
     if (!staff) return;
     setLoading(true);
     try {
-      const res = await dbStore.deletePartnerStaff(staff.id);
+      const res = await deletePartnerStaffAction(staff.id);
       if (res.success) {
         toast.success(res.message);
         onSuccess();

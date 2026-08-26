@@ -4,8 +4,12 @@ import { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { History, LayoutDashboard } from "lucide-react";
 import { toast } from "sonner";
-import { dbStore } from "@/services/dbStore";
+import { authStore } from "@/services/authStore";
 import { Member, Partner, Transaction } from "@/services/db";
+import { getMemberByIdAction, updateMemberProfileAction } from "@/app/actions/memberActions";
+import { getTransactionsAction, addTransactionAction } from "@/app/actions/transactionActions";
+import { isMemberTxAllowedAction } from "@/app/actions/systemSettingsActions";
+import { getPartnersAction } from "@/app/actions/partnerActions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 
@@ -62,7 +66,7 @@ function DashboardContent() {
     Promise.resolve().then(async () => {
       if (!isMounted) return;
 
-      let currentUser = dbStore.getCurrentUser();
+      let currentUser = authStore.getCurrentUser();
       // If not in local storage (e.g. offline cold start), attempt to recover from IndexedDB
       if (!currentUser) {
         const offlineCard = await getOfflineMemberCard();
@@ -102,10 +106,10 @@ function DashboardContent() {
 
       try {
         const [freshUser, userTx, allowed, pts] = await Promise.all([
-          dbStore.getMemberById(currentUser.id).catch(() => null),
-          dbStore.getTransactions(currentUser.id).catch(() => []),
-          dbStore.isMemberTxAllowed().catch(() => false),
-          dbStore.getPartners().catch(() => []),
+          getMemberByIdAction(currentUser.id).catch(() => null),
+          getTransactionsAction(currentUser.id).catch(() => []),
+          isMemberTxAllowedAction().catch(() => false),
+          getPartnersAction().catch(() => []),
         ]);
 
         if (!isMounted) return;
@@ -165,7 +169,7 @@ function DashboardContent() {
 
     setAddTxSubmitting(true);
     try {
-      await dbStore.addTransaction({
+      const res = await addTransactionAction({
         memberId: user.id,
         memberName: user.name,
         partnerId: partner.id,
@@ -174,6 +178,20 @@ function DashboardContent() {
         saved: saved,
       });
 
+      if ("error" in res) {
+        toast.error(res.error || t("admin.dashboard.txLogFailed"));
+        return;
+      }
+
+      // Sync totalSaved in localStorage
+      const currentUser = authStore.getCurrentUser();
+      if (currentUser && currentUser.id === user.id) {
+        authStore.setCurrentUser({
+          ...currentUser,
+          totalSaved: currentUser.totalSaved + saved,
+        });
+      }
+
       toast.success(t("dashboard.history.txAddedSuccess"));
       setNewTxPartnerId("");
       setNewTxAmount("");
@@ -181,10 +199,13 @@ function DashboardContent() {
       setIsAddTxOpen(false);
 
       // Refresh transactions and user stats
-      const updatedTx = await dbStore.getTransactions(user.id);
+      const updatedTx = await getTransactionsAction(user.id);
       setTransactions(updatedTx);
-      const freshUser = await dbStore.getMemberById(user.id);
-      if (freshUser) setUser(freshUser);
+      const freshUser = await getMemberByIdAction(user.id);
+      if (freshUser) {
+        setUser(freshUser);
+        authStore.setCurrentUser(freshUser);
+      }
     } catch {
       toast.error(t("admin.dashboard.txLogFailed"));
     } finally {
@@ -269,7 +290,7 @@ function DashboardContent() {
     if (!user) return;
 
     try {
-      const success = await dbStore.updateMemberProfile(
+      const success = await updateMemberProfileAction(
         user.id,
         profileName,
         profilePhone,
@@ -291,7 +312,7 @@ function DashboardContent() {
           profession: profileProfession,
           profilePictureUrl: profilePictureUrl,
         };
-        dbStore.setCurrentUser(updatedUser);
+        authStore.setCurrentUser(updatedUser);
         setUser(updatedUser);
         toast.success(t("dashboard.profile.success"));
       } else {

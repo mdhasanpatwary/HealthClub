@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Pagination } from "@/components/ui/pagination";
 import { Transaction, Member } from "@/services/db";
-import { dbStore } from "@/services/dbStore";
+import { getPaginatedTransactionsAction } from "@/app/actions/transactionActions";
 import { Locale } from "@/lib/i18n";
 
 interface DashboardHistoryTabProps {
@@ -39,7 +39,7 @@ export function DashboardHistoryTab({
     if (!userId) return;
     setLoading(true);
     try {
-      const res = await dbStore.getPaginatedTransactions({
+      const res = await getPaginatedTransactionsAction({
         page: currentPage,
         pageSize,
         memberId: userId,

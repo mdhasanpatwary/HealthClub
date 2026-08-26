@@ -2,7 +2,12 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { MemberNotification } from "@/services/db";
-import { dbStore } from "@/services/dbStore";
+import {
+  getMemberNotificationsAction,
+  markMemberNotificationReadAction,
+  markAllMemberNotificationsReadAction,
+  deleteMemberNotificationAction,
+} from "@/app/actions/memberNotificationActions";
 import { safeStorage } from "@/lib/safeStorage";
 import { toast } from "sonner";
 
@@ -26,7 +31,7 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
 
   const fetchNotifications = useCallback(async () => {
     try {
-      const res = await dbStore.getMemberNotifications({
+      const res = await getMemberNotificationsAction({
         unreadOnly,
         type,
       });
@@ -114,7 +119,7 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
 
       // 4. Persist to server database
       try {
-        await dbStore.markMemberNotificationRead(notificationId);
+        await markMemberNotificationReadAction(notificationId);
       } catch {
         // Retain local read status even if network glitch occurs
       }
@@ -139,7 +144,7 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
 
     // 4. Persist to server database
     try {
-      const res = await dbStore.markAllMemberNotificationsRead();
+      const res = await markAllMemberNotificationsReadAction();
       if (res.success) {
         toast.success("সব বিজ্ঞপ্তি পঠিত হিসেবে চিহ্নিত করা হয়েছে।");
       }
@@ -154,7 +159,7 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
       setItems((prev) => prev.filter((n) => n.id !== notificationId));
 
       try {
-        const res = await dbStore.deleteMemberNotification(notificationId);
+        const res = await deleteMemberNotificationAction(notificationId);
         if (res.success) {
           toast.success("বিজ্ঞপ্তিটি মুছে ফেলা হয়েছে।");
           window.dispatchEvent(new Event("member-notification-change"));

@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Heart, Lock, Building2 } from "lucide-react";
-import { dbStore } from "@/services/dbStore";
+import { authStore } from "@/services/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
@@ -32,8 +32,8 @@ export default function PartnerLoginPage() {
     try {
       const res = await loginPartnerAction(identifier, password);
       if (res.success && res.partner) {
-        dbStore.setCurrentPartner(res.partner);
-        dbStore.setCurrentStaff(res.staff || null);
+        authStore.setCurrentPartner(res.partner);
+        authStore.setCurrentStaff(res.staff || null);
         toast.success(t("auth.login.success"));
         router.push("/partner/dashboard");
         return;
