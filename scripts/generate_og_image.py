@@ -39,6 +39,11 @@ def main():
     res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if os.path.exists(output_path):
         print(f"✅ Successfully generated standard 1200x630 OpenGraph card at {output_path}")
+        # Run compression script to optimize PNG (<100 KB), JPG (~75 KB), and WebP (~45 KB)
+        compress_script = os.path.join(base_dir, "scripts", "compress_og.js")
+        if os.path.exists(compress_script):
+            print("Optimizing and compressing OG images...")
+            subprocess.run(["node", compress_script], check=False)
     else:
         print(f"❌ Failed to generate screenshot. Stderr: {res.stderr.decode('utf-8', errors='ignore')}")
 

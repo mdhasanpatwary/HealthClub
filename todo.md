@@ -349,7 +349,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/actions/analyticsActions.ts`
   - **Details**: `getAdminRevenueAnalyticsAction` fetches ALL members and ALL transactions into Node.js memory, then aggregates with `for` loops. As data grows, this risks OOM crashes and severe latency. Refactor to use `prisma.$queryRaw` with SQL `GROUP BY`, `COUNT`, `SUM`, and date functions for tier breakdowns, monthly financials, and partner performance metrics.
 
-- [ ] **TODO-73**: **Compress `og-image.png` (620 KB → <100 KB)**
+- [x] **TODO-73**: **Compress `og-image.png` (620 KB → <100 KB)**
   - **Files**: `public/og-image.png`
   - **Details**: OpenGraph image is 620 KB — should be <100 KB for fast social sharing previews. Compress to optimized WebP or JPEG at 1200×630, targeting ~50-80 KB.
 
