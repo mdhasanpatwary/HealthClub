@@ -367,7 +367,7 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/page.tsx`, `src/components/ui/SavingsCalculator.tsx`, `src/components/ui/TestimonialCarousel.tsx`, `src/components/landing/FAQSection.tsx`, `src/components/landing/ContactForm.tsx`
   - **Details**: No uses of `next/dynamic` or `React.lazy` exist in the project. Heavy client components (SavingsCalculator: 316 lines, TestimonialCarousel: 147 lines, FAQSection, ContactForm) are eagerly loaded on the homepage even when below the fold. Wrap with `next/dynamic({ loading: () => <Skeleton /> })` to defer loading.
 
-- [ ] **TODO-77**: **Replace Raw `<img>` Tags with `next/image`**
+- [x] **TODO-77**: **Replace Raw `<img>` Tags with `next/image`**
   - **Files**: `src/app/admin/components/MemberDetailsDialog.tsx`, `src/app/admin/components/MembersTab.tsx`, `src/app/partner/dashboard/components/PartnerBillingTab.tsx`, `src/app/partner/dashboard/components/PartnerCardPreview.tsx`
   - **Details**: 4 files use raw `<img>` tags which bypass Next.js image optimization (no WebP/AVIF conversion, no lazy loading, no responsive sizes, no blur placeholder). Replace with `<Image>` from `next/image` with appropriate `width`/`height` and `sizes` props.
 

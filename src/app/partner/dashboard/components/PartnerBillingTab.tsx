@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { Camera, Search, CheckCircle, XCircle, AlertTriangle, Receipt, CreditCard, History, Download } from "lucide-react";
 import { Partner, Transaction } from "@/services/db";
 import { dbStore } from "@/services/dbStore";
@@ -238,8 +239,14 @@ export function PartnerBillingTab({
               <div className="p-5 rounded-2xl border border-border bg-slate-50/60 dark:bg-slate-900/60 space-y-4 animate-in fade-in duration-200">
                 <div className="flex items-start gap-4">
                   {verifiedMember.profilePictureUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={verifiedMember.profilePictureUrl} alt={verifiedMember.name} className="h-14 w-14 rounded-full object-cover border border-border shadow-sm shrink-0" />
+                    <Image
+                      src={verifiedMember.profilePictureUrl}
+                      alt={verifiedMember.name}
+                      width={56}
+                      height={56}
+                      unoptimized
+                      className="h-14 w-14 rounded-full object-cover border border-border shadow-sm shrink-0"
+                    />
                   ) : (
                     <div className="h-14 w-14 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-500 font-bold uppercase border border-border shrink-0">
                       {verifiedMember.name.substring(0, 2)}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Phone, Mail, MapPin, MessageSquare } from "lucide-react";
 import { Locale, tServer } from "@/lib/i18n";
 
@@ -20,10 +21,11 @@ export default function Footer({ locale = "bn" }: { locale?: string }) {
           {/* Logo & Contact Info */}
           <div className="space-y-6 md:col-span-1">
             <Link href="/" className="flex items-center space-x-2.5 group">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src="/images/member-card-logo.png"
                 alt="Health Club Logo"
+                width={36}
+                height={36}
                 className="h-8 w-8 sm:h-9 sm:w-9 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.3)] transition-transform duration-300 group-hover:scale-110 shrink-0"
               />
               <span className="font-heading text-xl font-bold tracking-tight text-white">

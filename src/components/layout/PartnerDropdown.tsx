@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { LogOut, LayoutDashboard } from "lucide-react";
 import { Partner } from "@/services/db";
@@ -36,12 +37,12 @@ export default function PartnerDropdown({ partner }: PartnerDropdownProps) {
         className="flex items-center gap-2 rounded-full outline-hidden cursor-pointer focus-visible:ring-2 focus-visible:ring-primary/20 shrink-0 select-none"
       >
         {partner.imageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={partner.imageUrl}
             alt={partner.name}
             width={36}
             height={36}
+            unoptimized
             className="h-9 w-9 rounded-full object-cover object-left-top border border-border shrink-0 shadow-xs"
           />
         ) : (

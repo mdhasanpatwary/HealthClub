@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -62,10 +63,12 @@ export function MemberDetailsDialog({
               >
                 {viewingMember.profilePictureUrl ? (
                   <>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img 
+                    <Image 
                       src={viewingMember.profilePictureUrl} 
                       alt={viewingMember.name} 
+                      width={56}
+                      height={56}
+                      unoptimized
                       className="h-full w-full object-cover object-left-top transition-transform duration-200 group-hover:scale-105" 
                     />
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-xl">
@@ -298,10 +301,12 @@ export function MemberDetailsDialog({
 
           <div className="flex flex-col items-center justify-center pt-2 pb-1 gap-3">
             <div className="relative w-full max-h-[65vh] rounded-xl overflow-hidden bg-muted/30 border border-border flex items-center justify-center p-1">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={viewingMember.profilePictureUrl}
                 alt={viewingMember.name}
+                width={480}
+                height={480}
+                unoptimized
                 className="w-full h-auto max-h-[62vh] object-contain rounded-lg shadow-sm"
               />
             </div>

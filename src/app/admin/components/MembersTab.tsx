@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Search, User, Edit3, Trash2, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -163,10 +164,16 @@ export function MembersTab({
                     <TableCell className="font-mono text-primary font-bold whitespace-nowrap">{m.id}</TableCell>
                     <TableCell className="font-bold text-secondary whitespace-nowrap">
                       <div className="flex items-center gap-2.5">
-                        <div className="h-8 w-8 rounded-full border border-border bg-muted/40 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
+                        <div className="h-8 w-8 rounded-full border border-border bg-muted/40 overflow-hidden flex items-center justify-center shrink-0 shadow-sm relative">
                           {m.profilePictureUrl ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={m.profilePictureUrl} alt={m.name} className="h-full w-full object-cover object-left-top" />
+                            <Image
+                              src={m.profilePictureUrl}
+                              alt={m.name}
+                              width={32}
+                              height={32}
+                              unoptimized
+                              className="h-full w-full object-cover object-left-top"
+                            />
                           ) : (
                             <User className="h-4 w-4 text-muted-foreground" />
                           )}

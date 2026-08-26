@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Heart, Clock, AlertTriangle, CreditCard } from "lucide-react";
 import { Member } from "@/services/db";
 import { buttonVariants } from "@/components/ui/button";
@@ -66,10 +67,12 @@ export function DashboardWelcomeHeader({
             {/* Avatar */}
             <div className="relative shrink-0">
               {user.profilePictureUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
                   src={user.profilePictureUrl}
                   alt={user.name}
+                  width={56}
+                  height={56}
+                  unoptimized
                   className="h-14 w-14 rounded-2xl object-cover object-left-top border-2 border-white/20 shadow-lg"
                 />
               ) : (

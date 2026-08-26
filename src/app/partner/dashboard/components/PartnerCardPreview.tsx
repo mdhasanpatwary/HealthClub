@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Building2, MapPin, PhoneCall, Clock, Eye } from "lucide-react";
 import { Partner, DepartmentDiscount } from "@/services/db";
 import { Card } from "@/components/ui/card";
@@ -39,8 +40,14 @@ export function PartnerCardPreview({
         {/* Banner preview */}
         <div className="relative h-44 w-full bg-slate-900 overflow-hidden">
           {imageUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={imageUrl} alt={name || "Hospital"} className="w-full h-full object-cover" />
+            <Image
+              src={imageUrl}
+              alt={name || "Hospital"}
+              fill
+              sizes="(max-width: 768px) 100vw, 450px"
+              unoptimized={imageUrl.startsWith("data:")}
+              className="w-full h-full object-cover"
+            />
           ) : (
             <div className="w-full h-full bg-gradient-to-tr from-slate-950 via-slate-900 to-slate-800 flex items-center justify-center text-slate-500">
               <Building2 className="h-16 w-16 opacity-30" />
