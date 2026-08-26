@@ -219,11 +219,11 @@ export function BroadcastTab() {
       </div>
 
       {/* Tabs Control */}
-      <div className="flex items-center gap-2 border-b border-border/80 pb-2">
+      <div className="flex flex-wrap items-center gap-2 border-b border-border/80 pb-2">
         <button
           type="button"
           onClick={() => setActiveTab("compose")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+          className={`flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex-1 sm:flex-initial shrink-0 ${
             activeTab === "compose"
               ? "bg-primary text-primary-foreground shadow-xs"
               : "text-muted-foreground hover:bg-muted"
@@ -236,7 +236,7 @@ export function BroadcastTab() {
         <button
           type="button"
           onClick={() => setActiveTab("history")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+          className={`flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex-1 sm:flex-initial shrink-0 ${
             activeTab === "history"
               ? "bg-primary text-primary-foreground shadow-xs"
               : "text-muted-foreground hover:bg-muted"

@@ -211,12 +211,12 @@ export function EmergencyTab() {
             </CardDescription>
           </div>
 
-          <div className="flex items-center gap-1.5 p-1 bg-muted/60 rounded-xl border border-border">
+          <div className="flex flex-wrap items-center gap-1.5 p-1 bg-muted/60 rounded-xl border border-border w-full sm:w-auto">
             <Button
               size="sm"
               variant={activeSubTab === "donors" ? "default" : "ghost"}
               onClick={() => { setActiveSubTab("donors"); setSearch(""); setPage(1); }}
-              className="text-xs h-8 rounded-lg font-bold gap-1.5"
+              className="text-xs h-8 rounded-lg font-bold gap-1.5 flex-1 sm:flex-initial shrink-0 justify-center"
             >
               <Droplet className="h-3.5 w-3.5" />
               <span>{isEn ? "Blood Donors" : "রক্তদাতা"}</span>
@@ -229,7 +229,7 @@ export function EmergencyTab() {
               size="sm"
               variant={activeSubTab === "ambulances" ? "default" : "ghost"}
               onClick={() => { setActiveSubTab("ambulances"); setSearch(""); setPage(1); }}
-              className="text-xs h-8 rounded-lg font-bold gap-1.5"
+              className="text-xs h-8 rounded-lg font-bold gap-1.5 flex-1 sm:flex-initial shrink-0 justify-center"
             >
               <Truck className="h-3.5 w-3.5" />
               <span>{isEn ? "Ambulances" : "অ্যাম্বুলেন্স"}</span>
@@ -242,7 +242,7 @@ export function EmergencyTab() {
               size="sm"
               variant={activeSubTab === "hotlines" ? "default" : "ghost"}
               onClick={() => { setActiveSubTab("hotlines"); setSearch(""); setPage(1); }}
-              className="text-xs h-8 rounded-lg font-bold gap-1.5"
+              className="text-xs h-8 rounded-lg font-bold gap-1.5 flex-1 sm:flex-initial shrink-0 justify-center"
             >
               <PhoneCall className="h-3.5 w-3.5" />
               <span>{isEn ? "Hotlines & Oxygen" : "হটলাইন ও অক্সিজেন"}</span>

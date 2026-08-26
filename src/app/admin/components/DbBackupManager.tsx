@@ -74,11 +74,11 @@ export function DbBackupManager() {
 
       {/* Tabs Navigation */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3">
-        <div className="flex items-center gap-1.5 p-1 bg-muted/70 rounded-xl">
+        <div className="flex flex-wrap items-center gap-1.5 p-1 bg-muted/70 rounded-xl w-full sm:w-auto">
           <button
             type="button"
             onClick={() => setActiveTab("export")}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer flex-1 sm:flex-initial shrink-0 ${
               activeTab === "export"
                 ? "bg-background text-foreground shadow-xs"
                 : "text-muted-foreground hover:text-foreground"
@@ -90,7 +90,7 @@ export function DbBackupManager() {
           <button
             type="button"
             onClick={() => setActiveTab("snapshots")}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer flex-1 sm:flex-initial shrink-0 ${
               activeTab === "snapshots"
                 ? "bg-background text-foreground shadow-xs"
                 : "text-muted-foreground hover:text-foreground"
@@ -105,7 +105,7 @@ export function DbBackupManager() {
           <button
             type="button"
             onClick={() => setActiveTab("retention")}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer flex-1 sm:flex-initial shrink-0 ${
               activeTab === "retention"
                 ? "bg-background text-foreground shadow-xs"
                 : "text-muted-foreground hover:text-foreground"

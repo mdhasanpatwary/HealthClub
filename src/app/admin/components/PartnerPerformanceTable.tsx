@@ -112,7 +112,7 @@ export function PartnerPerformanceTable({
             />
           </div>
 
-          <div className="flex items-center gap-1 bg-muted/60 dark:bg-slate-900/80 p-1 rounded-xl border border-border/60">
+          <div className="flex flex-wrap items-center gap-1 bg-muted/60 dark:bg-slate-900/80 p-1 rounded-xl border border-border/60">
             {["all", "hospital", "diagnostic", "pharmacy"].map((cat) => (
               <Button
                 key={cat}
