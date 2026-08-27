@@ -1,10 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_Bengali } from "next/font/google";
+import dynamic from "next/dynamic";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import BottomNav from "@/components/layout/BottomNav";
-import InstallAppBanner from "@/components/layout/InstallAppBanner";
 import GlobalNoticeBanner from "@/components/layout/GlobalNoticeBanner";
 import { getCachedNoticeSetting } from "@/app/actions/systemSettingsActions";
 import { Toaster } from "sonner";
@@ -16,10 +16,13 @@ import { getDictionary, getNamespacesForRoute } from "@/lib/translations";
 import JsonLd from "@/components/seo/JsonLd";
 import { Analytics } from "@vercel/analytics/next";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
-import WebVitalsTracker from "@/components/analytics/WebVitalsTracker";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
-import PwaTracker from "@/components/pwa/PwaTracker";
-import PushNotificationPrompt from "@/components/pwa/PushNotificationPrompt";
+
+// Lazy-load client-only background/interactive components to reduce main layout bundle
+const InstallAppBanner = dynamic(() => import("@/components/layout/InstallAppBanner"));
+const PushNotificationPrompt = dynamic(() => import("@/components/pwa/PushNotificationPrompt"));
+const PwaTracker = dynamic(() => import("@/components/pwa/PwaTracker"));
+const WebVitalsTracker = dynamic(() => import("@/components/analytics/WebVitalsTracker"));
 
 const inter = Inter({
   variable: "--font-inter",
@@ -30,7 +33,7 @@ const inter = Inter({
 const notoSansBengali = Noto_Sans_Bengali({
   variable: "--font-noto-sans-bengali",
   subsets: ["bengali"],
-  weight: ["400", "500", "700"],
+  weight: ["400", "700"],
   display: "swap",
 });
 
@@ -227,6 +230,12 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} data-scroll-behavior="smooth" className={`${theme} ${inter.variable} ${notoSansBengali.variable}`}>
+      <head>
+        <link rel="preconnect" href="https://api.qrserver.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://api.qrserver.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+      </head>
       <body className="font-sans antialiased bg-background text-foreground min-h-screen flex flex-col">
         {/* Skip to Main Content Link for Keyboard / Screen Reader users */}
         <a

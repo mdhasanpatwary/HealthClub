@@ -216,7 +216,7 @@ export default function InstallAppBanner() {
           {/* App Icon (Same as Website Header & Card Logo) */}
           <div className="relative size-12 shrink-0 rounded-xl bg-white border border-emerald-500/40 p-1 flex items-center justify-center shadow-md overflow-hidden">
             <Image
-              src="/images/member-card-logo.png"
+              src="/images/member-card-logo.webp"
               alt="Health Club Logo"
               width={44}
               height={44}

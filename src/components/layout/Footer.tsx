@@ -22,7 +22,7 @@ export default function Footer({ locale = "bn" }: { locale?: string }) {
           <div className="space-y-6 md:col-span-1">
             <Link href="/" className="flex items-center space-x-2.5 group">
               <Image
-                src="/images/member-card-logo.png"
+                src="/images/member-card-logo.webp"
                 alt="Health Club Logo"
                 width={36}
                 height={36}

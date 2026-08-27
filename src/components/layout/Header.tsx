@@ -95,7 +95,7 @@ export default function Header() {
           >
             <div className="relative shrink-0">
               <Image
-                src="/images/member-card-logo.png"
+                src="/images/member-card-logo.webp"
                 alt="Health Club Logo"
                 width={36}
                 height={36}

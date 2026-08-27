@@ -339,10 +339,12 @@ label {
 
 .animate-float {
   animation: float 4s ease-in-out infinite;
+  will-change: transform;
 }
 
 .animate-float-delayed {
   animation: float 4s ease-in-out 1.5s infinite;
+  will-change: transform;
 }
 
 .animate-fade-in-up {
@@ -363,12 +365,21 @@ label {
       rgba(255, 255, 255, 0.2) 50%,
       transparent 100%);
   background-size: 200% 100%;
-  animation: shimmer 2s ease-in-out infinite;
+  animation: shimmer 2.5s ease-in-out infinite;
 }
 
 .animate-gradient {
   background-size: 200% 200%;
-  animation: gradient-shift 4s ease infinite;
+  animation: gradient-shift 6s ease infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-float-delayed,
+  .animate-shimmer,
+  .animate-gradient {
+    animation: none !important;
+  }
 }
 
 /* Gradient text */

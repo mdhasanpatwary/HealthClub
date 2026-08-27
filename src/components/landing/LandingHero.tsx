@@ -13,10 +13,12 @@ export function LandingHero({ sampleMember, t }: LandingHeroProps) {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-primary-light/60 via-emerald-50/30 to-background dark:from-slate-950 dark:via-slate-900 dark:to-background py-10 sm:py-20 lg:py-28">
 
-      {/* Animated background orbs */}
-      <div className="absolute -top-48 -right-48 w-[600px] h-[600px] bg-primary/8 dark:bg-primary/5 rounded-full blur-3xl -z-10 animate-gradient" />
-      <div className="absolute top-48 -left-48 w-[500px] h-[500px] bg-emerald-200/50 dark:bg-emerald-900/20 rounded-full blur-3xl -z-10" />
-      <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-emerald-100/60 dark:bg-emerald-950/30 rounded-full blur-3xl -z-10" />
+      {/* Background orbs (optimized for mobile paint performance) */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden -z-10" aria-hidden="true">
+        <div className="absolute -top-32 sm:-top-48 -right-32 sm:-right-48 w-[320px] h-[320px] sm:w-[600px] sm:h-[600px] bg-primary/8 dark:bg-primary/5 rounded-full blur-2xl sm:blur-3xl animate-gradient will-change-transform" />
+        <div className="absolute top-36 sm:top-48 -left-32 sm:-left-48 w-[280px] h-[280px] sm:w-[500px] sm:h-[500px] bg-emerald-200/40 dark:bg-emerald-900/20 rounded-full blur-2xl sm:blur-3xl will-change-transform" />
+        <div className="hidden sm:block absolute bottom-0 right-1/3 w-96 h-96 bg-emerald-100/60 dark:bg-emerald-950/30 rounded-full blur-3xl" />
+      </div>
 
       {/* Dot-grid pattern overlay */}
       <div

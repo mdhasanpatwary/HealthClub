@@ -93,7 +93,7 @@ export default function MobileNavDrawer({
             onClick={onClose}
           >
             <Image
-              src="/images/member-card-logo.png"
+              src="/images/member-card-logo.webp"
               alt="Health Club Logo"
               width={32}
               height={32}

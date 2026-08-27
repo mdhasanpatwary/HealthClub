@@ -1,4 +1,5 @@
 import { forwardRef } from "react";
+import Image from "next/image";
 import { Member } from "@/services/db";
 import { Star, ShieldCheck, User } from "lucide-react";
 import { SITE_URL } from "@/lib/siteConfig";
@@ -50,10 +51,15 @@ const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCa
         } as React.CSSProperties),
       }}
     >
-      {/* Custom Generated Background Texture */}
-      <div
-        className="absolute inset-0 bg-cover bg-center opacity-60 mix-blend-screen pointer-events-none rounded-2xl"
-        style={{ backgroundImage: "url('/images/member-card-bg.png')" }}
+      {/* Custom Generated Background Texture — uses next/image for automatic AVIF/WebP */}
+      <Image
+        src="/images/member-card-bg.webp"
+        alt=""
+        fill
+        sizes="(max-width: 448px) 100vw, 448px"
+        className="object-cover opacity-60 mix-blend-screen pointer-events-none rounded-2xl"
+        loading="lazy"
+        aria-hidden="true"
       />
 
       {/* Radial ambient glow & glass overlay */}
@@ -72,7 +78,7 @@ const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCa
           {/* Branded Logo Emblem */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/member-card-logo.png"
+            src="/images/member-card-logo.webp"
             alt="Health Club Logo Emblem"
             className="h-8 w-8 sm:h-10 sm:w-10 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.4)] shrink-0"
           />
