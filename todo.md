@@ -385,27 +385,27 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
 
 ### 🟡 P2/P3 — Medium-Priority Performance Issues
 
-- [ ] **TODO-81**: **Fix Dev-Mode PrismaClient Recreation on Every Module Load**
+- [x] **TODO-81**: **Fix Dev-Mode PrismaClient Recreation on Every Module Load**
   - **Files**: `src/lib/prisma.ts`
   - **Details**: In dev mode, a new `PrismaClient` is created on every module load (lines 43-45), overriding the cached instance. While the `pg.Pool` is reused, PrismaClient instance overhead (internal caches, type maps) adds unnecessary latency. Remove the dev-mode override and rely on server restart after `prisma generate`.
 
-- [ ] **TODO-82**: **Fix Double `.filter()` in MemberDetailsDialog**
+- [x] **TODO-82**: **Fix Double `.filter()` in MemberDetailsDialog**
   - **Files**: `src/app/admin/components/MemberDetailsDialog.tsx`
   - **Details**: The same `transactions.filter(t => t.memberId === viewingMember.id)` runs twice — once to check `.length > 0` and again to `.map()`. Extract to a single `const memberTxs = ...` variable and reuse.
 
-- [ ] **TODO-83**: **Add Database Indexes for Text Search Queries**
+- [x] **TODO-83**: **Add Database Indexes for Text Search Queries**
   - **Files**: `prisma/schema.prisma`
   - **Details**: Transaction search uses `OR` with `contains` (case-insensitive LIKE) on `memberName`, `memberId`, `partnerName`, `id` — causing full table scans as data grows. Consider adding PostgreSQL `pg_trgm` extension with GIN indexes for text search columns, or at minimum add a composite `@@index([memberId, partnerId])` for filtered queries.
 
-- [ ] **TODO-84**: **Lazy-Load `xlsx` Library (Admin-Only Bulk Import)**
+- [x] **TODO-84**: **Lazy-Load `xlsx` Library (Admin-Only Bulk Import)**
   - **Files**: `package.json`, `src/lib/bulkImportUtils.ts`
   - **Details**: The `xlsx` package (~1 MB minified) is a top-level dependency but only used in admin bulk import. Ensure it's only imported server-side or behind dynamic import to prevent client bundle bloat.
 
-- [ ] **TODO-85**: **Lazy-Load `html-to-image` and `html5-qrcode` Libraries**
+- [x] **TODO-85**: **Lazy-Load `html-to-image` and `html5-qrcode` Libraries**
   - **Files**: `package.json`, related component files
   - **Details**: `html5-qrcode` (~350 KB) is only used for QR scanning (partner dashboard) and `html-to-image` only for card exports. If imported at top level, they bloat the initial JS bundle. Use dynamic `import()` only when the user clicks "Scan QR" or "Export Card".
 
-- [ ] **TODO-86**: **Add Route-Specific `loading.tsx` for Key Routes**
+- [x] **TODO-86**: **Add Route-Specific `loading.tsx` for Key Routes**
   - **Files**: `src/app/admin/loading.tsx` (new), `src/app/dashboard/loading.tsx` (new), `src/app/partner/dashboard/loading.tsx` (new), `src/app/consultants/loading.tsx` (new)
   - **Details**: Only the root `loading.tsx` exists. Routes like `/admin`, `/dashboard`, `/partner/dashboard`, `/consultants` lack their own loading states, causing users to see the homepage skeleton when navigating to admin. Add route-specific `loading.tsx` files with contextually appropriate skeleton UIs.
 

@@ -1,4 +1,3 @@
-import * as XLSX from "xlsx";
 import { z } from "zod";
 import {
   ImportEntityType,
@@ -73,6 +72,7 @@ export function autoMapColumns(
 // --- Parsing Functions ---
 
 export async function parseFileToRawData(file: File): Promise<RawParsedData> {
+  const XLSX = await import("xlsx");
   const buffer = await file.arrayBuffer();
   const workbook = XLSX.read(buffer, { type: "array" });
   const firstSheetName = workbook.SheetNames[0];
@@ -183,10 +183,11 @@ export function processAndValidateRows(
 
 // --- Sample Template Downloads ---
 
-export function downloadSampleTemplate(
+export async function downloadSampleTemplate(
   entityType: ImportEntityType,
   format: "xlsx" | "csv"
-): void {
+): Promise<void> {
+  const XLSX = await import("xlsx");
   const config = ENTITY_CONFIGS[entityType];
   const headers = config.columns.map((c) => c.labelEn);
   const sampleRow1 = config.columns.map((c) => c.exampleValue || "");

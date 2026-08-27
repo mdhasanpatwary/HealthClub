@@ -35,6 +35,8 @@ export function MemberDetailsDialog({
 
   if (!viewingMember) return null;
 
+  const memberTxs = transactions.filter((t) => t.memberId === viewingMember.id);
+
   return (
     <>
       <Dialog open={!!viewingMember} onOpenChange={(open) => {
@@ -221,7 +223,7 @@ export function MemberDetailsDialog({
               <HistoryIcon className="h-4 w-4 text-primary" />
               {t("admin.dashboard.txLogDesc")}
             </h4>
-            {transactions.filter(t => t.memberId === viewingMember.id).length > 0 ? (
+            {memberTxs.length > 0 ? (
               <div className="overflow-x-auto border border-border rounded-xl">
                 <Table>
                   <TableHeader className="bg-muted/40">
@@ -233,18 +235,16 @@ export function MemberDetailsDialog({
                     </TableRow>
                   </TableHeader>
                   <TableBody className="text-[11px]">
-                    {transactions
-                      .filter(t => t.memberId === viewingMember.id)
-                      .map((tx) => (
-                        <TableRow key={tx.id}>
-                          <TableCell className="font-semibold text-secondary py-2">{tx.partnerName}</TableCell>
-                          <TableCell className="text-muted-foreground py-2 font-mono">
-                            {tx.date.includes("T") ? tx.date.split("T")[0] : tx.date.split(" ")[0].replace(/,$/, "")}
-                          </TableCell>
-                          <TableCell className="text-right font-mono py-2">৳{tx.amount}</TableCell>
-                          <TableCell className="text-right font-mono text-primary font-bold py-2">৳{tx.saved}</TableCell>
-                        </TableRow>
-                      ))}
+                    {memberTxs.map((tx) => (
+                      <TableRow key={tx.id}>
+                        <TableCell className="font-semibold text-secondary py-2">{tx.partnerName}</TableCell>
+                        <TableCell className="text-muted-foreground py-2 font-mono">
+                          {tx.date.includes("T") ? tx.date.split("T")[0] : tx.date.split(" ")[0].replace(/,$/, "")}
+                        </TableCell>
+                        <TableCell className="text-right font-mono py-2">৳{tx.amount}</TableCell>
+                        <TableCell className="text-right font-mono text-primary font-bold py-2">৳{tx.saved}</TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
               </div>

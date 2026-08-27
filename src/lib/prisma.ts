@@ -28,20 +28,17 @@ if (!globalForPrisma.pool) {
   });
 }
 
-const adapter = new PrismaPg(globalForPrisma.pool);
-
 const createPrismaClient = () => {
+  const adapter = new PrismaPg(globalForPrisma.pool!);
   return new PrismaClient({
     adapter,
     log: process.env.NODE_ENV === "production" ? ["error"] : ["error", "warn"],
   });
 };
 
-// Ensure fresh PrismaClient is instantiated so newly generated schema fields (such as upazila)
-// are immediately reflected without stale client caching in dev mode.
-globalForPrisma.prisma = globalForPrisma.prisma || createPrismaClient();
+export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+
 if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = createPrismaClient();
+  globalForPrisma.prisma = prisma;
 }
 
-export const prisma = globalForPrisma.prisma;

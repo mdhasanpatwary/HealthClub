@@ -10,7 +10,7 @@ import {
   bloodDonorImportSchema,
   ambulanceImportSchema,
   hotlineImportSchema,
-} from "@/lib/bulkImportUtils";
+} from "@/lib/bulkImportSchemas";
 import { BulkImportResult } from "@/types/bulkImport";
 import { getEmergencyDataAction } from "./emergencyAdminActions";
 import { BloodDonor, AmbulanceService, EmergencyHotline } from "@/data/emergencyData";

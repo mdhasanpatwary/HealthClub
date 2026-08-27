@@ -37,10 +37,14 @@ model Member {
   reviews           Review[]
 
   // Indexes for frequent filter/sort patterns
+  @@index([name], map: "members_name_idx")
   @@index([status])
   @@index([tier])
   @@index([renewalStatus], map: "members_renewal_status_idx")
   @@index([expiryDate], map: "members_expiry_date_idx")
+  @@index([status, expiryDate], map: "members_status_expiry_date_idx")
+  @@index([tier, status], map: "members_tier_status_idx")
+  @@index([status, createdAt(sort: Desc)], map: "members_status_created_at_idx")
   @@index([createdAt(sort: Desc)], map: "members_created_at_idx")
   @@map("members")
 }
@@ -69,8 +73,11 @@ model Partner {
   staff                     PartnerStaff[]
   reviews                   Review[]
 
+  @@index([name], map: "partners_name_idx")
   @@index([category])
   @@index([upazila], map: "partners_upazila_idx")
+  @@index([category, upazila], map: "partners_category_upazila_idx")
+  @@index([createdAt(sort: Desc)], map: "partners_created_at_idx")
   @@map("partners")
 }
 
@@ -92,6 +99,7 @@ model PartnerStaff {
 
   @@index([partnerId], map: "partner_staff_partner_id_idx")
   @@index([isActive], map: "partner_staff_is_active_idx")
+  @@index([partnerId, isActive], map: "partner_staff_partner_id_is_active_idx")
   @@index([createdAt(sort: Desc)], map: "partner_staff_created_at_idx")
   @@map("partner_staff")
 }
@@ -118,6 +126,12 @@ model Transaction {
   @@index([memberId], map: "transactions_member_id_idx")
   @@index([partnerId], map: "transactions_partner_id_idx")
   @@index([staffId], map: "transactions_staff_id_idx")
+  @@index([memberId, partnerId], map: "transactions_member_id_partner_id_idx")
+  @@index([memberId, createdAt(sort: Desc)], map: "transactions_member_id_created_at_idx")
+  @@index([partnerId, createdAt(sort: Desc)], map: "transactions_partner_id_created_at_idx")
+  @@index([staffId, createdAt(sort: Desc)], map: "transactions_staff_id_created_at_idx")
+  @@index([memberName], map: "transactions_member_name_idx")
+  @@index([partnerName], map: "transactions_partner_name_idx")
   @@index([createdAt(sort: Desc)], map: "transactions_created_at_idx")
   @@map("transactions")
 }
@@ -147,11 +161,16 @@ model Doctor {
 
   partner         Partner?  @relation(fields: [partnerId], references: [id], onDelete: SetNull)
 
+  @@index([name], map: "doctors_name_idx")
   @@index([department], map: "doctors_department_idx")
   @@index([upazila], map: "doctors_upazila_idx")
   @@index([isActive], map: "doctors_is_active_idx")
   @@index([partnerId], map: "doctors_partner_id_idx")
   @@index([availableToday], map: "doctors_available_today_idx")
+  @@index([isActive, department], map: "doctors_is_active_department_idx")
+  @@index([isActive, upazila], map: "doctors_is_active_upazila_idx")
+  @@index([isActive, partnerId], map: "doctors_is_active_partner_id_idx")
+  @@index([createdAt(sort: Desc)], map: "doctors_created_at_idx")
   @@map("doctors")
 }
 
@@ -168,6 +187,7 @@ model PartnerRequest {
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
 
   @@index([status], map: "partner_requests_status_idx")
+  @@index([status, createdAt(sort: Desc)], map: "partner_requests_status_created_at_idx")
   @@map("partner_requests")
 }
 
@@ -179,6 +199,7 @@ model ContactMessage {
   message   String
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
 
+  @@index([createdAt(sort: Desc)], map: "contact_messages_created_at_idx")
   @@map("contact_messages")
 }
 
@@ -285,6 +306,8 @@ model Review {
   @@index([memberId], map: "reviews_member_id_idx")
   @@index([status], map: "reviews_status_idx")
   @@index([partnerId, status], map: "reviews_partner_id_status_idx")
+  @@index([status, createdAt(sort: Desc)], map: "reviews_status_created_at_idx")
+  @@index([partnerId, status, createdAt(sort: Desc)], map: "reviews_partner_status_created_at_idx")
   @@index([createdAt(sort: Desc)], map: "reviews_created_at_idx")
   @@map("reviews")
 }
