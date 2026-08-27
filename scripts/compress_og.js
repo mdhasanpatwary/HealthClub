@@ -3,62 +3,87 @@ const sharp = require('sharp');
 const path = require('path');
 const fs = require('fs');
 
-async function compressOgImage() {
-  const publicDir = path.join(__dirname, '..', 'public');
-  const inputPng = path.join(publicDir, 'og-image.png');
-  const tempPng = path.join(publicDir, 'og-image-temp.png');
-  const outputJpg = path.join(publicDir, 'og-image.jpg');
-  const outputWebp = path.join(publicDir, 'og-image.webp');
+async function generateAndCompressOgImage() {
+  const rootDir = path.join(__dirname, '..');
+  const publicDir = path.join(rootDir, 'public');
+  const appDir = path.join(rootDir, 'src', 'app');
+  const logoPath = path.join(publicDir, 'logo', 'v_logo_transparent.png');
 
-  if (!fs.existsSync(inputPng)) {
-    console.error('❌ og-image.png not found at:', inputPng);
+  if (!fs.existsSync(logoPath)) {
+    console.error('❌ Logo source not found at:', logoPath);
     process.exit(1);
   }
 
-  const initialStats = fs.statSync(inputPng);
-  console.log(`Original og-image.png size: ${(initialStats.size / 1024).toFixed(2)} KB`);
+  // Trim transparent margins and resize to fit within standard 1200x630 canvas
+  const trimmedLogoBuffer = await sharp(logoPath)
+    .trim()
+    .resize({ height: 510, fit: 'inside' })
+    .toBuffer();
 
-  // Read full quality buffer first
-  const sourceBuffer = fs.readFileSync(inputPng);
+  const metadata = await sharp(trimmedLogoBuffer).metadata();
+  const left = Math.round((1200 - (metadata.width || 0)) / 2);
+  const top = Math.round((630 - (metadata.height || 0)) / 2);
 
-  // 1. High-fidelity JPEG (target ~75 KB)
-  await sharp(sourceBuffer)
+  // Compose onto clean 1200x630 canvas
+  const canvasBuffer = await sharp({
+    create: {
+      width: 1200,
+      height: 630,
+      channels: 4,
+      background: { r: 255, g: 255, b: 255, alpha: 1 },
+    },
+  })
+    .composite([
+      {
+        input: trimmedLogoBuffer,
+        top: top,
+        left: left,
+      },
+    ])
+    .png()
+    .toBuffer();
+
+  const outputPng = path.join(publicDir, 'og-image.png');
+  const outputJpg = path.join(publicDir, 'og-image.jpg');
+  const outputWebp = path.join(publicDir, 'og-image.webp');
+  const appOgPng = path.join(appDir, 'opengraph-image.png');
+  const appTwitterPng = path.join(appDir, 'twitter-image.png');
+
+  // 1. High-fidelity JPEG (target ~45-75 KB)
+  await sharp(canvasBuffer)
     .jpeg({
-      quality: 85,
+      quality: 90,
       mozjpeg: true,
     })
     .toFile(outputJpg);
-  const jpgStats = fs.statSync(outputJpg);
-  console.log(`✅ Generated og-image.jpg: ${(jpgStats.size / 1024).toFixed(2)} KB`);
+  console.log(`✅ Generated og-image.jpg: ${(fs.statSync(outputJpg).size / 1024).toFixed(2)} KB`);
 
-  // 2. Ultra-compact WebP (target ~45 KB)
-  await sharp(sourceBuffer)
+  // 2. WebP format
+  await sharp(canvasBuffer)
     .webp({
-      quality: 85,
+      quality: 90,
       effort: 6,
     })
     .toFile(outputWebp);
-  const webpStats = fs.statSync(outputWebp);
-  console.log(`✅ Generated og-image.webp: ${(webpStats.size / 1024).toFixed(2)} KB`);
+  console.log(`✅ Generated og-image.webp: ${(fs.statSync(outputWebp).size / 1024).toFixed(2)} KB`);
 
-  // 3. Optimized PNG (under 100 KB with 128 color palette + maximum compression effort)
-  await sharp(sourceBuffer)
+  // 3. PNG format for public and Next.js app metadata
+  await sharp(canvasBuffer)
     .png({
-      quality: 80,
+      quality: 90,
       compressionLevel: 9,
       effort: 10,
-      palette: true,
-      colours: 128,
-      dither: 0.8,
     })
-    .toFile(tempPng);
+    .toFile(outputPng);
+  console.log(`✅ Generated public/og-image.png: ${(fs.statSync(outputPng).size / 1024).toFixed(2)} KB`);
 
-  fs.renameSync(tempPng, inputPng);
-  const newPngStats = fs.statSync(inputPng);
-  console.log(`✅ Compressed og-image.png: ${(newPngStats.size / 1024).toFixed(2)} KB`);
+  fs.copyFileSync(outputPng, appOgPng);
+  fs.copyFileSync(outputPng, appTwitterPng);
+  console.log(`✅ Copied to src/app/opengraph-image.png & src/app/twitter-image.png`);
 }
 
-compressOgImage().catch((err) => {
-  console.error('Error compressing OG images:', err);
+generateAndCompressOgImage().catch((err) => {
+  console.error('Error generating OG images:', err);
   process.exit(1);
 });
+
