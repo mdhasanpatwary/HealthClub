@@ -10,6 +10,7 @@ import {
   updatePartnerAction,
   addPartnerAction,
   deletePartnerAction,
+  resetPartnerPasswordByAdminAction,
 } from "@/app/actions/partnerActions";
 import { getStatsAction } from "@/app/actions/transactionActions";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -216,6 +217,21 @@ function AdminPartnersContent() {
     }
   };
 
+  const handleResetPassword = async (p: Partner) => {
+    if (confirm(`আপনি কি "${p.name}" এর পাসওয়ার্ড ডিফল্ট "123456"-এ রিসেট করতে চান?`)) {
+      try {
+        const res = await resetPartnerPasswordByAdminAction(p.id, "123456");
+        if (res.success) {
+          toast.success(res.message);
+        } else {
+          toast.error(res.message || "পাসওয়ার্ড রিসেট করতে সমস্যা হয়েছে।");
+        }
+      } catch {
+        toast.error("সার্ভার ত্রুটি।");
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div className="space-y-4 animate-pulse">
@@ -293,6 +309,7 @@ function AdminPartnersContent() {
           setIsPartnerOpen(true);
         }}
         onDeleteClick={handleDeletePartner}
+        onResetPasswordClick={handleResetPassword}
         locale={locale}
         t={t}
         loading={loading}

@@ -1,6 +1,6 @@
 "use server";
 
-import { randomInt, randomBytes } from "crypto";
+import { randomInt } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { Partner } from "@/services/db";
 import { getSessionUser, setSessionUser } from "@/lib/session";
@@ -188,8 +188,7 @@ export async function updatePartnerRequestStatusAction(
   try {
     if (status === "approved") {
       const partnerId = `p_${crypto.randomUUID()}`;
-      const tempPassword = randomBytes(4).toString("hex");
-      const defaultPassword = hashPassword(tempPassword);
+      const defaultPassword = hashPassword("123456");
 
       await prisma.$transaction(async (tx) => {
         const req = await tx.partnerRequest.update({
@@ -267,9 +266,23 @@ export async function loginPartnerAction(
       where: { OR: [{ phone: cleanIdentifier }, { email: cleanIdentifier }] },
     });
 
-    if (partnerData && partnerData.password) {
-      const isValid = verifyPassword(password, partnerData.password);
+    if (partnerData) {
+      const isValid = partnerData.password
+        ? verifyPassword(password, partnerData.password)
+        : password === "123456";
+
       if (isValid) {
+        if (!partnerData.password) {
+          try {
+            await prisma.partner.update({
+              where: { id: partnerData.id },
+              data: { password: hashPassword("123456") },
+            });
+          } catch (e) {
+            logger.warn("Failed to auto-persist partner default password:", e);
+          }
+        }
+
         resetRateLimit(`partner_login_id:${cleanIdentifier.toLowerCase()}`);
         await setSessionUser(partnerData.id, "partner");
         return { success: true, partner: toPartner(partnerData) };
@@ -339,12 +352,19 @@ export async function changePartnerPasswordAction(
   try {
     const partner = await prisma.partner.findUnique({ where: { id: session.userId } });
     if (!partner) return { success: false, message: "পার্টনার খুঁজে পাওয়া যায়নি।" };
-    if (!partner.password) {
-      return { success: false, message: "পূর্বে কোনো পাসওয়ার্ড সেট করা নেই। অ্যাডমিনের সাথে যোগাযোগ করুন।" };
-    }
 
-    const isValid = verifyPassword(currentPassword, partner.password);
-    if (!isValid) return { success: false, message: "বর্তমান পাসওয়ার্ডটি সঠিক নয়।" };
+    const isValid = partner.password
+      ? verifyPassword(currentPassword, partner.password)
+      : currentPassword === "123456";
+
+    if (!isValid) {
+      return {
+        success: false,
+        message: partner.password
+          ? "বর্তমান পাসওয়ার্ডটি সঠিক নয়।"
+          : "বর্তমান ডিফল্ট পাসওয়ার্ড (123456) সঠিক নয়।",
+      };
+    }
 
     const hashed = hashPassword(newPassword);
     await prisma.partner.update({ where: { id: partner.id }, data: { password: hashed } });

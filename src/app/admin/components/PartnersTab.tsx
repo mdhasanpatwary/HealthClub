@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Edit3, Trash2, Download, Building2, Activity, Pill, LayoutGrid, UploadCloud } from "lucide-react";
+import { Search, Edit3, Trash2, Download, Building2, Activity, Pill, LayoutGrid, UploadCloud, KeyRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -34,6 +34,7 @@ interface PartnersTabProps {
   onNewPartnerClick: () => void;
   onEditClick: (p: Partner) => void;
   onDeleteClick: (id: string, name: string) => void;
+  onResetPasswordClick?: (p: Partner) => void;
   locale?: Locale;
   t?: (key: string) => string;
   loading?: boolean;
@@ -55,6 +56,7 @@ export function PartnersTab({
   onNewPartnerClick,
   onEditClick,
   onDeleteClick,
+  onResetPasswordClick,
   locale = "bn",
   t = (k) => k,
   loading = false,
@@ -256,6 +258,18 @@ export function PartnersTab({
                     <TableCell className="font-mono text-xs whitespace-nowrap">{p.phone}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
+                        {onResetPasswordClick && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => onResetPasswordClick(p)}
+                            title={isEn ? `Reset password for ${p.name} (123456)` : `${p.name} এর পাসওয়ার্ড রিসেট করুন (123456)`}
+                            aria-label={isEn ? `Reset password for ${p.name}` : `${p.name} এর পাসওয়ার্ড রিসেট করুন`}
+                            className="h-8 w-8 text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/40 cursor-pointer"
+                          >
+                            <KeyRound className="h-4 w-4" />
+                          </Button>
+                        )}
                         <Button
                           variant="ghost"
                           size="icon"

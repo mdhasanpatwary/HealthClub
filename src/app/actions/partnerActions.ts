@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { Partner } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
+import { hashPassword } from "@/lib/crypto";
 import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag } from "next/cache";
 import { PaginatedResult } from "@/types/pagination";
@@ -239,6 +240,7 @@ export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Pa
         discount: partner.discount,
         phone: partner.phone,
         email: partner.email || null,
+        password: hashPassword("123456"),
         logoText: partner.logoText,
         mapLink: partner.mapLink || null,
         imageUrl: partner.imageUrl || null,
@@ -442,4 +444,37 @@ export async function addPartnerTransactionAction(
 
 export async function getPartnerAnalyticsAction() {
   return _getPartnerAnalyticsAction();
+}
+
+export async function resetPartnerPasswordByAdminAction(
+  partnerId: string,
+  newPassword?: string
+): Promise<{ success: boolean; message: string }> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") {
+    return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
+  }
+
+  const pass = newPassword && newPassword.trim().length >= 6 ? newPassword.trim() : "123456";
+
+  try {
+    const existing = await prisma.partner.findUnique({ where: { id: partnerId } });
+    if (!existing) {
+      return { success: false, message: "পার্টনার খুঁজে পাওয়া যায়নি।" };
+    }
+
+    const hashed = hashPassword(pass);
+    await prisma.partner.update({
+      where: { id: partnerId },
+      data: { password: hashed },
+    });
+
+    return {
+      success: true,
+      message: `পাসওয়ার্ড সফলভাবে '${pass}'-এ রিসেট করা হয়েছে।`,
+    };
+  } catch (error) {
+    logger.error("Error in resetPartnerPasswordByAdminAction:", error);
+    return { success: false, message: "পাসওয়ার্ড রিসেট করতে সমস্যা হয়েছে।" };
+  }
 }

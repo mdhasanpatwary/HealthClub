@@ -11,6 +11,7 @@ import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { PartnerCardPreview } from "./PartnerCardPreview";
+import { PartnerPasswordCard } from "./PartnerPasswordCard";
 import { toast } from "sonner";
 
 interface PartnerProfileSettingsTabProps {
@@ -448,6 +449,9 @@ export function PartnerProfileSettingsTab({
               {saving ? t("partner.profile.saving") : t("partner.profile.saveChanges")}
             </Button>
           </div>
+
+          {/* Partner Password & Security Card */}
+          <PartnerPasswordCard />
         </form>
 
         {/* Live Preview Column (4 Cols) */}
