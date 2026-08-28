@@ -4,6 +4,7 @@ import { getDoctorsAction } from "@/app/actions/doctorActions";
 import { getPartnersAction } from "@/app/actions/partnerActions";
 import { getAllHealthTipsAction } from "@/app/actions/healthTipsAdminActions";
 import { HEALTH_TIPS_ARTICLES, HealthTipArticle } from "@/data/healthTipsData";
+import { getAllDepartmentSlugs } from "@/data/doctorSeoData";
 import { logger } from "@/lib/logger";
 
 import { parseArticleDate, STATIC_FALLBACK_DATE as STATIC_LAST_MODIFIED } from "@/lib/dateUtils";
@@ -100,30 +101,42 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let doctorEntries: MetadataRoute.Sitemap = [];
   try {
     const doctors = await getDoctorsAction();
-    doctorEntries = doctors.map((doc) => {
-      const url = `${baseUrl}/consultants/${doc.id}`;
-      return {
-        url,
-        lastModified: STATIC_LAST_MODIFIED,
-        changeFrequency: "daily",
-        priority: 0.85,
-        alternates: getAlternates(url),
-      };
-    });
+    doctorEntries = doctors
+      .filter((doc) => doc.isActive !== false)
+      .map((doc) => {
+        const url = `${baseUrl}/consultants/${doc.id}`;
+        const lastModified =
+          doc.createdAt && !isNaN(new Date(doc.createdAt).getTime())
+            ? new Date(doc.createdAt)
+            : STATIC_LAST_MODIFIED;
+
+        return {
+          url,
+          lastModified,
+          changeFrequency: "daily",
+          priority: 0.85,
+          alternates: getAlternates(url),
+        };
+      });
   } catch (error) {
     logger.error("Error fetching doctors in sitemap:", error);
     doctorEntries = [];
   }
 
-  // Dynamic partner hospital & clinic profiles
+  // Dynamic partner hospital, diagnostic lab & clinic profiles
   let partnerEntries: MetadataRoute.Sitemap = [];
   try {
     const partners = await getPartnersAction();
     partnerEntries = partners.map((partner) => {
       const url = `${baseUrl}/partner-hospitals/${partner.id}`;
+      const lastModified =
+        partner.createdAt && !isNaN(new Date(partner.createdAt).getTime())
+          ? new Date(partner.createdAt)
+          : STATIC_LAST_MODIFIED;
+
       return {
         url,
-        lastModified: STATIC_LAST_MODIFIED,
+        lastModified,
         changeFrequency: "daily",
         priority: 0.85,
         alternates: getAlternates(url),
@@ -134,5 +147,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     partnerEntries = [];
   }
 
-  return [...staticEntries, ...articleEntries, ...doctorEntries, ...partnerEntries];
+  // Dynamic specialized doctor department SEO landing routes
+  const departmentEntries: MetadataRoute.Sitemap = getAllDepartmentSlugs().map((slug) => {
+    const url = `${baseUrl}/consultants?dept=${slug}`;
+    return {
+      url,
+      lastModified: STATIC_LAST_MODIFIED,
+      changeFrequency: "daily",
+      priority: 0.9,
+      alternates: getAlternates(url),
+    };
+  });
+
+  // Dynamic partner category landing routes (hospital, diagnostic, pharmacy)
+  const partnerCategories = ["hospital", "diagnostic", "pharmacy"] as const;
+  const partnerCategoryEntries: MetadataRoute.Sitemap = partnerCategories.map((category) => {
+    const url = `${baseUrl}/partner-hospitals?category=${category}`;
+    return {
+      url,
+      lastModified: STATIC_LAST_MODIFIED,
+      changeFrequency: "daily",
+      priority: 0.85,
+      alternates: getAlternates(url),
+    };
+  });
+
+  return [
+    ...staticEntries,
+    ...departmentEntries,
+    ...partnerCategoryEntries,
+    ...articleEntries,
+    ...doctorEntries,
+    ...partnerEntries,
+  ];
 }

@@ -5,6 +5,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import DoctorProfileView from "@/components/consultants/DoctorProfileView";
 import { getDoctorByIdAction, getRelatedDoctorsAction } from "@/app/actions/doctorActions";
 import { SITE_URL } from "@/lib/siteConfig";
+import { generateDoctorJsonLd } from "@/lib/seo/doctorSchema";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -121,92 +122,8 @@ export default async function DoctorDetailPage({ params }: PageProps) {
 
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const isEn = locale === "en";
 
-  const jsonLdData = [
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: isEn ? "Home" : "হোম",
-          item: SITE_URL,
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: isEn ? "Specialist Doctors" : "বিশেষজ্ঞ ডাক্তারগণ",
-          item: `${SITE_URL}/consultants`,
-        },
-        {
-          "@type": "ListItem",
-          position: 3,
-          name: doctor.name,
-          item: `${SITE_URL}/consultants/${doctor.id}`,
-        },
-      ],
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "Physician",
-      name: doctor.name,
-      image: doctor.imageUrl || `${SITE_URL}/og-image.png`,
-      medicalSpecialty: doctor.specialty,
-      jobTitle: doctor.designation,
-      telephone: doctor.serialPhone,
-      priceRange: doctor.consultationFee || "৳৳",
-      currenciesAccepted: "BDT",
-      paymentAccepted: "Cash, bKash, Nagad, Mobile Banking",
-      isAcceptingNewPatients: doctor.isActive !== false,
-      url: `${SITE_URL}/consultants/${doctor.id}`,
-      description: `${doctor.name} is a specialist in ${doctor.specialty} practicing at ${doctor.chamberName}, Feni.`,
-      ...(doctor.degrees
-        ? {
-            hasCredential: [
-              {
-                "@type": "EducationalOccupationalCredential",
-                credentialCategory: "degree",
-                name: doctor.degrees,
-              },
-            ],
-          }
-        : {}),
-      availableService: [
-        {
-          "@type": "MedicalService",
-          name: isEn ? `${doctor.specialty} Consultation` : `${doctor.specialty} কনসাল্টেশন`,
-          serviceType: doctor.department || doctor.specialty,
-          description: isEn
-            ? `${doctor.specialty} specialist consultation and clinical care by ${doctor.name} (${doctor.degrees}). Chamber at ${doctor.chamberName}.`
-            : `${doctor.name} (${doctor.degrees}) কর্তৃক ${doctor.specialty} বিশেষজ্ঞ চিকিৎসা ও স্বাস্থ্য পরামর্শ সেবা। চেম্বার: ${doctor.chamberName}।`,
-          provider: {
-            "@type": "Physician",
-            name: doctor.name,
-          },
-        },
-      ],
-      worksFor: {
-        "@type": "MedicalOrganization",
-        name: doctor.chamberName,
-        address: {
-          "@type": "PostalAddress",
-          streetAddress: doctor.chamberAddress,
-          addressLocality: "Feni",
-          addressRegion: "Chittagong Division",
-          addressCountry: "BD",
-        },
-      },
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: doctor.chamberAddress,
-        addressLocality: "Feni",
-        addressRegion: "Chittagong Division",
-        addressCountry: "BD",
-      },
-    },
-  ];
+  const jsonLdData = generateDoctorJsonLd(doctor, locale);
 
   return (
     <>

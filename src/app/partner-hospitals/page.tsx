@@ -7,6 +7,7 @@ import { Locale, tServer } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import { getPartnersAction } from "@/app/actions/partnerActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
+import { Sparkles, ShieldCheck, Tag, Pill, MapPin } from "lucide-react";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -14,18 +15,18 @@ export async function generateMetadata() {
   const isEn = locale === "en";
 
   const ogTitle = isEn
-    ? "Partner Hospitals & Diagnostic Centers in Feni - Health Club"
-    : "ফেনীর পার্টনার হাসপাতাল, ডায়াগনস্টিক ও ফার্মেসি - হেলথ ক্লাব";
+    ? "Feni Hospital List, Diagnostic Centers & Pathology Lab Discounts - Health Club"
+    : "ফেনী হাসপাতাল তালিকা, ডায়াগনস্টিক সেন্টার ও প্যাথলজি ডিসকাউন্ট - হেলথ ক্লাব";
   const ogDesc = isEn
-    ? "Find hospitals, diagnostic labs, and pharmacies with instant member discounts in Feni."
-    : "ফেনী ও আশপাশের চুক্তিভিত্তিক হাসপাতাল ও ডায়াগনস্টিক সেন্টারের বিস্তারিত তালিকা।";
+    ? "Explore verified private hospitals, diagnostic pathology labs, and model pharmacies in Feni offering 10% to 30% instant member discounts on medical tests and healthcare services."
+    : "ফেনীর শীর্ষ বেসরকারি হাসপাতাল, প্যাথলজি ল্যাব, ডায়াগনস্টিক সেন্টার ও মডেল ফার্মেসির তালিকা। হেলথ ক্লাব মেম্বার কার্ডে পান ১০% থেকে ৩০% নিশ্চিত ডিসকাউন্ট।";
 
   return {
     title: isEn
-      ? "Partner Hospitals, Diagnostic Centers & Pharmacies in Feni - Health Club"
-      : "ফেনীর পার্টনার হাসপাতাল, ডায়াগনস্টিক ও ফার্মেসি তালিকা - হেলথ ক্লাব",
+      ? "Feni Hospital List, Diagnostic Centers & Pathology Lab Discounts - Health Club"
+      : "ফেনী হাসপাতাল তালিকা, ডায়াগনস্টিক সেন্টার ও প্যাথলজি ডিসকাউন্ট - হেলথ ক্লাব",
     description: isEn
-      ? "Explore our full network of partner hospitals, diagnostic centers, pathology labs, and model pharmacies offering 10% to 30% discount to Health Club members in Feni."
+      ? "Explore verified private hospitals, diagnostic labs, pathology clinics, and model pharmacies in Feni. Enjoy 10% to 30% instant member discounts on medical tests, admissions, and medicines."
       : "ফেনীর শীর্ষ বেসরকারি হাসপাতাল, প্যাথলজি ল্যাব, ডায়াগনস্টিক সেন্টার ও মডেল ফার্মেসির তালিকা। হেলথ ক্লাব মেম্বার কার্ডে পান ১০% থেকে ৩০% নিশ্চিত ডিসকাউন্ট।",
     alternates: {
       canonical: `${SITE_URL}/partner-hospitals`,
@@ -35,23 +36,35 @@ export async function generateMetadata() {
       },
     },
     keywords: [
-      "feni diagnostic center",
       "feni hospital list",
       "feni diagnostic center list",
+      "feni private hospital",
       "feni private hospital list",
+      "feni blood test discount",
+      "feni pathology lab discount",
+      "feni medical test price list",
+      "feni diagnostic center",
+      "diagnostic center in feni",
+      "hospitals in feni",
+      "feni hospital discount",
       "feni pharmacy discount",
-      "feni pathology lab",
       "feni blood test price discount",
-      "ফেনী ডায়াগনস্টিক সেন্টার",
+      "Health Club partner hospitals",
+      "feni clinic list",
+      "feni pathology lab",
+      "ফেনী ডায়াগনস্টিক সেন্টার তালিকা",
       "ফেনী হাসপাতাল তালিকা",
       "ফেনী ক্লিনিক ও ডায়াগনস্টিক",
+      "ফেনী প্যাথলজি ল্যাব ছাড়",
       "ফেনী মডেল ফার্মেসি",
-      "ফেনী প্যাথলজি ল্যাব",
-      "diagnostic center in Feni",
-      "hospitals in Feni",
-      "Health Club partner hospitals",
-      "মেডিকেল ডিসকাউন্ট হাসপাতাল ফেনী",
+      "ফেনী ঔষধ ডিসকাউন্ট",
+      "ফেনী রক্ত পরীক্ষা ছাড়",
+      "ফেনী ডায়াগনস্টিক সেন্টার",
       "ফেনী প্যাথলজি ও ল্যাব",
+      "মেডিকেল ডিসকাউন্ট হাসপাতাল ফেনী",
+      "ফেনী প্রাইভেট হাসপাতাল",
+      "ফেনী সদর হাসপাতাল",
+      "ফেনী ল্যাব টেস্ট ডিসকাউন্ট",
     ],
     openGraph: {
       title: ogTitle,
@@ -68,6 +81,17 @@ export async function generateMetadata() {
       description: ogDesc,
       images: DEFAULT_TWITTER_IMAGES,
     },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
   };
 }
 
@@ -77,7 +101,7 @@ export default async function PartnerHospitalsPage() {
   const isEn = locale === "en";
   const t = (key: string) => tServer(locale, key);
 
-  // Fetch partners server-side (cached) — eliminates client-side loading spinner
+  // Fetch partners server-side (cached)
   const allPartners = await getPartnersAction();
 
   const jsonLdData = [
@@ -94,17 +118,19 @@ export default async function PartnerHospitalsPage() {
         {
           "@type": "ListItem",
           "position": 2,
-          "name": isEn ? "Partner Hospitals" : "পার্টনার হাসপাতালসমূহ",
+          "name": isEn ? "Partner Hospitals & Diagnostics" : "পার্টনার হাসপাতাল ও ডায়াগনস্টিক সেন্টার",
           "item": `${SITE_URL}/partner-hospitals`
         }
       ]
     },
     {
       "@context": "https://schema.org",
-      "@type": "MedicalBusiness",
-      "name": "Health Club Partner Network Feni",
+      "@type": ["MedicalBusiness", "MedicalOrganization"],
+      "name": isEn ? "Health Club Partner Healthcare Network Feni" : "হেলথ ক্লাব পার্টনার হাসপাতাল ও ডায়াগনস্টিক নেটওয়ার্ক (ফেনী)",
       "url": `${SITE_URL}/partner-hospitals`,
-      "description": "Network of partner hospitals, diagnostic clinics, pathology labs, and model pharmacies offering healthcare discounts in Feni, Bangladesh.",
+      "description": isEn
+        ? "Network of verified partner hospitals, diagnostic centers, pathology labs, and model pharmacies offering 10% to 30% discounts in Feni, Bangladesh."
+        : "ফেনীর শীর্ষ বেসরকারি হাসপাতাল, প্যাথলজি ল্যাব, ডায়াগনস্টিক সেন্টার ও মডেল ফার্মেসির তালিকা এবং ১০% থেকে ৩০% মেম্বার ডিসকাউন্ট নেটওয়ার্ক।",
       "areaServed": [
         "Feni Sadar",
         "Daganbhuiyan",
@@ -114,7 +140,12 @@ export default async function PartnerHospitalsPage() {
         "Fulgazi",
         "Mohipal"
       ],
-      "medicalSpecialty": "Healthcare Discount Membership & Diagnostic Partner Services"
+      "medicalSpecialty": [
+        "General Medical Services",
+        "Diagnostic Pathology & Laboratory",
+        "Radiology & Imaging",
+        "Pharmacy & Prescription Medicine Discount"
+      ]
     },
     {
       "@context": "https://schema.org",
@@ -159,35 +190,78 @@ export default async function PartnerHospitalsPage() {
             "@type": "Answer",
             "text": t("partnerHospitals.faq.a5")
           }
+        },
+        {
+          "@type": "Question",
+          "name": t("partnerHospitals.faq.q6"),
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": t("partnerHospitals.faq.a6")
+          }
         }
       ]
     }
   ];
 
   return (
-    <div className="bg-background min-h-screen py-6 sm:py-12">
+    <div className="bg-background min-h-screen">
       <JsonLd data={jsonLdData} />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-14">
-        
-        {/* Header */}
-        <div className="text-center space-y-2 sm:space-y-4 max-w-2xl mx-auto">
-          <span className="text-[11px] sm:text-xs font-extrabold text-primary tracking-widest uppercase">
-            {t("partnerHospitals.page.partnerNetwork")}
-          </span>
-          <h1 className="font-heading text-2xl sm:text-4xl md:text-5xl font-bold text-secondary dark:text-white">
-            {t("partnerHospitals.page.partnerHospitalsDiagnostics")}
+      
+      {/* Hero Header Section */}
+      <header className="relative overflow-hidden border-b border-border/40 bg-linear-to-b from-primary/5 via-background to-background py-10 sm:py-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-4">
+          
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold border border-primary/20 shadow-2xs">
+            <Sparkles className="h-3.5 w-3.5" />
+            <span>{t("partnerHospitals.page.badge")}</span>
+          </div>
+
+          {/* Heading */}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-foreground font-heading">
+            {t("partnerHospitals.page.heroTitle")}{" "}
+            <span className="text-primary">{t("partnerHospitals.page.heroHighlight")}</span>
           </h1>
-          <p className="text-xs sm:text-base text-muted-foreground">
-            {t("partnerHospitals.page.findYourNearestPartnerFacilities")}
+
+          {/* Subtitle */}
+          <p className="mx-auto max-w-2xl text-xs sm:text-sm md:text-base text-muted-foreground leading-relaxed">
+            {t("partnerHospitals.page.heroDesc")}
           </p>
-        </div>
 
+          {/* Quick Highlight Feature Badges */}
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs font-semibold text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-card border border-border/70 shadow-2xs">
+              <Tag className="h-3.5 w-3.5 text-primary" />
+              {t("partnerHospitals.page.tag1")}
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-card border border-border/70 shadow-2xs">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+              {t("partnerHospitals.page.tag2")}
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-card border border-border/70 shadow-2xs">
+              <Pill className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+              {t("partnerHospitals.page.tag3")}
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-card border border-border/70 shadow-2xs">
+              <MapPin className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
+              {t("partnerHospitals.page.tag4")}
+            </span>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content Directory & SEO Guides */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-10 sm:space-y-16">
+        
         {/* Directory Component — server-fetched data, no client-side loading */}
-        <div className="bg-muted/30 border border-border/80 rounded-3xl p-3.5 sm:p-8">
+        <section aria-labelledby="partner-directory-heading" className="bg-muted/30 border border-border/80 rounded-3xl p-3.5 sm:p-8 space-y-4">
+          <h2 id="partner-directory-heading" className="sr-only">
+            {isEn ? "Partner Hospitals & Diagnostic Centers Directory" : "পার্টনার হাসপাতাল ও ডায়াগনস্টিক ডিরেক্টরি"}
+          </h2>
           <PartnerDirectory partners={allPartners} />
-        </div>
+        </section>
 
-        {/* Informational SEO Guide Component */}
+        {/* Informational SEO Guide Component (4 Pillars, Popular Test Pricing & 3-Step Redemption) */}
         <PartnerHospitalsGuide />
 
         {/* FAQ Section with Rich SEO Accordion */}
@@ -200,4 +274,5 @@ export default async function PartnerHospitalsPage() {
     </div>
   );
 }
+
 

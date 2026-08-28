@@ -67,6 +67,8 @@ export interface Partner {
   workingHours?: string;
   departmentDiscounts?: string;
   upazila?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export type AdminRole = 'super_admin' | 'content_moderator' | 'support_staff';
@@ -285,6 +287,8 @@ export interface Doctor {
   availableToday?: boolean;
   onLeaveUntil?: string;
   notice?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface DatabaseSnapshot {

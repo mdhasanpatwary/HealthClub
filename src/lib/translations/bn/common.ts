@@ -59,7 +59,7 @@ export const commonBn = {
   "ui.partnerdirectory.noPartnersFoundDesc": "আপনার সার্চ বা নির্বাচিত এলাকার সাথে কোনো পার্টনার মেলেনি।",
   "ui.partnerdirectory.pharmacy": "ফার্মেসি",
   "ui.partnerdirectory.resetFilters": "ফিল্টার মুছুন",
-  "ui.partnerdirectory.searchByHospitalNameOr": "হাসপাতাল বা এলাকার নাম দিয়ে খুঁজুন...",
+  "ui.partnerdirectory.searchByHospitalNameOr": "হাসপাতাল, ল্যাব, মেডিকেল টেস্ট বা এলাকা দিয়ে খুঁজুন...",
   "ui.partnerdirectory.viewAllPartners": "সকল পার্টনার দেখুন",
   "ui.partnerdirectory.viewMap": "ম্যাপে দেখুন",
   "ui.savingscalculator.1000": "৳১,০০০",

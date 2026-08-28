@@ -1,6 +1,6 @@
 import {
   Stethoscope, HeartPulse, Brain, Bone, Baby,
-  Sparkles, ShieldCheck, UserRound, Apple, Eye, Info, Smile
+  Sparkles, ShieldCheck, UserRound, Apple, Eye, Info, Smile, Activity
 } from "lucide-react";
 
 export const DEPT_ICONS: Record<string, typeof Stethoscope> = {
@@ -19,6 +19,7 @@ export const DEPT_ICONS: Record<string, typeof Stethoscope> = {
   ent: Info,
   eye: Eye,
   dental: Smile,
+  diabetes: Activity,
   other: Sparkles,
 };
 
@@ -74,6 +75,10 @@ export const CLINICAL_FOCUS_MAP: Record<string, { bn: string; en: string }> = {
   dental: {
     bn: "রুট ক্যানেল, স্কেলিং, দাঁতের ফিলিং, ক্যাপ বসানো, মাড়ির রোগ ও আধুনিক অর্থোডন্টিক সেবা।",
     en: "Root canal therapy, scaling, tooth fillings, crowns, gum care & modern orthodontic dentistry.",
+  },
+  diabetes: {
+    bn: "টাইপ ১ ও টাইপ ২ ডায়াবেটিস, রক্তে সুগার নিয়ন্ত্রণ, থাইরয়েড ও হরমোনজনিত জটিলতার বিশেষায়িত চিকিৎসা।",
+    en: "Type 1 & 2 diabetes management, blood sugar control, thyroid disorders & hormone care.",
   },
   nutrition: {
     bn: "ওজন নিয়ন্ত্রণ, ডায়াবেটিস ডায়েট চার্ট, কিডনি ও ফ্যাটি লিভার রোগীর পুষ্টি পরামর্শ ও সুষম খাদ্য তালিকা।",

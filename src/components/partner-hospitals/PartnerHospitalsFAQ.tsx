@@ -19,6 +19,7 @@ export default function PartnerHospitalsFAQ() {
     { question: t("partnerHospitals.faq.q3"), answer: t("partnerHospitals.faq.a3") },
     { question: t("partnerHospitals.faq.q4"), answer: t("partnerHospitals.faq.a4") },
     { question: t("partnerHospitals.faq.q5"), answer: t("partnerHospitals.faq.a5") },
+    { question: t("partnerHospitals.faq.q6"), answer: t("partnerHospitals.faq.a6") },
   ];
 
   const toggleFAQ = (index: number) => {

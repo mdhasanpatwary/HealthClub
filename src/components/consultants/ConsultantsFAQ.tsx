@@ -19,6 +19,7 @@ export default function ConsultantsFAQ() {
     { question: t("consultants.faq.q3"), answer: t("consultants.faq.a3") },
     { question: t("consultants.faq.q4"), answer: t("consultants.faq.a4") },
     { question: t("consultants.faq.q5"), answer: t("consultants.faq.a5") },
+    { question: t("consultants.faq.q6"), answer: t("consultants.faq.a6") },
   ];
 
   const toggleFAQ = (index: number) => {

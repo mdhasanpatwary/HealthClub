@@ -94,6 +94,11 @@ function formatPartner(p: any): Partner {
     workingHours: p.workingHours || undefined,
     departmentDiscounts: p.departmentDiscounts || undefined,
     upazila: p.upazila || "feni-sadar",
+    createdAt: p.createdAt
+      ? typeof p.createdAt === "string"
+        ? p.createdAt
+        : p.createdAt.toISOString()
+      : undefined,
   };
 }
 
@@ -205,6 +210,7 @@ export const getPartnersAction = unstable_cache(
           workingHours: true,
           departmentDiscounts: true,
           upazila: true,
+          createdAt: true,
         },
       });
 

@@ -17,11 +17,11 @@ export async function generateMetadata() {
 
   return {
     title: isEn
-      ? "24/7 Emergency Health Services, Blood Donors & Ambulances in Feni - Health Club"
-      : "জরুরি স্বাস্থ্য সেবা, রক্তদাতা ও অ্যাম্বুলেন্স তালিকা (ফেনী) - হেলথ ক্লাব",
+      ? "Feni Blood Donors, 24/7 ICU Ambulances & Emergency Medical Directory - Health Club"
+      : "ফেনী রক্তদাতা, ২৪/৭ আইসিইউ অ্যাম্বুলেন্স ও জরুরি স্বাস্থ্য সেবা - হেলথ ক্লাব",
     description: isEn
-      ? "24/7 emergency medical support in Feni: voluntary blood donor directory by blood group, ICU & AC ambulance phone numbers, emergency oxygen cylinders, and hospital ER hotlines."
-      : "ফেনীর ২৪/৭ জরুরি স্বাস্থ্য সহায়তা: রক্তের গ্রুপ ও উপজেলাভিত্তিক রক্তদাতা তালিকা, আইসিইউ ও এসি অ্যাম্বুলেন্স নম্বর, জরুরি অক্সিজেন সিলিন্ডার এবং সদর হাসপাতাল মেডিকেল হটলাইন।",
+      ? "24/7 verified emergency medical directory in Feni: voluntary blood donors by blood group, ICU & AC ambulance phone numbers, oxygen cylinder home delivery, and Feni Sadar Hospital ER hotlines."
+      : "ফেনীর ২৪/৭ জরুরি স্বাস্থ্য সহায়তা: রক্তের গ্রুপভিত্তিক স্বেচ্ছাসেবী রক্তদাতা, আইসিইউ ও এসি অ্যাম্বুলেন্স নম্বর, জরুরি অক্সিজেন সিলিন্ডার এবং সদর হাসপাতাল মেডিকেল হটলাইন ডিরেক্টরি।",
     alternates: {
       canonical: `${SITE_URL}/emergency`,
       languages: {
@@ -30,32 +30,36 @@ export async function generateMetadata() {
       },
     },
     keywords: [
+      "feni blood donor",
+      "blood donor in feni",
+      "feni blood bank contact number",
+      "feni blood bank",
+      "feni blood donors directory",
+      "feni emergency ambulance service",
+      "feni ambulance number",
+      "icu ambulance feni",
       "feni ambulance",
       "feni ambulance service",
-      "Feni ambulance service",
-      "ফেনী এ্যাম্বুলেন্স সার্ভিস",
-      "ফেনী অ্যাম্বুলেন্স সেবা",
-      "ambulance service feni",
-      "ICU ambulance in Feni",
-      "আইসিইউ অ্যাম্বুলেন্স ফেনী",
-      "feni blood donor",
-      "feni blood donors",
-      "feni blood bank",
+      "feni oxygen cylinder",
+      "emergency oxygen cylinder feni",
+      "emergency oxygen supply feni",
       "ফেনী রক্তদাতা",
       "ফেনী ব্লাড ব্যাংক",
       "ফেনীর রক্তের গ্রুপ ডিরেক্টরি",
-      "Emergency oxygen cylinder Feni",
+      "ফেনী অ্যাম্বুলেন্স সেবা",
+      "ফেনী এ্যাম্বুলেন্স সার্ভিস",
+      "আইসিইউ অ্যাম্বুলেন্স ফেনী",
       "ফেনী অক্সিজেন সিলিন্ডার সেবা",
-      "Feni 250 bed hospital emergency hotline",
       "ফেনী সদর হাসপাতাল জরুরি বিভাগ",
-      "Red Crescent blood bank Feni",
       "রেড ক্রিসেন্ট রক্ত কেন্দ্র ফেনী",
+      "Feni 250 bed hospital emergency hotline",
+      "Red Crescent blood bank Feni",
       "Health Club emergency directory",
       "Health Club Feni",
     ],
     openGraph: {
       title: isEn
-        ? "24/7 Emergency Health Services & Blood Directory in Feni - Health Club"
+        ? "24/7 Emergency Health Services, Blood Donors & Ambulances in Feni - Health Club"
         : "জরুরি স্বাস্থ্য সেবা, রক্তদাতা ও অ্যাম্বুলেন্স তালিকা (ফেনী) - হেলথ ক্লাব",
       description: isEn
         ? "Instant access to voluntary blood donors in Feni, 24/7 ICU/AC ambulance contacts, oxygen cylinder supplies, and critical hospital hotlines."

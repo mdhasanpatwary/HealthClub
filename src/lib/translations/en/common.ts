@@ -59,7 +59,7 @@ export const commonEn = {
   "ui.partnerdirectory.noPartnersFoundDesc": "No partners found matching your search or location filter.",
   "ui.partnerdirectory.pharmacy": "Pharmacy",
   "ui.partnerdirectory.resetFilters": "Reset Filters",
-  "ui.partnerdirectory.searchByHospitalNameOr": "Search by hospital name or area...",
+  "ui.partnerdirectory.searchByHospitalNameOr": "Search by hospital, diagnostic lab, test, or area...",
   "ui.partnerdirectory.viewAllPartners": "View All Partners",
   "ui.partnerdirectory.viewMap": "View Map",
   "ui.savingscalculator.1000": "৳1,000",

@@ -14,28 +14,26 @@ import {
 } from "@/data/emergencyData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Heart,
   PhoneCall,
-  MessageCircle,
   Truck,
   PhoneForwarded,
   Search,
   PlusCircle,
-  Clock,
-  MapPin,
   Sparkles,
   Activity,
   Wind,
   Snowflake,
+  ShieldAlert,
 } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { BloodDonorRegisterDialog } from "./BloodDonorRegisterDialog";
 import { AmbulanceRegisterDialog } from "./AmbulanceRegisterDialog";
 import { AmbulanceCard } from "./AmbulanceCard";
+import { BloodDonorCard } from "./BloodDonorCard";
 import { trackEvent } from "@/lib/analytics";
 
 interface EmergencyDirectoryProps {
@@ -62,7 +60,6 @@ export function EmergencyDirectory({
   const [selectedAmbulanceType, setSelectedAmbulanceType] = useState<string>("all");
   const [ambulanceSearch, setAmbulanceSearch] = useState<string>("");
 
-  // Ensure robust fallback to INITIAL_BLOOD_DONORS and INITIAL_AMBULANCES
   const donorsList =
     initialBloodDonors && initialBloodDonors.length > 0
       ? initialBloodDonors
@@ -160,12 +157,12 @@ export function EmergencyDirectory({
             <div className="space-y-1">
               <h3 className="font-heading font-bold text-base sm:text-lg text-secondary dark:text-white flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-rose-500" />
-                {isEn ? "Emergency Voluntary Blood Donors" : "স্বেচ্ছাসেবী রক্তদাতা নেটওয়ার্ক"}
+                {isEn ? "Feni Voluntary Blood Donor Directory" : "ফেনী স্বেচ্ছাসেবী রক্তদাতা ডিরেক্টরি"}
               </h3>
               <p className="text-xs text-muted-foreground">
                 {isEn
-                  ? "Find verified blood donors in Feni or register yourself to save lives."
-                  : "ফেনীর বিভিন্ন এলাকার রক্তদাতাদের খুঁজুন অথবা নিজে রক্তদাতা হয়ে তালিকাভুক্ত হোন।"}
+                  ? "Instant access to verified blood donors across Feni Sadar, Daganbhuiyan, Sonagazi, and all upazilas."
+                  : "ফেনীর সকল উপজেলার রক্তের গ্রুপভিত্তিক যাচাইকৃত রক্তদাতাদের তালিকা থেকে সরাসরি যোগাযোগ করুন।"}
               </p>
             </div>
             <Button
@@ -218,15 +215,15 @@ export function EmergencyDirectory({
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  aria-label={isEn ? "Search by donor name" : "নাম দিয়ে রক্তদাতা খুঁজুন"}
-                  placeholder={isEn ? "Search by donor name..." : "নাম দিয়ে রক্তদাতা খুঁজুন..."}
+                  aria-label={isEn ? "Search by donor name or phone" : "নাম বা ফোন দিয়ে রক্তদাতা খুঁজুন"}
+                  placeholder={isEn ? "Search by donor name or phone..." : "নাম বা ফোন দিয়ে রক্তদাতা খুঁজুন..."}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-9 bg-background"
                 />
               </div>
               <select
-                aria-label={isEn ? "Filter donors by upazila" : "উপজেলা অনুযায়ী ফিল্টার"}
+                aria-label={isEn ? "Filter donors by Feni upazila" : "উপজেলা অনুযায়ী রক্তদাতা ফিল্টার"}
                 value={selectedUpazila}
                 onChange={(e) => setSelectedUpazila(e.target.value)}
                 className="h-10 px-3 rounded-lg border border-border bg-background text-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/20 cursor-pointer"
@@ -240,69 +237,29 @@ export function EmergencyDirectory({
             </div>
           </div>
 
+          {/* Donors Count Summary */}
+          <div className="flex items-center justify-between px-1">
+            <p className="text-xs font-semibold text-muted-foreground">
+              {isEn
+                ? `Showing ${filteredDonors.length} active blood donor(s)`
+                : `মোট ${filteredDonors.length} জন সক্রিয় রক্তদাতা প্রদর্শিত`}
+            </p>
+          </div>
+
           {/* Donors Grid */}
           {filteredDonors.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
               {filteredDonors.map((donor) => {
                 const upazilaObj = UPAZILAS_FENI.find((u) => u.id === donor.upazila);
-                const areaLabel = isEn ? upazilaObj?.nameEn : upazilaObj?.nameBn;
+                const areaLabel = isEn ? (upazilaObj?.nameEn || "Feni") : (upazilaObj?.nameBn || "ফেনী");
 
                 return (
-                  <Card
+                  <BloodDonorCard
                     key={donor.id}
-                    className="border border-border/80 bg-background hover:border-rose-500/30 transition-all duration-300 shadow-xs"
-                  >
-                    <CardContent className="p-4 space-y-3">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="space-y-0.5">
-                          <h4 className="font-heading font-bold text-sm text-secondary dark:text-white">
-                            {donor.name}
-                          </h4>
-                          <p className="text-xs text-muted-foreground flex items-center gap-1">
-                            <MapPin className="h-3 w-3 text-muted-foreground" />
-                            {areaLabel}
-                          </p>
-                        </div>
-                        <Badge className="bg-rose-600/10 text-rose-600 border-rose-600/20 font-mono font-black text-sm px-2.5 py-0.5">
-                          {donor.bloodGroup}
-                        </Badge>
-                      </div>
-
-                      <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground pt-1 border-t border-border/50">
-                        <Clock className="h-3 w-3" />
-                        <span>
-                          {isEn ? "Last Donated:" : "সর্বশেষ দান:"} {donor.lastDonated}
-                        </span>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-2 pt-1">
-                        <a
-                          href={`tel:${donor.phone}`}
-                          onClick={() => {
-                            trackEvent("emergency_dial", {
-                              service_type: "blood_donor",
-                              target_name: `${donor.name} (${donor.bloodGroup})`,
-                              phone: donor.phone,
-                              upazila: donor.upazila,
-                            });
-                          }}
-                          className="inline-flex items-center justify-center gap-1.5 h-8 px-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors"
-                        >
-                          <PhoneCall className="h-3.5 w-3.5" />
-                          <span>{isEn ? "Call" : "কল করুন"}</span>
-                        </a>
-                        <a
-                          href={`https://wa.me/88${donor.phone}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center gap-1.5 h-8 px-2.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-xs font-bold transition-colors"
-                        >
-                          <MessageCircle className="h-3.5 w-3.5" />
-                          <span>WhatsApp</span>
-                        </a>
-                      </div>
-                    </CardContent>
-                  </Card>
+                    donor={donor}
+                    areaLabel={areaLabel}
+                    isEn={isEn}
+                  />
                 );
               })}
             </div>
@@ -311,7 +268,7 @@ export function EmergencyDirectory({
               <Heart className="h-8 w-8 text-muted-foreground mx-auto" />
               <p className="text-sm font-semibold text-muted-foreground">
                 {isEn
-                  ? "No blood donors found for this criteria."
+                  ? "No blood donors found for this search criteria."
                   : "এই মুহূর্তে নির্বাচিত গ্রুপের কোনো রক্তদাতা পাওয়া যায়নি।"}
               </p>
             </div>
@@ -325,12 +282,12 @@ export function EmergencyDirectory({
             <div className="space-y-1">
               <h3 className="font-heading font-bold text-base sm:text-lg text-secondary dark:text-white flex items-center gap-2">
                 <Truck className="h-4 w-4 text-primary" />
-                {isEn ? "24/7 Verified Ambulance Fleet" : "২৪/৭ ভেরিফাইড অ্যাম্বুলেন্স তালিকা"}
+                {isEn ? "24/7 Feni Emergency Ambulance Services" : "২৪/৭ ফেনী জরুরি অ্যাম্বুলেন্স সেবা"}
               </h3>
               <p className="text-xs text-muted-foreground">
                 {isEn
-                  ? "Find ICU, AC, Non-AC & Freezing ambulances in Feni or register your own vehicle."
-                  : "ফেনীর এসি, নন-এসি, আইসিইউ ও ফ্রিজিং অ্যাম্বুলেন্স খুঁজুন অথবা আপনার অ্যাম্বুলেন্স তালিকাভুক্ত করুন।"}
+                  ? "Verified ICU ventilator ambulances, AC, Non-AC & Freezing carriers across Feni & highway routes."
+                  : "ফেনী ও মহাসড়কে জরুরি রোগীর জন্য আইসিইউ, এসি, নন-এসি ও ফ্রিজিং অ্যাম্বুলেন্সের সরাসরি যোগাযোগ নম্বর।"}
               </p>
             </div>
             <Button
@@ -410,12 +367,12 @@ export function EmergencyDirectory({
               <Input
                 aria-label={
                   isEn
-                    ? "Search ambulance, driver, area, or phone"
+                    ? "Search ambulance service, driver, location, or phone"
                     : "অ্যাম্বুলেন্সের নাম, চালক, এলাকা বা ফোন নম্বর দিয়ে খুঁজুন"
                 }
                 placeholder={
                   isEn
-                    ? "Search ambulance, driver, location, or phone..."
+                    ? "Search ambulance service, driver, location, or phone..."
                     : "অ্যাম্বুলেন্সের নাম, চালক, এলাকা বা ফোন নম্বর দিয়ে খুঁজুন..."
                 }
                 value={ambulanceSearch}
@@ -461,6 +418,10 @@ export function EmergencyDirectory({
               >
                 <CardContent className="p-4 sm:p-5 flex flex-col justify-between h-full space-y-4">
                   <div className="space-y-2">
+                    <div className="flex items-center gap-1.5 text-xs text-amber-600 font-semibold">
+                      <ShieldAlert className="h-3.5 w-3.5 shrink-0" />
+                      <span className="capitalize">{hotline.category.replace("_", " ")}</span>
+                    </div>
                     <h4 className="font-heading font-bold text-sm sm:text-base text-secondary dark:text-white">
                       {isEn ? hotline.titleEn : hotline.titleBn}
                     </h4>
@@ -498,3 +459,4 @@ export function EmergencyDirectory({
     </div>
   );
 }
+

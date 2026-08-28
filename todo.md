@@ -409,3 +409,41 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/admin/loading.tsx` (new), `src/app/dashboard/loading.tsx` (new), `src/app/partner/dashboard/loading.tsx` (new), `src/app/consultants/loading.tsx` (new)
   - **Details**: Only the root `loading.tsx` exists. Routes like `/admin`, `/dashboard`, `/partner/dashboard`, `/consultants` lack their own loading states, causing users to see the homepage skeleton when navigating to admin. Add route-specific `loading.tsx` files with contextually appropriate skeleton UIs.
 
+---
+
+## 🔍 Phase 13: Local SEO, Feni Keyword Optimization & Google 1st-Page Ranking
+
+- [x] **TODO-87**: **Feni Doctor & Serial SEO Optimization (Doctor List, Serial Numbers, Chamber Schedules)**
+  - **Target Keywords**: `feni doctor list`, `feni doctor serial number`, `feni doctor appointment`, `feni doctors info`, `feni doctor schedule`, `ফেনী ডাক্তার তালিকা`, `ফেনী ডাক্তারদের তথ্য`, `ফেনী ডাক্তার সিরিয়াল`, `ফেনীর ডাক্তারদের চেম্বার ও সময়সূচী`, `ফেনীতে আজ কোন ডাক্তার বসেন`.
+  - **Files**: `src/app/consultants/page.tsx`, `src/components/consultants/ConsultantsGuide.tsx`, `src/components/consultants/ConsultantsFAQ.tsx`, `src/lib/translations.bn.ts`, `src/lib/translations.en.ts`
+  - **Details**: Update `/consultants` page metadata, dynamic title/description, high-ranking H1/H2 headings, bilingual keywords, and FAQ content to aggressively rank for all general Feni doctor and appointment serial queries.
+
+- [x] **TODO-88**: **Specialized & Categorized Doctor SEO Landing & Filter System**
+  - **Target Specializations**: Medicine, Child Specialist (Pediatrician), Gynaecologist & Obstetrician, Cardiologist, Orthopedic, Dermatologist (Skin & VD), Eye Specialist, ENT Specialist, Diabetes & Hormone.
+  - **Target Keywords**: `feni medicine specialist doctor`, `feni child specialist doctor`, `feni gynecologist doctor list`, `feni orthopedic doctor`, `feni eye specialist doctor`, `ফেনীর শিশু বিশেষজ্ঞ ডাক্তার`, `ফেনীর মেডিসিন বিশেষজ্ঞ`, `ফেনীর সেরা গাইনি ডাক্তার`, `ফেনীর হার্ট বিশেষজ্ঞ ডাক্তার`, `ফেনীর অর্থোপেডিক ডাক্তার`.
+  - **Files**: `src/app/consultants/page.tsx`, `src/components/ui/DoctorDirectory.tsx`, `src/app/sitemap.ts`
+  - **Details**: Implement SEO-friendly specialty filters, dynamic metadata based on category selection, canonical tag management, and contextual landing copy for specific medical departments in Feni.
+
+- [x] **TODO-89**: **Blood Donor & 24/7 Emergency Medical Services SEO**
+  - **Target Keywords**: `feni blood donor`, `feni blood bank contact number`, `blood donor in feni`, `feni emergency ambulance service`, `feni ambulance number`, `icu ambulance feni`, `feni oxygen cylinder`, `ফেনী রক্তদাতা`, `ফেনী ব্লাড ব্যাংক`, `ফেনীর রক্তের গ্রুপ ডিরেক্টরি`, `ফেনী অ্যাম্বুলেন্স সেবা`, `ফেনী অক্সিজেন সিলিন্ডার সেবা`.
+  - **Files**: `src/app/emergency/page.tsx`, `src/app/emergency/components/EmergencyDirectory.tsx`, `src/components/emergency/EmergencyGuide.tsx`, `src/components/emergency/EmergencyFAQ.tsx`
+  - **Details**: Optimize the `/emergency` route metadata, indexable blood group directory, 24/7 emergency ambulance hotline keywords, and Red Crescent / Sadar Hospital emergency references.
+
+- [x] **TODO-90**: **Hospital, Diagnostic Center & Medical Test Discount SEO**
+  - **Target Keywords**: `feni hospital list`, `feni diagnostic center list`, `feni private hospital`, `feni blood test discount`, `feni pathology lab discount`, `feni medical test price list`, `ফেনী ডায়াগনস্টিক সেন্টার তালিকা`, `ফেনী হাসপাতাল তালিকা`, `ফেনী ক্লিনিক ও ডায়াগনস্টিক`, `ফেনী প্যাথলজি ল্যাব ছাড়`, `ফেনী মডেল ফার্মেসি`, `ফেনী ঔষধ ডিসকাউন্ট`.
+  - **Files**: `src/app/partner-hospitals/page.tsx`, `src/app/partner-hospitals/components/PartnerDirectory.tsx`, `src/components/partner-hospitals/PartnerHospitalsGuide.tsx`, `src/components/partner-hospitals/PartnerHospitalsFAQ.tsx`
+  - **Details**: Enhance `/partner-hospitals` metadata, partner category filters (Hospitals, Diagnostic Labs, Pharmacies), member discount rate keywords (10% to 30% savings), and diagnostic test pricing queries.
+
+- [x] **TODO-91**: **Doctor Profile Rich Snippets (Physician & MedicalSpecialty Schema JSON-LD)**
+  - **Files**: `src/app/consultants/[id]/page.tsx`, `src/components/seo/JsonLd.tsx`, `src/lib/seo/doctorSchema.ts`
+  - **Details**: Integrate Google-compliant Schema.org `Physician` and `MedicalSpecialty` JSON-LD structured data into doctor detail pages (`/consultants/[id]`), including name, qualification, specialty, chamber location, contact phone, visiting hours, and consultation fee info for Google Rich Snippets.
+
+- [x] **TODO-92**: **Hospital & Diagnostic Lab Rich Snippets (MedicalOrganization & DiagnosticLab Schema)**
+  - **Files**: `src/app/partner-hospitals/[id]/page.tsx`, `src/components/seo/JsonLd.tsx`, `src/lib/seo/partnerSchema.ts`
+  - **Details**: Implement Schema.org `MedicalOrganization`, `Hospital`, `DiagnosticLab`, `Pharmacy`, `PriceSpecification`, and `Offer` structured data on partner hospital profile pages to display verified location, contact, and discount offers in Google search results.
+
+- [x] **TODO-93**: **Dynamic XML Sitemap & Breadcrumbs Schema for Feni Healthcare Pages**
+  - **Files**: `src/app/sitemap.ts`, `src/app/layout.tsx`, `src/components/seo/JsonLd.tsx`
+  - **Details**: Update `sitemap.ts` to dynamically fetch and index all published doctor profile URLs (`/consultants/[id]`) and partner hospital URLs (`/partner-hospitals/[id]`) with proper `lastmod` timestamps, priority, and `BreadcrumbList` schema for seamless crawling by Googlebot.
+
+

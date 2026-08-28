@@ -5,7 +5,7 @@ import Link from "next/link";
 import {
   Search, PhoneCall, Calendar, Clock, MapPin, Building2,
   Stethoscope, HeartPulse, Brain, Bone, Baby, Sparkles, ShieldCheck,
-  UserRound, Apple, Eye, Info, X, CheckCircle2, ChevronDown, Smile,
+  UserRound, Apple, Eye, Info, X, CheckCircle2, ChevronDown, Smile, Activity
 } from "lucide-react";
 import { Doctor } from "@/services/db";
 import { Input } from "@/components/ui/input";
@@ -19,6 +19,8 @@ import { FENI_UPAZILAS, getUpazilaLabel, detectUpazilaFromText } from "@/data/fe
 interface DoctorDirectoryProps {
   doctors?: Doctor[];
   limit?: number;
+  initialDept?: string;
+  initialUpazila?: string;
 }
 
 const DEPARTMENTS = [
@@ -26,31 +28,99 @@ const DEPARTMENTS = [
   { id: "medicine", labelKey: "consultants.filter.medicine", icon: Stethoscope },
   { id: "cardiology", labelKey: "consultants.filter.cardiology", icon: HeartPulse },
   { id: "gynecology", labelKey: "consultants.filter.gynecology", icon: UserRound },
+  { id: "pediatrics", labelKey: "consultants.filter.pediatrics", icon: Baby },
   { id: "orthopedics", labelKey: "consultants.filter.orthopedics", icon: Bone },
+  { id: "dermatology", labelKey: "consultants.filter.dermatology", icon: Sparkles },
+  { id: "eye", labelKey: "consultants.filter.eye", icon: Eye },
+  { id: "ent", labelKey: "consultants.filter.ent", icon: Info },
+  { id: "diabetes", labelKey: "consultants.filter.diabetes", icon: Activity },
   { id: "psychiatry", labelKey: "consultants.filter.psychiatry", icon: Brain },
   { id: "nephrology", labelKey: "consultants.filter.nephrology", icon: ShieldCheck },
   { id: "hepatology", labelKey: "consultants.filter.hepatology", icon: ShieldCheck },
   { id: "surgery", labelKey: "consultants.filter.surgery", icon: Sparkles },
-  { id: "pediatrics", labelKey: "consultants.filter.pediatrics", icon: Baby },
   { id: "rheumatology", labelKey: "consultants.filter.rheumatology", icon: Bone },
   { id: "nutrition", labelKey: "consultants.filter.nutrition", icon: Apple },
-  { id: "dermatology", labelKey: "consultants.filter.dermatology", icon: Sparkles },
-  { id: "ent", labelKey: "consultants.filter.ent", icon: Info },
-  { id: "eye", labelKey: "consultants.filter.eye", icon: Eye },
   { id: "dental", labelKey: "consultants.filter.dental", icon: Smile },
   { id: "other", labelKey: "consultants.filter.other", icon: Sparkles },
 ];
 
-export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectoryProps) {
+function isDiabetesDoctor(doc: Doctor): boolean {
+  if (doc.department === "diabetes") return true;
+  const spec = (doc.specialty || "").toLowerCase();
+  return (
+    spec.includes("ডায়াবেটিস") ||
+    spec.includes("diabetes") ||
+    spec.includes("হরমোন") ||
+    spec.includes("hormone") ||
+    spec.includes("থাইরয়েড") ||
+    spec.includes("thyroid") ||
+    spec.includes("endocrin")
+  );
+}
+
+export default function DoctorDirectory({
+  doctors = [],
+  limit,
+  initialDept = "all",
+  initialUpazila = "all",
+}: DoctorDirectoryProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedDept, setSelectedDept] = useState("all");
-  const [selectedUpazila, setSelectedUpazila] = useState("all");
+  const [selectedDept, setSelectedDept] = useState(initialDept || "all");
+  const [selectedUpazila, setSelectedUpazila] = useState(initialUpazila || "all");
+  const [prevInitialDept, setPrevInitialDept] = useState(initialDept);
+  const [prevInitialUpazila, setPrevInitialUpazila] = useState(initialUpazila);
+
+  if (initialDept !== prevInitialDept) {
+    setPrevInitialDept(initialDept);
+    setSelectedDept(initialDept || "all");
+  }
+  if (initialUpazila !== prevInitialUpazila) {
+    setPrevInitialUpazila(initialUpazila);
+    setSelectedUpazila(initialUpazila || "all");
+  }
+
   const [visibleCount, setVisibleCount] = useState(24);
   const [activeSerialDoctor, setActiveSerialDoctor] = useState<Doctor | null>(null);
   const [activeDetailsDoctor, setActiveDetailsDoctor] = useState<Doctor | null>(null);
   const { t, locale } = useLanguage();
-
   const isEn = locale === "en";
+
+  // Update browser URL query params without full page reload
+  const updateUrlParams = (dept: string, upazila: string) => {
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    if (dept && dept !== "all") {
+      url.searchParams.set("dept", dept);
+    } else {
+      url.searchParams.delete("dept");
+    }
+    if (upazila && upazila !== "all") {
+      url.searchParams.set("upazila", upazila);
+    } else {
+      url.searchParams.delete("upazila");
+    }
+    window.history.replaceState(null, "", `${url.pathname}${url.search}`);
+  };
+
+  const handleDeptChange = (deptId: string) => {
+    setSelectedDept(deptId);
+    setVisibleCount(24);
+    updateUrlParams(deptId, selectedUpazila);
+  };
+
+  const handleUpazilaChange = (upzId: string) => {
+    setSelectedUpazila(upzId);
+    setVisibleCount(24);
+    updateUrlParams(selectedDept, upzId);
+  };
+
+  const handleResetFilters = () => {
+    setSelectedUpazila("all");
+    setSelectedDept("all");
+    setSearchQuery("");
+    setVisibleCount(24);
+    updateUrlParams("all", "all");
+  };
 
   // Precompute upazila for each doctor
   const doctorsWithUpazila = useMemo(() => {
@@ -72,7 +142,11 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
         doc.chamberName.toLowerCase().includes(q) ||
         doc.chamberAddress.toLowerCase().includes(q);
 
-      const matchesDept = selectedDept === "all" || doc.department === selectedDept;
+      const matchesDept =
+        selectedDept === "all" ||
+        doc.department === selectedDept ||
+        (selectedDept === "diabetes" && isDiabetesDoctor(doc));
+
       const matchesUpazila = selectedUpazila === "all" || doc.resolvedUpazila === selectedUpazila;
 
       return matchesSearch && matchesDept && matchesUpazila;
@@ -122,12 +196,7 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
           {(selectedUpazila !== "all" || selectedDept !== "all" || searchQuery) && (
             <button
               type="button"
-              onClick={() => {
-                setSelectedUpazila("all");
-                setSelectedDept("all");
-                setSearchQuery("");
-                setVisibleCount(24);
-              }}
+              onClick={handleResetFilters}
               className="text-xs text-primary hover:underline font-semibold cursor-pointer"
             >
               {isEn ? "Reset Filters" : "ফিল্টার মুছুন"}
@@ -149,10 +218,7 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
                 key={upz.id}
                 type="button"
                 aria-pressed={isSelected}
-                onClick={() => {
-                  setSelectedUpazila(upz.id);
-                  setVisibleCount(24);
-                }}
+                onClick={() => handleUpazilaChange(upz.id)}
                 className={`flex items-center gap-1.5 px-3.5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                   isSelected
                     ? "bg-primary text-white shadow-sm ring-2 ring-primary/20"
@@ -186,16 +252,15 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
             id="mobile-department-select"
             aria-label={t("consultants.filter.all")}
             value={selectedDept}
-            onChange={(e) => {
-              setSelectedDept(e.target.value);
-              setVisibleCount(24);
-            }}
+            onChange={(e) => handleDeptChange(e.target.value)}
             className="w-full appearance-none pl-10 pr-10 py-3 text-sm font-semibold rounded-2xl border border-border/80 bg-background text-foreground shadow-xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all cursor-pointer"
           >
             {DEPARTMENTS.map((dept) => {
               const count =
                 dept.id === "all"
                   ? doctors.length
+                  : dept.id === "diabetes"
+                  ? doctors.filter(isDiabetesDoctor).length
                   : doctors.filter((d) => d.department === dept.id).length;
               return (
                 <option key={dept.id} value={dept.id} className="bg-popover text-popover-foreground py-1">
@@ -215,17 +280,19 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
         {DEPARTMENTS.map((dept) => {
           const Icon = dept.icon;
           const isSelected = selectedDept === dept.id;
-          const count = dept.id === "all" ? doctors.length : doctors.filter((d) => d.department === dept.id).length;
+          const count =
+            dept.id === "all"
+              ? doctors.length
+              : dept.id === "diabetes"
+              ? doctors.filter(isDiabetesDoctor).length
+              : doctors.filter((d) => d.department === dept.id).length;
 
           return (
             <button
               key={dept.id}
               type="button"
               aria-pressed={isSelected}
-              onClick={() => {
-                setSelectedDept(dept.id);
-                setVisibleCount(24);
-              }}
+              onClick={() => handleDeptChange(dept.id)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                 isSelected
                   ? "bg-secondary text-white shadow-sm ring-2 ring-secondary/20"
@@ -396,11 +463,7 @@ export default function DoctorDirectory({ doctors = [], limit }: DoctorDirectory
           <Button
             variant="outline"
             size="sm"
-            onClick={() => {
-              setSearchQuery("");
-              setSelectedDept("all");
-              setSelectedUpazila("all");
-            }}
+            onClick={handleResetFilters}
             className="rounded-xl cursor-pointer"
           >
             {t("consultants.empty.reset") || (isEn ? "Reset Filters" : "ফিল্টার রিসেট করুন")}

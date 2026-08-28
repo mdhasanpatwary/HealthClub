@@ -37,6 +37,11 @@ function formatDoctor(d: any): Doctor {
         : d.onLeaveUntil.toISOString().slice(0, 10)
       : undefined,
     notice: d.notice || undefined,
+    createdAt: d.createdAt
+      ? typeof d.createdAt === "string"
+        ? d.createdAt
+        : d.createdAt.toISOString()
+      : undefined,
   };
 }
 
@@ -152,6 +157,7 @@ export const getDoctorsAction = unstable_cache(
           availableToday: true,
           onLeaveUntil: true,
           notice: true,
+          createdAt: true,
         },
       });
 
