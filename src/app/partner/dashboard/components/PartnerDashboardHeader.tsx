@@ -51,7 +51,7 @@ export function PartnerDashboardHeader({ partner, currentStaff: propStaff, onLog
 
           <div className="flex flex-wrap items-center gap-y-1 gap-x-3 text-xs text-slate-300">
             <span className="flex items-center gap-1">
-              {t("admin.dashboard.discountRate")}: <strong className="text-primary font-bold">{partner.discount}</strong>
+              {t("partner.profile.discountRate")}: <strong className="text-primary font-bold">{partner.discount}</strong>
             </span>
             {currentStaff && (
               <span className="inline-flex items-center gap-1.5 text-emerald-300 font-semibold bg-emerald-500/15 px-2.5 py-0.5 rounded-full border border-emerald-500/30">

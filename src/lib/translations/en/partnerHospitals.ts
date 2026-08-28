@@ -50,5 +50,23 @@ export const partnerHospitalsEn = {
   "partnerHospitals.faq.q5": "How do I find emergency ambulance or oxygen in Feni?",
   "partnerHospitals.faq.a5": "Visit our 24/7 Emergency page to access direct hotlines for ICU/AC ambulances, voluntary blood donors by blood group, oxygen cylinder providers, and Feni 250-bed General Hospital ER hotlines.",
   "partnerHospitals.faq.q6": "How much can I save on medical test price lists in Feni?",
-  "partnerHospitals.faq.a6": "Depending on the diagnostic facility and test category, members save 15% to 30% on routine pathology, hormone profiles, digital X-rays, USG, and advanced scans (CT scan / MRI), saving hundreds to thousands of Taka per medical checkup."
+  "partnerHospitals.faq.a6": "Depending on the diagnostic facility and test category, members save 15% to 30% on routine pathology, hormone profiles, digital X-rays, USG, and advanced scans (CT scan / MRI), saving hundreds to thousands of Taka per medical checkup.",
+
+  // Gallery Modal
+  "partnerHospitals.gallery.title": "Hospital & Facility Photo Gallery",
+  "partnerHospitals.gallery.mainBuilding": "Main Building & Entrance",
+  "partnerHospitals.gallery.indoorFacility": "Inpatient Wards & Admission Facilities",
+  "partnerHospitals.gallery.labDiagnostic": "Digital Laboratory & Diagnostic Imaging",
+  "partnerHospitals.gallery.pharmacyCounter": "In-house Pharmacy & Medical Supplies",
+  "partnerHospitals.gallery.prev": "Previous Image",
+  "partnerHospitals.gallery.next": "Next Image",
+  "partnerHospitals.gallery.close": "Close Gallery",
+
+  // Profile View
+  "partnerHospitals.profile.overview": "Overview & Facilities",
+  "partnerHospitals.profile.discountTitle": "Member Discount Rates",
+  "partnerHospitals.profile.doctorRoster": "Doctors & Specialists Chamber",
+  "partnerHospitals.profile.emergencyHotline": "24/7 Emergency Helpline",
+  "partnerHospitals.profile.getDirections": "Get Map Directions",
+  "partnerHospitals.profile.shareHospital": "Share Hospital Profile"
 } as const;

@@ -17,7 +17,7 @@ interface BloodDonorRegisterDialogProps {
 }
 
 export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegisterDialogProps) {
-  const { locale } = useLanguage();
+  const { locale, t } = useLanguage();
   const isEn = locale === "en";
 
   const [name, setName] = useState("");
@@ -30,7 +30,7 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !phone.trim()) {
-      toast.error(isEn ? "Please provide your name and phone number." : "আপনার নাম ও মোবাইল নম্বর প্রদান করুন।");
+      toast.error(t("emergency.donorModal.phoneRequired") || (isEn ? "Please provide your name and phone number." : "আপনার নাম ও মোবাইল নম্বর প্রদান করুন।"));
       return;
     }
 
@@ -49,9 +49,9 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
 
       if (res.success) {
         toast.success(
-          isEn
+          t("emergency.donorModal.successMsg") || (isEn
             ? "Registration submitted! It will appear in the directory once approved by admin."
-            : res.message
+            : res.message)
         );
         setName("");
         setPhone("");
@@ -61,7 +61,7 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
         toast.error(res.message);
       }
     } catch {
-      toast.error(isEn ? "Failed to submit registration." : "আবেদনটি জমা দেওয়া সম্ভব হয়নি।");
+      toast.error(t("emergency.donorModal.errorMsg") || (isEn ? "Failed to submit registration." : "আবেদনটি জমা দেওয়া সম্ভব হয়নি।"));
     } finally {
       setLoading(false);
     }
@@ -75,12 +75,10 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
             <Heart className="h-6 w-6 fill-rose-500/20" />
           </div>
           <DialogTitle className="text-center font-heading text-xl font-bold">
-            {isEn ? "Register as a Blood Donor" : "রক্তদাতা হিসেবে নিবন্ধন করুন"}
+            {t("emergency.donorModal.title")}
           </DialogTitle>
           <DialogDescription className="text-center text-xs sm:text-sm text-muted-foreground">
-            {isEn
-              ? "Join our voluntary blood donation network and save lives in emergency situations."
-              : "আমাদের স্বেচ্ছাসেবী রক্তদাতা নেটওয়ার্কে যুক্ত হয়ে যেকোনো জরুরি প্রয়োজনে মুমূর্ষু রোগীর পাশে দাঁড়ান।"}
+            {t("emergency.donorModal.desc")}
           </DialogDescription>
         </DialogHeader>
 
@@ -88,11 +86,11 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
           {/* Name */}
           <div className="space-y-1.5">
             <Label htmlFor="donor-name" className="text-xs font-semibold">
-              {isEn ? "Your Full Name" : "আপনার পূর্ণ নাম"} <span className="text-rose-500">*</span>
+              {t("emergency.donorModal.name")} <span className="text-rose-500">*</span>
             </Label>
             <Input
               id="donor-name"
-              placeholder={isEn ? "e.g. Tanvir Ahmed" : "যেমন: তানভীর আহমেদ"}
+              placeholder={t("emergency.donorModal.namePlaceholder")}
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -102,12 +100,12 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
           {/* Phone */}
           <div className="space-y-1.5">
             <Label htmlFor="donor-phone" className="text-xs font-semibold">
-              {isEn ? "Phone Number" : "মোবাইল নম্বর"} <span className="text-rose-500">*</span>
+              {t("emergency.donorModal.phone")} <span className="text-rose-500">*</span>
             </Label>
             <Input
               id="donor-phone"
               type="tel"
-              placeholder={isEn ? "e.g. 018XXXXXXXX" : "যেমন: ০১৮XXXXXXXX"}
+              placeholder={t("emergency.donorModal.phonePlaceholder")}
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               required
@@ -117,7 +115,7 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
           {/* Blood Group Select */}
           <div className="space-y-1.5">
             <Label className="text-xs font-semibold">
-              {isEn ? "Select Blood Group" : "রক্তের গ্রুপ নির্বাচন করুন"} <span className="text-rose-500">*</span>
+              {t("emergency.donorModal.bloodGroup")} <span className="text-rose-500">*</span>
             </Label>
             <div className="grid grid-cols-4 gap-1.5">
               {BLOOD_GROUPS.map((bg) => (
@@ -140,7 +138,7 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
           {/* Upazila Select */}
           <div className="space-y-1.5">
             <Label htmlFor="donor-upazila" className="text-xs font-semibold">
-              {isEn ? "Upazila / Area" : "উপজেলা / এলাকা"} <span className="text-rose-500">*</span>
+              {t("emergency.donorModal.upazila")} <span className="text-rose-500">*</span>
             </Label>
             <select
               id="donor-upazila"
@@ -159,11 +157,11 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
           {/* Last Donation */}
           <div className="space-y-1.5">
             <Label htmlFor="last-donated" className="text-xs font-semibold text-muted-foreground">
-              {isEn ? "Last Blood Donation (Optional)" : "সর্বশেষ রক্তদানের সময় (ঐচ্ছিক)"}
+              {t("emergency.donorModal.lastDonated")}
             </Label>
             <Input
               id="last-donated"
-              placeholder={isEn ? "e.g. 3 months ago / Never" : "যেমন: ৩ মাস আগে / কখনো দিইনি"}
+              placeholder={t("emergency.donorModal.lastDonatedPlaceholder")}
               value={lastDonated}
               onChange={(e) => setLastDonated(e.target.value)}
             />
@@ -178,12 +176,12 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {isEn ? "Submitting..." : "জমা দেওয়া হচ্ছে..."}
+                  {t("emergency.donorModal.submitting")}
                 </>
               ) : (
                 <>
                   <Heart className="mr-2 h-4 w-4 fill-white" />
-                  {isEn ? "Submit Registration" : "নিবন্ধন জমা দিন"}
+                  {t("emergency.donorModal.submit")}
                 </>
               )}
             </Button>

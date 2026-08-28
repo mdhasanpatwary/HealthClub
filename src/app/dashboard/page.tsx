@@ -153,13 +153,13 @@ function DashboardContent() {
 
     const partner = partners.find((p) => p.id === newTxPartnerId);
     if (!partner) {
-      toast.error(t("admin.dashboard.selectedPartnerNotFound"));
+      toast.error(t("dashboard.history.selectedPartnerNotFound"));
       return;
     }
 
     const billAmount = Number(newTxAmount);
     if (isNaN(billAmount) || billAmount <= 0) {
-      toast.error(t("admin.dashboard.enterValidBillAmount"));
+      toast.error(t("dashboard.history.enterValidBillAmount"));
       return;
     }
 
@@ -179,7 +179,7 @@ function DashboardContent() {
       });
 
       if ("error" in res) {
-        toast.error(res.error || t("admin.dashboard.txLogFailed"));
+        toast.error(res.error || t("dashboard.history.txAddFailed"));
         return;
       }
 
@@ -207,7 +207,7 @@ function DashboardContent() {
         authStore.setCurrentUser(freshUser);
       }
     } catch {
-      toast.error(t("admin.dashboard.txLogFailed"));
+      toast.error(t("dashboard.history.txAddFailed"));
     } finally {
       setAddTxSubmitting(false);
     }

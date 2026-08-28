@@ -141,5 +141,32 @@ export const commonBn = {
   "ui.imageUpload.processError": "ছবি প্রসেস করতে ব্যর্থ হয়েছে।",
   "ui.imageUpload.deleteImage": "ছবি মুছে ফেলুন",
   "ui.imageUpload.changeImage": "ছবি পরিবর্তন করুন",
-  "ui.imageUpload.uploadImage": "ছবি আপলোড করুন"
+  "ui.imageUpload.uploadImage": "ছবি আপলোড করুন",
+
+  // Layout, Notice, PWA & Navigation
+  "layout.notice.dismiss": "বিজ্ঞপ্তিটি বন্ধ করুন",
+  "layout.notice.close": "বন্ধ করুন",
+  "layout.pwa.installPrompt": "অফলাইনে ব্যবহারের জন্য অ্যাপ ইনস্টল করুন",
+  "layout.pwa.installBtn": "ইনস্টল করুন",
+  "layout.pwa.dismiss": "এখন নয়",
+  "layout.pwa.closePrompt": "ইনস্টলেশন নোটিশ বন্ধ করুন",
+  "layout.push.promptTitle": "জরুরি স্বাস্থ্য বিজ্ঞপ্তি চালু করুন",
+  "layout.push.promptDesc": "জরুরি রক্তের চাহিদা ও নতুন ডিসকাউন্ট তথ্যের ইনস্ট্যান্ট নোটিফিকেশন পান।",
+  "layout.push.enableBtn": "নোটিফিকেশন চালু করুন",
+  "layout.push.closePrompt": "নোটিফিকেশন প্রম্পট বন্ধ করুন",
+  "layout.card.joined": "যুক্ত হয়েছেন:",
+  "layout.card.validThru": "মেয়াদ:",
+  "layout.nav.dashboard": "ড্যাশবোর্ড",
+  "layout.nav.openMenu": "মেনু খুলুন",
+  "layout.nav.closeMenu": "মেনু বন্ধ করুন",
+  "layout.nav.toggleTheme": "থিম পরিবর্তন",
+
+  // Generic UI & Feedback
+  "common.fillRequired": "সবগুলো প্রয়োজনীয় ফিল্ড পূরণ করুন।",
+  "common.cancel": "বাতিল",
+  "common.save": "সংরক্ষণ করুন",
+  "common.submit": "জমা দিন",
+  "common.loading": "লোড হচ্ছে...",
+  "common.success": "সফল হয়েছে",
+  "common.error": "কোনো সমস্যা হয়েছে। আবার চেষ্টা করুন।"
 } as const;

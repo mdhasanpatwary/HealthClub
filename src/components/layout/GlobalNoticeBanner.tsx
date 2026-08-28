@@ -3,6 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 import { Megaphone, X } from "lucide-react";
+import { useLanguage } from "./LanguageProvider";
 
 interface GlobalNoticeBannerProps {
   notice: {
@@ -34,6 +35,7 @@ function getServerSnapshot() {
 
 export default function GlobalNoticeBanner({ notice }: GlobalNoticeBannerProps) {
   const pathname = usePathname();
+  const { t } = useLanguage();
   const dismissedText = useSyncExternalStore(subscribe, getDismissedText, getServerSnapshot);
 
   // Hide announcement banner inside admin panel
@@ -78,8 +80,8 @@ export default function GlobalNoticeBanner({ notice }: GlobalNoticeBannerProps) 
           type="button"
           onClick={handleDismiss}
           className="inline-flex items-center justify-center size-7 sm:size-6 rounded-md p-1 text-white/80 hover:text-white hover:bg-white/20 dark:hover:bg-white/10 transition-colors shrink-0 cursor-pointer"
-          aria-label="বিজ্ঞপ্তিটি বন্ধ করুন"
-          title="বন্ধ করুন"
+          aria-label={t("layout.notice.dismiss")}
+          title={t("layout.notice.close")}
         >
           <X className="size-4 sm:size-3.5" />
         </button>

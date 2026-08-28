@@ -141,5 +141,32 @@ export const commonEn = {
   "ui.imageUpload.processError": "Failed to process image.",
   "ui.imageUpload.deleteImage": "Remove Image",
   "ui.imageUpload.changeImage": "Change Image",
-  "ui.imageUpload.uploadImage": "Upload Image"
+  "ui.imageUpload.uploadImage": "Upload Image",
+
+  // Layout, Notice, PWA & Navigation
+  "layout.notice.dismiss": "Dismiss Announcement",
+  "layout.notice.close": "Close",
+  "layout.pwa.installPrompt": "Install App for Offline Access",
+  "layout.pwa.installBtn": "Install Now",
+  "layout.pwa.dismiss": "Not Now",
+  "layout.pwa.closePrompt": "Close installation prompt",
+  "layout.push.promptTitle": "Enable Medical Emergency Alerts",
+  "layout.push.promptDesc": "Get instant notifications for emergency blood requests and discount updates.",
+  "layout.push.enableBtn": "Enable Notifications",
+  "layout.push.closePrompt": "Close notification prompt",
+  "layout.card.joined": "JOINED:",
+  "layout.card.validThru": "VALID THRU:",
+  "layout.nav.dashboard": "Dashboard",
+  "layout.nav.openMenu": "Open Navigation Menu",
+  "layout.nav.closeMenu": "Close Menu",
+  "layout.nav.toggleTheme": "Toggle Theme",
+
+  // Generic UI & Feedback
+  "common.fillRequired": "Please fill in all required fields.",
+  "common.cancel": "Cancel",
+  "common.save": "Save Changes",
+  "common.submit": "Submit",
+  "common.loading": "Loading...",
+  "common.success": "Success",
+  "common.error": "Something went wrong. Please try again."
 } as const;

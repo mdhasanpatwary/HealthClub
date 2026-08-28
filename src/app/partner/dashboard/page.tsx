@@ -36,7 +36,7 @@ export default function PartnerDashboardPage() {
   const [partner, setPartner] = useState<Partner | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loadingTransactions, setLoadingTransactions] = useState(true);
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
 
   const loadTransactions = useCallback(async () => {
     setLoadingTransactions(true);
@@ -95,46 +95,41 @@ export default function PartnerDashboardPage() {
 
       {/* Main Tabbed Navigation */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 max-w-4xl bg-muted/70 dark:bg-slate-900/70 p-1.5 rounded-2xl border border-border/60 gap-1">
+        <TabsList className="flex flex-wrap items-center justify-start sm:justify-center w-full h-auto group-data-horizontal/tabs:h-auto p-1.5 bg-muted/70 dark:bg-slate-900/80 rounded-2xl border border-border/60 gap-1.5">
           <TabsTrigger
             value="billing"
-            className="rounded-xl text-xs sm:text-sm font-semibold py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm cursor-pointer"
+            className="flex-1 sm:flex-initial min-w-[140px] sm:min-w-[160px] h-auto min-h-[44px] py-2.5 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all data-active:bg-background data-active:text-foreground data-active:shadow-md data-active:border-border/80 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-md cursor-pointer whitespace-nowrap justify-center"
           >
-            <Receipt className="h-4 w-4 mr-1.5" />
-            <span className="hidden sm:inline">{t("partner.dashboard.tabs.billing")}</span>
-            <span className="sm:hidden">বিলিং</span>
+            <Receipt className="h-4 w-4 mr-2 shrink-0 text-emerald-600 dark:text-emerald-400" />
+            <span>{locale === "bn" ? "বিলিং ও ভেরিফিকেশন" : (t("partner.dashboard.tabs.billing") || "POS Billing")}</span>
           </TabsTrigger>
           <TabsTrigger
             value="doctors"
-            className="rounded-xl text-xs sm:text-sm font-semibold py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm cursor-pointer"
+            className="flex-1 sm:flex-initial min-w-[140px] sm:min-w-[160px] h-auto min-h-[44px] py-2.5 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all data-active:bg-background data-active:text-foreground data-active:shadow-md data-active:border-border/80 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-md cursor-pointer whitespace-nowrap justify-center"
           >
-            <Stethoscope className="h-4 w-4 mr-1.5 text-primary" />
-            <span className="hidden sm:inline">{t("partner.dashboard.tabs.doctors")}</span>
-            <span className="sm:hidden">ডাক্তার</span>
+            <Stethoscope className="h-4 w-4 mr-2 shrink-0 text-teal-600 dark:text-teal-400" />
+            <span>{locale === "bn" ? "ডাক্তার ও চেম্বার" : (t("partner.dashboard.tabs.doctors") || "Doctor Roster")}</span>
           </TabsTrigger>
           <TabsTrigger
             value="analytics"
-            className="rounded-xl text-xs sm:text-sm font-semibold py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm cursor-pointer"
+            className="flex-1 sm:flex-initial min-w-[140px] sm:min-w-[160px] h-auto min-h-[44px] py-2.5 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all data-active:bg-background data-active:text-foreground data-active:shadow-md data-active:border-border/80 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-md cursor-pointer whitespace-nowrap justify-center"
           >
-            <BarChart3 className="h-4 w-4 mr-1.5 text-amber-500" />
-            <span className="hidden sm:inline">{t("partner.dashboard.tabs.analytics")}</span>
-            <span className="sm:hidden">অ্যানালিটিক্স</span>
+            <BarChart3 className="h-4 w-4 mr-2 shrink-0 text-amber-500 dark:text-amber-400" />
+            <span>{locale === "bn" ? "অ্যানালিটিক্স ও রিপোর্ট" : (t("partner.dashboard.tabs.analytics") || "Analytics")}</span>
           </TabsTrigger>
           <TabsTrigger
             value="staff"
-            className="rounded-xl text-xs sm:text-sm font-semibold py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm cursor-pointer"
+            className="flex-1 sm:flex-initial min-w-[140px] sm:min-w-[160px] h-auto min-h-[44px] py-2.5 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all data-active:bg-background data-active:text-foreground data-active:shadow-md data-active:border-border/80 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-md cursor-pointer whitespace-nowrap justify-center"
           >
-            <Users className="h-4 w-4 mr-1.5 text-blue-500" />
-            <span className="hidden sm:inline">{t("partner.dashboard.tabs.staff") || "স্টাফ ও কাউন্টার"}</span>
-            <span className="sm:hidden">স্টাফ</span>
+            <Users className="h-4 w-4 mr-2 shrink-0 text-blue-500 dark:text-blue-400" />
+            <span>{locale === "bn" ? "স্টাফ ও কাউন্টার" : (t("partner.dashboard.tabs.staff") || "Staff & Counters")}</span>
           </TabsTrigger>
           <TabsTrigger
             value="profile"
-            className="rounded-xl text-xs sm:text-sm font-semibold py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm cursor-pointer"
+            className="flex-1 sm:flex-initial min-w-[140px] sm:min-w-[160px] h-auto min-h-[44px] py-2.5 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all data-active:bg-background data-active:text-foreground data-active:shadow-md data-active:border-border/80 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-md cursor-pointer whitespace-nowrap justify-center"
           >
-            <Building2 className="h-4 w-4 mr-1.5" />
-            <span className="hidden sm:inline">{t("partner.dashboard.tabs.profileSettings")}</span>
-            <span className="sm:hidden">প্রোফাইল</span>
+            <Building2 className="h-4 w-4 mr-2 shrink-0 text-indigo-500 dark:text-indigo-400" />
+            <span>{locale === "bn" ? "হাসপাতাল প্রোফাইল" : (t("partner.dashboard.tabs.profileSettings") || "Profile Settings")}</span>
           </TabsTrigger>
         </TabsList>
 

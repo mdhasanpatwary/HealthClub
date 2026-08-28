@@ -233,7 +233,7 @@ export default function MobileNavDrawer({
                   })}
                 >
                   <LayoutDashboard className="h-4 w-4 mr-2" />
-                  <span>ড্যাশবোর্ড</span>
+                  <span>{t("layout.header.dashboard")}</span>
                 </Link>
                 <Button
                   variant="ghost"

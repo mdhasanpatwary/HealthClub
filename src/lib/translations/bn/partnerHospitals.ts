@@ -50,5 +50,23 @@ export const partnerHospitalsBn = {
   "partnerHospitals.faq.q5": "জরুরি প্রয়োজনে কীভাবে নিকটস্থ অ্যাম্বুলেন্স বা অক্সিজেন খুঁজে পাবো?",
   "partnerHospitals.faq.a5": "হেলথ ক্লাবের 'জরুরি সেবা' পেজ থেকে সরাসরি হটলাইনে কল করে ২৪/৭ আইসিইউ/এসি অ্যাম্বুলেন্স, ব্লাড ডোনার এবং অক্সিজেন সিলিন্ডার সহায়তা পাওয়া যাবে।",
   "partnerHospitals.faq.q6": "ফেনীতে মেডিকেল টেস্ট ও প্যাথলজি ল্যাব টেস্টে কত টাকা সাশ্রয় হয়?",
-  "partnerHospitals.faq.a6": "টেস্টের ধরন অনুযায়ী মেম্বাররা রুটিন প্যাথলজি, হরমোন টেস্ট, এক্স-রে, ৪ডি ইউএসজি, সিটি স্ক্যান এবং এমআরআই-তে ১৫% থেকে ৩০% পর্যন্ত ছাড় পান, যা প্রতিটি মেডিকেল চেকআপে উল্লেখযোগ্য আর্থিক সাশ্রয় নিশ্চিত করে।"
+  "partnerHospitals.faq.a6": "টেস্টের ধরন অনুযায়ী মেম্বাররা রুটিন প্যাথলজি, হরমোন টেস্ট, এক্স-রে, ৪ডি ইউএসজি, সিটি স্ক্যান এবং এমআরআই-তে ১৫% থেকে ৩০% পর্যন্ত ছাড় পান, যা প্রতিটি মেডিকেল চেকআপে উল্লেখযোগ্য আর্থিক সাশ্রয় নিশ্চিত করে।",
+
+  // Gallery Modal
+  "partnerHospitals.gallery.title": "ছবি গ্যালারি",
+  "partnerHospitals.gallery.mainBuilding": "মূল ভবন ও রিসেপশন",
+  "partnerHospitals.gallery.indoorFacility": "রোগী ভর্তি ও ইনডোর চিকিৎসা সুবিধা",
+  "partnerHospitals.gallery.labDiagnostic": "ডিজিটাল ল্যাবরেটরি ও ডায়াগনস্টিক বিভাগ",
+  "partnerHospitals.gallery.pharmacyCounter": "ইন-হাউজ ফার্মেসি ও মেডিসিন কাউন্টার",
+  "partnerHospitals.gallery.prev": "আগের ছবি",
+  "partnerHospitals.gallery.next": "পরের ছবি",
+  "partnerHospitals.gallery.close": "গ্যালারি বন্ধ করুন",
+
+  // Profile View
+  "partnerHospitals.profile.overview": "প্রতিষ্ঠানের বিবরণ ও সুবিধাসমূহ",
+  "partnerHospitals.profile.discountTitle": "মেম্বারদের ডিসকাউন্ট রেট",
+  "partnerHospitals.profile.doctorRoster": "চেম্বার ও বিশেষজ্ঞ ডাক্তার তালিকা",
+  "partnerHospitals.profile.emergencyHotline": "২৪/৭ জরুরি হটলাইন",
+  "partnerHospitals.profile.getDirections": "ম্যাপে লোকেশন দেখুন",
+  "partnerHospitals.profile.shareHospital": "শেয়ার করুন"
 } as const;

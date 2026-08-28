@@ -26,7 +26,7 @@ export function AmbulanceRegisterDialog({
   open,
   onOpenChange,
 }: AmbulanceRegisterDialogProps) {
-  const { locale } = useLanguage();
+  const { locale, t } = useLanguage();
   const isEn = locale === "en";
 
   const [serviceName, setServiceName] = useState("");
@@ -43,9 +43,9 @@ export function AmbulanceRegisterDialog({
     e.preventDefault();
     if (!serviceName.trim() || !operatorName.trim() || !phone.trim()) {
       toast.error(
-        isEn
+        t("emergency.ambulanceModal.phoneRequired") || (isEn
           ? "Please provide service name, driver/operator name, and phone number."
-          : "অনুগ্রহ করে প্রতিষ্ঠানের নাম, চালক/মালিকের নাম ও ফোন নম্বর পূরণ করুন।"
+          : "অনুগ্রহ করে প্রতিষ্ঠানের নাম, চালক/মালিকের নাম ও ফোন নম্বর পূরণ করুন।")
       );
       return;
     }
@@ -70,9 +70,9 @@ export function AmbulanceRegisterDialog({
 
       if (res.success) {
         toast.success(
-          isEn
+          t("emergency.ambulanceModal.successMsg") || (isEn
             ? "Ambulance registration submitted successfully! We will review and publish it."
-            : res.message
+            : res.message)
         );
         setServiceName("");
         setOperatorName("");
@@ -86,9 +86,9 @@ export function AmbulanceRegisterDialog({
       }
     } catch {
       toast.error(
-        isEn
+        t("emergency.ambulanceModal.errorMsg") || (isEn
           ? "Failed to submit ambulance registration. Please try again."
-          : "নিবন্ধন জমা দেওয়া সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।"
+          : "নিবন্ধন জমা দেওয়া সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।")
       );
     } finally {
       setLoading(false);
@@ -103,12 +103,10 @@ export function AmbulanceRegisterDialog({
             <Truck className="h-6 w-6" />
           </div>
           <DialogTitle className="text-center font-heading text-xl font-bold">
-            {isEn ? "Register Ambulance Service" : "অ্যাম্বুলেন্স তালিকাভুক্ত করুন"}
+            {t("emergency.ambulanceModal.title")}
           </DialogTitle>
           <DialogDescription className="text-center text-xs sm:text-sm text-muted-foreground">
-            {isEn
-              ? "List your ambulance in Health Club's 24/7 emergency dispatch directory in Feni."
-              : "ফেনীর মানুষের জরুরি স্বাস্থ্য সেবায় হেলথ ক্লাব ২৪/৭ অ্যাম্বুলেন্স ডিরেক্টরিতে যুক্ত হোন।"}
+            {t("emergency.ambulanceModal.desc")}
           </DialogDescription>
         </DialogHeader>
 
@@ -116,12 +114,12 @@ export function AmbulanceRegisterDialog({
           {/* Service / Ambulance Name */}
           <div className="space-y-1.5">
             <Label htmlFor="ambulance-service-name" className="text-xs font-semibold">
-              {isEn ? "Ambulance / Service Name" : "অ্যাম্বুলেন্স / সার্ভিসের নাম"}{" "}
+              {t("emergency.ambulanceModal.serviceName")}{" "}
               <span className="text-rose-500">*</span>
             </Label>
             <Input
               id="ambulance-service-name"
-              placeholder={isEn ? "e.g. Al-Madina AC Ambulance Service" : "যেমন: আল-মদিনা এসি অ্যাম্বুলেন্স সার্ভিস"}
+              placeholder={t("emergency.ambulanceModal.serviceNamePlaceholder")}
               value={serviceName}
               onChange={(e) => setServiceName(e.target.value)}
               required
@@ -131,12 +129,12 @@ export function AmbulanceRegisterDialog({
           {/* Driver / Operator Name */}
           <div className="space-y-1.5">
             <Label htmlFor="ambulance-operator-name" className="text-xs font-semibold">
-              {isEn ? "Driver / Owner Name" : "চালক বা মালিকের নাম"}{" "}
+              {t("emergency.ambulanceModal.operatorName")}{" "}
               <span className="text-rose-500">*</span>
             </Label>
             <Input
               id="ambulance-operator-name"
-              placeholder={isEn ? "e.g. Md. Jasim Uddin" : "যেমন: মোঃ জসীম উদ্দিন"}
+              placeholder={t("emergency.ambulanceModal.operatorNamePlaceholder")}
               value={operatorName}
               onChange={(e) => setOperatorName(e.target.value)}
               required
@@ -147,13 +145,13 @@ export function AmbulanceRegisterDialog({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="ambulance-phone" className="text-xs font-semibold">
-                {isEn ? "Primary Hotline Phone" : "প্রধান কল নম্বর (২৪/৭)"}{" "}
+                {t("emergency.ambulanceModal.phone")}{" "}
                 <span className="text-rose-500">*</span>
               </Label>
               <Input
                 id="ambulance-phone"
                 type="tel"
-                placeholder={isEn ? "e.g. 018XXXXXXXX" : "যেমন: ০১৮XXXXXXXX"}
+                placeholder={t("emergency.ambulanceModal.phonePlaceholder")}
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 required
@@ -161,12 +159,12 @@ export function AmbulanceRegisterDialog({
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="ambulance-alt-phone" className="text-xs font-semibold text-muted-foreground">
-                {isEn ? "Alternative Phone (Optional)" : "বিকল্প নম্বর (ঐচ্ছিক)"}
+                {t("emergency.ambulanceModal.altPhone")}
               </Label>
               <Input
                 id="ambulance-alt-phone"
                 type="tel"
-                placeholder={isEn ? "e.g. 017XXXXXXXX" : "যেমন: ০১৭XXXXXXXX"}
+                placeholder={t("emergency.ambulanceModal.altPhonePlaceholder")}
                 value={altPhone}
                 onChange={(e) => setAltPhone(e.target.value)}
               />
@@ -176,23 +174,23 @@ export function AmbulanceRegisterDialog({
           {/* Ambulance Type Selection */}
           <div className="space-y-1.5">
             <Label className="text-xs font-semibold">
-              {isEn ? "Ambulance Type" : "অ্যাম্বুলেন্সের ধরন"}{" "}
+              {t("emergency.ambulanceModal.type")}{" "}
               <span className="text-rose-500">*</span>
             </Label>
             <div className="grid grid-cols-2 gap-2">
-              {AMBULANCE_TYPES.map((t) => (
+              {AMBULANCE_TYPES.map((tItem) => (
                 <button
                   type="button"
-                  key={t.id}
-                  onClick={() => setType(t.id)}
+                  key={tItem.id}
+                  onClick={() => setType(tItem.id)}
                   className={`p-2.5 text-xs font-bold rounded-xl border text-left flex items-center justify-between transition-all ${
-                    type === t.id
+                    type === tItem.id
                       ? "bg-primary/10 text-primary border-primary shadow-2xs font-semibold"
                       : "bg-background hover:bg-muted text-muted-foreground border-border"
                   }`}
                 >
-                  <span>{isEn ? t.nameEn : t.nameBn}</span>
-                  {type === t.id && <span className="text-primary font-bold">✓</span>}
+                  <span>{isEn ? tItem.nameEn : tItem.nameBn}</span>
+                  {type === tItem.id && <span className="text-primary font-bold">✓</span>}
                 </button>
               ))}
             </div>
@@ -202,7 +200,7 @@ export function AmbulanceRegisterDialog({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="ambulance-upazila" className="text-xs font-semibold">
-                {isEn ? "Upazila / Area" : "উপজেলা / এলাকা"}{" "}
+                {t("emergency.ambulanceModal.upazila")}{" "}
                 <span className="text-rose-500">*</span>
               </Label>
               <select
@@ -220,11 +218,11 @@ export function AmbulanceRegisterDialog({
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="ambulance-stand" className="text-xs font-semibold">
-                {isEn ? "Stand / Specific Point" : "স্ট্যান্ড / নির্দিষ্ট স্থান"}
+                {t("emergency.ambulanceModal.standLocation")}
               </Label>
               <Input
                 id="ambulance-stand"
-                placeholder={isEn ? "e.g. Sadar Hospital Gate" : "যেমন: সদর হাসপাতাল গেইট"}
+                placeholder={t("emergency.ambulanceModal.standLocationPlaceholder")}
                 value={standLocation}
                 onChange={(e) => setStandLocation(e.target.value)}
               />
@@ -234,11 +232,11 @@ export function AmbulanceRegisterDialog({
           {/* Coverage Note */}
           <div className="space-y-1.5">
             <Label htmlFor="ambulance-coverage" className="text-xs font-semibold text-muted-foreground">
-              {isEn ? "Service Coverage Area (Optional)" : "সার্ভিস রুট / কভারেজ (ঐচ্ছিক)"}
+              {t("emergency.ambulanceModal.coverage")}
             </Label>
             <Input
               id="ambulance-coverage"
-              placeholder={isEn ? "e.g. Feni Local & Feni to Dhaka/Ctg" : "যেমন: সমগ্র ফেনী ও ঢাকা/চট্টগ্রাম ট্রিপ"}
+              placeholder={t("emergency.ambulanceModal.coveragePlaceholder")}
               value={coverage}
               onChange={(e) => setCoverage(e.target.value)}
             />
@@ -248,9 +246,7 @@ export function AmbulanceRegisterDialog({
           <div className="flex items-start gap-2 p-2.5 rounded-xl bg-muted/60 text-xs text-muted-foreground">
             <ShieldCheck className="h-4 w-4 text-primary shrink-0 mt-0.5" />
             <span>
-              {isEn
-                ? "Your details will be reviewed and published to the 24/7 public emergency directory upon phone verification."
-                : "তথ্য সাবমিট করার পর আমাদের হেল্পডেস্ক টিম যাচাই করে দ্রুত ডিরেক্টরিতে উন্মুক্ত করবে।"}
+              {t("emergency.ambulanceModal.verificationNote")}
             </span>
           </div>
 
@@ -263,12 +259,12 @@ export function AmbulanceRegisterDialog({
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {isEn ? "Submitting..." : "জমা দেওয়া হচ্ছে..."}
+                  {t("emergency.ambulanceModal.submitting")}
                 </>
               ) : (
                 <>
                   <Truck className="mr-2 h-4 w-4" />
-                  {isEn ? "Submit Ambulance Listing" : "অ্যাম্বুলেন্স তথ্য জমা দিন"}
+                  {t("emergency.ambulanceModal.submit")}
                 </>
               )}
             </Button>

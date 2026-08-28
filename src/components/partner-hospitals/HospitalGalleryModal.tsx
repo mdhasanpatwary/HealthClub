@@ -19,7 +19,7 @@ export default function HospitalGalleryModal({
   onClose,
   initialIndex = 0,
 }: HospitalGalleryModalProps) {
-  const { locale } = useLanguage();
+  const { locale, t } = useLanguage();
   const isEn = locale === "en";
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [prevInitialIndex, setPrevInitialIndex] = useState(initialIndex);
@@ -39,23 +39,23 @@ export default function HospitalGalleryModal({
   const images = [
     {
       src: partner.imageUrl || fallbackImage,
-      captionBn: `${partner.name} - মূল ভবন ও রিসেপশন`,
-      captionEn: `${partner.name} - Main Building & Entrance`,
+      captionBn: `${partner.name} - ${t("partnerHospitals.gallery.mainBuilding")}`,
+      captionEn: `${partner.name} - ${t("partnerHospitals.gallery.mainBuilding")}`,
     },
     {
       src: "/images/placeholders/hospital.webp",
-      captionBn: "রোগী ভর্তি ও ইনডোর চিকিৎসা সুবিধা",
-      captionEn: "Inpatient Wards & Admission Facilities",
+      captionBn: t("partnerHospitals.gallery.indoorFacility"),
+      captionEn: t("partnerHospitals.gallery.indoorFacility"),
     },
     {
       src: "/images/placeholders/diagnostic.webp",
-      captionBn: "ডিজিটাল ল্যাবরেটরি ও ডায়াগনস্টিক বিভাগ",
-      captionEn: "Digital Laboratory & Diagnostic Imaging",
+      captionBn: t("partnerHospitals.gallery.labDiagnostic"),
+      captionEn: t("partnerHospitals.gallery.labDiagnostic"),
     },
     {
       src: "/images/placeholders/pharmacy.webp",
-      captionBn: "ইন-হাউজ ফার্মেসি ও মেডিসিন কাউন্টার",
-      captionEn: "In-house Pharmacy & Medical Supplies",
+      captionBn: t("partnerHospitals.gallery.pharmacyCounter"),
+      captionEn: t("partnerHospitals.gallery.pharmacyCounter"),
     },
   ];
 
@@ -94,7 +94,7 @@ export default function HospitalGalleryModal({
             </div>
             <div>
               <h3 id="gallery-modal-title" className="text-xs sm:text-sm font-bold text-foreground font-heading">
-                {partner.name} - {isEn ? "Photo Gallery" : "ছবি গ্যালারি"}
+                {partner.name} - {t("partnerHospitals.gallery.title")}
               </h3>
               <p className="text-[10px] text-muted-foreground">
                 {currentIndex + 1} / {images.length}
@@ -105,7 +105,7 @@ export default function HospitalGalleryModal({
           <button
             onClick={onClose}
             className="p-1.5 text-muted-foreground hover:text-foreground rounded-full hover:bg-muted cursor-pointer transition-colors"
-            aria-label="Close modal"
+            aria-label={t("partnerHospitals.gallery.close")}
           >
             <X className="h-5 w-5" />
           </button>
@@ -125,7 +125,7 @@ export default function HospitalGalleryModal({
           <button
             onClick={() => setCurrentIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1))}
             className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/60 hover:bg-black/80 text-white shadow-lg cursor-pointer transition-all hover:scale-105"
-            aria-label="Previous image"
+            aria-label={t("partnerHospitals.gallery.prev")}
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -133,7 +133,7 @@ export default function HospitalGalleryModal({
           <button
             onClick={() => setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0))}
             className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/60 hover:bg-black/80 text-white shadow-lg cursor-pointer transition-all hover:scale-105"
-            aria-label="Next image"
+            aria-label={t("partnerHospitals.gallery.next")}
           >
             <ChevronRight className="h-5 w-5" />
           </button>

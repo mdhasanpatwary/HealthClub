@@ -33,12 +33,14 @@ import {
   DeleteStaffConfirmModal,
 } from "./PartnerStaffModals";
 import { toast } from "sonner";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 
 interface PartnerStaffTabProps {
   partner: Partner;
 }
 
 export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
+  const { t } = useLanguage();
   const [staffList, setStaffList] = useState<PartnerStaff[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -134,11 +136,11 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
               <Users className="h-5 w-5" />
             </div>
             <h2 className="text-lg sm:text-xl font-bold font-heading text-secondary dark:text-white">
-              কাউন্টার ও ক্যাশিয়ার স্টাফ একাউন্টস
+              {t("partner.staff.title")}
             </h2>
           </div>
           <p className="text-xs sm:text-sm text-muted-foreground">
-            বিলিং ডেস্ক ও ফার্মেসি কাউন্টারের জন্য পৃথক সাব-লগইন তৈরি করুন এবং কে কোন ডিসকাউন্ট দিয়েছেন তা ট্র্যাক করুন।
+            {t("partner.staff.subtitle")}
           </p>
         </div>
 
@@ -150,7 +152,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
           className="bg-primary hover:bg-primary-dark text-white font-semibold rounded-2xl gap-2 shadow-sm shrink-0 cursor-pointer h-11"
         >
           <UserPlus className="h-4 w-4" />
-          <span>নতুন ক্যাশিয়ার যোগ করুন</span>
+          <span>{t("partner.staff.addNew")}</span>
         </Button>
       </div>
 
@@ -162,7 +164,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
               <Users className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-[11px] font-medium text-muted-foreground">মোট ক্যাশিয়ার অ্যাকাউন্ট</p>
+              <p className="text-[11px] font-medium text-muted-foreground">{t("partner.staff.kpiTotalStaff")}</p>
               <h3 className="text-xl sm:text-2xl font-bold text-secondary dark:text-white font-mono">
                 {totalStaff}
               </h3>
@@ -176,7 +178,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
               <CheckCircle2 className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-[11px] font-medium text-muted-foreground">সক্রিয় কাউন্টার ডেস্ক</p>
+              <p className="text-[11px] font-medium text-muted-foreground">{t("partner.staff.kpiActiveDesks")}</p>
               <h3 className="text-xl sm:text-2xl font-bold text-secondary dark:text-white font-mono">
                 {activeStaff}
               </h3>
@@ -190,7 +192,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
               <CreditCard className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-[11px] font-medium text-muted-foreground">স্টাফ প্রসেসকৃত লেনদেন</p>
+              <p className="text-[11px] font-medium text-muted-foreground">{t("partner.staff.kpiStaffTxns")}</p>
               <h3 className="text-xl sm:text-2xl font-bold text-secondary dark:text-white font-mono">
                 {totalStaffTxns}
               </h3>
@@ -204,7 +206,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
               <TrendingUp className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-[11px] font-medium text-muted-foreground">মোট প্রদত্ত ছাড়</p>
+              <p className="text-[11px] font-medium text-muted-foreground">{t("partner.staff.kpiStaffSavings")}</p>
               <h3 className="text-xl sm:text-2xl font-bold text-primary font-mono">
                 ৳{totalStaffSavings.toLocaleString("bn-BD")}
               </h3>
@@ -221,7 +223,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="নাম, ইউজারনেম বা ডেস্ক দিয়ে খুঁজুন..."
+            placeholder={t("partner.staff.searchPlaceholder")}
             className="pl-10 h-10 border-border rounded-xl bg-card"
           />
         </div>
@@ -335,7 +337,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
                           : "bg-slate-500/10 text-slate-500 border-slate-500/20"
                       }`}
                     >
-                      {staff.isActive ? "সক্রিয়" : "নিষ্ক্রিয়"}
+                      {staff.isActive ? t("partner.staff.statusActive") : t("partner.staff.statusInactive")}
                     </span>
                   </div>
                 </div>
@@ -350,7 +352,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
                       variant="outline"
                       className="text-[10px] uppercase font-bold text-muted-foreground border-border px-1.5 py-0"
                     >
-                      {staff.role === "manager" ? "ম্যানেজার" : "ক্যাশিয়ার"}
+                      {staff.role === "manager" ? t("partner.staff.roleManager") : t("partner.staff.roleCashier")}
                     </Badge>
                   </div>
                   <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
@@ -371,13 +373,13 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
                 {/* Stats Bar */}
                 <div className="grid grid-cols-2 gap-2 p-2.5 rounded-2xl bg-muted/40 border border-border/50 text-center">
                   <div>
-                    <span className="text-[10px] text-muted-foreground block">লেনদেন সংখ্যা</span>
+                    <span className="text-[10px] text-muted-foreground block">{t("partner.staff.colTxns")}</span>
                     <span className="text-sm font-bold text-secondary dark:text-white font-mono">
-                      {staff.transactionCount || 0} টি
+                      {staff.transactionCount || 0}
                     </span>
                   </div>
                   <div className="border-l border-border/60">
-                    <span className="text-[10px] text-muted-foreground block">মোট ছাড় প্রদান</span>
+                    <span className="text-[10px] text-muted-foreground block">{t("partner.staff.colSavings")}</span>
                     <span className="text-sm font-bold text-primary font-mono">
                       ৳{(staff.totalSavedAmount || 0).toLocaleString("bn-BD")}
                     </span>
@@ -391,7 +393,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
                       onClick={() => handleCopyCredentials(staff)}
                       variant="ghost"
                       size="sm"
-                      title="লগইন তথ্য কপি করুন"
+                      title={t("partner.staff.searchPlaceholder") || "Copy"}
                       className="h-8 w-8 p-0 rounded-xl text-muted-foreground hover:text-foreground cursor-pointer"
                     >
                       {copiedId === staff.id ? (
@@ -405,7 +407,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
                       onClick={() => setResetPwStaff(staff)}
                       variant="ghost"
                       size="sm"
-                      title="পাসওয়ার্ড পরিবর্তন করুন"
+                      title={t("partner.staff.resetPassword")}
                       className="h-8 w-8 p-0 rounded-xl text-muted-foreground hover:text-amber-600 cursor-pointer"
                     >
                       <KeyRound className="h-3.5 w-3.5" />
@@ -418,7 +420,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
                       }}
                       variant="ghost"
                       size="sm"
-                      title="তথ্য সম্পাদনা"
+                      title={t("partner.staff.modalEditTitle")}
                       className="h-8 w-8 p-0 rounded-xl text-muted-foreground hover:text-blue-600 cursor-pointer"
                     >
                       <Edit2 className="h-3.5 w-3.5" />
@@ -428,7 +430,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
                       onClick={() => setDeleteStaff(staff)}
                       variant="ghost"
                       size="sm"
-                      title="অ্যাকাউন্ট মুছুন"
+                      title={t("partner.staff.deleteStaff")}
                       className="h-8 w-8 p-0 rounded-xl text-muted-foreground hover:text-destructive cursor-pointer"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
@@ -445,7 +447,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
                         : "text-emerald-600 border-emerald-500/30 hover:bg-emerald-500/10"
                     }`}
                   >
-                    {staff.isActive ? "নিষ্ক্রিয় করুন" : "সক্রিয় করুন"}
+                    {staff.isActive ? t("partner.staff.statusInactive") : t("partner.staff.statusActive")}
                   </Button>
                 </div>
               </CardContent>

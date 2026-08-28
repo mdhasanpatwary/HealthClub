@@ -102,5 +102,17 @@ export const consultantsEn = {
   "consultants.faq.a5": "When doctors prescribe medical tests (e.g. Pathology, Digital X-Ray, USG, MRI, CT Scan, ECG, Echo), Health Club members receive exclusive 10% to 30% instant discounts at our partner hospitals and diagnostic centers across Feni.",
   "consultants.faq.q6": "How often is the Feni doctor list and serial helpline updated?",
   "consultants.faq.a6": "Our dedicated healthcare operations team actively coordinates with hospital chambers to ensure all visiting days, shifts, chamber room numbers, and contact hotlines remain 100% verified and updated. We advise calling the serial number to confirm your schedule before visiting.",
-  "consultants.profile.viewFullProfile": "View Full Profile & Map"
+  "consultants.profile.viewFullProfile": "View Full Profile & Map",
+  "consultants.profile.callSerial": "Call for Serial / Appointment",
+  "consultants.profile.shareProfile": "Share Profile",
+  "consultants.profile.visitingSchedule": "Chamber Schedule & Visiting Hours",
+  "consultants.profile.consultationFee": "Consultation Fee",
+  "consultants.profile.chamberLocation": "Chamber Location",
+  "consultants.profile.aboutDoctor": "About the Specialist",
+  "consultants.profile.qualification": "Educational Qualifications & Degrees",
+  "consultants.profile.workplace": "Current Designation & Hospital",
+  "consultants.profile.serialPhones": "Direct Serial Numbers",
+  "consultants.profile.notice": "Special Chamber Notice",
+  "consultants.profile.copyPhone": "Copy Number",
+  "consultants.profile.copied": "Copied!"
 } as const;

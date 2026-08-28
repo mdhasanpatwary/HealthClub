@@ -63,7 +63,7 @@ export default function PartnerDropdown({ partner }: PartnerDropdownProps) {
           className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md hover:bg-muted text-foreground transition-colors"
         >
           <LayoutDashboard className="h-4 w-4 text-primary" />
-          <span>ড্যাশবোর্ড</span>
+          <span>{t("layout.header.dashboard")}</span>
         </DropdownMenuItem>
         
         <DropdownMenuSeparator />

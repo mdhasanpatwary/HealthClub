@@ -7,7 +7,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -87,19 +86,19 @@ function EditChamberForm({
   };
 
   return (
-    <DialogContent className="border-border bg-background max-h-[92vh] overflow-y-auto w-full sm:max-w-2xl md:max-w-3xl p-5 sm:p-7">
-      <DialogHeader>
-        <DialogTitle className="font-heading font-bold text-lg sm:text-xl flex items-center gap-2">
-          <Building2 className="h-5 w-5 text-primary" />
-          <span>চেম্বার ও সময়সূচি এডিট করুন</span>
+    <DialogContent className="border-border bg-background max-h-[90vh] overflow-y-auto overflow-x-hidden w-full max-w-[calc(100vw-2rem)] sm:max-w-2xl md:max-w-3xl p-4 sm:p-6">
+      <DialogHeader className="space-y-1">
+        <DialogTitle className="font-heading font-bold text-base sm:text-lg md:text-xl flex items-center gap-2">
+          <Building2 className="h-5 w-5 text-primary shrink-0" />
+          <span className="truncate">চেম্বার ও সময়সূচি এডিট করুন</span>
         </DialogTitle>
         <DialogDescription className="text-xs text-muted-foreground">
           {doctor.name} - এর চেম্বারের রুম নম্বর, সময়সূচি এবং সিরিয়াল তথ্য আপডেট করুন।
         </DialogDescription>
       </DialogHeader>
 
-      <form onSubmit={handleSubmit} className="space-y-4 pt-2">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit} className="space-y-4 pt-2 w-full max-w-full overflow-x-hidden">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-full">
           <div className="space-y-1.5">
             <label htmlFor="edit-doc-name" className="text-xs font-semibold text-foreground">ডাক্তারের নাম</label>
             <Input
@@ -254,14 +253,14 @@ function EditChamberForm({
           </div>
         </div>
 
-        <DialogFooter className="gap-2 pt-4 border-t border-border">
-          <Button type="button" variant="outline" onClick={onClose} disabled={submitting} className="rounded-xl">
+        <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-4 border-t border-border w-full">
+          <Button type="button" variant="outline" onClick={onClose} disabled={submitting} className="rounded-xl w-full sm:w-auto">
             বাতিল
           </Button>
-          <Button type="submit" disabled={submitting} className="rounded-xl bg-primary text-white hover:bg-primary/90">
+          <Button type="submit" disabled={submitting} className="rounded-xl bg-primary text-white hover:bg-primary/90 cursor-pointer w-full sm:w-auto">
             {submitting ? "সংরক্ষণ হচ্ছে..." : "পরিবর্তন সংরক্ষণ করুন"}
           </Button>
-        </DialogFooter>
+        </div>
       </form>
     </DialogContent>
   );

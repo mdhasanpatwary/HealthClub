@@ -74,7 +74,7 @@ export function AddMemberTxDialog({
               }}
               className="w-full h-10 rounded-xl border border-border/60 bg-background px-3 text-sm focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary"
             >
-              <option value="">{t("admin.dashboard.selectPartnerLabel")}</option>
+              <option value="">{t("dashboard.history.selectPartner")}</option>
               {partners.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.name} ({p.discount})

@@ -46,7 +46,7 @@ export default function BecomePartnerPage() {
         email: ""
       });
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : t("auth.login.serverError");
+      const msg = err instanceof Error ? err.message : t("common.error");
       toast.error(msg);
     }
   };

@@ -21,7 +21,7 @@ import { trackEvent } from "@/lib/analytics";
 import { PregnancyResultView } from "./PregnancyResultView";
 
 export function PregnancyCalculator() {
-  const { locale } = useLanguage();
+  const { locale, t } = useLanguage();
   const isEn = locale === "en";
 
   const [method, setMethod] = useState<"lmp" | "ultrasound">("lmp");
@@ -124,26 +124,24 @@ export function PregnancyCalculator() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-      {/* Form Input Card */}
-      <Card className="lg:col-span-5 border border-border/80 bg-background shadow-sm rounded-3xl overflow-hidden">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      {/* Input Form Card */}
+      <Card className="lg:col-span-5 border border-border/80 bg-background shadow-sm rounded-3xl">
         <CardContent className="p-5 sm:p-7 space-y-6">
           <div className="space-y-1">
             <h3 className="text-lg font-heading font-black text-secondary dark:text-white flex items-center gap-2">
               <Baby className="h-5 w-5 text-pink-600" />
-              <span>{isEn ? "Pregnancy EDD Calculator" : "প্রসবের তারিখ নির্ণায়ক"}</span>
+              <span>{t("healthTools.pregnancy.title")}</span>
             </h3>
             <p className="text-xs text-muted-foreground">
-              {isEn
-                ? "Calculate your estimated due date, fetal age, and weekly milestones."
-                : "শেষ মাসিকের তারিখ (LMP) অথবা আল্ট্রাসনোগ্রাম রিপোর্টের সাহায্যে প্রসবের সম্ভাব্য তারিখ ও শিশুর বিকাশ জানুন।"}
+              {t("healthTools.pregnancy.subtitle")}
             </p>
           </div>
 
           {/* Method Selection (LMP vs Ultrasound) */}
           <div className="space-y-2">
             <Label className="text-xs font-semibold text-muted-foreground">
-              {isEn ? "Calculation Method:" : "হিসাবের পদ্ধতি:"}
+              {t("healthTools.pregnancy.method")}
             </Label>
             <div className="grid grid-cols-2 gap-2 bg-muted p-1 rounded-2xl">
               <button
@@ -155,7 +153,7 @@ export function PregnancyCalculator() {
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {isEn ? "By Period (LMP)" : "শেষ পিরিয়ড (LMP)"}
+                {t("healthTools.pregnancy.methodLmp")}
               </button>
               <button
                 type="button"
@@ -166,7 +164,7 @@ export function PregnancyCalculator() {
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {isEn ? "By Ultrasound" : "আল্ট্রাসনোগ্রাম স্ক্যান"}
+                {t("healthTools.pregnancy.methodUs")}
               </button>
             </div>
           </div>
@@ -177,7 +175,7 @@ export function PregnancyCalculator() {
                 {/* LMP Date Input */}
                 <div className="space-y-1.5">
                   <Label htmlFor="lmp-date" className="text-xs font-semibold">
-                    {isEn ? "First Day of Last Period (LMP)" : "শেষ মাসিকের প্রথম দিন (LMP)"}
+                    {t("healthTools.pregnancy.lmpDate")}
                   </Label>
                   <Input
                     id="lmp-date"
@@ -189,9 +187,7 @@ export function PregnancyCalculator() {
                     className="cursor-pointer"
                   />
                   <p className="text-[11px] text-muted-foreground">
-                    {isEn
-                      ? "Select the date when your last menstrual cycle started."
-                      : "আপনার শেষ পিরিয়ড যেদিন শুরু হয়েছিল সেই তারিখটি দিন।"}
+                    {t("healthTools.pregnancy.lmpHelp")}
                   </p>
                 </div>
 
@@ -235,17 +231,17 @@ export function PregnancyCalculator() {
                 {/* Gestational Age at Scan */}
                 <div className="space-y-1.5">
                   <Label className="text-xs font-semibold">
-                    {isEn ? "Gestational Age at Scan Time" : "স্ক্যানের সময় শিশুর বয়স (সপ্তাহ ও দিন)"}
+                    {t("healthTools.pregnancy.scanGa")}
                   </Label>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <Input
                         id="scan-weeks"
-                        aria-label={isEn ? "Gestational weeks at scan" : "স্ক্যানের সময় সপ্তাহ"}
+                        aria-label={t("healthTools.pregnancy.scanGa")}
                         type="number"
                         min="4"
                         max="42"
-                        placeholder={isEn ? "Weeks (e.g. 12)" : "সপ্তাহ (যেমন: ১২)"}
+                        placeholder={t("healthTools.pregnancy.weeksPlaceholder")}
                         value={scanWeeks}
                         onChange={(e) => setScanWeeks(e.target.value)}
                         required
@@ -254,20 +250,18 @@ export function PregnancyCalculator() {
                     <div>
                       <Input
                         id="scan-days"
-                        aria-label={isEn ? "Gestational days at scan" : "স্ক্যানের সময় দিন"}
+                        aria-label={t("healthTools.pregnancy.scanGa")}
                         type="number"
                         min="0"
                         max="6"
-                        placeholder={isEn ? "Days (0-6)" : "দিন (০-৬)"}
+                        placeholder={t("healthTools.pregnancy.daysPlaceholder")}
                         value={scanDays}
                         onChange={(e) => setScanDays(e.target.value)}
                       />
                     </div>
                   </div>
                   <p className="text-[11px] text-muted-foreground">
-                    {isEn
-                      ? "Found on your ultrasound report (e.g. 12w 3d / GA)."
-                      : "আপনার আল্ট্রাসনোগ্রাম রিপোর্টে উল্লেখিত GA (যেমন: 12w 3d) অনুযায়ী লিখুন।"}
+                    {t("healthTools.pregnancy.scanHelp")}
                   </p>
                 </div>
               </>
@@ -276,7 +270,7 @@ export function PregnancyCalculator() {
             <div className="flex gap-2 pt-2">
               <Button type="submit" className="flex-1 font-bold bg-pink-600 hover:bg-pink-700 text-white">
                 <Calendar className="mr-2 h-4 w-4" />
-                {isEn ? "Calculate Due Date" : "প্রসবের তারিখ দেখুন"}
+                {t("healthTools.pregnancy.calculate")}
               </Button>
               {result && (
                 <Button

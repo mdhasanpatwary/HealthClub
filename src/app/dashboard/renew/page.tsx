@@ -265,7 +265,7 @@ export default function RenewalPage() {
                       required
                       value={senderNumber}
                       onChange={(e) => setSenderNumber(e.target.value)}
-                      placeholder={t("landing.contactform.eg017xxxxxxxx")}
+                      placeholder={t("dashboard.renew.senderPlaceholder")}
                       className="h-11 border-border bg-background"
                     />
                   </div>
