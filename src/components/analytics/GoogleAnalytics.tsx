@@ -2,15 +2,22 @@
 
 import Script from "next/script";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, Suspense } from "react";
+import { useEffect, useRef, Suspense } from "react";
 import { GA_MEASUREMENT_ID, trackPageView } from "@/lib/analytics";
 
 function PageViewTracker() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
     if (!GA_MEASUREMENT_ID) return;
+
+    // Skip the initial page view since gtag('config') automatically records it on page load
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
 
     const url = searchParams?.toString()
       ? `${pathname}?${searchParams.toString()}`
@@ -29,14 +36,14 @@ export default function GoogleAnalytics() {
 
   return (
     <>
-      {/* Global Site Tag (gtag.js) - Google Analytics with lazyOnload to reduce TBT */}
+      {/* Global Site Tag (gtag.js) - Google Analytics */}
       <Script
-        strategy="lazyOnload"
+        strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
       />
       <Script
         id="google-analytics-init"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];
@@ -44,7 +51,6 @@ export default function GoogleAnalytics() {
             gtag('js', new Date());
             gtag('config', '${GA_MEASUREMENT_ID}', {
               page_path: window.location.pathname,
-              send_page_view: false
             });
           `,
         }}
