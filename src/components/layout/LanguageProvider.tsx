@@ -16,7 +16,7 @@ import {
 interface LanguageContextType {
   locale: Locale;
   setLocale: (locale: Locale) => void;
-  t: (key: TranslationKey | string, fallbackEn?: string) => string;
+  t: (key: TranslationKey | (string & {}), fallbackEn?: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -87,15 +87,23 @@ export function LanguageProvider({
     router.refresh();
   };
 
-  const t = (key: TranslationKey | string, fallbackEn?: string): string => {
+  const t = (key: TranslationKey | (string & {}), fallbackEn?: string): string => {
     if (dict && dict[key]) {
       return dict[key];
     }
-    // Universal fallback across all namespaces for robust resilience
+    // Universal fallback across all namespaces for active locale
     const source = locale === "en" ? enNamespaces : bnNamespaces;
     for (const nsDict of Object.values(source)) {
       if (nsDict && nsDict[key]) {
         return nsDict[key];
+      }
+    }
+    // Cross-locale fallback (if missing in active locale, fall back to English dictionary)
+    if (locale !== "en") {
+      for (const nsDict of Object.values(enNamespaces)) {
+        if (nsDict && nsDict[key]) {
+          return nsDict[key];
+        }
       }
     }
     if (fallbackEn !== undefined) {

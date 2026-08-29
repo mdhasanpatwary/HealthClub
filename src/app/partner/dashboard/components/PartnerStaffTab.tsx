@@ -5,13 +5,6 @@ import {
   Users,
   UserPlus,
   Search,
-  Building2,
-  Phone,
-  KeyRound,
-  Trash2,
-  Edit2,
-  Copy,
-  Check,
   CreditCard,
   TrendingUp,
   Filter,
@@ -24,14 +17,19 @@ import {
 } from "@/app/actions/partnerStaffActions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   AddEditStaffModal,
   ResetStaffPasswordModal,
   DeleteStaffConfirmModal,
 } from "./PartnerStaffModals";
+import { PartnerStaffCard } from "./PartnerStaffCard";
+import {
+  PartnerStaffCredentialsModal,
+  StaffCredentialsData,
+} from "./PartnerStaffCredentialsModal";
+import { PartnerStaffDetailsModal } from "./PartnerStaffDetailsModal";
 import { toast } from "sonner";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 
@@ -51,7 +49,9 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
   const [editingStaff, setEditingStaff] = useState<PartnerStaff | null>(null);
   const [resetPwStaff, setResetPwStaff] = useState<PartnerStaff | null>(null);
   const [deleteStaff, setDeleteStaff] = useState<PartnerStaff | null>(null);
-  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [detailsStaff, setDetailsStaff] = useState<PartnerStaff | null>(null);
+  const [credentialsModalData, setCredentialsModalData] =
+    useState<StaffCredentialsData | null>(null);
 
   const loadStaff = useCallback(async () => {
     setLoading(true);
@@ -98,8 +98,14 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
   // Aggregate KPIs
   const totalStaff = staffList.length;
   const activeStaff = staffList.filter((s) => s.isActive).length;
-  const totalStaffTxns = staffList.reduce((sum, s) => sum + (s.transactionCount || 0), 0);
-  const totalStaffSavings = staffList.reduce((sum, s) => sum + (s.totalSavedAmount || 0), 0);
+  const totalStaffTxns = staffList.reduce(
+    (sum, s) => sum + (s.transactionCount || 0),
+    0
+  );
+  const totalStaffSavings = staffList.reduce(
+    (sum, s) => sum + (s.totalSavedAmount || 0),
+    0
+  );
 
   const handleToggleStatus = async (staff: PartnerStaff) => {
     const newStatus = !staff.isActive;
@@ -108,7 +114,9 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
       if (res.success) {
         toast.success(res.message);
         setStaffList((prev) =>
-          prev.map((s) => (s.id === staff.id ? { ...s, isActive: newStatus } : s))
+          prev.map((s) =>
+            s.id === staff.id ? { ...s, isActive: newStatus } : s
+          )
         );
       } else {
         toast.error(res.message || t("common.error"));
@@ -116,14 +124,6 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
     } catch {
       toast.error(t("common.error.server"));
     }
-  };
-
-  const handleCopyCredentials = (staff: PartnerStaff) => {
-    const text = `🏥 ${t("partner.profile.basicInfo")}: ${partner.name}\n📍 ${t("partner.staff.colDesk")}: ${staff.deskName}\n👤 ${t("partner.staff.usernameLabel")}: ${staff.username}\n🔗 ${window.location.origin}/login/partner`;
-    navigator.clipboard.writeText(text);
-    setCopiedId(staff.id);
-    toast.success(`"${staff.name}" ${t("partner.staff.credentialsCopied")}`);
-    setTimeout(() => setCopiedId(null), 2500);
   };
 
   return (
@@ -164,7 +164,9 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
               <Users className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-[11px] font-medium text-muted-foreground">{t("partner.staff.kpiTotalStaff")}</p>
+              <p className="text-[11px] font-medium text-muted-foreground">
+                {t("partner.staff.kpiTotalStaff")}
+              </p>
               <h3 className="text-xl sm:text-2xl font-bold text-secondary dark:text-white font-mono">
                 {totalStaff}
               </h3>
@@ -178,7 +180,9 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
               <CheckCircle2 className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-[11px] font-medium text-muted-foreground">{t("partner.staff.kpiActiveDesks")}</p>
+              <p className="text-[11px] font-medium text-muted-foreground">
+                {t("partner.staff.kpiActiveDesks")}
+              </p>
               <h3 className="text-xl sm:text-2xl font-bold text-secondary dark:text-white font-mono">
                 {activeStaff}
               </h3>
@@ -192,7 +196,9 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
               <CreditCard className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-[11px] font-medium text-muted-foreground">{t("partner.staff.kpiStaffTxns")}</p>
+              <p className="text-[11px] font-medium text-muted-foreground">
+                {t("partner.staff.kpiStaffTxns")}
+              </p>
               <h3 className="text-xl sm:text-2xl font-bold text-secondary dark:text-white font-mono">
                 {totalStaffTxns}
               </h3>
@@ -206,7 +212,9 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
               <TrendingUp className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-[11px] font-medium text-muted-foreground">{t("partner.staff.kpiStaffSavings")}</p>
+              <p className="text-[11px] font-medium text-muted-foreground">
+                {t("partner.staff.kpiStaffSavings")}
+              </p>
               <h3 className="text-xl sm:text-2xl font-bold text-primary font-mono">
                 ৳{totalStaffSavings.toLocaleString("bn-BD")}
               </h3>
@@ -264,7 +272,10 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 3 }).map((_, i) => (
-            <Card key={i} className="p-5 space-y-4 rounded-3xl border-border animate-pulse">
+            <Card
+              key={i}
+              className="p-5 space-y-4 rounded-3xl border-border animate-pulse"
+            >
               <div className="flex items-start justify-between">
                 <Skeleton className="h-10 w-10 rounded-2xl" />
                 <Skeleton className="h-6 w-16 rounded-full" />
@@ -310,148 +321,19 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {filteredStaff.map((staff) => (
-            <Card
+            <PartnerStaffCard
               key={staff.id}
-              className={`rounded-3xl border transition-all duration-200 hover:shadow-md flex flex-col justify-between ${
-                staff.isActive
-                  ? "bg-card border-border/80"
-                  : "bg-muted/30 border-dashed border-border/60 opacity-80"
-              }`}
-            >
-              <CardHeader className="p-5 pb-3 space-y-3">
-                {/* Desk Identifier & Status */}
-                <div className="flex items-start justify-between gap-2">
-                  <Badge
-                    variant="outline"
-                    className="bg-primary/10 text-primary border-primary/20 text-xs font-semibold px-2.5 py-1 rounded-xl flex items-center gap-1.5"
-                  >
-                    <Building2 className="h-3.5 w-3.5" />
-                    <span className="truncate max-w-[170px]">{staff.deskName}</span>
-                  </Badge>
-
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    <span
-                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
-                        staff.isActive
-                          ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
-                          : "bg-slate-500/10 text-slate-500 border-slate-500/20"
-                      }`}
-                    >
-                      {staff.isActive ? t("partner.staff.statusActive") : t("partner.staff.statusInactive")}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Staff Name and Role */}
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-base text-secondary dark:text-white font-heading truncate">
-                      {staff.name}
-                    </h3>
-                    <Badge
-                      variant="outline"
-                      className="text-[10px] uppercase font-bold text-muted-foreground border-border px-1.5 py-0"
-                    >
-                      {staff.role === "manager" ? t("partner.staff.roleManager") : t("partner.staff.roleCashier")}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
-                    <span className="font-mono bg-muted/60 px-2 py-0.5 rounded-md text-[11px] text-foreground">
-                      @{staff.username}
-                    </span>
-                    {staff.phone && (
-                      <span className="flex items-center gap-1 text-[11px]">
-                        <Phone className="h-3 w-3" />
-                        {staff.phone}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </CardHeader>
-
-              <CardContent className="p-5 pt-0 space-y-4">
-                {/* Stats Bar */}
-                <div className="grid grid-cols-2 gap-2 p-2.5 rounded-2xl bg-muted/40 border border-border/50 text-center">
-                  <div>
-                    <span className="text-[10px] text-muted-foreground block">{t("partner.staff.colTxns")}</span>
-                    <span className="text-sm font-bold text-secondary dark:text-white font-mono">
-                      {staff.transactionCount || 0}
-                    </span>
-                  </div>
-                  <div className="border-l border-border/60">
-                    <span className="text-[10px] text-muted-foreground block">{t("partner.staff.colSavings")}</span>
-                    <span className="text-sm font-bold text-primary font-mono">
-                      ৳{(staff.totalSavedAmount || 0).toLocaleString("bn-BD")}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex items-center justify-between gap-1 pt-1 border-t border-border/60">
-                  <div className="flex items-center gap-1">
-                    <Button
-                      onClick={() => handleCopyCredentials(staff)}
-                      variant="ghost"
-                      size="sm"
-                      title={t("partner.staff.searchPlaceholder") || "Copy"}
-                      className="h-8 w-8 p-0 rounded-xl text-muted-foreground hover:text-foreground cursor-pointer"
-                    >
-                      {copiedId === staff.id ? (
-                        <Check className="h-3.5 w-3.5 text-emerald-600" />
-                      ) : (
-                        <Copy className="h-3.5 w-3.5" />
-                      )}
-                    </Button>
-
-                    <Button
-                      onClick={() => setResetPwStaff(staff)}
-                      variant="ghost"
-                      size="sm"
-                      title={t("partner.staff.resetPassword")}
-                      className="h-8 w-8 p-0 rounded-xl text-muted-foreground hover:text-amber-600 cursor-pointer"
-                    >
-                      <KeyRound className="h-3.5 w-3.5" />
-                    </Button>
-
-                    <Button
-                      onClick={() => {
-                        setEditingStaff(staff);
-                        setAddModalOpen(true);
-                      }}
-                      variant="ghost"
-                      size="sm"
-                      title={t("partner.staff.modalEditTitle")}
-                      className="h-8 w-8 p-0 rounded-xl text-muted-foreground hover:text-blue-600 cursor-pointer"
-                    >
-                      <Edit2 className="h-3.5 w-3.5" />
-                    </Button>
-
-                    <Button
-                      onClick={() => setDeleteStaff(staff)}
-                      variant="ghost"
-                      size="sm"
-                      title={t("partner.staff.deleteStaff")}
-                      className="h-8 w-8 p-0 rounded-xl text-muted-foreground hover:text-destructive cursor-pointer"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </Button>
-                  </div>
-
-                  <Button
-                    onClick={() => handleToggleStatus(staff)}
-                    variant="outline"
-                    size="sm"
-                    className={`h-7 px-2.5 rounded-xl text-[11px] font-semibold cursor-pointer ${
-                      staff.isActive
-                        ? "text-slate-600 hover:text-destructive border-border hover:border-destructive/30"
-                        : "text-emerald-600 border-emerald-500/30 hover:bg-emerald-500/10"
-                    }`}
-                  >
-                    {staff.isActive ? t("partner.staff.statusInactive") : t("partner.staff.statusActive")}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+              staff={staff}
+              partnerName={partner.name}
+              onViewDetails={(st) => setDetailsStaff(st)}
+              onEdit={(st) => {
+                setEditingStaff(st);
+                setAddModalOpen(true);
+              }}
+              onResetPassword={(st) => setResetPwStaff(st)}
+              onDelete={(st) => setDeleteStaff(st)}
+              onToggleStatus={handleToggleStatus}
+            />
           ))}
         </div>
       )}
@@ -465,6 +347,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
         }}
         staffToEdit={editingStaff}
         onSuccess={loadStaff}
+        onSuccessWithCredentials={(creds) => setCredentialsModalData(creds)}
         partnerName={partner.name}
       />
 
@@ -473,6 +356,8 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
         onClose={() => setResetPwStaff(null)}
         staff={resetPwStaff}
         onSuccess={loadStaff}
+        onSuccessWithCredentials={(creds) => setCredentialsModalData(creds)}
+        partnerName={partner.name}
       />
 
       <DeleteStaffConfirmModal
@@ -481,6 +366,52 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
         staff={deleteStaff}
         onSuccess={loadStaff}
       />
+
+      {/* Credentials Access Slip Modal */}
+      <PartnerStaffCredentialsModal
+        isOpen={!!credentialsModalData}
+        onClose={() => setCredentialsModalData(null)}
+        data={credentialsModalData}
+      />
+
+      {/* Staff Details & Transactions Modal */}
+      <PartnerStaffDetailsModal
+        isOpen={!!detailsStaff}
+        onClose={() => setDetailsStaff(null)}
+        staff={detailsStaff}
+        partnerName={partner.name}
+        onEdit={(st) => {
+          setDetailsStaff(null);
+          setEditingStaff(st);
+          setAddModalOpen(true);
+        }}
+        onResetPassword={(st) => {
+          setDetailsStaff(null);
+          setResetPwStaff(st);
+        }}
+        onDelete={(st) => {
+          setDetailsStaff(null);
+          setDeleteStaff(st);
+        }}
+        onToggleStatus={(st) => {
+          handleToggleStatus(st);
+          setDetailsStaff((prev) =>
+            prev && prev.id === st.id ? { ...prev, isActive: !prev.isActive } : prev
+          );
+        }}
+        onOpenCredentials={(st) => {
+          setCredentialsModalData({
+            partnerName: partner.name,
+            staffName: st.name,
+            deskName: st.deskName,
+            username: st.username,
+            password: st.plainPassword,
+            role: st.role,
+            type: "view",
+          });
+        }}
+      />
     </div>
   );
 }
+

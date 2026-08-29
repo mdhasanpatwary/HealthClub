@@ -9,13 +9,21 @@ export type Locale = "bn" | "en";
  * Server-side translation utility.
  * Looks up the correct string from the translations dictionary depending on the active locale.
  */
-export function tServer(locale: Locale, key: TranslationKey | string, fallbackEn?: string): string {
+export function tServer(
+  locale: Locale,
+  key: TranslationKey | (string & {}),
+  fallbackEn?: string
+): string {
   if (fallbackEn !== undefined) {
     return locale === "en" ? fallbackEn : (key as string);
   }
   
   const dict = (locale === "en" ? en : bn) as Record<string, string>;
-  return dict?.[key] || key;
+  if (dict?.[key]) return dict[key];
+  if (locale !== "en" && (en as Record<string, string>)?.[key]) {
+    return (en as Record<string, string>)[key];
+  }
+  return key as string;
 }
 
 /**

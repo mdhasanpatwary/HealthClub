@@ -3,9 +3,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Receipt, Building2, Stethoscope, BarChart3, Users } from "lucide-react";
-import { authStore } from "@/services/authStore";
+import { authStore, StaffSessionUser } from "@/services/authStore";
 import { Partner, Transaction } from "@/services/db";
 import { getPartnerTransactionsAction, getPartnerProfileAction } from "@/app/actions/partnerActions";
+import { getCurrentPartnerStaffSessionAction } from "@/app/actions/partnerStaffActions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { PartnerDashboardSkeleton } from "./components/PartnerDashboardSkeleton";
@@ -34,6 +35,7 @@ export default function PartnerDashboardPage() {
 
   const [activeTab, setActiveTab] = useState(initialTab);
   const [partner, setPartner] = useState<Partner | null>(null);
+  const [currentStaff, setCurrentStaff] = useState<StaffSessionUser | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loadingTransactions, setLoadingTransactions] = useState(true);
   const { t, locale } = useLanguage();
@@ -44,11 +46,11 @@ export default function PartnerDashboardPage() {
       const data = await getPartnerTransactionsAction();
       setTransactions(data);
     } catch {
-      toast.error("লেনদেন তালিকা লোড করতে সমস্যা হয়েছে।");
+      toast.error(t("partner.errors.loadTransactionsError"));
     } finally {
       setLoadingTransactions(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     let isMounted = true;
@@ -56,15 +58,20 @@ export default function PartnerDashboardPage() {
     async function initPartnerDashboard() {
       // 1. Initial cached render
       let activePartner = authStore.getCurrentPartner();
+      const activeStaff = authStore.getCurrentStaff();
       if (activePartner && isMounted) {
         setPartner(activePartner);
+      }
+      if (activeStaff && isMounted) {
+        setCurrentStaff(activeStaff);
       }
 
       // 2. Hydrate from server session in parallel
       try {
-        const [profileRes, txs] = await Promise.all([
+        const [profileRes, txs, staffSessionRes] = await Promise.all([
           getPartnerProfileAction().catch(() => null),
           getPartnerTransactionsAction().catch(() => []),
+          getCurrentPartnerStaffSessionAction().catch(() => null),
         ]);
 
         if (!isMounted) return;
@@ -73,6 +80,21 @@ export default function PartnerDashboardPage() {
           activePartner = profileRes.partner;
           setPartner(activePartner);
           authStore.setCurrentPartner(activePartner);
+        }
+
+        if (staffSessionRes?.isStaff && staffSessionRes.staff) {
+          const staffObj: StaffSessionUser = {
+            id: staffSessionRes.staff.id,
+            name: staffSessionRes.staff.name,
+            deskName: staffSessionRes.staff.deskName,
+            role: "cashier",
+            username: staffSessionRes.staff.username || "",
+          };
+          setCurrentStaff(staffObj);
+          authStore.setCurrentStaff(staffObj);
+        } else if (staffSessionRes && !staffSessionRes.isStaff) {
+          setCurrentStaff(null);
+          authStore.setCurrentStaff(null);
         }
 
         if (txs) {
@@ -101,7 +123,7 @@ export default function PartnerDashboardPage() {
 
   const handleLogout = () => {
     authStore.logoutPartner();
-    toast.success("সফলভাবে লগআউট করা হয়েছে।");
+    toast.success(t("auth.logoutSuccess"));
     window.location.href = "/login/partner";
   };
 
@@ -116,7 +138,7 @@ export default function PartnerDashboardPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8">
       {/* Top Header Profile Card */}
-      <PartnerDashboardHeader partner={partner} onLogout={handleLogout} />
+      <PartnerDashboardHeader partner={partner} currentStaff={currentStaff} onLogout={handleLogout} />
 
       {/* Main Tabbed Navigation */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
@@ -187,6 +209,7 @@ export default function PartnerDashboardPage() {
         <TabsContent value="profile" className="space-y-6 focus-visible:outline-none">
           <PartnerProfileSettingsTab
             partner={partner}
+            isStaff={Boolean(currentStaff)}
             onProfileUpdated={handleProfileUpdated}
           />
         </TabsContent>

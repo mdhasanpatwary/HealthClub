@@ -402,10 +402,10 @@ export async function requestRenewalAction(
 export async function verifyMemberForPartnerAction(
   memberId: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<{ success: boolean; member?: any; message?: string }> {
+): Promise<{ success: boolean; member?: any; message?: string; errorKey?: string }> {
   const session = await getSessionUser();
-  if (!session || session.role !== "partner") {
-    return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
+  if (!session || (session.role !== "partner" && session.role !== "partner_staff")) {
+    return { success: false, message: "অননুমোদিত অ্যাক্সেস।", errorKey: "partner.errors.unauthorized" };
   }
 
   try {
@@ -425,7 +425,7 @@ export async function verifyMemberForPartnerAction(
     });
 
     if (!data) {
-      return { success: false, message: "মেম্বারশিপ আইডি পাওয়া যায়নি।" };
+      return { success: false, message: "মেম্বারশিপ আইডি পাওয়া যায়নি।", errorKey: "partner.errors.memberNotFound" };
     }
 
     const expiryDate = new Date(data.expiryDate);
@@ -449,6 +449,6 @@ export async function verifyMemberForPartnerAction(
     };
   } catch (error) {
     logger.error("Error in verifyMemberForPartnerAction:", error);
-    return { success: false, message: "মেম্বার যাচাই করতে সমস্যা হয়েছে।" };
+    return { success: false, message: "মেম্বার যাচাই করতে সমস্যা হয়েছে。", errorKey: "common.error.server" };
   }
 }

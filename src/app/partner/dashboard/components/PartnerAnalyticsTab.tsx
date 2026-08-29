@@ -33,8 +33,9 @@ export function PartnerAnalyticsTab({ partner }: PartnerAnalyticsTabProps) {
       if (res.success && res.data) {
         setAnalytics(res.data);
       } else {
-        setError(res.error || t("partner.analytics.title"));
-        toast.error(res.error || t("partner.analytics.title"));
+        const errorMsg = res.errorKey ? t(res.errorKey) : (res.error || t("partner.errors.loadAnalyticsError"));
+        setError(errorMsg);
+        toast.error(errorMsg);
       }
     } catch {
       setError(t("common.error.server"));

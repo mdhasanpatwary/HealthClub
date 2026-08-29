@@ -14,6 +14,7 @@ export const authEn = {
   "auth.login.adminHint": "To log in as admin, go to /login/admin.",
   "auth.login.emailNotVerified": "Your email is not verified. Redirecting to verification page...",
   "auth.login.success": "Logged in successfully!",
+  "auth.logoutSuccess": "Logged out successfully.",
   "auth.login.invalidCredentials": "Invalid mobile number/email or password. Please try again.",
   "auth.login.serverError": "Server error. Please try again.",
   "auth.adminLogin.title": "Admin Portal Login",

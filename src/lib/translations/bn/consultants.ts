@@ -13,6 +13,7 @@ export const consultantsBn = {
   "consultants.filter.fulgazi": "ফুলগাজী",
   "consultants.filter.all": "সকল বিভাগ",
   "consultants.filter.medicine": "মেডিসিন ও লিভার",
+  "consultants.filter.neurology": "নিউরোমেডিসিন ও ব্রেন",
   "consultants.filter.cardiology": "কার্ডিওলজি (হৃদরোগ)",
   "consultants.filter.gynecology": "গাইনী ও প্রসূতি",
   "consultants.filter.orthopedics": "অর্থোপেডিকস (হাড়)",

@@ -16,6 +16,7 @@ import { toast } from "sonner";
 
 interface PartnerProfileSettingsTabProps {
   partner: Partner;
+  isStaff?: boolean;
   onProfileUpdated: (updatedPartner: Partner) => void;
 }
 
@@ -36,6 +37,7 @@ function createDepartmentDiscountId(prefix = "dept") {
 
 export function PartnerProfileSettingsTab({
   partner,
+  isStaff,
   onProfileUpdated,
 }: PartnerProfileSettingsTabProps) {
   const { t } = useLanguage();
@@ -455,8 +457,8 @@ export function PartnerProfileSettingsTab({
             </div>
           </form>
 
-          {/* Partner Password & Security Card */}
-          <PartnerPasswordCard />
+          {/* Partner Password & Security Card - Visible only to Main Partner Admin */}
+          {!isStaff && <PartnerPasswordCard />}
         </div>
 
         {/* Live Preview Column (4 Cols) */}

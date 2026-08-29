@@ -13,6 +13,7 @@ export const consultantsEn = {
   "consultants.filter.fulgazi": "Fulgazi",
   "consultants.filter.all": "All Specialties",
   "consultants.filter.medicine": "Medicine & Gastro",
+  "consultants.filter.neurology": "Neurology & Brain",
   "consultants.filter.cardiology": "Cardiology",
   "consultants.filter.gynecology": "Gynaecology & Obs",
   "consultants.filter.orthopedics": "Orthopaedics",

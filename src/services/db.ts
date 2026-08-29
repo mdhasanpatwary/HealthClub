@@ -93,6 +93,7 @@ export interface PartnerStaff {
   phone?: string;
   deskName: string;
   role: 'cashier' | 'manager';
+  plainPassword?: string;
   isActive: boolean;
   createdAt: string;
   updatedAt?: string;

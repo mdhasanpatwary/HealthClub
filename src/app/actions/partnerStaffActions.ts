@@ -2,9 +2,9 @@
 
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { PartnerStaff } from "@/services/db";
+import { PartnerStaff, Transaction } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
-import { hashPassword } from "@/lib/crypto";
+import { encryptSecret, decryptSecret } from "@/lib/crypto";
 import { logger } from "@/lib/logger";
 
 const createStaffSchema = z.object({
@@ -37,25 +37,15 @@ export type UpdatePartnerStaffInput = z.infer<typeof updateStaffSchema>;
  */
 export async function getPartnerStaffListAction(): Promise<PartnerStaff[]> {
   const session = await getSessionUser();
-  if (!session || (session.role !== "partner" && session.role !== "partner_staff")) {
-    return [];
-  }
-
+  if (!session || (session.role !== "partner" && session.role !== "partner_staff")) return [];
   const partnerId = session.role === "partner_staff" ? session.partnerId || session.userId : session.userId;
 
   try {
     const staffMembers = await prisma.partnerStaff.findMany({
       where: { partnerId },
       include: {
-        _count: {
-          select: { transactions: true },
-        },
-        transactions: {
-          select: {
-            amount: true,
-            saved: true,
-          },
-        },
+        _count: { select: { transactions: true } },
+        transactions: { select: { amount: true, saved: true } },
       },
       orderBy: [{ isActive: "desc" }, { createdAt: "desc" }],
     });
@@ -63,6 +53,9 @@ export async function getPartnerStaffListAction(): Promise<PartnerStaff[]> {
     return staffMembers.map((staff) => {
       const totalBill = staff.transactions.reduce((sum, tx) => sum + tx.amount, 0);
       const totalSaved = staff.transactions.reduce((sum, tx) => sum + tx.saved, 0);
+      const plainPassword = staff.password.startsWith("enc:")
+        ? decryptSecret(staff.password) || undefined
+        : undefined;
 
       return {
         id: staff.id,
@@ -72,6 +65,7 @@ export async function getPartnerStaffListAction(): Promise<PartnerStaff[]> {
         phone: staff.phone || undefined,
         deskName: staff.deskName,
         role: staff.role as "cashier" | "manager",
+        plainPassword,
         isActive: staff.isActive,
         createdAt: staff.createdAt.toISOString(),
         updatedAt: staff.updatedAt.toISOString(),
@@ -98,7 +92,6 @@ export async function createPartnerStaffAction(
   }
 
   const partnerId = session.role === "partner_staff" ? session.partnerId || session.userId : session.userId;
-
   const parsed = createStaffSchema.safeParse(input);
   if (!parsed.success) {
     return { success: false, error: parsed.error.issues[0]?.message || "সঠিক তথ্য দিন।" };
@@ -108,16 +101,14 @@ export async function createPartnerStaffAction(
   const normalizedUsername = username.toLowerCase().trim();
 
   try {
-    // Check if username is already taken
     const existing = await prisma.partnerStaff.findUnique({
       where: { username: normalizedUsername },
     });
-
     if (existing) {
       return { success: false, error: `"${normalizedUsername}" ইউজারনেমটি ইতিমধ্যে ব্যবহৃত হয়েছে। অন্য ইউজারনেম দিন।` };
     }
 
-    const hashedPassword = hashPassword(password);
+    const encryptedPassword = encryptSecret(password);
     const staffId = `staff_${crypto.randomUUID().slice(0, 10)}`;
 
     const newStaff = await prisma.partnerStaff.create({
@@ -128,7 +119,7 @@ export async function createPartnerStaffAction(
         username: normalizedUsername,
         phone: phone || null,
         deskName,
-        password: hashedPassword,
+        password: encryptedPassword,
         role,
         isActive: true,
       },
@@ -144,6 +135,7 @@ export async function createPartnerStaffAction(
         phone: newStaff.phone || undefined,
         deskName: newStaff.deskName,
         role: newStaff.role as "cashier" | "manager",
+        plainPassword: password,
         isActive: newStaff.isActive,
         createdAt: newStaff.createdAt.toISOString(),
         updatedAt: newStaff.updatedAt.toISOString(),
@@ -245,11 +237,11 @@ export async function resetPartnerStaffPasswordAction(
       return { success: false, message: "স্টাফ অ্যাকাউন্টটি খুঁজে পাওয়া যায়নি।" };
     }
 
-    const hashedPassword = hashPassword(newPassword);
+    const encryptedPassword = encryptSecret(newPassword);
 
     await prisma.partnerStaff.update({
       where: { id },
-      data: { password: hashedPassword },
+      data: { password: encryptedPassword },
     });
 
     return { success: true, message: `"${existing.name}" এর পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে।` };
@@ -353,4 +345,143 @@ export async function getCurrentPartnerStaffSessionAction(): Promise<{
       deskName: session.deskName || "কাউন্টার ডেস্ক",
     },
   };
+}
+
+export interface PartnerStaffStats {
+  totalCount: number;
+  totalBill: number;
+  totalSaved: number;
+  todayCount: number;
+  todaySaved: number;
+  monthCount: number;
+  monthSaved: number;
+  avgBill: number;
+  avgSaved: number;
+}
+
+export interface PartnerStaffDetailsResult {
+  success: boolean;
+  staff?: PartnerStaff;
+  transactions?: Transaction[];
+  stats?: PartnerStaffStats;
+  error?: string;
+}
+
+/**
+ * Get detailed profile, calculated KPI stats, and full transaction history for a specific staff member.
+ */
+export async function getPartnerStaffDetailsAction(
+  staffId: string
+): Promise<PartnerStaffDetailsResult> {
+  const session = await getSessionUser();
+  if (!session || (session.role !== "partner" && session.role !== "partner_staff")) {
+    return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
+  }
+
+  const partnerId =
+    session.role === "partner_staff" ? session.partnerId || session.userId : session.userId;
+
+  try {
+    const staff = await prisma.partnerStaff.findUnique({
+      where: { id: staffId },
+    });
+
+    if (!staff || staff.partnerId !== partnerId) {
+      return { success: false, error: "স্টাফ অ্যাকাউন্টটি খুঁজে পাওয়া যায়নি।" };
+    }
+
+    // Fetch all transactions processed by this staff member
+    const txRecords = await prisma.transaction.findMany({
+      where: {
+        partnerId,
+        staffId: staff.id,
+      },
+      orderBy: { date: "desc" },
+    });
+
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+
+    let totalBill = 0;
+    let totalSaved = 0;
+    let todayCount = 0;
+    let todaySaved = 0;
+    let monthCount = 0;
+    let monthSaved = 0;
+
+    const transactions: Transaction[] = txRecords.map((t) => {
+      totalBill += t.amount;
+      totalSaved += t.saved;
+
+      const txDate = new Date(t.date);
+      if (txDate >= todayStart) {
+        todayCount++;
+        todaySaved += t.saved;
+      }
+      if (txDate >= monthStart) {
+        monthCount++;
+        monthSaved += t.saved;
+      }
+
+      return {
+        id: t.id,
+        memberId: t.memberId,
+        memberName: t.memberName,
+        partnerId: t.partnerId,
+        partnerName: t.partnerName,
+        staffId: t.staffId || undefined,
+        staffName: t.staffName || undefined,
+        deskName: t.deskName || undefined,
+        amount: t.amount,
+        saved: t.saved,
+        date: t.date.toISOString(),
+      };
+    });
+
+    const totalCount = transactions.length;
+    const avgBill = totalCount > 0 ? Math.round(totalBill / totalCount) : 0;
+    const avgSaved = totalCount > 0 ? Math.round(totalSaved / totalCount) : 0;
+
+    const plainPassword = staff.password.startsWith("enc:")
+      ? decryptSecret(staff.password) || undefined
+      : undefined;
+
+    const partnerStaff: PartnerStaff = {
+      id: staff.id,
+      partnerId: staff.partnerId,
+      name: staff.name,
+      username: staff.username,
+      phone: staff.phone || undefined,
+      deskName: staff.deskName,
+      role: staff.role as "cashier" | "manager",
+      plainPassword,
+      isActive: staff.isActive,
+      createdAt: staff.createdAt.toISOString(),
+      updatedAt: staff.updatedAt.toISOString(),
+      transactionCount: totalCount,
+      totalBillAmount: totalBill,
+      totalSavedAmount: totalSaved,
+    };
+
+    return {
+      success: true,
+      staff: partnerStaff,
+      transactions,
+      stats: {
+        totalCount,
+        totalBill,
+        totalSaved,
+        todayCount,
+        todaySaved,
+        monthCount,
+        monthSaved,
+        avgBill,
+        avgSaved,
+      },
+    };
+  } catch (error) {
+    logger.error("Error in getPartnerStaffDetailsAction:", error);
+    return { success: false, error: "স্টাফের বিস্তারিত তথ্য লোড করতে সমস্যা হয়েছে।" };
+  }
 }

@@ -14,6 +14,7 @@ export const authBn = {
   "auth.login.adminHint": "এডমিন লগইন করতে /login/admin এ যান।",
   "auth.login.emailNotVerified": "আপনার ইমেইল ভেরিফাই করা হয়নি। ভেরিফিকেশন পেজে পাঠানো হচ্ছে...",
   "auth.login.success": "সফলভাবে লগইন করা হয়েছে!",
+  "auth.logoutSuccess": "সফলভাবে লগআউট করা হয়েছে।",
   "auth.login.invalidCredentials": "ভুল মোবাইল নম্বর/ইমেইল অথবা পাসওয়ার্ড। অনুগ্রহ করে আবার চেষ্টা করুন।",
   "auth.login.serverError": "সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।",
   "auth.adminLogin.title": "এডমিন পোর্টাল লগইন",

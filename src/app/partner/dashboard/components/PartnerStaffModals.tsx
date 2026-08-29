@@ -42,12 +42,15 @@ export const DESK_PRESETS = [
   "OPD Billing Counter",
 ];
 
+import { StaffCredentialsData } from "./PartnerStaffCredentialsModal";
+
 // --- ADD / EDIT STAFF MODAL ---
 interface AddEditStaffModalProps {
   isOpen: boolean;
   onClose: () => void;
   staffToEdit: PartnerStaff | null;
   onSuccess: () => void;
+  onSuccessWithCredentials?: (credentials: StaffCredentialsData) => void;
   partnerName?: string;
 }
 
@@ -56,6 +59,8 @@ export function AddEditStaffModal({
   onClose,
   staffToEdit,
   onSuccess,
+  onSuccessWithCredentials,
+  partnerName = "",
 }: AddEditStaffModalProps) {
   const { t } = useLanguage();
   const isEditing = !!staffToEdit;
@@ -140,6 +145,17 @@ export function AddEditStaffModal({
           toast.success(t("partner.staff.createdSuccess"));
           onSuccess();
           onClose();
+          if (onSuccessWithCredentials) {
+            onSuccessWithCredentials({
+              partnerName: partnerName || "",
+              staffName: name.trim(),
+              deskName: deskName.trim(),
+              username: username.trim().toLowerCase(),
+              password: password,
+              role,
+              type: "created",
+            });
+          }
         } else {
           toast.error(res.error || t("common.error"));
         }

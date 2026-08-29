@@ -200,12 +200,15 @@ export const commonEn = {
   "common.back": "Go Back",
   "common.search": "Search",
   "common.save": "Save Changes",
+  "common.saving": "Saving...",
   "common.submit": "Submit",
   "common.close": "Close",
   "common.loading": "Loading...",
   "common.success": "Success",
   "common.error": "Something went wrong. Please try again.",
   "common.error.server": "Server error. Please try again.",
+  "common.unauthorized": "Unauthorized access.",
+  "common.adminUnauthorized": "Unauthorized access. Please log in as an admin.",
   "common.button.remaining": "remaining",
 
   // Profile & Header

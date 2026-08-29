@@ -1,34 +1,19 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
-import { Camera, Search, CheckCircle, XCircle, AlertTriangle, Receipt, CreditCard } from "lucide-react";
+import { Camera, Search } from "lucide-react";
 import { Partner, Transaction } from "@/services/db";
 import { authStore } from "@/services/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { verifyMemberForPartnerAction } from "@/app/actions/memberActions";
-import { addPartnerTransactionAction } from "@/app/actions/partnerActions";
-import { parseDiscountPercentage } from "@/lib/utils";
 import { toast } from "sonner";
 import type { Html5Qrcode } from "html5-qrcode";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { CameraPermissionModal } from "./CameraPermissionModal";
 import { PartnerRecentTransactionsCard } from "./PartnerRecentTransactionsCard";
-
-interface VerifiedMember {
-  id: string;
-  name: string;
-  phone: string;
-  email: string;
-  tier: string;
-  status: string;
-  expiryDate: string;
-  totalSaved: number;
-  profilePictureUrl: string;
-  isExpired: boolean;
-}
+import { PartnerVerifiedMemberCard, VerifiedMember } from "./PartnerVerifiedMemberCard";
 
 interface PartnerBillingTabProps {
   partner: Partner;
@@ -47,10 +32,6 @@ export function PartnerBillingTab({
   const [memberId, setMemberId] = useState("");
   const [loadingVerify, setLoadingVerify] = useState(false);
   const [verifiedMember, setVerifiedMember] = useState<VerifiedMember | null>(null);
-
-  // Transaction Form States
-  const [billAmount, setBillAmount] = useState("");
-  const [loadingSubmit, setLoadingSubmit] = useState(false);
 
   // Scanner States & Permission Modal
   const [scanning, setScanning] = useState(false);
@@ -114,24 +95,28 @@ export function PartnerBillingTab({
     }
   };
 
-  const handleVerifyDirect = useCallback(async (idToVerify: string) => {
-    if (!idToVerify) return;
-    setLoadingVerify(true);
-    setVerifiedMember(null);
-    try {
-      const res = await verifyMemberForPartnerAction(idToVerify);
-      if (res.success && res.member) {
-        setVerifiedMember(res.member);
-        toast.success(t("partner.billing.memberVerifiedToast"));
-      } else {
-        toast.error(res.message || t("partner.billing.memberInvalidToast"));
+  const handleVerifyDirect = useCallback(
+    async (idToVerify: string) => {
+      if (!idToVerify) return;
+      setLoadingVerify(true);
+      setVerifiedMember(null);
+      try {
+        const res = await verifyMemberForPartnerAction(idToVerify);
+        if (res.success && res.member) {
+          setVerifiedMember(res.member);
+          toast.success(t("partner.billing.memberVerifiedToast"));
+        } else {
+          const errMsg = res.errorKey ? t(res.errorKey) : (res.message || t("partner.billing.memberInvalidToast"));
+          toast.error(errMsg);
+        }
+      } catch {
+        toast.error(t("partner.billing.verifyErrorToast"));
+      } finally {
+        setLoadingVerify(false);
       }
-    } catch {
-      toast.error(t("partner.billing.verifyErrorToast"));
-    } finally {
-      setLoadingVerify(false);
-    }
-  }, [t]);
+    },
+    [t]
+  );
 
   // Scanner mount/start effect
   useEffect(() => {
@@ -250,36 +235,6 @@ export function PartnerBillingTab({
     handleVerifyDirect(memberId);
   };
 
-  const handleTransactionSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!verifiedMember || !billAmount || isNaN(Number(billAmount))) {
-      toast.error(t("partner.billing.invalidAmountToast"));
-      return;
-    }
-
-    setLoadingSubmit(true);
-    try {
-      const res = await addPartnerTransactionAction({
-        memberId: verifiedMember.id,
-        amount: Math.round(Number(billAmount)),
-      });
-
-      if (res.success) {
-        toast.success(res.message);
-        setBillAmount("");
-        setVerifiedMember(null);
-        setMemberId("");
-        onTransactionComplete();
-      } else {
-        toast.error(res.message || t("partner.billing.verifyErrorToast"));
-      }
-    } catch {
-      toast.error(t("common.error.server"));
-    } finally {
-      setLoadingSubmit(false);
-    }
-  };
-
   const currentStaff = typeof window !== "undefined" ? authStore.getCurrentStaff() : null;
 
   return (
@@ -309,20 +264,33 @@ export function PartnerBillingTab({
             {/* QR Reader Area */}
             {scanning ? (
               <div className="space-y-4">
-                <div id="qr-reader" className="w-full max-w-sm mx-auto overflow-hidden rounded-2xl border border-border bg-slate-950 aspect-square flex items-center justify-center"></div>
+                <div
+                  id="qr-reader"
+                  className="w-full max-w-sm mx-auto overflow-hidden rounded-2xl border border-border bg-slate-950 aspect-square flex items-center justify-center"
+                ></div>
                 <div className="text-center">
-                  <Button onClick={stopScanner} variant="outline" size="sm" className="text-destructive border-destructive/20 hover:bg-destructive/10 rounded-xl cursor-pointer">
+                  <Button
+                    onClick={stopScanner}
+                    variant="outline"
+                    size="sm"
+                    className="text-destructive border-destructive/20 hover:bg-destructive/10 rounded-xl cursor-pointer"
+                  >
                     {t("partner.billing.stopScanner")}
                   </Button>
                 </div>
               </div>
             ) : (
               <div className="flex flex-col sm:flex-row gap-3 items-center justify-center py-6 border-2 border-dashed border-border rounded-2xl bg-muted/20">
-                <Button onClick={startScanner} className="bg-primary hover:bg-primary-dark text-white gap-2 font-semibold rounded-xl cursor-pointer">
+                <Button
+                  onClick={startScanner}
+                  className="bg-primary hover:bg-primary-dark text-white gap-2 font-semibold rounded-xl cursor-pointer"
+                >
                   <Camera className="h-4 w-4" />
                   {t("partner.billing.scanQr")}
                 </Button>
-                <span className="text-muted-foreground text-xs sm:text-sm">{t("partner.billing.orEnterId")}</span>
+                <span className="text-muted-foreground text-xs sm:text-sm">
+                  {t("partner.billing.orEnterId")}
+                </span>
               </div>
             )}
 
@@ -341,103 +309,27 @@ export function PartnerBillingTab({
                   className="pl-10 h-11 border-border rounded-xl"
                 />
               </div>
-              <Button type="submit" disabled={loadingVerify} className="h-11 bg-secondary text-white hover:bg-slate-800 rounded-xl font-medium cursor-pointer">
+              <Button
+                type="submit"
+                disabled={loadingVerify}
+                className="h-11 bg-secondary text-white hover:bg-slate-800 rounded-xl font-medium cursor-pointer"
+              >
                 {loadingVerify ? t("partner.billing.verifying") : t("partner.billing.verifyBtn")}
               </Button>
             </form>
 
-            {/* Verified Member Display */}
+            {/* Verified Member & Billing Form Display */}
             {verifiedMember && (
-              <div className="p-5 rounded-2xl border border-border bg-slate-50/60 dark:bg-slate-900/60 space-y-4 animate-in fade-in duration-200">
-                <div className="flex items-start gap-4">
-                  {verifiedMember.profilePictureUrl ? (
-                    <Image
-                      src={verifiedMember.profilePictureUrl}
-                      alt={verifiedMember.name}
-                      width={56}
-                      height={56}
-                      unoptimized
-                      className="h-14 w-14 rounded-full object-cover border border-border shadow-sm shrink-0"
-                    />
-                  ) : (
-                    <div className="h-14 w-14 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-500 font-bold uppercase border border-border shrink-0">
-                      {verifiedMember.name.substring(0, 2)}
-                    </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="font-bold text-secondary dark:text-white truncate">{verifiedMember.name}</h3>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                        verifiedMember.tier === "founding" 
-                          ? "bg-amber-500/10 text-amber-600 dark:text-amber-500 border border-amber-500/20" 
-                          : "bg-primary/10 text-primary border border-primary/20"
-                      }`}>
-                        {verifiedMember.tier === "founding" ? t("partner.billing.foundingMember") : t("partner.billing.premiumMember")}
-                      </span>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-0.5">{t("partner.billing.memberId")}: {verifiedMember.id}</p>
-                    <p className="text-xs text-muted-foreground">{t("partner.billing.phone")}: {verifiedMember.phone}</p>
-                  </div>
-
-                  <div className="shrink-0 text-right">
-                    {verifiedMember.isExpired ? (
-                      <div className="inline-flex items-center gap-1.5 bg-destructive/10 text-destructive text-xs font-semibold px-2.5 py-1 rounded-full border border-destructive/20">
-                        <XCircle className="h-3.5 w-3.5" />
-                        {t("partner.billing.expired")}
-                      </div>
-                    ) : verifiedMember.status === "active" ? (
-                      <div className="inline-flex items-center gap-1.5 bg-primary/10 text-primary text-xs font-semibold px-2.5 py-1 rounded-full border border-primary/20">
-                        <CheckCircle className="h-3.5 w-3.5" />
-                        {t("partner.billing.activeCard")}
-                      </div>
-                    ) : (
-                      <div className="inline-flex items-center gap-1.5 bg-amber-500/10 text-amber-600 text-xs font-semibold px-2.5 py-1 rounded-full border border-amber-500/20">
-                        <AlertTriangle className="h-3.5 w-3.5" />
-                        {t("partner.billing.inactiveCard")}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Transaction submission form if card is active & valid */}
-                {!verifiedMember.isExpired && verifiedMember.status === "active" ? (
-                  <form onSubmit={handleTransactionSubmit} className="pt-4 border-t border-border space-y-4">
-                    <div className="space-y-1.5">
-                      <label htmlFor="partner-bill-amount" className="text-xs font-semibold text-secondary dark:text-slate-200 flex items-center gap-1.5 cursor-pointer">
-                        <Receipt className="h-3.5 w-3.5 text-primary" />
-                        {t("partner.billing.billAmountLabel")}
-                      </label>
-                      <Input
-                        id="partner-bill-amount"
-                        type="number"
-                        required
-                        min="1"
-                        value={billAmount}
-                        onChange={(e) => setBillAmount(e.target.value)}
-                        placeholder={t("partner.billing.billAmountPlaceholder")}
-                        className="h-11 border-border rounded-xl"
-                      />
-                    </div>
-                    {billAmount && !isNaN(Number(billAmount)) && Number(billAmount) > 0 && (
-                      <div className="bg-primary/5 border border-primary/20 rounded-xl p-3.5 flex justify-between items-center text-sm font-semibold text-primary">
-                        <span>{t("partner.billing.estimatedSaving")}</span>
-                        <span className="text-base font-extrabold font-mono">
-                          ৳{Math.round(Number(billAmount) * parseDiscountPercentage(partner.discount))}
-                        </span>
-                      </div>
-                    )}
-                    <Button type="submit" disabled={loadingSubmit} className="w-full bg-primary hover:bg-primary-dark text-white font-semibold rounded-xl h-11 gap-1.5 cursor-pointer">
-                      <CreditCard className="h-4 w-4" />
-                      {loadingSubmit ? t("partner.billing.processingTx") : t("partner.billing.completeTx")}
-                    </Button>
-                  </form>
-                ) : (
-                  <div className="p-3.5 bg-destructive/5 border border-destructive/10 text-destructive rounded-xl text-xs flex items-center gap-2">
-                    <AlertTriangle className="h-4 w-4 shrink-0" />
-                    <span>{t("partner.billing.cardInactiveNotice")}</span>
-                  </div>
-                )}
-              </div>
+              <PartnerVerifiedMemberCard
+                verifiedMember={verifiedMember}
+                partner={partner}
+                onTransactionComplete={onTransactionComplete}
+                onClearMember={() => {
+                  setVerifiedMember(null);
+                  setMemberId("");
+                }}
+                t={t}
+              />
             )}
           </CardContent>
         </Card>

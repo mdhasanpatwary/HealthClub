@@ -78,7 +78,7 @@ export function PartnerDashboardHeader({ partner, currentStaff: propStaff, onLog
       </div>
 
       <div className="flex items-center gap-2.5 shrink-0 self-stretch sm:self-auto justify-end pt-2 md:pt-0 border-t md:border-t-0 border-slate-800/80 w-full sm:w-auto">
-        <ChangePartnerPasswordDialog />
+        {!currentStaff && <ChangePartnerPasswordDialog />}
 
         <Button
           onClick={onLogout}

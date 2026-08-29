@@ -200,12 +200,15 @@ export const commonBn = {
   "common.back": "ফিরে যান",
   "common.search": "অনুসন্ধান",
   "common.save": "সংরক্ষণ করুন",
+  "common.saving": "সংরক্ষণ হচ্ছে...",
   "common.submit": "জমা দিন",
   "common.close": "বন্ধ করুন",
   "common.loading": "লোড হচ্ছে...",
   "common.success": "সফল হয়েছে",
   "common.error": "কোনো সমস্যা হয়েছে। আবার চেষ্টা করুন।",
   "common.error.server": "সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।",
+  "common.unauthorized": "অননুমোদিত অ্যাক্সেস।",
+  "common.adminUnauthorized": "অননুমোদিত অ্যাক্সেস। অনুগ্রহ করে এডমিন হিসেবে লগইন করুন।",
   "common.button.remaining": "টি অবশিষ্ট",
 
   // Profile & Header

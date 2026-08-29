@@ -41,14 +41,15 @@ export async function getPartnerTransactionsAction(): Promise<Transaction[]> {
 export async function addPartnerTransactionAction(tx: {
   memberId: string;
   amount: number;
-}): Promise<{ success: boolean; message: string }> {
+  discountAmount?: number;
+}): Promise<{ success: boolean; message: string; messageKey?: string; errorKey?: string }> {
   const session = await getSessionUser();
   if (!session || (session.role !== "partner" && session.role !== "partner_staff")) {
-    return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
+    return { success: false, message: "অননুমোদিত অ্যাক্সেস।", errorKey: "partner.errors.unauthorized" };
   }
 
   if (isNaN(tx.amount) || tx.amount <= 0) {
-    return { success: false, message: "সঠিক বিলের পরিমাণ ইনপুট দিন।" };
+    return { success: false, message: "সঠিক বিলের পরিমাণ ইনপুট দিন।", errorKey: "partner.errors.invalidAmount" };
   }
 
   const partnerId = session.role === "partner_staff" ? session.partnerId || session.userId : session.userId;
@@ -70,27 +71,40 @@ export async function addPartnerTransactionAction(tx: {
     ]);
 
     if (!member) {
-      return { success: false, message: "মেম্বার আইডিটি খুঁজে পাওয়া যায়নি।" };
+      return { success: false, message: "মেম্বার আইডিটি খুঁজে পাওয়া যায়নি।", errorKey: "partner.errors.memberNotFound" };
     }
 
     if (member.status !== "active") {
-      return { success: false, message: "এই মেম্বারশিপটি সক্রিয় নয়।" };
+      return { success: false, message: "এই মেম্বারশিপটি সক্রিয় নয়।", errorKey: "partner.errors.memberInactive" };
     }
 
     const currentDate = new Date();
     const expiryDate = new Date(member.expiryDate);
     expiryDate.setHours(23, 59, 59, 999);
     if (expiryDate < currentDate) {
-      return { success: false, message: "এই মেম্বারশিপ কার্ডটির মেয়াদ শেষ হয়ে গেছে।" };
+      return { success: false, message: "এই মেম্বারশিপ কার্ডটির মেয়াদ শেষ হয়ে গেছে।", errorKey: "partner.errors.memberExpired" };
     }
 
     if (!partner) {
-      return { success: false, message: "পার্টনার ডেটা খুঁজে পাওয়া যায়নি।" };
+      return { success: false, message: "পার্টনার ডেটা খুঁজে পাওয়া যায়নি।", errorKey: "partner.errors.partnerNotFound" };
     }
 
-    const discountRate = parseDiscountPercentage(partner.discount);
-    const safeRate = Math.min(discountRate, 0.70);
-    const saved = Math.round(tx.amount * safeRate);
+    let saved: number;
+    if (tx.discountAmount !== undefined && !isNaN(Number(tx.discountAmount))) {
+      const customDiscount = Number(tx.discountAmount);
+      if (customDiscount < 0) {
+        return { success: false, message: "ছাড়ের পরিমাণ ঋণাত্মক হতে পারে না।", errorKey: "partner.errors.negativeDiscount" };
+      }
+      if (customDiscount > tx.amount) {
+        return { success: false, message: "ছাড়ের পরিমাণ মোট বিলের চেয়ে বেশি হতে পারে না।", errorKey: "partner.errors.discountExceedsBill" };
+      }
+      saved = Math.round(customDiscount);
+    } else {
+      const discountRate = parseDiscountPercentage(partner.discount);
+      const safeRate = Math.min(discountRate, 0.70);
+      saved = Math.round(tx.amount * safeRate);
+    }
+
     const txId = `tx_${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
 
     await prisma.$transaction([
@@ -134,6 +148,6 @@ export async function addPartnerTransactionAction(tx: {
     return { success: true, message: `লেনদেন সফলভাবে সম্পন্ন হয়েছে! ছাড়ের পরিমাণ: ৳${saved}` };
   } catch (error) {
     logger.error("Error in addPartnerTransactionAction:", error);
-    return { success: false, message: "লেনদেনটি সংরক্ষণ করতে সমস্যা হয়েছে।" };
+    return { success: false, message: "লেনদেনটি সংরক্ষণ করতে সমস্যা হয়েছে。", errorKey: "partner.errors.transactionFailed" };
   }
 }

@@ -29,15 +29,18 @@ export async function getPartnerAnalyticsAction(): Promise<{
   success: boolean;
   data?: PartnerAnalyticsData;
   error?: string;
+  errorKey?: string;
 }> {
   const session = await getSessionUser();
-  if (!session || session.role !== "partner") {
-    return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
+  if (!session || (session.role !== "partner" && session.role !== "partner_staff")) {
+    return { success: false, error: "অননুমোদিত অ্যাক্সেস।", errorKey: "partner.errors.unauthorized" };
   }
+
+  const partnerId = session.role === "partner_staff" ? session.partnerId || session.userId : session.userId;
 
   try {
     const rawTransactions = await prisma.transaction.findMany({
-      where: { partnerId: session.userId },
+      where: { partnerId },
       orderBy: { date: "desc" },
     });
 

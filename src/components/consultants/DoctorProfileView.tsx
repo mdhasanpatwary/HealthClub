@@ -116,7 +116,13 @@ export default function DoctorProfileView({
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
                 <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-xs font-bold px-3 py-1 rounded-full gap-1.5">
                   <DeptIcon className="h-3.5 w-3.5" />
-                  <span>{t(`consultants.filter.${doctor.department}`) || doctor.department}</span>
+                  <span>
+                    {(() => {
+                      const deptKey = `consultants.filter.${doctor.department}`;
+                      const translated = t(deptKey);
+                      return translated !== deptKey ? translated : (doctor.department || doctor.specialty);
+                    })()}
+                  </span>
                 </Badge>
                 <DoctorAvailabilityBadge doctor={doctor} locale={locale} size="md" />
                 <Badge variant="outline" className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 border-emerald-500/30 bg-emerald-50/50 dark:bg-emerald-950/20 px-2.5 py-0.5 rounded-full gap-1">

@@ -20,12 +20,16 @@ import { toast } from "sonner";
 import { KeyRound, Trash2 } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 
+import { StaffCredentialsData } from "./PartnerStaffCredentialsModal";
+
 // --- RESET PASSWORD MODAL ---
 interface ResetStaffPasswordModalProps {
   isOpen: boolean;
   onClose: () => void;
   staff: PartnerStaff | null;
   onSuccess: () => void;
+  onSuccessWithCredentials?: (credentials: StaffCredentialsData) => void;
+  partnerName?: string;
 }
 
 export function ResetStaffPasswordModal({
@@ -33,6 +37,8 @@ export function ResetStaffPasswordModal({
   onClose,
   staff,
   onSuccess,
+  onSuccessWithCredentials,
+  partnerName = "",
 }: ResetStaffPasswordModalProps) {
   const { t } = useLanguage();
   const [newPassword, setNewPassword] = useState("");
@@ -66,6 +72,17 @@ export function ResetStaffPasswordModal({
         toast.success(res.message || t("common.success"));
         onSuccess();
         onClose();
+        if (onSuccessWithCredentials) {
+          onSuccessWithCredentials({
+            partnerName: partnerName || "",
+            staffName: staff.name,
+            deskName: staff.deskName,
+            username: staff.username,
+            password: newPassword,
+            role: staff.role,
+            type: "reset",
+          });
+        }
       } else {
         toast.error(res.message || t("common.error"));
       }

@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { changePartnerPasswordAction } from "@/app/actions/partnerActions";
+import { authStore } from "@/services/authStore";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toast } from "sonner";
 
@@ -16,6 +17,12 @@ export function ChangePartnerPasswordDialog() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loadingChange, setLoadingChange] = useState(false);
+
+  // If logged in as staff, hide password change dialog (only main partner admin can change partner password)
+  const isStaff = typeof window !== "undefined" && Boolean(authStore.getCurrentStaff());
+  if (isStaff) {
+    return null;
+  }
 
   const handleChangePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
