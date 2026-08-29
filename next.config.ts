@@ -49,18 +49,6 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
-      // Partner dashboard: allow camera for QR scanning, deny microphone & geolocation
-      {
-        source: "/partner/dashboard/:path*",
-        headers: [
-          { key: "X-Frame-Options", value: "DENY" },
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
-          { key: "Permissions-Policy", value: "camera=(self), microphone=(), geolocation=()" },
-          { key: "X-DNS-Prefetch-Control", value: "on" },
-        ],
-      },
       // Static assets: aggressive caching for images, icons, and partner logos
       {
         source: "/images/:path*",
@@ -74,7 +62,7 @@ const nextConfig: NextConfig = {
           { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
         ],
       },
-      // All other routes: deny camera, microphone, geolocation
+      // Security headers for all application routes (allows camera for self domain QR scanning)
       {
         source: "/:path*",
         headers: [
@@ -82,7 +70,7 @@ const nextConfig: NextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
-          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+          { key: "Permissions-Policy", value: "camera=(self), microphone=(), geolocation=()" },
           { key: "X-DNS-Prefetch-Control", value: "on" },
         ],
       },
