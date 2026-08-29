@@ -2,20 +2,20 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { Camera, Search, CheckCircle, XCircle, AlertTriangle, Receipt, CreditCard, History, Download } from "lucide-react";
+import { Camera, Search, CheckCircle, XCircle, AlertTriangle, Receipt, CreditCard } from "lucide-react";
 import { Partner, Transaction } from "@/services/db";
 import { authStore } from "@/services/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { verifyMemberForPartnerAction } from "@/app/actions/memberActions";
 import { addPartnerTransactionAction } from "@/app/actions/partnerActions";
 import { parseDiscountPercentage } from "@/lib/utils";
-import { exportToCsv } from "@/lib/exportUtils";
 import { toast } from "sonner";
 import type { Html5Qrcode } from "html5-qrcode";
 import { useLanguage } from "@/components/layout/LanguageProvider";
+import { CameraPermissionModal } from "./CameraPermissionModal";
+import { PartnerRecentTransactionsCard } from "./PartnerRecentTransactionsCard";
 
 interface VerifiedMember {
   id: string;
@@ -52,16 +52,66 @@ export function PartnerBillingTab({
   const [billAmount, setBillAmount] = useState("");
   const [loadingSubmit, setLoadingSubmit] = useState(false);
 
-  // Scanner States
+  // Scanner States & Permission Modal
   const [scanning, setScanning] = useState(false);
+  const [permissionModalOpen, setPermissionModalOpen] = useState(false);
+  const [requestingPermission, setRequestingPermission] = useState(false);
 
-  const startScanner = () => {
-    setScanning(true);
+  const startScanner = async () => {
     setVerifiedMember(null);
+
+    // Pre-check if camera permission is explicitly denied
+    if (typeof navigator !== "undefined" && navigator.permissions?.query) {
+      try {
+        const result = await navigator.permissions.query({ name: "camera" as PermissionName });
+        if (result.state === "denied") {
+          setPermissionModalOpen(true);
+          return;
+        }
+      } catch {
+        // Permissions query for camera is not supported in all browsers, safe to proceed
+      }
+    }
+
+    setScanning(true);
   };
 
   const stopScanner = () => {
     setScanning(false);
+  };
+
+  const handleRequestCameraPermission = async () => {
+    setRequestingPermission(true);
+    try {
+      if (typeof navigator !== "undefined" && navigator.mediaDevices?.getUserMedia) {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        // Close test stream tracks immediately
+        stream.getTracks().forEach((track) => track.stop());
+        toast.success(t("partner.billing.cameraSuccessToast"));
+        setPermissionModalOpen(false);
+        setScanning(true);
+      } else {
+        toast.error(t("partner.billing.cameraErrorToast"));
+      }
+    } catch (err: unknown) {
+      const error = err as { name?: string };
+      if (error?.name === "NotAllowedError" || error?.name === "PermissionDeniedError") {
+        toast.error(t("partner.billing.cameraBlockedToast"));
+      } else {
+        toast.error(t("partner.billing.cameraErrorToast"));
+      }
+    } finally {
+      setRequestingPermission(false);
+    }
+  };
+
+  const handleManualInputSelect = () => {
+    setPermissionModalOpen(false);
+    setScanning(false);
+    const inputEl = document.getElementById("partner-member-id-input");
+    if (inputEl) {
+      inputEl.focus();
+    }
   };
 
   const handleVerifyDirect = useCallback(async (idToVerify: string) => {
@@ -104,25 +154,84 @@ export function PartnerBillingTab({
       try {
         html5QrCode = new Html5Qrcode("qr-reader");
 
-        await html5QrCode.start(
-          { facingMode: "environment" },
-          {
-            fps: 10,
-            qrbox: { width: 250, height: 250 },
-          },
-          (decodedText) => {
-            setMemberId(decodedText);
-            handleVerifyDirect(decodedText);
-            setScanning(false);
-          },
-          () => {
-            // Silently ignore frame errors
+        const qrConfig = {
+          fps: 10,
+          qrbox: { width: 250, height: 250 },
+        };
+
+        const onSuccess = (decodedText: string) => {
+          setMemberId(decodedText);
+          handleVerifyDirect(decodedText);
+          setScanning(false);
+        };
+
+        const onError = () => {
+          // Silently ignore frame errors
+        };
+
+        let started = false;
+
+        // 1. Try rear camera (environment) first - ideal for mobile & tablet
+        try {
+          await html5QrCode.start(
+            { facingMode: "environment" },
+            qrConfig,
+            onSuccess,
+            onError
+          );
+          started = true;
+        } catch (backCamError: unknown) {
+          const err = backCamError as { name?: string; message?: string };
+          // If explicitly denied permission, throw to trigger permission modal
+          if (
+            err?.name === "NotAllowedError" ||
+            err?.name === "PermissionDeniedError" ||
+            String(err?.message || "").toLowerCase().includes("permission")
+          ) {
+            throw backCamError;
           }
-        );
-        isStarted = true;
-      } catch {
-        toast.error(t("partner.billing.cameraErrorToast"));
+
+          // 2. Fallback for laptop / desktop / front webcam
+          try {
+            const devices = await Html5Qrcode.getCameras().catch(() => []);
+            if (devices && devices.length > 0) {
+              await html5QrCode.start(
+                devices[0].id,
+                qrConfig,
+                onSuccess,
+                onError
+              );
+              started = true;
+            } else {
+              await html5QrCode.start(
+                { facingMode: "user" },
+                qrConfig,
+                onSuccess,
+                onError
+              );
+              started = true;
+            }
+          } catch (fallbackError) {
+            throw fallbackError;
+          }
+        }
+
+        isStarted = started;
+      } catch (err: unknown) {
+        console.error("Camera scanner setup error:", err);
+        const error = err as { name?: string; message?: string };
+        const isPermission =
+          error?.name === "NotAllowedError" ||
+          error?.name === "PermissionDeniedError" ||
+          String(error?.message || "").toLowerCase().includes("permission") ||
+          String(error?.message || "").toLowerCase().includes("notallowederror");
+
         setScanning(false);
+        if (isPermission) {
+          setPermissionModalOpen(true);
+        } else {
+          toast.error(t("partner.billing.cameraErrorToast"));
+        }
       }
     };
 
@@ -222,6 +331,7 @@ export function PartnerBillingTab({
               <div className="relative flex-1">
                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
+                  id="partner-member-id-input"
                   type="text"
                   required
                   aria-label={t("partner.billing.memberIdAria")}
@@ -335,95 +445,22 @@ export function PartnerBillingTab({
 
       {/* Right 1 Col: Recent Transactions history */}
       <div>
-        <Card className="border-border shadow-sm rounded-3xl h-full flex flex-col justify-between">
-          <CardHeader className="flex flex-row items-center justify-between pb-3 p-5 sm:p-6">
-            <div className="space-y-0.5">
-              <CardTitle className="font-heading text-base font-bold text-secondary dark:text-white flex items-center gap-1.5">
-                <History className="h-4 w-4 text-primary" />
-                {t("partner.billing.recentTxTitle")}
-              </CardTitle>
-              <CardDescription className="text-xs">
-                {t("partner.billing.recentTxSubtitle")}
-              </CardDescription>
-            </div>
-            {transactions.length > 0 && (
-              <Button
-                onClick={() =>
-                  exportToCsv(transactions, "partner_transactions", [
-                    { header: "Transaction ID", accessor: "id" },
-                    { header: "Member ID", accessor: "memberId" },
-                    { header: "Member Name", accessor: "memberName" },
-                    { header: "Counter Desk", accessor: "deskName" },
-                    { header: "Processed By", accessor: "staffName" },
-                    { header: "Bill Amount (BDT)", accessor: "amount" },
-                    { header: "Saved Amount (BDT)", accessor: "saved" },
-                    { header: "Date", accessor: "date" },
-                  ])
-                }
-                variant="outline"
-                size="sm"
-                className="border-border gap-1.5 text-xs font-semibold h-8 rounded-xl cursor-pointer"
-              >
-                <Download className="h-3.5 w-3.5" />
-                <span>{t("partner.billing.export")}</span>
-              </Button>
-            )}
-          </CardHeader>
-          <CardContent className="px-0 flex-1">
-            {loadingTransactions ? (
-              <div className="divide-y divide-border/60 p-4 space-y-4 animate-pulse">
-                {Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="py-2 flex justify-between items-start">
-                    <div className="space-y-1.5">
-                      <Skeleton className="h-3.5 w-28" />
-                      <Skeleton className="h-2.5 w-16" />
-                    </div>
-                    <div className="space-y-1.5 text-right">
-                      <Skeleton className="h-3.5 w-14 ml-auto" />
-                      <Skeleton className="h-2.5 w-10 ml-auto" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : transactions.length === 0 ? (
-              <div className="py-16 text-center text-xs sm:text-sm text-muted-foreground px-4">
-                {t("partner.billing.noTxRecorded")}
-              </div>
-            ) : (
-              <div className="divide-y divide-border/60 max-h-[500px] overflow-y-auto">
-                {transactions.map((tx) => (
-                  <div key={tx.id} className="p-4 flex justify-between items-start text-xs hover:bg-slate-50/50 dark:hover:bg-slate-900/30 transition-colors">
-                    <div className="space-y-0.5">
-                      <p className="font-bold text-secondary dark:text-white">{tx.memberName}</p>
-                      <div className="flex items-center gap-1.5 flex-wrap text-[10px] text-muted-foreground">
-                        <span>{t("partner.billing.idPrefix")}: {tx.memberId}</span>
-                        {tx.deskName && (
-                          <span className="bg-primary/10 text-primary font-medium px-1.5 py-0.2 rounded">
-                            {tx.deskName}
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-[10px] text-muted-foreground font-mono">
-                        {new Date(tx.date).toLocaleDateString(locale === "bn" ? "bn-BD" : "en-US", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </p>
-                    </div>
-                    <div className="text-right space-y-0.5">
-                      <p className="font-bold text-secondary dark:text-white font-mono">{t("partner.billing.bill")}: ৳{tx.amount}</p>
-                      <p className="font-extrabold text-primary font-mono">{t("partner.billing.discount")}: ৳{tx.saved}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <PartnerRecentTransactionsCard
+          transactions={transactions}
+          loadingTransactions={loadingTransactions}
+          locale={locale}
+          t={t}
+        />
       </div>
+
+      {/* Camera Permission Request Modal */}
+      <CameraPermissionModal
+        open={permissionModalOpen}
+        onOpenChange={setPermissionModalOpen}
+        onRequestAccess={handleRequestCameraPermission}
+        onManualInput={handleManualInputSelect}
+        isRequesting={requestingPermission}
+      />
     </div>
   );
 }

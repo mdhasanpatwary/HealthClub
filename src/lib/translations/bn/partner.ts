@@ -317,6 +317,14 @@ export const partnerBn = {
   "partner.billing.verifyErrorToast": "যাচাই করতে সমস্যা হয়েছে।",
   "partner.billing.invalidAmountToast": "সঠিক বিলের পরিমাণ ইনপুট দিন।",
   "partner.billing.cameraErrorToast": "ক্যামেরা চালু করতে সমস্যা হয়েছে। ম্যানুয়ালি মেম্বার আইডি টাইপ করুন।",
+  "partner.billing.cameraPermissionTitle": "QR কোড স্ক্যান করতে ক্যামেরা অ্যাক্সেস দিন",
+  "partner.billing.cameraPermissionDesc": "মেম্বারশিপ কার্ডের QR কোড সরাসরি স্ক্যান করার জন্য আপনার ব্রাউজারে ক্যামেরা ব্যবহারের অনুমতি প্রয়োজন।",
+  "partner.billing.cameraPermissionStep1": "১. 'ক্যামেরা পারমিশন দিন' বাটনে ক্লিক করে ব্রাউজার প্রম্পটে 'Allow' সিলেক্ট করুন।",
+  "partner.billing.cameraPermissionStep2": "২. অনুমতি ব্লক করা থাকলে ব্রাউজারের অ্যাড্রেস বারের লক (🔒) আইকন থেকে Camera 'Allow' করুন এবং পেজ রিলোড দিন।",
+  "partner.billing.grantCameraPermissionBtn": "ক্যামেরা পারমিশন দিন",
+  "partner.billing.enterManuallyBtn": "ম্যানুয়ালি আইডি টাইপ করুন",
+  "partner.billing.cameraBlockedToast": "ক্যামেরা অ্যাক্সেস ব্লক করা আছে। ব্রাউজার সেটিংসে গিয়ে অনুমতি দিন।",
+  "partner.billing.cameraSuccessToast": "ক্যামেরা পারমিশন সফলভাবে অনুমোদিত হয়েছে!",
   "partner.dashboard.backToDashboard": "ড্যাশবোর্ডে ফিরে যান",
 
   // Settlement Statements & Printing

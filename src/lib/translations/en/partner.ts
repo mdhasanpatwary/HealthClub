@@ -317,6 +317,14 @@ export const partnerEn = {
   "partner.billing.verifyErrorToast": "Error verifying member ID.",
   "partner.billing.invalidAmountToast": "Please input a valid bill amount.",
   "partner.billing.cameraErrorToast": "Failed to start camera. Please enter Member ID manually.",
+  "partner.billing.cameraPermissionTitle": "Allow Camera Access to Scan QR Code",
+  "partner.billing.cameraPermissionDesc": "Camera access is required to scan membership card QR codes directly.",
+  "partner.billing.cameraPermissionStep1": "1. Click 'Grant Camera Access' and choose 'Allow' on the browser prompt.",
+  "partner.billing.cameraPermissionStep2": "2. If access was previously blocked, click the lock (🔒) icon in your browser address bar to allow Camera access and reload.",
+  "partner.billing.grantCameraPermissionBtn": "Grant Camera Access",
+  "partner.billing.enterManuallyBtn": "Enter Member ID Manually",
+  "partner.billing.cameraBlockedToast": "Camera access is blocked. Please enable it in browser site settings.",
+  "partner.billing.cameraSuccessToast": "Camera access granted successfully!",
   "partner.dashboard.backToDashboard": "Back to Dashboard",
 
   // Settlement Statements & Printing
