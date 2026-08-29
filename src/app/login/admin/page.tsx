@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Heart, Lock, Shield } from "lucide-react";
 import { authStore } from "@/services/authStore";
 import { Button } from "@/components/ui/button";
@@ -17,7 +16,6 @@ export default function AdminLoginPage() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +31,7 @@ export default function AdminLoginPage() {
       if (adminMember) {
         authStore.setCurrentUser(adminMember);
         toast.success(t("auth.login.success"));
-        router.push("/admin");
+        window.location.href = "/admin";
         return;
       }
     } catch {

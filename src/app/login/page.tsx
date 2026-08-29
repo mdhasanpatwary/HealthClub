@@ -46,7 +46,8 @@ export default function LoginPage() {
         }
         authStore.setCurrentUser(res.member);
         toast.success(t("auth.login.success"));
-        router.push("/dashboard");
+        window.location.href = "/dashboard";
+        return;
       } else {
         const errMsg = res.message || res.error || t("auth.login.invalidCredentials");
         toast.error(errMsg);

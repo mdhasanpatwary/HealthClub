@@ -50,34 +50,59 @@ export default function PartnerDashboardPage() {
     }
   }, []);
 
-  const refreshPartnerProfile = useCallback(async () => {
-    try {
-      const res = await getPartnerProfileAction();
-      if (res.success && res.partner) {
-        setPartner(res.partner);
-        authStore.setCurrentPartner(res.partner);
-      }
-    } catch {
-      // Fallback to cached partner session
-    }
-  }, []);
-
   useEffect(() => {
-    const currentPartner = authStore.getCurrentPartner();
-    if (!currentPartner) {
-      router.push("/login/partner");
-      return;
+    let isMounted = true;
+
+    async function initPartnerDashboard() {
+      // 1. Initial cached render
+      let activePartner = authStore.getCurrentPartner();
+      if (activePartner && isMounted) {
+        setPartner(activePartner);
+      }
+
+      // 2. Hydrate from server session in parallel
+      try {
+        const [profileRes, txs] = await Promise.all([
+          getPartnerProfileAction().catch(() => null),
+          getPartnerTransactionsAction().catch(() => []),
+        ]);
+
+        if (!isMounted) return;
+
+        if (profileRes?.success && profileRes.partner) {
+          activePartner = profileRes.partner;
+          setPartner(activePartner);
+          authStore.setCurrentPartner(activePartner);
+        }
+
+        if (txs) {
+          setTransactions(txs);
+        }
+      } catch {
+        // Retain cached session on network glitch
+      } finally {
+        if (isMounted) {
+          setLoadingTransactions(false);
+        }
+      }
+
+      // 3. Only redirect if partner is completely missing from both cache and server
+      if (!activePartner && isMounted) {
+        router.push("/login/partner");
+      }
     }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setPartner(currentPartner);
-    loadTransactions();
-    refreshPartnerProfile();
-  }, [router, loadTransactions, refreshPartnerProfile]);
+
+    initPartnerDashboard();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [router]);
 
   const handleLogout = () => {
     authStore.logoutPartner();
     toast.success("সফলভাবে লগআউট করা হয়েছে।");
-    router.push("/login/partner");
+    window.location.href = "/login/partner";
   };
 
   const handleProfileUpdated = (updated: Partner) => {

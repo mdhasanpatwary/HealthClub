@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Heart, Lock, Building2 } from "lucide-react";
 import { authStore } from "@/services/authStore";
 import { Button } from "@/components/ui/button";
@@ -17,7 +16,6 @@ export default function PartnerLoginPage() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handlePartnerLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +33,7 @@ export default function PartnerLoginPage() {
         authStore.setCurrentPartner(res.partner);
         authStore.setCurrentStaff(res.staff || null);
         toast.success(t("auth.login.success"));
-        router.push("/partner/dashboard");
+        window.location.href = "/partner/dashboard";
         return;
       } else {
         toast.error(res.error || t("auth.login.invalidCredentials"));

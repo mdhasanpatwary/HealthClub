@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { authStore } from "@/services/authStore";
 import { Partner } from "@/services/db";
@@ -19,33 +19,42 @@ export default function PartnerDoctorsPage() {
   const { t } = useLanguage();
   const [partner, setPartner] = useState<Partner | null>(null);
 
-  const refreshPartnerProfile = useCallback(async () => {
-    try {
-      const res = await getPartnerProfileAction();
-      if (res.success && res.partner) {
-        setPartner(res.partner);
-        authStore.setCurrentPartner(res.partner);
-      }
-    } catch {
-      // Fallback
-    }
-  }, []);
-
   useEffect(() => {
-    const currentPartner = authStore.getCurrentPartner();
-    if (!currentPartner) {
-      router.push("/login/partner");
-      return;
+    let isMounted = true;
+
+    async function initPartner() {
+      let activePartner = authStore.getCurrentPartner();
+      if (activePartner && isMounted) {
+        setPartner(activePartner);
+      }
+
+      try {
+        const res = await getPartnerProfileAction();
+        if (res.success && res.partner && isMounted) {
+          activePartner = res.partner;
+          setPartner(activePartner);
+          authStore.setCurrentPartner(activePartner);
+        }
+      } catch {
+        // Fallback
+      }
+
+      if (!activePartner && isMounted) {
+        router.push("/login/partner");
+      }
     }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setPartner(currentPartner);
-    refreshPartnerProfile();
-  }, [router, refreshPartnerProfile]);
+
+    initPartner();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [router]);
 
   const handleLogout = () => {
     authStore.logoutPartner();
     toast.success(t("auth.logoutSuccess"));
-    router.push("/login/partner");
+    window.location.href = "/login/partner";
   };
 
   if (!partner) {

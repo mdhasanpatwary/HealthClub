@@ -320,13 +320,15 @@ export async function getPartnerProfileAction(): Promise<{
   error?: string;
 }> {
   const session = await getSessionUser();
-  if (!session || session.role !== "partner") {
+  if (!session || (session.role !== "partner" && session.role !== "partner_staff")) {
     return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
   }
 
+  const partnerId = session.role === "partner_staff" ? session.partnerId || session.userId : session.userId;
+
   try {
     const data = await prisma.partner.findUnique({
-      where: { id: session.userId },
+      where: { id: partnerId },
       select: {
         id: true,
         name: true,

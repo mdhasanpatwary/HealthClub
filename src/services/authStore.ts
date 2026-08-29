@@ -25,6 +25,8 @@ export const authStore = {
 
   setCurrentUser(user: Member): void {
     if (isClient) {
+      safeStorage.removeItem(KEYS.CURRENT_PARTNER);
+      safeStorage.removeItem(KEYS.CURRENT_STAFF);
       safeStorage.setItem(KEYS.CURRENT_USER, user);
       window.dispatchEvent(new Event("auth-change"));
     }
@@ -48,6 +50,7 @@ export const authStore = {
 
   setCurrentPartner(partner: Partner): void {
     if (isClient) {
+      safeStorage.removeItem(KEYS.CURRENT_USER);
       safeStorage.setItem(KEYS.CURRENT_PARTNER, partner);
       window.dispatchEvent(new Event("auth-change"));
     }
