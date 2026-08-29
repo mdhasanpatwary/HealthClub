@@ -12,9 +12,11 @@ import { buttonVariants } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 
 export default function PartnerDoctorsPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [partner, setPartner] = useState<Partner | null>(null);
 
   const refreshPartnerProfile = useCallback(async () => {
@@ -42,7 +44,7 @@ export default function PartnerDoctorsPage() {
 
   const handleLogout = () => {
     authStore.logoutPartner();
-    toast.success("সফলভাবে লগআউট করা হয়েছে।");
+    toast.success(t("auth.logoutSuccess"));
     router.push("/login/partner");
   };
 
@@ -66,7 +68,7 @@ export default function PartnerDoctorsPage() {
           })}
         >
           <ArrowLeft className="h-4 w-4" />
-          <span>ড্যাশবোর্ডে ফিরে যান</span>
+          <span>{t("partner.dashboard.backToDashboard")}</span>
         </Link>
       </div>
 

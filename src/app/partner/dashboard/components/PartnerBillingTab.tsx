@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { Camera, Search, CheckCircle, XCircle, AlertTriangle, Receipt, CreditCard, History, Download } from "lucide-react";
 import { Partner, Transaction } from "@/services/db";
@@ -15,6 +15,7 @@ import { parseDiscountPercentage } from "@/lib/utils";
 import { exportToCsv } from "@/lib/exportUtils";
 import { toast } from "sonner";
 import type { Html5Qrcode } from "html5-qrcode";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 
 interface VerifiedMember {
   id: string;
@@ -42,6 +43,7 @@ export function PartnerBillingTab({
   loadingTransactions,
   onTransactionComplete,
 }: PartnerBillingTabProps) {
+  const { t, locale } = useLanguage();
   const [memberId, setMemberId] = useState("");
   const [loadingVerify, setLoadingVerify] = useState(false);
   const [verifiedMember, setVerifiedMember] = useState<VerifiedMember | null>(null);
@@ -62,7 +64,7 @@ export function PartnerBillingTab({
     setScanning(false);
   };
 
-  const handleVerifyDirect = async (idToVerify: string) => {
+  const handleVerifyDirect = useCallback(async (idToVerify: string) => {
     if (!idToVerify) return;
     setLoadingVerify(true);
     setVerifiedMember(null);
@@ -70,16 +72,16 @@ export function PartnerBillingTab({
       const res = await verifyMemberForPartnerAction(idToVerify);
       if (res.success && res.member) {
         setVerifiedMember(res.member);
-        toast.success("মেম্বার আইডিটি ভেরিফাই করা হয়েছে!");
+        toast.success(t("partner.billing.memberVerifiedToast"));
       } else {
-        toast.error(res.message || "মেম্বার আইডিটি সঠিক নয়।");
+        toast.error(res.message || t("partner.billing.memberInvalidToast"));
       }
     } catch {
-      toast.error("যাচাই করতে সমস্যা হয়েছে।");
+      toast.error(t("partner.billing.verifyErrorToast"));
     } finally {
       setLoadingVerify(false);
     }
-  };
+  }, [t]);
 
   // Scanner mount/start effect
   useEffect(() => {
@@ -93,7 +95,7 @@ export function PartnerBillingTab({
 
       const element = document.getElementById("qr-reader");
       if (!element) {
-        toast.error("ক্যামেরা রিডারটি লোড করা যায়নি।");
+        toast.error(t("partner.billing.cameraErrorToast"));
         setScanning(false);
         return;
       }
@@ -119,7 +121,7 @@ export function PartnerBillingTab({
         );
         isStarted = true;
       } catch {
-        toast.error("ক্যামেরা চালু করতে সমস্যা হয়েছে। ম্যানুয়ালি মেম্বার আইডি টাইপ করুন।");
+        toast.error(t("partner.billing.cameraErrorToast"));
         setScanning(false);
       }
     };
@@ -132,7 +134,7 @@ export function PartnerBillingTab({
         html5QrCode.stop().catch(() => {});
       }
     };
-  }, [scanning]);
+  }, [scanning, t, handleVerifyDirect]);
 
   const handleVerifySubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -142,7 +144,7 @@ export function PartnerBillingTab({
   const handleTransactionSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!verifiedMember || !billAmount || isNaN(Number(billAmount))) {
-      toast.error("সঠিক বিলের পরিমাণ ইনপুট দিন।");
+      toast.error(t("partner.billing.invalidAmountToast"));
       return;
     }
 
@@ -160,10 +162,10 @@ export function PartnerBillingTab({
         setMemberId("");
         onTransactionComplete();
       } else {
-        toast.error(res.message || "লেনদেন রেকর্ড করতে সমস্যা হয়েছে।");
+        toast.error(res.message || t("partner.billing.verifyErrorToast"));
       }
     } catch {
-      toast.error("সার্ভার ত্রুটি। দয়া করে আবার চেষ্টা করুন।");
+      toast.error(t("common.error.server"));
     } finally {
       setLoadingSubmit(false);
     }
@@ -180,10 +182,10 @@ export function PartnerBillingTab({
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
                 <CardTitle className="font-heading text-lg sm:text-xl font-bold text-secondary dark:text-white">
-                  মেম্বার ভেরিফিকেশন ও ডিসকাউন্ট এন্ট্রি
+                  {t("partner.billing.cardTitle")}
                 </CardTitle>
                 <CardDescription className="text-xs sm:text-sm">
-                  ডিজিটাল কার্ডের কিউআর কোড স্ক্যান করুন অথবা মেম্বার আইডি টাইপ করে ছাড়ের লেনদেন রেকর্ড করুন।
+                  {t("partner.billing.cardSubtitle")}
                 </CardDescription>
               </div>
               {currentStaff && (
@@ -201,7 +203,7 @@ export function PartnerBillingTab({
                 <div id="qr-reader" className="w-full max-w-sm mx-auto overflow-hidden rounded-2xl border border-border bg-slate-950 aspect-square flex items-center justify-center"></div>
                 <div className="text-center">
                   <Button onClick={stopScanner} variant="outline" size="sm" className="text-destructive border-destructive/20 hover:bg-destructive/10 rounded-xl cursor-pointer">
-                    স্ক্যানার বন্ধ করুন
+                    {t("partner.billing.stopScanner")}
                   </Button>
                 </div>
               </div>
@@ -209,9 +211,9 @@ export function PartnerBillingTab({
               <div className="flex flex-col sm:flex-row gap-3 items-center justify-center py-6 border-2 border-dashed border-border rounded-2xl bg-muted/20">
                 <Button onClick={startScanner} className="bg-primary hover:bg-primary-dark text-white gap-2 font-semibold rounded-xl cursor-pointer">
                   <Camera className="h-4 w-4" />
-                  কিউআর কোড স্ক্যান করুন
+                  {t("partner.billing.scanQr")}
                 </Button>
-                <span className="text-muted-foreground text-xs sm:text-sm">অথবা নিচে আইডি লিখুন</span>
+                <span className="text-muted-foreground text-xs sm:text-sm">{t("partner.billing.orEnterId")}</span>
               </div>
             )}
 
@@ -222,15 +224,15 @@ export function PartnerBillingTab({
                 <Input
                   type="text"
                   required
-                  aria-label="মেম্বার আইডি লিখুন"
+                  aria-label={t("partner.billing.memberIdAria")}
                   value={memberId}
                   onChange={(e) => setMemberId(e.target.value)}
-                  placeholder="যেমন: HC-2026-F578E"
+                  placeholder={t("partner.billing.memberIdPlaceholder")}
                   className="pl-10 h-11 border-border rounded-xl"
                 />
               </div>
               <Button type="submit" disabled={loadingVerify} className="h-11 bg-secondary text-white hover:bg-slate-800 rounded-xl font-medium cursor-pointer">
-                {loadingVerify ? "যাচাই হচ্ছে..." : "যাচাই করুন"}
+                {loadingVerify ? t("partner.billing.verifying") : t("partner.billing.verifyBtn")}
               </Button>
             </form>
 
@@ -260,28 +262,28 @@ export function PartnerBillingTab({
                           ? "bg-amber-500/10 text-amber-600 dark:text-amber-500 border border-amber-500/20" 
                           : "bg-primary/10 text-primary border border-primary/20"
                       }`}>
-                        {verifiedMember.tier === "founding" ? "ফাউন্ডিং মেম্বার" : "প্রিমিয়াম মেম্বার"}
+                        {verifiedMember.tier === "founding" ? t("partner.billing.foundingMember") : t("partner.billing.premiumMember")}
                       </span>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-0.5">মেম্বার আইডি: {verifiedMember.id}</p>
-                    <p className="text-xs text-muted-foreground">ফোন: {verifiedMember.phone}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{t("partner.billing.memberId")}: {verifiedMember.id}</p>
+                    <p className="text-xs text-muted-foreground">{t("partner.billing.phone")}: {verifiedMember.phone}</p>
                   </div>
 
                   <div className="shrink-0 text-right">
                     {verifiedMember.isExpired ? (
                       <div className="inline-flex items-center gap-1.5 bg-destructive/10 text-destructive text-xs font-semibold px-2.5 py-1 rounded-full border border-destructive/20">
                         <XCircle className="h-3.5 w-3.5" />
-                        মেয়াদোত্তীর্ণ
+                        {t("partner.billing.expired")}
                       </div>
                     ) : verifiedMember.status === "active" ? (
                       <div className="inline-flex items-center gap-1.5 bg-primary/10 text-primary text-xs font-semibold px-2.5 py-1 rounded-full border border-primary/20">
                         <CheckCircle className="h-3.5 w-3.5" />
-                        সক্রিয় কার্ড
+                        {t("partner.billing.activeCard")}
                       </div>
                     ) : (
                       <div className="inline-flex items-center gap-1.5 bg-amber-500/10 text-amber-600 text-xs font-semibold px-2.5 py-1 rounded-full border border-amber-500/20">
                         <AlertTriangle className="h-3.5 w-3.5" />
-                        অচল কার্ড
+                        {t("partner.billing.inactiveCard")}
                       </div>
                     )}
                   </div>
@@ -293,7 +295,7 @@ export function PartnerBillingTab({
                     <div className="space-y-1.5">
                       <label htmlFor="partner-bill-amount" className="text-xs font-semibold text-secondary dark:text-slate-200 flex items-center gap-1.5 cursor-pointer">
                         <Receipt className="h-3.5 w-3.5 text-primary" />
-                        মোট বিলের পরিমাণ (টাকা)
+                        {t("partner.billing.billAmountLabel")}
                       </label>
                       <Input
                         id="partner-bill-amount"
@@ -302,13 +304,13 @@ export function PartnerBillingTab({
                         min="1"
                         value={billAmount}
                         onChange={(e) => setBillAmount(e.target.value)}
-                        placeholder="যেমন: ১৫০০"
+                        placeholder={t("partner.billing.billAmountPlaceholder")}
                         className="h-11 border-border rounded-xl"
                       />
                     </div>
                     {billAmount && !isNaN(Number(billAmount)) && Number(billAmount) > 0 && (
                       <div className="bg-primary/5 border border-primary/20 rounded-xl p-3.5 flex justify-between items-center text-sm font-semibold text-primary">
-                        <span>প্রাক্কলিত সাশ্রয় (ছাড়):</span>
+                        <span>{t("partner.billing.estimatedSaving")}</span>
                         <span className="text-base font-extrabold font-mono">
                           ৳{Math.round(Number(billAmount) * parseDiscountPercentage(partner.discount))}
                         </span>
@@ -316,13 +318,13 @@ export function PartnerBillingTab({
                     )}
                     <Button type="submit" disabled={loadingSubmit} className="w-full bg-primary hover:bg-primary-dark text-white font-semibold rounded-xl h-11 gap-1.5 cursor-pointer">
                       <CreditCard className="h-4 w-4" />
-                      {loadingSubmit ? "সংরক্ষণ হচ্ছে..." : "ডিসকাউন্ট লেনদেন সম্পন্ন করুন"}
+                      {loadingSubmit ? t("partner.billing.processingTx") : t("partner.billing.completeTx")}
                     </Button>
                   </form>
                 ) : (
                   <div className="p-3.5 bg-destructive/5 border border-destructive/10 text-destructive rounded-xl text-xs flex items-center gap-2">
                     <AlertTriangle className="h-4 w-4 shrink-0" />
-                    <span>এই কার্ডটি সচল ও কার্যকর না হওয়ায় ডিসকাউন্ট ট্রানজেকশন সম্পন্ন করা যাবে না।</span>
+                    <span>{t("partner.billing.cardInactiveNotice")}</span>
                   </div>
                 )}
               </div>
@@ -338,10 +340,10 @@ export function PartnerBillingTab({
             <div className="space-y-0.5">
               <CardTitle className="font-heading text-base font-bold text-secondary dark:text-white flex items-center gap-1.5">
                 <History className="h-4 w-4 text-primary" />
-                সাম্প্রতিক লেনদেনসমূহ
+                {t("partner.billing.recentTxTitle")}
               </CardTitle>
               <CardDescription className="text-xs">
-                আপনার প্রতিষ্ঠান থেকে প্রদানকৃত ছাড়।
+                {t("partner.billing.recentTxSubtitle")}
               </CardDescription>
             </div>
             {transactions.length > 0 && (
@@ -363,7 +365,7 @@ export function PartnerBillingTab({
                 className="border-border gap-1.5 text-xs font-semibold h-8 rounded-xl cursor-pointer"
               >
                 <Download className="h-3.5 w-3.5" />
-                <span>এক্সপোর্ট</span>
+                <span>{t("partner.billing.export")}</span>
               </Button>
             )}
           </CardHeader>
@@ -385,7 +387,7 @@ export function PartnerBillingTab({
               </div>
             ) : transactions.length === 0 ? (
               <div className="py-16 text-center text-xs sm:text-sm text-muted-foreground px-4">
-                কোনো লেনদেন রেকর্ড করা হয়নি।
+                {t("partner.billing.noTxRecorded")}
               </div>
             ) : (
               <div className="divide-y divide-border/60 max-h-[500px] overflow-y-auto">
@@ -394,7 +396,7 @@ export function PartnerBillingTab({
                     <div className="space-y-0.5">
                       <p className="font-bold text-secondary dark:text-white">{tx.memberName}</p>
                       <div className="flex items-center gap-1.5 flex-wrap text-[10px] text-muted-foreground">
-                        <span>আইডি: {tx.memberId}</span>
+                        <span>{t("partner.billing.idPrefix")}: {tx.memberId}</span>
                         {tx.deskName && (
                           <span className="bg-primary/10 text-primary font-medium px-1.5 py-0.2 rounded">
                             {tx.deskName}
@@ -402,7 +404,7 @@ export function PartnerBillingTab({
                         )}
                       </div>
                       <p className="text-[10px] text-muted-foreground font-mono">
-                        {new Date(tx.date).toLocaleDateString("bn-BD", {
+                        {new Date(tx.date).toLocaleDateString(locale === "bn" ? "bn-BD" : "en-US", {
                           year: "numeric",
                           month: "short",
                           day: "numeric",
@@ -412,8 +414,8 @@ export function PartnerBillingTab({
                       </p>
                     </div>
                     <div className="text-right space-y-0.5">
-                      <p className="font-bold text-secondary dark:text-white font-mono">বিল: ৳{tx.amount}</p>
-                      <p className="font-extrabold text-primary font-mono">ছাড়: ৳{tx.saved}</p>
+                      <p className="font-bold text-secondary dark:text-white font-mono">{t("partner.billing.bill")}: ৳{tx.amount}</p>
+                      <p className="font-extrabold text-primary font-mono">{t("partner.billing.discount")}: ৳{tx.saved}</p>
                     </div>
                   </div>
                 ))}

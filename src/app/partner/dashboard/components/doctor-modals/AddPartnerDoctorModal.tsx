@@ -279,10 +279,10 @@ export function AddPartnerDoctorModal({
 
           <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-4 border-t border-border w-full">
             <Button type="button" variant="outline" onClick={onClose} disabled={submitting} className="rounded-xl w-full sm:w-auto">
-              বাতিল
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={submitting} className="rounded-xl bg-primary text-white hover:bg-primary/90 cursor-pointer w-full sm:w-auto">
-              {submitting ? "যুক্ত হচ্ছে..." : "ডাক্তার যুক্ত করুন"}
+              {submitting ? t("partner.doctors.adding") : t("partner.doctors.addDoctorBtn")}
             </Button>
           </div>
         </form>

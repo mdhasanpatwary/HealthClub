@@ -159,6 +159,24 @@ export const healthToolsBn = {
   "healthTools.report.patientGender": "লিঙ্গ",
   "healthTools.report.print": "প্রিন্ট বা পিডিএফ সেভ করুন",
   "healthTools.report.disclaimer": "সতর্কতা: এই রিপোর্টটি স্বয়ংক্রিয় স্বাস্থ্য ক্যালকুলেটর ও ক্লিনিক্যাল গাইডলাইনের ওপর ভিত্তি করে তৈরি। যেকোনো জরুরি শারীরিক সমস্যা বা চিকিৎসার জন্য অবশ্যই রেজিস্টার্ড বিশেষজ্ঞ ডাক্তারের পরামর্শ নিন।",
-  "healthTools.water.resetAria": "ক্যালকুলেটর রিসেট করুন"
+  "healthTools.water.resetAria": "ক্যালকুলেটর রিসেট করুন",
+
+  // Clinical Evaluation Results
+  "healthTools.evalResult": "ক্লিনিক্যাল ফলাফল",
+  "healthTools.systolicLabel": "সিস্টোলিক",
+  "healthTools.diastolicLabel": "ডায়াস্টোলিক",
+  "healthTools.pulsePressureLabel": "পালস প্রেসার",
+  "healthTools.mapLabel": "গড় ধমনী চাপ",
+  "healthTools.sugarMeasured": "পরিমাপকৃত মান",
+  "healthTools.actionPlan": "করণীয় ও জীবনযাত্রা",
+  "healthTools.dietTips": "খাদ্যাভ্যাস ও পুষ্টি",
+  "healthTools.warningSigns": "বিপদ সংকেত / জরুরি লক্ষণ",
+  "healthTools.recommendedDoctor": "সুপারিশকৃত বিশেষজ্ঞ ডাক্তার",
+  "healthTools.targetRange": "আদর্শ পরিসীমা",
+  "healthTools.exportPdf": "পিডিএফ রিপোর্ট ডাউনলোড",
+  "healthTools.downloadingReport": "রিপোর্ট তৈরি হচ্ছে...",
+  "healthTools.reportLivePreview": "ডিজিটাল স্বাস্থ্য রিপোর্ট লাইভ প্রিভিউ",
+  "healthTools.consultantHelpNotice": "ফেনীর শীর্ষ বিশেষজ্ঞ ডাক্তারদের চেম্বার শিডিউল দেখুন ও ডিসকাউন্ট সুবিধায় সরাসরি সিরিয়াল নিন।",
+  "healthTools.viewSpecialists": "বিশেষজ্ঞ ডাক্তারদের তালিকা দেখুন"
 } as const;
 

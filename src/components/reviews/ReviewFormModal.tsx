@@ -18,10 +18,10 @@ import { submitReviewAction } from "@/app/actions/reviewActions";
 import { Review } from "@/services/db";
 
 const formSchema = z.object({
-  rating: z.number().int().min(1, "অনুগ্রহ করে কমপক্ষে ১টি স্টার রেটিং নির্বাচন করুন").max(5),
+  rating: z.number().int().min(1, "reviews.minRatingError").max(5),
   comment: z
     .string()
-    .max(1000, "মন্তব্য সর্বোচ্চ ১০০০ অক্ষরের মধ্যে হতে হবে")
+    .max(1000, "reviews.maxCommentError")
     .optional(),
 });
 
@@ -47,8 +47,7 @@ function ReviewFormContent({
   onSuccess: () => void;
   onClose: () => void;
 }) {
-  const { t, locale } = useLanguage();
-  const isBn = locale === "bn";
+  const { t } = useLanguage();
 
   const [rating, setRating] = useState<number>(existingReview?.rating || 5);
   const [comment, setComment] = useState<string>(existingReview?.comment || "");
@@ -64,8 +63,8 @@ function ReviewFormContent({
     if (!validation.success) {
       const fieldErrors: { rating?: string; comment?: string } = {};
       for (const err of validation.error.issues) {
-        if (err.path[0] === "rating") fieldErrors.rating = err.message;
-        if (err.path[0] === "comment") fieldErrors.comment = err.message;
+        if (err.path[0] === "rating") fieldErrors.rating = t("reviews.minRatingError");
+        if (err.path[0] === "comment") fieldErrors.comment = t("reviews.maxCommentError");
       }
       setErrors(fieldErrors);
       return;
@@ -80,19 +79,14 @@ function ReviewFormContent({
       });
 
       if (res.success) {
-        toast.success(
-          res.message ||
-            (isBn
-              ? "আপনার রিভিউ জমা হয়েছে। এডমিন অনুমোদনের পর প্রদর্শিত হবে।"
-              : "Review submitted! It will appear once approved by admin.")
-        );
+        toast.success(res.message || t("reviews.submitSuccess"));
         onClose();
         onSuccess();
       } else {
-        toast.error(res.message || (isBn ? "রিভিউ জমা দিতে ব্যর্থ হয়েছে।" : "Failed to submit review."));
+        toast.error(res.message || t("reviews.submitFailed"));
       }
     } catch {
-      toast.error(isBn ? "সার্ভারে সমস্যা হয়েছে। আবার চেষ্টা করুন।" : "Server error. Please try again.");
+      toast.error(t("reviews.serverError"));
     } finally {
       setIsSubmitting(false);
     }
@@ -101,15 +95,15 @@ function ReviewFormContent({
   const getRatingLabel = (stars: number) => {
     switch (stars) {
       case 5:
-        return isBn ? "অসাধারণ (Excellent)" : "Excellent (5 Stars)";
+        return t("reviews.ratingExcellent");
       case 4:
-        return isBn ? "খুব ভালো (Very Good)" : "Very Good (4 Stars)";
+        return t("reviews.ratingVeryGood");
       case 3:
-        return isBn ? "ভালো (Good)" : "Good (3 Stars)";
+        return t("reviews.ratingGood");
       case 2:
-        return isBn ? "চলনসই (Fair)" : "Fair (2 Stars)";
+        return t("reviews.ratingFair");
       case 1:
-        return isBn ? "অসন্তোষজনক (Poor)" : "Poor (1 Star)";
+        return t("reviews.ratingPoor");
       default:
         return "";
     }
@@ -130,9 +124,7 @@ function ReviewFormContent({
         </div>
         <DialogDescription className="text-xs text-muted-foreground">
           <span className="font-semibold text-foreground">{partnerName}</span> -{" "}
-          {isBn
-            ? "আপনার সৎ অভিজ্ঞতা অন্য সদস্যদের সঠিক হাসপাতাল ও সেবা বেছে নিতে সাহায্য করবে।"
-            : "Your authentic feedback helps fellow members make informed healthcare choices."}
+          {t("reviews.reviewHelpNotice")}
         </DialogDescription>
       </DialogHeader>
 
@@ -219,9 +211,7 @@ function ReviewFormContent({
         <div className="flex items-start gap-2 text-[11px] text-muted-foreground bg-muted/40 p-2.5 rounded-xl border border-border/50">
           <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
           <span>
-            {isBn
-              ? "সব রিভিউ এডমিন মডারেশনের মাধ্যমে ভেরিফাই করা হয়। কোনো অশালীন বা বিভ্রান্তিকর মন্তব্য প্রকাশিত হবে না।"
-              : "All reviews undergo admin moderation before publishing to maintain community trust."}
+            {t("reviews.moderationPolicy")}
           </span>
         </div>
 
@@ -235,7 +225,7 @@ function ReviewFormContent({
             disabled={isSubmitting}
             className="text-xs rounded-xl"
           >
-            {isBn ? "বাতিল" : "Cancel"}
+            {t("common.cancel")}
           </Button>
 
           <Button

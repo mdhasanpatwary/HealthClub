@@ -20,14 +20,14 @@ interface PartnerProfileSettingsTabProps {
 }
 
 const PRESET_DEPARTMENTS = [
-  { name: "প্যাথলজি ল্যাব (Pathology)", discount: "25%", description: "সকল রুটিন রক্ত ও বায়োকেমিক্যাল টেস্ট" },
-  { name: "রেডিওলজি ও ইমেজিং (Radiology)", discount: "20%", description: "এক্স-রে, আল্ট্রাসনোগ্রাম ও সিটি স্ক্যান" },
-  { name: "কেবিন ও বেড চার্জ (Cabin & Bed)", discount: "10%", description: "ইনডোর ভর্তি ও সাধারণ বেড ভাড়া" },
-  { name: "ফার্মেসি ও ওষুধ (Pharmacy)", discount: "5%", description: "সকল প্রয়োজনীয় প্রেসক্রিপশন মেডিসিন" },
-  { name: "ডাক্তার ভিজিট (Doctor Visit)", discount: "15%", description: "বিশেষজ্ঞ চিকিৎসকের কনসালটেশন ফি" },
-  { name: "এম্বুলেন্স সেবা (Ambulance)", discount: "10%", description: "জরুরি রোগী পরিবহন ও অক্সিজেন সুবিধা" },
-  { name: "ডেন্টাল ও মুখরোগ (Dental)", discount: "20%", description: "স্কেলিং, ফিলিং ও রুট ক্যানেল" },
-  { name: "অপারেশন থিয়েটার (OT)", discount: "15%", description: "মেজর ও মাইনর সার্জারি চার্জ" },
+  { nameKey: "partner.profile.presetPathology", discount: "25%", descKey: "partner.profile.presetPathologyDesc" },
+  { nameKey: "partner.profile.presetRadiology", discount: "20%", descKey: "partner.profile.presetRadiologyDesc" },
+  { nameKey: "partner.profile.presetCabin", discount: "10%", descKey: "partner.profile.presetCabinDesc" },
+  { nameKey: "partner.profile.presetPharmacy", discount: "5%", descKey: "partner.profile.presetPharmacyDesc" },
+  { nameKey: "partner.profile.presetDoctor", discount: "15%", descKey: "partner.profile.presetDoctorDesc" },
+  { nameKey: "partner.profile.presetAmbulance", discount: "10%", descKey: "partner.profile.presetAmbulanceDesc" },
+  { nameKey: "partner.profile.presetDental", discount: "20%", descKey: "partner.profile.presetDentalDesc" },
+  { nameKey: "partner.profile.presetSurgery", discount: "15%", descKey: "partner.profile.presetSurgeryDesc" },
 ];
 
 function createDepartmentDiscountId(prefix = "dept") {
@@ -69,27 +69,29 @@ export function PartnerProfileSettingsTab({
   const [saving, setSaving] = useState(false);
 
   const handleAddPreset = (preset: typeof PRESET_DEPARTMENTS[0]) => {
+    const deptName = t(preset.nameKey);
+    const deptDescription = t(preset.descKey);
     const exists = departmentDiscounts.some(
-      (d) => d.name.toLowerCase() === preset.name.toLowerCase()
+      (d) => d.name.toLowerCase() === deptName.toLowerCase()
     );
     if (exists) {
-      toast.info(`"${preset.name}" ইতিমধ্যে তালিকায় যুক্ত রয়েছে।`);
+      toast.info(`"${deptName}" ${t("partner.profile.presetAlreadyAdded")}`);
       return;
     }
     const newItem: DepartmentDiscount = {
       id: createDepartmentDiscountId(),
-      name: preset.name,
+      name: deptName,
       discount: preset.discount,
-      description: preset.description,
+      description: deptDescription,
     };
     setDepartmentDiscounts((prev) => [...prev, newItem]);
-    toast.success(`"${preset.name}" যুক্ত করা হয়েছে।`);
+    toast.success(`"${deptName}" ${t("partner.profile.presetAdded")}`);
   };
 
   const handleAddCustomDept = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newDeptName.trim() || !newDeptDiscount.trim()) {
-      toast.error("বিভাগের নাম ও ডিসকাউন্টের হার প্রদান করুন।");
+      toast.error(t("partner.profile.fillDeptNameAndRate"));
       return;
     }
     const newItem: DepartmentDiscount = {
@@ -103,7 +105,7 @@ export function PartnerProfileSettingsTab({
     setNewDeptDiscount("");
     setNewDeptDesc("");
     setShowAddDeptForm(false);
-    toast.success("নতুন বিভাগ সফলভাবে যুক্ত হয়েছে।");
+    toast.success(t("partner.profile.deptAddedSuccess"));
   };
 
   const handleRemoveDept = (id?: string, name?: string) => {
@@ -113,7 +115,7 @@ export function PartnerProfileSettingsTab({
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !address.trim() || !phone.trim() || !discount.trim()) {
-      toast.error("দয়া করে সকল বাধ্যতামূলক তথ্য পূরণ করুন।");
+      toast.error(t("partner.profile.fillRequiredFields"));
       return;
     }
 
@@ -139,7 +141,7 @@ export function PartnerProfileSettingsTab({
         toast.error(res.error || t("partner.profile.updateFailed"));
       }
     } catch {
-      toast.error("সার্ভার ত্রুটি। দয়া করে আবার চেষ্টা করুন।");
+      toast.error(t("common.error.server"));
     } finally {
       setSaving(false);
     }
@@ -160,7 +162,7 @@ export function PartnerProfileSettingsTab({
                   {t("partner.profile.basicInfo")}
                 </CardTitle>
                 <CardDescription className="text-xs sm:text-sm">
-                  হাসপাতাল বা ডায়াগনস্টিক সেন্টারের প্রাথমিক পরিচিতি।
+                  {t("partner.profile.basicInfoDesc")}
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-5 sm:p-6 pt-0 space-y-4">
@@ -174,7 +176,7 @@ export function PartnerProfileSettingsTab({
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
-                      placeholder="যেমন: সেন্ট্রাল হাসপাতাল ও ডায়াগনস্টিক কমপ্লেক্স"
+                      placeholder={t("partner.profile.orgNamePlaceholder")}
                       className="h-10 rounded-xl border-border"
                     />
                   </div>
@@ -188,7 +190,7 @@ export function PartnerProfileSettingsTab({
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
                       required
-                      placeholder="যেমন: এস.এস.কে রোড, ট্রাংক রোড সংলগ্ন, ফেনী সদর"
+                      placeholder={t("partner.profile.addressPlaceholder")}
                       className="h-10 rounded-xl border-border"
                     />
                   </div>
@@ -295,7 +297,7 @@ export function PartnerProfileSettingsTab({
                     </CardDescription>
                   </div>
                   <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-xs px-2.5 py-1">
-                    {departmentDiscounts.length} টি বিভাগ সক্রিয়
+                    {departmentDiscounts.length} {t("partner.profile.deptsActive")}
                   </Badge>
                 </div>
               </CardHeader>
@@ -309,12 +311,13 @@ export function PartnerProfileSettingsTab({
                   </p>
                   <div className="flex flex-wrap gap-2 pt-1">
                     {PRESET_DEPARTMENTS.map((preset) => {
+                      const deptName = t(preset.nameKey);
                       const isAdded = departmentDiscounts.some(
-                        (d) => d.name.toLowerCase() === preset.name.toLowerCase()
+                        (d) => d.name.toLowerCase() === deptName.toLowerCase()
                       );
                       return (
                         <button
-                          key={preset.name}
+                          key={preset.nameKey}
                           type="button"
                           onClick={() => handleAddPreset(preset)}
                           disabled={isAdded}
@@ -325,7 +328,7 @@ export function PartnerProfileSettingsTab({
                           }`}
                         >
                           <Plus className="h-3 w-3" />
-                          <span>{preset.name}</span>
+                          <span>{deptName}</span>
                           <span className="font-bold text-primary font-mono ml-0.5">({preset.discount})</span>
                         </button>
                       );
@@ -347,13 +350,13 @@ export function PartnerProfileSettingsTab({
                   </Button>
                 ) : (
                   <div className="p-4 rounded-2xl border border-primary/30 bg-primary/5 space-y-3 animate-in fade-in duration-150">
-                    <p className="text-xs font-bold text-primary">নতুন কাস্টম বিভাগ যোগ করুন</p>
+                    <p className="text-xs font-bold text-primary">{t("partner.profile.addCustomDeptTitle")}</p>
                     <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
                       <div className="sm:col-span-5">
                         <Input
                           value={newDeptName}
                           onChange={(e) => setNewDeptName(e.target.value)}
-                          placeholder="বিভাগের নাম (যেমন: এনআইসিইউ / NICU)"
+                          placeholder={t("partner.profile.deptNameCustomPlaceholder")}
                           className="h-9 text-xs rounded-xl bg-background border-border"
                         />
                       </div>
@@ -361,7 +364,7 @@ export function PartnerProfileSettingsTab({
                         <Input
                           value={newDeptDiscount}
                           onChange={(e) => setNewDeptDiscount(e.target.value)}
-                          placeholder="ছাড় (যেমন: 20%)"
+                          placeholder={t("partner.profile.deptDiscountPlaceholder")}
                           className="h-9 text-xs rounded-xl bg-background border-border"
                         />
                       </div>
@@ -369,7 +372,7 @@ export function PartnerProfileSettingsTab({
                         <Input
                           value={newDeptDesc}
                           onChange={(e) => setNewDeptDesc(e.target.value)}
-                          placeholder="শর্ত/নোট (ঐচ্ছিক)"
+                          placeholder={t("partner.profile.deptNotePlaceholder")}
                           className="h-9 text-xs rounded-xl bg-background border-border"
                         />
                       </div>
@@ -382,7 +385,7 @@ export function PartnerProfileSettingsTab({
                         onClick={() => setShowAddDeptForm(false)}
                         className="h-8 text-xs rounded-xl cursor-pointer"
                       >
-                        বাতিল
+                        {t("common.cancel")}
                       </Button>
                       <Button
                         type="button"
@@ -390,7 +393,7 @@ export function PartnerProfileSettingsTab({
                         size="sm"
                         className="h-8 text-xs rounded-xl bg-primary hover:bg-primary-dark text-white font-semibold cursor-pointer"
                       >
-                        যুক্ত করুন
+                        {t("common.add")}
                       </Button>
                     </div>
                   </div>

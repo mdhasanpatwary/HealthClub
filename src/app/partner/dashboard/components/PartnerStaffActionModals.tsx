@@ -18,6 +18,7 @@ import {
 } from "@/app/actions/partnerStaffActions";
 import { toast } from "sonner";
 import { KeyRound, Trash2 } from "lucide-react";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 
 // --- RESET PASSWORD MODAL ---
 interface ResetStaffPasswordModalProps {
@@ -33,6 +34,7 @@ export function ResetStaffPasswordModal({
   staff,
   onSuccess,
 }: ResetStaffPasswordModalProps) {
+  const { t } = useLanguage();
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -48,12 +50,12 @@ export function ResetStaffPasswordModal({
     if (!staff) return;
 
     if (newPassword.length < 6) {
-      toast.error("নতুন পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।");
+      toast.error(t("partner.password.minLength"));
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      toast.error("নতুন পাসওয়ার্ড দুটি মেলেনি।");
+      toast.error(t("partner.password.mismatch"));
       return;
     }
 
@@ -61,14 +63,14 @@ export function ResetStaffPasswordModal({
     try {
       const res = await resetPartnerStaffPasswordAction(staff.id, newPassword);
       if (res.success) {
-        toast.success(res.message);
+        toast.success(res.message || t("common.success"));
         onSuccess();
         onClose();
       } else {
-        toast.error(res.message || "পাসওয়ার্ড রিসেট করা যায়নি।");
+        toast.error(res.message || t("common.error"));
       }
     } catch {
-      toast.error("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
+      toast.error(t("common.error.server"));
     } finally {
       setLoading(false);
     }
@@ -80,17 +82,17 @@ export function ResetStaffPasswordModal({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-foreground font-heading">
             <KeyRound className="h-5 w-5 text-amber-500" />
-            ক্যাশিয়ারের পাসওয়ার্ড রিসেট করুন
+            {t("partner.staff.resetPassword")}
           </DialogTitle>
           <DialogDescription className="text-xs text-muted-foreground">
-            {staff ? `"${staff.name}" (${staff.deskName}) এর জন্য নতুন পাসওয়ার্ড নির্ধারণ করুন।` : ""}
+            {staff ? `"${staff.name}" (${staff.deskName})` : ""}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleResetSubmit} className="space-y-4 pt-2">
           <div className="space-y-1.5">
             <label htmlFor="staff-new-pw" className="text-xs font-semibold text-foreground cursor-pointer">
-              নতুন পাসওয়ার্ড (অন্তত ৬ অক্ষর)
+              {t("partner.staff.passwordMinLength")}
             </label>
             <Input
               id="staff-new-pw"
@@ -105,7 +107,7 @@ export function ResetStaffPasswordModal({
 
           <div className="space-y-1.5">
             <label htmlFor="staff-confirm-pw" className="text-xs font-semibold text-foreground cursor-pointer">
-              নতুন পাসওয়ার্ড পুনরায় লিখুন
+              {t("partner.password.confirm")}
             </label>
             <Input
               id="staff-confirm-pw"
@@ -125,14 +127,14 @@ export function ResetStaffPasswordModal({
               onClick={onClose}
               className="border-border rounded-xl cursor-pointer"
             >
-              বাতিল
+              {t("common.cancel")}
             </Button>
             <Button
               type="submit"
               disabled={loading}
               className="bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl cursor-pointer"
             >
-              {loading ? "রিসেট হচ্ছে..." : "পাসওয়ার্ড রিসেট করুন"}
+              {loading ? t("partner.staff.resetting") : t("partner.staff.resetBtn")}
             </Button>
           </DialogFooter>
         </form>
@@ -155,6 +157,7 @@ export function DeleteStaffConfirmModal({
   staff,
   onSuccess,
 }: DeleteStaffConfirmModalProps) {
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
 
   const handleDelete = async () => {
@@ -163,14 +166,14 @@ export function DeleteStaffConfirmModal({
     try {
       const res = await deletePartnerStaffAction(staff.id);
       if (res.success) {
-        toast.success(res.message);
+        toast.success(res.message || t("common.success"));
         onSuccess();
         onClose();
       } else {
-        toast.error(res.message || "অ্যাকাউন্টটি মোছা যায়নি।");
+        toast.error(res.message || t("common.error"));
       }
     } catch {
-      toast.error("সার্ভার ত্রুটি।");
+      toast.error(t("common.error.server"));
     } finally {
       setLoading(false);
     }
@@ -182,10 +185,10 @@ export function DeleteStaffConfirmModal({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-destructive font-heading">
             <Trash2 className="h-5 w-5" />
-            স্টাফ অ্যাকাউন্ট মুছতে চান?
+            {t("partner.staff.deleteConfirmTitle")}
           </DialogTitle>
           <DialogDescription className="text-xs text-muted-foreground pt-1">
-            আপনি কি নিশ্চিত যে <strong>&quot;{staff?.name}&quot;</strong> ({staff?.deskName}) এর অ্যাকাউন্টটি স্থায়ীভাবে মুছে ফেলতে চান? পূর্বে সম্পন্ন লেনদেনের রেকর্ড বহাল থাকবে।
+            {t("partner.staff.deleteConfirmDesc")} <strong>&quot;{staff?.name}&quot;</strong> {t("partner.staff.deletePermanentlyDesc")}
           </DialogDescription>
         </DialogHeader>
 
@@ -196,7 +199,7 @@ export function DeleteStaffConfirmModal({
             onClick={onClose}
             className="border-border rounded-xl cursor-pointer"
           >
-            বাতিল
+            {t("common.cancel")}
           </Button>
           <Button
             type="button"
@@ -205,7 +208,7 @@ export function DeleteStaffConfirmModal({
             onClick={handleDelete}
             className="rounded-xl cursor-pointer"
           >
-            {loading ? "মুছে ফেলা হচ্ছে..." : "হ্যাঁ, মুছে ফেলুন"}
+            {loading ? t("partner.staff.deleting") : t("partner.staff.deleteConfirmBtn")}
           </Button>
         </DialogFooter>
       </DialogContent>

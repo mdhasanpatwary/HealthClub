@@ -216,16 +216,14 @@ export default function ReviewSection({
                 <div className="space-y-0.5">
                   <div className="flex items-center gap-2">
                     <h4 className="text-xs sm:text-sm font-bold text-foreground font-heading">
-                      {isBn ? "আপনি এডমিন হিসেবে লগইন আছেন" : "Logged in as Administrator"}
+                      {t("reviews.adminBanner")}
                     </h4>
                     <span className="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-indigo-500/20 text-indigo-600 dark:text-indigo-400">
-                      {isBn ? "এডমিন সেশন" : "Admin Session"}
+                      {t("reviews.adminSession")}
                     </span>
                   </div>
                   <p className="text-[11px] sm:text-xs text-muted-foreground leading-relaxed">
-                    {isBn
-                      ? "সাধারণত ভেরিফাইড মেম্বারগণ ডিসকাউন্ট ভিজিটের পর রিভিউ দেন। এডমিন হিসেবে আপনি সরাসরি মডারেশন পরিচালনা করতে পারেন অথবা টেস্ট রিভিউ দিতে পারেন।"
-                      : "Verified members submit reviews after discount visits. As an admin, you can moderate reviews or post a test review."}
+                    {t("reviews.adminSessionDesc")}
                   </p>
                 </div>
               </div>
@@ -239,7 +237,7 @@ export default function ReviewSection({
                   )}
                 >
                   <Settings className="h-3.5 w-3.5 mr-1" />
-                  <span>{isBn ? "মডারেশন প্যানেল" : "Moderate Reviews"}</span>
+                  <span>{t("reviews.moderateBtn")}</span>
                 </Link>
                 <Button
                   type="button"
@@ -249,7 +247,7 @@ export default function ReviewSection({
                   className="text-xs rounded-xl cursor-pointer"
                 >
                   <MessageSquarePlus className="h-3.5 w-3.5 mr-1" />
-                  <span>{isBn ? "টেস্ট রিভিউ" : "Test Review"}</span>
+                  <span>{t("reviews.testReviewBtn")}</span>
                 </Button>
               </div>
             </div>
@@ -278,7 +276,7 @@ export default function ReviewSection({
                   "bg-primary hover:bg-primary-dark text-white text-xs font-bold rounded-xl shrink-0 self-start sm:self-auto"
                 )}
               >
-                <span>{isBn ? "লগইন করুন" : "Log In"}</span>
+                <span>{t("reviews.loginBtn")}</span>
               </Link>
             </div>
           )}
@@ -305,7 +303,7 @@ export default function ReviewSection({
             <div className="p-4 rounded-2xl border border-border bg-card shadow-2xs space-y-2">
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2 text-xs font-bold text-foreground font-heading">
-                  <span>{isBn ? "আপনার জমাকৃত রিভিউ" : "Your Submitted Review"}</span>
+                  <span>{t("reviews.yourSubmittedReview")}</span>
                   {eligibility.existingReview.status === "pending" ? (
                     <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20 flex items-center gap-1">
                       <Clock className="h-3 w-3" />
@@ -365,7 +363,7 @@ export default function ReviewSection({
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
             <span className="text-muted-foreground flex items-center gap-1 text-[11px] font-semibold mr-1">
               <Filter className="h-3 w-3" />
-              <span>{isBn ? "ফিল্টার:" : "Filter:"}</span>
+              <span>{t("reviews.filter")}</span>
             </span>
             <Button
               variant={selectedStarFilter === null ? "default" : "outline"}
@@ -415,12 +413,8 @@ export default function ReviewSection({
             <div className="space-y-1 max-w-sm mx-auto">
               <h4 className="text-sm font-bold text-foreground font-heading">
                 {selectedStarFilter
-                  ? isBn
-                    ? "এই স্টার রেটিংয়ে কোনো রিভিউ নেই"
-                    : "No reviews for this star rating"
-                  : isBn
-                  ? "এখনও কোনো রিভিউ যুক্ত হয়নি"
-                  : "No reviews yet"}
+                  ? t("reviews.noReviewsForRating")
+                  : t("reviews.noReviewsAddedYet")}
               </h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 {t("reviews.noReviewsYet")}

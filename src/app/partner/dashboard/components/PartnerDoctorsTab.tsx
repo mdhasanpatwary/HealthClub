@@ -61,14 +61,14 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
       if (res.success) {
         setDoctors(res.doctors);
       } else {
-        toast.error(res.error || "ডাক্তার তালিকা লোড করতে ব্যর্থ হয়েছে।");
+        toast.error(res.error || t("partner.doctors.loadError"));
       }
     } catch {
-      toast.error("ডাক্তার তালিকা লোড করার সময় সমস্যা হয়েছে।");
+      toast.error(t("common.error.server"));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     let isMounted = true;
@@ -108,7 +108,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
 
   const handleExportCsv = () => {
     if (doctors.length === 0) {
-      toast.info("এক্সপোর্ট করার মতো কোনো ডাক্তার নেই।");
+      toast.info(t("partner.doctors.noDoctorsToExport"));
       return;
     }
     exportToCsv(doctors, `${partner.name.replace(/\s+/g, "_")}_doctors`, [
@@ -138,7 +138,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
             </div>
             <div>
               <p className="text-xs text-muted-foreground font-medium">
-                {t("partner.doctors.kpiTotal") || "মোট বিশেষজ্ঞ ডাক্তার"}
+                {t("partner.doctors.kpiTotal")}
               </p>
               <h3 className="text-2xl font-extrabold text-foreground tracking-tight">
                 {loading ? <Skeleton className="h-7 w-12 inline-block" /> : totalDoctors}
@@ -154,7 +154,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
             </div>
             <div>
               <p className="text-xs text-muted-foreground font-medium">
-                {t("partner.doctors.kpiActive") || "সক্রিয় চেম্বার"}
+                {t("partner.doctors.kpiActive")}
               </p>
               <h3 className="text-2xl font-extrabold text-foreground tracking-tight">
                 {loading ? <Skeleton className="h-7 w-12 inline-block" /> : activeChambers}
@@ -170,7 +170,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
             </div>
             <div>
               <p className="text-xs text-muted-foreground font-medium">
-                {t("partner.doctors.kpiDepts") || "বিশেষজ্ঞ বিভাগসমূহ"}
+                {t("partner.doctors.kpiDepts")}
               </p>
               <h3 className="text-2xl font-extrabold text-foreground tracking-tight">
                 {loading ? <Skeleton className="h-7 w-12 inline-block" /> : uniqueDepts}
@@ -187,11 +187,10 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
             <div>
               <CardTitle className="font-heading text-lg sm:text-xl font-bold flex items-center gap-2 text-foreground">
                 <Stethoscope className="h-5 w-5 text-primary" />
-                <span>{t("partner.doctors.title") || "হাসপাতাল চেম্বার ও বিশেষজ্ঞ ডাক্তার রোস্টার"}</span>
+                <span>{t("partner.doctors.title")}</span>
               </CardTitle>
               <CardDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                {t("partner.doctors.subtitle") ||
-                  "আপনার হাসপাতালে প্র্যাকটিসকারী বিশেষজ্ঞ ডাক্তারদের তালিকা পরিচালনা করুন, চেম্বারের রুম নম্বর, সাক্ষাতের সময়সূচি ও সিরিয়াল আপডেট করুন।"}
+                {t("partner.doctors.subtitle")}
               </CardDescription>
             </div>
 
@@ -203,7 +202,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
                 className="gap-1.5 rounded-xl text-xs font-semibold shrink-0 cursor-pointer"
               >
                 <Download className="h-3.5 w-3.5" />
-                <span>{t("partner.doctors.exportCsv") || "CSV"}</span>
+                <span>{t("partner.doctors.exportCsv")}</span>
               </Button>
 
               <Button
@@ -213,7 +212,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
                 className="gap-1.5 rounded-xl text-xs font-semibold shrink-0 cursor-pointer"
               >
                 <LinkIcon className="h-3.5 w-3.5 text-primary" />
-                <span>{t("partner.doctors.linkDoctor") || "বিদ্যমান ডাক্তার লিঙ্ক করুন"}</span>
+                <span>{t("partner.doctors.linkDoctor")}</span>
               </Button>
 
               <Button
@@ -222,7 +221,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
                 className="gap-1.5 rounded-xl text-xs font-semibold bg-primary text-white hover:bg-primary/90 shrink-0 cursor-pointer shadow-sm"
               >
                 <Plus className="h-3.5 w-3.5" />
-                <span>{t("partner.doctors.addDoctor") || "নতুন ডাক্তার যুক্ত করুন"}</span>
+                <span>{t("partner.doctors.addDoctor")}</span>
               </Button>
             </div>
           </div>
@@ -233,7 +232,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder={t("partner.doctors.searchPlaceholder") || "ডাক্তারের নাম, বিভাগ, রুম বা ডিগ্রি খুঁজুন..."}
+                placeholder={t("partner.doctors.searchPlaceholder")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-9 h-10 rounded-xl bg-background border-border text-xs sm:text-sm"
@@ -242,12 +241,12 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
 
             <div className="w-full sm:w-64 shrink-0">
               <select
-                aria-label={t("partner.doctors.filterAllDepts") || "সকল বিশেষজ্ঞ বিভাগ"}
+                aria-label={t("partner.doctors.filterAllDepts")}
                 value={selectedDept}
                 onChange={(e) => setSelectedDept(e.target.value)}
                 className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-xs sm:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <option value="all">{t("partner.doctors.filterAllDepts") || "সকল বিশেষজ্ঞ বিভাগ"}</option>
+                <option value="all">{t("partner.doctors.filterAllDepts")}</option>
                 {DEPT_OPTIONS.map((dept) => (
                   <option key={dept.value} value={dept.value}>{dept.label}</option>
                 ))}
@@ -279,14 +278,13 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
               </div>
               <h4 className="text-base font-bold text-foreground">
                 {doctors.length === 0
-                  ? t("partner.doctors.noDoctors") || "আপনার হাসপাতালে কোনো ডাক্তার তালিকাভুক্ত নেই।"
-                  : "কোনো ডাক্তারের তথ্য পাওয়া যায়নি।"}
+                  ? t("partner.doctors.noDoctors")
+                  : t("partner.doctors.noDoctorsFound")}
               </h4>
               <p className="text-xs text-muted-foreground max-w-md mx-auto">
                 {doctors.length === 0
-                  ? t("partner.doctors.noDoctorsDesc") ||
-                    "উপরের 'নতুন ডাক্তার যুক্ত করুন' অথবা 'বিদ্যমান ডাক্তার লিঙ্ক করুন' বাটনে ক্লিক করে চেম্বার রোস্টার সাজান।"
-                  : "অনুগ্রহ করে অন্য শব্দ বা বিভাগ দিয়ে সার্চ করে দেখুন।"}
+                  ? t("partner.doctors.noDoctorsDesc")
+                  : t("partner.doctors.noDoctorsFoundDesc")}
               </p>
               {doctors.length === 0 && (
                 <div className="flex justify-center gap-2 pt-2">
@@ -296,14 +294,14 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
                     size="sm"
                     className="rounded-xl text-xs"
                   >
-                    বিদ্যমান ডাক্তার লিঙ্ক করুন
+                    {t("partner.doctors.linkDoctor")}
                   </Button>
                   <Button
                     onClick={() => setIsAddOpen(true)}
                     size="sm"
                     className="rounded-xl text-xs bg-primary text-white"
                   >
-                    নতুন ডাক্তার যুক্ত করুন
+                    {t("partner.doctors.addDoctor")}
                   </Button>
                 </div>
               )}
@@ -362,7 +360,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
                     <div className="flex items-center justify-between gap-2 text-slate-700 dark:text-slate-300">
                       <span className="flex items-center gap-1 font-semibold text-primary">
                         <Building2 className="h-3.5 w-3.5" />
-                        {doc.roomNo || "চেম্বার রুম নির্ধারিত নেই"}
+                        {doc.roomNo || t("partner.doctors.noRoomAssigned")}
                       </span>
                       {doc.consultationFee && (
                         <span className="inline-flex items-center gap-1 font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">
@@ -397,7 +395,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
                       className="flex-1 rounded-xl text-xs font-semibold gap-1.5 h-8 border-border hover:border-primary/50 cursor-pointer"
                     >
                       <Edit3 className="h-3.5 w-3.5 text-primary" />
-                      <span>{t("partner.doctors.editChamber") || "চেম্বার ও সময়সূচি এডিট"}</span>
+                      <span>{t("partner.doctors.editChamber")}</span>
                     </Button>
 
                     <Button
@@ -407,7 +405,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
                       className="rounded-xl text-xs font-semibold gap-1.5 h-8 text-rose-500 hover:text-rose-600 hover:bg-rose-500/10 cursor-pointer shrink-0"
                     >
                       <Unlink className="h-3.5 w-3.5" />
-                      <span>{t("partner.doctors.unlink") || "আনলিঙ্ক"}</span>
+                      <span>{t("partner.doctors.unlink")}</span>
                     </Button>
                   </div>
                 </div>

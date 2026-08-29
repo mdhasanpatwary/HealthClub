@@ -6,9 +6,11 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { changePartnerPasswordAction } from "@/app/actions/partnerActions";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toast } from "sonner";
 
 export function PartnerPasswordCard() {
+  const { t } = useLanguage();
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -18,17 +20,17 @@ export function PartnerPasswordCard() {
     e.preventDefault();
 
     if (!currentPassword.trim() || !newPassword.trim()) {
-      toast.warning("বর্তমান ও নতুন পাসওয়ার্ড পূরণ করুন।");
+      toast.warning(t("partner.password.fillBoth"));
       return;
     }
 
     if (newPassword.length < 6) {
-      toast.warning("নতুন পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।");
+      toast.warning(t("partner.password.minLength"));
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      toast.error("নতুন পাসওয়ার্ড এবং নিশ্চিতকরণ পাসওয়ার্ড মিলছে না।");
+      toast.error(t("partner.password.mismatch"));
       return;
     }
 
@@ -36,15 +38,15 @@ export function PartnerPasswordCard() {
     try {
       const res = await changePartnerPasswordAction(currentPassword.trim(), newPassword.trim());
       if (res.success) {
-        toast.success(res.message || "পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে।");
+        toast.success(res.message || t("common.success"));
         setCurrentPassword("");
         setNewPassword("");
         setConfirmPassword("");
       } else {
-        toast.error(res.message || "পাসওয়ার্ড পরিবর্তন ব্যর্থ হয়েছে।");
+        toast.error(res.message || t("common.error"));
       }
     } catch {
-      toast.error("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
+      toast.error(t("common.error.server"));
     } finally {
       setLoading(false);
     }
@@ -55,10 +57,10 @@ export function PartnerPasswordCard() {
       <CardHeader className="p-5 sm:p-6 pb-3 sm:pb-4">
         <CardTitle className="font-heading text-lg font-bold text-secondary dark:text-white flex items-center gap-2">
           <KeyRound className="h-5 w-5 text-primary" />
-          পাসওয়ার্ড ও নিরাপত্তা সেটিংস
+          {t("partner.password.title")}
         </CardTitle>
         <CardDescription className="text-xs sm:text-sm">
-          আপনার পার্টনার অ্যাকাউন্টের লগইন পাসওয়ার্ড পরিবর্তন করুন। (প্রথমবার লগইন করার পর ডিফল্ট পাসওয়ার্ড <span className="font-mono font-bold text-primary">123456</span> পরিবর্তন করে নিন)।
+          {t("partner.password.description")}
         </CardDescription>
       </CardHeader>
 
@@ -71,7 +73,7 @@ export function PartnerPasswordCard() {
                 className="text-xs font-semibold text-secondary dark:text-slate-200 flex items-center gap-1.5 cursor-pointer"
               >
                 <Lock className="h-3.5 w-3.5 text-muted-foreground" />
-                বর্তমান পাসওয়ার্ড *
+                {t("partner.password.current")} *
               </label>
               <Input
                 id="current-partner-password"
@@ -79,7 +81,7 @@ export function PartnerPasswordCard() {
                 required
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                placeholder="যেমন: 123456"
+                placeholder={t("partner.password.currentPlaceholder")}
                 className="h-10 rounded-xl border-border bg-background text-sm"
               />
             </div>
@@ -90,7 +92,7 @@ export function PartnerPasswordCard() {
                 className="text-xs font-semibold text-secondary dark:text-slate-200 flex items-center gap-1.5 cursor-pointer"
               >
                 <Lock className="h-3.5 w-3.5 text-primary" />
-                নতুন পাসওয়ার্ড *
+                {t("partner.password.new")} *
               </label>
               <Input
                 id="new-partner-password"
@@ -98,7 +100,7 @@ export function PartnerPasswordCard() {
                 required
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="কমপক্ষে ৬ অক্ষর"
+                placeholder={t("partner.password.newPlaceholder")}
                 className="h-10 rounded-xl border-border bg-background text-sm"
               />
             </div>
@@ -109,7 +111,7 @@ export function PartnerPasswordCard() {
                 className="text-xs font-semibold text-secondary dark:text-slate-200 flex items-center gap-1.5 cursor-pointer"
               >
                 <Lock className="h-3.5 w-3.5 text-primary" />
-                নতুন পাসওয়ার্ড নিশ্চিত করুন *
+                {t("partner.password.confirm")} *
               </label>
               <Input
                 id="confirm-partner-password"
@@ -117,7 +119,7 @@ export function PartnerPasswordCard() {
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="পুনরায় পাসওয়ার্ড লিখুন"
+                placeholder={t("partner.password.confirmPlaceholder")}
                 className="h-10 rounded-xl border-border bg-background text-sm"
               />
             </div>
@@ -130,7 +132,7 @@ export function PartnerPasswordCard() {
               className="rounded-xl px-6 h-10 bg-primary hover:bg-primary-dark text-white font-semibold gap-1.5 cursor-pointer text-xs sm:text-sm"
             >
               <CheckCircle2 className="h-4 w-4" />
-              {loading ? "পরিবর্তন হচ্ছে..." : "পাসওয়ার্ড আপডেট করুন"}
+              {loading ? t("partner.password.updating") : t("partner.password.updateBtn")}
             </Button>
           </div>
         </form>

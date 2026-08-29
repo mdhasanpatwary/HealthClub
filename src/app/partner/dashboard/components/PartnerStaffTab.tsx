@@ -59,11 +59,11 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
       const data = await getPartnerStaffListAction();
       setStaffList(data);
     } catch {
-      toast.error("স্টাফ তালিকা লোড করতে সমস্যা হয়েছে।");
+      toast.error(t("partner.staff.loadError"));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -111,18 +111,18 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
           prev.map((s) => (s.id === staff.id ? { ...s, isActive: newStatus } : s))
         );
       } else {
-        toast.error(res.message || "স্ট্যাটাস পরিবর্তন করা যায়নি।");
+        toast.error(res.message || t("common.error"));
       }
     } catch {
-      toast.error("সার্ভার ত্রুটি।");
+      toast.error(t("common.error.server"));
     }
   };
 
   const handleCopyCredentials = (staff: PartnerStaff) => {
-    const text = `🏥 প্রতিষ্ঠান: ${partner.name}\n📍 ডেস্ক: ${staff.deskName}\n👤 ইউজারনেম: ${staff.username}\n🔗 লগইন লিংক: ${window.location.origin}/login/partner`;
+    const text = `🏥 ${t("partner.profile.basicInfo")}: ${partner.name}\n📍 ${t("partner.staff.colDesk")}: ${staff.deskName}\n👤 ${t("partner.staff.usernameLabel")}: ${staff.username}\n🔗 ${window.location.origin}/login/partner`;
     navigator.clipboard.writeText(text);
     setCopiedId(staff.id);
-    toast.success(`"${staff.name}" এর লগইন তথ্য কপি করা হয়েছে!`);
+    toast.success(`"${staff.name}" ${t("partner.staff.credentialsCopied")}`);
     setTimeout(() => setCopiedId(null), 2500);
   };
 
@@ -240,7 +240,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
                   : "bg-card hover:bg-muted text-muted-foreground border-border"
               }`}
             >
-              সকল ডেস্ক
+              {t("partner.staff.filterAllDesks")}
             </button>
             {deskOptions.map((desk) => (
               <button
@@ -285,13 +285,13 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
           <div className="space-y-1 max-w-sm mx-auto">
             <h3 className="font-bold text-secondary dark:text-white text-base">
               {searchQuery || filterDesk !== "all"
-                ? "কোনো ক্যাশিয়ার পাওয়া যায়নি"
-                : "এখনো কোনো ক্যাশিয়ার অ্যাকাউন্ট যুক্ত করা হয়নি"}
+                ? t("partner.staff.noCashierFound")
+                : t("partner.staff.noCashierYet")}
             </h3>
             <p className="text-xs text-muted-foreground">
               {searchQuery || filterDesk !== "all"
-                ? "অনুগ্রহ করে অন্য শব্দ দিয়ে অনুসন্ধান করুন।"
-                : "আপনার হাসপাতাল বা ডায়াগনস্টিক সেন্টারের বিলিং কাউন্টারের জন্য প্রথম ক্যাশিয়ার যুক্ত করুন।"}
+                ? t("partner.staff.noCashierFoundDesc")
+                : t("partner.staff.noCashierYetDesc")}
             </p>
           </div>
           {!searchQuery && filterDesk === "all" && (
@@ -303,7 +303,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
               className="bg-primary hover:bg-primary-dark text-white rounded-xl font-semibold gap-1.5 cursor-pointer"
             >
               <UserPlus className="h-4 w-4" />
-              নতুন ক্যাশিয়ার যুক্ত করুন
+              {t("partner.staff.addFirstCashier")}
             </Button>
           )}
         </Card>

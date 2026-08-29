@@ -20,6 +20,7 @@ import {
 import { toast } from "sonner";
 import { Search, Link as LinkIcon, X, Check, Stethoscope } from "lucide-react";
 import { DAY_PRESETS, DEPT_OPTIONS } from "./doctorModalConstants";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 
 export interface LinkDoctorModalProps {
   isOpen: boolean;
@@ -34,6 +35,7 @@ export function LinkDoctorModal({
   partnerPhone,
   onSuccess,
 }: LinkDoctorModalProps) {
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDept, setSelectedDept] = useState("all");
   const [searching, setSearching] = useState(false);
@@ -77,12 +79,12 @@ export function LinkDoctorModal({
             setHasMore(res.hasMore);
             setTotalCount(res.total);
           } else {
-            toast.error(res.error || "ডাক্তার তালিকা পেতে সমস্যা হয়েছে।");
+            toast.error(res.error || t("partner.doctors.updateFailed"));
           }
         }
       } catch {
         if (!isCancelled) {
-          toast.error("সার্ভার থেকে তথ্য লোড করা যায়নি।");
+          toast.error(t("common.error.server"));
         }
       } finally {
         if (!isCancelled) {
@@ -96,7 +98,7 @@ export function LinkDoctorModal({
       isCancelled = true;
       clearTimeout(timer);
     };
-  }, [isOpen, searchTerm]);
+  }, [isOpen, searchTerm, t]);
 
   const loadMore = async () => {
     if (!hasMore || loadingMore || searching) return;
@@ -111,7 +113,7 @@ export function LinkDoctorModal({
         setPage(nextPage);
       }
     } catch {
-      toast.error("পরবর্তী ডাক্তার লোড করতে সমস্যা হয়েছে।");
+      toast.error(t("common.error.server"));
     } finally {
       setLoadingMore(false);
     }
@@ -146,7 +148,7 @@ export function LinkDoctorModal({
   const handleLink = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedDoctor) {
-      toast.error("অনুগ্রহ করে একজন ডাক্তার নির্বাচন করুন।");
+      toast.error(t("partner.doctors.linkSelect"));
       return;
     }
 
@@ -161,14 +163,14 @@ export function LinkDoctorModal({
       });
 
       if (res.success) {
-        toast.success(`${selectedDoctor.name} সফলভাবে আপনার চেম্বারে যুক্ত হয়েছেন।`);
+        toast.success(`${selectedDoctor.name} ${t("partner.doctors.updateSuccess")}`);
         onSuccess();
         handleClose();
       } else {
-        toast.error(res.error || "ডাক্তার লিঙ্ক করতে সমস্যা হয়েছে।");
+        toast.error(res.error || t("partner.doctors.updateFailed"));
       }
     } catch {
-      toast.error("সার্ভারে সমস্যা হয়েছে।");
+      toast.error(t("common.error.server"));
     } finally {
       setSubmitting(false);
     }
@@ -180,10 +182,10 @@ export function LinkDoctorModal({
         <DialogHeader className="space-y-1">
           <DialogTitle className="font-heading font-bold text-base sm:text-lg md:text-xl flex items-center gap-2">
             <LinkIcon className="h-5 w-5 text-primary shrink-0" />
-            <span className="truncate">ডিরেক্টরি থেকে বিদ্যমান ডাক্তার লিঙ্ক করুন</span>
+            <span className="truncate">{t("partner.doctors.modalLinkTitle")}</span>
           </DialogTitle>
           <DialogDescription className="text-xs text-muted-foreground">
-            হেলথ ক্লাব প্ল্যাটফর্মে থাকা রেজিস্টার্ড বিশেষজ্ঞ ডাক্তারকে আপনার হাসপাতাল চেম্বারে যুক্ত করুন।
+            {t("partner.doctors.modalLinkDesc")}
           </DialogDescription>
         </DialogHeader>
 
@@ -197,7 +199,7 @@ export function LinkDoctorModal({
                   <Input
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="ডাক্তারের নাম, পদবি, বা ডিগ্রি দিয়ে খুঁজুন..."
+                    placeholder={t("partner.doctors.linkSearchPlaceholder")}
                     className="pl-9 pr-8 h-10 rounded-xl text-xs sm:text-sm w-full"
                     autoFocus
                   />
@@ -214,12 +216,12 @@ export function LinkDoctorModal({
 
                 <div className="w-full min-w-0">
                   <select
-                    aria-label="বিশেষজ্ঞ বিভাগ ফিল্টার"
+                    aria-label={t("partner.doctors.department")}
                     value={selectedDept}
                     onChange={(e) => setSelectedDept(e.target.value)}
                     className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-xs sm:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
-                    <option value="all">সকল বিভাগ ({totalCount > 0 ? totalCount : availableDoctors.length})</option>
+                    <option value="all">{t("partner.doctors.allDepts")} ({totalCount > 0 ? totalCount : availableDoctors.length})</option>
                     {DEPT_OPTIONS.map((dept) => (
                       <option key={dept.value} value={dept.value}>
                         {dept.label}
@@ -251,11 +253,11 @@ export function LinkDoctorModal({
                     <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground mx-auto">
                       <Stethoscope className="h-5 w-5" />
                     </div>
-                    <p className="text-xs font-semibold text-foreground">কোনো নতুন ডাক্তার পাওয়া যায়নি।</p>
+                    <p className="text-xs font-semibold text-foreground">{t("partner.doctors.noNewDoctors")}</p>
                     <p className="text-[11px] text-muted-foreground">
                       {searchTerm
-                        ? "অন্য শব্দ বা বিভাগ দিয়ে সার্চ করে দেখুন।"
-                        : "উপরে 'নতুন ডাক্তার যুক্ত করুন' থেকে সরাসরি নতুন ডাক্তার যোগ করতে পারেন।"}
+                        ? t("partner.staff.noCashierFoundDesc")
+                        : t("partner.doctors.modalLinkDesc")}
                     </p>
                   </div>
                 ) : (
@@ -288,7 +290,7 @@ export function LinkDoctorModal({
                           className="shrink-0 text-xs rounded-xl font-semibold group-hover:bg-primary group-hover:text-white transition-colors"
                         >
                           <Check className="h-3.5 w-3.5 mr-1 hidden group-hover:inline" />
-                          <span>নির্বাচন করুন</span>
+                          <span>{t("partner.doctors.linkSelect")}</span>
                         </Button>
                       </div>
                     ))}
@@ -297,13 +299,7 @@ export function LinkDoctorModal({
                     {loadingMore && (
                       <div className="p-3 rounded-xl bg-card border border-border/50 flex items-center justify-center gap-2 text-xs text-muted-foreground">
                         <div className="h-3.5 w-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                        <span>পরবর্তী ডাক্তারদের লোড করা হচ্ছে...</span>
-                      </div>
-                    )}
-
-                    {!hasMore && displayedDoctors.length >= 50 && (
-                      <div className="text-center py-2 text-[11px] text-muted-foreground font-medium border-t border-border/40">
-                        সকল ডাক্তার দেখানো হয়েছে (মোট: {totalCount || displayedDoctors.length} জন)
+                        <span>{t("partner.doctors.loadingMore")}</span>
                       </div>
                     )}
                   </>
@@ -330,41 +326,41 @@ export function LinkDoctorModal({
                   onClick={() => setSelectedDoctor(null)}
                   className="text-xs text-muted-foreground hover:text-foreground shrink-0 cursor-pointer"
                 >
-                  পরিবর্তন করুন
+                  {t("common.edit")}
                 </Button>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-full">
                 <div className="space-y-1.5 w-full min-w-0">
-                  <label htmlFor="link-room" className="text-xs font-semibold text-foreground">চেম্বার রুম / কক্ষ নং</label>
+                  <label htmlFor="link-room" className="text-xs font-semibold text-foreground">{t("partner.doctors.roomNo")}</label>
                   <Input
                     id="link-room"
                     value={chamberData.roomNo}
                     onChange={(e) => setChamberData({ ...chamberData, roomNo: e.target.value })}
-                    placeholder="যেমন: রুম-৪০১"
+                    placeholder={t("partner.doctors.roomPlaceholder")}
                     className="h-10 text-sm w-full"
                   />
                 </div>
 
                 <div className="space-y-1.5 w-full min-w-0">
-                  <label htmlFor="link-fee" className="text-xs font-semibold text-foreground">পরামর্শ ফি</label>
+                  <label htmlFor="link-fee" className="text-xs font-semibold text-foreground">{t("partner.doctors.consultationFee")}</label>
                   <Input
                     id="link-fee"
                     value={chamberData.consultationFee}
                     onChange={(e) => setChamberData({ ...chamberData, consultationFee: e.target.value })}
-                    placeholder="যেমন: ৳১০০০"
+                    placeholder={t("partner.doctors.feePlaceholder")}
                     className="h-10 text-sm w-full"
                   />
                 </div>
 
                 <div className="space-y-1.5 sm:col-span-2 w-full min-w-0">
-                  <label htmlFor="link-days" className="text-xs font-semibold text-foreground">সাক্ষাতের দিনসমূহ *</label>
+                  <label htmlFor="link-days" className="text-xs font-semibold text-foreground">{t("partner.doctors.visitingDays")} *</label>
                   <Input
                     id="link-days"
                     required
                     value={chamberData.visitingDays}
                     onChange={(e) => setChamberData({ ...chamberData, visitingDays: e.target.value })}
-                    placeholder="যেমন: শনি - বৃহস্পতি"
+                    placeholder={t("partner.doctors.daysPlaceholder")}
                     className="h-10 text-sm w-full"
                   />
                   <div className="flex flex-wrap gap-1.5 pt-1 max-w-full">
@@ -382,25 +378,25 @@ export function LinkDoctorModal({
                 </div>
 
                 <div className="space-y-1.5 w-full min-w-0">
-                  <label htmlFor="link-hours" className="text-xs font-semibold text-foreground">সাক্ষাতের সময় *</label>
+                  <label htmlFor="link-hours" className="text-xs font-semibold text-foreground">{t("partner.doctors.visitingHours")} *</label>
                   <Input
                     id="link-hours"
                     required
                     value={chamberData.visitingHours}
                     onChange={(e) => setChamberData({ ...chamberData, visitingHours: e.target.value })}
-                    placeholder="যেমন: বিকাল ৫:০০ - রাত ৯:০০"
+                    placeholder={t("partner.doctors.hoursPlaceholder")}
                     className="h-10 text-sm w-full"
                   />
                 </div>
 
                 <div className="space-y-1.5 w-full min-w-0">
-                  <label htmlFor="link-phone" className="text-xs font-semibold text-foreground">সিরিয়াল নম্বর *</label>
+                  <label htmlFor="link-phone" className="text-xs font-semibold text-foreground">{t("partner.doctors.serialPhone")} *</label>
                   <Input
                     id="link-phone"
                     required
                     value={chamberData.serialPhone}
                     onChange={(e) => setChamberData({ ...chamberData, serialPhone: e.target.value })}
-                    placeholder="যেমন: 017XXXXXXXX"
+                    placeholder={t("partner.doctors.phonePlaceholder")}
                     className="h-10 text-sm w-full"
                   />
                 </div>
@@ -408,10 +404,10 @@ export function LinkDoctorModal({
 
               <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-4 border-t border-border w-full">
                 <Button type="button" variant="outline" onClick={() => setSelectedDoctor(null)} className="rounded-xl w-full sm:w-auto">
-                  পেছনে যান
+                  {t("common.back")}
                 </Button>
                 <Button type="submit" disabled={submitting} className="rounded-xl bg-primary text-white hover:bg-primary/90 cursor-pointer w-full sm:w-auto">
-                  {submitting ? "লিঙ্ক হচ্ছে..." : "চেম্বারে লিঙ্ক নিশ্চিত করুন"}
+                  {submitting ? t("partner.doctors.linking") : t("partner.doctors.confirmLink")}
                 </Button>
               </div>
             </form>

@@ -158,6 +158,24 @@ export const healthToolsEn = {
   "healthTools.report.patientGender": "Gender",
   "healthTools.report.print": "Print / Save PDF",
   "healthTools.report.disclaimer": "Note: This report is generated based on self-reported interactive calculator inputs and standard clinical guidelines. For medical diagnosis and treatment, please consult a registered physician.",
-  "healthTools.water.resetAria": "Reset calculator"
+  "healthTools.water.resetAria": "Reset calculator",
+
+  // Clinical Evaluation Results
+  "healthTools.evalResult": "Clinical Evaluation Result",
+  "healthTools.systolicLabel": "Systolic",
+  "healthTools.diastolicLabel": "Diastolic",
+  "healthTools.pulsePressureLabel": "Pulse Pressure",
+  "healthTools.mapLabel": "MAP (Mean)",
+  "healthTools.sugarMeasured": "Measured Value",
+  "healthTools.actionPlan": "Action Plan & Lifestyle",
+  "healthTools.dietTips": "Diet & Nutrition",
+  "healthTools.warningSigns": "Warning Signs & Red Flags",
+  "healthTools.recommendedDoctor": "Recommended Medical Specialist",
+  "healthTools.targetRange": "Target Normal Range",
+  "healthTools.exportPdf": "Download PDF Report",
+  "healthTools.downloadingReport": "Generating Report...",
+  "healthTools.reportLivePreview": "Digital Health Report Live Preview",
+  "healthTools.consultantHelpNotice": "Browse top specialist doctor schedules in Feni and get direct serial with discount benefits.",
+  "healthTools.viewSpecialists": "View Specialist Doctors"
 } as const;
 

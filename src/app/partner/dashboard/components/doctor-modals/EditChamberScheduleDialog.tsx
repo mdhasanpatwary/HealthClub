@@ -15,6 +15,7 @@ import { updatePartnerDoctorChamberAction } from "@/app/actions/partnerDoctorAct
 import { toast } from "sonner";
 import { Building2 } from "lucide-react";
 import { DEPT_OPTIONS, DAY_PRESETS } from "./doctorModalConstants";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 
 export interface EditChamberModalProps {
   doctor: Doctor | null;
@@ -32,6 +33,7 @@ function EditChamberForm({
   onClose: () => void;
   onSuccess: () => void;
 }) {
+  const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: doctor.name || "",
@@ -72,14 +74,14 @@ function EditChamberForm({
       });
 
       if (res.success) {
-        toast.success("চেম্বার ও সময়সূচি তথ্য সফলভাবে আপডেট করা হয়েছে।");
+        toast.success(t("partner.doctors.updateSuccess"));
         onSuccess();
         onClose();
       } else {
-        toast.error(res.error || "আপডেট করতে সমস্যা হয়েছে।");
+        toast.error(res.error || t("partner.doctors.updateFailed"));
       }
     } catch {
-      toast.error("সার্ভারে সমস্যা হয়েছে।");
+      toast.error(t("common.error.server"));
     } finally {
       setSubmitting(false);
     }
@@ -90,17 +92,17 @@ function EditChamberForm({
       <DialogHeader className="space-y-1">
         <DialogTitle className="font-heading font-bold text-base sm:text-lg md:text-xl flex items-center gap-2">
           <Building2 className="h-5 w-5 text-primary shrink-0" />
-          <span className="truncate">চেম্বার ও সময়সূচি এডিট করুন</span>
+          <span className="truncate">{t("partner.doctors.editChamberTitle")}</span>
         </DialogTitle>
         <DialogDescription className="text-xs text-muted-foreground">
-          {doctor.name} - এর চেম্বারের রুম নম্বর, সময়সূচি এবং সিরিয়াল তথ্য আপডেট করুন।
+          {doctor.name} - {t("partner.doctors.editChamberDesc")}
         </DialogDescription>
       </DialogHeader>
 
       <form onSubmit={handleSubmit} className="space-y-4 pt-2 w-full max-w-full overflow-x-hidden">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-full">
           <div className="space-y-1.5">
-            <label htmlFor="edit-doc-name" className="text-xs font-semibold text-foreground">ডাক্তারের নাম</label>
+            <label htmlFor="edit-doc-name" className="text-xs font-semibold text-foreground">{t("partner.doctors.doctorName")}</label>
             <Input
               id="edit-doc-name"
               value={formData.name}
@@ -110,7 +112,7 @@ function EditChamberForm({
           </div>
 
           <div className="space-y-1.5">
-            <label htmlFor="edit-doc-dept" className="text-xs font-semibold text-foreground">বিভাগ</label>
+            <label htmlFor="edit-doc-dept" className="text-xs font-semibold text-foreground">{t("partner.doctors.department")}</label>
             <select
               id="edit-doc-dept"
               value={formData.department}
@@ -124,41 +126,41 @@ function EditChamberForm({
           </div>
 
           <div className="space-y-1.5 sm:col-span-2">
-            <label htmlFor="edit-doc-spec" className="text-xs font-semibold text-foreground">বিশেষজ্ঞ পদবি ও ডিগ্রি</label>
+            <label htmlFor="edit-doc-spec" className="text-xs font-semibold text-foreground">{t("partner.doctors.specialtyDegree")}</label>
             <Input
               id="edit-doc-spec"
               value={formData.specialty}
               onChange={(e) => setFormData({ ...formData, specialty: e.target.value })}
-              placeholder="যেমন: বিশেষজ্ঞ সার্জন"
+              placeholder={t("partner.doctors.specPlaceholder")}
               className="h-10 text-sm"
             />
           </div>
 
           {/* Chamber Fields */}
           <div className="space-y-1.5">
-            <label htmlFor="edit-doc-room" className="text-xs font-semibold text-primary">চেম্বার রুম / কক্ষ নং</label>
+            <label htmlFor="edit-doc-room" className="text-xs font-semibold text-primary">{t("partner.doctors.roomNo")}</label>
             <Input
               id="edit-doc-room"
               value={formData.roomNo}
               onChange={(e) => setFormData({ ...formData, roomNo: e.target.value })}
-              placeholder="যেমন: রুম-২০৫ (২য় তলা)"
+              placeholder={t("partner.doctors.roomPlaceholder")}
               className="h-10 text-sm border-primary/40 focus-visible:ring-primary"
             />
           </div>
 
           <div className="space-y-1.5">
-            <label htmlFor="edit-doc-fee" className="text-xs font-semibold text-foreground">পরামর্শ ফি</label>
+            <label htmlFor="edit-doc-fee" className="text-xs font-semibold text-foreground">{t("partner.doctors.consultationFee")}</label>
             <Input
               id="edit-doc-fee"
               value={formData.consultationFee}
               onChange={(e) => setFormData({ ...formData, consultationFee: e.target.value })}
-              placeholder="যেমন: ৳১০০০"
+              placeholder={t("partner.doctors.feePlaceholder")}
               className="h-10 text-sm"
             />
           </div>
 
           <div className="space-y-1.5 sm:col-span-2">
-            <label htmlFor="edit-doc-days" className="text-xs font-semibold text-foreground">সাক্ষাতের দিনসমূহ *</label>
+            <label htmlFor="edit-doc-days" className="text-xs font-semibold text-foreground">{t("partner.doctors.visitingDays")} *</label>
             <Input
               id="edit-doc-days"
               required
@@ -181,7 +183,7 @@ function EditChamberForm({
           </div>
 
           <div className="space-y-1.5">
-            <label htmlFor="edit-doc-hours" className="text-xs font-semibold text-foreground">সাক্ষাতের সময় *</label>
+            <label htmlFor="edit-doc-hours" className="text-xs font-semibold text-foreground">{t("partner.doctors.visitingHours")} *</label>
             <Input
               id="edit-doc-hours"
               required
@@ -192,7 +194,7 @@ function EditChamberForm({
           </div>
 
           <div className="space-y-1.5">
-            <label htmlFor="edit-doc-phone" className="text-xs font-semibold text-foreground">সিরিয়াল নম্বর *</label>
+            <label htmlFor="edit-doc-phone" className="text-xs font-semibold text-foreground">{t("partner.doctors.serialPhone")} *</label>
             <Input
               id="edit-doc-phone"
               required
@@ -209,10 +211,10 @@ function EditChamberForm({
             <div className="flex items-center justify-between p-2.5 bg-background border border-border/80 rounded-xl">
               <div>
                 <label htmlFor="edit-doc-available" className="text-xs font-bold text-foreground block cursor-pointer">
-                  আজ চেম্বার খোলা আছে
+                  {t("partner.doctors.openToday")}
                 </label>
                 <span className="text-[10px] text-muted-foreground">
-                  {formData.availableToday ? "আজ চেম্বার খোলা দেখাবে" : "আজ চেম্বার বন্ধ দেখাবে"}
+                  {formData.availableToday ? t("partner.doctors.openTodayDesc") : t("partner.doctors.closedTodayDesc")}
                 </span>
               </div>
               <input
@@ -226,7 +228,7 @@ function EditChamberForm({
 
             <div className="space-y-1">
               <label htmlFor="edit-doc-leave" className="text-xs font-semibold text-foreground cursor-pointer">
-                ছুটির শেষ তারিখ (ঐচ্ছিক)
+                {t("partner.doctors.leaveUntil")}
               </label>
               <Input
                 id="edit-doc-leave"
@@ -240,12 +242,12 @@ function EditChamberForm({
 
           <div className="space-y-1">
             <label htmlFor="edit-doc-notice" className="text-xs font-semibold text-foreground cursor-pointer">
-              চেম্বার সংক্রান্ত বিশেষ বিজ্ঞপ্তি (ঐচ্ছিক)
+              {t("partner.doctors.chamberNotice")}
             </label>
             <Input
               id="edit-doc-notice"
               type="text"
-              placeholder="যেমন: শুধুমাত্র অ্যাপয়েন্টমেন্ট সাপেক্ষে সিরিয়াল নেওয়া হবে"
+              placeholder={t("partner.doctors.chamberNoticePlaceholder")}
               value={formData.notice}
               onChange={(e) => setFormData({ ...formData, notice: e.target.value })}
               className="h-9 text-xs"
@@ -255,10 +257,10 @@ function EditChamberForm({
 
         <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-4 border-t border-border w-full">
           <Button type="button" variant="outline" onClick={onClose} disabled={submitting} className="rounded-xl w-full sm:w-auto">
-            বাতিল
+            {t("common.cancel")}
           </Button>
           <Button type="submit" disabled={submitting} className="rounded-xl bg-primary text-white hover:bg-primary/90 cursor-pointer w-full sm:w-auto">
-            {submitting ? "সংরক্ষণ হচ্ছে..." : "পরিবর্তন সংরক্ষণ করুন"}
+            {submitting ? t("common.saving") : t("partner.doctors.saveChanges")}
           </Button>
         </div>
       </form>

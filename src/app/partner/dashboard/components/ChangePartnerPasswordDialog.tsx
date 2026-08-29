@@ -1,12 +1,16 @@
+"use client";
+
 import React, { useState } from "react";
 import { KeyRound } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { changePartnerPasswordAction } from "@/app/actions/partnerActions";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toast } from "sonner";
 
 export function ChangePartnerPasswordDialog() {
+  const { t } = useLanguage();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -18,13 +22,13 @@ export function ChangePartnerPasswordDialog() {
     setLoadingChange(true);
 
     if (newPassword.length < 6) {
-      toast.error("নতুন পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।");
+      toast.error(t("partner.password.minLength"));
       setLoadingChange(false);
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      toast.error("নতুন পাসওয়ার্ড দুটি মেলেনি।");
+      toast.error(t("partner.password.mismatch"));
       setLoadingChange(false);
       return;
     }
@@ -32,16 +36,16 @@ export function ChangePartnerPasswordDialog() {
     try {
       const res = await changePartnerPasswordAction(currentPassword, newPassword);
       if (res.success) {
-        toast.success(res.message);
+        toast.success(res.message || t("common.success"));
         setDialogOpen(false);
         setCurrentPassword("");
         setNewPassword("");
         setConfirmPassword("");
       } else {
-        toast.error(res.message || "পাসওয়ার্ড পরিবর্তন করা যায়নি।");
+        toast.error(res.message || t("common.error"));
       }
     } catch {
-      toast.error("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
+      toast.error(t("common.error.server"));
     } finally {
       setLoadingChange(false);
     }
@@ -53,7 +57,7 @@ export function ChangePartnerPasswordDialog() {
         render={
           <Button variant="outline" size="sm" className="gap-1.5 border-white/25 bg-transparent text-white hover:bg-white/10 hover:text-white">
             <KeyRound className="h-4 w-4" />
-            <span>পাসওয়ার্ড পরিবর্তন</span>
+            <span>{t("partner.password.dialogBtn")}</span>
           </Button>
         }
       />
@@ -61,17 +65,17 @@ export function ChangePartnerPasswordDialog() {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-foreground font-heading">
             <KeyRound className="h-5 w-5 text-amber-500" />
-            পাসওয়ার্ড পরিবর্তন করুন
+            {t("partner.password.dialogTitle")}
           </DialogTitle>
           <DialogDescription className="text-muted-foreground text-xs">
-            আপনার অ্যাকাউন্ট সুরক্ষিত রাখতে নিয়মিত পাসওয়ার্ড পরিবর্তন করুন।
+            {t("partner.password.dialogDesc")}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleChangePasswordSubmit} className="space-y-4 pt-2">
 
           <div className="space-y-1.5">
-            <label htmlFor="partner-current-pw" className="text-xs font-semibold text-foreground cursor-pointer">বর্তমান পাসওয়ার্ড</label>
+            <label htmlFor="partner-current-pw" className="text-xs font-semibold text-foreground cursor-pointer">{t("partner.password.current")}</label>
             <Input
               id="partner-current-pw"
               type="password"
@@ -84,12 +88,12 @@ export function ChangePartnerPasswordDialog() {
           </div>
 
           <div className="space-y-1.5">
-            <label htmlFor="partner-new-pw" className="text-xs font-semibold text-foreground cursor-pointer">নতুন পাসওয়ার্ড</label>
+            <label htmlFor="partner-new-pw" className="text-xs font-semibold text-foreground cursor-pointer">{t("partner.password.new")}</label>
             <Input
               id="partner-new-pw"
               type="password"
               required
-              placeholder="অন্তত ৬ অক্ষর"
+              placeholder={t("partner.password.newPlaceholder")}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               className="border-border bg-background"
@@ -97,12 +101,12 @@ export function ChangePartnerPasswordDialog() {
           </div>
 
           <div className="space-y-1.5">
-            <label htmlFor="partner-confirm-pw" className="text-xs font-semibold text-foreground cursor-pointer">নতুন পাসওয়ার্ড পুনরায় লিখুন</label>
+            <label htmlFor="partner-confirm-pw" className="text-xs font-semibold text-foreground cursor-pointer">{t("partner.password.confirm")}</label>
             <Input
               id="partner-confirm-pw"
               type="password"
               required
-              placeholder="••••••••"
+              placeholder={t("partner.password.confirmPlaceholder")}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="border-border bg-background"
@@ -116,14 +120,14 @@ export function ChangePartnerPasswordDialog() {
               onClick={() => setDialogOpen(false)}
               className="border-border text-foreground"
             >
-              বাতিল
+              {t("common.cancel")}
             </Button>
             <Button
               type="submit"
               disabled={loadingChange}
               className="bg-primary hover:bg-primary-dark text-white font-semibold"
             >
-              {loadingChange ? "পরিবর্তন হচ্ছে..." : "পাসওয়ার্ড আপডেট করুন"}
+              {loadingChange ? t("partner.password.updating") : t("partner.password.updateBtn")}
             </Button>
           </div>
         </form>

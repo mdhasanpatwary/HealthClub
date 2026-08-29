@@ -101,7 +101,7 @@ export function Pagination({
         <div>
           {isEn ? (
             <span>
-              Showing{" "}
+              {t("pagination.showing")}{" "}
               <span className="font-semibold text-foreground">
                 {formatNum(startItem, locale)}
               </span>
@@ -109,7 +109,7 @@ export function Pagination({
               <span className="font-semibold text-foreground">
                 {formatNum(endItem, locale)}
               </span>{" "}
-              of{" "}
+              {t("pagination.entriesOf")}{" "}
               <span className="font-semibold text-foreground">
                 {formatNum(totalItems, locale)}
               </span>{" "}
@@ -117,11 +117,11 @@ export function Pagination({
             </span>
           ) : (
             <span>
-              মোট{" "}
+              {t("pagination.total")}{" "}
               <span className="font-semibold text-foreground">
                 {formatNum(totalItems, locale)}
               </span>{" "}
-              {itemLabel || "টি এন্ট্রি"} এর মধ্যে{" "}
+              {itemLabel || t("pagination.entriesOf")}{" "}
               <span className="font-semibold text-foreground">
                 {formatNum(startItem, locale)}
               </span>
@@ -129,7 +129,7 @@ export function Pagination({
               <span className="font-semibold text-foreground">
                 {formatNum(endItem, locale)}
               </span>{" "}
-              প্রদর্শিত
+              {t("pagination.showing")}
             </span>
           )}
         </div>

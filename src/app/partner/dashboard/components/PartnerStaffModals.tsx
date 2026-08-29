@@ -28,6 +28,7 @@ import {
   Shield,
   CreditCard,
 } from "lucide-react";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 
 export { ResetStaffPasswordModal, DeleteStaffConfirmModal } from "./PartnerStaffActionModals";
 
@@ -56,6 +57,7 @@ export function AddEditStaffModal({
   staffToEdit,
   onSuccess,
 }: AddEditStaffModalProps) {
+  const { t } = useLanguage();
   const isEditing = !!staffToEdit;
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -87,21 +89,21 @@ export function AddEditStaffModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
-      toast.error("স্টাফের নাম দিন।");
+      toast.error(t("partner.profile.fillRequiredFields"));
       return;
     }
     if (!deskName.trim()) {
-      toast.error("কাউন্টার / ডেস্কের নাম দিন।");
+      toast.error(t("partner.profile.fillRequiredFields"));
       return;
     }
 
     if (!isEditing) {
       if (!username.trim() || username.trim().length < 3) {
-        toast.error("ইউজারনেম কমপক্ষে ৩ অক্ষরের হতে হবে।");
+        toast.error(t("partner.staff.usernamePlaceholder"));
         return;
       }
       if (!password || password.length < 6) {
-        toast.error("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");
+        toast.error(t("partner.password.minLength"));
         return;
       }
     }
@@ -118,11 +120,11 @@ export function AddEditStaffModal({
         });
 
         if (res.success) {
-          toast.success("স্টাফ অ্যাকাউন্টের তথ্য সফলভাবে আপডেট হয়েছে।");
+          toast.success(t("partner.staff.updatedSuccess"));
           onSuccess();
           onClose();
         } else {
-          toast.error(res.error || "তথ্য আপডেট করা যায়নি।");
+          toast.error(res.error || t("common.error"));
         }
       } else {
         const res = await createPartnerStaffAction({
@@ -135,15 +137,15 @@ export function AddEditStaffModal({
         });
 
         if (res.success) {
-          toast.success(`"${name}" - নতুন ক্যাশিয়ার অ্যাকাউন্ট তৈরি হয়েছে!`);
+          toast.success(t("partner.staff.createdSuccess"));
           onSuccess();
           onClose();
         } else {
-          toast.error(res.error || "অ্যাকাউন্ট তৈরি করা যায়নি।");
+          toast.error(res.error || t("common.error"));
         }
       }
     } catch {
-      toast.error("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
+      toast.error(t("common.error.server"));
     } finally {
       setLoading(false);
     }
@@ -157,19 +159,17 @@ export function AddEditStaffModal({
             {isEditing ? (
               <>
                 <UserCheck className="h-5 w-5 text-primary" />
-                স্টাফ অ্যাকাউন্ট সম্পাদনা
+                {t("partner.staff.modalEditTitle")}
               </>
             ) : (
               <>
                 <UserPlus className="h-5 w-5 text-primary" />
-                নতুন ক্যাশিয়ার / কাউন্টার স্টাফ যুক্ত করুন
+                {t("partner.staff.modalAddTitle")}
               </>
             )}
           </DialogTitle>
           <DialogDescription className="text-xs text-muted-foreground">
-            {isEditing
-              ? "কাউন্টার ডেস্কের নাম, ফোন ও স্টাফের দায়িত্ব পরিবর্তন করুন।"
-              : "হাসপাতালের নির্দিষ্ট কাউন্টারের জন্য স্বতন্ত্র লগইন ক্রেডেনশিয়ালস তৈরি করুন।"}
+            {t("partner.staff.modalDesc")}
           </DialogDescription>
         </DialogHeader>
 
@@ -178,13 +178,13 @@ export function AddEditStaffModal({
           <div className="space-y-1.5">
             <label htmlFor="staff-name" className="text-xs font-semibold text-foreground flex items-center gap-1.5 cursor-pointer">
               <User className="h-3.5 w-3.5 text-primary" />
-              স্টাফের পুরো নাম *
+              {t("partner.staff.nameLabel")}
             </label>
             <Input
               id="staff-name"
               type="text"
               required
-              placeholder="যেমন: মোঃ তারিকুল ইসলাম"
+              placeholder={t("partner.staff.namePlaceholder")}
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="border-border bg-background h-10"
@@ -195,7 +195,7 @@ export function AddEditStaffModal({
           <div className="space-y-2">
             <label htmlFor="staff-desk-name" className="text-xs font-semibold text-foreground flex items-center gap-1.5 cursor-pointer">
               <Building className="h-3.5 w-3.5 text-primary" />
-              কাউন্টার / ডেস্ক আইডেন্টিফায়ার *
+              {t("partner.staff.deskLabel")}
             </label>
             <div className="flex flex-wrap gap-1.5 pb-1">
               {DESK_PRESETS.map((preset) => (
@@ -217,7 +217,7 @@ export function AddEditStaffModal({
               id="staff-desk-name"
               type="text"
               required
-              placeholder="যেমন: Counter 1 - Billing বা Pharmacy Desk"
+              placeholder={t("partner.staff.deskPlaceholder")}
               value={deskName}
               onChange={(e) => setDeskName(e.target.value)}
               className="border-border bg-background h-10"
@@ -228,21 +228,21 @@ export function AddEditStaffModal({
           <div className="space-y-1.5">
             <label htmlFor="staff-username" className="text-xs font-semibold text-foreground flex items-center gap-1.5 cursor-pointer">
               <CreditCard className="h-3.5 w-3.5 text-primary" />
-              লগইন ইউজারনেম {isEditing ? "(অপরিবর্তনযোগ্য)" : "*"}
+              {t("partner.staff.usernameLabel")} {isEditing ? t("partner.staff.usernameImmutable") : "*"}
             </label>
             <Input
               id="staff-username"
               type="text"
               required={!isEditing}
               disabled={isEditing}
-              placeholder="যেমন: counter1_labaid বা tariqul"
+              placeholder={t("partner.staff.usernamePlaceholder")}
               value={username}
               onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/\s+/g, "_"))}
               className="border-border bg-background h-10 font-mono text-xs"
             />
             {!isEditing && (
               <p className="text-[11px] text-muted-foreground">
-                ক্যাশিয়ার এই ইউজারনেম এবং পাসওয়ার্ড দিয়ে পার্টনার পোর্টালে লগইন করবেন।
+                {t("partner.staff.usernameLoginNote")}
               </p>
             )}
           </div>
@@ -251,12 +251,12 @@ export function AddEditStaffModal({
           <div className="space-y-1.5">
             <label htmlFor="staff-phone" className="text-xs font-semibold text-foreground flex items-center gap-1.5 cursor-pointer">
               <Phone className="h-3.5 w-3.5 text-primary" />
-              মোবাইল নম্বর (ঐচ্ছিক)
+              {t("partner.staff.phoneLabel")}
             </label>
             <Input
               id="staff-phone"
               type="tel"
-              placeholder="যেমন: 018XXXXXXXX"
+              placeholder={t("partner.staff.phonePlaceholder")}
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               className="border-border bg-background h-10"
@@ -267,7 +267,7 @@ export function AddEditStaffModal({
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
               <Shield className="h-3.5 w-3.5 text-primary" />
-              অ্যাকাউন্টের ভূমিকা (Role)
+              {t("partner.staff.roleRole")}
             </label>
             <div className="grid grid-cols-2 gap-2">
               <button
@@ -279,8 +279,8 @@ export function AddEditStaffModal({
                     : "border-border bg-muted/30 text-muted-foreground hover:border-border/80"
                 }`}
               >
-                <div className="text-xs font-bold">ক্যাশিয়ার (Cashier)</div>
-                <div className="text-[10px] text-muted-foreground mt-0.5">শুধু ছাড় ট্রানজেকশন রেকর্ড ও স্ক্যান করতে পারবে</div>
+                <div className="text-xs font-bold">{t("partner.staff.roleCashier")}</div>
+                <div className="text-[10px] text-muted-foreground mt-0.5">{t("partner.staff.roleCashierDesc")}</div>
               </button>
               <button
                 type="button"
@@ -291,8 +291,8 @@ export function AddEditStaffModal({
                     : "border-border bg-muted/30 text-muted-foreground hover:border-border/80"
                 }`}
               >
-                <div className="text-xs font-bold">ম্যানেজার (Manager)</div>
-                <div className="text-[10px] text-muted-foreground mt-0.5">কাউন্টার ও অন্যান্য ক্যাশিয়ার পরিচালনা করতে পারবে</div>
+                <div className="text-xs font-bold">{t("partner.staff.roleManager")}</div>
+                <div className="text-[10px] text-muted-foreground mt-0.5">{t("partner.staff.roleManagerDesc")}</div>
               </button>
             </div>
           </div>
@@ -302,13 +302,13 @@ export function AddEditStaffModal({
             <div className="space-y-1.5">
               <label htmlFor="staff-password" className="text-xs font-semibold text-foreground flex items-center gap-1.5 cursor-pointer">
                 <Lock className="h-3.5 w-3.5 text-primary" />
-                লগইন পাসওয়ার্ড * (কমপক্ষে ৬ অক্ষর)
+                {t("partner.staff.passwordMinLength")}
               </label>
               <Input
                 id="staff-password"
                 type="password"
                 required
-                placeholder="••••••••"
+                placeholder={t("partner.staff.passwordPlaceholder")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="border-border bg-background h-10"
@@ -323,14 +323,14 @@ export function AddEditStaffModal({
               onClick={onClose}
               className="border-border rounded-xl cursor-pointer"
             >
-              বাতিল
+              {t("common.cancel")}
             </Button>
             <Button
               type="submit"
               disabled={loading}
               className="bg-primary hover:bg-primary-dark text-white font-semibold rounded-xl cursor-pointer"
             >
-              {loading ? "সংরক্ষণ হচ্ছে..." : isEditing ? "আপডেট করুন" : "অ্যাকাউন্ট তৈরি করুন"}
+              {loading ? t("partner.staff.saving") : isEditing ? t("partner.staff.submitUpdate") : t("partner.staff.submitCreate")}
             </Button>
           </DialogFooter>
         </form>

@@ -57,17 +57,17 @@ export function PartnerCardPreview({
 
           <div className="absolute top-3 right-3 z-10">
             <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-emerald-400 border border-emerald-500/30">
-              {partner.category === "hospital" ? "হাসপাতাল" : partner.category === "diagnostic" ? "ডায়াগনস্টিক" : "ফার্মেসি"}
+              {partner.category === "hospital" ? t("partner.dashboard.category.hospital") : partner.category === "diagnostic" ? t("partner.dashboard.category.diagnostic") : t("partner.dashboard.category.pharmacy")}
             </span>
           </div>
 
           <div className="absolute bottom-3 left-4 right-4 z-10 space-y-1">
             <h3 className="font-heading text-base font-bold text-white line-clamp-1">
-              {name || "হাসপাতালের নাম"}
+              {name || t("partner.profile.hospitalNamePlaceholder")}
             </h3>
             <p className="flex items-center gap-1 text-xs text-slate-300 line-clamp-1">
               <MapPin className="h-3 w-3 text-emerald-400 shrink-0" />
-              <span>{address || "ঠিকানা"}</span>
+              <span>{address || t("partner.profile.addressPlaceholderShort")}</span>
             </p>
           </div>
         </div>
@@ -76,13 +76,13 @@ export function PartnerCardPreview({
         <div className="p-4 space-y-3">
           <div className="flex items-center justify-between border-b border-border/60 pb-3">
             <div>
-              <p className="text-[10px] text-muted-foreground uppercase font-mono">ডিসকাউন্ট হার</p>
-              <p className="text-base font-bold text-primary font-heading">{discount || "২০%"}</p>
+              <p className="text-[10px] text-muted-foreground uppercase font-mono">{t("partner.profile.discountRate")}</p>
+              <p className="text-base font-bold text-primary font-heading">{discount || "20%"}</p>
             </div>
             {emergencyPhone && (
               <div className="text-right">
                 <p className="text-[10px] text-amber-600 dark:text-amber-400 font-bold flex items-center gap-1 justify-end">
-                  <PhoneCall className="h-3 w-3" /> জরুরি
+                  <PhoneCall className="h-3 w-3" /> {t("partner.profile.emergency")}
                 </p>
                 <p className="text-xs font-bold text-secondary dark:text-white font-mono">{emergencyPhone}</p>
               </div>
@@ -99,7 +99,7 @@ export function PartnerCardPreview({
           {/* Department breakdown tags */}
           {departmentDiscounts.length > 0 && (
             <div className="space-y-1.5 pt-1">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase">বিভাগভিত্তিক ছাড়:</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase">{t("partner.profile.deptDiscountsLabel")}</p>
               <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto">
                 {departmentDiscounts.map((dept, i) => (
                   <span key={i} className="text-[10px] bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">

@@ -19,8 +19,7 @@ interface PartnerAnalyticsTabProps {
 }
 
 export function PartnerAnalyticsTab({ partner }: PartnerAnalyticsTabProps) {
-  const { locale } = useLanguage();
-  const isBn = locale === "bn";
+  const { t, locale } = useLanguage();
 
   const [analytics, setAnalytics] = useState<PartnerAnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -34,16 +33,16 @@ export function PartnerAnalyticsTab({ partner }: PartnerAnalyticsTabProps) {
       if (res.success && res.data) {
         setAnalytics(res.data);
       } else {
-        setError(res.error || "অ্যানালিটিক্স লোড করতে ব্যর্থ হয়েছে।");
-        toast.error(res.error || "অ্যানালিটিক্স লোড করতে ব্যর্থ হয়েছে।");
+        setError(res.error || t("partner.analytics.title"));
+        toast.error(res.error || t("partner.analytics.title"));
       }
     } catch {
-      setError("সার্ভারের সাথে সংযোগ স্থাপন করা সম্ভব হয়নি।");
-      toast.error("সার্ভারের সাথে সংযোগ স্থাপন করা সম্ভব হয়নি।");
+      setError(t("common.error.server"));
+      toast.error(t("common.error.server"));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -60,13 +59,11 @@ export function PartnerAnalyticsTab({ partner }: PartnerAnalyticsTabProps) {
               <BarChart2 className="h-5 w-5" />
             </div>
             <h2 className="text-lg sm:text-xl font-bold font-heading text-secondary dark:text-white">
-              {isBn ? "পার্টনার অ্যানালিটিক্স ও মাসিক সেটেলমেন্ট" : "Partner Analytics & Monthly Settlement"}
+              {t("partner.analytics.title")}
             </h2>
           </div>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            {isBn
-              ? "মাসিক রোগী ভলিউম, ডিসকাউন্ট ছাড় পরিসংখ্যান, পিক ভিজিটিং ডে এবং অফিশিয়াল বিলিং স্টেটমেন্ট রিপোর্ট।"
-              : "Track monthly patient traffic, discount dispensation, peak visiting patterns, and download monthly statements."}
+            {t("partner.analytics.subtitle")}
           </p>
         </div>
 
@@ -79,7 +76,7 @@ export function PartnerAnalyticsTab({ partner }: PartnerAnalyticsTabProps) {
             className="rounded-xl border-border text-xs font-semibold gap-1.5 cursor-pointer hover:bg-muted"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin text-primary" : ""}`} />
-            <span>{isBn ? "রিফ্রেশ" : "Refresh"}</span>
+            <span>{t("partner.analytics.refresh")}</span>
           </Button>
         </div>
       </div>
@@ -107,7 +104,7 @@ export function PartnerAnalyticsTab({ partner }: PartnerAnalyticsTabProps) {
             <AlertCircle className="h-10 w-10 text-red-500" />
             <p className="text-sm font-semibold text-red-600 dark:text-red-400">{error}</p>
             <Button onClick={fetchAnalytics} variant="outline" size="sm" className="rounded-xl text-xs">
-              {isBn ? "পুনরায় চেষ্টা করুন" : "Try Again"}
+              {t("common.retry")}
             </Button>
           </CardContent>
         </Card>
