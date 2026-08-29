@@ -158,5 +158,10 @@ export const dashboardEn = {
   "verifyMember.expiredDesc": "This membership card has expired. Please renew.",
   "verifyMember.pendingDesc": "This membership account is currently pending admin verification or approval.",
   "verifyMember.expiredNote": "Discounts at partner facilities will be available once membership is renewed.",
-  "verifyMember.pendingNote": "Discounts at partner healthcare centers will be activated once membership is approved."
+  "verifyMember.pendingNote": "Discounts at partner healthcare centers will be activated once membership is approved.",
+  "dashboard.card.downloading": "Downloading card...",
+  "dashboard.card.downloadSuccess": "Card downloaded successfully!",
+  "dashboard.card.downloadFailed": "Failed to download card. Please try again.",
+  "dashboard.syncError": "Unable to update some dashboard data. Showing cached data."
 } as const;
+

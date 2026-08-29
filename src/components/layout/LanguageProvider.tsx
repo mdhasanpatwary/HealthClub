@@ -9,6 +9,8 @@ import {
   Dict,
   getNamespacesForRoute,
   namespaceLoaders,
+  enNamespaces,
+  bnNamespaces,
 } from "@/lib/translations";
 
 interface LanguageContextType {
@@ -88,6 +90,13 @@ export function LanguageProvider({
   const t = (key: TranslationKey | string, fallbackEn?: string): string => {
     if (dict && dict[key]) {
       return dict[key];
+    }
+    // Universal fallback across all namespaces for robust resilience
+    const source = locale === "en" ? enNamespaces : bnNamespaces;
+    for (const nsDict of Object.values(source)) {
+      if (nsDict && nsDict[key]) {
+        return nsDict[key];
+      }
     }
     if (fallbackEn !== undefined) {
       return fallbackEn;

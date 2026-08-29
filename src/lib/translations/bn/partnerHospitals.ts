@@ -68,5 +68,7 @@ export const partnerHospitalsBn = {
   "partnerHospitals.profile.doctorRoster": "চেম্বার ও বিশেষজ্ঞ ডাক্তার তালিকা",
   "partnerHospitals.profile.emergencyHotline": "২৪/৭ জরুরি হটলাইন",
   "partnerHospitals.profile.getDirections": "ম্যাপে লোকেশন দেখুন",
-  "partnerHospitals.profile.shareHospital": "শেয়ার করুন"
+  "partnerHospitals.profile.shareHospital": "শেয়ার করুন",
+  "partnerHospitals.button.remaining": "টি অবশিষ্ট"
 } as const;
+

@@ -158,5 +158,10 @@ export const dashboardBn = {
   "verifyMember.expiredDesc": "এই মেম্বারশিপ কার্ডটির মেয়াদ শেষ হয়ে গেছে। রিনিউ করুন।",
   "verifyMember.pendingDesc": "মেম্বারশিপ অ্যাকাউন্টটি বর্তমানে পেন্ডিং বা অনুমোদনের অপেক্ষায় রয়েছে",
   "verifyMember.expiredNote": "মেম্বারশিপ রিনিউ করার পর পার্টনার চিকিৎসাকেন্দ্রে ডিসকাউন্ট পাবেন।",
-  "verifyMember.pendingNote": "মেম্বারশিপটি সচল হওয়ার পর হাসপাতাল বা অংশীদার চিকিৎসাকেন্দ্রে ডিসকাউন্ট পাওয়া যাবে।"
+  "verifyMember.pendingNote": "মেম্বারশিপটি সচল হওয়ার পর হাসপাতাল বা অংশীদার চিকিৎসাকেন্দ্রে ডিসকাউন্ট পাওয়া যাবে।",
+  "dashboard.card.downloading": "কার্ড ডাউনলোড হচ্ছে...",
+  "dashboard.card.downloadSuccess": "কার্ড সফলভাবে ডাউনলোড হয়েছে!",
+  "dashboard.card.downloadFailed": "ডাউনলোড ব্যর্থ হয়েছে। আবার চেষ্টা করুন।",
+  "dashboard.syncError": "ড্যাশবোর্ডের কিছু তথ্য আপডেট করতে সমস্যা হয়েছে। ক্যাশড তথ্য প্রদর্শিত হচ্ছে।"
 } as const;
+

@@ -68,5 +68,7 @@ export const partnerHospitalsEn = {
   "partnerHospitals.profile.doctorRoster": "Doctors & Specialists Chamber",
   "partnerHospitals.profile.emergencyHotline": "24/7 Emergency Helpline",
   "partnerHospitals.profile.getDirections": "Get Map Directions",
-  "partnerHospitals.profile.shareHospital": "Share Hospital Profile"
+  "partnerHospitals.profile.shareHospital": "Share Hospital Profile",
+  "partnerHospitals.button.remaining": "remaining"
 } as const;
+

@@ -164,7 +164,7 @@ export const adminEn = {
   "admin.dashboard.planPremiumOption": "Premium Plan (৳500 / Annual)",
   "admin.dashboard.saveChanges": "Save Changes",
   "admin.dashboard.selectedPartnerNotFound": "Selected partner medical center not found.",
-  "admin.dashboard.tierFamily": "",
+  "admin.dashboard.tierFamily": "Family",
   "admin.dashboard.tierFounding": "Founding (Free)",
   "admin.dashboard.tierFounding1Year": "Founding (1 Year Free)",
   "admin.dashboard.tierPremium": "Premium",

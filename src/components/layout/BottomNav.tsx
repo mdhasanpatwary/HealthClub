@@ -213,7 +213,7 @@ export default function BottomNav() {
                   {t("layout.bottomNav.card")}
                 </h3>
                 <p className="text-xs text-muted-foreground">
-                  হাসপাতালে ডিসকাউন্টের জন্য এই কিউআর কোডটি দেখান
+                  {t("layout.bottomNav.cardScanHint")}
                 </p>
               </div>
               <button
@@ -247,7 +247,7 @@ export default function BottomNav() {
                 onClick={() => setIsCardModalOpen(false)}
                 className="px-5 border-border cursor-pointer"
               >
-                {t("admin.dashboard.closeButton")}
+                {t("layout.bottomNav.close")}
               </Button>
             </div>
           </div>

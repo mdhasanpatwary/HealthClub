@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/layout/LanguageProvider";
+import { formatNum } from "@/lib/i18n";
 import { PartnerCardSkeleton } from "@/components/ui/skeleton";
 import { FENI_UPAZILAS, detectUpazilaFromText } from "@/data/feniLocations";
 import PartnerCard from "@/components/ui/PartnerCard";
@@ -242,7 +243,7 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
                 onClick={() => setVisibleCount((prev) => prev + 18)}
                 className="px-6 py-2.5 rounded-xl text-sm font-semibold border-border hover:bg-muted cursor-pointer"
               >
-                {t("ui.partnerdirectory.loadMorePartners")} ({filteredPartners.length - displayedPartners.length} {t("consultants.button.remaining")})
+                {t("ui.partnerdirectory.loadMorePartners")} ({formatNum(filteredPartners.length - displayedPartners.length, locale)} {t("partnerHospitals.button.remaining")})
               </Button>
             </div>
           )}

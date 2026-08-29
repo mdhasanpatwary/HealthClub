@@ -137,7 +137,7 @@ function DashboardContent() {
         setPartners(pts);
       } catch {
         if (isMounted) {
-          toast.error("ড্যাশবোর্ডের কিছু তথ্য আপডেট করতে সমস্যা হয়েছে। ক্যাশড তথ্য প্রদর্শিত হচ্ছে।");
+          toast.error(t("dashboard.syncError"));
         }
       }
     });
@@ -145,7 +145,7 @@ function DashboardContent() {
     return () => {
       isMounted = false;
     };
-  }, [router]);
+  }, [router, t]);
 
   const handleAddMemberTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -216,9 +216,7 @@ function DashboardContent() {
   const handleDownloadCard = async () => {
     if (!cardRef.current) return;
 
-    const loadingToast = toast.loading(
-      locale === "bn" ? "কার্ড ডাউনলোড হচ্ছে..." : "Downloading card..."
-    );
+    const loadingToast = toast.loading(t("dashboard.card.downloading"));
 
     try {
       const { toCanvas } = await import("html-to-image");
@@ -273,14 +271,10 @@ function DashboardContent() {
       link.click();
 
       toast.dismiss(loadingToast);
-      toast.success(
-        locale === "bn" ? "কার্ড সফলভাবে ডাউনলোড হয়েছে!" : "Card downloaded successfully!"
-      );
+      toast.success(t("dashboard.card.downloadSuccess"));
     } catch {
       toast.dismiss(loadingToast);
-      toast.error(
-        locale === "bn" ? "ডাউনলোড ব্যর্থ হয়েছে। আবার চেষ্টা করুন।" : "Failed to download card. Please try again."
-      );
+      toast.error(t("dashboard.card.downloadFailed"));
     }
   };
 

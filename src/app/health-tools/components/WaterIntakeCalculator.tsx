@@ -12,7 +12,6 @@ import { trackEvent } from "@/lib/analytics";
 
 export function WaterIntakeCalculator() {
   const { locale, t } = useLanguage();
-  const isEn = locale === "en";
 
   const [weightKg, setWeightKg] = useState("");
   const [activityLevel, setActivityLevel] = useState<"sedentary" | "moderate" | "heavy">("sedentary");
@@ -180,7 +179,7 @@ export function WaterIntakeCalculator() {
                   variant="outline"
                   onClick={handleReset}
                   size="icon"
-                  aria-label={isEn ? "Reset calculator" : "ক্যালকুলেটর রিসেট করুন"}
+                  aria-label={t("healthTools.water.resetAria")}
                   className="cursor-pointer"
                 >
                   <RotateCcw className="h-4 w-4" />

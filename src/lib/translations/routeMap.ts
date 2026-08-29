@@ -6,14 +6,14 @@ import type { TranslationNamespace } from "./types";
  */
 export function getNamespacesForRoute(pathname?: string | null): TranslationNamespace[] {
   if (!pathname || pathname === "/") {
-    return ["common", "landing"];
+    return ["common", "landing", "partnerHospitals", "consultants", "emergency"];
   }
 
   // Normalize pathname
   const cleanPath = pathname.split("?")[0].replace(/\/$/, "") || "/";
 
   if (cleanPath.startsWith("/admin")) {
-    return ["common", "admin"];
+    return ["common", "admin", "dashboard", "consultants", "partner", "emergency"];
   }
 
   if (cleanPath.startsWith("/dashboard") || cleanPath.startsWith("/profile")) {
@@ -21,15 +21,15 @@ export function getNamespacesForRoute(pathname?: string | null): TranslationName
   }
 
   if (cleanPath.startsWith("/partner-hospitals")) {
-    return ["common", "partnerHospitals"];
+    return ["common", "partnerHospitals", "consultants", "emergency"];
   }
 
   if (cleanPath.startsWith("/partner") || cleanPath.startsWith("/become-partner")) {
-    return ["common", "partner"];
+    return ["common", "partner", "consultants"];
   }
 
   if (cleanPath.startsWith("/consultants") || cleanPath.startsWith("/doctors")) {
-    return ["common", "consultants"];
+    return ["common", "consultants", "emergency"];
   }
 
   if (cleanPath.startsWith("/emergency")) {
@@ -37,11 +37,15 @@ export function getNamespacesForRoute(pathname?: string | null): TranslationName
   }
 
   if (cleanPath.startsWith("/membership")) {
-    return ["common", "membership"];
+    return ["common", "membership", "landing"];
   }
 
   if (cleanPath.startsWith("/health-tools")) {
     return ["common", "healthTools"];
+  }
+
+  if (cleanPath.startsWith("/health-tips")) {
+    return ["common", "landing", "consultants"];
   }
 
   if (
@@ -60,6 +64,7 @@ export function getNamespacesForRoute(pathname?: string | null): TranslationName
     return ["common", "landing", "emergency"];
   }
 
-  // Default to common + landing for public pages (e.g. /about-us, /privacy-policy, /terms-conditions)
-  return ["common", "landing"];
+  // Default to common + landing + emergency for general public pages (e.g. /about-us, /privacy-policy, /terms-conditions, /contact)
+  return ["common", "landing", "emergency"];
 }
+

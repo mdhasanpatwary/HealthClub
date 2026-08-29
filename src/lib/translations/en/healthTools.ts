@@ -157,5 +157,7 @@ export const healthToolsEn = {
   "healthTools.report.patientAge": "Age",
   "healthTools.report.patientGender": "Gender",
   "healthTools.report.print": "Print / Save PDF",
-  "healthTools.report.disclaimer": "Note: This report is generated based on self-reported interactive calculator inputs and standard clinical guidelines. For medical diagnosis and treatment, please consult a registered physician."
+  "healthTools.report.disclaimer": "Note: This report is generated based on self-reported interactive calculator inputs and standard clinical guidelines. For medical diagnosis and treatment, please consult a registered physician.",
+  "healthTools.water.resetAria": "Reset calculator"
 } as const;
+

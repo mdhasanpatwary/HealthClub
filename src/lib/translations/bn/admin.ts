@@ -164,7 +164,7 @@ export const adminBn = {
   "admin.dashboard.planPremiumOption": "Premium Plan (৳৫০০ / বাৎসরিক)",
   "admin.dashboard.saveChanges": "পরিবর্তন সংরক্ষণ করুন",
   "admin.dashboard.selectedPartnerNotFound": "নির্বাচিত পার্টনার চিকিৎসাকেন্দ্র খুঁজে পাওয়া যায়নি।",
-  "admin.dashboard.tierFamily": "",
+  "admin.dashboard.tierFamily": "ফ্যামিলি",
   "admin.dashboard.tierFounding": "Founding (ফ্রি)",
   "admin.dashboard.tierFounding1Year": "Founding (ফ্রি ১ বছর)",
   "admin.dashboard.tierPremium": "Premium",
