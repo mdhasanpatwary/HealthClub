@@ -18,7 +18,7 @@ declare global {
 }
 
 export const GA_MEASUREMENT_ID =
-  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-T3YQYKGPY7";
+  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-HXNSQ13G5X";
 
 export type AnalyticsEventName =
   | "emergency_dial"
