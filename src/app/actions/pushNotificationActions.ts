@@ -9,6 +9,7 @@ import {
   sendWebPushNotification,
   WebPushPayload,
 } from "@/lib/webpush";
+import { hasAdminPermission } from "@/lib/permissions";
 
 // ---------------------------------------------------------------------------
 // Schemas
@@ -175,7 +176,7 @@ export async function checkPushSubscriptionStatusAction(
  */
 export async function getPushSubscriberStatsAction(): Promise<PushSubscriberStats> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "send_broadcast")) {
     return {
       totalSubscribers: 0,
       memberSubscribers: 0,
@@ -241,10 +242,10 @@ export async function sendPushBroadcastAction(
   };
 }> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "send_broadcast")) {
     return {
       success: false,
-      message: "অননুমোদিত অ্যাক্সেস। অনুগ্রহ করে এডমিন হিসেবে লগইন করুন।",
+      message: "অননুমোদিত অ্যাক্সেস। পুশ নোটিফিকেশন পাঠানোর অনুমতি নেই।",
     };
   }
 

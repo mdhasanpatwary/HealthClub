@@ -40,6 +40,10 @@ export default function PartnerDashboardPage() {
   const [loadingTransactions, setLoadingTransactions] = useState(true);
   const { t, locale } = useLanguage();
 
+  const canManageStaff = !currentStaff || currentStaff.role === "manager";
+
+  const effectiveActiveTab = !canManageStaff && activeTab === "staff" ? "billing" : activeTab;
+
   const loadTransactions = useCallback(async () => {
     setLoadingTransactions(true);
     try {
@@ -87,7 +91,7 @@ export default function PartnerDashboardPage() {
             id: staffSessionRes.staff.id,
             name: staffSessionRes.staff.name,
             deskName: staffSessionRes.staff.deskName,
-            role: "cashier",
+            role: staffSessionRes.staff.role || "cashier",
             username: staffSessionRes.staff.username || "",
           };
           setCurrentStaff(staffObj);
@@ -141,7 +145,7 @@ export default function PartnerDashboardPage() {
       <PartnerDashboardHeader partner={partner} currentStaff={currentStaff} onLogout={handleLogout} />
 
       {/* Main Tabbed Navigation */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
+      <Tabs value={effectiveActiveTab} onValueChange={setActiveTab} className="w-full space-y-6">
         <TabsList className="flex flex-wrap items-center justify-start sm:justify-center w-full h-auto group-data-horizontal/tabs:h-auto p-1.5 bg-muted/70 dark:bg-slate-900/80 rounded-2xl border border-border/60 gap-1.5">
           <TabsTrigger
             value="billing"
@@ -164,13 +168,15 @@ export default function PartnerDashboardPage() {
             <BarChart3 className="h-4 w-4 mr-2 shrink-0 text-amber-500 dark:text-amber-400" />
             <span>{locale === "bn" ? "অ্যানালিটিক্স ও রিপোর্ট" : (t("partner.dashboard.tabs.analytics") || "Analytics")}</span>
           </TabsTrigger>
-          <TabsTrigger
-            value="staff"
-            className="flex-1 sm:flex-initial min-w-[140px] sm:min-w-[160px] h-auto min-h-[44px] py-2.5 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all data-active:bg-background data-active:text-foreground data-active:shadow-md data-active:border-border/80 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-md cursor-pointer whitespace-nowrap justify-center"
-          >
-            <Users className="h-4 w-4 mr-2 shrink-0 text-blue-500 dark:text-blue-400" />
-            <span>{locale === "bn" ? "স্টাফ ও কাউন্টার" : (t("partner.dashboard.tabs.staff") || "Staff & Counters")}</span>
-          </TabsTrigger>
+          {canManageStaff && (
+            <TabsTrigger
+              value="staff"
+              className="flex-1 sm:flex-initial min-w-[140px] sm:min-w-[160px] h-auto min-h-[44px] py-2.5 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all data-active:bg-background data-active:text-foreground data-active:shadow-md data-active:border-border/80 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-md cursor-pointer whitespace-nowrap justify-center"
+            >
+              <Users className="h-4 w-4 mr-2 shrink-0 text-blue-500 dark:text-blue-400" />
+              <span>{locale === "bn" ? "স্টাফ ও কাউন্টার" : (t("partner.dashboard.tabs.staff") || "Staff & Counters")}</span>
+            </TabsTrigger>
+          )}
           <TabsTrigger
             value="profile"
             className="flex-1 sm:flex-initial min-w-[140px] sm:min-w-[160px] h-auto min-h-[44px] py-2.5 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all data-active:bg-background data-active:text-foreground data-active:shadow-md data-active:border-border/80 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-md cursor-pointer whitespace-nowrap justify-center"
@@ -201,9 +207,11 @@ export default function PartnerDashboardPage() {
         </TabsContent>
 
         {/* Tab 4: Hospital Multi-Cashier & Counter Staff Accounts */}
-        <TabsContent value="staff" className="space-y-6 focus-visible:outline-none">
-          <PartnerStaffTab partner={partner} />
-        </TabsContent>
+        {canManageStaff && (
+          <TabsContent value="staff" className="space-y-6 focus-visible:outline-none">
+            <PartnerStaffTab partner={partner} />
+          </TabsContent>
+        )}
 
         {/* Tab 5: Hospital Profile, Emergency Contact & Department Discounts */}
         <TabsContent value="profile" className="space-y-6 focus-visible:outline-none">

@@ -122,34 +122,20 @@ export async function getAvailableDoctorsToLinkAction(
   const trimmed = search?.trim();
   const q = trimmed?.toLowerCase();
 
-  const filterFallback = () => {
-    return initialDoctors.filter((doc) => {
-      if (!doc.isActive) return false;
-      if (doc.partnerId === partnerId) return false;
-      if (!q) return true;
-      return (
-        doc.name.toLowerCase().includes(q) ||
-        doc.specialty.toLowerCase().includes(q) ||
-        doc.department.toLowerCase().includes(q) ||
-        doc.degrees.toLowerCase().includes(q) ||
-        (doc.designation && doc.designation.toLowerCase().includes(q)) ||
-        (doc.chamberName && doc.chamberName.toLowerCase().includes(q))
-      );
-    });
-  };
+  const filterFallback = () => initialDoctors.filter((doc) => {
+    if (!doc.isActive || doc.partnerId === partnerId) return false;
+    if (!q) return true;
+    return doc.name.toLowerCase().includes(q) || doc.specialty.toLowerCase().includes(q) ||
+      doc.department.toLowerCase().includes(q) || doc.degrees.toLowerCase().includes(q) ||
+      (doc.designation && doc.designation.toLowerCase().includes(q)) ||
+      (doc.chamberName && doc.chamberName.toLowerCase().includes(q));
+  });
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = {
       isActive: true,
-      AND: [
-        {
-          OR: [
-            { partnerId: null },
-            { partnerId: { not: partnerId } },
-          ],
-        },
-      ],
+      AND: [{ OR: [{ partnerId: null }, { partnerId: { not: partnerId } }] }],
     };
 
     if (trimmed) {
@@ -284,6 +270,7 @@ export async function linkDoctorToPartnerAction(
   } finally {
     updateTag(DOCTORS_TAG);
     updateTag(PARTNERS_TAG);
+    updateTag("admin-stats");
   }
 }
 
@@ -323,6 +310,7 @@ export async function unlinkDoctorFromPartnerAction(
   } finally {
     updateTag(DOCTORS_TAG);
     updateTag(PARTNERS_TAG);
+    updateTag("admin-stats");
   }
 }
 
@@ -394,6 +382,7 @@ export async function addPartnerDoctorAction(
   } finally {
     updateTag(DOCTORS_TAG);
     updateTag(PARTNERS_TAG);
+    updateTag("admin-stats");
   }
 }
 
@@ -448,11 +437,12 @@ export async function updatePartnerDoctorChamberAction(
   } finally {
     updateTag(DOCTORS_TAG);
     updateTag(PARTNERS_TAG);
+    updateTag("admin-stats");
   }
 }
 
 /**
- * Delete a doctor created by this partner.
+ * Delete a doctor created by this partner, or unlink if it is a central directory doctor.
  */
 export async function deletePartnerDoctorAction(
   doctorId: string
@@ -465,16 +455,28 @@ export async function deletePartnerDoctorAction(
   try {
     const doctor = await prisma.doctor.findUnique({
       where: { id: doctorId },
-      select: { partnerId: true },
+      select: { id: true, partnerId: true },
     });
 
     if (!doctor || doctor.partnerId !== partnerId) {
       return { success: false, error: "এই ডাক্তার আপনার চেম্বারের অন্তর্ভুক্ত নয়।" };
     }
 
-    await prisma.doctor.delete({
-      where: { id: doctorId },
-    });
+    const isCentralDoctor = initialDoctors.some((d) => d.id === doctorId);
+
+    if (isCentralDoctor) {
+      await prisma.doctor.update({
+        where: { id: doctorId },
+        data: {
+          partnerId: null,
+          roomNo: null,
+        },
+      });
+    } else {
+      await prisma.doctor.delete({
+        where: { id: doctorId },
+      });
+    }
 
     return { success: true };
   } catch (error) {
@@ -483,6 +485,6 @@ export async function deletePartnerDoctorAction(
   } finally {
     updateTag(DOCTORS_TAG);
     updateTag(PARTNERS_TAG);
+    updateTag("admin-stats");
   }
 }
-

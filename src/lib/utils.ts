@@ -19,8 +19,8 @@ export function toBanglaNums(num: number | string): string {
 
 /**
  * Parses a discount string that may contain Bangla or English numerals
- * (e.g., "১০-৩০% ডিসকাউন্ট" or "10-30% Discount") and returns
- * the rate as a decimal (0.30 for 30%).
+ * (e.g., "১০-৫০% ডিসকাউন্ট" or "10-50% Discount") and returns
+ * the rate as a decimal (e.g. 0.50 for 50%, capped at 0.70).
  */
 export function parseDiscountPercentage(discountStr: string): number {
   if (!discountStr) return 0.10;
@@ -35,14 +35,14 @@ export function parseDiscountPercentage(discountStr: string): number {
     converted = converted.replaceAll(bangla, english);
   }
 
-  // 1. First priority: look for numbers explicitly marked with % (e.g., "10-30%", "15%")
+  // 1. First priority: look for numbers explicitly marked with % (e.g., "10-50%", "15%")
   const percentMatches = [...converted.matchAll(/(\d+(?:\.\d+)?)\s*%/g)];
   if (percentMatches.length > 0) {
     const nums = percentMatches.map((m) => parseFloat(m[1])).filter((n) => !isNaN(n));
     if (nums.length > 0) {
       const maxNum = Math.max(...nums);
       const rate = maxNum / 100;
-      return Math.max(0, Math.min(rate, 0.30));
+      return Math.max(0, Math.min(rate, 0.70));
     }
   }
 
@@ -56,7 +56,7 @@ export function parseDiscountPercentage(discountStr: string): number {
     if (validNums.length > 0) {
       const maxNum = Math.max(...validNums);
       const rate = maxNum >= 1 ? maxNum / 100 : maxNum;
-      return Math.max(0, Math.min(rate, 0.30));
+      return Math.max(0, Math.min(rate, 0.70));
     }
   }
 

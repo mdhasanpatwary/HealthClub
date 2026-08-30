@@ -9,8 +9,17 @@ import {
   INITIAL_BLOOD_DONORS,
   INITIAL_AMBULANCES,
 } from "@/data/emergencyData";
+import { getClientIp, checkRateLimit, RATE_LIMIT_RULES } from "@/lib/rateLimit";
 
 const EMERGENCY_TAG = "emergency-data";
+
+function normalizePhone(phone: string): string {
+  const digits = phone.replace(/\D/g, "");
+  if (digits.length === 13 && digits.startsWith("8801")) {
+    return digits.substring(2);
+  }
+  return digits;
+}
 
 export interface RegisterBloodDonorInput {
   name: string;
@@ -34,8 +43,26 @@ export async function registerBloodDonorAction(
   input: RegisterBloodDonorInput
 ): Promise<{ success: boolean; message: string }> {
   try {
+    const ip = await getClientIp();
+    const rateLimit = checkRateLimit(
+      `emergency_donor:${ip}`,
+      RATE_LIMIT_RULES.EMERGENCY_SUBMISSION_PER_IP.limit,
+      RATE_LIMIT_RULES.EMERGENCY_SUBMISSION_PER_IP.windowMs
+    );
+    if (!rateLimit.success) {
+      return {
+        success: false,
+        message: rateLimit.message || "আপনি খুব দ্রুত অনুরোধ পাঠাচ্ছেন। অনুগ্রহ করে কিছুক্ষণ পর চেষ্টা করুন।",
+      };
+    }
+
     if (!input.name || !input.phone || !input.bloodGroup || !input.upazila) {
       return { success: false, message: "সকল প্রয়োজনীয় তথ্য পূরণ করুন।" };
+    }
+
+    const cleanInputPhone = normalizePhone(input.phone);
+    if (cleanInputPhone.length < 10) {
+      return { success: false, message: "অনুগ্রহ করে একটি সঠিক মোবাইল নম্বর দিন।" };
     }
 
     const newDonor: BloodDonor = {
@@ -50,31 +77,59 @@ export async function registerBloodDonorAction(
       createdAt: new Date().toISOString(),
     };
 
-    // Load existing donors
-    let donorsList = INITIAL_BLOOD_DONORS;
-    const setting = await prisma.systemSetting.findUnique({
-      where: { key: "emergency_donors" },
-    });
-    if (setting?.value) {
-      try {
-        const parsed = JSON.parse(setting.value);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          donorsList = parsed;
+    let duplicateFound = false;
+
+    await prisma.$transaction(async (tx) => {
+      const defaultDonorsJson = JSON.stringify(INITIAL_BLOOD_DONORS);
+      await tx.$executeRaw`
+        INSERT INTO "system_settings" ("key", "value", "updated_at")
+        VALUES ('emergency_donors', ${defaultDonorsJson}, NOW())
+        ON CONFLICT ("key") DO NOTHING
+      `;
+
+      const rows = await tx.$queryRaw<Array<{ key: string; value: string }>>`
+        SELECT "key", "value" FROM "system_settings" WHERE "key" = 'emergency_donors' FOR UPDATE
+      `;
+
+      let donorsList: BloodDonor[] = INITIAL_BLOOD_DONORS;
+      if (rows.length > 0 && rows[0].value) {
+        try {
+          const parsed = JSON.parse(rows[0].value);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            donorsList = parsed;
+          }
+        } catch (e) {
+          logger.error("Failed to parse existing emergency_donors", e);
         }
-      } catch (e) {
-        logger.error("Failed to parse existing emergency_donors", e);
       }
+
+      // Check for phone duplicate
+      const exists = donorsList.some(
+        (d) => normalizePhone(d.phone) === cleanInputPhone
+      );
+
+      if (exists) {
+        duplicateFound = true;
+        return;
+      }
+
+      const updatedDonors = [newDonor, ...donorsList];
+
+      await tx.systemSetting.update({
+        where: { key: "emergency_donors" },
+        data: { value: JSON.stringify(updatedDonors) },
+      });
+    });
+
+    if (duplicateFound) {
+      return {
+        success: false,
+        message: "এই মোবাইল নম্বরটি দিয়ে ইতিমধ্যে রক্তদাতা হিসেবে আবেদন জমা করা হয়েছে।",
+      };
     }
 
-    const updatedDonors = [newDonor, ...donorsList];
-
-    await prisma.systemSetting.upsert({
-      where: { key: "emergency_donors" },
-      create: { key: "emergency_donors", value: JSON.stringify(updatedDonors) },
-      update: { value: JSON.stringify(updatedDonors) },
-    });
-
     updateTag(EMERGENCY_TAG);
+    updateTag("admin-stats");
     revalidateTag(EMERGENCY_TAG, "max");
     revalidatePath("/emergency");
     revalidatePath("/admin");
@@ -97,8 +152,26 @@ export async function registerAmbulanceAction(
   input: RegisterAmbulanceInput
 ): Promise<{ success: boolean; message: string }> {
   try {
+    const ip = await getClientIp();
+    const rateLimit = checkRateLimit(
+      `emergency_ambulance:${ip}`,
+      RATE_LIMIT_RULES.EMERGENCY_SUBMISSION_PER_IP.limit,
+      RATE_LIMIT_RULES.EMERGENCY_SUBMISSION_PER_IP.windowMs
+    );
+    if (!rateLimit.success) {
+      return {
+        success: false,
+        message: rateLimit.message || "আপনি খুব দ্রুত অনুরোধ পাঠাচ্ছেন। অনুগ্রহ করে কিছুক্ষণ পর চেষ্টা করুন।",
+      };
+    }
+
     if (!input.operatorName || !input.serviceName || !input.phone || !input.type || !input.location) {
       return { success: false, message: "সকল প্রয়োজনীয় তথ্য পূরণ করুন।" };
+    }
+
+    const cleanInputPhone = normalizePhone(input.phone);
+    if (cleanInputPhone.length < 10) {
+      return { success: false, message: "অনুগ্রহ করে একটি সঠিক মোবাইল নম্বর দিন।" };
     }
 
     const coverageInfo = input.coverage ? ` | কভারেজ: ${input.coverage}` : "";
@@ -114,31 +187,59 @@ export async function registerAmbulanceAction(
       createdAt: new Date().toISOString(),
     };
 
-    // Load existing ambulances
-    let ambulancesList = INITIAL_AMBULANCES;
-    const setting = await prisma.systemSetting.findUnique({
-      where: { key: "emergency_ambulances" },
-    });
-    if (setting?.value) {
-      try {
-        const parsed = JSON.parse(setting.value);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          ambulancesList = parsed;
+    let duplicateFound = false;
+
+    await prisma.$transaction(async (tx) => {
+      const defaultAmbulancesJson = JSON.stringify(INITIAL_AMBULANCES);
+      await tx.$executeRaw`
+        INSERT INTO "system_settings" ("key", "value", "updated_at")
+        VALUES ('emergency_ambulances', ${defaultAmbulancesJson}, NOW())
+        ON CONFLICT ("key") DO NOTHING
+      `;
+
+      const rows = await tx.$queryRaw<Array<{ key: string; value: string }>>`
+        SELECT "key", "value" FROM "system_settings" WHERE "key" = 'emergency_ambulances' FOR UPDATE
+      `;
+
+      let ambulancesList: AmbulanceService[] = INITIAL_AMBULANCES;
+      if (rows.length > 0 && rows[0].value) {
+        try {
+          const parsed = JSON.parse(rows[0].value);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            ambulancesList = parsed;
+          }
+        } catch (e) {
+          logger.error("Failed to parse existing emergency_ambulances", e);
         }
-      } catch (e) {
-        logger.error("Failed to parse existing emergency_ambulances", e);
       }
+
+      // Check for phone duplicate
+      const exists = ambulancesList.some(
+        (a) => normalizePhone(a.phone) === cleanInputPhone
+      );
+
+      if (exists) {
+        duplicateFound = true;
+        return;
+      }
+
+      const updatedAmbulances = [newAmbulance, ...ambulancesList];
+
+      await tx.systemSetting.update({
+        where: { key: "emergency_ambulances" },
+        data: { value: JSON.stringify(updatedAmbulances) },
+      });
+    });
+
+    if (duplicateFound) {
+      return {
+        success: false,
+        message: "এই মোবাইল নম্বরটি দিয়ে ইতিমধ্যে অ্যাম্বুলেন্স সেবা তালিকাভুক্ত রয়েছে।",
+      };
     }
 
-    const updatedAmbulances = [newAmbulance, ...ambulancesList];
-
-    await prisma.systemSetting.upsert({
-      where: { key: "emergency_ambulances" },
-      create: { key: "emergency_ambulances", value: JSON.stringify(updatedAmbulances) },
-      update: { value: JSON.stringify(updatedAmbulances) },
-    });
-
     updateTag(EMERGENCY_TAG);
+    updateTag("admin-stats");
     revalidateTag(EMERGENCY_TAG, "max");
     revalidatePath("/emergency");
     revalidatePath("/admin");

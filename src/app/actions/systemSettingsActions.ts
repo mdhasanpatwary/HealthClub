@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag, revalidatePath } from "next/cache";
+import { hasAdminPermission } from "@/lib/permissions";
 
 const SYSTEM_SETTINGS_TAG = "system-settings";
 
@@ -26,7 +27,7 @@ export async function getSystemSettingAction(key: string, defaultValue: string =
 
 export async function updateSystemSettingAction(key: string, value: string): Promise<boolean> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_settings")) {
     return false;
   }
 
@@ -115,8 +116,8 @@ export async function updateMultipleSystemSettingsAction(
   settings: Record<string, string>
 ): Promise<{ success: boolean; message: string }> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
-    return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
+  if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_settings")) {
+    return { success: false, message: "অননুমোদিত অ্যাক্সেস। সেটিংস পরিবর্তনের অনুমতি নেই।" };
   }
 
   try {

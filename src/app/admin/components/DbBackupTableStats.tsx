@@ -16,6 +16,8 @@ import {
   HardDrive,
   UserCheck,
   FileCheck,
+  Star,
+  Radio,
 } from "lucide-react";
 
 interface DbBackupTableStatsProps {
@@ -50,6 +52,12 @@ export function DbBackupTableStats({ stats, loading }: DbBackupTableStatsProps) 
     { label: isEn ? "Notifications" : "নোটিফিকেশন", count: stats.memberNotifications, icon: Bell, color: "text-pink-500 bg-pink-500/10" },
     { label: isEn ? "Admin Users" : "এডমিন একাউন্ট", count: stats.adminUsers, icon: ShieldCheck, color: "text-violet-500 bg-violet-500/10" },
     { label: isEn ? "Snapshots" : "সংরক্ষিত ব্যাকআপ", count: stats.databaseSnapshots, icon: HardDrive, color: "text-primary bg-primary/10" },
+    ...(stats.reviews !== undefined
+      ? [{ label: isEn ? "Reviews" : "রিভিউ", count: stats.reviews, icon: Star, color: "text-amber-500 bg-amber-500/10" }]
+      : []),
+    ...(stats.pushSubscriptions !== undefined
+      ? [{ label: isEn ? "Push Subs" : "পুশ সাবস্ক্রিপশন", count: stats.pushSubscriptions, icon: Radio, color: "text-sky-500 bg-sky-500/10" }]
+      : []),
   ];
 
   return (

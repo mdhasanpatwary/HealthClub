@@ -32,6 +32,7 @@ export interface AdminStatsData {
   totalMembers: number;
   activeMembers: number;
   inactiveMembers: number;
+  pendingMembers?: number;
   foundingMembers: number;
   premiumMembers: number;
   expiringMembers: number;
@@ -164,7 +165,7 @@ export function AdminStatsGrid({ stats, onSelectTab }: AdminStatsGridProps) {
                 <p className="text-3xl font-extrabold text-secondary dark:text-white font-mono">
                   {formatNum(stats.totalMembers, locale)}
                 </p>
-                <div className="flex items-center gap-2 pt-1">
+                <div className="flex flex-wrap items-center gap-2 pt-1">
                   <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-0.5">
                     <UserCheck className="h-3 w-3" />
                     {formatNum(stats.activeMembers, locale)} {isBn ? "সচল" : "active"}
@@ -173,6 +174,12 @@ export function AdminStatsGrid({ stats, onSelectTab }: AdminStatsGridProps) {
                     <span className="text-[11px] text-slate-500 font-medium flex items-center gap-0.5">
                       <UserX className="h-3 w-3" />
                       {formatNum(stats.inactiveMembers, locale)} {isBn ? "অচল" : "inactive"}
+                    </span>
+                  )}
+                  {(stats.pendingMembers ?? 0) > 0 && (
+                    <span className="text-[11px] text-amber-600 dark:text-amber-400 font-medium flex items-center gap-0.5">
+                      <Clock className="h-3 w-3" />
+                      {formatNum(stats.pendingMembers ?? 0, locale)} {isBn ? "অপেক্ষমাণ" : "pending"}
                     </span>
                   )}
                 </div>

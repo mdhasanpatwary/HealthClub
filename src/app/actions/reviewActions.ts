@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { Review, ReviewStatus, PartnerReviewStats, AdminReviewSummary } from "@/services/db";
+import { hasAdminPermission } from "@/lib/permissions";
 
 const submitReviewSchema = z.object({
   partnerId: z.string().min(1, "Partner ID is required"),
@@ -22,18 +23,8 @@ interface ReviewWithRelations {
   adminFeedback: string | null;
   createdAt: Date;
   updatedAt: Date;
-  member?: {
-    id: string;
-    name: string;
-    tier: string;
-    phone?: string;
-    profilePictureUrl: string | null;
-  } | null;
-  partner?: {
-    id: string;
-    name: string;
-    category: string;
-  } | null;
+  member?: { id: string; name: string; tier: string; phone?: string; profilePictureUrl: string | null } | null;
+  partner?: { id: string; name: string; category: string } | null;
 }
 
 function serializeReview(r: ReviewWithRelations): Review {
@@ -48,21 +39,9 @@ function serializeReview(r: ReviewWithRelations): Review {
     createdAt: r.createdAt.toISOString(),
     updatedAt: r.updatedAt.toISOString(),
     member: r.member
-      ? {
-          id: r.member.id,
-          name: r.member.name,
-          tier: r.member.tier,
-          phone: r.member.phone,
-          profilePictureUrl: r.member.profilePictureUrl,
-        }
+      ? { id: r.member.id, name: r.member.name, tier: r.member.tier, phone: r.member.phone, profilePictureUrl: r.member.profilePictureUrl }
       : undefined,
-    partner: r.partner
-      ? {
-          id: r.partner.id,
-          name: r.partner.name,
-          category: r.partner.category,
-        }
-      : undefined,
+    partner: r.partner ? { id: r.partner.id, name: r.partner.name, category: r.partner.category } : undefined,
   };
 }
 
@@ -95,29 +74,37 @@ export async function canMemberReviewPartnerAction(
     }
 
     if (session.role === "admin") {
-      let adminMember = await prisma.member.findFirst({
+      const adminEmail = session.adminEmail || process.env.ADMIN_EMAIL || "healthclubfeni@gmail.com";
+      const adminMember = await prisma.member.findFirst({
         where: {
-          OR: [{ id: session.userId }, { email: session.adminEmail || "healthclubfeni@gmail.com" }],
+          OR: [{ id: session.userId }, { email: adminEmail }],
         },
       });
-      if (!adminMember) adminMember = await prisma.member.findFirst();
 
-      const existingReview = adminMember
-        ? await prisma.review.findFirst({
-            where: { memberId: adminMember.id, partnerId },
-            include: {
-              member: { select: { id: true, name: true, tier: true, profilePictureUrl: true } },
-              partner: { select: { id: true, name: true, category: true } },
-            },
-          })
-        : null;
+      if (!adminMember) {
+        return {
+          canReview: false,
+          reason: "LOGGED_IN_AS_ADMIN",
+          hasReviewed: false,
+          existingReview: null,
+          member: { id: session.userId, name: session.adminName || "Super Admin", tier: "founding" },
+        };
+      }
+
+      const existingReview = await prisma.review.findFirst({
+        where: { memberId: adminMember.id, partnerId },
+        include: {
+          member: { select: { id: true, name: true, tier: true, profilePictureUrl: true } },
+          partner: { select: { id: true, name: true, category: true } },
+        },
+      });
 
       return {
         canReview: true,
         reason: "LOGGED_IN_AS_ADMIN",
         hasReviewed: !!existingReview,
         existingReview: existingReview ? serializeReview(existingReview) : null,
-        member: { id: adminMember?.id || session.userId, name: session.adminName || "Super Admin", tier: "founding" },
+        member: { id: adminMember.id, name: adminMember.name || session.adminName || "Super Admin", tier: adminMember.tier || "founding" },
       };
     }
 
@@ -187,14 +174,18 @@ export async function submitReviewAction(
     let memberIdToUse: string;
 
     if (session.role === "admin") {
-      let adminMember = await prisma.member.findFirst({
+      const adminEmail = session.adminEmail || process.env.ADMIN_EMAIL || "healthclubfeni@gmail.com";
+      const adminMember = await prisma.member.findFirst({
         where: {
-          OR: [{ id: session.userId }, { email: session.adminEmail || "healthclubfeni@gmail.com" }],
+          OR: [{ id: session.userId }, { email: adminEmail }],
         },
       });
-      if (!adminMember) adminMember = await prisma.member.findFirst();
       if (!adminMember) {
-        return { success: false, error: "NO_MEMBER", message: "কোনো সদস্য প্রোফাইল পাওয়া যায়নি।" };
+        return {
+          success: false,
+          error: "NO_MEMBER",
+          message: "রিভিউ প্রদানের জন্য এডমিন অ্যাকাউন্টের সাথে যুক্ত মেম্বার প্রোফাইল প্রয়োজন।",
+        };
       }
       memberIdToUse = adminMember.id;
     } else if (session.role === "user") {
@@ -324,7 +315,7 @@ export async function getAdminReviewsAction(filters?: {
 }> {
   try {
     const session = await getSessionUser();
-    if (!session || session.role !== "admin") {
+    if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_partners")) {
       throw new Error("UNAUTHORIZED");
     }
 
@@ -417,7 +408,7 @@ export async function moderateReviewAction(
 ): Promise<{ success: boolean; message: string }> {
   try {
     const session = await getSessionUser();
-    if (!session || session.role !== "admin") {
+    if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_partners")) {
       return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
     }
 
@@ -475,7 +466,7 @@ export async function deleteReviewAction(
 ): Promise<{ success: boolean; message: string }> {
   try {
     const session = await getSessionUser();
-    if (!session || session.role !== "admin") {
+    if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_partners")) {
       return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
     }
 

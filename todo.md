@@ -446,4 +446,82 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/sitemap.ts`, `src/app/layout.tsx`, `src/components/seo/JsonLd.tsx`
   - **Details**: Update `sitemap.ts` to dynamically fetch and index all published doctor profile URLs (`/consultants/[id]`) and partner hospital URLs (`/partner-hospitals/[id]`) with proper `lastmod` timestamps, priority, and `BreadcrumbList` schema for seamless crawling by Googlebot.
 
+---
+
+## 🛠️ Phase 15: Unexpected Behavioral Issues, Security & Integrity Fixes (TODO-94 to TODO-106)
+
+### 🔴 P0 — Critical Security & Data Integrity
+
+- [x] **TODO-94**: **Fix Cashier Privilege Escalation & Plaintext Credential Leakage**
+  - **Severity**: Critical
+  - **Files**: `src/app/actions/partnerStaffActions.ts`, `src/app/partner/dashboard/page.tsx`, `src/app/partner/dashboard/components/PartnerStaffTab.tsx`
+  - **Details**: Staff management actions (`getPartnerStaffListAction`, `createPartnerStaffAction`, `updatePartnerStaffAction`, `resetPartnerStaffPasswordAction`, `deletePartnerStaffAction`) incorrectly authorize callers with `session.role === "partner_staff"`. Ordinary cashiers can call these actions to decrypt and view the plaintext passwords (`plainPassword`) of all other cashiers and managers, as well as create, modify, reset passwords for, or delete other staff. Restrict staff management actions strictly to `session.role === "partner"` or staff with `staffRole === "manager"`, and hide the "Staff & Counters" tab on the Partner Dashboard for cashiers.
+
+- [x] **TODO-95**: **Fix Arbitrary Member Review Impersonation Bug**
+  - **Severity**: Critical
+  - **Files**: `src/app/actions/reviewActions.ts`
+  - **Details**: In `canMemberReviewPartnerAction` (L98-L121) and `submitReviewAction` (L189-L215), when an admin user checks eligibility or submits a review and does not have a linked `Member` record matching their ID or email, the code falls back to `prisma.member.findFirst()`. This takes an arbitrary innocent member in the database and creates/modifies reviews under their identity. Remove this fallback and handle admin reviews explicitly or disallow reviews without a verified linked member profile.
+
+- [x] **TODO-96**: **Fix PostgreSQL Database Backup Export Column Mapping & Table Name Incompatibility**
+  - **Severity**: Critical
+  - **Files**: `src/lib/dbBackupUtils.ts`, `src/app/actions/dbBackupActions.ts`
+  - **Details**: In `generateTableSql`, Prisma queries return JavaScript camelCase property names (`joinedDate`, `expiryDate`, `qrCodeUrl`, `totalSaved`, `createdAt`), but PostgreSQL requires snake_case database column names (`joined_date`, `expiry_date`, `qr_code_url`, `total_saved`, `created_at`). Furthermore, table names like `partnerStaff`, `partnerRequests`, `contactMessages`, `systemSettings`, etc. are emitted in camelCase instead of snake_case (`partner_staff`, `partner_requests`, etc.). The generated `.sql` database backup cannot be restored into PostgreSQL/Supabase. Map Prisma fields and model names to their actual PostgreSQL snake_case identifiers.
+
+### 🟠 P1 — High-Priority Business Logic & Permissions
+
+- [x] **TODO-97**: **Fix Permanent 0% Renewal Retention Rate & Zero Total Renewals in Revenue Analytics**
+  - **Severity**: High
+  - **Files**: `src/app/actions/analyticsActions.ts`, `src/app/actions/memberAdminActions.ts`
+  - **Details**: `analyticsActions.ts` queries `WHERE renewal_status = 'approved'`, but when an admin approves a renewal in `approveMemberRenewalAction`, it sets `renewalStatus: "none"`. Consequently, `totalRenewedCount` in Revenue Analytics is permanently 0 and `renewalRetentionRate` is always 0.00%. Maintain renewal records or query members where `expiry_date > joined_date + INTERVAL '1 year'` to accurately compute renewals and retention.
+
+- [x] **TODO-98**: **Prevent Full Deletion of Linked Doctors by Partner Facilities**
+  - **Severity**: High
+  - **Files**: `src/app/actions/partnerDoctorActions.ts`
+  - **Details**: In `deletePartnerDoctorAction`, when a partner deletes a doctor from their chamber roster, it executes `prisma.doctor.delete({ where: { id: doctorId } })`. If an admin-seeded doctor was linked to that partner, the doctor is permanently deleted from the entire platform directory instead of just removing the partner affiliation. Check if the doctor was created by the partner or linked from the central directory, and unlink (`partnerId: null`) instead of permanently deleting.
+
+- [x] **TODO-99**: **Enforce Granular Admin RBAC on Server Action RPC Endpoints**
+  - **Severity**: High
+  - **Files**: `src/app/actions/broadcastActions.ts`, `src/app/actions/bulkImportActions.ts`, `src/app/actions/emergencyAdminActions.ts`, `src/app/actions/healthTipsAdminActions.ts`
+  - **Details**: Server actions only verify `session.role === "admin"` without checking `hasAdminPermission(session.adminRole, permission)`. A restricted admin (such as `support_staff`) can invoke server actions directly via RPC to send mass broadcast emails/SMS or bulk import data. Integrate granular permission checks using `hasAdminPermission` in all administrative Server Actions.
+
+### 🟡 P2 — Medium-Priority Inconsistencies & Caching
+
+- [x] **TODO-100**: **Fix Incomplete Member Status Counts in Admin Stats**
+  - **Severity**: Medium
+  - **Files**: `src/app/actions/transactionActions.ts`
+  - **Details**: In `getCachedAdminStats`, `active_members` counts `status = 'active'`, and `inactive_members` counts `status = 'inactive'`, ignoring members in `'pending_approval'` or `'pending_payment'`. As a result, `active_members + inactive_members` does not equal `total_members`. Add a `pending_members` counter or adjust inactive calculations to account for all non-active member statuses.
+
+- [x] **TODO-101**: **Revalidate Admin Stats Cache on Administrative Data Mutations**
+  - **Severity**: Medium
+  - **Files**: `src/app/actions/memberAdminActions.ts`, `src/app/actions/doctorActions.ts`, `src/app/actions/partnerActions.ts`, `src/app/actions/partnerRequestActions.ts`, `src/app/actions/contactActions.ts`
+  - **Details**: The admin statistics cache (`admin-stats` tag) is only revalidated in `addTransactionAction` and `addPartnerTransactionAction`. Creating/updating/deleting members, approving partner requests, adding/deleting doctors, or deleting contact messages leaves the admin dashboard summary cards stale for up to 60 seconds. Call `updateTag("admin-stats")` upon modifying any relevant entity.
+
+- [x] **TODO-102**: **Unify Discount Capping Rules Across Admin and Partner Portals**
+  - **Severity**: Medium
+  - **Files**: `src/lib/utils.ts`, `src/app/actions/transactionActions.ts`, `src/app/actions/partnerTransactionActions.ts`
+  - **Details**: `parseDiscountPercentage` in `src/lib/utils.ts` and `addTransactionAction` cap discounts at 30% (`0.30`), whereas `addPartnerTransactionAction` supports up to 70% (`0.70`). Align the discount capping policy across both utilities and server actions so high-discount healthcare services (e.g., 40-50% off pathology tests) are consistently allowed.
+
+- [x] **TODO-103**: **Fix Outdated Doctor Cache Revalidation Path in Bulk Import**
+  - **Severity**: Medium
+  - **Files**: `src/app/actions/bulkImportActions.ts`
+  - **Details**: In `bulkImportDoctorsAction`, line 125 calls `revalidatePath("/doctors")` instead of `/consultants` (since the doctor directory route was moved to `/consultants`). Update to `revalidatePath("/consultants")` so the public directory cache is purged immediately after bulk imports.
+
+### 🟢 P3 — Low-Priority Edge Cases & Anti-Spam
+
+- [x] **TODO-104**: **Prevent Race Conditions on SystemSetting JSON Collections**
+  - **Severity**: Low
+  - **Files**: `src/app/actions/healthTipsAdminActions.ts`, `src/app/actions/emergencyActions.ts`
+  - **Details**: `submitArticleReactionAction` and `registerBloodDonorAction` perform read-modify-write operations on JSON strings in `SystemSetting` without database locks. High concurrent requests can cause votes or submissions to overwrite each other. Use database transactions, locking, or atomic structures.
+
+- [x] **TODO-105**: **Add Rate Limiting & Phone Deduplication on Public Emergency Forms**
+  - **Severity**: Low
+  - **Files**: `src/app/actions/emergencyActions.ts`
+  - **Details**: `registerBloodDonorAction` and `registerAmbulanceAction` lack rate limiting (unlike contact forms) and do not check if a phone number already exists before appending to the list, allowing potential spam bloating of system settings. Add sliding-window rate limiting and deduplication checks.
+
+- [x] **TODO-106**: **Fix Date Timezone Shift on `input[type="date"]` in Pregnancy Calculator**
+  - **Severity**: Low
+  - **Files**: `src/app/health-tools/components/PregnancyCalculator.tsx`
+  - **Details**: `new Date(lmpDate)` parses `"YYYY-MM-DD"` as UTC midnight. When accessed with local date methods (`getFullYear()`, `getMonth()`, `getDate()`) in negative timezones (e.g. UTC-5), the date can shift backwards by one day. Parse `YYYY-MM-DD` explicitly using `const [y, m, d] = str.split("-").map(Number); new Date(y, m - 1, d);`.
+
+
 

@@ -164,7 +164,7 @@ function DashboardContent() {
     }
 
     const parsedPercent = Number(newTxDiscountPercent);
-    const discountRate = isNaN(parsedPercent) ? 0.10 : Math.min(Math.max(0, parsedPercent), 30) / 100;
+    const discountRate = isNaN(parsedPercent) ? 0.10 : Math.min(Math.max(0, parsedPercent), 70) / 100;
     const saved = Math.round(billAmount * discountRate);
 
     setAddTxSubmitting(true);

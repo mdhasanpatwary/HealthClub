@@ -14,10 +14,13 @@ import {
 import { BulkImportResult } from "@/types/bulkImport";
 import { getEmergencyDataAction } from "./emergencyAdminActions";
 import { BloodDonor, AmbulanceService, EmergencyHotline } from "@/data/emergencyData";
+import { hasAdminPermission } from "@/lib/permissions";
 
 async function verifyAdmin(): Promise<boolean> {
   const session = await getSessionUser();
-  return !!(session && session.role === "admin");
+  if (!session || session.role !== "admin") return false;
+  const role = session.adminRole || "super_admin";
+  return hasAdminPermission(role, "bulk_import");
 }
 
 async function saveEmergencySetting(key: string, data: unknown) {
@@ -27,6 +30,7 @@ async function saveEmergencySetting(key: string, data: unknown) {
     update: { value: JSON.stringify(data) },
   });
   updateTag("emergency-data");
+  updateTag("admin-stats");
   revalidateTag("emergency-data", "max");
   revalidatePath("/emergency");
   revalidatePath("/admin");
@@ -121,7 +125,8 @@ export async function bulkImportDoctorsAction(
     });
 
     updateTag("doctors");
-    revalidatePath("/doctors");
+    updateTag("admin-stats");
+    revalidatePath("/consultants");
     revalidatePath("/admin");
     revalidatePath("/admin/doctors");
 
@@ -226,6 +231,7 @@ export async function bulkImportPartnersAction(
 
     updateTag("partners");
     updateTag("homepage-partners");
+    updateTag("admin-stats");
     revalidatePath("/partner-hospitals");
     revalidatePath("/admin");
     revalidatePath("/admin/partners");

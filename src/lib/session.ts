@@ -27,6 +27,7 @@ export interface SessionPayload {
   staffId?: string;
   staffName?: string;
   deskName?: string;
+  staffRole?: "cashier" | "manager";
   partnerId?: string;
   expiresAt: Date;
 }
@@ -60,6 +61,7 @@ export async function decrypt(session: string | undefined = ""): Promise<Session
       staffId: payload.staffId as string | undefined,
       staffName: payload.staffName as string | undefined,
       deskName: payload.deskName as string | undefined,
+      staffRole: payload.staffRole as ("cashier" | "manager") | undefined,
       partnerId: payload.partnerId as string | undefined,
       expiresAt: new Date(payload.expiresAt as string),
     };
@@ -81,6 +83,7 @@ export async function setSessionUser(
     staffId?: string;
     staffName?: string;
     deskName?: string;
+    staffRole?: "cashier" | "manager";
     partnerId?: string;
   }
 ) {

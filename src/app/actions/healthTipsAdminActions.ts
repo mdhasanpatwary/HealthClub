@@ -6,12 +6,15 @@ import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag } from "next/cache";
 import { HealthTipArticle, HEALTH_TIPS_ARTICLES } from "@/data/healthTipsData";
 import { PaginatedResult } from "@/types/pagination";
+import { hasAdminPermission } from "@/lib/permissions";
 
 const HEALTH_TIPS_TAG = "health-tips-data";
 
 async function verifyAdmin(): Promise<boolean> {
   const session = await getSessionUser();
-  return !!(session && session.role === "admin");
+  if (!session || session.role !== "admin") return false;
+  const role = session.adminRole || "super_admin";
+  return hasAdminPermission(role, "manage_health_tips");
 }
 
 export interface GetPaginatedHealthTipsAdminParams {
@@ -25,7 +28,7 @@ export async function getPaginatedHealthTipsAdminAction(
   params?: GetPaginatedHealthTipsAdminParams
 ): Promise<PaginatedResult<HealthTipArticle>> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_health_tips")) {
     return {
       data: [],
       totalItems: 0,
@@ -176,6 +179,7 @@ export async function saveHealthTipAction(article: HealthTipArticle) {
     });
 
     updateTag(HEALTH_TIPS_TAG);
+    updateTag("admin-stats");
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -201,6 +205,7 @@ export async function deleteHealthTipAction(slug: string) {
     });
 
     updateTag(HEALTH_TIPS_TAG);
+    updateTag("admin-stats");
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -222,6 +227,7 @@ export async function syncHealthTipsWithDatabaseAction() {
       update: { value: JSON.stringify(articles) },
     });
     updateTag(HEALTH_TIPS_TAG);
+    updateTag("admin-stats");
     return { success: true, count: articles.length };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -282,61 +288,70 @@ export async function submitArticleReactionAction(
       return { success: false, error: "ডাটাবেজ সংযোগ পাওয়া যায়নি।" };
     }
 
-    const setting = await prisma.systemSetting.findUnique({
-      where: { key: REACTIONS_SETTING_KEY },
-    });
+    const updatedStats = await prisma.$transaction(async (tx) => {
+      // Ensure row exists so FOR UPDATE row lock can be acquired
+      await tx.$executeRaw`
+        INSERT INTO "system_settings" ("key", "value", "updated_at")
+        VALUES (${REACTIONS_SETTING_KEY}, '{}', NOW())
+        ON CONFLICT ("key") DO NOTHING
+      `;
 
-    let reactionsMap: Record<string, ArticleReactionStats> = {};
-    if (setting?.value) {
-      try {
-        reactionsMap = JSON.parse(setting.value);
-      } catch {
-        reactionsMap = {};
+      // Acquire exclusive row lock
+      const rows = await tx.$queryRaw<Array<{ key: string; value: string }>>`
+        SELECT "key", "value" FROM "system_settings" WHERE "key" = ${REACTIONS_SETTING_KEY} FOR UPDATE
+      `;
+
+      let reactionsMap: Record<string, ArticleReactionStats> = {};
+      if (rows.length > 0 && rows[0].value) {
+        try {
+          reactionsMap = JSON.parse(rows[0].value);
+        } catch {
+          reactionsMap = {};
+        }
       }
-    }
 
-    const currentStats: ArticleReactionStats = reactionsMap[slug] || {
-      helpful: 0,
-      notHelpful: 0,
-    };
+      const currentStats: ArticleReactionStats = reactionsMap[slug] || {
+        helpful: 0,
+        notHelpful: 0,
+      };
 
-    // Revert previous reaction if user is switching
-    if (previousReaction === "helpful") {
-      currentStats.helpful = Math.max(0, currentStats.helpful - 1);
-    } else if (previousReaction === "not_helpful") {
-      currentStats.notHelpful = Math.max(0, currentStats.notHelpful - 1);
-    }
+      // Revert previous reaction if user is switching
+      if (previousReaction === "helpful") {
+        currentStats.helpful = Math.max(0, currentStats.helpful - 1);
+      } else if (previousReaction === "not_helpful") {
+        currentStats.notHelpful = Math.max(0, currentStats.notHelpful - 1);
+      }
 
-    // Apply new reaction
-    if (reaction === "helpful") {
-      currentStats.helpful += 1;
-    } else if (reaction === "not_helpful") {
-      currentStats.notHelpful += 1;
-    }
+      // Apply new reaction
+      if (reaction === "helpful") {
+        currentStats.helpful += 1;
+      } else if (reaction === "not_helpful") {
+        currentStats.notHelpful += 1;
+      }
 
-    reactionsMap[slug] = currentStats;
+      reactionsMap[slug] = currentStats;
 
-    await prisma.systemSetting.upsert({
-      where: { key: REACTIONS_SETTING_KEY },
-      create: {
-        key: REACTIONS_SETTING_KEY,
-        value: JSON.stringify(reactionsMap),
-      },
-      update: {
-        value: JSON.stringify(reactionsMap),
-      },
+      await tx.systemSetting.update({
+        where: { key: REACTIONS_SETTING_KEY },
+        data: {
+          value: JSON.stringify(reactionsMap),
+        },
+      });
+
+      return {
+        helpful: currentStats.helpful,
+        notHelpful: currentStats.notHelpful,
+      };
     });
 
     return {
       success: true,
-      stats: {
-        helpful: currentStats.helpful,
-        notHelpful: currentStats.notHelpful,
-      },
+      stats: updatedStats,
     };
   } catch (err: unknown) {
     logger.error("Error saving article reaction:", err);
     return { success: false, error: (err as Error).message };
   }
 }
+
 

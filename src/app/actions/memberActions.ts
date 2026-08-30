@@ -8,6 +8,7 @@ import { getSessionUser, setSessionUser } from "@/lib/session";
 import { sendOtpEmail } from "@/lib/mail";
 import { logger } from "@/lib/logger";
 import { SITE_URL } from "@/lib/siteConfig";
+import { updateTag } from "next/cache";
 import {
   checkRateLimit,
   getClientIp,
@@ -159,6 +160,8 @@ export async function addMemberAction(
         logger.error(`[SIGNUP] OTP email send failed for ${member.email}, member ${newId} created but unverified`);
       }
     }
+
+    updateTag("admin-stats");
 
     return {
       ...m,
@@ -350,6 +353,8 @@ export async function submitBkashPaymentAction(
       },
     });
 
+    updateTag("admin-stats");
+
     // Set session user so user stays logged in
     await setSessionUser(cleanId, "user");
 
@@ -391,6 +396,8 @@ export async function requestRenewalAction(
       where: { id: session.userId },
       data: updateData,
     });
+
+    updateTag("admin-stats");
 
     return { success: true, message: "রিনিউয়াল অনুরোধ সফলভাবে পাঠানো হয়েছে! এডমিন যাচাইয়ের পর অ্যাক্টিভ করা হবে।" };
   } catch (error) {

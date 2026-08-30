@@ -16,6 +16,7 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
     totalMembers: 0,
     activeMembers: 0,
     inactiveMembers: 0,
+    pendingMembers: 0,
     foundingMembers: 0,
     premiumMembers: 0,
     expiringMembers: 0,

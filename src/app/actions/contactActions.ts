@@ -4,11 +4,20 @@ import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { PaginatedResult } from "@/types/pagination";
+import { hasAdminPermission } from "@/lib/permissions";
+import { updateTag } from "next/cache";
 import {
   checkRateLimit,
   getClientIp,
   RATE_LIMIT_RULES,
 } from "@/lib/rateLimit";
+
+async function verifyMessageAdmin(): Promise<boolean> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") return false;
+  const role = session.adminRole || "super_admin";
+  return hasAdminPermission(role, "manage_messages");
+}
 
 export interface ContactMessage {
   id: string;
@@ -28,8 +37,7 @@ export interface GetPaginatedContactMessagesParams {
 export async function getPaginatedContactMessagesAction(
   params?: GetPaginatedContactMessagesParams
 ): Promise<PaginatedResult<ContactMessage>> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!await verifyMessageAdmin()) {
     return {
       data: [],
       totalItems: 0,
@@ -124,6 +132,8 @@ export async function addContactMessageAction(data: {
       },
     });
 
+    updateTag("admin-stats");
+
     return { success: true };
   } catch (error) {
     logger.error("Error in addContactMessageAction:", error);
@@ -135,8 +145,7 @@ export async function addContactMessageAction(data: {
  * Retrieves all contact messages. Admin only.
  */
 export async function getContactMessagesAction(): Promise<ContactMessage[]> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!await verifyMessageAdmin()) {
     return [];
   }
 
@@ -163,8 +172,7 @@ export async function getContactMessagesAction(): Promise<ContactMessage[]> {
  * Deletes a contact message by ID. Admin only.
  */
 export async function deleteContactMessageAction(id: string): Promise<boolean> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!await verifyMessageAdmin()) {
     return false;
   }
 
@@ -172,6 +180,7 @@ export async function deleteContactMessageAction(id: string): Promise<boolean> {
     await prisma.contactMessage.delete({
       where: { id },
     });
+    updateTag("admin-stats");
     return true;
   } catch (error) {
     logger.error("Error in deleteContactMessageAction:", error);
@@ -207,8 +216,7 @@ export async function convertContactMessageToEmergencyAction(messageId: string):
   name?: string;
   error?: string;
 }> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!await verifyMessageAdmin()) {
     return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
   }
 
@@ -294,8 +302,9 @@ export async function convertContactMessageToEmergencyAction(messageId: string):
       });
 
       try {
-        const { updateTag, revalidateTag, revalidatePath } = await import("next/cache");
+        const { revalidateTag, revalidatePath } = await import("next/cache");
         updateTag(EMERGENCY_TAG);
+        updateTag("admin-stats");
         revalidateTag(EMERGENCY_TAG, "max");
         revalidatePath("/emergency");
         revalidatePath("/admin/emergency");
@@ -371,8 +380,9 @@ export async function convertContactMessageToEmergencyAction(messageId: string):
       });
 
       try {
-        const { updateTag, revalidateTag, revalidatePath } = await import("next/cache");
+        const { revalidateTag, revalidatePath } = await import("next/cache");
         updateTag(EMERGENCY_TAG);
+        updateTag("admin-stats");
         revalidateTag(EMERGENCY_TAG, "max");
         revalidatePath("/emergency");
         revalidatePath("/admin/emergency");

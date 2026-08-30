@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
+import { hasAdminPermission } from "@/lib/permissions";
 
 export type NotificationCategory =
   | "renewal"
@@ -27,6 +28,7 @@ export interface AdminNotificationItem {
   actionLabelEn: string;
   severity: NotificationSeverity;
   meta?: Record<string, string | number | boolean | null | undefined>;
+  isRead?: boolean;
 }
 
 export interface AdminNotificationSummary {
@@ -40,16 +42,6 @@ export interface AdminNotificationSummary {
   newMembersCount: number;
 }
 
-export interface GetAdminNotificationsParams {
-  page?: number;
-  pageSize?: number;
-  category?: string;
-  search?: string;
-  unreadOnly?: boolean;
-  readIds?: string[];
-  dismissedIds?: string[];
-}
-
 export interface PaginatedAdminNotificationsResult {
   items: AdminNotificationItem[];
   totalItems: number;
@@ -57,6 +49,17 @@ export interface PaginatedAdminNotificationsResult {
   currentPage: number;
   pageSize: number;
   summary: AdminNotificationSummary;
+}
+
+export interface GetAdminNotificationsParams {
+  page?: number;
+  pageSize?: number;
+  category?: string;
+  severity?: string;
+  search?: string;
+  unreadOnly?: boolean;
+  readIds?: string[];
+  dismissedIds?: string[];
 }
 
 const DEFAULT_SUMMARY: AdminNotificationSummary = {
@@ -78,7 +81,7 @@ export async function getAdminNotificationsAction(
   params?: GetAdminNotificationsParams
 ): Promise<PaginatedAdminNotificationsResult> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_notifications")) {
     return {
       items: [],
       totalItems: 0,

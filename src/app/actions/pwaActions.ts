@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag } from "next/cache";
+import { hasAdminPermission } from "@/lib/permissions";
 
 const PWA_STATS_TAG = "admin-pwa-stats";
 
@@ -167,6 +168,7 @@ export async function recordPwaInstallAction(
     });
 
     updateTag(PWA_STATS_TAG);
+    updateTag("admin-stats");
     return { success: true };
   } catch (error) {
     logger.error("[pwaActions] recordPwaInstallAction error:", error);
@@ -216,6 +218,7 @@ export async function recordPwaPromptAction(payload: PwaPromptPayload): Promise<
     });
 
     updateTag(PWA_STATS_TAG);
+    updateTag("admin-stats");
     return { success: true };
   } catch (error) {
     logger.error("[pwaActions] recordPwaPromptAction error:", error);
@@ -366,7 +369,7 @@ const getCachedPwaStats = unstable_cache(
  */
 export async function getPwaStatsAction(): Promise<PwaStatsData> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "view_pwa")) {
     return DEFAULT_PWA_STATS;
   }
 

@@ -20,6 +20,19 @@ import {
 import { trackEvent } from "@/lib/analytics";
 import { PregnancyResultView } from "./PregnancyResultView";
 
+function parseLocalDate(dateStr: string): Date {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
+function getTodayLocalDateString(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 export function PregnancyCalculator() {
   const { locale, t } = useLanguage();
   const isEn = locale === "en";
@@ -43,7 +56,7 @@ export function PregnancyCalculator() {
         return;
       }
 
-      const lmp = new Date(lmpDate);
+      const lmp = parseLocalDate(lmpDate);
       const now = new Date();
       const todayMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
@@ -82,7 +95,7 @@ export function PregnancyCalculator() {
         return;
       }
 
-      const scan = new Date(scanDate);
+      const scan = parseLocalDate(scanDate);
       const now = new Date();
       const todayMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
@@ -181,7 +194,7 @@ export function PregnancyCalculator() {
                     id="lmp-date"
                     type="date"
                     value={lmpDate}
-                    max={new Date().toISOString().split("T")[0]}
+                    max={getTodayLocalDateString()}
                     onChange={(e) => setLmpDate(e.target.value)}
                     required
                     className="cursor-pointer"
@@ -221,7 +234,7 @@ export function PregnancyCalculator() {
                     id="scan-date"
                     type="date"
                     value={scanDate}
-                    max={new Date().toISOString().split("T")[0]}
+                    max={getTodayLocalDateString()}
                     onChange={(e) => setScanDate(e.target.value)}
                     required
                     className="cursor-pointer"

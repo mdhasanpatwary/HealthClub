@@ -27,6 +27,16 @@ import {
   getDoctorsByPartnerIdAction as _getDoctorsByPartnerIdAction,
   getRelatedPartnersAction as _getRelatedPartnersAction,
 } from "./partnerProfileQueryActions";
+import { hasAdminPermission } from "@/lib/permissions";
+
+const PARTNERS_TAG = "partners";
+
+async function verifyPartnerAdmin(): Promise<boolean> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") return false;
+  const role = session.adminRole || "super_admin";
+  return hasAdminPermission(role, "manage_partners");
+}
 
 export async function getPartnerByIdAction(id: string) {
   return _getPartnerByIdAction(id);
@@ -76,8 +86,6 @@ export async function resetPartnerPasswordAction(email: string, code: string, ra
   return _resetPartnerPasswordAction(email, code, rawNewPassword);
 }
 
-const PARTNERS_TAG = "partners";
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function formatPartner(p: any): Partner {
   return {
@@ -114,8 +122,7 @@ export interface GetPaginatedPartnersAdminParams {
 export async function getPaginatedPartnersAdminAction(
   params?: GetPaginatedPartnersAdminParams
 ): Promise<PaginatedResult<Partner>> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!await verifyPartnerAdmin()) {
     return {
       data: [],
       totalItems: 0,
@@ -226,8 +233,7 @@ export const getPartnersAction = unstable_cache(
 );
 
 export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Partner | { error: string }> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") return { error: "অননুমোদিত অ্যাক্সেস।" };
+  if (!await verifyPartnerAdmin()) return { error: "অননুমোদিত অ্যাক্সেস।" };
 
   const newPartnerId = `p_${crypto.randomUUID()}`;
   try {
@@ -258,12 +264,12 @@ export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Pa
   } finally {
     updateTag(PARTNERS_TAG);
     updateTag("homepage-partners");
+    updateTag("admin-stats");
   }
 }
 
 export async function updatePartnerAction(id: string, partner: Omit<Partner, "id">): Promise<boolean> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") return false;
+  if (!await verifyPartnerAdmin()) return false;
 
   try {
     await prisma.partner.update({
@@ -291,12 +297,12 @@ export async function updatePartnerAction(id: string, partner: Omit<Partner, "id
   } finally {
     updateTag(PARTNERS_TAG);
     updateTag("homepage-partners");
+    updateTag("admin-stats");
   }
 }
 
 export async function deletePartnerAction(id: string): Promise<boolean> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") return false;
+  if (!await verifyPartnerAdmin()) return false;
 
   try {
     await prisma.partner.delete({
@@ -309,6 +315,7 @@ export async function deletePartnerAction(id: string): Promise<boolean> {
   } finally {
     updateTag(PARTNERS_TAG);
     updateTag("homepage-partners");
+    updateTag("admin-stats");
   }
 }
 
@@ -431,6 +438,7 @@ export async function updatePartnerProfileAction(
   } finally {
     updateTag(PARTNERS_TAG);
     updateTag("homepage-partners");
+    updateTag("admin-stats");
   }
 }
 
@@ -452,8 +460,7 @@ export async function resetPartnerPasswordByAdminAction(
   partnerId: string,
   newPassword?: string
 ): Promise<{ success: boolean; message: string }> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!await verifyPartnerAdmin()) {
     return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
   }
 

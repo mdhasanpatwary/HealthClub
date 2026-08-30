@@ -6,8 +6,16 @@ import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag } from "next/cache";
 import { PaginatedResult } from "@/types/pagination";
+import { hasAdminPermission } from "@/lib/permissions";
 
 const DOCTORS_TAG = "doctors";
+
+async function verifyDoctorAdmin(): Promise<boolean> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") return false;
+  const role = session.adminRole || "super_admin";
+  return hasAdminPermission(role, "manage_doctors");
+}
 
 // Helper to format Prisma Doctor record to Doctor interface
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -57,8 +65,7 @@ export interface GetPaginatedDoctorsAdminParams {
 export async function getPaginatedDoctorsAdminAction(
   params?: GetPaginatedDoctorsAdminParams
 ): Promise<PaginatedResult<Doctor>> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!await verifyDoctorAdmin()) {
     return {
       data: [],
       totalItems: 0,
@@ -179,8 +186,7 @@ export const getDoctorsAction = unstable_cache(
  * Fetch all doctors including inactive ones (for Admin dashboard).
  */
 export async function getAllDoctorsAdminAction(): Promise<Doctor[]> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") return [];
+  if (!await verifyDoctorAdmin()) return [];
 
   try {
     const data = await prisma.doctor.findMany({
@@ -289,8 +295,7 @@ export async function getRelatedDoctorsAction(
 export async function addDoctorAction(
   doctor: Omit<Doctor, "id">
 ): Promise<{ success: boolean; doctor?: Doctor; error?: string }> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!await verifyDoctorAdmin()) {
     return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
   }
 
@@ -330,6 +335,7 @@ export async function addDoctorAction(
     return { success: false, error: "ডাক্তারের তথ্য যুক্ত করতে সমস্যা হয়েছে।" };
   } finally {
     updateTag(DOCTORS_TAG);
+    updateTag("admin-stats");
   }
 }
 
@@ -340,8 +346,7 @@ export async function updateDoctorAction(
   id: string,
   doctor: Partial<Omit<Doctor, "id">>
 ): Promise<{ success: boolean; error?: string }> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!await verifyDoctorAdmin()) {
     return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
   }
 
@@ -379,6 +384,7 @@ export async function updateDoctorAction(
     return { success: false, error: "তথ্য আপডেট করতে সমস্যা হয়েছে।" };
   } finally {
     updateTag(DOCTORS_TAG);
+    updateTag("admin-stats");
   }
 }
 
@@ -386,8 +392,7 @@ export async function updateDoctorAction(
  * Admin action to delete a doctor.
  */
 export async function deleteDoctorAction(id: string): Promise<{ success: boolean; error?: string }> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!await verifyDoctorAdmin()) {
     return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
   }
 
@@ -401,6 +406,7 @@ export async function deleteDoctorAction(id: string): Promise<{ success: boolean
     return { success: false, error: "ডাক্তার ডিলিট করতে সমস্যা হয়েছে।" };
   } finally {
     updateTag(DOCTORS_TAG);
+    updateTag("admin-stats");
   }
 }
 
@@ -408,8 +414,7 @@ export async function deleteDoctorAction(id: string): Promise<{ success: boolean
  * Admin action to seed default doctors into the database if needed.
  */
 export async function seedDoctorsAction(): Promise<{ success: boolean; count?: number; error?: string }> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!await verifyDoctorAdmin()) {
     return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
   }
 
@@ -441,6 +446,7 @@ export async function seedDoctorsAction(): Promise<{ success: boolean; count?: n
     });
 
     updateTag(DOCTORS_TAG);
+    updateTag("admin-stats");
     return { success: true, count: res.count };
   } catch (error) {
     logger.error("Error in seedDoctorsAction:", error);

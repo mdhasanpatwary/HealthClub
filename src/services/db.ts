@@ -319,6 +319,8 @@ export interface BackupTableStats {
   memberNotifications: number;
   adminUsers: number;
   databaseSnapshots: number;
+  reviews?: number;
+  pushSubscriptions?: number;
   totalRecords: number;
 }
 

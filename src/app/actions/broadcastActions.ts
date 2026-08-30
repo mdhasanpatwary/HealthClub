@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 import { sendBroadcastEmail, sendBulkBroadcastEmails } from "@/lib/mail";
 import { sendSms, sendBulkSms } from "@/lib/sms";
 import { INITIAL_BLOOD_DONORS, BloodDonor } from "@/data/emergencyData";
+import { hasAdminPermission } from "@/lib/permissions";
 
 export type BroadcastAudienceType =
   | "all_members"
@@ -62,7 +63,9 @@ export interface BroadcastCampaignRecord {
 
 async function verifyAdmin(): Promise<boolean> {
   const session = await getSessionUser();
-  return !!(session && session.role === "admin");
+  if (!session || session.role !== "admin") return false;
+  const role = session.adminRole || "super_admin";
+  return hasAdminPermission(role, "send_broadcast");
 }
 
 /**
@@ -165,8 +168,12 @@ export async function sendBroadcastCampaignAction(
   input: SendBroadcastCampaignInput
 ): Promise<{ success: boolean; message: string; campaign?: BroadcastCampaignRecord }> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
-    return { success: false, message: "অননুমোদিত অ্যাক্সেস। অনুগ্রহ করে এডমিন হিসেবে লগইন করুন।" };
+  if (
+    !session ||
+    session.role !== "admin" ||
+    !hasAdminPermission(session.adminRole || "super_admin", "send_broadcast")
+  ) {
+    return { success: false, message: "অননুমোদিত অ্যাক্সেস। ব্রডকাস্ট পাঠানোর অনুমতি আপনার নেই।" };
   }
 
   if (!input.title.trim() || !input.message.trim()) {

@@ -108,7 +108,7 @@ export function AddMemberTxDialog({
               type="number"
               required
               min="0"
-              max="30"
+              max="70"
               placeholder="10"
               value={newTxDiscountPercent}
               onChange={(e) => setNewTxDiscountPercent(e.target.value)}
@@ -123,7 +123,7 @@ export function AddMemberTxDialog({
                 formatNum(
                   Math.round(
                     Number(newTxAmount) *
-                      (Math.min(Math.max(0, Number(newTxDiscountPercent) || 0), 30) / 100)
+                      (Math.min(Math.max(0, Number(newTxDiscountPercent) || 0), 70) / 100)
                   ),
                   locale
                 )

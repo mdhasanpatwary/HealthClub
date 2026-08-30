@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
+import { hasAdminPermission } from "@/lib/permissions";
 import {
   AdminRevenueAnalyticsData,
   RevenueKpis,
@@ -44,6 +45,11 @@ interface MonthlyMemberRow {
   founding_count: bigint | number;
 }
 
+interface MonthlyRenewalRow {
+  month_key: string;
+  renewal_count: bigint | number;
+}
+
 interface MonthlyTransactionRow {
   month_key: string;
   medical_billed: bigint | number;
@@ -67,8 +73,8 @@ export async function getAdminRevenueAnalyticsAction(): Promise<{
   error?: string;
 }> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
-    return { success: false, error: "অননুমোদিত অ্যাক্সেস। কেবল অ্যাডমিন এই ডেটা দেখতে পারবেন।" };
+  if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "view_analytics")) {
+    return { success: false, error: "অননুমোদিত অ্যাক্সেস। অ্যানালিটিক্স ডেটা দেখার অনুমতি আপনার নেই।" };
   }
 
   try {
@@ -82,6 +88,7 @@ export async function getAdminRevenueAnalyticsAction(): Promise<{
       pricingSettings,
       summaryStatsRows,
       monthlyMemberRows,
+      monthlyRenewalRows,
       monthlyTransactionRows,
       partnerPerformanceRows,
     ] = await Promise.all([
@@ -91,11 +98,11 @@ export async function getAdminRevenueAnalyticsAction(): Promise<{
       prisma.$queryRaw<SummaryStatsRow[]>`
         SELECT
           (SELECT COUNT(*) FROM members) AS total_members,
-          (SELECT COUNT(*) FROM members WHERE tier = 'premium' AND status = 'active') AS active_premium_count,
-          (SELECT COUNT(*) FROM members WHERE tier = 'founding' AND status = 'active') AS active_founding_count,
-          (SELECT COUNT(*) FROM members WHERE renewal_status = 'approved') AS total_renewed_count,
+          (SELECT COUNT(*) FROM members WHERE tier = 'premium' AND status = 'active' AND expiry_date >= ${now}) AS active_premium_count,
+          (SELECT COUNT(*) FROM members WHERE tier = 'founding' AND status = 'active' AND expiry_date >= ${now}) AS active_founding_count,
+          (SELECT COUNT(*) FROM members WHERE expiry_date > (joined_date + INTERVAL '1 year') OR id IN (SELECT member_id FROM member_notifications WHERE type = 'renewal_approved')) AS total_renewed_count,
           (SELECT COUNT(*) FROM members WHERE renewal_status = 'pending') AS pending_renewals_count,
-          (SELECT COUNT(*) FROM members WHERE expiry_date < ${now} AND status != 'active') AS expired_members_count,
+          (SELECT COUNT(*) FROM members WHERE expiry_date < ${now} AND (renewal_status IS NULL OR renewal_status != 'pending')) AS expired_members_count,
           (SELECT COUNT(*) FROM transactions) AS total_transactions,
           (SELECT COALESCE(SUM(amount), 0) FROM transactions) AS total_medical_billed,
           (SELECT COALESCE(SUM(saved), 0) FROM transactions) AS total_member_savings,
@@ -112,6 +119,15 @@ export async function getAdminRevenueAnalyticsAction(): Promise<{
         FROM members
         WHERE COALESCE(created_at, joined_date) IS NOT NULL
         GROUP BY TO_CHAR(COALESCE(created_at, joined_date), 'YYYY-MM')
+        ORDER BY month_key ASC
+      `,
+      prisma.$queryRaw<MonthlyRenewalRow[]>`
+        SELECT
+          TO_CHAR(created_at, 'YYYY-MM') AS month_key,
+          COUNT(*) AS renewal_count
+        FROM member_notifications
+        WHERE type = 'renewal_approved' AND created_at IS NOT NULL
+        GROUP BY TO_CHAR(created_at, 'YYYY-MM')
         ORDER BY month_key ASC
       `,
       prisma.$queryRaw<MonthlyTransactionRow[]>`
@@ -163,7 +179,9 @@ export async function getAdminRevenueAnalyticsAction(): Promise<{
     const thisMonthMemberSavings = Number(stats.this_month_member_savings ?? 0);
 
     const totalSubscriptionRevenue =
-      activePremiumCount * premiumFee + activeFoundingCount * foundingFee;
+      activePremiumCount * premiumFee +
+      activeFoundingCount * foundingFee +
+      totalRenewedCount * premiumFee;
 
     // 4. Construct monthly financial buckets
     const monthBuckets: Record<
@@ -226,6 +244,32 @@ export async function getAdminRevenueAnalyticsAction(): Promise<{
       monthBuckets[mKey].newMembersCount = totalJoins;
       monthBuckets[mKey].subscriptionRevenue +=
         premJoins * premiumFee + foundJoins * foundingFee;
+    }
+
+    // Populate monthly renewal data
+    for (const row of monthlyRenewalRows) {
+      const rKey = row.month_key;
+      if (!rKey) continue;
+
+      if (!monthBuckets[rKey]) {
+        const [yStr, mStr] = rKey.split("-");
+        const y = parseInt(yStr, 10);
+        const m = parseInt(mStr, 10) - 1;
+        monthBuckets[rKey] = {
+          year: y,
+          month: m,
+          subscriptionRevenue: 0,
+          medicalBilled: 0,
+          memberSavings: 0,
+          transactionCount: 0,
+          newMembersCount: 0,
+          renewalsCount: 0,
+        };
+      }
+
+      const rCount = Number(row.renewal_count ?? 0);
+      monthBuckets[rKey].renewalsCount += rCount;
+      monthBuckets[rKey].subscriptionRevenue += rCount * premiumFee;
     }
 
     // Populate monthly transaction data

@@ -9,6 +9,7 @@ import { sendPasswordResetEmail } from "@/lib/mail";
 import { logger } from "@/lib/logger";
 import { updateTag } from "next/cache";
 import { PaginatedResult } from "@/types/pagination";
+import { hasAdminPermission } from "@/lib/permissions";
 import {
   checkRateLimit,
   resetRateLimit,
@@ -18,6 +19,13 @@ import {
 
 const PARTNERS_TAG = "partners";
 const MAX_PARTNER_OTP_ATTEMPTS = 5;
+
+async function verifyPartnerRequestAdmin(): Promise<boolean> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") return false;
+  const role = session.adminRole || "super_admin";
+  return hasAdminPermission(role, "manage_partner_requests");
+}
 
 export interface PartnerRequest {
   id: string;
@@ -76,8 +84,7 @@ function toPartnerRequest(d: any): PartnerRequest {
 export async function getPaginatedPartnerRequestsAction(
   params?: GetPaginatedPartnerRequestsParams
 ): Promise<PaginatedResult<PartnerRequest>> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!await verifyPartnerRequestAdmin()) {
     return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize: params?.pageSize || 10 };
   }
 
@@ -154,6 +161,8 @@ export async function addPartnerRequestAction(
       },
     });
 
+    updateTag("admin-stats");
+
     return toPartnerRequest(data);
   } catch (error) {
     logger.error("Error in addPartnerRequestAction:", error);
@@ -162,8 +171,7 @@ export async function addPartnerRequestAction(
 }
 
 export async function getPartnerRequestsAction(): Promise<PartnerRequest[]> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") return [];
+  if (!await verifyPartnerRequestAdmin()) return [];
   try {
     const data = await prisma.partnerRequest.findMany({
       orderBy: { createdAt: "desc" },
@@ -179,8 +187,7 @@ export async function updatePartnerRequestStatusAction(
   id: string,
   status: "approved" | "rejected"
 ): Promise<boolean> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!await verifyPartnerRequestAdmin()) {
     logger.warn("Unauthorized attempt to update partner request status");
     return false;
   }
@@ -224,6 +231,7 @@ export async function updatePartnerRequestStatusAction(
   } finally {
     try {
       updateTag(PARTNERS_TAG);
+      updateTag("admin-stats");
     } catch (err) {
       logger.warn("Failed to revalidate partners cache tag:", err);
     }
@@ -310,6 +318,7 @@ export async function loginPartnerAction(
           staffId: staffData.id,
           staffName: staffData.name,
           deskName: staffData.deskName,
+          staffRole: (staffData.role as "cashier" | "manager") || "cashier",
           partnerId: staffData.partnerId,
         });
 

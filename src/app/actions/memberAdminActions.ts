@@ -6,10 +6,39 @@ import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { PaginatedResult } from "@/types/pagination";
 import { createMemberNotification } from "./memberNotificationActions";
+import { hasAdminPermission } from "@/lib/permissions";
+import { updateTag } from "next/cache";
+
+async function verifyMemberAdmin(permission: "manage_members" | "approve_renewals" = "manage_members"): Promise<boolean> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") return false;
+  const role = session.adminRole || "super_admin";
+  return hasAdminPermission(role, permission);
+}
+
+const MEMBER_SELECT_FIELDS = {
+  id: true,
+  name: true,
+  phone: true,
+  email: true,
+  tier: true,
+  status: true,
+  joinedDate: true,
+  expiryDate: true,
+  qrCodeUrl: true,
+  totalSaved: true,
+  address: true,
+  birthDate: true,
+  profession: true,
+  profilePictureUrl: true,
+  bkashSender: true,
+  bkashTxnId: true,
+  renewalStatus: true,
+  renewalBkashSender: true,
+  renewalBkashTxnId: true,
+} as const;
 
 // Helper to format Date objects as YYYY-MM-DD in local time (not UTC).
-// Using toISOString() would shift the date to UTC, causing off-by-one errors
-// for timezones ahead of UTC (e.g., BDT is UTC+6).
 function formatDate(date: Date): string {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, "0");
@@ -53,8 +82,7 @@ export interface GetPaginatedMembersParams {
 export async function getPaginatedMembersAction(
   params?: GetPaginatedMembersParams
 ): Promise<PaginatedResult<Member>> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!await verifyMemberAdmin("manage_members")) {
     return {
       data: [],
       totalItems: 0,
@@ -97,27 +125,7 @@ export async function getPaginatedMembersAction(
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * pageSize,
         take: pageSize,
-        select: {
-          id: true,
-          name: true,
-          phone: true,
-          email: true,
-          tier: true,
-          status: true,
-          joinedDate: true,
-          expiryDate: true,
-          qrCodeUrl: true,
-          totalSaved: true,
-          address: true,
-          birthDate: true,
-          profession: true,
-          profilePictureUrl: true,
-          bkashSender: true,
-          bkashTxnId: true,
-          renewalStatus: true,
-          renewalBkashSender: true,
-          renewalBkashTxnId: true,
-        },
+        select: MEMBER_SELECT_FIELDS,
       }),
     ]);
 
@@ -146,8 +154,7 @@ export interface GetPaginatedRenewalsParams {
 export async function getPaginatedRenewalsAction(
   params?: GetPaginatedRenewalsParams
 ): Promise<PaginatedResult<Member>> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!await verifyMemberAdmin("approve_renewals")) {
     return {
       data: [],
       totalItems: 0,
@@ -168,7 +175,7 @@ export async function getPaginatedRenewalsAction(
     where.renewalStatus = status;
   } else {
     // Default to members who have requested renewal
-    where.renewalStatus = { in: ["pending", "approved", "rejected"] };
+    where.renewalStatus = "pending";
   }
 
   if (search) {
@@ -188,27 +195,7 @@ export async function getPaginatedRenewalsAction(
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * pageSize,
         take: pageSize,
-        select: {
-          id: true,
-          name: true,
-          phone: true,
-          email: true,
-          tier: true,
-          status: true,
-          joinedDate: true,
-          expiryDate: true,
-          qrCodeUrl: true,
-          totalSaved: true,
-          address: true,
-          birthDate: true,
-          profession: true,
-          profilePictureUrl: true,
-          bkashSender: true,
-          bkashTxnId: true,
-          renewalStatus: true,
-          renewalBkashSender: true,
-          renewalBkashTxnId: true,
-        },
+        select: MEMBER_SELECT_FIELDS,
       }),
     ]);
 
@@ -228,33 +215,11 @@ export async function getPaginatedRenewalsAction(
 }
 
 export async function getMembersAction(): Promise<Member[]> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") return [];
+  if (!await verifyMemberAdmin("manage_members")) return [];
   try {
-    // Select only needed columns — excludes password, verificationCode at DB level
     const data = await prisma.member.findMany({
       orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        name: true,
-        phone: true,
-        email: true,
-        tier: true,
-        status: true,
-        joinedDate: true,
-        expiryDate: true,
-        qrCodeUrl: true,
-        totalSaved: true,
-        address: true,
-        birthDate: true,
-        profession: true,
-        profilePictureUrl: true,
-        bkashSender: true,
-        bkashTxnId: true,
-        renewalStatus: true,
-        renewalBkashSender: true,
-        renewalBkashTxnId: true,
-      },
+      select: MEMBER_SELECT_FIELDS,
     });
 
     return data.map(mapPrismaMember);
@@ -265,8 +230,7 @@ export async function getMembersAction(): Promise<Member[]> {
 }
 
 export async function updateMemberStatusAction(id: string, status: Member["status"]): Promise<boolean> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") return false;
+  if (!await verifyMemberAdmin("manage_members")) return false;
   try {
     const member = await prisma.member.findUnique({ where: { id } });
     if (!member) return false;
@@ -289,6 +253,7 @@ export async function updateMemberStatusAction(id: string, status: Member["statu
       where: { id },
       data: updateData,
     });
+    updateTag("admin-stats");
     return true;
   } catch (error) {
     logger.error("Error in updateMemberStatusAction:", error);
@@ -333,6 +298,7 @@ export async function updateMemberProfileAction(
         ...(updates.profilePictureUrl !== undefined && { profilePictureUrl: updates.profilePictureUrl || null }),
       },
     });
+    updateTag("admin-stats");
     return true;
   } catch (error) {
     logger.error("Error in updateMemberProfileAction:", error);
@@ -353,8 +319,7 @@ export async function updateMemberAction(
     profilePictureUrl?: string;
   }
 ): Promise<boolean> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!await verifyMemberAdmin("manage_members")) {
     logger.warn("Unauthorized attempt to update member");
     return false;
   }
@@ -372,6 +337,7 @@ export async function updateMemberAction(
         profilePictureUrl: member.profilePictureUrl || null,
       },
     });
+    updateTag("admin-stats");
     return true;
   } catch (error) {
     logger.error("Error in updateMemberAction:", error);
@@ -380,8 +346,7 @@ export async function updateMemberAction(
 }
 
 export async function deleteMemberAction(id: string): Promise<boolean> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!await verifyMemberAdmin("manage_members")) {
     logger.warn("Unauthorized attempt to delete member");
     return false;
   }
@@ -389,6 +354,7 @@ export async function deleteMemberAction(id: string): Promise<boolean> {
     await prisma.member.delete({
       where: { id },
     });
+    updateTag("admin-stats");
     return true;
   } catch (error) {
     logger.error("Error in deleteMemberAction:", error);
@@ -397,14 +363,12 @@ export async function deleteMemberAction(id: string): Promise<boolean> {
 }
 
 export async function approveMemberRenewalAction(memberId: string): Promise<boolean> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!await verifyMemberAdmin("approve_renewals")) {
     logger.warn("Unauthorized attempt to approve renewal");
     return false;
   }
 
   try {
-    // Only fetch the single column needed to compute the new expiry date
     const member = await prisma.member.findUnique({
       where: { id: memberId },
       select: { expiryDate: true },
@@ -427,6 +391,7 @@ export async function approveMemberRenewalAction(memberId: string): Promise<bool
         expiryDate: newExpiry,
       }
     });
+    updateTag("admin-stats");
 
     const expDateBn = newExpiry.toLocaleDateString("bn-BD", {
       year: "numeric",
@@ -457,8 +422,7 @@ export async function approveMemberRenewalAction(memberId: string): Promise<bool
 }
 
 export async function rejectMemberRenewalAction(memberId: string): Promise<boolean> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!await verifyMemberAdmin("approve_renewals")) {
     logger.warn("Unauthorized attempt to reject renewal");
     return false;
   }
@@ -472,6 +436,7 @@ export async function rejectMemberRenewalAction(memberId: string): Promise<boole
         renewalBkashTxnId: null,
       }
     });
+    updateTag("admin-stats");
 
     await createMemberNotification({
       memberId,

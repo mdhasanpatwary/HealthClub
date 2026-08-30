@@ -179,6 +179,7 @@ export const RATE_LIMIT_RULES = {
 
   // Public Submissions
   CONTACT_MESSAGE_PER_IP: { limit: 5, windowMs: 15 * 60 * 1000 },
+  EMERGENCY_SUBMISSION_PER_IP: { limit: 5, windowMs: 15 * 60 * 1000 },
   PARTNER_LOGIN_PER_IP: { limit: 10, windowMs: 10 * 60 * 1000 },
   PARTNER_LOGIN_PER_IDENTIFIER: { limit: 5, windowMs: 10 * 60 * 1000 },
 } as const;

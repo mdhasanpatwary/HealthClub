@@ -13,12 +13,15 @@ import {
   INITIAL_EMERGENCY_HOTLINES,
 } from "@/data/emergencyData";
 import { PaginatedResult } from "@/types/pagination";
+import { hasAdminPermission } from "@/lib/permissions";
 
 const EMERGENCY_TAG = "emergency-data";
 
 async function verifyAdmin(): Promise<boolean> {
   const session = await getSessionUser();
-  return !!(session && session.role === "admin");
+  if (!session || session.role !== "admin") return false;
+  const role = session.adminRole || "super_admin";
+  return hasAdminPermission(role, "manage_emergency");
 }
 
 async function saveEmergencySetting(key: string, data: unknown) {
@@ -28,6 +31,7 @@ async function saveEmergencySetting(key: string, data: unknown) {
     update: { value: JSON.stringify(data) },
   });
   updateTag(EMERGENCY_TAG);
+  updateTag("admin-stats");
   revalidateTag(EMERGENCY_TAG, "max");
   revalidatePath("/emergency");
   revalidatePath("/admin");
@@ -45,7 +49,7 @@ export async function getPaginatedHotlinesAdminAction(
   params?: GetPaginatedHotlinesAdminParams
 ): Promise<PaginatedResult<EmergencyHotline>> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_emergency")) {
     return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize: params?.pageSize || 10 };
   }
 
@@ -99,7 +103,7 @@ export async function getPaginatedDonorsAdminAction(
   params?: GetPaginatedDonorsAdminParams
 ): Promise<PaginatedResult<BloodDonor>> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_emergency")) {
     return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize: params?.pageSize || 10 };
   }
 
@@ -163,7 +167,7 @@ export async function getPaginatedAmbulancesAdminAction(
   params?: GetPaginatedAmbulancesAdminParams
 ): Promise<PaginatedResult<AmbulanceService>> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
+  if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_emergency")) {
     return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize: params?.pageSize || 10 };
   }
 

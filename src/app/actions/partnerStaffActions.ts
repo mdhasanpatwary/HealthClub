@@ -33,12 +33,24 @@ export type CreatePartnerStaffInput = z.infer<typeof createStaffSchema>;
 export type UpdatePartnerStaffInput = z.infer<typeof updateStaffSchema>;
 
 /**
+ * Returns partnerId if caller is primary partner or staff with manager role; null otherwise.
+ */
+function getAuthorizedPartnerId(session: Awaited<ReturnType<typeof getSessionUser>>): string | null {
+  if (!session) return null;
+  if (session.role === "partner") return session.userId;
+  if (session.role === "partner_staff" && session.staffRole === "manager") {
+    return session.partnerId || session.userId;
+  }
+  return null;
+}
+
+/**
  * Get all staff / cashier accounts for the authenticated partner organization.
  */
 export async function getPartnerStaffListAction(): Promise<PartnerStaff[]> {
   const session = await getSessionUser();
-  if (!session || (session.role !== "partner" && session.role !== "partner_staff")) return [];
-  const partnerId = session.role === "partner_staff" ? session.partnerId || session.userId : session.userId;
+  const partnerId = getAuthorizedPartnerId(session);
+  if (!partnerId) return [];
 
   try {
     const staffMembers = await prisma.partnerStaff.findMany({
@@ -87,11 +99,11 @@ export async function createPartnerStaffAction(
   input: CreatePartnerStaffInput
 ): Promise<{ success: boolean; staff?: PartnerStaff; error?: string }> {
   const session = await getSessionUser();
-  if (!session || (session.role !== "partner" && session.role !== "partner_staff")) {
-    return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
+  const partnerId = getAuthorizedPartnerId(session);
+  if (!partnerId) {
+    return { success: false, error: "অননুমোদিত অ্যাক্সেস। শুধুমাত্র অ্যাডমিন ও ম্যানেজাররা স্টাফ তৈরি করতে পারেন।" };
   }
 
-  const partnerId = session.role === "partner_staff" ? session.partnerId || session.userId : session.userId;
   const parsed = createStaffSchema.safeParse(input);
   if (!parsed.success) {
     return { success: false, error: parsed.error.issues[0]?.message || "সঠিক তথ্য দিন।" };
@@ -158,11 +170,10 @@ export async function updatePartnerStaffAction(
   input: UpdatePartnerStaffInput
 ): Promise<{ success: boolean; staff?: PartnerStaff; error?: string }> {
   const session = await getSessionUser();
-  if (!session || (session.role !== "partner" && session.role !== "partner_staff")) {
+  const partnerId = getAuthorizedPartnerId(session);
+  if (!partnerId) {
     return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
   }
-
-  const partnerId = session.role === "partner_staff" ? session.partnerId || session.userId : session.userId;
 
   const parsed = updateStaffSchema.safeParse(input);
   if (!parsed.success) {
@@ -218,11 +229,10 @@ export async function resetPartnerStaffPasswordAction(
   newPassword: string
 ): Promise<{ success: boolean; message: string }> {
   const session = await getSessionUser();
-  if (!session || (session.role !== "partner" && session.role !== "partner_staff")) {
+  const partnerId = getAuthorizedPartnerId(session);
+  if (!partnerId) {
     return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
   }
-
-  const partnerId = session.role === "partner_staff" ? session.partnerId || session.userId : session.userId;
 
   if (!newPassword || newPassword.length < 6) {
     return { success: false, message: "নতুন পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।" };
@@ -259,11 +269,10 @@ export async function togglePartnerStaffStatusAction(
   isActive: boolean
 ): Promise<{ success: boolean; message: string }> {
   const session = await getSessionUser();
-  if (!session || (session.role !== "partner" && session.role !== "partner_staff")) {
+  const partnerId = getAuthorizedPartnerId(session);
+  if (!partnerId) {
     return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
   }
-
-  const partnerId = session.role === "partner_staff" ? session.partnerId || session.userId : session.userId;
 
   try {
     const existing = await prisma.partnerStaff.findUnique({
@@ -294,11 +303,10 @@ export async function deletePartnerStaffAction(
   id: string
 ): Promise<{ success: boolean; message: string }> {
   const session = await getSessionUser();
-  if (!session || (session.role !== "partner" && session.role !== "partner_staff")) {
+  const partnerId = getAuthorizedPartnerId(session);
+  if (!partnerId) {
     return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
   }
-
-  const partnerId = session.role === "partner_staff" ? session.partnerId || session.userId : session.userId;
 
   try {
     const existing = await prisma.partnerStaff.findUnique({
@@ -329,6 +337,7 @@ export async function getCurrentPartnerStaffSessionAction(): Promise<{
     id: string;
     name: string;
     deskName: string;
+    role: "cashier" | "manager";
     username?: string;
   };
 }> {
@@ -343,6 +352,7 @@ export async function getCurrentPartnerStaffSessionAction(): Promise<{
       id: session.staffId,
       name: session.staffName || "ক্যাশিয়ার",
       deskName: session.deskName || "কাউন্টার ডেস্ক",
+      role: session.staffRole || "cashier",
     },
   };
 }
@@ -374,12 +384,10 @@ export async function getPartnerStaffDetailsAction(
   staffId: string
 ): Promise<PartnerStaffDetailsResult> {
   const session = await getSessionUser();
-  if (!session || (session.role !== "partner" && session.role !== "partner_staff")) {
+  const partnerId = getAuthorizedPartnerId(session);
+  if (!partnerId) {
     return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
   }
-
-  const partnerId =
-    session.role === "partner_staff" ? session.partnerId || session.userId : session.userId;
 
   try {
     const staff = await prisma.partnerStaff.findUnique({

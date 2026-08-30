@@ -10,6 +10,7 @@ import { PaginatedResult } from "@/types/pagination";
 import { INITIAL_BLOOD_DONORS, INITIAL_AMBULANCES } from "@/data/emergencyData";
 import { HEALTH_TIPS_ARTICLES } from "@/data/healthTipsData";
 import { createMemberNotification } from "./memberNotificationActions";
+import { hasAdminPermission } from "@/lib/permissions";
 
 const ADMIN_STATS_TAG = "admin-stats";
 
@@ -35,8 +36,9 @@ export async function getPaginatedTransactionsAction(
     };
   }
 
-  // Non-admins can only view their own transactions
-  if (session.role !== "admin") {
+  // Non-admins (or admins without view_transactions permission) can only view their own transactions
+  const isAdminWithTxPerm = session.role === "admin" && hasAdminPermission(session.adminRole || "super_admin", "view_transactions");
+  if (!isAdminWithTxPerm) {
     if (!params?.memberId || session.userId !== params.memberId) {
       return {
         data: [],
@@ -114,8 +116,9 @@ export async function getTransactionsAction(memberId?: string): Promise<Transact
   const session = await getSessionUser();
   if (!session) return [];
 
-  // Security check: non-admins can only fetch their own transactions
-  if (session.role !== "admin") {
+  // Security check: non-admins (or admins without view_transactions) can only fetch their own transactions
+  const isAdminWithTxPerm = session.role === "admin" && hasAdminPermission(session.adminRole || "super_admin", "view_transactions");
+  if (!isAdminWithTxPerm) {
     if (!memberId || session.userId !== memberId) {
       return [];
     }
@@ -159,8 +162,8 @@ export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">)
     return { error: "সঠিক ছাড়ের পরিমাণ ইনপুট দিন।" };
   }
 
-  // Enforce max 30% discount limit on platform transactions
-  const maxAllowedSaved = Math.round(billAmount * 0.30);
+  // Enforce max 70% discount limit on platform transactions (allowing high-discount medical/pathology services)
+  const maxAllowedSaved = Math.round(billAmount * 0.70);
   const validatedSaved = Math.min(rawSaved, maxAllowedSaved);
 
   if (session.role !== "admin") {
@@ -271,6 +274,7 @@ const DEFAULT_STATS = {
   totalMembers: 0,
   activeMembers: 0,
   inactiveMembers: 0,
+  pendingMembers: 0,
   foundingMembers: 0,
   premiumMembers: 0,
   expiringMembers: 0,
@@ -316,6 +320,7 @@ const getCachedAdminStats = unstable_cache(
           total_members: bigint;
           active_members: bigint;
           inactive_members: bigint;
+          pending_members: bigint;
           founding_members: bigint;
           premium_members: bigint;
           expiring_members: bigint;
@@ -341,6 +346,7 @@ const getCachedAdminStats = unstable_cache(
           (SELECT COUNT(*) FROM members) AS total_members,
           (SELECT COUNT(*) FROM members WHERE status = 'active') AS active_members,
           (SELECT COUNT(*) FROM members WHERE status = 'inactive') AS inactive_members,
+          (SELECT COUNT(*) FROM members WHERE status IN ('pending_approval', 'pending_payment')) AS pending_members,
           (SELECT COUNT(*) FROM members WHERE tier = 'founding') AS founding_members,
           (SELECT COUNT(*) FROM members WHERE tier = 'premium') AS premium_members,
           (SELECT COUNT(*) FROM members WHERE status = 'active' AND expiry_date >= ${now} AND expiry_date <= ${in30Days}) AS expiring_members,
@@ -437,6 +443,7 @@ const getCachedAdminStats = unstable_cache(
       totalMembers,
       activeMembers,
       inactiveMembers: Number(row?.inactive_members ?? 0),
+      pendingMembers: Number(row?.pending_members ?? 0),
       foundingMembers: Number(row?.founding_members ?? 0),
       premiumMembers: Number(row?.premium_members ?? 0),
       expiringMembers: Number(row?.expiring_members ?? 0),
