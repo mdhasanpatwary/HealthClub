@@ -306,7 +306,7 @@ export default async function Home() {
       <LandingComparison t={t} />
 
       {/* CTA BANNER */}
-      <section className="py-10 sm:py-20 bg-gradient-to-r from-primary via-emerald-500 to-primary dark:from-primary-dark dark:via-emerald-600 dark:to-primary-dark animate-gradient relative overflow-hidden">
+      <section className="py-10 sm:py-20 bg-gradient-to-r from-primary via-emerald-500 to-primary dark:from-primary-dark dark:via-emerald-600 dark:to-primary-dark relative overflow-hidden">
         <div
           className="absolute inset-0 opacity-10"
           style={{

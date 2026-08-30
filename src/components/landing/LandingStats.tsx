@@ -28,7 +28,7 @@ export function LandingStats({
             <p className="text-3xl font-extrabold text-primary font-mono tabular-nums">
               {t("page.seatsLeft").replace("{count}", formatNum(remainingSeats, locale))}
             </p>
-            <h3 className="text-sm font-bold text-secondary dark:text-white mt-1.5">{t("page.remainingSeats")}</h3>
+            <p className="text-sm font-bold text-secondary dark:text-white mt-1.5">{t("page.remainingSeats")}</p>
             <p className="text-xs text-muted-foreground mt-1">
               {t("page.foundingMemberLimitLabel").replace("{count}", formatNum(100, locale))}
             </p>
@@ -38,7 +38,7 @@ export function LandingStats({
           <div className="relative bg-gradient-to-br from-emerald-500/5 to-emerald-500/10 dark:from-emerald-500/10 dark:to-emerald-500/5 p-4 sm:p-6 rounded-2xl border border-emerald-500/15 text-center hover-lift shadow-sm overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-emerald-500 to-transparent" />
             <p className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">{t("page.10Flat")}</p>
-            <h3 className="text-sm font-bold text-secondary dark:text-white mt-1.5">{t("page.medicalBillSavings")}</h3>
+            <p className="text-sm font-bold text-secondary dark:text-white mt-1.5">{t("page.medicalBillSavings")}</p>
             <p className="text-xs text-muted-foreground mt-1">{t("page.flat10DiscountOnAll")}</p>
           </div>
 
@@ -48,7 +48,7 @@ export function LandingStats({
             <p className="text-3xl font-extrabold text-blue-600 dark:text-blue-400 font-mono tabular-nums">
               {formatNum(hospitalCount, locale)}+
             </p>
-            <h3 className="text-sm font-bold text-secondary dark:text-white mt-1.5">{t("page.partnerHospitals")}</h3>
+            <p className="text-sm font-bold text-secondary dark:text-white mt-1.5">{t("page.partnerHospitals")}</p>
             <p className="text-xs text-muted-foreground mt-1">{t("page.contractedHospitalsDesc")}</p>
           </div>
 
@@ -58,7 +58,7 @@ export function LandingStats({
             <p className="text-3xl font-extrabold text-teal-600 dark:text-teal-400 font-mono tabular-nums">
               {formatNum(diagnosticCount, locale)}+
             </p>
-            <h3 className="text-sm font-bold text-secondary dark:text-white mt-1.5">{t("page.diagnosticCenters")}</h3>
+            <p className="text-sm font-bold text-secondary dark:text-white mt-1.5">{t("page.diagnosticCenters")}</p>
             <p className="text-xs text-muted-foreground mt-1">{t("page.diagnosticCentersDesc")}</p>
           </div>
 
@@ -68,7 +68,7 @@ export function LandingStats({
             <p className="text-3xl font-extrabold text-violet-600 dark:text-violet-400 font-mono tabular-nums">
               {formatNum(pharmacyCount, locale)}+
             </p>
-            <h3 className="text-sm font-bold text-secondary dark:text-white mt-1.5">{t("page.modelPharmacies")}</h3>
+            <p className="text-sm font-bold text-secondary dark:text-white mt-1.5">{t("page.modelPharmacies")}</p>
             <p className="text-xs text-muted-foreground mt-1">{t("page.10DiscountOnMedicinePurchases")}</p>
           </div>
 

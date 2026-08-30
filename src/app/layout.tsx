@@ -233,7 +233,6 @@ export default async function RootLayout({
       <head>
         <link rel="preconnect" href="https://api.qrserver.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.qrserver.com" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
       </head>
       <body className="font-sans antialiased bg-background text-foreground min-h-screen flex flex-col">
