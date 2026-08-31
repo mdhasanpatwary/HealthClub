@@ -4,14 +4,9 @@ import React, { createContext, useContext, useState, useEffect, useRef } from "r
 import { useRouter, usePathname } from "next/navigation";
 import { Locale } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/translations.en";
-import {
-  TranslationNamespace,
-  Dict,
-  getNamespacesForRoute,
-  namespaceLoaders,
-  enNamespaces,
-  bnNamespaces,
-} from "@/lib/translations";
+import { TranslationNamespace, Dict } from "@/lib/translations/types";
+import { getNamespacesForRoute } from "@/lib/translations/routeMap";
+import { namespaceLoaders } from "@/lib/translations/clientLoaders";
 
 interface LanguageContextType {
   locale: Locale;
@@ -90,21 +85,6 @@ export function LanguageProvider({
   const t = (key: TranslationKey | (string & {}), fallbackEn?: string): string => {
     if (dict && dict[key]) {
       return dict[key];
-    }
-    // Universal fallback across all namespaces for active locale
-    const source = locale === "en" ? enNamespaces : bnNamespaces;
-    for (const nsDict of Object.values(source)) {
-      if (nsDict && nsDict[key]) {
-        return nsDict[key];
-      }
-    }
-    // Cross-locale fallback (if missing in active locale, fall back to English dictionary)
-    if (locale !== "en") {
-      for (const nsDict of Object.values(enNamespaces)) {
-        if (nsDict && nsDict[key]) {
-          return nsDict[key];
-        }
-      }
     }
     if (fallbackEn !== undefined) {
       return fallbackEn;

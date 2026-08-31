@@ -6,10 +6,11 @@ import { SITE_URL } from "@/lib/siteConfig";
 
 interface MemberCardProps {
   member: Member;
+  priority?: boolean;
 }
 
 const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCard(
-  { member },
+  { member, priority = true },
   ref
 ) {
   // Determine card tier badge & accent styling
@@ -51,14 +52,14 @@ const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCa
         } as React.CSSProperties),
       }}
     >
-      {/* Custom Generated Background Texture — uses next/image for automatic AVIF/WebP */}
+      {/* Custom Generated Background Texture — uses next/image with priority for instant LCP render */}
       <Image
         src="/images/member-card-bg.webp"
         alt=""
         fill
         sizes="(max-width: 448px) 100vw, 448px"
         className="object-cover opacity-60 mix-blend-screen pointer-events-none rounded-2xl"
-        loading="lazy"
+        priority={priority}
         aria-hidden="true"
       />
 
@@ -76,10 +77,13 @@ const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCa
       <div className="relative flex justify-between items-center z-10 gap-1.5 sm:gap-2">
         <div className="flex items-center space-x-2 sm:space-x-2.5 min-w-0">
           {/* Branded Logo Emblem */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src="/images/member-card-logo.webp"
             alt="Health Club Logo Emblem"
+            width={40}
+            height={40}
+            priority={priority}
+            sizes="40px"
             className="h-8 w-8 sm:h-10 sm:w-10 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.4)] shrink-0"
           />
           <div className="min-w-0">

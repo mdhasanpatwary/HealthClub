@@ -231,8 +231,10 @@ export default async function RootLayout({
   return (
     <html lang={locale} data-scroll-behavior="smooth" className={`${theme} ${inter.variable} ${notoSansBengali.variable}`}>
       <head>
+        <link rel="preload" as="image" href="/images/member-card-bg.webp" type="image/webp" fetchPriority="high" />
         <link rel="preconnect" href="https://api.qrserver.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.qrserver.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
       </head>
       <body className="font-sans antialiased bg-background text-foreground min-h-screen flex flex-col">
