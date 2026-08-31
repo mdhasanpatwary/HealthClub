@@ -7,6 +7,7 @@ import { hashPassword, verifyPassword } from "@/lib/crypto";
 import { setSessionUser, clearSessionUser } from "@/lib/session";
 import { sendOtpEmail, sendPasswordResetEmail } from "@/lib/mail";
 import { logger } from "@/lib/logger";
+import { telemetry } from "@/lib/telemetry";
 import {
   checkRateLimit,
   resetRateLimit,
@@ -255,11 +256,13 @@ export async function verifyEmailOtpAction(
     }
 
     if (attempts >= MAX_OTP_ATTEMPTS) {
+      telemetry.captureEvent("otp_verification_failed", { email: cleanEmail, memberId: member.id, attempts, reason: "max_attempts_exceeded" }, "warn", { userId: member.id, route: "verifyEmailOtpAction" });
       return { success: false, message: "অনেকবার ভুল কোড দেওয়া হয়েছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
     }
 
     const fifteenMinutes = 15 * 60 * 1000;
     if (Date.now() - new Date(member.verificationCodeCreatedAt).getTime() > fifteenMinutes) {
+      telemetry.captureEvent("otp_verification_failed", { email: cleanEmail, memberId: member.id, reason: "otp_expired" }, "warn", { userId: member.id, route: "verifyEmailOtpAction" });
       return { success: false, message: "ওটিপি কোডের মেয়াদ শেষ হয়ে গেছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
     }
 
@@ -340,6 +343,7 @@ export async function resendVerificationCodeAction(email: string): Promise<{ suc
       const sent = await sendOtpEmail(member.email, code, member.name);
       if (!sent) {
         logger.error(`[RESEND OTP] Email send failed for ${member.email}`);
+        telemetry.captureEvent("otp_delivery_failed", { email: member.email, memberId: member.id, flow: "resend_verification", tier: member.tier }, "error", { userId: member.id, route: "resendVerificationCodeAction", action: "resend_otp" });
         return { success: false, message: "ওটিপি কোড পাঠাতে সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।" };
       }
     }
@@ -385,6 +389,7 @@ export async function requestPasswordResetAction(email: string): Promise<{ succe
     const sent = await sendPasswordResetEmail(member.email || "", otp, member.name);
     if (!sent) {
       logger.error(`[PASSWORD RESET] Email send failed for ${email}`);
+      telemetry.captureEvent("otp_delivery_failed", { email, memberId: member.id, flow: "password_reset" }, "error", { userId: member.id, route: "requestPasswordResetAction", action: "password_reset_otp" });
       return { success: false, message: "পাসওয়ার্ড রিসেট ওটিপি পাঠাতে সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।" };
     }
 
@@ -435,11 +440,13 @@ export async function resetPasswordAction(
     }
 
     if (attempts >= MAX_OTP_ATTEMPTS) {
+      telemetry.captureEvent("password_reset_failed", { email: cleanEmail, memberId: member.id, reason: "max_attempts_exceeded" }, "warn", { userId: member.id, route: "resetPasswordAction" });
       return { success: false, message: "অনেকবার ভুল কোড দেওয়া হয়েছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
     }
 
     const fifteenMinutes = 15 * 60 * 1000;
     if (Date.now() - new Date(member.verificationCodeCreatedAt).getTime() > fifteenMinutes) {
+      telemetry.captureEvent("password_reset_failed", { email: cleanEmail, memberId: member.id, reason: "otp_expired" }, "warn", { userId: member.id, route: "resetPasswordAction" });
       return { success: false, message: "ওটিপি কোডের মেয়াদ শেষ হয়ে গেছে (১৫ মিনিট পার হয়েছে)। অনুগ্রহ করে আবার নতুন কোড পাঠান।" };
     }
 

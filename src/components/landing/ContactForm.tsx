@@ -1,16 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Phone, MapPin, CheckCircle, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { addContactMessageAction } from "@/app/actions/contactActions";
+import {
+  getPublicContactSettingsAction,
+  PublicContactSettings,
+} from "@/app/actions/systemSettingsActions";
+import { toBanglaNums } from "@/lib/utils";
 import { toast } from "sonner";
 
-export default function ContactForm() {
+interface ContactFormProps {
+  initialSettings?: PublicContactSettings;
+}
+
+const DEFAULT_CONTACT_SETTINGS: PublicContactSettings = {
+  hotline: process.env.NEXT_PUBLIC_HOTLINE_PHONE || "01886763849",
+  whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_PHONE || "01886763849",
+  email: process.env.NEXT_PUBLIC_OFFICIAL_EMAIL || "healthclubfeni@gmail.com",
+  facebookUrl:
+    process.env.NEXT_PUBLIC_FACEBOOK_URL ||
+    "https://www.facebook.com/profile.php?id=61591616953090",
+};
+
+export default function ContactForm({ initialSettings }: ContactFormProps) {
   const { t, locale } = useLanguage();
+  const [settings, setSettings] = useState<PublicContactSettings>(
+    initialSettings || DEFAULT_CONTACT_SETTINGS
+  );
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -19,6 +40,28 @@ export default function ContactForm() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!initialSettings) {
+      getPublicContactSettingsAction().then((s) => setSettings(s));
+    }
+  }, [initialSettings]);
+
+  const rawHotline = settings.hotline.replace(/[^0-9]/g, "");
+  const normalizedHotline = rawHotline.replace(/^(880|88|0)/, "");
+  const hotlineTel = `+880${normalizedHotline}`;
+  const hotlineDisplay =
+    locale === "bn"
+      ? toBanglaNums(`+880 ${normalizedHotline}`)
+      : `+880 ${normalizedHotline}`;
+
+  const rawWhatsapp = settings.whatsapp.replace(/[^0-9]/g, "");
+  const normalizedWhatsapp = rawWhatsapp.replace(/^(880|88|0)/, "");
+  const whatsappUrl = `https://wa.me/880${normalizedWhatsapp}`;
+  const whatsappDisplay =
+    locale === "bn"
+      ? toBanglaNums(`+880 ${normalizedWhatsapp}`)
+      : `+880 ${normalizedWhatsapp}`;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,23 +109,23 @@ export default function ContactForm() {
 
           <div className="space-y-4">
             
-            <a href="tel:+8801886763849" className="flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors">
+            <a href={`tel:${hotlineTel}`} className="flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors">
               <div className="h-10 w-10 rounded-lg bg-primary-light text-primary flex items-center justify-center">
                 <Phone className="h-5 w-5" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">{t("landing.contactform.hotlineNumber")}</p>
-                <p className="text-sm font-bold text-secondary dark:text-white font-mono">{t("landing.contactform.8801886763849")}</p>
+                <p className="text-sm font-bold text-secondary dark:text-white font-mono">{hotlineDisplay}</p>
               </div>
             </a>
 
-            <a href="https://wa.me/8801886763849" target="_blank" rel="noreferrer" className="flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors">
+            <a href={whatsappUrl} target="_blank" rel="noreferrer" className="flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors">
               <div className="h-10 w-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
                 <MessageSquare className="h-5 w-5 fill-emerald-600/10" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">{t("landing.contactform.whatsappChat")}</p>
-                <p className="text-sm font-bold text-secondary dark:text-white font-mono">{t("landing.contactform.8801886763849")}</p>
+                <p className="text-sm font-bold text-secondary dark:text-white font-mono">{whatsappDisplay}</p>
               </div>
             </a>
 
@@ -100,7 +143,7 @@ export default function ContactForm() {
         </div>
 
         <a
-          href={process.env.NEXT_PUBLIC_FACEBOOK_URL || "https://www.facebook.com/profile.php?id=61591616953090"}
+          href={settings.facebookUrl}
           target="_blank"
           rel="noreferrer"
           className="flex items-center justify-center gap-2 p-3 bg-secondary text-white rounded-xl hover:bg-slate-800 transition-colors text-sm font-semibold"

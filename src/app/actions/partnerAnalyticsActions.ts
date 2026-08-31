@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
+import { Transaction } from "@/services/db";
 import { PartnerAnalyticsData, MonthlyTrendPoint, DayDistribution, MonthlySettlementStatement } from "@/types/partnerAnalytics";
 
 const BN_MONTHS = [
@@ -243,5 +244,106 @@ export async function getPartnerAnalyticsAction(): Promise<{
   } catch (error) {
     logger.error("Error in getPartnerAnalyticsAction:", error);
     return { success: false, error: "অ্যানালিটিক্স ডেটা লোড করতে সমস্যা হয়েছে।" };
+  }
+}
+
+export interface GetPartnerMonthlyTransactionsParams {
+  monthKey?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface GetPartnerMonthlyTransactionsResult {
+  success: boolean;
+  transactions: Transaction[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  pageSize: number;
+  hasMore: boolean;
+  error?: string;
+}
+
+export async function getPartnerMonthlyTransactionsAction(
+  params?: GetPartnerMonthlyTransactionsParams
+): Promise<GetPartnerMonthlyTransactionsResult> {
+  const session = await getSessionUser();
+  if (!session || (session.role !== "partner" && session.role !== "partner_staff")) {
+    return {
+      success: false,
+      transactions: [],
+      totalItems: 0,
+      totalPages: 1,
+      currentPage: 1,
+      pageSize: 10,
+      hasMore: false,
+      error: "অননুমোদিত অ্যাক্সেস।",
+    };
+  }
+
+  const partnerId = session.role === "partner_staff" ? session.partnerId || session.userId : session.userId;
+  const page = Math.max(Number(params?.page || 1), 1);
+  const pageSize = Math.max(Number(params?.pageSize || 10), 1);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const where: any = { partnerId };
+
+  if (params?.monthKey && /^\d{4}-\d{2}$/.test(params.monthKey)) {
+    const [yStr, mStr] = params.monthKey.split("-");
+    const year = parseInt(yStr, 10);
+    const month = parseInt(mStr, 10);
+    const startDate = new Date(year, month - 1, 1, 0, 0, 0, 0);
+    const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+    where.date = { gte: startDate, lte: endDate };
+  }
+
+  try {
+    const [totalItems, rawTxs] = await Promise.all([
+      prisma.transaction.count({ where }),
+      prisma.transaction.findMany({
+        where,
+        orderBy: { date: "desc" },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
+    ]);
+
+    const transactions = rawTxs.map((t) => ({
+      id: t.id,
+      memberId: t.memberId,
+      memberName: t.memberName,
+      partnerId: t.partnerId,
+      partnerName: t.partnerName,
+      staffId: t.staffId || undefined,
+      staffName: t.staffName || undefined,
+      deskName: t.deskName || undefined,
+      amount: t.amount,
+      saved: t.saved,
+      date: t.date.toISOString(),
+    }));
+
+    const totalPages = Math.ceil(totalItems / pageSize) || 1;
+
+    return {
+      success: true,
+      transactions,
+      totalItems,
+      totalPages,
+      currentPage: page,
+      pageSize,
+      hasMore: page < totalPages,
+    };
+  } catch (error) {
+    logger.error("Error in getPartnerMonthlyTransactionsAction:", error);
+    return {
+      success: false,
+      transactions: [],
+      totalItems: 0,
+      totalPages: 1,
+      currentPage: 1,
+      pageSize,
+      hasMore: false,
+      error: "ট্রানজেকশন লোড করতে সমস্যা হয়েছে।",
+    };
   }
 }

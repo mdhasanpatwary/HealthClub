@@ -16,6 +16,8 @@ import {
   Printer,
   CheckCircle2,
   Calendar,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -33,6 +35,14 @@ export function PartnerSettlementStatementsTable({
   const isBn = locale === "bn";
   const [selectedStatement, setSelectedStatement] = useState<MonthlySettlementStatement | null>(null);
   const [printModalOpen, setPrintModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 6;
+
+  const totalPages = Math.max(1, Math.ceil(statements.length / pageSize));
+  const paginatedStatements = statements.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
 
   const handleOpenPrint = (statement: MonthlySettlementStatement) => {
     setSelectedStatement(statement);
@@ -110,7 +120,7 @@ export function PartnerSettlementStatementsTable({
                     </TableCell>
                   </TableRow>
                 ) : (
-                  statements.map((st) => (
+                  paginatedStatements.map((st) => (
                     <TableRow key={st.monthKey} className="hover:bg-muted/30 transition-colors">
                       {/* Month Column */}
                       <TableCell className="font-bold text-secondary dark:text-white whitespace-nowrap">
@@ -185,6 +195,50 @@ export function PartnerSettlementStatementsTable({
               </TableBody>
             </Table>
           </div>
+
+          {/* Pagination Controls for Statements */}
+          {totalPages > 1 && (
+            <div className="p-4 border-t border-border/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-muted/20">
+              <p className="text-xs text-muted-foreground font-mono">
+                {isBn ? "পৃষ্ঠা" : "Page"} {formatNum(currentPage, locale)} / {formatNum(totalPages, locale)} ({formatNum(statements.length, locale)} {isBn ? "টি মাস" : "months"})
+              </p>
+              <div className="flex items-center gap-1.5 self-start sm:self-auto">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                  disabled={currentPage <= 1}
+                  className="text-xs rounded-xl h-8 px-2.5 cursor-pointer gap-1"
+                >
+                  <ChevronLeft className="h-3.5 w-3.5" />
+                  <span>{isBn ? "পূর্ববর্তী" : "Prev"}</span>
+                </Button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                  <Button
+                    key={p}
+                    variant={p === currentPage ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setCurrentPage(p)}
+                    className={`text-xs rounded-xl h-8 w-8 p-0 cursor-pointer ${
+                      p === currentPage ? "bg-primary text-white font-bold" : ""
+                    }`}
+                  >
+                    {formatNum(p, locale)}
+                  </Button>
+                ))}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                  disabled={currentPage >= totalPages}
+                  className="text-xs rounded-xl h-8 px-2.5 cursor-pointer gap-1"
+                >
+                  <span>{isBn ? "পরবর্তী" : "Next"}</span>
+                  <ChevronRight className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 

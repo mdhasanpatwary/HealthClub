@@ -21,7 +21,10 @@ import {
   getPartnerTransactionsAction as _getPartnerTransactionsAction,
   addPartnerTransactionAction as _addPartnerTransactionAction,
 } from "./partnerTransactionActions";
-import { getPartnerAnalyticsAction as _getPartnerAnalyticsAction } from "./partnerAnalyticsActions";
+import {
+  getPartnerAnalyticsAction as _getPartnerAnalyticsAction,
+  getPartnerMonthlyTransactionsAction as _getPartnerMonthlyTransactionsAction,
+} from "./partnerAnalyticsActions";
 import {
   getPartnerByIdAction as _getPartnerByIdAction,
   getDoctorsByPartnerIdAction as _getDoctorsByPartnerIdAction,
@@ -454,6 +457,12 @@ export async function addPartnerTransactionAction(
 
 export async function getPartnerAnalyticsAction() {
   return _getPartnerAnalyticsAction();
+}
+
+export async function getPartnerMonthlyTransactionsAction(
+  ...args: Parameters<typeof _getPartnerMonthlyTransactionsAction>
+) {
+  return _getPartnerMonthlyTransactionsAction(...args);
 }
 
 export async function resetPartnerPasswordByAdminAction(

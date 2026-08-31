@@ -6,13 +6,14 @@ import { cookies } from "next/headers";
 import { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
+import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
 
-  const ogTitle = isEn ? "Contact Health Club - Hotline +8801886763849" : "যোগাযোগ করুন - হেলথ ক্লাব";
+  const ogTitle = isEn ? "Contact Health Club - Hotline & Support" : "যোগাযোগ করুন - হেলথ ক্লাব";
   const ogDesc = isEn
     ? "Contact our helpline for membership queries or hospital partnership applications."
     : "মেম্বারশিপ অথবা পার্টনারশিপ সংক্রান্ত যেকোনো প্রশ্ন নিয়ে আমাদের সাথে কথা বলুন।";
@@ -21,7 +22,7 @@ export async function generateMetadata() {
     title: isEn ? "Contact Us - Health Club Hotline & Support" : "যোগাযোগ করুন - হেলথ ক্লাব হটলাইন ও অফিস",
     description: isEn
       ? "Get in touch with Health Club support team. Find our hotline number, support email, address, and online inquiry form."
-      : "হেলথ ক্লাবের সাথে যোগাযোগ করুন। আমাদের ফোন নাম্বার (+8801886763849), ইমেইল, অফিস ঠিকানা ও সাপোর্ট সেন্টার।",
+      : "হেলথ ক্লাবের সাথে যোগাযোগ করুন। আমাদের ফোন নাম্বার, ইমেইল, অফিস ঠিকানা ও সাপোর্ট সেন্টার।",
     alternates: {
       canonical: `${SITE_URL}/contact`,
     },
@@ -46,6 +47,7 @@ export async function generateMetadata() {
 export default async function ContactPage() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
+  const contactSettings = await getCachedContactSettings();
 
   const jsonLdData = [
     {
@@ -97,7 +99,7 @@ export default async function ContactPage() {
 
         {/* Contact Form Wrapper */}
         <div className="bg-muted/30 border border-border/80 rounded-3xl p-6 sm:p-8">
-          <ContactForm />
+          <ContactForm initialSettings={contactSettings} />
         </div>
 
         {/* Help Center CTA */}

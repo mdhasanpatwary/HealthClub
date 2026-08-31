@@ -8,6 +8,7 @@ import EmergencyFAQ from "@/components/emergency/EmergencyFAQ";
 import CommunityNetworkCTA from "@/components/common/CommunityNetworkCTA";
 import { Siren, ShieldCheck, HeartHandshake, PhoneCall } from "lucide-react";
 import { getEmergencyDataAction } from "@/app/actions/emergencyAdminActions";
+import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
@@ -100,9 +101,15 @@ export default async function EmergencyPage() {
   const isEn = locale === "en";
   const t = (key: string) => tServer(locale, key);
 
-  const { bloodDonors, ambulances, hotlines } = await getEmergencyDataAction();
+  const [{ bloodDonors, ambulances, hotlines }, contactSettings] = await Promise.all([
+    getEmergencyDataAction(),
+    getCachedContactSettings(),
+  ]);
   const approvedDonors = bloodDonors.filter((d) => d.status !== "pending");
   const approvedAmbulances = ambulances.filter((a) => a.status !== "pending");
+
+  const rawHotline = contactSettings.hotline.replace(/[^0-9]/g, "");
+  const formattedTel = `+880${rawHotline.replace(/^(880|88|0)/, "")}`;
 
   // Structured Data for SEO, AEO, and GEO Rich Snippets
   const jsonLdData = [
@@ -134,7 +141,7 @@ export default async function EmergencyPage() {
         ? "Health Club 24/7 Emergency Health Network Feni"
         : "হেলথ ক্লাব জরুরি স্বাস্থ্য সেবা ও রক্তদাতা নেটওয়ার্ক (ফেনী)",
       url: `${SITE_URL}/emergency`,
-      logo: `${SITE_URL}/images/member-card-logo.png`,
+      logo: `${SITE_URL}/images/member-card-logo.webp`,
       description: isEn
         ? "24/7 emergency medical directory in Feni, Bangladesh. Voluntary blood donor network, ICU/AC ambulances, oxygen supplies, and critical hospital ER dispatch."
         : "ফেনীর ২৪/৭ জরুরি স্বাস্থ্য সহায়তা ডিরেক্টরি। রক্তের গ্রুপ অনুযায়ী ভেরিফাইড রক্তদাতা, আইসিইউ ও এসি অ্যাম্বুলেন্স, অক্সিজেন সিলিন্ডার এবং হাসপাতাল জরুরি হটলাইন।",
@@ -148,7 +155,7 @@ export default async function EmergencyPage() {
         "Feni, Bangladesh",
       ],
       openingHours: "Mo-Su 00:00-24:00",
-      telephone: "+8801886763849",
+      telephone: formattedTel,
       priceRange: "Free / Public Service",
       availableService: [
         "Voluntary Blood Donor Matching",
@@ -370,10 +377,10 @@ export default async function EmergencyPage() {
         <EmergencyProtocol />
 
         {/* 4. Answer Engine Optimization (AEO) FAQ Section */}
-        <EmergencyFAQ />
+        <EmergencyFAQ hotline={contactSettings.hotline} />
 
         {/* 5. Emergency Community Collaborations & Multi-Pathway CTA */}
-        <CommunityNetworkCTA />
+        <CommunityNetworkCTA hotline={contactSettings.hotline} />
 
       </div>
     </div>

@@ -4,6 +4,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import PartnerDirectory from "@/components/ui/PartnerDirectory";
 import { getHomepageStats, getHomepagePartners } from "@/lib/homepageData";
+import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
 import type { Member } from "@/services/db";
@@ -110,10 +111,11 @@ export default async function Home() {
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const t = (key: string) => tServer(locale, key);
 
-  // Single cached query for all homepage stats (4 counts → 1 SQL, 60s cache)
-  const [stats, homepagePartners] = await Promise.all([
+  // Single cached query for all homepage stats & settings (60s cache)
+  const [stats, homepagePartners, contactSettings] = await Promise.all([
     getHomepageStats(),
     getHomepagePartners(3),
+    getCachedContactSettings(),
   ]);
   const { memberCount, foundingCount, hospitalCount, diagnosticCount, pharmacyCount } = stats;
 
@@ -364,7 +366,7 @@ export default async function Home() {
             </p>
           </div>
 
-          <ContactForm />
+          <ContactForm initialSettings={contactSettings} />
         </div>
       </section>
 

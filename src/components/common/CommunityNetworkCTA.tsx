@@ -9,13 +9,25 @@ import { Truck, Heart, Building2, PhoneCall, ArrowRight, ShieldCheck, Sparkles }
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { BloodDonorRegisterDialog } from "@/app/emergency/components/BloodDonorRegisterDialog";
 import { AmbulanceRegisterDialog } from "@/app/emergency/components/AmbulanceRegisterDialog";
+import { toBanglaNums } from "@/lib/utils";
 
-export default function CommunityNetworkCTA() {
+interface CommunityNetworkCTAProps {
+  hotline?: string;
+}
+
+export default function CommunityNetworkCTA({ hotline }: CommunityNetworkCTAProps) {
   const { t, locale } = useLanguage();
   const isEn = locale === "en";
 
   const [isDonorModalOpen, setIsDonorModalOpen] = useState(false);
   const [isAmbulanceModalOpen, setIsAmbulanceModalOpen] = useState(false);
+
+  const rawHotline = (hotline || process.env.NEXT_PUBLIC_HOTLINE_PHONE || "01886763849").replace(/[^0-9]/g, "");
+  const normalizedHotline = rawHotline.replace(/^(880|88|0)/, "");
+  const hotlineTel = `+880${normalizedHotline}`;
+  const hotlineDisplay = isEn
+    ? `+880 ${normalizedHotline}`
+    : toBanglaNums(`+880 ${normalizedHotline}`);
 
   return (
     <section
@@ -193,11 +205,11 @@ export default function CommunityNetworkCTA() {
 
         <div className="flex items-center gap-3">
           <a
-            href="tel:+8801886763849"
+            href={`tel:${hotlineTel}`}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-card border border-border text-xs font-bold text-primary hover:bg-primary/10 transition-colors"
           >
             <PhoneCall className="h-3.5 w-3.5" />
-            <span>{isEn ? "+880 1886763849" : "+৮৮০ ১৮৮৬৭৬৩৮৪৯"}</span>
+            <span>{hotlineDisplay}</span>
           </a>
           <Link
             href="/contact"

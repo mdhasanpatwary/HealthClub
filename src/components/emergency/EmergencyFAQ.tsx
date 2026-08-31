@@ -3,15 +3,28 @@
 import { useState } from "react";
 import { ChevronDown, HelpCircle, PhoneCall } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
+import { toBanglaNums } from "@/lib/utils";
 
 interface FAQItem {
   question: string;
   answer: string;
 }
 
-export default function EmergencyFAQ() {
+interface EmergencyFAQProps {
+  hotline?: string;
+}
+
+export default function EmergencyFAQ({ hotline }: EmergencyFAQProps) {
   const { t, locale } = useLanguage();
   const [openIndex, setOpenIndex] = useState<number | null>(0); // First FAQ open by default
+
+  const rawHotline = (hotline || process.env.NEXT_PUBLIC_HOTLINE_PHONE || "01886763849").replace(/[^0-9]/g, "");
+  const normalizedHotline = rawHotline.replace(/^(880|88|0)/, "");
+  const hotlineTel = `+880${normalizedHotline}`;
+  const hotlineDisplay =
+    locale === "en"
+      ? `+880 ${normalizedHotline}`
+      : toBanglaNums(`+880 ${normalizedHotline}`);
 
   const faqs: FAQItem[] = [
     { question: t("emergency.faq.q1"), answer: t("emergency.faq.a1") },
@@ -109,11 +122,11 @@ export default function EmergencyFAQ() {
           </p>
         </div>
         <a
-          href="tel:+8801886763849"
+          href={`tel:${hotlineTel}`}
           className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary hover:bg-primary-dark text-white text-xs font-bold shrink-0 transition-colors shadow-xs"
         >
           <PhoneCall className="h-3.5 w-3.5" />
-          <span>{locale === "en" ? "+880 1886763849" : "+৮৮০ ১৮৮৬৭৬৩৮৪৯"}</span>
+          <span>{hotlineDisplay}</span>
         </a>
       </div>
     </section>

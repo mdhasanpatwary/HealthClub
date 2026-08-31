@@ -44,6 +44,44 @@ function getAuthorizedPartnerId(session: Awaited<ReturnType<typeof getSessionUse
   return null;
 }
 
+function toStaffModel(
+  staff: {
+    id: string;
+    partnerId: string;
+    name: string;
+    username: string;
+    phone: string | null;
+    deskName: string;
+    password?: string;
+    role: string;
+    isActive: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+  },
+  stats?: { count?: number; bill?: number; saved?: number; plainPassword?: string }
+): PartnerStaff {
+  const plainPassword =
+    stats?.plainPassword ??
+    (staff.password?.startsWith("enc:") ? decryptSecret(staff.password) || undefined : undefined);
+
+  return {
+    id: staff.id,
+    partnerId: staff.partnerId,
+    name: staff.name,
+    username: staff.username,
+    phone: staff.phone || undefined,
+    deskName: staff.deskName,
+    role: staff.role as "cashier" | "manager",
+    plainPassword,
+    isActive: staff.isActive,
+    createdAt: staff.createdAt.toISOString(),
+    updatedAt: staff.updatedAt.toISOString(),
+    transactionCount: stats?.count,
+    totalBillAmount: stats?.bill,
+    totalSavedAmount: stats?.saved,
+  };
+}
+
 /**
  * Get all staff / cashier accounts for the authenticated partner organization.
  */
@@ -65,26 +103,11 @@ export async function getPartnerStaffListAction(): Promise<PartnerStaff[]> {
     return staffMembers.map((staff) => {
       const totalBill = staff.transactions.reduce((sum, tx) => sum + tx.amount, 0);
       const totalSaved = staff.transactions.reduce((sum, tx) => sum + tx.saved, 0);
-      const plainPassword = staff.password.startsWith("enc:")
-        ? decryptSecret(staff.password) || undefined
-        : undefined;
-
-      return {
-        id: staff.id,
-        partnerId: staff.partnerId,
-        name: staff.name,
-        username: staff.username,
-        phone: staff.phone || undefined,
-        deskName: staff.deskName,
-        role: staff.role as "cashier" | "manager",
-        plainPassword,
-        isActive: staff.isActive,
-        createdAt: staff.createdAt.toISOString(),
-        updatedAt: staff.updatedAt.toISOString(),
-        transactionCount: staff._count.transactions,
-        totalBillAmount: totalBill,
-        totalSavedAmount: totalSaved,
-      };
+      return toStaffModel(staff, {
+        count: staff._count.transactions,
+        bill: totalBill,
+        saved: totalSaved,
+      });
     });
   } catch (error) {
     logger.error("Error in getPartnerStaffListAction:", error);
@@ -139,22 +162,7 @@ export async function createPartnerStaffAction(
 
     return {
       success: true,
-      staff: {
-        id: newStaff.id,
-        partnerId: newStaff.partnerId,
-        name: newStaff.name,
-        username: newStaff.username,
-        phone: newStaff.phone || undefined,
-        deskName: newStaff.deskName,
-        role: newStaff.role as "cashier" | "manager",
-        plainPassword: password,
-        isActive: newStaff.isActive,
-        createdAt: newStaff.createdAt.toISOString(),
-        updatedAt: newStaff.updatedAt.toISOString(),
-        transactionCount: 0,
-        totalBillAmount: 0,
-        totalSavedAmount: 0,
-      },
+      staff: toStaffModel(newStaff, { plainPassword: password, count: 0, bill: 0, saved: 0 }),
     };
   } catch (error) {
     logger.error("Error in createPartnerStaffAction:", error);
@@ -197,23 +205,13 @@ export async function updatePartnerStaffAction(
         deskName: parsed.data.deskName,
         role: parsed.data.role,
         isActive: parsed.data.isActive,
+        updatedAt: new Date(),
       },
     });
 
     return {
       success: true,
-      staff: {
-        id: updated.id,
-        partnerId: updated.partnerId,
-        name: updated.name,
-        username: updated.username,
-        phone: updated.phone || undefined,
-        deskName: updated.deskName,
-        role: updated.role as "cashier" | "manager",
-        isActive: updated.isActive,
-        createdAt: updated.createdAt.toISOString(),
-        updatedAt: updated.updatedAt.toISOString(),
-      },
+      staff: toStaffModel(updated),
     };
   } catch (error) {
     logger.error("Error in updatePartnerStaffAction:", error);
@@ -251,7 +249,10 @@ export async function resetPartnerStaffPasswordAction(
 
     await prisma.partnerStaff.update({
       where: { id },
-      data: { password: encryptedPassword },
+      data: {
+        password: encryptedPassword,
+        updatedAt: new Date(),
+      },
     });
 
     return { success: true, message: `"${existing.name}" এর পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে।` };
@@ -285,7 +286,10 @@ export async function togglePartnerStaffStatusAction(
 
     await prisma.partnerStaff.update({
       where: { id },
-      data: { isActive },
+      data: {
+        isActive,
+        updatedAt: new Date(),
+      },
     });
 
     const statusText = isActive ? "সক্রিয়" : "নিষ্ক্রিয়";
@@ -451,26 +455,11 @@ export async function getPartnerStaffDetailsAction(
     const avgBill = totalCount > 0 ? Math.round(totalBill / totalCount) : 0;
     const avgSaved = totalCount > 0 ? Math.round(totalSaved / totalCount) : 0;
 
-    const plainPassword = staff.password.startsWith("enc:")
-      ? decryptSecret(staff.password) || undefined
-      : undefined;
-
-    const partnerStaff: PartnerStaff = {
-      id: staff.id,
-      partnerId: staff.partnerId,
-      name: staff.name,
-      username: staff.username,
-      phone: staff.phone || undefined,
-      deskName: staff.deskName,
-      role: staff.role as "cashier" | "manager",
-      plainPassword,
-      isActive: staff.isActive,
-      createdAt: staff.createdAt.toISOString(),
-      updatedAt: staff.updatedAt.toISOString(),
-      transactionCount: totalCount,
-      totalBillAmount: totalBill,
-      totalSavedAmount: totalSaved,
-    };
+    const partnerStaff = toStaffModel(staff, {
+      count: totalCount,
+      bill: totalBill,
+      saved: totalSaved,
+    });
 
     return {
       success: true,

@@ -2,10 +2,25 @@ import Link from "next/link";
 import Image from "next/image";
 import { Phone, Mail, MapPin, MessageSquare } from "lucide-react";
 import { Locale, tServer } from "@/lib/i18n";
+import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
+import { toBanglaNums } from "@/lib/utils";
 
-export default function Footer({ locale = "bn" }: { locale?: string }) {
+export default async function Footer({ locale = "bn" }: { locale?: string }) {
   const currentLocale = (locale === "en" ? "en" : "bn") as Locale;
   const t = (key: string) => tServer(currentLocale, key);
+  const contact = await getCachedContactSettings();
+
+  const rawHotline = contact.hotline.replace(/[^0-9]/g, "");
+  const normalizedHotline = rawHotline.replace(/^(880|88|0)/, "");
+  const hotlineTel = `+880${normalizedHotline}`;
+  const hotlineDisplay =
+    currentLocale === "bn"
+      ? toBanglaNums(`+880 ${normalizedHotline}`)
+      : `+880 ${normalizedHotline}`;
+
+  const rawWhatsapp = contact.whatsapp.replace(/[^0-9]/g, "");
+  const normalizedWhatsapp = rawWhatsapp.replace(/^(880|88|0)/, "");
+  const whatsappUrl = `https://wa.me/880${normalizedWhatsapp}`;
 
   return (
     <footer
@@ -39,7 +54,7 @@ export default function Footer({ locale = "bn" }: { locale?: string }) {
             {/* Social Icons */}
             <div className="flex space-x-3">
               <a
-                href="https://www.facebook.com/profile.php?id=61591616953090"
+                href={contact.facebookUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="h-9 w-9 flex items-center justify-center rounded-xl bg-slate-800/60 border border-slate-700/50 text-slate-400 hover:text-white hover:bg-primary/20 hover:border-primary/30 transition-all duration-200"
@@ -50,7 +65,7 @@ export default function Footer({ locale = "bn" }: { locale?: string }) {
                 </svg>
               </a>
               <a
-                href="https://wa.me/8801886763849"
+                href={whatsappUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="h-9 w-9 flex items-center justify-center rounded-xl bg-slate-800/60 border border-slate-700/50 text-slate-400 hover:text-white hover:bg-emerald-500/20 hover:border-emerald-500/30 transition-all duration-200"
@@ -85,9 +100,9 @@ export default function Footer({ locale = "bn" }: { locale?: string }) {
                   { href: "/", label: t("layout.footer.home") },
                   { href: "/consultants", label: t("layout.footer.consultants") },
                   { href: "/partner-hospitals", label: t("layout.footer.partnerHospitals") },
-                  { href: "/emergency", label: currentLocale === "en" ? "Emergency Services" : "জরুরি সেবা" },
-                  { href: "/health-tools", label: currentLocale === "en" ? "Health Calculators" : "হেলথ ক্যালকুলেটর" },
-                  { href: "/health-tips", label: currentLocale === "en" ? "Health Tips & Blog" : "স্বাস্থ্য টিপস ও ব্লগ" },
+                  { href: "/emergency", label: t("layout.footer.emergencyServices") },
+                  { href: "/health-tools", label: t("layout.footer.healthCalculators") },
+                  { href: "/health-tips", label: t("layout.footer.healthTips") },
                   { href: "/membership", label: t("layout.footer.membershipPlans") },
                   { href: "/become-partner", label: t("layout.footer.becomeAPartner") },
                   { href: "/about-us", label: t("layout.footer.aboutUs") },
@@ -121,16 +136,16 @@ export default function Footer({ locale = "bn" }: { locale?: string }) {
                   <div className="h-8 w-8 rounded-lg bg-slate-800 border border-slate-700/50 flex items-center justify-center shrink-0">
                     <Phone className="h-4 w-4 text-primary" />
                   </div>
-                  <a href="tel:+8801886763849" className="hover:text-white transition-colors">
-                    {t("layout.footer.8801886763849")}
+                  <a href={`tel:${hotlineTel}`} className="hover:text-white transition-colors">
+                    {hotlineDisplay}
                   </a>
                 </li>
                 <li className="flex items-center gap-3">
                   <div className="h-8 w-8 rounded-lg bg-slate-800 border border-slate-700/50 flex items-center justify-center shrink-0">
                     <Mail className="h-4 w-4 text-primary" />
                   </div>
-                  <a href="mailto:healthclubfeni@gmail.com" className="hover:text-white transition-colors break-all">
-                    healthclubfeni@gmail.com
+                  <a href={`mailto:${contact.email}`} className="hover:text-white transition-colors break-all">
+                    {contact.email}
                   </a>
                 </li>
               </ul>

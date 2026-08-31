@@ -7,6 +7,7 @@ import { hashPassword } from "@/lib/crypto";
 import { getSessionUser, setSessionUser } from "@/lib/session";
 import { sendOtpEmail } from "@/lib/mail";
 import { logger } from "@/lib/logger";
+import { telemetry } from "@/lib/telemetry";
 import { SITE_URL } from "@/lib/siteConfig";
 import { updateTag } from "next/cache";
 import {
@@ -29,44 +30,17 @@ import {
   updateMemberProfileAction as _updateMemberProfileAction,
 } from "./memberAdminActions";
 
-export async function loginMemberAction(
-  identifier: string,
-  passwordInput: string
-) {
-  return _loginMemberAction(identifier, passwordInput);
-}
-
-export async function loginAdminAction(identifier: string, passwordInput: string) {
-  return _loginAdminAction(identifier, passwordInput);
-}
-
-export async function logoutUserAction() {
-  return _logoutUserAction();
-}
-
-export async function logoutMemberAction() {
-  return _logoutUserAction();
-}
-
-export async function verifyEmailOtpAction(email: string, code: string) {
-  return _verifyEmailOtpAction(email, code);
-}
-
-export async function resendVerificationCodeAction(email: string) {
-  return _resendVerificationCodeAction(email);
-}
-
-export async function requestPasswordResetAction(email: string) {
-  return _requestPasswordResetAction(email);
-}
-
-export async function resetPasswordAction(
-  email: string,
-  code: string,
-  rawNewPassword: string
-) {
-  return _resetPasswordAction(email, code, rawNewPassword);
-}
+export async function loginMemberAction(...args: Parameters<typeof _loginMemberAction>) { return _loginMemberAction(...args); }
+export async function loginAdminAction(...args: Parameters<typeof _loginAdminAction>) { return _loginAdminAction(...args); }
+export async function logoutUserAction() { return _logoutUserAction(); }
+export async function logoutMemberAction() { return _logoutUserAction(); }
+export async function verifyEmailOtpAction(...args: Parameters<typeof _verifyEmailOtpAction>) { return _verifyEmailOtpAction(...args); }
+export async function resendVerificationCodeAction(...args: Parameters<typeof _resendVerificationCodeAction>) { return _resendVerificationCodeAction(...args); }
+export async function requestPasswordResetAction(...args: Parameters<typeof _requestPasswordResetAction>) { return _requestPasswordResetAction(...args); }
+export async function resetPasswordAction(...args: Parameters<typeof _resetPasswordAction>) { return _resetPasswordAction(...args); }
+export async function getMembersAction() { return _getMembersAction(); }
+export async function updateMemberStatusAction(...args: Parameters<typeof _updateMemberStatusAction>) { return _updateMemberStatusAction(...args); }
+export async function updateMemberProfileAction(...args: Parameters<typeof _updateMemberProfileAction>) { return _updateMemberProfileAction(...args); }
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "healthclubfeni@gmail.com";
 
@@ -158,6 +132,7 @@ export async function addMemberAction(
       const sent = await sendOtpEmail(member.email, verificationCode, member.name);
       if (!sent) {
         logger.error(`[SIGNUP] OTP email send failed for ${member.email}, member ${newId} created but unverified`);
+        telemetry.captureEvent("otp_delivery_failed", { email: member.email, memberId: newId, flow: "signup_verification", tier: member.tier }, "error", { userId: newId, route: "addMemberAction", action: "signup_otp" });
       }
     }
 
@@ -182,19 +157,7 @@ export async function addMemberAction(
   }
 }
 
-export async function getMembersAction() {
-  return _getMembersAction();
-}
 
-export async function updateMemberStatusAction(id: string, status: "active" | "inactive") {
-  return _updateMemberStatusAction(id, status);
-}
-
-export async function updateMemberProfileAction(
-  ...args: Parameters<typeof _updateMemberProfileAction>
-) {
-  return _updateMemberProfileAction(...args);
-}
 
 
 export async function getPublicMemberVerificationAction(
@@ -328,11 +291,40 @@ export async function submitBkashPaymentAction(
     const cleanSender = bkashSender.trim();
     const cleanTxnId = bkashTxnId.trim().toUpperCase();
 
+    if (cleanTxnId.length < 6 || cleanTxnId.length > 20) {
+      telemetry.captureEvent("payment_submission_invalid", { memberId: cleanId, bkashSender: cleanSender, bkashTxnId: cleanTxnId, reason: "invalid_txn_length" }, "warn", { userId: cleanId, route: "submitBkashPaymentAction" });
+      return false;
+    }
+
     const member = await prisma.member.findUnique({
       where: { id: cleanId },
     });
 
     if (!member) return false;
+
+    // Check for duplicate bKash transaction IDs already submitted by another member
+    const duplicateTxn = await prisma.member.findFirst({
+      where: {
+        OR: [{ bkashTxnId: cleanTxnId }, { renewalBkashTxnId: cleanTxnId }],
+        NOT: { id: cleanId },
+      },
+      select: { id: true, name: true },
+    });
+
+    if (duplicateTxn) {
+      telemetry.captureEvent(
+        "payment_dispute",
+        {
+          disputeType: "duplicate_bkash_txn",
+          submittedBy: cleanId,
+          bkashSender: cleanSender,
+          bkashTxnId: cleanTxnId,
+          conflictsWithMemberId: duplicateTxn.id,
+        },
+        "warn",
+        { userId: cleanId, route: "submitBkashPaymentAction" }
+      );
+    }
 
     // Verify permission: session match or pending/inactive member completing payment
     const session = await getSessionUser();
@@ -377,15 +369,42 @@ export async function requestRenewalAction(
   }
 
   try {
-    if (!bkashSender || !bkashTxnId) {
+    const cleanSender = bkashSender?.trim() || "";
+    const cleanTxnId = bkashTxnId?.trim().toUpperCase() || "";
+
+    if (!cleanSender || !cleanTxnId) {
+      telemetry.captureEvent("payment_renewal_invalid", { memberId: session.userId, reason: "missing_fields" }, "warn", { userId: session.userId, route: "requestRenewalAction" });
       return { success: false, message: "বিকাশ নম্বর এবং ট্রানজেকশন আইডি দিন।" };
+    }
+
+    const duplicateTxn = await prisma.member.findFirst({
+      where: {
+        OR: [{ bkashTxnId: cleanTxnId }, { renewalBkashTxnId: cleanTxnId }],
+        NOT: { id: session.userId },
+      },
+      select: { id: true },
+    });
+
+    if (duplicateTxn) {
+      telemetry.captureEvent(
+        "payment_dispute",
+        {
+          disputeType: "duplicate_renewal_txn",
+          submittedBy: session.userId,
+          bkashSender: cleanSender,
+          bkashTxnId: cleanTxnId,
+          conflictsWithMemberId: duplicateTxn.id,
+        },
+        "warn",
+        { userId: session.userId, route: "requestRenewalAction" }
+      );
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateData: any = {
       renewalStatus: "pending",
-      renewalBkashSender: bkashSender,
-      renewalBkashTxnId: bkashTxnId,
+      renewalBkashSender: cleanSender,
+      renewalBkashTxnId: cleanTxnId,
     };
 
     if (profession) {

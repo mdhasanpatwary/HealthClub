@@ -68,6 +68,13 @@ export function HealthTipsDirectory({
 
   return (
     <div className="space-y-8">
+      {/* Screen Reader Live Announcement */}
+      <div aria-live="polite" role="status" aria-atomic="true" className="sr-only">
+        {isEn
+          ? `Found ${filteredArticles.length} health guide${filteredArticles.length === 1 ? "" : "s"}`
+          : `${filteredArticles.length}টি স্বাস্থ্য গাইড পাওয়া গেছে`}
+      </div>
+
       {/* Search & Category Filter */}
       <div className="space-y-4">
         {/* Search Input Bar */}

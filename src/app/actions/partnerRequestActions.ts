@@ -7,6 +7,7 @@ import { getSessionUser, setSessionUser } from "@/lib/session";
 import { hashPassword, verifyPassword } from "@/lib/crypto";
 import { sendPasswordResetEmail } from "@/lib/mail";
 import { logger } from "@/lib/logger";
+import { telemetry } from "@/lib/telemetry";
 import { updateTag } from "next/cache";
 import { PaginatedResult } from "@/types/pagination";
 import { hasAdminPermission } from "@/lib/permissions";
@@ -320,6 +321,7 @@ export async function loginPartnerAction(
           deskName: staffData.deskName,
           staffRole: (staffData.role as "cashier" | "manager") || "cashier",
           partnerId: staffData.partnerId,
+          staffUpdatedAt: staffData.updatedAt.getTime(),
         });
 
         return {
@@ -413,6 +415,7 @@ export async function requestPartnerPasswordResetAction(
     const sent = await sendPasswordResetEmail(partner.email || "", otp, partner.name);
     if (!sent) {
       logger.error(`[PARTNER PASSWORD RESET] Email send failed for ${email}`);
+      telemetry.captureEvent("otp_delivery_failed", { email, partnerId: partner.id, flow: "partner_password_reset" }, "error", { userId: partner.id, route: "requestPartnerPasswordResetAction", action: "partner_password_reset_otp" });
       return { success: false, message: "পাসওয়ার্ড রিসেট ওটিপি পাঠাতে সমস্যা হয়েছে। কিছুক্ষণ পর চেষ্টা করুন।" };
     }
 
@@ -455,11 +458,13 @@ export async function resetPartnerPasswordAction(
     }
 
     if (attempts >= MAX_PARTNER_OTP_ATTEMPTS) {
+      telemetry.captureEvent("partner_password_reset_failed", { email: cleanEmail, partnerId: partner.id, reason: "max_attempts_exceeded" }, "warn", { userId: partner.id, route: "resetPartnerPasswordAction" });
       return { success: false, message: "অনেকবার ভুল কোড দেওয়া হয়েছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
     }
 
     const diffMinutes = (Date.now() - new Date(partner.verificationCodeCreatedAt).getTime()) / (1000 * 60);
     if (diffMinutes > 15) {
+      telemetry.captureEvent("partner_password_reset_failed", { email: cleanEmail, partnerId: partner.id, reason: "otp_expired" }, "warn", { userId: partner.id, route: "resetPartnerPasswordAction" });
       return { success: false, message: "ভেরিফিকেশন কোডের মেয়াদ শেষ হয়ে গেছে। আবার চেষ্টা করুন।" };
     }
 

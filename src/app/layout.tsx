@@ -6,7 +6,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import BottomNav from "@/components/layout/BottomNav";
 import GlobalNoticeBanner from "@/components/layout/GlobalNoticeBanner";
-import { getCachedNoticeSetting } from "@/app/actions/systemSettingsActions";
+import { getCachedNoticeSetting, getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 import { Toaster } from "sonner";
 import { cookies, headers } from "next/headers";
 import { LanguageProvider } from "@/components/layout/LanguageProvider";
@@ -180,7 +180,15 @@ export default async function RootLayout({
   // Serialize only the active route's translation namespaces (e.g. common + landing)
   const initialNamespaces = getNamespacesForRoute(pathname);
   const initialDict = getDictionary(locale, initialNamespaces);
-  const notice = await getCachedNoticeSetting();
+  const [notice, contactSettings] = await Promise.all([
+    getCachedNoticeSetting(),
+    getCachedContactSettings(),
+  ]);
+
+  const rawHotline = contactSettings.hotline.replace(/[^0-9]/g, "");
+  const formattedTel = `+880${rawHotline.replace(/^(880|88|0)/, "")}`;
+  const rawWhatsapp = contactSettings.whatsapp.replace(/[^0-9]/g, "");
+  const formattedWhatsapp = `https://wa.me/880${rawWhatsapp.replace(/^(880|88|0)/, "")}`;
 
   const globalJsonLd = [
     {
@@ -189,13 +197,13 @@ export default async function RootLayout({
       "name": "হেলথ ক্লাব",
       "alternateName": ["Health Club", "Health Club Feni"],
       "url": SITE_URL,
-      "logo": `${SITE_URL}/images/member-card-logo.png`,
+      "logo": `${SITE_URL}/images/member-card-logo.webp`,
       "description": "স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী - একটি প্রিমিয়াম স্বাস্থ্য মেম্বারশিপ সার্ভিস।",
-      "telephone": "+8801886763849",
-      "email": "healthclubfeni@gmail.com",
+      "telephone": formattedTel,
+      "email": contactSettings.email,
       "sameAs": [
-        "https://www.facebook.com/profile.php?id=61591616953090",
-        "https://wa.me/8801886763849",
+        contactSettings.facebookUrl,
+        formattedWhatsapp,
         "https://youtube.com"
       ],
       "address": {
@@ -205,12 +213,13 @@ export default async function RootLayout({
       },
       "contactPoint": {
         "@type": "ContactPoint",
-        "telephone": "+8801886763849",
+        "telephone": formattedTel,
         "contactType": "customer service",
         "areaServed": "BD",
         "availableLanguage": ["Bengali", "English"]
       }
     },
+
     {
       "@context": "https://schema.org",
       "@type": "WebSite",

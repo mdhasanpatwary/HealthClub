@@ -58,9 +58,9 @@ export function SettingsTab() {
       if (data.bkash_personal_number) setBkashPersonal(data.bkash_personal_number);
       if (data.bkash_merchant_number) setBkashMerchant(data.bkash_merchant_number);
       if (data.payment_instructions) setPaymentInstructions(data.payment_instructions);
-      if (data.hotline_phone) setHotlinePhone(data.hotline_phone);
-      if (data.whatsapp_phone) setWhatsappPhone(data.whatsapp_phone);
-      if (data.official_email) setOfficialEmail(data.official_email);
+      if (data.hotline_phone || data.contact_hotline) setHotlinePhone(data.hotline_phone || data.contact_hotline);
+      if (data.whatsapp_phone || data.contact_whatsapp) setWhatsappPhone(data.whatsapp_phone || data.contact_whatsapp);
+      if (data.official_email || data.contact_email) setOfficialEmail(data.official_email || data.contact_email);
       if (data.facebook_url) setFacebookUrl(data.facebook_url);
       if (data.notice_enabled) setNoticeEnabled(data.notice_enabled === "true");
       if (data.notice_text) setNoticeText(data.notice_text);
@@ -82,12 +82,21 @@ export function SettingsTab() {
     setSaving(true);
     try {
       const payload: Record<string, string> = {
-        founding_fee: foundingFee, premium_fee: premiumFee,
-        bkash_personal_number: bkashPersonal, bkash_merchant_number: bkashMerchant,
-        payment_instructions: paymentInstructions, hotline_phone: hotlinePhone,
-        whatsapp_phone: whatsappPhone, official_email: officialEmail,
-        facebook_url: facebookUrl, notice_enabled: noticeEnabled ? "true" : "false",
-        notice_text: noticeText, allow_member_tx: allowMemberTx ? "true" : "false",
+        founding_fee: foundingFee,
+        premium_fee: premiumFee,
+        bkash_personal_number: bkashPersonal,
+        bkash_merchant_number: bkashMerchant,
+        payment_instructions: paymentInstructions,
+        hotline_phone: hotlinePhone,
+        contact_hotline: hotlinePhone,
+        whatsapp_phone: whatsappPhone,
+        contact_whatsapp: whatsappPhone,
+        official_email: officialEmail,
+        contact_email: officialEmail,
+        facebook_url: facebookUrl,
+        notice_enabled: noticeEnabled ? "true" : "false",
+        notice_text: noticeText,
+        allow_member_tx: allowMemberTx ? "true" : "false",
       };
 
       const res = await updateMultipleSystemSettingsAction(payload);

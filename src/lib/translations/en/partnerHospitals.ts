@@ -62,7 +62,19 @@ export const partnerHospitalsEn = {
   "partnerHospitals.gallery.next": "Next Image",
   "partnerHospitals.gallery.close": "Close Gallery",
 
+  // Categories
+  "partnerHospitals.category.specializedHospital": "Specialized Hospital",
+  "partnerHospitals.category.diagnosticCenter": "Diagnostic & Pathology Center",
+  "partnerHospitals.category.modelPharmacy": "Model Pharmacy",
+  "partnerHospitals.category.healthcarePartner": "Healthcare Partner",
+
   // Profile View
+  "partnerHospitals.profile.breadcrumbHome": "Home",
+  "partnerHospitals.profile.breadcrumbPartnerNetwork": "Partner Network",
+  "partnerHospitals.profile.backToNetwork": "Back to Partner Network",
+  "partnerHospitals.profile.verifiedPartner": "Verified Partner",
+  "partnerHospitals.profile.photos": "Photos",
+  "partnerHospitals.profile.memberDiscount": "Member Discount",
   "partnerHospitals.profile.overview": "Overview & Facilities",
   "partnerHospitals.profile.discountTitle": "Member Discount Rates",
   "partnerHospitals.profile.doctorRoster": "Doctors & Specialists Chamber",

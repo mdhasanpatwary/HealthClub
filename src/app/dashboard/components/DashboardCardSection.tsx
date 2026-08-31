@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { CreditCard, Download } from "lucide-react";
+import { CreditCard, Download, Printer } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -40,14 +40,27 @@ export function DashboardCardSection({
               <div className="w-full flex justify-center pb-1">
                 <MemberCard ref={cardRef} member={user} />
               </div>
-              <Button
-                onClick={handleDownloadCard}
-                variant="outline"
-                className="w-full text-xs active:scale-[0.98]"
-              >
-                <Download className="h-4 w-4 text-primary" />
-                {t("dashboard.card.printButton")}
-              </Button>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <Button
+                  onClick={handleDownloadCard}
+                  variant="outline"
+                  className="w-full text-xs active:scale-[0.98] gap-1.5 cursor-pointer"
+                >
+                  <Download className="h-4 w-4 text-primary" />
+                  {t("dashboard.card.downloadPng")}
+                </Button>
+                <Link
+                  href="/dashboard/print"
+                  target="_blank"
+                  className={cn(
+                    buttonVariants({ variant: "outline", size: "default" }),
+                    "w-full text-xs active:scale-[0.98] gap-1.5 cursor-pointer"
+                  )}
+                >
+                  <Printer className="h-4 w-4 text-primary" />
+                  {t("dashboard.card.printPhysical")}
+                </Link>
+              </div>
             </div>
           ) : user.status === "pending_payment" || (user.status === "inactive" && user.tier === "premium") ? (
             <div className="relative w-full max-w-md mx-auto aspect-[1.586/1] rounded-2xl p-6 overflow-hidden border border-rose-500/20 bg-gradient-to-br from-slate-900 to-slate-950 flex flex-col justify-center items-center text-center space-y-3 shadow-lg">

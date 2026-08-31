@@ -29,6 +29,7 @@ export interface SessionPayload {
   deskName?: string;
   staffRole?: "cashier" | "manager";
   partnerId?: string;
+  staffUpdatedAt?: number;
   expiresAt: Date;
 }
 
@@ -63,10 +64,45 @@ export async function decrypt(session: string | undefined = ""): Promise<Session
       deskName: payload.deskName as string | undefined,
       staffRole: payload.staffRole as ("cashier" | "manager") | undefined,
       partnerId: payload.partnerId as string | undefined,
+      staffUpdatedAt: typeof payload.staffUpdatedAt === "number" ? payload.staffUpdatedAt : undefined,
       expiresAt: new Date(payload.expiresAt as string),
     };
   } catch {
     return null;
+  }
+}
+
+/**
+ * Validates that an active partner staff account is still enabled, exists, and
+ * has not had their status deactivated or password reset after token issuance.
+ */
+async function verifyActivePartnerStaff(
+  staffId: string,
+  tokenStaffUpdatedAt?: number
+): Promise<boolean> {
+  try {
+    const { prisma } = await import("@/lib/prisma");
+    const staff = await prisma.partnerStaff.findUnique({
+      where: { id: staffId },
+      select: { id: true, isActive: true, updatedAt: true },
+    });
+
+    if (!staff || !staff.isActive) {
+      return false;
+    }
+
+    if (tokenStaffUpdatedAt) {
+      const dbUpdatedAt = staff.updatedAt.getTime();
+      // Allow 1000ms clock skew / tolerance for token generation precision
+      if (dbUpdatedAt > tokenStaffUpdatedAt + 1000) {
+        return false;
+      }
+    }
+
+    return true;
+  } catch (error) {
+    logger.error("[AUTH] Error verifying active partner staff session:", error);
+    return false;
   }
 }
 
@@ -85,6 +121,7 @@ export async function setSessionUser(
     deskName?: string;
     staffRole?: "cashier" | "manager";
     partnerId?: string;
+    staffUpdatedAt?: number;
   }
 ) {
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 1 week
@@ -107,12 +144,29 @@ export async function setSessionUser(
 
 /**
  * Retrieves and verifies the current session from cookies.
- * Returns the decrypted session payload, or null if invalid/missing.
+ * Returns the decrypted session payload, or null if invalid/missing/revoked.
  */
 export async function getSessionUser(): Promise<SessionPayload | null> {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get("session")?.value;
-  return decrypt(sessionCookie);
+  const session = await decrypt(sessionCookie);
+  if (!session) return null;
+
+  // Immediate session invalidation for partner staff if deactivated or password reset
+  if (session.role === "partner_staff" && session.staffId) {
+    const isValid = await verifyActivePartnerStaff(session.staffId, session.staffUpdatedAt);
+    if (!isValid) {
+      logger.warn(`[AUTH] Revoking invalid/deactivated partner_staff session for staffId: ${session.staffId}`);
+      try {
+        cookieStore.delete("session");
+      } catch {
+        // Readonly in RSC render pass
+      }
+      return null;
+    }
+  }
+
+  return session;
 }
 
 /**

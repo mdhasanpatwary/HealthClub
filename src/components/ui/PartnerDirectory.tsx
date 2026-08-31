@@ -96,6 +96,13 @@ export default function PartnerDirectory({ partners: initialPartners, limit, sho
 
   return (
     <div className="space-y-6">
+      {/* Screen Reader Live Announcement */}
+      <div aria-live="polite" role="status" aria-atomic="true" className="sr-only">
+        {isEn
+          ? `Found ${filteredPartners.length} partner hospital${filteredPartners.length === 1 ? "" : "s"}`
+          : `${filteredPartners.length}টি পার্টনার প্রতিষ্ঠান পাওয়া গেছে`}
+      </div>
+
       {/* Search and Filters Section */}
       <div className="space-y-4">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">

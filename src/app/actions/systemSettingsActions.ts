@@ -206,3 +206,88 @@ export async function setMemberTxAllowedAction(enabled: boolean): Promise<boolea
   return updateSystemSettingAction("allow_member_tx", enabled ? "true" : "false");
 }
 
+export interface PublicContactSettings {
+  hotline: string;
+  whatsapp: string;
+  email: string;
+  facebookUrl: string;
+}
+
+export const getCachedContactSettings = unstable_cache(
+  async (): Promise<PublicContactSettings> => {
+    try {
+      const settings = await prisma.systemSetting.findMany({
+        where: {
+          key: {
+            in: [
+              "contact_hotline",
+              "hotline_phone",
+              "contact_whatsapp",
+              "whatsapp_phone",
+              "contact_email",
+              "official_email",
+              "facebook_url",
+            ],
+          },
+        },
+      });
+      const map: Record<string, string> = {};
+      for (const s of settings) {
+        map[s.key] = s.value;
+      }
+      return {
+        hotline:
+          map["contact_hotline"] ||
+          map["hotline_phone"] ||
+          process.env.NEXT_PUBLIC_HOTLINE_PHONE ||
+          process.env.HOTLINE_PHONE ||
+          "01886763849",
+        whatsapp:
+          map["contact_whatsapp"] ||
+          map["whatsapp_phone"] ||
+          process.env.NEXT_PUBLIC_WHATSAPP_PHONE ||
+          process.env.WHATSAPP_PHONE ||
+          "01886763849",
+        email:
+          map["contact_email"] ||
+          map["official_email"] ||
+          process.env.NEXT_PUBLIC_OFFICIAL_EMAIL ||
+          process.env.OFFICIAL_EMAIL ||
+          process.env.NEXT_PUBLIC_ADMIN_EMAIL ||
+          "healthclubfeni@gmail.com",
+        facebookUrl:
+          map["facebook_url"] ||
+          process.env.NEXT_PUBLIC_FACEBOOK_URL ||
+          "https://www.facebook.com/profile.php?id=61591616953090",
+      };
+    } catch (error) {
+      logger.error("Error fetching contact settings:", error);
+      return {
+        hotline:
+          process.env.NEXT_PUBLIC_HOTLINE_PHONE ||
+          process.env.HOTLINE_PHONE ||
+          "01886763849",
+        whatsapp:
+          process.env.NEXT_PUBLIC_WHATSAPP_PHONE ||
+          process.env.WHATSAPP_PHONE ||
+          "01886763849",
+        email:
+          process.env.NEXT_PUBLIC_OFFICIAL_EMAIL ||
+          process.env.OFFICIAL_EMAIL ||
+          process.env.NEXT_PUBLIC_ADMIN_EMAIL ||
+          "healthclubfeni@gmail.com",
+        facebookUrl:
+          process.env.NEXT_PUBLIC_FACEBOOK_URL ||
+          "https://www.facebook.com/profile.php?id=61591616953090",
+      };
+    }
+  },
+  ["public_contact_settings"],
+  { revalidate: 60, tags: [SYSTEM_SETTINGS_TAG] }
+);
+
+export async function getPublicContactSettingsAction(): Promise<PublicContactSettings> {
+  return getCachedContactSettings();
+}
+
+

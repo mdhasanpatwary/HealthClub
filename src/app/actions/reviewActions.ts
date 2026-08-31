@@ -1,68 +1,27 @@
 "use server";
 
-import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
-import { Review, ReviewStatus, PartnerReviewStats, AdminReviewSummary } from "@/services/db";
+import { Review, AdminReviewSummary } from "@/services/db";
 import { hasAdminPermission } from "@/lib/permissions";
+import {
+  submitReviewSchema,
+  serializeReview,
+  ReviewWithRelations,
+  ReviewEligibilityReason,
+  ReviewEligibilityResult,
+  GetPartnerReviewsOptions,
+  GetPartnerReviewsResult,
+} from "./reviewHelpers";
 
-const submitReviewSchema = z.object({
-  partnerId: z.string().min(1, "Partner ID is required"),
-  rating: z.number().int().min(1, "Rating must be between 1 and 5").max(5, "Rating must be between 1 and 5"),
-  comment: z.string().max(1000, "Review comment cannot exceed 1000 characters").optional().nullable(),
-});
+export type {
+  ReviewEligibilityReason,
+  ReviewEligibilityResult,
+  GetPartnerReviewsOptions,
+  GetPartnerReviewsResult,
+};
 
-interface ReviewWithRelations {
-  id: string;
-  memberId: string;
-  partnerId: string;
-  rating: number;
-  comment: string | null;
-  status: string;
-  adminFeedback: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-  member?: { id: string; name: string; tier: string; phone?: string; profilePictureUrl: string | null } | null;
-  partner?: { id: string; name: string; category: string } | null;
-}
-
-function serializeReview(r: ReviewWithRelations): Review {
-  return {
-    id: r.id,
-    memberId: r.memberId,
-    partnerId: r.partnerId,
-    rating: r.rating,
-    comment: r.comment,
-    status: r.status as ReviewStatus,
-    adminFeedback: r.adminFeedback,
-    createdAt: r.createdAt.toISOString(),
-    updatedAt: r.updatedAt.toISOString(),
-    member: r.member
-      ? { id: r.member.id, name: r.member.name, tier: r.member.tier, phone: r.member.phone, profilePictureUrl: r.member.profilePictureUrl }
-      : undefined,
-    partner: r.partner ? { id: r.partner.id, name: r.partner.name, category: r.partner.category } : undefined,
-  };
-}
-
-export type ReviewEligibilityReason =
-  | "NOT_LOGGED_IN"
-  | "LOGGED_IN_AS_ADMIN"
-  | "INACTIVE_MEMBERSHIP"
-  | "NO_TRANSACTION"
-  | "ELIGIBLE";
-
-export interface ReviewEligibilityResult {
-  canReview: boolean;
-  reason: ReviewEligibilityReason;
-  hasReviewed: boolean;
-  existingReview?: Review | null;
-  member?: {
-    id: string;
-    name: string;
-    tier: string;
-  };
-}
 
 export async function canMemberReviewPartnerAction(
   partnerId: string
@@ -259,35 +218,61 @@ export async function submitReviewAction(
   }
 }
 
-export async function getPartnerReviewsAction(
-  partnerId: string
-): Promise<{ success: boolean; reviews: Review[]; stats: PartnerReviewStats }> {
-  try {
-    const rawReviews = await prisma.review.findMany({
-      where: { partnerId, status: "approved" },
-      include: {
-        member: { select: { id: true, name: true, tier: true, profilePictureUrl: true } },
-      },
-      orderBy: { createdAt: "desc" },
-    });
 
-    const reviews = rawReviews.map(serializeReview);
-    const totalReviews = reviews.length;
+export async function getPartnerReviewsAction(
+  partnerId: string,
+  options?: GetPartnerReviewsOptions
+): Promise<GetPartnerReviewsResult> {
+  try {
+    const page = Math.max(Number(options?.page || 1), 1);
+    const pageSize = Math.max(Number(options?.pageSize || 5), 1);
+    const ratingFilter = options?.rating ? Number(options.rating) : undefined;
+
+    const where = {
+      partnerId,
+      status: "approved",
+      ...(ratingFilter ? { rating: ratingFilter } : {}),
+    };
+
+    const [filteredCount, rawReviews, allApprovedReviews] = await Promise.all([
+      prisma.review.count({ where }),
+      prisma.review.findMany({
+        where,
+        include: {
+          member: { select: { id: true, name: true, tier: true, profilePictureUrl: true } },
+        },
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
+      prisma.review.findMany({
+        where: { partnerId, status: "approved" },
+        select: { rating: true },
+      }),
+    ]);
+
+    const totalApproved = allApprovedReviews.length;
     const distribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
     let ratingSum = 0;
 
-    for (const r of reviews) {
+    for (const r of allApprovedReviews) {
       const star = Math.min(Math.max(r.rating, 1), 5) as 1 | 2 | 3 | 4 | 5;
       distribution[star] = (distribution[star] || 0) + 1;
       ratingSum += r.rating;
     }
 
-    const averageRating = totalReviews > 0 ? Number((ratingSum / totalReviews).toFixed(1)) : 0;
+    const averageRating = totalApproved > 0 ? Number((ratingSum / totalApproved).toFixed(1)) : 0;
+    const totalPages = Math.ceil(filteredCount / pageSize) || 1;
 
     return {
       success: true,
-      reviews,
-      stats: { averageRating, totalReviews, distribution },
+      reviews: rawReviews.map(serializeReview),
+      stats: { averageRating, totalReviews: totalApproved, distribution },
+      totalItems: filteredCount,
+      totalPages,
+      currentPage: page,
+      pageSize,
+      hasMore: page < totalPages,
     };
   } catch (error) {
     logger.error("Error fetching partner reviews:", error);
@@ -295,6 +280,11 @@ export async function getPartnerReviewsAction(
       success: false,
       reviews: [],
       stats: { averageRating: 0, totalReviews: 0, distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 } },
+      totalItems: 0,
+      totalPages: 1,
+      currentPage: 1,
+      pageSize: 5,
+      hasMore: false,
     };
   }
 }

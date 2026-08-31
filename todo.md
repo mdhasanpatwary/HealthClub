@@ -523,5 +523,56 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/health-tools/components/PregnancyCalculator.tsx`
   - **Details**: `new Date(lmpDate)` parses `"YYYY-MM-DD"` as UTC midnight. When accessed with local date methods (`getFullYear()`, `getMonth()`, `getDate()`) in negative timezones (e.g. UTC-5), the date can shift backwards by one day. Parse `YYYY-MM-DD` explicitly using `const [y, m, d] = str.split("-").map(Number); new Date(y, m - 1, d);`.
 
+---
 
+## 🌟 Phase 16: Performance, Dynamic Settings, i18n & UX Enhancements (TODO-107 to TODO-114)
 
+### ⚡ Performance & Asset Optimization (Item 2)
+
+- [x] **TODO-107**: **Purge Unused Legacy PNG Assets & Update Metadata References to WebP**
+  - **Severity**: High
+  - **Files**: `public/images/`, `src/app/manifest.ts`, `src/app/layout.tsx`, `src/app/emergency/page.tsx`
+  - **Details**: Update PWA manifest, root JSON-LD metadata, and emergency schema to reference `/images/member-card-logo.webp` (11 KB) instead of the uncompressed `member-card-logo.png` (270 KB). Remove legacy unreferenced PNG files (`health-club-logo.png` 373 KB, `member-card-bg.png` 509 KB, `member-card-logo.png` 270 KB) from `public/images/` to reduce repository and bundle payload.
+
+- [x] **TODO-108**: **Add Server-Side Pagination for Customer Reviews & Partner Statements**
+  - **Severity**: Medium
+  - **Files**: `src/app/actions/reviewActions.ts`, `src/app/actions/partnerAnalyticsActions.ts`, `src/components/reviews/ReviewSection.tsx`, `src/app/admin/components/ReviewsTab.tsx`
+  - **Details**: Enforce server-side pagination with `skip`/`take` and cursor/page controls on member review queries and partner monthly transaction statements to ensure scalability and fast query responses as records grow.
+
+### 🔒 Security, Dynamic Settings & Session Invalidation (Items 3.2 & 3.3)
+
+- [x] **TODO-109**: **Connect Contact Helplines & Social Links to Dynamic System Settings**
+  - **Severity**: Medium
+  - **Files**: `src/components/layout/Footer.tsx`, `src/components/landing/ContactForm.tsx`, `src/data/emergencyData.ts`, `src/app/actions/systemSettingsActions.ts`
+  - **Details**: Replace hardcoded contact numbers (`01886763849`), email addresses (`healthclubfeni@gmail.com`), and WhatsApp links across Footer, Contact Form, and Emergency directory with dynamically fetched `SystemSetting` keys (`contact_hotline`, `contact_whatsapp`, `contact_email`, `facebook_url`) with fallback to environment variables.
+
+- [x] **TODO-110**: **Invalidate Active JWT Sessions on Partner Staff Deactivation & Password Reset**
+  - **Severity**: High
+  - **Files**: `src/proxy.ts`, `src/lib/session.ts`, `src/app/actions/partnerStaffActions.ts`
+  - **Details**: When an admin or partner manager deactivates a cashier (`isActive: false`) or resets their password in `PartnerStaff`, ensure their active JWT session is immediately invalidated on the next request by verifying staff active status in proxy/server actions or incorporating a token revision timestamp.
+
+### 🌐 Localization (i18n) Standardization (Item 4)
+
+- [x] **TODO-111**: **Replace Ad-Hoc Inline Ternary Locale Checks with i18n Dictionary Keys**
+  - **Severity**: Medium
+  - **Files**: `src/components/layout/Footer.tsx`, `src/components/partner-hospitals/HospitalProfileView.tsx`, `src/lib/translations/`
+  - **Details**: Replace inline `currentLocale === "en" ? ... : ...` ternary strings in `Footer.tsx` (emergency, health tools, health tips links) and `HospitalProfileView.tsx` (breadcrumbs, facility category labels) with standard dictionary keys loaded from translation namespaces.
+
+### 📱 Mobile-First UX, Accessibility (a11y) & Print Media (Item 5)
+
+- [x] **TODO-112**: **Implement Screen Reader Live Announcements (`aria-live`) for Dynamic Search**
+  - **Severity**: Low
+  - **Files**: `src/components/ui/DoctorDirectory.tsx`, `src/app/partner-hospitals/components/PartnerDirectory.tsx`, `src/app/emergency/components/EmergencyDirectory.tsx`
+  - **Details**: Add screen-reader-only live announcement regions (`<div aria-live="polite" className="sr-only">`) to dynamically notify assistive technology users of matching result counts when category filters or search inputs change.
+
+- [x] **TODO-113**: **Standardize CR80 Physical PVC Card Print Sizing & Media Queries**
+  - **Severity**: Low
+  - **Files**: `src/app/dashboard/print/page.tsx`, `src/components/ui/MemberCard.tsx`
+  - **Details**: Add precise CR80 physical card dimensions (`85.60mm × 53.98mm`) and high-DPI scaling rules inside `@media print` on `/dashboard/print` to support high-quality printing on PVC ID card printers and wallet photo laminates.
+
+### 📊 Observability & Failure Telemetry (Item 6)
+
+- [x] **TODO-114**: **Add Telemetry Breadcrumbs for OTP Delivery Failures & Payment Disputes**
+  - **Severity**: Medium
+  - **Files**: `src/lib/telemetry.ts`, `src/app/actions/memberAuthActions.ts`, `src/app/actions/memberActions.ts`
+  - **Details**: Instrument structured telemetry error events (`telemetry.captureEvent`) when email OTP delivery fails or when duplicate/invalid bKash transaction IDs are submitted to facilitate real-time monitoring and rapid dispute resolution.

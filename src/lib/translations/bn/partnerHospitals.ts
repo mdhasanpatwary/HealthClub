@@ -62,7 +62,19 @@ export const partnerHospitalsBn = {
   "partnerHospitals.gallery.next": "পরের ছবি",
   "partnerHospitals.gallery.close": "গ্যালারি বন্ধ করুন",
 
+  // Categories
+  "partnerHospitals.category.specializedHospital": "স্পেশালাইজড হাসপাতাল",
+  "partnerHospitals.category.diagnosticCenter": "ডায়াগনস্টিক ও প্যাথলজি সেন্টার",
+  "partnerHospitals.category.modelPharmacy": "মডেল ফার্মেসি",
+  "partnerHospitals.category.healthcarePartner": "স্বাস্থ্যসেবা পার্টনার",
+
   // Profile View
+  "partnerHospitals.profile.breadcrumbHome": "হোম",
+  "partnerHospitals.profile.breadcrumbPartnerNetwork": "পার্টনার নেটওয়ার্ক",
+  "partnerHospitals.profile.backToNetwork": "সকল পার্টনার প্রতিষ্ঠানে ফিরে যান",
+  "partnerHospitals.profile.verifiedPartner": "ভেরিফাইড পার্টনার",
+  "partnerHospitals.profile.photos": "ছবি গ্যালারি",
+  "partnerHospitals.profile.memberDiscount": "মেম্বার ডিসকাউন্ট",
   "partnerHospitals.profile.overview": "প্রতিষ্ঠানের বিবরণ ও সুবিধাসমূহ",
   "partnerHospitals.profile.discountTitle": "মেম্বারদের ডিসকাউন্ট রেট",
   "partnerHospitals.profile.doctorRoster": "চেম্বার ও বিশেষজ্ঞ ডাক্তার তালিকা",

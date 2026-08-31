@@ -1,22 +1,15 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
 import {
   Star,
   ShieldCheck,
   MessageSquarePlus,
-  LogIn,
-  Receipt,
-  Clock,
-  CheckCircle2,
   Filter,
   Sparkles,
-  ShieldAlert,
-  Settings,
+  Loader2,
 } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatNum } from "@/lib/i18n";
@@ -28,6 +21,7 @@ import {
 } from "@/app/actions/reviewActions";
 import { ReviewCard } from "./ReviewCard";
 import { ReviewFormModal } from "./ReviewFormModal";
+import { ReviewEligibilityBanner } from "./ReviewEligibilityBanner";
 
 interface ReviewSectionProps {
   partner: Partner;
@@ -43,8 +37,17 @@ export default function ReviewSection({
   const { t, locale } = useLanguage();
   const isBn = locale === "bn";
 
-  const [loading, setLoading] = useState(!initialReviews);
+  const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [reviews, setReviews] = useState<Review[]>(initialReviews || []);
+  const [page, setPage] = useState(1);
+  const pageSize = 5;
+  const [totalItems, setTotalItems] = useState(
+    initialStats?.totalReviews || initialReviews?.length || 0
+  );
+  const [hasMore, setHasMore] = useState(
+    (initialReviews?.length || 0) < (initialStats?.totalReviews || 0)
+  );
   const [stats, setStats] = useState<PartnerReviewStats>(
     initialStats || {
       averageRating: 0,
@@ -58,20 +61,42 @@ export default function ReviewSection({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStarFilter, setSelectedStarFilter] = useState<number | null>(null);
 
-  // Load reviews & stats
-  const loadReviews = useCallback(async () => {
-    try {
-      const res = await getPartnerReviewsAction(partner.id);
-      if (res.success) {
-        setReviews(res.reviews);
-        setStats(res.stats);
+  // Load reviews & stats with server-side pagination
+  const loadReviews = useCallback(
+    async (pageToLoad: number, starFilter: number | null, append: boolean = false) => {
+      if (append) {
+        setLoadingMore(true);
+      } else {
+        setLoading(true);
       }
-    } catch {
-      // Keep existing
-    } finally {
-      setLoading(false);
-    }
-  }, [partner.id]);
+
+      try {
+        const res = await getPartnerReviewsAction(partner.id, {
+          page: pageToLoad,
+          pageSize,
+          rating: starFilter,
+        });
+
+        if (res.success) {
+          if (append) {
+            setReviews((prev) => [...prev, ...res.reviews]);
+          } else {
+            setReviews(res.reviews);
+          }
+          setStats(res.stats);
+          setPage(pageToLoad);
+          setTotalItems(res.totalItems);
+          setHasMore(res.hasMore);
+        }
+      } catch {
+        // Keep existing
+      } finally {
+        setLoading(false);
+        setLoadingMore(false);
+      }
+    },
+    [partner.id, pageSize]
+  );
 
   // Load member review eligibility
   const checkEligibility = useCallback(async () => {
@@ -89,7 +114,9 @@ export default function ReviewSection({
     let isMounted = true;
     Promise.resolve().then(() => {
       if (isMounted) {
-        if (!initialReviews) loadReviews();
+        if (!initialReviews) {
+          loadReviews(1, null, false);
+        }
         checkEligibility();
       }
     });
@@ -98,13 +125,20 @@ export default function ReviewSection({
     };
   }, [initialReviews, loadReviews, checkEligibility]);
 
-  const handleReviewSaved = async () => {
-    await Promise.all([loadReviews(), checkEligibility()]);
+  const handleStarFilterChange = (star: number | null) => {
+    const newFilter = selectedStarFilter === star ? null : star;
+    setSelectedStarFilter(newFilter);
+    loadReviews(1, newFilter, false);
   };
 
-  const filteredReviews = selectedStarFilter
-    ? reviews.filter((r) => r.rating === selectedStarFilter)
-    : reviews;
+  const handleLoadMore = () => {
+    if (loadingMore || !hasMore) return;
+    loadReviews(page + 1, selectedStarFilter, true);
+  };
+
+  const handleReviewSaved = async () => {
+    await Promise.all([loadReviews(1, selectedStarFilter, false), checkEligibility()]);
+  };
 
   return (
     <div className="space-y-6">
@@ -176,9 +210,7 @@ export default function ReviewSection({
               <div key={star} className="flex items-center gap-2 text-xs">
                 <button
                   type="button"
-                  onClick={() =>
-                    setSelectedStarFilter(selectedStarFilter === star ? null : star)
-                  }
+                  onClick={() => handleStarFilterChange(star)}
                   className={`flex items-center gap-1 w-12 text-[11px] font-bold transition-colors cursor-pointer ${
                     selectedStarFilter === star ? "text-primary font-black" : "text-muted-foreground hover:text-foreground"
                   }`}
@@ -204,161 +236,15 @@ export default function ReviewSection({
       </div>
 
       {/* Review Eligibility Feedback Cards */}
-      {!eligibilityLoading && (
-        <>
-          {/* Case 1: Logged in as Admin */}
-          {eligibility?.reason === "LOGGED_IN_AS_ADMIN" && (
-            <div className="p-4 rounded-2xl border border-indigo-500/30 bg-indigo-500/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5">
-                  <ShieldAlert className="h-4 w-4" />
-                </div>
-                <div className="space-y-0.5">
-                  <div className="flex items-center gap-2">
-                    <h4 className="text-xs sm:text-sm font-bold text-foreground font-heading">
-                      {t("reviews.adminBanner")}
-                    </h4>
-                    <span className="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-indigo-500/20 text-indigo-600 dark:text-indigo-400">
-                      {t("reviews.adminSession")}
-                    </span>
-                  </div>
-                  <p className="text-[11px] sm:text-xs text-muted-foreground leading-relaxed">
-                    {t("reviews.adminSessionDesc")}
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
-                <Link
-                  href="/admin/reviews"
-                  className={cn(
-                    buttonVariants({ size: "sm" }),
-                    "bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl"
-                  )}
-                >
-                  <Settings className="h-3.5 w-3.5 mr-1" />
-                  <span>{t("reviews.moderateBtn")}</span>
-                </Link>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsModalOpen(true)}
-                  className="text-xs rounded-xl cursor-pointer"
-                >
-                  <MessageSquarePlus className="h-3.5 w-3.5 mr-1" />
-                  <span>{t("reviews.testReviewBtn")}</span>
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {/* Case 2: Not logged in */}
-          {eligibility?.reason === "NOT_LOGGED_IN" && (
-            <div className="p-4 rounded-2xl border border-primary/20 bg-primary/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-xl bg-primary/10 text-primary shrink-0 mt-0.5">
-                  <LogIn className="h-4 w-4" />
-                </div>
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-foreground font-heading">
-                    {t("reviews.loginToReview")}
-                  </h4>
-                  <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5">
-                    {t("reviews.loginPrompt")}
-                  </p>
-                </div>
-              </div>
-              <Link
-                href={`/login?redirect=/partner-hospitals/${partner.id}`}
-                className={cn(
-                  buttonVariants({ size: "sm" }),
-                  "bg-primary hover:bg-primary-dark text-white text-xs font-bold rounded-xl shrink-0 self-start sm:self-auto"
-                )}
-              >
-                <span>{t("reviews.loginBtn")}</span>
-              </Link>
-            </div>
-          )}
-
-          {/* Case 3: Logged in but no transaction */}
-          {eligibility?.reason === "NO_TRANSACTION" && (
-            <div className="p-4 rounded-2xl border border-amber-500/25 bg-amber-500/5 flex items-start gap-3 shadow-2xs">
-              <div className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5">
-                <Receipt className="h-4 w-4" />
-              </div>
-              <div className="space-y-0.5">
-                <h4 className="text-xs sm:text-sm font-bold text-foreground font-heading">
-                  {t("reviews.transactionRequired")}
-                </h4>
-                <p className="text-[11px] sm:text-xs text-muted-foreground leading-relaxed">
-                  {t("reviews.transactionRequiredDesc")}
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* Case 4: Eligible with existing review */}
-          {eligibility?.hasReviewed && eligibility.existingReview && (
-            <div className="p-4 rounded-2xl border border-border bg-card shadow-2xs space-y-2">
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 text-xs font-bold text-foreground font-heading">
-                  <span>{t("reviews.yourSubmittedReview")}</span>
-                  {eligibility.existingReview.status === "pending" ? (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20 flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      <span>{t("reviews.pendingModeration")}</span>
-                    </span>
-                  ) : eligibility.existingReview.status === "approved" ? (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
-                      <CheckCircle2 className="h-3 w-3" />
-                      <span>{t("reviews.approvedStatus")}</span>
-                    </span>
-                  ) : null}
-                </div>
-
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => setIsModalOpen(true)}
-                  className="h-7 text-xs rounded-lg cursor-pointer"
-                >
-                  <span>{t("reviews.editReview")}</span>
-                </Button>
-              </div>
-
-              {eligibility.existingReview.status === "pending" && (
-                <p className="text-xs text-muted-foreground">
-                  {t("reviews.underReviewNotice")}
-                </p>
-              )}
-
-              <div className="pt-1 flex items-center gap-2">
-                <div className="flex items-center gap-0.5">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <Star
-                      key={s}
-                      className={`h-3.5 w-3.5 ${
-                        s <= (eligibility.existingReview?.rating || 0)
-                          ? "fill-amber-400 text-amber-500"
-                          : "text-muted-foreground/30"
-                      }`}
-                    />
-                  ))}
-                </div>
-                {eligibility.existingReview.comment && (
-                  <span className="text-xs text-foreground/80 truncate">
-                    &ldquo;{eligibility.existingReview.comment}&rdquo;
-                  </span>
-                )}
-              </div>
-            </div>
-          )}
-        </>
-      )}
+      <ReviewEligibilityBanner
+        partner={partner}
+        eligibility={eligibility}
+        eligibilityLoading={eligibilityLoading}
+        onOpenReviewModal={() => setIsModalOpen(true)}
+      />
 
       {/* Filter Bar */}
-      {reviews.length > 0 && (
+      {(stats.totalReviews > 0 || reviews.length > 0) && (
         <div className="flex items-center justify-between gap-2 pt-2">
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
             <span className="text-muted-foreground flex items-center gap-1 text-[11px] font-semibold mr-1">
@@ -368,7 +254,7 @@ export default function ReviewSection({
             <Button
               variant={selectedStarFilter === null ? "default" : "outline"}
               size="sm"
-              onClick={() => setSelectedStarFilter(null)}
+              onClick={() => handleStarFilterChange(null)}
               className="h-7 text-xs rounded-full cursor-pointer px-3"
             >
               <span>{t("reviews.allRatings")}</span>
@@ -378,7 +264,7 @@ export default function ReviewSection({
                 key={s}
                 variant={selectedStarFilter === s ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSelectedStarFilter(selectedStarFilter === s ? null : s)}
+                onClick={() => handleStarFilterChange(s)}
                 className="h-7 text-xs rounded-full cursor-pointer px-2.5 flex items-center gap-1"
               >
                 <span>{formatNum(s, locale)}</span>
@@ -388,7 +274,7 @@ export default function ReviewSection({
           </div>
 
           <span className="text-[11px] text-muted-foreground shrink-0 font-mono hidden sm:inline">
-            {formatNum(filteredReviews.length, locale)} / {formatNum(reviews.length, locale)}
+            {formatNum(reviews.length, locale)} / {formatNum(totalItems, locale)}
           </span>
         </div>
       )}
@@ -400,8 +286,8 @@ export default function ReviewSection({
             <Skeleton className="h-24 w-full rounded-2xl" />
             <Skeleton className="h-24 w-full rounded-2xl" />
           </div>
-        ) : filteredReviews.length > 0 ? (
-          filteredReviews.map((review) => (
+        ) : reviews.length > 0 ? (
+          reviews.map((review) => (
             <ReviewCard key={review.id} review={review} />
           ))
         ) : (
@@ -420,6 +306,31 @@ export default function ReviewSection({
                 {t("reviews.noReviewsYet")}
               </p>
             </div>
+          </div>
+        )}
+
+        {/* Load More Pagination Button */}
+        {hasMore && !loading && (
+          <div className="pt-3 flex justify-center">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLoadMore}
+              disabled={loadingMore}
+              className="rounded-xl px-5 py-2 text-xs font-bold border-border/80 hover:bg-muted cursor-pointer shadow-2xs gap-1.5"
+            >
+              {loadingMore && <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />}
+              <span>
+                {loadingMore
+                  ? (isBn ? "লোড হচ্ছে..." : "Loading...")
+                  : (isBn ? "আরও রিভিউ দেখুন" : "Load More Reviews")}
+              </span>
+              {!loadingMore && (
+                <span className="text-[10px] text-muted-foreground font-mono font-normal">
+                  ({formatNum(reviews.length, locale)} / {formatNum(totalItems, locale)})
+                </span>
+              )}
+            </Button>
           </div>
         )}
       </div>

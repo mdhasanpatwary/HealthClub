@@ -43,7 +43,6 @@ export default function HospitalProfileView({
   initialReviews,
 }: HospitalProfileViewProps) {
   const { t, locale } = useLanguage();
-  const isEn = locale === "en";
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
   const fallbackImage =
@@ -56,13 +55,13 @@ export default function HospitalProfileView({
   const getCategoryLabel = (category: string) => {
     switch (category) {
       case "hospital":
-        return isEn ? "Specialized Hospital" : "স্পেশালাইজড হাসপাতাল";
+        return t("partnerHospitals.category.specializedHospital");
       case "diagnostic":
-        return isEn ? "Diagnostic & Pathology Center" : "ডায়াগনস্টিক ও প্যাথলজি সেন্টার";
+        return t("partnerHospitals.category.diagnosticCenter");
       case "pharmacy":
-        return isEn ? "Model Pharmacy" : "মডেল ফার্মেসি";
+        return t("partnerHospitals.category.modelPharmacy");
       default:
-        return isEn ? "Healthcare Partner" : "স্বাস্থ্যসেবা পার্টনার";
+        return t("partnerHospitals.category.healthcarePartner");
     }
   };
 
@@ -92,14 +91,14 @@ export default function HospitalProfileView({
             href="/"
             className="hover:text-foreground transition-colors shrink-0"
           >
-            {isEn ? "Home" : "হোম"}
+            {t("partnerHospitals.profile.breadcrumbHome")}
           </Link>
           <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground/60" />
           <Link
             href="/partner-hospitals"
             className="hover:text-foreground transition-colors shrink-0"
           >
-            {isEn ? "Partner Network" : "পার্টনার নেটওয়ার্ক"}
+            {t("partnerHospitals.profile.breadcrumbPartnerNetwork")}
           </Link>
           <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground/60" />
           <span className="text-foreground font-semibold truncate max-w-[180px] sm:max-w-none">
@@ -114,7 +113,7 @@ export default function HospitalProfileView({
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary-dark transition-colors cursor-pointer"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            <span>{isEn ? "Back to Partner Network" : "সকল পার্টনার প্রতিষ্ঠানে ফিরে যান"}</span>
+            <span>{t("partnerHospitals.profile.backToNetwork")}</span>
           </Link>
         </div>
 
@@ -141,7 +140,7 @@ export default function HospitalProfileView({
                 </span>
                 <span className="px-2 sm:px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-bold bg-emerald-500/90 text-white backdrop-blur-md shadow-xs flex items-center gap-1">
                   <CheckCircle2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                  <span>{isEn ? "Verified Partner" : "ভেরিফাইড পার্টনার"}</span>
+                  <span>{t("partnerHospitals.profile.verifiedPartner")}</span>
                 </span>
                 {initialStats && initialStats.totalReviews > 0 && (
                   <span className="px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-bold bg-background/95 text-amber-600 dark:text-amber-400 backdrop-blur-md shadow-xs flex items-center gap-1 border border-border/60">
@@ -161,7 +160,7 @@ export default function HospitalProfileView({
                 className="h-7 sm:h-8 px-2.5 sm:px-3 rounded-full text-[11px] sm:text-xs bg-background/95 hover:bg-background text-foreground backdrop-blur-md shadow-xs cursor-pointer border border-border/60 shrink-0"
               >
                 <ImageIcon className="h-3.5 w-3.5 mr-1 text-primary" />
-                <span>{isEn ? "Photos" : "ছবি গ্যালারি"}</span>
+                <span>{t("partnerHospitals.profile.photos")}</span>
               </Button>
             </div>
           </div>
@@ -193,7 +192,7 @@ export default function HospitalProfileView({
               </div>
               <div>
                 <p className="text-[10px] sm:text-[11px] uppercase font-bold text-muted-foreground tracking-wider font-mono">
-                  {isEn ? "Member Discount" : "মেম্বার ডিসকাউন্ট"}
+                  {t("partnerHospitals.profile.memberDiscount")}
                 </p>
                 <p className="text-base sm:text-xl font-black text-primary font-heading">
                   {formatDiscount(partner.discount, locale)}

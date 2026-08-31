@@ -24,37 +24,22 @@ interface DoctorDirectoryProps {
 }
 
 const DEPARTMENTS = [
-  { id: "all", labelKey: "consultants.filter.all", icon: Stethoscope },
-  { id: "medicine", labelKey: "consultants.filter.medicine", icon: Stethoscope },
-  { id: "cardiology", labelKey: "consultants.filter.cardiology", icon: HeartPulse },
-  { id: "gynecology", labelKey: "consultants.filter.gynecology", icon: UserRound },
-  { id: "pediatrics", labelKey: "consultants.filter.pediatrics", icon: Baby },
-  { id: "orthopedics", labelKey: "consultants.filter.orthopedics", icon: Bone },
-  { id: "dermatology", labelKey: "consultants.filter.dermatology", icon: Sparkles },
-  { id: "eye", labelKey: "consultants.filter.eye", icon: Eye },
-  { id: "ent", labelKey: "consultants.filter.ent", icon: Info },
-  { id: "diabetes", labelKey: "consultants.filter.diabetes", icon: Activity },
-  { id: "psychiatry", labelKey: "consultants.filter.psychiatry", icon: Brain },
-  { id: "nephrology", labelKey: "consultants.filter.nephrology", icon: ShieldCheck },
-  { id: "hepatology", labelKey: "consultants.filter.hepatology", icon: ShieldCheck },
-  { id: "surgery", labelKey: "consultants.filter.surgery", icon: Sparkles },
-  { id: "rheumatology", labelKey: "consultants.filter.rheumatology", icon: Bone },
-  { id: "nutrition", labelKey: "consultants.filter.nutrition", icon: Apple },
-  { id: "dental", labelKey: "consultants.filter.dental", icon: Smile },
-  { id: "other", labelKey: "consultants.filter.other", icon: Sparkles },
+  { id: "all", labelKey: "consultants.filter.all", icon: Stethoscope }, { id: "medicine", labelKey: "consultants.filter.medicine", icon: Stethoscope },
+  { id: "cardiology", labelKey: "consultants.filter.cardiology", icon: HeartPulse }, { id: "gynecology", labelKey: "consultants.filter.gynecology", icon: UserRound },
+  { id: "pediatrics", labelKey: "consultants.filter.pediatrics", icon: Baby }, { id: "orthopedics", labelKey: "consultants.filter.orthopedics", icon: Bone },
+  { id: "dermatology", labelKey: "consultants.filter.dermatology", icon: Sparkles }, { id: "eye", labelKey: "consultants.filter.eye", icon: Eye },
+  { id: "ent", labelKey: "consultants.filter.ent", icon: Info }, { id: "diabetes", labelKey: "consultants.filter.diabetes", icon: Activity },
+  { id: "psychiatry", labelKey: "consultants.filter.psychiatry", icon: Brain }, { id: "nephrology", labelKey: "consultants.filter.nephrology", icon: ShieldCheck },
+  { id: "hepatology", labelKey: "consultants.filter.hepatology", icon: ShieldCheck }, { id: "surgery", labelKey: "consultants.filter.surgery", icon: Sparkles },
+  { id: "rheumatology", labelKey: "consultants.filter.rheumatology", icon: Bone }, { id: "nutrition", labelKey: "consultants.filter.nutrition", icon: Apple },
+  { id: "dental", labelKey: "consultants.filter.dental", icon: Smile }, { id: "other", labelKey: "consultants.filter.other", icon: Sparkles },
 ];
 
 function isDiabetesDoctor(doc: Doctor): boolean {
   if (doc.department === "diabetes") return true;
   const spec = (doc.specialty || "").toLowerCase();
-  return (
-    spec.includes("ডায়াবেটিস") ||
-    spec.includes("diabetes") ||
-    spec.includes("হরমোন") ||
-    spec.includes("hormone") ||
-    spec.includes("থাইরয়েড") ||
-    spec.includes("thyroid") ||
-    spec.includes("endocrin")
+  return ["ডায়াবেটিস", "diabetes", "হরমোন", "hormone", "থাইরয়েড", "thyroid", "endocrin"].some((k) =>
+    spec.includes(k)
   );
 }
 
@@ -157,6 +142,13 @@ export default function DoctorDirectory({
 
   return (
     <div className="space-y-6 sm:space-y-8">
+      {/* Screen Reader Live Announcement */}
+      <div aria-live="polite" role="status" aria-atomic="true" className="sr-only">
+        {isEn
+          ? `Found ${filteredDoctors.length} doctor${filteredDoctors.length === 1 ? "" : "s"}`
+          : `${filteredDoctors.length} জন ডাক্তার পাওয়া গেছে`}
+      </div>
+
       {/* Search Bar */}
       <div className="relative max-w-2xl mx-auto">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />

@@ -9,6 +9,8 @@ import {
   Search,
   RefreshCw,
   MessageSquareQuote,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -326,30 +328,77 @@ export function ReviewsTab({
         )}
       </div>
 
-      {/* Pagination Controls */}
+      {/* Enhanced Pagination Controls */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between gap-2 pt-2">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-border/60">
           <p className="text-xs text-muted-foreground font-mono">
-            {isBn ? "পৃষ্ঠা" : "Page"} {formatNum(currentPage, locale)} / {formatNum(totalPages, locale)} ({formatNum(totalItems, locale)} {isBn ? "টি মোট" : "total"})
+            {isBn ? "পৃষ্ঠা" : "Page"} {formatNum(currentPage, locale)} / {formatNum(totalPages, locale)} ({formatNum(totalItems, locale)} {isBn ? "টি মোট রিভিউ" : "total reviews"})
           </p>
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
             <Button
               variant="outline"
               size="sm"
               onClick={() => onPageChange(currentPage - 1)}
               disabled={currentPage <= 1 || loading}
-              className="text-xs rounded-xl h-8"
+              className="text-xs rounded-xl h-8 px-2.5 cursor-pointer gap-1"
             >
-              {isBn ? "পূর্ববর্তী" : "Previous"}
+              <ChevronLeft className="h-3.5 w-3.5" />
+              <span className="hidden xs:inline">{isBn ? "পূর্ববর্তী" : "Prev"}</span>
             </Button>
+
+            {/* Page number buttons */}
+            {Array.from({ length: totalPages }, (_, i) => i + 1)
+              .filter(
+                (p) =>
+                  p === 1 ||
+                  p === totalPages ||
+                  Math.abs(p - currentPage) <= 1
+              )
+              .reduce<(number | string)[]>((acc, p, idx, arr) => {
+                if (idx > 0 && p - (arr[idx - 1] as number) > 1) {
+                  acc.push(`ellipsis-${p}`);
+                }
+                acc.push(p);
+                return acc;
+              }, [])
+              .map((item) => {
+                if (typeof item === "string") {
+                  return (
+                    <span
+                      key={item}
+                      className="px-1.5 text-xs text-muted-foreground font-mono"
+                    >
+                      ...
+                    </span>
+                  );
+                }
+                const pageNum = item;
+                const isActive = pageNum === currentPage;
+                return (
+                  <Button
+                    key={pageNum}
+                    variant={isActive ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => onPageChange(pageNum)}
+                    disabled={loading}
+                    className={`text-xs rounded-xl h-8 w-8 p-0 cursor-pointer ${
+                      isActive ? "bg-primary text-white font-bold" : ""
+                    }`}
+                  >
+                    {formatNum(pageNum, locale)}
+                  </Button>
+                );
+              })}
+
             <Button
               variant="outline"
               size="sm"
               onClick={() => onPageChange(currentPage + 1)}
               disabled={currentPage >= totalPages || loading}
-              className="text-xs rounded-xl h-8"
+              className="text-xs rounded-xl h-8 px-2.5 cursor-pointer gap-1"
             >
-              {isBn ? "পরবর্তী" : "Next"}
+              <span className="hidden xs:inline">{isBn ? "পরবর্তী" : "Next"}</span>
+              <ChevronRight className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>

@@ -152,6 +152,13 @@ export function EmergencyDirectory({
 
         {/* 1. Blood Donors Tab */}
         <TabsContent value="donors" className="space-y-6 pt-4">
+          {/* Screen Reader Live Announcement */}
+          <div aria-live="polite" role="status" aria-atomic="true" className="sr-only">
+            {isEn
+              ? `Found ${filteredDonors.length} blood donor${filteredDonors.length === 1 ? "" : "s"}`
+              : `${filteredDonors.length} জন রক্তদাতা পাওয়া গেছে`}
+          </div>
+
           {/* Header Action Banner */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-rose-500/10 via-rose-500/5 to-transparent border border-rose-500/20">
             <div className="space-y-1">
@@ -277,6 +284,12 @@ export function EmergencyDirectory({
 
         {/* 2. Ambulances Tab */}
         <TabsContent value="ambulances" className="space-y-4 pt-4">
+          {/* Screen Reader Live Announcement */}
+          <div aria-live="polite" role="status" aria-atomic="true" className="sr-only">
+            {isEn
+              ? `Found ${filteredAmbulances.length} ambulance service${filteredAmbulances.length === 1 ? "" : "s"}`
+              : `${filteredAmbulances.length}টি অ্যাম্বুলেন্স সেবা পাওয়া গেছে`}
+          </div>
           {/* Header Action Banner */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/20">
             <div className="space-y-1">
