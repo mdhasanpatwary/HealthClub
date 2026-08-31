@@ -38,6 +38,14 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
 
       const localReadIds = new Set(safeStorage.getItem<string[]>(STORAGE_KEY, []) || []);
 
+      // Extract server read IDs to keep local cache updated
+      const serverReadIds = res.items.filter((item) => item.isRead).map((item) => item.id);
+      if (serverReadIds.length > 0) {
+        const currentLocal = safeStorage.getItem<string[]>(STORAGE_KEY, []) || [];
+        const mergedCache = Array.from(new Set([...currentLocal, ...serverReadIds]));
+        safeStorage.setItem(STORAGE_KEY, mergedCache);
+      }
+
       // Merge server items with local read cache to prevent race-condition reverts
       const mergedItems = res.items.map((item) => {
         if (localReadIds.has(item.id)) {
@@ -114,15 +122,15 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
       );
       setUnreadCount((prev) => Math.max(0, prev - 1));
 
-      // 3. Broadcast to other mounted instances
-      window.dispatchEvent(new Event("member-notification-change"));
-
-      // 4. Persist to server database
+      // 3. Persist to server database first so subsequent refetches see isRead = true
       try {
         await markMemberNotificationReadAction(notificationId);
       } catch {
         // Retain local read status even if network glitch occurs
       }
+
+      // 4. Broadcast to other mounted instances
+      window.dispatchEvent(new Event("member-notification-change"));
     },
     []
   );
@@ -139,10 +147,7 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
     setUnreadCount(0);
     setHighPriorityCount(0);
 
-    // 3. Broadcast to other mounted instances
-    window.dispatchEvent(new Event("member-notification-change"));
-
-    // 4. Persist to server database
+    // 3. Persist to server database
     try {
       const res = await markAllMemberNotificationsReadAction();
       if (res.success) {
@@ -151,6 +156,9 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
     } catch {
       // Local state remains read
     }
+
+    // 4. Broadcast to other mounted instances
+    window.dispatchEvent(new Event("member-notification-change"));
   }, [items]);
 
   const deleteNotification = useCallback(

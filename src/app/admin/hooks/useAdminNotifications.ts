@@ -3,6 +3,10 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   getAdminNotificationsAction,
+  markAdminNotificationReadAction,
+  markAllAdminNotificationsReadAction,
+  dismissAdminNotificationAction,
+  clearAllAdminReadAction,
   AdminNotificationItem,
   AdminNotificationSummary,
   GetAdminNotificationsParams,
@@ -77,6 +81,16 @@ export function useAdminNotifications(options?: UseAdminNotificationsOptions) {
 
       const result = await getAdminNotificationsAction(queryParams);
 
+      // Extract all read IDs from server result to keep local cache in sync
+      const serverReadIds = result.summary.items
+        .filter((item) => item.isRead)
+        .map((item) => item.id);
+      if (serverReadIds.length > 0) {
+        const mergedRead = Array.from(new Set([...currentRead, ...serverReadIds]));
+        safeStorage.setItem(STORAGE_KEYS.READ_IDS, mergedRead);
+        setReadIds(mergedRead);
+      }
+
       setItems(result.items);
       setTotalItems(result.totalItems);
       setTotalPages(result.totalPages);
@@ -121,63 +135,112 @@ export function useAdminNotifications(options?: UseAdminNotificationsOptions) {
   const unreadCount = useMemo(() => {
     return summary.items
       .filter((item) => !dismissedSet.has(item.id))
-      .filter((item) => !readSet.has(item.id)).length;
+      .filter((item) => !readSet.has(item.id) && !item.isRead).length;
   }, [summary.items, dismissedSet, readSet]);
 
   const highPriorityCount = useMemo(() => {
     return summary.items
       .filter((item) => !dismissedSet.has(item.id))
-      .filter((item) => item.severity === "high" && !readSet.has(item.id)).length;
+      .filter((item) => item.severity === "high" && !readSet.has(item.id) && !item.isRead).length;
   }, [summary.items, dismissedSet, readSet]);
 
   const markAsRead = useCallback(
-    (id: string) => {
+    async (id: string) => {
+      // 1. Optimistic local update
       const currentRead = safeStorage.getItem<string[]>(STORAGE_KEYS.READ_IDS, []) || [];
       if (!currentRead.includes(id)) {
         const next = [...currentRead, id];
         safeStorage.setItem(STORAGE_KEYS.READ_IDS, next);
+        setReadIds(next);
       }
-      setReadIds((prev) => {
-        if (prev.includes(id)) return prev;
-        return [...prev, id];
-      });
+
+      setItems((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+      );
+
+      // 2. Persist to server database
+      try {
+        const res = await markAdminNotificationReadAction(id);
+        if (res.success && res.readIds) {
+          safeStorage.setItem(STORAGE_KEYS.READ_IDS, res.readIds);
+          setReadIds(res.readIds);
+        }
+      } catch {
+        // Local state remains read
+      }
+
+      // 3. Broadcast to other mounted instances
       window.dispatchEvent(new Event("admin-notifications-change"));
     },
     []
   );
 
-  const markAllAsRead = useCallback(() => {
+  const markAllAsRead = useCallback(async () => {
     const allIds = summary.items.map((item) => item.id);
     const currentRead = safeStorage.getItem<string[]>(STORAGE_KEYS.READ_IDS, []) || [];
     const merged = Array.from(new Set([...currentRead, ...readIds, ...allIds]));
     setReadIds(merged);
     safeStorage.setItem(STORAGE_KEYS.READ_IDS, merged);
+    setItems((prev) => prev.map((n) => ({ ...n, isRead: true })));
+
+    try {
+      const res = await markAllAdminNotificationsReadAction(allIds);
+      if (res.success && res.readIds) {
+        safeStorage.setItem(STORAGE_KEYS.READ_IDS, res.readIds);
+        setReadIds(res.readIds);
+      }
+    } catch {
+      // Local state remains read
+    }
+
     window.dispatchEvent(new Event("admin-notifications-change"));
   }, [summary.items, readIds]);
 
   const dismissNotification = useCallback(
-    (id: string) => {
+    async (id: string) => {
       const currentDismissed = safeStorage.getItem<string[]>(STORAGE_KEYS.DISMISSED_IDS, []) || [];
       if (!currentDismissed.includes(id)) {
         const next = [...currentDismissed, id];
         safeStorage.setItem(STORAGE_KEYS.DISMISSED_IDS, next);
+        setDismissedIds(next);
       }
-      setDismissedIds((prev) => {
-        if (prev.includes(id)) return prev;
-        return [...prev, id];
-      });
+
+      setItems((prev) => prev.filter((n) => n.id !== id));
+
+      try {
+        const res = await dismissAdminNotificationAction(id);
+        if (res.success && res.dismissedIds) {
+          safeStorage.setItem(STORAGE_KEYS.DISMISSED_IDS, res.dismissedIds);
+          setDismissedIds(res.dismissedIds);
+        }
+      } catch {
+        // Fallback to local state
+      }
+
       window.dispatchEvent(new Event("admin-notifications-change"));
     },
     []
   );
 
-  const clearAllRead = useCallback(() => {
-    const readItems = summary.items.filter((item) => readSet.has(item.id));
+  const clearAllRead = useCallback(async () => {
+    const readItems = summary.items.filter((item) => readSet.has(item.id) || item.isRead);
     const toDismiss = readItems.map((item) => item.id);
     const currentDismissed = safeStorage.getItem<string[]>(STORAGE_KEYS.DISMISSED_IDS, []) || [];
     const merged = Array.from(new Set([...currentDismissed, ...dismissedIds, ...toDismiss]));
     setDismissedIds(merged);
     safeStorage.setItem(STORAGE_KEYS.DISMISSED_IDS, merged);
+    setItems((prev) => prev.filter((item) => !merged.includes(item.id)));
+
+    try {
+      const res = await clearAllAdminReadAction();
+      if (res.success && res.dismissedIds) {
+        safeStorage.setItem(STORAGE_KEYS.DISMISSED_IDS, res.dismissedIds);
+        setDismissedIds(res.dismissedIds);
+      }
+    } catch {
+      // Fallback to local state
+    }
+
     window.dispatchEvent(new Event("admin-notifications-change"));
   }, [summary.items, readSet, dismissedIds]);
 

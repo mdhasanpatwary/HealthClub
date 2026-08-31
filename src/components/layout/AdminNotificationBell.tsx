@@ -282,7 +282,8 @@ export function AdminNotificationBell() {
                     <div className="pt-1 flex items-center gap-2">
                       <Link
                         href={item.actionUrl}
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           markAsRead(item.id);
                           setOpen(false);
                         }}
@@ -295,8 +296,11 @@ export function AdminNotificationBell() {
                       {!isRead && (
                         <button
                           type="button"
-                          onClick={() => markAsRead(item.id)}
-                          className="text-[10px] text-muted-foreground hover:text-foreground font-medium ml-auto"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            markAsRead(item.id);
+                          }}
+                          className="text-[10px] text-muted-foreground hover:text-foreground font-medium ml-auto cursor-pointer"
                         >
                           {isBn ? "পঠিত করুন" : "Mark read"}
                         </button>

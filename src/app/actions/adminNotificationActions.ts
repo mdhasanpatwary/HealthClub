@@ -73,6 +73,41 @@ const DEFAULT_SUMMARY: AdminNotificationSummary = {
   newMembersCount: 0,
 };
 
+const SETTING_KEY_READ = "admin_notifications_read_ids";
+const SETTING_KEY_DISMISSED = "admin_notifications_dismissed_ids";
+
+async function getPersistedAdminNotificationIds(key: string): Promise<string[]> {
+  try {
+    const setting = await prisma.systemSetting.findUnique({
+      where: { key },
+    });
+    if (setting?.value) {
+      const parsed = JSON.parse(setting.value);
+      if (Array.isArray(parsed)) {
+        return parsed;
+      }
+    }
+  } catch (err) {
+    logger.error(`Error reading ${key} from systemSetting:`, err);
+  }
+  return [];
+}
+
+async function savePersistedAdminNotificationIds(key: string, ids: string[]): Promise<boolean> {
+  try {
+    const truncated = ids.slice(-200);
+    await prisma.systemSetting.upsert({
+      where: { key },
+      create: { key, value: JSON.stringify(truncated) },
+      update: { value: JSON.stringify(truncated) },
+    });
+    return true;
+  } catch (err) {
+    logger.error(`Error saving ${key} to systemSetting:`, err);
+    return false;
+  }
+}
+
 /**
  * Fetches real-time administrative notifications with server-side pagination,
  * filtering and search support.
@@ -103,6 +138,8 @@ export async function getAdminNotificationsAction(
       contactMessages,
       recentMembers,
       expiringMembers,
+      dbReadIds,
+      dbDismissedIds,
     ] = await Promise.all([
       // 1. Pending renewal requests
       prisma.member.findMany({
@@ -182,6 +219,12 @@ export async function getAdminNotificationsAction(
         orderBy: { expiryDate: "asc" },
         take: 50,
       }),
+
+      // 6. Persisted DB Read IDs
+      getPersistedAdminNotificationIds(SETTING_KEY_READ),
+
+      // 7. Persisted DB Dismissed IDs
+      getPersistedAdminNotificationIds(SETTING_KEY_DISMISSED),
     ]);
 
     const allNotifications: AdminNotificationItem[] = [];
@@ -316,19 +359,24 @@ export async function getAdminNotificationsAction(
       (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
 
-    // Filter sets for dismissed and read notifications
-    const dismissedSet = new Set(params?.dismissedIds || []);
-    const readSet = new Set(params?.readIds || []);
+    // Merge persisted DB sets with any passed client IDs
+    const dismissedSet = new Set([...dbDismissedIds, ...(params?.dismissedIds || [])]);
+    const readSet = new Set([...dbReadIds, ...(params?.readIds || [])]);
+
+    // Explicitly set isRead flag on every notification item
+    for (const item of allNotifications) {
+      item.isRead = readSet.has(item.id);
+    }
 
     const unreadCount = allNotifications.filter(
-      (item) => !dismissedSet.has(item.id) && !readSet.has(item.id)
+      (item) => !dismissedSet.has(item.id) && !item.isRead
     ).length;
 
     const highPriorityCount = allNotifications.filter(
       (item) =>
         item.severity === "high" &&
         !dismissedSet.has(item.id) &&
-        !readSet.has(item.id)
+        !item.isRead
     ).length;
 
     const summary: AdminNotificationSummary = {
@@ -358,7 +406,7 @@ export async function getAdminNotificationsAction(
 
     // Filter by Unread Only
     if (params?.unreadOnly) {
-      filtered = filtered.filter((item) => !readSet.has(item.id));
+      filtered = filtered.filter((item) => !item.isRead);
     }
 
     // Filter by Search Query
@@ -413,4 +461,84 @@ export async function getAdminNotificationsAction(
       summary: DEFAULT_SUMMARY,
     };
   }
+}
+
+/**
+ * Marks a single admin notification as read and persists it to the database.
+ */
+export async function markAdminNotificationReadAction(
+  notificationId: string
+): Promise<{ success: boolean; readIds: string[] }> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") {
+    return { success: false, readIds: [] };
+  }
+
+  const current = await getPersistedAdminNotificationIds(SETTING_KEY_READ);
+  if (!current.includes(notificationId)) {
+    const updated = [...current, notificationId];
+    await savePersistedAdminNotificationIds(SETTING_KEY_READ, updated);
+    return { success: true, readIds: updated };
+  }
+  return { success: true, readIds: current };
+}
+
+/**
+ * Marks all given admin notifications (or all current active items) as read.
+ */
+export async function markAllAdminNotificationsReadAction(
+  notificationIds?: string[]
+): Promise<{ success: boolean; readIds: string[] }> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") {
+    return { success: false, readIds: [] };
+  }
+
+  const current = await getPersistedAdminNotificationIds(SETTING_KEY_READ);
+  const toAdd = notificationIds && notificationIds.length > 0 ? notificationIds : [];
+  const merged = Array.from(new Set([...current, ...toAdd]));
+  await savePersistedAdminNotificationIds(SETTING_KEY_READ, merged);
+  return { success: true, readIds: merged };
+}
+
+/**
+ * Dismisses a single notification and persists dismissal to the database.
+ */
+export async function dismissAdminNotificationAction(
+  notificationId: string
+): Promise<{ success: boolean; dismissedIds: string[] }> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") {
+    return { success: false, dismissedIds: [] };
+  }
+
+  const current = await getPersistedAdminNotificationIds(SETTING_KEY_DISMISSED);
+  if (!current.includes(notificationId)) {
+    const updated = [...current, notificationId];
+    await savePersistedAdminNotificationIds(SETTING_KEY_DISMISSED, updated);
+    return { success: true, dismissedIds: updated };
+  }
+  return { success: true, dismissedIds: current };
+}
+
+/**
+ * Clears all read notifications by dismissing them in the database.
+ */
+export async function clearAllAdminReadAction(): Promise<{
+  success: boolean;
+  dismissedIds: string[];
+}> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") {
+    return { success: false, dismissedIds: [] };
+  }
+
+  const [currentRead, currentDismissed] = await Promise.all([
+    getPersistedAdminNotificationIds(SETTING_KEY_READ),
+    getPersistedAdminNotificationIds(SETTING_KEY_DISMISSED),
+  ]);
+
+  const merged = Array.from(new Set([...currentDismissed, ...currentRead]));
+  await savePersistedAdminNotificationIds(SETTING_KEY_DISMISSED, merged);
+  return { success: true, dismissedIds: merged };
 }

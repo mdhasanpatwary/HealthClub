@@ -291,7 +291,8 @@ export function MemberNotificationBell() {
                       {item.link && (
                         <Link
                           href={item.link}
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation();
                             if (!isRead) markAsRead(item.id);
                             setOpen(false);
                           }}
@@ -305,8 +306,11 @@ export function MemberNotificationBell() {
                       {!isRead && (
                         <button
                           type="button"
-                          onClick={() => markAsRead(item.id)}
-                          className="text-[10px] text-muted-foreground hover:text-foreground font-medium ml-auto transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            markAsRead(item.id);
+                          }}
+                          className="text-[10px] text-muted-foreground hover:text-foreground font-medium ml-auto transition-colors cursor-pointer"
                         >
                           {t("dashboard.notifications.markRead") || "পঠিত"}
                         </button>
@@ -314,8 +318,11 @@ export function MemberNotificationBell() {
 
                       <button
                         type="button"
-                        onClick={() => deleteNotification(item.id)}
-                        className={`text-[10px] text-muted-foreground hover:text-rose-500 p-1 rounded-md transition-colors opacity-0 group-hover:opacity-100 ${
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteNotification(item.id);
+                        }}
+                        className={`text-[10px] text-muted-foreground hover:text-rose-500 p-1 rounded-md transition-colors opacity-0 group-hover:opacity-100 cursor-pointer ${
                           isRead ? "ml-auto" : ""
                         }`}
                         title={t("dashboard.notifications.delete") || "মুছে ফেলুন"}
