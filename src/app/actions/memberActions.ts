@@ -16,6 +16,9 @@ import {
   RATE_LIMIT_RULES,
 } from "@/lib/rateLimit";
 import {
+  setPendingRegistration,
+} from "@/lib/pendingRegistration";
+import {
   loginMemberAction as _loginMemberAction,
   loginAdminAction as _loginAdminAction,
   logoutUserAction as _logoutUserAction,
@@ -64,13 +67,18 @@ export async function addMemberAction(
   member: Omit<Member, "id" | "status" | "joinedDate" | "expiryDate" | "totalSaved"> & { password?: string }
 ): Promise<Member | { error: string }> {
   const ip = await getClientIp();
-  const rateLimit = checkRateLimit(
-    `register:${ip}`,
-    RATE_LIMIT_RULES.REGISTRATION_PER_IP.limit,
-    RATE_LIMIT_RULES.REGISTRATION_PER_IP.windowMs
-  );
-  if (!rateLimit.success) {
-    return { error: rateLimit.message || "খুব বেশি রেজিস্ট্রেশন অনুরোধ করা হয়েছে। অনুগ্রহ করে কিছুক্ষণ অপেক্ষা করুন।" };
+  const session = await getSessionUser();
+  const isAdmin = session?.role === "admin";
+
+  if (!isAdmin) {
+    const rateLimit = checkRateLimit(
+      `register:${ip}`,
+      RATE_LIMIT_RULES.REGISTRATION_PER_IP.limit,
+      RATE_LIMIT_RULES.REGISTRATION_PER_IP.windowMs
+    );
+    if (!rateLimit.success) {
+      return { error: rateLimit.message || "খুব বেশি রেজিস্ট্রেশন অনুরোধ করা হয়েছে। অনুগ্রহ করে কিছুক্ষণ অপেক্ষা করুন।" };
+    }
   }
 
   const existingPhone = await prisma.member.findUnique({
@@ -92,67 +100,109 @@ export async function addMemberAction(
     }
   }
 
-  const year = new Date().getFullYear();
-  const rand = crypto.randomUUID().slice(0, 8).toUpperCase();
-  const newId = `HC-${year}-${rand}`;
-  
-  const joined = new Date();
-  const expiry = new Date();
-  expiry.setFullYear(joined.getFullYear() + 1); // 1-year membership
-
   const rawPassword = member.password || "123456";
   const hashedPassword = hashPassword(rawPassword);
   const verificationCode = randomInt(100000, 1000000).toString();
 
+  // If Admin is adding a member directly, insert into database immediately as verified
+  if (isAdmin) {
+    const year = new Date().getFullYear();
+    const rand = crypto.randomUUID().slice(0, 8).toUpperCase();
+    const newId = `HC-${year}-${rand}`;
+    const joined = new Date();
+    const expiry = new Date();
+    expiry.setFullYear(joined.getFullYear() + 1);
+
+    try {
+      const m = await prisma.member.create({
+        data: {
+          id: newId,
+          name: member.name,
+          phone: member.phone,
+          email: member.email || null,
+          password: hashedPassword,
+          tier: member.tier,
+          status: "active",
+          joinedDate: joined,
+          expiryDate: expiry,
+          qrCodeUrl: member.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`${SITE_URL}/verify/${newId}`)}`,
+          totalSaved: 0,
+          address: member.address || null,
+          birthDate: member.birthDate ? new Date(member.birthDate) : null,
+          profession: member.profession || null,
+          profilePictureUrl: member.profilePictureUrl || null,
+          emailVerified: true,
+        },
+      });
+
+      updateTag("admin-stats");
+
+      return {
+        ...m,
+        email: m.email || undefined,
+        joinedDate: formatDate(m.joinedDate),
+        expiryDate: formatDate(m.expiryDate),
+        address: m.address || undefined,
+        birthDate: m.birthDate ? formatDate(m.birthDate) : undefined,
+        profession: m.profession || undefined,
+        profilePictureUrl: m.profilePictureUrl || undefined,
+      } as Member;
+    } catch (error: unknown) {
+      logger.error("Error in addMemberAction (admin):", error);
+      return { error: "সদস্য যোগ করতে সমস্যা হয়েছে।" };
+    }
+  }
+
+  // Public User Registration: DO NOT insert into DB yet. Store in secure pending registration cookie and send OTP.
   try {
-    const m = await prisma.member.create({
-      data: {
-        id: newId,
+    if (!member.email) {
+      return { error: "ইমেইল অ্যাড্রেস আবশ্যক।" };
+    }
+
+    await setPendingRegistration(
+      {
         name: member.name,
         phone: member.phone,
-        email: member.email || null,
-        password: hashedPassword,
+        email: member.email,
+        hashedPassword,
         tier: member.tier,
-        status: "inactive",
-        joinedDate: joined,
-        expiryDate: expiry,
-        qrCodeUrl: member.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`${SITE_URL}/verify/${newId}`)}`,
-        totalSaved: 0,
-        address: member.address || null,
-        birthDate: member.birthDate ? new Date(member.birthDate) : null,
-        profession: member.profession || null,
-        profilePictureUrl: member.profilePictureUrl || null,
-        emailVerified: false,
-        verificationCode,
-        verificationCodeCreatedAt: new Date(),
+        address: member.address,
+        birthDate: member.birthDate,
+        profession: member.profession,
+        profilePictureUrl: member.profilePictureUrl,
       },
-    });
+      verificationCode
+    );
 
-    if (member.email) {
-      const sent = await sendOtpEmail(member.email, verificationCode, member.name);
-      if (!sent) {
-        logger.error(`[SIGNUP] OTP email send failed for ${member.email}, member ${newId} created but unverified`);
-        telemetry.captureEvent("otp_delivery_failed", { email: member.email, memberId: newId, flow: "signup_verification", tier: member.tier }, "error", { userId: newId, route: "addMemberAction", action: "signup_otp" });
-      }
+    const sent = await sendOtpEmail(member.email, verificationCode, member.name);
+    if (!sent) {
+      logger.error(`[SIGNUP] OTP email send failed for ${member.email}`);
+      telemetry.captureEvent(
+        "otp_delivery_failed",
+        { email: member.email, flow: "signup_verification", tier: member.tier },
+        "error",
+        { route: "addMemberAction", action: "signup_otp" }
+      );
     }
 
-    updateTag("admin-stats");
+    const now = new Date();
+    const expiry = new Date();
+    expiry.setFullYear(now.getFullYear() + 1);
 
     return {
-      ...m,
-      email: m.email || undefined,
-      joinedDate: formatDate(m.joinedDate),
-      expiryDate: formatDate(m.expiryDate),
-      address: m.address || undefined,
-      birthDate: m.birthDate ? formatDate(m.birthDate) : undefined,
-      profession: m.profession || undefined,
-      profilePictureUrl: m.profilePictureUrl || undefined,
+      id: "PENDING",
+      name: member.name,
+      phone: member.phone,
+      email: member.email,
+      tier: member.tier,
+      status: "inactive",
+      joinedDate: formatDate(now),
+      expiryDate: formatDate(expiry),
+      totalSaved: 0,
+      emailVerified: false,
     } as Member;
   } catch (error: unknown) {
-    logger.error("Error in addMemberAction:", error);
-    if (typeof error === "object" && error !== null && "code" in error && (error as { code: string }).code === "P2002") {
-      return { error: "এই মোবাইল নম্বর বা ইমেইল দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।" };
-    }
+    logger.error("Error in addMemberAction (public):", error);
     return { error: "রেজিস্ট্রেশন করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।" };
   }
 }

@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { Member, AdminRole } from "@/services/db";
 import { hashPassword, verifyPassword } from "@/lib/crypto";
 import { setSessionUser, clearSessionUser } from "@/lib/session";
-import { sendOtpEmail, sendPasswordResetEmail } from "@/lib/mail";
+import { sendOtpEmail } from "@/lib/mail";
 import { logger } from "@/lib/logger";
 import { telemetry } from "@/lib/telemetry";
 import {
@@ -14,6 +14,14 @@ import {
   getClientIp,
   RATE_LIMIT_RULES,
 } from "@/lib/rateLimit";
+import {
+  getPendingRegistration,
+  updatePendingRegistrationAttempts,
+  updatePendingRegistrationOtp,
+  clearPendingRegistration,
+} from "@/lib/pendingRegistration";
+import { SITE_URL } from "@/lib/siteConfig";
+import { updateTag } from "next/cache";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "healthclubfeni@gmail.com";
 const MAX_OTP_ATTEMPTS = 5;
@@ -228,6 +236,7 @@ export async function verifyEmailOtpAction(
   try {
     const ip = await getClientIp();
     const cleanEmail = email?.trim().toLowerCase() || "";
+    const cleanCode = code?.trim() || "";
 
     const rateLimit = checkRateLimit(
       `verify_otp:${ip}:${cleanEmail}`,
@@ -238,9 +247,86 @@ export async function verifyEmailOtpAction(
       return { success: false, message: rateLimit.message };
     }
 
+    // 1. Primary Flow: Check active pending registration from HttpOnly cookie
+    const pending = await getPendingRegistration();
+    if (pending && pending.email.toLowerCase() === cleanEmail) {
+      if (pending.attempts >= MAX_OTP_ATTEMPTS) {
+        telemetry.captureEvent("otp_verification_failed", { email: cleanEmail, attempts: pending.attempts, reason: "max_attempts_exceeded" }, "warn", { route: "verifyEmailOtpAction" });
+        return { success: false, message: "অনেকবার ভুল কোড দেওয়া হয়েছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
+      }
+
+      if (Date.now() > new Date(pending.expiresAt).getTime()) {
+        telemetry.captureEvent("otp_verification_failed", { email: cleanEmail, reason: "otp_expired" }, "warn", { route: "verifyEmailOtpAction" });
+        return { success: false, message: "ওটিপি কোডের মেয়াদ শেষ হয়ে গেছে। অনুগ্রহ করে নতুন কোড পাঠান বা আবার রেজিস্ট্রেশন করুন।" };
+      }
+
+      if (pending.otpCode !== cleanCode) {
+        const newAttempts = pending.attempts + 1;
+        await updatePendingRegistrationAttempts(pending, newAttempts);
+        const remaining = MAX_OTP_ATTEMPTS - newAttempts;
+        if (remaining <= 0) {
+          return { success: false, message: "অনেকবার ভুল কোড দেওয়া হয়েছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
+        }
+        return { success: false, message: `ভুল ওটিপি কোড। আর ${remaining}টি সুযোগ বাকি।` };
+      }
+
+      // OTP MATCHED! Insert Member record into Database
+      const year = new Date().getFullYear();
+      const rand = crypto.randomUUID().slice(0, 8).toUpperCase();
+      const newId = `HC-${year}-${rand}`;
+      const joined = new Date();
+      const expiry = new Date();
+      expiry.setFullYear(joined.getFullYear() + 1);
+
+      const nextStatus = pending.tier === "founding" ? "active" : "inactive";
+
+      const createdMember = await prisma.member.create({
+        data: {
+          id: newId,
+          name: pending.name,
+          phone: pending.phone,
+          email: pending.email,
+          password: pending.hashedPassword,
+          tier: pending.tier,
+          status: nextStatus,
+          joinedDate: joined,
+          expiryDate: expiry,
+          qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`${SITE_URL}/verify/${newId}`)}`,
+          totalSaved: 0,
+          address: pending.address || null,
+          birthDate: pending.birthDate ? new Date(pending.birthDate) : null,
+          profession: pending.profession || null,
+          profilePictureUrl: pending.profilePictureUrl || null,
+          emailVerified: true,
+          verificationCode: null,
+          verificationCodeCreatedAt: null,
+        },
+      });
+
+      await clearPendingRegistration();
+      updateTag("admin-stats");
+
+      const safeMember = stripSensitive({
+        ...createdMember,
+        email: createdMember.email || undefined,
+        joinedDate: formatDate(createdMember.joinedDate),
+        expiryDate: formatDate(createdMember.expiryDate),
+        address: createdMember.address || undefined,
+        birthDate: createdMember.birthDate ? formatDate(createdMember.birthDate) : undefined,
+        profession: createdMember.profession || undefined,
+        profilePictureUrl: createdMember.profilePictureUrl || undefined,
+      } as Member);
+
+      await setSessionUser(safeMember.id, "user");
+      const requiresPayment = createdMember.tier === "premium" && createdMember.status === "inactive";
+
+      return { success: true, member: safeMember, requiresPayment };
+    }
+
+    // 2. Fallback for legacy already-in-DB unverified members
     const member = await prisma.member.findFirst({ where: { email } });
     if (!member) {
-      return { success: false, message: "মেম্বার অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।" };
+      return { success: false, message: "ভেরিফিকেশন সেশন পাওয়া যায়নি বা মেয়াদ শেষ হয়ে গেছে। অনুগ্রহ করে আবার রেজিস্ট্রেশন করুন।" };
     }
 
     if (!member.verificationCode || !member.verificationCodeCreatedAt) {
@@ -266,7 +352,7 @@ export async function verifyEmailOtpAction(
       return { success: false, message: "ওটিপি কোডের মেয়াদ শেষ হয়ে গেছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
     }
 
-    if (storedCode !== code) {
+    if (storedCode !== cleanCode) {
       const newAttempts = attempts + 1;
       await prisma.member.update({
         where: { id: member.id },
@@ -325,9 +411,24 @@ export async function resendVerificationCodeAction(email: string): Promise<{ suc
       return { success: false, message: rateLimit.message };
     }
 
+    // 1. Primary: Check pending registration cookie
+    const pending = await getPendingRegistration();
+    if (pending && pending.email.toLowerCase() === cleanEmail) {
+      const code = randomInt(100000, 1000000).toString();
+      await updatePendingRegistrationOtp(pending, code);
+      const sent = await sendOtpEmail(pending.email, code, pending.name);
+      if (!sent) {
+        logger.error(`[RESEND OTP] Email send failed for pending ${pending.email}`);
+        telemetry.captureEvent("otp_delivery_failed", { email: pending.email, flow: "resend_verification", tier: pending.tier }, "error", { route: "resendVerificationCodeAction", action: "resend_otp" });
+        return { success: false, message: "ওটিপি কোড পাঠাতে সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।" };
+      }
+      return { success: true, message: "নতুন ওটিপি কোড পাঠানো হয়েছে!" };
+    }
+
+    // 2. Fallback for legacy DB member
     const member = await prisma.member.findFirst({ where: { email } });
     if (!member) {
-      return { success: false, message: "মেম্বার খুঁজে পাওয়া যায়নি।" };
+      return { success: false, message: "ভেরিফিকেশন সেশন পাওয়া যায়নি বা মেয়াদ শেষ হয়ে গেছে। অনুগ্রহ করে আবার রেজিস্ট্রেশন করুন।" };
     }
 
     const code = randomInt(100000, 1000000).toString();
@@ -354,128 +455,15 @@ export async function resendVerificationCodeAction(email: string): Promise<{ suc
   }
 }
 
-export async function requestPasswordResetAction(email: string): Promise<{ success: boolean; message: string }> {
-  try {
-    if (!email) {
-      return { success: false, message: "অনুগ্রহ করে ইমেইল অ্যাড্রেসটি দিন।" };
-    }
+import {
+  requestPasswordResetAction as _requestPasswordResetAction,
+  resetPasswordAction as _resetPasswordAction,
+} from "./memberPasswordResetActions";
 
-    const ip = await getClientIp();
-    const cleanEmail = email.trim().toLowerCase();
-
-    const rateLimit = checkRateLimit(
-      `reset_req:${ip}:${cleanEmail}`,
-      RATE_LIMIT_RULES.PASSWORD_RESET_REQ.limit,
-      RATE_LIMIT_RULES.PASSWORD_RESET_REQ.windowMs
-    );
-    if (!rateLimit.success) {
-      return { success: false, message: rateLimit.message };
-    }
-
-    const member = await prisma.member.findFirst({ where: { email } });
-    if (!member) {
-      return { success: true, message: "যদি এই ইমেইলটি আমাদের সিস্টেমে নিবন্ধিত থাকে, তবে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
-    }
-
-    const otp = randomInt(100000, 1000000).toString();
-    await prisma.member.update({
-      where: { id: member.id },
-      data: {
-        verificationCode: otp,
-        verificationCodeCreatedAt: new Date(),
-      },
-    });
-
-    const sent = await sendPasswordResetEmail(member.email || "", otp, member.name);
-    if (!sent) {
-      logger.error(`[PASSWORD RESET] Email send failed for ${email}`);
-      telemetry.captureEvent("otp_delivery_failed", { email, memberId: member.id, flow: "password_reset" }, "error", { userId: member.id, route: "requestPasswordResetAction", action: "password_reset_otp" });
-      return { success: false, message: "পাসওয়ার্ড রিসেট ওটিপি পাঠাতে সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।" };
-    }
-
-    return { success: true, message: "যদি এই ইমেইলটি আমাদের সিস্টেমে নিবন্ধিত থাকে, তবে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
-  } catch (error) {
-    logger.error("Error in requestPasswordResetAction:", error);
-    return { success: false, message: "পাসওয়ার্ড রিসেট অনুরোধ প্রক্রিয়া করতে সমস্যা হয়েছে।" };
-  }
+export async function requestPasswordResetAction(...args: Parameters<typeof _requestPasswordResetAction>) {
+  return _requestPasswordResetAction(...args);
 }
 
-export async function resetPasswordAction(
-  email: string,
-  code: string,
-  rawNewPassword: string
-): Promise<{ success: boolean; message: string }> {
-  try {
-    if (!email || !code || !rawNewPassword) {
-      return { success: false, message: "সব তথ্য প্রদান করুন।" };
-    }
-
-    const ip = await getClientIp();
-    const cleanEmail = email.trim().toLowerCase();
-
-    const rateLimit = checkRateLimit(
-      `reset_confirm:${ip}:${cleanEmail}`,
-      RATE_LIMIT_RULES.PASSWORD_RESET_CONFIRM.limit,
-      RATE_LIMIT_RULES.PASSWORD_RESET_CONFIRM.windowMs
-    );
-    if (!rateLimit.success) {
-      return { success: false, message: rateLimit.message };
-    }
-
-    const member = await prisma.member.findFirst({ where: { email } });
-    if (!member) {
-      return { success: false, message: "মেম্বার অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।" };
-    }
-
-    if (!member.verificationCode || !member.verificationCodeCreatedAt) {
-      return { success: false, message: "রিসেট অনুরোধ পাওয়া যায়নি বা কোড ইতিমধ্যে ব্যবহৃত হয়েছে।" };
-    }
-
-    let storedCode = member.verificationCode;
-    let attempts = 0;
-    const attemptMatch = storedCode.match(/^attempts:(\d+):(.+)$/);
-    if (attemptMatch) {
-      attempts = parseInt(attemptMatch[1], 10);
-      storedCode = attemptMatch[2];
-    }
-
-    if (attempts >= MAX_OTP_ATTEMPTS) {
-      telemetry.captureEvent("password_reset_failed", { email: cleanEmail, memberId: member.id, reason: "max_attempts_exceeded" }, "warn", { userId: member.id, route: "resetPasswordAction" });
-      return { success: false, message: "অনেকবার ভুল কোড দেওয়া হয়েছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
-    }
-
-    const fifteenMinutes = 15 * 60 * 1000;
-    if (Date.now() - new Date(member.verificationCodeCreatedAt).getTime() > fifteenMinutes) {
-      telemetry.captureEvent("password_reset_failed", { email: cleanEmail, memberId: member.id, reason: "otp_expired" }, "warn", { userId: member.id, route: "resetPasswordAction" });
-      return { success: false, message: "ওটিপি কোডের মেয়াদ শেষ হয়ে গেছে (১৫ মিনিট পার হয়েছে)। অনুগ্রহ করে আবার নতুন কোড পাঠান।" };
-    }
-
-    if (storedCode !== code) {
-      const newAttempts = attempts + 1;
-      await prisma.member.update({
-        where: { id: member.id },
-        data: { verificationCode: `attempts:${newAttempts}:${storedCode}` },
-      });
-      const remaining = MAX_OTP_ATTEMPTS - newAttempts;
-      if (remaining <= 0) {
-        return { success: false, message: "অনেকবার ভুল কোড দেওয়া হয়েছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
-      }
-      return { success: false, message: `ভুল ওটিপি কোড। আর ${remaining}টি সুযোগ বাকি।` };
-    }
-
-    const hashedPassword = hashPassword(rawNewPassword);
-    await prisma.member.update({
-      where: { id: member.id },
-      data: {
-        password: hashedPassword,
-        verificationCode: null,
-        verificationCodeCreatedAt: null,
-      },
-    });
-
-    return { success: true, message: "পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে!" };
-  } catch (error) {
-    logger.error("Error in resetPasswordAction:", error);
-    return { success: false, message: "পাসওয়ার্ড রিসেট করতে সমস্যা হয়েছে।" };
-  }
+export async function resetPasswordAction(...args: Parameters<typeof _resetPasswordAction>) {
+  return _resetPasswordAction(...args);
 }

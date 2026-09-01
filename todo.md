@@ -576,3 +576,10 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Severity**: Medium
   - **Files**: `src/lib/telemetry.ts`, `src/app/actions/memberAuthActions.ts`, `src/app/actions/memberActions.ts`
   - **Details**: Instrument structured telemetry error events (`telemetry.captureEvent`) when email OTP delivery fails or when duplicate/invalid bKash transaction IDs are submitted to facilitate real-time monitoring and rapid dispute resolution.
+
+### 🔐 Authentication & Zero-Junk Registration Architecture (Item 7)
+
+- [x] **TODO-115**: **Implement Email OTP Verification Before Database Record Insertion**
+  - **Severity**: High
+  - **Files**: `src/lib/pendingRegistration.ts`, `src/app/actions/memberActions.ts`, `src/app/actions/memberAuthActions.ts`, `src/app/register/verify-email/page.tsx`
+  - **Details**: Refactor user signup to store unverified registration data in a signed/encrypted HttpOnly cookie session (`hc_pending_registration`), dispatching the OTP and creating the `Member` record in the database only upon successful 6-digit OTP verification. Allows users with mistyped emails to re-register without phone number locking.

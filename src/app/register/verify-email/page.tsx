@@ -139,27 +139,37 @@ function VerifyEmailForm() {
           </Button>
         </form>
 
-        <div className="text-center text-sm text-muted-foreground border-t border-border pt-4">
-          {t("auth.verifyEmail.noCode")}{" "}
-          <button 
-            disabled={isSubmitting}
-            onClick={async () => {
-              if (!email) return;
-              try {
-                const res = await resendVerificationCodeAction(email);
-                if (res.success) {
-                  toast.success(res.message || t("auth.verifyEmail.resendSuccess"));
-                } else {
-                  toast.error(res.message || t("auth.verifyEmail.resendError"));
+        <div className="space-y-3 text-center text-sm text-muted-foreground border-t border-border pt-4">
+          <div>
+            {t("auth.verifyEmail.noCode")}{" "}
+            <button 
+              type="button"
+              disabled={isSubmitting}
+              onClick={async () => {
+                if (!email) return;
+                try {
+                  const res = await resendVerificationCodeAction(email);
+                  if (res.success) {
+                    toast.success(res.message || t("auth.verifyEmail.resendSuccess"));
+                  } else {
+                    toast.error(res.message || t("auth.verifyEmail.resendError"));
+                  }
+                } catch {
+                  toast.error(t("auth.verifyEmail.resendError"));
                 }
-              } catch {
-                toast.error(t("auth.verifyEmail.resendError"));
-              }
-            }}
-            className="text-primary hover:underline font-semibold bg-transparent border-0 cursor-pointer disabled:opacity-50"
-          >
-            {t("auth.verifyEmail.resendCode")}
-          </button>
+              }}
+              className="text-primary hover:underline font-semibold bg-transparent border-0 cursor-pointer disabled:opacity-50"
+            >
+              {t("auth.verifyEmail.resendCode")}
+            </button>
+          </div>
+
+          <div className="text-xs text-muted-foreground pt-1">
+            {t("auth.verifyEmail.wrongEmailPrompt")}{" "}
+            <Link href="/register" className="text-primary hover:underline font-semibold">
+              {t("auth.verifyEmail.reRegisterLink")}
+            </Link>
+          </div>
         </div>
       </CardContent>
     </Card>
