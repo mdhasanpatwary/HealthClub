@@ -54,9 +54,21 @@ export function PushNotificationPrompt() {
       return;
     }
 
-    navigator.serviceWorker.ready
+    let isMounted = true;
+    let timer: NodeJS.Timeout | null = null;
+
+    // Timeout fail-safe in case SW ready hangs
+    const swReadyWithTimeout = Promise.race([
+      navigator.serviceWorker.ready,
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("SW ready timeout")), 4000)
+      ),
+    ]);
+
+    swReadyWithTimeout
       .then((reg) => reg.pushManager.getSubscription())
       .then((sub) => {
+        if (!isMounted) return;
         setIsSupported(true);
         setPermission(Notification.permission);
 
@@ -73,15 +85,28 @@ export function PushNotificationPrompt() {
               return;
             }
           }
-          // Delay display slightly for smooth page load
-          if (Notification.permission === "default") {
-            setIsVisible(true);
-          }
+
+          // Delay display to prevent simultaneous prompt overlap on mobile
+          const isMobile = window.innerWidth < 768;
+          const delayMs = isMobile ? 5000 : 1500;
+
+          timer = setTimeout(() => {
+            if (isMounted && Notification.permission === "default") {
+              setIsVisible(true);
+            }
+          }, delayMs);
         }
       })
       .catch(() => {
-        setIsSubscribed(false);
+        if (isMounted) {
+          setIsSubscribed(false);
+        }
       });
+
+    return () => {
+      isMounted = false;
+      if (timer) clearTimeout(timer);
+    };
   }, []);
 
   const handleDismiss = () => {
@@ -108,6 +133,9 @@ export function PushNotificationPrompt() {
       setPermission(result);
 
       if (result !== "granted") {
+        try {
+          localStorage.setItem(PROMPT_DISMISS_KEY, Date.now().toString());
+        } catch {}
         if (result === "denied") {
           toast.error(
             isBn
@@ -195,8 +223,9 @@ export function PushNotificationPrompt() {
         <button
           type="button"
           onClick={handleDismiss}
+          disabled={loading}
           aria-label="Close notification prompt"
-          className="absolute top-3 right-3 p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/80 rounded-xl transition-colors cursor-pointer"
+          className="absolute top-3 right-3 p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/80 rounded-xl transition-colors cursor-pointer disabled:opacity-50"
         >
           <X className="h-4 w-4" />
         </button>

@@ -297,6 +297,40 @@ export const getEmergencyDataAction = unstable_cache(
   { tags: [EMERGENCY_TAG], revalidate: 60 }
 );
 
+export interface EmergencyCounts {
+  donors: number;
+  ambulances: number;
+  hotlines: number;
+  pendingDonors: number;
+  pendingAmbulances: number;
+}
+
+export async function getEmergencyCountsAdminAction(): Promise<EmergencyCounts> {
+  const session = await getSessionUser();
+  if (
+    !session ||
+    session.role !== "admin" ||
+    !hasAdminPermission(session.adminRole || "super_admin", "manage_emergency")
+  ) {
+    return {
+      donors: 0,
+      ambulances: 0,
+      hotlines: 0,
+      pendingDonors: 0,
+      pendingAmbulances: 0,
+    };
+  }
+
+  const { bloodDonors, ambulances, hotlines } = await getEmergencyDataAction();
+  return {
+    donors: bloodDonors.length,
+    ambulances: ambulances.length,
+    hotlines: hotlines.length,
+    pendingDonors: bloodDonors.filter((d) => d.status === "pending").length,
+    pendingAmbulances: ambulances.filter((a) => a.status === "pending").length,
+  };
+}
+
 // --- BLOOD DONORS ---
 
 export async function saveBloodDonorAction(donor: BloodDonor) {

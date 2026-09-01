@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
-import { X, Download, Share2 } from "lucide-react";
+import { X, Download, Share2, Loader2 } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -24,6 +24,7 @@ export default function InstallAppBanner() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [showIosTip, setShowIosTip] = useState(false);
+  const [isInstalling, setIsInstalling] = useState(false);
   const hasLoggedShown = useRef(false);
 
   useEffect(() => {
@@ -97,6 +98,7 @@ export default function InstallAppBanner() {
       } catch {}
       setIsVisible(false);
       setDeferredPrompt(null);
+      setIsInstalling(false);
       const info = getClientDeviceInfo();
       if (info.deviceId) {
         recordPwaInstallAction({
@@ -138,49 +140,72 @@ export default function InstallAppBanner() {
   };
 
   const handleInstallClick = async () => {
+    if (isInstalling) return;
+    setIsInstalling(true);
+
     const info = getClientDeviceInfo();
 
     if (deferredPrompt) {
-      await deferredPrompt.prompt();
-      const choiceResult = await deferredPrompt.userChoice;
-      if (choiceResult.outcome === "accepted") {
-        try {
-          localStorage.setItem(INSTALLED_KEY, "true");
-        } catch {}
+      try {
+        await deferredPrompt.prompt();
+        const choiceResult = await deferredPrompt.userChoice;
+        if (choiceResult.outcome === "accepted") {
+          try {
+            localStorage.setItem(INSTALLED_KEY, "true");
+          } catch {}
+          setIsVisible(false);
+          trackEvent("pwa_action", { action: "install_accepted" });
+          if (info.deviceId) {
+            recordPwaInstallAction({
+              deviceId: info.deviceId,
+              platform: info.platform,
+              browser: info.browser,
+              deviceType: info.deviceType,
+            }).catch(() => {});
+          }
+        } else {
+          // If user dismissed the prompt dialog
+          try {
+            localStorage.setItem(DISMISSAL_KEY, Date.now().toString());
+          } catch {}
+          setIsVisible(false);
+          trackEvent("pwa_action", { action: "install_dismissed" });
+          if (info.deviceId) {
+            recordPwaPromptAction({
+              deviceId: info.deviceId,
+              outcome: "dismissed",
+              platform: info.platform,
+              browser: info.browser,
+              deviceType: info.deviceType,
+            }).catch(() => {});
+          }
+        }
+      } catch (err) {
+        console.error("PWA install error:", err);
         setIsVisible(false);
-        trackEvent("pwa_action", { action: "install_accepted" });
-        if (info.deviceId) {
-          recordPwaInstallAction({
-            deviceId: info.deviceId,
-            platform: info.platform,
-            browser: info.browser,
-            deviceType: info.deviceType,
-          }).catch(() => {});
-        }
-      } else {
-        trackEvent("pwa_action", { action: "install_dismissed" });
-        if (info.deviceId) {
-          recordPwaPromptAction({
-            deviceId: info.deviceId,
-            outcome: "dismissed",
-            platform: info.platform,
-            browser: info.browser,
-            deviceType: info.deviceType,
-          }).catch(() => {});
-        }
+      } finally {
+        setDeferredPrompt(null);
+        setIsInstalling(false);
       }
-      setDeferredPrompt(null);
     } else {
       // Check if iOS Safari
       const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
       if (isIos) {
-        setShowIosTip(!showIosTip);
+        setShowIosTip(true);
+        setIsInstalling(false);
       } else {
         // Fallback for browsers that don't support beforeinstallprompt directly
         toast.info(
           t("pwa.iosInstructions") ||
-            "আপনার ব্রাউজার মেনু থেকে 'Add to Home Screen' বা 'Install' বেছে নিন।"
+            "আপনার ব্রাউজার মেনু থেকে 'Add to Home Screen' বা 'Install' বেছে নিন。"
         );
+        try {
+          localStorage.setItem(DISMISSAL_KEY, Date.now().toString());
+        } catch {}
+        setTimeout(() => {
+          setIsVisible(false);
+          setIsInstalling(false);
+        }, 1500);
       }
     }
   };
@@ -196,8 +221,9 @@ export default function InstallAppBanner() {
         {/* Top Close Button */}
         <button
           onClick={handleDismiss}
+          disabled={isInstalling}
           aria-label="Close installation prompt"
-          className="absolute top-2.5 right-2.5 p-1 text-slate-400 hover:text-white hover:bg-slate-800/80 rounded-lg transition-colors z-10"
+          className="absolute top-2.5 right-2.5 p-1 text-slate-400 hover:text-white hover:bg-slate-800/80 rounded-lg transition-colors z-10 disabled:opacity-50"
         >
           <X className="size-4" />
         </button>
@@ -240,11 +266,20 @@ export default function InstallAppBanner() {
         <div className="flex items-center justify-end pt-1">
           <Button
             onClick={handleInstallClick}
+            disabled={isInstalling}
             size="sm"
-            className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-2 h-10 rounded-xl text-xs shadow-md border border-emerald-400/30 gap-2 justify-center"
+            className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-2 h-10 rounded-xl text-xs shadow-md border border-emerald-400/30 gap-2 justify-center transition-all disabled:opacity-75"
           >
-            <Download className="size-4" />
-            <span>{t("pwa.installBtn")}</span>
+            {isInstalling ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Download className="size-4" />
+            )}
+            <span>
+              {isInstalling
+                ? t("common.loading") || "প্রসেসিং..."
+                : t("pwa.installBtn")}
+            </span>
           </Button>
         </div>
       </div>

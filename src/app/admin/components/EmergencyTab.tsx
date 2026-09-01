@@ -1,23 +1,20 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Siren, Search, Plus, Droplet, Truck, PhoneCall, Download, UploadCloud } from "lucide-react";
+import { Siren, Droplet, Truck, PhoneCall } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import {
   BloodDonor,
   AmbulanceService,
   EmergencyHotline,
-  UPAZILAS_FENI,
-  BLOOD_GROUPS,
-  AMBULANCE_TYPES,
 } from "@/data/emergencyData";
 import {
   getPaginatedDonorsAdminAction,
   getPaginatedAmbulancesAdminAction,
   getPaginatedHotlinesAdminAction,
+  getEmergencyCountsAdminAction,
   approveBloodDonorAction,
   approveAmbulanceAction,
   deleteBloodDonorAction,
@@ -28,6 +25,7 @@ import {
 import { exportEmergencyData } from "@/lib/emergencyExport";
 import { toast } from "sonner";
 import { useLanguage } from "@/components/layout/LanguageProvider";
+import { formatNum } from "@/lib/i18n";
 import { useDebounce } from "@/hooks/useDebounce";
 import { EmergencyDonorDialog } from "./EmergencyDonorDialog";
 import { EmergencyAmbulanceDialog } from "./EmergencyAmbulanceDialog";
@@ -36,6 +34,7 @@ import { EmergencyDeleteDialog } from "./emergency/EmergencyDeleteDialog";
 import { EmergencyDonorsList } from "./emergency/EmergencyDonorsList";
 import { EmergencyAmbulancesList } from "./emergency/EmergencyAmbulancesList";
 import { EmergencyHotlinesList } from "./emergency/EmergencyHotlinesList";
+import { EmergencyFilterBar } from "./emergency/EmergencyFilterBar";
 import { BulkImportDialog } from "./BulkImportDialog";
 
 export function EmergencyTab() {
@@ -44,6 +43,17 @@ export function EmergencyTab() {
 
   const [activeSubTab, setActiveSubTab] = useState<"donors" | "ambulances" | "hotlines">("donors");
   const [loading, setLoading] = useState(true);
+
+  // Tab counts state
+  const [counts, setCounts] = useState<{
+    donors: number;
+    ambulances: number;
+    hotlines: number;
+  }>({
+    donors: 0,
+    ambulances: 0,
+    hotlines: 0,
+  });
 
   // Data states
   const [donors, setDonors] = useState<BloodDonor[]>([]);
@@ -83,39 +93,49 @@ export function EmergencyTab() {
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      if (activeSubTab === "donors") {
-        const res = await getPaginatedDonorsAdminAction({
-          page,
-          pageSize,
-          search: debouncedSearch,
-          group: selectedGroup,
-          upazila: selectedUpazila,
-          status: statusFilter,
+      const [countsRes, listRes] = await Promise.all([
+        getEmergencyCountsAdminAction(),
+        activeSubTab === "donors"
+          ? getPaginatedDonorsAdminAction({
+              page,
+              pageSize,
+              search: debouncedSearch,
+              group: selectedGroup,
+              upazila: selectedUpazila,
+              status: statusFilter,
+            })
+          : activeSubTab === "ambulances"
+          ? getPaginatedAmbulancesAdminAction({
+              page,
+              pageSize,
+              search: debouncedSearch,
+              type: ambulanceTypeFilter,
+              status: statusFilter,
+            })
+          : getPaginatedHotlinesAdminAction({
+              page,
+              pageSize,
+              search: debouncedSearch,
+            }),
+      ]);
+
+      if (countsRes) {
+        setCounts({
+          donors: countsRes.donors,
+          ambulances: countsRes.ambulances,
+          hotlines: countsRes.hotlines,
         });
-        setDonors(res.data);
-        setTotalItems(res.totalItems);
-        setTotalPages(res.totalPages);
-      } else if (activeSubTab === "ambulances") {
-        const res = await getPaginatedAmbulancesAdminAction({
-          page,
-          pageSize,
-          search: debouncedSearch,
-          type: ambulanceTypeFilter,
-          status: statusFilter,
-        });
-        setAmbulances(res.data);
-        setTotalItems(res.totalItems);
-        setTotalPages(res.totalPages);
-      } else {
-        const res = await getPaginatedHotlinesAdminAction({
-          page,
-          pageSize,
-          search: debouncedSearch,
-        });
-        setHotlines(res.data);
-        setTotalItems(res.totalItems);
-        setTotalPages(res.totalPages);
       }
+
+      if (activeSubTab === "donors") {
+        setDonors(listRes.data as BloodDonor[]);
+      } else if (activeSubTab === "ambulances") {
+        setAmbulances(listRes.data as AmbulanceService[]);
+      } else {
+        setHotlines(listRes.data as EmergencyHotline[]);
+      }
+      setTotalItems(listRes.totalItems);
+      setTotalPages(listRes.totalPages);
     } catch {
       toast.error(isEn ? "Failed to load emergency data" : "জরুরি সেবার তথ্য লোড করতে ব্যর্থ");
     } finally {
@@ -221,7 +241,7 @@ export function EmergencyTab() {
               <Droplet className="h-3.5 w-3.5" />
               <span>{isEn ? "Blood Donors" : "রক্তদাতা"}</span>
               <Badge variant="secondary" className="ml-1 text-[10px] px-1.5 py-0">
-                {activeSubTab === "donors" ? totalItems : donors.length}
+                {formatNum(counts.donors, locale)}
               </Badge>
             </Button>
 
@@ -234,7 +254,7 @@ export function EmergencyTab() {
               <Truck className="h-3.5 w-3.5" />
               <span>{isEn ? "Ambulances" : "অ্যাম্বুলেন্স"}</span>
               <Badge variant="secondary" className="ml-1 text-[10px] px-1.5 py-0">
-                {activeSubTab === "ambulances" ? totalItems : ambulances.length}
+                {formatNum(counts.ambulances, locale)}
               </Badge>
             </Button>
 
@@ -247,154 +267,56 @@ export function EmergencyTab() {
               <PhoneCall className="h-3.5 w-3.5" />
               <span>{isEn ? "Hotlines & Oxygen" : "হটলাইন ও অক্সিজেন"}</span>
               <Badge variant="secondary" className="ml-1 text-[10px] px-1.5 py-0">
-                {activeSubTab === "hotlines" ? totalItems : hotlines.length}
+                {formatNum(counts.hotlines, locale)}
               </Badge>
             </Button>
           </div>
         </CardHeader>
 
         <CardContent className="pt-0 space-y-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 border-t border-border">
-            <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-              <div className="relative flex-1 sm:w-64">
-                <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  placeholder={
-                    activeSubTab === "donors"
-                      ? isEn ? "Search donor by name, phone..." : "নাম বা মোবাইল নম্বর দিয়ে খুঁজুন..."
-                      : activeSubTab === "ambulances"
-                      ? isEn ? "Search ambulance by agency, area..." : "অ্যাম্বুলেন্স বা এলাকা খুঁজুন..."
-                      : isEn ? "Search hotline or oxygen..." : "হটলাইন বা অক্সিজেন খুঁজুন..."
-                  }
-                  value={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value);
-                    setPage(1);
-                  }}
-                  className="pl-9 h-9 text-xs border-border bg-background"
-                />
-              </div>
-
-              {activeSubTab === "donors" && (
-                <>
-                  <select
-                    value={selectedGroup}
-                    onChange={(e) => {
-                      setSelectedGroup(e.target.value);
-                      setPage(1);
-                    }}
-                    className="h-9 px-2.5 text-xs rounded-md border border-border bg-background focus:outline-none"
-                  >
-                    <option value="all">{isEn ? "All Blood Groups" : "সকল রক্তের গ্রুপ"}</option>
-                    {BLOOD_GROUPS.map((bg) => (
-                      <option key={bg} value={bg}>{bg}</option>
-                    ))}
-                  </select>
-
-                  <select
-                    value={selectedUpazila}
-                    onChange={(e) => {
-                      setSelectedUpazila(e.target.value);
-                      setPage(1);
-                    }}
-                    className="h-9 px-2.5 text-xs rounded-md border border-border bg-background focus:outline-none"
-                  >
-                    {UPAZILAS_FENI.map((u) => (
-                      <option key={u.id} value={u.id}>
-                        {isEn ? u.nameEn : u.nameBn}
-                      </option>
-                    ))}
-                  </select>
-                </>
-              )}
-
-              {activeSubTab === "ambulances" && (
-                <select
-                  value={ambulanceTypeFilter}
-                  onChange={(e) => {
-                    setAmbulanceTypeFilter(e.target.value);
-                    setPage(1);
-                  }}
-                  className="h-9 px-2.5 text-xs rounded-md border border-border bg-background focus:outline-none"
-                >
-                  <option value="all">{isEn ? "All Types" : "সকল ধরন"}</option>
-                  {AMBULANCE_TYPES.map((t) => (
-                    <option key={t.id} value={t.id}>{isEn ? t.nameEn : t.nameBn}</option>
-                  ))}
-                </select>
-              )}
-
-              {(activeSubTab === "donors" || activeSubTab === "ambulances") && (
-                <select
-                  value={statusFilter}
-                  onChange={(e) => {
-                    setStatusFilter(e.target.value);
-                    setPage(1);
-                  }}
-                  className="h-9 px-2.5 text-xs rounded-md border border-border bg-background focus:outline-none font-medium"
-                >
-                  <option value="all">{isEn ? "All Status" : "সকল স্ট্যাটাস"}</option>
-                  <option value="approved">{isEn ? "Approved Only" : "অনুমোদিত"}</option>
-                  <option value="pending">{isEn ? "Pending Approval" : "অপেক্ষমাণ"}</option>
-                </select>
-              )}
-            </div>
-
-            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setImportDialogOpen(true)}
-                className="text-xs h-9 font-semibold gap-1.5 border-border"
-              >
-                <UploadCloud className="h-3.5 w-3.5 text-primary" />
-                <span>{isEn ? "Bulk Import" : "বাল্ক ইম্পোর্ট"}</span>
-              </Button>
-
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleExport}
-                className="text-xs h-9 font-semibold gap-1.5 border-border"
-              >
-                <Download className="h-3.5 w-3.5" />
-                <span>{isEn ? "Export" : "এক্সপোর্ট"}</span>
-              </Button>
-
-              {activeSubTab === "donors" && (
-                <Button
-                  size="sm"
-                  onClick={() => { setEditingDonor(null); setDonorDialogOpen(true); }}
-                  className="bg-rose-600 hover:bg-rose-700 text-white text-xs h-9 font-bold gap-1"
-                >
-                  <Plus className="h-4 w-4" />
-                  <span>{isEn ? "Add Donor" : "রক্তদাতা যুক্ত করুন"}</span>
-                </Button>
-              )}
-
-              {activeSubTab === "ambulances" && (
-                <Button
-                  size="sm"
-                  onClick={() => { setEditingAmbulance(null); setAmbulanceDialogOpen(true); }}
-                  className="bg-cyan-600 hover:bg-cyan-700 text-white text-xs h-9 font-bold gap-1"
-                >
-                  <Plus className="h-4 w-4" />
-                  <span>{isEn ? "Add Ambulance" : "অ্যাম্বুলেন্স যুক্ত করুন"}</span>
-                </Button>
-              )}
-
-              {activeSubTab === "hotlines" && (
-                <Button
-                  size="sm"
-                  onClick={() => { setEditingHotline(null); setHotlineDialogOpen(true); }}
-                  className="bg-primary hover:bg-primary-dark text-white text-xs h-9 font-bold gap-1"
-                >
-                  <Plus className="h-4 w-4" />
-                  <span>{isEn ? "Add Hotline" : "হটলাইন যুক্ত করুন"}</span>
-                </Button>
-              )}
-            </div>
-          </div>
+          <EmergencyFilterBar
+            activeSubTab={activeSubTab}
+            search={search}
+            onSearchChange={(val) => {
+              setSearch(val);
+              setPage(1);
+            }}
+            selectedGroup={selectedGroup}
+            onGroupChange={(val) => {
+              setSelectedGroup(val);
+              setPage(1);
+            }}
+            selectedUpazila={selectedUpazila}
+            onUpazilaChange={(val) => {
+              setSelectedUpazila(val);
+              setPage(1);
+            }}
+            ambulanceTypeFilter={ambulanceTypeFilter}
+            onAmbulanceTypeChange={(val) => {
+              setAmbulanceTypeFilter(val);
+              setPage(1);
+            }}
+            statusFilter={statusFilter}
+            onStatusChange={(val) => {
+              setStatusFilter(val);
+              setPage(1);
+            }}
+            onImportClick={() => setImportDialogOpen(true)}
+            onExportClick={handleExport}
+            onAddClick={() => {
+              if (activeSubTab === "donors") {
+                setEditingDonor(null);
+                setDonorDialogOpen(true);
+              } else if (activeSubTab === "ambulances") {
+                setEditingAmbulance(null);
+                setAmbulanceDialogOpen(true);
+              } else {
+                setEditingHotline(null);
+                setHotlineDialogOpen(true);
+              }
+            }}
+            isEn={isEn}
+          />
 
           {activeSubTab === "donors" ? (
             <EmergencyDonorsList

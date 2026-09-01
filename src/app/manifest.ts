@@ -47,7 +47,6 @@ export default function manifest(): MetadataRoute.Manifest {
         src: "/images/member-card-logo.webp",
         sizes: "622x535",
         type: "image/webp",
-        form_factor: "wide",
         label: "হেলথ ক্লাব মেম্বার কার্ড",
       },
     ],
