@@ -3,25 +3,35 @@ import { prisma } from "../src/lib/prisma";
 import { INITIAL_BLOOD_DONORS } from "../src/data/emergencyData";
 
 async function main() {
-  console.log(`Syncing ${INITIAL_BLOOD_DONORS.length} blood donors to database...`);
-  
-  await prisma.systemSetting.upsert({
-    where: { key: "emergency_donors" },
-    create: {
-      key: "emergency_donors",
-      value: JSON.stringify(INITIAL_BLOOD_DONORS),
-    },
-    update: {
-      value: JSON.stringify(INITIAL_BLOOD_DONORS),
-    },
-  });
+  console.log(`Syncing ${INITIAL_BLOOD_DONORS.length} blood donors to relational table...`);
 
-  const updated = await prisma.systemSetting.findUnique({
-    where: { key: "emergency_donors" },
-  });
+  for (const donor of INITIAL_BLOOD_DONORS) {
+    const cleanPhone = donor.phone.replace(/\D/g, "");
+    await prisma.bloodDonor.upsert({
+      where: { phone: cleanPhone },
+      update: {
+        name: donor.name,
+        bloodGroup: donor.bloodGroup,
+        upazila: donor.upazila,
+        lastDonated: donor.lastDonated || "তথ্য নেই",
+        isAvailable: donor.isAvailable !== false,
+        status: donor.status || "approved",
+      },
+      create: {
+        id: donor.id,
+        name: donor.name,
+        phone: cleanPhone,
+        bloodGroup: donor.bloodGroup,
+        upazila: donor.upazila,
+        lastDonated: donor.lastDonated || "তথ্য নেই",
+        isAvailable: donor.isAvailable !== false,
+        status: donor.status || "approved",
+      },
+    });
+  }
 
-  const count = updated ? JSON.parse(updated.value).length : 0;
-  console.log(`Successfully synced! Total donors in DB: ${count}`);
+  const count = await prisma.bloodDonor.count();
+  console.log(`Successfully synced! Total blood donors in DB: ${count}`);
 }
 
 main()

@@ -1,12 +1,17 @@
 "use client";
 
-import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BLOOD_GROUPS, UPAZILAS_FENI } from "@/data/emergencyData";
 import { registerBloodDonorAction } from "@/app/actions/emergencyActions";
+import {
+  bloodDonorRegistrationSchema,
+  type BloodDonorFormValues,
+} from "@/lib/validations/emergency";
+import { useForm, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Heart, Loader2 } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
@@ -20,31 +25,37 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
   const { locale, t } = useLanguage();
   const isEn = locale === "en";
 
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [bloodGroup, setBloodGroup] = useState<string>("O+");
-  const [upazila, setUpazila] = useState<string>("feni-sadar");
-  const [lastDonated, setLastDonated] = useState("");
-  const [loading, setLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    control,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<BloodDonorFormValues>({
+    resolver: zodResolver(bloodDonorRegistrationSchema),
+    defaultValues: {
+      name: "",
+      phone: "",
+      bloodGroup: "O+",
+      upazila: "feni-sadar",
+      lastDonated: "",
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim() || !phone.trim()) {
-      toast.error(t("emergency.donorModal.phoneRequired") || (isEn ? "Please provide your name and phone number." : "আপনার নাম ও মোবাইল নম্বর প্রদান করুন।"));
-      return;
-    }
+  const selectedBloodGroup = useWatch({ control, name: "bloodGroup" });
 
-    setLoading(true);
+  const onSubmit = async (data: BloodDonorFormValues) => {
     try {
-      const selectedUpazila = UPAZILAS_FENI.find((u) => u.id === upazila);
+      const selectedUpazila = UPAZILAS_FENI.find((u) => u.id === data.upazila);
       const upazilaName = isEn ? selectedUpazila?.nameEn : selectedUpazila?.nameBn;
 
       const res = await registerBloodDonorAction({
-        name,
-        phone,
-        bloodGroup,
-        upazila: upazilaName || upazila,
-        lastDonated,
+        name: data.name,
+        phone: data.phone,
+        bloodGroup: data.bloodGroup,
+        upazila: upazilaName || data.upazila,
+        lastDonated: data.lastDonated,
       });
 
       if (res.success) {
@@ -53,17 +64,13 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
             ? "Registration submitted! It will appear in the directory once approved by admin."
             : res.message)
         );
-        setName("");
-        setPhone("");
-        setLastDonated("");
+        reset();
         onOpenChange(false);
       } else {
         toast.error(res.message);
       }
     } catch {
       toast.error(t("emergency.donorModal.errorMsg") || (isEn ? "Failed to submit registration." : "আবেদনটি জমা দেওয়া সম্ভব হয়নি।"));
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -82,7 +89,7 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-2">
           {/* Name */}
           <div className="space-y-1.5">
             <Label htmlFor="donor-name" className="text-xs font-semibold">
@@ -91,10 +98,11 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
             <Input
               id="donor-name"
               placeholder={t("emergency.donorModal.namePlaceholder")}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
+              {...register("name")}
             />
+            {errors.name && (
+              <p className="text-xs text-destructive">{errors.name.message}</p>
+            )}
           </div>
 
           {/* Phone */}
@@ -106,10 +114,11 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
               id="donor-phone"
               type="tel"
               placeholder={t("emergency.donorModal.phonePlaceholder")}
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              required
+              {...register("phone")}
             />
+            {errors.phone && (
+              <p className="text-xs text-destructive">{errors.phone.message}</p>
+            )}
           </div>
 
           {/* Blood Group Select */}
@@ -122,10 +131,10 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
                 <button
                   type="button"
                   key={bg}
-                  onClick={() => setBloodGroup(bg)}
-                  className={`py-2 text-xs font-bold rounded-lg border transition-all ${
-                    bloodGroup === bg
-                      ? "bg-rose-600 text-white border-rose-600 shadow-sm"
+                  onClick={() => setValue("bloodGroup", bg as BloodDonorFormValues["bloodGroup"], { shouldValidate: true })}
+                  className={`py-2 text-xs font-bold rounded-lg border transition-all cursor-pointer ${
+                    selectedBloodGroup === bg
+                      ? "bg-rose-600 text-white border-rose-600 shadow-xs"
                       : "bg-background hover:bg-muted text-muted-foreground border-border"
                   }`}
                 >
@@ -133,6 +142,9 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
                 </button>
               ))}
             </div>
+            {errors.bloodGroup && (
+              <p className="text-xs text-destructive">{errors.bloodGroup.message}</p>
+            )}
           </div>
 
           {/* Upazila Select */}
@@ -142,8 +154,7 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
             </Label>
             <select
               id="donor-upazila"
-              value={upazila}
-              onChange={(e) => setUpazila(e.target.value)}
+              {...register("upazila")}
               className="w-full h-10 px-3 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
             >
               {UPAZILAS_FENI.filter((u) => u.id !== "all").map((u) => (
@@ -152,6 +163,9 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
                 </option>
               ))}
             </select>
+            {errors.upazila && (
+              <p className="text-xs text-destructive">{errors.upazila.message}</p>
+            )}
           </div>
 
           {/* Last Donation */}
@@ -162,18 +176,17 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
             <Input
               id="last-donated"
               placeholder={t("emergency.donorModal.lastDonatedPlaceholder")}
-              value={lastDonated}
-              onChange={(e) => setLastDonated(e.target.value)}
+              {...register("lastDonated")}
             />
           </div>
 
           <div className="pt-2">
             <Button
               type="submit"
-              disabled={loading}
+              disabled={isSubmitting}
               className="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold"
             >
-              {loading ? (
+              {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   {t("emergency.donorModal.submitting")}

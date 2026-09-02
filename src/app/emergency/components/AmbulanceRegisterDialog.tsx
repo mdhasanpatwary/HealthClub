@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,6 +12,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UPAZILAS_FENI, AMBULANCE_TYPES } from "@/data/emergencyData";
 import { registerAmbulanceAction } from "@/app/actions/emergencyActions";
+import {
+  ambulanceDialogFormSchema,
+  type AmbulanceDialogFormValues,
+} from "@/lib/validations/emergency";
+import { useForm, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Truck, Loader2, ShieldCheck } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
@@ -29,43 +34,45 @@ export function AmbulanceRegisterDialog({
   const { locale, t } = useLanguage();
   const isEn = locale === "en";
 
-  const [serviceName, setServiceName] = useState("");
-  const [operatorName, setOperatorName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [altPhone, setAltPhone] = useState("");
-  const [type, setType] = useState<string>("AC");
-  const [upazila, setUpazila] = useState<string>("feni-sadar");
-  const [standLocation, setStandLocation] = useState("");
-  const [coverage, setCoverage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    control,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<AmbulanceDialogFormValues>({
+    resolver: zodResolver(ambulanceDialogFormSchema),
+    defaultValues: {
+      serviceName: "",
+      operatorName: "",
+      phone: "",
+      altPhone: "",
+      type: "AC",
+      upazila: "feni-sadar",
+      standLocation: "",
+      coverage: "",
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!serviceName.trim() || !operatorName.trim() || !phone.trim()) {
-      toast.error(
-        t("emergency.ambulanceModal.phoneRequired") || (isEn
-          ? "Please provide service name, driver/operator name, and phone number."
-          : "অনুগ্রহ করে প্রতিষ্ঠানের নাম, চালক/মালিকের নাম ও ফোন নম্বর পূরণ করুন।")
-      );
-      return;
-    }
+  const selectedType = useWatch({ control, name: "type" });
 
-    setLoading(true);
+  const onSubmit = async (data: AmbulanceDialogFormValues) => {
     try {
-      const selectedUpazilaObj = UPAZILAS_FENI.find((u) => u.id === upazila);
+      const selectedUpazilaObj = UPAZILAS_FENI.find((u) => u.id === data.upazila);
       const upazilaLabel = isEn ? selectedUpazilaObj?.nameEn : selectedUpazilaObj?.nameBn;
-      const fullLocation = standLocation.trim()
-        ? `${upazilaLabel || upazila} (${standLocation.trim()})`
-        : upazilaLabel || upazila;
+      const fullLocation = data.standLocation?.trim()
+        ? `${upazilaLabel || data.upazila} (${data.standLocation.trim()})`
+        : upazilaLabel || data.upazila;
 
       const res = await registerAmbulanceAction({
-        serviceName: serviceName.trim(),
-        operatorName: operatorName.trim(),
-        phone: phone.trim(),
-        altPhone: altPhone.trim() || undefined,
-        type,
+        serviceName: data.serviceName.trim(),
+        operatorName: data.operatorName.trim(),
+        phone: data.phone.trim(),
+        altPhone: data.altPhone?.trim() || undefined,
+        type: data.type,
         location: fullLocation,
-        coverage: coverage.trim() || undefined,
+        coverage: data.coverage?.trim() || undefined,
       });
 
       if (res.success) {
@@ -74,12 +81,7 @@ export function AmbulanceRegisterDialog({
             ? "Ambulance registration submitted successfully! We will review and publish it."
             : res.message)
         );
-        setServiceName("");
-        setOperatorName("");
-        setPhone("");
-        setAltPhone("");
-        setStandLocation("");
-        setCoverage("");
+        reset();
         onOpenChange(false);
       } else {
         toast.error(res.message);
@@ -90,8 +92,6 @@ export function AmbulanceRegisterDialog({
           ? "Failed to submit ambulance registration. Please try again."
           : "নিবন্ধন জমা দেওয়া সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।")
       );
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -110,7 +110,7 @@ export function AmbulanceRegisterDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-2">
           {/* Service / Ambulance Name */}
           <div className="space-y-1.5">
             <Label htmlFor="ambulance-service-name" className="text-xs font-semibold">
@@ -120,10 +120,11 @@ export function AmbulanceRegisterDialog({
             <Input
               id="ambulance-service-name"
               placeholder={t("emergency.ambulanceModal.serviceNamePlaceholder")}
-              value={serviceName}
-              onChange={(e) => setServiceName(e.target.value)}
-              required
+              {...register("serviceName")}
             />
+            {errors.serviceName && (
+              <p className="text-xs text-destructive">{errors.serviceName.message}</p>
+            )}
           </div>
 
           {/* Driver / Operator Name */}
@@ -135,10 +136,11 @@ export function AmbulanceRegisterDialog({
             <Input
               id="ambulance-operator-name"
               placeholder={t("emergency.ambulanceModal.operatorNamePlaceholder")}
-              value={operatorName}
-              onChange={(e) => setOperatorName(e.target.value)}
-              required
+              {...register("operatorName")}
             />
+            {errors.operatorName && (
+              <p className="text-xs text-destructive">{errors.operatorName.message}</p>
+            )}
           </div>
 
           {/* Phone Numbers */}
@@ -152,10 +154,11 @@ export function AmbulanceRegisterDialog({
                 id="ambulance-phone"
                 type="tel"
                 placeholder={t("emergency.ambulanceModal.phonePlaceholder")}
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                required
+                {...register("phone")}
               />
+              {errors.phone && (
+                <p className="text-xs text-destructive">{errors.phone.message}</p>
+              )}
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="ambulance-alt-phone" className="text-xs font-semibold text-muted-foreground">
@@ -165,9 +168,11 @@ export function AmbulanceRegisterDialog({
                 id="ambulance-alt-phone"
                 type="tel"
                 placeholder={t("emergency.ambulanceModal.altPhonePlaceholder")}
-                value={altPhone}
-                onChange={(e) => setAltPhone(e.target.value)}
+                {...register("altPhone")}
               />
+              {errors.altPhone && (
+                <p className="text-xs text-destructive">{errors.altPhone.message}</p>
+              )}
             </div>
           </div>
 
@@ -182,18 +187,21 @@ export function AmbulanceRegisterDialog({
                 <button
                   type="button"
                   key={tItem.id}
-                  onClick={() => setType(tItem.id)}
-                  className={`p-2.5 text-xs font-bold rounded-xl border text-left flex items-center justify-between transition-all ${
-                    type === tItem.id
+                  onClick={() => setValue("type", tItem.id as AmbulanceDialogFormValues["type"], { shouldValidate: true })}
+                  className={`p-2.5 text-xs font-bold rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
+                    selectedType === tItem.id
                       ? "bg-primary/10 text-primary border-primary shadow-2xs font-semibold"
                       : "bg-background hover:bg-muted text-muted-foreground border-border"
                   }`}
                 >
                   <span>{isEn ? tItem.nameEn : tItem.nameBn}</span>
-                  {type === tItem.id && <span className="text-primary font-bold">✓</span>}
+                  {selectedType === tItem.id && <span className="text-primary font-bold">✓</span>}
                 </button>
               ))}
             </div>
+            {errors.type && (
+              <p className="text-xs text-destructive">{errors.type.message}</p>
+            )}
           </div>
 
           {/* Upazila & Stand Location */}
@@ -205,8 +213,7 @@ export function AmbulanceRegisterDialog({
               </Label>
               <select
                 id="ambulance-upazila"
-                value={upazila}
-                onChange={(e) => setUpazila(e.target.value)}
+                {...register("upazila")}
                 className="w-full h-10 px-3 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
               >
                 {UPAZILAS_FENI.filter((u) => u.id !== "all").map((u) => (
@@ -215,6 +222,9 @@ export function AmbulanceRegisterDialog({
                   </option>
                 ))}
               </select>
+              {errors.upazila && (
+                <p className="text-xs text-destructive">{errors.upazila.message}</p>
+              )}
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="ambulance-stand" className="text-xs font-semibold">
@@ -223,8 +233,7 @@ export function AmbulanceRegisterDialog({
               <Input
                 id="ambulance-stand"
                 placeholder={t("emergency.ambulanceModal.standLocationPlaceholder")}
-                value={standLocation}
-                onChange={(e) => setStandLocation(e.target.value)}
+                {...register("standLocation")}
               />
             </div>
           </div>
@@ -237,8 +246,7 @@ export function AmbulanceRegisterDialog({
             <Input
               id="ambulance-coverage"
               placeholder={t("emergency.ambulanceModal.coveragePlaceholder")}
-              value={coverage}
-              onChange={(e) => setCoverage(e.target.value)}
+              {...register("coverage")}
             />
           </div>
 
@@ -253,10 +261,10 @@ export function AmbulanceRegisterDialog({
           <div className="pt-2">
             <Button
               type="submit"
-              disabled={loading}
+              disabled={isSubmitting}
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-xl"
             >
-              {loading ? (
+              {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   {t("emergency.ambulanceModal.submitting")}

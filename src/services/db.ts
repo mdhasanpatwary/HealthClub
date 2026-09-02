@@ -21,6 +21,8 @@ export interface Member {
   renewalStatus?: string;
   renewalBkashSender?: string;
   renewalBkashTxnId?: string;
+  role?: string;
+  adminRole?: AdminRole;
 }
 
 export type MemberNotificationType =

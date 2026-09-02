@@ -1,13 +1,19 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useForm, Controller, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Heart, User, Phone, Mail, Lock, MapPin, Calendar, Briefcase,
   ArrowRight, Star, ShieldCheck
 } from "lucide-react";
 import { addMemberAction } from "@/app/actions/memberActions";
+import {
+  memberRegistrationSchema,
+  type MemberRegistrationInput,
+} from "@/lib/validations/member";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ImageUpload } from "@/components/ui/ImageUpload";
@@ -22,58 +28,43 @@ function RegisterForm() {
   const searchParams = useSearchParams();
   const planParam = searchParams.get("plan");
 
-  const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    password: "",
-    tier: (planParam === "premium" ? "premium" : "founding") as "founding" | "premium",
-    address: "",
-    birthDate: "",
-    profession: "",
-    profilePictureUrl: ""
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<MemberRegistrationInput>({
+    resolver: zodResolver(memberRegistrationSchema),
+    defaultValues: {
+      name: "",
+      phone: "",
+      email: "",
+      password: "",
+      tier: (planParam === "premium" ? "premium" : "founding"),
+      address: "",
+      birthDate: "",
+      profession: "",
+      profilePictureUrl: "",
+    },
   });
-  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const selectedTier = useWatch({ control, name: "tier" });
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    if (!formData.name || !formData.phone || !formData.password || !formData.email || !formData.address || !formData.birthDate || !formData.profession || !formData.profilePictureUrl) {
-      toast.warning(t("auth.register.fillRequired"));
-      setLoading(false);
-      return;
-    }
-
+  const onSubmit = async (data: MemberRegistrationInput) => {
     try {
-      const result = await addMemberAction({
-        name: formData.name,
-        phone: formData.phone,
-        email: formData.email,
-        password: formData.password,
-        tier: formData.tier,
-        address: formData.address,
-        birthDate: formData.birthDate,
-        profession: formData.profession,
-        profilePictureUrl: formData.profilePictureUrl
-      });
+      const result = await addMemberAction(data);
 
       if ("error" in result) {
         toast.error(result.error);
-        setLoading(false);
         return;
       }
 
       toast.success(t("auth.register.registerSuccess"));
-      router.push(`/register/verify-email?email=${encodeURIComponent(formData.email)}`);
+      router.push(`/register/verify-email?email=${encodeURIComponent(data.email)}`);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : t("auth.register.registerError");
       toast.error(errorMessage);
-      setLoading(false);
     }
   };
 
@@ -110,51 +101,61 @@ function RegisterForm() {
           <button
             type="button"
             role="radio"
-            aria-checked={formData.tier === "founding"}
-            onClick={() => setFormData(p => ({ ...p, tier: "founding" }))}
+            aria-checked={selectedTier === "founding"}
+            onClick={() => setValue("tier", "founding", { shouldValidate: true })}
             className={`relative p-4 rounded-2xl border-2 text-left transition-all duration-200 cursor-pointer ${
-              formData.tier === "founding"
+              selectedTier === "founding"
                 ? "border-primary bg-primary/5 dark:bg-primary/10"
                 : "border-border/60 hover:border-primary/30"
             }`}
           >
-            {formData.tier === "founding" && (
+            {selectedTier === "founding" && (
               <div className="absolute top-2 right-2 h-5 w-5 rounded-full bg-primary flex items-center justify-center">
                 <Star className="h-3 w-3 text-white fill-white" />
               </div>
             )}
-            <Star className={`h-5 w-5 mb-2 ${formData.tier === "founding" ? "text-primary fill-primary/20" : "text-muted-foreground"}`} />
+            <Star className={`h-5 w-5 mb-2 ${selectedTier === "founding" ? "text-primary fill-primary/20" : "text-muted-foreground"}`} />
             <p className="text-xs font-bold text-secondary dark:text-white">{t("auth.register.foundingTier")}</p>
             <p className="text-[11px] text-primary font-semibold">{t("auth.register.foundingSub")}</p>
           </button>
           <button
             type="button"
             role="radio"
-            aria-checked={formData.tier === "premium"}
-            onClick={() => setFormData(p => ({ ...p, tier: "premium" }))}
+            aria-checked={selectedTier === "premium"}
+            onClick={() => setValue("tier", "premium", { shouldValidate: true })}
             className={`relative p-4 rounded-2xl border-2 text-left transition-all duration-200 cursor-pointer ${
-              formData.tier === "premium"
+              selectedTier === "premium"
                 ? "border-primary bg-primary/5 dark:bg-primary/10"
                 : "border-border/60 hover:border-primary/30"
             }`}
           >
-            {formData.tier === "premium" && (
+            {selectedTier === "premium" && (
               <div className="absolute top-2 right-2 h-5 w-5 rounded-full bg-primary flex items-center justify-center">
                 <ShieldCheck className="h-3 w-3 text-white" />
               </div>
             )}
-            <ShieldCheck className={`h-5 w-5 mb-2 ${formData.tier === "premium" ? "text-primary" : "text-muted-foreground"}`} />
+            <ShieldCheck className={`h-5 w-5 mb-2 ${selectedTier === "premium" ? "text-primary" : "text-muted-foreground"}`} />
             <p className="text-xs font-bold text-secondary dark:text-white">{t("auth.register.premiumTier")}</p>
             <p className="text-[11px] text-muted-foreground font-semibold">{t("auth.register.premiumSub")}</p>
           </button>
         </div>
 
-        <form onSubmit={handleRegister} className="space-y-4">
-
-          <ImageUpload
-            value={formData.profilePictureUrl}
-            onChange={(url) => setFormData(prev => ({ ...prev, profilePictureUrl: url }))}
-            label={t("auth.register.photoLabel")}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <Controller
+            name="profilePictureUrl"
+            control={control}
+            render={({ field, fieldState }) => (
+              <div className="space-y-1">
+                <ImageUpload
+                  value={field.value}
+                  onChange={field.onChange}
+                  label={t("auth.register.photoLabel")}
+                />
+                {fieldState.error && (
+                  <p className="text-xs text-destructive">{fieldState.error.message}</p>
+                )}
+              </div>
+            )}
           />
 
           <div className="space-y-1.5">
@@ -165,13 +166,13 @@ function RegisterForm() {
             <Input
               id="reg-name"
               type="text"
-              name="name"
-              required
-              value={formData.name}
-              onChange={handleChange}
+              {...register("name")}
               placeholder={t("auth.register.fullNamePlaceholder")}
               className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
             />
+            {errors.name && (
+              <p className="text-xs text-destructive">{errors.name.message}</p>
+            )}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -183,13 +184,13 @@ function RegisterForm() {
               <Input
                 id="reg-phone"
                 type="tel"
-                name="phone"
-                required
-                value={formData.phone}
-                onChange={handleChange}
+                {...register("phone")}
                 placeholder="017XXXXXXXX"
                 className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
               />
+              {errors.phone && (
+                <p className="text-xs text-destructive">{errors.phone.message}</p>
+              )}
             </div>
             <div className="space-y-1.5">
               <label htmlFor="reg-email" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
@@ -199,13 +200,13 @@ function RegisterForm() {
               <Input
                 id="reg-email"
                 type="email"
-                name="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
+                {...register("email")}
                 placeholder="name@domain.com"
                 className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
               />
+              {errors.email && (
+                <p className="text-xs text-destructive">{errors.email.message}</p>
+              )}
             </div>
           </div>
 
@@ -217,13 +218,13 @@ function RegisterForm() {
             <Input
               id="reg-address"
               type="text"
-              name="address"
-              required
-              value={formData.address}
-              onChange={handleChange}
+              {...register("address")}
               placeholder={t("auth.register.addressPlaceholder")}
               className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
             />
+            {errors.address && (
+              <p className="text-xs text-destructive">{errors.address.message}</p>
+            )}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -235,12 +236,12 @@ function RegisterForm() {
               <Input
                 id="reg-birthDate"
                 type="date"
-                name="birthDate"
-                required
-                value={formData.birthDate}
-                onChange={handleChange}
+                {...register("birthDate")}
                 className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
               />
+              {errors.birthDate && (
+                <p className="text-xs text-destructive">{errors.birthDate.message}</p>
+              )}
             </div>
             <div className="space-y-1.5">
               <label htmlFor="reg-profession" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
@@ -250,13 +251,13 @@ function RegisterForm() {
               <Input
                 id="reg-profession"
                 type="text"
-                name="profession"
-                required
-                value={formData.profession}
-                onChange={handleChange}
+                {...register("profession")}
                 placeholder={t("auth.register.professionPlaceholder")}
                 className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
               />
+              {errors.profession && (
+                <p className="text-xs text-destructive">{errors.profession.message}</p>
+              )}
             </div>
           </div>
 
@@ -268,22 +269,22 @@ function RegisterForm() {
             <Input
               id="reg-password"
               type="password"
-              name="password"
-              required
-              value={formData.password}
-              onChange={handleChange}
+              {...register("password")}
               placeholder="••••••••"
               className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
             />
+            {errors.password && (
+              <p className="text-xs text-destructive">{errors.password.message}</p>
+            )}
           </div>
 
           <Button
             type="submit"
-            disabled={loading}
+            disabled={isSubmitting}
             size="lg"
             className="w-full mt-1"
           >
-            {loading ? (
+            {isSubmitting ? (
               <div className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
             ) : (
               <>
@@ -292,7 +293,6 @@ function RegisterForm() {
               </>
             )}
           </Button>
-
         </form>
 
         <div className="text-center text-sm text-muted-foreground border-t border-border/60 pt-5">

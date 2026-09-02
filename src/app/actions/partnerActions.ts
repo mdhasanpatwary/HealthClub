@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/generated/client/client";
 import { Partner } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
 import { hashPassword } from "@/lib/crypto";
@@ -89,8 +90,29 @@ export async function resetPartnerPasswordAction(email: string, code: string, ra
   return _resetPartnerPasswordAction(email, code, rawNewPassword);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function formatPartner(p: any): Partner {
+const PARTNER_SELECT_FIELDS = {
+  id: true,
+  name: true,
+  category: true,
+  address: true,
+  discount: true,
+  phone: true,
+  email: true,
+  logoText: true,
+  mapLink: true,
+  imageUrl: true,
+  emergencyPhone: true,
+  workingHours: true,
+  departmentDiscounts: true,
+  upazila: true,
+  createdAt: true,
+} as const;
+
+type PrismaPartnerRecord =
+  | Prisma.PartnerGetPayload<{ select: typeof PARTNER_SELECT_FIELDS }>
+  | Prisma.PartnerGetPayload<object>;
+
+function formatPartner(p: PrismaPartnerRecord): Partner {
   return {
     id: p.id,
     name: p.name,
@@ -141,8 +163,7 @@ export async function getPaginatedPartnersAdminAction(
   const category = params?.category;
   const upazila = params?.upazila;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const where: any = {};
+  const where: Prisma.PartnerWhereInput = {};
   if (category && category !== "all") {
     where.category = category;
   }
@@ -167,22 +188,7 @@ export async function getPaginatedPartnersAdminAction(
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * pageSize,
         take: pageSize,
-        select: {
-          id: true,
-          name: true,
-          category: true,
-          address: true,
-          discount: true,
-          phone: true,
-          email: true,
-          logoText: true,
-          mapLink: true,
-          imageUrl: true,
-          emergencyPhone: true,
-          workingHours: true,
-          departmentDiscounts: true,
-          upazila: true,
-        },
+        select: PARTNER_SELECT_FIELDS,
       }),
     ]);
 
@@ -206,23 +212,7 @@ export const getPartnersAction = unstable_cache(
     try {
       const data = await prisma.partner.findMany({
         orderBy: { createdAt: "desc" },
-        select: {
-          id: true,
-          name: true,
-          category: true,
-          address: true,
-          discount: true,
-          phone: true,
-          email: true,
-          logoText: true,
-          mapLink: true,
-          imageUrl: true,
-          emergencyPhone: true,
-          workingHours: true,
-          departmentDiscounts: true,
-          upazila: true,
-          createdAt: true,
-        },
+        select: PARTNER_SELECT_FIELDS,
       });
 
       return data.map(formatPartner);
@@ -339,22 +329,7 @@ export async function getPartnerProfileAction(): Promise<{
   try {
     const data = await prisma.partner.findUnique({
       where: { id: partnerId },
-      select: {
-        id: true,
-        name: true,
-        category: true,
-        address: true,
-        discount: true,
-        phone: true,
-        email: true,
-        logoText: true,
-        mapLink: true,
-        imageUrl: true,
-        emergencyPhone: true,
-        workingHours: true,
-        departmentDiscounts: true,
-        upazila: true,
-      },
+      select: PARTNER_SELECT_FIELDS,
     });
 
     if (!data) {
@@ -413,22 +388,7 @@ export async function updatePartnerProfileAction(
         departmentDiscounts: input.departmentDiscounts || null,
         ...(input.upazila !== undefined && { upazila: input.upazila || "feni-sadar" }),
       },
-      select: {
-        id: true,
-        name: true,
-        category: true,
-        address: true,
-        discount: true,
-        phone: true,
-        email: true,
-        logoText: true,
-        mapLink: true,
-        imageUrl: true,
-        emergencyPhone: true,
-        workingHours: true,
-        departmentDiscounts: true,
-        upazila: true,
-      },
+      select: PARTNER_SELECT_FIELDS,
     });
 
     return {

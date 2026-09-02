@@ -7,6 +7,7 @@ import { LogOut, LayoutDashboard, Settings } from "lucide-react";
 import { Member } from "@/services/db";
 import { authStore } from "@/services/authStore";
 import { useLanguage } from "@/components/layout/LanguageProvider";
+import { isAdminUser, canAccessAdminRoute } from "@/lib/permissions";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,7 +29,7 @@ export default function UserDropdown({ user }: UserDropdownProps) {
     router.push("/");
   };
 
-  const isAdmin = user.email === (process.env.NEXT_PUBLIC_ADMIN_EMAIL || "healthclubfeni@gmail.com");
+  const isAdmin = isAdminUser(user);
   const avatarText = user.name ? user.name.charAt(0).toUpperCase() : "U";
 
   return (
@@ -60,30 +61,42 @@ export default function UserDropdown({ user }: UserDropdownProps) {
         <DropdownMenuSeparator />
         
         {isAdmin ? (
-          <DropdownMenuItem
-            render={<Link href="/admin" />}
-            className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md hover:bg-muted text-foreground transition-colors"
-          >
-            <LayoutDashboard className="h-4 w-4 text-primary" />
-            <span>{t("layout.header.adminPanel")}</span>
-          </DropdownMenuItem>
+          <>
+            <DropdownMenuItem
+              render={<Link href="/admin" />}
+              className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md hover:bg-muted text-foreground transition-colors"
+            >
+              <LayoutDashboard className="h-4 w-4 text-primary" />
+              <span>{t("layout.header.adminPanel")}</span>
+            </DropdownMenuItem>
+            {canAccessAdminRoute(user.adminRole || "super_admin", "/admin/settings") && (
+              <DropdownMenuItem
+                render={<Link href="/admin/settings" />}
+                className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md hover:bg-muted text-foreground transition-colors"
+              >
+                <Settings className="h-4 w-4 text-primary" />
+                <span>{t("admin.nav.settings") || t("profile.page.profileSettings")}</span>
+              </DropdownMenuItem>
+            )}
+          </>
         ) : (
-          <DropdownMenuItem
-            render={<Link href="/dashboard" />}
-            className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md hover:bg-muted text-foreground transition-colors"
-          >
-            <LayoutDashboard className="h-4 w-4 text-primary" />
-            <span>{t("layout.header.dashboard")}</span>
-          </DropdownMenuItem>
+          <>
+            <DropdownMenuItem
+              render={<Link href="/dashboard" />}
+              className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md hover:bg-muted text-foreground transition-colors"
+            >
+              <LayoutDashboard className="h-4 w-4 text-primary" />
+              <span>{t("layout.header.dashboard")}</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              render={<Link href="/dashboard?tab=profile" />}
+              className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md hover:bg-muted text-foreground transition-colors"
+            >
+              <Settings className="h-4 w-4 text-primary" />
+              <span>{t("profile.page.profileSettings")}</span>
+            </DropdownMenuItem>
+          </>
         )}
-        
-        <DropdownMenuItem
-          render={<Link href="/dashboard?tab=profile" />}
-          className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md hover:bg-muted text-foreground transition-colors"
-        >
-          <Settings className="h-4 w-4 text-primary" />
-          <span>{t("profile.page.profileSettings")}</span>
-        </DropdownMenuItem>
         
         <DropdownMenuSeparator />
         

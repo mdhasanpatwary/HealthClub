@@ -69,18 +69,25 @@ async function verifyAdmin(): Promise<boolean> {
 }
 
 /**
- * Loads emergency donors from system settings or falls back to initial list.
+ * Loads emergency donors from relational table or falls back to initial list.
  */
 async function getBloodDonorsList(): Promise<BloodDonor[]> {
   try {
-    const setting = await prisma.systemSetting.findUnique({
-      where: { key: "emergency_donors" },
+    const rows = await prisma.bloodDonor.findMany({
+      orderBy: { createdAt: "desc" },
     });
-    if (setting?.value) {
-      const parsed = JSON.parse(setting.value);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
-      }
+    if (rows.length > 0) {
+      return rows.map((r) => ({
+        id: r.id,
+        name: r.name,
+        bloodGroup: r.bloodGroup as BloodDonor["bloodGroup"],
+        upazila: r.upazila,
+        phone: r.phone,
+        lastDonated: r.lastDonated,
+        isAvailable: r.isAvailable,
+        status: r.status as BloodDonor["status"],
+        createdAt: r.createdAt.toISOString(),
+      }));
     }
   } catch (err) {
     logger.error("Error reading emergency donors for broadcast:", err);

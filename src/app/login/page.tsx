@@ -7,7 +7,7 @@ import { Heart, User, Lock, ArrowRight } from "lucide-react";
 import { authStore } from "@/services/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { loginMemberAction } from "@/app/actions/memberActions";
+import { loginMemberAction } from "@/app/actions/memberAuthActions";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toast } from "sonner";
 
@@ -28,7 +28,9 @@ export default function LoginPage() {
       return;
     }
 
-    if (identifier === (process.env.NEXT_PUBLIC_ADMIN_EMAIL || "healthclubfeni@gmail.com")) {
+    const adminEmail = (process.env.NEXT_PUBLIC_ADMIN_EMAIL || "healthclubfeni@gmail.com").toLowerCase();
+    const cleanId = identifier.trim().toLowerCase();
+    if (cleanId === adminEmail || cleanId.startsWith("admin_")) {
       toast.warning(t("auth.login.adminHint"));
       setLoading(false);
       return;
@@ -49,6 +51,10 @@ export default function LoginPage() {
         window.location.href = "/dashboard";
         return;
       } else {
+        if (res.error === "ADMIN_ACCOUNT") {
+          toast.warning(t("auth.login.adminHint"));
+          return;
+        }
         const errMsg = res.message || res.error || t("auth.login.invalidCredentials");
         toast.error(errMsg);
       }

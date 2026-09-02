@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { verifyMemberForPartnerAction } from "@/app/actions/memberActions";
 import { toast } from "sonner";
+import { logger } from "@/lib/logger";
 import type { Html5Qrcode } from "html5-qrcode";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { CameraPermissionModal } from "./CameraPermissionModal";
@@ -203,7 +204,7 @@ export function PartnerBillingTab({
 
         isStarted = started;
       } catch (err: unknown) {
-        console.error("Camera scanner setup error:", err);
+        logger.error("Camera scanner setup error:", err);
         const error = err as { name?: string; message?: string };
         const isPermission =
           error?.name === "NotAllowedError" ||

@@ -7,7 +7,8 @@ import { ShieldCheck, CheckCircle2, Copy, Check, Smartphone, ArrowLeft, Heart, U
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle, CardDescription, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { requestRenewalAction, getMemberByIdAction } from "@/app/actions/memberActions";
+import { getMemberByIdAction } from "@/app/actions/memberActions";
+import { requestRenewalAction } from "@/app/actions/memberPaymentActions";
 import { getPublicPaymentSettingsAction, PublicPaymentSettings } from "@/app/actions/systemSettingsActions";
 import { authStore } from "@/services/authStore";
 import { Member } from "@/services/db";

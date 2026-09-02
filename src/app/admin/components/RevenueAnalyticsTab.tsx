@@ -10,12 +10,10 @@ import { RenewalRetentionBreakdown } from "./RenewalRetentionBreakdown";
 import { PartnerPerformanceTable } from "./PartnerPerformanceTable";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   TrendingUp,
   RefreshCw,
   Download,
-  AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 import { exportToCsv } from "@/lib/exportUtils";
@@ -26,23 +24,18 @@ export function RevenueAnalyticsTab() {
 
   const [data, setData] = useState<AdminRevenueAnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  const fetchAnalytics = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+  const loadData = useCallback(async () => {
     try {
       const res = await getAdminRevenueAnalyticsAction();
       if (res.success && res.data) {
         setData(res.data);
       } else {
         const errorMsg = res.error || "অ্যানালিটিক্স ডেটা লোড করতে সমস্যা হয়েছে।";
-        setError(errorMsg);
         toast.error(errorMsg);
       }
     } catch {
       const errorMsg = "সার্ভারের সাথে সংযোগ স্থাপন করা সম্ভব হয়নি।";
-      setError(errorMsg);
       toast.error(errorMsg);
     } finally {
       setLoading(false);
@@ -50,9 +43,21 @@ export function RevenueAnalyticsTab() {
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchAnalytics();
-  }, [fetchAnalytics]);
+    let isMounted = true;
+    Promise.resolve().then(() => {
+      if (isMounted) {
+        loadData();
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [loadData]);
+
+  const handleRefresh = async () => {
+    setLoading(true);
+    await loadData();
+  };
 
   const handleExportCsv = () => {
     if (!data) return;
@@ -92,7 +97,7 @@ export function RevenueAnalyticsTab() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 sm:p-6 rounded-3xl bg-card border border-border/80 shadow-xs">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <div className="p-2 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+            <div className="p-2 rounded-2xl bg-primary/10 text-primary border border-primary/20">
               <TrendingUp className="h-5 w-5" />
             </div>
             <h2 className="text-lg sm:text-xl font-bold font-heading text-secondary dark:text-white">
@@ -110,7 +115,7 @@ export function RevenueAnalyticsTab() {
           <Button
             variant="outline"
             size="sm"
-            onClick={fetchAnalytics}
+            onClick={handleRefresh}
             disabled={loading}
             className="rounded-xl border-border text-xs font-semibold gap-1.5 cursor-pointer hover:bg-muted"
           >
@@ -147,19 +152,6 @@ export function RevenueAnalyticsTab() {
           </div>
           <Skeleton className="h-72 w-full rounded-3xl" />
         </div>
-      )}
-
-      {/* Error State */}
-      {error && !loading && (
-        <Card className="border-red-200 dark:border-red-900 bg-red-50/50 dark:bg-red-950/20 rounded-3xl">
-          <CardContent className="p-8 flex flex-col items-center justify-center text-center space-y-3">
-            <AlertCircle className="h-10 w-10 text-red-500" />
-            <p className="text-sm font-semibold text-red-600 dark:text-red-400">{error}</p>
-            <Button onClick={fetchAnalytics} variant="outline" size="sm" className="rounded-xl text-xs">
-              {isBn ? "পুনরায় চেষ্টা করুন" : "Try Again"}
-            </Button>
-          </CardContent>
-        </Card>
       )}
 
       {/* Data Loaded View */}

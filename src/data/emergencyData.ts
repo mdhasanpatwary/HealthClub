@@ -7,7 +7,8 @@ export interface BloodDonor {
   lastDonated: string;
   isAvailable: boolean;
   status?: "approved" | "pending";
-  createdAt?: string;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
 }
 
 export type AmbulanceType = "ICU" | "AC" | "Non-AC" | "Freezer";
@@ -69,7 +70,8 @@ export interface AmbulanceService {
   phone: string;
   availableHours: string;
   status?: "approved" | "pending";
-  createdAt?: string;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
 }
 
 export interface EmergencyHotline {

@@ -1,6 +1,6 @@
 import { Member, Partner } from "./db";
 import { safeStorage } from "@/lib/safeStorage";
-import { logoutMemberAction } from "@/app/actions/memberActions";
+import { logoutMemberAction } from "@/app/actions/memberAuthActions";
 
 const isClient = typeof window !== "undefined";
 

@@ -590,3 +590,59 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Severity**: High
   - **Files**: `src/lib/siteConfig.ts`, `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/robots.ts`, `src/app/partner-hospitals/page.tsx`, `src/components/ui/PartnerDirectory.tsx`, `src/app/consultants/page.tsx`, `src/app/consultants/[id]/page.tsx`, `src/app/partner-hospitals/[id]/page.tsx`, `src/app/health-tips/[slug]/page.tsx`
   - **Details**: Resolved Google Search Console indexing bottlenecks by setting primary `SITE_URL` to `https://www.healthclubfeni.com` to eliminate 308 redirect loops, removing conflicting root layout `hreflang` inheritance that pointed subpage alternates to `/`, adding dynamic category-specific metadata and matching canonicals for `/partner-hospitals?category=...`, tightening `robots.ts` disallowed paths to protect crawl budget from private routes, and ensuring all dynamic pages provide consistent, self-referencing canonical and localized alternate headers.
+
+### 🏗️ File Modularization & 500-Line Limit Compliance (Item 9)
+
+- [x] **TODO-117**: **Modularize Files Exceeding the 500-Line Strict Limit**
+  - **Severity**: High
+  - **Files**: `src/app/actions/adminNotificationActions.ts`, `src/app/actions/memberActions.ts`, `src/app/admin/components/SettingsTab.tsx`, `src/data/doctorSeoData.ts`
+  - **Details**: Refactor files exceeding the project's strict 500-line code limit:
+    1. Extract notification item formatting, persistence helpers, and filtering logic from `adminNotificationActions.ts` (545 lines) into `adminNotificationHelpers.ts`.
+    2. Extract member payment/renewal processing (`submitBkashPaymentAction`, `requestRenewalAction`) from `memberActions.ts` (531 lines) into `memberPaymentActions.ts`, and prune legacy wrapper re-exports.
+    3. Split `SettingsTab.tsx` (507 lines) into modular subcomponents (`FeeSettingsCard.tsx`, `PaymentSettingsCard.tsx`, `ContactSettingsCard.tsx`, `NoticeSettingsCard.tsx`).
+    4. Break `doctorSeoData.ts` (825 lines) into structured category/department sub-data files.
+
+### 🛡️ Role-Based Access Control & Granular Security (Item 10)
+
+- [x] **TODO-118**: **Fix Admin Navigation Identity Check for Secondary Admin Roles**
+  - **Severity**: High
+  - **Files**: `src/components/layout/UserDropdown.tsx`, `src/components/layout/MobileNavDrawer.tsx`, `src/app/login/page.tsx`
+  - **Details**: Update admin detection in `UserDropdown.tsx` and `MobileNavDrawer.tsx` from checking exclusively `user.email === NEXT_PUBLIC_ADMIN_EMAIL` to also recognizing `user.id.startsWith("admin_")` or validating session role. This ensures secondary administrators (`super_admin`, `content_moderator`, `support_staff`) created via `adminUserActions.ts` with custom email addresses correctly see the "Admin Panel" link instead of being misidentified as regular members.
+
+- [x] **TODO-119**: **Add Granular RBAC Permission Check on Admin Transaction Creation**
+  - **Severity**: Medium
+  - **Files**: `src/app/actions/transactionActions.ts`
+  - **Details**: Enforce `hasAdminPermission(session.adminRole || "super_admin", "manage_transactions")` inside `addTransactionAction` when invoked by an admin session, preventing unauthorized transactions from staff with restricted administrative privileges (e.g., support staff or content moderators).
+
+### 🔔 UI Standards & Notification Deduplication (Item 11)
+
+- [x] **TODO-120**: **Remove Duplicate Inline Error Banners & Enforce Semantic Destructive Styling**
+  - **Severity**: Medium
+  - **Files**: `src/app/partner/dashboard/components/PartnerAnalyticsTab.tsx`, `src/app/admin/components/RevenueAnalyticsTab.tsx`
+  - **Details**: Comply with project notification rules ("No Duplicate Error Banners"): remove redundant inline error cards (`<Card className="border-red-200 ...">...<AlertCircle .../>`) in `PartnerAnalyticsTab.tsx` and `RevenueAnalyticsTab.tsx` since errors are already dispatched via `toast.error(errorMsg)`. Replace non-standard ad-hoc colors (`border-red-200`, `text-red-500`, `text-red-600`) with semantic `@theme` tokens (`destructive`).
+
+### 📝 Form Management & Validation Standardization (Item 12)
+
+- [x] **TODO-121**: **Integrate React Hook Form & Comprehensive Zod Schemas for Client Forms**
+  - **Severity**: Medium
+  - **Files**: `package.json`, `src/lib/validations/member.ts`, `src/lib/validations/emergency.ts`, `src/lib/validations/contact.ts`, `src/lib/validations/doctor.ts`, `src/lib/validations/settings.ts`, `src/lib/validations/index.ts`, `src/app/actions/memberActions.ts`, `src/app/actions/emergencyActions.ts`, `src/app/actions/contactActions.ts`, `src/app/actions/partnerDoctorActions.ts`, `src/app/actions/systemSettingsActions.ts`, `src/app/register/page.tsx`, `src/app/emergency/components/BloodDonorRegisterDialog.tsx`, `src/app/emergency/components/AmbulanceRegisterDialog.tsx`, `src/components/landing/ContactForm.tsx`, `src/app/partner/dashboard/components/doctor-modals/EditChamberScheduleDialog.tsx`, `src/app/admin/components/SettingsTab.tsx`
+  - **Details**: Installed `react-hook-form` and `@hookform/resolvers` and standardized form management and input validation across the application in compliance with project rules. Created centralized Zod validation schemas under `src/lib/validations/` ensuring DRY synchronization and full Next.js App Router compatibility. Replaced manual multi-state input bindings and ad-hoc string checks with React Hook Form controllers and Zod schema validation across member registration, emergency registrations (blood donors and ambulances), contact inquiries, partner doctor chamber schedules, and administrative system settings while keeping all files strictly under the 500-line limit.
+
+### 🗄️ Scalability & Database Performance (Item 13)
+
+- [x] **TODO-122**: **Migrate Emergency Donors & Ambulances from Monolithic SystemSetting JSON to Relational Tables**
+  - **Severity**: Medium
+  - **Files**: `prisma/schema.prisma`, `src/app/actions/emergencyActions.ts`, `src/app/actions/emergencyAdminActions.ts`, `src/data/emergencyData.ts`
+  - **Details**: Refactor `emergency_donors` and `emergency_ambulances` from monolithic JSON strings stored inside `system_settings` (which require heavy `SELECT ... FOR UPDATE` row locks and full array in-memory serialization on every write) into dedicated relational Prisma models (`BloodDonor` and `AmbulanceService`) with database-level `phone` unique constraints and indexed upazila queries.
+
+### 🧼 Code Quality, Typing & Telemetry Health (Item 14)
+
+- [x] **TODO-123**: **Route Direct `console.error` Calls Through Centralized Logger & Fix ESLint Effect Suppressions**
+  - **Severity**: Low
+  - **Files**: `src/app/partner/dashboard/components/PartnerBillingTab.tsx`, `src/components/layout/InstallAppBanner.tsx`, `src/components/layout/Header.tsx`, `src/app/partner/dashboard/components/PartnerAnalyticsTab.tsx`, `src/app/admin/components/RevenueAnalyticsTab.tsx`
+  - **Details**: Replace raw `console.error` calls in `PartnerBillingTab.tsx` (camera scanner) and `InstallAppBanner.tsx` (PWA install prompt) with `logger.error` for consistent error sanitization. Refactor `react-hooks/set-state-in-effect` ESLint suppressions in `Header.tsx`, `PartnerAnalyticsTab.tsx`, and `RevenueAnalyticsTab.tsx` to eliminate cascading state update anti-patterns.
+
+- [x] **TODO-124**: **Eliminate `any` Type Assertions Across Core Server Actions**
+  - **Severity**: Low
+  - **Files**: `src/app/actions/doctorActions.ts`, `src/app/actions/partnerDoctorActions.ts`, `src/app/actions/partnerRequestActions.ts`, `src/app/actions/partnerActions.ts`, `src/app/actions/memberAdminActions.ts`, `src/app/actions/memberActions.ts`, `src/app/actions/transactionActions.ts`, `src/app/actions/contactActions.ts`
+  - **Details**: Replaced loose `any` parameter types, where clauses, update inputs, and mappings with explicit Prisma models and types (`Prisma.DoctorGetPayload`, `Prisma.DoctorWhereInput`, `Prisma.PartnerGetPayload`, `Prisma.PartnerWhereInput`, `Prisma.PartnerRequestGetPayload`, `Prisma.PartnerRequestWhereInput`, `Prisma.MemberGetPayload`, `Prisma.MemberWhereInput`, `Prisma.MemberUpdateInput`, `Prisma.TransactionWhereInput`, `Prisma.ContactMessageWhereInput`, and `VerifiedPartnerMember`). Removed all `no-explicit-any` ESLint suppressions while maintaining strict compliance with the 500-line limit across all server action files.

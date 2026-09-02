@@ -48,6 +48,12 @@ export const MODEL_TO_POSTGRES_TABLE_MAP: Record<string, string> = {
   pushSubscriptions: "push_subscriptions",
   push_subscriptions: "push_subscriptions",
   PushSubscription: "push_subscriptions",
+  bloodDonors: "blood_donors",
+  blood_donors: "blood_donors",
+  BloodDonor: "blood_donors",
+  ambulanceServices: "ambulance_services",
+  ambulance_services: "ambulance_services",
+  AmbulanceService: "ambulance_services",
 };
 
 /**
@@ -175,6 +181,18 @@ export const MODEL_COLUMN_MAPS: Record<string, Record<string, string>> = {
     createdAt: "created_at",
     updatedAt: "updated_at",
   },
+  blood_donors: {
+    bloodGroup: "blood_group",
+    lastDonated: "last_donated",
+    isAvailable: "is_available",
+    createdAt: "created_at",
+    updatedAt: "updated_at",
+  },
+  ambulance_services: {
+    availableHours: "available_hours",
+    createdAt: "created_at",
+    updatedAt: "updated_at",
+  },
 };
 
 /**
@@ -286,6 +304,8 @@ export async function fetchAllDatabaseData(tables?: string[]) {
   if (isIncluded("pushSubscriptions")) data.pushSubscriptions = await prisma.pushSubscription.findMany();
   if (isIncluded("members")) data.members = await prisma.member.findMany();
   if (isIncluded("partners")) data.partners = await prisma.partner.findMany();
+  if (isIncluded("bloodDonors")) data.bloodDonors = await prisma.bloodDonor.findMany();
+  if (isIncluded("ambulanceServices")) data.ambulanceServices = await prisma.ambulanceService.findMany();
 
   // 2. Child tables with foreign keys
   if (isIncluded("partnerStaff")) data.partnerStaff = await prisma.partnerStaff.findMany();

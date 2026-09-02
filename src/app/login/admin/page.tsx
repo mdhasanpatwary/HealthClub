@@ -7,7 +7,7 @@ import { authStore } from "@/services/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
-import { loginAdminAction } from "@/app/actions/memberActions";
+import { loginAdminAction } from "@/app/actions/memberAuthActions";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toast } from "sonner";
 

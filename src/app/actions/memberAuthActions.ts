@@ -78,6 +78,22 @@ export async function loginMemberAction(
     }
 
     if (!m) {
+      const adminExists = await prisma.adminUser.findFirst({
+        where: {
+          OR: [
+            { email: cleanId },
+            { phone: identifier.trim() },
+            { id: identifier.trim() },
+          ],
+        },
+      });
+      if (adminExists) {
+        return {
+          success: false,
+          error: "ADMIN_ACCOUNT",
+          message: "এটি একটি এডমিন অ্যাকাউন্ট। এডমিন লগইন করতে /login/admin এ যান।",
+        };
+      }
       return { success: false, error: "INVALID_CREDENTIALS", message: "মেম্বারশিপ আইডি, ফোন নম্বর বা পাসওয়ার্ড সঠিক নয়।" };
     }
 
@@ -210,6 +226,8 @@ export async function loginAdminAction(identifier: string, passwordInput: string
       expiryDate: "2099-12-31",
       totalSaved: 0,
       emailVerified: true,
+      role: "admin",
+      adminRole: adminUser.role as AdminRole,
     } as Member;
   } catch (error) {
     logger.error("Error in loginAdminAction:", error);

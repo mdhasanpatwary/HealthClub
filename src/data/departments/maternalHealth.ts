@@ -1,0 +1,55 @@
+import { DepartmentSeoConfig } from "./types";
+
+export const maternalHealthDepartments: Record<string, DepartmentSeoConfig> = {
+  gynecology: {
+    id: "gynecology",
+    slug: "gynecology",
+    nameBn: "গাইনী ও প্রসূতি বিশেষজ্ঞ",
+    nameEn: "Gynaecology & Obstetrics",
+    metaTitleBn: "ফেনীর সেরা গাইনি ও প্রসূতি বিশেষজ্ঞ ডাক্তার তালিকা | চেম্বার ও সিরিয়াল - হেলথ ক্লাব",
+    metaTitleEn: "Top Gynecologist & Obstetrician Doctors in Feni | Chamber & Serial - Health Club",
+    metaDescriptionBn: "ফেনীর অভিজ্ঞ গাইনী ও প্রসূতি বিশেষজ্ঞ (Gynecologist) ডাক্তারদের তালিকা, বন্ধ্যাত্ব চিকিৎসা, চেম্বার শিডিউল, ভিজিট ফি ও সরাসরি সিরিয়াল নাম্বার।",
+    metaDescriptionEn: "Directory of leading gynecologists and obstetricians in Feni. View chamber schedules for prenatal care, normal delivery, infertility evaluation, and book phone serials.",
+    keywords: [
+      "feni gynecologist doctor list",
+      "best gynae doctor in feni",
+      "female gynecologist in feni",
+      "feni pregnancy doctor chamber",
+      "obstetrician in feni",
+      "ফেনীর সেরা গাইনি ডাক্তার",
+      "ফেনী গাইনী ডাক্তার তালিকা",
+      "ফেনীর মহিলা গাইনী বিশেষজ্ঞ",
+      "ফেনী প্রসূতি বিশেষজ্ঞ চেম্বার",
+      "ফেনী নরমাল ডেলিভারি ডাক্তার",
+    ],
+    heroBadgeBn: "মহিলা ও প্রসূতি স্বাস্থ্যসেবা",
+    heroBadgeEn: "Women's Health & Maternal Care",
+    heroHeadlineBn: "ফেনীর অভিজ্ঞ গাইনি, প্রসূতি ও বন্ধ্যাত্ব বিশেষজ্ঞদের তালিকা",
+    heroHeadlineEn: "Leading Gynecologists & Obstetricians in Feni",
+    introDescriptionBn: "মাতৃত্ব ও নারীদের বিশেষায়িত স্বাস্থ্য সুরক্ষায় ফেনীর স্বনামধন্য গাইনি ও প্রসূতি বিশেষজ্ঞ চিকিৎসকদের চেম্বার তথ্য। গর্ভকালীন নিয়মিত চেকআপ (ANC), বন্ধ্যাত্ব চিকিৎসা, জরায়ুর সমস্যা ও নিরাপদ ডেলিভারি পরামর্শ।",
+    introDescriptionEn: "Consult top gynecologists and obstetricians in Feni for maternal care, pregnancy monitoring, infertility treatment, and safe delivery support with verified chamber schedules.",
+    clinicalScopeBn: [
+      "গর্ভকালীন নিয়মিত যত্ন ও চেকআপ (ANC)",
+      "স্বাভাবিক ও নিরাপদ সিজারিয়ান ডেলিভারি",
+      "বন্ধ্যাত্ব নির্ণয় ও আধুনিক চিকিৎসা",
+      "জরায়ু ও ডিম্বাশয়ের জটিলতার চিকিৎসা",
+      "মহিলাদের হরমোন ও পিরিয়ডের সমস্যা",
+    ],
+    clinicalScopeEn: [
+      "Antenatal & Postnatal Care",
+      "Safe Delivery & Caesarean Support",
+      "Infertility Evaluation & Care",
+      "Uterine & Ovarian Health",
+      "Hormonal Balance & Gynecological Surgery",
+    ],
+    medicalSpecialtySchema: "Gynecologic",
+    faqs: [
+      {
+        qBn: "ফেনীতে মহিলা গাইনি ডাক্তার কীভাবে খুঁজে পাব?",
+        aBn: "হেলথ ক্লাবের গাইনী বিভাগে ফেনীর স্বনামধন্য নারী গাইনি ও প্রসূতি বিশেষজ্ঞদের পূর্ণাঙ্গ তালিকা, শিক্ষাগত যোগ্যতা ও চেম্বার শিডিউল দেওয়া রয়েছে।",
+        qEn: "How to find female gynecologists in Feni?",
+        aEn: "Our Gynecology directory lists certified female gynecologists and obstetricians with their qualifications, visiting shifts, and hospital affiliations in Feni.",
+      },
+    ],
+  },
+};

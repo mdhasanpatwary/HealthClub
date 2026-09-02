@@ -110,7 +110,7 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
       const safeRate = Math.min(discountRate, 0.70);
       const saved = Math.round(billAmount * safeRate);
 
-      await addTransactionAction({
+      const res = await addTransactionAction({
         memberId: member.id,
         memberName: member.name,
         partnerId: partner.id,
@@ -118,6 +118,11 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
         amount: billAmount,
         saved: saved,
       });
+
+      if ("error" in res) {
+        toast.error(res.error || t("admin.dashboard.txLogFailed"));
+        return;
+      }
 
       toast.success(t("admin.dashboard.txLoggedSuccess").replace("${saved}", formatNum(saved, locale)));
       setNewTx({ memberId: "", partnerId: "", amount: "" });

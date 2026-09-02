@@ -64,7 +64,9 @@ export const ModelName = {
   AdminUser: 'AdminUser',
   DatabaseSnapshot: 'DatabaseSnapshot',
   Review: 'Review',
-  PushSubscription: 'PushSubscription'
+  PushSubscription: 'PushSubscription',
+  BloodDonor: 'BloodDonor',
+  AmbulanceService: 'AmbulanceService'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -334,6 +336,37 @@ export const PushSubscriptionScalarFieldEnum = {
 } as const
 
 export type PushSubscriptionScalarFieldEnum = (typeof PushSubscriptionScalarFieldEnum)[keyof typeof PushSubscriptionScalarFieldEnum]
+
+
+export const BloodDonorScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  bloodGroup: 'bloodGroup',
+  upazila: 'upazila',
+  phone: 'phone',
+  lastDonated: 'lastDonated',
+  isAvailable: 'isAvailable',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BloodDonorScalarFieldEnum = (typeof BloodDonorScalarFieldEnum)[keyof typeof BloodDonorScalarFieldEnum]
+
+
+export const AmbulanceServiceScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  location: 'location',
+  phone: 'phone',
+  availableHours: 'availableHours',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AmbulanceServiceScalarFieldEnum = (typeof AmbulanceServiceScalarFieldEnum)[keyof typeof AmbulanceServiceScalarFieldEnum]
 
 
 export const SortOrder = {

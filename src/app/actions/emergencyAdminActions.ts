@@ -10,10 +10,11 @@ import {
   EmergencyHotline,
   INITIAL_BLOOD_DONORS,
   INITIAL_AMBULANCES,
-  INITIAL_EMERGENCY_HOTLINES,
 } from "@/data/emergencyData";
 import { PaginatedResult } from "@/types/pagination";
 import { hasAdminPermission } from "@/lib/permissions";
+import { getHotlinesList } from "./emergencyHotlineActions";
+import { Prisma } from "@/generated/client/client";
 
 const EMERGENCY_TAG = "emergency-data";
 
@@ -24,12 +25,7 @@ async function verifyAdmin(): Promise<boolean> {
   return hasAdminPermission(role, "manage_emergency");
 }
 
-async function saveEmergencySetting(key: string, data: unknown) {
-  await prisma.systemSetting.upsert({
-    where: { key },
-    create: { key, value: JSON.stringify(data) },
-    update: { value: JSON.stringify(data) },
-  });
+function revalidateEmergencyCaches() {
   updateTag(EMERGENCY_TAG);
   updateTag("admin-stats");
   revalidateTag(EMERGENCY_TAG, "max");
@@ -38,53 +34,53 @@ async function saveEmergencySetting(key: string, data: unknown) {
   revalidatePath("/admin/emergency");
 }
 
-export interface GetPaginatedHotlinesAdminParams {
-  page?: number;
-  pageSize?: number;
-  search?: string;
-  category?: string;
+function mapDonorRow(r: {
+  id: string;
+  name: string;
+  bloodGroup: string;
+  upazila: string;
+  phone: string;
+  lastDonated: string;
+  isAvailable: boolean;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+}): BloodDonor {
+  return {
+    id: r.id,
+    name: r.name,
+    bloodGroup: r.bloodGroup as BloodDonor["bloodGroup"],
+    upazila: r.upazila,
+    phone: r.phone,
+    lastDonated: r.lastDonated,
+    isAvailable: r.isAvailable,
+    status: r.status as BloodDonor["status"],
+    createdAt: r.createdAt.toISOString(),
+    updatedAt: r.updatedAt.toISOString(),
+  };
 }
 
-export async function getPaginatedHotlinesAdminAction(
-  params?: GetPaginatedHotlinesAdminParams
-): Promise<PaginatedResult<EmergencyHotline>> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_emergency")) {
-    return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize: params?.pageSize || 10 };
-  }
-
-  const { hotlines } = await getEmergencyDataAction();
-  const page = Math.max(1, params?.page || 1);
-  const pageSize = Math.max(1, params?.pageSize || 10);
-  const search = params?.search?.trim().toLowerCase();
-  const category = params?.category;
-
-  let filtered = hotlines;
-  if (category && category !== "all") {
-    filtered = filtered.filter((h) => h.category === category);
-  }
-  if (search) {
-    filtered = filtered.filter(
-      (h) =>
-        h.titleBn.toLowerCase().includes(search) ||
-        h.titleEn.toLowerCase().includes(search) ||
-        h.phone.toLowerCase().includes(search) ||
-        (h.descriptionBn && h.descriptionBn.toLowerCase().includes(search)) ||
-        (h.descriptionEn && h.descriptionEn.toLowerCase().includes(search))
-    );
-  }
-
-  const totalItems = filtered.length;
-  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
-  const startIndex = (page - 1) * pageSize;
-  const data = filtered.slice(startIndex, startIndex + pageSize);
-
+function mapAmbulanceRow(r: {
+  id: string;
+  name: string;
+  type: string;
+  location: string;
+  phone: string;
+  availableHours: string;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+}): AmbulanceService {
   return {
-    data,
-    totalItems,
-    totalPages,
-    currentPage: page,
-    pageSize,
+    id: r.id,
+    name: r.name,
+    type: r.type as AmbulanceService["type"],
+    location: r.location,
+    phone: r.phone,
+    availableHours: r.availableHours,
+    status: r.status as AmbulanceService["status"],
+    createdAt: r.createdAt.toISOString(),
+    updatedAt: r.updatedAt.toISOString(),
   };
 }
 
@@ -103,51 +99,53 @@ export async function getPaginatedDonorsAdminAction(
   params?: GetPaginatedDonorsAdminParams
 ): Promise<PaginatedResult<BloodDonor>> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_emergency")) {
+  if (
+    !session ||
+    session.role !== "admin" ||
+    !hasAdminPermission(session.adminRole || "super_admin", "manage_emergency")
+  ) {
     return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize: params?.pageSize || 10 };
   }
 
-  const { bloodDonors } = await getEmergencyDataAction();
   const page = Math.max(1, params?.page || 1);
   const pageSize = Math.max(1, params?.pageSize || 10);
-  const search = params?.search?.trim().toLowerCase();
+  const search = params?.search?.trim();
   const bloodGroup = params?.bloodGroup || params?.group;
   const upazila = params?.upazila || params?.area;
   const status = params?.status;
 
-  let filtered = bloodDonors;
+  const where: Prisma.BloodDonorWhereInput = {};
+
   if (status && status !== "all") {
-    if (status === "pending") {
-      filtered = filtered.filter((d) => d.status === "pending");
-    } else if (status === "approved") {
-      filtered = filtered.filter((d) => d.status !== "pending");
-    }
+    where.status = status === "pending" ? "pending" : { not: "pending" };
   }
-  if (bloodGroup && bloodGroup !== "all") {
-    filtered = filtered.filter((d) => d.bloodGroup === bloodGroup);
-  }
-  if (upazila && upazila !== "all") {
-    filtered = filtered.filter((d) => d.upazila === upazila);
-  }
+  if (bloodGroup && bloodGroup !== "all") where.bloodGroup = bloodGroup;
+  if (upazila && upazila !== "all") where.upazila = upazila;
+
   if (search) {
-    filtered = filtered.filter(
-      (d) =>
-        d.name.toLowerCase().includes(search) ||
-        d.phone.toLowerCase().includes(search) ||
-        d.upazila.toLowerCase().includes(search) ||
-        d.bloodGroup.toLowerCase().includes(search)
-    );
+    where.OR = [
+      { name: { contains: search, mode: "insensitive" } },
+      { phone: { contains: search, mode: "insensitive" } },
+      { upazila: { contains: search, mode: "insensitive" } },
+      { bloodGroup: { contains: search, mode: "insensitive" } },
+    ];
   }
 
-  const totalItems = filtered.length;
-  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
   const startIndex = (page - 1) * pageSize;
-  const data = filtered.slice(startIndex, startIndex + pageSize);
+  const [totalItems, rows] = await Promise.all([
+    prisma.bloodDonor.count({ where }),
+    prisma.bloodDonor.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      skip: startIndex,
+      take: pageSize,
+    }),
+  ]);
 
   return {
-    data,
+    data: rows.map(mapDonorRow),
     totalItems,
-    totalPages,
+    totalPages: Math.max(1, Math.ceil(totalItems / pageSize)),
     currentPage: page,
     pageSize,
   };
@@ -167,51 +165,55 @@ export async function getPaginatedAmbulancesAdminAction(
   params?: GetPaginatedAmbulancesAdminParams
 ): Promise<PaginatedResult<AmbulanceService>> {
   const session = await getSessionUser();
-  if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_emergency")) {
+  if (
+    !session ||
+    session.role !== "admin" ||
+    !hasAdminPermission(session.adminRole || "super_admin", "manage_emergency")
+  ) {
     return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize: params?.pageSize || 10 };
   }
 
-  const { ambulances } = await getEmergencyDataAction();
   const page = Math.max(1, params?.page || 1);
   const pageSize = Math.max(1, params?.pageSize || 10);
-  const search = params?.search?.trim().toLowerCase();
+  const search = params?.search?.trim();
   const location = params?.location || params?.area;
   const type = params?.type;
   const status = params?.status;
 
-  let filtered = ambulances;
+  const where: Prisma.AmbulanceServiceWhereInput = {};
+
   if (status && status !== "all") {
-    if (status === "pending") {
-      filtered = filtered.filter((a) => a.status === "pending");
-    } else if (status === "approved") {
-      filtered = filtered.filter((a) => a.status !== "pending");
-    }
+    where.status = status === "pending" ? "pending" : { not: "pending" };
   }
-  if (type && type !== "all") {
-    filtered = filtered.filter((a) => a.type === type);
-  }
+  if (type && type !== "all") where.type = type;
   if (location && location !== "all") {
-    filtered = filtered.filter((a) => a.location === location);
-  }
-  if (search) {
-    filtered = filtered.filter(
-      (a) =>
-        a.name.toLowerCase().includes(search) ||
-        a.location.toLowerCase().includes(search) ||
-        a.phone.toLowerCase().includes(search) ||
-        a.type.toLowerCase().includes(search)
-    );
+    where.location = { contains: location, mode: "insensitive" };
   }
 
-  const totalItems = filtered.length;
-  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  if (search) {
+    where.OR = [
+      { name: { contains: search, mode: "insensitive" } },
+      { location: { contains: search, mode: "insensitive" } },
+      { phone: { contains: search, mode: "insensitive" } },
+      { type: { contains: search, mode: "insensitive" } },
+    ];
+  }
+
   const startIndex = (page - 1) * pageSize;
-  const data = filtered.slice(startIndex, startIndex + pageSize);
+  const [totalItems, rows] = await Promise.all([
+    prisma.ambulanceService.count({ where }),
+    prisma.ambulanceService.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      skip: startIndex,
+      take: pageSize,
+    }),
+  ]);
 
   return {
-    data,
+    data: rows.map(mapAmbulanceRow),
     totalItems,
-    totalPages,
+    totalPages: Math.max(1, Math.ceil(totalItems / pageSize)),
     currentPage: page,
     pageSize,
   };
@@ -228,72 +230,38 @@ export const getEmergencyDataAction = unstable_cache(
     hotlines: EmergencyHotline[];
   }> => {
     try {
-      if (!prisma?.systemSetting) {
+      if (!prisma?.bloodDonor || !prisma?.ambulanceService) {
         return {
           bloodDonors: INITIAL_BLOOD_DONORS,
           ambulances: INITIAL_AMBULANCES,
-          hotlines: INITIAL_EMERGENCY_HOTLINES,
+          hotlines: await getHotlinesList(),
         };
       }
 
-      const settings = await prisma.systemSetting.findMany({
-        where: {
-          key: {
-            in: ["emergency_donors", "emergency_ambulances", "emergency_hotlines"],
-          },
-        },
-      });
+      const [donorRows, ambRows, hotlines] = await Promise.all([
+        prisma.bloodDonor.findMany({ orderBy: { createdAt: "desc" } }),
+        prisma.ambulanceService.findMany({ orderBy: { createdAt: "desc" } }),
+        getHotlinesList(),
+      ]);
 
-      const map = new Map(settings.map((s) => [s.key, s.value]));
+      const bloodDonors = donorRows.map(mapDonorRow);
+      const ambulances = ambRows.map(mapAmbulanceRow);
 
-      let bloodDonors = INITIAL_BLOOD_DONORS;
-      let ambulances = INITIAL_AMBULANCES;
-      let hotlines = INITIAL_EMERGENCY_HOTLINES;
-
-      if (map.has("emergency_donors")) {
-        try {
-          const parsed = JSON.parse(map.get("emergency_donors")!);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            bloodDonors = parsed;
-          }
-        } catch (e) {
-          logger.error("Failed to parse emergency_donors", e);
-        }
-      }
-
-      if (map.has("emergency_ambulances")) {
-        try {
-          const parsed = JSON.parse(map.get("emergency_ambulances")!);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            ambulances = parsed;
-          }
-        } catch (e) {
-          logger.error("Failed to parse emergency_ambulances", e);
-        }
-      }
-
-      if (map.has("emergency_hotlines")) {
-        try {
-          const parsed = JSON.parse(map.get("emergency_hotlines")!);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            hotlines = parsed;
-          }
-        } catch (e) {
-          logger.error("Failed to parse emergency_hotlines", e);
-        }
-      }
-
-      return { bloodDonors, ambulances, hotlines };
+      return {
+        bloodDonors: bloodDonors.length > 0 ? bloodDonors : INITIAL_BLOOD_DONORS,
+        ambulances: ambulances.length > 0 ? ambulances : INITIAL_AMBULANCES,
+        hotlines,
+      };
     } catch (err) {
       logger.error("Error in getEmergencyDataAction:", err);
       return {
         bloodDonors: INITIAL_BLOOD_DONORS,
         ambulances: INITIAL_AMBULANCES,
-        hotlines: INITIAL_EMERGENCY_HOTLINES,
+        hotlines: await getHotlinesList(),
       };
     }
   },
-  ["all-emergency-data-v4"],
+  ["all-emergency-data-v5"],
   { tags: [EMERGENCY_TAG], revalidate: 60 }
 );
 
@@ -321,38 +289,70 @@ export async function getEmergencyCountsAdminAction(): Promise<EmergencyCounts> 
     };
   }
 
-  const { bloodDonors, ambulances, hotlines } = await getEmergencyDataAction();
-  return {
-    donors: bloodDonors.length,
-    ambulances: ambulances.length,
-    hotlines: hotlines.length,
-    pendingDonors: bloodDonors.filter((d) => d.status === "pending").length,
-    pendingAmbulances: ambulances.filter((a) => a.status === "pending").length,
-  };
+  try {
+    const [
+      totalDonors,
+      pendingDonors,
+      totalAmbulances,
+      pendingAmbulances,
+      hotlines,
+    ] = await Promise.all([
+      prisma.bloodDonor.count(),
+      prisma.bloodDonor.count({ where: { status: "pending" } }),
+      prisma.ambulanceService.count(),
+      prisma.ambulanceService.count({ where: { status: "pending" } }),
+      getHotlinesList(),
+    ]);
+
+    return {
+      donors: totalDonors,
+      ambulances: totalAmbulances,
+      hotlines: hotlines.length,
+      pendingDonors,
+      pendingAmbulances,
+    };
+  } catch (error) {
+    logger.error("Error getting emergency counts:", error);
+    return {
+      donors: 0,
+      ambulances: 0,
+      hotlines: 0,
+      pendingDonors: 0,
+      pendingAmbulances: 0,
+    };
+  }
 }
 
 // --- BLOOD DONORS ---
 
 export async function saveBloodDonorAction(donor: BloodDonor) {
   try {
-    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
-    const data = await getEmergencyDataAction();
-    const existingIndex = data.bloodDonors.findIndex((d) => d.id === donor.id);
-    let updatedList: BloodDonor[];
+    if (!(await verifyAdmin())) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
 
-    const donorToSave: BloodDonor = {
-      ...donor,
-      status: donor.status || "approved",
-    };
+    const cleanPhone = donor.phone.trim();
+    await prisma.bloodDonor.upsert({
+      where: { phone: cleanPhone },
+      update: {
+        name: donor.name.trim(),
+        bloodGroup: donor.bloodGroup,
+        upazila: donor.upazila,
+        lastDonated: donor.lastDonated || "তথ্য নেই",
+        isAvailable: donor.isAvailable !== false,
+        status: donor.status || "approved",
+      },
+      create: {
+        id: donor.id || `donor-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+        name: donor.name.trim(),
+        phone: cleanPhone,
+        bloodGroup: donor.bloodGroup,
+        upazila: donor.upazila,
+        lastDonated: donor.lastDonated || "তথ্য নেই",
+        isAvailable: donor.isAvailable !== false,
+        status: donor.status || "approved",
+      },
+    });
 
-    if (existingIndex >= 0) {
-      updatedList = [...data.bloodDonors];
-      updatedList[existingIndex] = donorToSave;
-    } else {
-      updatedList = [donorToSave, ...data.bloodDonors];
-    }
-
-    await saveEmergencySetting("emergency_donors", updatedList);
+    revalidateEmergencyCaches();
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -361,12 +361,12 @@ export async function saveBloodDonorAction(donor: BloodDonor) {
 
 export async function approveBloodDonorAction(id: string) {
   try {
-    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
-    const data = await getEmergencyDataAction();
-    const updatedList = data.bloodDonors.map((d) =>
-      d.id === id ? { ...d, status: "approved" as const } : d
-    );
-    await saveEmergencySetting("emergency_donors", updatedList);
+    if (!(await verifyAdmin())) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
+    await prisma.bloodDonor.update({
+      where: { id },
+      data: { status: "approved" },
+    });
+    revalidateEmergencyCaches();
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -375,10 +375,11 @@ export async function approveBloodDonorAction(id: string) {
 
 export async function deleteBloodDonorAction(id: string) {
   try {
-    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
-    const data = await getEmergencyDataAction();
-    const updatedList = data.bloodDonors.filter((d) => d.id !== id);
-    await saveEmergencySetting("emergency_donors", updatedList);
+    if (!(await verifyAdmin())) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
+    await prisma.bloodDonor.delete({
+      where: { id },
+    });
+    revalidateEmergencyCaches();
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -387,12 +388,19 @@ export async function deleteBloodDonorAction(id: string) {
 
 export async function toggleBloodDonorAvailabilityAction(id: string) {
   try {
-    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
-    const data = await getEmergencyDataAction();
-    const updatedList = data.bloodDonors.map((d) =>
-      d.id === id ? { ...d, isAvailable: !d.isAvailable } : d
-    );
-    await saveEmergencySetting("emergency_donors", updatedList);
+    if (!(await verifyAdmin())) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
+    const current = await prisma.bloodDonor.findUnique({
+      where: { id },
+      select: { isAvailable: true },
+    });
+    if (!current) {
+      return { success: false, error: "রক্তদাতা খুঁজে পাওয়া যায়নি।" };
+    }
+    await prisma.bloodDonor.update({
+      where: { id },
+      data: { isAvailable: !current.isAvailable },
+    });
+    revalidateEmergencyCaches();
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -403,24 +411,30 @@ export async function toggleBloodDonorAvailabilityAction(id: string) {
 
 export async function saveAmbulanceAction(ambulance: AmbulanceService) {
   try {
-    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
-    const data = await getEmergencyDataAction();
-    const existingIndex = data.ambulances.findIndex((a) => a.id === ambulance.id);
-    let updatedList: AmbulanceService[];
+    if (!(await verifyAdmin())) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
 
-    const ambulanceToSave: AmbulanceService = {
-      ...ambulance,
-      status: ambulance.status || "approved",
-    };
+    const cleanPhone = ambulance.phone.trim();
+    await prisma.ambulanceService.upsert({
+      where: { phone: cleanPhone },
+      update: {
+        name: ambulance.name.trim(),
+        type: ambulance.type,
+        location: ambulance.location.trim(),
+        availableHours: ambulance.availableHours || "২৪/৭ সার্বক্ষণিক",
+        status: ambulance.status || "approved",
+      },
+      create: {
+        id: ambulance.id || `amb-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+        name: ambulance.name.trim(),
+        phone: cleanPhone,
+        type: ambulance.type,
+        location: ambulance.location.trim(),
+        availableHours: ambulance.availableHours || "২৪/৭ সার্বক্ষণিক",
+        status: ambulance.status || "approved",
+      },
+    });
 
-    if (existingIndex >= 0) {
-      updatedList = [...data.ambulances];
-      updatedList[existingIndex] = ambulanceToSave;
-    } else {
-      updatedList = [ambulanceToSave, ...data.ambulances];
-    }
-
-    await saveEmergencySetting("emergency_ambulances", updatedList);
+    revalidateEmergencyCaches();
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -429,12 +443,12 @@ export async function saveAmbulanceAction(ambulance: AmbulanceService) {
 
 export async function approveAmbulanceAction(id: string) {
   try {
-    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
-    const data = await getEmergencyDataAction();
-    const updatedList = data.ambulances.map((a) =>
-      a.id === id ? { ...a, status: "approved" as const } : a
-    );
-    await saveEmergencySetting("emergency_ambulances", updatedList);
+    if (!(await verifyAdmin())) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
+    await prisma.ambulanceService.update({
+      where: { id },
+      data: { status: "approved" },
+    });
+    revalidateEmergencyCaches();
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -443,45 +457,11 @@ export async function approveAmbulanceAction(id: string) {
 
 export async function deleteAmbulanceAction(id: string) {
   try {
-    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
-    const data = await getEmergencyDataAction();
-    const updatedList = data.ambulances.filter((a) => a.id !== id);
-    await saveEmergencySetting("emergency_ambulances", updatedList);
-    return { success: true };
-  } catch (err: unknown) {
-    return { success: false, error: (err as Error).message };
-  }
-}
-
-// --- HOTLINES & OXYGEN ---
-
-export async function saveHotlineAction(hotline: EmergencyHotline) {
-  try {
-    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
-    const data = await getEmergencyDataAction();
-    const existingIndex = data.hotlines.findIndex((h) => h.id === hotline.id);
-    let updatedList: EmergencyHotline[];
-
-    if (existingIndex >= 0) {
-      updatedList = [...data.hotlines];
-      updatedList[existingIndex] = hotline;
-    } else {
-      updatedList = [hotline, ...data.hotlines];
-    }
-
-    await saveEmergencySetting("emergency_hotlines", updatedList);
-    return { success: true };
-  } catch (err: unknown) {
-    return { success: false, error: (err as Error).message };
-  }
-}
-
-export async function deleteHotlineAction(id: string) {
-  try {
-    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
-    const data = await getEmergencyDataAction();
-    const updatedList = data.hotlines.filter((h) => h.id !== id);
-    await saveEmergencySetting("emergency_hotlines", updatedList);
+    if (!(await verifyAdmin())) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
+    await prisma.ambulanceService.delete({
+      where: { id },
+    });
+    revalidateEmergencyCaches();
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };

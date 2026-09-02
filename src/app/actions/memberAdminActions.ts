@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/generated/client/client";
 import { Member } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
@@ -46,8 +47,11 @@ function formatDate(date: Date): string {
   return `${y}-${m}-${d}`;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapPrismaMember(m: any): Member {
+type PrismaMemberRecord =
+  | Prisma.MemberGetPayload<{ select: typeof MEMBER_SELECT_FIELDS }>
+  | Prisma.MemberGetPayload<object>;
+
+function mapPrismaMember(m: PrismaMemberRecord): Member {
   return {
     id: m.id,
     name: m.name,
@@ -98,8 +102,7 @@ export async function getPaginatedMembersAction(
   const status = params?.status;
   const tier = params?.tier;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const where: any = {};
+  const where: Prisma.MemberWhereInput = {};
   if (status && status !== "all") {
     where.status = status;
   }
@@ -169,8 +172,7 @@ export async function getPaginatedRenewalsAction(
   const search = params?.search?.trim();
   const status = params?.status;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const where: any = {};
+  const where: Prisma.MemberWhereInput = {};
   if (status && status !== "all") {
     where.renewalStatus = status;
   } else {
@@ -235,8 +237,7 @@ export async function updateMemberStatusAction(id: string, status: Member["statu
     const member = await prisma.member.findUnique({ where: { id } });
     if (!member) return false;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const updateData: any = { status };
+    const updateData: Prisma.MemberUpdateInput = { status };
 
     if (status === "active") {
       const now = new Date();

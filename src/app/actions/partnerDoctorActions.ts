@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/generated/client/client";
 import { Doctor, initialDoctors } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
@@ -17,8 +18,7 @@ async function getAuthenticatedPartnerId(): Promise<string | null> {
   return session.role === "partner_staff" ? session.partnerId || null : session.userId;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function formatDoctor(d: any): Doctor {
+function formatDoctor(d: Prisma.DoctorGetPayload<object>): Doctor {
   return {
     id: d.id, name: d.name, specialty: d.specialty, department: d.department,
     degrees: d.degrees, designation: d.designation, chamberName: d.chamberName, chamberAddress: d.chamberAddress,
@@ -31,34 +31,18 @@ function formatDoctor(d: any): Doctor {
   };
 }
 
-export interface PartnerDoctorChamberInput {
-  roomNo?: string;
-  visitingDays?: string;
-  visitingHours?: string;
-  serialPhone?: string;
-  consultationFee?: string;
-}
+import {
+  partnerDoctorChamberSchema,
+  addPartnerDoctorSchema,
+  updatePartnerDoctorSchema,
+  type PartnerDoctorChamberFormValues,
+  type AddPartnerDoctorFormValues,
+  type UpdatePartnerDoctorFormValues,
+} from "@/lib/validations/doctor";
 
-export interface AddPartnerDoctorInput {
-  name: string;
-  specialty: string;
-  department: string;
-  degrees: string;
-  designation: string;
-  roomNo?: string;
-  visitingDays: string;
-  visitingHours: string;
-  serialPhone: string;
-  consultationFee?: string;
-  imageUrl?: string;
-  upazila?: string;
-  isActive?: boolean;
-  availableToday?: boolean;
-  onLeaveUntil?: string;
-  notice?: string;
-}
-
-export type UpdatePartnerDoctorInput = Partial<AddPartnerDoctorInput>;
+export type PartnerDoctorChamberInput = PartnerDoctorChamberFormValues;
+export type AddPartnerDoctorInput = AddPartnerDoctorFormValues;
+export type UpdatePartnerDoctorInput = UpdatePartnerDoctorFormValues;
 
 /**
  * Fetch all doctors practicing in the logged-in partner's hospital/chamber.
@@ -132,14 +116,12 @@ export async function getAvailableDoctorsToLinkAction(
   });
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const where: any = {
-      isActive: true,
-      AND: [{ OR: [{ partnerId: null }, { partnerId: { not: partnerId } }] }],
-    };
+    const andConditions: Prisma.DoctorWhereInput[] = [
+      { OR: [{ partnerId: null }, { partnerId: { not: partnerId } }] },
+    ];
 
     if (trimmed) {
-      where.AND.push({
+      andConditions.push({
         OR: [
           { name: { contains: trimmed, mode: "insensitive" } },
           { specialty: { contains: trimmed, mode: "insensitive" } },
@@ -150,6 +132,11 @@ export async function getAvailableDoctorsToLinkAction(
         ],
       });
     }
+
+    const where: Prisma.DoctorWhereInput = {
+      isActive: true,
+      AND: andConditions,
+    };
 
     const [total, data] = await Promise.all([
       prisma.doctor.count({ where }),
@@ -201,6 +188,11 @@ export async function linkDoctorToPartnerAction(
   const partnerId = await getAuthenticatedPartnerId();
   if (!partnerId) {
     return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
+  }
+
+  const parsed = partnerDoctorChamberSchema.safeParse(chamberData);
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0]?.message || "সঠিক চেম্বার তথ্য দিন।" };
   }
 
   try {
@@ -325,15 +317,9 @@ export async function addPartnerDoctorAction(
     return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
   }
 
-  if (
-    !input.name?.trim() ||
-    !input.specialty?.trim() ||
-    !input.department?.trim() ||
-    !input.visitingDays?.trim() ||
-    !input.visitingHours?.trim() ||
-    !input.serialPhone?.trim()
-  ) {
-    return { success: false, error: "অনুগ্রহ করে সকল আবশ্যকীয় তথ্য পূরণ করুন।" };
+  const parsed = addPartnerDoctorSchema.safeParse(input);
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0]?.message || "অনুগ্রহ করে সকল আবশ্যকীয় তথ্য পূরণ করুন।" };
   }
 
   try {
@@ -396,6 +382,11 @@ export async function updatePartnerDoctorChamberAction(
   const partnerId = await getAuthenticatedPartnerId();
   if (!partnerId) {
     return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
+  }
+
+  const parsed = updatePartnerDoctorSchema.safeParse(input);
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0]?.message || "সঠিক তথ্য প্রদান করুন।" };
   }
 
   try {

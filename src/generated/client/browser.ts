@@ -87,3 +87,13 @@ export type Review = Prisma.ReviewModel
  * 
  */
 export type PushSubscription = Prisma.PushSubscriptionModel
+/**
+ * Model BloodDonor
+ * 
+ */
+export type BloodDonor = Prisma.BloodDonorModel
+/**
+ * Model AmbulanceService
+ * 
+ */
+export type AmbulanceService = Prisma.AmbulanceServiceModel

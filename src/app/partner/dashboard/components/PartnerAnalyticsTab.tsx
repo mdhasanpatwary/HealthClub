@@ -10,8 +10,7 @@ import { PartnerAnalyticsCharts } from "./PartnerAnalyticsCharts";
 import { PartnerSettlementStatementsTable } from "./PartnerSettlementStatementsTable";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent } from "@/components/ui/card";
-import { RefreshCw, BarChart2, AlertCircle } from "lucide-react";
+import { RefreshCw, BarChart2 } from "lucide-react";
 import { toast } from "sonner";
 
 interface PartnerAnalyticsTabProps {
@@ -23,22 +22,17 @@ export function PartnerAnalyticsTab({ partner }: PartnerAnalyticsTabProps) {
 
   const [analytics, setAnalytics] = useState<PartnerAnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  const fetchAnalytics = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+  const loadAnalytics = useCallback(async () => {
     try {
       const res = await getPartnerAnalyticsAction();
       if (res.success && res.data) {
         setAnalytics(res.data);
       } else {
         const errorMsg = res.errorKey ? t(res.errorKey) : (res.error || t("partner.errors.loadAnalyticsError"));
-        setError(errorMsg);
         toast.error(errorMsg);
       }
     } catch {
-      setError(t("common.error.server"));
       toast.error(t("common.error.server"));
     } finally {
       setLoading(false);
@@ -46,9 +40,21 @@ export function PartnerAnalyticsTab({ partner }: PartnerAnalyticsTabProps) {
   }, [t]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchAnalytics();
-  }, [fetchAnalytics]);
+    let isMounted = true;
+    Promise.resolve().then(() => {
+      if (isMounted) {
+        loadAnalytics();
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [loadAnalytics]);
+
+  const handleRefresh = async () => {
+    setLoading(true);
+    await loadAnalytics();
+  };
 
   return (
     <div className="space-y-6 sm:space-y-8">
@@ -72,7 +78,7 @@ export function PartnerAnalyticsTab({ partner }: PartnerAnalyticsTabProps) {
           <Button
             variant="outline"
             size="sm"
-            onClick={fetchAnalytics}
+            onClick={handleRefresh}
             disabled={loading}
             className="rounded-xl border-border text-xs font-semibold gap-1.5 cursor-pointer hover:bg-muted"
           >
@@ -98,18 +104,6 @@ export function PartnerAnalyticsTab({ partner }: PartnerAnalyticsTabProps) {
         </div>
       )}
 
-      {/* Error State */}
-      {error && !loading && (
-        <Card className="border-red-200 dark:border-red-900 bg-red-50/50 dark:bg-red-950/20">
-          <CardContent className="p-6 flex flex-col items-center justify-center text-center space-y-3">
-            <AlertCircle className="h-10 w-10 text-red-500" />
-            <p className="text-sm font-semibold text-red-600 dark:text-red-400">{error}</p>
-            <Button onClick={fetchAnalytics} variant="outline" size="sm" className="rounded-xl text-xs">
-              {t("common.retry")}
-            </Button>
-          </CardContent>
-        </Card>
-      )}
 
       {/* Main Analytics Content */}
       {analytics && (

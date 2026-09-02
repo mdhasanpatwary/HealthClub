@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { getClientDeviceInfo } from "@/lib/pwaTelemetry";
 import { recordPwaPromptAction, recordPwaInstallAction } from "@/app/actions/pwaActions";
 import { trackEvent } from "@/lib/analytics";
+import { logger } from "@/lib/logger";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -181,7 +182,7 @@ export default function InstallAppBanner() {
           }
         }
       } catch (err) {
-        console.error("PWA install error:", err);
+        logger.error("PWA install error:", err);
         setIsVisible(false);
       } finally {
         setDeferredPrompt(null);

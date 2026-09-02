@@ -1,13 +1,13 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/generated/client/client";
 import { Transaction } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { isMemberTxAllowedAction } from "./systemSettingsActions";
 import { unstable_cache, updateTag } from "next/cache";
 import { PaginatedResult } from "@/types/pagination";
-import { INITIAL_BLOOD_DONORS, INITIAL_AMBULANCES } from "@/data/emergencyData";
 import { HEALTH_TIPS_ARTICLES } from "@/data/healthTipsData";
 import { createMemberNotification } from "./memberNotificationActions";
 import { hasAdminPermission } from "@/lib/permissions";
@@ -56,8 +56,7 @@ export async function getPaginatedTransactionsAction(
   const memberId = params?.memberId;
   const partnerId = params?.partnerId;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const where: any = {};
+  const where: Prisma.TransactionWhereInput = {};
   if (memberId) {
     where.memberId = memberId;
   }
@@ -166,7 +165,11 @@ export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">)
   const maxAllowedSaved = Math.round(billAmount * 0.70);
   const validatedSaved = Math.min(rawSaved, maxAllowedSaved);
 
-  if (session.role !== "admin") {
+  if (session.role === "admin") {
+    if (!hasAdminPermission(session.adminRole || "super_admin", "manage_transactions")) {
+      return { error: "আপনার ট্রানজেকশন তৈরি করার প্রশাসনিক অনুমতি নেই।" };
+    }
+  } else {
     const isAllowed = await isMemberTxAllowedAction();
     if (!isAllowed) return { error: "মেম্বার ট্রানজেকশন বর্তমানে অক্ষম করা আছে।" };
 
@@ -314,7 +317,7 @@ const getCachedAdminStats = unstable_cache(
     const past30Days = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
     // 1. Single parameterized SQL query for all scalar counts & aggregates
-    const [countsResult, topPartnerGroups, emergencySettings, healthTipsSetting] = await Promise.all([
+    const [countsResult, topPartnerGroups, healthTipsSetting] = await Promise.all([
       prisma.$queryRaw<
         Array<{
           total_members: bigint;
@@ -341,6 +344,9 @@ const getCachedAdminStats = unstable_cache(
           pwa_active: bigint;
           doctors_count: bigint;
           active_doctors_count: bigint;
+          emergency_donors_count: bigint;
+          pending_donors_count: bigint;
+          ambulances_count: bigint;
         }>
       >`SELECT
           (SELECT COUNT(*) FROM members) AS total_members,
@@ -366,7 +372,10 @@ const getCachedAdminStats = unstable_cache(
           (SELECT COUNT(*) FROM pwa_installations WHERE is_standalone = TRUE) AS pwa_installs,
           (SELECT COUNT(*) FROM pwa_installations WHERE is_standalone = TRUE AND last_active_at >= ${past30Days}) AS pwa_active,
           (SELECT COUNT(*) FROM doctors) AS doctors_count,
-          (SELECT COUNT(*) FROM doctors WHERE is_active = TRUE) AS active_doctors_count`,
+          (SELECT COUNT(*) FROM doctors WHERE is_active = TRUE) AS active_doctors_count,
+          (SELECT COUNT(*) FROM blood_donors) AS emergency_donors_count,
+          (SELECT COUNT(*) FROM blood_donors WHERE status = 'pending') AS pending_donors_count,
+          (SELECT COUNT(*) FROM ambulance_services) AS ambulances_count`,
       // 2. Top partners query
       prisma.transaction.groupBy({
         by: ["partnerId", "partnerName"],
@@ -375,11 +384,7 @@ const getCachedAdminStats = unstable_cache(
         orderBy: { _sum: { saved: "desc" } },
         take: 3,
       }),
-      // 3. Emergency settings
-      prisma.systemSetting.findMany({
-        where: { key: { in: ["emergency_donors", "emergency_ambulances"] } },
-      }),
-      // 4. Health tips settings
+      // 3. Health tips settings
       prisma.systemSetting.findUnique({
         where: { key: "health_tips_articles" },
       }),
@@ -396,35 +401,10 @@ const getCachedAdminStats = unstable_cache(
       transactionCount: p._count.id || 0,
     }));
 
-    // Calculate Emergency Donors count & Pending Donors
-    let emergencyDonorsCount = INITIAL_BLOOD_DONORS.length;
-    let pendingDonorsCount = INITIAL_BLOOD_DONORS.filter((d) => d.status === "pending").length;
-    const donorsSetting = emergencySettings.find((s) => s.key === "emergency_donors");
-    if (donorsSetting?.value) {
-      try {
-        const parsed = JSON.parse(donorsSetting.value);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          emergencyDonorsCount = parsed.length;
-          pendingDonorsCount = parsed.filter((d: { status?: string }) => d.status === "pending").length;
-        }
-      } catch (e) {
-        logger.error("Failed to parse emergency_donors stats", e);
-      }
-    }
-
-    // Calculate Ambulances count
-    let ambulancesCount = INITIAL_AMBULANCES.length;
-    const ambSetting = emergencySettings.find((s) => s.key === "emergency_ambulances");
-    if (ambSetting?.value) {
-      try {
-        const parsed = JSON.parse(ambSetting.value);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          ambulancesCount = parsed.length;
-        }
-      } catch (e) {
-        logger.error("Failed to parse emergency_ambulances stats", e);
-      }
-    }
+    // Emergency Donors and Ambulances from relational tables
+    const emergencyDonorsCount = Number(row?.emergency_donors_count ?? 0);
+    const pendingDonorsCount = Number(row?.pending_donors_count ?? 0);
+    const ambulancesCount = Number(row?.ambulances_count ?? 0);
 
     // Calculate Health Tips count
     let healthTipsCount = HEALTH_TIPS_ARTICLES.length;

@@ -397,7 +397,9 @@ export const ModelName = {
   AdminUser: 'AdminUser',
   DatabaseSnapshot: 'DatabaseSnapshot',
   Review: 'Review',
-  PushSubscription: 'PushSubscription'
+  PushSubscription: 'PushSubscription',
+  BloodDonor: 'BloodDonor',
+  AmbulanceService: 'AmbulanceService'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -413,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "member" | "partner" | "partnerStaff" | "transaction" | "doctor" | "partnerRequest" | "contactMessage" | "systemSetting" | "pwaInstallation" | "memberNotification" | "adminUser" | "databaseSnapshot" | "review" | "pushSubscription"
+    modelProps: "member" | "partner" | "partnerStaff" | "transaction" | "doctor" | "partnerRequest" | "contactMessage" | "systemSetting" | "pwaInstallation" | "memberNotification" | "adminUser" | "databaseSnapshot" | "review" | "pushSubscription" | "bloodDonor" | "ambulanceService"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1453,6 +1455,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    BloodDonor: {
+      payload: Prisma.$BloodDonorPayload<ExtArgs>
+      fields: Prisma.BloodDonorFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BloodDonorFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BloodDonorPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BloodDonorFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BloodDonorPayload>
+        }
+        findFirst: {
+          args: Prisma.BloodDonorFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BloodDonorPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BloodDonorFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BloodDonorPayload>
+        }
+        findMany: {
+          args: Prisma.BloodDonorFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BloodDonorPayload>[]
+        }
+        create: {
+          args: Prisma.BloodDonorCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BloodDonorPayload>
+        }
+        createMany: {
+          args: Prisma.BloodDonorCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BloodDonorCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BloodDonorPayload>[]
+        }
+        delete: {
+          args: Prisma.BloodDonorDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BloodDonorPayload>
+        }
+        update: {
+          args: Prisma.BloodDonorUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BloodDonorPayload>
+        }
+        deleteMany: {
+          args: Prisma.BloodDonorDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BloodDonorUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BloodDonorUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BloodDonorPayload>[]
+        }
+        upsert: {
+          args: Prisma.BloodDonorUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BloodDonorPayload>
+        }
+        aggregate: {
+          args: Prisma.BloodDonorAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBloodDonor>
+        }
+        groupBy: {
+          args: Prisma.BloodDonorGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BloodDonorGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BloodDonorCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BloodDonorCountAggregateOutputType> | number
+        }
+      }
+    }
+    AmbulanceService: {
+      payload: Prisma.$AmbulanceServicePayload<ExtArgs>
+      fields: Prisma.AmbulanceServiceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AmbulanceServiceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulanceServicePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AmbulanceServiceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulanceServicePayload>
+        }
+        findFirst: {
+          args: Prisma.AmbulanceServiceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulanceServicePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AmbulanceServiceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulanceServicePayload>
+        }
+        findMany: {
+          args: Prisma.AmbulanceServiceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulanceServicePayload>[]
+        }
+        create: {
+          args: Prisma.AmbulanceServiceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulanceServicePayload>
+        }
+        createMany: {
+          args: Prisma.AmbulanceServiceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AmbulanceServiceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulanceServicePayload>[]
+        }
+        delete: {
+          args: Prisma.AmbulanceServiceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulanceServicePayload>
+        }
+        update: {
+          args: Prisma.AmbulanceServiceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulanceServicePayload>
+        }
+        deleteMany: {
+          args: Prisma.AmbulanceServiceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AmbulanceServiceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AmbulanceServiceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulanceServicePayload>[]
+        }
+        upsert: {
+          args: Prisma.AmbulanceServiceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulanceServicePayload>
+        }
+        aggregate: {
+          args: Prisma.AmbulanceServiceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAmbulanceService>
+        }
+        groupBy: {
+          args: Prisma.AmbulanceServiceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AmbulanceServiceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AmbulanceServiceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AmbulanceServiceCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1745,6 +1895,37 @@ export const PushSubscriptionScalarFieldEnum = {
 export type PushSubscriptionScalarFieldEnum = (typeof PushSubscriptionScalarFieldEnum)[keyof typeof PushSubscriptionScalarFieldEnum]
 
 
+export const BloodDonorScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  bloodGroup: 'bloodGroup',
+  upazila: 'upazila',
+  phone: 'phone',
+  lastDonated: 'lastDonated',
+  isAvailable: 'isAvailable',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BloodDonorScalarFieldEnum = (typeof BloodDonorScalarFieldEnum)[keyof typeof BloodDonorScalarFieldEnum]
+
+
+export const AmbulanceServiceScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  location: 'location',
+  phone: 'phone',
+  availableHours: 'availableHours',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AmbulanceServiceScalarFieldEnum = (typeof AmbulanceServiceScalarFieldEnum)[keyof typeof AmbulanceServiceScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1961,6 +2142,8 @@ export type GlobalOmitConfig = {
   databaseSnapshot?: Prisma.DatabaseSnapshotOmit
   review?: Prisma.ReviewOmit
   pushSubscription?: Prisma.PushSubscriptionOmit
+  bloodDonor?: Prisma.BloodDonorOmit
+  ambulanceService?: Prisma.AmbulanceServiceOmit
 }
 
 /* Types for Logging */

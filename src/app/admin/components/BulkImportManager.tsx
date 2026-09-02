@@ -20,10 +20,12 @@ import {
 import {
   bulkImportDoctorsAction,
   bulkImportPartnersAction,
+} from "@/app/actions/bulkImportActions";
+import {
   bulkImportBloodDonorsAction,
   bulkImportAmbulancesAction,
   bulkImportHotlinesAction,
-} from "@/app/actions/bulkImportActions";
+} from "@/app/actions/bulkImportEmergencyActions";
 import { BulkImportDropzone } from "./import/BulkImportDropzone";
 import { BulkImportMapping } from "./import/BulkImportMapping";
 import { BulkImportPreviewTable } from "./import/BulkImportPreviewTable";

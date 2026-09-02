@@ -330,3 +330,45 @@ model PushSubscription {
   @@map("push_subscriptions")
 }
 
+model BloodDonor {
+  id          String   @id
+  name        String
+  bloodGroup  String   @map("blood_group") // 'A+' | 'A-' | 'B+' | 'B-' | 'O+' | 'O-' | 'AB+' | 'AB-'
+  upazila     String   @default("feni-sadar")
+  phone       String   @unique
+  lastDonated String   @default("তথ্য নেই") @map("last_donated")
+  isAvailable Boolean  @default(true) @map("is_available")
+  status      String   @default("pending") // 'approved' | 'pending'
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([upazila], map: "blood_donors_upazila_idx")
+  @@index([bloodGroup], map: "blood_donors_blood_group_idx")
+  @@index([status], map: "blood_donors_status_idx")
+  @@index([isAvailable], map: "blood_donors_is_available_idx")
+  @@index([status, upazila], map: "blood_donors_status_upazila_idx")
+  @@index([status, bloodGroup], map: "blood_donors_status_blood_group_idx")
+  @@index([status, bloodGroup, upazila], map: "blood_donors_status_group_upazila_idx")
+  @@index([createdAt(sort: Desc)], map: "blood_donors_created_at_idx")
+  @@map("blood_donors")
+}
+
+model AmbulanceService {
+  id             String   @id
+  name           String
+  type           String   // 'ICU' | 'AC' | 'Non-AC' | 'Freezer'
+  location       String
+  phone          String   @unique
+  availableHours String   @default("২৪/৭ সার্বক্ষণিক") @map("available_hours")
+  status         String   @default("pending") // 'approved' | 'pending'
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([type], map: "ambulance_services_type_idx")
+  @@index([status], map: "ambulance_services_status_idx")
+  @@index([location], map: "ambulance_services_location_idx")
+  @@index([status, type], map: "ambulance_services_status_type_idx")
+  @@index([createdAt(sort: Desc)], map: "ambulance_services_created_at_idx")
+  @@map("ambulance_services")
+}
+

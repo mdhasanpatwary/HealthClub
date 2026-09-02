@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/generated/client/client";
 import { Doctor, initialDoctors, Partner } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
@@ -18,8 +19,7 @@ async function verifyDoctorAdmin(): Promise<boolean> {
 }
 
 // Helper to format Prisma Doctor record to Doctor interface
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function formatDoctor(d: any): Doctor {
+function formatDoctor(d: Prisma.DoctorGetPayload<object>): Doctor {
   return {
     id: d.id,
     name: d.name,
@@ -82,8 +82,7 @@ export async function getPaginatedDoctorsAdminAction(
   const upazila = params?.upazila;
   const isActive = params?.isActive;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const where: any = {};
+  const where: Prisma.DoctorWhereInput = {};
   if (department && department !== "all") {
     where.department = department;
   }

@@ -1,70 +1,98 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { useState, useEffect, useCallback } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   getAllSystemSettingsAction,
   updateMultipleSystemSettingsAction,
 } from "@/app/actions/systemSettingsActions";
-import { toast } from "sonner";
 import {
-  Save,
-  CreditCard,
-  PhoneCall,
-  Megaphone,
-  Coins,
-  Loader2,
-  RotateCcw,
-  Receipt,
-  Database,
-  ArrowRight,
-} from "lucide-react";
+  systemSettingsSchema,
+  type SystemSettingsFormValues,
+} from "@/lib/validations/settings";
+import { toast } from "sonner";
+import { Save, Loader2, RotateCcw } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Skeleton } from "@/components/ui/skeleton";
+import { FeeSettingsCard } from "./settings/FeeSettingsCard";
+import { PaymentSettingsCard } from "./settings/PaymentSettingsCard";
+import { ContactSettingsCard } from "./settings/ContactSettingsCard";
+import { NoticeSettingsCard } from "./settings/NoticeSettingsCard";
+import { MemberTxSettingsCard } from "./settings/MemberTxSettingsCard";
+import { DatabaseBackupCard } from "./settings/DatabaseBackupCard";
 
 export function SettingsTab() {
   const { locale } = useLanguage();
   const isEn = locale === "en";
 
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
 
-  // Form states
-  const [foundingFee, setFoundingFee] = useState("0");
-  const [premiumFee, setPremiumFee] = useState("500");
-  const [bkashPersonal, setBkashPersonal] = useState("01886763849");
-  const [bkashMerchant, setBkashMerchant] = useState("01886763849");
-  const [paymentInstructions, setPaymentInstructions] = useState(
-    "বিকাশ পার্সোনাল বা মার্চেন্ট নম্বরে সেন্ড মানি/পেমেন্ট সম্পন্ন করে TrxID ও প্রেরক নম্বর লিখুন।"
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    control,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<SystemSettingsFormValues>({
+    resolver: zodResolver(systemSettingsSchema),
+    defaultValues: {
+      founding_fee: "0",
+      premium_fee: "500",
+      bkash_personal_number: "01886763849",
+      bkash_merchant_number: "01886763849",
+      payment_instructions:
+        "বিকাশ পার্সোনাল বা মার্চেন্ট নম্বরে সেন্ড মানি/পেমেন্ট সম্পন্ন করে TrxID ও প্রেরক নম্বর লিখুন।",
+      hotline_phone: "01886763849",
+      contact_hotline: "01886763849",
+      whatsapp_phone: "01886763849",
+      contact_whatsapp: "01886763849",
+      official_email: "healthclubfeni@gmail.com",
+      contact_email: "healthclubfeni@gmail.com",
+      facebook_url: "https://www.facebook.com/profile.php?id=61591616953090",
+      notice_enabled: false,
+      notice_text: "",
+      allow_member_tx: false,
+    },
+  });
+
+  const noticeEnabled = Boolean(useWatch({ control, name: "notice_enabled" }));
+  const noticeText = useWatch({ control, name: "notice_text" }) || "";
+  const allowMemberTx = Boolean(useWatch({ control, name: "allow_member_tx" }));
+
+  const applySettingsData = useCallback(
+    (data: Record<string, string | undefined>) => {
+      reset({
+        founding_fee: data.founding_fee || "0",
+        premium_fee: data.premium_fee || "500",
+        bkash_personal_number: data.bkash_personal_number || "01886763849",
+        bkash_merchant_number: data.bkash_merchant_number || "01886763849",
+        payment_instructions:
+          data.payment_instructions ||
+          "বিকাশ পার্সোনাল বা মার্চেন্ট নম্বরে সেন্ড মানি/পেমেন্ট সম্পন্ন করে TrxID ও প্রেরক নম্বর লিখুন।",
+        hotline_phone: data.hotline_phone || data.contact_hotline || "01886763849",
+        contact_hotline: data.hotline_phone || data.contact_hotline || "01886763849",
+        whatsapp_phone: data.whatsapp_phone || data.contact_whatsapp || "01886763849",
+        contact_whatsapp: data.whatsapp_phone || data.contact_whatsapp || "01886763849",
+        official_email: data.official_email || data.contact_email || "healthclubfeni@gmail.com",
+        contact_email: data.official_email || data.contact_email || "healthclubfeni@gmail.com",
+        facebook_url: data.facebook_url || "https://www.facebook.com/profile.php?id=61591616953090",
+        notice_enabled: data.notice_enabled === "true",
+        notice_text: data.notice_text || "",
+        allow_member_tx: data.allow_member_tx === "true",
+      });
+    },
+    [reset]
   );
-  const [hotlinePhone, setHotlinePhone] = useState("01886763849");
-  const [whatsappPhone, setWhatsappPhone] = useState("01886763849");
-  const [officialEmail, setOfficialEmail] = useState("healthclubfeni@gmail.com");
-  const [facebookUrl, setFacebookUrl] = useState("https://www.facebook.com/profile.php?id=61591616953090");
-  const [noticeEnabled, setNoticeEnabled] = useState(false);
-  const [noticeText, setNoticeText] = useState("");
-  const [allowMemberTx, setAllowMemberTx] = useState(false);
 
   const loadSettings = async () => {
     setLoading(true);
     try {
       const data = await getAllSystemSettingsAction();
-      if (data.founding_fee) setFoundingFee(data.founding_fee);
-      if (data.premium_fee) setPremiumFee(data.premium_fee);
-      if (data.bkash_personal_number) setBkashPersonal(data.bkash_personal_number);
-      if (data.bkash_merchant_number) setBkashMerchant(data.bkash_merchant_number);
-      if (data.payment_instructions) setPaymentInstructions(data.payment_instructions);
-      if (data.hotline_phone || data.contact_hotline) setHotlinePhone(data.hotline_phone || data.contact_hotline);
-      if (data.whatsapp_phone || data.contact_whatsapp) setWhatsappPhone(data.whatsapp_phone || data.contact_whatsapp);
-      if (data.official_email || data.contact_email) setOfficialEmail(data.official_email || data.contact_email);
-      if (data.facebook_url) setFacebookUrl(data.facebook_url);
-      if (data.notice_enabled) setNoticeEnabled(data.notice_enabled === "true");
-      if (data.notice_text) setNoticeText(data.notice_text);
-      if (data.allow_member_tx) setAllowMemberTx(data.allow_member_tx === "true");
+      applySettingsData(data);
     } catch {
       toast.error("সেটিংস লোড করতে সমস্যা হয়েছে।");
     } finally {
@@ -73,30 +101,42 @@ export function SettingsTab() {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    loadSettings();
-  }, []);
+    let isMounted = true;
+    getAllSystemSettingsAction()
+      .then((data) => {
+        if (!isMounted) return;
+        applySettingsData(data);
+      })
+      .catch(() => {
+        if (isMounted) toast.error("সেটিংস লোড করতে সমস্যা হয়েছে।");
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaving(true);
+    return () => {
+      isMounted = false;
+    };
+  }, [applySettingsData]);
+
+  const onSubmit = async (formData: SystemSettingsFormValues) => {
     try {
       const payload: Record<string, string> = {
-        founding_fee: foundingFee,
-        premium_fee: premiumFee,
-        bkash_personal_number: bkashPersonal,
-        bkash_merchant_number: bkashMerchant,
-        payment_instructions: paymentInstructions,
-        hotline_phone: hotlinePhone,
-        contact_hotline: hotlinePhone,
-        whatsapp_phone: whatsappPhone,
-        contact_whatsapp: whatsappPhone,
-        official_email: officialEmail,
-        contact_email: officialEmail,
-        facebook_url: facebookUrl,
-        notice_enabled: noticeEnabled ? "true" : "false",
-        notice_text: noticeText,
-        allow_member_tx: allowMemberTx ? "true" : "false",
+        founding_fee: formData.founding_fee,
+        premium_fee: formData.premium_fee,
+        bkash_personal_number: formData.bkash_personal_number,
+        bkash_merchant_number: formData.bkash_merchant_number || "",
+        payment_instructions: formData.payment_instructions,
+        hotline_phone: formData.hotline_phone,
+        contact_hotline: formData.hotline_phone,
+        whatsapp_phone: formData.whatsapp_phone,
+        contact_whatsapp: formData.whatsapp_phone,
+        official_email: formData.official_email,
+        contact_email: formData.official_email,
+        facebook_url: formData.facebook_url,
+        notice_enabled: formData.notice_enabled ? "true" : "false",
+        notice_text: formData.notice_text || "",
+        allow_member_tx: formData.allow_member_tx ? "true" : "false",
       };
 
       const res = await updateMultipleSystemSettingsAction(payload);
@@ -107,8 +147,6 @@ export function SettingsTab() {
       }
     } catch {
       toast.error("সেটিংস সংরক্ষণ করতে ব্যর্থ হয়েছে।");
-    } finally {
-      setSaving(false);
     }
   };
 
@@ -145,7 +183,7 @@ export function SettingsTab() {
   }
 
   return (
-    <form onSubmit={handleSave} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* Header Banner */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 rounded-2xl bg-background border border-border">
         <div>
@@ -163,8 +201,8 @@ export function SettingsTab() {
             <RotateCcw className="h-3.5 w-3.5 mr-1.5" />
             {isEn ? "Reset" : "রিলোড"}
           </Button>
-          <Button type="submit" disabled={saving} size="sm" className="font-bold">
-            {saving ? (
+          <Button type="submit" disabled={isSubmitting} size="sm" className="font-bold">
+            {isSubmitting ? (
               <>
                 <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" />
                 {isEn ? "Saving..." : "সংরক্ষণ হচ্ছে..."}
@@ -181,314 +219,49 @@ export function SettingsTab() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 1. Membership Pricing */}
-        <Card className="border border-border shadow-xs">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base font-bold flex items-center gap-2">
-              <Coins className="h-4 w-4 text-primary" />
-              <span>{isEn ? "Membership Pricing" : "মেম্বারশিপ ফি নির্ধারণ"}</span>
-            </CardTitle>
-            <CardDescription className="text-xs">
-              {isEn ? "Annual subscription fee for membership plans" : "সদস্যপদের বাৎসরিক ফি নির্ধারণ করুন"}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-1.5">
-              <Label htmlFor="founding-fee" className="text-xs font-semibold">
-                {isEn ? "Founding Member Annual Fee (৳)" : "ফাউন্ডিং মেম্বার ফি (৳)"}
-              </Label>
-              <Input
-                id="founding-fee"
-                type="number"
-                value={foundingFee}
-                onChange={(e) => setFoundingFee(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="premium-fee" className="text-xs font-semibold">
-                {isEn ? "Premium Member Annual Fee (৳)" : "প্রিমিয়াম মেম্বার ফি (৳)"}
-              </Label>
-              <Input
-                id="premium-fee"
-                type="number"
-                value={premiumFee}
-                onChange={(e) => setPremiumFee(e.target.value)}
-                required
-              />
-            </div>
-          </CardContent>
-        </Card>
+        <FeeSettingsCard
+          register={register}
+          errors={errors}
+          isEn={isEn}
+        />
 
         {/* 2. Payment & bKash Information */}
-        <Card className="border border-border shadow-xs">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base font-bold flex items-center gap-2">
-              <CreditCard className="h-4 w-4 text-primary" />
-              <span>{isEn ? "Payment & bKash Info" : "বিকাশ ও পেমেন্ট তথ্য"}</span>
-            </CardTitle>
-            <CardDescription className="text-xs">
-              {isEn ? "Receiver mobile numbers for registration/renewals" : "রেজিস্ট্রেশন ও রিনিউয়ালের পেমেন্ট নাম্বার"}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <Label htmlFor="bkash-personal" className="text-xs font-semibold">
-                  {isEn ? "bKash Personal Number" : "বিকাশ পার্সোনাল নম্বর"}
-                </Label>
-                <Input
-                  id="bkash-personal"
-                  value={bkashPersonal}
-                  onChange={(e) => setBkashPersonal(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="bkash-merchant" className="text-xs font-semibold">
-                  {isEn ? "bKash Merchant Number" : "বিকাশ মার্চেন্ট নম্বর"}
-                </Label>
-                <Input
-                  id="bkash-merchant"
-                  value={bkashMerchant}
-                  onChange={(e) => setBkashMerchant(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="payment-instructions" className="text-xs font-semibold">
-                {isEn ? "Payment Instructions Text" : "পেমেন্ট নির্দেশিকা টেক্সট"}
-              </Label>
-              <textarea
-                id="payment-instructions"
-                rows={2}
-                value={paymentInstructions}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setPaymentInstructions(e.target.value)}
-                className="w-full px-3 py-2 text-sm rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20"
-              />
-            </div>
-          </CardContent>
-        </Card>
+        <PaymentSettingsCard
+          register={register}
+          errors={errors}
+          isEn={isEn}
+        />
 
         {/* 3. Contact & Hotline Setup */}
-        <Card className="border border-border shadow-xs">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base font-bold flex items-center gap-2">
-              <PhoneCall className="h-4 w-4 text-primary" />
-              <span>{isEn ? "Contact & Social Links" : "যোগাযোগ ও সোশ্যাল মিডিয়া"}</span>
-            </CardTitle>
-            <CardDescription className="text-xs">
-              {isEn ? "Official hotline, WhatsApp, and social channels" : "সাইটের ফুটার ও কন্টাক্ট সেকশনের তথ্য"}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <Label htmlFor="hotline-phone" className="text-xs font-semibold">
-                  {isEn ? "Hotline Number" : "হটলাইন ফোন নম্বর"}
-                </Label>
-                <Input
-                  id="hotline-phone"
-                  value={hotlinePhone}
-                  onChange={(e) => setHotlinePhone(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="whatsapp-phone" className="text-xs font-semibold">
-                  {isEn ? "WhatsApp Support Number" : "হোয়াটসঅ্যাপ নম্বর"}
-                </Label>
-                <Input
-                  id="whatsapp-phone"
-                  value={whatsappPhone}
-                  onChange={(e) => setWhatsappPhone(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <Label htmlFor="official-email" className="text-xs font-semibold">
-                  {isEn ? "Official Email" : "অফিসিয়াল ইমেইল"}
-                </Label>
-                <Input
-                  id="official-email"
-                  type="email"
-                  value={officialEmail}
-                  onChange={(e) => setOfficialEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="facebook-url" className="text-xs font-semibold">
-                  {isEn ? "Facebook Page URL" : "ফেসবুক পেজ লিংক"}
-                </Label>
-                <Input
-                  id="facebook-url"
-                  value={facebookUrl}
-                  onChange={(e) => setFacebookUrl(e.target.value)}
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <ContactSettingsCard
+          register={register}
+          errors={errors}
+          isEn={isEn}
+        />
 
         {/* 4. Announcements & Website Banner */}
-        <Card className="border border-border shadow-xs">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base font-bold flex items-center gap-2">
-              <Megaphone className="h-4 w-4 text-primary" />
-              <span>{isEn ? "Website Notice Banner" : "ওয়েবসাইট নোটিশ ও ব্যানার"}</span>
-            </CardTitle>
-            <CardDescription className="text-xs">
-              {isEn ? "Show announcement bar on top of all pages" : "ওয়েবসাইটের শীর্ষে বিশেষ অফার বা জরুরি নোটিশ প্রদর্শন"}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between p-3 rounded-xl bg-muted/50 border border-border">
-              <div className="space-y-0.5">
-                <Label className="text-xs font-bold text-foreground">
-                  {isEn ? "Enable Global Notice Banner" : "ওয়েবসাইট নোটিশ ব্যানার চালু"}
-                </Label>
-                <p className="text-[11px] text-muted-foreground">
-                  {isEn ? "Show announcement bar to all visitors" : "চালু থাকলে ভিজিটররা সাইটের উপরে নোটিশ দেখতে পাবে"}
-                </p>
-              </div>
-              <button
-                type="button"
-                role="switch"
-                aria-checked={noticeEnabled}
-                onClick={() => setNoticeEnabled(!noticeEnabled)}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                  noticeEnabled ? "bg-primary" : "bg-muted-foreground/30"
-                }`}
-              >
-                <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
-                    noticeEnabled ? "translate-x-5" : "translate-x-0"
-                  }`}
-                />
-              </button>
-            </div>
-
-            {noticeEnabled && (
-              <div className="space-y-2 animate-in fade-in duration-200">
-                <Label htmlFor="notice-text" className="text-xs font-semibold">
-                  {isEn ? "Notice Banner Message" : "ব্যানারের বার্তা (টেক্সট)"}
-                </Label>
-                <Input
-                  id="notice-text"
-                  placeholder={isEn ? "e.g. Free Eye Camp on 25th August!" : "যেমন: আগামী ২৫ আগস্ট ফ্রি চক্ষু ক্যাম্প!"}
-                  value={noticeText}
-                  onChange={(e) => setNoticeText(e.target.value)}
-                />
-                {noticeText.trim() && (
-                  <div className="p-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 text-white text-xs flex items-center justify-between gap-2 shadow-xs border border-emerald-500/30">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className="p-1 rounded bg-white/20 text-amber-200 shrink-0">
-                        <Megaphone className="size-3" />
-                      </span>
-                      <span className="truncate font-medium">{noticeText}</span>
-                    </div>
-                    <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-black/20 text-emerald-100 shrink-0">
-                      {isEn ? "Preview" : "প্রিভিউ"}
-                    </span>
-                  </div>
-                )}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <NoticeSettingsCard
+          register={register}
+          noticeEnabled={noticeEnabled}
+          setNoticeEnabled={(val) => setValue("notice_enabled", val, { shouldValidate: true })}
+          noticeText={noticeText}
+          isEn={isEn}
+        />
 
         {/* 5. Member Self-Transaction Entry */}
-        <Card className="border border-border shadow-xs">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between gap-2">
-              <CardTitle className="text-base font-bold flex items-center gap-2">
-                <Receipt className="h-4 w-4 text-primary" />
-                <span>{isEn ? "Member Self-Transaction Entry" : "মেম্বারদের স্বয়ংক্রিয় লেনদেন এন্ট্রি সুবিধা"}</span>
-              </CardTitle>
-              <span
-                className={`text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider ${
-                  allowMemberTx
-                    ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
-                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700"
-                }`}
-              >
-                {allowMemberTx ? (isEn ? "Enabled" : "চালু রয়েছে") : isEn ? "Disabled" : "বন্ধ রয়েছে"}
-              </span>
-            </div>
-            <CardDescription className="text-xs">
-              {isEn
-                ? "Allow members to record discount transactions directly from their own dashboard"
-                : "চালু থাকলে মেম্বাররা তাদের নিজ ড্যাশবোর্ড থেকে ডিসকাউন্ট লেনদেন যুক্ত করতে পারবেন।"}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between p-3.5 rounded-xl bg-muted/50 border border-border">
-              <div className="space-y-0.5 pr-3">
-                <Label className="text-xs font-bold text-foreground">
-                  {isEn ? "Allow Member Self-Transactions" : "মেম্বার স্বয়ংক্রিয় লেনদেন অনুমতি"}
-                </Label>
-                <p className="text-[11px] text-muted-foreground">
-                  {isEn
-                    ? "Allows members to add discounts manually from member dashboard"
-                    : "মেম্বাররা নিজে ড্যাশবোর্ড থেকে ডিসকাউন্ট লেনদেন এন্ট্রি দিতে পারবে"}
-                </p>
-              </div>
-              <button
-                type="button"
-                role="switch"
-                aria-checked={allowMemberTx}
-                onClick={() => setAllowMemberTx(!allowMemberTx)}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                  allowMemberTx ? "bg-primary" : "bg-muted-foreground/30"
-                }`}
-              >
-                <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
-                    allowMemberTx ? "translate-x-5" : "translate-x-0"
-                  }`}
-                />
-              </button>
-            </div>
-          </CardContent>
-        </Card>
+        <MemberTxSettingsCard
+          allowMemberTx={allowMemberTx}
+          setAllowMemberTx={(val) => setValue("allow_member_tx", val, { shouldValidate: true })}
+          isEn={isEn}
+        />
 
         {/* 6. Database Backup & Disaster Recovery */}
-        <Card className="border border-border shadow-xs">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base font-bold flex items-center gap-2">
-              <Database className="h-4 w-4 text-primary" />
-              <span>{isEn ? "Database Backup & Snapshots" : "ডাটাবেস ব্যাকআপ ও স্ন্যাপশট"}</span>
-            </CardTitle>
-            <CardDescription className="text-xs">
-              {isEn
-                ? "One-click JSON/SQL backup export, snapshot registry, and retention policies"
-                : "ওয়ান-ক্লিক ব্যাকআপ ডাম্প, সার্ভার স্ন্যাপশট ও স্বয়ংক্রিয় রিটেনশন পলিসি"}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              {isEn
-                ? "Export complete database records, schedule automated snapshots, and manage retention for disaster recovery."
-                : "সম্পূর্ণ ডাটাবেসের ব্যাকআপ এক্সপোর্ট, পয়েন্ট-ইন-টাইম স্ন্যাপশট এবং অটো রিটেনশন পলিসি নিয়ন্ত্রণ করুন।"}
-            </p>
-            <div className="pt-1">
-              <Link
-                href="/admin/settings/backup"
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors"
-              >
-                <span>{isEn ? "Manage Backups & Snapshots" : "ব্যাকআপ ও স্ন্যাপশট ব্যবস্থাপনা"}</span>
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
+        <DatabaseBackupCard isEn={isEn} />
       </div>
 
       <div className="flex justify-end pt-2">
-        <Button type="submit" disabled={saving} size="lg" className="font-bold">
-          {saving ? (
+        <Button type="submit" disabled={isSubmitting} size="lg" className="font-bold">
+          {isSubmitting ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
               {isEn ? "Saving Settings..." : "সংরক্ষণ করা হচ্ছে..."}

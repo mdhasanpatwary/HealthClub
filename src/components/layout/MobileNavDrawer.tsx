@@ -18,6 +18,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { useTheme } from "@/components/layout/ThemeProvider";
 import { useAdminCounts } from "@/app/admin/hooks/useAdminCounts";
+import { isAdminUser } from "@/lib/permissions";
 import { MobileNavAdminLinks } from "./MobileNavAdminLinks";
 import { MobileNavPublicLinks } from "./MobileNavPublicLinks";
 
@@ -186,9 +187,7 @@ export default function MobileNavDrawer({
                   </div>
                   <span className="truncate">{user.name}</span>
                 </div>
-                {user.email ===
-                (process.env.NEXT_PUBLIC_ADMIN_EMAIL ||
-                  "healthclubfeni@gmail.com") ? (
+                {isAdminUser(user) ? (
                   <Link
                     href="/admin"
                     onClick={onClose}

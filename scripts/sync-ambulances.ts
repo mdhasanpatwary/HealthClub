@@ -3,27 +3,37 @@ import { prisma } from "../src/lib/prisma";
 import { INITIAL_AMBULANCES } from "../src/data/emergencyData";
 
 async function main() {
-  console.log(`Syncing ${INITIAL_AMBULANCES.length} ambulances to database...`);
-  
-  await prisma.systemSetting.upsert({
-    where: { key: "emergency_ambulances" },
-    create: {
-      key: "emergency_ambulances",
-      value: JSON.stringify(INITIAL_AMBULANCES),
-    },
-    update: {
-      value: JSON.stringify(INITIAL_AMBULANCES),
-    },
-  });
+  console.log(`Syncing ${INITIAL_AMBULANCES.length} ambulances to relational table...`);
 
-  const updated = await prisma.systemSetting.findUnique({
-    where: { key: "emergency_ambulances" },
-  });
+  for (const amb of INITIAL_AMBULANCES) {
+    const cleanPhone = amb.phone.replace(/\D/g, "");
+    await prisma.ambulanceService.upsert({
+      where: { phone: cleanPhone },
+      update: {
+        name: amb.name,
+        type: amb.type,
+        location: amb.location,
+        availableHours: amb.availableHours || "২৪/৭ সার্বক্ষণিক",
+        status: amb.status || "approved",
+      },
+      create: {
+        id: amb.id,
+        name: amb.name,
+        phone: cleanPhone,
+        type: amb.type,
+        location: amb.location,
+        availableHours: amb.availableHours || "২৪/৭ সার্বক্ষণিক",
+        status: amb.status || "approved",
+      },
+    });
+  }
 
-  const list = updated ? JSON.parse(updated.value) : [];
+  const list = await prisma.ambulanceService.findMany({
+    orderBy: { createdAt: "desc" },
+  });
   console.log(`Successfully synced! Total ambulances in DB: ${list.length}`);
   console.log("Ambulance Services:");
-  list.forEach((amb: { id: string; name: string; phone: string; type: string; location: string }, index: number) => {
+  list.forEach((amb, index) => {
     console.log(` ${index + 1}. [${amb.type}] ${amb.name} - 📞 ${amb.phone} (${amb.location})`);
   });
 }

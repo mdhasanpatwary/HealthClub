@@ -17,6 +17,7 @@ import AdminHeaderNav from "./AdminHeaderNav";
 import MobileNavDrawer from "./MobileNavDrawer";
 import { AdminNotificationBell } from "./AdminNotificationBell";
 import { MemberNotificationBell } from "@/app/dashboard/components/MemberNotificationBell";
+import { isAdminUser } from "@/lib/permissions";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,10 +25,20 @@ export default function Header() {
   const [partner, setPartner] = useState<Partner | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const [prevPathname, setPrevPathname] = useState(pathname);
   const { locale, setLocale, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
 
+  // Close mobile drawer on navigation during render to avoid cascading effect
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
+    if (isOpen) {
+      setIsOpen(false);
+    }
+  }
+
   const isAdminMode = pathname.startsWith("/admin");
+  const isAdmin = isAdminUser(user);
 
   // 1. Mount effect: window event listeners (auth sync, scroll detection with RAF throttle, mobile menu trigger)
   useEffect(() => {
@@ -62,12 +73,6 @@ export default function Header() {
       window.removeEventListener("open-mobile-menu", handleOpenMenu);
     };
   }, []);
-
-  // 2. Route change effect: close mobile drawer on navigation
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsOpen(false);
-  }, [pathname]);
 
   // 3. Body scroll lock effect when mobile drawer is open
   useEffect(() => {
@@ -134,7 +139,7 @@ export default function Header() {
               {isAdminMode && <AdminNotificationBell />}
 
               {/* Member Notification Bell (Shown when logged in as member in public/dashboard mode) */}
-              {!isAdminMode && user && <MemberNotificationBell />}
+              {!isAdminMode && user && !isAdmin && <MemberNotificationBell />}
 
               {/* Language Switcher Button */}
               <Button
@@ -201,7 +206,7 @@ export default function Header() {
                 <AdminNotificationBell />
               </div>
             )}
-            {!isAdminMode && user && (
+            {!isAdminMode && user && !isAdmin && (
               <div className="mr-0.5">
                 <MemberNotificationBell />
               </div>

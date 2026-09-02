@@ -8,7 +8,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { verifyEmailOtpAction, resendVerificationCodeAction } from "@/app/actions/memberActions";
+import { verifyEmailOtpAction, resendVerificationCodeAction } from "@/app/actions/memberAuthActions";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toast } from "sonner";
 

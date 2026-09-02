@@ -5,6 +5,7 @@ import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag, revalidatePath } from "next/cache";
 import { hasAdminPermission } from "@/lib/permissions";
+import { systemSettingsSchema } from "@/lib/validations/settings";
 
 const SYSTEM_SETTINGS_TAG = "system-settings";
 
@@ -118,6 +119,11 @@ export async function updateMultipleSystemSettingsAction(
   const session = await getSessionUser();
   if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_settings")) {
     return { success: false, message: "অননুমোদিত অ্যাক্সেস। সেটিংস পরিবর্তনের অনুমতি নেই।" };
+  }
+
+  const parsed = systemSettingsSchema.safeParse(settings);
+  if (!parsed.success) {
+    return { success: false, message: parsed.error.issues[0]?.message || "সঠিক সেটিংস তথ্য প্রদান করুন।" };
   }
 
   try {

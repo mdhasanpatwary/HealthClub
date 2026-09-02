@@ -4,7 +4,7 @@ import { randomInt } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { Member, PublicMemberVerification } from "@/services/db";
 import { hashPassword } from "@/lib/crypto";
-import { getSessionUser, setSessionUser } from "@/lib/session";
+import { getSessionUser } from "@/lib/session";
 import { sendOtpEmail } from "@/lib/mail";
 import { logger } from "@/lib/logger";
 import { telemetry } from "@/lib/telemetry";
@@ -19,31 +19,9 @@ import {
   setPendingRegistration,
 } from "@/lib/pendingRegistration";
 import {
-  loginMemberAction as _loginMemberAction,
-  loginAdminAction as _loginAdminAction,
-  logoutUserAction as _logoutUserAction,
-  verifyEmailOtpAction as _verifyEmailOtpAction,
-  resendVerificationCodeAction as _resendVerificationCodeAction,
-  requestPasswordResetAction as _requestPasswordResetAction,
-  resetPasswordAction as _resetPasswordAction,
-} from "./memberAuthActions";
-import {
-  getMembersAction as _getMembersAction,
-  updateMemberStatusAction as _updateMemberStatusAction,
-  updateMemberProfileAction as _updateMemberProfileAction,
-} from "./memberAdminActions";
-
-export async function loginMemberAction(...args: Parameters<typeof _loginMemberAction>) { return _loginMemberAction(...args); }
-export async function loginAdminAction(...args: Parameters<typeof _loginAdminAction>) { return _loginAdminAction(...args); }
-export async function logoutUserAction() { return _logoutUserAction(); }
-export async function logoutMemberAction() { return _logoutUserAction(); }
-export async function verifyEmailOtpAction(...args: Parameters<typeof _verifyEmailOtpAction>) { return _verifyEmailOtpAction(...args); }
-export async function resendVerificationCodeAction(...args: Parameters<typeof _resendVerificationCodeAction>) { return _resendVerificationCodeAction(...args); }
-export async function requestPasswordResetAction(...args: Parameters<typeof _requestPasswordResetAction>) { return _requestPasswordResetAction(...args); }
-export async function resetPasswordAction(...args: Parameters<typeof _resetPasswordAction>) { return _resetPasswordAction(...args); }
-export async function getMembersAction() { return _getMembersAction(); }
-export async function updateMemberStatusAction(...args: Parameters<typeof _updateMemberStatusAction>) { return _updateMemberStatusAction(...args); }
-export async function updateMemberProfileAction(...args: Parameters<typeof _updateMemberProfileAction>) { return _updateMemberProfileAction(...args); }
+  memberRegistrationSchema,
+  adminAddMemberSchema,
+} from "@/lib/validations/member";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "healthclubfeni@gmail.com";
 
@@ -78,6 +56,16 @@ export async function addMemberAction(
     );
     if (!rateLimit.success) {
       return { error: rateLimit.message || "খুব বেশি রেজিস্ট্রেশন অনুরোধ করা হয়েছে। অনুগ্রহ করে কিছুক্ষণ অপেক্ষা করুন।" };
+    }
+
+    const parsed = memberRegistrationSchema.safeParse(member);
+    if (!parsed.success) {
+      return { error: parsed.error.issues[0]?.message || "সঠিক তথ্য দিন।" };
+    }
+  } else {
+    const parsed = adminAddMemberSchema.safeParse(member);
+    if (!parsed.success) {
+      return { error: parsed.error.issues[0]?.message || "সঠিক তথ্য দিন।" };
     }
   }
 
@@ -207,9 +195,6 @@ export async function addMemberAction(
   }
 }
 
-
-
-
 export async function getPublicMemberVerificationAction(
   memberId: string
 ): Promise<PublicMemberVerification | null> {
@@ -287,198 +272,22 @@ export async function getMemberByIdAction(idOrPhone: string): Promise<Member | n
   }
 }
 
-
-export async function getMemberForPaymentAction(memberId: string): Promise<{
+export interface VerifiedPartnerMember {
   id: string;
   name: string;
   phone: string;
-  email?: string;
+  email: string;
   tier: string;
   status: string;
-  bkashTxnId?: string;
-  bkashSender?: string;
-} | null> {
-  try {
-    const cleanId = memberId.trim();
-    if (!cleanId) return null;
-    const m = await prisma.member.findUnique({
-      where: { id: cleanId },
-      select: {
-        id: true,
-        name: true,
-        phone: true,
-        email: true,
-        tier: true,
-        status: true,
-        bkashTxnId: true,
-        bkashSender: true,
-      },
-    });
-    if (!m) return null;
-    return {
-      id: m.id,
-      name: m.name,
-      phone: m.phone,
-      email: m.email || undefined,
-      tier: m.tier,
-      status: m.status,
-      bkashTxnId: m.bkashTxnId || undefined,
-      bkashSender: m.bkashSender || undefined,
-    };
-  } catch (error) {
-    logger.error("Error in getMemberForPaymentAction:", error);
-    return null;
-  }
-}
-
-export async function submitBkashPaymentAction(
-  memberId: string,
-  bkashSender: string,
-  bkashTxnId: string
-): Promise<boolean> {
-  try {
-    const cleanId = memberId.trim();
-    const cleanSender = bkashSender.trim();
-    const cleanTxnId = bkashTxnId.trim().toUpperCase();
-
-    if (cleanTxnId.length < 6 || cleanTxnId.length > 20) {
-      telemetry.captureEvent("payment_submission_invalid", { memberId: cleanId, bkashSender: cleanSender, bkashTxnId: cleanTxnId, reason: "invalid_txn_length" }, "warn", { userId: cleanId, route: "submitBkashPaymentAction" });
-      return false;
-    }
-
-    const member = await prisma.member.findUnique({
-      where: { id: cleanId },
-    });
-
-    if (!member) return false;
-
-    // Check for duplicate bKash transaction IDs already submitted by another member
-    const duplicateTxn = await prisma.member.findFirst({
-      where: {
-        OR: [{ bkashTxnId: cleanTxnId }, { renewalBkashTxnId: cleanTxnId }],
-        NOT: { id: cleanId },
-      },
-      select: { id: true, name: true },
-    });
-
-    if (duplicateTxn) {
-      telemetry.captureEvent(
-        "payment_dispute",
-        {
-          disputeType: "duplicate_bkash_txn",
-          submittedBy: cleanId,
-          bkashSender: cleanSender,
-          bkashTxnId: cleanTxnId,
-          conflictsWithMemberId: duplicateTxn.id,
-        },
-        "warn",
-        { userId: cleanId, route: "submitBkashPaymentAction" }
-      );
-    }
-
-    // Verify permission: session match or pending/inactive member completing payment
-    const session = await getSessionUser();
-    const isAuthorized =
-      session?.role === "admin" ||
-      session?.userId === cleanId ||
-      member.status === "inactive" ||
-      member.status === "pending_approval";
-
-    if (!isAuthorized) return false;
-
-    await prisma.member.update({
-      where: { id: cleanId },
-      data: {
-        bkashSender: cleanSender,
-        bkashTxnId: cleanTxnId,
-        status: "pending_approval",
-      },
-    });
-
-    updateTag("admin-stats");
-
-    // Set session user so user stays logged in
-    await setSessionUser(cleanId, "user");
-
-    return true;
-  } catch (error: unknown) {
-    if ((error as { code?: string })?.code === "P2025") return false;
-    logger.error("Error in submitBkashPaymentAction:", error);
-    return false;
-  }
-}
-
-export async function requestRenewalAction(
-  bkashSender: string,
-  bkashTxnId: string,
-  profession?: string
-): Promise<{ success: boolean; message: string }> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "user") {
-    return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
-  }
-
-  try {
-    const cleanSender = bkashSender?.trim() || "";
-    const cleanTxnId = bkashTxnId?.trim().toUpperCase() || "";
-
-    if (!cleanSender || !cleanTxnId) {
-      telemetry.captureEvent("payment_renewal_invalid", { memberId: session.userId, reason: "missing_fields" }, "warn", { userId: session.userId, route: "requestRenewalAction" });
-      return { success: false, message: "বিকাশ নম্বর এবং ট্রানজেকশন আইডি দিন।" };
-    }
-
-    const duplicateTxn = await prisma.member.findFirst({
-      where: {
-        OR: [{ bkashTxnId: cleanTxnId }, { renewalBkashTxnId: cleanTxnId }],
-        NOT: { id: session.userId },
-      },
-      select: { id: true },
-    });
-
-    if (duplicateTxn) {
-      telemetry.captureEvent(
-        "payment_dispute",
-        {
-          disputeType: "duplicate_renewal_txn",
-          submittedBy: session.userId,
-          bkashSender: cleanSender,
-          bkashTxnId: cleanTxnId,
-          conflictsWithMemberId: duplicateTxn.id,
-        },
-        "warn",
-        { userId: session.userId, route: "requestRenewalAction" }
-      );
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const updateData: any = {
-      renewalStatus: "pending",
-      renewalBkashSender: cleanSender,
-      renewalBkashTxnId: cleanTxnId,
-    };
-
-    if (profession) {
-      updateData.profession = profession;
-    }
-
-    await prisma.member.update({
-      where: { id: session.userId },
-      data: updateData,
-    });
-
-    updateTag("admin-stats");
-
-    return { success: true, message: "রিনিউয়াল অনুরোধ সফলভাবে পাঠানো হয়েছে! এডমিন যাচাইয়ের পর অ্যাক্টিভ করা হবে।" };
-  } catch (error) {
-    logger.error("Error in requestRenewalAction:", error);
-    return { success: false, message: "রিনিউয়াল অনুরোধ পাঠাতে সমস্যা হয়েছে।" };
-  }
+  expiryDate: string;
+  totalSaved: number;
+  profilePictureUrl: string;
+  isExpired: boolean;
 }
 
 export async function verifyMemberForPartnerAction(
   memberId: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<{ success: boolean; member?: any; message?: string; errorKey?: string }> {
+): Promise<{ success: boolean; member?: VerifiedPartnerMember; message?: string; errorKey?: string }> {
   const session = await getSessionUser();
   if (!session || (session.role !== "partner" && session.role !== "partner_staff")) {
     return { success: false, message: "অননুমোদিত অ্যাক্সেস।", errorKey: "partner.errors.unauthorized" };
@@ -525,6 +334,6 @@ export async function verifyMemberForPartnerAction(
     };
   } catch (error) {
     logger.error("Error in verifyMemberForPartnerAction:", error);
-    return { success: false, message: "মেম্বার যাচাই করতে সমস্যা হয়েছে。", errorKey: "common.error.server" };
+    return { success: false, message: "মেম্বার যাচাই করতে সমস্যা হয়েছে।", errorKey: "common.error.server" };
   }
 }

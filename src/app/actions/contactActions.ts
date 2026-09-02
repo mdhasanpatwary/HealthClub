@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/generated/client/client";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { PaginatedResult } from "@/types/pagination";
@@ -11,6 +12,7 @@ import {
   getClientIp,
   RATE_LIMIT_RULES,
 } from "@/lib/rateLimit";
+import { contactMessageSchema } from "@/lib/validations/contact";
 
 async function verifyMessageAdmin(): Promise<boolean> {
   const session = await getSessionUser();
@@ -51,8 +53,7 @@ export async function getPaginatedContactMessagesAction(
   const pageSize = Math.max(1, params?.pageSize || 10);
   const search = params?.search?.trim();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const where: any = {};
+  const where: Prisma.ContactMessageWhereInput = {};
   if (search) {
     where.OR = [
       { name: { contains: search, mode: "insensitive" } },
@@ -119,16 +120,20 @@ export async function addContactMessageAction(data: {
       };
     }
 
-    if (!data.name || !data.phone || !data.message) {
-      return { success: false, error: "Name, phone, and message are required." };
+    const parsed = contactMessageSchema.safeParse(data);
+    if (!parsed.success) {
+      return {
+        success: false,
+        error: parsed.error.issues[0]?.message || "সকল প্রয়োজনীয় তথ্য সঠিকভাবে পূরণ করুন।",
+      };
     }
 
     await prisma.contactMessage.create({
       data: {
-        name: data.name,
-        phone: data.phone,
-        email: data.email || null,
-        message: data.message,
+        name: parsed.data.name,
+        phone: parsed.data.phone,
+        email: parsed.data.email || null,
+        message: parsed.data.message,
       },
     });
 
@@ -259,46 +264,30 @@ export async function convertContactMessageToEmergencyAction(messageId: string):
       const lastDonatedMatch = text.match(/শেষ\s*রক্তদান\s*:\s*([^|]+)/);
       const lastDonated = lastDonatedMatch ? lastDonatedMatch[1].trim() : "তথ্য নেই";
 
-      const setting = await prisma.systemSetting.findUnique({
-        where: { key: "emergency_donors" },
-      });
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let donors: any[] = [];
-      if (setting?.value) {
-        try {
-          donors = JSON.parse(setting.value);
-        } catch (e) {
-          logger.error("Failed to parse emergency_donors", e);
-        }
-      }
-
       const donorId = `donor-msg-${msg.id.slice(0, 8)}`;
-      const donorRecord = {
-        id: donorId,
-        name: msg.name.trim(),
-        bloodGroup,
-        upazila,
-        phone: msg.phone.trim(),
-        lastDonated,
-        isAvailable: true,
-        status: "approved",
-        createdAt: msg.createdAt.toISOString(),
-      };
+      const cleanPhone = msg.phone.trim();
 
-      const existingIndex = donors.findIndex(
-        (d) => d.id === donorId || d.phone === msg.phone.trim()
-      );
-      if (existingIndex >= 0) {
-        donors[existingIndex] = { ...donors[existingIndex], ...donorRecord };
-      } else {
-        donors.unshift(donorRecord);
-      }
-
-      await prisma.systemSetting.upsert({
-        where: { key: "emergency_donors" },
-        create: { key: "emergency_donors", value: JSON.stringify(donors) },
-        update: { value: JSON.stringify(donors) },
+      await prisma.bloodDonor.upsert({
+        where: { phone: cleanPhone },
+        update: {
+          name: msg.name.trim(),
+          bloodGroup,
+          upazila,
+          lastDonated,
+          isAvailable: true,
+          status: "approved",
+        },
+        create: {
+          id: donorId,
+          name: msg.name.trim(),
+          bloodGroup,
+          upazila,
+          phone: cleanPhone,
+          lastDonated,
+          isAvailable: true,
+          status: "approved",
+          createdAt: msg.createdAt,
+        },
       });
 
       try {
@@ -337,46 +326,28 @@ export async function convertContactMessageToEmergencyAction(messageId: string):
       const coverage = coverageMatch ? ` | কভারেজ: ${coverageMatch[1].trim()}` : "";
 
       const location = `${rawLocation}${coverage}`;
-
-      const setting = await prisma.systemSetting.findUnique({
-        where: { key: "emergency_ambulances" },
-      });
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let ambulances: any[] = [];
-      if (setting?.value) {
-        try {
-          ambulances = JSON.parse(setting.value);
-        } catch (e) {
-          logger.error("Failed to parse emergency_ambulances", e);
-        }
-      }
-
       const ambId = `amb-msg-${msg.id.slice(0, 8)}`;
-      const ambulanceRecord = {
-        id: ambId,
-        name: msg.name.trim(),
-        type: validType,
-        location,
-        phone: msg.phone.trim(),
-        availableHours: "২৪/৭ সার্বক্ষণিক",
-        status: "approved",
-        createdAt: msg.createdAt.toISOString(),
-      };
+      const cleanPhone = msg.phone.trim();
 
-      const existingIndex = ambulances.findIndex(
-        (a) => a.id === ambId || a.phone === msg.phone.trim()
-      );
-      if (existingIndex >= 0) {
-        ambulances[existingIndex] = { ...ambulances[existingIndex], ...ambulanceRecord };
-      } else {
-        ambulances.unshift(ambulanceRecord);
-      }
-
-      await prisma.systemSetting.upsert({
-        where: { key: "emergency_ambulances" },
-        create: { key: "emergency_ambulances", value: JSON.stringify(ambulances) },
-        update: { value: JSON.stringify(ambulances) },
+      await prisma.ambulanceService.upsert({
+        where: { phone: cleanPhone },
+        update: {
+          name: msg.name.trim(),
+          type: validType,
+          location,
+          availableHours: "২৪/৭ সার্বক্ষণিক",
+          status: "approved",
+        },
+        create: {
+          id: ambId,
+          name: msg.name.trim(),
+          type: validType,
+          location,
+          phone: cleanPhone,
+          availableHours: "২৪/৭ সার্বক্ষণিক",
+          status: "approved",
+          createdAt: msg.createdAt,
+        },
       });
 
       try {

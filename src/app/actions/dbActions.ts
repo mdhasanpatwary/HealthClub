@@ -22,13 +22,19 @@ export {
   addMemberAction,
   getMemberByIdAction,
   getPublicMemberVerificationAction,
+} from "./memberActions";
+
+export {
   loginMemberAction,
   loginAdminAction,
   verifyEmailOtpAction,
   logoutMemberAction,
-  submitBkashPaymentAction,
   resendVerificationCodeAction,
-} from "./memberActions";
+} from "./memberAuthActions";
+
+export {
+  submitBkashPaymentAction,
+} from "./memberPaymentActions";
 
 export type { PublicMemberVerification } from "@/services/db";
 

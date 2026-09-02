@@ -8,6 +8,7 @@ export type AdminPermissionKey =
   | "manage_members"
   | "approve_renewals"
   | "view_transactions"
+  | "manage_transactions"
   | "manage_partners"
   | "manage_partner_requests"
   | "manage_doctors"
@@ -65,6 +66,7 @@ export const ROLE_CONFIGS: Record<AdminRole, RoleConfig> = {
       "manage_members",
       "approve_renewals",
       "view_transactions",
+      "manage_transactions",
       "manage_partners",
       "manage_partner_requests",
       "manage_doctors",
@@ -172,4 +174,22 @@ export function getRoleLabel(role: AdminRole, locale: "bn" | "en" = "bn"): strin
   const config = ROLE_CONFIGS[role];
   if (!config) return role;
   return locale === "bn" ? config.titleBn : config.titleEn;
+}
+
+/**
+ * Checks if a user object represents an administrator.
+ * Validates against:
+ * 1. Admin ID prefix (`admin_...`)
+ * 2. Dedicated admin session role (`role === 'admin'`)
+ * 3. Configured root admin email
+ */
+export function isAdminUser(
+  user: { id?: string; email?: string; role?: string; adminRole?: AdminRole } | null | undefined
+): boolean {
+  if (!user) return false;
+  if (user.id && user.id.startsWith("admin_")) return true;
+  if (user.role === "admin" || Boolean(user.adminRole)) return true;
+  const rootAdminEmail = (process.env.NEXT_PUBLIC_ADMIN_EMAIL || "healthclubfeni@gmail.com").toLowerCase();
+  if (user.email && user.email.toLowerCase() === rootAdminEmail) return true;
+  return false;
 }

@@ -13,15 +13,17 @@ import {
 import {
   getPaginatedDonorsAdminAction,
   getPaginatedAmbulancesAdminAction,
-  getPaginatedHotlinesAdminAction,
   getEmergencyCountsAdminAction,
   approveBloodDonorAction,
   approveAmbulanceAction,
   deleteBloodDonorAction,
   toggleBloodDonorAvailabilityAction,
   deleteAmbulanceAction,
-  deleteHotlineAction,
 } from "@/app/actions/emergencyAdminActions";
+import {
+  getPaginatedHotlinesAdminAction,
+  deleteHotlineAction,
+} from "@/app/actions/emergencyHotlineActions";
 import { exportEmergencyData } from "@/lib/emergencyExport";
 import { toast } from "sonner";
 import { useLanguage } from "@/components/layout/LanguageProvider";

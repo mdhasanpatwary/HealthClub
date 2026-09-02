@@ -2,6 +2,7 @@
 
 import { randomInt } from "crypto";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/generated/client/client";
 import { Partner } from "@/services/db";
 import { getSessionUser, setSessionUser } from "@/lib/session";
 import { hashPassword, verifyPassword } from "@/lib/crypto";
@@ -48,8 +49,7 @@ export interface GetPaginatedPartnerRequestsParams {
   category?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function toPartner(p: any): Partner {
+function toPartner(p: Prisma.PartnerGetPayload<object>): Partner {
   return {
     id: p.id,
     name: p.name,
@@ -67,8 +67,7 @@ function toPartner(p: any): Partner {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function toPartnerRequest(d: any): PartnerRequest {
+function toPartnerRequest(d: Prisma.PartnerRequestGetPayload<object>): PartnerRequest {
   return {
     id: d.id,
     orgName: d.orgName,
@@ -95,8 +94,7 @@ export async function getPaginatedPartnerRequestsAction(
   const status = params?.status;
   const category = params?.category;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const where: any = {};
+  const where: Prisma.PartnerRequestWhereInput = {};
   if (status && status !== "all") where.status = status;
   if (category && category !== "all") where.category = category;
   if (search) {

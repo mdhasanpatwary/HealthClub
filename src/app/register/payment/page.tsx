@@ -7,7 +7,7 @@ import { ShieldCheck, AlertCircle, CheckCircle2, Copy, Check, Smartphone, User, 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { submitBkashPaymentAction, getMemberForPaymentAction } from "@/app/actions/memberActions";
+import { submitBkashPaymentAction, getMemberForPaymentAction } from "@/app/actions/memberPaymentActions";
 import { getPublicPaymentSettingsAction, PublicPaymentSettings } from "@/app/actions/systemSettingsActions";
 import { Member } from "@/services/db";
 import { Skeleton } from "@/components/ui/skeleton";

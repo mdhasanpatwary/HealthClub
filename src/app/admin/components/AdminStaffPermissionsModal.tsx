@@ -72,10 +72,16 @@ export function AdminStaffPermissionsModal({
           support: true,
         },
         {
-          name: isBn ? "মেম্বারদের ডিসকাউন্ট লেনদেন লগ" : "Member Discount Transaction Logs",
+          name: isBn ? "মেম্বারদের ডিসকাউন্ট লেনদেন লগ দেখা" : "View Member Discount Transaction Logs",
           superAdmin: true,
           moderator: false,
           support: true,
+        },
+        {
+          name: isBn ? "নতুন ডিসকাউন্ট লেনদেন তৈরি ও যোগ" : "Record New Discount Transaction",
+          superAdmin: true,
+          moderator: false,
+          support: false,
         },
         {
           name: isBn ? "অংশীদারিত্ব (Partner) আবেদন যাচাই" : "Review Partner Applications",
