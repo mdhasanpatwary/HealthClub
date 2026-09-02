@@ -21,6 +21,10 @@ export async function generateMetadata() {
       : "হেলথ ক্লাবের লক্ষ্য, আমাদের ভিশন এবং কীভাবে আমরা চিকিৎসা খরচ কমিয়ে এনে দেশব্যাপী স্বাস্থ্যসেবা সহজলভ্য করছি তা জানুন।",
     alternates: {
       canonical: `${SITE_URL}/about-us`,
+      languages: {
+        "bn-BD": `${SITE_URL}/about-us`,
+        "en-US": `${SITE_URL}/about-us`,
+      },
     },
     openGraph: {
       title: ogTitle,

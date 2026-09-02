@@ -85,6 +85,10 @@ export async function generateMetadata({ params }: PageProps) {
     description: pageDesc,
     alternates: {
       canonical: canonicalUrl,
+      languages: {
+        "bn-BD": canonicalUrl,
+        "en-US": canonicalUrl,
+      },
     },
     keywords: [
       partner.name,

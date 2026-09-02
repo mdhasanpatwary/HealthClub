@@ -72,6 +72,10 @@ export async function generateMetadata({ params }: ArticlePageProps) {
     description,
     alternates: {
       canonical: `${SITE_URL}/health-tips/${article.slug}`,
+      languages: {
+        "bn-BD": `${SITE_URL}/health-tips/${article.slug}`,
+        "en-US": `${SITE_URL}/health-tips/${article.slug}`,
+      },
     },
     openGraph: {
       title,

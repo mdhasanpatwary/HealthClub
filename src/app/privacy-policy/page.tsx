@@ -14,6 +14,10 @@ export async function generateMetadata() {
     description,
     alternates: {
       canonical: `${SITE_URL}/privacy-policy`,
+      languages: {
+        "bn-BD": `${SITE_URL}/privacy-policy`,
+        "en-US": `${SITE_URL}/privacy-policy`,
+      },
     },
     openGraph: {
       title,

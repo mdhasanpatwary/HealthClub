@@ -33,6 +33,10 @@ export async function generateMetadata({ searchParams }: ConsultantsPageProps) {
       description,
       alternates: {
         canonical: canonicalUrl,
+        languages: {
+          "bn-BD": canonicalUrl,
+          "en-US": canonicalUrl,
+        },
       },
       keywords: [
         ...deptSeo.keywords,
@@ -79,6 +83,10 @@ export async function generateMetadata({ searchParams }: ConsultantsPageProps) {
       : "ফেনী ডাক্তার তালিকা, চেম্বার সময়সূচী ও সরাসরি সিরিয়াল নাম্বার। ফেনীর বিশেষজ্ঞ ডাক্তারদের (মেডিসিন, গাইনী, শিশু, হৃদরোগ) চেম্বার, রোগী দেখার সময় এবং অ্যাপয়েন্টমেন্ট বুকিংয়ের বিস্তারিত তথ্য।",
     alternates: {
       canonical: `${SITE_URL}/consultants`,
+      languages: {
+        "bn-BD": `${SITE_URL}/consultants`,
+        "en-US": `${SITE_URL}/consultants`,
+      },
     },
     keywords: [
       "feni doctor list",

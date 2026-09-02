@@ -2,21 +2,25 @@ import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/siteConfig";
 
 const DISALLOWED_PATHS = [
-  "/admin/",
+  "/admin",
   "/admin/*",
-  "/dashboard/",
+  "/dashboard",
   "/dashboard/*",
-  "/partner/",
+  "/partner",
   "/partner/*",
-  "/profile/",
+  "/profile",
   "/profile/*",
-  "/api/",
+  "/api",
   "/api/*",
+  "/offline",
+  "/offline/*",
   "/login/admin",
   "/login/partner",
   "/register/payment",
   "/register/verify-email",
   "/forgot-password/reset",
+  "/doctors",
+  "/doctors/*",
 ];
 
 const AI_AND_SEARCH_BOTS = [

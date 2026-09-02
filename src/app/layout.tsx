@@ -104,11 +104,6 @@ export const metadata: Metadata = {
     apple: "/icons/apple-touch-icon.png",
   },
   alternates: {
-    canonical: "/",
-    languages: {
-      "bn-BD": "/",
-      "en-US": "/",
-    },
     types: {
       "text/markdown": [
         { url: "/llms.txt", title: "Health Club LLM Knowledge Base (llms.txt)" },

@@ -33,6 +33,10 @@ export async function generateMetadata() {
       : "অভিজ্ঞ বিশেষজ্ঞ চিকিৎসকদের পরামর্শ, ডায়াবেটিস ও উচ্চ রক্তচাপ নিয়ন্ত্রণ, ডেঙ্গু ও হিটস্ট্রোক প্রতিরোধ, হার্ট অ্যাটাক ও স্ট্রোকের লক্ষণ, পুষ্টিকর খাদ্যতালিকা ও স্বাস্থ্যকর জীবনযাপনের নির্ভরযোগ্য গাইড।",
     alternates: {
       canonical: `${SITE_URL}/health-tips`,
+      languages: {
+        "bn-BD": `${SITE_URL}/health-tips`,
+        "en-US": `${SITE_URL}/health-tips`,
+      },
     },
     openGraph: {
       title: ogTitle,

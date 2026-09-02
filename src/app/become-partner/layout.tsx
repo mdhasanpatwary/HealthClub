@@ -25,6 +25,10 @@ export async function generateMetadata(): Promise<Metadata> {
       : "হেলথ ক্লাবের পার্টনার নেটওয়ার্কে আপনার হাসপাতাল, ল্যাব বা ফার্মেসি রেজিস্টার করুন এবং হাজারো মেম্বারদের চিকিৎসাসেবা প্রদান করুন।",
     alternates: {
       canonical: `${SITE_URL}/become-partner`,
+      languages: {
+        "bn-BD": `${SITE_URL}/become-partner`,
+        "en-US": `${SITE_URL}/become-partner`,
+      },
     },
     openGraph: {
       title: ogTitle,

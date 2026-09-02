@@ -27,6 +27,10 @@ export async function generateMetadata() {
       : "ফাউন্ডিং মেম্বার (১ বছর সম্পূর্ণ ফ্রি) ও প্রিমিয়াম মেম্বারশিপের সুবিধা দেখে নিন এবং আপনার জন্য সেরা প্ল্যানটি বেছে নিন।",
     alternates: {
       canonical: `${SITE_URL}/membership`,
+      languages: {
+        "bn-BD": `${SITE_URL}/membership`,
+        "en-US": `${SITE_URL}/membership`,
+      },
     },
     openGraph: {
       title: ogTitle,

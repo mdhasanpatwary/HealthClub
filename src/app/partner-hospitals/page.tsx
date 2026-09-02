@@ -9,30 +9,62 @@ import { getPartnersAction } from "@/app/actions/partnerActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 import { Sparkles, ShieldCheck, Tag, Pill, MapPin } from "lucide-react";
 
-export async function generateMetadata() {
+interface PartnerHospitalsPageProps {
+  searchParams?: Promise<{ category?: string; upazila?: string }>;
+}
+
+export async function generateMetadata({ searchParams }: PartnerHospitalsPageProps) {
+  const { category } = (await searchParams) || {};
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
 
-  const ogTitle = isEn
-    ? "Feni Hospital List, Diagnostic Centers & Pathology Lab Discounts - Health Club"
-    : "ফেনী হাসপাতাল তালিকা, ডায়াগনস্টিক সেন্টার ও প্যাথলজি ডিসকাউন্ট - হেলথ ক্লাব";
-  const ogDesc = isEn
-    ? "Explore verified private hospitals, diagnostic pathology labs, and model pharmacies in Feni offering 10% to 30% instant member discounts on medical tests and healthcare services."
-    : "ফেনীর শীর্ষ বেসরকারি হাসপাতাল, প্যাথলজি ল্যাব, ডায়াগনস্টিক সেন্টার ও মডেল ফার্মেসির তালিকা। হেলথ ক্লাব মেম্বার কার্ডে পান ১০% থেকে ৩০% নিশ্চিত ডিসকাউন্ট।";
+  const categoryMeta: Record<string, { titleBn: string; titleEn: string; descBn: string; descEn: string }> = {
+    hospital: {
+      titleBn: "ফেনী হাসপাতাল তালিকা ও চিকিৎসা সেবা ডিসকাউন্ট - হেলথ ক্লাব",
+      titleEn: "Feni Hospital List & Healthcare Discounts - Health Club",
+      descBn: "ফেনীর শীর্ষ বেসরকারি হাসপাতাল ও ক্লিনিকের তালিকা। হেলথ ক্লাব মেম্বারশিপ কার্ডে পান কেবিন, বেড ও চিকিৎসা ফিতে বিশেষ ছাড়।",
+      descEn: "Directory of top private hospitals and clinics in Feni. Get exclusive member discounts on cabin, admissions, and consultations.",
+    },
+    diagnostic: {
+      titleBn: "ফেনী ডায়াগনস্টিক সেন্টার ও প্যাথলজি ল্যাব টেস্ট ছাড় - হেলথ ক্লাব",
+      titleEn: "Feni Diagnostic Centers & Pathology Lab Discounts - Health Club",
+      descBn: "ফেনীর সেরা ডায়াগনস্টিক সেন্টার ও প্যাথলজি ল্যাবের তালিকা। রক্ত পরীক্ষা, এক্স-রে, আল্ট্রাসনোগ্রামসহ সকল টেস্টে ১০% থেকে ৩০% ডিসকাউন্ট।",
+      descEn: "Complete list of diagnostic centers and pathology labs in Feni. Get 10% to 30% instant discounts on blood tests, scans, and investigations.",
+    },
+    pharmacy: {
+      titleBn: "ফেনী মডেল ফার্মেসি ও ঔষধ ডিসকাউন্ট - হেলথ ক্লাব",
+      titleEn: "Feni Model Pharmacies & Medicine Discounts - Health Club",
+      descBn: "ফেনীর অনুমোদিত মডেল ফার্মেসি তালিকা। হেলথ ক্লাব মেম্বার কার্ড ব্যবহারে প্রেসক্রিপশন ঔষধে নিশ্চিত ক্যাশ ডিসকাউন্ট।",
+      descEn: "Verified model pharmacies in Feni offering instant discounts and genuine medications for Health Club members.",
+    },
+  };
+
+  const selectedCat = category && category in categoryMeta ? categoryMeta[category] : null;
+
+  const pageTitle = selectedCat
+    ? (isEn ? selectedCat.titleEn : selectedCat.titleBn)
+    : (isEn ? "Feni Hospital List, Diagnostic Centers & Pathology Lab Discounts - Health Club" : "ফেনী হাসপাতাল তালিকা, ডায়াগনস্টিক সেন্টার ও প্যাথলজি ডিসকাউন্ট - হেলথ ক্লাব");
+
+  const pageDesc = selectedCat
+    ? (isEn ? selectedCat.descEn : selectedCat.descBn)
+    : (isEn ? "Explore verified private hospitals, diagnostic labs, pathology clinics, and model pharmacies in Feni. Enjoy 10% to 30% instant member discounts on medical tests, admissions, and medicines." : "ফেনীর শীর্ষ বেসরকারি হাসপাতাল, প্যাথলজি ল্যাব, ডায়াগনস্টিক সেন্টার ও মডেল ফার্মেসির তালিকা। হেলথ ক্লাব মেম্বার কার্ডে পান ১০% থেকে ৩০% নিশ্চিত ডিসকাউন্ট।");
+
+  const canonicalUrl = category && category in categoryMeta
+    ? `${SITE_URL}/partner-hospitals?category=${category}`
+    : `${SITE_URL}/partner-hospitals`;
+
+  const ogTitle = pageTitle;
+  const ogDesc = pageDesc;
 
   return {
-    title: isEn
-      ? "Feni Hospital List, Diagnostic Centers & Pathology Lab Discounts - Health Club"
-      : "ফেনী হাসপাতাল তালিকা, ডায়াগনস্টিক সেন্টার ও প্যাথলজি ডিসকাউন্ট - হেলথ ক্লাব",
-    description: isEn
-      ? "Explore verified private hospitals, diagnostic labs, pathology clinics, and model pharmacies in Feni. Enjoy 10% to 30% instant member discounts on medical tests, admissions, and medicines."
-      : "ফেনীর শীর্ষ বেসরকারি হাসপাতাল, প্যাথলজি ল্যাব, ডায়াগনস্টিক সেন্টার ও মডেল ফার্মেসির তালিকা। হেলথ ক্লাব মেম্বার কার্ডে পান ১০% থেকে ৩০% নিশ্চিত ডিসকাউন্ট।",
+    title: pageTitle,
+    description: pageDesc,
     alternates: {
-      canonical: `${SITE_URL}/partner-hospitals`,
+      canonical: canonicalUrl,
       languages: {
-        "bn-BD": `${SITE_URL}/partner-hospitals`,
-        "en-US": `${SITE_URL}/partner-hospitals`,
+        "bn-BD": canonicalUrl,
+        "en-US": canonicalUrl,
       },
     },
     keywords: [
@@ -95,7 +127,8 @@ export async function generateMetadata() {
   };
 }
 
-export default async function PartnerHospitalsPage() {
+export default async function PartnerHospitalsPage({ searchParams }: PartnerHospitalsPageProps) {
+  const { category } = (await searchParams) || {};
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
@@ -258,7 +291,7 @@ export default async function PartnerHospitalsPage() {
           <h2 id="partner-directory-heading" className="sr-only">
             {isEn ? "Partner Hospitals & Diagnostic Centers Directory" : "পার্টনার হাসপাতাল ও ডায়াগনস্টিক ডিরেক্টরি"}
           </h2>
-          <PartnerDirectory partners={allPartners} />
+          <PartnerDirectory partners={allPartners} initialCategory={category || "all"} />
         </section>
 
         {/* Informational SEO Guide Component (4 Pillars, Popular Test Pricing & 3-Step Redemption) */}

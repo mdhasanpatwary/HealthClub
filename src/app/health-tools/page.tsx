@@ -31,6 +31,10 @@ export async function generateMetadata() {
     description: pageDesc,
     alternates: {
       canonical: `${SITE_URL}/health-tools`,
+      languages: {
+        "bn-BD": `${SITE_URL}/health-tools`,
+        "en-US": `${SITE_URL}/health-tools`,
+      },
     },
     openGraph: {
       title: isEn ? "Free Health & Fitness Calculators - Health Club" : "ফ্রি স্বাস্থ্য ক্যালকুলেটর টুলস - হেলথ ক্লাব",

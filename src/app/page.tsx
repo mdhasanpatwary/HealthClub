@@ -60,6 +60,10 @@ export async function generateMetadata() {
       : "হেলথ ক্লাবের ডিজিটাল মেম্বারশিপ কার্ড দিয়ে পার্টনার হাসপাতাল, ডায়াগনস্টিক ল্যাব ও মডেল ফার্মেসিতে পান আকর্ষণীয় ডিসকাউন্ট ও সাশ্রয়ী চিকিৎসা।",
     alternates: {
       canonical: SITE_URL,
+      languages: {
+        "bn-BD": SITE_URL,
+        "en-US": SITE_URL,
+      },
     },
     keywords: [
       "feni doctor",

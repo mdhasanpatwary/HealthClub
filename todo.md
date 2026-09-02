@@ -583,3 +583,10 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Severity**: High
   - **Files**: `src/lib/pendingRegistration.ts`, `src/app/actions/memberActions.ts`, `src/app/actions/memberAuthActions.ts`, `src/app/register/verify-email/page.tsx`
   - **Details**: Refactor user signup to store unverified registration data in a signed/encrypted HttpOnly cookie session (`hc_pending_registration`), dispatching the OTP and creating the `Member` record in the database only upon successful 6-digit OTP verification. Allows users with mistyped emails to re-register without phone number locking.
+
+### 🔍 Search Engine Optimization & Crawlability (Item 8)
+
+- [x] **TODO-116**: **Fix Search Console Crawlability, Canonical Alignment & Inherited Hreflang Conflicts**
+  - **Severity**: High
+  - **Files**: `src/lib/siteConfig.ts`, `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/robots.ts`, `src/app/partner-hospitals/page.tsx`, `src/components/ui/PartnerDirectory.tsx`, `src/app/consultants/page.tsx`, `src/app/consultants/[id]/page.tsx`, `src/app/partner-hospitals/[id]/page.tsx`, `src/app/health-tips/[slug]/page.tsx`
+  - **Details**: Resolved Google Search Console indexing bottlenecks by setting primary `SITE_URL` to `https://www.healthclubfeni.com` to eliminate 308 redirect loops, removing conflicting root layout `hreflang` inheritance that pointed subpage alternates to `/`, adding dynamic category-specific metadata and matching canonicals for `/partner-hospitals?category=...`, tightening `robots.ts` disallowed paths to protect crawl budget from private routes, and ensuring all dynamic pages provide consistent, self-referencing canonical and localized alternate headers.

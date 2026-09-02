@@ -17,15 +17,21 @@ interface PartnerDirectoryProps {
   partners?: Partner[];
   limit?: number;
   showFilters?: boolean;
+  initialCategory?: string;
 }
 
-export default function PartnerDirectory({ partners: initialPartners, limit, showFilters = true }: PartnerDirectoryProps) {
+export default function PartnerDirectory({
+  partners: initialPartners,
+  limit,
+  showFilters = true,
+  initialCategory = "all",
+}: PartnerDirectoryProps) {
   const hasInitialData = Boolean(initialPartners && initialPartners.length > 0);
   const [partners, setPartners] = useState<Partner[]>(initialPartners ?? []);
   const [loading, setLoading] = useState(!hasInitialData);
   const [prevInitialPartners, setPrevInitialPartners] = useState(initialPartners);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory || "all");
   const [selectedUpazila, setSelectedUpazila] = useState<string>("all");
   const [visibleCount, setVisibleCount] = useState(18);
   const { locale, t } = useLanguage();

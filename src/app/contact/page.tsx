@@ -25,6 +25,10 @@ export async function generateMetadata() {
       : "হেলথ ক্লাবের সাথে যোগাযোগ করুন। আমাদের ফোন নাম্বার, ইমেইল, অফিস ঠিকানা ও সাপোর্ট সেন্টার।",
     alternates: {
       canonical: `${SITE_URL}/contact`,
+      languages: {
+        "bn-BD": `${SITE_URL}/contact`,
+        "en-US": `${SITE_URL}/contact`,
+      },
     },
     openGraph: {
       title: ogTitle,
