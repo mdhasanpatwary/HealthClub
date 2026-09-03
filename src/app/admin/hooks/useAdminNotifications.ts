@@ -7,10 +7,12 @@ import {
   markAllAdminNotificationsReadAction,
   dismissAdminNotificationAction,
   clearAllAdminReadAction,
+} from "@/app/actions/adminNotificationActions";
+import type {
   AdminNotificationItem,
   AdminNotificationSummary,
   GetAdminNotificationsParams,
-} from "@/app/actions/adminNotificationActions";
+} from "@/app/actions/adminNotificationTypes";
 import { safeStorage } from "@/lib/safeStorage";
 
 const STORAGE_KEYS = {

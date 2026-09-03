@@ -4,7 +4,7 @@ import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatNum } from "@/lib/i18n";
 import { Card, CardContent } from "@/components/ui/card";
 import { Monitor, Smartphone, Globe, Laptop, Tablet } from "lucide-react";
-import { PwaStatsData } from "@/app/actions/pwaActions";
+import type { PwaStatsData } from "@/app/actions/pwaActions";
 
 interface PwaDistributionCardsProps {
   stats: PwaStatsData;

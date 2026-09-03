@@ -411,7 +411,7 @@ const getCachedAdminStats = unstable_cache(
     if (healthTipsSetting?.value) {
       try {
         const parsed = JSON.parse(healthTipsSetting.value);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed)) {
           healthTipsCount = parsed.length;
         }
       } catch (e) {

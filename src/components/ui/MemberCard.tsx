@@ -85,6 +85,7 @@ const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCa
             height={40}
             priority={priority}
             sizes="40px"
+            style={{ width: "auto", height: "auto" }}
             className="h-8 w-8 sm:h-10 sm:w-10 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.4)] shrink-0 print:h-[7.5mm] print:w-[7.5mm] print:drop-shadow-none"
           />
           <div className="min-w-0">

@@ -9,7 +9,8 @@ import { Card, CardContent, CardTitle, CardDescription, CardHeader } from "@/com
 import { Input } from "@/components/ui/input";
 import { getMemberByIdAction } from "@/app/actions/memberActions";
 import { requestRenewalAction } from "@/app/actions/memberPaymentActions";
-import { getPublicPaymentSettingsAction, PublicPaymentSettings } from "@/app/actions/systemSettingsActions";
+import { getPublicPaymentSettingsAction } from "@/app/actions/systemSettingsActions";
+import type { PublicPaymentSettings } from "@/app/actions/systemSettingsActions";
 import { authStore } from "@/services/authStore";
 import { Member } from "@/services/db";
 import { toast } from "sonner";

@@ -35,8 +35,7 @@ async function verifySuperAdmin(): Promise<{ authorized: boolean; userId?: strin
     return { authorized: false, error: "অননুমোদিত অ্যাক্সেস। অনুগ্রহ করে এডমিন হিসেবে লগইন করুন।" };
   }
 
-  const role = session.adminRole || "super_admin";
-  if (role !== "super_admin") {
+  if (session.adminRole !== "super_admin") {
     return { authorized: false, error: "এই কাজটির জন্য শুধুমাত্র সুপার এডমিনের অনুমতি রয়েছে।" };
   }
 
@@ -182,6 +181,10 @@ export async function updateAdminUserAction(
 
     if (!existing) {
       return { success: false, error: "এডমিন অ্যাকাউন্টটি খুঁজে পাওয়া যায়নি।" };
+    }
+
+    if (auth.userId === id && !parsed.data.isActive) {
+      return { success: false, error: "আপনি নিজের অ্যাকাউন্ট নিষ্ক্রিয় করতে পারবেন না।" };
     }
 
     // Safeguard: Check if demoting or deactivating the last active super_admin

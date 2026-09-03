@@ -18,7 +18,7 @@ import { Pagination } from "@/components/ui/pagination";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatNum } from "@/lib/i18n";
 import { useAdminNotifications } from "@/app/admin/hooks/useAdminNotifications";
-import { AdminNotificationItem } from "@/app/actions/adminNotificationActions";
+import type { AdminNotificationItem } from "@/app/actions/adminNotificationTypes";
 import { NotificationCard } from "./components/NotificationCard";
 import { NotificationKpiGrid } from "./components/NotificationKpiGrid";
 import { PushBroadcastModal } from "./components/PushBroadcastModal";

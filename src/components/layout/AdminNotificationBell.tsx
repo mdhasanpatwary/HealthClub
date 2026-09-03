@@ -23,7 +23,7 @@ import {
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatNum } from "@/lib/i18n";
 import { useAdminNotifications } from "@/app/admin/hooks/useAdminNotifications";
-import { AdminNotificationItem, NotificationCategory } from "@/app/actions/adminNotificationActions";
+import type { AdminNotificationItem, NotificationCategory } from "@/app/actions/adminNotificationTypes";
 
 function getCategoryIcon(category: NotificationCategory) {
   switch (category) {

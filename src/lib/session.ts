@@ -107,6 +107,47 @@ async function verifyActivePartnerStaff(
 }
 
 /**
+ * Validates that an active admin account is still enabled, exists, and
+ * has not been deactivated, demoted, or deleted.
+ */
+export async function verifyActiveAdminUser(
+  userId: string,
+  sessionAdminRole?: AdminRole
+): Promise<{ id: string; role: AdminRole; name: string; email: string } | null> {
+  try {
+    const { prisma } = await import("@/lib/prisma");
+    const admin = await prisma.adminUser.findUnique({
+      where: { id: userId },
+      select: { id: true, isActive: true, role: true, name: true, email: true },
+    });
+
+    if (!admin || !admin.isActive) {
+      return null;
+    }
+
+    const validRoles: AdminRole[] = ["super_admin", "content_moderator", "support_staff"];
+    if (!validRoles.includes(admin.role as AdminRole)) {
+      return null;
+    }
+
+    // Role verification: If the admin was demoted or their role in DB no longer matches sessionAdminRole
+    if (sessionAdminRole && admin.role !== sessionAdminRole) {
+      return null;
+    }
+
+    return {
+      id: admin.id,
+      role: admin.role as AdminRole,
+      name: admin.name,
+      email: admin.email,
+    };
+  } catch (error) {
+    logger.error("[AUTH] Error verifying active admin user session:", error);
+    return null;
+  }
+}
+
+/**
  * Creates a secure HttpOnly cookie session for the logged-in user.
  */
 export async function setSessionUser(
@@ -164,6 +205,24 @@ export async function getSessionUser(): Promise<SessionPayload | null> {
       }
       return null;
     }
+  }
+
+  // Immediate session invalidation for admin if deactivated, demoted, or deleted
+  if (session.role === "admin" && session.userId) {
+    const admin = await verifyActiveAdminUser(session.userId, session.adminRole);
+    if (!admin) {
+      logger.warn(`[AUTH] Revoking invalid/deactivated/demoted admin session for userId: ${session.userId}`);
+      try {
+        cookieStore.delete("session");
+      } catch {
+        // Readonly in RSC render pass
+      }
+      return null;
+    }
+    // Synchronize latest active admin attributes
+    session.adminRole = admin.role;
+    session.adminName = admin.name;
+    session.adminEmail = admin.email;
   }
 
   return session;

@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Send, Loader2 } from "lucide-react";
 import { formatNum, Locale } from "@/lib/i18n";
-import { BroadcastAudienceType, BroadcastChannel } from "@/app/actions/broadcastActions";
+import type { BroadcastAudienceType, BroadcastChannel } from "@/app/actions/broadcastActions";
 
 interface BroadcastConfirmModalProps {
   isOpen: boolean;

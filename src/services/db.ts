@@ -323,6 +323,8 @@ export interface BackupTableStats {
   databaseSnapshots: number;
   reviews?: number;
   pushSubscriptions?: number;
+  bloodDonors?: number;
+  ambulanceServices?: number;
   totalRecords: number;
 }
 

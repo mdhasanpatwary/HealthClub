@@ -4,13 +4,12 @@ import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { hasAdminPermission } from "@/lib/permissions";
+import type {
+  AdminNotificationItem,
+  PaginatedAdminNotificationsResult,
+  GetAdminNotificationsParams,
+} from "./adminNotificationTypes";
 import {
-  type NotificationCategory,
-  type NotificationSeverity,
-  type AdminNotificationItem,
-  type AdminNotificationSummary,
-  type PaginatedAdminNotificationsResult,
-  type GetAdminNotificationsParams,
   DEFAULT_SUMMARY,
   SETTING_KEY_READ,
   SETTING_KEY_DISMISSED,
@@ -23,15 +22,6 @@ import {
   formatNewMemberNotifications,
   filterAndPaginateNotifications,
 } from "./adminNotificationHelpers";
-
-export type {
-  NotificationCategory,
-  NotificationSeverity,
-  AdminNotificationItem,
-  AdminNotificationSummary,
-  PaginatedAdminNotificationsResult,
-  GetAdminNotificationsParams,
-};
 
 /**
  * Fetches real-time administrative notifications with server-side pagination,

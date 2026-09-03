@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { Review, ReviewStatus, PartnerReviewStats } from "@/services/db";
+import { Review, ReviewStatus, PartnerReviewStats, AdminRole } from "@/services/db";
+import { hasAdminPermission } from "@/lib/permissions";
 
 export const submitReviewSchema = z.object({
   partnerId: z.string().min(1, "Partner ID is required"),
@@ -73,4 +74,9 @@ export interface GetPartnerReviewsResult {
   currentPage: number;
   pageSize: number;
   hasMore: boolean;
+}
+
+export function canAdminManageReviews(role: AdminRole | undefined): boolean {
+  const r = role || "super_admin";
+  return hasAdminPermission(r, "manage_reviews") || hasAdminPermission(r, "manage_partners");
 }

@@ -3,7 +3,7 @@
 import { Bell, Building2, Mail, AlertTriangle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatNum, Locale } from "@/lib/i18n";
-import { AdminNotificationSummary } from "@/app/actions/adminNotificationActions";
+import type { AdminNotificationSummary } from "@/app/actions/adminNotificationTypes";
 
 interface NotificationKpiGridProps {
   summary: AdminNotificationSummary;

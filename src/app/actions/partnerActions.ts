@@ -13,11 +13,15 @@ import {
   getPartnerRequestsAction as _getPartnerRequestsAction,
   getPaginatedPartnerRequestsAction as _getPaginatedPartnerRequestsAction,
   updatePartnerRequestStatusAction as _updatePartnerRequestStatusAction,
+  approvePartnerRequestAction as _approvePartnerRequestAction,
+  rejectPartnerRequestAction as _rejectPartnerRequestAction,
   loginPartnerAction as _loginPartnerAction,
   changePartnerPasswordAction as _changePartnerPasswordAction,
+} from "./partnerRequestActions";
+import {
   requestPartnerPasswordResetAction as _requestPartnerPasswordResetAction,
   resetPartnerPasswordAction as _resetPartnerPasswordAction,
-} from "./partnerRequestActions";
+} from "./partnerPasswordResetActions";
 import {
   getPartnerTransactionsAction as _getPartnerTransactionsAction,
   addPartnerTransactionAction as _addPartnerTransactionAction,
@@ -72,6 +76,14 @@ export async function getPaginatedPartnerRequestsAction(...args: Parameters<type
 
 export async function updatePartnerRequestStatusAction(id: string, status: "approved" | "rejected") {
   return _updatePartnerRequestStatusAction(id, status);
+}
+
+export async function approvePartnerRequestAction(id: string) {
+  return _approvePartnerRequestAction(id);
+}
+
+export async function rejectPartnerRequestAction(id: string) {
+  return _rejectPartnerRequestAction(id);
 }
 
 export async function loginPartnerAction(identifier: string, password: string) {

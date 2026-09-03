@@ -18,7 +18,7 @@ export function DbBackupExportTab() {
     "members", "partners", "partnerStaff", "transactions", "doctors",
     "partnerRequests", "contactMessages", "systemSettings",
     "pwaInstallations", "memberNotifications", "adminUsers",
-    "reviews", "pushSubscriptions",
+    "reviews", "pushSubscriptions", "bloodDonors", "ambulanceServices",
   ]);
   const [isExporting, setIsExporting] = useState(false);
 
@@ -36,6 +36,8 @@ export function DbBackupExportTab() {
     { id: "adminUsers", label: isEn ? "Admin Users" : "এডমিন একাউন্ট" },
     { id: "reviews", label: isEn ? "Reviews" : "রিভিউ ও রেটিং" },
     { id: "pushSubscriptions", label: isEn ? "Push Subscriptions" : "পুশ সাবস্ক্রিপশন" },
+    { id: "bloodDonors", label: isEn ? "Blood Donors" : "রক্তদাতা তালিকা" },
+    { id: "ambulanceServices", label: isEn ? "Ambulance Services" : "অ্যাম্বুলেন্স সেবা" },
   ];
 
   const toggleTable = (id: string) => {

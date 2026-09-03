@@ -241,7 +241,9 @@ export async function updateMemberStatusAction(id: string, status: Member["statu
 
     if (status === "active") {
       const now = new Date();
-      updateData.joinedDate = now;
+      if (!member.joinedDate || isNaN(new Date(member.joinedDate).getTime())) {
+        updateData.joinedDate = now;
+      }
       const expiry = new Date(now);
       expiry.setFullYear(now.getFullYear() + 1);
       updateData.expiryDate = expiry;

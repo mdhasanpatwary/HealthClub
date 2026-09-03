@@ -8,9 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { Pagination } from "@/components/ui/pagination";
 import { Trash2, Droplet, Truck, Loader2, PlusCircle } from "lucide-react";
 import {
-  ContactMessage,
   convertContactMessageToEmergencyAction,
 } from "@/app/actions/contactActions";
+import type { ContactMessage } from "@/app/actions/contactActions";
 import { Locale } from "@/lib/i18n";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";

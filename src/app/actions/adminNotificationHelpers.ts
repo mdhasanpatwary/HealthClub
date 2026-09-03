@@ -1,62 +1,22 @@
 import { prisma } from "@/lib/prisma";
 import { logger } from "@/lib/logger";
 
-export type NotificationCategory =
-  | "renewal"
-  | "partner_request"
-  | "message"
-  | "member_new"
-  | "member_expiring"
-  | "system";
+// Re-export all types from the dedicated types file
+export type {
+  NotificationCategory,
+  NotificationSeverity,
+  AdminNotificationItem,
+  AdminNotificationSummary,
+  PaginatedAdminNotificationsResult,
+  GetAdminNotificationsParams,
+} from "./adminNotificationTypes";
 
-export type NotificationSeverity = "high" | "medium" | "low" | "info";
-
-export interface AdminNotificationItem {
-  id: string;
-  category: NotificationCategory;
-  titleBn: string;
-  titleEn: string;
-  descriptionBn: string;
-  descriptionEn: string;
-  timestamp: string;
-  actionUrl: string;
-  actionLabelBn: string;
-  actionLabelEn: string;
-  severity: NotificationSeverity;
-  meta?: Record<string, string | number | boolean | null | undefined>;
-  isRead?: boolean;
-}
-
-export interface AdminNotificationSummary {
-  items: AdminNotificationItem[];
-  unreadCount: number;
-  highPriorityCount: number;
-  pendingRenewalsCount: number;
-  pendingPartnerRequestsCount: number;
-  unreadMessagesCount: number;
-  expiringMembersCount: number;
-  newMembersCount: number;
-}
-
-export interface PaginatedAdminNotificationsResult {
-  items: AdminNotificationItem[];
-  totalItems: number;
-  totalPages: number;
-  currentPage: number;
-  pageSize: number;
-  summary: AdminNotificationSummary;
-}
-
-export interface GetAdminNotificationsParams {
-  page?: number;
-  pageSize?: number;
-  category?: string;
-  severity?: string;
-  search?: string;
-  unreadOnly?: boolean;
-  readIds?: string[];
-  dismissedIds?: string[];
-}
+import type {
+  AdminNotificationItem,
+  AdminNotificationSummary,
+  PaginatedAdminNotificationsResult,
+  GetAdminNotificationsParams,
+} from "./adminNotificationTypes";
 
 export const DEFAULT_SUMMARY: AdminNotificationSummary = {
   items: [],

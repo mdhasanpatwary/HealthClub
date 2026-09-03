@@ -6,8 +6,8 @@ import { useLanguage } from "@/components/layout/LanguageProvider";
 import {
   getPaginatedContactMessagesAction,
   deleteContactMessageAction,
-  ContactMessage,
 } from "@/app/actions/contactActions";
+import type { ContactMessage } from "@/app/actions/contactActions";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import {

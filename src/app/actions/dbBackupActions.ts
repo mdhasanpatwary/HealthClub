@@ -39,6 +39,8 @@ export async function getDatabaseStatsSummaryAction(): Promise<BackupTableStats 
       databaseSnapshots,
       reviews,
       pushSubscriptions,
+      bloodDonors,
+      ambulanceServices,
     ] = await prisma.$transaction([
       prisma.member.count(),
       prisma.partner.count(),
@@ -54,6 +56,8 @@ export async function getDatabaseStatsSummaryAction(): Promise<BackupTableStats 
       prisma.databaseSnapshot.count(),
       prisma.review.count(),
       prisma.pushSubscription.count(),
+      prisma.bloodDonor.count(),
+      prisma.ambulanceService.count(),
     ]);
 
     const totalRecords =
@@ -69,7 +73,9 @@ export async function getDatabaseStatsSummaryAction(): Promise<BackupTableStats 
       memberNotifications +
       adminUsers +
       reviews +
-      pushSubscriptions;
+      pushSubscriptions +
+      bloodDonors +
+      ambulanceServices;
 
     return {
       members,
@@ -86,6 +92,8 @@ export async function getDatabaseStatsSummaryAction(): Promise<BackupTableStats 
       databaseSnapshots,
       reviews,
       pushSubscriptions,
+      bloodDonors,
+      ambulanceServices,
       totalRecords,
     };
   } catch (error) {

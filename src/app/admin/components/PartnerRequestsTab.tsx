@@ -22,6 +22,7 @@ interface PartnerRequestsTabProps {
   locale?: Locale;
   t?: (key: string) => string;
   loading?: boolean;
+  processingId?: string | null;
 }
 
 export function PartnerRequestsTab({
@@ -37,6 +38,7 @@ export function PartnerRequestsTab({
   locale = "bn",
   t = (k) => k,
   loading = false,
+  processingId = null,
 }: PartnerRequestsTabProps) {
   const isEn = locale === "en";
 
@@ -137,18 +139,24 @@ export function PartnerRequestsTab({
                         <div className="flex justify-end gap-2">
                           <Button
                             size="sm"
+                            disabled={loading || Boolean(processingId)}
                             onClick={() => onApprove(req.id)}
-                            className="bg-primary hover:bg-primary-dark text-white text-xs h-7 py-1 px-3 animate-pulse"
+                            className="bg-primary hover:bg-primary-dark text-white text-xs h-7 py-1 px-3 animate-pulse disabled:opacity-50"
                           >
-                            {t("admin.partnerRequests.approve")}
+                            {processingId === req.id
+                              ? (isEn ? "Approving..." : "অনুমোদন হচ্ছে...")
+                              : t("admin.partnerRequests.approve")}
                           </Button>
                           <Button
                             size="sm"
                             variant="outline"
+                            disabled={loading || Boolean(processingId)}
                             onClick={() => onReject(req.id)}
-                            className="text-destructive border-destructive/20 hover:bg-destructive/10 text-xs h-7 py-1 px-3"
+                            className="text-destructive border-destructive/20 hover:bg-destructive/10 text-xs h-7 py-1 px-3 disabled:opacity-50"
                           >
-                            {t("admin.partnerRequests.reject")}
+                            {processingId === req.id
+                              ? (isEn ? "Processing..." : "প্রক্রিয়া হচ্ছে...")
+                              : t("admin.partnerRequests.reject")}
                           </Button>
                         </div>
                       )}

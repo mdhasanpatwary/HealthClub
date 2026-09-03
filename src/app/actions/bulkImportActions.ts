@@ -11,6 +11,9 @@ import {
 import { BulkImportResult } from "@/types/bulkImport";
 import { hasAdminPermission } from "@/lib/permissions";
 
+const DOCTORS_TAG = "doctors";
+const PARTNERS_TAG = "partners";
+
 async function verifyAdmin(): Promise<boolean> {
   const session = await getSessionUser();
   if (!session || session.role !== "admin") return false;
@@ -92,9 +95,9 @@ export async function bulkImportDoctorsAction(
       skipDuplicates: true,
     });
 
-    updateTag("doctors-data");
+    updateTag(DOCTORS_TAG);
     updateTag("admin-stats");
-    revalidateTag("doctors-data", "max");
+    revalidateTag(DOCTORS_TAG, "max");
     revalidatePath("/consultants");
     revalidatePath("/admin");
     revalidatePath("/admin/doctors");
@@ -197,9 +200,9 @@ export async function bulkImportPartnersAction(
       }
     }
 
-    updateTag("partners-data");
+    updateTag(PARTNERS_TAG);
     updateTag("admin-stats");
-    revalidateTag("partners-data", "max");
+    revalidateTag(PARTNERS_TAG, "max");
     revalidatePath("/partner-hospitals");
     revalidatePath("/admin");
     revalidatePath("/admin/partners");

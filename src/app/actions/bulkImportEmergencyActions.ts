@@ -235,6 +235,56 @@ export async function bulkImportAmbulancesAction(
   }
 }
 
+function normalizeHotlinePhone(phone: string): string {
+  if (!phone) return "";
+  const banglaToEnglishMap: Record<string, string> = {
+    "০": "0", "১": "1", "২": "2", "৩": "3", "৪": "4",
+    "৫": "5", "৬": "6", "৭": "7", "৮": "8", "৯": "9",
+  };
+  let converted = phone.trim();
+  for (const [bn, en] of Object.entries(banglaToEnglishMap)) {
+    converted = converted.replaceAll(bn, en);
+  }
+  const cleaned = converted.toLowerCase().replace(/[\s_\-–—()[\]{}./\\]/g, "");
+  const withoutCountryCode = cleaned.replace(/^\+?88/, "");
+  return withoutCountryCode || cleaned;
+}
+
+function normalizeHotlineTitle(title: string): string {
+  if (!title) return "";
+  const banglaToEnglishMap: Record<string, string> = {
+    "০": "0", "১": "1", "২": "2", "৩": "3", "৪": "4",
+    "৫": "5", "৬": "6", "৭": "7", "৮": "8", "৯": "9",
+  };
+  let converted = title.trim().toLowerCase();
+  for (const [bn, en] of Object.entries(banglaToEnglishMap)) {
+    converted = converted.replaceAll(bn, en);
+  }
+  return converted.replace(/[\s_\-–—()[\]{}.,/\\|:;!?'"“”‘’]/g, "");
+}
+
+function isHotlineDuplicate(a: EmergencyHotline, b: EmergencyHotline): boolean {
+  const phoneA = normalizeHotlinePhone(a.phone);
+  const phoneB = normalizeHotlinePhone(b.phone);
+  if (phoneA && phoneB && phoneA === phoneB) {
+    return true;
+  }
+
+  const titleBnA = normalizeHotlineTitle(a.titleBn);
+  const titleBnB = normalizeHotlineTitle(b.titleBn);
+  if (titleBnA && titleBnB && titleBnA === titleBnB) {
+    return true;
+  }
+
+  const titleEnA = normalizeHotlineTitle(a.titleEn);
+  const titleEnB = normalizeHotlineTitle(b.titleEn);
+  if (titleEnA && titleEnB && titleEnA === titleEnB) {
+    return true;
+  }
+
+  return false;
+}
+
 /**
  * Bulk import emergency hotlines into system settings.
  */
@@ -292,7 +342,45 @@ export async function bulkImportHotlinesAction(
 
   try {
     const existing = await getHotlinesList();
-    const updatedList = [...validHotlines, ...existing];
+
+    // 1. Deduplicate incoming batch within itself (later entries in the batch update earlier ones)
+    const dedupedIncoming: EmergencyHotline[] = [];
+    for (const incoming of validHotlines) {
+      const matchIdx = dedupedIncoming.findIndex((h) => isHotlineDuplicate(h, incoming));
+      if (matchIdx >= 0) {
+        dedupedIncoming[matchIdx] = {
+          ...dedupedIncoming[matchIdx],
+          ...incoming,
+        };
+      } else {
+        dedupedIncoming.push(incoming);
+      }
+    }
+
+    // 2. Merge with existing: if incoming matches an existing entry, update in-place preserving its existing ID
+    const mergedExisting = [...existing];
+    const newlyAdded: EmergencyHotline[] = [];
+
+    for (const incoming of dedupedIncoming) {
+      const matchIdx = mergedExisting.findIndex((h) => isHotlineDuplicate(h, incoming));
+      if (matchIdx >= 0) {
+        mergedExisting[matchIdx] = {
+          ...incoming,
+          id: mergedExisting[matchIdx].id,
+        };
+      } else {
+        newlyAdded.push(incoming);
+      }
+    }
+
+    // 3. Prune any duplicate hotlines across newlyAdded + mergedExisting (including any legacy duplicates)
+    const updatedList: EmergencyHotline[] = [];
+    for (const item of [...newlyAdded, ...mergedExisting]) {
+      if (!updatedList.some((existingItem) => isHotlineDuplicate(existingItem, item))) {
+        updatedList.push(item);
+      }
+    }
+
     await prisma.systemSetting.upsert({
       where: { key: "emergency_hotlines" },
       create: { key: "emergency_hotlines", value: JSON.stringify(updatedList) },
@@ -303,10 +391,10 @@ export async function bulkImportHotlinesAction(
 
     return {
       success: true,
-      totalImported: validHotlines.length,
+      totalImported: dedupedIncoming.length,
       totalFailed: rawHotlines.length - validHotlines.length,
       errors: errors.length > 0 ? errors : undefined,
-      message: `Successfully imported ${validHotlines.length} emergency hotlines.`,
+      message: `Successfully imported ${dedupedIncoming.length} emergency hotlines.`,
     };
   } catch (error) {
     logger.error("Failed to bulk import hotlines:", error);

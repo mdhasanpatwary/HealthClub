@@ -4,24 +4,35 @@ import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { Review, AdminReviewSummary } from "@/services/db";
-import { hasAdminPermission } from "@/lib/permissions";
+import { updateTag, revalidateTag, revalidatePath } from "next/cache";
 import {
   submitReviewSchema,
   serializeReview,
+  canAdminManageReviews,
+} from "./reviewHelpers";
+import type {
   ReviewWithRelations,
-  ReviewEligibilityReason,
   ReviewEligibilityResult,
   GetPartnerReviewsOptions,
   GetPartnerReviewsResult,
 } from "./reviewHelpers";
 
-export type {
-  ReviewEligibilityReason,
-  ReviewEligibilityResult,
-  GetPartnerReviewsOptions,
-  GetPartnerReviewsResult,
-};
+const PARTNERS_TAG = "partners";
 
+function revalidatePartnerReviewCache(partnerId?: string | null) {
+  try {
+    updateTag(PARTNERS_TAG);
+    updateTag("homepage-partners");
+    updateTag("admin-stats");
+    revalidateTag(PARTNERS_TAG, "max");
+    revalidatePath("/partner-hospitals");
+    if (partnerId) revalidatePath(`/partner-hospitals/${partnerId}`);
+    revalidatePath("/admin/reviews");
+    revalidatePath("/admin/partners");
+  } catch (err) {
+    logger.warn("Cache revalidation failed in reviewActions:", err);
+  }
+}
 
 export async function canMemberReviewPartnerAction(
   partnerId: string
@@ -205,6 +216,8 @@ export async function submitReviewAction(
       });
     }
 
+    revalidatePartnerReviewCache(partnerId);
+
     return {
       success: true,
       review: serializeReview(savedReview),
@@ -217,7 +230,6 @@ export async function submitReviewAction(
     return { success: false, error: "SERVER_ERROR", message: "রিভিউ জমা দিতে সমস্যা হয়েছে।" };
   }
 }
-
 
 export async function getPartnerReviewsAction(
   partnerId: string,
@@ -305,7 +317,7 @@ export async function getAdminReviewsAction(filters?: {
 }> {
   try {
     const session = await getSessionUser();
-    if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_partners")) {
+    if (!session || session.role !== "admin" || !canAdminManageReviews(session.adminRole)) {
       throw new Error("UNAUTHORIZED");
     }
 
@@ -398,7 +410,7 @@ export async function moderateReviewAction(
 ): Promise<{ success: boolean; message: string }> {
   try {
     const session = await getSessionUser();
-    if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_partners")) {
+    if (!session || session.role !== "admin" || !canAdminManageReviews(session.adminRole)) {
       return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
     }
 
@@ -441,6 +453,8 @@ export async function moderateReviewAction(
       logger.warn("Could not create member notification for review moderation:", notifErr);
     }
 
+    revalidatePartnerReviewCache(review.partnerId);
+
     return {
       success: true,
       message: status === "approved" ? "রিভিউ সফলভাবে অনুমোদিত হয়েছে।" : "রিভিউ বাতিল করা হয়েছে।",
@@ -456,13 +470,16 @@ export async function deleteReviewAction(
 ): Promise<{ success: boolean; message: string }> {
   try {
     const session = await getSessionUser();
-    if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_partners")) {
+    if (!session || session.role !== "admin" || !canAdminManageReviews(session.adminRole)) {
       return { success: false, message: "অননুমোদিত অ্যাক্সেস।" };
     }
 
-    await prisma.review.delete({
+    const review = await prisma.review.delete({
       where: { id: reviewId },
+      select: { partnerId: true },
     });
+
+    revalidatePartnerReviewCache(review.partnerId);
 
     return { success: true, message: "রিভিউটি সফলভাবে মুছে ফেলা হয়েছে।" };
   } catch (error) {

@@ -130,13 +130,12 @@ export async function getPaginatedDoctorsAdminAction(
 /**
  * Server action to fetch all active doctors.
  * Cached with ISR tags and revalidated on changes.
- * Automatically seeds initial doctors if the table is empty.
  */
 export const getDoctorsAction = unstable_cache(
   async (): Promise<Doctor[]> => {
     try {
       if (!prisma?.doctor) {
-        return initialDoctors;
+        return [];
       }
 
       const data = await prisma.doctor.findMany({
@@ -167,14 +166,10 @@ export const getDoctorsAction = unstable_cache(
         },
       });
 
-      if (data.length === 0) {
-        return initialDoctors;
-      }
-
       return data.map(formatDoctor);
     } catch (error) {
       logger.error("Error in getDoctorsAction:", error);
-      return initialDoctors;
+      return [];
     }
   },
   ["doctors-list"],
@@ -200,15 +195,14 @@ export async function getAllDoctorsAdminAction(): Promise<Doctor[]> {
 }
 
 /**
- * Fetch single doctor by ID with partner hospital details and initialDoctors fallback.
+ * Fetch single doctor by ID with partner hospital details.
  */
 export async function getDoctorByIdAction(
   id: string
 ): Promise<(Doctor & { partner?: Partner | null }) | null> {
   try {
     if (!prisma?.doctor) {
-      const fallback = initialDoctors.find((item) => item.id === id);
-      return fallback || null;
+      return null;
     }
 
     const d = await prisma.doctor.findUnique({
@@ -217,8 +211,7 @@ export async function getDoctorByIdAction(
     });
 
     if (!d) {
-      const fallback = initialDoctors.find((item) => item.id === id);
-      return fallback || null;
+      return null;
     }
 
     return {
@@ -243,8 +236,7 @@ export async function getDoctorByIdAction(
     };
   } catch (error) {
     logger.error("Error in getDoctorByIdAction:", error);
-    const fallback = initialDoctors.find((item) => item.id === id);
-    return fallback || null;
+    return null;
   }
 }
 
@@ -258,9 +250,7 @@ export async function getRelatedDoctorsAction(
 ): Promise<Doctor[]> {
   try {
     if (!prisma?.doctor) {
-      return initialDoctors
-        .filter((d) => d.department === department && d.id !== excludeDoctorId && d.isActive)
-        .slice(0, limit);
+      return [];
     }
 
     const data = await prisma.doctor.findMany({
@@ -273,20 +263,13 @@ export async function getRelatedDoctorsAction(
       orderBy: { createdAt: "asc" },
     });
 
-    if (data.length === 0) {
-      return initialDoctors
-        .filter((d) => d.department === department && d.id !== excludeDoctorId && d.isActive)
-        .slice(0, limit);
-    }
-
     return data.map(formatDoctor);
   } catch (error) {
     logger.error("Error in getRelatedDoctorsAction:", error);
-    return initialDoctors
-      .filter((d) => d.department === department && d.id !== excludeDoctorId && d.isActive)
-      .slice(0, limit);
+    return [];
   }
 }
+
 
 /**
  * Admin action to add a doctor.

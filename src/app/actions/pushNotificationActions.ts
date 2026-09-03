@@ -299,6 +299,15 @@ export async function sendPushBroadcastAction(
           stats: { total: 1, sent: 1, failed: 0, expired: 0 },
         };
       } else {
+        if (res.expired) {
+          try {
+            await prisma.pushSubscription.deleteMany({
+              where: { endpoint: testEndpoint },
+            });
+          } catch (purgeError) {
+            logger.error("[pushActions] Failed to delete expired test endpoint:", purgeError);
+          }
+        }
         return {
           success: false,
           message: `টেস্ট পুশ পাঠানো যায়নি: ${res.error || "অজানা ত্রুটি"}`,
@@ -341,6 +350,7 @@ export async function sendPushBroadcastAction(
     let sent = 0;
     let failed = 0;
     let expired = 0;
+    const expiredEndpoints: string[] = [];
 
     // Send in chunks of 20 to avoid overwhelming the serverless thread
     const CHUNK_SIZE = 20;
@@ -350,13 +360,36 @@ export async function sendPushBroadcastAction(
         chunk.map((sub) => sendWebPushNotification(sub, payload))
       );
 
-      for (const res of results) {
+      for (let j = 0; j < results.length; j++) {
+        const res = results[j];
         if (res.success) {
           sent++;
         } else {
           failed++;
-          if (res.expired) expired++;
+          if (res.expired) {
+            expired++;
+            expiredEndpoints.push(chunk[j].endpoint);
+          }
         }
+      }
+    }
+
+    // Automatically purge expired or defunct subscriptions in batch
+    if (expiredEndpoints.length > 0) {
+      try {
+        await prisma.pushSubscription.deleteMany({
+          where: {
+            endpoint: { in: expiredEndpoints },
+          },
+        });
+        logger.info(
+          `[pushActions] Purged ${expiredEndpoints.length} expired push subscriptions from database.`
+        );
+      } catch (purgeError) {
+        logger.error(
+          "[pushActions] Failed to batch purge expired push subscriptions:",
+          purgeError
+        );
       }
     }
 

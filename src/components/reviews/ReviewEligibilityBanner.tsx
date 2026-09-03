@@ -14,8 +14,8 @@ import {
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/components/layout/LanguageProvider";
-import { Partner } from "@/services/db";
-import { ReviewEligibilityResult } from "@/app/actions/reviewActions";
+import type { Partner } from "@/services/db";
+import type { ReviewEligibilityResult } from "@/app/actions/reviewHelpers";
 
 interface ReviewEligibilityBannerProps {
   partner: Partner;

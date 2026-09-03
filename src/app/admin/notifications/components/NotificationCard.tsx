@@ -17,10 +17,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatNum, Locale } from "@/lib/i18n";
-import {
+import type {
   AdminNotificationItem,
   NotificationCategory,
-} from "@/app/actions/adminNotificationActions";
+} from "@/app/actions/adminNotificationTypes";
 
 export function getCategoryIcon(category: NotificationCategory) {
   switch (category) {

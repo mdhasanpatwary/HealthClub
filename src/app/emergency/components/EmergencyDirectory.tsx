@@ -8,9 +8,6 @@ import {
   BloodDonor,
   AmbulanceService,
   EmergencyHotline,
-  INITIAL_BLOOD_DONORS,
-  INITIAL_AMBULANCES,
-  INITIAL_EMERGENCY_HOTLINES,
 } from "@/data/emergencyData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,9 +40,9 @@ interface EmergencyDirectoryProps {
 }
 
 export function EmergencyDirectory({
-  initialBloodDonors = INITIAL_BLOOD_DONORS,
-  initialAmbulances = INITIAL_AMBULANCES,
-  initialHotlines = INITIAL_EMERGENCY_HOTLINES,
+  initialBloodDonors = [],
+  initialAmbulances = [],
+  initialHotlines = [],
 }: EmergencyDirectoryProps) {
   const { locale } = useLanguage();
   const isEn = locale === "en";
@@ -60,20 +57,9 @@ export function EmergencyDirectory({
   const [selectedAmbulanceType, setSelectedAmbulanceType] = useState<string>("all");
   const [ambulanceSearch, setAmbulanceSearch] = useState<string>("");
 
-  const donorsList =
-    initialBloodDonors && initialBloodDonors.length > 0
-      ? initialBloodDonors
-      : INITIAL_BLOOD_DONORS;
-
-  const ambulancesList =
-    initialAmbulances && initialAmbulances.length > 0
-      ? initialAmbulances
-      : INITIAL_AMBULANCES;
-
-  const hotlinesList =
-    initialHotlines && initialHotlines.length > 0
-      ? initialHotlines
-      : INITIAL_EMERGENCY_HOTLINES;
+  const donorsList = useMemo(() => initialBloodDonors ?? [], [initialBloodDonors]);
+  const ambulancesList = useMemo(() => initialAmbulances ?? [], [initialAmbulances]);
+  const hotlinesList = useMemo(() => initialHotlines ?? [], [initialHotlines]);
 
   // Filtered blood donors
   const filteredDonors = useMemo(() => {

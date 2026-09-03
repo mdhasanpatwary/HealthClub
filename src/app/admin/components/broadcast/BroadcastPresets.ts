@@ -1,4 +1,4 @@
-import { BroadcastAudienceType, BroadcastChannel } from "@/app/actions/broadcastActions";
+import type { BroadcastAudienceType, BroadcastChannel } from "@/app/actions/broadcastActions";
 
 export interface BroadcastPreset {
   id: string;

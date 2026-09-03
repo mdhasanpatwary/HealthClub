@@ -8,8 +8,6 @@ import {
   BloodDonor,
   AmbulanceService,
   EmergencyHotline,
-  INITIAL_BLOOD_DONORS,
-  INITIAL_AMBULANCES,
 } from "@/data/emergencyData";
 import { PaginatedResult } from "@/types/pagination";
 import { hasAdminPermission } from "@/lib/permissions";
@@ -232,15 +230,21 @@ export const getEmergencyDataAction = unstable_cache(
     try {
       if (!prisma?.bloodDonor || !prisma?.ambulanceService) {
         return {
-          bloodDonors: INITIAL_BLOOD_DONORS,
-          ambulances: INITIAL_AMBULANCES,
+          bloodDonors: [],
+          ambulances: [],
           hotlines: await getHotlinesList(),
         };
       }
 
       const [donorRows, ambRows, hotlines] = await Promise.all([
-        prisma.bloodDonor.findMany({ orderBy: { createdAt: "desc" } }),
-        prisma.ambulanceService.findMany({ orderBy: { createdAt: "desc" } }),
+        prisma.bloodDonor.findMany({
+          where: { status: "approved" },
+          orderBy: { createdAt: "desc" },
+        }),
+        prisma.ambulanceService.findMany({
+          where: { status: "approved" },
+          orderBy: { createdAt: "desc" },
+        }),
         getHotlinesList(),
       ]);
 
@@ -248,20 +252,20 @@ export const getEmergencyDataAction = unstable_cache(
       const ambulances = ambRows.map(mapAmbulanceRow);
 
       return {
-        bloodDonors: bloodDonors.length > 0 ? bloodDonors : INITIAL_BLOOD_DONORS,
-        ambulances: ambulances.length > 0 ? ambulances : INITIAL_AMBULANCES,
+        bloodDonors,
+        ambulances,
         hotlines,
       };
     } catch (err) {
       logger.error("Error in getEmergencyDataAction:", err);
       return {
-        bloodDonors: INITIAL_BLOOD_DONORS,
-        ambulances: INITIAL_AMBULANCES,
-        hotlines: await getHotlinesList(),
+        bloodDonors: [],
+        ambulances: [],
+        hotlines: await getHotlinesList().catch(() => []),
       };
     }
   },
-  ["all-emergency-data-v5"],
+  ["all-emergency-data-v6"],
   { tags: [EMERGENCY_TAG], revalidate: 60 }
 );
 

@@ -18,6 +18,8 @@ import {
   FileCheck,
   Star,
   Radio,
+  Droplet,
+  Truck,
 } from "lucide-react";
 
 interface DbBackupTableStatsProps {
@@ -32,7 +34,7 @@ export function DbBackupTableStats({ stats, loading }: DbBackupTableStatsProps) 
   if (loading || !stats) {
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 animate-pulse">
-        {Array.from({ length: 12 }).map((_, i) => (
+        {Array.from({ length: 14 }).map((_, i) => (
           <div key={i} className="h-20 rounded-xl bg-muted/60 border border-border" />
         ))}
       </div>
@@ -57,6 +59,12 @@ export function DbBackupTableStats({ stats, loading }: DbBackupTableStatsProps) 
       : []),
     ...(stats.pushSubscriptions !== undefined
       ? [{ label: isEn ? "Push Subs" : "পুশ সাবস্ক্রিপশন", count: stats.pushSubscriptions, icon: Radio, color: "text-sky-500 bg-sky-500/10" }]
+      : []),
+    ...(stats.bloodDonors !== undefined
+      ? [{ label: isEn ? "Blood Donors" : "রক্তদাতা", count: stats.bloodDonors, icon: Droplet, color: "text-red-500 bg-red-500/10" }]
+      : []),
+    ...(stats.ambulanceServices !== undefined
+      ? [{ label: isEn ? "Ambulances" : "অ্যাম্বুলেন্স", count: stats.ambulanceServices, icon: Truck, color: "text-blue-600 bg-blue-600/10" }]
       : []),
   ];
 

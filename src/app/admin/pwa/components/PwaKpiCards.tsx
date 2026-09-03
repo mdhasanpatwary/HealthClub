@@ -11,7 +11,7 @@ import {
   TrendingUp,
   Percent,
 } from "lucide-react";
-import { PwaStatsData } from "@/app/actions/pwaActions";
+import type { PwaStatsData } from "@/app/actions/pwaActions";
 
 interface PwaKpiCardsProps {
   stats: PwaStatsData;

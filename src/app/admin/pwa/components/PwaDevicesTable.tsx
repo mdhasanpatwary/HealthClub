@@ -17,7 +17,7 @@ import {
   Copy,
   Check,
 } from "lucide-react";
-import { PwaStatsData } from "@/app/actions/pwaActions";
+import type { PwaStatsData } from "@/app/actions/pwaActions";
 import { toast } from "sonner";
 
 interface PwaDevicesTableProps {

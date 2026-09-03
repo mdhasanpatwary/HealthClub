@@ -646,3 +646,96 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Severity**: Low
   - **Files**: `src/app/actions/doctorActions.ts`, `src/app/actions/partnerDoctorActions.ts`, `src/app/actions/partnerRequestActions.ts`, `src/app/actions/partnerActions.ts`, `src/app/actions/memberAdminActions.ts`, `src/app/actions/memberActions.ts`, `src/app/actions/transactionActions.ts`, `src/app/actions/contactActions.ts`
   - **Details**: Replaced loose `any` parameter types, where clauses, update inputs, and mappings with explicit Prisma models and types (`Prisma.DoctorGetPayload`, `Prisma.DoctorWhereInput`, `Prisma.PartnerGetPayload`, `Prisma.PartnerWhereInput`, `Prisma.PartnerRequestGetPayload`, `Prisma.PartnerRequestWhereInput`, `Prisma.MemberGetPayload`, `Prisma.MemberWhereInput`, `Prisma.MemberUpdateInput`, `Prisma.TransactionWhereInput`, `Prisma.ContactMessageWhereInput`, and `VerifiedPartnerMember`). Removed all `no-explicit-any` ESLint suppressions while maintaining strict compliance with the 500-line limit across all server action files.
+
+---
+
+## 🛡️ Phase 17: Critical Logical Errors, Access Control, Data Integrity & Cache Resiliency (TODO-125 to TODO-140)
+
+### 🚨 Critical Security & Access Control (P1)
+
+- [x] **TODO-125**: **Fix Authentication Bypass & Account Takeover in `submitBkashPaymentAction`**
+  - **Severity**: Critical
+  - **Files**: `src/app/actions/memberPaymentActions.ts`
+  - **Details**: In `submitBkashPaymentAction`, `isAuthorized` evaluates to `true` for unauthenticated callers whenever the target member's status is `"inactive"` or `"pending_approval"`, calling `setSessionUser(cleanId, "user")` without requiring a password, OTP, or active session. Secure the action by verifying that payment submissions for registration are guarded by a signed registration cookie (`pending_reg_token`) or restricted strictly to authenticated users matching `session?.userId === cleanId`. Never issue an authenticated member session to an unauthenticated caller.
+
+- [x] **TODO-126**: **Prevent Public Exposure of Unapproved Blood Donors & Ambulances**
+  - **Severity**: Critical
+  - **Files**: `src/app/actions/emergencyAdminActions.ts`, `src/app/actions/broadcastActions.ts`
+  - **Details**: `getEmergencyDataAction` queries `prisma.bloodDonor.findMany` and `prisma.ambulanceService.findMany` without `{ where: { status: "approved" } }`, publicly displaying pending or spam submissions on `/emergency`. Similarly, `broadcastActions.ts` queries all donors without checking `status: "approved"`. Add `{ where: { status: "approved" } }` to `getEmergencyDataAction` and `getBloodDonorsList()`.
+
+- [x] **TODO-127**: **Enforce Instant Session Invalidation for Deactivated or Deleted Admin Users**
+  - **Severity**: Critical
+  - **Files**: `src/lib/session.ts`, `src/app/actions/adminUserActions.ts`
+  - **Details**: `session.ts` only validates database active status for `partner_staff`. For `role === "admin"`, JWT sessions remain trusted for up to 7 days even if the admin account is suspended (`isActive: false`), demoted, or deleted. Add a database verification helper `verifyActiveAdminUser(userId)` inside `getSessionUser` to immediately invalidate sessions of deactivated, demoted, or deleted administrators.
+
+### ⚠️ Data Integrity, Tenure & State Restoration (P1 / P2)
+
+- [x] **TODO-128**: **Preserve Member Historical `joinedDate` on Status Updates**
+  - **Severity**: High
+  - **Files**: `src/app/actions/memberAdminActions.ts`
+  - **Details**: In `updateMemberStatusAction`, toggling a member's status to `"active"` overwrites `updateData.joinedDate = new Date()`, wiping their original signup year and seniority. Check if `joinedDate` is already present on the member record and only set `joinedDate = now` if it was previously null or uninitialized.
+
+- [x] **TODO-129**: **Eliminate Fallback to Hardcoded Seed Data on Valid Empty (0-Row) Database Queries**
+  - **Severity**: High
+  - **Files**: `src/app/actions/doctorActions.ts`, `src/app/actions/partnerDoctorActions.ts`, `src/app/actions/emergencyAdminActions.ts`
+  - **Details**: In `getDoctorsAction`, `getPartnerDoctorsAction`, and `getEmergencyDataAction`, when the database returns 0 rows (e.g. after legitimate deletion, deactivation, or partner doctor unlinking), the actions fall back to hardcoded seed lists (`initialDoctors`, `INITIAL_BLOOD_DONORS`, `INITIAL_AMBULANCES`), making it impossible to remove or clear records. Remove the runtime fallback to seed arrays on read queries now that database tables and migrations are fully in place.
+
+- [x] **TODO-130**: **Fix Un-deletable Base Health Tips in `healthTipsAdminActions.ts`**
+  - **Severity**: High
+  - **Files**: `src/app/actions/healthTipsAdminActions.ts`
+  - **Details**: In `getAllHealthTipsAction`, any article from `HEALTH_TIPS_ARTICLES` missing from `dbMap` is automatically reconstructed and re-persisted into `system_settings`, effectively resurrecting deleted base articles on the very next read. Maintain an explicit list of deleted slugs or remove the automatic resurrection merge pattern so admin deletions remain permanent.
+
+- [x] **TODO-131**: **Reset Chamber Details When Doctor is Unlinked from Partner Facility**
+  - **Severity**: High
+  - **Files**: `src/app/actions/partnerDoctorActions.ts`
+  - **Details**: When a doctor is linked to a partner hospital, `chamberName` and `chamberAddress` are overwritten with the hospital's name and address. When `unlinkDoctorFromPartnerAction` is called, it resets `partnerId: null, roomNo: null` but leaves the stale hospital chamber address and name intact on the doctor record. Clear or reset `chamberName` and `chamberAddress` to default chamber info or empty when unlinking.
+
+- [x] **TODO-132**: **Fix PostgreSQL Case-Sensitivity in Member Password Reset Queries**
+  - **Severity**: Medium
+  - **Files**: `src/app/actions/memberPasswordResetActions.ts`
+  - **Details**: In `requestPasswordResetAction` and `verifyPasswordResetOtpAction`, the email is normalized into `cleanEmail = email.trim().toLowerCase()` for rate limiting, but the Prisma query searches using raw, unnormalized `email`: `prisma.member.findFirst({ where: { email } })`. Because PostgreSQL string comparison is case-sensitive, searching with raw `email` fails when casing does not match. Use `cleanEmail` (or case-insensitive mode) in the Prisma where clauses.
+
+- [x] **TODO-133**: **Prevent Concurrency Race Condition & Duplicate Creation on Partner Requests**
+  - **Severity**: Medium
+  - **Files**: `src/app/actions/partnerRequestActions.ts`
+  - **Details**: `approvePartnerRequestAction` does not check `{ where: { id: requestId, status: "pending" } }` atomically. If an admin double-clicks or multiple admins approve simultaneously, duplicate partner accounts are generated or unique constraint violations (P2002) are thrown. Guard approval within a transaction checking that `status === "pending"` before creating the partner.
+
+### 🔄 Cache Synchronization & Background Maintenance (P2)
+
+- [x] **TODO-134**: **Fix Cache Tag Mismatch on Bulk Import of Doctors & Partners**
+  - **Severity**: High
+  - **Files**: `src/app/actions/bulkImportActions.ts`
+  - **Details**: `bulkImportDoctorsAction` invalidates tag `"doctors-data"` and `bulkImportPartnersAction` invalidates tag `"partners-data"`. However, the read queries in `doctorActions.ts`, `partnerActions.ts`, and `partnerProfileQueryActions.ts` cache under `"doctors"` and `"partners"`. Update bulk import invalidations to use the exact canonical tags (`"doctors"` and `"partners"`).
+
+- [x] **TODO-135**: **Add Cache Invalidation & Path Revalidation on Review Moderation & Deletion**
+  - **Severity**: Medium
+  - **Files**: `src/app/actions/reviewActions.ts`
+  - **Details**: `submitReviewAction`, `moderateReviewAction`, and `deleteReviewAction` update database records and calculate average ratings, but never call `updateTag` or `revalidatePath`. Add cache busting for `"partners"` tag and revalidate `/partner-hospitals` and `/partner-hospitals/[slug]` so updated ratings and review counts reflect immediately.
+
+- [x] **TODO-136**: **Automatically Purge Expired Subscriptions in Web Push Broadcasts**
+  - **Severity**: Medium
+  - **Files**: `src/app/actions/pushNotificationActions.ts`
+  - **Details**: In `sendPushBroadcastAction`, when an endpoint returns HTTP 410 Gone / 404 Not Found (`res.expired === true`), the server increments `expired++` in memory but never deletes the defunct subscription from `prisma.pushSubscription`. Collect expired endpoint URLs and delete them from the database in batch (`deleteMany({ where: { endpoint: { in: expiredEndpoints } } })`).
+
+- [x] **TODO-137**: **Deduplicate Hotlines on Bulk Import to Prevent Endless Accumulation**
+  - **Severity**: Low
+  - **Files**: `src/app/actions/bulkImportEmergencyActions.ts`
+  - **Details**: `bulkImportHotlinesAction` prepends new hotlines directly onto existing ones without deduplicating by phone or Bengali title, multiplying duplicate hotlines on repeated CSV/JSON imports. Add deduplication by phone and title before saving to `system_settings`.
+
+### 🛡️ RBAC Permissions, PWA & Reporting Alignment (P2 / P3)
+
+- [x] **TODO-138**: **Fix RBAC Route Guard Lockout on `/admin/reviews` for Content Moderators**
+  - **Severity**: Medium
+  - **Files**: `src/lib/permissions.ts`, `src/proxy.ts`
+  - **Details**: The `/admin/reviews` route is omitted from `ROLE_CONFIGS.content_moderator.allowedRoutes` and `ROLE_CONFIGS.support_staff.allowedRoutes` (and missing from `ROLE_CONFIGS.super_admin.allowedRoutes`). Content moderators visiting `/admin/reviews` are blocked by `proxy.ts` and redirected to `/admin`. Add `"/admin/reviews"` to `allowedRoutes` and add the `"manage_reviews"` permission key.
+
+- [x] **TODO-139**: **Prevent PWA Standalone Status Overwrite on Standard Browser Visits**
+  - **Severity**: Medium
+  - **Files**: `src/app/actions/pwaActions.ts`
+  - **Details**: In `recordPwaSessionAction`, `isStandalone: Boolean(isStandalone)` is unconditionally written to the database. If a user installs the PWA (`isStandalone: true`) and later opens the website in a standard Chrome/Safari tab, `isStandalone` is overwritten with `false`, distorting install metrics and undercounting active installations. Only set `isStandalone: true` when present; never downgrade to `false` on standard session telemetry.
+
+- [x] **TODO-140**: **Include Relational Emergency Records (`BloodDonor`, `AmbulanceService`) in DB Backup Summary**
+  - **Severity**: Low
+  - **Files**: `src/app/actions/dbBackupActions.ts`, `src/services/db.ts`, `src/app/admin/components/DbBackupTableStats.tsx`, `src/app/admin/components/DbBackupExportTab.tsx`
+  - **Details**: `getDatabaseStatsSummaryAction` aggregates record counts across all relational database tables including `prisma.bloodDonor.count()` and `prisma.ambulanceService.count()`. Added both counts to the transaction, summary stats object, and stats cards/export table selector so the Admin Database Backup & Retention page (`/admin/settings/backup`) displays accurate total database records.
+

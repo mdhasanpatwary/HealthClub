@@ -63,20 +63,9 @@ export async function getPartnerDoctorsAction(): Promise<{
       orderBy: { createdAt: "desc" },
     });
 
-    if (data.length === 0) {
-      const fallbackList = initialDoctors.filter((doc) => doc.partnerId === partnerId);
-      if (fallbackList.length > 0) {
-        return { success: true, doctors: fallbackList };
-      }
-    }
-
     return { success: true, doctors: data.map(formatDoctor) };
   } catch (error) {
     logger.error("Error in getPartnerDoctorsAction:", error);
-    const fallbackList = initialDoctors.filter((doc) => doc.partnerId === partnerId);
-    if (fallbackList.length > 0) {
-      return { success: true, doctors: fallbackList };
-    }
     return { success: false, doctors: [], error: "ডাক্তারদের তালিকা লোড করতে সমস্যা হয়েছে।" };
   }
 }
@@ -104,16 +93,6 @@ export async function getAvailableDoctorsToLinkAction(
   const safeLimit = Math.max(1, Math.min(limit, 100));
   const skip = (safePage - 1) * safeLimit;
   const trimmed = search?.trim();
-  const q = trimmed?.toLowerCase();
-
-  const filterFallback = () => initialDoctors.filter((doc) => {
-    if (!doc.isActive || doc.partnerId === partnerId) return false;
-    if (!q) return true;
-    return doc.name.toLowerCase().includes(q) || doc.specialty.toLowerCase().includes(q) ||
-      doc.department.toLowerCase().includes(q) || doc.degrees.toLowerCase().includes(q) ||
-      (doc.designation && doc.designation.toLowerCase().includes(q)) ||
-      (doc.chamberName && doc.chamberName.toLowerCase().includes(q));
-  });
 
   try {
     const andConditions: Prisma.DoctorWhereInput[] = [
@@ -148,17 +127,6 @@ export async function getAvailableDoctorsToLinkAction(
       }),
     ]);
 
-    if (total === 0 && safePage === 1) {
-      const fallbackList = filterFallback();
-      const paginated = fallbackList.slice(skip, skip + safeLimit);
-      return {
-        success: true,
-        doctors: paginated,
-        hasMore: fallbackList.length > skip + safeLimit,
-        total: fallbackList.length,
-      };
-    }
-
     return {
       success: true,
       doctors: data.map(formatDoctor),
@@ -167,13 +135,12 @@ export async function getAvailableDoctorsToLinkAction(
     };
   } catch (error) {
     logger.error("Error in getAvailableDoctorsToLinkAction:", error);
-    const fallbackList = filterFallback();
-    const paginated = fallbackList.slice(skip, skip + safeLimit);
     return {
-      success: true,
-      doctors: paginated,
-      hasMore: fallbackList.length > skip + safeLimit,
-      total: fallbackList.length,
+      success: false,
+      doctors: [],
+      hasMore: false,
+      total: 0,
+      error: "উপলব্ধ ডাক্তার লোড করতে সমস্যা হয়েছে।",
     };
   }
 }
@@ -287,11 +254,16 @@ export async function unlinkDoctorFromPartnerAction(
       return { success: false, error: "এই ডাক্তার আপনার চেম্বারের অন্তর্ভুক্ত নয়।" };
     }
 
+    const initDoc = initialDoctors.find((d) => d.id === doctorId);
+
     await prisma.doctor.update({
       where: { id: doctorId },
       data: {
         partnerId: null,
         roomNo: null,
+        chamberName: initDoc?.chamberName || "",
+        chamberAddress: initDoc?.chamberAddress || "",
+        ...(initDoc?.upazila ? { upazila: initDoc.upazila } : {}),
       },
     });
 
@@ -453,14 +425,17 @@ export async function deletePartnerDoctorAction(
       return { success: false, error: "এই ডাক্তার আপনার চেম্বারের অন্তর্ভুক্ত নয়।" };
     }
 
-    const isCentralDoctor = initialDoctors.some((d) => d.id === doctorId);
+    const initDoc = initialDoctors.find((d) => d.id === doctorId);
 
-    if (isCentralDoctor) {
+    if (initDoc) {
       await prisma.doctor.update({
         where: { id: doctorId },
         data: {
           partnerId: null,
           roomNo: null,
+          chamberName: initDoc.chamberName || "",
+          chamberAddress: initDoc.chamberAddress || "",
+          ...(initDoc.upazila ? { upazila: initDoc.upazila } : {}),
         },
       });
     } else {

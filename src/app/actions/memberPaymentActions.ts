@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/generated/client/client";
 import { getSessionUser, setSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { telemetry } from "@/lib/telemetry";
@@ -19,6 +20,16 @@ export async function getMemberForPaymentAction(memberId: string): Promise<{
   try {
     const cleanId = memberId.trim();
     if (!cleanId) return null;
+
+    // Verify session: only admin or the authenticated member themselves can view payment info
+    const session = await getSessionUser();
+    const isAuthorized =
+      session && (session.role === "admin" || session.userId === cleanId);
+
+    if (!isAuthorized) {
+      return null;
+    }
+
     const m = await prisma.member.findUnique({
       where: { id: cleanId },
       select: {
@@ -74,6 +85,25 @@ export async function submitBkashPaymentAction(
       return false;
     }
 
+    // Verify session: only admin or the authenticated member themselves can submit payment
+    const session = await getSessionUser();
+    const isAuthorized =
+      session && (session.role === "admin" || session.userId === cleanId);
+
+    if (!isAuthorized) {
+      telemetry.captureEvent(
+        "payment_submission_unauthorized",
+        {
+          targetMemberId: cleanId,
+          callerSessionUserId: session?.userId || "unauthenticated",
+          callerRole: session?.role || "none",
+        },
+        "warn",
+        { userId: cleanId, route: "submitBkashPaymentAction" }
+      );
+      return false;
+    }
+
     const member = await prisma.member.findUnique({
       where: { id: cleanId },
     });
@@ -104,16 +134,6 @@ export async function submitBkashPaymentAction(
       );
     }
 
-    // Verify permission: session match or pending/inactive member completing payment
-    const session = await getSessionUser();
-    const isAuthorized =
-      session?.role === "admin" ||
-      session?.userId === cleanId ||
-      member.status === "inactive" ||
-      member.status === "pending_approval";
-
-    if (!isAuthorized) return false;
-
     await prisma.member.update({
       where: { id: cleanId },
       data: {
@@ -125,8 +145,11 @@ export async function submitBkashPaymentAction(
 
     updateTag("admin-stats");
 
-    // Set session user so user stays logged in
-    await setSessionUser(cleanId, "user");
+    // Maintain member session only if the caller is the member themselves
+    // Never overwrite an admin session, and never issue a session to an unauthenticated caller
+    if (session.userId === cleanId && session.role === "user") {
+      await setSessionUser(cleanId, "user");
+    }
 
     return true;
   } catch (error: unknown) {
@@ -183,8 +206,7 @@ export async function requestRenewalAction(
       );
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const updateData: any = {
+    const updateData: Prisma.MemberUpdateInput = {
       renewalStatus: "pending",
       renewalBkashSender: cleanSender,
       renewalBkashTxnId: cleanTxnId,

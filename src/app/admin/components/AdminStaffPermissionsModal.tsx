@@ -114,6 +114,12 @@ export function AdminStaffPermissionsModal({
           support: false,
         },
         {
+          name: isBn ? "হাসপাতাল রিভিউ ও রেটিং মডারেশন" : "Partner Reviews & Rating Moderation",
+          superAdmin: true,
+          moderator: true,
+          support: true,
+        },
+        {
           name: isBn ? "জরুরি সেবা (রক্তদাতা, অ্যাম্বুলেন্স, হটলাইন)" : "Emergency Network Management",
           superAdmin: true,
           moderator: true,

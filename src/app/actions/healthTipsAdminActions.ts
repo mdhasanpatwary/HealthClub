@@ -3,18 +3,72 @@
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
-import { unstable_cache, updateTag } from "next/cache";
+import { unstable_cache, updateTag, revalidatePath } from "next/cache";
 import { HealthTipArticle, HEALTH_TIPS_ARTICLES } from "@/data/healthTipsData";
 import { PaginatedResult } from "@/types/pagination";
 import { hasAdminPermission } from "@/lib/permissions";
 
 const HEALTH_TIPS_TAG = "health-tips-data";
+const ARTICLES_SETTING_KEY = "health_tips_articles";
+const DELETED_SLUGS_SETTING_KEY = "health_tips_deleted_slugs";
 
 async function verifyAdmin(): Promise<boolean> {
   const session = await getSessionUser();
   if (!session || session.role !== "admin") return false;
   const role = session.adminRole || "super_admin";
   return hasAdminPermission(role, "manage_health_tips");
+}
+
+async function getDeletedSlugs(): Promise<string[]> {
+  try {
+    const setting = await prisma.systemSetting.findUnique({
+      where: { key: DELETED_SLUGS_SETTING_KEY },
+    });
+    if (!setting?.value) return [];
+    const parsed = JSON.parse(setting.value);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (err) {
+    logger.error("Failed to parse health tips deleted slugs:", err);
+    return [];
+  }
+}
+
+async function markSlugAsDeleted(slug: string): Promise<void> {
+  try {
+    const current = await getDeletedSlugs();
+    if (!current.includes(slug)) {
+      const updated = [...current, slug];
+      await prisma.systemSetting.upsert({
+        where: { key: DELETED_SLUGS_SETTING_KEY },
+        create: {
+          key: DELETED_SLUGS_SETTING_KEY,
+          value: JSON.stringify(updated),
+        },
+        update: { value: JSON.stringify(updated) },
+      });
+    }
+  } catch (err) {
+    logger.error(`Failed to mark slug as deleted: ${slug}`, err);
+  }
+}
+
+async function unmarkSlugAsDeleted(slug: string): Promise<void> {
+  try {
+    const current = await getDeletedSlugs();
+    if (current.includes(slug)) {
+      const updated = current.filter((s) => s !== slug);
+      await prisma.systemSetting.upsert({
+        where: { key: DELETED_SLUGS_SETTING_KEY },
+        create: {
+          key: DELETED_SLUGS_SETTING_KEY,
+          value: JSON.stringify(updated),
+        },
+        update: { value: JSON.stringify(updated) },
+      });
+    }
+  } catch (err) {
+    logger.error(`Failed to unmark slug as deleted: ${slug}`, err);
+  }
 }
 
 export interface GetPaginatedHealthTipsAdminParams {
@@ -77,7 +131,7 @@ export async function getPaginatedHealthTipsAdminAction(
 
 
 /**
- * Fetch all health tips articles (database + base articles merged).
+ * Fetch all health tips articles from system_settings.
  * Cached via Next.js ISR tags.
  */
 export const getAllHealthTipsAction = unstable_cache(
@@ -88,51 +142,34 @@ export const getAllHealthTipsAction = unstable_cache(
       }
 
       const setting = await prisma.systemSetting.findUnique({
-        where: { key: "health_tips_articles" },
+        where: { key: ARTICLES_SETTING_KEY },
       });
 
       if (!setting?.value) {
+        const deletedSlugs = await getDeletedSlugs();
+        const initialArticles = deletedSlugs.length > 0
+          ? HEALTH_TIPS_ARTICLES.filter((a) => !deletedSlugs.includes(a.slug))
+          : HEALTH_TIPS_ARTICLES;
+
         await prisma.systemSetting
           .upsert({
-            where: { key: "health_tips_articles" },
+            where: { key: ARTICLES_SETTING_KEY },
             create: {
-              key: "health_tips_articles",
-              value: JSON.stringify(HEALTH_TIPS_ARTICLES),
+              key: ARTICLES_SETTING_KEY,
+              value: JSON.stringify(initialArticles),
             },
-            update: { value: JSON.stringify(HEALTH_TIPS_ARTICLES) },
+            update: { value: JSON.stringify(initialArticles) },
           })
           .catch(() => {});
-        return HEALTH_TIPS_ARTICLES;
+        return initialArticles;
       }
 
       const dbArticles = JSON.parse(setting.value);
-      if (!Array.isArray(dbArticles) || dbArticles.length === 0) {
-        return HEALTH_TIPS_ARTICLES;
+      if (Array.isArray(dbArticles)) {
+        return dbArticles;
       }
 
-      // Merge: prioritize DB edits for existing slugs, include new base articles, and retain custom admin articles
-      const dbMap = new Map(dbArticles.map((a: HealthTipArticle) => [a.slug, a]));
-      const merged: HealthTipArticle[] = HEALTH_TIPS_ARTICLES.map((base) => {
-        return dbMap.get(base.slug) || base;
-      });
-
-      for (const dbArt of dbArticles) {
-        if (!HEALTH_TIPS_ARTICLES.some((b) => b.slug === dbArt.slug)) {
-          merged.push(dbArt);
-        }
-      }
-
-      // Keep DB synchronized if new articles were added
-      if (merged.length !== dbArticles.length) {
-        await prisma.systemSetting
-          .update({
-            where: { key: "health_tips_articles" },
-            data: { value: JSON.stringify(merged) },
-          })
-          .catch(() => {});
-      }
-
-      return merged;
+      return HEALTH_TIPS_ARTICLES;
     } catch (err) {
       logger.error("Error in getAllHealthTipsAction:", err);
       return HEALTH_TIPS_ARTICLES;
@@ -170,16 +207,21 @@ export async function saveHealthTipAction(article: HealthTipArticle) {
     }
 
     await prisma.systemSetting.upsert({
-      where: { key: "health_tips_articles" },
+      where: { key: ARTICLES_SETTING_KEY },
       create: {
-        key: "health_tips_articles",
+        key: ARTICLES_SETTING_KEY,
         value: JSON.stringify(updatedList),
       },
       update: { value: JSON.stringify(updatedList) },
     });
 
+    // If re-creating or editing an article that was previously recorded as deleted, unmark it
+    await unmarkSlugAsDeleted(article.slug);
+
     updateTag(HEALTH_TIPS_TAG);
     updateTag("admin-stats");
+    revalidatePath("/health-tips");
+    revalidatePath(`/health-tips/${article.slug}`);
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -196,16 +238,21 @@ export async function deleteHealthTipAction(slug: string) {
     const updatedList = articles.filter((a) => a.slug !== slug);
 
     await prisma.systemSetting.upsert({
-      where: { key: "health_tips_articles" },
+      where: { key: ARTICLES_SETTING_KEY },
       create: {
-        key: "health_tips_articles",
+        key: ARTICLES_SETTING_KEY,
         value: JSON.stringify(updatedList),
       },
       update: { value: JSON.stringify(updatedList) },
     });
 
+    // Permanently record deleted slug so it won't be resurrected
+    await markSlugAsDeleted(slug);
+
     updateTag(HEALTH_TIPS_TAG);
     updateTag("admin-stats");
+    revalidatePath("/health-tips");
+    revalidatePath(`/health-tips/${slug}`);
     return { success: true };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
@@ -213,22 +260,58 @@ export async function deleteHealthTipAction(slug: string) {
 }
 
 /**
- * Sync / Reset database articles to include all 25 current health guides.
+ * Sync / Reset database articles to include all base health guides.
+ * Retains custom articles and skips explicitly deleted base articles unless resetDeleted is true.
  */
-export async function syncHealthTipsWithDatabaseAction() {
+export async function syncHealthTipsWithDatabaseAction(options?: { resetDeleted?: boolean }) {
   try {
-    const articles = await getAllHealthTipsAction();
+    if (!await verifyAdmin()) return { success: false, error: "অননুমোদিত অ্যাক্সেস।" };
+
+    let deletedSlugs: string[] = [];
+    if (!options?.resetDeleted) {
+      deletedSlugs = await getDeletedSlugs();
+    } else {
+      await prisma.systemSetting.upsert({
+        where: { key: DELETED_SLUGS_SETTING_KEY },
+        create: { key: DELETED_SLUGS_SETTING_KEY, value: "[]" },
+        update: { value: "[]" },
+      }).catch(() => {});
+    }
+
+    const currentArticles = await getAllHealthTipsAction();
+    const dbMap = new Map(currentArticles.map((a) => [a.slug, a]));
+
+    // Include base articles that have not been explicitly deleted
+    const updatedArticles: HealthTipArticle[] = [];
+    for (const base of HEALTH_TIPS_ARTICLES) {
+      if (!deletedSlugs.includes(base.slug)) {
+        updatedArticles.push(dbMap.get(base.slug) || base);
+      }
+    }
+
+    // Retain custom admin articles not in base
+    for (const current of currentArticles) {
+      if (
+        !HEALTH_TIPS_ARTICLES.some((b) => b.slug === current.slug) &&
+        !updatedArticles.some((u) => u.slug === current.slug)
+      ) {
+        updatedArticles.push(current);
+      }
+    }
+
     await prisma.systemSetting.upsert({
-      where: { key: "health_tips_articles" },
+      where: { key: ARTICLES_SETTING_KEY },
       create: {
-        key: "health_tips_articles",
-        value: JSON.stringify(articles),
+        key: ARTICLES_SETTING_KEY,
+        value: JSON.stringify(updatedArticles),
       },
-      update: { value: JSON.stringify(articles) },
+      update: { value: JSON.stringify(updatedArticles) },
     });
+
     updateTag(HEALTH_TIPS_TAG);
     updateTag("admin-stats");
-    return { success: true, count: articles.length };
+    revalidatePath("/health-tips");
+    return { success: true, count: updatedArticles.length };
   } catch (err: unknown) {
     return { success: false, error: (err as Error).message };
   }

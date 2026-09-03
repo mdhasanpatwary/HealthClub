@@ -176,7 +176,7 @@ export default async function EmergencyPage() {
       "@context": "https://schema.org",
       "@type": "ItemList",
       name: isEn ? "Ambulance Services in Feni" : "ফেনীর জরুরি অ্যাম্বুলেন্স সেবা",
-      itemListElement: ambulances.map((amb, index) => ({
+      itemListElement: approvedAmbulances.map((amb, index) => ({
         "@type": "ListItem",
         position: index + 1,
         item: {

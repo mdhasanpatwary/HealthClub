@@ -32,7 +32,14 @@ export async function requestPasswordResetAction(email: string): Promise<{ succe
       return { success: false, message: rateLimit.message };
     }
 
-    const member = await prisma.member.findFirst({ where: { email } });
+    const member = await prisma.member.findFirst({
+      where: {
+        email: {
+          equals: cleanEmail,
+          mode: "insensitive",
+        },
+      },
+    });
     if (!member) {
       return { success: true, message: "যদি এই ইমেইলটি আমাদের সিস্টেমে নিবন্ধিত থাকে, তবে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
     }
@@ -48,8 +55,8 @@ export async function requestPasswordResetAction(email: string): Promise<{ succe
 
     const sent = await sendPasswordResetEmail(member.email || "", otp, member.name);
     if (!sent) {
-      logger.error(`[PASSWORD RESET] Email send failed for ${email}`);
-      telemetry.captureEvent("otp_delivery_failed", { email, memberId: member.id, flow: "password_reset" }, "error", { userId: member.id, route: "requestPasswordResetAction", action: "password_reset_otp" });
+      logger.error(`[PASSWORD RESET] Email send failed for ${cleanEmail}`);
+      telemetry.captureEvent("otp_delivery_failed", { email: cleanEmail, memberId: member.id, flow: "password_reset" }, "error", { userId: member.id, route: "requestPasswordResetAction", action: "password_reset_otp" });
       return { success: false, message: "পাসওয়ার্ড রিসেট ওটিপি পাঠাতে সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।" };
     }
 
@@ -82,7 +89,14 @@ export async function resetPasswordAction(
       return { success: false, message: rateLimit.message };
     }
 
-    const member = await prisma.member.findFirst({ where: { email } });
+    const member = await prisma.member.findFirst({
+      where: {
+        email: {
+          equals: cleanEmail,
+          mode: "insensitive",
+        },
+      },
+    });
     if (!member) {
       return { success: false, message: "মেম্বার অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।" };
     }

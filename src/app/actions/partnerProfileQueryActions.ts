@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { Doctor, initialDoctors, initialPartners, Partner } from "@/services/db";
+import { Doctor, initialPartners, Partner } from "@/services/db";
 import { logger } from "@/lib/logger";
 import { unstable_cache } from "next/cache";
 
@@ -80,7 +80,7 @@ export const getDoctorsByPartnerIdAction = unstable_cache(
   async (partnerId: string): Promise<Doctor[]> => {
     try {
       if (!prisma?.doctor) {
-        return initialDoctors.filter((d) => d.partnerId === partnerId && d.isActive !== false);
+        return [];
       }
 
       const data = await prisma.doctor.findMany({
@@ -110,10 +110,6 @@ export const getDoctorsByPartnerIdAction = unstable_cache(
         },
       });
 
-      if (data.length === 0) {
-        return initialDoctors.filter((d) => d.partnerId === partnerId && d.isActive !== false);
-      }
-
       return data.map((d) => ({
         id: d.id,
         name: d.name,
@@ -135,7 +131,7 @@ export const getDoctorsByPartnerIdAction = unstable_cache(
       }));
     } catch (error) {
       logger.error("Error in getDoctorsByPartnerIdAction:", error);
-      return initialDoctors.filter((d) => d.partnerId === partnerId && d.isActive !== false);
+      return [];
     }
   },
   ["doctors-by-partner"],

@@ -17,8 +17,8 @@ import { Partner, Review, PartnerReviewStats } from "@/services/db";
 import {
   getPartnerReviewsAction,
   canMemberReviewPartnerAction,
-  ReviewEligibilityResult,
 } from "@/app/actions/reviewActions";
+import type { ReviewEligibilityResult } from "@/app/actions/reviewHelpers";
 import { ReviewCard } from "./ReviewCard";
 import { ReviewFormModal } from "./ReviewFormModal";
 import { ReviewEligibilityBanner } from "./ReviewEligibilityBanner";

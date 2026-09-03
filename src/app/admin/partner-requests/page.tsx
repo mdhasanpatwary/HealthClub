@@ -20,6 +20,7 @@ export default function AdminPartnerRequestsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [processingId, setProcessingId] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
     try {
@@ -51,6 +52,8 @@ export default function AdminPartnerRequestsPage() {
 
 
   const handleApprove = async (id: string) => {
+    if (processingId) return;
+    setProcessingId(id);
     try {
       const success = await updatePartnerRequestStatusAction(id, "approved");
       if (success) {
@@ -58,15 +61,19 @@ export default function AdminPartnerRequestsPage() {
         await loadData();
         window.dispatchEvent(new Event("admin-data-change"));
       } else {
-        toast.error("আবেদন অনুমোদন করতে সমস্যা হয়েছে।");
+        toast.error("আবেদনটি ইতিমধ্যে প্রক্রিয়া করা হয়েছে অথবা অনুমোদন করা সম্ভব হয়নি।");
       }
     } catch {
       toast.error("সার্ভার ত্রুটি।");
+    } finally {
+      setProcessingId(null);
     }
   };
 
   const handleReject = async (id: string) => {
+    if (processingId) return;
     if (confirm("আপনি কি নিশ্চিতভাবে এই আবেদনটি বাতিল করতে চান?")) {
+      setProcessingId(id);
       try {
         const success = await updatePartnerRequestStatusAction(id, "rejected");
         if (success) {
@@ -74,10 +81,12 @@ export default function AdminPartnerRequestsPage() {
           await loadData();
           window.dispatchEvent(new Event("admin-data-change"));
         } else {
-          toast.error("আবেদন বাতিল করতে সমস্যা হয়েছে।");
+          toast.error("আবেদনটি ইতিমধ্যে প্রক্রিয়া করা হয়েছে অথবা বাতিল করা সম্ভব হয়নি।");
         }
       } catch {
         toast.error("সার্ভার ত্রুটি।");
+      } finally {
+        setProcessingId(null);
       }
     }
   };
@@ -125,6 +134,7 @@ export default function AdminPartnerRequestsPage() {
         locale={locale}
         t={t}
         loading={loading}
+        processingId={processingId}
       />
     </div>
   );

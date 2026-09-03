@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { getPwaStatsAction, PwaStatsData } from "@/app/actions/pwaActions";
+import { getPwaStatsAction } from "@/app/actions/pwaActions";
+import type { PwaStatsData } from "@/app/actions/pwaActions";
 import { toast } from "sonner";
 
 const DEFAULT_PWA_STATS: PwaStatsData = {

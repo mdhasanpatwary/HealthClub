@@ -17,7 +17,8 @@ export type AdminPermissionKey =
   | "send_broadcast"
   | "manage_notifications"
   | "manage_messages"
-  | "view_pwa";
+  | "view_pwa"
+  | "manage_reviews";
 
 export interface RoleConfig {
   role: AdminRole;
@@ -47,6 +48,7 @@ export const ROLE_CONFIGS: Record<AdminRole, RoleConfig> = {
       "/admin/doctors",
       "/admin/partners",
       "/admin/partner-requests",
+      "/admin/reviews",
       "/admin/emergency",
       "/admin/health-tips",
       "/admin/broadcast",
@@ -76,19 +78,21 @@ export const ROLE_CONFIGS: Record<AdminRole, RoleConfig> = {
       "manage_notifications",
       "manage_messages",
       "view_pwa",
+      "manage_reviews",
     ],
   },
   content_moderator: {
     role: "content_moderator",
     titleBn: "কন্টেন্ট মডারেটর",
     titleEn: "Content Moderator",
-    descriptionBn: "ডাক্তার, স্বাস্থ্য টিপস, জরুরি সেবা ও ব্রডকাস্ট ক্যাম্পেইন পরিচালনা",
-    descriptionEn: "Manage doctors, health tips, emergency services & broadcast campaigns",
+    descriptionBn: "ডাক্তার, স্বাস্থ্য টিপস, রিভিউ মডারেশন, জরুরি সেবা ও ব্রডকাস্ট ক্যাম্পেইন পরিচালনা",
+    descriptionEn: "Manage doctors, health tips, review moderation, emergency services & broadcast campaigns",
     badgeClass: "bg-blue-500/15 text-blue-700 dark:text-blue-300 border-blue-500/30",
     allowedRoutes: [
       "/admin",
       "/admin/doctors",
       "/admin/health-tips",
+      "/admin/reviews",
       "/admin/emergency",
       "/admin/broadcast",
       "/admin/notifications",
@@ -98,6 +102,7 @@ export const ROLE_CONFIGS: Record<AdminRole, RoleConfig> = {
       "manage_doctors",
       "manage_health_tips",
       "manage_emergency",
+      "manage_reviews",
       "send_broadcast",
       "manage_notifications",
       "manage_messages",
@@ -117,6 +122,7 @@ export const ROLE_CONFIGS: Record<AdminRole, RoleConfig> = {
       "/admin/transactions",
       "/admin/partners",
       "/admin/partner-requests",
+      "/admin/reviews",
       "/admin/notifications",
       "/admin/messages",
     ],
@@ -126,6 +132,7 @@ export const ROLE_CONFIGS: Record<AdminRole, RoleConfig> = {
       "view_transactions",
       "manage_partners",
       "manage_partner_requests",
+      "manage_reviews",
       "manage_notifications",
       "manage_messages",
     ],

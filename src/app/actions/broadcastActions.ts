@@ -6,7 +6,7 @@ import { logger } from "@/lib/logger";
 import { revalidatePath } from "next/cache";
 import { sendBroadcastEmail, sendBulkBroadcastEmails } from "@/lib/mail";
 import { sendSms, sendBulkSms } from "@/lib/sms";
-import { INITIAL_BLOOD_DONORS, BloodDonor } from "@/data/emergencyData";
+import { BloodDonor } from "@/data/emergencyData";
 import { hasAdminPermission } from "@/lib/permissions";
 
 export type BroadcastAudienceType =
@@ -74,25 +74,24 @@ async function verifyAdmin(): Promise<boolean> {
 async function getBloodDonorsList(): Promise<BloodDonor[]> {
   try {
     const rows = await prisma.bloodDonor.findMany({
+      where: { status: "approved" },
       orderBy: { createdAt: "desc" },
     });
-    if (rows.length > 0) {
-      return rows.map((r) => ({
-        id: r.id,
-        name: r.name,
-        bloodGroup: r.bloodGroup as BloodDonor["bloodGroup"],
-        upazila: r.upazila,
-        phone: r.phone,
-        lastDonated: r.lastDonated,
-        isAvailable: r.isAvailable,
-        status: r.status as BloodDonor["status"],
-        createdAt: r.createdAt.toISOString(),
-      }));
-    }
+    return rows.map((r) => ({
+      id: r.id,
+      name: r.name,
+      bloodGroup: r.bloodGroup as BloodDonor["bloodGroup"],
+      upazila: r.upazila,
+      phone: r.phone,
+      lastDonated: r.lastDonated,
+      isAvailable: r.isAvailable,
+      status: r.status as BloodDonor["status"],
+      createdAt: r.createdAt.toISOString(),
+    }));
   } catch (err) {
     logger.error("Error reading emergency donors for broadcast:", err);
+    return [];
   }
-  return INITIAL_BLOOD_DONORS;
 }
 
 /**

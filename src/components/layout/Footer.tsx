@@ -41,6 +41,7 @@ export default async function Footer({ locale = "bn" }: { locale?: string }) {
                 alt="Health Club Logo"
                 width={36}
                 height={36}
+                style={{ width: "auto", height: "auto" }}
                 className="h-8 w-8 sm:h-9 sm:w-9 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.3)] transition-transform duration-300 group-hover:scale-110 shrink-0"
               />
               <span className="font-heading text-xl font-bold tracking-tight text-white">
