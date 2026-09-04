@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Heart, ShieldCheck } from "lucide-react";
@@ -8,7 +8,11 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { verifyEmailOtpAction, resendVerificationCodeAction } from "@/app/actions/memberAuthActions";
+import {
+  verifyEmailOtpAction,
+  resendVerificationCodeAction,
+  getPendingRegistrationEmailAction,
+} from "@/app/actions/memberAuthActions";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toast } from "sonner";
 
@@ -16,11 +20,22 @@ function VerifyEmailForm() {
   const { t } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const email = searchParams.get("email") || "";
+  const urlEmail = searchParams.get("email") || "";
+  const [email, setEmail] = useState(urlEmail);
 
   const [code, setCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [awaitingApproval, setAwaitingApproval] = useState(false);
+
+  useEffect(() => {
+    if (!email) {
+      getPendingRegistrationEmailAction().then((pendingEmail) => {
+        if (pendingEmail) {
+          setEmail(pendingEmail);
+        }
+      });
+    }
+  }, [email]);
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,8 +48,17 @@ function VerifyEmailForm() {
     }
 
     try {
-      const res = await verifyEmailOtpAction(email, code);
+      const pendingPhoto = typeof window !== "undefined" ? sessionStorage.getItem("hc_pending_photo") || undefined : undefined;
+      const res = await verifyEmailOtpAction(email, code, pendingPhoto);
       if (res.success && res.member) {
+        if (typeof window !== "undefined") {
+          try {
+            sessionStorage.removeItem("hc_pending_photo");
+          } catch {
+            // ignore
+          }
+        }
+
         // Sync local storage session
         localStorage.setItem("hc_current_user", JSON.stringify(res.member));
         
@@ -146,7 +170,6 @@ function VerifyEmailForm() {
               type="button"
               disabled={isSubmitting}
               onClick={async () => {
-                if (!email) return;
                 try {
                   const res = await resendVerificationCodeAction(email);
                   if (res.success) {
@@ -158,9 +181,9 @@ function VerifyEmailForm() {
                   toast.error(t("auth.verifyEmail.resendError"));
                 }
               }}
-              className="text-primary hover:underline font-semibold bg-transparent border-0 cursor-pointer disabled:opacity-50"
+              className="text-primary hover:underline font-medium disabled:opacity-50 cursor-pointer inline-block"
             >
-              {t("auth.verifyEmail.resendCode")}
+              {t("auth.verifyEmail.resendButton")}
             </button>
           </div>
 

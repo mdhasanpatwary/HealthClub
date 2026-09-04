@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { resetPasswordAction } from "@/app/actions/memberAuthActions";
+import { resetPasswordAction } from "@/app/actions/memberPasswordResetActions";
 import { resetPartnerPasswordAction } from "@/app/actions/partnerActions";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toast } from "sonner";

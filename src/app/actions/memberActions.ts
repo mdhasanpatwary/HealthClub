@@ -69,23 +69,32 @@ export async function addMemberAction(
     }
   }
 
-  const existingPhone = await prisma.member.findUnique({
-    where: { phone: member.phone },
-  });
-  if (existingPhone) {
-    return { error: "এই মোবাইল নম্বরটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।" };
+  if (member.email && member.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+    return { error: "এই ইমেইল অ্যাড্রেসটি দিয়ে সাধারণ অ্যাকাউন্ট তৈরি করা যাবে না।" };
   }
 
-  if (member.email) {
-    if (member.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-      return { error: "এই ইমেইল অ্যাড্রেসটি দিয়ে সাধারণ অ্যাকাউন্ট তৈরি করা যাবে না।" };
-    }
-    const existingEmail = await prisma.member.findUnique({
-      where: { email: member.email },
+  try {
+    const existingMember = await prisma.member.findFirst({
+      where: {
+        OR: [
+          { phone: member.phone },
+          ...(member.email ? [{ email: member.email }] : []),
+        ],
+      },
+      select: { phone: true, email: true },
     });
-    if (existingEmail) {
-      return { error: "এই ইমেইল অ্যাড্রেসটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।" };
+
+    if (existingMember) {
+      if (existingMember.phone === member.phone) {
+        return { error: "এই মোবাইল নম্বরটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।" };
+      }
+      if (member.email && existingMember.email?.toLowerCase() === member.email.toLowerCase()) {
+        return { error: "এই ইমেইল অ্যাড্রেসটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে।" };
+      }
     }
+  } catch (error: unknown) {
+    logger.error("Error checking existing member in addMemberAction:", error);
+    return { error: "ডাটাবেজ সংযোগে সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।" };
   }
 
   const rawPassword = member.password || "123456";

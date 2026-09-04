@@ -17,6 +17,7 @@ export interface AdminCounts {
 
 export function useAdminCounts() {
   const pathname = usePathname();
+  const isAdmin = pathname.startsWith("/admin");
   const [counts, setCounts] = useState<AdminCounts>({
     doctorsCount: 0,
     pendingPartnerRequests: 0,
@@ -26,6 +27,11 @@ export function useAdminCounts() {
   });
 
   const fetchCounts = useCallback(async () => {
+    if (!isAdmin) {
+      setCounts((prev) => ({ ...prev, loading: false }));
+      return;
+    }
+
     try {
       const [doctorsRes, requestsRes, membersRes, messagesRes] = await Promise.all([
         getAllDoctorsAdminAction(),
@@ -47,9 +53,13 @@ export function useAdminCounts() {
     } catch {
       setCounts((prev) => ({ ...prev, loading: false }));
     }
-  }, []);
+  }, [isAdmin]);
 
   useEffect(() => {
+    if (!isAdmin) {
+      return;
+    }
+
     let isMounted = true;
     Promise.resolve().then(() => {
       if (isMounted) {
@@ -66,7 +76,7 @@ export function useAdminCounts() {
       isMounted = false;
       window.removeEventListener("admin-data-change", handleDataChange);
     };
-  }, [fetchCounts, pathname]);
+  }, [fetchCounts, isAdmin]);
 
   return { ...counts, refetchCounts: fetchCounts };
 }

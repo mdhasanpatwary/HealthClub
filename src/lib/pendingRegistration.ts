@@ -46,8 +46,15 @@ async function signPendingRegistrationToken(
   attempts = 0
 ): Promise<string> {
   const expiresAt = new Date(Date.now() + PENDING_REG_EXPIRY_SECONDS * 1000);
+
+  // Strip large profilePictureUrl (base64 data URLs) so JWT stays ~500 bytes, well under the 4096-byte browser cookie limit
+  const safeData = { ...data };
+  if (safeData.profilePictureUrl && (safeData.profilePictureUrl.startsWith("data:") || safeData.profilePictureUrl.length > 500)) {
+    delete safeData.profilePictureUrl;
+  }
+
   return new SignJWT({
-    ...data,
+    ...safeData,
     otpCode,
     attempts,
     expiresAt: expiresAt.toISOString(),
@@ -82,7 +89,7 @@ async function verifyPendingRegistrationToken(token: string): Promise<PendingReg
       expiresAt: payload.expiresAt as string,
     };
   } catch (err) {
-    logger.debug("[PENDING REG] Invalid or expired pending registration token:", err);
+    logger.warn("[PENDING REG] Invalid or expired pending registration token:", err);
     return null;
   }
 }
@@ -99,6 +106,7 @@ export async function setPendingRegistration(data: PendingRegistrationData, otpC
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
+    maxAge: PENDING_REG_EXPIRY_SECONDS,
     expires,
     path: "/",
   });
@@ -144,6 +152,7 @@ export async function updatePendingRegistrationAttempts(
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
+    maxAge: PENDING_REG_EXPIRY_SECONDS,
     expires,
     path: "/",
   });
@@ -179,6 +188,7 @@ export async function updatePendingRegistrationOtp(
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
+    maxAge: PENDING_REG_EXPIRY_SECONDS,
     expires,
     path: "/",
   });

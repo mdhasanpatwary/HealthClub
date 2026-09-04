@@ -16,9 +16,11 @@ const connectionString = process.env.DATABASE_URL || process.env.DIRECT_URL;
 if (!globalForPrisma.pool) {
   globalForPrisma.pool = new pg.Pool({
     connectionString,
-    max: 5,               // pgbouncer manages its own pool; over-provisioning causes "too many clients"
-    idleTimeoutMillis: 10_000,   // recycle idle connections quickly
-    connectionTimeoutMillis: 10_000,
+    max: 15,                     // Sufficient pool capacity for concurrent server actions
+    idleTimeoutMillis: 30_000,   // Keep healthy connections warm; recycle after 30s
+    connectionTimeoutMillis: 30_000, // 30s connection timeout to handle WAN latency/cold starts
+    keepAlive: true,             // Send TCP keep-alive packets to prevent Supabase/AWS dropping idle connections
+    keepAliveInitialDelayMillis: 10_000,
     ssl: { rejectUnauthorized: false },
   });
 

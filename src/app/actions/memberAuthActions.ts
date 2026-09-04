@@ -249,7 +249,8 @@ export const logoutMemberAction = logoutUserAction;
 
 export async function verifyEmailOtpAction(
   email: string,
-  code: string
+  code: string,
+  profilePictureUrl?: string
 ): Promise<{ success: boolean; member?: Member; message?: string; requiresPayment?: boolean }> {
   try {
     const ip = await getClientIp();
@@ -257,7 +258,7 @@ export async function verifyEmailOtpAction(
     const cleanCode = code?.trim() || "";
 
     const rateLimit = checkRateLimit(
-      `verify_otp:${ip}:${cleanEmail}`,
+      `verify_otp:${ip}:${cleanEmail || "pending"}`,
       RATE_LIMIT_RULES.OTP_VERIFY_PER_IP_ACCOUNT.limit,
       RATE_LIMIT_RULES.OTP_VERIFY_PER_IP_ACCOUNT.windowMs
     );
@@ -267,14 +268,15 @@ export async function verifyEmailOtpAction(
 
     // 1. Primary Flow: Check active pending registration from HttpOnly cookie
     const pending = await getPendingRegistration();
-    if (pending && pending.email.toLowerCase() === cleanEmail) {
+    const isEmailMatching = !cleanEmail || pending?.email.toLowerCase().trim() === cleanEmail;
+    if (pending && isEmailMatching) {
       if (pending.attempts >= MAX_OTP_ATTEMPTS) {
-        telemetry.captureEvent("otp_verification_failed", { email: cleanEmail, attempts: pending.attempts, reason: "max_attempts_exceeded" }, "warn", { route: "verifyEmailOtpAction" });
+        telemetry.captureEvent("otp_verification_failed", { email: pending.email, attempts: pending.attempts, reason: "max_attempts_exceeded" }, "warn", { route: "verifyEmailOtpAction" });
         return { success: false, message: "অনেকবার ভুল কোড দেওয়া হয়েছে। অনুগ্রহ করে নতুন কোড পাঠান।" };
       }
 
       if (Date.now() > new Date(pending.expiresAt).getTime()) {
-        telemetry.captureEvent("otp_verification_failed", { email: cleanEmail, reason: "otp_expired" }, "warn", { route: "verifyEmailOtpAction" });
+        telemetry.captureEvent("otp_verification_failed", { email: pending.email, reason: "otp_expired" }, "warn", { route: "verifyEmailOtpAction" });
         return { success: false, message: "ওটিপি কোডের মেয়াদ শেষ হয়ে গেছে। অনুগ্রহ করে নতুন কোড পাঠান বা আবার রেজিস্ট্রেশন করুন।" };
       }
 
@@ -297,6 +299,7 @@ export async function verifyEmailOtpAction(
       expiry.setFullYear(joined.getFullYear() + 1);
 
       const nextStatus = pending.tier === "founding" ? "active" : "inactive";
+      const finalProfilePicture = profilePictureUrl || pending.profilePictureUrl || null;
 
       const createdMember = await prisma.member.create({
         data: {
@@ -314,7 +317,7 @@ export async function verifyEmailOtpAction(
           address: pending.address || null,
           birthDate: pending.birthDate ? new Date(pending.birthDate) : null,
           profession: pending.profession || null,
-          profilePictureUrl: pending.profilePictureUrl || null,
+          profilePictureUrl: finalProfilePicture,
           emailVerified: true,
           verificationCode: null,
           verificationCodeCreatedAt: null,
@@ -342,7 +345,11 @@ export async function verifyEmailOtpAction(
     }
 
     // 2. Fallback for legacy already-in-DB unverified members
-    const member = await prisma.member.findFirst({ where: { email } });
+    const fallbackEmail = cleanEmail || pending?.email || "";
+    if (!fallbackEmail) {
+      return { success: false, message: "ভেরিফিকেশন সেশন পাওয়া যায়নি বা মেয়াদ শেষ হয়ে গেছে। অনুগ্রহ করে আবার রেজিস্ট্রেশন করুন।" };
+    }
+    const member = await prisma.member.findFirst({ where: { email: fallbackEmail } });
     if (!member) {
       return { success: false, message: "ভেরিফিকেশন সেশন পাওয়া যায়নি বা মেয়াদ শেষ হয়ে গেছে। অনুগ্রহ করে আবার রেজিস্ট্রেশন করুন।" };
     }
@@ -431,7 +438,8 @@ export async function resendVerificationCodeAction(email: string): Promise<{ suc
 
     // 1. Primary: Check pending registration cookie
     const pending = await getPendingRegistration();
-    if (pending && pending.email.toLowerCase() === cleanEmail) {
+    const isEmailMatching = !cleanEmail || pending?.email.toLowerCase().trim() === cleanEmail;
+    if (pending && isEmailMatching) {
       const code = randomInt(100000, 1000000).toString();
       await updatePendingRegistrationOtp(pending, code);
       const sent = await sendOtpEmail(pending.email, code, pending.name);
@@ -444,7 +452,11 @@ export async function resendVerificationCodeAction(email: string): Promise<{ suc
     }
 
     // 2. Fallback for legacy DB member
-    const member = await prisma.member.findFirst({ where: { email } });
+    const fallbackEmail = cleanEmail || pending?.email || "";
+    if (!fallbackEmail) {
+      return { success: false, message: "ভেরিফিকেশন সেশন পাওয়া যায়নি বা মেয়াদ শেষ হয়ে গেছে। অনুগ্রহ করে আবার রেজিস্ট্রেশন করুন।" };
+    }
+    const member = await prisma.member.findFirst({ where: { email: fallbackEmail } });
     if (!member) {
       return { success: false, message: "ভেরিফিকেশন সেশন পাওয়া যায়নি বা মেয়াদ শেষ হয়ে গেছে। অনুগ্রহ করে আবার রেজিস্ট্রেশন করুন।" };
     }
@@ -473,15 +485,8 @@ export async function resendVerificationCodeAction(email: string): Promise<{ suc
   }
 }
 
-import {
-  requestPasswordResetAction as _requestPasswordResetAction,
-  resetPasswordAction as _resetPasswordAction,
-} from "./memberPasswordResetActions";
-
-export async function requestPasswordResetAction(...args: Parameters<typeof _requestPasswordResetAction>) {
-  return _requestPasswordResetAction(...args);
+export async function getPendingRegistrationEmailAction(): Promise<string | null> {
+  const pending = await getPendingRegistration();
+  return pending?.email || null;
 }
 
-export async function resetPasswordAction(...args: Parameters<typeof _resetPasswordAction>) {
-  return _resetPasswordAction(...args);
-}

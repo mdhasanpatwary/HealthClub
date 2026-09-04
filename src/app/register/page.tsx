@@ -53,6 +53,14 @@ function RegisterForm() {
 
   const onSubmit = async (data: MemberRegistrationInput) => {
     try {
+      if (data.profilePictureUrl && typeof window !== "undefined") {
+        try {
+          sessionStorage.setItem("hc_pending_photo", data.profilePictureUrl);
+        } catch {
+          // Ignore quota errors if storage is full
+        }
+      }
+
       const result = await addMemberAction(data);
 
       if ("error" in result) {
@@ -61,7 +69,7 @@ function RegisterForm() {
       }
 
       toast.success(t("auth.register.registerSuccess"));
-      router.push(`/register/verify-email?email=${encodeURIComponent(data.email)}`);
+      router.push(`/register/verify-email?email=${encodeURIComponent(data.email.trim())}`);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : t("auth.register.registerError");
       toast.error(errorMessage);
