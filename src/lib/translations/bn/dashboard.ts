@@ -159,8 +159,6 @@ export const dashboardBn = {
   "verifyMember.active": "সচল সদস্য (Active)",
   "verifyMember.expired": "মেম্বারশিপের মেয়াদ উত্তীর্ণ",
   "verifyMember.inactive": "মেম্বারশিপ সচল নয় / অনুমোদনের অপেক্ষায়",
-  "verifyMember.expiredNotice": "এই মেম্বারশিপ কার্ডটির মেয়াদ শেষ হয়ে গেছে। রিনিউ করুন।",
-  "verifyMember.pendingNotice": "মেম্বারশিপ অ্যাকাউন্টটি বর্তমানে পেন্ডিং বা অনুমোদনের অপেক্ষায় রয়েছে।",
   "verifyMember.status": "স্ট্যাটাস",
   "verifyMember.validity": "মেয়াদ তারিখ",
   "verifyMember.discountActiveNotice": "এই ভেরিফাইড কার্ডটি প্রদর্শন করে পার্টনার হাসপাতালে ডিসকাউন্ট উপভোগ করুন।",

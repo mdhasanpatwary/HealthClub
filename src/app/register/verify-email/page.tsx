@@ -183,7 +183,7 @@ function VerifyEmailForm() {
               }}
               className="text-primary hover:underline font-medium disabled:opacity-50 cursor-pointer inline-block"
             >
-              {t("auth.verifyEmail.resendButton")}
+              {t("auth.verifyEmail.resendCode")}
             </button>
           </div>
 

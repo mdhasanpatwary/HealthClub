@@ -1,10 +1,8 @@
 export const partnerHospitalsEn = {
   "partnerHospitals.page.applyAsAPartnerHospital": "Apply as a Partner Hospital",
   "partnerHospitals.page.doYouManageAHealthcare": "Do you manage a healthcare institution?",
-  "partnerHospitals.page.findYourNearestPartnerFacilities": "Explore verified private hospitals, diagnostic labs, pathology clinics, and model pharmacies in Feni. Enjoy 10% to 30% instant member discounts on medical tests, admissions, and medicines.",
   "partnerHospitals.page.joinOurHealthClubPartner": "Join our Health Club partner network to deliver your services to thousands of members and expand your customer base.",
   "partnerHospitals.page.partnerHospitalsDiagnostics": "Partner Hospitals & Diagnostic Centers in Feni",
-  "partnerHospitals.page.partnerNetwork": "Partner Network",
   "partnerHospitals.page.badge": "Feni Healthcare Network & Discounts",
   "partnerHospitals.page.heroTitle": "Partner Hospitals & Diagnostic Centers",
   "partnerHospitals.page.heroHighlight": "in Feni",

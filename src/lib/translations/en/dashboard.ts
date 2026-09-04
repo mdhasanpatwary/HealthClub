@@ -159,8 +159,6 @@ export const dashboardEn = {
   "verifyMember.active": "Active Member",
   "verifyMember.expired": "Membership Expired",
   "verifyMember.inactive": "Membership Inactive / Pending",
-  "verifyMember.expiredNotice": "This membership card has expired. Please renew.",
-  "verifyMember.pendingNotice": "This membership account is currently pending admin approval.",
   "verifyMember.status": "STATUS",
   "verifyMember.validity": "EXPIRY DATE",
   "verifyMember.discountActiveNotice": "Show this verified card at partner hospitals to claim discounts.",

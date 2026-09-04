@@ -103,17 +103,5 @@ export const consultantsBn = {
   "consultants.faq.a5": "ডাক্তার দেখানোর পর চিকিৎসকের পরামর্শ অনুযায়ী সকল প্রয়োজনীয় ডায়াগনস্টিক পরীক্ষা (যেমন: রক্ত পরীক্ষা, ডিজিটাল এক্স-রে, আল্ট্রাসনোগ্রাম, ইকো, এমআরআই, সিটি স্ক্যান)-এ হেলথ ক্লাব মেম্বাররা পার্টনার হাসপাতাল ও ল্যাবগুলোতে ১০% থেকে ৩০% পর্যন্ত তাৎক্ষণিক ডিসকাউন্ট পান।",
   "consultants.faq.q6": "চেম্বারে যাওয়ার পূর্বে কী প্রস্তুতি নেওয়া প্রয়োজন ও তথ্য কতটা নির্ভরযোগ্য?",
   "consultants.faq.a6": "আমাদের ডেডিকেটেড হেলথ টিম নিয়মিত হাসপাতাল ও চেম্বারগুলোর সাথে সরাসরি যোগাযোগ রেখে ডাক্তারদের সময়সূচি এবং সিরিয়াল নম্বর যাচাই করে। চেম্বারে যাওয়ার পূর্বে ফোনে সিরিয়াল নিশ্চিত করুন এবং রোগীর পূর্বের প্রেসক্রিপশন ও রিপোর্ট সাথে নিয়ে নির্ধারিত সময়ের ৩০ মিনিট পূর্বে উপস্থিত হোন।",
-  "consultants.profile.viewFullProfile": "পূর্ণাঙ্গ প্রোফাইল ও ম্যাপ দেখুন",
-  "consultants.profile.callSerial": "সিরিয়ালের জন্য কল করুন",
-  "consultants.profile.shareProfile": "প্রোফাইল শেয়ার করুন",
-  "consultants.profile.visitingSchedule": "চেম্বার ও সাক্ষাতের সময়সূচি",
-  "consultants.profile.consultationFee": "পরামর্শ ফি",
-  "consultants.profile.chamberLocation": "চেম্বারের অবস্থান",
-  "consultants.profile.aboutDoctor": "ডাক্তার সম্পর্কে",
-  "consultants.profile.qualification": "শিক্ষাগত যোগ্যতা ও ডিগ্রি",
-  "consultants.profile.workplace": "বর্তমান পদবি ও কর্মস্থল",
-  "consultants.profile.serialPhones": "সিরিয়াল নেওয়ার নম্বর",
-  "consultants.profile.notice": "বিশেষ বিজ্ঞপ্তি",
-  "consultants.profile.copyPhone": "নম্বর কপি করুন",
-  "consultants.profile.copied": "কপি হয়েছে!"
+  "consultants.profile.viewFullProfile": "পূর্ণাঙ্গ প্রোফাইল ও ম্যাপ দেখুন"
 } as const;

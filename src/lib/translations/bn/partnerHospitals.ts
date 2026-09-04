@@ -1,10 +1,8 @@
 export const partnerHospitalsBn = {
   "partnerHospitals.page.applyAsAPartnerHospital": "পার্টনার হাসপাতাল হিসেবে আবেদন করুন",
   "partnerHospitals.page.doYouManageAHealthcare": "আপনি কি একটি স্বাস্থ্যসেবা প্রতিষ্ঠান পরিচালনা করেন?",
-  "partnerHospitals.page.findYourNearestPartnerFacilities": "ফেনী সদর, মহিপাল ও সকল উপজেলার ভেরিফাইড বেসরকারি হাসপাতাল, ডায়াগনস্টিক সেন্টার, প্যাথলজি ল্যাব ও মডেল ফার্মেসির তালিকা। হেলথ ক্লাব মেম্বার কার্ডে পান ১০% থেকে ৩০% নিশ্চিত ছাড়।",
   "partnerHospitals.page.joinOurHealthClubPartner": "আমাদের হেলথ ক্লাব পার্টনার নেটওয়ার্কে যুক্ত হয়ে হাজার হাজার সদস্যদের কাছে আপনার সেবা পৌঁছে দিন এবং আপনার কাস্টমার বেস বৃদ্ধি করুন।",
   "partnerHospitals.page.partnerHospitalsDiagnostics": "পার্টনার হাসপাতাল ও ডায়াগনস্টিক সেন্টার তালিকা (ফেনী)",
-  "partnerHospitals.page.partnerNetwork": "অংশীদার নেটওয়ার্ক",
   "partnerHospitals.page.badge": "ফেনী হেলথকেয়ার নেটওয়ার্ক ও ডিসকাউন্ট",
   "partnerHospitals.page.heroTitle": "পার্টনার হাসপাতাল ও ডায়াগনস্টিক সেন্টার",
   "partnerHospitals.page.heroHighlight": "তালিকা (ফেনী)",
