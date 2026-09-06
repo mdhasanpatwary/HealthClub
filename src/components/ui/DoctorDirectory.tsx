@@ -5,7 +5,7 @@ import Link from "next/link";
 import {
   Search, PhoneCall, Calendar, Clock, MapPin, Building2,
   Stethoscope, HeartPulse, Brain, Bone, Baby, Sparkles, ShieldCheck,
-  UserRound, Apple, Eye, Info, X, CheckCircle2, ChevronDown, Smile, Activity
+  UserRound, Apple, Eye, Info, X, ChevronDown, Smile, Activity
 } from "lucide-react";
 import { Doctor } from "@/services/db";
 import { Input } from "@/components/ui/input";
@@ -323,15 +323,14 @@ export default function DoctorDirectory({
                       />
                     </Link>
                     <div className="space-y-0.5 sm:space-y-1 min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5 min-w-0">
+                      <div className="min-w-0">
                         <Link
                           href={`/consultants/${doc.id}`}
-                          className="font-heading font-bold text-sm sm:text-base text-secondary dark:text-white leading-snug line-clamp-1 hover:text-primary transition-colors"
+                          className="font-heading font-bold text-sm sm:text-base text-secondary dark:text-white leading-snug line-clamp-2 hover:text-primary transition-colors"
                           title={doc.name}
                         >
                           {doc.name}
                         </Link>
-                        <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
                       </div>
                       <p
                         className="text-[11px] sm:text-xs font-semibold text-primary leading-tight line-clamp-1"
@@ -358,8 +357,14 @@ export default function DoctorDirectory({
                           {doc.designation || "বিশেষজ্ঞ চিকিৎসক"}
                         </p>
                       </div>
-                      <div className="flex items-center justify-between gap-1.5">
+                      <div className="flex items-center justify-between gap-1.5 flex-wrap">
                         <DoctorAvailabilityBadge doctor={doc} locale={locale} size="sm" />
+                        {doc.partnerId && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                            <ShieldCheck className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
+                            <span>{isEn ? "Partner Chamber" : "পার্টনার চেম্বার"}</span>
+                          </span>
+                        )}
                       </div>
                     </div>
 

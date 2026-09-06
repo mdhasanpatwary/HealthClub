@@ -1,5 +1,4 @@
 import { verifyAdmin } from "@/lib/dal";
-import { AdminNav } from "../components/AdminNav";
 import { AdminStaffTab } from "../components/AdminStaffTab";
 import { Metadata } from "next";
 
@@ -14,7 +13,6 @@ export default async function AdminStaffPage() {
 
   return (
     <div className="space-y-6">
-      <AdminNav />
       <AdminStaffTab />
     </div>
   );

@@ -398,7 +398,7 @@ export default function DoctorProfileView({
                         className="h-12 w-12 rounded-xl shrink-0"
                       />
                       <div className="min-w-0 flex-1 space-y-0.5">
-                        <h4 className="font-heading font-bold text-xs text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                        <h4 className="font-heading font-bold text-xs text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
                           {relDoc.name}
                         </h4>
                         <p className="text-[11px] font-semibold text-primary line-clamp-1">

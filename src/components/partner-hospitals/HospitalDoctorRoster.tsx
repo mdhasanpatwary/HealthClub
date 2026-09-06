@@ -240,7 +240,7 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
                     href={`/consultants/${doc.id}`}
                     className="block group-hover:text-primary transition-colors"
                   >
-                    <h3 className="text-sm font-bold text-secondary dark:text-white truncate font-heading">
+                    <h3 className="text-sm font-bold text-secondary dark:text-white line-clamp-2 leading-snug font-heading">
                       {doc.name}
                     </h3>
                   </Link>

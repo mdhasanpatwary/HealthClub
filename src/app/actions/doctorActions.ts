@@ -8,6 +8,7 @@ import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag } from "next/cache";
 import { PaginatedResult } from "@/types/pagination";
 import { hasAdminPermission } from "@/lib/permissions";
+import { distributeDoctorsFairly } from "@/lib/doctorDistribution";
 
 const DOCTORS_TAG = "doctors";
 
@@ -140,7 +141,7 @@ export const getDoctorsAction = unstable_cache(
 
       const data = await prisma.doctor.findMany({
         where: { isActive: true },
-        orderBy: { createdAt: "asc" },
+        orderBy: { createdAt: "desc" },
         select: {
           id: true,
           name: true,
@@ -166,7 +167,8 @@ export const getDoctorsAction = unstable_cache(
         },
       });
 
-      return data.map(formatDoctor);
+      const formatted = data.map(formatDoctor);
+      return distributeDoctorsFairly(formatted);
     } catch (error) {
       logger.error("Error in getDoctorsAction:", error);
       return [];
