@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Stethoscope } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import PartnerDirectory from "@/components/ui/PartnerDirectory";
@@ -9,6 +9,7 @@ import { cookies } from "next/headers";
 import { Locale, tServer } from "@/lib/i18n";
 import type { Member } from "@/services/db";
 import JsonLd from "@/components/seo/JsonLd";
+import { getHomepageJsonLd } from "@/lib/seo/homepageSchema";
 import dynamic from "next/dynamic";
 import {
   SavingsCalculatorSkeleton,
@@ -32,6 +33,7 @@ const ContactForm = dynamic(() => import("@/components/landing/ContactForm"), {
 
 import { LandingHero } from "@/components/landing/LandingHero";
 import { LandingStats } from "@/components/landing/LandingStats";
+import { LandingQuickServices } from "@/components/landing/LandingQuickServices";
 import { LandingHowItWorks } from "@/components/landing/LandingHowItWorks";
 import { LandingBenefits } from "@/components/landing/LandingBenefits";
 import { LandingPricing } from "@/components/landing/LandingPricing";
@@ -48,8 +50,8 @@ export async function generateMetadata() {
     : "হেলথ ক্লাব - চিকিৎসা ব্যয়ে ৩০% পর্যন্ত ডিসকাউন্ট পান";
 
   const ogDescription = isEn
-    ? "Join Health Club to get digital discount card for hospitals, labs, and medicines."
-    : "নির্ধারিত হাসপাতাল ও ল্যাবে ডিসকাউন্ট পেতে আজই হেলথ ক্লাবের মেম্বারশিপ সংগ্রহ করুন।";
+    ? "Join Health Club to get digital discount cards for hospitals, labs, pharmacies, and 24/7 directory of doctors, blood donors, and ambulances in Feni."
+    : "নির্ধারিত হাসপাতাল ও ল্যাবে ডিসকাউন্ট কার্ড এবং ফেনীর বিশেষজ্ঞ ডাক্তার, রক্তদাতা ও অ্যাম্বুলেন্সের ২৪/৭ জরুরি তথ্য সেবা।";
 
   return {
     title: isEn
@@ -69,11 +71,18 @@ export async function generateMetadata() {
       "feni doctor",
       "feni doctors info",
       "feni doctor list",
+      "feni specialist doctor chamber",
+      "feni doctor appointment serial",
       "feni hospital list",
       "feni hospital",
       "feni ambulance service",
-      "feni ambulance",
+      "feni ambulance number",
+      "feni emergency ambulance 24/7",
+      "icu ambulance feni",
       "feni blood donor",
+      "feni blood donor contact number",
+      "feni blood bank directory",
+      "feni oxygen cylinder home delivery",
       "feni diagnostic center",
       "feni pharmacy",
       "feni medicine discount",
@@ -82,10 +91,17 @@ export async function generateMetadata() {
       "হেলথ ক্লাব ফেনী",
       "ফেনী ডাক্তার",
       "ফেনী ডাক্তারদের তথ্য",
+      "ফেনী বিশেষজ্ঞ ডাক্তার চেম্বার",
+      "ফেনী ডাক্তার সিরিয়াল নম্বর",
       "ফেনী হাসপাতাল তালিকা",
       "ফেনী হাসপাতাল",
       "ফেনী এ্যাম্বুলেন্স সার্ভিস",
+      "ফেনী জরুরি অ্যাম্বুলেন্স নম্বর",
+      "ফেনী আইসিইউ অ্যাম্বুলেন্স",
       "ফেনী রক্তদাতা",
+      "ফেনী ব্লাড ডোনার নম্বর",
+      "ফেনী অক্সিজেন সিলিন্ডার সেবা",
+      "ফেনী সদর হাসপাতাল জরুরি বিভাগ",
       "ফেনী ডায়াগনস্টিক সেন্টার",
       "ফেনী ফার্মেসি",
       "ফেনী ল্যাব টেস্ট",
@@ -113,6 +129,7 @@ export async function generateMetadata() {
 export default async function Home() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
+  const isEn = locale === "en";
   const t = (key: string) => tServer(locale, key);
 
   // Single cached query for all homepage stats & settings (60s cache)
@@ -121,7 +138,16 @@ export default async function Home() {
     getHomepagePartners(3),
     getCachedContactSettings(),
   ]);
-  const { memberCount, foundingCount, hospitalCount, diagnosticCount, pharmacyCount } = stats;
+  const {
+    memberCount,
+    foundingCount,
+    hospitalCount,
+    diagnosticCount,
+    pharmacyCount,
+    doctorCount,
+    bloodDonorCount,
+    ambulanceCount,
+  } = stats;
 
   const remainingSeats = Math.max(0, 100 - (foundingCount ?? memberCount));
 
@@ -139,65 +165,15 @@ export default async function Home() {
     address: locale === "en" ? "Mohipal, Feni" : "মহিপাল, ফেনী",
   };
 
-  // Structured FAQ JSON-LD for AEO / Answer Engine snippet optimization
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": t("faq.q1"),
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": t("faq.a1")
-        }
-      },
-      {
-        "@type": "Question",
-        "name": t("faq.q2"),
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": t("faq.a2")
-        }
-      },
-      {
-        "@type": "Question",
-        "name": t("faq.q3"),
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": t("faq.a3")
-        }
-      },
-      {
-        "@type": "Question",
-        "name": t("faq.q4"),
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": t("faq.a4")
-        }
-      },
-      {
-        "@type": "Question",
-        "name": t("faq.q5"),
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": t("faq.a5")
-        }
-      },
-      {
-        "@type": "Question",
-        "name": t("faq.q6"),
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": t("faq.a6")
-        }
-      }
-    ]
-  };
+  const homepageJsonLd = getHomepageJsonLd({
+    isEn,
+    t,
+    hotline: contactSettings?.hotline,
+  });
 
   return (
     <div className="flex flex-col min-h-screen">
-      <JsonLd data={faqJsonLd} />
+      <JsonLd data={homepageJsonLd} />
 
       {/* 1. HERO SECTION */}
       <LandingHero
@@ -211,6 +187,15 @@ export default async function Home() {
         hospitalCount={hospitalCount}
         diagnosticCount={diagnosticCount}
         pharmacyCount={pharmacyCount}
+        t={t}
+        locale={locale}
+      />
+
+      {/* 2.5 EMERGENCY & HEALTHCARE SERVICES HUB */}
+      <LandingQuickServices
+        doctorCount={doctorCount}
+        bloodDonorCount={bloodDonorCount}
+        ambulanceCount={ambulanceCount}
         t={t}
         locale={locale}
       />
@@ -250,40 +235,6 @@ export default async function Home() {
           </div>
 
           <PartnerDirectory partners={homepagePartners} limit={3} showFilters={false} />
-        </div>
-      </section>
-
-      {/* 6.5 DOCTORS & CONSULTANTS DIRECTORY SPOTLIGHT */}
-      <section className="py-8 sm:py-12 bg-gradient-to-r from-emerald-950/20 via-primary/5 to-slate-900/10 border-y border-border/60">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6 p-6 sm:p-8 rounded-3xl bg-card border border-primary/20 shadow-md">
-            <div className="space-y-2 text-center md:text-left">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
-                <Stethoscope className="h-3.5 w-3.5" />
-                <span>{locale === "en" ? "Doctor & Serial Helpline" : "ডাক্তার ও সিরিয়াল হেল্পলাইন"}</span>
-              </div>
-              <h3 className="font-heading text-xl sm:text-2xl font-bold text-secondary dark:text-white">
-                {locale === "en"
-                  ? "Looking for Specialist Doctors in Feni?"
-                  : "ফেনীর বিশেষজ্ঞ ডাক্তার ও চেম্বার শিডিউল খুঁজছেন?"}
-              </h3>
-              <p className="text-xs sm:text-sm text-muted-foreground max-w-xl">
-                {locale === "en"
-                  ? "Find qualified specialist doctors across all departments, check visiting hours at partner hospitals, and get direct appointment serial numbers."
-                  : "পার্টনার হাসপাতাল ও শীর্ষ ডায়াগনস্টিক সেন্টারের সকল বিভাগের বিশেষজ্ঞ চিকিৎসকদের তালিকা দেখুন ও সরাসরি সিরিয়াল বুক করুন।"}
-              </p>
-            </div>
-            <Link
-              href="/consultants"
-              className={cn(
-                buttonVariants({ size: "lg" }),
-                "bg-primary hover:bg-primary-dark text-white rounded-2xl shadow-sm px-6 font-semibold shrink-0"
-              )}
-            >
-              {locale === "en" ? "Browse Doctor Directory" : "ডাক্তারদের তালিকা দেখুন"}
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </div>
         </div>
       </section>
 

@@ -18,6 +18,9 @@ export const getHomepageStats = unstable_cache(
           hospital_count: bigint;
           diagnostic_count: bigint;
           pharmacy_count: bigint;
+          doctor_count: bigint;
+          blood_donor_count: bigint;
+          ambulance_count: bigint;
         }>
       >`
         SELECT
@@ -25,7 +28,10 @@ export const getHomepageStats = unstable_cache(
           (SELECT COUNT(*) FROM members WHERE tier = 'founding') AS founding_count,
           (SELECT COUNT(*) FROM partners WHERE category = 'hospital') AS hospital_count,
           (SELECT COUNT(*) FROM partners WHERE category = 'diagnostic') AS diagnostic_count,
-          (SELECT COUNT(*) FROM partners WHERE category = 'pharmacy') AS pharmacy_count
+          (SELECT COUNT(*) FROM partners WHERE category = 'pharmacy') AS pharmacy_count,
+          (SELECT COUNT(*) FROM doctors WHERE is_active = true) AS doctor_count,
+          (SELECT COUNT(*) FROM blood_donors WHERE status = 'approved') AS blood_donor_count,
+          (SELECT COUNT(*) FROM ambulance_services WHERE status = 'approved') AS ambulance_count
       `;
 
       const row = result[0];
@@ -35,6 +41,9 @@ export const getHomepageStats = unstable_cache(
         hospitalCount: Number(row?.hospital_count ?? 0),
         diagnosticCount: Number(row?.diagnostic_count ?? 0),
         pharmacyCount: Number(row?.pharmacy_count ?? 0),
+        doctorCount: Number(row?.doctor_count ?? 0),
+        bloodDonorCount: Number(row?.blood_donor_count ?? 0),
+        ambulanceCount: Number(row?.ambulance_count ?? 0),
       };
     } catch (error) {
       logger.error("Error fetching homepage stats:", error);
@@ -44,11 +53,14 @@ export const getHomepageStats = unstable_cache(
         hospitalCount: 0,
         diagnosticCount: 0,
         pharmacyCount: 0,
+        doctorCount: 0,
+        bloodDonorCount: 0,
+        ambulanceCount: 0,
       };
     }
   },
   ["homepage-stats"],
-  { revalidate: 60, tags: ["homepage-stats", "partners"] }
+  { revalidate: 60, tags: ["homepage-stats", "partners", "emergency-data", "doctors"] }
 );
 
 /**

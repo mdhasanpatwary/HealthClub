@@ -95,11 +95,24 @@ export async function generateMetadata() {
   };
 }
 
-export default async function EmergencyPage() {
-  const cookieStore = await cookies();
+export default async function EmergencyPage(props: {
+  searchParams?: Promise<{ tab?: string }>;
+}) {
+  const [cookieStore, resolvedParams] = await Promise.all([
+    cookies(),
+    props.searchParams,
+  ]);
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
   const t = (key: string) => tServer(locale, key);
+
+  const rawTab = resolvedParams?.tab;
+  const initialTab =
+    rawTab === "ambulances"
+      ? "ambulances"
+      : rawTab === "hotlines"
+      ? "hotlines"
+      : "donors";
 
   const [{ bloodDonors, ambulances, hotlines }, contactSettings] = await Promise.all([
     getEmergencyDataAction(),
@@ -367,6 +380,7 @@ export default async function EmergencyPage() {
             initialBloodDonors={approvedDonors}
             initialAmbulances={approvedAmbulances}
             initialHotlines={hotlines}
+            initialTab={initialTab}
           />
         </section>
 

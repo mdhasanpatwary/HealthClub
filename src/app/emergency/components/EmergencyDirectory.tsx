@@ -37,17 +37,19 @@ interface EmergencyDirectoryProps {
   initialBloodDonors?: BloodDonor[];
   initialAmbulances?: AmbulanceService[];
   initialHotlines?: EmergencyHotline[];
+  initialTab?: "donors" | "ambulances" | "hotlines";
 }
 
 export function EmergencyDirectory({
   initialBloodDonors = [],
   initialAmbulances = [],
   initialHotlines = [],
+  initialTab = "donors",
 }: EmergencyDirectoryProps) {
   const { locale } = useLanguage();
   const isEn = locale === "en";
 
-  const [activeTab, setActiveTab] = useState<"donors" | "ambulances" | "hotlines">("donors");
+  const [activeTab, setActiveTab] = useState<"donors" | "ambulances" | "hotlines">(initialTab);
   const [selectedGroup, setSelectedGroup] = useState<string>("all");
   const [selectedUpazila, setSelectedUpazila] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
