@@ -8,8 +8,6 @@ import {
   Siren,
   ShieldCheck,
   CheckCircle2,
-  MapPin,
-  Info,
 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -239,73 +237,6 @@ export function LandingQuickServices({
           })}
         </div>
 
-        {/* Generative Engine Optimization (GEO) & AEO Fact-Dense Coverage Sheet */}
-        <div
-          itemScope
-          itemType="https://schema.org/Dataset"
-          className="rounded-3xl border border-border/80 bg-card p-5 sm:p-7 space-y-4 shadow-2xs"
-        >
-          <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-secondary dark:text-white">
-            <div className="h-7 w-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
-              <Info className="h-4 w-4" />
-            </div>
-            <h3 itemProp="name" className="font-heading">
-              {t("servicesHub.geo.title")}
-            </h3>
-          </div>
-
-          <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 text-xs">
-            <div className="p-3 rounded-2xl bg-muted/40 border border-border/60 space-y-1">
-              <dt className="font-bold text-foreground flex items-center gap-1.5">
-                <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
-                <span>{t("servicesHub.geo.coverageLabel")}</span>
-              </dt>
-              <dd className="text-muted-foreground leading-relaxed">
-                {t("servicesHub.geo.coverageValue")}
-              </dd>
-            </div>
-
-            <div className="p-3 rounded-2xl bg-muted/40 border border-border/60 space-y-1">
-              <dt className="font-bold text-foreground flex items-center gap-1.5">
-                <Heart className="h-3.5 w-3.5 text-rose-500 shrink-0" />
-                <span>{t("servicesHub.geo.bloodLabel")}</span>
-              </dt>
-              <dd className="text-muted-foreground leading-relaxed">
-                {t("servicesHub.geo.bloodValue")}
-              </dd>
-            </div>
-
-            <div className="p-3 rounded-2xl bg-muted/40 border border-border/60 space-y-1">
-              <dt className="font-bold text-foreground flex items-center gap-1.5">
-                <Truck className="h-3.5 w-3.5 text-sky-500 shrink-0" />
-                <span>{t("servicesHub.geo.ambulanceLabel")}</span>
-              </dt>
-              <dd className="text-muted-foreground leading-relaxed">
-                {t("servicesHub.geo.ambulanceValue")}
-              </dd>
-            </div>
-
-            <div className="p-3 rounded-2xl bg-muted/40 border border-border/60 space-y-1">
-              <dt className="font-bold text-foreground flex items-center gap-1.5">
-                <PhoneCall className="h-3.5 w-3.5 text-amber-500 shrink-0" />
-                <span>{t("servicesHub.geo.hotlineLabel")}</span>
-              </dt>
-              <dd className="text-muted-foreground leading-relaxed">
-                {t("servicesHub.geo.hotlineValue")}
-              </dd>
-            </div>
-
-            <div className="p-3 rounded-2xl bg-muted/40 border border-border/60 space-y-1 sm:col-span-2 lg:col-span-2">
-              <dt className="font-bold text-foreground flex items-center gap-1.5">
-                <ShieldCheck className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
-                <span>{t("servicesHub.geo.costLabel")}</span>
-              </dt>
-              <dd className="text-muted-foreground leading-relaxed">
-                {t("servicesHub.geo.costValue")}
-              </dd>
-            </div>
-          </dl>
-        </div>
 
         {/* Public Service Guarantee Strip */}
         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 pt-1 text-xs sm:text-sm text-muted-foreground">
