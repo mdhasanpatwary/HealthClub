@@ -12,6 +12,7 @@ import { formatNum } from "@/lib/i18n";
 import { PartnerCardSkeleton } from "@/components/ui/skeleton";
 import { FENI_UPAZILAS, detectUpazilaFromText } from "@/data/feniLocations";
 import PartnerCard from "@/components/ui/PartnerCard";
+import { toast } from "sonner";
 
 interface PartnerDirectoryProps {
   partners?: Partner[];
@@ -52,17 +53,23 @@ export default function PartnerDirectory({
       return;
     }
     let isMounted = true;
-    getPartnersAction().then((data) => {
-      if (!isMounted) return;
-      if (data && data.length > 0) {
-        setPartners(data);
-      }
-      setLoading(false);
-    });
+    getPartnersAction()
+      .then((data) => {
+        if (!isMounted) return;
+        if (data && data.length > 0) {
+          setPartners(data);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        if (!isMounted) return;
+        setLoading(false);
+        toast.error(t("ui.partnerdirectory.loadError"));
+      });
     return () => {
       isMounted = false;
     };
-  }, [initialPartners]);
+  }, [initialPartners, t]);
 
   // Precompute upazila for each partner
   const partnersWithUpazila = useMemo(() => {

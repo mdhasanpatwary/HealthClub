@@ -61,7 +61,8 @@ const getCachedMemberTxSetting = unstable_cache(
         select: { value: true },
       });
       return setting?.value ?? "false";
-    } catch {
+    } catch (error) {
+      logger.error("Error fetching allow_member_tx setting:", error);
       return "false";
     }
   },
@@ -204,8 +205,13 @@ export async function getPublicPaymentSettingsAction(): Promise<PublicPaymentSet
 }
 
 export async function isMemberTxAllowedAction(): Promise<boolean> {
-  const value = await getCachedMemberTxSetting();
-  return value === "true";
+  try {
+    const value = await getCachedMemberTxSetting();
+    return value === "true";
+  } catch (error) {
+    logger.error("Error evaluating isMemberTxAllowedAction:", error);
+    return false;
+  }
 }
 
 export async function setMemberTxAllowedAction(enabled: boolean): Promise<boolean> {

@@ -35,17 +35,22 @@ export async function getHotlinesList(): Promise<EmergencyHotline[]> {
 }
 
 async function saveHotlinesSetting(hotlines: EmergencyHotline[]) {
-  await prisma.systemSetting.upsert({
-    where: { key: "emergency_hotlines" },
-    create: { key: "emergency_hotlines", value: JSON.stringify(hotlines) },
-    update: { value: JSON.stringify(hotlines) },
-  });
-  updateTag(EMERGENCY_TAG);
-  updateTag("admin-stats");
-  revalidateTag(EMERGENCY_TAG, "max");
-  revalidatePath("/emergency");
-  revalidatePath("/admin");
-  revalidatePath("/admin/emergency");
+  try {
+    await prisma.systemSetting.upsert({
+      where: { key: "emergency_hotlines" },
+      create: { key: "emergency_hotlines", value: JSON.stringify(hotlines) },
+      update: { value: JSON.stringify(hotlines) },
+    });
+    updateTag(EMERGENCY_TAG);
+    updateTag("admin-stats");
+    revalidateTag(EMERGENCY_TAG, "max");
+    revalidatePath("/emergency");
+    revalidatePath("/admin");
+    revalidatePath("/admin/emergency");
+  } catch (err) {
+    logger.error("Failed to save emergency_hotlines setting:", err);
+    throw err;
+  }
 }
 
 export interface GetPaginatedHotlinesAdminParams {
@@ -58,44 +63,49 @@ export interface GetPaginatedHotlinesAdminParams {
 export async function getPaginatedHotlinesAdminAction(
   params?: GetPaginatedHotlinesAdminParams
 ): Promise<PaginatedResult<EmergencyHotline>> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_emergency")) {
-    return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize: params?.pageSize || 10 };
+  try {
+    const session = await getSessionUser();
+    if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_emergency")) {
+      return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize: params?.pageSize || 10 };
+    }
+
+    const hotlines = await getHotlinesList();
+    const page = Math.max(1, params?.page || 1);
+    const pageSize = Math.max(1, params?.pageSize || 10);
+    const search = params?.search?.trim().toLowerCase();
+    const category = params?.category;
+
+    let filtered = hotlines;
+    if (category && category !== "all") {
+      filtered = filtered.filter((h) => h.category === category);
+    }
+    if (search) {
+      filtered = filtered.filter(
+        (h) =>
+          h.titleBn.toLowerCase().includes(search) ||
+          h.titleEn.toLowerCase().includes(search) ||
+          h.phone.toLowerCase().includes(search) ||
+          (h.descriptionBn && h.descriptionBn.toLowerCase().includes(search)) ||
+          (h.descriptionEn && h.descriptionEn.toLowerCase().includes(search))
+      );
+    }
+
+    const totalItems = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+    const startIndex = (page - 1) * pageSize;
+    const data = filtered.slice(startIndex, startIndex + pageSize);
+
+    return {
+      data,
+      totalItems,
+      totalPages,
+      currentPage: page,
+      pageSize,
+    };
+  } catch (error) {
+    logger.error("Error in getPaginatedHotlinesAdminAction:", error);
+    return { data: [], totalItems: 0, totalPages: 1, currentPage: params?.page || 1, pageSize: params?.pageSize || 10 };
   }
-
-  const hotlines = await getHotlinesList();
-  const page = Math.max(1, params?.page || 1);
-  const pageSize = Math.max(1, params?.pageSize || 10);
-  const search = params?.search?.trim().toLowerCase();
-  const category = params?.category;
-
-  let filtered = hotlines;
-  if (category && category !== "all") {
-    filtered = filtered.filter((h) => h.category === category);
-  }
-  if (search) {
-    filtered = filtered.filter(
-      (h) =>
-        h.titleBn.toLowerCase().includes(search) ||
-        h.titleEn.toLowerCase().includes(search) ||
-        h.phone.toLowerCase().includes(search) ||
-        (h.descriptionBn && h.descriptionBn.toLowerCase().includes(search)) ||
-        (h.descriptionEn && h.descriptionEn.toLowerCase().includes(search))
-    );
-  }
-
-  const totalItems = filtered.length;
-  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
-  const startIndex = (page - 1) * pageSize;
-  const data = filtered.slice(startIndex, startIndex + pageSize);
-
-  return {
-    data,
-    totalItems,
-    totalPages,
-    currentPage: page,
-    pageSize,
-  };
 }
 
 export async function saveHotlineAction(hotline: EmergencyHotline) {
@@ -115,7 +125,8 @@ export async function saveHotlineAction(hotline: EmergencyHotline) {
     await saveHotlinesSetting(updatedList);
     return { success: true };
   } catch (err: unknown) {
-    return { success: false, error: (err as Error).message };
+    logger.error("Error saving emergency hotline:", err);
+    return { success: false, error: "জরুরি হটলাইন সংরক্ষণ করতে সমস্যা হয়েছে।" };
   }
 }
 
@@ -127,6 +138,7 @@ export async function deleteHotlineAction(id: string) {
     await saveHotlinesSetting(updatedList);
     return { success: true };
   } catch (err: unknown) {
-    return { success: false, error: (err as Error).message };
+    logger.error("Error deleting emergency hotline:", err);
+    return { success: false, error: "জরুরি হটলাইন মুছে ফেলতে সমস্যা হয়েছে।" };
   }
 }

@@ -30,9 +30,13 @@ export default function HeroCardWrapper({ demoMember }: HeroCardWrapperProps) {
         Promise.resolve(currentUser).then(setMember);
       } else {
         // qrCodeUrl missing: fetch fresh data from DB
-        getMemberByIdAction(currentUser.id).then((freshUser) => {
-          setMember(freshUser ?? null);
-        });
+        getMemberByIdAction(currentUser.id)
+          .then((freshUser) => {
+            setMember(freshUser ?? null);
+          })
+          .catch(() => {
+            setMember(currentUser ?? null);
+          });
       }
     };
 

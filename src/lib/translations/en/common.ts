@@ -55,6 +55,7 @@ export const commonEn = {
   "ui.partnerdirectory.discountRate": "Discount Rate",
   "ui.partnerdirectory.healthcare": "Healthcare",
   "ui.partnerdirectory.hospital": "Hospital",
+  "ui.partnerdirectory.loadError": "Failed to load partner hospitals list. Please try again.",
   "ui.partnerdirectory.loadMorePartners": "Load More Partners",
   "ui.partnerdirectory.locationUpazila": "Location / Upazila:",
   "ui.partnerdirectory.noPartnerHospitalOrLab": "No partner hospital or lab found.",

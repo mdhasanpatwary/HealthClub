@@ -129,7 +129,7 @@ export async function getPaginatedPartnerRequestsAction(
 
 export async function addPartnerRequestAction(
   req: Omit<PartnerRequest, "id" | "status">
-): Promise<PartnerRequest> {
+): Promise<{ success: boolean; data?: PartnerRequest; error?: string }> {
   const ip = await getClientIp();
   const rateLimit = checkRateLimit(
     `partner_req:${ip}`,
@@ -137,7 +137,10 @@ export async function addPartnerRequestAction(
     RATE_LIMIT_RULES.PARTNER_REQUEST_PER_IP.windowMs
   );
   if (!rateLimit.success) {
-    throw new Error(rateLimit.message || "খুব বেশি পার্টনার আবেদন জমা দেওয়ার চেষ্টা করা হয়েছে।");
+    return {
+      success: false,
+      error: rateLimit.message || "খুব বেশি পার্টনার আবেদন জমা দেওয়ার চেষ্টা করা হয়েছে।",
+    };
   }
 
   const id = `req_${crypto.randomUUID()}`;
@@ -158,10 +161,13 @@ export async function addPartnerRequestAction(
 
     updateTag("admin-stats");
 
-    return toPartnerRequest(data);
+    return { success: true, data: toPartnerRequest(data) };
   } catch (error) {
     logger.error("Error in addPartnerRequestAction:", error);
-    throw error;
+    return {
+      success: false,
+      error: "পার্টনার আবেদন জমা দিতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+    };
   }
 }
 
@@ -256,17 +262,17 @@ export async function updatePartnerRequestStatusAction(
       }
     }
 
-    return true;
-  } catch (error) {
-    logger.error("Error in updatePartnerRequestStatusAction:", error);
-    return false;
-  } finally {
     try {
       updateTag(PARTNERS_TAG);
       updateTag("admin-stats");
     } catch (err) {
       logger.warn("Failed to revalidate partners cache tag:", err);
     }
+
+    return true;
+  } catch (error) {
+    logger.error("Error in updatePartnerRequestStatusAction:", error);
+    return false;
   }
 }
 

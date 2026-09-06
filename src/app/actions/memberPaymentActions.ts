@@ -64,7 +64,7 @@ export async function submitBkashPaymentAction(
   memberId: string,
   bkashSender: string,
   bkashTxnId: string
-): Promise<boolean> {
+): Promise<{ success: boolean; error?: string }> {
   try {
     const cleanId = memberId.trim();
     const cleanSender = bkashSender.trim();
@@ -82,7 +82,10 @@ export async function submitBkashPaymentAction(
         "warn",
         { userId: cleanId, route: "submitBkashPaymentAction" }
       );
-      return false;
+      return {
+        success: false,
+        error: "অবৈধ ট্রানজেকশন আইডি। ট্রানজেকশন আইডি ৬ থেকে ২০ অক্ষরের হতে হবে।",
+      };
     }
 
     // Verify session: only admin or the authenticated member themselves can submit payment
@@ -101,14 +104,22 @@ export async function submitBkashPaymentAction(
         "warn",
         { userId: cleanId, route: "submitBkashPaymentAction" }
       );
-      return false;
+      return {
+        success: false,
+        error: "অননুমোদিত অ্যাক্সেস। অনুগ্রহ করে লগইন করুন।",
+      };
     }
 
     const member = await prisma.member.findUnique({
       where: { id: cleanId },
     });
 
-    if (!member) return false;
+    if (!member) {
+      return {
+        success: false,
+        error: "সদস্য অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।",
+      };
+    }
 
     // Check for duplicate bKash transaction IDs already submitted by another member
     const duplicateTxn = await prisma.member.findFirst({
@@ -132,6 +143,10 @@ export async function submitBkashPaymentAction(
         "warn",
         { userId: cleanId, route: "submitBkashPaymentAction" }
       );
+      return {
+        success: false,
+        error: "এই বিকাশ ট্রানজেকশন আইডিটি ইতিমধ্যে অন্য একটি অ্যাকাউন্টে ব্যবহার করা হয়েছে।",
+      };
     }
 
     await prisma.member.update({
@@ -151,11 +166,16 @@ export async function submitBkashPaymentAction(
       await setSessionUser(cleanId, "user");
     }
 
-    return true;
+    return { success: true };
   } catch (error: unknown) {
-    if ((error as { code?: string })?.code === "P2025") return false;
+    if ((error as { code?: string })?.code === "P2025") {
+      return { success: false, error: "সদস্য অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।" };
+    }
     logger.error("Error in submitBkashPaymentAction:", error);
-    return false;
+    return {
+      success: false,
+      error: "পেমেন্ট তথ্য সংরক্ষণ করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+    };
   }
 }
 

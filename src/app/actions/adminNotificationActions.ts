@@ -190,19 +190,31 @@ export async function getAdminNotificationsAction(
  */
 export async function markAdminNotificationReadAction(
   notificationId: string
-): Promise<{ success: boolean; readIds: string[] }> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
-    return { success: false, readIds: [] };
-  }
+): Promise<{ success: boolean; readIds: string[]; error?: string }> {
+  try {
+    const session = await getSessionUser();
+    if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_notifications")) {
+      return { success: false, readIds: [], error: "অননুমোদিত অ্যাক্সেস" };
+    }
 
-  const current = await getPersistedAdminNotificationIds(SETTING_KEY_READ);
-  if (!current.includes(notificationId)) {
-    const updated = [...current, notificationId];
-    await savePersistedAdminNotificationIds(SETTING_KEY_READ, updated);
-    return { success: true, readIds: updated };
+    const current = await getPersistedAdminNotificationIds(SETTING_KEY_READ);
+    if (!current.includes(notificationId)) {
+      const updated = [...current, notificationId];
+      const saved = await savePersistedAdminNotificationIds(SETTING_KEY_READ, updated);
+      if (!saved) {
+        return {
+          success: false,
+          readIds: current,
+          error: "বিজ্ঞপ্তি স্ট্যাটাস সংরক্ষণ করতে ব্যর্থ হয়েছে",
+        };
+      }
+      return { success: true, readIds: updated };
+    }
+    return { success: true, readIds: current };
+  } catch (error) {
+    logger.error("Error in markAdminNotificationReadAction:", error);
+    return { success: false, readIds: [], error: "সার্ভার ত্রুটি ঘটেছে" };
   }
-  return { success: true, readIds: current };
 }
 
 /**
@@ -210,17 +222,29 @@ export async function markAdminNotificationReadAction(
  */
 export async function markAllAdminNotificationsReadAction(
   notificationIds?: string[]
-): Promise<{ success: boolean; readIds: string[] }> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
-    return { success: false, readIds: [] };
-  }
+): Promise<{ success: boolean; readIds: string[]; error?: string }> {
+  try {
+    const session = await getSessionUser();
+    if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_notifications")) {
+      return { success: false, readIds: [], error: "অননুমোদিত অ্যাক্সেস" };
+    }
 
-  const current = await getPersistedAdminNotificationIds(SETTING_KEY_READ);
-  const toAdd = notificationIds && notificationIds.length > 0 ? notificationIds : [];
-  const merged = Array.from(new Set([...current, ...toAdd]));
-  await savePersistedAdminNotificationIds(SETTING_KEY_READ, merged);
-  return { success: true, readIds: merged };
+    const current = await getPersistedAdminNotificationIds(SETTING_KEY_READ);
+    const toAdd = notificationIds && notificationIds.length > 0 ? notificationIds : [];
+    const merged = Array.from(new Set([...current, ...toAdd]));
+    const saved = await savePersistedAdminNotificationIds(SETTING_KEY_READ, merged);
+    if (!saved) {
+      return {
+        success: false,
+        readIds: current,
+        error: "বিজ্ঞপ্তি স্ট্যাটাস সংরক্ষণ করতে ব্যর্থ হয়েছে",
+      };
+    }
+    return { success: true, readIds: merged };
+  } catch (error) {
+    logger.error("Error in markAllAdminNotificationsReadAction:", error);
+    return { success: false, readIds: [], error: "সার্ভার ত্রুটি ঘটেছে" };
+  }
 }
 
 /**
@@ -228,19 +252,31 @@ export async function markAllAdminNotificationsReadAction(
  */
 export async function dismissAdminNotificationAction(
   notificationId: string
-): Promise<{ success: boolean; dismissedIds: string[] }> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
-    return { success: false, dismissedIds: [] };
-  }
+): Promise<{ success: boolean; dismissedIds: string[]; error?: string }> {
+  try {
+    const session = await getSessionUser();
+    if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_notifications")) {
+      return { success: false, dismissedIds: [], error: "অননুমোদিত অ্যাক্সেস" };
+    }
 
-  const current = await getPersistedAdminNotificationIds(SETTING_KEY_DISMISSED);
-  if (!current.includes(notificationId)) {
-    const updated = [...current, notificationId];
-    await savePersistedAdminNotificationIds(SETTING_KEY_DISMISSED, updated);
-    return { success: true, dismissedIds: updated };
+    const current = await getPersistedAdminNotificationIds(SETTING_KEY_DISMISSED);
+    if (!current.includes(notificationId)) {
+      const updated = [...current, notificationId];
+      const saved = await savePersistedAdminNotificationIds(SETTING_KEY_DISMISSED, updated);
+      if (!saved) {
+        return {
+          success: false,
+          dismissedIds: current,
+          error: "বিজ্ঞপ্তি বাতিল সংরক্ষণ করতে ব্যর্থ হয়েছে",
+        };
+      }
+      return { success: true, dismissedIds: updated };
+    }
+    return { success: true, dismissedIds: current };
+  } catch (error) {
+    logger.error("Error in dismissAdminNotificationAction:", error);
+    return { success: false, dismissedIds: [], error: "সার্ভার ত্রুটি ঘটেছে" };
   }
-  return { success: true, dismissedIds: current };
 }
 
 /**
@@ -249,18 +285,31 @@ export async function dismissAdminNotificationAction(
 export async function clearAllAdminReadAction(): Promise<{
   success: boolean;
   dismissedIds: string[];
+  error?: string;
 }> {
-  const session = await getSessionUser();
-  if (!session || session.role !== "admin") {
-    return { success: false, dismissedIds: [] };
+  try {
+    const session = await getSessionUser();
+    if (!session || session.role !== "admin" || !hasAdminPermission(session.adminRole || "super_admin", "manage_notifications")) {
+      return { success: false, dismissedIds: [], error: "অননুমোদিত অ্যাক্সেস" };
+    }
+
+    const [currentRead, currentDismissed] = await Promise.all([
+      getPersistedAdminNotificationIds(SETTING_KEY_READ),
+      getPersistedAdminNotificationIds(SETTING_KEY_DISMISSED),
+    ]);
+
+    const merged = Array.from(new Set([...currentDismissed, ...currentRead]));
+    const saved = await savePersistedAdminNotificationIds(SETTING_KEY_DISMISSED, merged);
+    if (!saved) {
+      return {
+        success: false,
+        dismissedIds: currentDismissed,
+        error: "বিজ্ঞপ্তি বাতিল সংরক্ষণ করতে ব্যর্থ হয়েছে",
+      };
+    }
+    return { success: true, dismissedIds: merged };
+  } catch (error) {
+    logger.error("Error in clearAllAdminReadAction:", error);
+    return { success: false, dismissedIds: [], error: "সার্ভার ত্রুটি ঘটেছে" };
   }
-
-  const [currentRead, currentDismissed] = await Promise.all([
-    getPersistedAdminNotificationIds(SETTING_KEY_READ),
-    getPersistedAdminNotificationIds(SETTING_KEY_DISMISSED),
-  ]);
-
-  const merged = Array.from(new Set([...currentDismissed, ...currentRead]));
-  await savePersistedAdminNotificationIds(SETTING_KEY_DISMISSED, merged);
-  return { success: true, dismissedIds: merged };
 }

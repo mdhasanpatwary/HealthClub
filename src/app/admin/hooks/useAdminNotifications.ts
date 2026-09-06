@@ -14,6 +14,8 @@ import type {
   GetAdminNotificationsParams,
 } from "@/app/actions/adminNotificationTypes";
 import { safeStorage } from "@/lib/safeStorage";
+import { toast } from "sonner";
+import { logger } from "@/lib/logger";
 
 const STORAGE_KEYS = {
   READ_IDS: "hc_admin_read_notifications",
@@ -97,8 +99,9 @@ export function useAdminNotifications(options?: UseAdminNotificationsOptions) {
       setTotalItems(result.totalItems);
       setTotalPages(result.totalPages);
       setSummary(result.summary);
-    } catch {
-      // Ignore notifications fetch failure silently
+    } catch (error) {
+      logger.error("Failed to fetch admin notifications:", error);
+      toast.error("বিজ্ঞপ্তি লোড করতে সমস্যা হয়েছে।");
     } finally {
       setLoading(false);
     }
@@ -166,9 +169,13 @@ export function useAdminNotifications(options?: UseAdminNotificationsOptions) {
         if (res.success && res.readIds) {
           safeStorage.setItem(STORAGE_KEYS.READ_IDS, res.readIds);
           setReadIds(res.readIds);
+        } else if (!res.success) {
+          logger.warn("Failed to persist notification read status to server:", res.error);
+          toast.error(res.error || "বিজ্ঞপ্তি স্ট্যাটাস সংরক্ষণ করতে ব্যর্থ হয়েছে");
         }
-      } catch {
-        // Local state remains read
+      } catch (error) {
+        logger.error("Error persisting notification read status:", error);
+        toast.error("বিজ্ঞপ্তি স্ট্যাটাস সংরক্ষণ করতে ব্যর্থ হয়েছে");
       }
 
       // 3. Broadcast to other mounted instances
@@ -190,9 +197,13 @@ export function useAdminNotifications(options?: UseAdminNotificationsOptions) {
       if (res.success && res.readIds) {
         safeStorage.setItem(STORAGE_KEYS.READ_IDS, res.readIds);
         setReadIds(res.readIds);
+      } else if (!res.success) {
+        logger.warn("Failed to persist all notifications read status to server:", res.error);
+        toast.error(res.error || "বিজ্ঞপ্তি স্ট্যাটাস সংরক্ষণ করতে ব্যর্থ হয়েছে");
       }
-    } catch {
-      // Local state remains read
+    } catch (error) {
+      logger.error("Error persisting all notifications read status:", error);
+      toast.error("বিজ্ঞপ্তি স্ট্যাটাস সংরক্ষণ করতে ব্যর্থ হয়েছে");
     }
 
     window.dispatchEvent(new Event("admin-notifications-change"));
@@ -214,9 +225,13 @@ export function useAdminNotifications(options?: UseAdminNotificationsOptions) {
         if (res.success && res.dismissedIds) {
           safeStorage.setItem(STORAGE_KEYS.DISMISSED_IDS, res.dismissedIds);
           setDismissedIds(res.dismissedIds);
+        } else if (!res.success) {
+          logger.warn("Failed to persist dismissed notification to server:", res.error);
+          toast.error(res.error || "বিজ্ঞপ্তি বাতিল সংরক্ষণ করতে ব্যর্থ হয়েছে");
         }
-      } catch {
-        // Fallback to local state
+      } catch (error) {
+        logger.error("Error persisting dismissed notification:", error);
+        toast.error("বিজ্ঞপ্তি বাতিল সংরক্ষণ করতে ব্যর্থ হয়েছে");
       }
 
       window.dispatchEvent(new Event("admin-notifications-change"));
@@ -238,9 +253,13 @@ export function useAdminNotifications(options?: UseAdminNotificationsOptions) {
       if (res.success && res.dismissedIds) {
         safeStorage.setItem(STORAGE_KEYS.DISMISSED_IDS, res.dismissedIds);
         setDismissedIds(res.dismissedIds);
+      } else if (!res.success) {
+        logger.warn("Failed to persist clear all read notifications to server:", res.error);
+        toast.error(res.error || "বিজ্ঞপ্তি বাতিল সংরক্ষণ করতে ব্যর্থ হয়েছে");
       }
-    } catch {
-      // Fallback to local state
+    } catch (error) {
+      logger.error("Error persisting clear all read notifications:", error);
+      toast.error("বিজ্ঞপ্তি বাতিল সংরক্ষণ করতে ব্যর্থ হয়েছে");
     }
 
     window.dispatchEvent(new Event("admin-notifications-change"));

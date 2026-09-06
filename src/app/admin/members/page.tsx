@@ -105,7 +105,7 @@ export default function AdminMembersPage() {
         });
         if (!success) throw new Error("Update failed");
       } else {
-        await addMemberAction({
+        const res = await addMemberAction({
           name: newMember.name,
           phone: newMember.phone,
           email: newMember.email,
@@ -115,6 +115,10 @@ export default function AdminMembersPage() {
           profession: newMember.profession,
           profilePictureUrl: newMember.profilePictureUrl,
         });
+        if ("error" in res) {
+          toast.error(res.error || t("admin.dashboard.memberAddedFailed"));
+          return;
+        }
       }
 
       setNewMember({
@@ -170,15 +174,19 @@ export default function AdminMembersPage() {
       return;
     }
 
-    const success = await updateMemberStatusAction(id, newStatus);
-    if (success) {
-      toast.success(t("admin.dashboard.memberStatusUpdatedSuccess"));
-      if (viewingMember && viewingMember.id === id) {
-        setViewingMember({ ...viewingMember, status: newStatus });
+    try {
+      const success = await updateMemberStatusAction(id, newStatus);
+      if (success) {
+        toast.success(t("admin.dashboard.memberStatusUpdatedSuccess"));
+        if (viewingMember && viewingMember.id === id) {
+          setViewingMember({ ...viewingMember, status: newStatus });
+        }
+        await loadData();
+        notifyChange();
+      } else {
+        toast.error(t("admin.dashboard.memberStatusUpdatedFailed"));
       }
-      await loadData();
-      notifyChange();
-    } else {
+    } catch {
       toast.error(t("admin.dashboard.memberStatusUpdatedFailed"));
     }
   };

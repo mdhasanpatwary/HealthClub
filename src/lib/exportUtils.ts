@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { MonthlySettlementStatement } from "@/types/partnerAnalytics";
 
 export interface ExportColumn<T> {
@@ -5,18 +6,39 @@ export interface ExportColumn<T> {
   accessor: keyof T | ((item: T) => string | number | null | undefined);
 }
 
+export interface ExportToCsvOptions {
+  emptyMessage?: string;
+  successMessage?: string;
+}
+
 /**
  * Exports tabular data to a downloadable CSV file.
  * Includes UTF-8 BOM (\uFEFF) to ensure non-Latin characters (like Bengali)
  * render properly in Microsoft Excel and other spreadsheet viewers.
+ *
+ * @returns boolean `true` if exported successfully, `false` if data was empty or invalid.
  */
 export function exportToCsv<T>(
   data: T[],
   filename: string,
-  columns: ExportColumn<T>[]
-): void {
+  columns: ExportColumn<T>[],
+  options?: string | ExportToCsvOptions
+): boolean {
   if (!data || data.length === 0) {
-    return;
+    const isBn =
+      typeof document !== "undefined" &&
+      (document.cookie.includes("locale=bn") ||
+        document.documentElement.lang === "bn" ||
+        !document.cookie.includes("locale=en"));
+
+    const customMessage =
+      typeof options === "string" ? options : options?.emptyMessage;
+    const defaultMsg = isBn
+      ? "এক্সপোর্ট করার জন্য কোনো তথ্য পাওয়া যায়নি।"
+      : "No data available to export.";
+
+    toast.warning(customMessage || defaultMsg);
+    return false;
   }
 
   // Generate header row
@@ -59,16 +81,40 @@ export function exportToCsv<T>(
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
+
+  const successMsg =
+    typeof options === "object" ? options?.successMessage : undefined;
+  if (successMsg) {
+    toast.success(successMsg);
+  }
+
+  return true;
 }
 
 /**
  * Generates and downloads a comprehensive Partner Monthly Settlement & Billing Statement CSV
  * formatted with hospital headers, monthly summary KPIs, and itemized patient transactions.
+ *
+ * @returns boolean `true` if exported successfully, `false` if statement was empty or invalid.
  */
 export function exportPartnerSettlementCsv(
   statement: MonthlySettlementStatement,
   partnerName: string
-): void {
+): boolean {
+  if (!statement) {
+    const isBn =
+      typeof document !== "undefined" &&
+      (document.cookie.includes("locale=bn") ||
+        document.documentElement.lang === "bn" ||
+        !document.cookie.includes("locale=en"));
+    toast.warning(
+      isBn
+        ? "এক্সপোর্ট করার জন্য কোনো স্টেটমেন্ট পাওয়া যায়নি।"
+        : "No statement data available to export."
+    );
+    return false;
+  }
+
   const lines: string[] = [
     `"HEALTH CLUB - PARTNER MONTHLY SETTLEMENT & BILLING STATEMENT"`,
     `"Partner Hospital / Facility:","${partnerName.replace(/"/g, '""')}"`,
@@ -120,5 +166,7 @@ export function exportPartnerSettlementCsv(
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
+
+  return true;
 }
 

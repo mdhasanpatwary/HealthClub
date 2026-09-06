@@ -138,9 +138,9 @@ function PaymentForm() {
     setIsSubmitting(true);
 
     try {
-      const success = await submitBkashPaymentAction(member.id, cleanSender, cleanTxnId);
+      const res = await submitBkashPaymentAction(member.id, cleanSender, cleanTxnId);
 
-      if (success) {
+      if (res.success) {
         setPaymentSuccess(true);
         trackEvent("membership_funnel", {
           step: "payment_submit",
@@ -162,7 +162,7 @@ function PaymentForm() {
           router.push("/dashboard");
         }, 2500);
       } else {
-        toast.error(t("auth.login.serverError"));
+        toast.error(res.error || t("auth.login.serverError"));
       }
     } catch {
       toast.error(t("auth.login.serverError"));

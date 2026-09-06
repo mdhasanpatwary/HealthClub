@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Printer, X, CreditCard, FileText, CheckCircle2, Sparkles, Scissors } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLanguage } from "@/components/layout/LanguageProvider";
+import { toast } from "sonner";
 
 type PrintMode = "cr80" | "sheet";
 
@@ -27,19 +28,26 @@ export default function PrintCardPage() {
       return;
     }
 
-    getMemberByIdAction(currentUser.id).then((freshUser) => {
-      const activeUser = freshUser || currentUser;
-      setMember(activeUser);
-      setLoading(false);
+    getMemberByIdAction(currentUser.id)
+      .then((freshUser) => {
+        const activeUser = freshUser || currentUser;
+        setMember(activeUser);
+        setLoading(false);
 
-      // Auto trigger print after a brief delay to let images (avatar, QR code) load
-      const timer = setTimeout(() => {
-        window.print();
-      }, 1000);
+        // Auto trigger print after a brief delay to let images (avatar, QR code) load
+        const timer = setTimeout(() => {
+          window.print();
+        }, 1000);
 
-      return () => clearTimeout(timer);
-    });
-  }, [router]);
+        return () => clearTimeout(timer);
+      })
+      .catch(() => {
+        // Fallback to local currentUser data so user is not stuck on skeleton
+        setMember(currentUser);
+        setLoading(false);
+        toast.error(t("dashboard.syncError"));
+      });
+  }, [router, t]);
 
   const handlePrint = () => {
     window.print();

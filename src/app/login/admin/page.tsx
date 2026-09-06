@@ -27,20 +27,19 @@ export default function AdminLoginPage() {
 
     setLoading(true);
     try {
-      const adminMember = await loginAdminAction(identifier, password);
-      if (adminMember) {
-        authStore.setCurrentUser(adminMember);
+      const res = await loginAdminAction(identifier, password);
+      if (res?.success && res.member) {
+        authStore.setCurrentUser(res.member);
         toast.success(t("auth.login.success"));
         window.location.href = "/admin";
         return;
       }
+      toast.error(res?.message || t("auth.login.invalidCredentials"));
     } catch {
-      // Login failed handled by error toast below
+      toast.error(t("auth.login.serverError"));
     } finally {
       setLoading(false);
     }
-
-    toast.error(t("auth.login.invalidCredentials"));
   };
 
   return (

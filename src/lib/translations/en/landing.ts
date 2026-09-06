@@ -56,6 +56,7 @@ export const landingEn = {
   "pages.verify.todoStep2": "2. Apply the contracted discount rate to the bill.",
   "pages.verify.verifiedDatabase": "Health Club Membership Database Verified",
   "pages.verify.verifiedMember": "VERIFIED MEMBER (VERIFIED)",
+  "pages.verify.verifyError": "Failed to load member verification data. Please try again.",
   "aboutUs.page.100OfficialPartnership": "100% Official Partnership",
   "aboutUs.page.bringingTheCostOfHealth": "Bringing the cost of health tests within reach of middle-class and rural low-income families is our primary goal.",
   "aboutUs.page.caringServiceWarmAndPrompt": "Caring Service: Warm and prompt assistance for every member and their family's medical needs.",

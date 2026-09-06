@@ -27,17 +27,28 @@ const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "healthclubfeni@gmail.com";
 const MAX_OTP_ATTEMPTS = 5;
 
 function formatDate(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
 
-function stripSensitive(m: Member): Member {
-  const safe = { ...m } as Partial<Member>;
+function toSafeMember(m: {
+  joinedDate: Date;
+  expiryDate: Date;
+  birthDate?: Date | null;
+  [key: string]: unknown;
+}): Member {
+  const safe = { ...m } as unknown as Partial<Member>;
   delete safe.password;
   delete safe.verificationCode;
-  return safe as Member;
+  return {
+    ...safe,
+    email: safe.email || undefined,
+    joinedDate: formatDate(m.joinedDate),
+    expiryDate: formatDate(m.expiryDate),
+    address: safe.address || undefined,
+    birthDate: m.birthDate ? formatDate(m.birthDate) : undefined,
+    profession: safe.profession || undefined,
+    profilePictureUrl: safe.profilePictureUrl || undefined,
+  } as Member;
 }
 
 export async function loginMemberAction(
@@ -104,16 +115,7 @@ export async function loginMemberAction(
 
     resetRateLimit(`login_id:${cleanId}`);
 
-    const safeMember = stripSensitive({
-      ...m,
-      email: m.email || undefined,
-      joinedDate: formatDate(m.joinedDate),
-      expiryDate: formatDate(m.expiryDate),
-      address: m.address || undefined,
-      birthDate: m.birthDate ? formatDate(m.birthDate) : undefined,
-      profession: m.profession || undefined,
-      profilePictureUrl: m.profilePictureUrl || undefined,
-    } as Member);
+    const safeMember = toSafeMember(m);
 
     if (m.email && !m.emailVerified) {
       return { 
@@ -132,7 +134,10 @@ export async function loginMemberAction(
   }
 }
 
-export async function loginAdminAction(identifier: string, passwordInput: string): Promise<Member | null> {
+export async function loginAdminAction(
+  identifier: string,
+  passwordInput: string
+): Promise<{ success: boolean; member?: Member; message?: string; error?: string }> {
   try {
     const ip = await getClientIp();
     const normalizedIdentifier = identifier.trim().toLowerCase();
@@ -145,7 +150,7 @@ export async function loginAdminAction(identifier: string, passwordInput: string
     );
     if (!ipLimit.success) {
       logger.warn(`Admin login rate limit exceeded for IP: ${ip}`);
-      return null;
+      return { success: false, error: "RATE_LIMITED", message: ipLimit.message };
     }
 
     // 2. Account-level rate limiting for admin login
@@ -156,7 +161,7 @@ export async function loginAdminAction(identifier: string, passwordInput: string
     );
     if (!idLimit.success) {
       logger.warn(`Admin login rate limit exceeded for identifier: ${normalizedIdentifier}`);
-      return null;
+      return { success: false, error: "RATE_LIMITED", message: idLimit.message };
     }
 
     const isEmail = identifier.includes("@");
@@ -196,10 +201,17 @@ export async function loginAdminAction(identifier: string, passwordInput: string
       }
     }
 
-    if (!adminUser || !adminUser.isActive) return null;
+    if (!adminUser) {
+      return { success: false, error: "INVALID_CREDENTIALS", message: "অ্যাডমিন ব্যবহারকারী খুঁজে পাওয়া যায়নি অথবা লগইন তথ্য সঠিক নয়।" };
+    }
 
-    const isValid = verifyPassword(passwordInput, adminUser.password);
-    if (!isValid) return null;
+    if (!adminUser.isActive) {
+      return { success: false, error: "ACCOUNT_DEACTIVATED", message: "আপনার এডমিন অ্যাকাউন্টটি নিষ্ক্রিয় করা হয়েছে। কর্তৃপক্ষের সাথে যোগাযোগ করুন।" };
+    }
+
+    if (!verifyPassword(passwordInput, adminUser.password)) {
+      return { success: false, error: "INVALID_CREDENTIALS", message: "লগইন তথ্য অথবা পাসওয়ার্ড সঠিক নয়।" };
+    }
 
     resetRateLimit(`admin_login_id:${normalizedIdentifier}`);
 
@@ -214,24 +226,30 @@ export async function loginAdminAction(identifier: string, passwordInput: string
       adminEmail: adminUser.email,
     });
 
-    const nowStr = formatDate(new Date());
     return {
-      id: adminUser.id,
-      name: adminUser.name,
-      phone: adminUser.phone || "",
-      email: adminUser.email,
-      tier: "founding",
-      status: "active",
-      joinedDate: nowStr,
-      expiryDate: "2099-12-31",
-      totalSaved: 0,
-      emailVerified: true,
-      role: "admin",
-      adminRole: adminUser.role as AdminRole,
-    } as Member;
+      success: true,
+      member: {
+        id: adminUser.id,
+        name: adminUser.name,
+        phone: adminUser.phone || "",
+        email: adminUser.email,
+        tier: "founding",
+        status: "active",
+        joinedDate: formatDate(new Date()),
+        expiryDate: "2099-12-31",
+        totalSaved: 0,
+        emailVerified: true,
+        role: "admin",
+        adminRole: adminUser.role as AdminRole,
+      } as Member,
+    };
   } catch (error) {
     logger.error("Error in loginAdminAction:", error);
-    return null;
+    return {
+      success: false,
+      error: "SERVER_ERROR",
+      message: "লগইন করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।",
+    };
   }
 }
 
@@ -327,16 +345,7 @@ export async function verifyEmailOtpAction(
       await clearPendingRegistration();
       updateTag("admin-stats");
 
-      const safeMember = stripSensitive({
-        ...createdMember,
-        email: createdMember.email || undefined,
-        joinedDate: formatDate(createdMember.joinedDate),
-        expiryDate: formatDate(createdMember.expiryDate),
-        address: createdMember.address || undefined,
-        birthDate: createdMember.birthDate ? formatDate(createdMember.birthDate) : undefined,
-        profession: createdMember.profession || undefined,
-        profilePictureUrl: createdMember.profilePictureUrl || undefined,
-      } as Member);
+      const safeMember = toSafeMember(createdMember);
 
       await setSessionUser(safeMember.id, "user");
       const requiresPayment = createdMember.tier === "premium" && createdMember.status === "inactive";
@@ -401,16 +410,7 @@ export async function verifyEmailOtpAction(
       },
     });
 
-    const safeMember = stripSensitive({
-      ...updated,
-      email: updated.email || undefined,
-      joinedDate: formatDate(updated.joinedDate),
-      expiryDate: formatDate(updated.expiryDate),
-      address: updated.address || undefined,
-      birthDate: updated.birthDate ? formatDate(updated.birthDate) : undefined,
-      profession: updated.profession || undefined,
-      profilePictureUrl: updated.profilePictureUrl || undefined,
-    } as Member);
+    const safeMember = toSafeMember(updated);
 
     await setSessionUser(safeMember.id, "user");
     const requiresPayment = updated.tier === "premium" && updated.status === "inactive" && !updated.bkashTxnId;

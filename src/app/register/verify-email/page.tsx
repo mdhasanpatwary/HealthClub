@@ -29,13 +29,17 @@ function VerifyEmailForm() {
 
   useEffect(() => {
     if (!email) {
-      getPendingRegistrationEmailAction().then((pendingEmail) => {
-        if (pendingEmail) {
-          setEmail(pendingEmail);
-        }
-      });
+      getPendingRegistrationEmailAction()
+        .then((pendingEmail) => {
+          if (pendingEmail) {
+            setEmail(pendingEmail);
+          }
+        })
+        .catch(() => {
+          toast.error(t("auth.login.serverError"));
+        });
     }
-  }, [email]);
+  }, [email, t]);
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();

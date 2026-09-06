@@ -33,16 +33,8 @@ function revalidateEmergencyCaches() {
 }
 
 function mapDonorRow(r: {
-  id: string;
-  name: string;
-  bloodGroup: string;
-  upazila: string;
-  phone: string;
-  lastDonated: string;
-  isAvailable: boolean;
-  status: string;
-  createdAt: Date;
-  updatedAt: Date;
+  id: string; name: string; bloodGroup: string; upazila: string; phone: string;
+  lastDonated: string; isAvailable: boolean; status: string; createdAt: Date; updatedAt: Date;
 }): BloodDonor {
   return {
     id: r.id,
@@ -59,15 +51,8 @@ function mapDonorRow(r: {
 }
 
 function mapAmbulanceRow(r: {
-  id: string;
-  name: string;
-  type: string;
-  location: string;
-  phone: string;
-  availableHours: string;
-  status: string;
-  createdAt: Date;
-  updatedAt: Date;
+  id: string; name: string; type: string; location: string; phone: string;
+  availableHours: string; status: string; createdAt: Date; updatedAt: Date;
 }): AmbulanceService {
   return {
     id: r.id,
@@ -96,57 +81,62 @@ export interface GetPaginatedDonorsAdminParams {
 export async function getPaginatedDonorsAdminAction(
   params?: GetPaginatedDonorsAdminParams
 ): Promise<PaginatedResult<BloodDonor>> {
-  const session = await getSessionUser();
-  if (
-    !session ||
-    session.role !== "admin" ||
-    !hasAdminPermission(session.adminRole || "super_admin", "manage_emergency")
-  ) {
-    return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize: params?.pageSize || 10 };
+  try {
+    const session = await getSessionUser();
+    if (
+      !session ||
+      session.role !== "admin" ||
+      !hasAdminPermission(session.adminRole || "super_admin", "manage_emergency")
+    ) {
+      return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize: params?.pageSize || 10 };
+    }
+
+    const page = Math.max(1, params?.page || 1);
+    const pageSize = Math.max(1, params?.pageSize || 10);
+    const search = params?.search?.trim();
+    const bloodGroup = params?.bloodGroup || params?.group;
+    const upazila = params?.upazila || params?.area;
+    const status = params?.status;
+
+    const where: Prisma.BloodDonorWhereInput = {};
+
+    if (status && status !== "all") {
+      where.status = status === "pending" ? "pending" : { not: "pending" };
+    }
+    if (bloodGroup && bloodGroup !== "all") where.bloodGroup = bloodGroup;
+    if (upazila && upazila !== "all") where.upazila = upazila;
+
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: "insensitive" } },
+        { phone: { contains: search, mode: "insensitive" } },
+        { upazila: { contains: search, mode: "insensitive" } },
+        { bloodGroup: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
+    const startIndex = (page - 1) * pageSize;
+    const [totalItems, rows] = await Promise.all([
+      prisma.bloodDonor.count({ where }),
+      prisma.bloodDonor.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip: startIndex,
+        take: pageSize,
+      }),
+    ]);
+
+    return {
+      data: rows.map(mapDonorRow),
+      totalItems,
+      totalPages: Math.max(1, Math.ceil(totalItems / pageSize)),
+      currentPage: page,
+      pageSize,
+    };
+  } catch (error) {
+    logger.error("Error in getPaginatedDonorsAdminAction:", error);
+    return { data: [], totalItems: 0, totalPages: 1, currentPage: params?.page || 1, pageSize: params?.pageSize || 10 };
   }
-
-  const page = Math.max(1, params?.page || 1);
-  const pageSize = Math.max(1, params?.pageSize || 10);
-  const search = params?.search?.trim();
-  const bloodGroup = params?.bloodGroup || params?.group;
-  const upazila = params?.upazila || params?.area;
-  const status = params?.status;
-
-  const where: Prisma.BloodDonorWhereInput = {};
-
-  if (status && status !== "all") {
-    where.status = status === "pending" ? "pending" : { not: "pending" };
-  }
-  if (bloodGroup && bloodGroup !== "all") where.bloodGroup = bloodGroup;
-  if (upazila && upazila !== "all") where.upazila = upazila;
-
-  if (search) {
-    where.OR = [
-      { name: { contains: search, mode: "insensitive" } },
-      { phone: { contains: search, mode: "insensitive" } },
-      { upazila: { contains: search, mode: "insensitive" } },
-      { bloodGroup: { contains: search, mode: "insensitive" } },
-    ];
-  }
-
-  const startIndex = (page - 1) * pageSize;
-  const [totalItems, rows] = await Promise.all([
-    prisma.bloodDonor.count({ where }),
-    prisma.bloodDonor.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      skip: startIndex,
-      take: pageSize,
-    }),
-  ]);
-
-  return {
-    data: rows.map(mapDonorRow),
-    totalItems,
-    totalPages: Math.max(1, Math.ceil(totalItems / pageSize)),
-    currentPage: page,
-    pageSize,
-  };
 }
 
 export interface GetPaginatedAmbulancesAdminParams {
@@ -162,59 +152,64 @@ export interface GetPaginatedAmbulancesAdminParams {
 export async function getPaginatedAmbulancesAdminAction(
   params?: GetPaginatedAmbulancesAdminParams
 ): Promise<PaginatedResult<AmbulanceService>> {
-  const session = await getSessionUser();
-  if (
-    !session ||
-    session.role !== "admin" ||
-    !hasAdminPermission(session.adminRole || "super_admin", "manage_emergency")
-  ) {
-    return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize: params?.pageSize || 10 };
+  try {
+    const session = await getSessionUser();
+    if (
+      !session ||
+      session.role !== "admin" ||
+      !hasAdminPermission(session.adminRole || "super_admin", "manage_emergency")
+    ) {
+      return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize: params?.pageSize || 10 };
+    }
+
+    const page = Math.max(1, params?.page || 1);
+    const pageSize = Math.max(1, params?.pageSize || 10);
+    const search = params?.search?.trim();
+    const location = params?.location || params?.area;
+    const type = params?.type;
+    const status = params?.status;
+
+    const where: Prisma.AmbulanceServiceWhereInput = {};
+
+    if (status && status !== "all") {
+      where.status = status === "pending" ? "pending" : { not: "pending" };
+    }
+    if (type && type !== "all") where.type = type;
+    if (location && location !== "all") {
+      where.location = { contains: location, mode: "insensitive" };
+    }
+
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: "insensitive" } },
+        { location: { contains: search, mode: "insensitive" } },
+        { phone: { contains: search, mode: "insensitive" } },
+        { type: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
+    const startIndex = (page - 1) * pageSize;
+    const [totalItems, rows] = await Promise.all([
+      prisma.ambulanceService.count({ where }),
+      prisma.ambulanceService.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip: startIndex,
+        take: pageSize,
+      }),
+    ]);
+
+    return {
+      data: rows.map(mapAmbulanceRow),
+      totalItems,
+      totalPages: Math.max(1, Math.ceil(totalItems / pageSize)),
+      currentPage: page,
+      pageSize,
+    };
+  } catch (error) {
+    logger.error("Error in getPaginatedAmbulancesAdminAction:", error);
+    return { data: [], totalItems: 0, totalPages: 1, currentPage: params?.page || 1, pageSize: params?.pageSize || 10 };
   }
-
-  const page = Math.max(1, params?.page || 1);
-  const pageSize = Math.max(1, params?.pageSize || 10);
-  const search = params?.search?.trim();
-  const location = params?.location || params?.area;
-  const type = params?.type;
-  const status = params?.status;
-
-  const where: Prisma.AmbulanceServiceWhereInput = {};
-
-  if (status && status !== "all") {
-    where.status = status === "pending" ? "pending" : { not: "pending" };
-  }
-  if (type && type !== "all") where.type = type;
-  if (location && location !== "all") {
-    where.location = { contains: location, mode: "insensitive" };
-  }
-
-  if (search) {
-    where.OR = [
-      { name: { contains: search, mode: "insensitive" } },
-      { location: { contains: search, mode: "insensitive" } },
-      { phone: { contains: search, mode: "insensitive" } },
-      { type: { contains: search, mode: "insensitive" } },
-    ];
-  }
-
-  const startIndex = (page - 1) * pageSize;
-  const [totalItems, rows] = await Promise.all([
-    prisma.ambulanceService.count({ where }),
-    prisma.ambulanceService.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      skip: startIndex,
-      take: pageSize,
-    }),
-  ]);
-
-  return {
-    data: rows.map(mapAmbulanceRow),
-    totalItems,
-    totalPages: Math.max(1, Math.ceil(totalItems / pageSize)),
-    currentPage: page,
-    pageSize,
-  };
 }
 
 /**
@@ -359,7 +354,8 @@ export async function saveBloodDonorAction(donor: BloodDonor) {
     revalidateEmergencyCaches();
     return { success: true };
   } catch (err: unknown) {
-    return { success: false, error: (err as Error).message };
+    logger.error("Error saving blood donor:", err);
+    return { success: false, error: "রক্তদাতার তথ্য সংরক্ষণ করতে সমস্যা হয়েছে।" };
   }
 }
 
@@ -373,7 +369,8 @@ export async function approveBloodDonorAction(id: string) {
     revalidateEmergencyCaches();
     return { success: true };
   } catch (err: unknown) {
-    return { success: false, error: (err as Error).message };
+    logger.error("Error approving blood donor:", err);
+    return { success: false, error: "রক্তদাতা অনুমোদন করতে সমস্যা হয়েছে।" };
   }
 }
 
@@ -386,7 +383,8 @@ export async function deleteBloodDonorAction(id: string) {
     revalidateEmergencyCaches();
     return { success: true };
   } catch (err: unknown) {
-    return { success: false, error: (err as Error).message };
+    logger.error("Error deleting blood donor:", err);
+    return { success: false, error: "রক্তদাতার তথ্য মুছে ফেলতে সমস্যা হয়েছে।" };
   }
 }
 
@@ -407,7 +405,8 @@ export async function toggleBloodDonorAvailabilityAction(id: string) {
     revalidateEmergencyCaches();
     return { success: true };
   } catch (err: unknown) {
-    return { success: false, error: (err as Error).message };
+    logger.error("Error toggling blood donor availability:", err);
+    return { success: false, error: "রক্তদাতার স্ট্যাটাস পরিবর্তন করতে সমস্যা হয়েছে।" };
   }
 }
 
@@ -441,7 +440,8 @@ export async function saveAmbulanceAction(ambulance: AmbulanceService) {
     revalidateEmergencyCaches();
     return { success: true };
   } catch (err: unknown) {
-    return { success: false, error: (err as Error).message };
+    logger.error("Error saving ambulance service:", err);
+    return { success: false, error: "অ্যাম্বুলেন্স সার্ভিসের তথ্য সংরক্ষণ করতে সমস্যা হয়েছে।" };
   }
 }
 
@@ -455,7 +455,8 @@ export async function approveAmbulanceAction(id: string) {
     revalidateEmergencyCaches();
     return { success: true };
   } catch (err: unknown) {
-    return { success: false, error: (err as Error).message };
+    logger.error("Error approving ambulance service:", err);
+    return { success: false, error: "অ্যাম্বুলেন্স সার্ভিস অনুমোদন করতে সমস্যা হয়েছে।" };
   }
 }
 
@@ -468,6 +469,7 @@ export async function deleteAmbulanceAction(id: string) {
     revalidateEmergencyCaches();
     return { success: true };
   } catch (err: unknown) {
-    return { success: false, error: (err as Error).message };
+    logger.error("Error deleting ambulance service:", err);
+    return { success: false, error: "অ্যাম্বুলেন্স সার্ভিসের তথ্য মুছে ফেলতে সমস্যা হয়েছে।" };
   }
 }

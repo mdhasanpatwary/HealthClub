@@ -739,3 +739,86 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/actions/dbBackupActions.ts`, `src/services/db.ts`, `src/app/admin/components/DbBackupTableStats.tsx`, `src/app/admin/components/DbBackupExportTab.tsx`
   - **Details**: `getDatabaseStatsSummaryAction` aggregates record counts across all relational database tables including `prisma.bloodDonor.count()` and `prisma.ambulanceService.count()`. Added both counts to the transaction, summary stats object, and stats cards/export table selector so the Admin Database Backup & Retention page (`/admin/settings/backup`) displays accurate total database records.
 
+---
+
+## 🛡️ Phase 18: Comprehensive Error Handling, Information Disclosure Prevention & Resilience (TODO-141 to TODO-152)
+
+### 🚨 Critical UI Feedback & Mutation Check Fixes (P1)
+
+- [x] **TODO-141**: **Fix Unchecked Server Action Mutation Returns in Admin Portals (`admin/partners` & `admin/members`)**
+  - **Severity**: Critical
+  - **Files**: `src/app/admin/partners/page.tsx`, `src/app/admin/members/page.tsx`
+  - **Details**: In `admin/partners/page.tsx` (`handleSavePartner`), `await addPartnerAction(...)` returns `Promise<Partner | { error: string }>`. The caller never checks `"error" in res` or return status, automatically closing the dialog, resetting inputs, and displaying `toast.success("Partner added successfully")` even when creation failed. Similarly, in `admin/members/page.tsx` (`handleSaveMember`), `await addMemberAction(...)` returns `Promise<Member | { error: string }>` but the caller does not verify `"error" in res`, falsely announcing success on failure. Also wrap `updateMemberStatusAction` in `admin/members/page.tsx` in a `try ... catch` block to prevent unhandled promise rejections on network interruptions.
+
+### ⚠️ System Security, Info Disclosure & Query Safety (P1 / P2)
+
+- [x] **TODO-142**: **Eliminate Internal System Error Leakage & Information Disclosure in Admin Actions**
+  - **Severity**: High
+  - **Files**: `src/app/actions/emergencyAdminActions.ts`, `src/app/actions/emergencyHotlineActions.ts`, `src/app/actions/healthTipsAdminActions.ts`
+  - **Details**: 13 server actions across emergency and health tips management (`saveBloodDonorAction`, `approveBloodDonorAction`, `deleteBloodDonorAction`, `toggleBloodDonorAvailabilityAction`, `saveAmbulanceAction`, `approveAmbulanceAction`, `deleteAmbulanceAction`, `saveHotlineAction`, `deleteHotlineAction`, `saveHealthTipAction`, `deleteHealthTipAction`, `syncHealthTipsWithDatabaseAction`, `recordArticleReactionAction`) catch errors and return `return { success: false, error: (err as Error).message };` directly to client UI. This exposes internal Prisma database errors, SQL table schemas, and connection details to the browser. Replace raw error leakage with localized, user-friendly error messages and log internal error details to `logger.error`.
+
+- [x] **TODO-143**: **Wrap Unhandled Database Queries in Try/Catch to Prevent Server Action 500 Crashes**
+  - **Severity**: High
+  - **Files**: `src/app/actions/emergencyAdminActions.ts`, `src/app/actions/emergencyHotlineActions.ts`, `src/app/actions/transactionActions.ts`, `src/app/actions/adminNotificationActions.ts`
+  - **Details**: Multiple server action queries perform raw or async Prisma queries outside `try ... catch` wrappers:
+    - `getPaginatedDonorsAdminAction` & `getPaginatedAmbulancesAdminAction`: `await Promise.all([ prisma.bloodDonor.count(), prisma.bloodDonor.findMany() ])` has no try/catch.
+    - `getPaginatedHotlinesAdminAction` & `saveHotlinesSetting`: lacks try/catch on database read/write operations.
+    - `addTransactionAction`: `await prisma.member.findUnique(...)` and `await prisma.partner.findUnique(...)` are executed outside the `try { ... }` block, causing unhandled 500 digest crashes if either query fails.
+    - `markAdminNotificationReadAction`, `markAllAdminNotificationsReadAction`, `dismissAdminNotificationAction`, `clearAllAdminReadAction`: lack try/catch wrappers around setting persistence.
+
+- [x] **TODO-144**: **Standardize Server Action Return Contracts for Predictable Client Error Handling**
+  - **Severity**: High
+  - **Files**: `src/app/actions/partnerRequestActions.ts`, `src/app/become-partner/page.tsx`, `src/app/actions/memberPaymentActions.ts`, `src/app/register/payment/page.tsx`, `src/app/actions/memberAuthActions.ts`, `src/app/login/admin/page.tsx`
+  - **Details**:
+    - `addPartnerRequestAction` uses `throw new Error(...)` and `throw error`. In Next.js production builds, thrown errors across server action boundaries are masked with generic render digests, stripping error context from `/become-partner/page.tsx`. Standardize to return `{ success: boolean, error?: string }`.
+    - `submitBkashPaymentAction` returns raw `Promise<boolean>` instead of `{ success: boolean, error?: string }`, forcing `/register/payment/page.tsx` to display a vague, unhelpful generic toast ("সার্ভার ত্রুটি") without explaining whether the transaction ID was duplicate, invalid, or unauthorized.
+    - `loginAdminAction` returns `Promise<Member | null>` instead of `{ success: boolean, error?: string, message?: string }`, causing `login/admin/page.tsx` to treat rate limits, account deactivations, and server errors identically as "Invalid credentials" ("লগইন তথ্য সঠিক নয়").
+
+### 🔄 Client State Resiliency & Cache Purge Safety (P2)
+
+- [x] **TODO-145**: **Prevent Infinite Loading Skeletons on Client-Side Query Rejections**
+  - **Severity**: Medium
+  - **Files**: `src/app/verify/[memberId]/page.tsx`, `src/app/dashboard/print/page.tsx`, `src/components/ui/PartnerDirectory.tsx`, `src/app/register/verify-email/page.tsx`, `src/components/landing/HeroCardWrapper.tsx`
+  - **Details**: In `verify/[memberId]/page.tsx` and `print/page.tsx`, `getPublicMemberVerificationAction().then(...)` and `getMemberByIdAction().then(...)` omit `.catch()` handlers. When a network error or DB hiccup occurs, `setLoading(false)` is never called, leaving the user permanently trapped on a pulsating skeleton screen. Add `.catch()` handlers with error toast notification and fallback loading reset. Also add `.catch()` to `getPartnersAction().then()` in `PartnerDirectory.tsx`, `getPendingRegistrationEmailAction().then()` in `verify-email/page.tsx`, and `getMemberByIdAction().then()` in `HeroCardWrapper.tsx`.
+
+- [x] **TODO-146**: **Move Cache Tag Invalidation Out of `finally` Blocks on Mutating Actions**
+  - **Severity**: Medium
+  - **Files**: `src/app/actions/doctorActions.ts`, `src/app/actions/partnerDoctorActions.ts`, `src/app/actions/partnerActions.ts`
+  - **Details**: In `doctorActions.ts` (`addDoctorAction`, `updateDoctorAction`, `deleteDoctorAction`), `partnerDoctorActions.ts` (`linkDoctorToPartnerAction`, `unlinkDoctorFromPartnerAction`, `addPartnerDoctorAction`, `updatePartnerDoctorChamberAction`, `deletePartnerDoctorAction`), and `partnerActions.ts` (`addPartnerAction`, `updatePartnerAction`, `deletePartnerAction`), `updateTag(...)` is invoked inside `finally` blocks. If database insertion, update, or deletion fails, the cache tags are still purged, triggering spurious and wasteful ISR cache regenerations on failed operations. Move cache tag updates inside `try` blocks immediately before returning `{ success: true }`.
+
+- [x] **TODO-147**: **Eliminate Silent Error Swallowing in Admin Hooks & Fallbacks**
+  - **Severity**: Medium
+  - **Files**: `src/app/admin/hooks/useAdminDoctors.ts`, `src/app/admin/hooks/useAdminNotifications.ts`, `src/app/actions/systemSettingsActions.ts`
+  - **Details**:
+    - `useAdminDoctors.ts` line 58 catches load failures with `catch { // Ignore load doctors errors silently }`, leaving the doctor management table empty without any visual toast feedback or logging to indicate a data fetch failure.
+    - `useAdminNotifications.ts` line 100 swallows notification fetch errors without reporting or logging.
+    - `systemSettingsActions.ts` (`getCachedMemberTxSetting`) silently catches DB errors and returns `"false"` without calling `logger.error`. Add appropriate logging and user feedback.
+
+- [x] **TODO-148**: **Implement Route-Level Error Boundaries for Admin, Partner, and Member Dashboards**
+  - **Severity**: Medium
+  - **Files**: `src/app/admin/error.tsx`, `src/app/partner/error.tsx`, `src/app/dashboard/error.tsx`
+  - **Details**: The application only has a root-level `src/app/error.tsx` and `src/app/global-error.tsx`. When a component runtime error occurs inside `/admin`, `/partner`, or `/dashboard`, the error bubbles up to the root boundary, rendering a full-page crash screen that links back to the homepage (`"/"`), kicking users out of their authenticated dashboard workflow. Implement dedicated error boundaries for `/admin`, `/partner`, and `/dashboard` with dashboard-scoped retry buttons and navigation links back to the respective portal root.
+
+- [x] **TODO-149**: **Add Top-Level Exception Safeguard in Next.js `proxy.ts` (Middleware)**
+  - **Severity**: Medium
+  - **Files**: `src/proxy.ts`
+  - **Details**: `proxy.ts` executes on all inbound non-static requests without a top-level `try ... catch` block. If any unexpected error occurs during URL parsing, header extraction, or route matching, the proxy throws an unhandled exception, causing the entire Next.js server to return HTTP 500. Wrap the proxy body in a defensive `try ... catch` block, logging exceptions via `logger.error` and falling back gracefully to `NextResponse.next()`.
+
+- [x] **TODO-150**: **Fix Unhandled Secondary Verification Crash in Mail Transporter Pool**
+  - **Severity**: Medium
+  - **Files**: `src/lib/mail.ts`
+  - **Details**: In `getVerifiedTransporter()`, if the initial transporter fails verification, it catches the error and creates a fresh transporter. However, the subsequent verification `await _transporter.verify();` (line 51) is executed outside of a `try ... catch` block. If SMTP credentials or the network are degraded, this secondary check throws an uncaught error, bypassing the retry loop in `sendWithRetry` and crashing the caller. Wrap secondary verification in `try ... catch` and handle fallback gracefully.
+
+### 🛡️ Low Priority: Reporting & Edge Feedback (P3)
+
+- [x] **TODO-151**: **Fix False-Positive Success Reporting on Admin Notification Sync Failures**
+  - **Severity**: Low
+  - **Files**: `src/app/actions/adminNotificationActions.ts`
+  - **Details**: In `markAdminNotificationReadAction`, `savePersistedAdminNotificationIds(SETTING_KEY_READ, updated)` returns a boolean (`true` on success, `false` on DB error). The action never checks the returned boolean and unconditionally returns `{ success: true, readIds: updated }`, misleading the client into believing notifications were persisted to the database when the write operation actually failed. Check return status and return `{ success: false, error: ... }` when persistence fails.
+
+- [x] **TODO-152**: **Provide User Feedback for Empty Data Exports in `exportToCsv`**
+  - **Severity**: Low
+  - **Files**: `src/lib/exportUtils.ts`
+  - **Details**: In `exportToCsv`, when `data` is empty or undefined (`if (!data || data.length === 0)`), the function returns silently without notifying the user. When users click "Export CSV" on an empty table or filtered list with 0 rows, nothing happens, leading users to believe the button or feature is broken. Provide toast notification (`toast.warning(...)` / error feedback) or return a boolean so callers can alert the user.
+
+

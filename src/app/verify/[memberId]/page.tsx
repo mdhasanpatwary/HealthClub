@@ -10,6 +10,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 
 export default function VerificationPage() {
   const params = useParams();
@@ -21,14 +22,19 @@ export default function VerificationPage() {
   useEffect(() => {
     if (memberId) {
       const decodedId = decodeURIComponent(memberId);
-      getPublicMemberVerificationAction(decodedId).then((found) => {
-        if (found) {
-          setMember(found);
-        }
-        setLoading(false);
-      });
+      getPublicMemberVerificationAction(decodedId)
+        .then((found) => {
+          if (found) {
+            setMember(found);
+          }
+          setLoading(false);
+        })
+        .catch(() => {
+          toast.error(t("pages.verify.verifyError"));
+          setLoading(false);
+        });
     }
-  }, [memberId]);
+  }, [memberId, t]);
 
   return (
     <div className="bg-muted/30 min-h-[85vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">

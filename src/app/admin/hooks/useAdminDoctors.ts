@@ -10,6 +10,7 @@ import {
   deleteDoctorAction,
 } from "@/app/actions/doctorActions";
 import { useDebounce } from "@/hooks/useDebounce";
+import { logger } from "@/lib/logger";
 
 export function useAdminDoctors() {
   const [loading, setLoading] = useState(true);
@@ -54,8 +55,9 @@ export function useAdminDoctors() {
       setDoctors(res.data);
       setTotalItems(res.totalItems);
       setTotalPages(res.totalPages);
-    } catch {
-      // Ignore load doctors errors silently
+    } catch (error) {
+      logger.error("Failed to load admin doctors:", error);
+      toast.error("ডাক্তারদের তথ্য লোড করতে সমস্যা হয়েছে।");
     } finally {
       setLoading(false);
     }
@@ -152,7 +154,8 @@ export function useAdminDoctors() {
           toast.error(res.error || "যুক্ত করা ব্যর্থ হয়েছে।");
         }
       }
-    } catch {
+    } catch (error) {
+      logger.error("Error saving doctor:", error);
       toast.error("প্রক্রিয়াটি সম্পন্ন করতে সমস্যা হয়েছে।");
     }
   };
@@ -168,7 +171,8 @@ export function useAdminDoctors() {
       } else {
         toast.error(res.error || "ডিলিট ব্যর্থ হয়েছে।");
       }
-    } catch {
+    } catch (error) {
+      logger.error("Error deleting doctor:", error);
       toast.error("ডিলিট করতে সমস্যা হয়েছে।");
     }
   };

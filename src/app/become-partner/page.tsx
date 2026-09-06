@@ -25,7 +25,7 @@ export default function BecomePartnerPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await addPartnerRequestAction({
+      const res = await addPartnerRequestAction({
         orgName: formData.orgName,
         category: formData.category as "hospital" | "diagnostic" | "pharmacy",
         address: formData.address,
@@ -34,6 +34,12 @@ export default function BecomePartnerPage() {
         phone: formData.phone,
         email: formData.email || null,
       });
+
+      if (!res?.success) {
+        toast.error(res?.error || t("common.error"));
+        return;
+      }
+
       setSubmitted(true);
       toast.success(t("becomePartner.successTitle"));
       setFormData({

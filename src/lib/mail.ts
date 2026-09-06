@@ -42,13 +42,19 @@ async function getVerifiedTransporter(): Promise<Transporter> {
 
   try {
     await _transporter!.verify();
-  } catch {
+  } catch (initialError) {
     // Connection is dead — create a fresh one
-    logger.warn("[EMAIL] Transporter verification failed, creating fresh connection");
-    try { _transporter!.close(); } catch { /* ignore */ }
+    logger.warn("[EMAIL] Transporter verification failed, creating fresh connection:", initialError);
+    if (_transporter) {
+      try { _transporter.close(); } catch { /* ignore */ }
+    }
     _transporter = createTransporter();
     _transporterCreatedAt = Date.now();
-    await _transporter.verify();
+    try {
+      await _transporter.verify();
+    } catch (secondaryError) {
+      logger.warn("[EMAIL] Secondary transporter verification failed; falling back to unverified transporter:", secondaryError);
+    }
   }
 
   return _transporter!;

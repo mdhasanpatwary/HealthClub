@@ -51,7 +51,8 @@ export function PartnerSettlementStatementsTable({
 
   const handleExportCsv = (statement: MonthlySettlementStatement) => {
     try {
-      exportPartnerSettlementCsv(statement, partner.name);
+      const exported = exportPartnerSettlementCsv(statement, partner.name);
+      if (!exported) return;
       toast.success(
         isBn
           ? `${statement.monthLabelBn} এর সেটেলমেন্ট CSV ডাউনলোড সফল হয়েছে!`

@@ -80,7 +80,7 @@ export function RevenueAnalyticsTab() {
       newMembersCount: m.newMembersCount,
     }));
 
-    exportToCsv<RevenueExportRow>(rows, "healthclub_revenue_report", [
+    const exported = exportToCsv<RevenueExportRow>(rows, "healthclub_revenue_report", [
       { header: "Month", accessor: "month" },
       { header: "Subscription Revenue (BDT)", accessor: "subscriptionRevenue" },
       { header: "Gross Medical Billed (BDT)", accessor: "medicalBilled" },
@@ -88,6 +88,7 @@ export function RevenueAnalyticsTab() {
       { header: "Patient Visits Count", accessor: "transactionCount" },
       { header: "New Members Registered", accessor: "newMembersCount" },
     ]);
+    if (!exported) return;
     toast.success(isBn ? "আর্থিক রিপোর্ট CSV ডাউনলোড সম্পন্ন হয়েছে।" : "Revenue report exported to CSV successfully.");
   };
 

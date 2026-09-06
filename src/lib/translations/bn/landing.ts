@@ -56,6 +56,7 @@ export const landingBn = {
   "pages.verify.todoStep2": "২. চুক্তি অনুযায়ী বিলে নির্ধারিত ডিসকাউন্ট রেট যোগ করুন।",
   "pages.verify.verifiedDatabase": "হেলথ ক্লাব মেম্বারশিপ ডাটাবেজ ভেরিফাইড",
   "pages.verify.verifiedMember": "ভেরিফাইড মেম্বার (VERIFIED)",
+  "pages.verify.verifyError": "সদস্য তথ্য লোড করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
   "aboutUs.page.100OfficialPartnership": "শতভাগ অফিশিয়াল পার্টনারশিপ",
   "aboutUs.page.bringingTheCostOfHealth": "মধ্যবিত্ত ও গ্রামীণ নিম্ন-আয়ের পরিবারগুলোর স্বাস্থ্য পরীক্ষার ব্যয় হাতের নাগালে নিয়ে আসা আমাদের প্রথম লক্ষ্য।",
   "aboutUs.page.caringServiceWarmAndPrompt": "যত্নশীল সেবা: প্রতিটি মেম্বার এবং তাদের পরিবারের চিকিৎসায় আন্তরিক সমাধান।",

@@ -158,7 +158,7 @@ function AdminPartnersContent() {
         });
         if (!success) throw new Error("Update failed");
       } else {
-        await addPartnerAction({
+        const res = await addPartnerAction({
           name: newPartner.name,
           category: newPartner.category,
           address: newPartner.address,
@@ -169,6 +169,10 @@ function AdminPartnersContent() {
           imageUrl: newPartner.imageUrl,
           upazila: newPartner.upazila || "feni-sadar",
         });
+        if ("error" in res) {
+          toast.error(res.error || t("admin.dashboard.partnerAddedFailed"));
+          return;
+        }
       }
 
       setNewPartner({

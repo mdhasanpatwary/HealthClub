@@ -55,6 +55,7 @@ export const commonBn = {
   "ui.partnerdirectory.discountRate": "ডিসকাউন্ট রেট",
   "ui.partnerdirectory.healthcare": "স্বাস্থ্যসেবা",
   "ui.partnerdirectory.hospital": "হাসপাতাল",
+  "ui.partnerdirectory.loadError": "পার্টনার হাসপাতাল তালিকা লোড করতে সমস্যা হয়েছে।",
   "ui.partnerdirectory.loadMorePartners": "আরো পার্টনার দেখুন",
   "ui.partnerdirectory.locationUpazila": "এলাকা / উপজেলা:",
   "ui.partnerdirectory.noPartnerHospitalOrLab": "কোন পার্টনার হাসপাতাল বা ল্যাব খুঁজে পাওয়া যায়নি।",

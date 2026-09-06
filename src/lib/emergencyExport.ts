@@ -6,9 +6,9 @@ export function exportEmergencyData(
   donors: BloodDonor[],
   ambulances: AmbulanceService[],
   hotlines: EmergencyHotline[]
-) {
+): boolean {
   if (activeSubTab === "donors") {
-    exportToCsv(donors, "healthclub_blood_donors", [
+    return exportToCsv(donors, "healthclub_blood_donors", [
       { header: "ID", accessor: "id" },
       { header: "Name", accessor: "name" },
       { header: "Blood Group", accessor: "bloodGroup" },
@@ -18,7 +18,7 @@ export function exportEmergencyData(
       { header: "Available", accessor: (d) => (d.isAvailable ? "Yes" : "No") },
     ]);
   } else if (activeSubTab === "ambulances") {
-    exportToCsv(ambulances, "healthclub_ambulances", [
+    return exportToCsv(ambulances, "healthclub_ambulances", [
       { header: "ID", accessor: "id" },
       { header: "Name", accessor: "name" },
       { header: "Type", accessor: "type" },
@@ -27,7 +27,7 @@ export function exportEmergencyData(
       { header: "Hours", accessor: "availableHours" },
     ]);
   } else {
-    exportToCsv(hotlines, "healthclub_emergency_hotlines", [
+    return exportToCsv(hotlines, "healthclub_emergency_hotlines", [
       { header: "ID", accessor: "id" },
       { header: "Title (BN)", accessor: "titleBn" },
       { header: "Title (EN)", accessor: "titleEn" },

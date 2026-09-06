@@ -202,6 +202,9 @@ export async function linkDoctorToPartnerAction(
             notice: initDoc.notice || null,
           },
         });
+        updateTag(DOCTORS_TAG);
+        updateTag(PARTNERS_TAG);
+        updateTag("admin-stats");
         return { success: true };
       }
       return { success: false, error: "ডাক্তার খুঁজে পাওয়া যায়নি।" };
@@ -222,14 +225,13 @@ export async function linkDoctorToPartnerAction(
       },
     });
 
+    updateTag(DOCTORS_TAG);
+    updateTag(PARTNERS_TAG);
+    updateTag("admin-stats");
     return { success: true };
   } catch (error) {
     logger.error("Error in linkDoctorToPartnerAction:", error);
     return { success: false, error: "ডাক্তার লিঙ্ক করতে সমস্যা হয়েছে।" };
-  } finally {
-    updateTag(DOCTORS_TAG);
-    updateTag(PARTNERS_TAG);
-    updateTag("admin-stats");
   }
 }
 
@@ -267,14 +269,13 @@ export async function unlinkDoctorFromPartnerAction(
       },
     });
 
+    updateTag(DOCTORS_TAG);
+    updateTag(PARTNERS_TAG);
+    updateTag("admin-stats");
     return { success: true };
   } catch (error) {
     logger.error("Error in unlinkDoctorFromPartnerAction:", error);
     return { success: false, error: "ডাক্তার আনলিঙ্ক করতে সমস্যা হয়েছে।" };
-  } finally {
-    updateTag(DOCTORS_TAG);
-    updateTag(PARTNERS_TAG);
-    updateTag("admin-stats");
   }
 }
 
@@ -330,6 +331,9 @@ export async function addPartnerDoctorAction(
       },
     });
 
+    updateTag(DOCTORS_TAG);
+    updateTag(PARTNERS_TAG);
+    updateTag("admin-stats");
     return {
       success: true,
       doctor: formatDoctor(created),
@@ -337,10 +341,6 @@ export async function addPartnerDoctorAction(
   } catch (error) {
     logger.error("Error in addPartnerDoctorAction:", error);
     return { success: false, error: "নতুন ডাক্তার যুক্ত করতে সমস্যা হয়েছে।" };
-  } finally {
-    updateTag(DOCTORS_TAG);
-    updateTag(PARTNERS_TAG);
-    updateTag("admin-stats");
   }
 }
 
@@ -393,14 +393,13 @@ export async function updatePartnerDoctorChamberAction(
       },
     });
 
+    updateTag(DOCTORS_TAG);
+    updateTag(PARTNERS_TAG);
+    updateTag("admin-stats");
     return { success: true };
   } catch (error) {
     logger.error("Error in updatePartnerDoctorChamberAction:", error);
     return { success: false, error: "চেম্বার তথ্য আপডেট করতে সমস্যা হয়েছে।" };
-  } finally {
-    updateTag(DOCTORS_TAG);
-    updateTag(PARTNERS_TAG);
-    updateTag("admin-stats");
   }
 }
 
@@ -444,13 +443,12 @@ export async function deletePartnerDoctorAction(
       });
     }
 
+    updateTag(DOCTORS_TAG);
+    updateTag(PARTNERS_TAG);
+    updateTag("admin-stats");
     return { success: true };
   } catch (error) {
     logger.error("Error in deletePartnerDoctorAction:", error);
     return { success: false, error: "ডাক্তার মুছে ফেলতে সমস্যা হয়েছে।" };
-  } finally {
-    updateTag(DOCTORS_TAG);
-    updateTag(PARTNERS_TAG);
-    updateTag("admin-stats");
   }
 }

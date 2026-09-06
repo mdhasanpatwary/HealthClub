@@ -224,7 +224,8 @@ export async function saveHealthTipAction(article: HealthTipArticle) {
     revalidatePath(`/health-tips/${article.slug}`);
     return { success: true };
   } catch (err: unknown) {
-    return { success: false, error: (err as Error).message };
+    logger.error("Error saving health tip article:", err);
+    return { success: false, error: "স্বাস্থ্য টিপস সংরক্ষণ করতে সমস্যা হয়েছে।" };
   }
 }
 
@@ -255,7 +256,8 @@ export async function deleteHealthTipAction(slug: string) {
     revalidatePath(`/health-tips/${slug}`);
     return { success: true };
   } catch (err: unknown) {
-    return { success: false, error: (err as Error).message };
+    logger.error("Error deleting health tip article:", err);
+    return { success: false, error: "স্বাস্থ্য টিপস মুছে ফেলতে সমস্যা হয়েছে।" };
   }
 }
 
@@ -313,7 +315,8 @@ export async function syncHealthTipsWithDatabaseAction(options?: { resetDeleted?
     revalidatePath("/health-tips");
     return { success: true, count: updatedArticles.length };
   } catch (err: unknown) {
-    return { success: false, error: (err as Error).message };
+    logger.error("Error syncing health tips with database:", err);
+    return { success: false, error: "স্বাস্থ্য টিপস ডাটাবেজের সাথে সিঙ্ক করতে সমস্যা হয়েছে।" };
   }
 }
 
@@ -433,7 +436,7 @@ export async function submitArticleReactionAction(
     };
   } catch (err: unknown) {
     logger.error("Error saving article reaction:", err);
-    return { success: false, error: (err as Error).message };
+    return { success: false, error: "মতামত সংরক্ষণ করতে সমস্যা হয়েছে।" };
   }
 }
 

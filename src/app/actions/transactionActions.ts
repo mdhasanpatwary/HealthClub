@@ -178,41 +178,41 @@ export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">)
     }
   }
 
-  // Verify member validity and active status
-  const member = await prisma.member.findUnique({
-    where: { id: tx.memberId },
-    select: { id: true, name: true, status: true, expiryDate: true },
-  });
-
-  if (!member) {
-    return { error: "মেম্বার খুঁজে পাওয়া যায়নি।" };
-  }
-
-  if (session.role !== "admin") {
-    if (member.status !== "active") {
-      return { error: "মেম্বারশিপটি সক্রিয় নয়।" };
-    }
-    const currentDate = new Date();
-    const expiryDate = new Date(member.expiryDate);
-    expiryDate.setHours(23, 59, 59, 999);
-    if (expiryDate < currentDate) {
-      return { error: "মেম্বারশিপ কার্ডের মেয়াদ শেষ হয়ে গেছে।" };
-    }
-  }
-
-  const partner = await prisma.partner.findUnique({
-    where: { id: tx.partnerId },
-    select: { id: true, name: true },
-  });
-
-  if (!partner) {
-    return { error: "পার্টনার খুঁজে পাওয়া যায়নি।" };
-  }
-
-  const newTxId = `tx_${crypto.randomUUID()}`;
-  const now = new Date();
-
   try {
+    // Verify member validity and active status
+    const member = await prisma.member.findUnique({
+      where: { id: tx.memberId },
+      select: { id: true, name: true, status: true, expiryDate: true },
+    });
+
+    if (!member) {
+      return { error: "মেম্বার খুঁজে পাওয়া যায়নি।" };
+    }
+
+    if (session.role !== "admin") {
+      if (member.status !== "active") {
+        return { error: "মেম্বারশিপটি সক্রিয় নয়।" };
+      }
+      const currentDate = new Date();
+      const expiryDate = new Date(member.expiryDate);
+      expiryDate.setHours(23, 59, 59, 999);
+      if (expiryDate < currentDate) {
+        return { error: "মেম্বারশিপ কার্ডের মেয়াদ শেষ হয়ে গেছে।" };
+      }
+    }
+
+    const partner = await prisma.partner.findUnique({
+      where: { id: tx.partnerId },
+      select: { id: true, name: true },
+    });
+
+    if (!partner) {
+      return { error: "পার্টনার খুঁজে পাওয়া যায়নি।" };
+    }
+
+    const newTxId = `tx_${crypto.randomUUID()}`;
+    const now = new Date();
+
     const data = await prisma.$transaction(async (txPrisma) => {
       // 1. Create transaction
       const newTx = await txPrisma.transaction.create({

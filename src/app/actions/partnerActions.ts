@@ -262,14 +262,13 @@ export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Pa
       },
     });
 
+    updateTag(PARTNERS_TAG);
+    updateTag("homepage-partners");
+    updateTag("admin-stats");
     return formatPartner(p);
   } catch (error) {
     logger.error("Error in addPartnerAction:", error);
     return { error: "পার্টনার যোগ করতে সমস্যা হয়েছে।" };
-  } finally {
-    updateTag(PARTNERS_TAG);
-    updateTag("homepage-partners");
-    updateTag("admin-stats");
   }
 }
 
@@ -295,14 +294,14 @@ export async function updatePartnerAction(id: string, partner: Omit<Partner, "id
         upazila: partner.upazila || "feni-sadar",
       },
     });
+
+    updateTag(PARTNERS_TAG);
+    updateTag("homepage-partners");
+    updateTag("admin-stats");
     return true;
   } catch (error) {
     logger.error("Error in updatePartnerAction:", error);
     return false;
-  } finally {
-    updateTag(PARTNERS_TAG);
-    updateTag("homepage-partners");
-    updateTag("admin-stats");
   }
 }
 
@@ -313,14 +312,14 @@ export async function deletePartnerAction(id: string): Promise<boolean> {
     await prisma.partner.delete({
       where: { id },
     });
+
+    updateTag(PARTNERS_TAG);
+    updateTag("homepage-partners");
+    updateTag("admin-stats");
     return true;
   } catch (error) {
     logger.error("Error in deletePartnerAction:", error);
     return false;
-  } finally {
-    updateTag(PARTNERS_TAG);
-    updateTag("homepage-partners");
-    updateTag("admin-stats");
   }
 }
 
@@ -403,6 +402,9 @@ export async function updatePartnerProfileAction(
       select: PARTNER_SELECT_FIELDS,
     });
 
+    updateTag(PARTNERS_TAG);
+    updateTag("homepage-partners");
+    updateTag("admin-stats");
     return {
       success: true,
       partner: formatPartner(updated),
@@ -410,10 +412,6 @@ export async function updatePartnerProfileAction(
   } catch (error) {
     logger.error("Error in updatePartnerProfileAction:", error);
     return { success: false, error: "প্রোফাইল আপডেট করতে সমস্যা হয়েছে।" };
-  } finally {
-    updateTag(PARTNERS_TAG);
-    updateTag("homepage-partners");
-    updateTag("admin-stats");
   }
 }
 

@@ -310,6 +310,8 @@ export async function addDoctorAction(
       },
     });
 
+    updateTag(DOCTORS_TAG);
+    updateTag("admin-stats");
     return {
       success: true,
       doctor: formatDoctor(d),
@@ -317,9 +319,6 @@ export async function addDoctorAction(
   } catch (error) {
     logger.error("Error in addDoctorAction:", error);
     return { success: false, error: "ডাক্তারের তথ্য যুক্ত করতে সমস্যা হয়েছে।" };
-  } finally {
-    updateTag(DOCTORS_TAG);
-    updateTag("admin-stats");
   }
 }
 
@@ -362,13 +361,12 @@ export async function updateDoctorAction(
       },
     });
 
+    updateTag(DOCTORS_TAG);
+    updateTag("admin-stats");
     return { success: true };
   } catch (error) {
     logger.error("Error in updateDoctorAction:", error);
     return { success: false, error: "তথ্য আপডেট করতে সমস্যা হয়েছে।" };
-  } finally {
-    updateTag(DOCTORS_TAG);
-    updateTag("admin-stats");
   }
 }
 
@@ -384,13 +382,12 @@ export async function deleteDoctorAction(id: string): Promise<{ success: boolean
     await prisma.doctor.delete({
       where: { id },
     });
+    updateTag(DOCTORS_TAG);
+    updateTag("admin-stats");
     return { success: true };
   } catch (error) {
     logger.error("Error in deleteDoctorAction:", error);
     return { success: false, error: "ডাক্তার ডিলিট করতে সমস্যা হয়েছে।" };
-  } finally {
-    updateTag(DOCTORS_TAG);
-    updateTag("admin-stats");
   }
 }
 
