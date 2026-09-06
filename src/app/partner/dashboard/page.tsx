@@ -17,6 +17,8 @@ import { PartnerProfileSettingsTab } from "./components/PartnerProfileSettingsTa
 import { PartnerAnalyticsTab } from "./components/PartnerAnalyticsTab";
 import { PartnerStaffTab } from "./components/PartnerStaffTab";
 import { toast } from "sonner";
+import { useRealtimeNotifications } from "@/hooks/useRealtimeNotifications";
+import type { RealtimeTransactionPayload } from "@/lib/realtimeEmitter";
 
 export default function PartnerDashboardPage() {
   const router = useRouter();
@@ -55,6 +57,41 @@ export default function PartnerDashboardPage() {
       setLoadingTransactions(false);
     }
   }, [t]);
+
+  // Real-time transaction listener (Supabase Realtime / SSE)
+  const handleRealtimeTransaction = useCallback(
+    (payload: RealtimeTransactionPayload) => {
+      const incomingTx = payload.transaction;
+      toast.success(
+        locale === "bn"
+          ? `নতুন ডিসকাউন্ট লেনদেন রেকর্ড হয়েছে! (৳${incomingTx.amount}, সাশ্রয়: ৳${incomingTx.saved})`
+          : `New discount transaction recorded! (৳${incomingTx.amount}, saved: ৳${incomingTx.saved})`
+      );
+
+      setTransactions((prev) => {
+        if (prev.some((t) => t.id === incomingTx.id)) return prev;
+        const formatted: Transaction = {
+          id: incomingTx.id,
+          memberId: payload.memberId,
+          memberName: incomingTx.memberName,
+          partnerId: payload.partnerId,
+          partnerName: incomingTx.partnerName,
+          amount: incomingTx.amount,
+          saved: incomingTx.saved,
+          date: incomingTx.date,
+        };
+        return [formatted, ...prev];
+      });
+    },
+    [locale]
+  );
+
+  useRealtimeNotifications({
+    role: "partner",
+    partnerId: partner?.id,
+    enableSound: true,
+    onTransaction: handleRealtimeTransaction,
+  });
 
   useEffect(() => {
     let isMounted = true;

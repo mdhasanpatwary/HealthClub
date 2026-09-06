@@ -7,6 +7,7 @@ import { logger } from "@/lib/logger";
 import { updateTag } from "next/cache";
 import { parseDiscountPercentage } from "@/lib/utils";
 import { createMemberNotification } from "./memberNotificationActions";
+import { broadcastTransaction, broadcastAdminAlert } from "@/lib/realtimeEmitter";
 
 export async function getPartnerTransactionsAction(): Promise<Transaction[]> {
   const session = await getSessionUser();
@@ -143,6 +144,27 @@ export async function addPartnerTransactionAction(tx: {
       messageBn: `"${partner.name}" এ ৳${tx.amount} টাকার বিলে আপনি ৳${saved} সাশ্রয় করেছেন!`,
       messageEn: `You saved ৳${saved} on a ৳${tx.amount} bill at "${partner.name}"!`,
       link: "/dashboard?tab=history",
+    });
+
+    // Broadcast real-time transaction event
+    broadcastTransaction({
+      partnerId: partner.id,
+      memberId: member.id,
+      transaction: {
+        id: txId,
+        amount: tx.amount,
+        saved: saved,
+        partnerName: partner.name,
+        memberName: member.name,
+        date: new Date().toISOString(),
+      },
+    });
+
+    broadcastAdminAlert({
+      category: "transaction",
+      titleBn: `নতুন লেনদেন: ${partner.name} (৳${tx.amount})`,
+      titleEn: `New Transaction: ${partner.name} (৳${tx.amount})`,
+      id: txId,
     });
 
     return { success: true, message: `লেনদেন সফলভাবে সম্পন্ন হয়েছে! ছাড়ের পরিমাণ: ৳${saved}` };

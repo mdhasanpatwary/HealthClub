@@ -821,4 +821,38 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/lib/exportUtils.ts`
   - **Details**: In `exportToCsv`, when `data` is empty or undefined (`if (!data || data.length === 0)`), the function returns silently without notifying the user. When users click "Export CSV" on an empty table or filtered list with 0 rows, nothing happens, leading users to believe the button or feature is broken. Provide toast notification (`toast.warning(...)` / error feedback) or return a boolean so callers can alert the user.
 
+---
+
+## 🚀 Phase 19: Authentication Security, Real-Time Alerts & DX Hygiene (TODO-153 to TODO-156)
+
+### 🛡️ Critical Security & Session Invalidation (P0 / P1)
+
+- [x] **TODO-153**: **Implement Active Member Status Validation & Instant Session Invalidation in `getSessionUser`**
+  - **Severity**: High
+  - **Files**: `src/lib/session.ts`
+  - **Details**: In `src/lib/session.ts`, `getSessionUser()` validates the active database status and role permissions for `partner_staff` and `admin` sessions on every request, but performs no database check when `session.role === "user"`. If an admin deactivates, suspends, or bans a member in the admin portal (`status: "inactive"`), the member's signed 7-day JWT cookie remains fully valid, allowing them uninterrupted access to protected member dashboard routes. Implement an active member check in `getSessionUser()` to immediately revoke the session cookie and reject access if `member.status !== "active"`.
+
+### ⚡ Developer Experience & Dependency Hygiene (P2)
+
+- [x] **TODO-154**: **Remove Duplicate `@hookform/resolvers` Dependency from `package.json`**
+  - **Severity**: Low
+  - **Files**: `package.json`
+  - **Details**: In `package.json`, `@hookform/resolvers: "^5.9.1"` is declared redundantly on both line 13 and line 28 in `dependencies`. Remove the duplicate entry to ensure clean lockfile synchronization and eliminate redundant dependency warnings.
+
+- [x] **TODO-155**: **Add Standard DX & Prisma Workflow Scripts to `package.json`**
+  - **Severity**: Low
+  - **Files**: `package.json`
+  - **Details**: Currently `package.json` only defines `dev`, `build`, `start`, and `lint` scripts. Add standard developer experience and deployment workflow scripts:
+    - `"typecheck": "tsc --noEmit"` for quick type verification without building.
+    - `"db:generate": "prisma generate"` to regenerate the Prisma client on schema updates.
+    - `"db:push": "prisma db push"` for database schema prototyping and synchronization.
+
+### 🔔 Real-Time Communication & Sound Feedback (P2)
+
+- [x] **TODO-156**: **Implement Real-Time In-App Notifications & Sound Feedback via Supabase Realtime / SSE**
+  - **Severity**: Medium
+  - **Files**: `src/app/dashboard/components/MemberNotificationBell.tsx`, `src/app/admin/components/AdminHeader.tsx`, `src/app/partner/dashboard/page.tsx`
+  - **Details**: Currently, member notifications, transaction updates, and review approvals only appear after a manual page refresh or route change. Integrate Supabase Realtime (or Server-Sent Events) channels on `member_notifications` and `transactions` tables to push live notifications to the active dashboard bell with badge count increment and subtle audio cue feedback when a new notification arrives.
+
+
 

@@ -10,6 +10,8 @@ import {
   serializeReview,
   canAdminManageReviews,
 } from "./reviewHelpers";
+import { createMemberNotification } from "./memberNotificationActions";
+import { broadcastAdminAlert } from "@/lib/realtimeEmitter";
 import type {
   ReviewWithRelations,
   ReviewEligibilityResult,
@@ -217,6 +219,15 @@ export async function submitReviewAction(
     }
 
     revalidatePartnerReviewCache(partnerId);
+
+    if (session.role !== "admin") {
+      broadcastAdminAlert({
+        category: "review",
+        titleBn: `নতুন রিভিউ জমা হয়েছে (${savedReview.partner?.name || "পার্টনার"})`,
+        titleEn: `New Review Submitted (${savedReview.partner?.name || "Partner"})`,
+        id: savedReview.id,
+      });
+    }
 
     return {
       success: true,
@@ -428,26 +439,18 @@ export async function moderateReviewAction(
     });
 
     try {
-      await prisma.memberNotification.create({
-        data: {
-          memberId: review.memberId,
-          type: "system",
-          titleBn: status === "approved" ? "রিভিউ অনুমোদিত হয়েছে" : "রিভিউ মডারেশন আপডেট",
-          titleEn: status === "approved" ? "Review Approved" : "Review Moderation Update",
-          messageBn:
-            status === "approved"
-              ? `${review.partner?.name || "হাসপাতাল"}-এর জন্য আপনার দেওয়া রিভিউটি অনুমোদিত এবং প্রকাশিত হয়েছে।`
-              : `${review.partner?.name || "হাসপাতাল"}-এর জন্য দেওয়া রিভিউটি অনুমোদিত হয়নি। ${
-                  adminFeedback ? `মন্তব্য: ${adminFeedback}` : ""
-                }`,
-          messageEn:
-            status === "approved"
-              ? `Your review for ${review.partner?.name || "partner"} has been approved and published.`
-              : `Your review for ${review.partner?.name || "partner"} was not approved. ${
-                  adminFeedback ? `Note: ${adminFeedback}` : ""
-                }`,
-          link: `/partner-hospitals/${review.partnerId}`,
-        },
+      await createMemberNotification({
+        memberId: review.memberId,
+        type: "system",
+        titleBn: status === "approved" ? "রিভিউ অনুমোদিত হয়েছে" : "রিভিউ মডারেশন আপডেট",
+        titleEn: status === "approved" ? "Review Approved" : "Review Moderation Update",
+        messageBn: status === "approved"
+          ? `${review.partner?.name || "হাসপাতাল"}-এর জন্য আপনার দেওয়া রিভিউটি অনুমোদিত এবং প্রকাশিত হয়েছে।`
+          : `${review.partner?.name || "হাসপাতাল"}-এর জন্য দেওয়া রিভিউটি অনুমোদিত হয়নি। ${adminFeedback ? `মন্তব্য: ${adminFeedback}` : ""}`,
+        messageEn: status === "approved"
+          ? `Your review for ${review.partner?.name || "partner"} has been approved and published.`
+          : `Your review for ${review.partner?.name || "partner"} was not approved. ${adminFeedback ? `Note: ${adminFeedback}` : ""}`,
+        link: `/partner-hospitals/${review.partnerId}`,
       });
     } catch (notifErr) {
       logger.warn("Could not create member notification for review moderation:", notifErr);

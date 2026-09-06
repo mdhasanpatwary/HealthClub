@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { MemberNotification, MemberNotificationType } from "@/services/db";
+import { broadcastMemberNotification } from "@/lib/realtimeEmitter";
 
 export interface MemberNotificationSummary {
   items: MemberNotification[];
@@ -48,7 +49,7 @@ export async function createMemberNotification(
       },
     });
 
-    return {
+    const resultItem: MemberNotification = {
       id: notification.id,
       memberId: notification.memberId,
       type: notification.type as MemberNotificationType,
@@ -60,6 +61,22 @@ export async function createMemberNotification(
       link: notification.link || undefined,
       createdAt: notification.createdAt.toISOString(),
     };
+
+    broadcastMemberNotification({
+      memberId: notification.memberId,
+      notification: {
+        id: notification.id,
+        type: notification.type,
+        titleBn: notification.titleBn,
+        titleEn: notification.titleEn,
+        messageBn: notification.messageBn,
+        messageEn: notification.messageEn,
+        link: notification.link || undefined,
+        createdAt: notification.createdAt.toISOString(),
+      },
+    });
+
+    return resultItem;
   } catch (error) {
     logger.error("Error creating member notification:", error);
     return null;

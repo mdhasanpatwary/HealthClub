@@ -10,6 +10,9 @@ import {
 } from "@/app/actions/memberNotificationActions";
 import { safeStorage } from "@/lib/safeStorage";
 import { toast } from "sonner";
+import { authStore } from "@/services/authStore";
+import { useRealtimeNotifications } from "@/hooks/useRealtimeNotifications";
+import type { RealtimeMemberNotificationPayload } from "@/lib/realtimeEmitter";
 
 const STORAGE_KEY = "hc_member_read_notifications";
 
@@ -107,6 +110,57 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
       window.removeEventListener("auth-change", handleDataChange);
     };
   }, [fetchNotifications, autoRefreshInterval]);
+
+  // Real-time notification handler (Supabase Realtime / SSE)
+  const currentMemberId = typeof window !== "undefined" ? authStore.getCurrentUser()?.id : undefined;
+
+  const handleRealtimeNotification = useCallback(
+    (payload: RealtimeMemberNotificationPayload) => {
+      const incoming = payload.notification;
+      const newNotif: MemberNotification = {
+        id: incoming.id,
+        memberId: payload.memberId,
+        type: incoming.type as MemberNotification["type"],
+        titleBn: incoming.titleBn,
+        titleEn: incoming.titleEn,
+        messageBn: incoming.messageBn,
+        messageEn: incoming.messageEn,
+        isRead: false,
+        link: incoming.link,
+        createdAt: incoming.createdAt,
+      };
+
+      setItems((prev) => {
+        if (prev.some((n) => n.id === newNotif.id)) return prev;
+        return [newNotif, ...prev];
+      });
+
+      setUnreadCount((prev) => prev + 1);
+
+      const isHighPriority =
+        newNotif.type === "renewal_approved" ||
+        newNotif.type === "renewal_rejected" ||
+        newNotif.type === "expiring_soon";
+
+      if (isHighPriority) {
+        setHighPriorityCount((prev) => prev + 1);
+      }
+
+      toast.info(newNotif.titleBn || "নতুন বিজ্ঞপ্তি", {
+        description: newNotif.messageBn,
+      });
+
+      window.dispatchEvent(new Event("member-notification-change"));
+    },
+    []
+  );
+
+  useRealtimeNotifications({
+    role: "user",
+    memberId: currentMemberId,
+    enableSound: true,
+    onNotification: handleRealtimeNotification,
+  });
 
   const markAsRead = useCallback(
     async (notificationId: string) => {

@@ -13,6 +13,7 @@ import {
   RATE_LIMIT_RULES,
 } from "@/lib/rateLimit";
 import { contactMessageSchema } from "@/lib/validations/contact";
+import { broadcastAdminAlert } from "@/lib/realtimeEmitter";
 
 async function verifyMessageAdmin(): Promise<boolean> {
   const session = await getSessionUser();
@@ -138,6 +139,12 @@ export async function addContactMessageAction(data: {
     });
 
     updateTag("admin-stats");
+
+    broadcastAdminAlert({
+      category: "message",
+      titleBn: `নতুন বার্তা: ${parsed.data.name}`,
+      titleEn: `New Message: ${parsed.data.name}`,
+    });
 
     return { success: true };
   } catch (error) {

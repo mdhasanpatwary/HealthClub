@@ -15,6 +15,7 @@ import {
   getClientIp,
   RATE_LIMIT_RULES,
 } from "@/lib/rateLimit";
+import { broadcastAdminAlert } from "@/lib/realtimeEmitter";
 
 const PARTNERS_TAG = "partners";
 
@@ -160,6 +161,13 @@ export async function addPartnerRequestAction(
     });
 
     updateTag("admin-stats");
+
+    broadcastAdminAlert({
+      category: "partner_request",
+      titleBn: `নতুন পার্টনার আবেদন: ${req.orgName}`,
+      titleEn: `New Partner Request: ${req.orgName}`,
+      id,
+    });
 
     return { success: true, data: toPartnerRequest(data) };
   } catch (error) {

@@ -11,6 +11,7 @@ import { PaginatedResult } from "@/types/pagination";
 import { HEALTH_TIPS_ARTICLES } from "@/data/healthTipsData";
 import { createMemberNotification } from "./memberNotificationActions";
 import { hasAdminPermission } from "@/lib/permissions";
+import { broadcastTransaction, broadcastAdminAlert } from "@/lib/realtimeEmitter";
 
 const ADMIN_STATS_TAG = "admin-stats";
 
@@ -253,6 +254,27 @@ export async function addTransactionAction(tx: Omit<Transaction, "id" | "date">)
       messageBn: `"${partner.name}" এ ৳${billAmount} টাকার বিলে আপনি ৳${validatedSaved} সাশ্রয় করেছেন!`,
       messageEn: `You saved ৳${validatedSaved} on a ৳${billAmount} bill at "${partner.name}"!`,
       link: "/dashboard?tab=history",
+    });
+
+    // Broadcast real-time transaction event
+    broadcastTransaction({
+      partnerId: partner.id,
+      memberId: member.id,
+      transaction: {
+        id: data.id,
+        amount: data.amount,
+        saved: data.saved,
+        partnerName: data.partnerName,
+        memberName: data.memberName,
+        date: data.date.toISOString(),
+      },
+    });
+
+    broadcastAdminAlert({
+      category: "transaction",
+      titleBn: `নতুন লেনদেন: ${partner.name} (৳${data.amount})`,
+      titleEn: `New Transaction: ${partner.name} (৳${data.amount})`,
+      id: data.id,
     });
 
     return {

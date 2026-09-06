@@ -148,6 +148,30 @@ export async function verifyActiveAdminUser(
 }
 
 /**
+ * Validates that an active member account is still enabled, exists, and
+ * has active status ('active'). If the member has been deactivated, suspended,
+ * or deleted, returns false.
+ */
+export async function verifyActiveMemberUser(userId: string): Promise<boolean> {
+  try {
+    const { prisma } = await import("@/lib/prisma");
+    const member = await prisma.member.findUnique({
+      where: { id: userId },
+      select: { id: true, status: true },
+    });
+
+    if (!member || member.status !== "active") {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    logger.error("[AUTH] Error verifying active member user session:", error);
+    return false;
+  }
+}
+
+/**
  * Creates a secure HttpOnly cookie session for the logged-in user.
  */
 export async function setSessionUser(
@@ -192,6 +216,20 @@ export async function getSessionUser(): Promise<SessionPayload | null> {
   const sessionCookie = cookieStore.get("session")?.value;
   const session = await decrypt(sessionCookie);
   if (!session) return null;
+
+  // Immediate session invalidation for member (role "user") if deactivated, suspended, or not active
+  if (session.role === "user" && session.userId) {
+    const isValid = await verifyActiveMemberUser(session.userId);
+    if (!isValid) {
+      logger.warn(`[AUTH] Revoking invalid/inactive member session for userId: ${session.userId}`);
+      try {
+        cookieStore.delete("session");
+      } catch {
+        // Readonly in RSC render pass
+      }
+      return null;
+    }
+  }
 
   // Immediate session invalidation for partner staff if deactivated or password reset
   if (session.role === "partner_staff" && session.staffId) {

@@ -6,8 +6,9 @@ import { getSessionUser, setSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { telemetry } from "@/lib/telemetry";
 import { updateTag } from "next/cache";
+import { broadcastAdminAlert } from "@/lib/realtimeEmitter";
 
-export async function getMemberForPaymentAction(memberId: string): Promise<{
+export interface MemberPaymentInfo {
   id: string;
   name: string;
   phone: string;
@@ -16,19 +17,12 @@ export async function getMemberForPaymentAction(memberId: string): Promise<{
   status: string;
   bkashTxnId?: string;
   bkashSender?: string;
-} | null> {
+}
+
+export async function getMemberForPaymentAction(memberId: string): Promise<MemberPaymentInfo | null> {
   try {
     const cleanId = memberId.trim();
     if (!cleanId) return null;
-
-    // Verify session: only admin or the authenticated member themselves can view payment info
-    const session = await getSessionUser();
-    const isAuthorized =
-      session && (session.role === "admin" || session.userId === cleanId);
-
-    if (!isAuthorized) {
-      return null;
-    }
 
     const m = await prisma.member.findUnique({
       where: { id: cleanId },
@@ -44,6 +38,18 @@ export async function getMemberForPaymentAction(memberId: string): Promise<{
       },
     });
     if (!m) return null;
+
+    // Verify session: only admin, the authenticated member themselves, or inactive/pending member loading payment info
+    const session = await getSessionUser();
+    const isAuthorized =
+      (session && (session.role === "admin" || session.userId === cleanId)) ||
+      m.status === "inactive" ||
+      m.status === "pending_approval";
+
+    if (!isAuthorized) {
+      return null;
+    }
+
     return {
       id: m.id,
       name: m.name,
@@ -88,10 +94,23 @@ export async function submitBkashPaymentAction(
       };
     }
 
-    // Verify session: only admin or the authenticated member themselves can submit payment
+    const member = await prisma.member.findUnique({
+      where: { id: cleanId },
+    });
+
+    if (!member) {
+      return {
+        success: false,
+        error: "সদস্য অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।",
+      };
+    }
+
+    // Verify session: only admin, the authenticated member themselves, or inactive/pending member completing payment
     const session = await getSessionUser();
     const isAuthorized =
-      session && (session.role === "admin" || session.userId === cleanId);
+      (session && (session.role === "admin" || session.userId === cleanId)) ||
+      member.status === "inactive" ||
+      member.status === "pending_approval";
 
     if (!isAuthorized) {
       telemetry.captureEvent(
@@ -107,17 +126,6 @@ export async function submitBkashPaymentAction(
       return {
         success: false,
         error: "অননুমোদিত অ্যাক্সেস। অনুগ্রহ করে লগইন করুন।",
-      };
-    }
-
-    const member = await prisma.member.findUnique({
-      where: { id: cleanId },
-    });
-
-    if (!member) {
-      return {
-        success: false,
-        error: "সদস্য অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।",
       };
     }
 
@@ -162,7 +170,7 @@ export async function submitBkashPaymentAction(
 
     // Maintain member session only if the caller is the member themselves
     // Never overwrite an admin session, and never issue a session to an unauthenticated caller
-    if (session.userId === cleanId && session.role === "user") {
+    if (session?.userId === cleanId && session?.role === "user") {
       await setSessionUser(cleanId, "user");
     }
 
@@ -242,6 +250,13 @@ export async function requestRenewalAction(
     });
 
     updateTag("admin-stats");
+
+    broadcastAdminAlert({
+      category: "renewal",
+      titleBn: "নতুন সদস্য নবায়ন আবেদন জমা পড়েছে",
+      titleEn: "New Member Renewal Request Submitted",
+      id: session.userId,
+    });
 
     return { success: true, message: "রিনিউয়াল অনুরোধ সফলভাবে পাঠানো হয়েছে! এডমিন যাচাইয়ের পর অ্যাক্টিভ করা হবে।" };
   } catch (error) {

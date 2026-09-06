@@ -12,6 +12,8 @@ import {
   AlertTriangle,
   ArrowRight,
   ExternalLink,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +25,10 @@ import {
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatNum } from "@/lib/i18n";
 import { useAdminNotifications } from "@/app/admin/hooks/useAdminNotifications";
+import {
+  isNotificationSoundEnabled,
+  setNotificationSoundEnabled,
+} from "@/lib/notificationSound";
 import type { AdminNotificationItem, NotificationCategory } from "@/app/actions/adminNotificationTypes";
 
 function getCategoryIcon(category: NotificationCategory) {
@@ -95,6 +101,13 @@ export function AdminNotificationBell() {
   const isBn = locale === "bn";
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState<"all" | "actions" | "messages">("all");
+  const [soundEnabled, setSoundEnabled] = useState(() => isNotificationSoundEnabled());
+
+  const toggleSound = () => {
+    const next = !soundEnabled;
+    setSoundEnabled(next);
+    setNotificationSoundEnabled(next);
+  };
 
   const {
     items,
@@ -163,17 +176,33 @@ export function AdminNotificationBell() {
             )}
           </div>
 
-          {unreadCount > 0 && (
-            <Button
-              variant="ghost"
-              size="xs"
-              onClick={markAllAsRead}
-              className="text-[11px] h-7 px-2 font-medium text-muted-foreground hover:text-primary transition-colors gap-1"
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={toggleSound}
+              className="p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+              title={soundEnabled ? (isBn ? "শব্দ বন্ধ করুন" : "Mute Sound") : (isBn ? "শব্দ চালু করুন" : "Unmute Sound")}
+              aria-label={soundEnabled ? "Mute notification sound" : "Unmute notification sound"}
             >
-              <CheckCheck className="h-3.5 w-3.5" />
-              <span>{t("admin.notifications.markAllRead") || "সব পঠিত"}</span>
-            </Button>
-          )}
+              {soundEnabled ? (
+                <Volume2 className="h-3.5 w-3.5 text-primary" />
+              ) : (
+                <VolumeX className="h-3.5 w-3.5 text-muted-foreground" />
+              )}
+            </button>
+
+            {unreadCount > 0 && (
+              <Button
+                variant="ghost"
+                size="xs"
+                onClick={markAllAsRead}
+                className="text-[11px] h-7 px-2 font-medium text-muted-foreground hover:text-primary transition-colors gap-1"
+              >
+                <CheckCheck className="h-3.5 w-3.5" />
+                <span>{t("admin.notifications.markAllRead") || "সব পঠিত"}</span>
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Filter Chips */}

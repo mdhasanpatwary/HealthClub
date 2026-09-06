@@ -16,6 +16,11 @@ import type {
 import { safeStorage } from "@/lib/safeStorage";
 import { toast } from "sonner";
 import { logger } from "@/lib/logger";
+import { useRealtimeNotifications } from "@/hooks/useRealtimeNotifications";
+import type {
+  RealtimeAdminAlertPayload,
+  RealtimeTransactionPayload,
+} from "@/lib/realtimeEmitter";
 
 const STORAGE_KEYS = {
   READ_IDS: "hc_admin_read_notifications",
@@ -132,6 +137,38 @@ export function useAdminNotifications(options?: UseAdminNotificationsOptions) {
       window.removeEventListener("admin-notifications-change", handleDataChange);
     };
   }, [fetchNotifications, loadLocalStates]);
+
+  // Real-time admin alert & transaction listener (Supabase Realtime / SSE)
+  const handleRealtimeAdminAlert = useCallback(
+    (payload: RealtimeAdminAlertPayload) => {
+      toast.info(payload.titleBn || "নতুন এডমিন অ্যালার্ট", {
+        description: payload.titleEn,
+      });
+      fetchNotifications();
+      window.dispatchEvent(new Event("admin-notifications-change"));
+      window.dispatchEvent(new Event("admin-data-change"));
+    },
+    [fetchNotifications]
+  );
+
+  const handleRealtimeTransaction = useCallback(
+    (payload: RealtimeTransactionPayload) => {
+      toast.info(`নতুন লেনদেন: ${payload.transaction.partnerName}`, {
+        description: `বিল ৳${payload.transaction.amount}, সাশ্রয় ৳${payload.transaction.saved}`,
+      });
+      fetchNotifications();
+      window.dispatchEvent(new Event("admin-notifications-change"));
+      window.dispatchEvent(new Event("admin-data-change"));
+    },
+    [fetchNotifications]
+  );
+
+  useRealtimeNotifications({
+    role: "admin",
+    enableSound: true,
+    onAdminAlert: handleRealtimeAdminAlert,
+    onTransaction: handleRealtimeTransaction,
+  });
 
   const readSet = useMemo(() => new Set(readIds), [readIds]);
   const dismissedSet = useMemo(() => new Set(dismissedIds), [dismissedIds]);
