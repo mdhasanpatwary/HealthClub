@@ -333,7 +333,7 @@ export default function DoctorDirectory({
                         </Link>
                       </div>
                       <p
-                        className="text-[11px] sm:text-xs font-semibold text-primary leading-tight line-clamp-1"
+                        className="text-[11px] sm:text-xs font-semibold text-primary leading-tight line-clamp-2 break-words"
                         title={doc.specialty}
                       >
                         {doc.specialty}

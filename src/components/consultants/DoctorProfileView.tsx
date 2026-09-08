@@ -401,7 +401,7 @@ export default function DoctorProfileView({
                         <h4 className="font-heading font-bold text-xs text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
                           {relDoc.name}
                         </h4>
-                        <p className="text-[11px] font-semibold text-primary line-clamp-1">
+                        <p className="text-[11px] font-semibold text-primary line-clamp-2 break-words">
                           {relDoc.specialty}
                         </p>
                         <p className="text-[10px] text-muted-foreground line-clamp-1">

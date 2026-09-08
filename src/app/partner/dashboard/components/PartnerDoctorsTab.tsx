@@ -338,12 +338,12 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
                         <DoctorAvailabilityBadge doctor={doc} size="sm" />
                       </div>
 
-                      <p className="text-xs font-medium text-slate-600 dark:text-slate-300 line-clamp-1">
+                      <p className="text-xs font-medium text-slate-600 dark:text-slate-300 line-clamp-2 break-words">
                         {doc.specialty}
                       </p>
 
                       {doc.degrees && (
-                        <p className="text-[11px] text-muted-foreground line-clamp-1">{doc.degrees}</p>
+                        <p className="text-[11px] text-muted-foreground line-clamp-2 break-words">{doc.degrees}</p>
                       )}
                       {doc.designation && (
                         <p className="text-[11px] text-slate-500 italic line-clamp-1">{doc.designation}</p>

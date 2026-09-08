@@ -245,7 +245,7 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
                     </h3>
                   </Link>
 
-                  <p className="text-[11px] text-muted-foreground line-clamp-1 leading-snug">
+                  <p className="text-[11px] text-muted-foreground line-clamp-2 leading-snug break-words">
                     {doc.degrees}
                   </p>
 
