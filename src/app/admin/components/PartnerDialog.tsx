@@ -49,7 +49,7 @@ export function PartnerDialog({
     <Dialog open={isOpen} onOpenChange={(open) => {
       if (!open) onClose();
     }}>
-      <DialogContent className="border-border bg-background">
+      <DialogContent className="w-full sm:max-w-xl md:max-w-2xl max-h-[90vh] overflow-y-auto p-5 sm:p-6 border-border bg-background">
         <DialogHeader>
           <DialogTitle className="font-heading font-bold text-secondary">
             {editingPartner ? t("admin.dashboard.editPartnerTitle") : t("admin.dashboard.addNewPartnerTitle")}
@@ -66,7 +66,7 @@ export function PartnerDialog({
             <label htmlFor="admin-partner-name" className="text-xs font-semibold text-secondary cursor-pointer">{t("admin.dashboard.partnerNameLabel")}</label>
             <Input id="admin-partner-name" type="text" required placeholder={t("admin.dashboard.egPartnerName")} value={newPartner.name} onChange={e => setNewPartner({ ...newPartner, name: e.target.value })} className="border-border bg-background" />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label htmlFor="admin-partner-category" className="text-xs font-semibold text-secondary cursor-pointer">{t("admin.dashboard.categoryLabel")}</label>
               <select id="admin-partner-category" value={newPartner.category} onChange={e => setNewPartner({ ...newPartner, category: e.target.value as Partner["category"] })} className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary">
@@ -106,7 +106,7 @@ export function PartnerDialog({
             <label htmlFor="admin-partner-maplink" className="text-xs font-semibold text-secondary cursor-pointer">{t("admin.dashboard.googleMapLinkLabel")}</label>
             <Input id="admin-partner-maplink" type="url" placeholder={t("admin.dashboard.egMapLink")} value={newPartner.mapLink} onChange={e => setNewPartner({ ...newPartner, mapLink: e.target.value })} className="border-border bg-background" />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label htmlFor="admin-partner-phone" className="text-xs font-semibold text-secondary cursor-pointer">{t("admin.dashboard.hotlineLabel")}</label>
               <Input id="admin-partner-phone" type="text" required placeholder={t("admin.dashboard.egHotline")} value={newPartner.phone} onChange={e => setNewPartner({ ...newPartner, phone: e.target.value })} className="border-border bg-background" />

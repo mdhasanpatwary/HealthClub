@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, Phone, Clock, Hospital, ShieldAlert, Pill, HeartHandshake, Tag, ChevronRight } from "lucide-react";
-import { Partner, DepartmentDiscount } from "@/services/db";
+import { MapPin, Phone, Clock, Hospital, ShieldAlert, Pill, HeartHandshake, ChevronRight } from "lucide-react";
+import { Partner } from "@/services/db";
 import { Card } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { formatDiscount, Locale } from "@/lib/i18n";
@@ -90,14 +90,6 @@ export default function PartnerCard({ partner, locale, t }: PartnerCardProps) {
       `${partner.name}, ${partner.address}`
     )}`;
 
-  let deptList: DepartmentDiscount[] = [];
-  if (partner.departmentDiscounts) {
-    try {
-      const parsed = JSON.parse(partner.departmentDiscounts);
-      if (Array.isArray(parsed)) deptList = parsed;
-    } catch {}
-  }
-
   return (
     <Card className="group relative overflow-hidden rounded-2xl border-border bg-card shadow-xs hover:shadow-xl hover:border-primary/40 transition-all duration-300 flex flex-col justify-between p-0 py-0 gap-0">
       {/* Full Image Banner with Overlay & Floating Info */}
@@ -152,28 +144,6 @@ export default function PartnerCard({ partner, locale, t }: PartnerCardProps) {
           </div>
         </div>
       </div>
-
-      {/* Department Discounts Breakdown Pills (if configured) */}
-      {deptList.length > 0 && (
-        <div className="px-3.5 sm:px-4 py-2.5 bg-slate-50/80 dark:bg-slate-900/50 border-t border-border/40 space-y-1.5">
-          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
-            <Tag className="h-3 w-3 text-primary" />
-            {t("ui.partnerdirectory.departmentDiscounts")}
-          </p>
-          <div className="flex flex-wrap gap-1.5 max-h-20 overflow-y-auto">
-            {deptList.map((dept, idx) => (
-              <span
-                key={idx}
-                className="text-[10px] bg-background text-secondary dark:text-slate-200 border border-border px-2 py-0.5 rounded-md font-medium flex items-center gap-1 shadow-2xs"
-                title={dept.description}
-              >
-                <span>{dept.name}</span>
-                <strong className="text-primary font-mono font-bold">({dept.discount})</strong>
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Card Footer: Discount Rate & Action Buttons */}
       <div className="p-3.5 sm:p-4 bg-background dark:bg-slate-900 flex flex-wrap items-center justify-between gap-2 border-t border-border/60">

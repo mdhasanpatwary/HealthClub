@@ -9,7 +9,7 @@ import { Truck, Heart, Building2, PhoneCall, ArrowRight, ShieldCheck, Sparkles }
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { BloodDonorRegisterDialog } from "@/app/emergency/components/BloodDonorRegisterDialog";
 import { AmbulanceRegisterDialog } from "@/app/emergency/components/AmbulanceRegisterDialog";
-import { toBanglaNums } from "@/lib/utils";
+import { cn, toBanglaNums } from "@/lib/utils";
 
 interface CommunityNetworkCTAProps {
   hotline?: string;
@@ -180,10 +180,10 @@ export default function CommunityNetworkCTA({ hotline }: CommunityNetworkCTAProp
 
             <Link
               href="/become-partner"
-              className={buttonVariants({
-                variant: "outline",
-                className: "w-full border-blue-500/30 hover:bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold rounded-xl mt-2",
-              })}
+              className={cn(
+                buttonVariants({ variant: "secondary" }),
+                "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl mt-2 cursor-pointer shadow-md"
+              )}
             >
               <span>{t("communityCTA.partner.btn")}</span>
               <ArrowRight className="ml-2 h-4 w-4" />

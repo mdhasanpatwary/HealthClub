@@ -14,7 +14,7 @@ interface PartnerCardPreviewProps {
   emergencyPhone: string;
   workingHours: string;
   imageUrl: string;
-  departmentDiscounts: DepartmentDiscount[];
+  departmentDiscounts?: DepartmentDiscount[];
 }
 
 export function PartnerCardPreview({
@@ -25,7 +25,6 @@ export function PartnerCardPreview({
   emergencyPhone,
   workingHours,
   imageUrl,
-  departmentDiscounts,
 }: PartnerCardPreviewProps) {
   const { t } = useLanguage();
 
@@ -93,21 +92,6 @@ export function PartnerCardPreview({
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/30 p-2 rounded-xl">
               <Clock className="h-3.5 w-3.5 text-primary shrink-0" />
               <span className="truncate">{workingHours}</span>
-            </div>
-          )}
-
-          {/* Department breakdown tags */}
-          {departmentDiscounts.length > 0 && (
-            <div className="space-y-1.5 pt-1">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase">{t("partner.profile.deptDiscountsLabel")}</p>
-              <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto">
-                {departmentDiscounts.map((dept, i) => (
-                  <span key={i} className="text-[10px] bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
-                    <span>{dept.name}</span>
-                    <strong className="font-mono font-bold">({dept.discount})</strong>
-                  </span>
-                ))}
-              </div>
             </div>
           )}
         </div>
