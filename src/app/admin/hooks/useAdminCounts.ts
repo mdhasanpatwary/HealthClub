@@ -2,10 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { usePathname } from "next/navigation";
-import { getPartnerRequestsAction } from "@/app/actions/partnerActions";
-import { getContactMessagesAction } from "@/app/actions/contactActions";
-import { getMembersAction } from "@/app/actions/memberAdminActions";
-import { getAllDoctorsAdminAction } from "@/app/actions/doctorActions";
+import { getAdminCountsAction, type AdminBadgeCounts } from "@/app/actions/adminCountActions";
 
 export interface AdminCounts {
   doctorsCount: number;
@@ -13,6 +10,36 @@ export interface AdminCounts {
   pendingRenewals: number;
   contactMessagesCount: number;
   loading: boolean;
+}
+
+// Module-level deduplication and short TTL cache to prevent redundant concurrent
+// queries when both AdminHeaderNav and MobileNavDrawer mount at the same time.
+let inFlightRequest: Promise<AdminBadgeCounts> | null = null;
+let cachedResult: { data: AdminBadgeCounts; timestamp: number } | null = null;
+const CACHE_TTL_MS = 3000;
+
+async function fetchDedupedAdminCounts(force = false): Promise<AdminBadgeCounts> {
+  const now = Date.now();
+  if (!force && cachedResult && now - cachedResult.timestamp < CACHE_TTL_MS) {
+    return cachedResult.data;
+  }
+
+  if (force) {
+    cachedResult = null;
+  }
+
+  if (!inFlightRequest) {
+    inFlightRequest = getAdminCountsAction()
+      .then((data) => {
+        cachedResult = { data, timestamp: Date.now() };
+        return data;
+      })
+      .finally(() => {
+        inFlightRequest = null;
+      });
+  }
+
+  return inFlightRequest;
 }
 
 export function useAdminCounts() {
@@ -26,28 +53,19 @@ export function useAdminCounts() {
     loading: true,
   });
 
-  const fetchCounts = useCallback(async () => {
+  const fetchCounts = useCallback(async (force = false) => {
     if (!isAdmin) {
       setCounts((prev) => ({ ...prev, loading: false }));
       return;
     }
 
     try {
-      const [doctorsRes, requestsRes, membersRes, messagesRes] = await Promise.all([
-        getAllDoctorsAdminAction(),
-        getPartnerRequestsAction(),
-        getMembersAction(),
-        getContactMessagesAction(),
-      ]);
-
-      const pendingRequests = requestsRes.filter((r) => r.status === "pending").length;
-      const pendingRenewals = membersRes.filter((m) => m.renewalStatus === "pending").length;
-
+      const data = await fetchDedupedAdminCounts(force);
       setCounts({
-        doctorsCount: doctorsRes.length,
-        pendingPartnerRequests: pendingRequests,
-        pendingRenewals: pendingRenewals,
-        contactMessagesCount: messagesRes.length,
+        doctorsCount: data.doctorsCount,
+        pendingPartnerRequests: data.pendingPartnerRequests,
+        pendingRenewals: data.pendingRenewals,
+        contactMessagesCount: data.contactMessagesCount,
         loading: false,
       });
     } catch {
@@ -68,7 +86,7 @@ export function useAdminCounts() {
     });
 
     const handleDataChange = () => {
-      fetchCounts();
+      fetchCounts(true);
     };
 
     window.addEventListener("admin-data-change", handleDataChange);
@@ -78,5 +96,6 @@ export function useAdminCounts() {
     };
   }, [fetchCounts, isAdmin]);
 
-  return { ...counts, refetchCounts: fetchCounts };
+  return { ...counts, refetchCounts: () => fetchCounts(true) };
 }
+

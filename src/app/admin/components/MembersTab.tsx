@@ -164,7 +164,7 @@ export function MembersTab({
                     <TableCell className="font-mono text-primary font-bold whitespace-nowrap">{m.id}</TableCell>
                     <TableCell className="font-bold text-secondary whitespace-nowrap">
                       <div className="flex items-center gap-2.5">
-                        <div className="h-8 w-8 rounded-full border border-border bg-muted/40 overflow-hidden flex items-center justify-center shrink-0 shadow-sm relative">
+                        <div className="h-8 w-8 rounded-full border border-border/80 bg-primary/10 text-primary font-bold text-xs overflow-hidden flex items-center justify-center shrink-0 shadow-xs relative select-none">
                           {m.profilePictureUrl ? (
                             <Image
                               src={m.profilePictureUrl}
@@ -175,7 +175,7 @@ export function MembersTab({
                               className="h-full w-full object-cover object-left-top"
                             />
                           ) : (
-                            <User className="h-4 w-4 text-muted-foreground" />
+                            <span>{m.name?.trim().charAt(0).toUpperCase() || <User className="h-4 w-4 text-primary" />}</span>
                           )}
                         </div>
                         <div>

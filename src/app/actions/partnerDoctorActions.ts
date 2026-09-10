@@ -6,6 +6,7 @@ import { Doctor, initialDoctors } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { updateTag } from "next/cache";
+import { ensureStorageUrl } from "@/services/storageService";
 
 const DOCTORS_TAG = "doctors";
 const PARTNERS_TAG = "partners";
@@ -321,7 +322,7 @@ export async function addPartnerDoctorAction(
         visitingHours: input.visitingHours.trim(),
         serialPhone: input.serialPhone.trim(),
         consultationFee: input.consultationFee?.trim() || null,
-        imageUrl: input.imageUrl?.trim() || null,
+        imageUrl: (await ensureStorageUrl(input.imageUrl?.trim(), "doctors")) || null,
         partnerId,
         upazila: input.upazila || partner.upazila || "feni-sadar",
         isActive: input.isActive ?? true,
@@ -384,7 +385,7 @@ export async function updatePartnerDoctorChamberAction(
         ...(input.visitingHours && { visitingHours: input.visitingHours.trim() }),
         ...(input.serialPhone && { serialPhone: input.serialPhone.trim() }),
         ...(input.consultationFee !== undefined && { consultationFee: input.consultationFee.trim() || null }),
-        ...(input.imageUrl !== undefined && { imageUrl: input.imageUrl.trim() || null }),
+        ...(input.imageUrl !== undefined && { imageUrl: (await ensureStorageUrl(input.imageUrl.trim(), "doctors", doctorId)) || null }),
         ...(input.upazila !== undefined && { upazila: input.upazila || "feni-sadar" }),
         ...(input.isActive !== undefined && { isActive: input.isActive }),
         ...(input.availableToday !== undefined && { availableToday: input.availableToday }),

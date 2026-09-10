@@ -1,11 +1,13 @@
 "use client";
 
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
-import { User, Building, Camera, Trash2, Stethoscope } from "lucide-react";
+import { User, Building, Camera, Trash2, Stethoscope, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/layout/LanguageProvider";
+import { uploadImageAction } from "@/app/actions/uploadActions";
+import { StorageFolder } from "@/services/storageService";
 import { toast } from "sonner";
 
 interface ImageUploadProps {
@@ -13,11 +15,21 @@ interface ImageUploadProps {
   onChange: (value: string) => void;
   label?: string;
   fallbackType?: 'user' | 'building' | 'doctor' | 'stethoscope';
+  folder?: StorageFolder;
+  disabled?: boolean;
 }
 
-export function ImageUpload({ value, onChange, label, fallbackType = 'user' }: ImageUploadProps) {
+export function ImageUpload({
+  value,
+  onChange,
+  label,
+  fallbackType = 'user',
+  folder = 'members',
+  disabled = false,
+}: ImageUploadProps) {
   const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -89,7 +101,30 @@ export function ImageUpload({ value, onChange, label, fallbackType = 'user' }: I
 
           ctx.drawImage(img, 0, 0, width, height);
           const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.82);
-          onChange(compressedDataUrl);
+
+          // Upload to Supabase Storage CDN asynchronously
+          setIsUploading(true);
+          uploadImageAction(compressedDataUrl, folder)
+            .then((res) => {
+              if (res.success && res.url) {
+                onChange(res.url);
+                toast.success(t("ui.imageUpload.uploadSuccess"));
+              } else if (!res.isConfigured) {
+                // Storage not configured yet, fallback to compressed base64
+                onChange(compressedDataUrl);
+              } else {
+                // Upload failed, retain compressed preview and notify
+                onChange(compressedDataUrl);
+                toast.error(res.error || t("ui.imageUpload.processError"));
+              }
+            })
+            .catch(() => {
+              onChange(compressedDataUrl);
+              toast.error(t("ui.imageUpload.processError"));
+            })
+            .finally(() => {
+              setIsUploading(false);
+            });
         } catch {
           onChange(result);
         }
@@ -110,7 +145,7 @@ export function ImageUpload({ value, onChange, label, fallbackType = 'user' }: I
               src={value}
               alt={label ? `${label} Preview` : "Image Preview"}
               fill
-              unoptimized
+              unoptimized={value.startsWith("data:")}
               className="object-cover object-left-top"
             />
           ) : fallbackType === 'building' ? (
@@ -120,20 +155,37 @@ export function ImageUpload({ value, onChange, label, fallbackType = 'user' }: I
           ) : (
             <User className="h-8 w-8 text-muted-foreground" />
           )}
-          <button
-            type="button"
-            aria-label={label ? `${label} ${t("ui.imageUpload.changeImage")}` : t("ui.imageUpload.uploadImage")}
-            onClick={() => fileInputRef.current?.click()}
-            className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity cursor-pointer duration-200 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
-          >
-            <Camera className="h-4 w-4 text-white" />
-          </button>
+
+          {isUploading && (
+            <div
+              role="status"
+              aria-live="polite"
+              className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-1 z-10"
+            >
+              <Loader2 className="h-5 w-5 text-white animate-spin" />
+              <span className="text-[8px] text-white/90 font-medium leading-none px-1 text-center truncate">
+                {t("ui.imageUpload.uploading")}
+              </span>
+            </div>
+          )}
+
+          {!isUploading && !disabled && (
+            <button
+              type="button"
+              aria-label={label ? `${label} ${t("ui.imageUpload.changeImage")}` : t("ui.imageUpload.uploadImage")}
+              onClick={() => fileInputRef.current?.click()}
+              className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity cursor-pointer duration-200 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              <Camera className="h-4 w-4 text-white" />
+            </button>
+          )}
         </div>
         <div className="flex-1">
           <Input
             ref={fileInputRef}
             type="file"
             accept="image/*"
+            disabled={disabled || isUploading}
             aria-label={label || t("ui.imageUpload.uploadImage")}
             onChange={handleFileChange}
             className="border-border bg-background text-xs cursor-pointer file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
@@ -142,6 +194,7 @@ export function ImageUpload({ value, onChange, label, fallbackType = 'user' }: I
             <Button
               type="button"
               variant="ghost"
+              disabled={disabled || isUploading}
               onClick={() => {
                 onChange("");
                 if (fileInputRef.current) {

@@ -58,6 +58,7 @@ export function MemberDialog({
             value={newMember.profilePictureUrl || ""}
             onChange={(url) => setNewMember({ ...newMember, profilePictureUrl: url })}
             label={t("admin.dashboard.profilePictureLabel")}
+            folder="members"
           />
           <div className="space-y-2">
             <label htmlFor="admin-member-name" className="text-xs font-semibold text-secondary cursor-pointer">{t("admin.dashboard.nameLabel")}</label>

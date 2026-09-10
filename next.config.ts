@@ -23,6 +23,9 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
+      // Supabase Storage CDN
+      { protocol: "https", hostname: "*.supabase.co" },
+      { protocol: "https", hostname: "uqtodphwiwzikmhsyiyc.supabase.co" },
       // Unsplash — partner card images
       { protocol: "https", hostname: "images.unsplash.com" },
       // External QR code API (fallback when qrCodeUrl not in DB)

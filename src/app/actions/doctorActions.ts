@@ -9,6 +9,7 @@ import { unstable_cache, updateTag } from "next/cache";
 import { PaginatedResult } from "@/types/pagination";
 import { hasAdminPermission } from "@/lib/permissions";
 import { distributeDoctorsFairly } from "@/lib/doctorDistribution";
+import { ensureStorageUrl } from "@/services/storageService";
 
 const DOCTORS_TAG = "doctors";
 
@@ -19,8 +20,36 @@ async function verifyDoctorAdmin(): Promise<boolean> {
   return hasAdminPermission(role, "manage_doctors");
 }
 
+const DOCTOR_ADMIN_SELECT_FIELDS = {
+  id: true,
+  name: true,
+  specialty: true,
+  department: true,
+  degrees: true,
+  designation: true,
+  chamberName: true,
+  chamberAddress: true,
+  roomNo: true,
+  visitingDays: true,
+  visitingHours: true,
+  serialPhone: true,
+  consultationFee: true,
+  partnerId: true,
+  upazila: true,
+  isActive: true,
+  availableToday: true,
+  onLeaveUntil: true,
+  notice: true,
+  createdAt: true,
+  // Note: imageUrl omitted from admin bulk queries to prevent heavy base64 data transfer
+} as const;
+
+type PrismaDoctorRecord =
+  | Prisma.DoctorGetPayload<{ select: typeof DOCTOR_ADMIN_SELECT_FIELDS }>
+  | Prisma.DoctorGetPayload<object>;
+
 // Helper to format Prisma Doctor record to Doctor interface
-function formatDoctor(d: Prisma.DoctorGetPayload<object>): Doctor {
+function formatDoctor(d: PrismaDoctorRecord): Doctor {
   return {
     id: d.id,
     name: d.name,
@@ -35,7 +64,7 @@ function formatDoctor(d: Prisma.DoctorGetPayload<object>): Doctor {
     visitingHours: d.visitingHours,
     serialPhone: d.serialPhone,
     consultationFee: d.consultationFee || undefined,
-    imageUrl: d.imageUrl || undefined,
+    imageUrl: (d as { imageUrl?: string | null }).imageUrl || undefined,
     partnerId: d.partnerId || undefined,
     upazila: d.upazila || "feni-sadar",
     isActive: d.isActive,
@@ -112,6 +141,7 @@ export async function getPaginatedDoctorsAdminAction(
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * pageSize,
         take: pageSize,
+        select: DOCTOR_ADMIN_SELECT_FIELDS,
       }),
     ]);
 
@@ -187,12 +217,29 @@ export async function getAllDoctorsAdminAction(): Promise<Doctor[]> {
   try {
     const data = await prisma.doctor.findMany({
       orderBy: { createdAt: "desc" },
+      select: DOCTOR_ADMIN_SELECT_FIELDS,
     });
 
     return data.map(formatDoctor);
   } catch (error) {
     logger.error("Error in getAllDoctorsAdminAction:", error);
     return [];
+  }
+}
+
+/**
+ * Fetch doctor image on-demand when opening edit dialog.
+ */
+export async function getDoctorImageAction(id: string): Promise<string | null> {
+  try {
+    const doc = await prisma.doctor.findUnique({
+      where: { id },
+      select: { imageUrl: true },
+    });
+    return doc?.imageUrl || null;
+  } catch (error) {
+    logger.error("Error in getDoctorImageAction:", error);
+    return null;
   }
 }
 
@@ -300,7 +347,7 @@ export async function addDoctorAction(
         visitingHours: doctor.visitingHours,
         serialPhone: doctor.serialPhone,
         consultationFee: doctor.consultationFee || null,
-        imageUrl: doctor.imageUrl || null,
+        imageUrl: (await ensureStorageUrl(doctor.imageUrl, "doctors")) || null,
         partnerId: doctor.partnerId || null,
         upazila: doctor.upazila || "feni-sadar",
         isActive: doctor.isActive ?? true,
@@ -349,7 +396,7 @@ export async function updateDoctorAction(
         ...(doctor.visitingHours !== undefined && { visitingHours: doctor.visitingHours }),
         ...(doctor.serialPhone !== undefined && { serialPhone: doctor.serialPhone }),
         ...(doctor.consultationFee !== undefined && { consultationFee: doctor.consultationFee || null }),
-        ...(doctor.imageUrl !== undefined && { imageUrl: doctor.imageUrl || null }),
+        ...(doctor.imageUrl !== undefined && { imageUrl: (await ensureStorageUrl(doctor.imageUrl, "doctors", id)) || null }),
         ...(doctor.partnerId !== undefined && { partnerId: doctor.partnerId || null }),
         ...(doctor.upazila !== undefined && { upazila: doctor.upazila || "feni-sadar" }),
         ...(doctor.isActive !== undefined && { isActive: doctor.isActive }),

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Building2, PhoneCall, Clock, Percent, Plus, Trash2, Globe, Image as ImageIcon, Sparkles, ShieldCheck, Tag } from "lucide-react";
+import { Building2, PhoneCall, Clock, Percent, Plus, Trash2, Globe, Sparkles, ShieldCheck, Tag } from "lucide-react";
 import { Partner, DepartmentDiscount, PartnerSocialLinks, parsePartnerSocialLinks, formatSocialUrl } from "@/services/db";
 import { authStore } from "@/services/authStore";
 import { updatePartnerProfileAction } from "@/app/actions/partnerActions";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ImageUpload } from "@/components/ui/ImageUpload";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { PartnerCardPreview } from "./PartnerCardPreview";
 import { PartnerPasswordCard } from "./PartnerPasswordCard";
@@ -270,16 +271,12 @@ export function PartnerProfileSettingsTab({
                   </div>
 
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label htmlFor="partner-image-url" className="text-xs font-semibold text-secondary dark:text-slate-200 flex items-center gap-1">
-                      <ImageIcon className="h-3.5 w-3.5 text-primary" />
-                      {t("partner.profile.imageUrl")}
-                    </label>
-                    <Input
-                      id="partner-image-url"
+                    <ImageUpload
                       value={imageUrl}
-                      onChange={(e) => setImageUrl(e.target.value)}
-                      placeholder={t("partner.profile.imageUrlPlaceholder")}
-                      className="h-10 rounded-xl border-border text-xs"
+                      onChange={setImageUrl}
+                      label={t("partner.profile.imageUrl")}
+                      fallbackType="building"
+                      folder="partners"
                     />
                   </div>
                 </div>

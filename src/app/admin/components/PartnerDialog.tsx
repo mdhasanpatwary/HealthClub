@@ -55,6 +55,7 @@ export function PartnerDialog({
             onChange={(url) => setNewPartner({ ...newPartner, imageUrl: url })}
             label={t("admin.dashboard.partnerImageLabel")}
             fallbackType="building"
+            folder="partners"
           />
           <div className="space-y-2">
             <label htmlFor="admin-partner-name" className="text-xs font-semibold text-secondary cursor-pointer">{t("admin.dashboard.partnerNameLabel")}</label>

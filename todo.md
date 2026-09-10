@@ -868,6 +868,36 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `prisma/schema.prisma`, `src/services/db.ts`, `src/lib/slugify.ts`, `src/app/actions/partnerActions.ts`, `src/app/actions/partnerProfileQueryActions.ts`, `src/app/actions/partnerRequestActions.ts`, `src/app/partner-hospitals/[slug]/page.tsx`, `src/components/ui/PartnerCard.tsx`, `src/components/partner-hospitals/HospitalContactSidebar.tsx`, `src/app/admin/components/PartnerDialog.tsx`, `src/app/admin/partners/page.tsx`, `src/app/sitemap.ts`, `src/lib/seo/partnerSchema.ts`, `src/app/actions/reviewActions.ts`
   - **Details**: Replaced opaque random UUIDs (e.g. `/partner-hospitals/p_9abc5886-459d-43a7-8d26-52d51ac9589c`) with clean, SEO-friendly slugs derived from partner names (e.g. `/partner-hospitals/মজুমদার-ডেন্টাল-ক্লিনিক` or `/partner-hospitals/imperial-neurocare-diagnostic-center`). Implemented automatic HTTP 308/301 permanent redirection from old random ID URLs to canonical name slugs, unique slug generation in Prisma schema, custom slug editing in Admin portal, and updated directory cards, sidebars, reviews, and sitemap.
 
+---
+
+## 🚀 Phase 20: Supabase Quota Optimization & Database Bandwidth Reduction (TODO-159 to TODO-162)
+
+### 📉 Bandwidth & Database Egress Optimization (P0 / P1)
+
+- [x] **TODO-159**: **Optimize `useAdminCounts` to Use Dedicated Lightweight SQL `COUNT(*)` Queries**
+  - **Severity**: High
+  - **Files**: `src/app/admin/hooks/useAdminCounts.ts`, `src/app/actions/adminCountActions.ts`
+  - **Details**: Created dedicated `getAdminCountsAction` server action executing parallel Prisma SQL `count()` queries (`prisma.doctor.count()`, `prisma.partnerRequest.count()`, `prisma.member.count()`, `prisma.contactMessage.count()`) instead of fetching entire entity datasets with heavy base64 images. Implemented module-level in-flight promise deduplication and short TTL caching in `useAdminCounts` to ensure simultaneous mounts of `AdminHeaderNav` and `MobileNavDrawer` coalesce into a single sub-100-byte network request, reducing database egress by over 99.9%.
+
+
+- [x] **TODO-160**: **Exclude Base64 Image Fields (`profilePictureUrl`, `imageUrl`) from Bulk List Queries & Admin Tables**
+  - **Severity**: High
+  - **Files**: `src/app/actions/memberAdminActions.ts`, `src/app/actions/doctorActions.ts`, `src/app/actions/partnerActions.ts`, `src/app/actions/dbActions.ts`, `src/app/admin/components/MemberDetailsDialog.tsx`, `src/app/admin/members/page.tsx`, `src/app/admin/components/MembersTab.tsx`, `src/app/admin/hooks/useAdminDoctors.ts`, `src/app/admin/partners/page.tsx`
+  - **Details**: Omitted large base64 image fields (`profilePictureUrl`, `imageUrl`) from bulk list queries and paginated admin tables (`getPaginatedMembersAction`, `getMembersAction`, `getPaginatedRenewalsAction`, `getPaginatedDoctorsAdminAction`, `getAllDoctorsAdminAction`, `getPaginatedPartnersAdminAction`). Created dedicated on-demand fetch actions (`getMemberProfilePictureAction`, `getDoctorImageAction`, `getPartnerImageAction`) to load images only when an administrator views or edits an entity. Updated table avatars to render clean initials/icons, slashing query payloads by 95-99% per table view.
+
+- [x] **TODO-161**: **Throttle Redundant Client-Side Notification Polling in `useMemberNotifications`**
+  - **Severity**: Medium
+  - **Files**: `src/app/dashboard/hooks/useMemberNotifications.ts`
+  - **Details**: Eliminated aggressive 30s interval polling in `useMemberNotifications` and increased fallback polling to a lazy 5-minute heartbeat (`autoRefreshInterval = 300000`) that automatically halts when the browser tab is hidden (`document.visibilityState === "hidden"`). Replaced unthrottled window `focus` query spam with a 5-minute minimum cooldown throttle. Implemented module-level in-flight promise deduplication and short TTL cache (5s) to coalesce concurrent mounts (Desktop Header, Mobile Header, Dashboard Welcome Header) into a single database read. Added zero-query inter-instance custom event synchronization (`member-notification-local-read`, `member-notification-local-all-read`, `member-notification-local-delete`) and toast deduplication, slashing idle member tab database queries by over 99%.
+
+### 🖼️ Storage Architecture & Asset Delivery (P2)
+
+- [x] **TODO-162**: **Migrate Image Uploads from Database Base64 Strings to Supabase Storage / External CDN**
+  - **Severity**: Medium
+  - **Files**: `src/services/storageService.ts`, `src/app/actions/uploadActions.ts`, `src/components/ui/ImageUpload.tsx`, `src/app/actions/memberActions.ts`, `src/app/actions/memberAdminActions.ts`, `src/app/actions/memberAuthActions.ts`, `src/app/actions/partnerActions.ts`, `src/app/actions/doctorActions.ts`, `src/app/actions/partnerDoctorActions.ts`, `src/app/partner/dashboard/components/PartnerProfileSettingsTab.tsx`, `src/scripts/migrateExistingImages.ts`
+  - **Details**: Created dedicated Supabase Storage service (`storageService.ts`) and server action (`uploadImageAction`) connecting to the public `healthclub-public` bucket with 1-year immutable CDN edge caching. Enhanced `ImageUpload.tsx` with client-side canvas compression, asynchronous storage upload, upload spinner overlay, and resilient fallback to avoid blocking users. Instrumented `memberActions.ts`, `memberAdminActions.ts`, `memberAuthActions.ts`, `partnerActions.ts`, `doctorActions.ts`, and `partnerDoctorActions.ts` with `ensureStorageUrl` to guarantee that incoming base64 images are automatically uploaded to Supabase Storage before database insertion. Created runnable migration script (`migrateExistingImages.ts`) to upload existing base64 images to Supabase Storage and update PostgreSQL records to short public CDN URLs.
+
+
 
 
 

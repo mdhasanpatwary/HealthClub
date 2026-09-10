@@ -1,16 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { 
   User, Mail, Phone, Calendar, MapPin, Briefcase, CreditCard, ShieldCheck, Edit3, Heart,
-  History as HistoryIcon, ZoomIn, ExternalLink
+  History as HistoryIcon, ZoomIn, ExternalLink, Loader2
 } from "lucide-react";
 import { Member, Transaction } from "@/services/db";
 import { formatNum, Locale } from "@/lib/i18n";
+import { getMemberProfilePictureAction } from "@/app/actions/memberAdminActions";
 
 interface MemberDetailsDialogProps {
   viewingMember: Member | null;
@@ -32,6 +33,36 @@ export function MemberDetailsDialog({
   t,
 }: MemberDetailsDialogProps) {
   const [isImagePreviewOpen, setIsImagePreviewOpen] = useState(false);
+  const [fetchedPic, setFetchedPic] = useState<string | null>(null);
+  const [fetchedMemberId, setFetchedMemberId] = useState<string | null>(null);
+
+  const memberId = viewingMember?.id;
+  const initialPicUrl = viewingMember?.profilePictureUrl;
+  const profilePic = initialPicUrl || (fetchedMemberId === memberId ? fetchedPic : null);
+  const loadingPic = Boolean(memberId && !initialPicUrl && fetchedMemberId !== memberId);
+
+  useEffect(() => {
+    if (!memberId || initialPicUrl) return;
+
+    let isMounted = true;
+    getMemberProfilePictureAction(memberId)
+      .then((url) => {
+        if (isMounted) {
+          setFetchedPic(url);
+          setFetchedMemberId(memberId);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setFetchedPic(null);
+          setFetchedMemberId(memberId);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [memberId, initialPicUrl]);
 
   if (!viewingMember) return null;
 
@@ -51,22 +82,24 @@ export function MemberDetailsDialog({
               <button
                 type="button"
                 onClick={() => {
-                  if (viewingMember.profilePictureUrl) {
+                  if (profilePic) {
                     setIsImagePreviewOpen(true);
                   }
                 }}
-                disabled={!viewingMember.profilePictureUrl}
-                aria-label={viewingMember.profilePictureUrl ? (locale === "bn" ? "প্রোফাইল ছবি বড় করে দেখুন" : "View profile picture") : undefined}
+                disabled={!profilePic}
+                aria-label={profilePic ? (locale === "bn" ? "প্রোফাইল ছবি বড় করে দেখুন" : "View profile picture") : undefined}
                 className={`h-14 w-14 rounded-xl border border-border bg-muted/40 overflow-hidden flex items-center justify-center shrink-0 shadow-sm relative group text-left ${
-                  viewingMember.profilePictureUrl 
+                  profilePic 
                     ? "cursor-pointer hover:ring-2 hover:ring-primary/60 hover:shadow-md transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" 
                     : "cursor-default"
                 }`}
               >
-                {viewingMember.profilePictureUrl ? (
+                {loadingPic ? (
+                  <Loader2 className="h-5 w-5 text-muted-foreground animate-spin" />
+                ) : profilePic ? (
                   <>
                     <Image 
-                      src={viewingMember.profilePictureUrl} 
+                      src={profilePic} 
                       alt={viewingMember.name} 
                       width={56}
                       height={56}
@@ -268,7 +301,7 @@ export function MemberDetailsDialog({
             )}
             <div className="flex gap-2 flex-1 w-full">
               <Button 
-                onClick={() => onEditClick(viewingMember)}
+                onClick={() => onEditClick(profilePic ? { ...viewingMember, profilePictureUrl: profilePic } : viewingMember)}
                 className="flex-1 bg-primary hover:bg-primary-dark text-white font-semibold gap-1.5"
               >
                 <Edit3 className="h-4 w-4" />
@@ -288,7 +321,7 @@ export function MemberDetailsDialog({
     </Dialog>
 
     {/* Profile Picture Preview Modal */}
-    {viewingMember.profilePictureUrl && (
+    {profilePic && (
       <Dialog open={isImagePreviewOpen} onOpenChange={setIsImagePreviewOpen}>
         <DialogContent className="max-w-md sm:max-w-lg p-4 sm:p-5 border-border bg-background z-[60] overflow-hidden">
           <DialogHeader className="border-b border-border pb-3">
@@ -302,7 +335,7 @@ export function MemberDetailsDialog({
           <div className="flex flex-col items-center justify-center pt-2 pb-1 gap-3">
             <div className="relative w-full max-h-[65vh] rounded-xl overflow-hidden bg-muted/30 border border-border flex items-center justify-center p-1">
               <Image
-                src={viewingMember.profilePictureUrl}
+                src={profilePic}
                 alt={viewingMember.name}
                 width={480}
                 height={480}
@@ -316,7 +349,7 @@ export function MemberDetailsDialog({
                 {locale === "bn" ? "সদস্যের ছবি" : "Member Photo"}
               </span>
               <a
-                href={viewingMember.profilePictureUrl}
+                href={profilePic}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-primary hover:text-primary-dark font-semibold hover:underline"

@@ -175,6 +175,8 @@ export const commonEn = {
   "ui.imageUpload.deleteImage": "Remove Image",
   "ui.imageUpload.changeImage": "Change Image",
   "ui.imageUpload.uploadImage": "Upload Image",
+  "ui.imageUpload.uploading": "Uploading image...",
+  "ui.imageUpload.uploadSuccess": "Image uploaded successfully.",
 
   // Layout, Notice, PWA & Navigation
   "layout.notice.dismiss": "Dismiss Announcement",

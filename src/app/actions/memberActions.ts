@@ -22,6 +22,7 @@ import {
   memberRegistrationSchema,
   adminAddMemberSchema,
 } from "@/lib/validations/member";
+import { ensureStorageUrl } from "@/services/storageService";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "healthclubfeni@gmail.com";
 
@@ -127,7 +128,7 @@ export async function addMemberAction(
           address: member.address || null,
           birthDate: member.birthDate ? new Date(member.birthDate) : null,
           profession: member.profession || null,
-          profilePictureUrl: member.profilePictureUrl || null,
+          profilePictureUrl: (await ensureStorageUrl(member.profilePictureUrl, "members", newId)) || null,
           emailVerified: true,
         },
       });
@@ -156,6 +157,8 @@ export async function addMemberAction(
       return { error: "ইমেইল অ্যাড্রেস আবশ্যক।" };
     }
 
+    const pendingProfilePhoto = (await ensureStorageUrl(member.profilePictureUrl, "members")) || undefined;
+
     await setPendingRegistration(
       {
         name: member.name,
@@ -166,7 +169,7 @@ export async function addMemberAction(
         address: member.address,
         birthDate: member.birthDate,
         profession: member.profession,
-        profilePictureUrl: member.profilePictureUrl,
+        profilePictureUrl: pendingProfilePhoto,
       },
       verificationCode
     );

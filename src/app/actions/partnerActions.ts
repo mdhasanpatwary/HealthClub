@@ -37,6 +37,7 @@ import {
 } from "./partnerProfileQueryActions";
 import { hasAdminPermission } from "@/lib/permissions";
 import { generatePartnerSlug, sanitizePartnerSlug, resolveUniquePartnerSlug } from "@/lib/slugify";
+import { ensureStorageUrl } from "@/services/storageService";
 
 const PARTNERS_TAG = "partners";
 
@@ -47,61 +48,19 @@ async function verifyPartnerAdmin(): Promise<boolean> {
   return hasAdminPermission(role, "manage_partners");
 }
 
-export async function getPartnerByIdAction(id: string) {
-  return _getPartnerByIdAction(id);
-}
-
-export async function getDoctorsByPartnerIdAction(partnerId: string) {
-  return _getDoctorsByPartnerIdAction(partnerId);
-}
-
-export async function getRelatedPartnersAction(
-  category: string,
-  currentId: string,
-  limit?: number
-) {
-  return _getRelatedPartnersAction(category, currentId, limit);
-}
-
-export async function addPartnerRequestAction(...args: Parameters<typeof _addPartnerRequestAction>) {
-  return _addPartnerRequestAction(...args);
-}
-
-export async function getPartnerRequestsAction() {
-  return _getPartnerRequestsAction();
-}
-
-export async function getPaginatedPartnerRequestsAction(...args: Parameters<typeof _getPaginatedPartnerRequestsAction>) {
-  return _getPaginatedPartnerRequestsAction(...args);
-}
-
-export async function updatePartnerRequestStatusAction(id: string, status: "approved" | "rejected") {
-  return _updatePartnerRequestStatusAction(id, status);
-}
-
-export async function approvePartnerRequestAction(id: string) {
-  return _approvePartnerRequestAction(id);
-}
-
-export async function rejectPartnerRequestAction(id: string) {
-  return _rejectPartnerRequestAction(id);
-}
-
-export async function loginPartnerAction(identifier: string, password: string) {
-  return _loginPartnerAction(identifier, password);
-}
-
-export async function changePartnerPasswordAction(currentPassword: string, newPassword: string) {
-  return _changePartnerPasswordAction(currentPassword, newPassword);
-}
-
-export async function requestPartnerPasswordResetAction(email: string) {
-  return _requestPartnerPasswordResetAction(email);
-}
-
-export async function resetPartnerPasswordAction(email: string, code: string, rawNewPassword: string) {
-  return _resetPartnerPasswordAction(email, code, rawNewPassword);
-}
+export async function getPartnerByIdAction(id: string) { return _getPartnerByIdAction(id); }
+export async function getDoctorsByPartnerIdAction(partnerId: string) { return _getDoctorsByPartnerIdAction(partnerId); }
+export async function getRelatedPartnersAction(category: string, currentId: string, limit?: number) { return _getRelatedPartnersAction(category, currentId, limit); }
+export async function addPartnerRequestAction(...args: Parameters<typeof _addPartnerRequestAction>) { return _addPartnerRequestAction(...args); }
+export async function getPartnerRequestsAction() { return _getPartnerRequestsAction(); }
+export async function getPaginatedPartnerRequestsAction(...args: Parameters<typeof _getPaginatedPartnerRequestsAction>) { return _getPaginatedPartnerRequestsAction(...args); }
+export async function updatePartnerRequestStatusAction(id: string, status: "approved" | "rejected") { return _updatePartnerRequestStatusAction(id, status); }
+export async function approvePartnerRequestAction(id: string) { return _approvePartnerRequestAction(id); }
+export async function rejectPartnerRequestAction(id: string) { return _rejectPartnerRequestAction(id); }
+export async function loginPartnerAction(identifier: string, password: string) { return _loginPartnerAction(identifier, password); }
+export async function changePartnerPasswordAction(currentPassword: string, newPassword: string) { return _changePartnerPasswordAction(currentPassword, newPassword); }
+export async function requestPartnerPasswordResetAction(email: string) { return _requestPartnerPasswordResetAction(email); }
+export async function resetPartnerPasswordAction(email: string, code: string, rawNewPassword: string) { return _resetPartnerPasswordAction(email, code, rawNewPassword); }
 
 const PARTNER_SELECT_FIELDS = {
   id: true,
@@ -123,8 +82,29 @@ const PARTNER_SELECT_FIELDS = {
   createdAt: true,
 } as const;
 
+const PARTNER_ADMIN_SELECT_FIELDS = {
+  id: true,
+  slug: true,
+  name: true,
+  category: true,
+  address: true,
+  discount: true,
+  phone: true,
+  email: true,
+  logoText: true,
+  mapLink: true,
+  emergencyPhone: true,
+  workingHours: true,
+  departmentDiscounts: true,
+  socialLinks: true,
+  upazila: true,
+  createdAt: true,
+  // Note: imageUrl omitted from admin bulk queries to prevent large base64 data transfer
+} as const;
+
 type PrismaPartnerRecord =
   | Prisma.PartnerGetPayload<{ select: typeof PARTNER_SELECT_FIELDS }>
+  | Prisma.PartnerGetPayload<{ select: typeof PARTNER_ADMIN_SELECT_FIELDS }>
   | Prisma.PartnerGetPayload<object>;
 
 function formatPartner(p: PrismaPartnerRecord): Partner {
@@ -139,7 +119,7 @@ function formatPartner(p: PrismaPartnerRecord): Partner {
     email: p.email || undefined,
     logoText: p.logoText,
     mapLink: p.mapLink || undefined,
-    imageUrl: p.imageUrl || undefined,
+    imageUrl: (p as { imageUrl?: string | null }).imageUrl || undefined,
     emergencyPhone: p.emergencyPhone || undefined,
     workingHours: p.workingHours || undefined,
     departmentDiscounts: p.departmentDiscounts || undefined,
@@ -205,7 +185,7 @@ export async function getPaginatedPartnersAdminAction(
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * pageSize,
         take: pageSize,
-        select: PARTNER_SELECT_FIELDS,
+        select: PARTNER_ADMIN_SELECT_FIELDS,
       }),
     ]);
 
@@ -263,7 +243,7 @@ export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Pa
         password: hashPassword("123456"),
         logoText: partner.logoText,
         mapLink: partner.mapLink || null,
-        imageUrl: partner.imageUrl || null,
+        imageUrl: (await ensureStorageUrl(partner.imageUrl, "partners")) || null,
         emergencyPhone: partner.emergencyPhone || null,
         workingHours: partner.workingHours || null,
         departmentDiscounts: partner.departmentDiscounts || null,
@@ -315,7 +295,7 @@ export async function updatePartnerAction(id: string, partner: Omit<Partner, "id
         email: partner.email || null,
         logoText: partner.logoText,
         mapLink: partner.mapLink || null,
-        imageUrl: partner.imageUrl || null,
+        imageUrl: (await ensureStorageUrl(partner.imageUrl, "partners", id)) || null,
         emergencyPhone: partner.emergencyPhone || null,
         workingHours: partner.workingHours || null,
         departmentDiscounts: partner.departmentDiscounts || null,
@@ -423,7 +403,7 @@ export async function updatePartnerProfileAction(
         discount: input.discount.trim(),
         logoText: input.logoText?.trim() || input.name.trim().slice(0, 15),
         mapLink: input.mapLink?.trim() || null,
-        imageUrl: input.imageUrl?.trim() || null,
+        imageUrl: (await ensureStorageUrl(input.imageUrl?.trim(), "partners", session.userId)) || null,
         emergencyPhone: input.emergencyPhone?.trim() || null,
         workingHours: input.workingHours?.trim() || null,
         departmentDiscounts: input.departmentDiscounts || null,
@@ -497,3 +477,20 @@ export async function resetPartnerPasswordByAdminAction(
     return { success: false, message: "পাসওয়ার্ড রিসেট করতে সমস্যা হয়েছে।" };
   }
 }
+
+/**
+ * Fetch partner image on-demand when opening edit dialog.
+ */
+export async function getPartnerImageAction(id: string): Promise<string | null> {
+  try {
+    const p = await prisma.partner.findUnique({
+      where: { id },
+      select: { imageUrl: true },
+    });
+    return p?.imageUrl || null;
+  } catch (error) {
+    logger.error("Error in getPartnerImageAction:", error);
+    return null;
+  }
+}
+

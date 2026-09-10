@@ -158,6 +158,7 @@ function RegisterForm() {
                   value={field.value}
                   onChange={field.onChange}
                   label={t("auth.register.photoLabel")}
+                  folder="members"
                 />
                 {fieldState.error && (
                   <p className="text-xs text-destructive">{fieldState.error.message}</p>

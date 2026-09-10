@@ -92,6 +92,7 @@ export function AddPartnerDoctorModal({
             onChange={(url) => setFormData({ ...formData, imageUrl: url })}
             label={t("partner.profile.imageUrl") || "ডাক্তারের ছবি (ঐচ্ছিক)"}
             fallbackType="doctor"
+            folder="doctors"
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

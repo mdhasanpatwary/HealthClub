@@ -40,8 +40,10 @@ export type { PublicMemberVerification } from "@/services/db";
 
 export {
   getMembersAction,
+  getMemberProfilePictureAction,
   updateMemberStatusAction,
   updateMemberProfileAction,
   updateMemberAction,
   deleteMemberAction,
 } from "./memberAdminActions";
+

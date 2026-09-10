@@ -60,6 +60,7 @@ export function DashboardProfileTab({
             value={profilePictureUrl}
             onChange={setProfilePictureUrl}
             label={t("dashboard.profile.picture")}
+            folder="members"
           />
 
           <div className="space-y-2">

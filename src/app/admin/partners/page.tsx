@@ -7,6 +7,7 @@ import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Partner } from "@/services/db";
 import {
   getPaginatedPartnersAdminAction,
+  getPartnerImageAction,
   updatePartnerAction,
   addPartnerAction,
   deletePartnerAction,
@@ -302,7 +303,7 @@ function AdminPartnersContent() {
           });
           setIsPartnerOpen(true);
         }}
-        onEditClick={(p) => {
+        onEditClick={async (p) => {
           setEditingPartner(p);
           setNewPartner({
             name: p.name,
@@ -317,6 +318,20 @@ function AdminPartnersContent() {
             upazila: p.upazila || "feni-sadar",
           });
           setIsPartnerOpen(true);
+
+          if (!p.imageUrl) {
+            try {
+              const img = await getPartnerImageAction(p.id);
+              if (img) {
+                setNewPartner((prev) => ({
+                  ...prev,
+                  imageUrl: img,
+                }));
+              }
+            } catch {
+              // ignore background image fetch error
+            }
+          }
         }}
         onDeleteClick={handleDeletePartner}
         onResetPasswordClick={handleResetPassword}

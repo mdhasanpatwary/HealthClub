@@ -6,6 +6,7 @@ import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Member, Transaction } from "@/services/db";
 import {
   getPaginatedMembersAction,
+  getMemberProfilePictureAction,
   updateMemberAction,
   deleteMemberAction,
   updateMemberStatusAction,
@@ -191,6 +192,35 @@ export default function AdminMembersPage() {
     }
   };
 
+  const handleOpenEditMember = async (m: Member) => {
+    setEditingMember(m);
+    setNewMember({
+      name: m.name,
+      phone: m.phone,
+      email: m.email || "",
+      tier: m.tier,
+      address: m.address || "",
+      birthDate: m.birthDate || "",
+      profession: m.profession || "",
+      profilePictureUrl: m.profilePictureUrl || "",
+    });
+    setIsMemberOpen(true);
+
+    if (!m.profilePictureUrl) {
+      try {
+        const pic = await getMemberProfilePictureAction(m.id);
+        if (pic) {
+          setNewMember((prev) => ({
+            ...prev,
+            profilePictureUrl: pic,
+          }));
+        }
+      } catch {
+        // ignore background picture load error
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div className="space-y-4 animate-pulse">
@@ -254,20 +284,7 @@ export default function AdminMembersPage() {
 
         onViewMemberClick={setViewingMember}
         onToggleStatus={handleToggleMemberStatus}
-        onEditClick={(m) => {
-          setEditingMember(m);
-          setNewMember({
-            name: m.name,
-            phone: m.phone,
-            email: m.email || "",
-            tier: m.tier,
-            address: m.address || "",
-            birthDate: m.birthDate || "",
-            profession: m.profession || "",
-            profilePictureUrl: m.profilePictureUrl || "",
-          });
-          setIsMemberOpen(true);
-        }}
+        onEditClick={handleOpenEditMember}
         onDeleteClick={handleDeleteMember}
         locale={locale}
         t={t}
@@ -306,19 +323,8 @@ export default function AdminMembersPage() {
           transactions={transactions}
           onToggleStatus={handleToggleMemberStatus}
           onEditClick={(m) => {
-            setEditingMember(m);
-            setNewMember({
-              name: m.name,
-              phone: m.phone,
-              email: m.email || "",
-              tier: m.tier,
-              address: m.address || "",
-              birthDate: m.birthDate || "",
-              profession: m.profession || "",
-              profilePictureUrl: m.profilePictureUrl || "",
-            });
             setViewingMember(null);
-            setIsMemberOpen(true);
+            handleOpenEditMember(m);
           }}
           locale={locale}
           t={t}

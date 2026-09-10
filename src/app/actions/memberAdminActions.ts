@@ -9,6 +9,7 @@ import { PaginatedResult } from "@/types/pagination";
 import { createMemberNotification } from "./memberNotificationActions";
 import { hasAdminPermission } from "@/lib/permissions";
 import { updateTag } from "next/cache";
+import { ensureStorageUrl } from "@/services/storageService";
 
 async function verifyMemberAdmin(permission: "manage_members" | "approve_renewals" = "manage_members"): Promise<boolean> {
   const session = await getSessionUser();
@@ -31,7 +32,7 @@ const MEMBER_SELECT_FIELDS = {
   address: true,
   birthDate: true,
   profession: true,
-  profilePictureUrl: true,
+  // Note: profilePictureUrl omitted to prevent large base64 payload transfer in bulk queries
   bkashSender: true,
   bkashTxnId: true,
   renewalStatus: true,
@@ -66,7 +67,7 @@ function mapPrismaMember(m: PrismaMemberRecord): Member {
     address: m.address || "",
     birthDate: m.birthDate ? formatDate(m.birthDate) : "",
     profession: m.profession || "",
-    profilePictureUrl: m.profilePictureUrl || "",
+    profilePictureUrl: (m as { profilePictureUrl?: string | null }).profilePictureUrl || undefined,
     bkashSender: m.bkashSender || undefined,
     bkashTxnId: m.bkashTxnId || undefined,
     renewalStatus: m.renewalStatus || undefined,
@@ -298,7 +299,7 @@ export async function updateMemberProfileAction(
         ...(updates.address !== undefined && { address: updates.address || null }),
         ...(updates.birthDate !== undefined && { birthDate: updates.birthDate ? new Date(updates.birthDate) : null }),
         ...(updates.profession !== undefined && { profession: updates.profession || null }),
-        ...(updates.profilePictureUrl !== undefined && { profilePictureUrl: updates.profilePictureUrl || null }),
+        ...(updates.profilePictureUrl !== undefined && { profilePictureUrl: (await ensureStorageUrl(updates.profilePictureUrl, "members", id)) || null }),
       },
     });
     updateTag("admin-stats");
@@ -337,7 +338,7 @@ export async function updateMemberAction(
         address: member.address || null,
         birthDate: member.birthDate ? new Date(member.birthDate) : null,
         profession: member.profession || null,
-        profilePictureUrl: member.profilePictureUrl || null,
+        profilePictureUrl: (await ensureStorageUrl(member.profilePictureUrl, "members", id)) || null,
       },
     });
     updateTag("admin-stats");
@@ -457,3 +458,24 @@ export async function rejectMemberRenewalAction(memberId: string): Promise<boole
     return false;
   }
 }
+
+/**
+ * Fetch member profile picture on-demand when opening member view or edit dialog.
+ * Keeps bulk pagination queries lightweight by excluding massive base64 payloads.
+ */
+export async function getMemberProfilePictureAction(id: string): Promise<string | null> {
+  const isAuthorized = (await verifyMemberAdmin("manage_members")) || (await verifyMemberAdmin("approve_renewals"));
+  if (!isAuthorized) return null;
+
+  try {
+    const member = await prisma.member.findUnique({
+      where: { id },
+      select: { profilePictureUrl: true },
+    });
+    return member?.profilePictureUrl || null;
+  } catch (error) {
+    logger.error("Error in getMemberProfilePictureAction:", error);
+    return null;
+  }
+}
+

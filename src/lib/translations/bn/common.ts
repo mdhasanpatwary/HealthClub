@@ -175,6 +175,8 @@ export const commonBn = {
   "ui.imageUpload.deleteImage": "ছবি মুছে ফেলুন",
   "ui.imageUpload.changeImage": "ছবি পরিবর্তন করুন",
   "ui.imageUpload.uploadImage": "ছবি আপলোড করুন",
+  "ui.imageUpload.uploading": "ছবি আপলোড হচ্ছে...",
+  "ui.imageUpload.uploadSuccess": "ছবি সফলভাবে আপলোড হয়েছে।",
 
   // Layout, Notice, PWA & Navigation
   "layout.notice.dismiss": "বিজ্ঞপ্তিটি বন্ধ করুন",

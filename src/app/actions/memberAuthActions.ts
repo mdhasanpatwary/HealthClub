@@ -22,6 +22,7 @@ import {
 } from "@/lib/pendingRegistration";
 import { SITE_URL } from "@/lib/siteConfig";
 import { updateTag } from "next/cache";
+import { ensureStorageUrl } from "@/services/storageService";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "healthclubfeni@gmail.com";
 const MAX_OTP_ATTEMPTS = 5;
@@ -317,7 +318,7 @@ export async function verifyEmailOtpAction(
       expiry.setFullYear(joined.getFullYear() + 1);
 
       const nextStatus = pending.tier === "founding" ? "active" : "inactive";
-      const finalProfilePicture = profilePictureUrl || pending.profilePictureUrl || null;
+      const finalProfilePicture = (await ensureStorageUrl(profilePictureUrl || pending.profilePictureUrl, "members", newId)) || null;
 
       const createdMember = await prisma.member.create({
         data: {

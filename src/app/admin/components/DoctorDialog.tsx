@@ -99,6 +99,7 @@ export function DoctorDialog({
             onChange={(url) => setNewDoctor({ ...newDoctor, imageUrl: url })}
             label="ডাক্তারের ছবি"
             fallbackType="doctor"
+            folder="doctors"
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Doctor } from "@/services/db";
 import {
   getPaginatedDoctorsAdminAction,
+  getDoctorImageAction,
   updateDoctorAction,
   addDoctorAction,
   deleteDoctorAction,
@@ -100,7 +101,7 @@ export function useAdminDoctors() {
     setIsDoctorOpen(true);
   };
 
-  const handleEditDoctor = (doc: Doctor) => {
+  const handleEditDoctor = async (doc: Doctor) => {
     setEditingDoctor(doc);
     setNewDoctor({
       name: doc.name,
@@ -122,6 +123,20 @@ export function useAdminDoctors() {
       notice: doc.notice || "",
     });
     setIsDoctorOpen(true);
+
+    if (!doc.imageUrl) {
+      try {
+        const img = await getDoctorImageAction(doc.id);
+        if (img) {
+          setNewDoctor((prev) => ({
+            ...prev,
+            imageUrl: img,
+          }));
+        }
+      } catch {
+        // ignore background image fetch error
+      }
+    }
   };
 
   const handleSaveDoctor = async (e: React.FormEvent) => {

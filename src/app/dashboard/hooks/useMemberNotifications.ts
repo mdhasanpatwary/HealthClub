@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { MemberNotification } from "@/services/db";
 import {
   getMemberNotificationsAction,
@@ -16,8 +16,61 @@ import type { RealtimeMemberNotificationPayload } from "@/lib/realtimeEmitter";
 
 const STORAGE_KEY = "hc_member_read_notifications";
 
+// Module-level deduplication and short TTL cache to prevent duplicate concurrent queries
+// when Header (desktop), Mobile Drawer, and DashboardWelcomeHeader mount simultaneously.
+interface CachedMemberNotifications {
+  data: Awaited<ReturnType<typeof getMemberNotificationsAction>>;
+  timestamp: number;
+}
+
+const CACHE_TTL_MS = 5000; // 5-second cache
+const inFlightRequests = new Map<string, Promise<Awaited<ReturnType<typeof getMemberNotificationsAction>>>>();
+const cachedResults = new Map<string, CachedMemberNotifications>();
+const recentlyToastedIds = new Set<string>();
+
+function getCacheKey(unreadOnly?: boolean, type?: string): string {
+  return `${unreadOnly ? "1" : "0"}_${type || "all"}`;
+}
+
+async function fetchDedupedMemberNotifications(
+  unreadOnly?: boolean,
+  type?: string,
+  force = false
+) {
+  const key = getCacheKey(unreadOnly, type);
+  const now = Date.now();
+  const cached = cachedResults.get(key);
+
+  if (!force && cached && now - cached.timestamp < CACHE_TTL_MS) {
+    return cached.data;
+  }
+
+  if (force) {
+    cachedResults.delete(key);
+  }
+
+  let inFlight = inFlightRequests.get(key);
+  if (!inFlight) {
+    inFlight = getMemberNotificationsAction({ unreadOnly, type })
+      .then((res) => {
+        cachedResults.set(key, { data: res, timestamp: Date.now() });
+        return res;
+      })
+      .finally(() => {
+        inFlightRequests.delete(key);
+      });
+    inFlightRequests.set(key, inFlight);
+  }
+
+  return inFlight;
+}
+
+export function invalidateMemberNotificationsCache() {
+  cachedResults.clear();
+}
+
 export interface UseMemberNotificationsOptions {
-  autoRefreshInterval?: number; // In milliseconds (default 30000ms = 30s)
+  autoRefreshInterval?: number; // In milliseconds (default 300000ms = 5m lazy heartbeat, 0 to disable)
   unreadOnly?: boolean;
   type?: string;
 }
@@ -27,87 +80,140 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [highPriorityCount, setHighPriorityCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
+  const lastFetchTimeRef = useRef<number>(0);
 
   const unreadOnly = options?.unreadOnly;
   const type = options?.type;
-  const autoRefreshInterval = options?.autoRefreshInterval ?? 30000;
+  // Default to 5-minute lazy heartbeat instead of aggressive 30s polling
+  const autoRefreshInterval = options?.autoRefreshInterval ?? 300000;
 
-  const fetchNotifications = useCallback(async () => {
-    try {
-      const res = await getMemberNotificationsAction({
-        unreadOnly,
-        type,
-      });
+  const fetchNotifications = useCallback(
+    async (force = false) => {
+      try {
+        const res = await fetchDedupedMemberNotifications(unreadOnly, type, force);
 
-      const localReadIds = new Set(safeStorage.getItem<string[]>(STORAGE_KEY, []) || []);
+        const localReadIds = new Set(safeStorage.getItem<string[]>(STORAGE_KEY, []) || []);
 
-      // Extract server read IDs to keep local cache updated
-      const serverReadIds = res.items.filter((item) => item.isRead).map((item) => item.id);
-      if (serverReadIds.length > 0) {
-        const currentLocal = safeStorage.getItem<string[]>(STORAGE_KEY, []) || [];
-        const mergedCache = Array.from(new Set([...currentLocal, ...serverReadIds]));
-        safeStorage.setItem(STORAGE_KEY, mergedCache);
-      }
-
-      // Merge server items with local read cache to prevent race-condition reverts
-      const mergedItems = res.items.map((item) => {
-        if (localReadIds.has(item.id)) {
-          return { ...item, isRead: true };
+        // Extract server read IDs to keep local cache updated
+        const serverReadIds = res.items.filter((item) => item.isRead).map((item) => item.id);
+        if (serverReadIds.length > 0) {
+          const currentLocal = safeStorage.getItem<string[]>(STORAGE_KEY, []) || [];
+          const mergedCache = Array.from(new Set([...currentLocal, ...serverReadIds]));
+          safeStorage.setItem(STORAGE_KEY, mergedCache);
         }
-        return item;
-      });
 
-      const calculatedUnread = mergedItems.filter((i) => !i.isRead).length;
-      const calculatedHighPriority = mergedItems.filter(
-        (n) =>
-          !n.isRead &&
-          (n.type === "renewal_approved" ||
-            n.type === "renewal_rejected" ||
-            n.type === "expiring_soon")
-      ).length;
+        // Merge server items with local read cache to prevent race-condition reverts
+        const mergedItems = res.items.map((item) => {
+          if (localReadIds.has(item.id)) {
+            return { ...item, isRead: true };
+          }
+          return item;
+        });
 
-      setItems(mergedItems);
-      setUnreadCount(calculatedUnread);
-      setHighPriorityCount(calculatedHighPriority);
-    } catch {
-      // Graceful fallback for non-fatal notification fetch errors
-    } finally {
-      setLoading(false);
-    }
-  }, [unreadOnly, type]);
+        const calculatedUnread = mergedItems.filter((i) => !i.isRead).length;
+        const calculatedHighPriority = mergedItems.filter(
+          (n) =>
+            !n.isRead &&
+            (n.type === "renewal_approved" ||
+              n.type === "renewal_rejected" ||
+              n.type === "expiring_soon")
+        ).length;
+
+        setItems(mergedItems);
+        setUnreadCount(calculatedUnread);
+        setHighPriorityCount(calculatedHighPriority);
+        lastFetchTimeRef.current = Date.now();
+      } catch {
+        // Graceful fallback for non-fatal notification fetch errors
+      } finally {
+        setLoading(false);
+      }
+    },
+    [unreadOnly, type]
+  );
 
   useEffect(() => {
     let isMounted = true;
     Promise.resolve().then(() => {
       if (isMounted) {
-        fetchNotifications();
+        fetchNotifications(false);
       }
     });
 
     let timer: NodeJS.Timeout | null = null;
     if (autoRefreshInterval > 0) {
       timer = setInterval(() => {
-        if (isMounted) {
-          fetchNotifications();
+        if (!isMounted) return;
+        // Skip background polling if tab is hidden to eliminate idle database egress
+        if (typeof document !== "undefined" && document.visibilityState === "hidden") {
+          return;
         }
+        fetchNotifications(false);
       }, autoRefreshInterval);
     }
 
-    const handleDataChange = () => {
+    const MIN_FOCUS_REFETCH_INTERVAL_MS = 300000; // 5 minutes minimum between focus refetches
+
+    const handleVisibilityOrFocus = () => {
       if (!isMounted) return;
-      fetchNotifications();
+      if (typeof document !== "undefined" && document.visibilityState === "hidden") {
+        return;
+      }
+      const now = Date.now();
+      // Only refetch on focus / visibilitychange if at least 5m elapsed since last fetch
+      if (now - lastFetchTimeRef.current >= MIN_FOCUS_REFETCH_INTERVAL_MS) {
+        lastFetchTimeRef.current = now;
+        fetchNotifications(false);
+      }
     };
 
-    window.addEventListener("focus", handleDataChange);
-    window.addEventListener("member-notification-change", handleDataChange);
-    window.addEventListener("auth-change", handleDataChange);
+    // Lightweight cross-instance state synchronization without querying the database
+    const handleLocalRead = (e: Event) => {
+      if (!isMounted) return;
+      const notifId = (e as CustomEvent<string>).detail;
+      if (!notifId) return;
+      setItems((prev) =>
+        prev.map((n) => (n.id === notifId ? { ...n, isRead: true } : n))
+      );
+      setUnreadCount((prev) => Math.max(0, prev - 1));
+    };
+
+    const handleLocalAllRead = () => {
+      if (!isMounted) return;
+      setItems((prev) => prev.map((n) => ({ ...n, isRead: true })));
+      setUnreadCount(0);
+      setHighPriorityCount(0);
+    };
+
+    const handleLocalDelete = (e: Event) => {
+      if (!isMounted) return;
+      const notifId = (e as CustomEvent<string>).detail;
+      if (!notifId) return;
+      setItems((prev) => prev.filter((n) => n.id !== notifId));
+    };
+
+    const handleAuthChange = () => {
+      if (!isMounted) return;
+      invalidateMemberNotificationsCache();
+      fetchNotifications(true);
+    };
+
+    window.addEventListener("focus", handleVisibilityOrFocus);
+    document.addEventListener("visibilitychange", handleVisibilityOrFocus);
+    window.addEventListener("member-notification-local-read", handleLocalRead);
+    window.addEventListener("member-notification-local-all-read", handleLocalAllRead);
+    window.addEventListener("member-notification-local-delete", handleLocalDelete);
+    window.addEventListener("auth-change", handleAuthChange);
 
     return () => {
       isMounted = false;
       if (timer) clearInterval(timer);
-      window.removeEventListener("focus", handleDataChange);
-      window.removeEventListener("member-notification-change", handleDataChange);
-      window.removeEventListener("auth-change", handleDataChange);
+      window.removeEventListener("focus", handleVisibilityOrFocus);
+      document.removeEventListener("visibilitychange", handleVisibilityOrFocus);
+      window.removeEventListener("member-notification-local-read", handleLocalRead);
+      window.removeEventListener("member-notification-local-all-read", handleLocalAllRead);
+      window.removeEventListener("member-notification-local-delete", handleLocalDelete);
+      window.removeEventListener("auth-change", handleAuthChange);
     };
   }, [fetchNotifications, autoRefreshInterval]);
 
@@ -130,6 +236,8 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
         createdAt: incoming.createdAt,
       };
 
+      invalidateMemberNotificationsCache();
+
       setItems((prev) => {
         if (prev.some((n) => n.id === newNotif.id)) return prev;
         return [newNotif, ...prev];
@@ -146,11 +254,17 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
         setHighPriorityCount((prev) => prev + 1);
       }
 
-      toast.info(newNotif.titleBn || "নতুন বিজ্ঞপ্তি", {
-        description: newNotif.messageBn,
-      });
-
-      window.dispatchEvent(new Event("member-notification-change"));
+      // Deduplicate toast notification if multiple bells are mounted
+      if (!recentlyToastedIds.has(newNotif.id)) {
+        recentlyToastedIds.add(newNotif.id);
+        if (recentlyToastedIds.size > 100) {
+          const oldest = recentlyToastedIds.values().next().value;
+          if (oldest) recentlyToastedIds.delete(oldest);
+        }
+        toast.info(newNotif.titleBn || "নতুন বিজ্ঞপ্তি", {
+          description: newNotif.messageBn,
+        });
+      }
     },
     []
   );
@@ -175,16 +289,19 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
         prev.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n))
       );
       setUnreadCount((prev) => Math.max(0, prev - 1));
+      invalidateMemberNotificationsCache();
 
-      // 3. Persist to server database first so subsequent refetches see isRead = true
+      // 3. Persist to server database
       try {
         await markMemberNotificationReadAction(notificationId);
       } catch {
         // Retain local read status even if network glitch occurs
       }
 
-      // 4. Broadcast to other mounted instances
-      window.dispatchEvent(new Event("member-notification-change"));
+      // 4. Synchronize other mounted bell instances without querying database
+      window.dispatchEvent(
+        new CustomEvent("member-notification-local-read", { detail: notificationId })
+      );
     },
     []
   );
@@ -200,8 +317,12 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
     setItems((prev) => prev.map((n) => ({ ...n, isRead: true })));
     setUnreadCount(0);
     setHighPriorityCount(0);
+    invalidateMemberNotificationsCache();
 
-    // 3. Persist to server database
+    // 3. Synchronize other mounted bell instances without querying database
+    window.dispatchEvent(new Event("member-notification-local-all-read"));
+
+    // 4. Persist to server database
     try {
       const res = await markAllMemberNotificationsReadAction();
       if (res.success) {
@@ -210,28 +331,32 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
     } catch {
       // Local state remains read
     }
-
-    // 4. Broadcast to other mounted instances
-    window.dispatchEvent(new Event("member-notification-change"));
   }, [items]);
 
   const deleteNotification = useCallback(
     async (notificationId: string) => {
       // Optimistic UI update
       setItems((prev) => prev.filter((n) => n.id !== notificationId));
+      invalidateMemberNotificationsCache();
+
+      // Synchronize other mounted bell instances without querying database
+      window.dispatchEvent(
+        new CustomEvent("member-notification-local-delete", { detail: notificationId })
+      );
 
       try {
         const res = await deleteMemberNotificationAction(notificationId);
         if (res.success) {
           toast.success("বিজ্ঞপ্তিটি মুছে ফেলা হয়েছে।");
-          window.dispatchEvent(new Event("member-notification-change"));
         } else {
           toast.error(res.error || "বিজ্ঞপ্তি মুছে ফেলা সম্ভব হয়নি।");
-          fetchNotifications();
+          invalidateMemberNotificationsCache();
+          fetchNotifications(true);
         }
       } catch {
         toast.error("বিজ্ঞপ্তি মুছে ফেলা সম্ভব হয়নি।");
-        fetchNotifications();
+        invalidateMemberNotificationsCache();
+        fetchNotifications(true);
       }
     },
     [fetchNotifications]
@@ -242,7 +367,7 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
     unreadCount,
     highPriorityCount,
     loading,
-    refresh: fetchNotifications,
+    refresh: () => fetchNotifications(true),
     markAsRead,
     markAllAsRead,
     deleteNotification,
