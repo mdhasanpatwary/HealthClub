@@ -854,5 +854,13 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/dashboard/components/MemberNotificationBell.tsx`, `src/app/admin/components/AdminHeader.tsx`, `src/app/partner/dashboard/page.tsx`
   - **Details**: Currently, member notifications, transaction updates, and review approvals only appear after a manual page refresh or route change. Integrate Supabase Realtime (or Server-Sent Events) channels on `member_notifications` and `transactions` tables to push live notifications to the active dashboard bell with badge count increment and subtle audio cue feedback when a new notification arrives.
 
+### 🌐 Partner Social Media & Digital Presence (P2)
+
+- [x] **TODO-157**: **Add Social Links Management in Partner Panel & Display on Public Partner Details Page**
+  - **Severity**: Medium
+  - **Files**: `prisma/schema.prisma`, `src/services/db.ts`, `src/app/actions/partnerActions.ts`, `src/app/actions/partnerProfileQueryActions.ts`, `src/app/partner/dashboard/components/PartnerSocialLinksCard.tsx`, `src/app/partner/dashboard/components/PartnerProfileSettingsTab.tsx`, `src/app/partner/dashboard/components/PartnerCardPreview.tsx`, `src/components/partner-hospitals/HospitalSocialLinks.tsx`, `src/components/partner-hospitals/HospitalContactSidebar.tsx`, `src/components/partner-hospitals/HospitalProfileView.tsx`, `src/lib/seo/partnerSchema.ts`
+  - **Details**: Enabled healthcare partners (hospitals, diagnostic centers, pharmacies) to configure and update their social media links (Facebook, WhatsApp, Website, YouTube, LinkedIn, Instagram) from their dashboard settings tab. Configured live preview in partner panel, responsive quick-chips and sidebar buttons on the public partner details page, and automatic inclusion in Google JSON-LD schema (`sameAs`).
+
+
 
 

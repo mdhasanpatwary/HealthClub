@@ -116,6 +116,7 @@ const PARTNER_SELECT_FIELDS = {
   emergencyPhone: true,
   workingHours: true,
   departmentDiscounts: true,
+  socialLinks: true,
   upazila: true,
   createdAt: true,
 } as const;
@@ -139,6 +140,7 @@ function formatPartner(p: PrismaPartnerRecord): Partner {
     emergencyPhone: p.emergencyPhone || undefined,
     workingHours: p.workingHours || undefined,
     departmentDiscounts: p.departmentDiscounts || undefined,
+    socialLinks: p.socialLinks || undefined,
     upazila: p.upazila || "feni-sadar",
     createdAt: p.createdAt
       ? typeof p.createdAt === "string"
@@ -291,6 +293,7 @@ export async function updatePartnerAction(id: string, partner: Omit<Partner, "id
         emergencyPhone: partner.emergencyPhone || null,
         workingHours: partner.workingHours || null,
         departmentDiscounts: partner.departmentDiscounts || null,
+        socialLinks: partner.socialLinks || null,
         upazila: partner.upazila || "feni-sadar",
       },
     });
@@ -368,6 +371,7 @@ export interface UpdatePartnerProfileInput {
   mapLink?: string;
   imageUrl?: string;
   departmentDiscounts?: string;
+  socialLinks?: string;
   upazila?: string;
 }
 
@@ -397,6 +401,7 @@ export async function updatePartnerProfileAction(
         emergencyPhone: input.emergencyPhone?.trim() || null,
         workingHours: input.workingHours?.trim() || null,
         departmentDiscounts: input.departmentDiscounts || null,
+        socialLinks: input.socialLinks || null,
         ...(input.upazila !== undefined && { upazila: input.upazila || "feni-sadar" }),
       },
       select: PARTNER_SELECT_FIELDS,

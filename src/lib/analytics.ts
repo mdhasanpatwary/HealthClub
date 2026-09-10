@@ -26,6 +26,7 @@ export type AnalyticsEventName =
   | "doctor_serial_click"
   | "hospital_search"
   | "hospital_contact_click"
+  | "partner_social_click"
   | "health_tool_used"
   | "health_report_downloaded"
   | "membership_funnel"
@@ -62,6 +63,12 @@ export interface AnalyticsEventParams {
     partner_name: string;
     upazila?: string;
     phone: string;
+  };
+  partner_social_click: {
+    partner_id: string;
+    partner_name: string;
+    platform: string;
+    url: string;
   };
   health_tool_used: {
     tool_name: "bmi" | "pregnancy_edd" | "bp_diabetes" | "calorie" | "water";

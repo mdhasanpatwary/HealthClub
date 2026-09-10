@@ -19,8 +19,6 @@ const DISALLOWED_PATHS = [
   "/register/payment",
   "/register/verify-email",
   "/forgot-password/reset",
-  "/doctors",
-  "/doctors/*",
 ];
 
 const AI_AND_SEARCH_BOTS = [

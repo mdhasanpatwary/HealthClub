@@ -24,6 +24,7 @@ function formatPartner(p: any): Partner {
     emergencyPhone: p.emergencyPhone || undefined,
     workingHours: p.workingHours || undefined,
     departmentDiscounts: p.departmentDiscounts || undefined,
+    socialLinks: p.socialLinks || undefined,
     upazila: p.upazila || "feni-sadar",
   };
 }
@@ -55,6 +56,7 @@ export async function getPartnerByIdAction(id: string): Promise<Partner | null> 
         emergencyPhone: true,
         workingHours: true,
         departmentDiscounts: true,
+        socialLinks: true,
         upazila: true,
       },
     });
@@ -174,6 +176,7 @@ export async function getRelatedPartnersAction(
         emergencyPhone: true,
         workingHours: true,
         departmentDiscounts: true,
+        socialLinks: true,
         upazila: true,
       },
     });
@@ -200,6 +203,7 @@ export async function getRelatedPartnersAction(
           emergencyPhone: true,
           workingHours: true,
           departmentDiscounts: true,
+          socialLinks: true,
           upazila: true,
         },
       });

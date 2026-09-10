@@ -130,6 +130,7 @@ export const PartnerScalarFieldEnum = {
   emergencyPhone: 'emergencyPhone',
   workingHours: 'workingHours',
   departmentDiscounts: 'departmentDiscounts',
+  socialLinks: 'socialLinks',
   upazila: 'upazila',
   verificationCode: 'verificationCode',
   verificationCodeCreatedAt: 'verificationCodeCreatedAt',

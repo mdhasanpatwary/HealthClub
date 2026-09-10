@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Building2, MapPin, PhoneCall, Clock, Eye } from "lucide-react";
-import { Partner, DepartmentDiscount } from "@/services/db";
+import { Partner, DepartmentDiscount, PartnerSocialLinks } from "@/services/db";
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 
@@ -15,6 +15,7 @@ interface PartnerCardPreviewProps {
   workingHours: string;
   imageUrl: string;
   departmentDiscounts?: DepartmentDiscount[];
+  socialLinks?: PartnerSocialLinks;
 }
 
 export function PartnerCardPreview({
@@ -25,6 +26,7 @@ export function PartnerCardPreview({
   emergencyPhone,
   workingHours,
   imageUrl,
+  socialLinks,
 }: PartnerCardPreviewProps) {
   const { t } = useLanguage();
 
@@ -92,6 +94,42 @@ export function PartnerCardPreview({
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/30 p-2 rounded-xl">
               <Clock className="h-3.5 w-3.5 text-primary shrink-0" />
               <span className="truncate">{workingHours}</span>
+            </div>
+          )}
+
+          {socialLinks && (socialLinks.facebook || socialLinks.whatsapp || socialLinks.website || socialLinks.youtube || socialLinks.linkedin || socialLinks.instagram) && (
+            <div className="pt-2 border-t border-border/50 flex flex-wrap items-center gap-1.5">
+              <span className="text-[10px] text-muted-foreground font-semibold mr-1">সোশ্যাল:</span>
+              {socialLinks.facebook && (
+                <span className="h-5 px-1.5 rounded-md bg-[#1877F2]/10 text-[#1877F2] text-[10px] font-bold flex items-center gap-1">
+                  FB
+                </span>
+              )}
+              {socialLinks.whatsapp && (
+                <span className="h-5 px-1.5 rounded-md bg-emerald-500/10 text-emerald-600 text-[10px] font-bold flex items-center gap-1">
+                  WA
+                </span>
+              )}
+              {socialLinks.website && (
+                <span className="h-5 px-1.5 rounded-md bg-sky-500/10 text-sky-600 text-[10px] font-bold flex items-center gap-1">
+                  Web
+                </span>
+              )}
+              {socialLinks.youtube && (
+                <span className="h-5 px-1.5 rounded-md bg-red-500/10 text-red-600 text-[10px] font-bold flex items-center gap-1">
+                  YT
+                </span>
+              )}
+              {socialLinks.linkedin && (
+                <span className="h-5 px-1.5 rounded-md bg-[#0A66C2]/10 text-[#0A66C2] text-[10px] font-bold flex items-center gap-1">
+                  IN
+                </span>
+              )}
+              {socialLinks.instagram && (
+                <span className="h-5 px-1.5 rounded-md bg-pink-500/10 text-pink-600 text-[10px] font-bold flex items-center gap-1">
+                  IG
+                </span>
+              )}
             </div>
           )}
         </div>

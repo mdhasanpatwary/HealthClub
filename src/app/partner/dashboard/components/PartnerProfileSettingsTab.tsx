@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Building2, PhoneCall, Clock, Percent, Plus, Trash2, Globe, Image as ImageIcon, Sparkles, ShieldCheck, Tag } from "lucide-react";
-import { Partner, DepartmentDiscount } from "@/services/db";
+import { Partner, DepartmentDiscount, PartnerSocialLinks, parsePartnerSocialLinks, formatSocialUrl } from "@/services/db";
 import { authStore } from "@/services/authStore";
 import { updatePartnerProfileAction } from "@/app/actions/partnerActions";
 import { Button } from "@/components/ui/button";
@@ -12,27 +12,14 @@ import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { PartnerCardPreview } from "./PartnerCardPreview";
 import { PartnerPasswordCard } from "./PartnerPasswordCard";
+import { PartnerSocialLinksCard } from "./PartnerSocialLinksCard";
+import { PRESET_DEPARTMENTS, createDepartmentDiscountId } from "./presetDepartments";
 import { toast } from "sonner";
 
 interface PartnerProfileSettingsTabProps {
   partner: Partner;
   isStaff?: boolean;
   onProfileUpdated: (updatedPartner: Partner) => void;
-}
-
-const PRESET_DEPARTMENTS = [
-  { nameKey: "partner.profile.presetPathology", discount: "25%", descKey: "partner.profile.presetPathologyDesc" },
-  { nameKey: "partner.profile.presetRadiology", discount: "20%", descKey: "partner.profile.presetRadiologyDesc" },
-  { nameKey: "partner.profile.presetCabin", discount: "10%", descKey: "partner.profile.presetCabinDesc" },
-  { nameKey: "partner.profile.presetPharmacy", discount: "5%", descKey: "partner.profile.presetPharmacyDesc" },
-  { nameKey: "partner.profile.presetDoctor", discount: "15%", descKey: "partner.profile.presetDoctorDesc" },
-  { nameKey: "partner.profile.presetAmbulance", discount: "10%", descKey: "partner.profile.presetAmbulanceDesc" },
-  { nameKey: "partner.profile.presetDental", discount: "20%", descKey: "partner.profile.presetDentalDesc" },
-  { nameKey: "partner.profile.presetSurgery", discount: "15%", descKey: "partner.profile.presetSurgeryDesc" },
-];
-
-function createDepartmentDiscountId(prefix = "dept") {
-  return `${prefix}_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
 }
 
 export function PartnerProfileSettingsTab({
@@ -51,6 +38,13 @@ export function PartnerProfileSettingsTab({
   const [discount, setDiscount] = useState(partner.discount || "");
   const [mapLink, setMapLink] = useState(partner.mapLink || "");
   const [imageUrl, setImageUrl] = useState(partner.imageUrl || "");
+  const [socialLinks, setSocialLinks] = useState<PartnerSocialLinks>(
+    parsePartnerSocialLinks(partner.socialLinks) || {}
+  );
+
+  const handleSocialLinkChange = (field: keyof PartnerSocialLinks, value: string) => {
+    setSocialLinks((prev) => ({ ...prev, [field]: value }));
+  };
 
   // Department Discounts State
   const parseInitialDiscounts = (): DepartmentDiscount[] => {
@@ -123,6 +117,12 @@ export function PartnerProfileSettingsTab({
 
     setSaving(true);
     try {
+      const cleanSocialLinks: PartnerSocialLinks = {};
+      (Object.keys(socialLinks) as Array<keyof PartnerSocialLinks>).forEach((k) => {
+        const val = socialLinks[k]?.trim();
+        if (val) cleanSocialLinks[k] = formatSocialUrl(k, val);
+      });
+
       const res = await updatePartnerProfileAction({
         name: name.trim(),
         address: address.trim(),
@@ -133,6 +133,7 @@ export function PartnerProfileSettingsTab({
         mapLink: mapLink.trim() || undefined,
         imageUrl: imageUrl.trim() || undefined,
         departmentDiscounts: JSON.stringify(departmentDiscounts),
+        socialLinks: JSON.stringify(cleanSocialLinks),
       });
 
       if (res.success && res.partner) {
@@ -285,7 +286,13 @@ export function PartnerProfileSettingsTab({
               </CardContent>
             </Card>
 
-            {/* Card 2: Department Discount Breakdown Editor */}
+            {/* Card 2: Social Media & Web Links */}
+            <PartnerSocialLinksCard
+              socialLinks={socialLinks}
+              onChange={handleSocialLinkChange}
+            />
+
+            {/* Card 3: Department Discount Breakdown Editor */}
             <Card className="border-border shadow-sm rounded-3xl">
               <CardHeader className="p-5 sm:p-6 pb-3 sm:pb-4">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
@@ -472,6 +479,7 @@ export function PartnerProfileSettingsTab({
             workingHours={workingHours}
             imageUrl={imageUrl}
             departmentDiscounts={departmentDiscounts}
+            socialLinks={socialLinks}
           />
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { Partner, Doctor, DepartmentDiscount, Review, PartnerReviewStats } from "@/services/db";
+import { Partner, Doctor, DepartmentDiscount, Review, PartnerReviewStats, parsePartnerSocialLinks, formatSocialUrl } from "@/services/db";
 import { SITE_URL } from "@/lib/siteConfig";
 import { Locale } from "@/lib/i18n";
 
@@ -250,6 +250,13 @@ export function generatePartnerJsonLd({
     });
   }
 
+  const socials = parsePartnerSocialLinks(partner.socialLinks);
+  const sameAsUrls = socials
+    ? (["facebook", "website", "youtube", "linkedin", "instagram", "whatsapp"] as const)
+        .map((p) => socials[p] ? formatSocialUrl(p, socials[p]) : undefined)
+        .filter((u): u is string => Boolean(u))
+    : [];
+
   // 2. Primary Medical Organization / Facility Schema
   const facilitySchema: Record<string, unknown> = {
     "@context": "https://schema.org",
@@ -258,6 +265,7 @@ export function generatePartnerJsonLd({
     name: partner.name,
     alternateName: `${partner.name} (${isEn ? categoryConfig.nameEn : categoryConfig.nameBn})`,
     url: profileUrl,
+    ...(sameAsUrls.length > 0 ? { sameAs: sameAsUrls } : {}),
     image: imageUrl,
     logo: imageUrl,
     telephone: partner.phone,

@@ -79,6 +79,14 @@ export const partnerHospitalsBn = {
   "partnerHospitals.profile.emergencyHotline": "২৪/৭ জরুরি হটলাইন",
   "partnerHospitals.profile.getDirections": "ম্যাপে লোকেশন দেখুন",
   "partnerHospitals.profile.shareHospital": "শেয়ার করুন",
+  "partnerHospitals.profile.socialLinks": "সোশ্যাল মিডিয়া ও অনলাইন কানেক্ট",
+  "partnerHospitals.profile.socialSubtitle": "সরাসরি যোগাযোগ ও সাম্প্রতিক তথ্যের জন্য",
+  "partnerHospitals.profile.facebook": "ফেসবুক পেজ",
+  "partnerHospitals.profile.whatsapp": "হোয়াটসঅ্যাপ চ্যাট",
+  "partnerHospitals.profile.website": "অফিসিয়াল ওয়েবসাইট",
+  "partnerHospitals.profile.youtube": "ইউটিউব চ্যানেল",
+  "partnerHospitals.profile.linkedin": "লিঙ্কডইন",
+  "partnerHospitals.profile.instagram": "ইনস্টাগ্রাম",
   "partnerHospitals.button.remaining": "টি অবশিষ্ট"
 } as const;
 

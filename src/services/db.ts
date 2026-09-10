@@ -53,6 +53,48 @@ export interface DepartmentDiscount {
   description?: string;
 }
 
+export interface PartnerSocialLinks {
+  facebook?: string;
+  whatsapp?: string;
+  website?: string;
+  youtube?: string;
+  linkedin?: string;
+  instagram?: string;
+}
+
+export function parsePartnerSocialLinks(raw?: string | null): PartnerSocialLinks | null {
+  if (!raw) return null;
+  try {
+    const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
+    if (parsed && typeof parsed === "object") {
+      return parsed as PartnerSocialLinks;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export function formatSocialUrl(platform: keyof PartnerSocialLinks, value?: string): string | undefined {
+  if (!value || !value.trim()) return undefined;
+  const trimmed = value.trim();
+
+  if (platform === "whatsapp") {
+    if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+      return trimmed;
+    }
+    const rawNumber = trimmed.replace(/[^0-9]/g, "");
+    const normalizedNumber = rawNumber.replace(/^(880|88|0)/, "");
+    return `https://wa.me/880${normalizedNumber}`;
+  }
+
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+    return trimmed;
+  }
+
+  return `https://${trimmed}`;
+}
+
 export interface Partner {
   id: string;
   name: string;
@@ -68,6 +110,7 @@ export interface Partner {
   emergencyPhone?: string;
   workingHours?: string;
   departmentDiscounts?: string;
+  socialLinks?: string;
   upazila?: string;
   createdAt?: string;
   updatedAt?: string;

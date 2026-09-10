@@ -21,6 +21,7 @@ import { formatDiscount } from "@/lib/i18n";
 import { toast } from "sonner";
 import { SITE_URL } from "@/lib/siteConfig";
 import { trackEvent } from "@/lib/analytics";
+import HospitalSocialLinks from "./HospitalSocialLinks";
 
 interface HospitalContactSidebarProps {
   partner: Partner;
@@ -209,6 +210,9 @@ export default function HospitalContactSidebar({
             </div>
           </div>
         </div>
+
+        {/* Social Media & Online Connect Links */}
+        <HospitalSocialLinks partner={partner} variant="sidebar" />
       </Card>
 
       {/* Member Privilege & Discount Guide */}

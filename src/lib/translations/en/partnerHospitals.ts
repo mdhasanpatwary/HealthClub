@@ -79,6 +79,14 @@ export const partnerHospitalsEn = {
   "partnerHospitals.profile.emergencyHotline": "24/7 Emergency Helpline",
   "partnerHospitals.profile.getDirections": "Get Map Directions",
   "partnerHospitals.profile.shareHospital": "Share Hospital Profile",
+  "partnerHospitals.profile.socialLinks": "Social Media & Online Connect",
+  "partnerHospitals.profile.socialSubtitle": "Connect directly for updates, notices and inquiries",
+  "partnerHospitals.profile.facebook": "Facebook Page",
+  "partnerHospitals.profile.whatsapp": "WhatsApp Chat",
+  "partnerHospitals.profile.website": "Official Website",
+  "partnerHospitals.profile.youtube": "YouTube Channel",
+  "partnerHospitals.profile.linkedin": "LinkedIn",
+  "partnerHospitals.profile.instagram": "Instagram",
   "partnerHospitals.button.remaining": "remaining"
 } as const;
 

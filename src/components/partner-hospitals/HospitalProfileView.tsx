@@ -25,6 +25,7 @@ import HospitalDiscountsSection from "./HospitalDiscountsSection";
 import HospitalDoctorRoster from "./HospitalDoctorRoster";
 import HospitalContactSidebar from "./HospitalContactSidebar";
 import HospitalGalleryModal from "./HospitalGalleryModal";
+import HospitalSocialLinks from "./HospitalSocialLinks";
 import ReviewSection from "@/components/reviews/ReviewSection";
 
 interface HospitalProfileViewProps {
@@ -182,6 +183,11 @@ export default function HospitalProfileView({
                     <span>{partner.workingHours}</span>
                   </span>
                 )}
+              </div>
+
+              {/* Quick Social & Web Chips */}
+              <div className="pt-1">
+                <HospitalSocialLinks partner={partner} variant="chips" />
               </div>
             </div>
 

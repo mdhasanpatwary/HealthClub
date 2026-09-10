@@ -64,6 +64,7 @@ model Partner {
   emergencyPhone            String?       @map("emergency_phone")
   workingHours              String?       @map("working_hours")
   departmentDiscounts       String?       @map("department_discounts")
+  socialLinks               String?       @map("social_links")
   upazila                   String?       @default("feni-sadar") @map("upazila")
   verificationCode          String?       @map("verification_code")
   verificationCodeCreatedAt DateTime?     @map("verification_code_created_at") @db.Timestamptz
