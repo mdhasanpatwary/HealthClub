@@ -43,6 +43,9 @@ export function setNotificationSoundEnabled(enabled: boolean): void {
   );
 }
 
+let lastSoundPlayTime = 0;
+const SOUND_THROTTLE_MS = 300;
+
 /**
  * Plays a pleasant, subtle two-tone chime (G5 -> C6) via Web Audio API.
  * Completely zero-dependency, non-blocking, and handles autoplay constraints gracefully.
@@ -50,6 +53,12 @@ export function setNotificationSoundEnabled(enabled: boolean): void {
 export function playNotificationSound(): void {
   if (typeof window === "undefined") return;
   if (!isNotificationSoundEnabled()) return;
+
+  const nowMs = Date.now();
+  if (nowMs - lastSoundPlayTime < SOUND_THROTTLE_MS) {
+    return;
+  }
+  lastSoundPlayTime = nowMs;
 
   try {
     const ctx = getAudioContext();
