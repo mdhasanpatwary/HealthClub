@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Languages, Globe, Sun, Moon } from "lucide-react";
@@ -18,6 +18,7 @@ import MobileNavDrawer from "./MobileNavDrawer";
 import { AdminNotificationBell } from "./AdminNotificationBell";
 import { MemberNotificationBell } from "@/app/dashboard/components/MemberNotificationBell";
 import { isAdminUser } from "@/lib/permissions";
+import { toast } from "sonner";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,6 +29,11 @@ export default function Header() {
   const [prevPathname, setPrevPathname] = useState(pathname);
   const { locale, setLocale, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
+
+  const tRef = useRef(t);
+  useEffect(() => {
+    tRef.current = t;
+  }, [t]);
 
   // Close mobile drawer on navigation during render to avoid cascading effect
   if (pathname !== prevPathname) {
@@ -63,12 +69,24 @@ export default function Header() {
 
     const handleOpenMenu = () => setIsOpen(true);
 
+    const handleAccountTerminated = async (e: Event) => {
+      const customEvent = e as CustomEvent<{ memberId: string; status: string }>;
+      const current = authStore.getCurrentUser();
+      if (customEvent.detail?.memberId && current && customEvent.detail.memberId === current.id) {
+        await authStore.logout();
+        toast.error(tRef.current("dashboard.accountTerminated"));
+        window.location.href = "/login";
+      }
+    };
+
     window.addEventListener("auth-change", syncUser);
+    window.addEventListener("hc-account-terminated", handleAccountTerminated);
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("open-mobile-menu", handleOpenMenu);
 
     return () => {
       window.removeEventListener("auth-change", syncUser);
+      window.removeEventListener("hc-account-terminated", handleAccountTerminated);
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("open-mobile-menu", handleOpenMenu);
     };

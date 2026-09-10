@@ -36,6 +36,8 @@ const nextConfig: NextConfig = {
     ],
     // Serve modern formats (WebP/AVIF) where supported
     formats: ["image/avif", "image/webp"],
+    // Cache optimized images on the edge CDN for 31 days (2,678,400s) to minimize repeat storage egress
+    minimumCacheTTL: 2678400,
   },
   async redirects() {
     return [

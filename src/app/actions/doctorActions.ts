@@ -6,6 +6,7 @@ import { Doctor, initialDoctors, Partner } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag } from "next/cache";
+import { cache } from "react";
 import { PaginatedResult } from "@/types/pagination";
 import { hasAdminPermission } from "@/lib/permissions";
 import { distributeDoctorsFairly } from "@/lib/doctorDistribution";
@@ -245,49 +246,52 @@ export async function getDoctorImageAction(id: string): Promise<string | null> {
 
 /**
  * Fetch single doctor by ID with partner hospital details.
+ * Request-memoized via React cache() to deduplicate DB queries between generateMetadata and page body.
  */
-export async function getDoctorByIdAction(
-  id: string
-): Promise<(Doctor & { partner?: Partner | null }) | null> {
-  try {
-    if (!prisma?.doctor) {
+export const getDoctorByIdAction = cache(
+  async (
+    id: string
+  ): Promise<(Doctor & { partner?: Partner | null }) | null> => {
+    try {
+      if (!prisma?.doctor) {
+        return null;
+      }
+
+      const d = await prisma.doctor.findUnique({
+        where: { id },
+        include: { partner: true },
+      });
+
+      if (!d) {
+        return null;
+      }
+
+      return {
+        ...formatDoctor(d),
+        partner: d.partner
+          ? {
+              id: d.partner.id,
+              name: d.partner.name,
+              category: d.partner.category as "hospital" | "diagnostic" | "pharmacy",
+              address: d.partner.address,
+              discount: d.partner.discount,
+              phone: d.partner.phone,
+              logoText: d.partner.logoText,
+              mapLink: d.partner.mapLink || undefined,
+              imageUrl: d.partner.imageUrl || undefined,
+              emergencyPhone: d.partner.emergencyPhone || undefined,
+              workingHours: d.partner.workingHours || undefined,
+              departmentDiscounts: d.partner.departmentDiscounts || undefined,
+              upazila: d.partner.upazila || "feni-sadar",
+            }
+          : undefined,
+      };
+    } catch (error) {
+      logger.error("Error in getDoctorByIdAction:", error);
       return null;
     }
-
-    const d = await prisma.doctor.findUnique({
-      where: { id },
-      include: { partner: true },
-    });
-
-    if (!d) {
-      return null;
-    }
-
-    return {
-      ...formatDoctor(d),
-      partner: d.partner
-        ? {
-            id: d.partner.id,
-            name: d.partner.name,
-            category: d.partner.category as "hospital" | "diagnostic" | "pharmacy",
-            address: d.partner.address,
-            discount: d.partner.discount,
-            phone: d.partner.phone,
-            logoText: d.partner.logoText,
-            mapLink: d.partner.mapLink || undefined,
-            imageUrl: d.partner.imageUrl || undefined,
-            emergencyPhone: d.partner.emergencyPhone || undefined,
-            workingHours: d.partner.workingHours || undefined,
-            departmentDiscounts: d.partner.departmentDiscounts || undefined,
-            upazila: d.partner.upazila || "feni-sadar",
-          }
-        : undefined,
-    };
-  } catch (error) {
-    logger.error("Error in getDoctorByIdAction:", error);
-    return null;
   }
-}
+);
 
 /**
  * Fetch related specialist doctors in the same department.

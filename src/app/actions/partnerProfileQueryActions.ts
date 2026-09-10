@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { Doctor, initialPartners, Partner } from "@/services/db";
 import { logger } from "@/lib/logger";
 import { unstable_cache } from "next/cache";
+import { cache } from "react";
 
 const PARTNERS_TAG = "partners";
 const DOCTORS_TAG = "doctors";
@@ -32,69 +33,72 @@ function formatPartner(p: any): Partner {
 
 /**
  * Fetch a single partner by ID or Slug.
+ * Request-memoized via React cache() to deduplicate DB queries between generateMetadata and page body.
  * Falls back to initialPartners if not found in database.
  */
-export async function getPartnerByIdAction(idOrSlug: string): Promise<Partner | null> {
-  try {
-    let decoded = idOrSlug;
+export const getPartnerByIdAction = cache(
+  async (idOrSlug: string): Promise<Partner | null> => {
     try {
-      decoded = decodeURIComponent(idOrSlug);
-    } catch {
-      // keep original
-    }
+      let decoded = idOrSlug;
+      try {
+        decoded = decodeURIComponent(idOrSlug);
+      } catch {
+        // keep original
+      }
 
-    if (!prisma?.partner) {
+      if (!prisma?.partner) {
+        const fallback = initialPartners.find(
+          (p) => p.slug === decoded || p.slug === idOrSlug || p.id === idOrSlug || p.id === decoded
+        );
+        return fallback || null;
+      }
+
+      const p = await prisma.partner.findFirst({
+        where: {
+          OR: [
+            { slug: decoded },
+            { slug: idOrSlug },
+            { id: idOrSlug },
+            { id: decoded },
+          ],
+        },
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+          category: true,
+          address: true,
+          discount: true,
+          phone: true,
+          email: true,
+          logoText: true,
+          mapLink: true,
+          imageUrl: true,
+          emergencyPhone: true,
+          workingHours: true,
+          departmentDiscounts: true,
+          socialLinks: true,
+          upazila: true,
+        },
+      });
+
+      if (!p) {
+        const fallback = initialPartners.find(
+          (item) => item.slug === decoded || item.slug === idOrSlug || item.id === idOrSlug || item.id === decoded
+        );
+        return fallback || null;
+      }
+
+      return formatPartner(p);
+    } catch (error) {
+      logger.error("Error in getPartnerByIdAction:", error);
       const fallback = initialPartners.find(
-        (p) => p.slug === decoded || p.slug === idOrSlug || p.id === idOrSlug || p.id === decoded
+        (item) => item.slug === idOrSlug || item.id === idOrSlug
       );
       return fallback || null;
     }
-
-    const p = await prisma.partner.findFirst({
-      where: {
-        OR: [
-          { slug: decoded },
-          { slug: idOrSlug },
-          { id: idOrSlug },
-          { id: decoded },
-        ],
-      },
-      select: {
-        id: true,
-        slug: true,
-        name: true,
-        category: true,
-        address: true,
-        discount: true,
-        phone: true,
-        email: true,
-        logoText: true,
-        mapLink: true,
-        imageUrl: true,
-        emergencyPhone: true,
-        workingHours: true,
-        departmentDiscounts: true,
-        socialLinks: true,
-        upazila: true,
-      },
-    });
-
-    if (!p) {
-      const fallback = initialPartners.find(
-        (item) => item.slug === decoded || item.slug === idOrSlug || item.id === idOrSlug || item.id === decoded
-      );
-      return fallback || null;
-    }
-
-    return formatPartner(p);
-  } catch (error) {
-    logger.error("Error in getPartnerByIdAction:", error);
-    const fallback = initialPartners.find(
-      (item) => item.slug === idOrSlug || item.id === idOrSlug
-    );
-    return fallback || null;
   }
-}
+);
 
 /**
  * Fetch resident consultant doctors practicing at a partner hospital.

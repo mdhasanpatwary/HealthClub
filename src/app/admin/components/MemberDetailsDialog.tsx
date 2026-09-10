@@ -103,7 +103,7 @@ export function MemberDetailsDialog({
                       alt={viewingMember.name} 
                       width={56}
                       height={56}
-                      unoptimized
+                      unoptimized={Boolean(profilePic.startsWith("data:"))}
                       className="h-full w-full object-cover object-left-top transition-transform duration-200 group-hover:scale-105" 
                     />
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-xl">
@@ -339,7 +339,7 @@ export function MemberDetailsDialog({
                 alt={viewingMember.name}
                 width={480}
                 height={480}
-                unoptimized
+                unoptimized={Boolean(profilePic.startsWith("data:"))}
                 className="w-full h-auto max-h-[62vh] object-contain rounded-lg shadow-sm"
               />
             </div>

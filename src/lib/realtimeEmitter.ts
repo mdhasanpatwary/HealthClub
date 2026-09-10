@@ -85,3 +85,19 @@ export function broadcastAdminAlert(payload: RealtimeAdminAlertPayload): void {
     // Graceful silent fallback
   }
 }
+
+export interface RealtimeAccountStatusPayload {
+  memberId: string;
+  status: "deleted" | "deactivated";
+}
+
+/**
+ * Broadcast an account status event (e.g. deletion, suspension) to force real-time logout.
+ */
+export function broadcastAccountStatus(payload: RealtimeAccountStatusPayload): void {
+  try {
+    realtimeEmitter.emit("account_status", payload);
+  } catch {
+    // Graceful silent fallback
+  }
+}

@@ -173,6 +173,7 @@ export const dashboardEn = {
   "dashboard.card.downloading": "Downloading card...",
   "dashboard.card.downloadSuccess": "Card downloaded successfully!",
   "dashboard.card.downloadFailed": "Failed to download card. Please try again.",
-  "dashboard.syncError": "Unable to update some dashboard data. Showing cached data."
+  "dashboard.syncError": "Unable to update some dashboard data. Showing cached data.",
+  "dashboard.accountTerminated": "Your account is no longer active or has been removed."
 } as const;
 

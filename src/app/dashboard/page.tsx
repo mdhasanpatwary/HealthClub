@@ -114,6 +114,14 @@ function DashboardContent() {
         ]);
 
         if (!isMounted) return;
+
+        if (typeof navigator !== "undefined" && navigator.onLine && !freshUser) {
+          await authStore.logout();
+          toast.error(t("dashboard.accountTerminated"));
+          router.replace("/login");
+          return;
+        }
+
         const activeUser = freshUser || currentUser;
         setUser(activeUser);
         saveOfflineMemberCard(activeUser).catch(() => {});

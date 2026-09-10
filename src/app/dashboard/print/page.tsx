@@ -29,7 +29,14 @@ export default function PrintCardPage() {
     }
 
     getMemberByIdAction(currentUser.id)
-      .then((freshUser) => {
+      .then(async (freshUser) => {
+        if (typeof navigator !== "undefined" && navigator.onLine && !freshUser) {
+          await authStore.logout();
+          toast.error(t("dashboard.accountTerminated"));
+          router.replace("/login");
+          return;
+        }
+
         const activeUser = freshUser || currentUser;
         setMember(activeUser);
         setLoading(false);

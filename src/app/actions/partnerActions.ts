@@ -7,6 +7,7 @@ import { getSessionUser } from "@/lib/session";
 import { hashPassword } from "@/lib/crypto";
 import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag } from "next/cache";
+import { cache } from "react";
 import { PaginatedResult } from "@/types/pagination";
 import {
   addPartnerRequestAction as _addPartnerRequestAction,
@@ -22,14 +23,8 @@ import {
   requestPartnerPasswordResetAction as _requestPartnerPasswordResetAction,
   resetPartnerPasswordAction as _resetPartnerPasswordAction,
 } from "./partnerPasswordResetActions";
-import {
-  getPartnerTransactionsAction as _getPartnerTransactionsAction,
-  addPartnerTransactionAction as _addPartnerTransactionAction,
-} from "./partnerTransactionActions";
-import {
-  getPartnerAnalyticsAction as _getPartnerAnalyticsAction,
-  getPartnerMonthlyTransactionsAction as _getPartnerMonthlyTransactionsAction,
-} from "./partnerAnalyticsActions";
+import { getPartnerTransactionsAction as _getPartnerTransactionsAction, addPartnerTransactionAction as _addPartnerTransactionAction } from "./partnerTransactionActions";
+import { getPartnerAnalyticsAction as _getPartnerAnalyticsAction, getPartnerMonthlyTransactionsAction as _getPartnerMonthlyTransactionsAction } from "./partnerAnalyticsActions";
 import {
   getPartnerByIdAction as _getPartnerByIdAction,
   getDoctorsByPartnerIdAction as _getDoctorsByPartnerIdAction,
@@ -48,7 +43,7 @@ async function verifyPartnerAdmin(): Promise<boolean> {
   return hasAdminPermission(role, "manage_partners");
 }
 
-export async function getPartnerByIdAction(id: string) { return _getPartnerByIdAction(id); }
+export const getPartnerByIdAction = cache(async (id: string) => { return _getPartnerByIdAction(id); });
 export async function getDoctorsByPartnerIdAction(partnerId: string) { return _getDoctorsByPartnerIdAction(partnerId); }
 export async function getRelatedPartnersAction(category: string, currentId: string, limit?: number) { return _getRelatedPartnersAction(category, currentId, limit); }
 export async function addPartnerRequestAction(...args: Parameters<typeof _addPartnerRequestAction>) { return _addPartnerRequestAction(...args); }

@@ -248,7 +248,7 @@ export default function InstallAppBanner() {
               width={44}
               height={44}
               style={{ width: "auto", height: "auto" }}
-              className="object-contain size-full"
+              className="object-contain max-h-full max-w-full"
             />
           </div>
 

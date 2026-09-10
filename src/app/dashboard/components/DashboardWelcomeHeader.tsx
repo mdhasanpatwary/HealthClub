@@ -72,7 +72,7 @@ export function DashboardWelcomeHeader({
                   alt={user.name}
                   width={56}
                   height={56}
-                  unoptimized
+                  unoptimized={Boolean(user.profilePictureUrl.startsWith("data:"))}
                   className="h-14 w-14 rounded-2xl object-cover object-left-top border-2 border-white/20 shadow-lg"
                 />
               ) : (

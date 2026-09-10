@@ -173,6 +173,7 @@ export const dashboardBn = {
   "dashboard.card.downloading": "কার্ড ডাউনলোড হচ্ছে...",
   "dashboard.card.downloadSuccess": "কার্ড সফলভাবে ডাউনলোড হয়েছে!",
   "dashboard.card.downloadFailed": "ডাউনলোড ব্যর্থ হয়েছে। আবার চেষ্টা করুন।",
-  "dashboard.syncError": "ড্যাশবোর্ডের কিছু তথ্য আপডেট করতে সমস্যা হয়েছে। ক্যাশড তথ্য প্রদর্শিত হচ্ছে।"
+  "dashboard.syncError": "ড্যাশবোর্ডের কিছু তথ্য আপডেট করতে সমস্যা হয়েছে। ক্যাশড তথ্য প্রদর্শিত হচ্ছে।",
+  "dashboard.accountTerminated": "আপনার অ্যাকাউন্টটি আর সক্রিয় নেই অথবা মুছে ফেলা হয়েছে।"
 } as const;
 

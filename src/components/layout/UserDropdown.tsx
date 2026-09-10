@@ -44,7 +44,7 @@ export default function UserDropdown({ user }: UserDropdownProps) {
             alt={user.name}
             width={36}
             height={36}
-            unoptimized
+            unoptimized={Boolean(user.profilePictureUrl.startsWith("data:"))}
             className="h-9 w-9 rounded-full object-cover object-left-top border border-border shrink-0 shadow-xs"
           />
         ) : (

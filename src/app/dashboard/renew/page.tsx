@@ -60,6 +60,14 @@ export default function RenewalPage() {
       try {
         const freshUser = await getMemberByIdAction(currentUser.id);
         if (!isMounted) return;
+
+        if (typeof navigator !== "undefined" && navigator.onLine && !freshUser) {
+          await authStore.logout();
+          toast.error(t("dashboard.accountTerminated"));
+          router.replace("/login");
+          return;
+        }
+
         const activeUser = freshUser || currentUser;
         setMember(activeUser);
         setProfession(activeUser.profession || "");
@@ -75,7 +83,7 @@ export default function RenewalPage() {
     return () => {
       isMounted = false;
     };
-  }, [router]);
+  }, [router, t]);
 
   const handleCopyNumber = () => {
     navigator.clipboard.writeText(bkashNumber);

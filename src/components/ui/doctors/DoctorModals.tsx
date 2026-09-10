@@ -31,7 +31,7 @@ export function DoctorAvatar({
           alt={alt}
           fill
           sizes="(max-width: 640px) 80px, 100px"
-          unoptimized
+          unoptimized={Boolean(typeof src === "string" && src.startsWith("data:"))}
           className="object-cover object-top"
           onError={() => setHasError(true)}
         />

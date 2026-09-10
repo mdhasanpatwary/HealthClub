@@ -4,6 +4,7 @@ import {
   RealtimeMemberNotificationPayload,
   RealtimeTransactionPayload,
   RealtimeAdminAlertPayload,
+  RealtimeAccountStatusPayload,
 } from "@/lib/realtimeEmitter";
 
 export const dynamic = "force-dynamic";
@@ -71,16 +72,24 @@ export async function GET(request: Request) {
         }
       };
 
+      // 5. Account status listener (auto-logout on deletion/deactivation)
+      const handleAccountStatus = (payload: RealtimeAccountStatusPayload) => {
+        if (role === "admin" || (role === "user" && payload.memberId === userId)) {
+          sendEvent("account_status", payload);
+        }
+      };
+
       realtimeEmitter.on("member_notification", handleMemberNotification);
       realtimeEmitter.on("transaction", handleTransaction);
       realtimeEmitter.on("admin_alert", handleAdminAlert);
+      realtimeEmitter.on("account_status", handleAccountStatus);
 
-      // 5. Periodic keepalive ping (every 25 seconds) to prevent proxy timeouts
+      // 6. Periodic keepalive ping (every 25 seconds) to prevent proxy timeouts
       const pingInterval = setInterval(() => {
         sendEvent("ping", { time: Date.now() });
       }, 25000);
 
-      // 6. Cleanup on disconnect
+      // 7. Cleanup on disconnect
       const cleanup = () => {
         if (isClosed) return;
         isClosed = true;
@@ -88,6 +97,7 @@ export async function GET(request: Request) {
         realtimeEmitter.off("member_notification", handleMemberNotification);
         realtimeEmitter.off("transaction", handleTransaction);
         realtimeEmitter.off("admin_alert", handleAdminAlert);
+        realtimeEmitter.off("account_status", handleAccountStatus);
         try {
           controller.close();
         } catch {

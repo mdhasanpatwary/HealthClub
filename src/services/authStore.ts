@@ -1,5 +1,5 @@
 import { Member, Partner } from "./db";
-import { safeStorage } from "@/lib/safeStorage";
+import { safeStorage, safeIndexedDB } from "@/lib/safeStorage";
 import { logoutMemberAction } from "@/app/actions/memberAuthActions";
 
 const isClient = typeof window !== "undefined";
@@ -35,6 +35,7 @@ export const authStore = {
   async logout(): Promise<void> {
     if (isClient) {
       safeStorage.removeItem(KEYS.CURRENT_USER);
+      safeIndexedDB.removeItem("hc_offline_member_card").catch(() => {});
       window.dispatchEvent(new Event("auth-change"));
     }
     try {

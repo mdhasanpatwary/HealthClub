@@ -10,6 +10,7 @@ import { createMemberNotification } from "./memberNotificationActions";
 import { hasAdminPermission } from "@/lib/permissions";
 import { updateTag } from "next/cache";
 import { ensureStorageUrl } from "@/services/storageService";
+import { broadcastAccountStatus } from "@/lib/realtimeEmitter";
 
 async function verifyMemberAdmin(permission: "manage_members" | "approve_renewals" = "manage_members"): Promise<boolean> {
   const session = await getSessionUser();
@@ -257,6 +258,9 @@ export async function updateMemberStatusAction(id: string, status: Member["statu
       where: { id },
       data: updateData,
     });
+    if (status !== "active") {
+      broadcastAccountStatus({ memberId: id, status: "deactivated" });
+    }
     updateTag("admin-stats");
     return true;
   } catch (error) {
@@ -358,6 +362,7 @@ export async function deleteMemberAction(id: string): Promise<boolean> {
     await prisma.member.delete({
       where: { id },
     });
+    broadcastAccountStatus({ memberId: id, status: "deleted" });
     updateTag("admin-stats");
     return true;
   } catch (error) {
