@@ -26,6 +26,7 @@ export type AggregatePartner = {
 
 export type PartnerMinAggregateOutputType = {
   id: string | null
+  slug: string | null
   name: string | null
   category: string | null
   address: string | null
@@ -48,6 +49,7 @@ export type PartnerMinAggregateOutputType = {
 
 export type PartnerMaxAggregateOutputType = {
   id: string | null
+  slug: string | null
   name: string | null
   category: string | null
   address: string | null
@@ -70,6 +72,7 @@ export type PartnerMaxAggregateOutputType = {
 
 export type PartnerCountAggregateOutputType = {
   id: number
+  slug: number
   name: number
   category: number
   address: number
@@ -94,6 +97,7 @@ export type PartnerCountAggregateOutputType = {
 
 export type PartnerMinAggregateInputType = {
   id?: true
+  slug?: true
   name?: true
   category?: true
   address?: true
@@ -116,6 +120,7 @@ export type PartnerMinAggregateInputType = {
 
 export type PartnerMaxAggregateInputType = {
   id?: true
+  slug?: true
   name?: true
   category?: true
   address?: true
@@ -138,6 +143,7 @@ export type PartnerMaxAggregateInputType = {
 
 export type PartnerCountAggregateInputType = {
   id?: true
+  slug?: true
   name?: true
   category?: true
   address?: true
@@ -233,6 +239,7 @@ export type PartnerGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type PartnerGroupByOutputType = {
   id: string
+  slug: string | null
   name: string
   category: string
   address: string
@@ -276,6 +283,7 @@ export type PartnerWhereInput = {
   OR?: Prisma.PartnerWhereInput[]
   NOT?: Prisma.PartnerWhereInput | Prisma.PartnerWhereInput[]
   id?: Prisma.StringFilter<"Partner"> | string
+  slug?: Prisma.StringNullableFilter<"Partner"> | string | null
   name?: Prisma.StringFilter<"Partner"> | string
   category?: Prisma.StringFilter<"Partner"> | string
   address?: Prisma.StringFilter<"Partner"> | string
@@ -302,6 +310,7 @@ export type PartnerWhereInput = {
 
 export type PartnerOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  slug?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   category?: Prisma.SortOrder
   address?: Prisma.SortOrder
@@ -328,6 +337,7 @@ export type PartnerOrderByWithRelationInput = {
 
 export type PartnerWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  slug?: string
   email?: string
   AND?: Prisma.PartnerWhereInput | Prisma.PartnerWhereInput[]
   OR?: Prisma.PartnerWhereInput[]
@@ -353,10 +363,11 @@ export type PartnerWhereUniqueInput = Prisma.AtLeast<{
   doctors?: Prisma.DoctorListRelationFilter
   staff?: Prisma.PartnerStaffListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
-}, "id" | "email">
+}, "id" | "slug" | "email">
 
 export type PartnerOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  slug?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   category?: Prisma.SortOrder
   address?: Prisma.SortOrder
@@ -385,6 +396,7 @@ export type PartnerScalarWhereWithAggregatesInput = {
   OR?: Prisma.PartnerScalarWhereWithAggregatesInput[]
   NOT?: Prisma.PartnerScalarWhereWithAggregatesInput | Prisma.PartnerScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Partner"> | string
+  slug?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
   name?: Prisma.StringWithAggregatesFilter<"Partner"> | string
   category?: Prisma.StringWithAggregatesFilter<"Partner"> | string
   address?: Prisma.StringWithAggregatesFilter<"Partner"> | string
@@ -407,6 +419,7 @@ export type PartnerScalarWhereWithAggregatesInput = {
 
 export type PartnerCreateInput = {
   id: string
+  slug?: string | null
   name: string
   category: string
   address: string
@@ -433,6 +446,7 @@ export type PartnerCreateInput = {
 
 export type PartnerUncheckedCreateInput = {
   id: string
+  slug?: string | null
   name: string
   category: string
   address: string
@@ -459,6 +473,7 @@ export type PartnerUncheckedCreateInput = {
 
 export type PartnerUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
@@ -485,6 +500,7 @@ export type PartnerUpdateInput = {
 
 export type PartnerUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
@@ -511,6 +527,7 @@ export type PartnerUncheckedUpdateInput = {
 
 export type PartnerCreateManyInput = {
   id: string
+  slug?: string | null
   name: string
   category: string
   address: string
@@ -533,6 +550,7 @@ export type PartnerCreateManyInput = {
 
 export type PartnerUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
@@ -555,6 +573,7 @@ export type PartnerUpdateManyMutationInput = {
 
 export type PartnerUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
@@ -577,6 +596,7 @@ export type PartnerUncheckedUpdateManyInput = {
 
 export type PartnerCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
   name?: Prisma.SortOrder
   category?: Prisma.SortOrder
   address?: Prisma.SortOrder
@@ -599,6 +619,7 @@ export type PartnerCountOrderByAggregateInput = {
 
 export type PartnerMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
   name?: Prisma.SortOrder
   category?: Prisma.SortOrder
   address?: Prisma.SortOrder
@@ -621,6 +642,7 @@ export type PartnerMaxOrderByAggregateInput = {
 
 export type PartnerMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
   name?: Prisma.SortOrder
   category?: Prisma.SortOrder
   address?: Prisma.SortOrder
@@ -711,6 +733,7 @@ export type PartnerUpdateOneRequiredWithoutReviewsNestedInput = {
 
 export type PartnerCreateWithoutStaffInput = {
   id: string
+  slug?: string | null
   name: string
   category: string
   address: string
@@ -736,6 +759,7 @@ export type PartnerCreateWithoutStaffInput = {
 
 export type PartnerUncheckedCreateWithoutStaffInput = {
   id: string
+  slug?: string | null
   name: string
   category: string
   address: string
@@ -777,6 +801,7 @@ export type PartnerUpdateToOneWithWhereWithoutStaffInput = {
 
 export type PartnerUpdateWithoutStaffInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
@@ -802,6 +827,7 @@ export type PartnerUpdateWithoutStaffInput = {
 
 export type PartnerUncheckedUpdateWithoutStaffInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
@@ -827,6 +853,7 @@ export type PartnerUncheckedUpdateWithoutStaffInput = {
 
 export type PartnerCreateWithoutTransactionsInput = {
   id: string
+  slug?: string | null
   name: string
   category: string
   address: string
@@ -852,6 +879,7 @@ export type PartnerCreateWithoutTransactionsInput = {
 
 export type PartnerUncheckedCreateWithoutTransactionsInput = {
   id: string
+  slug?: string | null
   name: string
   category: string
   address: string
@@ -893,6 +921,7 @@ export type PartnerUpdateToOneWithWhereWithoutTransactionsInput = {
 
 export type PartnerUpdateWithoutTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
@@ -918,6 +947,7 @@ export type PartnerUpdateWithoutTransactionsInput = {
 
 export type PartnerUncheckedUpdateWithoutTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
@@ -943,6 +973,7 @@ export type PartnerUncheckedUpdateWithoutTransactionsInput = {
 
 export type PartnerCreateWithoutDoctorsInput = {
   id: string
+  slug?: string | null
   name: string
   category: string
   address: string
@@ -968,6 +999,7 @@ export type PartnerCreateWithoutDoctorsInput = {
 
 export type PartnerUncheckedCreateWithoutDoctorsInput = {
   id: string
+  slug?: string | null
   name: string
   category: string
   address: string
@@ -1009,6 +1041,7 @@ export type PartnerUpdateToOneWithWhereWithoutDoctorsInput = {
 
 export type PartnerUpdateWithoutDoctorsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1034,6 +1067,7 @@ export type PartnerUpdateWithoutDoctorsInput = {
 
 export type PartnerUncheckedUpdateWithoutDoctorsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1059,6 +1093,7 @@ export type PartnerUncheckedUpdateWithoutDoctorsInput = {
 
 export type PartnerCreateWithoutReviewsInput = {
   id: string
+  slug?: string | null
   name: string
   category: string
   address: string
@@ -1084,6 +1119,7 @@ export type PartnerCreateWithoutReviewsInput = {
 
 export type PartnerUncheckedCreateWithoutReviewsInput = {
   id: string
+  slug?: string | null
   name: string
   category: string
   address: string
@@ -1125,6 +1161,7 @@ export type PartnerUpdateToOneWithWhereWithoutReviewsInput = {
 
 export type PartnerUpdateWithoutReviewsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1150,6 +1187,7 @@ export type PartnerUpdateWithoutReviewsInput = {
 
 export type PartnerUncheckedUpdateWithoutReviewsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1233,6 +1271,7 @@ export type PartnerCountOutputTypeCountReviewsArgs<ExtArgs extends runtime.Types
 
 export type PartnerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  slug?: boolean
   name?: boolean
   category?: boolean
   address?: boolean
@@ -1260,6 +1299,7 @@ export type PartnerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 
 export type PartnerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  slug?: boolean
   name?: boolean
   category?: boolean
   address?: boolean
@@ -1282,6 +1322,7 @@ export type PartnerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 
 export type PartnerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  slug?: boolean
   name?: boolean
   category?: boolean
   address?: boolean
@@ -1304,6 +1345,7 @@ export type PartnerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 
 export type PartnerSelectScalar = {
   id?: boolean
+  slug?: boolean
   name?: boolean
   category?: boolean
   address?: boolean
@@ -1324,7 +1366,7 @@ export type PartnerSelectScalar = {
   createdAt?: boolean
 }
 
-export type PartnerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "category" | "address" | "discount" | "phone" | "email" | "password" | "logoText" | "mapLink" | "imageUrl" | "emergencyPhone" | "workingHours" | "departmentDiscounts" | "socialLinks" | "upazila" | "verificationCode" | "verificationCodeCreatedAt" | "createdAt", ExtArgs["result"]["partner"]>
+export type PartnerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "category" | "address" | "discount" | "phone" | "email" | "password" | "logoText" | "mapLink" | "imageUrl" | "emergencyPhone" | "workingHours" | "departmentDiscounts" | "socialLinks" | "upazila" | "verificationCode" | "verificationCodeCreatedAt" | "createdAt", ExtArgs["result"]["partner"]>
 export type PartnerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactions?: boolean | Prisma.Partner$transactionsArgs<ExtArgs>
   doctors?: boolean | Prisma.Partner$doctorsArgs<ExtArgs>
@@ -1345,6 +1387,7 @@ export type $PartnerPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    slug: string | null
     name: string
     category: string
     address: string
@@ -1791,6 +1834,7 @@ export interface Prisma__PartnerClient<T, Null = never, ExtArgs extends runtime.
  */
 export interface PartnerFieldRefs {
   readonly id: Prisma.FieldRef<"Partner", 'String'>
+  readonly slug: Prisma.FieldRef<"Partner", 'String'>
   readonly name: Prisma.FieldRef<"Partner", 'String'>
   readonly category: Prisma.FieldRef<"Partner", 'String'>
   readonly address: Prisma.FieldRef<"Partner", 'String'>

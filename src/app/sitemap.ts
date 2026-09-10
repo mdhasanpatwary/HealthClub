@@ -128,7 +128,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const partners = await getPartnersAction();
     partnerEntries = partners.map((partner) => {
-      const url = `${baseUrl}/partner-hospitals/${partner.id}`;
+      const url = `${baseUrl}/partner-hospitals/${encodeURIComponent(partner.slug || partner.id)}`;
       const lastModified =
         partner.createdAt && !isNaN(new Date(partner.createdAt).getTime())
           ? new Date(partner.createdAt)

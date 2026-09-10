@@ -142,7 +142,7 @@ export function generatePartnerJsonLd({
   locale = "bn",
 }: PartnerJsonLdOptions): Record<string, unknown>[] {
   const isEn = locale === "en";
-  const profileUrl = `${SITE_URL}/partner-hospitals/${partner.id}`;
+  const profileUrl = `${SITE_URL}/partner-hospitals/${encodeURIComponent(partner.slug || partner.id)}`;
 
   const categoryConfig = {
     hospital: {

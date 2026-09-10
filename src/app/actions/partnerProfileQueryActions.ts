@@ -12,6 +12,7 @@ const DOCTORS_TAG = "doctors";
 function formatPartner(p: any): Partner {
   return {
     id: p.id,
+    slug: p.slug || undefined,
     name: p.name,
     category: p.category as Partner["category"],
     address: p.address,
@@ -30,20 +31,37 @@ function formatPartner(p: any): Partner {
 }
 
 /**
- * Fetch a single partner by ID.
+ * Fetch a single partner by ID or Slug.
  * Falls back to initialPartners if not found in database.
  */
-export async function getPartnerByIdAction(id: string): Promise<Partner | null> {
+export async function getPartnerByIdAction(idOrSlug: string): Promise<Partner | null> {
   try {
+    let decoded = idOrSlug;
+    try {
+      decoded = decodeURIComponent(idOrSlug);
+    } catch {
+      // keep original
+    }
+
     if (!prisma?.partner) {
-      const fallback = initialPartners.find((p) => p.id === id);
+      const fallback = initialPartners.find(
+        (p) => p.slug === decoded || p.slug === idOrSlug || p.id === idOrSlug || p.id === decoded
+      );
       return fallback || null;
     }
 
-    const p = await prisma.partner.findUnique({
-      where: { id },
+    const p = await prisma.partner.findFirst({
+      where: {
+        OR: [
+          { slug: decoded },
+          { slug: idOrSlug },
+          { id: idOrSlug },
+          { id: decoded },
+        ],
+      },
       select: {
         id: true,
+        slug: true,
         name: true,
         category: true,
         address: true,
@@ -62,14 +80,18 @@ export async function getPartnerByIdAction(id: string): Promise<Partner | null> 
     });
 
     if (!p) {
-      const fallback = initialPartners.find((item) => item.id === id);
+      const fallback = initialPartners.find(
+        (item) => item.slug === decoded || item.slug === idOrSlug || item.id === idOrSlug || item.id === decoded
+      );
       return fallback || null;
     }
 
     return formatPartner(p);
   } catch (error) {
     logger.error("Error in getPartnerByIdAction:", error);
-    const fallback = initialPartners.find((item) => item.id === id);
+    const fallback = initialPartners.find(
+      (item) => item.slug === idOrSlug || item.id === idOrSlug
+    );
     return fallback || null;
   }
 }
@@ -164,6 +186,7 @@ export async function getRelatedPartnersAction(
       orderBy: { createdAt: "desc" },
       select: {
         id: true,
+        slug: true,
         name: true,
         category: true,
         address: true,
@@ -191,6 +214,7 @@ export async function getRelatedPartnersAction(
         orderBy: { createdAt: "desc" },
         select: {
           id: true,
+          slug: true,
           name: true,
           category: true,
           address: true,

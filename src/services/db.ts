@@ -97,6 +97,7 @@ export function formatSocialUrl(platform: keyof PartnerSocialLinks, value?: stri
 
 export interface Partner {
   id: string;
+  slug?: string;
   name: string;
   category: 'hospital' | 'diagnostic' | 'pharmacy';
   address: string;
@@ -186,6 +187,7 @@ export interface PublicMemberVerification {
 export const initialPartners: Partner[] = [
   {
     id: "p1",
+    slug: "পপুলার-ডায়াগনস্টিক-সেন্টার",
     name: "পপুলার ডায়াগনস্টিক সেন্টার",
     category: "diagnostic",
     address: "এসএসকে রোড, ফেনী",
@@ -197,6 +199,7 @@ export const initialPartners: Partner[] = [
   },
   {
     id: "p2",
+    slug: "ল্যাবএইড-স্পেশালাইজড-হাসপাতাল",
     name: "ল্যাবএইড স্পেশালাইজড হাসপাতাল",
     category: "hospital",
     address: "মিজান রোড, ফেনী",
@@ -208,6 +211,7 @@ export const initialPartners: Partner[] = [
   },
   {
     id: "p3",
+    slug: "লাজ-ফার্মা-লিমিটেড",
     name: "লাজ ফার্মা লিমিটেড",
     category: "pharmacy",
     address: "ট্রাঙ্ক রোড, ফেনী",
@@ -219,6 +223,7 @@ export const initialPartners: Partner[] = [
   },
   {
     id: "p5",
+    slug: "ইবনে-সিনা-ডায়াগনস্টিক-সেন্টার",
     name: "ইবনে সিনা ডায়াগনস্টিক সেন্টার",
     category: "diagnostic",
     address: "মহিপাল, ফেনী",
@@ -230,6 +235,7 @@ export const initialPartners: Partner[] = [
   },
   {
     id: "p6",
+    slug: "স্কয়ার-হাসপাতাল",
     name: "স্কয়ার হাসপাতাল (সিলেক্টেড সুবিধা)",
     category: "hospital",
     address: "গ্র্যান্ড ট্রাঙ্ক রোড, ফেনী",
@@ -241,6 +247,7 @@ export const initialPartners: Partner[] = [
   },
   {
     id: "p_ddlab",
+    slug: "ডিডি-ল্যাব",
     name: "ডিডি ল্যাব",
     category: "diagnostic",
     address: "মা প্লাজা (জিয়া মহিলা কলেজের বিপরীতে), শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",

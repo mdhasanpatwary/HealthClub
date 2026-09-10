@@ -434,7 +434,7 @@ export async function moderateReviewAction(
       },
       include: {
         member: { select: { id: true, name: true } },
-        partner: { select: { id: true, name: true } },
+        partner: { select: { id: true, slug: true, name: true } },
       },
     });
 
@@ -450,7 +450,7 @@ export async function moderateReviewAction(
         messageEn: status === "approved"
           ? `Your review for ${review.partner?.name || "partner"} has been approved and published.`
           : `Your review for ${review.partner?.name || "partner"} was not approved. ${adminFeedback ? `Note: ${adminFeedback}` : ""}`,
-        link: `/partner-hospitals/${review.partnerId}`,
+        link: `/partner-hospitals/${encodeURIComponent(review.partner?.slug || review.partnerId)}`,
       });
     } catch (notifErr) {
       logger.warn("Could not create member notification for review moderation:", notifErr);

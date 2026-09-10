@@ -5,33 +5,27 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ImageUpload } from "@/components/ui/ImageUpload";
 import { Partner } from "@/services/db";
+import { generatePartnerSlug } from "@/lib/slugify";
+
+export interface PartnerFormData {
+  name: string;
+  slug?: string;
+  category: Partner["category"];
+  address: string;
+  discount: string;
+  phone: string;
+  logoText: string;
+  mapLink: string;
+  imageUrl: string;
+  upazila: string;
+}
 
 interface PartnerDialogProps {
   isOpen: boolean;
   onClose: () => void;
   editingPartner: Partner | null;
-  newPartner: {
-    name: string;
-    category: Partner["category"];
-    address: string;
-    discount: string;
-    phone: string;
-    logoText: string;
-    mapLink: string;
-    imageUrl: string;
-    upazila: string;
-  };
-  setNewPartner: (partner: {
-    name: string;
-    category: Partner["category"];
-    address: string;
-    discount: string;
-    phone: string;
-    logoText: string;
-    mapLink: string;
-    imageUrl: string;
-    upazila: string;
-  }) => void;
+  newPartner: PartnerFormData;
+  setNewPartner: (partner: PartnerFormData) => void;
   onSubmit: (e: React.FormEvent) => void;
   t: (key: string) => string;
 }
@@ -64,7 +58,45 @@ export function PartnerDialog({
           />
           <div className="space-y-2">
             <label htmlFor="admin-partner-name" className="text-xs font-semibold text-secondary cursor-pointer">{t("admin.dashboard.partnerNameLabel")}</label>
-            <Input id="admin-partner-name" type="text" required placeholder={t("admin.dashboard.egPartnerName")} value={newPartner.name} onChange={e => setNewPartner({ ...newPartner, name: e.target.value })} className="border-border bg-background" />
+            <Input
+              id="admin-partner-name"
+              type="text"
+              required
+              placeholder={t("admin.dashboard.egPartnerName")}
+              value={newPartner.name}
+              onChange={(e) => {
+                const newName = e.target.value;
+                setNewPartner({
+                  ...newPartner,
+                  name: newName,
+                  ...(!editingPartner && !newPartner.slug ? { slug: generatePartnerSlug(newName) } : {}),
+                });
+              }}
+              className="border-border bg-background"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label htmlFor="admin-partner-slug" className="text-xs font-semibold text-secondary cursor-pointer">
+                URL Slug / লিংক পাথ (ঐচ্ছিক)
+              </label>
+              {newPartner.slug && (
+                <span className="text-[10px] text-primary font-mono truncate max-w-[200px]">
+                  /partner-hospitals/{newPartner.slug}
+                </span>
+              )}
+            </div>
+            <Input
+              id="admin-partner-slug"
+              type="text"
+              placeholder="যেমন: mojumdar-dental-clinic বা মজুমদার-ডেন্টাল-ক্লিনিক"
+              value={newPartner.slug || ""}
+              onChange={(e) => setNewPartner({ ...newPartner, slug: e.target.value })}
+              className="border-border bg-background font-mono text-xs"
+            />
+            <p className="text-[10px] text-muted-foreground">
+              খালি রাখলে পার্টনারের নাম থেকে স্বয়ংক্রিয়ভাবে ক্লিন URL তৈরি হবে।
+            </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">

@@ -17,7 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { useDebounce } from "@/hooks/useDebounce";
 import { PartnersTab } from "../components/PartnersTab";
-import { PartnerDialog } from "../components/PartnerDialog";
+import { PartnerDialog, PartnerFormData } from "../components/PartnerDialog";
 
 function AdminPartnersContent() {
   const { t, locale } = useLanguage();
@@ -50,8 +50,9 @@ function AdminPartnersContent() {
   // Dialog States
   const [isPartnerOpen, setIsPartnerOpen] = useState(false);
   const [editingPartner, setEditingPartner] = useState<Partner | null>(null);
-  const [newPartner, setNewPartner] = useState({
+  const [newPartner, setNewPartner] = useState<PartnerFormData>({
     name: "",
+    slug: "",
     category: "hospital" as Partner["category"],
     address: "",
     discount: "",
@@ -147,6 +148,7 @@ function AdminPartnersContent() {
       if (editingPartner) {
         const success = await updatePartnerAction(editingPartner.id, {
           name: newPartner.name,
+          slug: newPartner.slug || undefined,
           category: newPartner.category,
           address: newPartner.address,
           discount: newPartner.discount,
@@ -160,6 +162,7 @@ function AdminPartnersContent() {
       } else {
         const res = await addPartnerAction({
           name: newPartner.name,
+          slug: newPartner.slug || undefined,
           category: newPartner.category,
           address: newPartner.address,
           discount: newPartner.discount,
@@ -177,6 +180,7 @@ function AdminPartnersContent() {
 
       setNewPartner({
         name: "",
+        slug: "",
         category: (activeCategory !== "all" ? activeCategory : "hospital") as Partner["category"],
         address: "",
         discount: "",
@@ -286,6 +290,7 @@ function AdminPartnersContent() {
           setEditingPartner(null);
           setNewPartner({
             name: "",
+            slug: "",
             category: (activeCategory !== "all" ? activeCategory : "hospital") as Partner["category"],
             address: "",
             discount: "",
@@ -301,6 +306,7 @@ function AdminPartnersContent() {
           setEditingPartner(p);
           setNewPartner({
             name: p.name,
+            slug: p.slug || "",
             category: p.category,
             address: p.address,
             discount: p.discount,
@@ -327,6 +333,7 @@ function AdminPartnersContent() {
             setEditingPartner(null);
             setNewPartner({
               name: "",
+              slug: "",
               category: "hospital",
               address: "",
               discount: "",

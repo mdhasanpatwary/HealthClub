@@ -100,7 +100,7 @@ export function ReviewEligibilityBanner({
             </div>
           </div>
           <Link
-            href={`/login?redirect=/partner-hospitals/${partner.id}`}
+            href={`/login?redirect=/partner-hospitals/${encodeURIComponent(partner.slug || partner.id)}`}
             className={cn(
               buttonVariants({ size: "sm" }),
               "bg-primary hover:bg-primary-dark text-white text-xs font-bold rounded-xl shrink-0 self-start sm:self-auto"

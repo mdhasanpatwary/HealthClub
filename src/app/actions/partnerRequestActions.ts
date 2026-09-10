@@ -16,6 +16,7 @@ import {
   RATE_LIMIT_RULES,
 } from "@/lib/rateLimit";
 import { broadcastAdminAlert } from "@/lib/realtimeEmitter";
+import { generatePartnerSlug, resolveUniquePartnerSlug } from "@/lib/slugify";
 
 const PARTNERS_TAG = "partners";
 
@@ -238,9 +239,15 @@ export async function updatePartnerRequestStatusAction(
           }
         }
 
+        const partnerSlug = await resolveUniquePartnerSlug(
+          tx,
+          generatePartnerSlug(req.orgName)
+        );
+
         await tx.partner.create({
           data: {
             id: partnerId,
+            slug: partnerSlug,
             name: req.orgName,
             category: req.category,
             address: req.address,

@@ -59,7 +59,7 @@ export default function HospitalContactSidebar({
     const profileUrl =
       typeof window !== "undefined"
         ? window.location.href
-        : `${SITE_URL}/partner-hospitals/${partner.id}`;
+        : `${SITE_URL}/partner-hospitals/${encodeURIComponent(partner.slug || partner.id)}`;
     const shareTitle = `${partner.name} - Health Club Partner`;
     const shareText = `${partner.name}, ${partner.address}. ডিসকাউন্ট: ${partner.discount}। হেল্পলাইন: ${partner.phone}`;
 
@@ -282,7 +282,7 @@ export default function HospitalContactSidebar({
             {relatedPartners.map((p) => (
               <Link
                 key={p.id}
-                href={`/partner-hospitals/${p.id}`}
+                href={`/partner-hospitals/${encodeURIComponent(p.slug || p.id)}`}
                 className="group block p-2.5 rounded-xl border border-border/60 hover:border-primary/40 bg-muted/20 hover:bg-muted/50 transition-all"
               >
                 <div className="flex items-center justify-between gap-2">

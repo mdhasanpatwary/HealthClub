@@ -120,7 +120,7 @@ export default function PartnerCard({ partner, locale, t }: PartnerCardProps) {
 
         {/* Floating Name & Address at bottom of image overlay */}
         <div className="absolute bottom-3 left-4 right-4 z-10 space-y-1">
-          <Link href={`/partner-hospitals/${partner.id}`} className="block">
+          <Link href={`/partner-hospitals/${encodeURIComponent(partner.slug || partner.id)}`} className="block">
             <h3 className="font-heading text-base sm:text-lg font-bold text-white drop-shadow-md line-clamp-2 leading-snug group-hover:text-emerald-400 transition-colors">
               {partner.name}
             </h3>
@@ -158,7 +158,7 @@ export default function PartnerCard({ partner, locale, t }: PartnerCardProps) {
 
         <div className="flex items-center gap-1.5 shrink-0">
           <Link
-            href={`/partner-hospitals/${partner.id}`}
+            href={`/partner-hospitals/${encodeURIComponent(partner.slug || partner.id)}`}
             className={buttonVariants({
               variant: "outline",
               size: "sm",

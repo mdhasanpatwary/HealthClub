@@ -51,6 +51,7 @@ model Member {
 
 model Partner {
   id                        String        @id
+  slug                      String?       @unique
   name                      String
   category                  String        // 'hospital' | 'diagnostic' | 'pharmacy'
   address                   String

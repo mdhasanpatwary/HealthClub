@@ -36,6 +36,7 @@ import {
   getRelatedPartnersAction as _getRelatedPartnersAction,
 } from "./partnerProfileQueryActions";
 import { hasAdminPermission } from "@/lib/permissions";
+import { generatePartnerSlug, sanitizePartnerSlug, resolveUniquePartnerSlug } from "@/lib/slugify";
 
 const PARTNERS_TAG = "partners";
 
@@ -104,6 +105,7 @@ export async function resetPartnerPasswordAction(email: string, code: string, ra
 
 const PARTNER_SELECT_FIELDS = {
   id: true,
+  slug: true,
   name: true,
   category: true,
   address: true,
@@ -128,6 +130,7 @@ type PrismaPartnerRecord =
 function formatPartner(p: PrismaPartnerRecord): Partner {
   return {
     id: p.id,
+    slug: (p as { slug?: string | null }).slug || undefined,
     name: p.name,
     category: p.category as Partner["category"],
     address: p.address,
@@ -244,9 +247,13 @@ export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Pa
 
   const newPartnerId = `p_${crypto.randomUUID()}`;
   try {
+    const rawSlug = partner.slug ? sanitizePartnerSlug(partner.slug) : generatePartnerSlug(partner.name);
+    const finalSlug = await resolveUniquePartnerSlug(prisma, rawSlug);
+
     const p = await prisma.partner.create({
       data: {
         id: newPartnerId,
+        slug: finalSlug,
         name: partner.name,
         category: partner.category,
         address: partner.address,
@@ -278,9 +285,28 @@ export async function updatePartnerAction(id: string, partner: Omit<Partner, "id
   if (!await verifyPartnerAdmin()) return false;
 
   try {
+    let finalSlug: string | undefined = undefined;
+    if (partner.slug && partner.slug.trim()) {
+      const sanitized = sanitizePartnerSlug(partner.slug);
+      finalSlug = await resolveUniquePartnerSlug(prisma, sanitized, id);
+    } else if (partner.name) {
+      const current = await prisma.partner.findUnique({
+        where: { id },
+        select: { slug: true },
+      });
+      if (!current?.slug) {
+        finalSlug = await resolveUniquePartnerSlug(
+          prisma,
+          generatePartnerSlug(partner.name),
+          id
+        );
+      }
+    }
+
     await prisma.partner.update({
       where: { id },
       data: {
+        ...(finalSlug ? { slug: finalSlug } : {}),
         name: partner.name,
         category: partner.category,
         address: partner.address,

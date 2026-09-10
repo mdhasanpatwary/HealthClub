@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import HospitalProfileView from "@/components/partner-hospitals/HospitalProfileView";
@@ -13,12 +13,12 @@ import { SITE_URL } from "@/lib/siteConfig";
 import { generatePartnerJsonLd } from "@/lib/seo/partnerSchema";
 
 interface PageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps) {
-  const { id } = await params;
-  const partner = await getPartnerByIdAction(id);
+  const { slug } = await params;
+  const partner = await getPartnerByIdAction(slug);
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
@@ -69,7 +69,8 @@ export async function generateMetadata({ params }: PageProps) {
     ? `${partner.name} at ${partner.address}, Feni. Avail ${partner.discount} with Health Club Member Card. Verified facilities, resident specialist doctors & 24/7 hotline: ${partner.phone}.`
     : `${partner.name}, ${partner.address}, ফেনী। হেলথ ক্লাব মেম্বার কার্ডে পান ${partner.discount}। আধুনিক স্বাস্থ্যসেবা, বিশেষজ্ঞ ডাক্তারদের চেম্বার শিডিউল ও হটলাইন: ${partner.phone}।`;
 
-  const canonicalUrl = `${SITE_URL}/partner-hospitals/${partner.id}`;
+  const canonicalSlug = encodeURIComponent(partner.slug || partner.id);
+  const canonicalUrl = `${SITE_URL}/partner-hospitals/${canonicalSlug}`;
   const rawImage = partner.imageUrl?.trim();
   const hasValidImage = Boolean(rawImage && rawImage.length > 0);
   const ogImage = hasValidImage
@@ -130,11 +131,24 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 export default async function PartnerHospitalDetailPage({ params }: PageProps) {
-  const { id } = await params;
-  const partner = await getPartnerByIdAction(id);
+  const { slug } = await params;
+  const partner = await getPartnerByIdAction(slug);
 
   if (!partner) {
     notFound();
+  }
+
+  // If accessed via ID (e.g. p_9abc5886-...) or mismatched slug,
+  // permanently redirect to the canonical name slug URL
+  let decodedParam = slug;
+  try {
+    decodedParam = decodeURIComponent(slug);
+  } catch {
+    // keep as is
+  }
+
+  if (partner.slug && decodedParam !== partner.slug) {
+    permanentRedirect(`/partner-hospitals/${encodeURIComponent(partner.slug)}`);
   }
 
   const [doctors, relatedPartners, reviewData] = await Promise.all([

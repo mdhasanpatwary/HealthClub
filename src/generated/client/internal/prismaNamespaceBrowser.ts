@@ -117,6 +117,7 @@ export type MemberScalarFieldEnum = (typeof MemberScalarFieldEnum)[keyof typeof 
 
 export const PartnerScalarFieldEnum = {
   id: 'id',
+  slug: 'slug',
   name: 'name',
   category: 'category',
   address: 'address',

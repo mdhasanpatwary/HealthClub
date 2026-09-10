@@ -861,6 +861,14 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `prisma/schema.prisma`, `src/services/db.ts`, `src/app/actions/partnerActions.ts`, `src/app/actions/partnerProfileQueryActions.ts`, `src/app/partner/dashboard/components/PartnerSocialLinksCard.tsx`, `src/app/partner/dashboard/components/PartnerProfileSettingsTab.tsx`, `src/app/partner/dashboard/components/PartnerCardPreview.tsx`, `src/components/partner-hospitals/HospitalSocialLinks.tsx`, `src/components/partner-hospitals/HospitalContactSidebar.tsx`, `src/components/partner-hospitals/HospitalProfileView.tsx`, `src/lib/seo/partnerSchema.ts`
   - **Details**: Enabled healthcare partners (hospitals, diagnostic centers, pharmacies) to configure and update their social media links (Facebook, WhatsApp, Website, YouTube, LinkedIn, Instagram) from their dashboard settings tab. Configured live preview in partner panel, responsive quick-chips and sidebar buttons on the public partner details page, and automatic inclusion in Google JSON-LD schema (`sameAs`).
 
+### 🔗 SEO & Human-Readable URLs (P1)
+
+- [x] **TODO-158**: **Implement Name-Based URL Slugs for Partner Hospitals with Automatic Canonical Redirects**
+  - **Severity**: High
+  - **Files**: `prisma/schema.prisma`, `src/services/db.ts`, `src/lib/slugify.ts`, `src/app/actions/partnerActions.ts`, `src/app/actions/partnerProfileQueryActions.ts`, `src/app/actions/partnerRequestActions.ts`, `src/app/partner-hospitals/[slug]/page.tsx`, `src/components/ui/PartnerCard.tsx`, `src/components/partner-hospitals/HospitalContactSidebar.tsx`, `src/app/admin/components/PartnerDialog.tsx`, `src/app/admin/partners/page.tsx`, `src/app/sitemap.ts`, `src/lib/seo/partnerSchema.ts`, `src/app/actions/reviewActions.ts`
+  - **Details**: Replaced opaque random UUIDs (e.g. `/partner-hospitals/p_9abc5886-459d-43a7-8d26-52d51ac9589c`) with clean, SEO-friendly slugs derived from partner names (e.g. `/partner-hospitals/মজুমদার-ডেন্টাল-ক্লিনিক` or `/partner-hospitals/imperial-neurocare-diagnostic-center`). Implemented automatic HTTP 308/301 permanent redirection from old random ID URLs to canonical name slugs, unique slug generation in Prisma schema, custom slug editing in Admin portal, and updated directory cards, sidebars, reviews, and sitemap.
+
+
 
 
 
