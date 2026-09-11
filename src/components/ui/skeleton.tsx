@@ -197,19 +197,26 @@ function SavingsCalculatorSkeleton() {
 function TestimonialSkeleton() {
   return (
     <div className="w-full max-w-3xl mx-auto px-2 sm:px-4 py-1 sm:py-4 space-y-4">
-      <Card className="border border-border bg-background/50 backdrop-blur shadow-lg w-full">
-        <CardContent className="p-4 sm:p-6 md:p-8">
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center">
-            <div className="flex flex-col items-center shrink-0 space-y-2">
-              <Skeleton className="h-14 w-14 sm:h-16 sm:w-16 rounded-full" />
-              <Skeleton className="h-5 w-20 rounded-full" />
+      <Card className="border border-border/80 bg-card/90 dark:bg-slate-900/80 backdrop-blur shadow-xl rounded-2xl w-full">
+        <CardContent className="p-5 sm:p-7 md:p-8">
+          <div className="flex flex-col sm:flex-row gap-5 sm:gap-7 items-center sm:items-start">
+            <div className="flex flex-col items-center shrink-0 space-y-2.5">
+              <Skeleton className="h-16 w-16 sm:h-20 sm:w-20 rounded-full" />
+              <Skeleton className="h-6 w-24 rounded-full" />
             </div>
             <div className="space-y-3 flex-1 w-full text-center sm:text-left">
+              <div className="flex items-center justify-center sm:justify-start gap-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-20 rounded-md" />
+              </div>
               <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-5/6" />
-              <div className="pt-2 space-y-1.5">
-                <Skeleton className="h-4 w-32 mx-auto sm:mx-0" />
-                <Skeleton className="h-3 w-20 mx-auto sm:mx-0" />
+              <Skeleton className="h-4 w-4/5" />
+              <div className="pt-2 border-t border-border/50 flex flex-col sm:flex-row sm:justify-between items-center gap-2">
+                <div className="space-y-1 w-full sm:w-auto text-center sm:text-left">
+                  <Skeleton className="h-4 w-32 mx-auto sm:mx-0" />
+                  <Skeleton className="h-3 w-20 mx-auto sm:mx-0" />
+                </div>
+                <Skeleton className="h-5 w-28 rounded" />
               </div>
             </div>
           </div>
@@ -218,7 +225,7 @@ function TestimonialSkeleton() {
       <div className="flex justify-center items-center gap-3">
         <Skeleton className="h-8 w-8 rounded-full" />
         <div className="flex gap-2">
-          <Skeleton className="h-2 w-6 rounded-full" />
+          <Skeleton className="h-2 w-7 rounded-full" />
           <Skeleton className="h-2 w-2 rounded-full" />
           <Skeleton className="h-2 w-2 rounded-full" />
         </div>
