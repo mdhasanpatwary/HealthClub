@@ -31,6 +31,19 @@ const DEFAULT_CONTACT_SETTINGS: PublicContactSettings = {
   facebookUrl:
     process.env.NEXT_PUBLIC_FACEBOOK_URL ||
     "https://www.facebook.com/profile.php?id=61591616953090",
+  youtubeUrl:
+    process.env.NEXT_PUBLIC_YOUTUBE_URL ||
+    "",
+  instagramUrl:
+    process.env.NEXT_PUBLIC_INSTAGRAM_URL ||
+    "",
+  xUrl:
+    process.env.NEXT_PUBLIC_X_URL ||
+    process.env.NEXT_PUBLIC_TWITTER_URL ||
+    "",
+  linkedinUrl:
+    process.env.NEXT_PUBLIC_LINKEDIN_URL ||
+    "",
 };
 
 export default function ContactForm({ initialSettings }: ContactFormProps) {

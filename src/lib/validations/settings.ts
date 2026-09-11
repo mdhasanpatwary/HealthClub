@@ -43,7 +43,38 @@ export const systemSettingsSchema = z.object({
   facebook_url: z
     .string()
     .trim()
-    .min(5, "ফেসবুক লিংক লিখুন।"),
+    .optional()
+    .refine((val) => !val || val.length >= 5, {
+      message: "সঠিক ফেসবুক লিংক লিখুন।",
+    }),
+  youtube_url: z
+    .string()
+    .trim()
+    .optional()
+    .refine((val) => !val || val.length >= 5, {
+      message: "সঠিক ইউটিউব লিংক লিখুন।",
+    }),
+  instagram_url: z
+    .string()
+    .trim()
+    .optional()
+    .refine((val) => !val || val.length >= 5, {
+      message: "সঠিক ইনস্টাগ্রাম লিংক লিখুন।",
+    }),
+  x_url: z
+    .string()
+    .trim()
+    .optional()
+    .refine((val) => !val || val.length >= 5, {
+      message: "সঠিক X (টুইটার) লিংক লিখুন।",
+    }),
+  linkedin_url: z
+    .string()
+    .trim()
+    .optional()
+    .refine((val) => !val || val.length >= 5, {
+      message: "সঠিক লিংকডইন লিংক লিখুন।",
+    }),
   notice_enabled: z.union([z.boolean(), z.enum(["true", "false"])]).optional(),
   notice_text: z.string().trim().optional(),
   allow_member_tx: z.union([z.boolean(), z.enum(["true", "false"])]).optional(),

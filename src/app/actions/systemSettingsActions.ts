@@ -223,6 +223,10 @@ export interface PublicContactSettings {
   whatsapp: string;
   email: string;
   facebookUrl: string;
+  youtubeUrl: string;
+  instagramUrl: string;
+  xUrl: string;
+  linkedinUrl: string;
 }
 
 export const getCachedContactSettings = unstable_cache(
@@ -239,6 +243,11 @@ export const getCachedContactSettings = unstable_cache(
               "contact_email",
               "official_email",
               "facebook_url",
+              "youtube_url",
+              "instagram_url",
+              "x_url",
+              "twitter_url",
+              "linkedin_url",
             ],
           },
         },
@@ -271,6 +280,24 @@ export const getCachedContactSettings = unstable_cache(
           map["facebook_url"] ||
           process.env.NEXT_PUBLIC_FACEBOOK_URL ||
           "https://www.facebook.com/profile.php?id=61591616953090",
+        youtubeUrl:
+          map["youtube_url"] ||
+          process.env.NEXT_PUBLIC_YOUTUBE_URL ||
+          "",
+        instagramUrl:
+          map["instagram_url"] ||
+          process.env.NEXT_PUBLIC_INSTAGRAM_URL ||
+          "",
+        xUrl:
+          map["x_url"] ||
+          map["twitter_url"] ||
+          process.env.NEXT_PUBLIC_X_URL ||
+          process.env.NEXT_PUBLIC_TWITTER_URL ||
+          "",
+        linkedinUrl:
+          map["linkedin_url"] ||
+          process.env.NEXT_PUBLIC_LINKEDIN_URL ||
+          "",
       };
     } catch (error) {
       logger.error("Error fetching contact settings:", error);
@@ -291,6 +318,19 @@ export const getCachedContactSettings = unstable_cache(
         facebookUrl:
           process.env.NEXT_PUBLIC_FACEBOOK_URL ||
           "https://www.facebook.com/profile.php?id=61591616953090",
+        youtubeUrl:
+          process.env.NEXT_PUBLIC_YOUTUBE_URL ||
+          "",
+        instagramUrl:
+          process.env.NEXT_PUBLIC_INSTAGRAM_URL ||
+          "",
+        xUrl:
+          process.env.NEXT_PUBLIC_X_URL ||
+          process.env.NEXT_PUBLIC_TWITTER_URL ||
+          "",
+        linkedinUrl:
+          process.env.NEXT_PUBLIC_LINKEDIN_URL ||
+          "",
       };
     }
   },

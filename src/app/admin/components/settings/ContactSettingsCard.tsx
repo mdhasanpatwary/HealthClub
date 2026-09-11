@@ -53,9 +53,7 @@ export function ContactSettingsCard({
               <p className="text-xs text-destructive">{errors.whatsapp_phone.message}</p>
             )}
           </div>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 sm:col-span-2">
             <Label htmlFor="official-email" className="text-xs font-semibold">
               {isEn ? "Official Email" : "অফিসিয়াল ইমেইল"}
             </Label>
@@ -68,17 +66,81 @@ export function ContactSettingsCard({
               <p className="text-xs text-destructive">{errors.official_email.message}</p>
             )}
           </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="facebook-url" className="text-xs font-semibold">
-              {isEn ? "Facebook Page URL" : "ফেসবুক পেজ লিংক"}
-            </Label>
-            <Input
-              id="facebook-url"
-              {...register("facebook_url")}
-            />
-            {errors?.facebook_url && (
-              <p className="text-xs text-destructive">{errors.facebook_url.message}</p>
-            )}
+        </div>
+
+        {/* Social Accounts Section */}
+        <div className="pt-2 border-t border-border/60">
+          <p className="text-xs font-medium text-muted-foreground mb-3">
+            {isEn
+              ? "Social Media Profiles (links will show matching icons in footer)"
+              : "সোশ্যাল মিডিয়া প্রোফাইল (লিংক দিলে ফুটারে সংশ্লিষ্ট আইকন প্রদর্শিত হবে)"}
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="facebook-url" className="text-xs font-semibold">
+                {isEn ? "Facebook Page URL" : "ফেসবুক পেজ লিংক"}
+              </Label>
+              <Input
+                id="facebook-url"
+                placeholder={isEn ? "e.g. https://facebook.com/healthclub" : "যেমন: https://facebook.com/healthclub"}
+                {...register("facebook_url")}
+              />
+              {errors?.facebook_url && (
+                <p className="text-xs text-destructive">{errors.facebook_url.message}</p>
+              )}
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="youtube-url" className="text-xs font-semibold">
+                {isEn ? "YouTube Channel URL" : "ইউটিউব চ্যানেল লিংক"}
+              </Label>
+              <Input
+                id="youtube-url"
+                placeholder={isEn ? "e.g. https://youtube.com/@healthclub" : "যেমন: https://youtube.com/@healthclub"}
+                {...register("youtube_url")}
+              />
+              {errors?.youtube_url && (
+                <p className="text-xs text-destructive">{errors.youtube_url.message}</p>
+              )}
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="instagram-url" className="text-xs font-semibold">
+                {isEn ? "Instagram Profile URL" : "ইনস্টাগ্রাম প্রোফাইল লিংক"}
+              </Label>
+              <Input
+                id="instagram-url"
+                placeholder={isEn ? "e.g. https://instagram.com/healthclub" : "যেমন: https://instagram.com/healthclub"}
+                {...register("instagram_url")}
+              />
+              {errors?.instagram_url && (
+                <p className="text-xs text-destructive">{errors.instagram_url.message}</p>
+              )}
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="x-url" className="text-xs font-semibold">
+                {isEn ? "X (Twitter) Profile URL" : "X (টুইটার) প্রোফাইল লিংক"}
+              </Label>
+              <Input
+                id="x-url"
+                placeholder={isEn ? "e.g. https://x.com/healthclub" : "যেমন: https://x.com/healthclub"}
+                {...register("x_url")}
+              />
+              {errors?.x_url && (
+                <p className="text-xs text-destructive">{errors.x_url.message}</p>
+              )}
+            </div>
+            <div className="space-y-1.5 sm:col-span-2">
+              <Label htmlFor="linkedin-url" className="text-xs font-semibold">
+                {isEn ? "LinkedIn Page URL" : "লিংকডইন পেজ লিংক"}
+              </Label>
+              <Input
+                id="linkedin-url"
+                placeholder={isEn ? "e.g. https://linkedin.com/company/healthclub" : "যেমন: https://linkedin.com/company/healthclub"}
+                {...register("linkedin_url")}
+              />
+              {errors?.linkedin_url && (
+                <p className="text-xs text-destructive">{errors.linkedin_url.message}</p>
+              )}
+            </div>
           </div>
         </div>
       </CardContent>

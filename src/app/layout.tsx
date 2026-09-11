@@ -199,8 +199,11 @@ export default async function RootLayout({
       "sameAs": [
         contactSettings.facebookUrl,
         formattedWhatsapp,
-        "https://youtube.com"
-      ],
+        contactSettings.youtubeUrl,
+        contactSettings.instagramUrl,
+        contactSettings.xUrl,
+        contactSettings.linkedinUrl,
+      ].filter(Boolean),
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Feni",

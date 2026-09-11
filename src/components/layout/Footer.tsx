@@ -1,9 +1,26 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Phone, Mail, MapPin, MessageSquare } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
 import { Locale, tServer } from "@/lib/i18n";
 import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 import { toBanglaNums } from "@/lib/utils";
+import {
+  FacebookIcon,
+  WhatsAppIcon,
+  YouTubeIcon,
+  InstagramIcon,
+  XIcon,
+  LinkedInIcon,
+} from "@/components/ui/SocialBrandIcons";
+
+function formatSocialUrl(url?: string): string {
+  if (!url || !url.trim()) return "";
+  const trimmed = url.trim();
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+    return trimmed;
+  }
+  return `https://${trimmed}`;
+}
 
 export default async function Footer({ locale = "bn" }: { locale?: string }) {
   const currentLocale = (locale === "en" ? "en" : "bn") as Locale;
@@ -20,7 +37,52 @@ export default async function Footer({ locale = "bn" }: { locale?: string }) {
 
   const rawWhatsapp = contact.whatsapp.replace(/[^0-9]/g, "");
   const normalizedWhatsapp = rawWhatsapp.replace(/^(880|88|0)/, "");
-  const whatsappUrl = `https://wa.me/880${normalizedWhatsapp}`;
+  const whatsappUrl = normalizedWhatsapp ? `https://wa.me/880${normalizedWhatsapp}` : "";
+
+  const socialLinks = [
+    {
+      key: "facebook",
+      url: formatSocialUrl(contact.facebookUrl),
+      label: "Facebook",
+      icon: FacebookIcon,
+      hoverClass: "hover:bg-blue-600/20 hover:border-blue-600/30 hover:text-white",
+    },
+    {
+      key: "whatsapp",
+      url: whatsappUrl,
+      label: "WhatsApp",
+      icon: WhatsAppIcon,
+      hoverClass: "hover:bg-emerald-500/20 hover:border-emerald-500/30 hover:text-white",
+    },
+    {
+      key: "youtube",
+      url: formatSocialUrl(contact.youtubeUrl),
+      label: "YouTube",
+      icon: YouTubeIcon,
+      hoverClass: "hover:bg-red-500/20 hover:border-red-500/30 hover:text-white",
+    },
+    {
+      key: "instagram",
+      url: formatSocialUrl(contact.instagramUrl),
+      label: "Instagram",
+      icon: InstagramIcon,
+      hoverClass: "hover:bg-pink-500/20 hover:border-pink-500/30 hover:text-white",
+    },
+    {
+      key: "x",
+      url: formatSocialUrl(contact.xUrl),
+      label: "X (Twitter)",
+      icon: XIcon,
+      hoverClass: "hover:bg-slate-700/50 hover:border-slate-500/50 hover:text-white",
+    },
+    {
+      key: "linkedin",
+      url: formatSocialUrl(contact.linkedinUrl),
+      label: "LinkedIn",
+      icon: LinkedInIcon,
+      hoverClass: "hover:bg-blue-700/20 hover:border-blue-700/30 hover:text-white",
+    },
+  ].filter((item) => Boolean(item.url));
 
   return (
     <footer
@@ -53,39 +115,22 @@ export default async function Footer({ locale = "bn" }: { locale?: string }) {
               {t("layout.footer.healthcareMadeSimpleAndAffordable")}
             </p>
             {/* Social Icons */}
-            <div className="flex space-x-3">
-              <a
-                href={contact.facebookUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="h-9 w-9 flex items-center justify-center rounded-xl bg-slate-800/60 border border-slate-700/50 text-slate-400 hover:text-white hover:bg-primary/20 hover:border-primary/30 transition-all duration-200"
-                aria-label="Facebook"
-              >
-                <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z" />
-                </svg>
-              </a>
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="h-9 w-9 flex items-center justify-center rounded-xl bg-slate-800/60 border border-slate-700/50 text-slate-400 hover:text-white hover:bg-emerald-500/20 hover:border-emerald-500/30 transition-all duration-200"
-                aria-label="WhatsApp"
-              >
-                <MessageSquare className="h-4 w-4" />
-              </a>
-              <a
-                href="https://youtube.com"
-                target="_blank"
-                rel="noreferrer"
-                className="h-9 w-9 flex items-center justify-center rounded-xl bg-slate-800/60 border border-slate-700/50 text-slate-400 hover:text-white hover:bg-red-500/20 hover:border-red-500/30 transition-all duration-200"
-                aria-label="YouTube"
-              >
-                <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.508 9.388.508 9.388.508s7.517 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                </svg>
-              </a>
-            </div>
+            {socialLinks.length > 0 && (
+              <div className="flex flex-wrap items-center gap-2.5">
+                {socialLinks.map(({ key, url, label, icon: Icon, hoverClass }) => (
+                  <a
+                    key={key}
+                    href={url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={`h-9 w-9 flex items-center justify-center rounded-xl bg-slate-800/60 border border-slate-700/50 text-slate-400 transition-all duration-200 ${hoverClass}`}
+                    aria-label={label}
+                  >
+                    <Icon className="h-4 w-4 fill-current" />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Quick Links Group */}

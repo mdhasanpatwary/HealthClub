@@ -930,4 +930,16 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `vercel.json`
   - **Details**: Updated Vercel Serverless Function deployment region from Singapore (`sin1`) to Mumbai (`bom1` / AWS `ap-south-1`). Because the Supabase database is hosted in South Asia (Mumbai), co-locating Vercel compute in the exact same cloud datacenter region eliminates ~70ms cross-region WAN network latency per database query, reducing database round-trip time to <2-5ms, speeding up TTFB and Server Actions, and cutting serverless compute execution time.
 
+- [x] **TODO-168**: **Add YouTube Channel URL to System Settings & Admin Contact Settings Card, Connecting Footer & Structured Data**
+  - **Severity**: Medium (P1)
+  - **Files**: `src/lib/validations/settings.ts`, `src/app/actions/systemSettingsActions.ts`, `src/app/admin/components/SettingsTab.tsx`, `src/app/admin/components/settings/ContactSettingsCard.tsx`, `src/components/layout/Footer.tsx`, `src/app/layout.tsx`, `src/components/landing/ContactForm.tsx`
+  - **Details**: Added `youtube_url` setting to `systemSettingsSchema`, `PublicContactSettings`, and `getCachedContactSettings` with fallback to `process.env.NEXT_PUBLIC_YOUTUBE_URL || "https://youtube.com"`. Added YouTube Channel URL input field in Admin Panel's `ContactSettingsCard` with responsive mobile-first 2-column layout alongside Facebook Page URL and bilingual Bengali/English labels. Connected `Footer.tsx` social icon to dynamically link to `contact.youtubeUrl` and updated Organization JSON-LD structured data in `layout.tsx` `sameAs` array.
+
+- [x] **TODO-169**: **Multi-Social Expansion in Admin Panel (Instagram, X.com, LinkedIn) & Dynamic Icon Visibility in User Panel**
+  - **Severity**: Medium (P1)
+  - **Files**: `src/components/ui/SocialBrandIcons.tsx`, `src/lib/validations/settings.ts`, `src/app/actions/systemSettingsActions.ts`, `src/components/landing/ContactForm.tsx`, `src/app/admin/components/SettingsTab.tsx`, `src/app/admin/components/settings/ContactSettingsCard.tsx`, `src/components/layout/Footer.tsx`, `src/app/layout.tsx`
+  - **Details**: Added `XIcon` (and `TwitterIcon` alias) to `SocialBrandIcons.tsx`. Added `instagram_url`, `x_url`, and `linkedin_url` to `systemSettingsSchema`, `PublicContactSettings`, and `getCachedContactSettings`. Updated Admin Settings `ContactSettingsCard` with dedicated social media section containing input fields for Facebook, YouTube, Instagram, X (Twitter), and LinkedIn with responsive mobile-first 2-column grid. Refactored `Footer.tsx` to dynamically render only social channels with configured URLs, with brand-specific hover styling and resilient URL normalization (`formatSocialUrl`), and updated Organization SEO structured data.
+
+
+
 
