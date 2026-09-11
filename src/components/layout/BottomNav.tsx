@@ -7,8 +7,10 @@ import { Home, Building2, CreditCard, User, Menu, X, ArrowUpRight } from "lucide
 import { authStore } from "@/services/authStore";
 import { Member, Partner } from "@/services/db";
 import { useLanguage } from "@/components/layout/LanguageProvider";
-import MemberCard from "@/components/ui/MemberCard";
+import dynamic from "next/dynamic";
 import { Button, buttonVariants } from "@/components/ui/button";
+
+const MemberCard = dynamic(() => import("@/components/ui/MemberCard"), { ssr: false });
 
 export default function BottomNav() {
   const pathname = usePathname();

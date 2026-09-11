@@ -164,7 +164,7 @@ export default function TestimonialCarousel() {
                                   sizes="(max-width: 640px) 64px, 80px"
                                   className="object-cover w-full h-full rounded-full"
                                   onError={() => setImgError((prev) => ({ ...prev, [item.id]: true }))}
-                                  priority={index === 0}
+                                  loading="lazy"
                                 />
                               </div>
                             ) : (

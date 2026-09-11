@@ -8,17 +8,9 @@ import { logger } from "@/lib/logger";
 
 declare global {
   interface Window {
-    gtag?: (
-      command: "config" | "event" | "js" | "set",
-      targetIdOrEventName: string | Date,
-      params?: Record<string, unknown>
-    ) => void;
     dataLayer?: unknown[];
   }
 }
-
-export const GA_MEASUREMENT_ID =
-  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-HXNSQ13G5X";
 
 export type AnalyticsEventName =
   | "emergency_dial"
@@ -106,12 +98,7 @@ export function trackEvent<E extends AnalyticsEventName>(
   if (typeof window === "undefined") return;
 
   try {
-    // 1. Google Analytics 4 (gtag)
-    if (typeof window.gtag === "function" && GA_MEASUREMENT_ID) {
-      window.gtag("event", eventName, params as Record<string, unknown>);
-    }
-
-    // 2. Dev mode logger
+    // Dev mode logger
     if (process.env.NODE_ENV === "development") {
       logger.debug(`[Analytics] ${eventName}`, params);
     }
@@ -121,15 +108,12 @@ export function trackEvent<E extends AnalyticsEventName>(
 }
 
 /**
- * Dispatches page view event to GA4 on client-side route transitions.
+ * Dispatches page view event on client-side route transitions.
  */
 export function trackPageView(url: string, title?: string): void {
   if (typeof window === "undefined") return;
 
-  if (typeof window.gtag === "function" && GA_MEASUREMENT_ID) {
-    window.gtag("event", "page_view", {
-      page_location: url,
-      page_title: title || document.title,
-    });
+  if (process.env.NODE_ENV === "development") {
+    logger.debug(`[Analytics] Page view: ${url}`, { title: title || document.title });
   }
 }

@@ -7,18 +7,29 @@ import { Menu, X, Languages, Globe, Sun, Moon } from "lucide-react";
 import Image from "next/image";
 import { authStore } from "@/services/authStore";
 import { Member, Partner } from "@/services/db";
+import dynamic from "next/dynamic";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { useTheme } from "@/components/layout/ThemeProvider";
-import UserDropdown from "./UserDropdown";
-import PartnerDropdown from "./PartnerDropdown";
 import PublicHeaderNav from "./PublicHeaderNav";
-import AdminHeaderNav from "./AdminHeaderNav";
-import MobileNavDrawer from "./MobileNavDrawer";
-import { AdminNotificationBell } from "./AdminNotificationBell";
-import { MemberNotificationBell } from "@/app/dashboard/components/MemberNotificationBell";
 import { isAdminUser } from "@/lib/permissions";
 import { toast } from "sonner";
+
+const UserDropdown = dynamic(() => import("./UserDropdown"), { ssr: false });
+const PartnerDropdown = dynamic(() => import("./PartnerDropdown"), { ssr: false });
+const AdminHeaderNav = dynamic(() => import("./AdminHeaderNav"), { ssr: false });
+const MobileNavDrawer = dynamic(() => import("./MobileNavDrawer"), { ssr: false });
+const AdminNotificationBell = dynamic(
+  () => import("./AdminNotificationBell").then((mod) => mod.AdminNotificationBell),
+  { ssr: false }
+);
+const MemberNotificationBell = dynamic(
+  () =>
+    import("@/app/dashboard/components/MemberNotificationBell").then(
+      (mod) => mod.MemberNotificationBell
+    ),
+  { ssr: false }
+);
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -255,12 +266,14 @@ export default function Header() {
       </header>
 
       {/* Mobile Menu Drawer */}
-      <MobileNavDrawer
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        user={user}
-        partner={partner}
-      />
+      {isOpen && (
+        <MobileNavDrawer
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          user={user}
+          partner={partner}
+        />
+      )}
     </>
   );
 }

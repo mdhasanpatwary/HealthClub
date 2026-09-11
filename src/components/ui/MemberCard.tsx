@@ -61,6 +61,8 @@ const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCa
         sizes="(max-width: 448px) 100vw, 448px"
         className="object-cover opacity-60 mix-blend-screen pointer-events-none rounded-2xl print:rounded-[3.18mm] print:opacity-80"
         priority={priority}
+        fetchPriority={priority ? "high" : "auto"}
+        loading={priority ? "eager" : "lazy"}
         aria-hidden="true"
       />
 
@@ -83,7 +85,6 @@ const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCa
             alt="Health Club Logo Emblem"
             width={40}
             height={40}
-            priority={priority}
             sizes="40px"
             style={{ width: "auto", height: "auto" }}
             className="h-8 w-8 sm:h-10 sm:w-10 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.4)] shrink-0 print:h-[7.5mm] print:w-[7.5mm] print:drop-shadow-none"

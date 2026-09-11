@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_Bengali } from "next/font/google";
-import dynamic from "next/dynamic";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import BottomNav from "@/components/layout/BottomNav";
 import GlobalNoticeBanner from "@/components/layout/GlobalNoticeBanner";
+import DeferredClientComponents from "@/components/layout/DeferredClientComponents";
 import { getCachedNoticeSetting, getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 import { Toaster } from "sonner";
 import { cookies, headers } from "next/headers";
@@ -15,14 +15,7 @@ import { Locale } from "@/lib/i18n";
 import { getDictionary, getNamespacesForRoute } from "@/lib/translations";
 import JsonLd from "@/components/seo/JsonLd";
 import { Analytics } from "@vercel/analytics/next";
-import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
-
-// Lazy-load client-only background/interactive components to reduce main layout bundle
-const InstallAppBanner = dynamic(() => import("@/components/layout/InstallAppBanner"));
-const PushNotificationPrompt = dynamic(() => import("@/components/pwa/PushNotificationPrompt"));
-const PwaTracker = dynamic(() => import("@/components/pwa/PwaTracker"));
-const WebVitalsTracker = dynamic(() => import("@/components/analytics/WebVitalsTracker"));
 
 const inter = Inter({
   variable: "--font-inter",
@@ -241,8 +234,6 @@ export default async function RootLayout({
         <link rel="preload" as="image" href="/images/member-card-bg.webp" type="image/webp" fetchPriority="high" />
         <link rel="preconnect" href="https://api.qrserver.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.qrserver.com" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
       </head>
       <body className="font-sans antialiased bg-background text-foreground min-h-screen flex flex-col">
         {/* Skip to Main Content Link for Keyboard / Screen Reader users */}
@@ -259,7 +250,6 @@ export default async function RootLayout({
             initialDict={initialDict}
             initialNamespaces={initialNamespaces}
           >
-            <PwaTracker />
             <GlobalNoticeBanner notice={notice} />
             <Header />
             <main id="main-content" tabIndex={-1} className="flex-grow focus:outline-hidden">
@@ -267,12 +257,9 @@ export default async function RootLayout({
             </main>
             <Footer locale={locale} />
             <BottomNav />
-            <InstallAppBanner />
-            <PushNotificationPrompt />
+            <DeferredClientComponents />
             <Toaster richColors position="top-right" />
             <Analytics />
-            <GoogleAnalytics />
-            <WebVitalsTracker />
           </LanguageProvider>
         </ThemeProvider>
       </body>
