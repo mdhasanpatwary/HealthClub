@@ -1,19 +1,25 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/siteConfig";
 
+const ALLOWED_PATHS = [
+  "/",
+  "/partner-hospitals",
+  "/partner-hospitals/*",
+];
+
 const DISALLOWED_PATHS = [
-  "/admin",
-  "/admin/*",
-  "/dashboard",
-  "/dashboard/*",
-  "/partner",
-  "/partner/*",
-  "/profile",
-  "/profile/*",
-  "/api",
-  "/api/*",
-  "/offline",
-  "/offline/*",
+  "/admin/",
+  "/admin$",
+  "/dashboard/",
+  "/dashboard$",
+  "/partner/",
+  "/partner$",
+  "/profile/",
+  "/profile$",
+  "/api/",
+  "/api$",
+  "/offline/",
+  "/offline$",
   "/login/admin",
   "/login/partner",
   "/register/payment",
@@ -32,7 +38,11 @@ const AI_AND_SEARCH_BOTS = [
   "ChatGPT-User",
   "Google-Extended",
   "Applebot-Extended",
+  "GrokBot",
+  "xAI-bot",
   "cohere-ai",
+  "facebookexternalhit",
+  "Meta-ExternalAgent",
 ];
 
 export default function robots(): MetadataRoute.Robots {
@@ -42,12 +52,12 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: "/",
+        allow: ALLOWED_PATHS,
         disallow: DISALLOWED_PATHS,
       },
       ...AI_AND_SEARCH_BOTS.map((bot) => ({
         userAgent: bot,
-        allow: "/",
+        allow: ALLOWED_PATHS,
         disallow: DISALLOWED_PATHS,
       })),
     ],

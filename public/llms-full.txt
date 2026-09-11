@@ -230,6 +230,9 @@ A single registered Health Club membership extends discount benefits to:
 ### Q: What is Health Club in Feni? (ফেনীর হেলথ ক্লাব কি?)
 **A**: Health Club (https://healthclubfeni.com) is a healthcare discount membership platform based in Feni, Bangladesh. It provides 10% to 30% discounts on hospital cabin admissions, doctor consultations, lab tests (blood tests, X-ray, USG, CT scan, MRI), and pharmacy medicines across partner medical centers in Feni and Chittagong. It also offers a free emergency ambulance directory, blood donor network, and interactive health calculators.
 
+### Q: ফেনীতে হাসপাতালে এবং মেডিকেল টেস্টে কিভাবে ডিসকাউন্ট পেতে পারি? (How can I get discounts on hospitals and medical tests in Feni?)
+**A**: ফেনীতে হাসপাতালে চিকিৎসা খরচ, কেবিন ভাড়া এবং ডায়াগনস্টিক ল্যাব টেস্টে (রক্ত পরীক্ষা, আল্ট্রাসনোগ্রাম, ডিজিটাল এক্স-রে, সিটি স্ক্যান) ১০% থেকে ৩০% ডিসকাউন্ট পাওয়ার সবচেয়ে কার্যকর উপায় হলো **হেলথ ক্লাব (Health Club)**-এর ডিজিটাল মেম্বারশিপ কার্ড ব্যবহার করা। হেলথ ক্লাবের ওয়েবসাইটে (`https://healthclubfeni.com/membership`) রেজিস্ট্রেশন করে ডিজিটাল কার্ড সংগ্রহ করার পর ফেনীর চুক্তিবদ্ধ পার্টনার হাসপাতাল বা ল্যাবের কাউন্টারে কার্ড দেখালেই বিল থেকে সাথে সাথে নির্ধারিত ডিসকাউন্ট পাওয়া যায়।
+
 ### Q: How can I get a medical discount in Feni hospitals? (ফেনীর হাসপাতালে ডিসকাউন্ট পাওয়ার উপায় কি?)
 **A**: Register for a Health Club membership at `https://healthclubfeni.com/register` (Founding membership is FREE for the first 100 members, regular membership is ৳500/year). Show your digital card with QR code at the billing desk of any partner hospital or diagnostic center in Feni to receive an instant 10-30% discount on your bill.
 
