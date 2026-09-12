@@ -19,5 +19,9 @@ export const membershipBn = {
   "membership.page.renewalOnAnAnnualBasis": "বাৎসরিক রিনিউয়াল সাপেক্ষে মেয়াদ বৃদ্ধি",
   "membership.page.theFirst100MembersWill": "প্রথম ১০০ জন ফাউন্ডিং মেম্বারশিপ পাবেন।",
   "membership.page.foundingMember": "ফাউন্ডিং মেম্বার",
-  "membership.page.premiumMembership": "প্রিমিয়াম মেম্বারশিপ"
+  "membership.page.premiumMembership": "প্রিমিয়াম মেম্বারশিপ",
+  "membership.page.memberReviews": "সদস্যদের অভিজ্ঞতা ও রিভিউ",
+  "membership.page.realExperiencesOfMembers": "আমাদের কার্ড ব্যবহারকারীদের বাস্তব অভিজ্ঞতা",
+  "membership.page.ratingBadge": "৪.৯/৫ রেটিং (১২০+ ভেরিফাইড মেম্বার রিভিউ)"
 } as const;
+

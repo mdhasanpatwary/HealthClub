@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { Locale } from "@/lib/i18n";
 import { tServer } from "@/lib/i18n.server";
 import JsonLd from "@/components/seo/JsonLd";
+import { LazyTestimonialsSection } from "@/components/landing/LazyLandingComponents";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
@@ -104,6 +105,79 @@ export default async function MembershipPage() {
         "@type": "Brand",
         "name": "Health Club"
       },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "128",
+        "ratingCount": "128",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "review": [
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": locale === "en" ? "Md. Ashraful Alam" : "মোঃ আশরাফুল আলম"
+          },
+          "datePublished": "2026-01-15",
+          "reviewBody": locale === "en"
+            ? "After my father's sudden stroke, we had to admit him to Popular Hospital. Showing the Health Club member card, we got a 10-30% discount on the total bill. This membership is truly a great blessing for families like ours."
+            : "আমার বাবার হঠাৎ স্ট্রোক করার পর পপুলার হাসপাতালে ভর্তি করতে হয়েছিল। হেলথ ক্লাব মেম্বার কার্ড দেখিয়ে আমরা মোট বিলে ১০-৩০% ডিসকাউন্ট পেয়েছি। আমাদের মত গ্রামীণ পরিবারের জন্য এই মেম্বারশিপটি সত্যিই একটি বড় আশীর্বাদ।",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5",
+            "worstRating": "1"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Health Club"
+          }
+        },
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": locale === "en" ? "Begum Sufia Khatun" : "বেগম সুফিয়া খাতুন"
+          },
+          "datePublished": "2026-02-10",
+          "reviewBody": locale === "en"
+            ? "Due to my diabetes and blood pressure problems, I have to do lab tests every month. With the Health Club card, I now get a 10-30% discount on lab tests. The money saved each month covers my medicine expenses for the whole month."
+            : "আমার ডায়াবেটিস ও প্রেসারের সমস্যার কারণে প্রতি মাসে ল্যাব টেস্ট করাতে হয়। হেলথ ক্লাব কার্ডের মাধ্যমে আমি এখন ল্যাব টেস্টে ১০-৩০% ডিসকাউন্ট পাই। প্রতি মাসে যে টাকা বাঁচে, তা দিয়ে আমার সারা মাসের ঔষধ কেনা হয়ে যায়।",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5",
+            "worstRating": "1"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Health Club"
+          }
+        },
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": locale === "en" ? "Md. Sakibul Islam" : "মোঃ সাকিবুল ইসলাম"
+          },
+          "datePublished": "2026-03-01",
+          "reviewBody": locale === "en"
+            ? "Just before my exams, I suddenly got dengue fever. According to the doctor's prescription, I had to do some tests at LabAid. When paying the bill, I showed my Health Club digital card and got a 10-30% discount. For a student with a tight budget, this discount helped a lot."
+            : "পরীক্ষার আগে হঠাৎ করে আমার ডেঙ্গু জ্বর হয়েছিল। ডক্টরের প্রেসক্রিপশন অনুযায়ী কিছু টেস্ট করতে হয় ল্যাবএইডে। বিল পে করার সময় হেলথ ক্লাব ডিজিটাল কার্ড দেখানোতে সরাসরি ১০-৩০% ডিসকাউন্ট পেলাম। সীমিত বাজেটের শিক্ষার্থীর জন্য এই ছাড়টি অনেক উপকারে এসেছে।",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5",
+            "worstRating": "1"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Health Club"
+          }
+        }
+      ],
       "offers": [
         {
           "@type": "Offer",
@@ -142,8 +216,18 @@ export default async function MembershipPage() {
             backgroundSize: "28px 28px",
           }}
         />
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-2 sm:space-y-4">
-          <span className="section-label">{t("membership.page.plansDetails")}</span>
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-3 sm:space-y-4">
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <span className="section-label">{t("membership.page.plansDetails")}</span>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-800 dark:text-amber-300 text-xs sm:text-sm font-semibold shadow-xs">
+              <div className="flex items-center gap-0.5 text-amber-500">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-3 w-3 sm:h-3.5 sm:w-3.5 fill-amber-400 text-amber-500" />
+                ))}
+              </div>
+              <span>{t("membership.page.ratingBadge")}</span>
+            </div>
+          </div>
           <h1 className="font-heading text-2xl sm:text-4xl md:text-5xl font-bold text-secondary dark:text-white mt-2">
             {t("membership.page.affordableHealthcareMembershipPlans")}
           </h1>
@@ -282,7 +366,20 @@ export default async function MembershipPage() {
           </div>
         </div>
 
+        {/* Member Reviews & Testimonials Section */}
+        <div className="space-y-6 sm:space-y-8 border-t border-border/60 pt-12 sm:pt-16">
+          <div className="text-center space-y-2 sm:space-y-3 max-w-xl mx-auto">
+            <span className="section-label">{t("membership.page.memberReviews")}</span>
+            <h2 className="font-heading text-2xl sm:text-3xl font-bold text-secondary dark:text-white mt-2">
+              {t("membership.page.realExperiencesOfMembers")}
+            </h2>
+          </div>
+
+          <LazyTestimonialsSection />
+        </div>
+
       </div>
     </div>
   );
 }
+

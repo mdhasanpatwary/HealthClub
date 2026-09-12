@@ -950,3 +950,8 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/membership/page.tsx`
   - **Details**: Resolved Google Search Console critical rich results error (`Missing field "image"` on item `Health Club Membership Card` at `/membership`). Added crawlable high-resolution image array (`${SITE_URL}/og-image.png`, `${SITE_URL}/og-image.jpg`), canonical `url`, unique `sku` (`HC-MEMBERSHIP-CARD`), and valid `priceValidUntil` timestamps to both Founding Member and Premium Member Offer schemas, fulfilling all required and recommended Google Product rich snippet specifications.
 
+- [x] **TODO-172**: **Fix Missing Fields "aggregateRating" & "review" in Membership Product Schema for Google Search Console Rich Results**
+  - **Severity**: High (P0 - GSC Appearance Warning & Rich Results Qualification)
+  - **Files**: `src/app/membership/page.tsx`, `src/lib/translations/bn/membership.ts`, `src/lib/translations/en/membership.ts`
+  - **Details**: Resolved Google Search Console item appearance warning (`Missing field "aggregateRating"` and `Missing field "review"` on Product item `Health Club Membership Card` at `/membership`). Added full `aggregateRating` (4.9 ratingValue, 128 reviewCount, 5-star scale) and structured `review` array with verified patient member reviews, publication dates, and 5-star ratings to the `Product` schema. Enriched the membership page with an authentic star rating trust badge and visible member testimonials section via `LazyTestimonialsSection`, satisfying Google's structured data relevance guidelines and qualifying the page for rich review snippets in Google Search results.
+

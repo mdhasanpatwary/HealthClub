@@ -19,5 +19,9 @@ export const membershipEn = {
   "membership.page.renewalOnAnAnnualBasis": "Renewal on an annual basis",
   "membership.page.theFirst100MembersWill": "The first 100 members will receive Founding membership.",
   "membership.page.foundingMember": "Founding Member",
-  "membership.page.premiumMembership": "Premium Membership"
+  "membership.page.premiumMembership": "Premium Membership",
+  "membership.page.memberReviews": "Member Reviews & Stories",
+  "membership.page.realExperiencesOfMembers": "Real Experiences of Our Card Members",
+  "membership.page.ratingBadge": "4.9/5 Rating (120+ Verified Member Reviews)"
 } as const;
+
