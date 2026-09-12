@@ -87,7 +87,7 @@ export function PushNotificationPrompt() {
           }
 
           // Delay display to prevent simultaneous prompt overlap on mobile
-          const isMobile = window.innerWidth < 768;
+          const isMobile = typeof window !== "undefined" && window.matchMedia?.("(max-width: 767px)").matches;
           const delayMs = isMobile ? 5000 : 1500;
 
           timer = setTimeout(() => {

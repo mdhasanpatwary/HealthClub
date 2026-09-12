@@ -945,3 +945,8 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/components/ui/TestimonialCarousel.tsx`, `src/components/ui/skeleton.tsx`, `src/lib/translations/bn/landing.ts`, `src/lib/translations/en/landing.ts`, `public/images/testimonials/ashraful-alam.webp`, `public/images/testimonials/sufia-khatun.webp`, `public/images/testimonials/sakibul-islam.webp`
   - **Details**: Replaced generic single-letter placeholder avatars ("আ", "সু", "সা") with high-quality, culturally authentic Bangladeshi member portraits (`ashraful-alam.webp`, `sufia-khatun.webp`, `sakibul-islam.webp`) served with 1-year immutable CDN edge caching. Enhanced `TestimonialCarousel` with verified member badges (`CheckCircle2`), 5-star ratings, real partner facility badges (Popular Hospital Feni, LabAid Diagnostic), member ID badges (`#HC-1042`, `#HC-2189`, `#HC-3504`), mobile touch swipe gestures, hover pause, and graceful avatar fallback. Synchronized `TestimonialSkeleton` for zero cumulative layout shift (CLS).
 
+- [x] **TODO-171**: **Fix Missing Field "image" in Membership Product Schema for Google Search Rich Results**
+  - **Severity**: High (P0 - GSC Critical Error)
+  - **Files**: `src/app/membership/page.tsx`
+  - **Details**: Resolved Google Search Console critical rich results error (`Missing field "image"` on item `Health Club Membership Card` at `/membership`). Added crawlable high-resolution image array (`${SITE_URL}/og-image.png`, `${SITE_URL}/og-image.jpg`), canonical `url`, unique `sku` (`HC-MEMBERSHIP-CARD`), and valid `priceValidUntil` timestamps to both Founding Member and Premium Member Offer schemas, fulfilling all required and recommended Google Product rich snippet specifications.
+

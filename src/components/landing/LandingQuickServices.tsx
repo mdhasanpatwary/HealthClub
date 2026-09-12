@@ -130,7 +130,7 @@ export function LandingQuickServices({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12">
         {/* Section Header */}
         <div className="text-center space-y-2.5 sm:space-y-3 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-emerald-800 dark:text-emerald-300 border border-primary/20 text-xs font-bold uppercase tracking-wider">
             <Siren className="h-3.5 w-3.5 text-primary animate-pulse" />
             <span>{t("servicesHub.badge")}</span>
           </div>

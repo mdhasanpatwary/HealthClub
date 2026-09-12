@@ -50,7 +50,7 @@ export default function InstallAppBanner() {
     }
 
     // 3. Mobile screen check
-    const isMobile = window.innerWidth < 768;
+    const isMobile = typeof window !== "undefined" && window.matchMedia?.("(max-width: 767px)").matches;
     if (isMobile) {
       requestAnimationFrame(() => {
         setIsVisible(true);

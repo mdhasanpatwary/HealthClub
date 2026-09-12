@@ -31,7 +31,7 @@ const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCa
   const verificationUrl = `${appBaseUrl}/verify/${member.id}`;
   const qrCodeSrc =
     member.qrCodeUrl ||
-    `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verificationUrl)}&color=0f172a&bgcolor=ffffff`;
+    `/api/qr?size=150x150&data=${encodeURIComponent(verificationUrl)}&color=0f172a&bgcolor=ffffff`;
 
   const expiryDate = new Date(member.expiryDate);
   expiryDate.setHours(23, 59, 59, 999);
@@ -47,10 +47,6 @@ const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCa
       style={{
         fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
         backgroundColor: "#020617",
-        ...({
-          "--font-heading": "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
-          "--font-sans": "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
-        } as React.CSSProperties),
       }}
     >
       {/* Custom Generated Background Texture — uses next/image with priority for instant LCP render */}
@@ -72,8 +68,8 @@ const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCa
       <div className="absolute -left-10 -bottom-10 w-36 h-36 bg-blue-600/15 rounded-full blur-3xl pointer-events-none print:opacity-50" />
 
       {/* Shimmer overlay effect - hidden in print */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl print:hidden">
-        <div className="absolute -inset-full h-full w-1/3 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12 animate-shimmer" />
+      <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl print:hidden" aria-hidden="true">
+        <div className="absolute inset-y-0 -left-full w-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer" />
       </div>
 
       {/* Header section with branded 3D logo badge */}

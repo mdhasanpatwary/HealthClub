@@ -33,24 +33,24 @@ export function LandingComparison({ t }: LandingComparisonProps) {
               <tr className="hover:bg-muted/40 dark:hover:bg-slate-800/50 transition-colors">
                 <td className="p-4 md:p-5 font-bold text-secondary dark:text-white">{t("page.diagnosticTestFee")}</td>
                 <td className="p-4 md:p-5">{t("page.mustPay100FullFee")}</td>
-                <td className="p-4 md:p-5 font-semibold text-primary flex items-center gap-1.5">
-                  <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
+                <td className="p-4 md:p-5 font-semibold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
                   {t("page.flat10DiscountBenefit")}
                 </td>
               </tr>
               <tr className="hover:bg-muted/40 dark:hover:bg-slate-800/50 transition-colors">
                 <td className="p-4 md:p-5 font-bold text-secondary dark:text-white">{t("page.hospitalBedCabinCharge")}</td>
                 <td className="p-4 md:p-5">{t("page.regularBedChargeAppliesWithout")}</td>
-                <td className="p-4 md:p-5 font-semibold text-primary flex items-center gap-1.5">
-                  <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
+                <td className="p-4 md:p-5 font-semibold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
                   {t("page.flat10DiscountBenefit")}
                 </td>
               </tr>
               <tr className="hover:bg-muted/40 dark:hover:bg-slate-800/50 transition-colors">
                 <td className="p-4 md:p-5 font-bold text-secondary dark:text-white">{t("page.partnerPharmacyDiscount")}</td>
                 <td className="p-4 md:p-5">{t("page.noPharmacyDiscount")}</td>
-                <td className="p-4 md:p-5 font-semibold text-primary flex items-center gap-1.5">
-                  <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
+                <td className="p-4 md:p-5 font-semibold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
                   {t("page.pharmacyDiscount5to10")}
                 </td>
               </tr>

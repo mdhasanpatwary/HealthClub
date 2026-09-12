@@ -253,8 +253,12 @@ label {
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
+  0% {
+    transform: translateX(0) skewX(-15deg);
+  }
+  100% {
+    transform: translateX(400%) skewX(-15deg);
+  }
 }
 
 @keyframes gradient-shift {
@@ -326,9 +330,9 @@ label {
 }
 
 .animate-shimmer {
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
-  background-size: 200% 100%;
-  animation: shimmer 2.5s ease-in-out infinite;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.18) 50%, transparent 100%);
+  animation: shimmer 3s ease-in-out infinite;
+  will-change: transform;
 }
 
 .animate-gradient {
@@ -364,11 +368,17 @@ label {
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: #15803d;
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
   background: color-mix(in srgb, var(--primary) 10%, transparent);
   border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+:where(.dark) .section-label {
+  color: #4ade80;
+  background: color-mix(in srgb, var(--primary) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
 }
 
 /* Glass card */

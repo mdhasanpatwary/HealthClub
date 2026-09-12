@@ -17,9 +17,16 @@ const WebVitalsTracker = dynamic(
   () => import("@/components/analytics/WebVitalsTracker"),
   { ssr: false }
 );
+const Toaster = dynamic(() => import("sonner").then((m) => m.Toaster), {
+  ssr: false,
+});
+const Analytics = dynamic(
+  () => import("@vercel/analytics/react").then((m) => m.Analytics),
+  { ssr: false }
+);
 
 /**
- * Defers PWA prompts, telemetry trackers, and web vitals tracking until
+ * Defers PWA prompts, telemetry trackers, web vitals tracking, toaster, and analytics until
  * the main thread is completely idle after initial page load and user interactivity.
  */
 export default function DeferredClientComponents() {
@@ -57,6 +64,8 @@ export default function DeferredClientComponents() {
       <InstallAppBanner />
       <PushNotificationPrompt />
       <WebVitalsTracker />
+      <Toaster richColors position="top-right" />
+      <Analytics />
     </>
   );
 }

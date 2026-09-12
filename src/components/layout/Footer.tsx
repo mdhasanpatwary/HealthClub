@@ -203,14 +203,14 @@ export default async function Footer({ locale = "bn" }: { locale?: string }) {
 
         {/* Bottom bar */}
         <div className="mt-12 border-t border-slate-800/60 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-400">
             &copy; {new Date().getFullYear()} {t("layout.footer.healthClubAllRightsReserved")}
           </p>
-          <div className="flex space-x-6 text-xs text-slate-500">
-            <Link href="/privacy-policy" className="hover:text-slate-300 transition-colors">
+          <div className="flex space-x-6 text-xs text-slate-400">
+            <Link href="/privacy-policy" className="hover:text-white transition-colors">
               {t("layout.footer.privacyPolicy")}
             </Link>
-            <Link href="/terms-conditions" className="hover:text-slate-300 transition-colors">
+            <Link href="/terms-conditions" className="hover:text-white transition-colors">
               {t("layout.footer.termsConditions")}
             </Link>
           </div>

@@ -50,13 +50,14 @@ const customOfflineCache: RuntimeCaching[] = [
 
   // 2. Member Card QR Code Generator Service - Cache First with long TTL
   {
-    matcher: ({ url }) =>
-      url.hostname === "api.qrserver.com" && url.pathname.startsWith("/v1/create-qr-code"),
+    matcher: ({ url, sameOrigin }) =>
+      (sameOrigin && url.pathname.startsWith("/api/qr")) ||
+      (url.hostname === "api.qrserver.com" && url.pathname.startsWith("/v1/create-qr-code")),
     handler: new CacheFirst({
       cacheName: "hc-member-qr-cache",
       plugins: [
         new ExpirationPlugin({
-          maxEntries: 64,
+          maxEntries: 128,
           maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
           maxAgeFrom: "last-used",
         }),

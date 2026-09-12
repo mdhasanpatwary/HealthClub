@@ -94,6 +94,12 @@ export default async function MembershipPage() {
       "@type": "Product",
       "name": "Health Club Membership Card",
       "description": "Digital health discount membership card offering 10% to 30% discount at partner hospitals, diagnostic centers, and pharmacies.",
+      "image": [
+        `${SITE_URL}/og-image.png`,
+        `${SITE_URL}/og-image.jpg`
+      ],
+      "url": `${SITE_URL}/membership`,
+      "sku": "HC-MEMBERSHIP-CARD",
       "brand": {
         "@type": "Brand",
         "name": "Health Club"
@@ -105,7 +111,8 @@ export default async function MembershipPage() {
           "price": "0",
           "priceCurrency": "BDT",
           "availability": "https://schema.org/InStock",
-          "url": `${SITE_URL}/membership`
+          "url": `${SITE_URL}/membership`,
+          "priceValidUntil": `${new Date().getFullYear() + 1}-12-31`
         },
         {
           "@type": "Offer",
@@ -113,7 +120,8 @@ export default async function MembershipPage() {
           "price": "500",
           "priceCurrency": "BDT",
           "availability": "https://schema.org/InStock",
-          "url": `${SITE_URL}/membership`
+          "url": `${SITE_URL}/membership`,
+          "priceValidUntil": `${new Date().getFullYear() + 1}-12-31`
         }
       ]
     }

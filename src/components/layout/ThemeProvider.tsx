@@ -23,13 +23,17 @@ export function ThemeProvider({
   const [theme, setThemeState] = useState<Theme>(initialTheme);
   const router = useRouter();
 
-  // Sync theme with document class on first mount and if theme changes
+  // Sync theme with document class only if it actually differs from server-rendered HTML
   useEffect(() => {
     const root = window.document.documentElement;
     if (theme === "dark") {
-      root.classList.add("dark");
+      if (!root.classList.contains("dark")) {
+        root.classList.add("dark");
+      }
     } else {
-      root.classList.remove("dark");
+      if (root.classList.contains("dark")) {
+        root.classList.remove("dark");
+      }
     }
   }, [theme]);
 

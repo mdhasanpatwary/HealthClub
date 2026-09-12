@@ -7,14 +7,12 @@ import BottomNav from "@/components/layout/BottomNav";
 import GlobalNoticeBanner from "@/components/layout/GlobalNoticeBanner";
 import DeferredClientComponents from "@/components/layout/DeferredClientComponents";
 import { getCachedNoticeSetting, getCachedContactSettings } from "@/app/actions/systemSettingsActions";
-import { Toaster } from "sonner";
 import { cookies, headers } from "next/headers";
 import { LanguageProvider } from "@/components/layout/LanguageProvider";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Locale } from "@/lib/i18n";
 import { getDictionary, getNamespacesForRoute } from "@/lib/translations";
 import JsonLd from "@/components/seo/JsonLd";
-import { Analytics } from "@vercel/analytics/next";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 const inter = Inter({
@@ -232,8 +230,6 @@ export default async function RootLayout({
     <html lang={locale} data-scroll-behavior="smooth" className={`${theme} ${inter.variable} ${notoSansBengali.variable}`}>
       <head>
         <link rel="preload" as="image" href="/images/member-card-bg.webp" type="image/webp" fetchPriority="high" />
-        <link rel="preconnect" href="https://api.qrserver.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://api.qrserver.com" />
       </head>
       <body className="font-sans antialiased bg-background text-foreground min-h-screen flex flex-col">
         {/* Skip to Main Content Link for Keyboard / Screen Reader users */}
@@ -258,8 +254,6 @@ export default async function RootLayout({
             <Footer locale={locale} />
             <BottomNav />
             <DeferredClientComponents />
-            <Toaster richColors position="top-right" />
-            <Analytics />
           </LanguageProvider>
         </ThemeProvider>
       </body>

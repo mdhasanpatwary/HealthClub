@@ -76,7 +76,6 @@ export default function Header() {
         ticking = true;
       }
     };
-    handleScroll();
 
     const handleOpenMenu = () => setIsOpen(true);
 

@@ -86,7 +86,7 @@ export function getClientDeviceInfo(): ClientDeviceInfo {
 
   if (isTablet) {
     deviceType = "tablet";
-  } else if (isMobile || window.innerWidth < 768) {
+  } else if (isMobile || (typeof window !== "undefined" && window.matchMedia?.("(max-width: 767px)").matches)) {
     deviceType = "mobile";
   }
 
