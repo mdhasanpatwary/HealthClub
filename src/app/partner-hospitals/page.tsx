@@ -3,7 +3,8 @@ import PartnerHospitalsGuide from "@/components/partner-hospitals/PartnerHospita
 import PartnerHospitalsFAQ from "@/components/partner-hospitals/PartnerHospitalsFAQ";
 import CommunityNetworkCTA from "@/components/common/CommunityNetworkCTA";
 import { cookies } from "next/headers";
-import { Locale, tServer } from "@/lib/i18n";
+import { Locale } from "@/lib/i18n";
+import { tServer } from "@/lib/i18n.server";
 import JsonLd from "@/components/seo/JsonLd";
 import { getPartnersAction } from "@/app/actions/partnerActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";

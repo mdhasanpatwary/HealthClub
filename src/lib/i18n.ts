@@ -1,30 +1,6 @@
 import { toBanglaNums } from "./utils";
-import { en } from "./translations.en";
-import { bn } from "./translations.bn";
-import type { TranslationKey } from "./translations.en";
 
 export type Locale = "bn" | "en";
-
-/**
- * Server-side translation utility.
- * Looks up the correct string from the translations dictionary depending on the active locale.
- */
-export function tServer(
-  locale: Locale,
-  key: TranslationKey | (string & {}),
-  fallbackEn?: string
-): string {
-  if (fallbackEn !== undefined) {
-    return locale === "en" ? fallbackEn : (key as string);
-  }
-  
-  const dict = (locale === "en" ? en : bn) as Record<string, string>;
-  if (dict?.[key]) return dict[key];
-  if (locale !== "en" && (en as Record<string, string>)?.[key]) {
-    return (en as Record<string, string>)[key];
-  }
-  return key as string;
-}
 
 /**
  * Format a number or numeric string to match the current locale's writing system.

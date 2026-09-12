@@ -1,6 +1,7 @@
 import { Heart, ShieldCheck, Users, Award, Target, Zap } from "lucide-react";
 import { cookies } from "next/headers";
-import { Locale, tServer } from "@/lib/i18n";
+import { Locale } from "@/lib/i18n";
+import { tServer } from "@/lib/i18n.server";
 import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 

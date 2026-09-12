@@ -2,34 +2,21 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import PartnerDirectory from "@/components/ui/PartnerDirectory";
 import { getHomepageStats, getHomepagePartners } from "@/lib/homepageData";
 import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 import { cookies } from "next/headers";
-import { Locale, tServer } from "@/lib/i18n";
+import { Locale } from "@/lib/i18n";
+import { tServer } from "@/lib/i18n.server";
 import type { Member } from "@/services/db";
 import JsonLd from "@/components/seo/JsonLd";
 import { getHomepageJsonLd } from "@/lib/seo/homepageSchema";
-import dynamic from "next/dynamic";
+import FAQSection from "@/components/landing/FAQSection";
 import {
-  SavingsCalculatorSkeleton,
-  TestimonialSkeleton,
-  FAQSkeleton,
-  ContactFormSkeleton,
-} from "@/components/ui/skeleton";
-
-const SavingsCalculator = dynamic(() => import("@/components/ui/SavingsCalculator"), {
-  loading: () => <SavingsCalculatorSkeleton />,
-});
-const TestimonialCarousel = dynamic(() => import("@/components/ui/TestimonialCarousel"), {
-  loading: () => <TestimonialSkeleton />,
-});
-const FAQSection = dynamic(() => import("@/components/landing/FAQSection"), {
-  loading: () => <FAQSkeleton />,
-});
-const ContactForm = dynamic(() => import("@/components/landing/ContactForm"), {
-  loading: () => <ContactFormSkeleton />,
-});
+  LazyPartnerDirectorySection,
+  LazySavingsCalculatorSection,
+  LazyTestimonialsSection,
+  LazyContactFormSection,
+} from "@/components/landing/LazyLandingComponents";
 
 import { LandingHero } from "@/components/landing/LandingHero";
 import { LandingStats } from "@/components/landing/LandingStats";
@@ -201,16 +188,22 @@ export default async function Home() {
       />
 
       {/* 3. HOW IT WORKS SECTION */}
-      <LandingHowItWorks t={t} />
+      <div className="content-auto">
+        <LandingHowItWorks t={t} />
+      </div>
 
       {/* 4. MEMBERSHIP BENEFITS SECTION */}
-      <LandingBenefits t={t} />
+      <div className="content-auto">
+        <LandingBenefits t={t} />
+      </div>
 
       {/* 5. PRICING PLANS SECTION */}
-      <LandingPricing t={t} />
+      <div className="content-auto">
+        <LandingPricing t={t} />
+      </div>
 
       {/* 6. PARTNER DIRECTORY PREVIEW */}
-      <section className="py-10 sm:py-20 lg:py-28 bg-background">
+      <section className="content-auto py-10 sm:py-20 lg:py-28 bg-background">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-12">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div className="space-y-2 sm:space-y-3 text-center md:text-left">
@@ -234,19 +227,19 @@ export default async function Home() {
             </Link>
           </div>
 
-          <PartnerDirectory partners={homepagePartners} limit={3} showFilters={false} />
+          <LazyPartnerDirectorySection partners={homepagePartners} />
         </div>
       </section>
 
       {/* 7. SAVINGS CALCULATOR SECTION */}
-      <section className="py-10 sm:py-20 lg:py-28 bg-muted/40 dark:bg-slate-950/60 border-y border-border/60">
+      <section className="content-auto py-10 sm:py-20 lg:py-28 bg-muted/40 dark:bg-slate-950/60 border-y border-border/60">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SavingsCalculator />
+          <LazySavingsCalculatorSection />
         </div>
       </section>
 
       {/* 8. TESTIMONIALS SECTION */}
-      <section className="py-10 sm:py-20 lg:py-28 bg-background">
+      <section className="content-auto py-10 sm:py-20 lg:py-28 bg-background">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-3 sm:space-y-8">
           <div className="text-center space-y-2 sm:space-y-3 max-w-xl mx-auto">
             <span className="section-label">{t("page.memberTestimonials")}</span>
@@ -255,15 +248,17 @@ export default async function Home() {
             </h2>
           </div>
 
-          <TestimonialCarousel />
+          <LazyTestimonialsSection />
         </div>
       </section>
 
       {/* 9. WHY CHOOSE - COMPARISON TABLE */}
-      <LandingComparison t={t} />
+      <div className="content-auto">
+        <LandingComparison t={t} />
+      </div>
 
       {/* CTA BANNER */}
-      <section className="py-10 sm:py-20 bg-gradient-to-r from-primary via-emerald-500 to-primary dark:from-primary-dark dark:via-emerald-600 dark:to-primary-dark relative overflow-hidden">
+      <section className="content-auto py-10 sm:py-20 bg-gradient-to-r from-primary via-emerald-500 to-primary dark:from-primary-dark dark:via-emerald-600 dark:to-primary-dark relative overflow-hidden">
         <div
           className="absolute inset-0 opacity-10"
           style={{
@@ -292,7 +287,7 @@ export default async function Home() {
       </section>
 
       {/* 10. FAQ SECTION */}
-      <section id="faq" className="py-10 sm:py-20 lg:py-28 bg-background">
+      <section id="faq" className="content-auto py-10 sm:py-20 lg:py-28 bg-background">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-12">
           <div className="text-center space-y-2 sm:space-y-3 max-w-xl mx-auto">
             <span className="section-label">{t("page.questionsAnswers")}</span>
@@ -304,12 +299,12 @@ export default async function Home() {
             </p>
           </div>
 
-          <FAQSection />
+          <FAQSection t={t} />
         </div>
       </section>
 
       {/* 11. CONTACT SECTION */}
-      <section className="py-10 sm:py-20 lg:py-28 bg-muted/40 dark:bg-slate-950/60 border-t border-border/60">
+      <section className="content-auto py-10 sm:py-20 lg:py-28 bg-muted/40 dark:bg-slate-950/60 border-t border-border/60">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-12">
           <div className="text-center space-y-2 sm:space-y-3 max-w-xl mx-auto">
             <span className="section-label">{t("page.contactUs")}</span>
@@ -321,7 +316,7 @@ export default async function Home() {
             </p>
           </div>
 
-          <ContactForm initialSettings={contactSettings} />
+          <LazyContactFormSection initialSettings={contactSettings} />
         </div>
       </section>
 

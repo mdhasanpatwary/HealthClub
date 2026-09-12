@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Phone, Mail, MapPin } from "lucide-react";
-import { Locale, tServer } from "@/lib/i18n";
+import { Locale } from "@/lib/i18n";
+import { tServer } from "@/lib/i18n.server";
 import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 import { toBanglaNums } from "@/lib/utils";
 import {

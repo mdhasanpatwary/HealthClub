@@ -238,14 +238,8 @@ label {
 }
 
 @keyframes fade-in-up {
-  0% {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0% { opacity: 0; transform: translateY(24px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fade-in {
@@ -254,14 +248,8 @@ label {
 }
 
 @keyframes scale-in {
-  0% {
-    opacity: 0;
-    transform: scale(0.92);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
+  0% { opacity: 0; transform: scale(0.92); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
 @keyframes shimmer {
@@ -391,25 +379,27 @@ label {
   border: 1px solid var(--glass-border);
 }
 
-/* Hover lift */
+/* Hover lift & button glow */
 .hover-lift {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-
 .hover-lift:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-card-hover);
 }
-
-/* Glow button */
 .btn-glow {
   box-shadow: var(--shadow-primary);
   transition: box-shadow 0.25s ease, transform 0.2s ease;
 }
-
 .btn-glow:hover {
   box-shadow: 0 8px 32px -4px rgba(22, 163, 74, 0.40);
   transform: translateY(-1px);
+}
+
+/* Offscreen layout deferral for CWV & main-thread reduction */
+.content-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 700px;
 }
 
 /* Custom Range Slider */

@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
-import { Locale, tServer } from "@/lib/i18n";
+import { Locale } from "@/lib/i18n";
+import { tServer } from "@/lib/i18n.server";
 import JsonLd from "@/components/seo/JsonLd";
 import { EmergencyDirectory } from "./components/EmergencyDirectory";
 import EmergencyGuide from "@/components/emergency/EmergencyGuide";
