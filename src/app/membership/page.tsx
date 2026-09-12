@@ -71,6 +71,41 @@ export default async function MembershipPage() {
     { title: "১ বছর প্রতিষ্ঠাতা স্ট্যাটাস", desc: "প্রথম ১০০ ফাউন্ডিং মেম্বারদের জন্য মেম্বারশিপ ১ বছরের জন্য সম্পূর্ণ ফ্রি।", gradient: "from-amber-500 to-orange-600" }
   ];
 
+  const merchantReturnPolicy = {
+    "@type": "MerchantReturnPolicy",
+    "applicableCountry": "BD",
+    "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
+    "merchantReturnLink": `${SITE_URL}/terms-conditions`
+  };
+
+  const digitalShippingDetails = {
+    "@type": "OfferShippingDetails",
+    "shippingRate": {
+      "@type": "MonetaryAmount",
+      "value": "0",
+      "currency": "BDT"
+    },
+    "shippingDestination": {
+      "@type": "DefinedRegion",
+      "addressCountry": "BD"
+    },
+    "deliveryTime": {
+      "@type": "ShippingDeliveryTime",
+      "handlingTime": {
+        "@type": "QuantitativeValue",
+        "minValue": 0,
+        "maxValue": 0,
+        "unitCode": "DAY"
+      },
+      "transitTime": {
+        "@type": "QuantitativeValue",
+        "minValue": 0,
+        "maxValue": 0,
+        "unitCode": "DAY"
+      }
+    }
+  };
+
   const jsonLdData = [
     {
       "@context": "https://schema.org",
@@ -185,8 +220,11 @@ export default async function MembershipPage() {
           "price": "0",
           "priceCurrency": "BDT",
           "availability": "https://schema.org/InStock",
+          "itemCondition": "https://schema.org/NewCondition",
           "url": `${SITE_URL}/membership`,
-          "priceValidUntil": `${new Date().getFullYear() + 1}-12-31`
+          "priceValidUntil": `${new Date().getFullYear() + 1}-12-31`,
+          "hasMerchantReturnPolicy": merchantReturnPolicy,
+          "shippingDetails": digitalShippingDetails
         },
         {
           "@type": "Offer",
@@ -194,8 +232,11 @@ export default async function MembershipPage() {
           "price": "500",
           "priceCurrency": "BDT",
           "availability": "https://schema.org/InStock",
+          "itemCondition": "https://schema.org/NewCondition",
           "url": `${SITE_URL}/membership`,
-          "priceValidUntil": `${new Date().getFullYear() + 1}-12-31`
+          "priceValidUntil": `${new Date().getFullYear() + 1}-12-31`,
+          "hasMerchantReturnPolicy": merchantReturnPolicy,
+          "shippingDetails": digitalShippingDetails
         }
       ]
     }
