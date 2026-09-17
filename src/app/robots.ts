@@ -3,8 +3,22 @@ import { SITE_URL } from "@/lib/siteConfig";
 
 const ALLOWED_PATHS = [
   "/",
+  "/blog",
+  "/blog/*",
+  "/consultants",
+  "/consultants/*",
   "/partner-hospitals",
   "/partner-hospitals/*",
+  "/emergency",
+  "/health-tips",
+  "/health-tips/*",
+  "/health-tools",
+  "/membership",
+  "/about-us",
+  "/contact",
+  "/become-partner",
+  "/llms.txt",
+  "/llms-full.txt",
 ];
 
 const DISALLOWED_PATHS = [

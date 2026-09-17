@@ -150,6 +150,10 @@ export default async function Footer({ locale = "bn" }: { locale?: string }) {
                   { href: "/emergency", label: t("layout.footer.emergencyServices") },
                   { href: "/health-tools", label: t("layout.footer.healthCalculators") },
                   { href: "/health-tips", label: t("layout.footer.healthTips") },
+                  {
+                    href: "/blog",
+                    label: t("layout.footer.blog") || (currentLocale === "bn" ? "স্বাস্থ্য ব্লগ ও গাইড" : "Healthcare Blog"),
+                  },
                   { href: "/membership", label: t("layout.footer.membershipPlans") },
                   { href: "/become-partner", label: t("layout.footer.becomeAPartner") },
                   { href: "/about-us", label: t("layout.footer.aboutUs") },

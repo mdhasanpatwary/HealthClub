@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Siren, Calculator, BookOpen } from "lucide-react";
+import { ChevronDown, Siren, Calculator, BookOpen, Newspaper } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import {
   DropdownMenu,
@@ -21,7 +21,10 @@ export default function PublicHeaderNav() {
   };
 
   const isServicesActive =
-    isActive("/emergency") || isActive("/health-tools") || isActive("/health-tips");
+    isActive("/emergency") ||
+    isActive("/health-tools") ||
+    isActive("/health-tips") ||
+    isActive("/blog");
 
   return (
     <nav aria-label="Main Navigation" className="hidden min-[992px]:flex items-center space-x-1">
@@ -106,7 +109,7 @@ export default function PublicHeaderNav() {
                   {t("layout.header.emergency")}
                 </span>
                 <span className="block text-[11px] text-muted-foreground group-hover:text-foreground/80 dark:group-hover:text-slate-300 font-normal transition-colors truncate">
-                  রক্তদাতা ও অ্যাম্বুলেন্স
+                  {t("layout.header.emergencySubtitle") || "রক্তদাতা ও অ্যাম্বুলেন্স"}
                 </span>
               </div>
             </Link>
@@ -126,7 +129,7 @@ export default function PublicHeaderNav() {
                   {t("layout.header.healthTools")}
                 </span>
                 <span className="block text-[11px] text-muted-foreground group-hover:text-foreground/80 dark:group-hover:text-slate-300 font-normal transition-colors truncate">
-                  বিএমআই ও ক্যালোরি
+                  {t("layout.header.healthToolsSubtitle") || "বিএমআই ও ক্যালোরি"}
                 </span>
               </div>
             </Link>
@@ -146,7 +149,27 @@ export default function PublicHeaderNav() {
                   {t("layout.header.healthTips")}
                 </span>
                 <span className="block text-[11px] text-muted-foreground group-hover:text-foreground/80 dark:group-hover:text-slate-300 font-normal transition-colors truncate">
-                  ডাক্তারের পরামর্শ ও ব্লগ
+                  {t("layout.header.healthTipsSubtitle") || "ডাক্তারের পরামর্শ ও টিপস"}
+                </span>
+              </div>
+            </Link>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
+            <Link
+              href="/blog"
+              aria-current={isActive("/blog") ? "page" : undefined}
+              className="flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 hover:bg-emerald-500/10 dark:hover:bg-emerald-950/40 text-foreground group"
+            >
+              <div className="h-8 w-8 rounded-xl bg-emerald-500/15 dark:bg-emerald-500/25 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <Newspaper className="h-4 w-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <span className="block text-xs font-bold text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors truncate">
+                  {t("layout.header.blog") || "স্বাস্থ্য ব্লগ ও গাইড"}
+                </span>
+                <span className="block text-[11px] text-muted-foreground group-hover:text-foreground/80 dark:group-hover:text-slate-300 font-normal transition-colors truncate">
+                  {t("layout.header.blogSubtitle") || "হাসপাতাল রিভিউ ও তালিকা"}
                 </span>
               </div>
             </Link>

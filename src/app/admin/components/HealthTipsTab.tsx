@@ -55,6 +55,7 @@ import { useLanguage } from "@/components/layout/LanguageProvider";
 import { HealthTipArticleDialog } from "./HealthTipArticleDialog";
 import { Pagination } from "@/components/ui/pagination";
 import { useDebounce } from "@/hooks/useDebounce";
+import { formatArticleDate } from "@/lib/dateUtils";
 
 export function HealthTipsTab() {
   const { locale, t } = useLanguage();
@@ -292,7 +293,7 @@ export function HealthTipsTab() {
                           {isEn ? art.authorEn : art.authorBn}
                         </TableCell>
                         <TableCell className="w-[110px] hidden md:table-cell text-xs text-muted-foreground whitespace-nowrap">
-                          {art.publishedDate}
+                          {formatArticleDate(art.publishedDate, isEn ? "en" : "bn")}
                         </TableCell>
                         <TableCell className="w-[90px] hidden lg:table-cell text-xs text-muted-foreground whitespace-nowrap">
                           {isEn ? art.readTimeEn : art.readTimeBn}

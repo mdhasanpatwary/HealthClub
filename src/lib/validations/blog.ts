@@ -1,0 +1,64 @@
+import { z } from "zod";
+
+export const blogAuthorSchema = z.object({
+  nameBn: z.string().min(2, "লেখকের বাংলা নাম আবশ্যক"),
+  nameEn: z.string().min(2, "Author English name is required"),
+  roleBn: z.string().min(2, "লেখকের পদবি আবশ্যক"),
+  roleEn: z.string().min(2, "Author role in English is required"),
+  avatarUrl: z.string().optional(),
+});
+
+export const blogFAQSchema = z.object({
+  questionBn: z.string().min(3, "প্রশ্ন (বাংলা) আবশ্যক"),
+  questionEn: z.string().min(3, "Question (English) is required"),
+  answerBn: z.string().min(5, "উত্তর (বাংলা) আবশ্যক"),
+  answerEn: z.string().min(5, "Answer (English) is required"),
+});
+
+export const blogPostSchema = z.object({
+  slug: z
+    .string()
+    .min(3, "স্লাগ অন্তত ৩ অক্ষরের হতে হবে")
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "স্লাগে কেবল ছোট হাতের ইংরেজি বর্ণ, সংখ্যা এবং হাইফেন ব্যবহার করুন"),
+  titleBn: z.string().min(5, "বাংলা শিরোনাম আবশ্যক (কমপক্ষে ৫ অক্ষর)"),
+  titleEn: z.string().min(5, "English title is required (at least 5 characters)"),
+  excerptBn: z.string().min(10, "বাংলা সারাংশ আবশ্যক (কমপক্ষে ১০ অক্ষর)"),
+  excerptEn: z.string().min(10, "English excerpt is required (at least 10 characters)"),
+  category: z.string().min(1, "ক্যাটাগরি নির্বাচন করুন"),
+  categoryNameBn: z.string().min(1, "ক্যাটাগরির বাংলা নাম আবশ্যক"),
+  categoryNameEn: z.string().min(1, "Category English name is required"),
+  publishedDate: z.string().min(10, "প্রকাশের তারিখ দিন"),
+  modifiedDate: z.string().min(10, "সংশোধনের তারিখ দিন"),
+  readTimeBn: z.string().default("৫ মিনিট"),
+  readTimeEn: z.string().default("5 min read"),
+  author: blogAuthorSchema,
+  coverImage: z.string().min(1, "কভার ইমেজের URL আবশ্যক"),
+  coverImageAlt: z.string().min(1, "কভার ইমেজ Alt টেক্সট আবশ্যক"),
+  tags: z.array(z.string()).default([]),
+  metaKeywords: z.array(z.string()).default([]),
+  keyHighlightsBn: z.array(z.string()).default([]),
+  introParagraphsBn: z.array(z.string()).min(1, "কমপক্ষে একটি অনুচ্ছেদ কনটেন্ট আবশ্যক"),
+  faqs: z.array(blogFAQSchema).default([]),
+  relatedSlugs: z.array(z.string()).optional(),
+  // Specialized components preserved as any or generic records
+  hospitals: z.array(z.any()).optional(),
+  comparisonTable: z.array(z.any()).optional(),
+  doctorGroups: z.array(z.any()).optional(),
+  chamberHubsBn: z.array(z.any()).optional(),
+  diagnosticCenters: z.array(z.any()).optional(),
+  diagnosticComparisonTable: z.array(z.any()).optional(),
+  diagnosticTestPricingBn: z.any().optional(),
+  dentalClinics: z.array(z.any()).optional(),
+  dentalComparisonTable: z.array(z.any()).optional(),
+  dentalProcedurePricingBn: z.any().optional(),
+  physiotherapyCenters: z.array(z.any()).optional(),
+  physiotherapyComparisonTable: z.array(z.any()).optional(),
+  physiotherapyTreatmentPricingBn: z.any().optional(),
+  maternityCarePricingBn: z.any().optional(),
+  cardiacCarePricingBn: z.any().optional(),
+  bookingGuideBn: z.any().optional(),
+  selectionGuideBn: z.any().optional(),
+  emergencyDirectoryBn: z.any().optional(),
+});
+
+export type BlogPostFormValues = z.infer<typeof blogPostSchema>;

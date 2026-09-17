@@ -27,7 +27,7 @@ import { ArticleReactions } from "@/components/health-tips/ArticleReactions";
 import { MedicalDisclaimer } from "../components/MedicalDisclaimer";
 import { getArticleReadingTime } from "@/lib/readingTime";
 import { SITE_URL } from "@/lib/siteConfig";
-import { getArticleIsoDate } from "@/lib/dateUtils";
+import { getArticleIsoDate, formatArticleDate } from "@/lib/dateUtils";
 
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;
@@ -219,7 +219,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
             </div>
             <div className="flex items-center gap-1 text-xs text-muted-foreground font-medium">
               <Calendar className="h-3.5 w-3.5" />
-              <span>{article.publishedDate}</span>
+              <span>{formatArticleDate(article.publishedDate, locale)}</span>
             </div>
           </div>
 

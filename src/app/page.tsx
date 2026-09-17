@@ -25,6 +25,8 @@ import { LandingHowItWorks } from "@/components/landing/LandingHowItWorks";
 import { LandingBenefits } from "@/components/landing/LandingBenefits";
 import { LandingPricing } from "@/components/landing/LandingPricing";
 import { LandingComparison } from "@/components/landing/LandingComparison";
+import { LandingBlogSection } from "@/components/landing/LandingBlogSection";
+import { getAllBlogPostsAction } from "@/app/actions/blogAdminActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
@@ -137,6 +139,7 @@ export default async function Home() {
   } = stats;
 
   const remainingSeats = Math.max(0, 100 - (foundingCount ?? memberCount));
+  const blogPosts = await getAllBlogPostsAction();
 
   // Sample member data for the digital card visual in Hero
   const sampleMember: Member = {
@@ -285,6 +288,11 @@ export default async function Home() {
           </Link>
         </div>
       </section>
+
+      {/* 9.5 HEALTHCARE BLOG & HOSPITAL GUIDES */}
+      <div className="content-auto">
+        <LandingBlogSection posts={blogPosts} locale={locale} />
+      </div>
 
       {/* 10. FAQ SECTION */}
       <section id="faq" className="content-auto py-10 sm:py-20 lg:py-28 bg-background">

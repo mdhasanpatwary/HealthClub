@@ -13,6 +13,7 @@ import {
   FileCheck,
   Star,
   Siren,
+  Newspaper,
   BookOpen,
   Radio,
   Bell,
@@ -91,6 +92,12 @@ export const ADMIN_NAV_LINKS: AdminNavLink[] = [
     labelBn: "জরুরি সেবা",
     labelEn: "Emergency",
     icon: Siren,
+  },
+  {
+    href: "/admin/blogs",
+    labelBn: "ব্লগ পোস্ট",
+    labelEn: "Blog Posts",
+    icon: Newspaper,
   },
   {
     href: "/admin/health-tips",

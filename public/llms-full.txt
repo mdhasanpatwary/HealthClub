@@ -251,13 +251,28 @@ A single registered Health Club membership extends discount benefits to:
 ### Q: Does one Health Club card cover my whole family? (একটি কার্ডে কি পুরো পরিবার সুবিধা পাবে?)
 **A**: Yes. One Health Club digital card covers the cardholder, spouse, children, and parents for medical discounts at all partner clinics, hospitals, and diagnostic centers.
 
-### Q: How can a healthcare clinic or hospital become a partner? (হাসপাতাল বা ক্লিনিক কিভাবে পার্টনার হবে?)
-**A**: Healthcare institutions can submit a partner application at `https://healthclubfeni.com/become-partner` or call the official hotline at `+880 1886763849`.
+### Q: What healthcare guides and facility directories are available on Health Club Blog? (ব্লগে কি কি তথ্য পাওয়া যাবে?)
+**A**: Health Club's editorial blog at `https://healthclubfeni.com/blog` features in-depth, verified reviews and comparison matrix guides for regional healthcare:
+1. **Best 10 Hospitals in Feni** (`/blog/best-10-hospitals-in-feni`): Government 250-bed Sadar Hospital vs private facilities (Al-Aqsa Hospital, Al-Kamy, Z.U Model, etc.), ICU/CCU bed capacities, 24/7 emergency hotlines, and member discount benefits.
+2. **Specialist Doctors in Feni** (`/blog/best-doctors-in-feni`): Departmental breakdown of specialist physicians (Medicine, Cardiology, Gynecology, Pediatrics, Surgery, Orthopedics) with qualification degrees, chamber hubs, visiting hours, and serial booking hotlines.
+3. **Best Diagnostic Centers & Labs in Feni** (`/blog/best-diagnostic-centers-in-feni`): Top 10 diagnostic labs with advanced MRI, CT Scan, 4D USG, digital pathology capabilities, test price charts, and 15-30% Health Club member discounts.
+4. **Best Dental Clinics in Feni** (`/blog/best-dental-clinics-in-feni`): Top 10 dental clinics with BMDC-registered dental surgeons, digital RVG, root canal, dental implant procedures, and sterilization standards.
+5. **Best Physiotherapy Centers in Feni** (`/blog/best-physiotherapy-in-feni`): Top 10 physical rehabilitation centers for stroke rehab, paralysis, PLID, musculoskeletal pain, and home physiotherapy services.
+6. **Best Cardiologists in Feni** (`/blog/best-cardiologists-in-feni`): Top heart specialists, echocardiography, ETT testing facilities, and emergency CCU hospital protocols.
+7. **Best Gynecologists & Maternity Care in Feni** (`/blog/best-gynecologists-in-feni`): Top female obstetricians & gynecologists, normal delivery vs caesarean packages, and neonatal intensive care (NICU) incubators.
 
 ---
 
-## 10. Canonical Machine-Readable Route Index
+## 11. Canonical Machine-Readable Route Index
 - **Homepage**: `https://healthclubfeni.com/`
+- **Healthcare Blog & Guides Directory**: `https://healthclubfeni.com/blog`
+- **Top 10 Hospitals in Feni Guide**: `https://healthclubfeni.com/blog/best-10-hospitals-in-feni`
+- **Top Specialist Doctors Guide Feni**: `https://healthclubfeni.com/blog/best-doctors-in-feni`
+- **Top Diagnostic Centers Guide Feni**: `https://healthclubfeni.com/blog/best-diagnostic-centers-in-feni`
+- **Top Dental Clinics Guide Feni**: `https://healthclubfeni.com/blog/best-dental-clinics-in-feni`
+- **Top Physiotherapy Centers Guide Feni**: `https://healthclubfeni.com/blog/best-physiotherapy-in-feni`
+- **Top Cardiologists Guide Feni**: `https://healthclubfeni.com/blog/best-cardiologists-in-feni`
+- **Top Gynecologists & Maternity Guide Feni**: `https://healthclubfeni.com/blog/best-gynecologists-in-feni`
 - **Emergency & Blood Services**: `https://healthclubfeni.com/emergency`
 - **Specialist Doctors Directory**: `https://healthclubfeni.com/consultants`
 - **Partner Hospitals & Diagnostic Centers**: `https://healthclubfeni.com/partner-hospitals`

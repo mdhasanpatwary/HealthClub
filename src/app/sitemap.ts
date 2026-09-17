@@ -5,6 +5,7 @@ import { getPartnersAction } from "@/app/actions/partnerActions";
 import { getAllHealthTipsAction } from "@/app/actions/healthTipsAdminActions";
 import { HEALTH_TIPS_ARTICLES, HealthTipArticle } from "@/data/healthTipsData";
 import { getAllDepartmentSlugs } from "@/data/doctorSeoData";
+import { getAllBlogPostsAction } from "@/app/actions/blogAdminActions";
 import { logger } from "@/lib/logger";
 
 import { parseArticleDate, STATIC_FALLBACK_DATE as STATIC_LAST_MODIFIED } from "@/lib/dateUtils";
@@ -27,6 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/emergency",
     "/consultants",
     "/partner-hospitals",
+    "/blog",
     "/health-tips",
     "/health-tools",
     "/membership",
@@ -49,7 +51,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     } else if (route === "/emergency" || route === "/consultants") {
       priority = 0.95;
       changeFrequency = "daily";
-    } else if (route === "/partner-hospitals" || route === "/membership") {
+    } else if (route === "/partner-hospitals" || route === "/membership" || route === "/blog") {
       priority = 0.9;
       changeFrequency = "daily";
     } else if (route === "/health-tips" || route === "/health-tools") {
@@ -172,10 +174,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
   });
 
+  // Dynamic blog articles (e.g. Best 10 Hospitals in Feni)
+  const blogPosts = await getAllBlogPostsAction();
+  const blogPostEntries: MetadataRoute.Sitemap = blogPosts.map((post) => {
+    const url = `${baseUrl}/blog/${encodeURIComponent(post.slug)}`;
+    const lastModified = parseArticleDate(post.modifiedDate, STATIC_LAST_MODIFIED);
+
+    return {
+      url,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.9,
+      alternates: getAlternates(url),
+    };
+  });
+
   return [
     ...staticEntries,
     ...departmentEntries,
     ...partnerCategoryEntries,
+    ...blogPostEntries,
     ...articleEntries,
     ...doctorEntries,
     ...partnerEntries,

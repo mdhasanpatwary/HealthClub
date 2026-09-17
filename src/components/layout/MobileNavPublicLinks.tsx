@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Siren, Calculator, BookOpen } from "lucide-react";
+import { Siren, Calculator, BookOpen, Newspaper } from "lucide-react";
 
 interface MobileNavPublicLinksProps {
   pathname: string;
@@ -58,7 +58,7 @@ export function MobileNavPublicLinks({
             <div className="h-7 w-7 rounded-lg bg-rose-500/10 text-rose-600 flex items-center justify-center shrink-0">
               <Siren className="h-4 w-4" />
             </div>
-            <span>{t("layout.header.emergency")} (রক্তদাতা ও অ্যাম্বুলেন্স)</span>
+            <span>{t("layout.header.emergency")} ({t("layout.header.emergencySubtitle") || "রক্তদাতা ও অ্যাম্বুলেন্স"})</span>
           </Link>
 
           <Link
@@ -69,7 +69,7 @@ export function MobileNavPublicLinks({
             <div className="h-7 w-7 rounded-lg bg-cyan-500/10 text-cyan-600 flex items-center justify-center shrink-0">
               <Calculator className="h-4 w-4" />
             </div>
-            <span>{t("layout.header.healthTools")} (বিএমআই ও ক্যালোরি)</span>
+            <span>{t("layout.header.healthTools")} ({t("layout.header.healthToolsSubtitle") || "বিএমআই ও ক্যালোরি"})</span>
           </Link>
 
           <Link
@@ -80,7 +80,18 @@ export function MobileNavPublicLinks({
             <div className="h-7 w-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
               <BookOpen className="h-4 w-4" />
             </div>
-            <span>{t("layout.header.healthTips")} (ডাক্তারের পরামর্শ ও ব্লগ)</span>
+            <span>{t("layout.header.healthTips")} ({t("layout.header.healthTipsSubtitle") || "ডাক্তারের পরামর্শ ও টিপস"})</span>
+          </Link>
+
+          <Link
+            href="/blog"
+            onClick={onClose}
+            className="flex items-center gap-3 p-2.5 rounded-xl bg-emerald-500/5 hover:bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-bold"
+          >
+            <div className="h-7 w-7 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0">
+              <Newspaper className="h-4 w-4" />
+            </div>
+            <span>{t("layout.header.blog") || "স্বাস্থ্য ব্লগ ও গাইড"} ({t("layout.header.blogSubtitle") || "হাসপাতাল রিভিউ ও তালিকা"})</span>
           </Link>
         </div>
       </div>
