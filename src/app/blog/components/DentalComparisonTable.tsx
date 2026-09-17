@@ -83,7 +83,7 @@ export function DentalComparisonTable({
           <tbody className="divide-y divide-border/60">
             {items.map((item) => {
               const name = isEn ? item.nameEn : item.nameBn;
-              const isPartner = item.discountBn.includes("হেলথ ক্লাব") || item.discountBn.includes("ছাড়");
+              const isPartner = item.partnerStatus ?? false;
 
               return (
                 <tr

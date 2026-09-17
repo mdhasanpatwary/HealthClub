@@ -25,8 +25,8 @@ export function MaternityPriceTable({
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground">
           {isEn
-            ? "Estimated delivery, ANC, and baby care charges in Feni with exclusive Health Club member savings."
-            : pricingData.subtitleBn}
+            ? "Standard market fees for delivery and maternity care in Feni and 10-30% discount for Health Club members."
+            : "ফেনীর বিভিন্ন প্রাইভেট ও পার্টনার হাসপাতালে স্বাভাবিক ও সিজারিয়ান প্রসবের সাধারণ বাজারদর এবং হেলথ ক্লাব মেম্বারদের জন্য ১০-৩০% ডিসকাউন্ট সুবিধা।"}
         </p>
       </div>
 
@@ -41,10 +41,7 @@ export function MaternityPriceTable({
                 {isEn ? "Regular Market Fee" : "সাধারণ বাজারদর"}
               </th>
               <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
-                {isEn ? "Member Price" : "হেলথ ক্লাব সদস্য মূল্য"}
-              </th>
-              <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
-                {isEn ? "Member Savings" : "ডিসকাউন্ট / সাশ্রয়"}
+                {isEn ? "Health Club Discount" : "হেলথ ক্লাব মেম্বার সুবিধা"}
               </th>
               <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
                 {isEn ? "Stay / Validity" : "হাসপাতাল অবস্থান"}
@@ -65,16 +62,13 @@ export function MaternityPriceTable({
                       {item.categoryBn}
                     </span>
                   </td>
-                  <td className="py-3 px-3 sm:px-4 text-center font-mono text-muted-foreground line-through whitespace-nowrap">
+                  <td className="py-3 px-3 sm:px-4 text-center font-mono text-muted-foreground whitespace-nowrap">
                     {item.regularPriceRangeBn}
                   </td>
-                  <td className="py-3 px-3 sm:px-4 text-center font-semibold text-emerald-600 dark:text-emerald-400 whitespace-nowrap">
-                    {item.memberPriceRangeBn}
-                  </td>
                   <td className="py-3 px-3 sm:px-4 text-center whitespace-nowrap">
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
-                      <Sparkles className="h-3 w-3" />
-                      {item.discountPercentageBn}
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
+                      <Sparkles className="h-3 w-3 shrink-0" />
+                      <span>{isEn ? "10-30% Member Discount" : "মেম্বার হলে ১০-৩০% ডিসকাউন্ট"}</span>
                     </span>
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-center text-muted-foreground whitespace-nowrap">
@@ -95,8 +89,8 @@ export function MaternityPriceTable({
           <ShieldCheck className="h-5 w-5 text-primary shrink-0 mt-0.5" />
           <p className="text-muted-foreground">
             {isEn
-              ? "All maternity discounts are applicable at Health Club partner hospitals (including Z.U Model Hospital, Al-Kamy Hospital Ltd.) upon presenting your digital member card."
-              : "সকল প্রসূতি ও ডেলিভারি ছাড় হেলথ ক্লাবের নিবন্ধিত পার্টনার হাসপাতালগুলোতে (যেমন: জেড.ইউ মডেল হাসপাতাল, আল-কেমি হাসপাতাল ইত্যাদি) ডিজিটাল মেম্বার কার্ড প্রদর্শন করে তাৎক্ষণিক উপভোগ করা যায়।"}
+              ? "Health Club members get a 10-30% discount on maternity and delivery care packages at verified partner hospitals across Feni (including Z.U Model Hospital and Al-Kamy Hospital Ltd.)."
+              : "হেলথ ক্লাব মেম্বার হলে ফেনীর পার্টনার হাসপাতালগুলোতে (জেড.ইউ মডেল হাসপাতাল, আল-কেমি হাসপাতাল ইত্যাদি) প্রসূতি ও ডেলিভারি সেবায় ১০-৩০% ডিসকাউন্ট পাবেন।"}
           </p>
         </div>
         <Link

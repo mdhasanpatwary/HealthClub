@@ -55,7 +55,7 @@ export const BEST_GYNECOLOGISTS_IN_FENI: BlogPost = {
     "ফেনীর খ্যাতিমান নারী গাইনি ও প্রসূতি সার্জনদের (FCPS, MS, DGO) যাচাইকৃত চেম্বার শিডিউল ও সরাসরি সিরিয়াল নম্বর।",
     "গর্ভকালীন ৪টি বাধ্যতামূলক এএনসি (ANC) চেকআপ রুটিন ও অ্যানোমালি স্ক্যান (Anomaly Scan 4D) টাইমিং গাইড।",
     "স্বাভাবিক প্রসব (Normal Delivery), ব্যথাহীন প্রসব ও সিজারিয়ান প্রসব খরচের বাস্তবসম্মত তুলনামূলক তালিকা।",
-    "পার্টনার হাসপাতালসমূহে (জেড.ইউ মডেল হাসপাতাল, আল-কেমি হাসপাতাল ইত্যাদি) মেম্বারদের জন্য ডেলিভারি প্যাকেজে বিশেষ মেম্বার ছাড়।",
+    "পার্টনার হাসপাতালসমূহে (জেড.ইউ মডেল হাসপাতাল, আল-কেমি হাসপাতাল ইত্যাদি) মেম্বারদের জন্য ১০-৩০% ডিসকাউন্ট সুবিধা।",
     "২৪/৭ জরুরি প্রসূতি এমার্জেন্সি, নবজাতকের এনআইসিইউ (NICU/SNCU) ও ব্লাড ডোনার হটলাইন।",
   ],
   introParagraphsBn: [
@@ -152,15 +152,15 @@ export const BEST_GYNECOLOGISTS_IN_FENI: BlogPost = {
   },
   maternityCarePricingBn: {
     titleBn: "ফেনীতে প্রসূতি সেবা ও ডেলিভারি খরচের বাস্তবসম্মত হিসাব (২০২৬)",
-    subtitleBn: "ফেনীর বিভিন্ন প্রাইভেট ও পার্টনার হাসপাতালে স্বাভাবিক ও সিজারিয়ান প্রসবের আনুমানিক প্যাকেজ রেট এবং হেলথ ক্লাব মেম্বারদের বিশেষ ডিসকাউন্ট।",
+    subtitleBn: "ফেনীর বিভিন্ন প্রাইভেট ও পার্টনার হাসপাতালে স্বাভাবিক ও সিজারিয়ান প্রসবের আনুমানিক প্যাকেজ রেট এবং হেলথ ক্লাব মেম্বারদের জন্য ১০-৩০% ডিসকাউন্ট সুবিধা।",
     packages: [
       {
         packageNameBn: "স্বাভাবিক প্রসব প্যাকেজ (Normal Delivery)",
         packageNameEn: "Normal Delivery Package (Bed & Nursing included)",
         categoryBn: "সাধারণ কেবিন/ওয়ার্ড, সার্বক্ষণিক নার্সিং ও চিকিৎসকের ভিজিট",
         regularPriceRangeBn: "৳৮,০০০ - ৳১২,০০০",
-        memberPriceRangeBn: "৳৬,০০০ - ৳৯,০০০",
-        discountPercentageBn: "বিশেষ মেম্বার ছাড়",
+        memberPriceRangeBn: "১০-৩০% ডিসকাউন্ট",
+        discountPercentageBn: "১০-৩০% ডিসকাউন্ট",
         stayOrDurationBn: "২৪ - ৩৬ ঘণ্টা",
       },
       {
@@ -168,8 +168,8 @@ export const BEST_GYNECOLOGISTS_IN_FENI: BlogPost = {
         packageNameEn: "Painless Delivery (Epidural Analgesia)",
         categoryBn: "অভিজ্ঞ এনেস্থেটিস্ট কর্তৃক এপিডুরাল এনেস্থেসিয়া ও স্পেশাল কেয়ার",
         regularPriceRangeBn: "৳১৪,০০০ - ৳১৮,০০০",
-        memberPriceRangeBn: "৳১১,০০০ - ৳১৪,০০০",
-        discountPercentageBn: "বিশেষ মেম্বার ছাড়",
+        memberPriceRangeBn: "১০-৩০% ডিসকাউন্ট",
+        discountPercentageBn: "১০-৩০% ডিসকাউন্ট",
         stayOrDurationBn: "২৪ - ৩৬ ঘণ্টা",
       },
       {
@@ -177,8 +177,8 @@ export const BEST_GYNECOLOGISTS_IN_FENI: BlogPost = {
         packageNameEn: "Cesarean Delivery Package (Surgical OT & Private Cabin)",
         categoryBn: "সার্জন ফি, এনেস্থেসিয়া, ৩ দিনের এসি/নন-এসি কেবিন ও নিয়মিত ড্রেসিং",
         regularPriceRangeBn: "৳১৮,০০০ - ৳২৮,০০০",
-        memberPriceRangeBn: "৳১৪,৫০০ - ৳২১,৫০০",
-        discountPercentageBn: "বিশেষ মেম্বার ছাড়",
+        memberPriceRangeBn: "১০-৩০% ডিসকাউন্ট",
+        discountPercentageBn: "১০-৩০% ডিসকাউন্ট",
         stayOrDurationBn: "৩ দিন ২ রাত",
       },
       {
@@ -186,8 +186,8 @@ export const BEST_GYNECOLOGISTS_IN_FENI: BlogPost = {
         packageNameEn: "High-Risk Complex Cesarean Delivery",
         categoryBn: "প্লাসেন্টা প্রিভিয়া, প্রি-এক্লাম্পসিয়া বা টুইন প্রেগন্যান্সি অপারেশন",
         regularPriceRangeBn: "৳২৮,০০০ - ৳৪০,০০০",
-        memberPriceRangeBn: "৳২২,০০০ - ৳৩১,০০০",
-        discountPercentageBn: "বিশেষ মেম্বার ছাড়",
+        memberPriceRangeBn: "১০-৩০% ডিসকাউন্ট",
+        discountPercentageBn: "১০-৩০% ডিসকাউন্ট",
         stayOrDurationBn: "৪ - ৫ দিন",
       },
       {
@@ -195,8 +195,8 @@ export const BEST_GYNECOLOGISTS_IN_FENI: BlogPost = {
         packageNameEn: "Neonatal ICU (NICU) / Phototherapy Day Care",
         categoryBn: "ইনকিউবেটর, সার্বক্ষণিক শিশু বিশেষজ্ঞ ও জন্ডিস ফটোথেরাপি",
         regularPriceRangeBn: "৳৩,০০০ - ৳৫,০০০ /দিন",
-        memberPriceRangeBn: "৳২,২০০ - ৳৩,৫০০ /দিন",
-        discountPercentageBn: "বিশেষ মেম্বার ছাড়",
+        memberPriceRangeBn: "১০-৩০% ডিসকাউন্ট",
+        discountPercentageBn: "১০-৩০% ডিসকাউন্ট",
         stayOrDurationBn: "দৈনিক প্যাকেজ",
       },
       {
@@ -204,8 +204,8 @@ export const BEST_GYNECOLOGISTS_IN_FENI: BlogPost = {
         packageNameEn: "4D Anomaly Scan & Complete ANC Pathology Panel",
         categoryBn: "কালার ডপলার ইউএসজি, ওজিটিটি, সিবিসি, এইচবিএসএজি, টিএসএইচ",
         regularPriceRangeBn: "৳৫,৫০০ - ৳৭,৫০০",
-        memberPriceRangeBn: "৳৩,৯০০ - ৳৫,৩০০",
-        discountPercentageBn: "বিশেষ মেম্বার ছাড়",
+        memberPriceRangeBn: "১০-৩০% ডিসকাউন্ট",
+        discountPercentageBn: "১০-৩০% ডিসকাউন্ট",
         stayOrDurationBn: "এককালীন পরীক্ষা",
       },
     ],
@@ -266,9 +266,9 @@ export const BEST_GYNECOLOGISTS_IN_FENI: BlogPost = {
       questionBn: "ফেনীতে কোন কোন প্রাইভেট হাসপাতালে নবজাতকের জন্য এনআইসিইউ (NICU) রয়েছে?",
       questionEn: "Which private hospitals in Feni have Neonatal ICU (NICU) facilities?",
       answerBn:
-        "ফেনী শহরে জেড.ইউ মডেল হাসপাতাল (মিজান রোড) এবং আল-কেমি হাসপাতাল লিমিটেড (হাসপাতাল রোড)-এ আধুনিক প্রাইভেট এনআইসিইউ (NICU/ইনকিউবেটর) সুবিধা রয়েছে। এছাড়া ২৫০ শয্যা বিশিষ্ট সরকারি আধুনিক সদর হাসপাতালে বিশেষায়িত নবজাতক সেবা কেন্দ্র (SNCU) চালু রয়েছে। হেলথ ক্লাব মেম্বাররা পার্টনার হাসপাতালে এনআইসিইউ চার্জে বিশেষ ছাড় পান।",
+        "ফেনী শহরে জেড.ইউ মডেল হাসপাতাল (মিজান রোড) এবং আল-কেমি হাসপাতাল লিমিটেড (হাসপাতাল রোড)-এ আধুনিক প্রাইভেট এনআইসিইউ (NICU/ইনকিউবেটর) সুবিধা রয়েছে। এছাড়া ২৫০ শয্যা বিশিষ্ট সরকারি আধুনিক সদর হাসপাতালে বিশেষায়িত নবজাতক সেবা কেন্দ্র (SNCU) চালু রয়েছে। হেলথ ক্লাব মেম্বার হলে পার্টনার হাসপাতালে এনআইসিইউ ও প্রসূতি সেবায় ১০-৩০% ডিসকাউন্ট সুবিধা পাবেন।",
       answerEn:
-        "Z.U Model Hospital and Al-Kamy Hospital Ltd. operate private NICU units in Feni. Feni 250-Bed General Hospital also provides government SNCU services.",
+        "Z.U Model Hospital and Al-Kamy Hospital Ltd. operate private NICU units in Feni. Feni 250-Bed General Hospital also provides government SNCU services. Health Club members receive a 10-30% discount at partner facilities.",
     },
     {
       questionBn: "স্বাভাবিক প্রসব (নরমাল ডেলিভারি) নিশ্চিত করতে একজন প্রসূতির কী কী প্রস্তুতি নেওয়া উচিত?",
@@ -298,9 +298,9 @@ export const BEST_GYNECOLOGISTS_IN_FENI: BlogPost = {
       questionBn: "হেলথ ক্লাব সদস্য হলে ফেনীতে প্রসূতি সেবা ও ডেলিভারিতে কী কী সুবিধা পাওয়া যায়?",
       questionEn: "What maternity benefits do Health Club members receive in Feni?",
       answerBn:
-        "হেলথ ক্লাবের ডিজিটাল মেম্বার কার্ড থাকলে ফেনীর পার্টনার হাসপাতালগুলোতে স্বাভাবিক ও সিজারিয়ান ডেলিভারি প্যাকেজে সরাসরি ক্যাশ মেম্বার ডিসকাউন্ট পাওয়া যায়। এছাড়া গর্ভকালীন আল্ট্রাসনোগ্রাম ও সকল প্যাথলজি রক্ত পরীক্ষায় ডায়াগনস্টিক ভেদে বিশেষ সাশ্রয় এবং সার্বক্ষণিক ফ্রি ডিজিটাল মেডিকেল পরামর্শ নিশ্চিত হয়।",
+        "হেলথ ক্লাবের ডিজিটাল মেম্বার হলে ফেনীর পার্টনার হাসপাতালগুলোতে স্বাভাবিক ও সিজারিয়ান ডেলিভারি প্যাকেজে ১০-৩০% ডিসকাউন্ট সুবিধা পাওয়া যায়। এছাড়া গর্ভকালীন আল্ট্রাসনোগ্রাম ও সকল প্যাথলজি রক্ত পরীক্ষায় ডায়াগনস্টিক ভেদে বিশেষ সাশ্রয় এবং সার্বক্ষণিক ফ্রি ডিজিটাল মেডিকেল পরামর্শ নিশ্চিত হয়।",
       answerEn:
-        "Health Club members receive direct member discounts on delivery packages at partner hospitals, plus special savings on prenatal ultrasounds and pathology tests depending on the diagnostic facility.",
+        "Health Club members receive a 10-30% discount on maternity and delivery care packages at partner hospitals, plus special savings on prenatal ultrasounds and pathology tests depending on the diagnostic facility.",
     },
     {
       questionBn: "ফেনীতে গাইনি ডাক্তারের সিরিয়াল নেওয়ার জন্য কখন যোগাযোগ করা সবচেয়ে ভালো?",

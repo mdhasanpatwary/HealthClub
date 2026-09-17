@@ -27,8 +27,7 @@ export function BlogSidebar({
   const isEn = locale === "en";
 
   return (
-    <aside className="lg:col-span-4 space-y-6">
-      <div className="lg:sticky lg:top-24 space-y-6">
+    <aside className="lg:col-span-4 lg:sticky lg:top-24 space-y-6 self-start lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto pr-1 pb-6 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/40">
         {/* Table of Contents */}
         <BlogTableOfContents
           hospitals={hospitals}
@@ -85,7 +84,6 @@ export function BlogSidebar({
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
-      </div>
     </aside>
   );
 }

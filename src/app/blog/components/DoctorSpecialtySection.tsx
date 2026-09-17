@@ -17,8 +17,10 @@ import {
   ExternalLink,
   Sparkles,
   CheckCircle2,
+  ShieldCheck,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { BlogReviewCardWrapper } from "./BlogReviewCardWrapper";
 
 interface DoctorSpecialtySectionProps {
   doctorGroups: DoctorSpecialtyGroup[];
@@ -61,8 +63,8 @@ export function DoctorSpecialtySection({
         </div>
         <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
           {isEn
-            ? "Top Specialist Doctors in Feni by Department"
-            : "ফেনীর শীর্ষ বিশেষজ্ঞ ডাক্তারদের তালিকা ও চেম্বার শিডিউল"}
+            ? "2. Top Specialist Doctors in Feni by Department"
+            : "২. ফেনীর শীর্ষ বিশেষজ্ঞ ডাক্তারদের তালিকা ও চেম্বার শিডিউল"}
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground mt-1">
           {isEn
@@ -106,14 +108,14 @@ export function DoctorSpecialtySection({
       </div>
 
       {/* Specialty Groups */}
-      <div className="space-y-10">
+      <div className="space-y-10 sm:space-y-12">
         {filteredGroups.map((group) => {
           const Icon = DEPARTMENT_ICONS[group.department] || Stethoscope;
           return (
             <div
               key={group.department}
               id={`dept-${group.department}`}
-              className="scroll-mt-24 space-y-4"
+              className="scroll-mt-24 space-y-5"
             >
               <div className="flex items-center gap-3 border-b border-border/70 pb-3">
                 <div className="p-2 rounded-xl bg-primary/10 text-primary shrink-0">
@@ -130,9 +132,14 @@ export function DoctorSpecialtySection({
               </div>
 
               {/* Doctor Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {group.doctors.map((doctor) => (
-                  <DoctorCard key={doctor.id} doctor={doctor} isEn={isEn} />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 items-stretch">
+                {group.doctors.map((doctor, docIdx) => (
+                  <DoctorCard
+                    key={doctor.id}
+                    doctor={doctor}
+                    rank={doctor.rank ?? docIdx + 1}
+                    locale={locale}
+                  />
                 ))}
               </div>
             </div>
@@ -145,19 +152,37 @@ export function DoctorSpecialtySection({
 
 function DoctorCard({
   doctor,
-  isEn,
+  rank,
+  locale = "bn",
 }: {
   doctor: DoctorSpecialistItem;
-  isEn: boolean;
+  rank: number;
+  locale?: string;
 }) {
+  const isEn = locale === "en";
   const primaryPhone = doctor.serialPhone.split(",")[0].trim();
   const cleanPhone = primaryPhone.replace(/[^0-9]/g, "");
 
   return (
-    <div className="rounded-2xl border border-border/80 bg-card p-5 flex flex-col justify-between shadow-xs hover:border-primary/40 hover:shadow-md transition-all gap-4">
+    <BlogReviewCardWrapper
+      sectionId={`doctor-${doctor.id}`}
+      rank={rank}
+      partnerStatus={doctor.partnerStatus}
+      locale={locale}
+      wrapperClassName="h-full flex flex-col"
+      contentPadding="p-4 sm:p-5"
+      contentSpacing="space-y-4"
+      className="flex-1 flex flex-col justify-between"
+    >
       <div className="space-y-3">
         {/* Badges */}
         <div className="flex flex-wrap items-center gap-1.5">
+          {doctor.partnerStatus && (
+            <Badge className="bg-emerald-600 dark:bg-emerald-700 text-white font-semibold flex items-center gap-1 shadow-xs text-[11px]">
+              <ShieldCheck className="h-3 w-3" />
+              <span>{isEn ? "Health Club Partner" : "অফিসিয়াল পার্টনার চেম্বার"}</span>
+            </Badge>
+          )}
           {doctor.featuredBadgeBn && (
             <Badge
               variant="secondary"
@@ -220,6 +245,17 @@ function DoctorCard({
               {doctor.consultationFeeBn}
             </span>
           </div>
+
+          {doctor.partnerStatus && (
+            <div className="flex items-center gap-1.5 text-[11px] font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 p-2 rounded-lg">
+              <Sparkles className="h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+              <span>
+                {isEn
+                  ? "Health Club Members: 10-30% special discount on hospital services"
+                  : "হেলথ ক্লাব কার্ডধারীদের জন্য হাসপাতালে ১০-৩০% বিশেষ ছাড়"}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -241,6 +277,6 @@ function DoctorCard({
           <ExternalLink className="h-3 w-3" />
         </Link>
       </div>
-    </div>
+    </BlogReviewCardWrapper>
   );
 }

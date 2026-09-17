@@ -20,7 +20,7 @@ export function BlogArticleHeader({
   const title = isEn ? post.titleEn : post.titleBn;
 
   return (
-    <header className="space-y-5 max-w-4xl">
+    <header className="space-y-6 w-full">
       <div className="flex flex-wrap items-center gap-2">
         <Badge className="bg-primary text-primary-foreground font-semibold">
           {isEn ? post.categoryNameEn : post.categoryNameBn}

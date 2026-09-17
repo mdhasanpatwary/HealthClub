@@ -18,8 +18,8 @@ export function DoctorChamberHubs({ hubs, locale = "bn" }: DoctorChamberHubsProp
         </div>
         <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
           {isEn
-            ? "Major Medical Hubs & Chamber Locations in Feni"
-            : "ফেনী শহরের প্রধান ডাক্তার চেম্বার ও ক্লিনিক্যাল হাবসমূহ"}
+            ? "3. Major Medical Hubs & Chamber Locations in Feni"
+            : "৩. ফেনী শহরের প্রধান ডাক্তার চেম্বার ও ক্লিনিক্যাল হাবসমূহ"}
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground mt-1">
           {isEn

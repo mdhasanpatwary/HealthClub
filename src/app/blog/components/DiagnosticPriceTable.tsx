@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { DiagnosticTestPriceItem } from "@/types/blog";
-import { ShieldCheck, ArrowRight, Clock, Sparkles } from "lucide-react";
+import { ShieldCheck, ArrowRight, Clock } from "lucide-react";
 
 interface DiagnosticPriceTableProps {
   pricingData: {
@@ -41,10 +41,7 @@ export function DiagnosticPriceTable({
                 {isEn ? "Regular Price Range" : "সাধারণ বাজারদর"}
               </th>
               <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
-                {isEn ? "Health Club Member Price" : "হেলথ ক্লাব মূল্য"}
-              </th>
-              <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
-                {isEn ? "Savings" : "সাশ্রয়"}
+                {isEn ? "Health Club Discount" : "হেলথ ক্লাব মেম্বার সুবিধা"}
               </th>
               <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
                 {isEn ? "Report Time" : "রিপোর্ট সময়"}
@@ -65,16 +62,13 @@ export function DiagnosticPriceTable({
                       </span>
                     </div>
                   </td>
-                  <td className="py-3 px-3 sm:px-4 text-center text-muted-foreground line-through whitespace-nowrap">
+                  <td className="py-3 px-3 sm:px-4 text-center text-muted-foreground whitespace-nowrap font-medium">
                     {test.regularPriceRangeBn}
                   </td>
-                  <td className="py-3 px-3 sm:px-4 text-center font-bold text-primary whitespace-nowrap">
-                    {test.memberPriceRangeBn}
-                  </td>
                   <td className="py-3 px-3 sm:px-4 text-center whitespace-nowrap">
-                    <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
-                      <Sparkles className="h-3 w-3" />
-                      <span>{test.discountPercentageBn}</span>
+                    <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                      <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                      <span>{isEn ? "10-30% Special Discount" : "১০-৩০% বিশেষ ছাড়"}</span>
                     </span>
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-center text-muted-foreground whitespace-nowrap">

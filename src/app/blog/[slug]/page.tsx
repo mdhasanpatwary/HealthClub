@@ -163,18 +163,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
       </nav>
 
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 space-y-10">
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 space-y-12">
         <article
           itemScope
           itemType="https://schema.org/MedicalWebPage"
-          className="space-y-10"
         >
-          {/* Article Header (Title, Author, Highlights) */}
-          <BlogArticleHeader post={post} pageUrl={pageUrl} locale={locale} />
-
           {/* Content Layout: 8 cols main, 4 cols sidebar */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
             <div className="lg:col-span-8 space-y-10 min-w-0">
+              {/* Article Header (Title, Author, Highlights) */}
+              <BlogArticleHeader post={post} pageUrl={pageUrl} locale={locale} />
+
               {/* AEO Quick Answer / AI Decision Summary */}
               <BlogQuickAnswer post={post} locale={locale} />
 

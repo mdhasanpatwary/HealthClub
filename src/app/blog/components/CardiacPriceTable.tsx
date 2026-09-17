@@ -25,8 +25,8 @@ export function CardiacPriceTable({
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground">
           {isEn
-            ? "Estimated charges for heart tests in Feni and guaranteed discounts with Health Club membership."
-            : pricingData.subtitleBn}
+            ? "Standard market fees for cardiac diagnostic tests in Feni and 10-30% discount for Health Club members."
+            : "ফেনীর শীর্ষ ডায়াগনস্টিক সেন্টারে কার্ডিয়াক পরীক্ষাগুলোর সাধারণ বাজারদর এবং হেলথ ক্লাব মেম্বারদের জন্য ১০-৩০% ডিসকাউন্ট সুবিধা।"}
         </p>
       </div>
 
@@ -41,10 +41,7 @@ export function CardiacPriceTable({
                 {isEn ? "Regular Market Fee" : "সাধারণ বাজারদর"}
               </th>
               <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
-                {isEn ? "Member Price" : "হেলথ ক্লাব সদস্য মূল্য"}
-              </th>
-              <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
-                {isEn ? "Member Savings" : "ডিসকাউন্ট / সাশ্রয়"}
+                {isEn ? "Health Club Discount" : "হেলথ ক্লাব মেম্বার সুবিধা"}
               </th>
               <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
                 {isEn ? "Report Time" : "রিপোর্ট পাওয়ার সময়"}
@@ -65,16 +62,13 @@ export function CardiacPriceTable({
                       {item.categoryBn}
                     </span>
                   </td>
-                  <td className="py-3 px-3 sm:px-4 text-center font-mono text-muted-foreground line-through whitespace-nowrap">
+                  <td className="py-3 px-3 sm:px-4 text-center font-mono text-muted-foreground whitespace-nowrap">
                     {item.regularPriceRangeBn}
                   </td>
-                  <td className="py-3 px-3 sm:px-4 text-center font-semibold text-emerald-600 dark:text-emerald-400 whitespace-nowrap">
-                    {item.memberPriceRangeBn}
-                  </td>
                   <td className="py-3 px-3 sm:px-4 text-center whitespace-nowrap">
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
-                      <Sparkles className="h-3 w-3" />
-                      {item.discountPercentageBn}
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
+                      <Sparkles className="h-3 w-3 shrink-0" />
+                      <span>{isEn ? "10-30% Member Discount" : "মেম্বার হলে ১০-৩০% ডিসকাউন্ট"}</span>
                     </span>
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-center text-muted-foreground whitespace-nowrap">
@@ -95,8 +89,8 @@ export function CardiacPriceTable({
           <ShieldCheck className="h-5 w-5 text-primary shrink-0 mt-0.5" />
           <p className="text-muted-foreground">
             {isEn
-              ? "All cardiac diagnostic discounts are directly redeemable at verified Health Club partner centers across Feni (including Feni Heart Foundation Hospital, Popular, Chevron, and LabAid)."
-              : "সকল কার্ডিয়াক টেস্ট ও হৃদরোগ চেকআপে নির্ধারিত ছাড় হেলথ ক্লাবের নিবন্ধিত পার্টনার হাসপাতাল ও ডায়াগনস্টিক সেন্টারে (ফেনী হার্ট ফাউন্ডেশন, পপুলার, শেভরন ও ল্যাবএইড) ডিজিটাল কার্ড প্রদর্শনে সরাসরি উপভোগ্য।"}
+              ? "Health Club members get a 10-30% discount on all cardiac diagnostic tests at verified partner centers across Feni (including Feni Heart Foundation Hospital, Popular, Chevron, and LabAid)."
+              : "হেলথ ক্লাব মেম্বার হলে ফেনীর পার্টনার হাসপাতাল ও ডায়াগনস্টিক সেন্টারে (ফেনী হার্ট ফাউন্ডেশন, পপুলার, শেভরন ও ল্যাবএইড) সকল কার্ডিয়াক টেস্টে ১০-৩০% ডিসকাউন্ট পাবেন।"}
           </p>
         </div>
         <Link

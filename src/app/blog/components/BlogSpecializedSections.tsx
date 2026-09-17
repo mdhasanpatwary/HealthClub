@@ -54,7 +54,7 @@ export function BlogSpecializedSections({
             </p>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-8">
             {post.diagnosticCenters.map((center) => (
               <DiagnosticReviewCard
                 key={center.rank}
@@ -102,7 +102,7 @@ export function BlogSpecializedSections({
             </p>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-8">
             {post.dentalClinics.map((clinic) => (
               <DentalReviewCard
                 key={clinic.rank}
@@ -150,7 +150,7 @@ export function BlogSpecializedSections({
             </p>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-8">
             {post.physiotherapyCenters.map((center) => (
               <PhysiotherapyReviewCard
                 key={center.rank}
@@ -214,7 +214,7 @@ export function BlogSpecializedSections({
             </p>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-8">
             {post.hospitals.map((hospital) => (
               <HospitalReviewCard
                 key={hospital.rank}

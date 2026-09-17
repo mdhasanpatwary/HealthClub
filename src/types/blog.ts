@@ -68,6 +68,8 @@ export interface DoctorSpecialistItem {
   consultationFeeBn: string;
   consultantProfileUrl?: string;
   featuredBadgeBn?: string;
+  partnerStatus?: boolean;
+  rank?: number;
 }
 
 export interface DoctorSpecialtyGroup {
@@ -130,6 +132,7 @@ export interface DiagnosticComparisonItem {
   automatedLab: boolean | string;
   discountBn: string;
   locationBn: string;
+  partnerStatus?: boolean;
 }
 
 export interface DiagnosticTestPriceItem {
@@ -180,6 +183,7 @@ export interface DentalComparisonItem {
   bracesOrthodontics: boolean | string;
   discountBn: string;
   locationBn: string;
+  partnerStatus?: boolean;
 }
 
 export interface DentalProcedurePriceItem {
@@ -187,7 +191,7 @@ export interface DentalProcedurePriceItem {
   procedureNameEn: string;
   categoryBn: string;
   regularPriceRangeBn: string;
-  memberPriceRangeBn: string;
+  memberPriceRangeBn?: string;
   discountPercentageBn: string;
   durationBn: string;
 }
@@ -230,6 +234,7 @@ export interface PhysiotherapyComparisonItem {
   homeService: boolean | string;
   discountBn: string;
   locationBn: string;
+  partnerStatus?: boolean;
 }
 
 export interface PhysiotherapyTreatmentPriceItem {
@@ -237,8 +242,8 @@ export interface PhysiotherapyTreatmentPriceItem {
   treatmentNameEn: string;
   categoryBn: string;
   regularPriceRangeBn: string;
-  memberPriceRangeBn: string;
-  discountPercentageBn: string;
+  memberPriceRangeBn?: string;
+  discountPercentageBn?: string;
   durationBn: string;
 }
 
@@ -247,8 +252,8 @@ export interface MaternityCarePackageItem {
   packageNameEn: string;
   categoryBn: string;
   regularPriceRangeBn: string;
-  memberPriceRangeBn: string;
-  discountPercentageBn: string;
+  memberPriceRangeBn?: string;
+  discountPercentageBn?: string;
   stayOrDurationBn: string;
 }
 
@@ -257,8 +262,8 @@ export interface CardiacPackagePriceItem {
   testOrPackageNameEn: string;
   categoryBn: string;
   regularPriceRangeBn: string;
-  memberPriceRangeBn: string;
-  discountPercentageBn: string;
+  memberPriceRangeBn?: string;
+  discountPercentageBn?: string;
   reportTimeBn: string;
 }
 

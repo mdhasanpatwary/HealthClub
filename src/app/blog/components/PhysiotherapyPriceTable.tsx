@@ -25,8 +25,8 @@ export function PhysiotherapyPriceTable({
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground">
           {isEn
-            ? "Estimated physical therapy charges in Feni and guaranteed savings with Health Club membership."
-            : pricingData.subtitleBn}
+            ? "Standard market fees for physiotherapy in Feni and 10-30% discount for Health Club members."
+            : "ফেনীর বিভিন্ন প্রাইভেট ও পার্টনার হাসপাতালে ফিজিওথেরাপি সেশনের সাধারণ বাজারদর এবং হেলথ ক্লাব মেম্বারদের জন্য ১০-৩০% ডিসকাউন্ট সুবিধা।"}
         </p>
       </div>
 
@@ -41,10 +41,7 @@ export function PhysiotherapyPriceTable({
                 {isEn ? "Regular Market Fee" : "সাধারণ বাজারদর"}
               </th>
               <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
-                {isEn ? "Member Price" : "হেলথ ক্লাব সদস্য মূল্য"}
-              </th>
-              <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
-                {isEn ? "Member Savings" : "ডিসকাউন্ট / সাশ্রয়"}
+                {isEn ? "Health Club Discount" : "হেলথ ক্লাব মেম্বার সুবিধা"}
               </th>
               <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
                 {isEn ? "Duration" : "সেশনের সময়"}
@@ -65,16 +62,13 @@ export function PhysiotherapyPriceTable({
                       </span>
                     </div>
                   </td>
-                  <td className="py-3 px-3 sm:px-4 text-center text-muted-foreground line-through whitespace-nowrap">
+                  <td className="py-3 px-3 sm:px-4 text-center font-mono text-muted-foreground whitespace-nowrap">
                     {item.regularPriceRangeBn}
                   </td>
-                  <td className="py-3 px-3 sm:px-4 text-center font-bold text-primary whitespace-nowrap">
-                    {item.memberPriceRangeBn}
-                  </td>
                   <td className="py-3 px-3 sm:px-4 text-center whitespace-nowrap">
-                    <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
-                      <Sparkles className="h-3 w-3" />
-                      <span>{item.discountPercentageBn}</span>
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
+                      <Sparkles className="h-3 w-3 shrink-0" />
+                      <span>{isEn ? "10-30% Member Discount" : "মেম্বার হলে ১০-৩০% ডিসকাউন্ট"}</span>
                     </span>
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-center text-muted-foreground whitespace-nowrap">
@@ -97,14 +91,14 @@ export function PhysiotherapyPriceTable({
             <ShieldCheck className="h-5 w-5 shrink-0" />
             <span>
               {isEn
-                ? "Special member savings on physiotherapy sessions in Feni!"
-                : "ফেনীর সেরা ফিজিওথেরাপি সেন্টারে বিশেষ মেম্বার ছাড় পান!"}
+                ? "10-30% member discount on physiotherapy sessions in Feni!"
+                : "ফেনীর পার্টনার ফিজিওথেরাপি সেন্টারে ১০-৩০% মেম্বার ডিসকাউন্ট পান!"}
             </span>
           </div>
           <p className="text-xs sm:text-sm text-muted-foreground">
             {isEn
-              ? "Health Club membership card provides instant discounts on stroke rehab, PLID traction, and home care visits across Feni."
-              : "একটিমাত্র হেলথ ক্লাব মেম্বারশিপ কার্ডে আপনি ও আপনার পরিবার ফেনীর পার্টনার হাসপাতাল ও ফিজিওথেরাপি সেন্টারে প্রতিটি সেশনে নিশ্চিত ছাড় উপভোগ করতে পারেন।"}
+              ? "Health Club members receive guaranteed 10-30% discounts on stroke rehab, PLID traction, and therapy sessions at verified partner clinics (Central Physiotherapy, Islamia Physiotherapy)."
+              : "হেলথ ক্লাব মেম্বার হলে ফেনীর পার্টনার ফিজিওথেরাপি সেন্টারে (সেন্ট্রাল ফিজিওথেরাপি অ্যান্ড রিহ্যাবিলিটেশন সেন্টার, ইসলামিয়া ফিজিওথেরাপি অ্যান্ড রিহ্যাবিলিটেশন সেন্টার) প্রতিটি সেশনে ১০-৩০% ডিসকাউন্ট পাবেন।"}
           </p>
         </div>
 

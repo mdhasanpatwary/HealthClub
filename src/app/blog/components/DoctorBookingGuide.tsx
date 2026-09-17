@@ -23,7 +23,7 @@ export function DoctorBookingGuide({
           <span>{isEn ? "Appointment Advice" : "সিরিয়াল গাইডলাইন"}</span>
         </div>
         <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-          {guide.titleBn}
+          {isEn ? `4. ${guide.titleBn}` : `৪. ${guide.titleBn}`}
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground mt-1">
           {isEn
@@ -32,32 +32,33 @@ export function DoctorBookingGuide({
         </p>
       </div>
 
-      <div
-        className={`grid grid-cols-1 sm:grid-cols-2 ${
-          isEvenSteps ? "lg:grid-cols-2" : "lg:grid-cols-3"
-        } gap-4`}
-      >
-        {guide.stepsBn.map((step, idx) => (
-          <div
-            key={idx}
-            className="rounded-2xl border border-border/80 bg-card p-4 sm:p-5 space-y-2.5 shadow-xs hover:border-primary/40 transition-all flex flex-col justify-between"
-          >
-            <div className="space-y-2">
-              <div className="flex items-center justify-between gap-2">
-                <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-primary/10 text-primary border border-primary/20 text-xs font-bold leading-none">
-                  {step.step}
-                </span>
-                <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {guide.stepsBn.map((step, idx) => {
+          const isLastOdd = !isEvenSteps && idx === guide.stepsBn.length - 1;
+          return (
+            <div
+              key={idx}
+              className={`rounded-2xl border border-border/80 bg-card p-4 sm:p-5 space-y-2.5 shadow-xs hover:border-primary/40 transition-all flex flex-col justify-between ${
+                isLastOdd ? "sm:col-span-2" : ""
+              }`}
+            >
+              <div className="space-y-2">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-primary/10 text-primary border border-primary/20 text-xs font-bold leading-none">
+                    {step.step}
+                  </span>
+                  <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+                </div>
+                <h3 className="font-heading text-xs sm:text-sm font-semibold text-foreground leading-snug">
+                  {step.title}
+                </h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {step.desc}
+                </p>
               </div>
-              <h3 className="font-heading text-xs sm:text-sm font-semibold text-foreground leading-snug">
-                {step.title}
-              </h3>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                {step.desc}
-              </p>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

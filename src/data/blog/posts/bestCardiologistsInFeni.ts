@@ -55,7 +55,7 @@ export const BEST_CARDIOLOGISTS_IN_FENI: BlogPost = {
     "ফেনীর শীর্ষ কার্ডিওলজিস্ট ও হৃদরোগ বিশেষজ্ঞদের (MD Cardiology, FCPS, D-Card) যাচাইকৃত চেম্বার শিডিউল ও সরাসরি সিরিয়াল নম্বর।",
     "হঠাৎ তীব্র বুকে ব্যথা বা হার্ট অ্যাটাকের লক্ষণ দেখা দিলে প্রথম ১০ মিনিটের জীবনরক্ষাকারী গোল্ডেন আওয়ার প্রোটোকল।",
     "ফেনী ন্যাশনাল হার্ট ফাউন্ডেশন, ২৫০ শয্যা জেনারেল হাসপাতাল ও পার্টনার হাসপাতালগুলোর সিসিইউ ও আইসিইউ সুবিধা।",
-    "ইসিজি, কালার ডপলার ২ডি ইকো, ইটিটি ও ট্রোপোনিন-আই টেস্ট খরচের বাস্তবভিত্তিক তালিকা এবং হেলথ ক্লাব মেম্বারদের বিশেষ ছাড়।",
+    "ইসিজি, কালার ডপলার ২ডি ইকো, ইটিটি ও ট্রোপোনিন-আই টেস্ট খরচের বাস্তবভিত্তিক তালিকা এবং হেলথ ক্লাব মেম্বারদের জন্য ১০-৩০% ডিসকাউন্ট।",
     "২৪/৭ জরুরি কার্ডিয়াক অ্যাম্বুলেন্স, অক্সিজেন সাপোর্ট ও অন-কল হৃদরোগ বিশেষজ্ঞ ডিরেক্টরি।",
   ],
   introParagraphsBn: [
@@ -152,15 +152,15 @@ export const BEST_CARDIOLOGISTS_IN_FENI: BlogPost = {
   },
   cardiacCarePricingBn: {
     titleBn: "ফেনীতে কার্ডিয়াক ডায়াগনস্টিক টেস্ট খরচের বাস্তব হিসাব (২০২৬)",
-    subtitleBn: "ফেনীর শীর্ষ ডায়াগনস্টিক সেন্টারে কার্ডিয়াক পরীক্ষাগুলোর সাধারণ বাজারদর এবং হেলথ ক্লাব মেম্বারদের বিশেষ সাশ্রয়ী মূল্য।",
+    subtitleBn: "ফেনীর শীর্ষ ডায়াগনস্টিক সেন্টারে কার্ডিয়াক পরীক্ষাগুলোর সাধারণ বাজারদর এবং হেলথ ক্লাব মেম্বারদের জন্য ১০-৩০% ডিসকাউন্ট সুবিধা।",
     packages: [
       {
         testOrPackageNameBn: "১২-লিড ডিজিটাল ইসিজি (12-Lead Digital ECG)",
         testOrPackageNameEn: "12-Lead Digital ECG with Cardiologist Note",
         categoryBn: "হার্ট রিদম ও প্রাথমিক ইসকেমিয়া শনাক্তকরণ",
         regularPriceRangeBn: "৳৩০০ - ৳৫০০",
-        memberPriceRangeBn: "৳২২০ - ৳৩৫০",
-        discountPercentageBn: "বিশেষ মেম্বার ছাড়",
+        memberPriceRangeBn: "১০-৩০% ডিসকাউন্ট",
+        discountPercentageBn: "১০-৩০% ডিসকাউন্ট",
         reportTimeBn: "১৫ - ৩০ মিনিট",
       },
       {
@@ -168,8 +168,8 @@ export const BEST_CARDIOLOGISTS_IN_FENI: BlogPost = {
         testOrPackageNameEn: "2D Color Doppler Echocardiogram",
         categoryBn: "হার্টের পাম্পিং (EF%), ভালভ রোগ ও পেশীর সক্ষমতা পরীক্ষা",
         regularPriceRangeBn: "৳১,৮০০ - ৳২,৫০০",
-        memberPriceRangeBn: "৳১,৩০০ - ৳১,৮০০",
-        discountPercentageBn: "বিশেষ মেম্বার ছাড়",
+        memberPriceRangeBn: "১০-৩০% ডিসকাউন্ট",
+        discountPercentageBn: "১০-৩০% ডিসকাউন্ট",
         reportTimeBn: "১ - ২ ঘণ্টা",
       },
       {
@@ -177,8 +177,8 @@ export const BEST_CARDIOLOGISTS_IN_FENI: BlogPost = {
         testOrPackageNameEn: "Exercise Tolerance Test (ETT)",
         categoryBn: "পরিশ্রমকালীন হার্টের রক্ত সরবরাহ ও করোনারি আর্টারি ব্লক স্ক্রিনিং",
         regularPriceRangeBn: "৳২,৫০০ - ৳৩,৫০০",
-        memberPriceRangeBn: "৳১,৯০০ - ৳২,৬০০",
-        discountPercentageBn: "বিশেষ মেম্বার ছাড়",
+        memberPriceRangeBn: "১০-৩০% ডিসকাউন্ট",
+        discountPercentageBn: "১০-৩০% ডিসকাউন্ট",
         reportTimeBn: "একই দিন",
       },
       {
@@ -186,8 +186,8 @@ export const BEST_CARDIOLOGISTS_IN_FENI: BlogPost = {
         testOrPackageNameEn: "24-Hour Ambulatory Holter ECG Monitoring",
         categoryBn: "অনিয়মিত হৃদস্পন্দন (Arrhythmia) ও প্যালপিটেশন পরীক্ষা",
         regularPriceRangeBn: "৳৩,০০০ - ৳৪,২০০",
-        memberPriceRangeBn: "৳২,২০০ - ৳৩,১০০",
-        discountPercentageBn: "বিশেষ মেম্বার ছাড়",
+        memberPriceRangeBn: "১০-৩০% ডিসকাউন্ট",
+        discountPercentageBn: "১০-৩০% ডিসকাউন্ট",
         reportTimeBn: "পরের দিন",
       },
       {
@@ -195,8 +195,8 @@ export const BEST_CARDIOLOGISTS_IN_FENI: BlogPost = {
         testOrPackageNameEn: "Troponin-I Serum Quantitative Test",
         categoryBn: "হার্ট অ্যাটাক দ্রুত নিশ্চিতকরণের বায়োমার্কার টেস্ট",
         regularPriceRangeBn: "৳১,২০০ - ৳১,৬০০",
-        memberPriceRangeBn: "৳৮৫০ - ৳১,১০০",
-        discountPercentageBn: "বিশেষ মেম্বার ছাড়",
+        memberPriceRangeBn: "১০-৩০% ডিসকাউন্ট",
+        discountPercentageBn: "১০-৩০% ডিসকাউন্ট",
         reportTimeBn: "১ ঘণ্টা (জরুরি)",
       },
       {
@@ -204,8 +204,8 @@ export const BEST_CARDIOLOGISTS_IN_FENI: BlogPost = {
         testOrPackageNameEn: "Full Lipid Profile (Cholesterol, HDL, LDL, TG)",
         categoryBn: "রক্তের ক্ষতিকর কোলেস্টেরল ও রক্তনালী ব্লক ঝুঁকি নির্ণয়",
         regularPriceRangeBn: "৳৯০০ - ৳১,২০০",
-        memberPriceRangeBn: "৳৬৫০ - ৳৮৫০",
-        discountPercentageBn: "বিশেষ মেম্বার ছাড়",
+        memberPriceRangeBn: "১০-৩০% ডিসকাউন্ট",
+        discountPercentageBn: "১০-৩০% ডিসকাউন্ট",
         reportTimeBn: "২ - ৩ ঘণ্টা",
       },
       {
@@ -213,8 +213,8 @@ export const BEST_CARDIOLOGISTS_IN_FENI: BlogPost = {
         testOrPackageNameEn: "Executive Comprehensive Cardiac Health Package",
         categoryBn: "ইসিজি + ইকো + লিপিড প্রোফাইল + সিরাম ক্রিয়েটিনিন + ডক্টর ভিজিট",
         regularPriceRangeBn: "৳৪,৫০০ - ৳৬,০০০",
-        memberPriceRangeBn: "৳৩,২০০ - ৳৪,২০০",
-        discountPercentageBn: "বিশেষ মেম্বার ছাড়",
+        memberPriceRangeBn: "১০-৩০% ডিসকাউন্ট",
+        discountPercentageBn: "১০-৩০% ডিসকাউন্ট",
         reportTimeBn: "একই দিনে সম্পূর্ণ",
       },
     ],
@@ -307,9 +307,9 @@ export const BEST_CARDIOLOGISTS_IN_FENI: BlogPost = {
       questionBn: "হেলথ ক্লাব সদস্য হলে ফেনীতে হৃদরোগের পরীক্ষায় কী কী সুবিধা পাওয়া যায়?",
       questionEn: "What cardiac discounts do Health Club members receive in Feni?",
       answerBn:
-        "হেলথ ক্লাবের ডিজিটাল মেম্বার কার্ড দেখালে ফেনীর পার্টনার ডায়াগনস্টিক ও হাসপাতালে ইসিজি, ইকোকার্ডিওগ্রাম, ইটিটি ও রক্ত পরীক্ষায় বিশেষ মেম্বার ছাড় পাওয়া যায়।",
+        "হেলথ ক্লাবের ডিজিটাল মেম্বার কার্ড দেখালে ফেনীর পার্টনার ডায়াগনস্টিক ও হাসপাতালে ইসিজি, ইকোকার্ডিওগ্রাম, ইটিটি ও রক্ত পরীক্ষায় ১০-৩০% ডিসকাউন্ট পাওয়া যায়।",
       answerEn:
-        "Health Club members receive exclusive member discounts on ECG, Echo, ETT, and lipid profile blood tests at verified partner centers.",
+        "Health Club members receive a 10-30% discount on ECG, Echo, ETT, and lipid profile tests at verified partner centers.",
     },
     {
       questionBn: "ফেনীতে হার্টের বিশেষজ্ঞ ডাক্তারের সিরিয়াল কীভাবে আগেভাগে পাওয়া যায়?",

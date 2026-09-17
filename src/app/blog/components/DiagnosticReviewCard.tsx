@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { DiagnosticCenterReviewItem } from "@/types/blog";
-import { toBanglaNums } from "@/lib/utils";
+import { BlogReviewCardWrapper } from "./BlogReviewCardWrapper";
 
 interface DiagnosticReviewCardProps {
   center: DiagnosticCenterReviewItem;
@@ -36,45 +36,36 @@ export function DiagnosticReviewCard({
   const sectionId = `diagnostic-${center.rank}`;
 
   return (
-    <article
-      id={sectionId}
-      className={`scroll-mt-24 rounded-2xl border transition-all duration-300 p-5 sm:p-7 space-y-6 ${
-        center.partnerStatus
-          ? "border-primary/40 bg-card shadow-md shadow-primary/5 ring-1 ring-primary/20"
-          : "border-border/80 bg-card shadow-xs"
-      }`}
+    <BlogReviewCardWrapper
+      sectionId={sectionId}
+      rank={center.rank}
+      partnerStatus={center.partnerStatus}
+      locale={locale}
     >
-      {/* Header: Rank + Names + Badges */}
+      {/* Header: Names + Badges */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-        <div className="flex items-start gap-3.5">
-          {/* Rank Number Badge */}
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground font-heading text-lg font-extrabold shadow-sm">
-            {isEn ? `#${center.rank}` : `নং ${toBanglaNums(center.rank)}`}
+        <div className="space-y-1.5 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge variant="outline" className="text-xs font-medium border-border/80">
+              {typeName}
+            </Badge>
+
+            {center.partnerStatus && (
+              <Badge className="bg-emerald-600 dark:bg-emerald-700 text-white font-semibold flex items-center gap-1 shadow-xs">
+                <ShieldCheck className="h-3.5 w-3.5" />
+                <span>{isEn ? "Health Club Partner" : "অফিসিয়াল পার্টনার ল্যাব"}</span>
+              </Badge>
+            )}
           </div>
 
-          <div className="space-y-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge variant="outline" className="text-xs font-medium border-border/80">
-                {typeName}
-              </Badge>
+          <h3 className="font-heading text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+            {name}
+          </h3>
 
-              {center.partnerStatus && (
-                <Badge className="bg-emerald-600 dark:bg-emerald-700 text-white font-semibold flex items-center gap-1 shadow-xs">
-                  <ShieldCheck className="h-3.5 w-3.5" />
-                  <span>{isEn ? "Health Club Partner" : "অফিসিয়াল পার্টনার ল্যাব"}</span>
-                </Badge>
-              )}
-            </div>
-
-            <h3 className="font-heading text-xl sm:text-2xl font-bold tracking-tight text-foreground">
-              {name}
-            </h3>
-
-            {/* Address */}
-            <div className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground pt-0.5">
-              <MapPin className="h-4 w-4 text-primary shrink-0" />
-              <span>{address}</span>
-            </div>
+          {/* Address */}
+          <div className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground pt-0.5">
+            <MapPin className="h-4 w-4 text-primary shrink-0" />
+            <span>{address}</span>
           </div>
         </div>
 
@@ -240,6 +231,6 @@ export function DiagnosticReviewCard({
           </a>
         )}
       </div>
-    </article>
+    </BlogReviewCardWrapper>
   );
 }

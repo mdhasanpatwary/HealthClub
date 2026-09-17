@@ -83,7 +83,7 @@ export function DiagnosticComparisonTable({
           <tbody className="divide-y divide-border/60">
             {items.map((item) => {
               const name = isEn ? item.nameEn : item.nameBn;
-              const isPartner = item.discountBn.includes("হেলথ ক্লাব");
+              const isPartner = item.partnerStatus ?? (item.discountBn.includes("হেলথ ক্লাব") || item.discountBn.includes("১০-৩০%"));
 
               return (
                 <tr

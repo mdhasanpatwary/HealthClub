@@ -126,7 +126,7 @@ const getCachedBlogPosts = unstable_cache(
       return BLOG_POSTS;
     }
   },
-  ["all-blog-posts-admin-v3"],
+  ["all-blog-posts-admin-v10"],
   { tags: [BLOG_POSTS_TAG] }
 );
 
