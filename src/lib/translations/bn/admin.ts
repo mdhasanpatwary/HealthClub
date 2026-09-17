@@ -235,6 +235,8 @@ export const adminBn = {
   "admin.nav.emergencyDesc": "রক্তদাতা, অ্যাম্বুলেন্স ও অক্সিজেন",
   "admin.nav.healthTips": "স্বাস্থ্য টিপস",
   "admin.nav.healthTipsDesc": "স্বাস্থ্য বিষয়ক ব্লগ ও আর্টিকেল",
+  "admin.nav.blogs": "ব্লগ পোস্ট",
+  "admin.nav.blogsDesc": "হাসপাতাল রিভিউ ও ব্লগ আর্টিকেল",
   "admin.nav.system": "সিস্টেম ও সাপোর্ট",
   "admin.nav.broadcast": "ব্রডকাস্ট ক্যাম্পেইন",
   "admin.nav.broadcastDesc": "এসএমএস ও ইমেইল নোটিশ প্রেরণ",

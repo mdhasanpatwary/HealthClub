@@ -22,6 +22,7 @@ import {
   Pill,
   Radio,
   ShieldCheck,
+  Newspaper,
 } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { formatNum } from "@/lib/i18n";
@@ -123,7 +124,9 @@ export default function AdminHeaderNav() {
 
   const isServicesActive =
     pathname.startsWith("/admin/emergency") ||
-    pathname.startsWith("/admin/health-tips");
+    pathname.startsWith("/admin/health-tips") ||
+    pathname.startsWith("/admin/blogs") ||
+    pathname.startsWith("/admin/blog");
 
   const isSystemActive =
     pathname.startsWith("/admin/staff") ||
@@ -327,6 +330,15 @@ export default function AdminHeaderNav() {
             title={t("admin.nav.healthTips") || "স্বাস্থ্য টিপস"}
             description={t("admin.nav.healthTipsDesc") || "স্বাস্থ্য বিষয়ক ব্লগ ও আর্টিকেল"}
             active={pathname.startsWith("/admin/health-tips")}
+          />
+          <AdminNavDropdownItem
+            href="/admin/blogs"
+            icon={Newspaper}
+            iconBg="bg-indigo-500/15"
+            iconColor="text-indigo-600 dark:text-indigo-400"
+            title={t("admin.nav.blogs") || (isBn ? "ব্লগ পোস্ট" : "Blog Posts")}
+            description={t("admin.nav.blogsDesc") || (isBn ? "হাসপাতাল রিভিউ ও ব্লগ আর্টিকেল" : "Hospital reviews & blog articles")}
+            active={pathname.startsWith("/admin/blogs") || pathname.startsWith("/admin/blog")}
           />
         </DropdownMenuContent>
       </DropdownMenu>

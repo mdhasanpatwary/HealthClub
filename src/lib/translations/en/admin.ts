@@ -235,6 +235,8 @@ export const adminEn = {
   "admin.nav.emergencyDesc": "Blood donors, ambulances & hotlines",
   "admin.nav.healthTips": "Health Tips & Blog",
   "admin.nav.healthTipsDesc": "Wellness articles & health advice",
+  "admin.nav.blogs": "Blog Posts",
+  "admin.nav.blogsDesc": "Hospital reviews & blog articles",
   "admin.nav.system": "System & Support",
   "admin.nav.broadcast": "Broadcast Campaigns",
   "admin.nav.broadcastDesc": "Mass SMS, email & in-app alerts",

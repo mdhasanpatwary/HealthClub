@@ -313,6 +313,8 @@ export const commonEn = {
   "admin.nav.emergencyDesc": "Ambulance & blood donors",
   "admin.nav.healthTips": "Health Tips",
   "admin.nav.healthTipsDesc": "Articles & guides",
+  "admin.nav.blogs": "Blog Posts",
+  "admin.nav.blogsDesc": "Hospital reviews & blog articles",
   "admin.nav.system": "System & Engagement",
   "admin.nav.broadcast": "Push Broadcast",
   "admin.nav.broadcastDesc": "Web push notifications",

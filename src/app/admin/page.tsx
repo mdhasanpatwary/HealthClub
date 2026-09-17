@@ -22,6 +22,7 @@ import {
   Radio,
   ShieldCheck,
   Star,
+  Newspaper,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -230,6 +231,17 @@ export default function AdminDashboardPage() {
       count: stats.healthTipsCount ?? 0,
       countLabel: isBn ? "টি আর্টিকেল" : "articles",
       color: "emerald",
+    },
+    {
+      title: isBn ? "ব্লগ পোস্ট ও রিভিউ" : "Blog Posts & Reviews",
+      description: isBn
+        ? "হাসপাতাল রিভিউ প্রোফাইল ও স্বাস্থ্য বিষয়ক ব্লগ আর্টিকেল ম্যানেজমেন্ট"
+        : "Hospital reviews, profiles and published blog articles",
+      href: "/admin/blogs",
+      icon: Newspaper,
+      count: 0,
+      countLabel: isBn ? "ব্লগ পরিচালনা" : "blog posts",
+      color: "indigo",
     },
     {
       title: isBn ? "PWA অ্যাপ অ্যানালিটিক্স" : "PWA App Analytics",

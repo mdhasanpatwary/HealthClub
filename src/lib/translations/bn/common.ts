@@ -313,6 +313,8 @@ export const commonBn = {
   "admin.nav.emergencyDesc": "অ্যাম্বুলেন্স ও ব্লাড ডোনার",
   "admin.nav.healthTips": "স্বাস্থ্য টিপস",
   "admin.nav.healthTipsDesc": "আর্টিকেল ও স্বাস্থ্য পরামর্শ",
+  "admin.nav.blogs": "ব্লগ পোস্ট",
+  "admin.nav.blogsDesc": "হাসপাতাল রিভিউ ও ব্লগ আর্টিকেল",
   "admin.nav.system": "সিস্টেম ও এনগেজমেন্ট",
   "admin.nav.broadcast": "পুশ ব্রডকাস্ট",
   "admin.nav.broadcastDesc": "সকল ইউজারকে নোটিফিকেশন পাঠান",

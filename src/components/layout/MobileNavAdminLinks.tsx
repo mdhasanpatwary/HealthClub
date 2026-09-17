@@ -22,6 +22,7 @@ import {
   Settings,
   Globe,
   ExternalLink,
+  Newspaper,
 } from "lucide-react";
 import { formatNum } from "@/lib/i18n";
 
@@ -260,6 +261,21 @@ export function MobileNavAdminLinks({
             <div className="flex items-center gap-2.5">
               <BookOpen className="h-4 w-4 text-primary shrink-0" />
               <span>{t("admin.nav.healthTips") || "স্বাস্থ্য টিপস"}</span>
+            </div>
+          </Link>
+
+          <Link
+            href="/admin/blogs"
+            onClick={onClose}
+            className={`flex items-center justify-between p-2 rounded-xl text-xs font-semibold transition-colors ${
+              isActive("/admin/blogs") || isActive("/admin/blog")
+                ? "bg-primary/10 text-primary font-bold"
+                : "text-foreground hover:bg-muted"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <Newspaper className="h-4 w-4 text-indigo-500 shrink-0" />
+              <span>{t("admin.nav.blogs") || (isBn ? "ব্লগ পোস্ট" : "Blog Posts")}</span>
             </div>
           </Link>
         </div>
