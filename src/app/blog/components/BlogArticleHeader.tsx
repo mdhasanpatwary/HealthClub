@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, Calendar, Clock, Sparkles, CheckCircle2 } from "lucide-react";
 import { BlogShareBar } from "./BlogShareBar";
 import { formatArticleDate, getArticleIsoDate } from "@/lib/dateUtils";
+import { getArticleEnglishHighlights } from "../utils/blogTranslations";
 
 interface BlogArticleHeaderProps {
   post: BlogPost;
@@ -18,6 +19,7 @@ export function BlogArticleHeader({
 }: BlogArticleHeaderProps) {
   const isEn = locale === "en";
   const title = isEn ? post.titleEn : post.titleBn;
+  const highlights = getArticleEnglishHighlights(post.slug, post.keyHighlightsBn, isEn);
 
   return (
     <header className="space-y-6 w-full">
@@ -83,14 +85,14 @@ export function BlogArticleHeader({
 
 
       {/* Key Highlights Box */}
-      {post.keyHighlightsBn && post.keyHighlightsBn.length > 0 && (
+      {highlights && highlights.length > 0 && (
         <div id="key-highlights" className="rounded-2xl border border-primary/20 bg-primary/5 p-5 sm:p-6 space-y-3">
           <h2 className="font-heading text-sm font-bold uppercase tracking-wider text-primary flex items-center gap-2">
             <Sparkles className="h-4 w-4" />
             <span>{isEn ? "Article Highlights" : "এই লেখার মূল বিষয়সমূহ"}</span>
           </h2>
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs sm:text-sm text-foreground/90">
-            {post.keyHighlightsBn.map((hl, idx) => (
+            {highlights.map((hl, idx) => (
               <li key={idx} className="flex items-start gap-2">
                 <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0 mt-2" />
                 <span className="leading-snug">{hl}</span>

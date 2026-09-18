@@ -27,8 +27,11 @@ export interface HospitalReviewItem {
   descriptionBn: string;
   descriptionEn?: string;
   keyFeaturesBn: string[];
+  keyFeaturesEn?: string[];
   specialtiesBn: string[];
+  specialtiesEn?: string[];
   bedCountBn?: string;
+  bedCountEn?: string;
   icuAvailable: boolean;
   emergency24x7: boolean;
   partnerStatus: boolean;
@@ -43,11 +46,17 @@ export interface HospitalComparisonItem {
   nameBn: string;
   nameEn: string;
   typeBn: string;
+  typeEn?: string;
   bedCountBn: string;
+  bedCountEn?: string;
   icu: string;
+  icuEn?: string;
   emergency: string;
+  emergencyEn?: string;
   discountBn: string;
+  discountEn?: string;
   locationBn: string;
+  locationEn?: string;
   partnerStatus?: boolean;
 }
 
@@ -78,6 +87,7 @@ export interface DoctorSpecialtyGroup {
   departmentNameEn: string;
   iconName?: string;
   descriptionBn: string;
+  descriptionEn?: string;
   doctors: DoctorSpecialistItem[];
 }
 
@@ -85,8 +95,11 @@ export interface DoctorChamberHub {
   areaNameBn: string;
   areaNameEn: string;
   descriptionBn: string;
+  descriptionEn?: string;
   popularHospitalsChambersBn: string[];
+  popularHospitalsChambersEn?: string[];
   tipsBn: string;
+  tipsEn?: string;
 }
 
 export interface BlogFAQItem {
@@ -109,13 +122,18 @@ export interface DiagnosticCenterReviewItem {
   descriptionBn: string;
   descriptionEn?: string;
   keyFeaturesBn: string[];
+  keyFeaturesEn?: string[];
   equipmentHighlightsBn: string[];
+  equipmentHighlightsEn?: string[];
   testCategoriesBn: string[];
+  testCategoriesEn?: string[];
   reportTimingBn?: string;
+  reportTimingEn?: string;
   homeSampleCollection: boolean;
   onlineReport: boolean;
   partnerStatus: boolean;
   partnerDiscountBn?: string;
+  partnerDiscountEn?: string;
   partnerProfileSlug?: string;
   imageUrl?: string;
   mapQuery?: string;
@@ -131,7 +149,9 @@ export interface DiagnosticComparisonItem {
   digitalXray: boolean | string;
   automatedLab: boolean | string;
   discountBn: string;
+  discountEn?: string;
   locationBn: string;
+  locationEn?: string;
   partnerStatus?: boolean;
 }
 
@@ -177,12 +197,16 @@ export interface DentalComparisonItem {
   nameBn: string;
   nameEn: string;
   leadDentistBn: string;
+  leadDentistEn?: string;
   degreesBn: string;
+  degreesEn?: string;
   digitalRvg: boolean | string;
   laserImplants: boolean | string;
   bracesOrthodontics: boolean | string;
   discountBn: string;
+  discountEn?: string;
   locationBn: string;
+  locationEn?: string;
   partnerStatus?: boolean;
 }
 
@@ -214,10 +238,14 @@ export interface PhysiotherapyCenterReviewItem {
   descriptionBn: string;
   descriptionEn?: string;
   keyFeaturesBn: string[];
+  keyFeaturesEn?: string[];
   equipmentHighlightsBn: string[];
+  equipmentHighlightsEn?: string[];
   conditionsTreatedBn: string[];
+  conditionsTreatedEn?: string[];
   partnerStatus: boolean;
   partnerDiscountBn?: string;
+  partnerDiscountEn?: string;
   partnerProfileSlug?: string;
   imageUrl?: string;
   mapQuery?: string;
@@ -228,12 +256,16 @@ export interface PhysiotherapyComparisonItem {
   nameBn: string;
   nameEn: string;
   leadTherapistBn: string;
+  leadTherapistEn?: string;
   degreesBn: string;
+  degreesEn?: string;
   tractionSwd: boolean | string;
   strokeRehab: boolean | string;
   homeService: boolean | string;
   discountBn: string;
+  discountEn?: string;
   locationBn: string;
+  locationEn?: string;
   partnerStatus?: boolean;
 }
 
@@ -286,7 +318,9 @@ export interface BlogPost {
   tags: string[];
   metaKeywords: string[];
   keyHighlightsBn?: string[];
+  keyHighlightsEn?: string[];
   introParagraphsBn: string[];
+  introParagraphsEn?: string[];
   hospitals?: HospitalReviewItem[];
   comparisonTable?: HospitalComparisonItem[];
   doctorGroups?: DoctorSpecialtyGroup[];
@@ -326,12 +360,24 @@ export interface BlogPost {
     titleBn: string;
     stepsBn: { step: string; title: string; desc: string }[];
   };
+  bookingGuideEn?: {
+    titleEn: string;
+    stepsEn: { step: string; title: string; desc: string }[];
+  };
   selectionGuideBn?: {
     titleBn: string;
     pointsBn: { title: string; desc: string }[];
   };
+  selectionGuideEn?: {
+    titleEn: string;
+    pointsEn: { title: string; desc: string }[];
+  };
   emergencyDirectoryBn?: {
     titleBn: string;
+    services: { name: string; phone: string; note: string }[];
+  };
+  emergencyDirectoryEn?: {
+    titleEn: string;
     services: { name: string; phone: string; note: string }[];
   };
   faqs: BlogFAQItem[];

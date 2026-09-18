@@ -14,6 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { PhysiotherapyCenterReviewItem } from "@/types/blog";
 import { BlogReviewCardWrapper } from "./BlogReviewCardWrapper";
+import { translateDiscount, translateMedicalCategory } from "../utils/blogTranslations";
 
 interface PhysiotherapyReviewCardProps {
   center: PhysiotherapyCenterReviewItem;
@@ -33,7 +34,8 @@ export function PhysiotherapyReviewCard({
     ? center.visitingHoursEn || center.visitingHoursBn
     : center.visitingHoursBn;
   const description = isEn
-    ? center.descriptionEn || center.descriptionBn
+    ? center.descriptionEn ||
+      `${center.nameEn} is a leading physiotherapy and rehabilitation clinic at ${center.addressEn}, Feni, providing specialized physical therapy, stroke rehab, and exclusive Health Club member discounts.`
     : center.descriptionBn;
 
   const sectionId = `physio-${center.rank}`;
@@ -106,7 +108,7 @@ export function PhysiotherapyReviewCard({
           <div className="flex flex-wrap gap-1.5 sm:justify-end">
             {center.specialtiesBn.slice(0, 3).map((sp, idx) => (
               <Badge key={idx} variant="secondary" className="text-[11px]">
-                {sp}
+                {translateMedicalCategory(sp, isEn)}
               </Badge>
             ))}
           </div>
@@ -182,7 +184,7 @@ export function PhysiotherapyReviewCard({
                 {isEn ? "Health Club Member Benefit" : "হেলথ ক্লাব মেম্বারশিপ বিশেষ সুবিধা"}
               </span>
               <span className="text-xs sm:text-sm font-semibold text-foreground">
-                {center.partnerDiscountBn}
+                {translateDiscount(center.partnerDiscountBn, isEn)}
               </span>
             </div>
           </div>

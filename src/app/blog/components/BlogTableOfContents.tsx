@@ -2,8 +2,15 @@
 
 import { useState } from "react";
 import { ListOrdered, ChevronDown } from "lucide-react";
-import { HospitalReviewItem, DoctorSpecialtyGroup, DiagnosticCenterReviewItem, DentalClinicReviewItem, PhysiotherapyCenterReviewItem } from "@/types/blog";
+import {
+  HospitalReviewItem,
+  DoctorSpecialtyGroup,
+  DiagnosticCenterReviewItem,
+  DentalClinicReviewItem,
+  PhysiotherapyCenterReviewItem,
+} from "@/types/blog";
 import { toBanglaNums } from "@/lib/utils";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 
 interface BlogTableOfContentsProps {
   hospitals?: HospitalReviewItem[];
@@ -26,13 +33,17 @@ export function BlogTableOfContents({
   hasCardiacPricing = false,
   locale = "bn",
 }: BlogTableOfContentsProps) {
-  const isEn = locale === "en";
+  const { locale: contextLocale } = useLanguage();
+  const activeLocale = contextLocale || locale;
+  const isEn = activeLocale === "en";
   const [isOpen, setIsOpen] = useState(false);
+
   const isDoctorArticle = doctorGroups && doctorGroups.length > 0;
   const isDiagnosticArticle = diagnosticCenters && diagnosticCenters.length > 0;
   const isDentalArticle = dentalClinics && dentalClinics.length > 0;
   const isPhysiotherapyArticle = physiotherapyCenters && physiotherapyCenters.length > 0;
 
+  const secNum = (n: number) => (isEn ? `${n}. ` : `${toBanglaNums(n)}. `);
 
   return (
     <nav
@@ -68,11 +79,8 @@ export function BlogTableOfContents({
         {isDoctorArticle ? (
           <ol className="space-y-1.5 list-none pl-0">
             <li>
-              <a
-                href="#overview"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ১. {isEn ? "Healthcare Landscape of Feni" : "ফেনীর স্বাস্থ্যসেবা ও বিশেষজ্ঞ ডাক্তার"}
+              <a href="#overview" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(1)}{isEn ? "Healthcare Landscape of Feni" : "ফেনীর স্বাস্থ্যসেবা ও বিশেষজ্ঞ ডাক্তার"}
               </a>
             </li>
             <li>
@@ -80,7 +88,7 @@ export function BlogTableOfContents({
                 href="#specialist-doctors"
                 className="hover:text-primary transition-colors font-semibold text-foreground block py-0.5"
               >
-                ২. {isEn ? "Specialist Doctors by Department" : "বিভাগভিত্তিক বিশেষজ্ঞ ডাক্তার তালিকা"}
+                {secNum(2)}{isEn ? "Specialist Doctors by Department" : "বিভাগভিত্তিক বিশেষজ্ঞ ডাক্তার তালিকা"}
               </a>
               <ol className="pl-4 pt-1 space-y-1 text-xs text-muted-foreground/90 border-l border-border/80 ml-2">
                 {doctorGroups.map((group, idx) => (
@@ -98,19 +106,13 @@ export function BlogTableOfContents({
               </ol>
             </li>
             <li>
-              <a
-                href="#chamber-hubs"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ৩. {isEn ? "Major Chamber Locations" : "ফেনী শহরের প্রধান চেম্বার হাবসমূহ"}
+              <a href="#chamber-hubs" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(3)}{isEn ? "Major Chamber Locations" : "ফেনী শহরের প্রধান চেম্বার হাবসমূহ"}
               </a>
             </li>
             <li>
-              <a
-                href="#serial-guide"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ৪. {isEn ? "Serial Booking Guidelines" : "ডাক্তারের সিরিয়াল নেওয়ার নিয়মাবলী"}
+              <a href="#serial-guide" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(4)}{isEn ? "Serial Booking Guidelines" : "ডাক্তারের সিরিয়াল নেওয়ার নিয়মাবলী"}
               </a>
             </li>
             {hasMaternityPricing && (
@@ -119,7 +121,7 @@ export function BlogTableOfContents({
                   href="#maternity-price-guide"
                   className="hover:text-primary transition-colors block py-0.5"
                 >
-                  ৫. {isEn ? "Maternity & Delivery Cost Guide" : "প্রসূতি ও ডেলিভারি খরচের হিসাব"}
+                  {secNum(5)}{isEn ? "Maternity & Delivery Cost Guide" : "প্রসূতি ও ডেলিভারি খরচের হিসাব"}
                 </a>
               </li>
             )}
@@ -129,37 +131,27 @@ export function BlogTableOfContents({
                   href="#cardiac-price-guide"
                   className="hover:text-primary transition-colors block py-0.5"
                 >
-                  ৫. {isEn ? "Cardiac Diagnostic Cost Guide" : "হৃদরোগ পরীক্ষা খরচের হিসাব"}
+                  {secNum(5)}{isEn ? "Cardiac Diagnostic Cost Guide" : "হৃদরোগ পরীক্ষা খরচের হিসাব"}
                 </a>
               </li>
             )}
             <li>
-              <a
-                href="#faq-section"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                {hasMaternityPricing || hasCardiacPricing
-                  ? (isEn ? "৬. Frequently Asked Questions" : "৬. সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)")
-                  : (isEn ? "৫. Frequently Asked Questions" : "৫. সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)")}
+              <a href="#faq-section" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(hasMaternityPricing || hasCardiacPricing ? 6 : 5)}
+                {isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
               </a>
             </li>
           </ol>
         ) : isDiagnosticArticle ? (
           <ol className="space-y-1.5 list-none pl-0">
             <li>
-              <a
-                href="#overview"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ১. {isEn ? "Diagnostic Healthcare in Feni" : "ফেনীর ডায়াগনস্টিক ও ল্যাব পরিকাঠামো"}
+              <a href="#overview" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(1)}{isEn ? "Diagnostic Healthcare in Feni" : "ফেনীর ডায়াগনস্টিক ও ল্যাব পরিকাঠামো"}
               </a>
             </li>
             <li>
-              <a
-                href="#comparison-matrix"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ২. {isEn ? "Equipment Comparison Matrix" : "একনজরে সেরা ১০ ডায়াগনস্টিকের তুলনা"}
+              <a href="#comparison-matrix" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(2)}{isEn ? "Equipment Comparison Matrix" : "একনজরে সেরা ১০ ডায়াগনস্টিকের তুলনা"}
               </a>
             </li>
             <li>
@@ -167,7 +159,7 @@ export function BlogTableOfContents({
                 href="#diagnostic-reviews"
                 className="hover:text-primary transition-colors font-semibold text-foreground block py-0.5"
               >
-                ৩. {isEn ? "Detailed Diagnostic Center Reviews" : "সেরা ১০ ডায়াগনস্টিক সেন্টারের পর্যালোচনা"}
+                {secNum(3)}{isEn ? "Detailed Diagnostic Center Reviews" : "সেরা ১০ ডায়াগনস্টিক সেন্টারের পর্যালোচনা"}
               </a>
               {diagnosticCenters.length > 0 && (
                 <ol className="pl-4 pt-1 space-y-1 text-xs text-muted-foreground/90 border-l border-border/80 ml-2">
@@ -185,46 +177,31 @@ export function BlogTableOfContents({
               )}
             </li>
             <li>
-              <a
-                href="#price-guide"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ৪. {isEn ? "Test Pricing & Member Savings" : "সাধারণ টেস্টের মূল্যতালিকা ও মেম্বার ছাড়"}
+              <a href="#price-guide" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(4)}{isEn ? "Test Pricing & Member Savings" : "সাধারণ টেস্টের মূল্যতালিকা ও মেম্বার ছাড়"}
               </a>
             </li>
             <li>
-              <a
-                href="#selection-guide"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ৫. {isEn ? "Guidelines for Choosing a Lab" : "সঠিক ডায়াগনস্টিক ল্যাব নির্বাচনের উপায়"}
+              <a href="#selection-guide" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(5)}{isEn ? "Guidelines for Choosing a Lab" : "সঠিক ডায়াগনস্টিক ল্যাব নির্বাচনের উপায়"}
               </a>
             </li>
             <li>
-              <a
-                href="#faq-section"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ৬. {isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
+              <a href="#faq-section" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(6)}{isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
               </a>
             </li>
           </ol>
         ) : isDentalArticle ? (
           <ol className="space-y-1.5 list-none pl-0">
             <li>
-              <a
-                href="#overview"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ১. {isEn ? "Dental Health in Feni" : "ফেনীর দন্ত চিকিৎসা ও প্রেক্ষাপট"}
+              <a href="#overview" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(1)}{isEn ? "Dental Health in Feni" : "ফেনীর দন্ত চিকিৎসা ও প্রেক্ষাপট"}
               </a>
             </li>
             <li>
-              <a
-                href="#comparison-matrix"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ২. {isEn ? "Dental Clinics Comparison Matrix" : "একনজরে সেরা ১০ ডেন্টাল ক্লিনিকের তুলনা"}
+              <a href="#comparison-matrix" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(2)}{isEn ? "Dental Clinics Comparison Matrix" : "একনজরে সেরা ১০ ডেন্টাল ক্লিনিকের তুলনা"}
               </a>
             </li>
             <li>
@@ -232,7 +209,7 @@ export function BlogTableOfContents({
                 href="#dental-reviews"
                 className="hover:text-primary transition-colors font-semibold text-foreground block py-0.5"
               >
-                ৩. {isEn ? "Detailed Dental Clinic Reviews" : "সেরা ১০ ডেন্টাল ক্লিনিকের পর্যালোচনা"}
+                {secNum(3)}{isEn ? "Detailed Dental Clinic Reviews" : "সেরা ১০ ডেন্টাল ক্লিনিকের পর্যালোচনা"}
               </a>
               {dentalClinics.length > 0 && (
                 <ol className="pl-4 pt-1 space-y-1 text-xs text-muted-foreground/90 border-l border-border/80 ml-2">
@@ -250,46 +227,31 @@ export function BlogTableOfContents({
               )}
             </li>
             <li>
-              <a
-                href="#price-guide"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ৪. {isEn ? "Dental Treatment Cost & Savings" : "দন্ত চিকিৎসার খরচ ও মেম্বার সাশ্রয়"}
+              <a href="#price-guide" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(4)}{isEn ? "Dental Treatment Cost & Savings" : "দন্ত চিকিৎসার খরচ ও মেম্বার সাশ্রয়"}
               </a>
             </li>
             <li>
-              <a
-                href="#selection-guide"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ৫. {isEn ? "Guidelines for Choosing a Dentist" : "সঠিক ডেন্টাল ক্লিনিক নির্বাচনের উপায়"}
+              <a href="#selection-guide" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(5)}{isEn ? "Guidelines for Choosing a Dentist" : "সঠিক ডেন্টাল ক্লিনিক নির্বাচনের উপায়"}
               </a>
             </li>
             <li>
-              <a
-                href="#faq-section"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ৬. {isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
+              <a href="#faq-section" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(6)}{isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
               </a>
             </li>
           </ol>
         ) : isPhysiotherapyArticle ? (
           <ol className="space-y-1.5 list-none pl-0">
             <li>
-              <a
-                href="#overview"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ১. {isEn ? "Physiotherapy in Feni" : "ফেনীর ফিজিওথেরাপি ও পুনর্বাসন চিকিৎসা"}
+              <a href="#overview" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(1)}{isEn ? "Physiotherapy in Feni" : "ফেনীর ফিজিওথেরাপি ও পুনর্বাসন চিকিৎসা"}
               </a>
             </li>
             <li>
-              <a
-                href="#comparison-matrix"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ২. {isEn ? "Physiotherapy Comparison Matrix" : "একনজরে সেরা ১০ ফিজিওথেরাপি সেন্টারের তুলনা"}
+              <a href="#comparison-matrix" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(2)}{isEn ? "Physiotherapy Comparison Matrix" : "একনজরে সেরা ১০ ফিজিওথেরাপি সেন্টারের তুলনা"}
               </a>
             </li>
             <li>
@@ -297,7 +259,7 @@ export function BlogTableOfContents({
                 href="#physiotherapy-reviews"
                 className="hover:text-primary transition-colors font-semibold text-foreground block py-0.5"
               >
-                ৩. {isEn ? "Detailed Physiotherapy Center Reviews" : "সেরা ১০ ফিজিওথেরাপি সেন্টারের পর্যালোচনা"}
+                {secNum(3)}{isEn ? "Detailed Physiotherapy Center Reviews" : "সেরা ১০ ফিজিওথেরাপি সেন্টারের পর্যালোচনা"}
               </a>
               {physiotherapyCenters.length > 0 && (
                 <ol className="pl-4 pt-1 space-y-1 text-xs text-muted-foreground/90 border-l border-border/80 ml-2">
@@ -315,47 +277,31 @@ export function BlogTableOfContents({
               )}
             </li>
             <li>
-              <a
-                href="#price-guide"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ৪. {isEn ? "Therapy Costs & Member Savings" : "থেরাপি ফি ও মেম্বার সাশ্রয় তালিকা"}
+              <a href="#price-guide" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(4)}{isEn ? "Therapy Costs & Member Savings" : "থেরাপি ফি ও মেম্বার সাশ্রয় তালিকা"}
               </a>
             </li>
             <li>
-              <a
-                href="#selection-guide"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ৫. {isEn ? "Guidelines for Choosing a Physiotherapist" : "সঠিক ফিজিওথেরাপি সেন্টার নির্বাচনের উপায়"}
+              <a href="#selection-guide" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(5)}{isEn ? "Guidelines for Choosing a Physiotherapist" : "সঠিক ফিজিওথেরাপি সেন্টার নির্বাচনের উপায়"}
               </a>
             </li>
             <li>
-              <a
-                href="#faq-section"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ৬. {isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
+              <a href="#faq-section" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(6)}{isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
               </a>
             </li>
           </ol>
         ) : (
           <ol className="space-y-1.5 list-none pl-0">
-
             <li>
-              <a
-                href="#overview"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ১. {isEn ? "Healthcare Overview of Feni" : "ফেনী জেলার স্বাস্থ্যসেবা ও পটভূমি"}
+              <a href="#overview" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(1)}{isEn ? "Healthcare Overview of Feni" : "ফেনী জেলার স্বাস্থ্যসেবা ও পটভূমি"}
               </a>
             </li>
             <li>
-              <a
-                href="#comparison-matrix"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ২. {isEn ? "Quick Comparison Matrix" : "একনজরে সেরা ১০ হাসপাতালের তুলনা"}
+              <a href="#comparison-matrix" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(2)}{isEn ? "Quick Comparison Matrix" : "একনজরে সেরা ১০ হাসপাতালের তুলনা"}
               </a>
             </li>
             <li>
@@ -363,7 +309,7 @@ export function BlogTableOfContents({
                 href="#hospital-reviews"
                 className="hover:text-primary transition-colors font-semibold text-foreground block py-0.5"
               >
-                ৩. {isEn ? "Detailed Hospital Reviews" : "সেরা ১০ হাসপাতালের বিস্তারিত পর্যালোচনা"}
+                {secNum(3)}{isEn ? "Detailed Hospital Reviews" : "সেরা ১০ হাসপাতালের বিস্তারিত পর্যালোচনা"}
               </a>
               {hospitals.length > 0 && (
                 <ol className="pl-4 pt-1 space-y-1 text-xs text-muted-foreground/90 border-l border-border/80 ml-2">
@@ -381,27 +327,18 @@ export function BlogTableOfContents({
               )}
             </li>
             <li>
-              <a
-                href="#selection-guide"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ৪. {isEn ? "How to Choose the Right Hospital" : "সঠিক হাসপাতাল নির্বাচনের উপায়"}
+              <a href="#selection-guide" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(4)}{isEn ? "How to Choose the Right Hospital" : "সঠিক হাসপাতাল নির্বাচনের উপায়"}
               </a>
             </li>
             <li>
-              <a
-                href="#emergency-directory"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ৫. {isEn ? "Emergency Contacts & Ambulance" : "জরুরি যোগাযোগ ও অ্যাম্বুলেন্স হটলাইন"}
+              <a href="#emergency-directory" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(5)}{isEn ? "Emergency Contacts & Ambulance" : "জরুরি যোগাযোগ ও অ্যাম্বুলেন্স হটলাইন"}
               </a>
             </li>
             <li>
-              <a
-                href="#faq-section"
-                className="hover:text-primary transition-colors block py-0.5"
-              >
-                ৬. {isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
+              <a href="#faq-section" className="hover:text-primary transition-colors block py-0.5">
+                {secNum(6)}{isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
               </a>
             </li>
           </ol>
@@ -410,4 +347,3 @@ export function BlogTableOfContents({
     </nav>
   );
 }
-

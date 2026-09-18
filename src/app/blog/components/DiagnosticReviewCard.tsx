@@ -15,6 +15,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { DiagnosticCenterReviewItem } from "@/types/blog";
 import { BlogReviewCardWrapper } from "./BlogReviewCardWrapper";
+import {
+  translateDiscount,
+  translateTurnaroundTime,
+  translateMedicalCategory,
+} from "../utils/blogTranslations";
 
 interface DiagnosticReviewCardProps {
   center: DiagnosticCenterReviewItem;
@@ -30,7 +35,8 @@ export function DiagnosticReviewCard({
   const address = isEn ? center.addressEn : center.addressBn;
   const typeName = isEn ? center.typeEn : center.typeBn;
   const description = isEn
-    ? center.descriptionEn || center.descriptionBn
+    ? center.descriptionEn ||
+      `${center.nameEn} is a verified diagnostic facility at ${center.addressEn}, Feni, offering modern laboratory testing, medical imaging, and exclusive Health Club member discounts.`
     : center.descriptionBn;
 
   const sectionId = `diagnostic-${center.rank}`;
@@ -142,7 +148,7 @@ export function DiagnosticReviewCard({
                 key={idx}
                 className="inline-flex items-center text-xs bg-muted/80 text-foreground px-2.5 py-1 rounded-md border border-border/60"
               >
-                {category}
+                {translateMedicalCategory(category, isEn)}
               </span>
             ))}
           </div>
@@ -155,7 +161,7 @@ export function DiagnosticReviewCard({
           <Clock className="h-3.5 w-3.5 text-primary shrink-0" />
           <span>
             <strong className="text-foreground">{isEn ? "Report Delivery: " : "রিপোর্ট ডেলিভারি: "}</strong>
-            {center.reportTimingBn}
+            {translateTurnaroundTime(center.reportTimingBn, isEn)}
           </span>
         </div>
       )}
@@ -170,7 +176,7 @@ export function DiagnosticReviewCard({
                 {isEn ? "Health Club Member Benefit" : "হেলথ ক্লাব মেম্বারশিপ বিশেষ সুবিধা"}
               </span>
               <span className="text-xs sm:text-sm font-semibold text-foreground">
-                {center.partnerDiscountBn}
+                {translateDiscount(center.partnerDiscountBn, isEn)}
               </span>
             </div>
           </div>
@@ -211,7 +217,7 @@ export function DiagnosticReviewCard({
               href={`tel:${center.hotline.replace(/[^0-9]/g, "")}`}
               className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-border/80 bg-muted/40 hover:bg-muted text-foreground text-xs font-semibold transition-colors"
             >
-              <span>হটলাইন: {center.hotline}</span>
+              <span>{isEn ? "Hotline: " : "হটলাইন: "}{center.hotline}</span>
             </a>
           )}
         </div>

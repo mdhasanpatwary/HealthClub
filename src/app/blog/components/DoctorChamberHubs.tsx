@@ -44,7 +44,10 @@ export function DoctorChamberHubs({ hubs, locale = "bn" }: DoctorChamberHubsProp
                     {isEn ? hub.areaNameEn : hub.areaNameBn}
                   </h3>
                   <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                    {hub.descriptionBn}
+                    {isEn
+                      ? hub.descriptionEn ||
+                        `Major healthcare hub located along ${hub.areaNameEn}, housing specialized clinics, diagnostic labs, and doctor chambers.`
+                      : hub.descriptionBn}
                   </p>
                 </div>
               </div>
@@ -71,7 +74,12 @@ export function DoctorChamberHubs({ hubs, locale = "bn" }: DoctorChamberHubsProp
             {/* Practical Tip */}
             <div className="rounded-xl bg-amber-500/5 border border-amber-500/20 p-3 text-xs flex items-start gap-2 text-amber-900 dark:text-amber-200">
               <Lightbulb className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-              <p className="text-[11px] leading-relaxed">{hub.tipsBn}</p>
+              <p className="text-[11px] leading-relaxed">
+                {isEn
+                  ? hub.tipsEn ||
+                    "Tip: Book appointments 1-2 days ahead by calling serial hotlines between 8:00 AM - 11:00 AM."
+                  : hub.tipsBn}
+              </p>
             </div>
           </div>
         ))}

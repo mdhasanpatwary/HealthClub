@@ -1,6 +1,11 @@
 import { PhysiotherapyComparisonItem } from "@/types/blog";
 import { toBanglaNums } from "@/lib/utils";
 import { CheckCircle2, XCircle, ShieldCheck } from "lucide-react";
+import {
+  translateComparisonStatus,
+  translateDiscount,
+  translateLocation,
+} from "../utils/blogTranslations";
 
 interface PhysiotherapyComparisonTableProps {
   items: PhysiotherapyComparisonItem[];
@@ -32,7 +37,7 @@ export function PhysiotherapyComparisonTable({
     }
     return (
       <span className="inline-flex items-center text-amber-600 dark:text-amber-400 font-medium text-xs">
-        {val}
+        {translateComparisonStatus(val, isEn)}
       </span>
     );
   };
@@ -122,14 +127,16 @@ export function PhysiotherapyComparisonTable({
                   <td className="py-3 px-3 sm:px-4">
                     {isPartner ? (
                       <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
-                        {item.discountBn}
+                        {translateDiscount(item.discountBn, isEn)}
                       </span>
                     ) : (
-                      <span className="text-muted-foreground text-xs">{item.discountBn}</span>
+                      <span className="text-muted-foreground text-xs">
+                        {translateDiscount(item.discountBn, isEn)}
+                      </span>
                     )}
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-muted-foreground whitespace-nowrap">
-                    {item.locationBn}
+                    {translateLocation(item.locationBn, isEn)}
                   </td>
                 </tr>
               );

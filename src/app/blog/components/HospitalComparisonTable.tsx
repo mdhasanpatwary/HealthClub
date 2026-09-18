@@ -1,6 +1,13 @@
 import { HospitalComparisonItem } from "@/types/blog";
 import { toBanglaNums } from "@/lib/utils";
 import { CheckCircle2, XCircle, ShieldCheck } from "lucide-react";
+import {
+  toEnglishDigits,
+  translateComparisonStatus,
+  translateDiscount,
+  translateLocation,
+  translateMedicalCategory,
+} from "../utils/blogTranslations";
 
 interface HospitalComparisonTableProps {
   items: HospitalComparisonItem[];
@@ -86,41 +93,45 @@ export function HospitalComparisonTable({
                     </a>
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-muted-foreground whitespace-nowrap">
-                    {item.typeBn}
+                    {item.typeEn || translateMedicalCategory(item.typeBn, isEn)}
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-center font-medium whitespace-nowrap">
-                    {item.bedCountBn}
+                    {isEn
+                      ? `${toEnglishDigits(item.bedCountBn).replace(/[^0-9]/g, "") || toEnglishDigits(item.bedCountBn)} Beds`
+                      : item.bedCountBn}
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-center whitespace-nowrap">
-                    {item.icu.toLowerCase().includes("নয়") ? (
+                    {item.icu.toLowerCase().includes("নয়") || item.icu.toLowerCase().includes("নেই") ? (
                       <span className="inline-flex items-center gap-1 text-muted-foreground text-xs">
                         <XCircle className="h-3.5 w-3.5 text-slate-400" />
-                        <span>নেই</span>
+                        <span>{isEn ? "No" : "নেই"}</span>
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold text-xs">
                         <CheckCircle2 className="h-3.5 w-3.5" />
-                        <span>{item.icu}</span>
+                        <span>{translateComparisonStatus(item.icu, isEn)}</span>
                       </span>
                     )}
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-center whitespace-nowrap">
                     <span className="inline-flex items-center gap-1 text-primary font-semibold text-xs">
                       <CheckCircle2 className="h-3.5 w-3.5" />
-                      <span>{item.emergency}</span>
+                      <span>{translateComparisonStatus(item.emergency, isEn)}</span>
                     </span>
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-xs">
                     {isPartner ? (
                       <span className="font-bold text-primary bg-primary/10 px-2 py-1 rounded-md inline-block">
-                        {item.discountBn}
+                        {translateDiscount(item.discountBn, isEn)}
                       </span>
                     ) : (
-                      <span className="text-muted-foreground">{item.discountBn}</span>
+                      <span className="text-muted-foreground">
+                        {translateDiscount(item.discountBn, isEn)}
+                      </span>
                     )}
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-xs text-muted-foreground">
-                    {item.locationBn}
+                    {translateLocation(item.locationBn, isEn)}
                   </td>
                 </tr>
               );

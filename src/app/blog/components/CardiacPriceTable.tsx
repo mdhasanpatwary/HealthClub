@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { CardiacPackagePriceItem } from "@/types/blog";
 import { ShieldCheck, ArrowRight, Clock, Sparkles } from "lucide-react";
+import {
+  formatBlogPriceRange,
+  translateMedicalCategory,
+  translateTurnaroundTime,
+} from "../utils/blogTranslations";
 
 interface CardiacPriceTableProps {
   pricingData: {
@@ -59,11 +64,11 @@ export function CardiacPriceTable({
                       {name}
                     </span>
                     <span className="text-[11px] text-muted-foreground">
-                      {item.categoryBn}
+                      {translateMedicalCategory(item.categoryBn, isEn)}
                     </span>
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-center font-mono text-muted-foreground whitespace-nowrap">
-                    {item.regularPriceRangeBn}
+                    {formatBlogPriceRange(item.regularPriceRangeBn, isEn)}
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-center whitespace-nowrap">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
@@ -74,7 +79,7 @@ export function CardiacPriceTable({
                   <td className="py-3 px-3 sm:px-4 text-center text-muted-foreground whitespace-nowrap">
                     <span className="inline-flex items-center gap-1 text-xs">
                       <Clock className="h-3 w-3 text-muted-foreground/70" />
-                      <span>{item.reportTimeBn}</span>
+                      <span>{translateTurnaroundTime(item.reportTimeBn, isEn)}</span>
                     </span>
                   </td>
                 </tr>

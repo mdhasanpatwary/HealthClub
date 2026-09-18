@@ -1,6 +1,11 @@
 import { DiagnosticComparisonItem } from "@/types/blog";
 import { toBanglaNums } from "@/lib/utils";
 import { CheckCircle2, XCircle, ShieldCheck } from "lucide-react";
+import {
+  translateComparisonStatus,
+  translateDiscount,
+  translateLocation,
+} from "../utils/blogTranslations";
 
 interface DiagnosticComparisonTableProps {
   items: DiagnosticComparisonItem[];
@@ -32,7 +37,7 @@ export function DiagnosticComparisonTable({
     }
     return (
       <span className="inline-flex items-center text-amber-600 dark:text-amber-400 font-medium text-xs">
-        {val}
+        {translateComparisonStatus(val, isEn)}
       </span>
     );
   };
@@ -122,14 +127,16 @@ export function DiagnosticComparisonTable({
                     {isPartner ? (
                       <span className="inline-flex items-center gap-1 text-primary font-bold text-xs bg-primary/10 px-2 py-0.5 rounded-md">
                         <ShieldCheck className="h-3 w-3 shrink-0" />
-                        <span>{item.discountBn}</span>
+                        <span>{translateDiscount(item.discountBn, isEn)}</span>
                       </span>
                     ) : (
-                      <span className="text-muted-foreground text-xs">{item.discountBn}</span>
+                      <span className="text-muted-foreground text-xs">
+                        {translateDiscount(item.discountBn, isEn)}
+                      </span>
                     )}
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-muted-foreground text-xs whitespace-nowrap">
-                    {item.locationBn}
+                    {translateLocation(item.locationBn, isEn)}
                   </td>
                 </tr>
               );

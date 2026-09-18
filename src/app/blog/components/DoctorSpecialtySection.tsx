@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { BlogReviewCardWrapper } from "./BlogReviewCardWrapper";
+import { toEnglishDigits, translateLocation } from "../utils/blogTranslations";
 
 interface DoctorSpecialtySectionProps {
   doctorGroups: DoctorSpecialtyGroup[];
@@ -126,7 +127,10 @@ export function DoctorSpecialtySection({
                     {isEn ? group.departmentNameEn : group.departmentNameBn}
                   </h3>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    {group.descriptionBn}
+                    {isEn
+                      ? group.descriptionEn ||
+                        `Find experienced ${group.departmentNameEn} specialists and consultation chambers in Feni.`
+                      : group.descriptionBn}
                   </p>
                 </div>
               </div>
@@ -189,7 +193,15 @@ function DoctorCard({
               className="text-[11px] font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20"
             >
               <CheckCircle2 className="h-3 w-3 mr-1" />
-              {doctor.featuredBadgeBn}
+              {isEn
+                ? (doctor.featuredBadgeBn.includes("চিফ") || doctor.featuredBadgeBn.includes("প্রধান")
+                    ? "Chief Specialist"
+                    : doctor.featuredBadgeBn.includes("অন-কল")
+                    ? "On-Call Consultant"
+                    : doctor.featuredBadgeBn.includes("অভিজ্ঞ")
+                    ? "Senior Consultant"
+                    : "Verified Specialist")
+                : doctor.featuredBadgeBn}
             </Badge>
           )}
           <Badge
@@ -222,7 +234,7 @@ function DoctorCard({
             <div>
               <span className="font-semibold">{doctor.chamberNameBn}</span>
               <p className="text-[11px] text-muted-foreground mt-0.5">
-                {doctor.chamberAddressBn}
+                {isEn ? translateLocation(doctor.chamberAddressBn, isEn) : doctor.chamberAddressBn}
               </p>
             </div>
           </div>
@@ -242,7 +254,9 @@ function DoctorCard({
               {isEn ? "Consultation Fee:" : "ভিজিট ফি:"}
             </span>
             <span className="font-bold text-primary">
-              {doctor.consultationFeeBn}
+              {isEn
+                ? `${toEnglishDigits(doctor.consultationFeeBn)} BDT`
+                : doctor.consultationFeeBn}
             </span>
           </div>
 

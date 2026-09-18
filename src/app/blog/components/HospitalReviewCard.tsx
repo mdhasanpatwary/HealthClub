@@ -13,6 +13,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { HospitalReviewItem } from "@/types/blog";
 import { BlogReviewCardWrapper } from "./BlogReviewCardWrapper";
+import {
+  toEnglishDigits,
+  translateDiscount,
+  translateMedicalCategory,
+} from "../utils/blogTranslations";
 
 interface HospitalReviewCardProps {
   hospital: HospitalReviewItem;
@@ -28,7 +33,8 @@ export function HospitalReviewCard({
   const address = isEn ? hospital.addressEn : hospital.addressBn;
   const typeName = isEn ? hospital.typeEn : hospital.typeBn;
   const description = isEn
-    ? hospital.descriptionEn || hospital.descriptionBn
+    ? hospital.descriptionEn ||
+      `${hospital.nameEn} is a leading healthcare facility in Feni, offering modern inpatient services, specialized doctor chambers, emergency response, and verified healthcare solutions.`
     : hospital.descriptionBn;
 
   const sectionId = `hospital-${hospital.rank}`;
@@ -72,7 +78,9 @@ export function HospitalReviewCard({
           {hospital.bedCountBn && (
             <span className="inline-flex items-center gap-1.5 text-xs bg-muted px-2.5 py-1 rounded-lg font-medium text-foreground">
               <Bed className="h-3.5 w-3.5 text-muted-foreground" />
-              {isEn ? hospital.bedCountBn.replace("শয্যা", "Beds") : hospital.bedCountBn}
+              {isEn
+                ? `${toEnglishDigits(hospital.bedCountBn).replace(/[^0-9]/g, "") || toEnglishDigits(hospital.bedCountBn)} Beds`
+                : hospital.bedCountBn}
             </span>
           )}
 
@@ -110,7 +118,7 @@ export function HospitalReviewCard({
               </span>
               <p className="text-sm font-semibold text-foreground">
                 {isEn
-                  ? "Exclusive discount on diagnostic tests and hospital services"
+                  ? translateDiscount(hospital.partnerDiscountBn, isEn)
                   : hospital.partnerDiscountBn}
               </p>
             </div>
@@ -150,13 +158,13 @@ export function HospitalReviewCard({
             <Stethoscope className="h-4 w-4 text-primary" />
             {isEn ? "Key Departments & Doctors" : "প্রধান বিভাগ ও বিশেষজ্ঞ চেম্বার"}
           </h4>
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-2">
             {hospital.specialtiesBn.map((spec, idx) => (
               <span
                 key={idx}
                 className="bg-muted/80 text-foreground/90 px-2.5 py-1 rounded-md text-xs font-medium"
               >
-                {spec}
+                {translateMedicalCategory(spec, isEn)}
               </span>
             ))}
           </div>
@@ -184,7 +192,7 @@ export function HospitalReviewCard({
               className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-700 dark:text-rose-300 text-xs font-bold transition-colors"
             >
               <Siren className="h-3.5 w-3.5 text-rose-600" />
-              <span>জরুরি: {hospital.emergencyPhone}</span>
+              <span>{isEn ? "Emergency: " : "জরুরি: "}{hospital.emergencyPhone}</span>
             </a>
           )}
         </div>

@@ -14,6 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { DentalClinicReviewItem } from "@/types/blog";
 import { BlogReviewCardWrapper } from "./BlogReviewCardWrapper";
+import { translateDiscount, translateMedicalCategory } from "../utils/blogTranslations";
 
 interface DentalReviewCardProps {
   clinic: DentalClinicReviewItem;
@@ -33,7 +34,8 @@ export function DentalReviewCard({
     ? clinic.visitingHoursEn || clinic.visitingHoursBn
     : clinic.visitingHoursBn;
   const description = isEn
-    ? clinic.descriptionEn || clinic.descriptionBn
+    ? clinic.descriptionEn ||
+      `${clinic.nameEn} is a premier dental surgery and clinic located at ${clinic.addressEn}, Feni, offering modern dental treatments, sterile procedures, and exclusive Health Club member discounts.`
     : clinic.descriptionBn;
 
   const sectionId = `dental-${clinic.rank}`;
@@ -99,7 +101,7 @@ export function DentalReviewCard({
           <div className="flex flex-wrap gap-1.5 sm:justify-end">
             {clinic.specialtiesBn.slice(0, 2).map((sp, idx) => (
               <Badge key={idx} variant="secondary" className="text-[11px]">
-                {sp}
+                {translateMedicalCategory(sp, isEn)}
               </Badge>
             ))}
           </div>
@@ -169,7 +171,7 @@ export function DentalReviewCard({
                 {isEn ? "Health Club Member Benefit" : "হেলথ ক্লাব মেম্বারশিপ বিশেষ সুবিধা"}
               </span>
               <span className="text-xs sm:text-sm font-semibold text-foreground">
-                {clinic.partnerDiscountBn}
+                {translateDiscount(clinic.partnerDiscountBn, isEn)}
               </span>
             </div>
           </div>

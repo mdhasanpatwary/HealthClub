@@ -2,8 +2,10 @@ import { CheckCircle2, PhoneCall } from "lucide-react";
 
 interface DoctorBookingGuideProps {
   guide: {
-    titleBn: string;
-    stepsBn: { step: string; title: string; desc: string }[];
+    title?: string;
+    titleBn?: string;
+    steps?: { step: string; title: string; desc: string }[];
+    stepsBn?: { step: string; title: string; desc: string }[];
   };
   locale?: string;
 }
@@ -13,7 +15,9 @@ export function DoctorBookingGuide({
   locale = "bn",
 }: DoctorBookingGuideProps) {
   const isEn = locale === "en";
-  const isEvenSteps = guide.stepsBn.length % 2 === 0;
+  const title = guide.title || guide.titleBn || "";
+  const steps = guide.steps || guide.stepsBn || [];
+  const isEvenSteps = steps.length % 2 === 0;
 
   return (
     <section id="serial-guide" className="scroll-mt-24 space-y-6">
@@ -23,7 +27,7 @@ export function DoctorBookingGuide({
           <span>{isEn ? "Appointment Advice" : "সিরিয়াল গাইডলাইন"}</span>
         </div>
         <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-          {isEn ? `4. ${guide.titleBn}` : `৪. ${guide.titleBn}`}
+          {isEn ? `4. ${title}` : `৪. ${title}`}
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground mt-1">
           {isEn
@@ -33,8 +37,8 @@ export function DoctorBookingGuide({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {guide.stepsBn.map((step, idx) => {
-          const isLastOdd = !isEvenSteps && idx === guide.stepsBn.length - 1;
+        {steps.map((step, idx) => {
+          const isLastOdd = !isEvenSteps && idx === steps.length - 1;
           return (
             <div
               key={idx}

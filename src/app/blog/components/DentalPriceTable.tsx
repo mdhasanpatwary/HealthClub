@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { DentalProcedurePriceItem } from "@/types/blog";
 import { ShieldCheck, ArrowRight, Clock } from "lucide-react";
+import {
+  formatBlogPriceRange,
+  translateMedicalCategory,
+  translateTurnaroundTime,
+} from "../utils/blogTranslations";
 
 interface DentalPriceTableProps {
   pricingData: {
@@ -58,12 +63,12 @@ export function DentalPriceTable({
                     <div className="space-y-0.5">
                       <span className="font-bold text-foreground block">{procName}</span>
                       <span className="text-[11px] text-muted-foreground block">
-                        {proc.categoryBn}
+                        {translateMedicalCategory(proc.categoryBn, isEn)}
                       </span>
                     </div>
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-center text-muted-foreground whitespace-nowrap font-medium">
-                    {proc.regularPriceRangeBn}
+                    {formatBlogPriceRange(proc.regularPriceRangeBn, isEn)}
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-center whitespace-nowrap">
                     <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
@@ -74,7 +79,7 @@ export function DentalPriceTable({
                   <td className="py-3 px-3 sm:px-4 text-center text-muted-foreground whitespace-nowrap">
                     <span className="inline-flex items-center gap-1 text-xs">
                       <Clock className="h-3 w-3 text-muted-foreground" />
-                      <span>{proc.durationBn}</span>
+                      <span>{translateTurnaroundTime(proc.durationBn, isEn)}</span>
                     </span>
                   </td>
                 </tr>

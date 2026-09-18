@@ -2,6 +2,7 @@ import React from "react";
 import { BlogPost } from "@/types/blog";
 import { Zap, ShieldCheck, Phone, CheckCircle2, Award } from "lucide-react";
 import { toBanglaNums } from "@/lib/utils";
+import { getArticleEnglishHighlights } from "../utils/blogTranslations";
 
 interface BlogQuickAnswerProps {
   post: BlogPost;
@@ -10,6 +11,7 @@ interface BlogQuickAnswerProps {
 
 export function BlogQuickAnswer({ post, locale = "bn" }: BlogQuickAnswerProps) {
   const isEn = locale === "en";
+  const highlights = getArticleEnglishHighlights(post.slug, post.keyHighlightsBn, isEn);
 
   // Determine top facilities or specialists count
   const facilityCount =
@@ -68,9 +70,9 @@ export function BlogQuickAnswer({ post, locale = "bn" }: BlogQuickAnswerProps) {
       </div>
 
       {/* Quick Core Highlights Grid */}
-      {post.keyHighlightsBn && post.keyHighlightsBn.length > 0 && (
+      {highlights && highlights.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-          {post.keyHighlightsBn.slice(0, 4).map((highlight, idx) => (
+          {highlights.slice(0, 4).map((highlight, idx) => (
             <div
               key={idx}
               className="flex items-start gap-2 rounded-xl bg-card/80 border border-border/80 p-2.5 text-xs sm:text-[13px] text-foreground/85"
