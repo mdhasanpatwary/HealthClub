@@ -15,27 +15,16 @@ export function getHomepageJsonLd({ isEn, t, hotline }: HomepageSchemaParams) {
   const formattedTel = `+880${rawHotline.replace(/^(880|88|0)/, "")}`;
 
   return [
-    // 1. WebSite & SearchAction Schema
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: isEn ? "Health Club Bangladesh" : "হেলথ ক্লাব (Health Club)",
-      url: SITE_URL,
-      potentialAction: {
-        "@type": "SearchAction",
-        target: `${SITE_URL}/consultants?search={search_term_string}`,
-        "query-input": "required name=search_term_string",
-      },
-    },
-
-    // 2. EmergencyService & MedicalBusiness Schema (Essential Services Hub)
+    // 1. EmergencyService & MedicalBusiness Schema (Essential Services Hub)
     {
       "@context": "https://schema.org",
       "@type": ["EmergencyService", "MedicalBusiness"],
+      "@id": `${SITE_URL}/#emergency-service`,
       name: isEn
         ? "Health Club Emergency & Essential Healthcare Directory Feni"
         : "হেলথ ক্লাব জরুরি স্বাস্থ্য সেবা ও ডিরেক্টরি (ফেনী)",
       url: `${SITE_URL}/emergency`,
+      image: `${SITE_URL}/og-image.png`,
       telephone: formattedTel,
       priceRange: "Free / Public Service",
       areaServed: [
@@ -55,8 +44,10 @@ export function getHomepageJsonLd({ isEn, t, hotline }: HomepageSchemaParams) {
       ],
       address: {
         "@type": "PostalAddress",
+        streetAddress: "Trunk Road",
         addressLocality: "Feni",
         addressRegion: "Chittagong",
+        postalCode: "3900",
         addressCountry: "BD",
       },
     },

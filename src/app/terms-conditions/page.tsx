@@ -7,31 +7,34 @@ import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteC
 export async function generateMetadata() {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const title = tServer(locale, "pages.termsConditions.metaTitle");
+  const isEn = locale === "en";
+  const rawTitle = tServer(locale, "pages.termsConditions.metaTitle");
   const description = tServer(locale, "pages.termsConditions.metaDesc");
+
+  const title = isEn
+    ? { absolute: "Terms & Conditions | Health Club" }
+    : rawTitle.replace(/\s*-\s*হেলথ ক্লাব$/, "");
+
+  const ogTitle = isEn ? "Terms & Conditions - Health Club" : "শর্তাবলী ও নিয়মাবলী - হেলথ ক্লাব";
 
   return {
     title,
     description,
     alternates: {
       canonical: `${SITE_URL}/terms-conditions`,
-      languages: {
-        "bn-BD": `${SITE_URL}/terms-conditions`,
-        "en-US": `${SITE_URL}/terms-conditions`,
-      },
     },
     openGraph: {
-      title,
+      title: ogTitle,
       description,
       url: `${SITE_URL}/terms-conditions`,
       siteName: "হেলথ ক্লাব (Health Club)",
-      locale: locale === "en" ? "en_US" : "bn_BD",
+      locale: isEn ? "en_US" : "bn_BD",
       type: "website",
       images: DEFAULT_OG_IMAGES,
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: ogTitle,
       description,
       images: DEFAULT_TWITTER_IMAGES,
     },

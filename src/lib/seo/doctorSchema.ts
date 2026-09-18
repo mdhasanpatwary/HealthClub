@@ -313,7 +313,7 @@ export function generateDoctorJsonLd(
       telephone: primaryPhone,
       ...(doctor.partnerId
         ? {
-            url: `${SITE_URL}/partner-hospitals/${doctor.partnerId}`,
+            url: `${SITE_URL}/partner-hospitals/${encodeURIComponent(doctor.partner?.slug || doctor.partnerId)}`,
           }
         : {}),
     },
@@ -376,6 +376,7 @@ export function generateDoctorJsonLd(
     "@type": "MedicalWebPage",
     "@id": profileUrl,
     url: profileUrl,
+    image: imageUrl,
     name: `${doctor.name} - ${doctor.specialty} (Feni) | Health Club`,
     description: isEn
       ? `${doctor.name} (${doctor.specialty}), ${doctor.degrees}. Chamber at ${doctor.chamberName}, ${doctor.chamberAddress}. Call serial: ${doctor.serialPhone}.`

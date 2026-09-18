@@ -91,6 +91,7 @@ export function generateBlogJsonLd(
       },
       publisher: {
         "@type": "Organization",
+        "@id": `${SITE_URL}/#organization`,
         name: "Health Club (হেলথ ক্লাব)",
         url: SITE_URL,
         logo: {

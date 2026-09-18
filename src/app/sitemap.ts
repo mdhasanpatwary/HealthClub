@@ -10,15 +10,6 @@ import { logger } from "@/lib/logger";
 
 import { parseArticleDate, STATIC_FALLBACK_DATE as STATIC_LAST_MODIFIED } from "@/lib/dateUtils";
 
-function getAlternates(url: string) {
-  return {
-    languages: {
-      "bn-BD": url,
-      "en-US": url,
-    },
-  };
-}
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = SITE_URL;
 
@@ -35,10 +26,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/about-us",
     "/become-partner",
     "/contact",
+    "/verify",
     "/privacy-policy",
     "/terms-conditions",
-    "/login",
-    "/register",
   ];
 
   const staticEntries: MetadataRoute.Sitemap = staticRoutes.map((route) => {
@@ -57,14 +47,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     } else if (route === "/health-tips" || route === "/health-tools") {
       priority = 0.85;
       changeFrequency = "daily";
-    } else if (route === "/about-us" || route === "/contact" || route === "/become-partner") {
+    } else if (route === "/about-us" || route === "/contact" || route === "/become-partner" || route === "/verify") {
       priority = 0.8;
       changeFrequency = "weekly";
     } else if (route === "/privacy-policy" || route === "/terms-conditions") {
       priority = 0.3;
-      changeFrequency = "monthly";
-    } else if (route === "/login" || route === "/register") {
-      priority = 0.5;
       changeFrequency = "monthly";
     }
 
@@ -75,7 +62,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: STATIC_LAST_MODIFIED,
       changeFrequency,
       priority,
-      alternates: getAlternates(url),
     };
   });
 
@@ -95,7 +81,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: parseArticleDate(article.publishedDate),
       changeFrequency: "weekly",
       priority: 0.85,
-      alternates: getAlternates(url),
     };
   });
 
@@ -117,7 +102,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           lastModified,
           changeFrequency: "daily",
           priority: 0.85,
-          alternates: getAlternates(url),
         };
       });
   } catch (error) {
@@ -141,7 +125,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified,
         changeFrequency: "daily",
         priority: 0.85,
-        alternates: getAlternates(url),
       };
     });
   } catch (error) {
@@ -157,7 +140,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: STATIC_LAST_MODIFIED,
       changeFrequency: "daily",
       priority: 0.9,
-      alternates: getAlternates(url),
     };
   });
 
@@ -170,7 +152,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: STATIC_LAST_MODIFIED,
       changeFrequency: "daily",
       priority: 0.85,
-      alternates: getAlternates(url),
     };
   });
 
@@ -185,7 +166,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified,
       changeFrequency: "weekly",
       priority: 0.9,
-      alternates: getAlternates(url),
     };
   });
 

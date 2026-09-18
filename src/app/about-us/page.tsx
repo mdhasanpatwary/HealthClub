@@ -16,16 +16,12 @@ export async function generateMetadata() {
     : "চিকিৎসা ব্যয় সাশ্রয়ে হেলথ ক্লাবের উদ্যোগ ও লক্ষ্য সম্পর্কে বিস্তারিত জানুন।";
 
   return {
-    title: isEn ? "About Us - Health Club Mission & Story" : "আমাদের সম্পর্কে - হেলথ ক্লাব ভিশন ও মিশন",
+    title: isEn ? { absolute: "About Us - Health Club Mission & Story | Health Club" } : "আমাদের সম্পর্কে - ভিশন ও মিশন",
     description: isEn
       ? "Learn about Health Club's mission to make healthcare affordable in Bangladesh through digital membership card discounts at top partner hospitals."
       : "হেলথ ক্লাবের লক্ষ্য, আমাদের ভিশন এবং কীভাবে আমরা চিকিৎসা খরচ কমিয়ে এনে দেশব্যাপী স্বাস্থ্যসেবা সহজলভ্য করছি তা জানুন।",
     alternates: {
       canonical: `${SITE_URL}/about-us`,
-      languages: {
-        "bn-BD": `${SITE_URL}/about-us`,
-        "en-US": `${SITE_URL}/about-us`,
-      },
     },
     openGraph: {
       title: ogTitle,

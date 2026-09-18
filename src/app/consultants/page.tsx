@@ -25,7 +25,11 @@ export async function generateMetadata({ searchParams }: ConsultantsPageProps) {
   const deptSeo = getDepartmentSeoConfig(dept);
 
   if (deptSeo) {
-    const title = isEn ? deptSeo.metaTitleEn : deptSeo.metaTitleBn;
+    const rawTitleBn = deptSeo.metaTitleBn.replace(/\s*[-|]\s*হেলথ ক্লাব\s*$/, "");
+    const title = isEn
+      ? { absolute: deptSeo.metaTitleEn }
+      : rawTitleBn;
+    const ogTitle = isEn ? deptSeo.metaTitleEn : deptSeo.metaTitleBn;
     const description = isEn ? deptSeo.metaDescriptionEn : deptSeo.metaDescriptionBn;
     const canonicalUrl = `${SITE_URL}/consultants?dept=${deptSeo.slug}`;
 
@@ -34,10 +38,6 @@ export async function generateMetadata({ searchParams }: ConsultantsPageProps) {
       description,
       alternates: {
         canonical: canonicalUrl,
-        languages: {
-          "bn-BD": canonicalUrl,
-          "en-US": canonicalUrl,
-        },
       },
       keywords: [
         ...deptSeo.keywords,
@@ -51,7 +51,7 @@ export async function generateMetadata({ searchParams }: ConsultantsPageProps) {
         "Health Club doctor directory",
       ],
       openGraph: {
-        title,
+        title: ogTitle,
         description,
         url: canonicalUrl,
         siteName: "হেলথ ক্লাব (Health Club)",
@@ -61,7 +61,7 @@ export async function generateMetadata({ searchParams }: ConsultantsPageProps) {
       },
       twitter: {
         card: "summary_large_image",
-        title,
+        title: ogTitle,
         description,
         images: DEFAULT_TWITTER_IMAGES,
       },
@@ -77,17 +77,13 @@ export async function generateMetadata({ searchParams }: ConsultantsPageProps) {
 
   return {
     title: isEn
-      ? "Feni Doctor List, Serial Numbers & Specialist Chamber Schedules - Health Club"
-      : "ফেনী ডাক্তার তালিকা ও সিরিয়াল নাম্বার | চেম্বার সময়সূচী ও অ্যাপয়েন্টমেন্ট - হেলথ ক্লাব",
+      ? { absolute: "Feni Doctor List, Serial Numbers & Specialist Chamber Schedules | Health Club" }
+      : "ফেনী ডাক্তার তালিকা ও সিরিয়াল নাম্বার | চেম্বার সময়সূচী ও অ্যাপয়েন্টমেন্ট",
     description: isEn
       ? "Find specialist doctors in Feni, check chamber visiting hours, qualifications, hospital affiliations, and call direct phone serial numbers for doctor appointments across Feni."
       : "ফেনী ডাক্তার তালিকা, চেম্বার সময়সূচী ও সরাসরি সিরিয়াল নাম্বার। ফেনীর বিশেষজ্ঞ ডাক্তারদের (মেডিসিন, গাইনী, শিশু, হৃদরোগ) চেম্বার, রোগী দেখার সময় এবং অ্যাপয়েন্টমেন্ট বুকিংয়ের বিস্তারিত তথ্য।",
     alternates: {
       canonical: `${SITE_URL}/consultants`,
-      languages: {
-        "bn-BD": `${SITE_URL}/consultants`,
-        "en-US": `${SITE_URL}/consultants`,
-      },
     },
     keywords: [
       "feni doctor list",

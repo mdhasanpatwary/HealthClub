@@ -28,14 +28,11 @@ const ContactForm = dynamic(() => import("@/components/landing/ContactForm"), {
 
 const PartnerDirectory = dynamic(() => import("@/components/ui/PartnerDirectory"), {
   loading: () => <PartnerGridSkeleton count={3} />,
-  ssr: false,
 });
 
 export function LazyPartnerDirectorySection({ partners }: { partners: Partner[] }) {
   return (
-    <LazyHydrate fallback={<PartnerGridSkeleton count={3} />}>
-      <PartnerDirectory partners={partners} limit={3} showFilters={false} />
-    </LazyHydrate>
+    <PartnerDirectory partners={partners} limit={3} showFilters={false} />
   );
 }
 

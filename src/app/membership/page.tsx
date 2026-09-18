@@ -22,17 +22,13 @@ export async function generateMetadata() {
 
   return {
     title: isEn
-      ? "Membership Plans & Pricing - Health Club"
-      : "মেম্বারশিপ প্ল্যান ও ফ্রি রেজিস্ট্রেশন - হেলথ ক্লাব",
+      ? { absolute: "Membership Plans & Pricing | Health Club" }
+      : "মেম্বারশিপ প্ল্যান ও ফ্রি রেজিস্ট্রেশন",
     description: isEn
       ? "Compare Founding Member (Free 1 year) and Premium Member plans to get instant discounts on medical bills across partner hospitals."
       : "ফাউন্ডিং মেম্বার (১ বছর সম্পূর্ণ ফ্রি) ও প্রিমিয়াম মেম্বারশিপের সুবিধা দেখে নিন এবং আপনার জন্য সেরা প্ল্যানটি বেছে নিন।",
     alternates: {
       canonical: `${SITE_URL}/membership`,
-      languages: {
-        "bn-BD": `${SITE_URL}/membership`,
-        "en-US": `${SITE_URL}/membership`,
-      },
     },
     openGraph: {
       title: ogTitle,

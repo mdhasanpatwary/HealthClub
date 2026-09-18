@@ -19,17 +19,13 @@ export async function generateMetadata() {
 
   return {
     title: isEn
-      ? "Feni Blood Donors, 24/7 ICU Ambulances & Emergency Medical Directory - Health Club"
-      : "ফেনী রক্তদাতা, ২৪/৭ আইসিইউ অ্যাম্বুলেন্স ও জরুরি স্বাস্থ্য সেবা - হেলথ ক্লাব",
+      ? { absolute: "Feni Blood Donors, 24/7 ICU Ambulances & Emergency Medical Directory | Health Club" }
+      : "ফেনী রক্তদাতা, ২৪/৭ আইসিইউ অ্যাম্বুলেন্স ও জরুরি স্বাস্থ্য সেবা",
     description: isEn
       ? "24/7 verified emergency medical directory in Feni: voluntary blood donors by blood group, ICU & AC ambulance phone numbers, oxygen cylinder home delivery, and Feni Sadar Hospital ER hotlines."
       : "ফেনীর ২৪/৭ জরুরি স্বাস্থ্য সহায়তা: রক্তের গ্রুপভিত্তিক স্বেচ্ছাসেবী রক্তদাতা, আইসিইউ ও এসি অ্যাম্বুলেন্স নম্বর, জরুরি অক্সিজেন সিলিন্ডার এবং সদর হাসপাতাল মেডিকেল হটলাইন ডিরেক্টরি।",
     alternates: {
       canonical: `${SITE_URL}/emergency`,
-      languages: {
-        "bn-BD": `${SITE_URL}/emergency`,
-        "en-US": `${SITE_URL}/emergency`,
-      },
     },
     keywords: [
       "feni blood donor",

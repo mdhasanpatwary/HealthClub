@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
   }
 
   const pageTitle = isEn
-    ? `${post.titleEn} | Health Club`
+    ? { absolute: `${post.titleEn} | Health Club` }
     : post.titleBn;
   const description = isEn ? post.excerptEn : post.excerptBn;
   const fullBrandTitle = isEn
@@ -72,10 +72,6 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
     keywords: post.metaKeywords,
     alternates: {
       canonical: `${SITE_URL}/blog/${post.slug}`,
-      languages: {
-        "bn-BD": `${SITE_URL}/blog/${post.slug}`,
-        "en-US": `${SITE_URL}/blog/${post.slug}`,
-      },
     },
     robots: {
       index: true,
@@ -163,11 +159,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
       </nav>
 
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 space-y-12">
-        <article
-          itemScope
-          itemType="https://schema.org/MedicalWebPage"
-        >
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 space-y-12">
+        <article>
           {/* Content Layout: 8 cols main, 4 cols sidebar */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
             <div className="lg:col-span-8 space-y-10 min-w-0">
@@ -330,7 +323,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
           </aside>
         )}
-      </main>
+      </div>
     </div>
   );
 }

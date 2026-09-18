@@ -33,15 +33,11 @@ export async function generateMetadata() {
 
   return {
     title: isEn
-      ? "Health Care Blog & Feni Hospital Reviews - Health Club"
-      : "স্বাস্থ্যসেবা ব্লগ ও ফেনী হাসপাতাল রিভিউ গাইড - হেলথ ক্লাব",
+      ? { absolute: "Health Care Blog & Feni Hospital Reviews | Health Club" }
+      : "স্বাস্থ্যসেবা ব্লগ ও ফেনী হাসপাতাল রিভিউ গাইড",
     description: ogDesc,
     alternates: {
       canonical: `${SITE_URL}/blog`,
-      languages: {
-        "bn-BD": `${SITE_URL}/blog`,
-        "en-US": `${SITE_URL}/blog`,
-      },
     },
     robots: {
       index: true,
@@ -201,7 +197,7 @@ export default async function BlogPage() {
       </section>
 
       {/* Main Content Area */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10 space-y-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10 space-y-12">
         {/* Featured Flagship Article Spotlight */}
         {featuredPost && (
           <section aria-labelledby="featured-article-heading">
@@ -320,7 +316,7 @@ export default async function BlogPage() {
             locale={locale}
           />
         </section>
-      </main>
+      </div>
     </div>
   );
 }

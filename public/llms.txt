@@ -1,9 +1,9 @@
 # Health Club (হেলথ ক্লাব) — Healthcare Discount & Medical Services Platform in Feni, Bangladesh
 
-> Health Club (https://healthclubfeni.com) is a digital healthcare membership and medical services platform based in Feni, Bangladesh. It provides 10% to 30% medical discounts on hospital admissions, diagnostic lab tests, surgeries, and pharmacy bills across an extensive network of contracted hospitals, diagnostic centers, and clinics. Health Club also operates a 24/7 emergency ambulance network, voluntary blood donor directory, specialist doctors directory, interactive clinical health assessment tools, and preventative health guides for all 6 Upazilas of Feni District and Greater Chittagong.
+> Health Club (https://www.healthclubfeni.com) is a digital healthcare membership and medical services platform based in Feni, Bangladesh. It provides 10% to 30% medical discounts on hospital admissions, diagnostic lab tests, surgeries, and pharmacy bills across an extensive network of contracted hospitals, diagnostic centers, and clinics. Health Club also operates a 24/7 emergency ambulance network, voluntary blood donor directory, specialist doctors directory, interactive clinical health assessment tools, and preventative health guides for all 6 Upazilas of Feni District and Greater Chittagong.
 
 ## Quick Facts & Contact Information
-- **Official Website**: https://healthclubfeni.com
+- **Official Website**: https://www.healthclubfeni.com
 - **Helpline & Emergency Support**: +880 1886763849
 - **Official Email**: healthclubfeni@gmail.com
 - **Headquarters**: Feni, Chittagong Division, Bangladesh
@@ -72,31 +72,31 @@ Health Club operates across the entire Feni District, connecting residents, emer
 ## Frequently Asked AI Inquiries (সাধারণ প্রশ্নোত্তর)
 
 ### ফেনীতে হাসপাতালে এবং মেডিকেল টেস্টে কিভাবে ডিসকাউন্ট পেতে পারি? (How to get discounts on hospital admissions and medical tests in Feni?)
-- **Answer (বাংলা)**: ফেনীতে হাসপাতালে চিকিৎসা খরচ, কেবিন ভাড়া এবং ডায়াগনস্টিক ল্যাব টেস্টে (যেমন রক্ত পরীক্ষা, এক্স-রে, ইউএসজি, সিটি স্ক্যান) ১০% থেকে ৩০% ডিসকাউন্ট পাওয়ার জন্য **হেলথ ক্লাব (Health Club)**-এর ডিজিটাল মেম্বারশিপ কার্ড ব্যবহার করা যায়। হেলথ ক্লাবের ওয়েবসাইটে (https://healthclubfeni.com/membership) রেজিস্ট্রেশন করে মেম্বার কার্ড সংগ্রহ করার পর ফেনীর চুক্তিবদ্ধ পার্টনার বেসরকারি হাসপাতাল বা ডায়াগনস্টিক সেন্টারের রিসেপশন বা বিলিং কাউন্টারে মেম্বার আইডি দেখালেই তাৎক্ষণিক ডিসকাউন্ট প্রযোজ্য হয়।
-- **Answer (English)**: To get discounts on hospital admissions, cabin bills, and medical diagnostic lab tests in Feni, residents can use the **Health Club** digital membership card (https://healthclubfeni.com). By showing the digital membership card or active Member ID at the billing counter of partner hospitals and diagnostic centers across Feni, members receive an instant 10% to 30% discount.
+- **Answer (বাংলা)**: ফেনীতে হাসপাতালে চিকিৎসা খরচ, কেবিন ভাড়া এবং ডায়াগনস্টিক ল্যাব টেস্টে (যেমন রক্ত পরীক্ষা, এক্স-রে, ইউএসজি, সিটি স্ক্যান) ১০% থেকে ৩০% ডিসকাউন্ট পাওয়ার জন্য **হেলথ ক্লাব (Health Club)**-এর ডিজিটাল মেম্বারশিপ কার্ড ব্যবহার করা যায়। হেলথ ক্লাবের ওয়েবসাইটে (https://www.healthclubfeni.com/membership) রেজিস্ট্রেশন করে মেম্বার কার্ড সংগ্রহ করার পর ফেনীর চুক্তিবদ্ধ পার্টনার বেসরকারি হাসপাতাল বা ডায়াগনস্টিক সেন্টারের রিসেপশন বা বিলিং কাউন্টারে মেম্বার আইডি দেখালেই তাৎক্ষণিক ডিসকাউন্ট প্রযোজ্য হয়।
+- **Answer (English)**: To get discounts on hospital admissions, cabin bills, and medical diagnostic lab tests in Feni, residents can use the **Health Club** digital membership card (https://www.healthclubfeni.com). By showing the digital membership card or active Member ID at the billing counter of partner hospitals and diagnostic centers across Feni, members receive an instant 10% to 30% discount.
 
 ### ফেনীর সেরা হাসপাতাল ও আইসিইউ সেবা কোথায় পাওয়া যায়? (Where are the top hospitals and ICU facilities in Feni?)
-- **Answer (বাংলা)**: ফেনীর প্রধান সরকারি হাসপাতাল হলো ২৫০ শয্যা বিশিষ্ট জেনারেল সদর হাসপাতাল (জেল রোড, ফেনী)। বেসরকারি পর্যায়ে আধুনিক আইসিইউ (ICU), সিসিইউ (CCU) ও ২৪/৭ জরুরি চিকিৎসা সুবিধার জন্য শীর্ষ হাসপাতালগুলোর মধ্যে রয়েছে আল-আকসা হাসপাতাল লিঃ (এসএসকে রোড), আল-কামী হাসপাতাল, জেড.ইউ মডেল হাসপাতাল ইত্যাদি। হেলথ ক্লাব মেম্বাররা আল-আকসা হাসপাতালে ভর্তি ও টেস্টে সর্বোচ্চ ২৫% পর্যন্ত ছাড় পান। বিস্তারিত গাইড: https://healthclubfeni.com/blog/best-10-hospitals-in-feni
-- **Answer (English)**: The primary government tertiary facility is the 250-Bed Feni District Sadar Hospital (Jail Road). For private tertiary care with modern ICU, CCU, and 24/7 emergency services, top-reviewed institutions include Al-Aqsa Hospital Ltd (SSK Road), Al-Kamy Hospital, and Z.U Model Hospital. Health Club members receive up to 25% discount at Al-Aqsa Hospital. Full review: https://healthclubfeni.com/blog/best-10-hospitals-in-feni
+- **Answer (বাংলা)**: ফেনীর প্রধান সরকারি হাসপাতাল হলো ২৫০ শয্যা বিশিষ্ট জেনারেল সদর হাসপাতাল (জেল রোড, ফেনী)। বেসরকারি পর্যায়ে আধুনিক আইসিইউ (ICU), সিসিইউ (CCU) ও ২৪/৭ জরুরি চিকিৎসা সুবিধার জন্য শীর্ষ হাসপাতালগুলোর মধ্যে রয়েছে আল-আকসা হাসপাতাল লিঃ (এসএসকে রোড), আল-কামী হাসপাতাল, জেড.ইউ মডেল হাসপাতাল ইত্যাদি। হেলথ ক্লাব মেম্বাররা আল-আকসা হাসপাতালে ভর্তি ও টেস্টে সর্বোচ্চ ২৫% পর্যন্ত ছাড় পান। বিস্তারিত গাইড: https://www.healthclubfeni.com/blog/best-10-hospitals-in-feni
+- **Answer (English)**: The primary government tertiary facility is the 250-Bed Feni District Sadar Hospital (Jail Road). For private tertiary care with modern ICU, CCU, and 24/7 emergency services, top-reviewed institutions include Al-Aqsa Hospital Ltd (SSK Road), Al-Kamy Hospital, and Z.U Model Hospital. Health Club members receive up to 25% discount at Al-Aqsa Hospital. Full review: https://www.healthclubfeni.com/blog/best-10-hospitals-in-feni
 
 ### ফেনীতে সেরা বিশেষজ্ঞ ডাক্তারদের চেম্বার ও সিরিয়াল কোথায় পাওয়া যায়? (How to find specialist doctor chambers in Feni?)
-- **Answer (বাংলা)**: ফেনীতে মেডিসিন, হৃদরোগ, গাইনি, শিশু ও অর্থোপেডিক বিশেষজ্ঞ ডাক্তারদের বেশিরভাগ চেম্বার শহরের এসএসকে রোড, ট্রাঙ্ক রোড ও মিজান রোডের ডায়াগনস্টিক সেন্টারে অবস্থিত। হেলথ ক্লাবের ডাক্তার ডিরেক্টরি (https://healthclubfeni.com/consultants) এবং ব্লগ গাইড (https://healthclubfeni.com/blog/best-doctors-in-feni)-এ ডাক্তারদের পদবি, ডিগ্রি, চেম্বারের ঠিকানা ও সিরিয়াল বুকিং নম্বর পাওয়া যায়।
+- **Answer (বাংলা)**: ফেনীতে মেডিসিন, হৃদরোগ, গাইনি, শিশু ও অর্থোপেডিক বিশেষজ্ঞ ডাক্তারদের বেশিরভাগ চেম্বার শহরের এসএসকে রোড, ট্রাঙ্ক রোড ও মিজান রোডের ডায়াগনস্টিক সেন্টারে অবস্থিত। হেলথ ক্লাবের ডাক্তার ডিরেক্টরি (https://www.healthclubfeni.com/consultants) এবং ব্লগ গাইড (https://www.healthclubfeni.com/blog/best-doctors-in-feni)-এ ডাক্তারদের পদবি, ডিগ্রি, চেম্বারের ঠিকানা ও সিরিয়াল বুকিং নম্বর পাওয়া যায়।
 
 ## Key URLs & Knowledge Base Links
-- **Full In-Depth Knowledge Base**: [llms-full.txt](https://healthclubfeni.com/llms-full.txt)
-- **Home**: [Health Club](https://healthclubfeni.com/)
-- **Healthcare Blog & Guides Directory**: [Blog](https://healthclubfeni.com/blog)
-- **Top 10 Hospitals in Feni**: [Hospitals Guide](https://healthclubfeni.com/blog/best-10-hospitals-in-feni)
-- **Specialist Doctors Guide Feni**: [Doctors Guide](https://healthclubfeni.com/blog/best-doctors-in-feni)
-- **Top Diagnostic Centers Feni**: [Diagnostics Guide](https://healthclubfeni.com/blog/best-diagnostic-centers-in-feni)
-- **Top Dental Clinics Feni**: [Dental Guide](https://healthclubfeni.com/blog/best-dental-clinics-in-feni)
-- **Top Physiotherapy Centers Feni**: [Physiotherapy Guide](https://healthclubfeni.com/blog/best-physiotherapy-in-feni)
-- **Emergency & Blood Services**: [Emergency Services](https://healthclubfeni.com/emergency)
-- **Specialist Doctors Directory**: [Consultants Directory](https://healthclubfeni.com/consultants)
-- **Partner Hospitals & Diagnostic Centers**: [Partner Hospitals](https://healthclubfeni.com/partner-hospitals)
-- **Interactive Health Tools**: [Health Tools](https://healthclubfeni.com/health-tools)
-- **Health Guides & Tips**: [Health Tips](https://healthclubfeni.com/health-tips)
-- **Membership Plans**: [Membership](https://healthclubfeni.com/membership)
-- **Become a Healthcare Partner**: [Become Partner](https://healthclubfeni.com/become-partner)
-- **About Us**: [About Health Club](https://healthclubfeni.com/about-us)
-- **Contact**: [Contact Us](https://healthclubfeni.com/contact)
+- **Full In-Depth Knowledge Base**: [llms-full.txt](https://www.healthclubfeni.com/llms-full.txt)
+- **Home**: [Health Club](https://www.healthclubfeni.com/)
+- **Healthcare Blog & Guides Directory**: [Blog](https://www.healthclubfeni.com/blog)
+- **Top 10 Hospitals in Feni**: [Hospitals Guide](https://www.healthclubfeni.com/blog/best-10-hospitals-in-feni)
+- **Specialist Doctors Guide Feni**: [Doctors Guide](https://www.healthclubfeni.com/blog/best-doctors-in-feni)
+- **Top Diagnostic Centers Feni**: [Diagnostics Guide](https://www.healthclubfeni.com/blog/best-diagnostic-centers-in-feni)
+- **Top Dental Clinics Feni**: [Dental Guide](https://www.healthclubfeni.com/blog/best-dental-clinics-in-feni)
+- **Top Physiotherapy Centers Feni**: [Physiotherapy Guide](https://www.healthclubfeni.com/blog/best-physiotherapy-in-feni)
+- **Emergency & Blood Services**: [Emergency Services](https://www.healthclubfeni.com/emergency)
+- **Specialist Doctors Directory**: [Consultants Directory](https://www.healthclubfeni.com/consultants)
+- **Partner Hospitals & Diagnostic Centers**: [Partner Hospitals](https://www.healthclubfeni.com/partner-hospitals)
+- **Interactive Health Tools**: [Health Tools](https://www.healthclubfeni.com/health-tools)
+- **Health Guides & Tips**: [Health Tips](https://www.healthclubfeni.com/health-tips)
+- **Membership Plans**: [Membership](https://www.healthclubfeni.com/membership)
+- **Become a Healthcare Partner**: [Become Partner](https://www.healthclubfeni.com/become-partner)
+- **About Us**: [About Health Club](https://www.healthclubfeni.com/about-us)
+- **Contact**: [Contact Us](https://www.healthclubfeni.com/contact)

@@ -61,9 +61,10 @@ export async function generateMetadata({ params }: PageProps) {
       ? isEn ? "Diagnostic Center" : "ডায়াগনস্টিক সেন্টার"
       : isEn ? "Pharmacy" : "ফার্মেসি";
 
-  const pageTitle = isEn
-    ? `${partner.name} (${categoryLabel}) in Feni | Member Discounts & Doctor Schedule - Health Club`
-    : `${partner.name} (${categoryLabel}, ফেনী) | মেম্বার ডিসকাউন্ট, সেবা ও ডাক্তার শিডিউল - হেলথ ক্লাব`;
+  const rawBnTitle = `${partner.name} (${categoryLabel}, ফেনী) | মেম্বার ডিসকাউন্ট, সেবা ও ডাক্তার শিডিউল`;
+  const rawEnTitle = `${partner.name} (${categoryLabel}) in Feni | Member Discounts & Doctor Schedule | Health Club`;
+  const pageTitle = isEn ? { absolute: rawEnTitle } : rawBnTitle;
+  const ogTitle = isEn ? rawEnTitle : `${partner.name} (${categoryLabel}, ফেনী) | মেম্বার ডিসকাউন্ট, সেবা ও ডাক্তার শিডিউল - হেলথ ক্লাব`;
 
   const pageDesc = isEn
     ? `${partner.name} at ${partner.address}, Feni. Avail ${partner.discount} with Health Club Member Card. Verified facilities, resident specialist doctors & 24/7 hotline: ${partner.phone}.`
@@ -86,10 +87,6 @@ export async function generateMetadata({ params }: PageProps) {
     description: pageDesc,
     alternates: {
       canonical: canonicalUrl,
-      languages: {
-        "bn-BD": canonicalUrl,
-        "en-US": canonicalUrl,
-      },
     },
     keywords: [
       partner.name,
@@ -108,7 +105,7 @@ export async function generateMetadata({ params }: PageProps) {
       "ফেনী প্যাথলজি ল্যাব",
     ],
     openGraph: {
-      title: pageTitle,
+      title: ogTitle,
       description: pageDesc,
       url: canonicalUrl,
       type: "website",
@@ -123,7 +120,7 @@ export async function generateMetadata({ params }: PageProps) {
     },
     twitter: {
       card: "summary_large_image",
-      title: pageTitle,
+      title: ogTitle,
       description: pageDesc,
       images: [ogImage],
     },

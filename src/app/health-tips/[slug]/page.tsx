@@ -63,22 +63,19 @@ export async function generateMetadata({ params }: ArticlePageProps) {
     };
   }
 
-  const title = isEn ? `${article.titleEn} - Health Club` : `${article.titleBn} - হেলথ ক্লাব`;
+  const pageTitle = isEn ? { absolute: `${article.titleEn} | Health Club` } : article.titleBn;
+  const ogTitle = isEn ? `${article.titleEn} - Health Club` : `${article.titleBn} - হেলথ ক্লাব`;
   const description = isEn ? article.excerptEn : article.excerptBn;
   const articleIsoDate = getArticleIsoDate(article.publishedDate);
 
   return {
-    title,
+    title: pageTitle,
     description,
     alternates: {
       canonical: `${SITE_URL}/health-tips/${article.slug}`,
-      languages: {
-        "bn-BD": `${SITE_URL}/health-tips/${article.slug}`,
-        "en-US": `${SITE_URL}/health-tips/${article.slug}`,
-      },
     },
     openGraph: {
-      title,
+      title: ogTitle,
       description,
       url: `${SITE_URL}/health-tips/${article.slug}`,
       type: "article",
@@ -89,13 +86,13 @@ export async function generateMetadata({ params }: ArticlePageProps) {
           url: `${SITE_URL}/og-image.png`,
           width: 1200,
           height: 630,
-          alt: title,
+          alt: ogTitle,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: ogTitle,
       description,
       images: [`${SITE_URL}/og-image.png`],
     },
@@ -168,6 +165,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
       "@type": "MedicalWebPage",
       "headline": isEn ? article.titleEn : article.titleBn,
       "description": isEn ? article.excerptEn : article.excerptBn,
+      "image": `${SITE_URL}/og-image.png`,
       "url": `${SITE_URL}/health-tips/${article.slug}`,
       "mainEntityOfPage": `${SITE_URL}/health-tips/${article.slug}`,
       "author": {
@@ -177,11 +175,11 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
       },
       "publisher": {
         "@type": "Organization",
-        "name": "Health Club",
+        "name": "Health Club (হেলথ ক্লাব)",
         "url": SITE_URL,
         "logo": {
           "@type": "ImageObject",
-          "url": `${SITE_URL}/icon.png`,
+          "url": `${SITE_URL}/images/member-card-logo.webp`,
         },
       },
       "datePublished": articleIsoDate,

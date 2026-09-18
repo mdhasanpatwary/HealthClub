@@ -48,6 +48,10 @@ export async function generateMetadata({ params }: PageProps) {
   }
 
   const pageTitle = isEn
+    ? { absolute: `${doctor.name} - ${doctor.specialty} in Feni | Chamber & Serial | Health Club` }
+    : `${doctor.name} - ${doctor.specialty} (ফেনী) | চেম্বার শিডিউল ও সিরিয়াল`;
+
+  const ogTitle = isEn
     ? `${doctor.name} - ${doctor.specialty} in Feni | Chamber & Serial - Health Club`
     : `${doctor.name} - ${doctor.specialty} (ফেনী) | চেম্বার শিডিউল ও সিরিয়াল - হেলথ ক্লাব`;
 
@@ -71,10 +75,6 @@ export async function generateMetadata({ params }: PageProps) {
     description: pageDesc,
     alternates: {
       canonical: canonicalUrl,
-      languages: {
-        "bn-BD": canonicalUrl,
-        "en-US": canonicalUrl,
-      },
     },
     keywords: [
       doctor.name,
@@ -92,7 +92,7 @@ export async function generateMetadata({ params }: PageProps) {
       "Health Club doctor directory",
     ],
     openGraph: {
-      title: pageTitle,
+      title: ogTitle,
       description: pageDesc,
       url: canonicalUrl,
       type: "profile",
@@ -107,7 +107,7 @@ export async function generateMetadata({ params }: PageProps) {
     },
     twitter: {
       card: "summary_large_image",
-      title: pageTitle,
+      title: ogTitle,
       description: pageDesc,
       images: [ogImage],
     },

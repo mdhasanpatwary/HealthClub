@@ -18,9 +18,10 @@ export async function generateMetadata() {
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
 
-  const pageTitle = isEn
-    ? "Free Health Calculators: BMI, BP & Diabetes, Water Intake, Calories & Pregnancy EDD - Health Club"
-    : "ফ্রি স্বাস্থ্য ক্যালকুলেটর: বিএমআই (BMI), রক্তচাপ ও ডায়াবেটিস, পানির চাহিদা, ক্যালোরি ও গর্ভকালীন ইডিডি - হেলথ ক্লাব";
+  const rawBnTitle = "ফ্রি স্বাস্থ্য ক্যালকুলেটর: বিএমআই, রক্তচাপ ও ডায়াবেটিস, পানির চাহিদা, ক্যালোরি ও গর্ভকালীন ইডিডি";
+  const rawEnTitle = "Free Health Calculators: BMI, BP & Diabetes, Water Intake, Calories & Pregnancy EDD | Health Club";
+  const pageTitle = isEn ? { absolute: rawEnTitle } : rawBnTitle;
+  const ogTitle = isEn ? rawEnTitle : `${rawBnTitle} - হেলথ ক্লাব`;
 
   const pageDesc = isEn
     ? "Calculate your Body Mass Index (BMI), evaluate blood pressure and blood sugar ranges, daily hydration target, maintenance calories, and pregnancy due date (EDD)."
@@ -31,13 +32,9 @@ export async function generateMetadata() {
     description: pageDesc,
     alternates: {
       canonical: `${SITE_URL}/health-tools`,
-      languages: {
-        "bn-BD": `${SITE_URL}/health-tools`,
-        "en-US": `${SITE_URL}/health-tools`,
-      },
     },
     openGraph: {
-      title: isEn ? "Free Health & Fitness Calculators - Health Club" : "ফ্রি স্বাস্থ্য ক্যালকুলেটর টুলস - হেলথ ক্লাব",
+      title: ogTitle,
       description: pageDesc,
       url: `${SITE_URL}/health-tools`,
       siteName: "হেলথ ক্লাব (Health Club)",

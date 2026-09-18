@@ -43,9 +43,16 @@ export async function generateMetadata({ searchParams }: PartnerHospitalsPagePro
 
   const selectedCat = category && category in categoryMeta ? categoryMeta[category] : null;
 
-  const pageTitle = selectedCat
-    ? (isEn ? selectedCat.titleEn : selectedCat.titleBn)
-    : (isEn ? "Feni Hospital List, Diagnostic Centers & Pathology Lab Discounts - Health Club" : "ফেনী হাসপাতাল তালিকা, ডায়াগনস্টিক সেন্টার ও প্যাথলজি ডিসকাউন্ট - হেলথ ক্লাব");
+  const rawBnTitle = selectedCat
+    ? selectedCat.titleBn.replace(/\s*[-|]\s*হেলথ ক্লাব\s*$/, "")
+    : "ফেনী হাসপাতাল তালিকা, ডায়াগনস্টিক সেন্টার ও প্যাথলজি ডিসকাউন্ট";
+
+  const rawEnTitle = selectedCat
+    ? selectedCat.titleEn
+    : "Feni Hospital List, Diagnostic Centers & Pathology Lab Discounts | Health Club";
+
+  const pageTitle = isEn ? { absolute: rawEnTitle } : rawBnTitle;
+  const ogTitle = isEn ? rawEnTitle : (selectedCat ? selectedCat.titleBn : "ফেনী হাসপাতাল তালিকা, ডায়াগনস্টিক সেন্টার ও প্যাথলজি ডিসকাউন্ট - হেলথ ক্লাব");
 
   const pageDesc = selectedCat
     ? (isEn ? selectedCat.descEn : selectedCat.descBn)
@@ -55,7 +62,6 @@ export async function generateMetadata({ searchParams }: PartnerHospitalsPagePro
     ? `${SITE_URL}/partner-hospitals?category=${category}`
     : `${SITE_URL}/partner-hospitals`;
 
-  const ogTitle = pageTitle;
   const ogDesc = pageDesc;
 
   return {
@@ -63,10 +69,6 @@ export async function generateMetadata({ searchParams }: PartnerHospitalsPagePro
     description: pageDesc,
     alternates: {
       canonical: canonicalUrl,
-      languages: {
-        "bn-BD": canonicalUrl,
-        "en-US": canonicalUrl,
-      },
     },
     keywords: [
       "feni hospital list",

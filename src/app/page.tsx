@@ -44,17 +44,13 @@ export async function generateMetadata() {
 
   return {
     title: isEn
-      ? "Health Club - Healthcare Discount Membership Platform in Bangladesh"
-      : "হেলথ ক্লাব - স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী | ডিজিটাল স্বাস্থ্য মেম্বারশিপ",
+      ? { absolute: "Health Club - Healthcare Discount Membership Platform in Bangladesh" }
+      : { absolute: "হেলথ ক্লাব - স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী | ডিজিটাল স্বাস্থ্য মেম্বারশিপ" },
     description: isEn
       ? "Get instant discounts up to 30% on hospital admission, medical tests, labs, and pharmacies with Health Club digital membership card in Feni and Bangladesh."
       : "হেলথ ক্লাবের ডিজিটাল মেম্বারশিপ কার্ড দিয়ে পার্টনার হাসপাতাল, ডায়াগনস্টিক ল্যাব ও মডেল ফার্মেসিতে পান আকর্ষণীয় ডিসকাউন্ট ও সাশ্রয়ী চিকিৎসা।",
     alternates: {
       canonical: SITE_URL,
-      languages: {
-        "bn-BD": SITE_URL,
-        "en-US": SITE_URL,
-      },
     },
     keywords: [
       "feni doctor",

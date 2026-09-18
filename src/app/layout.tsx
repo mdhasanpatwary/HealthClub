@@ -180,6 +180,7 @@ export default async function RootLayout({
     {
       "@context": "https://schema.org",
       "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
       "name": "হেলথ ক্লাব",
       "alternateName": ["Health Club", "Health Club Feni"],
       "url": SITE_URL,
@@ -212,6 +213,7 @@ export default async function RootLayout({
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
       "name": "হেলথ ক্লাব (Health Club)",
       "url": SITE_URL,
       "inLanguage": ["bn-BD", "en-US"],

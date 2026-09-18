@@ -16,6 +16,7 @@ const publicRoutes = [
   "/doctors",
   "/membership",
   "/contact",
+  "/blog",
   "/privacy-policy",
   "/terms-conditions",
   "/become-partner",

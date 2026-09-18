@@ -1,4 +1,13 @@
+import type { Metadata } from "next";
 import { verifyAdmin } from "@/lib/dal";
+
+export const metadata: Metadata = {
+  title: "Admin Portal",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 /**
  * Admin layout — server-side auth guard.
