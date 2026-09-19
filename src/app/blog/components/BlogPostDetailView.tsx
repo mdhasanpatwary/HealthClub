@@ -262,6 +262,9 @@ export function BlogPostDetailView({
               hasKidneyPricing={!!post.kidneyCarePricingBn}
               hasPediatricPricing={!!post.pediatricCarePricingBn}
               hasSkinPricing={!!post.skinCarePricingBn}
+              hasEyePricing={!!post.eyeCarePricingBn}
+              hasOrthopedicPricing={!!post.orthopedicCarePricingBn}
+              hasEntPricing={!!post.entCarePricingBn}
               locale={locale}
             />
           </div>

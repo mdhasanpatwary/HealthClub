@@ -329,6 +329,36 @@ export interface SkinCarePackageItem {
   durationOrTurnaroundBn: string;
 }
 
+export interface EyeCarePackageItem {
+  procedureOrTestNameBn: string;
+  procedureOrTestNameEn: string;
+  categoryBn: string;
+  regularPriceRangeBn: string;
+  memberPriceRangeBn?: string;
+  discountPercentageBn?: string;
+  durationOrTurnaroundBn: string;
+}
+
+export interface OrthopedicCarePackageItem {
+  procedureOrTestNameBn: string;
+  procedureOrTestNameEn: string;
+  categoryBn: string;
+  regularPriceRangeBn: string;
+  memberPriceRangeBn?: string;
+  discountPercentageBn?: string;
+  durationOrTurnaroundBn: string;
+}
+
+export interface EntCarePackageItem {
+  procedureOrTestNameBn: string;
+  procedureOrTestNameEn: string;
+  categoryBn: string;
+  regularPriceRangeBn: string;
+  memberPriceRangeBn?: string;
+  discountPercentageBn?: string;
+  durationOrTurnaroundBn: string;
+}
+
 export interface BlogPost {
   slug: string;
   titleBn: string;
@@ -400,6 +430,21 @@ export interface BlogPost {
     titleBn: string;
     subtitleBn: string;
     packages: SkinCarePackageItem[];
+  };
+  eyeCarePricingBn?: {
+    titleBn: string;
+    subtitleBn: string;
+    packages: EyeCarePackageItem[];
+  };
+  orthopedicCarePricingBn?: {
+    titleBn: string;
+    subtitleBn: string;
+    packages: OrthopedicCarePackageItem[];
+  };
+  entCarePricingBn?: {
+    titleBn: string;
+    subtitleBn: string;
+    packages: EntCarePackageItem[];
   };
   bookingGuideBn?: {
     titleBn: string;

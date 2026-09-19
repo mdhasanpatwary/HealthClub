@@ -23,6 +23,9 @@ interface BlogTableOfContentsProps {
   hasKidneyPricing?: boolean;
   hasPediatricPricing?: boolean;
   hasSkinPricing?: boolean;
+  hasEyePricing?: boolean;
+  hasOrthopedicPricing?: boolean;
+  hasEntPricing?: boolean;
   locale?: string;
 }
 
@@ -37,6 +40,9 @@ export function BlogTableOfContents({
   hasKidneyPricing = false,
   hasPediatricPricing = false,
   hasSkinPricing = false,
+  hasEyePricing = false,
+  hasOrthopedicPricing = false,
+  hasEntPricing = false,
   locale = "bn",
 }: BlogTableOfContentsProps) {
   const { locale: contextLocale } = useLanguage();
@@ -171,9 +177,39 @@ export function BlogTableOfContents({
                 </a>
               </li>
             )}
+            {hasEyePricing && (
+              <li>
+                <a
+                  href="#eye-price-guide"
+                  className="hover:text-primary transition-colors block py-0.5"
+                >
+                  {secNum(5)}{isEn ? "Eye Test & Cataract Surgery Cost Guide" : "চক্ষু পরীক্ষা ও ছানি অপারেশন খরচের হিসাব"}
+                </a>
+              </li>
+            )}
+            {hasOrthopedicPricing && (
+              <li>
+                <a
+                  href="#orthopedic-price-guide"
+                  className="hover:text-primary transition-colors block py-0.5"
+                >
+                  {secNum(5)}{isEn ? "Orthopedic & Joint Procedure Cost Guide" : "অর্থোপেডিক ও জয়েন্ট টেস্ট খরচের হিসাব"}
+                </a>
+              </li>
+            )}
+            {hasEntPricing && (
+              <li>
+                <a
+                  href="#ent-price-guide"
+                  className="hover:text-primary transition-colors block py-0.5"
+                >
+                  {secNum(5)}{isEn ? "ENT Diagnostic & Surgery Cost Guide" : "ইএনটি টেস্ট ও সার্জারি খরচের হিসাব"}
+                </a>
+              </li>
+            )}
             <li>
               <a href="#faq-section" className="hover:text-primary transition-colors block py-0.5">
-                {secNum(hasMaternityPricing || hasCardiacPricing || hasKidneyPricing || hasPediatricPricing || hasSkinPricing ? 6 : 5)}
+                {secNum(hasMaternityPricing || hasCardiacPricing || hasKidneyPricing || hasPediatricPricing || hasSkinPricing || hasEyePricing || hasOrthopedicPricing || hasEntPricing ? 6 : 5)}
                 {isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
               </a>
             </li>

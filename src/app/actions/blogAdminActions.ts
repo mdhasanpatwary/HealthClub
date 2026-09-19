@@ -119,6 +119,18 @@ const getCachedBlogPosts = unstable_cache(
           (p) => !existingSlugs.has(p.slug.toLowerCase().trim()) && !deletedSlugs.includes(p.slug)
         );
         const combined = [...missingStatic, ...dbArticles];
+        if (missingStatic.length > 0) {
+          await prisma.systemSetting
+            .upsert({
+              where: { key: BLOG_SETTING_KEY },
+              create: {
+                key: BLOG_SETTING_KEY,
+                value: JSON.stringify(combined),
+              },
+              update: { value: JSON.stringify(combined) },
+            })
+            .catch(() => {});
+        }
         if (deletedSlugs.length > 0) {
           return combined.filter((a: BlogPost) => !deletedSlugs.includes(a.slug));
         }
@@ -131,7 +143,7 @@ const getCachedBlogPosts = unstable_cache(
       return BLOG_POSTS;
     }
   },
-  ["all-blog-posts-admin-v12"],
+  ["all-blog-posts-admin-v13"],
   { tags: [BLOG_POSTS_TAG] }
 );
 
@@ -145,10 +157,21 @@ export async function getAllBlogPostsAction(): Promise<BlogPost[]> {
 export async function getBlogPostBySlugAction(
   slug: string
 ): Promise<BlogPost | null> {
-  const normalized = decodeURIComponent(slug).toLowerCase().trim();
+  const raw = decodeURIComponent(slug).toLowerCase().trim();
+  const normalized = raw.replace(/^[—–\s-]+|[—–\s-]+$/g, "");
   const articles = await getAllBlogPostsAction();
+  const found = articles.find(
+    (a) =>
+      a.slug.toLowerCase().trim() === normalized ||
+      a.slug.toLowerCase().trim() === raw
+  );
+  if (found) return found;
   return (
-    articles.find((a) => a.slug.toLowerCase().trim() === normalized) || null
+    BLOG_POSTS.find(
+      (a) =>
+        a.slug.toLowerCase().trim() === normalized ||
+        a.slug.toLowerCase().trim() === raw
+    ) || null
   );
 }
 

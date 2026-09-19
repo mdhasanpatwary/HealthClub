@@ -9,9 +9,10 @@ import { formatArticleDate } from "@/lib/dateUtils";
 interface BlogCardProps {
   post: BlogPost;
   locale?: string;
+  priority?: boolean;
 }
 
-export function BlogCard({ post, locale = "bn" }: BlogCardProps) {
+export function BlogCard({ post, locale = "bn", priority = false }: BlogCardProps) {
   const isEn = locale === "en";
   const title = isEn ? post.titleEn : post.titleBn;
   const excerpt = isEn ? post.excerptEn : post.excerptBn;
@@ -27,6 +28,7 @@ export function BlogCard({ post, locale = "bn" }: BlogCardProps) {
           src={post.coverImage}
           alt={post.coverImageAlt || title}
           fill
+          priority={priority}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />

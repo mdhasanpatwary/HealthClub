@@ -1,4 +1,7 @@
 import { BlogPost, BlogCategory } from "@/types/blog";
+import { BEST_ORTHOPEDIC_DOCTORS_IN_FENI } from "./posts/bestOrthopedicDoctorsInFeni";
+import { BEST_ENT_DOCTORS_IN_FENI } from "./posts/bestEntDoctorsInFeni";
+import { BEST_EYE_SPECIALISTS_IN_FENI } from "./posts/bestEyeSpecialistsInFeni";
 import { BEST_SKIN_SPECIALISTS_IN_FENI } from "./posts/bestSkinSpecialistsInFeni";
 import { BEST_CHILD_SPECIALISTS_IN_FENI } from "./posts/bestChildSpecialistsInFeni";
 import { BEST_KIDNEY_DOCTORS_IN_FENI } from "./posts/bestKidneyDoctorsInFeni";
@@ -18,6 +21,27 @@ export const BLOG_CATEGORIES: BlogCategory[] = [
     nameEn: "All Posts",
     descriptionBn: "স্বাস্থ্যসেবা, হাসপাতাল রিভিউ ও জীবনযাত্রার প্রয়োজনীয় সব গাইড",
     descriptionEn: "All healthcare reviews, hospital directories and wellness guides",
+  },
+  {
+    id: "orthopedic-guide",
+    nameBn: "অর্থোপেডিক ও ট্রমা কেয়ার গাইড",
+    nameEn: "Orthopedics & Trauma Care",
+    descriptionBn: "ফেনীর সেরা অর্থোপেডিক ডাক্তার, হাড় ভাঙা ও জোড়া বিশেষজ্ঞ, স্পাইন ও ট্রমা সেন্টার গাইড",
+    descriptionEn: "Top orthopedic doctors, trauma surgeons, fracture care, spine and joint specialists in Feni",
+  },
+  {
+    id: "ent-guide",
+    nameBn: "ইএনটি ও নাক-কান-গলা কেয়ার গাইড",
+    nameEn: "ENT & Head-Neck Care",
+    descriptionBn: "ফেনীর সেরা নাক, কান ও গলা বিশেষজ্ঞ ডাক্তার, টনসিল, সাইনাস ও কানের মাইক্রোসার্জারি গাইড",
+    descriptionEn: "Top ENT specialists, otolaryngologists, tonsillectomy, sinus and ear microsurgery in Feni",
+  },
+  {
+    id: "ophthalmology-guide",
+    nameBn: "চক্ষু সেবা ও হাসপাতাল গাইড",
+    nameEn: "Ophthalmology & Eye Care",
+    descriptionBn: "ফেনীর সেরা চক্ষু বিশেষজ্ঞ ডাক্তার, আধুনিক ফ্যাকো ছানি অপারেশন, গ্লুকোমা ও দৃষ্টিসেবা গাইড",
+    descriptionEn: "Top eye specialists, ophthalmologists, modern Phaco cataract surgery, glaucoma and vision care in Feni",
   },
   {
     id: "dermatology-guide",
@@ -132,6 +156,9 @@ export const BLOG_FILTER_PILLS: BlogFilterPill[] = [
     nameEn: "Doctor Guides",
     matchingCategories: [
       "doctor-guide",
+      "orthopedic-guide",
+      "ent-guide",
+      "ophthalmology-guide",
       "dermatology-guide",
       "pediatric-guide",
       "medicine-guide",
@@ -157,6 +184,9 @@ export const BLOG_FILTER_PILLS: BlogFilterPill[] = [
     nameBn: "বিশেষায়িত চিকিৎসা",
     nameEn: "Specialized Care",
     matchingCategories: [
+      "orthopedic-guide",
+      "ent-guide",
+      "ophthalmology-guide",
       "dermatology-guide",
       "pediatric-guide",
       "cardiology-guide",
@@ -174,6 +204,9 @@ export const BLOG_FILTER_PILLS: BlogFilterPill[] = [
 ];
 
 export const BLOG_POSTS: BlogPost[] = [
+  BEST_ORTHOPEDIC_DOCTORS_IN_FENI,
+  BEST_ENT_DOCTORS_IN_FENI,
+  BEST_EYE_SPECIALISTS_IN_FENI,
   BEST_SKIN_SPECIALISTS_IN_FENI,
   BEST_CHILD_SPECIALISTS_IN_FENI,
   BEST_KIDNEY_DOCTORS_IN_FENI,

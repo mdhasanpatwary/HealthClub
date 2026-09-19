@@ -39,6 +39,23 @@ export async function proxy(req: NextRequest) {
     const requestHeaders = new Headers(req.headers);
     requestHeaders.set("x-pathname", path);
 
+    // Auto-redirect malformed blog URLs like "/blog — slug" or "/blog - slug" or "/blog/ — slug" to canonical "/blog/:slug"
+    let decodedPath = path;
+    try {
+      decodedPath = decodeURIComponent(path);
+    } catch {
+      // ignore
+    }
+    const malformedBlogMatch = decodedPath.match(
+      /^\/blog(?:[\s%20]*[—–-][\s%20]*|\/+(?:[\s%20]*[—–-][\s%20]*))(.+)$/i
+    );
+    if (malformedBlogMatch) {
+      const cleanSlug = malformedBlogMatch[1].trim().replace(/^[—–\s-]+|[—–\s-]+$/g, "");
+      if (cleanSlug) {
+        return NextResponse.redirect(new URL(`/blog/${cleanSlug}`, req.nextUrl), 308);
+      }
+    }
+
     // Fast path: skip JWT decrypt for public-only routes (saves ~20ms per request)
     if (path === "/" || publicRoutes.some((r) => matchRoute(path, r))) {
       return NextResponse.next({

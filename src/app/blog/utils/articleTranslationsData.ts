@@ -1,4 +1,22 @@
 export const ARTICLE_ENGLISH_INTROS: Record<string, string[]> = {
+  "best-orthopedic-doctors-in-feni": [
+    "A healthy musculoskeletal system—encompassing strong bones, resilient joints, ligaments, and a stable spine—is essential for active mobility and productive living. As the strategic transport junction of southeastern Bangladesh, Feni's highway network (notably the Dhaka-Chittagong expressway at Mohipal) experiences frequent traffic accidents and traumatic injuries requiring urgent orthopedic care.",
+    "A catastrophic clinical pitfall in Bangladesh is the reliance on unqualified traditional bone-setters (quack massages and rigid bamboo splinting). Aggressive manipulation frequently crushes vital neurovascular bundles, precipitating severe compartment syndrome, tissue gangrene, and tragic preventable limb amputations. Prompt evaluation by a BMDC-registered orthopedic surgeon utilizing sterile immobilization and digital fluoroscopy guarantees anatomically sound recovery.",
+    "Furthermore, spine conditions such as lumbar disc prolapse (PLID), sciatica, and chronic neck pain cause debilitating discomfort among adults and desk workers. Over 90% of disc herniations resolve completely with conservative therapy, precision imaging (1.5T MRI), and computerized spinal traction without invasive surgery.",
+    "This verified directory profiles Feni's top 12 BMDC-registered orthopedic surgeons, trauma experts, and spine consultants across 3 specialized departments, featuring direct serial booking hotlines, hospital emergency triage, and exclusive 10-30% diagnostic savings.",
+  ],
+  "best-ent-doctors-in-feni": [
+    "The ear, nose, and throat govern vital sensory functions including respiration, speech, hearing, and balance. In coastal southeastern regions like Feni, warm humidity and dusty road corridors trigger a high prevalence of chronic sinusitis, allergic rhinitis, and fungal ear canal infections (Otomycosis).",
+    "A widespread, hazardous household habit is probing ear canals with cotton swabs, hairpins, or matchsticks. Ear canal cerumen is a protective natural barrier, not dirt; probing compresses wax against the tympanic membrane and risks traumatic eardrum perforation. Safe oto-microscopic suction by an ENT doctor eliminates impaction painlessly without invasive trauma.",
+    "Among children, recurrent tonsillitis and enlarged adenoids cause chronic mouth-breathing, loud snoring, and obstructive sleep apnea, impairing physical and cognitive growth. Modern coblation tonsillectomy provides virtually bloodless excision with rapid same-day recovery.",
+    "This verified directory profiles Feni's top 12 BMDC-registered ENT specialists and head-neck surgeons across 3 clinical departments, detailing chamber schedules, serial hotlines, and diagnostic discounts.",
+  ],
+  "best-eye-specialists-in-feni": [
+    "The human eye is our most delicate and vital sensory organ. Across Feni and surrounding coastal districts, age-related cataracts, diabetes-induced retinal damage, glaucoma, and digital eye strain from prolonged screen usage pose major challenges to clear vision.",
+    "Remarkable surgical advances now allow sutureless, injection-free Phaco cataract surgery completed in just 15 to 20 minutes under topical drops, enabling same-day recovery with advanced foldable intraocular lenses (IOLs).",
+    "Furthermore, early screening for diabetic retinopathy and glaucoma ('the silent thief of sight') is crucial to prevent irreversible vision loss before noticeable symptoms emerge.",
+    "This verified directory profiles Feni's top 12 BMDC-registered ophthalmologists, specialized eye hospitals, direct serial booking hotlines, and modern Phaco surgery pricing.",
+  ],
   "best-skin-specialists-in-feni": [
     "The human skin is the body's largest and most exposed organ. In Feni and surrounding coastal-plain upazilas, warm humid weather and environmental factors drive a high incidence of fungal ringworm (Tinea), chronic eczema, scabies, and acute allergies.",
     "A major clinical hazard in Bangladesh is the misuse of over-the-counter steroid combination creams (e.g. Betamethasone or Clobetasol mixtures) for fungal infections, leading to skin atrophy and severe antifungal resistance. Consulting a registered dermatologist (DDV, FCPS, MD) is essential for evidence-based healing.",
@@ -58,6 +76,30 @@ export const ARTICLE_ENGLISH_INTROS: Record<string, string[]> = {
 };
 
 export const ARTICLE_ENGLISH_HIGHLIGHTS: Record<string, string[]> = {
+  "best-orthopedic-doctors-in-feni": [
+    "Verified chamber schedules and direct serial booking hotlines for 12 leading BMDC-registered orthopedic and trauma surgeons (MS, D-Ortho, FCPS, NITOR/Pangu Hospital alumni) in Feni.",
+    "Dhaka-Chittagong Highway (Mohipal corridor) emergency accident triage and 24/7 trauma stabilization protocols at 250-bed Modern Sadar Hospital.",
+    "Critical warning against irrational traditional bone-setting and quack massages causing irreversible compartment syndrome and tissue necrosis.",
+    "Modern non-surgical management of lumbar disc prolapse (PLID), sciatica nerve compression, and endoscopic minimally invasive spine care.",
+    "Comprehensive guidance on knee osteoarthritis, intra-articular hyaluronic acid/PRP injections, and modern Total Knee Replacement (TKR) arthroplasty.",
+    "Exclusive 10-30% Health Club member discounts on digital X-rays, 3D CT bone scans, 1.5T superconductive MRI, and DEXA bone density tests at partner centers.",
+  ],
+  "best-ent-doctors-in-feni": [
+    "Verified chamber schedules and direct serial hotlines for 12 top BMDC-registered ENT specialists and head-neck surgeons in Feni.",
+    "Comprehensive guide on microscopic Tympanoplasty for chronic suppurative otitis media (CSOM) and perforated eardrum healing.",
+    "Critical warnings against harmful cotton bud ear digging and accidental eardrum ruptures.",
+    "Modern surgical indications for coblation tonsillectomy and adenoidectomy in snoring children.",
+    "Minimally invasive Functional Endoscopic Sinus Surgery (FESS) and Septoplasty for chronic sinus headaches and deviated septum.",
+    "Exclusive 10-30% Health Club member discounts on pure tone audiometry, tympanometry, PNS CT scans, and throat endoscopies.",
+  ],
+  "best-eye-specialists-in-feni": [
+    "Verified chamber schedules and direct serial hotlines for 12 top BMDC-registered ophthalmologists, Phaco surgeons, and retina consultants in Feni.",
+    "Comprehensive guide to modern stitchless Phaco cataract surgery with foldable monofocal and premium multifocal intraocular lenses (IOLs).",
+    "Essential diabetic retinopathy screening guidelines, dilated fundus examinations, and optical coherence tomography (OCT) imaging.",
+    "Glaucoma early detection protocol using non-contact tonometry (NCT) to safeguard the optic nerve against silent damage.",
+    "Pediatric amblyopia (lazy eye), strabismus (squint), and digital computer vision syndrome protection habits for students.",
+    "Exclusive 10-30% Health Club member discounts on OCT scans, fundus photography, and spectacle refractions at partner diagnostic centers.",
+  ],
   "best-skin-specialists-in-feni": [
     "Verified chamber schedules and direct serial hotlines for 13 top BMDC-registered dermatologists, venereologists, and dermatosurgeons in Feni.",
     "Critical warning against irrational steroid combination creams (Clobetasol/Betamethasone) causing steroid-induced fungal resistance.",
@@ -133,6 +175,56 @@ export const ARTICLE_SELECTION_GUIDES: Record<
   string,
   { title: string; points: { title: string; desc: string }[] }
 > = {
+  "best-ent-doctors-in-feni": {
+    title: "5 Essential Guidelines for Choosing an ENT Specialist & Head-Neck Surgeon in Feni",
+    points: [
+      {
+        title: "1. Department Specialization (Otology vs. Rhinology vs. Head-Neck)",
+        desc: "For hearing loss and ear discharge, consult a micro-otologist; for sinus headaches and blocked nose, seek a rhinology/FESS surgeon; for tonsils, thyroid, and neck swelling, choose a head-neck specialist.",
+      },
+      {
+        title: "2. Strictly Avoid Ear Canal Manipulation (No Cotton Swabs)",
+        desc: "Never use cotton buds, pointed hairpins, or unverified herbal ear drops; symptomatic blockage should always be evaluated using clean oto-microscopic suction.",
+      },
+      {
+        title: "3. Diagnostic Audiology & High-Resolution PNS Imaging",
+        desc: "Ensure the clinic or hospital has calibrated Pure Tone Audiometry (PTA), tympanometry, and multi-slice PNS CT imaging for accurate pre-operative mapping.",
+      },
+      {
+        title: "4. Minimally Invasive Video Endoscopy & OT Infrastructure",
+        desc: "Opt for centers equipped with rigid diagnostic nasal endoscopes (DNE), fiber-optic laryngoscopes, and operating theaters with micro-drills and coblation units.",
+      },
+      {
+        title: "5. Maximize Savings with Health Club Digital Membership",
+        desc: "Present your Health Club digital membership card to receive guaranteed 10% to 30% savings on audiometry tests, PNS CT scans, and surgical OT packages at partner centers.",
+      },
+    ],
+  },
+  "best-orthopedic-doctors-in-feni": {
+    title: "5 Crucial Guidelines for Choosing an Orthopedic Specialist & Trauma Center in Feni",
+    points: [
+      {
+        title: "1. Subspecialty Focus (Trauma vs. Spine vs. Arthroplasty)",
+        desc: "For acute fractures, consult a trauma surgeon (MS Ortho, NITOR); for sciatica or numbness, seek a spine specialist; for severe knee arthritis, consult an arthroplasty surgeon.",
+      },
+      {
+        title: "2. Immediate Fracture Immobilization (RICE Protocol)",
+        desc: "Immobilize broken limbs immediately using a firm padded splint and ice packs; never allow unscientific traditional massages or violent bone manipulations.",
+      },
+      {
+        title: "3. Advanced Diagnostic Imaging Support (1.5T MRI & Digital X-Ray)",
+        desc: "Accurate surgical reduction and ligament assessment require high-resolution digital radiography, 3D CT scans, and high-field superconductive MRI.",
+      },
+      {
+        title: "4. Sterile Operating Theater with C-Arm Fluoroscopy",
+        desc: "For surgical fixation (AO plates, interlocking nails, arthroscopy), select hospitals equipped with laminar airflow OTs and real-time C-Arm fluoroscopic guidance.",
+      },
+      {
+        title: "5. Maximize Savings with Health Club Membership",
+        desc: "Present your Health Club digital card to enjoy 10% to 30% member savings on digital X-rays, MRI scans, CT scans, and post-op physiotherapy sessions.",
+      },
+    ],
+  },
   "best-kidney-doctors-in-feni": {
     title: "5 Essential Criteria for Choosing a Kidney Specialist & Dialysis Unit in Feni",
     points: [

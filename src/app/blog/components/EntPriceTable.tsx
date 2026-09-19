@@ -1,4 +1,4 @@
-import { SkinCarePackageItem } from "@/types/blog";
+import { EntCarePackageItem } from "@/types/blog";
 import { BlogPriceTable } from "./BlogPriceTable";
 import {
   formatBlogPriceRange,
@@ -6,19 +6,19 @@ import {
   translateTurnaroundTime,
 } from "../utils/blogTranslations";
 
-interface SkinPriceTableProps {
+interface EntPriceTableProps {
   pricingData: {
     titleBn: string;
     subtitleBn: string;
-    packages: SkinCarePackageItem[];
+    packages: EntCarePackageItem[];
   };
   locale?: string;
 }
 
-export function SkinPriceTable({
+export function EntPriceTable({
   pricingData,
   locale = "bn",
-}: SkinPriceTableProps) {
+}: EntPriceTableProps) {
   const isEn = locale === "en";
 
   const items = pricingData.packages.map((item) => ({
@@ -31,15 +31,15 @@ export function SkinPriceTable({
 
   return (
     <BlogPriceTable
-      id="skin-price-guide"
+      id="ent-price-guide"
       title={
         isEn
-          ? "Skin Test, Allergy Panel & Dermatosurgery Cost Guide"
+          ? "ENT Diagnostic Tests, Hearing & Surgery Cost Guide"
           : pricingData.titleBn
       }
       subtitle={
         isEn
-          ? "Estimated diagnostic fees for skin scraping (KOH), allergy tests, biopsy, and minor cosmetic procedures in Feni with 10-30% Health Club member savings."
+          ? "Standard market fees for pure tone audiometry, PNS CT scans, eardrum repairs, and tonsillectomies in Feni with 10-30% Health Club member savings."
           : pricingData.subtitleBn
       }
       items={items}
@@ -48,13 +48,13 @@ export function SkinPriceTable({
         item: isEn ? "Procedure / Diagnostic Test" : "টেস্ট / প্রসিডিউরের নাম ও ধরন",
         regularPrice: isEn ? "Standard Rate" : "সাধারণ বাজারদর",
         benefit: isEn ? "Health Club Benefit" : "হেলথ ক্লাব সুবিধা",
-        duration: isEn ? "Duration / Turnaround" : "সময়কাল / রিপোর্ট ডেলিভারি",
+        duration: isEn ? "Duration / Turnaround" : "সময়কাল / সুবিধা",
       }}
       conversionBanner={{
         text: isEn
-          ? "Health Club members enjoy direct discounts on fungal scraping, allergy panels, and biopsy tests at partner diagnostic centers."
-          : "হেলথ ক্লাব মেম্বারশিপ থাকলে পার্টনার ডায়াগনস্টিক সেন্টারে স্কিন স্ক্র্যাপিং, এলার্জি প্যানেল ও বায়োপসি টেস্টে নিশ্চিত ছাড় পাওয়া যায়।",
-        buttonText: isEn ? "Get Membership" : "মেম্বারশিপ গ্রহণ করুন",
+          ? "Health Club members receive verified discounts on pure-tone audiometry, PNS CT imaging, diagnostic nasal endoscopy, and ENT surgeries at partner centers in Feni."
+          : "হেলথ ক্লাব মেম্বারশিপ থাকলে পার্টনার হাসপাতাল ও ডায়াগনস্টিক ল্যাবে পিউর টোন অডিওমেট্রি, পিএনএস এক্স-রে, সিটি স্ক্যান ও কানের মাইক্রোসার্জারিতে নিশ্চিত ছাড় পাওয়া যায়।",
+        buttonText: isEn ? "Join Health Club" : "মেম্বারশিপ গ্রহণ করুন",
         href: "/membership",
         variant: "link",
       }}

@@ -245,10 +245,9 @@ export default function InstallAppBanner() {
             <Image
               src="/images/member-card-logo.webp"
               alt="Health Club Logo"
-              width={44}
-              height={44}
-              style={{ width: "auto", height: "auto" }}
-              className="object-contain max-h-full max-w-full"
+              width={40}
+              height={40}
+              className="size-10 object-contain"
             />
           </div>
 

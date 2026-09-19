@@ -15,6 +15,9 @@ import { CardiacPriceTable } from "./CardiacPriceTable";
 import { KidneyPriceTable } from "./KidneyPriceTable";
 import { PediatricPriceTable } from "./PediatricPriceTable";
 import { SkinPriceTable } from "./SkinPriceTable";
+import { EyePriceTable } from "./EyePriceTable";
+import { OrthopedicPriceTable } from "./OrthopedicPriceTable";
+import { EntPriceTable } from "./EntPriceTable";
 
 interface BlogSpecializedSectionsProps {
   post: BlogPost;
@@ -209,6 +212,30 @@ export function BlogSpecializedSections({
       {post.skinCarePricingBn && (
         <SkinPriceTable
           pricingData={post.skinCarePricingBn}
+          locale={locale}
+        />
+      )}
+
+      {/* Eye Care, Cataract Surgery & Laser Pricing Table */}
+      {post.eyeCarePricingBn && (
+        <EyePriceTable
+          pricingData={post.eyeCarePricingBn}
+          locale={locale}
+        />
+      )}
+
+      {/* Orthopedic, Trauma & Joint Procedure Pricing Table */}
+      {post.orthopedicCarePricingBn && (
+        <OrthopedicPriceTable
+          pricingData={post.orthopedicCarePricingBn}
+          locale={locale}
+        />
+      )}
+
+      {/* ENT Diagnostic Tests & Surgery Pricing Table */}
+      {post.entCarePricingBn && (
+        <EntPriceTable
+          pricingData={post.entCarePricingBn}
           locale={locale}
         />
       )}

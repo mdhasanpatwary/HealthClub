@@ -1,4 +1,4 @@
-import { SkinCarePackageItem } from "@/types/blog";
+import { OrthopedicCarePackageItem } from "@/types/blog";
 import { BlogPriceTable } from "./BlogPriceTable";
 import {
   formatBlogPriceRange,
@@ -6,19 +6,19 @@ import {
   translateTurnaroundTime,
 } from "../utils/blogTranslations";
 
-interface SkinPriceTableProps {
+interface OrthopedicPriceTableProps {
   pricingData: {
     titleBn: string;
     subtitleBn: string;
-    packages: SkinCarePackageItem[];
+    packages: OrthopedicCarePackageItem[];
   };
   locale?: string;
 }
 
-export function SkinPriceTable({
+export function OrthopedicPriceTable({
   pricingData,
   locale = "bn",
-}: SkinPriceTableProps) {
+}: OrthopedicPriceTableProps) {
   const isEn = locale === "en";
 
   const items = pricingData.packages.map((item) => ({
@@ -31,15 +31,15 @@ export function SkinPriceTable({
 
   return (
     <BlogPriceTable
-      id="skin-price-guide"
+      id="orthopedic-price-guide"
       title={
         isEn
-          ? "Skin Test, Allergy Panel & Dermatosurgery Cost Guide"
+          ? "Orthopedic Tests, Plaster & Joint Procedure Cost Guide"
           : pricingData.titleBn
       }
       subtitle={
         isEn
-          ? "Estimated diagnostic fees for skin scraping (KOH), allergy tests, biopsy, and minor cosmetic procedures in Feni with 10-30% Health Club member savings."
+          ? "Standard market fees for digital X-rays, 3D CT bone scans, MRI spine/knee, plaster casts, and joint procedures in Feni with 10-30% Health Club member savings."
           : pricingData.subtitleBn
       }
       items={items}
@@ -48,13 +48,13 @@ export function SkinPriceTable({
         item: isEn ? "Procedure / Diagnostic Test" : "টেস্ট / প্রসিডিউরের নাম ও ধরন",
         regularPrice: isEn ? "Standard Rate" : "সাধারণ বাজারদর",
         benefit: isEn ? "Health Club Benefit" : "হেলথ ক্লাব সুবিধা",
-        duration: isEn ? "Duration / Turnaround" : "সময়কাল / রিপোর্ট ডেলিভারি",
+        duration: isEn ? "Duration / Turnaround" : "সময়কাল / সুবিধা",
       }}
       conversionBanner={{
         text: isEn
-          ? "Health Club members enjoy direct discounts on fungal scraping, allergy panels, and biopsy tests at partner diagnostic centers."
-          : "হেলথ ক্লাব মেম্বারশিপ থাকলে পার্টনার ডায়াগনস্টিক সেন্টারে স্কিন স্ক্র্যাপিং, এলার্জি প্যানেল ও বায়োপসি টেস্টে নিশ্চিত ছাড় পাওয়া যায়।",
-        buttonText: isEn ? "Get Membership" : "মেম্বারশিপ গ্রহণ করুন",
+          ? "Health Club members enjoy direct discounts on digital X-rays, 1.5T MRI spine imaging, BMD scans, and bone profile labs at partner diagnostic centers in Feni."
+          : "হেলথ ক্লাব মেম্বারশিপ থাকলে পার্টনার ডায়াগনস্টিক ল্যাবে ডিজিটাল এক্স-রে, ১.৫ টেসলা এমআরআই, বিএমডি বোন ডেনসিটি ও রক্তের ক্যালসিয়াম-ভিটামিন ডি টেস্টে নিশ্চিত ছাড় পাওয়া যায়।",
+        buttonText: isEn ? "Join Health Club" : "মেম্বারশিপ গ্রহণ করুন",
         href: "/membership",
         variant: "link",
       }}

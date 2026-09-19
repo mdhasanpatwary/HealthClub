@@ -18,6 +18,8 @@ import {
   Sparkles,
   CheckCircle2,
   ShieldCheck,
+  Eye,
+  Ear,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { BlogReviewCardWrapper } from "./BlogReviewCardWrapper";
@@ -44,11 +46,22 @@ const DEPARTMENT_ICONS: Record<string, React.ElementType> = {
   "neonatology-nicu": ShieldCheck,
   "pediatric-subspecialties": Sparkles,
   orthopedics: Bone,
+  "trauma-fracture": Bone,
+  "spine-arthroscopy": Activity,
+  "arthritis-joint-care": Sparkles,
   dermatology: Sparkles,
   "general-dermatology": Sparkles,
   "dermatosurgery-cosmetology": ShieldCheck,
   "vd-sexology": Activity,
   "skin-allergy": Sparkles,
+  ophthalmology: Eye,
+  "cataract-phaco": Eye,
+  "glaucoma-retina": ShieldCheck,
+  "pediatric-cornea": Sparkles,
+  ent: Ear,
+  "ear-hearing": Ear,
+  "nose-sinus": Activity,
+  "throat-head-neck": ShieldCheck,
 };
 
 export function DoctorSpecialtySection({
