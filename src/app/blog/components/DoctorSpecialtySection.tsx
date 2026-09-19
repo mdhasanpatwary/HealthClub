@@ -40,7 +40,15 @@ const DEPARTMENT_ICONS: Record<string, React.ElementType> = {
   "hypertension-vascular": Activity,
   "echo-preventive": Sparkles,
   pediatrics: Baby,
+  "general-pediatrics": Baby,
+  "neonatology-nicu": ShieldCheck,
+  "pediatric-subspecialties": Sparkles,
   orthopedics: Bone,
+  dermatology: Sparkles,
+  "general-dermatology": Sparkles,
+  "dermatosurgery-cosmetology": ShieldCheck,
+  "vd-sexology": Activity,
+  "skin-allergy": Sparkles,
 };
 
 export function DoctorSpecialtySection({

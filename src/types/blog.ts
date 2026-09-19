@@ -309,6 +309,26 @@ export interface KidneyPackagePriceItem {
   turnaroundOrDurationBn: string;
 }
 
+export interface PediatricCarePackageItem {
+  serviceOrVaccineNameBn: string;
+  serviceOrVaccineNameEn: string;
+  categoryBn: string;
+  regularPriceRangeBn: string;
+  memberPriceRangeBn?: string;
+  discountPercentageBn?: string;
+  ageOrDurationBn: string;
+}
+
+export interface SkinCarePackageItem {
+  procedureOrTestNameBn: string;
+  procedureOrTestNameEn: string;
+  categoryBn: string;
+  regularPriceRangeBn: string;
+  memberPriceRangeBn?: string;
+  discountPercentageBn?: string;
+  durationOrTurnaroundBn: string;
+}
+
 export interface BlogPost {
   slug: string;
   titleBn: string;
@@ -370,6 +390,16 @@ export interface BlogPost {
     titleBn: string;
     subtitleBn: string;
     packages: KidneyPackagePriceItem[];
+  };
+  pediatricCarePricingBn?: {
+    titleBn: string;
+    subtitleBn: string;
+    packages: PediatricCarePackageItem[];
+  };
+  skinCarePricingBn?: {
+    titleBn: string;
+    subtitleBn: string;
+    packages: SkinCarePackageItem[];
   };
   bookingGuideBn?: {
     titleBn: string;

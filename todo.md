@@ -1006,3 +1006,130 @@ This document lists all tasks required to resolve the 21 architectural, data, AP
   - **Files**: `src/app/layout.tsx`, `src/app/blog/[slug]/page.tsx`, `src/app/blog/page.tsx`, `src/app/page.tsx`, `src/app/about-us/page.tsx`, `src/app/privacy-policy/page.tsx`, `src/app/terms-conditions/page.tsx`, `src/app/membership/page.tsx`, `src/app/blog/components/BlogArticleHeader.tsx`
   - **Details**: Resolved critical mobile performance bottlenecks where LCP measured 4.3s, FCP 3.5s, and TTFB 1.7s in Google PageSpeed Insights. Identified that calling `cookies()` and `headers()` in `RootLayout` forced every single route across the application into dynamic serverless execution (`ƒ Dynamic`) in Mumbai (`bom1`), preventing Vercel's Global Edge CDN from caching HTML responses for US-based test runners. Eliminated `headers()` and `cookies()` from `RootLayout` and public pages, defaulting canonical SSR markup to Bengali (`bn`) and enabling client-side rehydration for language/theme switches. Configured 24-hour Incremental Static Regeneration (`revalidate = 86400`) on `/blog/[slug]`, `/blog`, `/about-us`, `/privacy-policy`, `/terms-conditions`, and `/membership`, as well as 5-minute ISR on `/`. Removed a rogue 26KB `<link rel="preload">` in `<head>` downloading `member-card-bg.webp` on every page, eliminating mobile network contention during initial CSS/font parsing. Fine-tuned responsive `sizes` on the blog hero cover image. Successfully converted public pages to `● (SSG)` and `○ (Static)` with zero TypeScript errors or ESLint warnings.
 
+---
+
+## 🌟 Phase 22: Local SEO Dominance — Feni Healthcare Content & Article Pipeline (TODO-183 to TODO-199)
+
+This roadmap outlines the strategic localized content cluster required to achieve 100% search dominance in Feni across Google Search, Google Discover, Google Maps, and AI answer engines (Perplexity, ChatGPT, Gemini). Each article targets verified high-intent local queries with rich Schema.org structured data, chamber serial contacts, pricing tables, and direct conversion hooks for Health Club membership and emergency services.
+
+### 🩺 Cluster 1: High-Volume Medical Specialty Guides (ডাক্তার ও চেম্বার সিরিয়াল সংক্রান্ত)
+
+- [x] **TODO-183**: **Authoritative SEO Article: Best Pediatricians & Child Specialists in Feni (ফেনীর সেরা শিশু বিশেষজ্ঞ ডাক্তার ও চেম্বার সিরিয়াল ২০২৬)**
+  - **Priority**: High (P1 - Massive Daily Local Search Volume)
+  - **Target Slug**: `/blog/best-child-specialists-in-feni`
+  - **Target Keywords**: `feni child specialist doctor`, `ফেনীর সেরা শিশু বিশেষজ্ঞ ডাক্তার`, `feni shishu doctor list`, `ফেনী শিশু ডাক্তারদের চেম্বার ও সিরিয়াল নম্বর`, `ফেনী শিশু হাসপাতাল`, `ফেনী নবজাতক ও শিশু বিশেষজ্ঞ`, `feni pediatrician doctor`.
+  - **Details**: Comprehensive guide profiling top 10-12 pediatricians and neonatologists in Feni (FCPS, DCH, MD Pediatrics). Include chamber locations (Hospital Road, SSK Road, Trunk Road), consultation fees, visiting hours, serial booking hotlines, vaccination guidelines, pediatric emergency danger signs, and partner hospitals with NICU/PICU facilities. Add `MedicalWebPage`, `ItemList` (with `Physician` objects), and `FAQPage` JSON-LD schemas.
+
+- [x] **TODO-184**: **Authoritative SEO Article: Best Dermatologists & Skin/VD Specialists in Feni (ফেনীর সেরা চর্ম, এলার্জি ও যৌন রোগ বিশেষজ্ঞ ডাক্তার ২০২৬)**
+  - **Priority**: High (P1 - Extremely High Private Local Search Volume)
+  - **Target Slug**: `/blog/best-skin-specialists-in-feni`
+  - **Files**: `src/data/blog/posts/feniSkinProfiles.ts`, `src/data/blog/posts/bestSkinSpecialistsInFeni.ts`, `src/app/blog/components/SkinPriceTable.tsx`, `src/types/blog.ts`, `src/app/blog/components/BlogSpecializedSections.tsx`, `src/app/blog/components/BlogTableOfContents.tsx`, `src/app/blog/components/BlogSidebar.tsx`, `src/app/blog/components/BlogPostDetailView.tsx`, `src/app/blog/components/DoctorSpecialtySection.tsx`, `src/data/blog/blogPosts.ts`, `src/app/blog/components/BlogClusterMesh.tsx`, `src/app/blog/utils/articleTranslationsData.ts`, `src/app/blog/utils/blogTranslations.ts`
+  - **Details**: Built authoritative, deeply localized, and medically verified guide profiling Feni's top 13 BMDC-registered dermatologists, allergists, cosmetologists, and venereologists across 3 clinical departments (General Dermatology, Dermatosurgery & Cosmetology, and Senior Visiting Specialists & VD Consultants). Covered evidence-based management of fungal ringworm (Tinea/দাদ) with strict warnings against irrational steroid combination creams (Clobetasol/Betamethasone), chronic eczema, acne scars, chemical peeling, PRP hair restoration, and confidential sexual health (STD/VD) consultations. Implemented mobile-responsive `SkinPriceTable` displaying KOH fungal scraping, total IgE allergy panels, punch biopsy, and electrocautery costs with 10-30% member savings. Linked into the Feni healthcare topic cluster network with bilingual FAQs and automated Schema.org structured data (`MedicalWebPage`, `ItemList` of `Physician` objects, `FAQPage`). All files strictly adhere to the 500-line code limit.
+
+- [ ] **TODO-185**: **Authoritative SEO Article: Best Eye Specialists & Eye Hospitals in Feni (ফেনীর সেরা চক্ষু বিশেষজ্ঞ ডাক্তার ও চক্ষু হাসপাতাল গাইড ২০২৬)**
+  - **Priority**: High (P1 - Regional Landmark Traffic)
+  - **Target Slug**: `/blog/best-eye-specialists-in-feni`
+  - **Target Keywords**: `feni eye specialist doctor`, `ফেনীর সেরা চক্ষু বিশেষজ্ঞ ডাক্তার`, `feni eye hospital`, `ফেনী অন্ধ কল্যাণ সমিতি চক্ষু হাসপাতাল`, `ফেনী ছানি অপারেশন খরচ`, `ফেনী চক্ষু ডাক্তার সিরিয়াল`, `ফেনী গ্লুকোমা ও রেটিনা বিশেষজ্ঞ`.
+  - **Details**: Profile top ophthalmologists (FCPS, MS Ophthalmology, DO) and eye hospitals (Feni Andha Kalyan Samiti Eye Hospital, private eye clinics). Detail modern Phaco cataract surgery costs, diabetic retinopathy screening, pediatric vision checkups, computer vision syndrome, spectacle prescription labs, and Health Club member diagnostic savings.
+
+- [ ] **TODO-186**: **Authoritative SEO Article: Best Orthopedic & Bone Specialists in Feni (ফেনীর সেরা অর্থোপেডিক, হাড় ভাঙা ও ট্রমা বিশেষজ্ঞ ডাক্তার ২০২৬)**
+  - **Priority**: High (P1 - Critical Trauma & Highway Accident Query Intent)
+  - **Target Slug**: `/blog/best-orthopedic-doctors-in-feni`
+  - **Target Keywords**: `feni orthopedic doctor list`, `ফেনীর সেরা অর্থোপেডিক ডাক্তার`, `ফেনী হাড় ভাঙা ও জোড়া বিশেষজ্ঞ`, `feni bone specialist`, `ফেনী ট্রমা সেন্টার`, `ফেনী কোমর ও হাঁটু ব্যথা বিশেষজ্ঞ`, `ফেনী স্পাইন সার্জন`.
+  - **Details**: Profile leading orthopedic and trauma surgeons (MS Ortho, D-Ortho, FCPS). Provide emergency fracture management guidance, joint replacement (hip/knee arthroplasty), sciatica/back pain relief, and digital X-ray/CT scan discount links at partner centers.
+
+- [ ] **TODO-187**: **Authoritative SEO Article: Best ENT (Ear, Nose, Throat) Specialists in Feni (ফেনীর সেরা নাক, কান ও গলা বিশেষজ্ঞ ডাক্তার ২০২৬)**
+  - **Priority**: Medium (P1 - Year-Round Seasonal Query Demand)
+  - **Target Slug**: `/blog/best-ent-doctors-in-feni`
+  - **Target Keywords**: `feni ent doctor`, `ফেনীর সেরা নাক কান গলা বিশেষজ্ঞ ডাক্তার`, `feni ear nose throat specialist`, `টনসিল অপারেশন ফেনী`, `ফেনী সাইনাস চিকিৎসা`, `ফেনী কানের পর্দা ফুটো অপারেশন`, `feni ent specialist chamber`.
+  - **Details**: Profile top ENT and head-neck surgeons in Feni (DLO, MS ENT, FCPS). Include detailed guidance on tonsillitis, DNS/sinusitis, ear discharge, hearing aid audiometry tests, and microsurgery facilities in local hospitals with Schema.org rich snippets.
+
+- [ ] **TODO-188**: **Authoritative SEO Article: Best General, Laparoscopic & Colorectal Surgeons in Feni (ফেনীর সেরা জেনারেল, ল্যাপারোস্কোপিক ও পাইলস সার্জন ২০২৬)**
+  - **Priority**: High (P1 - High-Value Surgical Intent)
+  - **Target Slug**: `/blog/best-surgeons-in-feni`
+  - **Target Keywords**: `feni general surgeon`, `ফেনীর সেরা সার্জন ডাক্তার`, `ফেনী পাইলস ও ফিস্টুলা লেজার চিকিৎসা`, `ফেনী ল্যাপারোস্কোপিক গলব্লাডার অপারেশন`, `ফেনী হার্নিয়া ও অ্যাপেন্ডিক্স অপারেশন`, `feni laparoscopic surgeon`.
+  - **Details**: Guide covering top general, laparoscopic, and colorectal surgeons in Feni. Provide operation cost breakdowns (laser piles surgery, gallbladder stone removal, appendix, hernia), post-op recovery advice, hospital admission checklists, and member surgical bed/OT charge discounts.
+
+- [ ] **TODO-189**: **Authoritative SEO Article: Best Neurologists & Stroke Specialists in Feni (ফেনীর সেরা নিউরোমেডিসিন ও স্ট্রোক বিশেষজ্ঞ ডাক্তার ২০২৬)**
+  - **Priority**: High (P1 - High-Intent Chronic Illness Traffic)
+  - **Target Slug**: `/blog/best-neurologists-in-feni`
+  - **Target Keywords**: `feni neurology doctor`, `ফেনীর সেরা নিউরোমেডিসিন ডাক্তার`, `ফেনী স্ট্রোক ও প্যারালাইসিস বিশেষজ্ঞ`, `feni neuro specialist`, `ফেনী মাইগ্রেন ও মাথাব্যথা চিকিৎসা`, `ফেনী মৃগীরোগ বিশেষজ্ঞ`.
+  - **Details**: Profile visiting and resident neurologists (MD Neuro, FCPS Neurology). Provide immediate acute stroke emergency protocols (Golden Window), EEG/brain MRI diagnostic guidance, neuropathic pain management, and direct links to partner CCU/ICU facilities.
+
+- [ ] **TODO-190**: **Authoritative SEO Article: Best Diabetes & Hormone (Endocrinologists) in Feni (ফেনীর সেরা ডায়াবেটিস ও হরমোন বিশেষজ্ঞ ডাক্তার ২০২৬)**
+  - **Priority**: High (P1 - Pervasive Chronic Condition Search Demand)
+  - **Target Slug**: `/blog/best-diabetes-doctors-in-feni`
+  - **Target Keywords**: `feni diabetes specialist doctor`, `ফেনীর সেরা ডায়াবেটিস ডাক্তার`, `ফেনীর হরমোন বিশেষজ্ঞ`, `ফেনী থাইরয়েড ডাক্তার`, `ফেনী ডায়াবেটিস নিয়ন্ত্রণ ও ডায়েট`, `ফেনী ডায়াবেটিক হাসপাতাল বিশেষজ্ঞ তালিকা`.
+  - **Details**: Profile specialized endocrinologists and diabetologists. Outline HbA1c testing guidelines, gestational diabetes in pregnancy, thyroid disorder management (hypo/hyperthyroidism), insulin dose calibration, and diabetic foot care protocols.
+
+- [ ] **TODO-191**: **Authoritative SEO Article: Best Psychiatrists & Mental Health Doctors in Feni (ফেনীর সেরা মানসিক রোগ ও সাইকিয়াট্রি বিশেষজ্ঞ ডাক্তার ২০২৬)**
+  - **Priority**: Medium (P2 - Underserved Medical Search Niche)
+  - **Target Slug**: `/blog/best-psychiatrists-in-feni`
+  - **Target Keywords**: `feni psychiatrist doctor`, `ফেনীর মানসিক রোগ বিশেষজ্ঞ ডাক্তার`, `ফেনী ডিপ্রেশন ও সাইকোথেরাপি`, `মানসিক স্বাস্থ্য ফেনী`, `ফেনী মাদকাসক্তি নিরাময় ও কাউন্সেলিং`.
+  - **Details**: Comprehensive guide profiling BMDC-registered psychiatrists and psychological counselors in Feni. Break down stigma around depression, generalized anxiety disorder, sleep disorders, OCD, adolescent counseling, and confidential serial booking.
+
+---
+
+### 🏥 Cluster 2: Public & Non-Profit Healthcare Hub Guides (সরকারি ও ট্রাস্ট হাসপাতাল গাইড)
+
+- [ ] **TODO-192**: **Authoritative SEO Article: Feni 250-Bed General (Sadar) Hospital Complete Guide: OPD, Emergency & Admissions (ফেনী ২৫০ শয্যা জেনারেল হাসপাতাল সম্পূর্ণ গাইড ২০২৬)**
+  - **Priority**: High (P0 - #1 Most Searched Healthcare Entity in the District)
+  - **Target Slug**: `/blog/feni-sadar-hospital-guide`
+  - **Target Keywords**: `feni 250 bed general hospital`, `ফেনী সদর হাসপাতাল`, `ফেনী সদর হাসপাতাল ডাক্তার তালিকা`, `ফেনী সরকারি হাসপাতাল বহির্বিভাগ সময়সূচী`, `ফেনী সদর হাসপাতাল জরুরি বিভাগ`, `ফেনী সদর হাসপাতাল টিকেট কাউন্টার`, `ফেনী সরকারি হাসপাতাল সেবা ও খরচ`.
+  - **Details**: In-depth operational guide to Feni 250-bed District General Hospital: outdoor OPD ticket system (৳১০), duty doctor schedules, indoor bed admission process, free medicine supply counter, emergency room (ER) 24/7 triage, government subsidized dialysis unit, pathology lab test costs, and blood bank contacts. Include maps, emergency phone numbers, and citizen charter details.
+
+- [ ] **TODO-193**: **Authoritative SEO Article: Feni Diabetic Samity Hospital Services, Doctors & Lab Guide (ফেনী ডায়াবেটিক সমিতি হাসপাতাল সেবা ও ডাক্তার গাইড ২০২৬)**
+  - **Priority**: High (P1 - High Trust Public Institution)
+  - **Target Slug**: `/blog/feni-diabetic-hospital-guide`
+  - **Target Keywords**: `feni diabetic hospital`, `ফেনী ডায়াবেটিক সমিতি হাসপাতাল`, `ফেনী ডায়াবেটিক হাসপাতাল ডাক্তার তালিকা`, `ডায়াবেটিস টেস্ট খরচ ফেনী`, `ফেনী ডায়াবেটিক হাসপাতাল ইনডোর ও ডায়াগনস্টিক`.
+  - **Details**: Comprehensive review of Feni Diabetic Association Hospital (Mizan Road, Feni): specialized outdoor clinics, subsidized diabetic patient registration book, pathology analyzer lab, eye and dental units, foot care clinic, ambulance service, and doctor rosters.
+
+---
+
+### 🧪 Cluster 3: Diagnostic Pricing, Lab Tests & Pharmacy Guides (পরীক্ষা খরচ ও ফার্মেসি গাইড)
+
+- [ ] **TODO-194**: **Authoritative SEO Article: Feni Medical Diagnostic & Pathology Test Price List 2026 (ফেনীতে প্যাথলজি ও রেডিওলজি টেস্টের খরচ তালিকা ২০২৬)**
+  - **Priority**: High (P0 - Extreme Commercial Search Intent & Membership Conversion)
+  - **Target Slug**: `/blog/feni-medical-test-price-list`
+  - **Target Keywords**: `feni medical test price`, `ফেনী ডায়াগনস্টিক টেস্ট খরচ তালিকা`, `এমআরআই টেস্ট খরচ ফেনী`, `সিটি স্ক্যান খরচ ফেনী`, `ইকো ও আল্ট্রাসনোগ্রাম খরচ ফেনী`, `রক্ত পরীক্ষার খরচ ফেনী`, `সিবিসি টেস্ট খরচ ফেনী`, `ফেনী ডায়াগনস্টিক ডিসকাউন্ট`.
+  - **Details**: Detailed comparative price guide for 50+ common diagnostic tests in Feni (CBC, Lipid Profile, Liver Function, Serum Creatinine, Thyroid Profile, HbA1c, 4D USG, Digital X-Ray, 128-Slice CT Scan, 1.5T MRI, Echocardiography, Endoscopy). Highlight regular market prices vs. Health Club partner discount prices (10% to 50% savings) with direct CTA buttons to join Health Club.
+
+- [ ] **TODO-195**: **Authoritative SEO Article: 24/7 Pharmacies & Emergency Medicine Delivery in Feni (ফেনীতে ২৪ ঘণ্টা খোলা ফার্মেসি ও জরুরি ওষুধ ডেলিভারি গাইড ২০২৬)**
+  - **Priority**: High (P1 - High Urgency Click-to-Call Intent)
+  - **Target Slug**: `/blog/24-hour-pharmacy-in-feni`
+  - **Target Keywords**: `24 hour pharmacy feni`, `feni model pharmacy`, `ফেনীতে ২৪ ঘণ্টা খোলা ওষুধের দোকান`, `ফেনী জরুরি ওষুধ হোম ডেলিভারি`, `ফেনী সদর হাসপাতাল সংলগ্ন ফার্মেসি`, `ফেনী প্রেসক্রিপশন মেডিসিন ডেলিভারি`.
+  - **Details**: Curated directory of 24-hour pharmacies near Hospital Road, SSK Road, Trunk Road, and Daganbhuiyan/Chhagalnaiya hubs. Include verified hotline numbers, night service status, insulin cool-pack storage, prescription verification, and emergency home delivery services.
+
+---
+
+### 🚨 Cluster 4: Emergency Lifesaving Network Guides (জরুরি জীবন রক্ষাকারী সেবা)
+
+- [ ] **TODO-196**: **Authoritative SEO Article: Feni Emergency Blood Bank, Donors & Voluntary Clubs Guide (ফেনী জেলা ব্লাড ব্যাংক ও জরুরি রক্তদাতা গাইড ২০২৬)**
+  - **Priority**: High (P0 - Viral Community Sharing & High Local Utility)
+  - **Target Slug**: `/blog/feni-blood-bank-and-donors-guide`
+  - **Target Keywords**: `feni blood bank contact number`, `feni blood donor`, `ফেনী রেড ক্রিসেন্ট ব্লাড ব্যাংক`, `ফেনী রক্তদান সংগঠন`, `ফেনীতে জরুরি রক্তের গ্রুপ সংগ্রহ`, `রক্তদাতা ফেনী`, `ফেনী ব্লাড ব্যাংক ফোন নাম্বার`.
+  - **Details**: Complete emergency blood network directory in Feni: Red Crescent Blood Center, Sadar Hospital Blood Bank, local volunteer donor organizations, rare negative group hotline, screening requirements, and direct integration with Health Club's verified `/emergency` blood donor search.
+
+- [ ] **TODO-197**: **Authoritative SEO Article: Feni 24/7 Ambulance, ICU Ambulance & Emergency Oxygen Cylinder Guide (ফেনী ২৪/৭ অ্যাম্বুলেন্স ও অক্সিজেন সার্ভিস গাইড ২০২৬)**
+  - **Priority**: High (P0 - Immediate Emergency Conversion)
+  - **Target Slug**: `/blog/feni-ambulance-and-oxygen-service-guide`
+  - **Target Keywords**: `feni ambulance number`, `feni icu ambulance`, `ফেনী অ্যাম্বুলেন্স ফোন নাম্বার`, `ফেনী অক্সিজেন সিলিন্ডার ভাড়া`, `ফেনী থেকে ঢাকা অ্যাম্বুলেন্স ভাড়া`, `ফেনী থেকে চট্টগ্রাম অ্যাম্বুলেন্স ভাড়া`, `ফেনী লাশবাহী ফ্রিজিং গাড়ি`.
+  - **Details**: Exhaustive emergency transport directory covering AC, Non-AC, ICU Cardiac, and NICU ambulances in Feni. Standard fare estimates for Feni to Dhaka/Chittagong hospital transfers, oxygen cylinder refill/rental hotlines, and instant click-to-call directory linking to `/emergency`.
+
+---
+
+### 📍 Cluster 5: Hyper-Local Upazila Healthcare Hubs (উপজেলা ভিত্তিক স্বাস্থ্যসেবা)
+
+- [ ] **TODO-198**: **Authoritative SEO Article: Daganbhuiyan, Chhagalnaiya & Sonagazi Healthcare & Doctor Guide (দাগনভূঞা, ছাগলনাইয়া ও সোনাগাজী স্বাস্থ্যসেবা ও ডাক্তার গাইড ২০২৬)**
+  - **Priority**: Medium (P1 - Dominating Sub-District Search Queries)
+  - **Target Slug**: `/blog/daganbhuiyan-chagalnaiya-sonagazi-healthcare-guide`
+  - **Target Keywords**: `daganbhuiyan hospital and doctor`, `chagalnaiya doctor list`, `sonagazi upazila health complex`, `দাগনভূঞা ডাক্তার তালিকা`, `ছাগলনাইয়া হাসপাতাল ও ডাক্তার`, `সোনাগাজী স্বাস্থ্য কমপ্লেক্স`, `দাগনভূঞা ক্লিনিক ও ডায়াগনস্টিক সেন্টার`.
+  - **Details**: Hyper-local guide covering government Upazila Health Complexes, top private clinics, specialist doctor visiting days, diagnostic centers, and emergency transport routes to Feni Sadar for Daganbhuiyan, Chhagalnaiya, and Sonagazi residents.
+
+- [ ] **TODO-199**: **Authoritative SEO Article: Parshuram & Fulgazi Upazila Healthcare & Clinic Guide (পরশুরাম ও ফুলগাজী উপজেলা স্বাস্থ্যসেবা ও ক্লিনিক গাইড ২০২৬)**
+  - **Priority**: Medium (P2 - Uncontested Northern Feni Search Authority)
+  - **Target Slug**: `/blog/parshuram-fulgazi-healthcare-guide`
+  - **Target Keywords**: `parshuram upazila health complex`, `fulgazi doctor list`, `পরশুরাম স্বাস্থ্য কমপ্লেক্স`, `ফুলগাজী ক্লিনিক ও ডায়াগনস্টিক`, `পরশুরাম ও ফুলগাজী ডাক্তার চেম্বার`.
+  - **Details**: Healthcare guide tailored for northern Feni: Parshuram and Fulgazi Upazila Health Complexes, local private diagnostic centers, emergency ambulance contacts, maternal ANC clinics, and referral guidelines to Feni Sadar tertiary hospitals.
+
+

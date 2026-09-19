@@ -1,4 +1,15 @@
 export const ARTICLE_ENGLISH_INTROS: Record<string, string[]> = {
+  "best-skin-specialists-in-feni": [
+    "The human skin is the body's largest and most exposed organ. In Feni and surrounding coastal-plain upazilas, warm humid weather and environmental factors drive a high incidence of fungal ringworm (Tinea), chronic eczema, scabies, and acute allergies.",
+    "A major clinical hazard in Bangladesh is the misuse of over-the-counter steroid combination creams (e.g. Betamethasone or Clobetasol mixtures) for fungal infections, leading to skin atrophy and severe antifungal resistance. Consulting a registered dermatologist (DDV, FCPS, MD) is essential for evidence-based healing.",
+    "Furthermore, social stigma frequently hinders individuals from seeking timely care for sexually transmitted infections (STDs/VD) and sensitive reproductive concerns. Modern dermatology and venereology ensure strictly confidential, non-judgmental treatment.",
+    "This verified directory profiles Feni's top 13 BMDC-registered dermatologists, venereologists, and dermatosurgeons, detailing chamber locations, direct serial hotlines, and diagnostic pricing.",
+  ],
+  "best-child-specialists-in-feni": [
+    "A child's early health, growth, and neurological development form the foundation of lifelong well-being. Because infants and children have sensitive immune systems, conditions like pneumonia, bronchiolitis, and neonatal jaundice require prompt specialist care.",
+    "Children require age-appropriate medicine dosages and clinical monitoring distinct from adults. Consulting a BMDC-registered pediatrician (FCPS, MD, DCH) or neonatologist ensures safe diagnosis without unnecessary antibiotic usage.",
+    "This verified directory covers Feni's top 11 child specialists, chamber contacts, visiting hours, routine EPI vs. private optional vaccination costs, and 24/7 NICU facilities.",
+  ],
   "best-kidney-doctors-in-feni": [
     "Healthy kidney function is critical for filtering metabolic toxins, regulating body fluids, balancing electrolytes, and maintaining normal blood pressure.",
     "With rising incidences of diabetes and hypertension across Feni district, early identification of elevated serum creatinine and diabetic nephropathy is vital to prevent irreversible renal failure.",
@@ -47,6 +58,20 @@ export const ARTICLE_ENGLISH_INTROS: Record<string, string[]> = {
 };
 
 export const ARTICLE_ENGLISH_HIGHLIGHTS: Record<string, string[]> = {
+  "best-skin-specialists-in-feni": [
+    "Verified chamber schedules and direct serial hotlines for 13 top BMDC-registered dermatologists, venereologists, and dermatosurgeons in Feni.",
+    "Critical warning against irrational steroid combination creams (Clobetasol/Betamethasone) causing steroid-induced fungal resistance.",
+    "Comprehensive guide covering chronic eczema, acne scar reduction, chemical peeling, PRP hair restoration, and electrocautery wart removal.",
+    "Strictly confidential and non-judgmental consultations and laboratory screening for sexually transmitted infections (STDs/VD).",
+    "Exclusive 10-30% Health Club member discounts on skin scraping (KOH), allergy IgE panels, and skin biopsies at partner diagnostic centers.",
+  ],
+  "best-child-specialists-in-feni": [
+    "Verified chamber schedules and direct serial hotlines for 11 top BMDC-registered pediatricians and neonatologists in Feni.",
+    "Comprehensive guide comparing free government EPI vaccines with recommended private optional vaccines (Rotavirus, Pneumococcal, Flu, Typhoid).",
+    "Critical pediatric emergency red flag signs (chest indrawing, lethargy, high fevers, seizures) requiring urgent hospitalization.",
+    "250-bed Sadar Hospital subsidized SCANU incubator rates vs. private hospital NICU and phototherapy daily charges.",
+    "Exclusive 10-30% Health Club member discounts on pediatric CBC with ESR, CRP, serum bilirubin, and digital X-rays.",
+  ],
   "best-kidney-doctors-in-feni": [
     "Verified chamber schedules and serial booking hotlines for top nephrologists (MD Nephrology) and urologists (MS Urology) in Feni.",
     "Comprehensive cost comparison between 250-bed Sadar Hospital subsidized hemodialysis (৳400-৳500) and private facilities (৳2,200-৳3,500).",

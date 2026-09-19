@@ -13,12 +13,16 @@ interface BlogSidebarProps {
   hasMaternityPricing?: boolean;
   hasCardiacPricing?: boolean;
   hasKidneyPricing?: boolean;
+  hasPediatricPricing?: boolean;
+  hasSkinPricing?: boolean;
   locale?: string;
 }
 
 const CLUSTER_QUICK_LINKS = [
   { slug: "best-10-hospitals-in-feni", titleBn: "ফেনীর সেরা হাসপাতাল", titleEn: "Top 10 Hospitals" },
   { slug: "best-doctors-in-feni", titleBn: "সেরা বিশেষজ্ঞ ডাক্তার", titleEn: "Specialist Doctors" },
+  { slug: "best-child-specialists-in-feni", titleBn: "শিশু ও নবজাতক বিশেষজ্ঞ", titleEn: "Child Specialists & NICU" },
+  { slug: "best-skin-specialists-in-feni", titleBn: "চর্ম, এলার্জি ও যৌন বিশেষজ্ঞ", titleEn: "Dermatologists & Skin" },
   { slug: "best-medicine-doctors-in-feni", titleBn: "মেডিসিন বিশেষজ্ঞ", titleEn: "Medicine Specialists" },
   { slug: "best-cardiologists-in-feni", titleBn: "হৃদরোগ ও কার্ডিওলজিস্ট", titleEn: "Cardiologists & Heart" },
   { slug: "best-gynecologists-in-feni", titleBn: "গাইনি ও প্রসূতি সেবা", titleEn: "Gynecologists & Maternity" },
@@ -38,6 +42,8 @@ export function BlogSidebar({
   hasMaternityPricing = false,
   hasCardiacPricing = false,
   hasKidneyPricing = false,
+  hasPediatricPricing = false,
+  hasSkinPricing = false,
   locale = "bn",
 }: BlogSidebarProps) {
   const isEn = locale === "en";
@@ -54,6 +60,8 @@ export function BlogSidebar({
           hasMaternityPricing={hasMaternityPricing}
           hasCardiacPricing={hasCardiacPricing}
           hasKidneyPricing={hasKidneyPricing}
+          hasPediatricPricing={hasPediatricPricing}
+          hasSkinPricing={hasSkinPricing}
           locale={locale}
         />
 
@@ -64,7 +72,7 @@ export function BlogSidebar({
               {isEn ? "Feni Healthcare Cluster" : "ফেনী স্বাস্থ্য গাইড নেটওয়ার্ক"}
             </h3>
             <span className="text-[10px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-              {isEn ? "9 Guides" : "৯টি গাইড"}
+              {isEn ? "11 Guides" : "১১টি গাইড"}
             </span>
           </div>
           <div className="space-y-1 text-xs">

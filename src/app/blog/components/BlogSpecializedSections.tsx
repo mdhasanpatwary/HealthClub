@@ -13,6 +13,8 @@ import { PhysiotherapyPriceTable } from "./PhysiotherapyPriceTable";
 import { MaternityPriceTable } from "./MaternityPriceTable";
 import { CardiacPriceTable } from "./CardiacPriceTable";
 import { KidneyPriceTable } from "./KidneyPriceTable";
+import { PediatricPriceTable } from "./PediatricPriceTable";
+import { SkinPriceTable } from "./SkinPriceTable";
 
 interface BlogSpecializedSectionsProps {
   post: BlogPost;
@@ -191,6 +193,22 @@ export function BlogSpecializedSections({
       {post.kidneyCarePricingBn && (
         <KidneyPriceTable
           pricingData={post.kidneyCarePricingBn}
+          locale={locale}
+        />
+      )}
+
+      {/* Pediatric Care, Vaccination & NICU Pricing Table */}
+      {post.pediatricCarePricingBn && (
+        <PediatricPriceTable
+          pricingData={post.pediatricCarePricingBn}
+          locale={locale}
+        />
+      )}
+
+      {/* Skin Care, Allergy & Minor Procedure Pricing Table */}
+      {post.skinCarePricingBn && (
+        <SkinPriceTable
+          pricingData={post.skinCarePricingBn}
           locale={locale}
         />
       )}

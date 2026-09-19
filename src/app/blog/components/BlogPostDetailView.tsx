@@ -260,6 +260,8 @@ export function BlogPostDetailView({
               hasMaternityPricing={!!post.maternityCarePricingBn}
               hasCardiacPricing={!!post.cardiacCarePricingBn}
               hasKidneyPricing={!!post.kidneyCarePricingBn}
+              hasPediatricPricing={!!post.pediatricCarePricingBn}
+              hasSkinPricing={!!post.skinCarePricingBn}
               locale={locale}
             />
           </div>

@@ -1,4 +1,6 @@
 import { BlogPost, BlogCategory } from "@/types/blog";
+import { BEST_SKIN_SPECIALISTS_IN_FENI } from "./posts/bestSkinSpecialistsInFeni";
+import { BEST_CHILD_SPECIALISTS_IN_FENI } from "./posts/bestChildSpecialistsInFeni";
 import { BEST_KIDNEY_DOCTORS_IN_FENI } from "./posts/bestKidneyDoctorsInFeni";
 import { BEST_MEDICINE_DOCTORS_IN_FENI } from "./posts/bestMedicineDoctorsInFeni";
 import { BEST_CARDIOLOGISTS_IN_FENI } from "./posts/bestCardiologistsInFeni";
@@ -16,6 +18,20 @@ export const BLOG_CATEGORIES: BlogCategory[] = [
     nameEn: "All Posts",
     descriptionBn: "স্বাস্থ্যসেবা, হাসপাতাল রিভিউ ও জীবনযাত্রার প্রয়োজনীয় সব গাইড",
     descriptionEn: "All healthcare reviews, hospital directories and wellness guides",
+  },
+  {
+    id: "dermatology-guide",
+    nameBn: "চর্ম ও এলার্জি সেবা গাইড",
+    nameEn: "Dermatology & Skin Care",
+    descriptionBn: "ফেনীর সেরা চর্ম, এলার্জি ও যৌন রোগ বিশেষজ্ঞ ডাক্তার, লেজার ও স্কিন কেয়ার গাইড",
+    descriptionEn: "Top dermatologists, skin & VD specialists, allergy care and dermatosurgery in Feni",
+  },
+  {
+    id: "pediatric-guide",
+    nameBn: "শিশু ও নবজাতক সেবা গাইড",
+    nameEn: "Pediatrics & Neonatal Care",
+    descriptionBn: "ফেনীর সেরা শিশু বিশেষজ্ঞ ডাক্তার, নবজাতক এনআইসিইউ ও টিকাদান গাইড",
+    descriptionEn: "Top pediatricians, child specialists, NICU incubator care and vaccination guides in Feni",
   },
   {
     id: "kidney-guide",
@@ -116,6 +132,8 @@ export const BLOG_FILTER_PILLS: BlogFilterPill[] = [
     nameEn: "Doctor Guides",
     matchingCategories: [
       "doctor-guide",
+      "dermatology-guide",
+      "pediatric-guide",
       "medicine-guide",
       "cardiology-guide",
       "gynecology-guide",
@@ -139,6 +157,8 @@ export const BLOG_FILTER_PILLS: BlogFilterPill[] = [
     nameBn: "বিশেষায়িত চিকিৎসা",
     nameEn: "Specialized Care",
     matchingCategories: [
+      "dermatology-guide",
+      "pediatric-guide",
       "cardiology-guide",
       "gynecology-guide",
       "kidney-guide",
@@ -154,6 +174,8 @@ export const BLOG_FILTER_PILLS: BlogFilterPill[] = [
 ];
 
 export const BLOG_POSTS: BlogPost[] = [
+  BEST_SKIN_SPECIALISTS_IN_FENI,
+  BEST_CHILD_SPECIALISTS_IN_FENI,
   BEST_KIDNEY_DOCTORS_IN_FENI,
   BEST_MEDICINE_DOCTORS_IN_FENI,
   BEST_CARDIOLOGISTS_IN_FENI,

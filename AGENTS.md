@@ -26,6 +26,12 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - **Validation**: Always use **Zod** for schema validation.
 - **Form Management**: Always use **React Hook Form** for form state, submission handling, and validation binding.
 
+## Pricing & Discount Display Rules
+- **No Direct Discounted Taka Amounts in Pricing Tables**: In all diagnostic, procedure, care, and medical pricing tables or packages, NEVER show fixed or calculated discounted price amounts (e.g., `৳২৪০ - ৳৪০০`). Health Club member benefits must strictly display **10-30% discount** text/badge:
+  - Bengali: `"১০-৩০% মেম্বার ছাড়"` or `"মেম্বার হলে ১০-৩০% ডিসকাউন্ট"` / `"১০-৩০% বিশেষ ছাড়"`
+  - English: `"10-30% Member Discount"` or `"10-30% Special Discount"`
+- Regular market price ranges (`regularPriceRangeBn`) can be shown as reference ranges, but the Health Club benefit column must always communicate percentage savings (`10-30%`) rather than an absolute member price.
+
 ## No Hallucinations
 - Do not guess or invent APIs, project structures, schemas, or routing configurations.
 - If any requirement, schema, or route is ambiguous, **stop and ask the user for clarification**.

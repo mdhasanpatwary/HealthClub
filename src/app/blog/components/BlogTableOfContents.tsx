@@ -21,6 +21,8 @@ interface BlogTableOfContentsProps {
   hasMaternityPricing?: boolean;
   hasCardiacPricing?: boolean;
   hasKidneyPricing?: boolean;
+  hasPediatricPricing?: boolean;
+  hasSkinPricing?: boolean;
   locale?: string;
 }
 
@@ -33,6 +35,8 @@ export function BlogTableOfContents({
   hasMaternityPricing = false,
   hasCardiacPricing = false,
   hasKidneyPricing = false,
+  hasPediatricPricing = false,
+  hasSkinPricing = false,
   locale = "bn",
 }: BlogTableOfContentsProps) {
   const { locale: contextLocale } = useLanguage();
@@ -147,9 +151,29 @@ export function BlogTableOfContents({
                 </a>
               </li>
             )}
+            {hasPediatricPricing && (
+              <li>
+                <a
+                  href="#pediatric-price-guide"
+                  className="hover:text-primary transition-colors block py-0.5"
+                >
+                  {secNum(5)}{isEn ? "Child Care & Vaccination Cost Guide" : "শিশু চিকিৎসা ও টিকা খরচের হিসাব"}
+                </a>
+              </li>
+            )}
+            {hasSkinPricing && (
+              <li>
+                <a
+                  href="#skin-price-guide"
+                  className="hover:text-primary transition-colors block py-0.5"
+                >
+                  {secNum(5)}{isEn ? "Skin Test & Dermatosurgery Cost Guide" : "চর্মরোগ টেস্ট ও প্রসিডিউর খরচের হিসাব"}
+                </a>
+              </li>
+            )}
             <li>
               <a href="#faq-section" className="hover:text-primary transition-colors block py-0.5">
-                {secNum(hasMaternityPricing || hasCardiacPricing || hasKidneyPricing ? 6 : 5)}
+                {secNum(hasMaternityPricing || hasCardiacPricing || hasKidneyPricing || hasPediatricPricing || hasSkinPricing ? 6 : 5)}
                 {isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
               </a>
             </li>
