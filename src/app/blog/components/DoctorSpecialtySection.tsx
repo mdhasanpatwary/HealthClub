@@ -20,6 +20,7 @@ import {
   ShieldCheck,
   Eye,
   Ear,
+  Brain,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { BlogReviewCardWrapper } from "./BlogReviewCardWrapper";
@@ -62,6 +63,21 @@ const DEPARTMENT_ICONS: Record<string, React.ElementType> = {
   "ear-hearing": Ear,
   "nose-sinus": Activity,
   "throat-head-neck": ShieldCheck,
+  "general-laparoscopy": Activity,
+  "colorectal-proctology": ShieldCheck,
+  "pediatric-breast-urology": Sparkles,
+  neurology: Brain,
+  "stroke-paralysis": Activity,
+  "headache-epilepsy": Sparkles,
+  "neuropathy-neuro-rehab": ShieldCheck,
+  diabetes: Activity,
+  "endocrinology-diabetes": Activity,
+  "thyroid-gestational": Sparkles,
+  "diabetic-complications-diet": ShieldCheck,
+  psychiatry: Brain,
+  "general-psychiatry": Brain,
+  "child-adolescent-psychiatry": Sparkles,
+  "addiction-counseling-psychiatry": ShieldCheck,
 };
 
 export function DoctorSpecialtySection({

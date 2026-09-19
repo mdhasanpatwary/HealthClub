@@ -26,6 +26,10 @@ interface BlogTableOfContentsProps {
   hasEyePricing?: boolean;
   hasOrthopedicPricing?: boolean;
   hasEntPricing?: boolean;
+  hasSurgeryPricing?: boolean;
+  hasNeurologyPricing?: boolean;
+  hasDiabetesPricing?: boolean;
+  hasPsychiatryPricing?: boolean;
   locale?: string;
 }
 
@@ -43,12 +47,30 @@ export function BlogTableOfContents({
   hasEyePricing = false,
   hasOrthopedicPricing = false,
   hasEntPricing = false,
+  hasSurgeryPricing = false,
+  hasNeurologyPricing = false,
+  hasDiabetesPricing = false,
+  hasPsychiatryPricing = false,
   locale = "bn",
 }: BlogTableOfContentsProps) {
   const { locale: contextLocale } = useLanguage();
   const activeLocale = contextLocale || locale;
   const isEn = activeLocale === "en";
   const [isOpen, setIsOpen] = useState(false);
+
+  const hasDoctorPricing =
+    hasMaternityPricing ||
+    hasCardiacPricing ||
+    hasKidneyPricing ||
+    hasPediatricPricing ||
+    hasSkinPricing ||
+    hasEyePricing ||
+    hasOrthopedicPricing ||
+    hasEntPricing ||
+    hasSurgeryPricing ||
+    hasNeurologyPricing ||
+    hasDiabetesPricing ||
+    hasPsychiatryPricing;
 
   const isDoctorArticle = doctorGroups && doctorGroups.length > 0;
   const isDiagnosticArticle = diagnosticCenters && diagnosticCenters.length > 0;
@@ -207,9 +229,49 @@ export function BlogTableOfContents({
                 </a>
               </li>
             )}
+            {hasSurgeryPricing && (
+              <li>
+                <a
+                  href="#surgery-price-guide"
+                  className="hover:text-primary transition-colors block py-0.5"
+                >
+                  {secNum(5)}{isEn ? "General, Laparoscopic & Laser Surgery Cost Guide" : "ল্যাপারোস্কোপিক ও সার্জারি খরচের হিসাব"}
+                </a>
+              </li>
+            )}
+            {hasNeurologyPricing && (
+              <li>
+                <a
+                  href="#neurology-price-guide"
+                  className="hover:text-primary transition-colors block py-0.5"
+                >
+                  {secNum(5)}{isEn ? "Brain MRI, CT & Neuro Diagnostics Cost Guide" : "ব্রেন এমআরআই, সিটি ও নিউরো টেস্ট খরচের হিসাব"}
+                </a>
+              </li>
+            )}
+            {hasDiabetesPricing && (
+              <li>
+                <a
+                  href="#diabetes-price-guide"
+                  className="hover:text-primary transition-colors block py-0.5"
+                >
+                  {secNum(5)}{isEn ? "Diabetes, HbA1c & Hormone Cost Guide" : "ডায়াবেটিস, HbA1c ও হরমোন টেস্ট খরচের হিসাব"}
+                </a>
+              </li>
+            )}
+            {hasPsychiatryPricing && (
+              <li>
+                <a
+                  href="#psychiatry-price-guide"
+                  className="hover:text-primary transition-colors block py-0.5"
+                >
+                  {secNum(5)}{isEn ? "Psychiatry & Therapy Cost Guide" : "সাইকিয়াট্রি ও থেরাপি খরচের হিসাব"}
+                </a>
+              </li>
+            )}
             <li>
               <a href="#faq-section" className="hover:text-primary transition-colors block py-0.5">
-                {secNum(hasMaternityPricing || hasCardiacPricing || hasKidneyPricing || hasPediatricPricing || hasSkinPricing || hasEyePricing || hasOrthopedicPricing || hasEntPricing ? 6 : 5)}
+                {secNum(hasDoctorPricing ? 6 : 5)}
                 {isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
               </a>
             </li>

@@ -5,6 +5,30 @@ export const ARTICLE_ENGLISH_INTROS: Record<string, string[]> = {
     "Furthermore, spine conditions such as lumbar disc prolapse (PLID), sciatica, and chronic neck pain cause debilitating discomfort among adults and desk workers. Over 90% of disc herniations resolve completely with conservative therapy, precision imaging (1.5T MRI), and computerized spinal traction without invasive surgery.",
     "This verified directory profiles Feni's top 12 BMDC-registered orthopedic surgeons, trauma experts, and spine consultants across 3 specialized departments, featuring direct serial booking hotlines, hospital emergency triage, and exclusive 10-30% diagnostic savings.",
   ],
+  "best-surgeons-in-feni": [
+    "When abdominal and soft-tissue surgical disorders progress beyond medical therapy, timely, precision surgical intervention is life-saving. In Feni and adjoining coastal districts, dietary patterns high in oil and spices combined with sedentary lifestyles lead to a high incidence of symptomatic gallbladder stones (cholelithiasis), acute appendicitis, inguinal hernias, and anorectal conditions including piles (hemorrhoids), fissures, and fistulae.",
+    "Historically, surgical care involved extensive open incisions resulting in prominent scarring, severe post-op pain, and prolonged hospital stays. Today, minimally invasive laparoscopic surgery enables complete organ excision through 3 to 4 tiny 5-10mm keyhole punctures using high-definition video cameras, virtually eliminating blood loss and enabling discharge within 24 to 48 hours.",
+    "In colorectal care, seeking unscientific quack remedies—such as applying caustic chemicals or herbal acid pastes to burn piles—destroys the delicate anal sphincter muscle, resulting in permanent fecal incontinence and complex pelvic sepsis. Modern laser proctology (LHP and FiLaC) provides painless, bloodless healing in just 15-20 minutes while completely safeguarding sphincter continence.",
+    "This verified directory profiles Feni's top 13 BMDC-registered general, laparoscopic, and colorectal surgeons across 3 specialized departments, featuring direct serial booking hotlines, hospital OT package rates, and exclusive 10-30% Health Club member discounts.",
+  ],
+  "best-neurologists-in-feni": [
+    "The nervous system serves as the human body's master command center, governing consciousness, movement, cognition, and sensory perception. In Feni and the surrounding southeastern coastal belt, uncontrolled hypertension, diabetes, hyperlipidemia, and chronic stress drive a steep rise in acute brain strokes, sudden paralysis, chronic migraines, and debilitating neuropathies.",
+    "In acute stroke management, clinical evidence reinforces the critical maxim 'Time is Brain'. Every minute a cerebral artery remains blocked, approximately 1.9 million neurons perish permanently. Reaching a stroke-ready hospital within the 4.5-hour 'Golden Window' permits intravenous thrombolytic therapy (tPA) to dissolve clots and reverse paralysis before ischemic damage becomes irreversible.",
+    "A catastrophic hazard during acute stroke emergencies is administering water or oral aspirin at home. Paralyzed pharyngeal reflexes cause oral liquids to aspirate into the lungs, triggering fatal chemical asphyxiation. Furthermore, giving aspirin before an emergency non-contrast brain CT scan severely exacerbates bleeding if the stroke is hemorrhagic rather than ischemic.",
+    "This verified directory profiles Feni's top 13 BMDC-registered neurologists, stroke experts, and neuro-rehabilitation specialists across 3 clinical departments, featuring direct chamber serial hotlines, acute emergency protocols, and exclusive 10-30% Health Club member savings.",
+  ],
+  "best-diabetes-doctors-in-feni": [
+    "Diabetes mellitus, thyroid disorders, and metabolic imbalances represent an escalating healthcare challenge across Feni and the southeastern coastal plain of Bangladesh. Sedentary lifestyles, refined carbohydrates, and central adiposity drive a high incidence of Type 2 diabetes, metabolic syndrome, and hormonal disruptions.",
+    "A pervasive misconception is relying solely on random fingerstick glucose readings or adjusting medications without medical guidance. The clinical gold standard for diabetes monitoring is the Glycated Hemoglobin (HbA1c) test, which measures average blood glucose over the preceding 90 days. Maintaining an HbA1c below 7.0% is vital to prevent irreversible damage to the kidneys, eyes, cardiovascular system, and peripheral nerves.",
+    "Furthermore, pregnant mothers face significant maternal-fetal risks from Gestational Diabetes Mellitus (GDM), requiring timely oral glucose tolerance testing (OGTT) and safe insulin titration. Women also frequently experience thyroid dysfunction (hypothyroidism and thyroid nodules) causing fatigue, unexplained weight gain, and menstrual irregularities.",
+    "This verified directory profiles Feni's top 13 BMDC-registered endocrinologists, diabetologists, and metabolic care consultants across 3 clinical departments, detailing chamber schedules, direct serial hotlines, and exclusive 10-30% Health Club member diagnostic savings.",
+  ],
+  "best-psychiatrists-in-feni": [
+    "Mental health is an indispensable cornerstone of overall physical well-being. Across Feni and adjoining coastal communities, familial stress, expatriate isolation, career anxiety, youth digital screen addiction, and substance abuse drive an escalating burden of depressive and anxiety disorders.",
+    "A pervasive social stigma erroneously equates seeking psychiatric care with 'madness'. In reality, psychiatric illnesses are neurochemical imbalances (involving neurotransmitters like serotonin and dopamine) in the brain, which respond remarkably well to modern evidence-based pharmacotherapy and Cognitive Behavioral Therapy (CBT).",
+    "Understanding the distinction between a psychiatrist (a medical physician who evaluates biological causes and prescribes medication) and a clinical psychologist (who provides non-pharmacological psychotherapy and counseling) is key to receiving personalized, compassionate mental healthcare.",
+    "This verified directory profiles Feni's top 12 BMDC-registered psychiatrists and certified clinical psychologists across 3 specialized departments, detailing chamber schedules, direct serial booking hotlines, and exclusive 10-30% Health Club member savings.",
+  ],
   "best-ent-doctors-in-feni": [
     "The ear, nose, and throat govern vital sensory functions including respiration, speech, hearing, and balance. In coastal southeastern regions like Feni, warm humidity and dusty road corridors trigger a high prevalence of chronic sinusitis, allergic rhinitis, and fungal ear canal infections (Otomycosis).",
     "A widespread, hazardous household habit is probing ear canals with cotton swabs, hairpins, or matchsticks. Ear canal cerumen is a protective natural barrier, not dirt; probing compresses wax against the tympanic membrane and risks traumatic eardrum perforation. Safe oto-microscopic suction by an ENT doctor eliminates impaction painlessly without invasive trauma.",
@@ -83,6 +107,42 @@ export const ARTICLE_ENGLISH_HIGHLIGHTS: Record<string, string[]> = {
     "Modern non-surgical management of lumbar disc prolapse (PLID), sciatica nerve compression, and endoscopic minimally invasive spine care.",
     "Comprehensive guidance on knee osteoarthritis, intra-articular hyaluronic acid/PRP injections, and modern Total Knee Replacement (TKR) arthroplasty.",
     "Exclusive 10-30% Health Club member discounts on digital X-rays, 3D CT bone scans, 1.5T superconductive MRI, and DEXA bone density tests at partner centers.",
+  ],
+  "best-surgeons-in-feni": [
+    "Chamber schedules and direct serial booking hotlines for 13 leading BMDC-registered general, laparoscopic, and colorectal surgeons (FCPS, MS, MRCS, FACS) practicing in Feni.",
+    "Minimally invasive laparoscopic cholecystectomy and appendectomy protocols offering bloodless keyhole surgery and rapid 24-hour hospital discharge.",
+    "Advanced laser proctology (LHP / FiLaC) for painless, cut-free treatment of hemorrhoids, anal fissures, and complex perianal fistulae.",
+    "Critical warnings against caustic quack acids that permanently destroy anal sphincter muscles and cause lifelong fecal incontinence.",
+    "Tension-free polypropylene mesh hernioplasty for inguinal and umbilical hernias with minimal recurrence rates.",
+    "Guaranteed 10-30% Health Club member discounts on surgical operation theater (OT) packages, cabin beds, and pre-op diagnostic tests.",
+  ],
+  "best-neurologists-in-feni": [
+    "Chamber schedules and direct serial booking hotlines for 13 leading BMDC-registered neurologists and stroke consultants (MD Neurology, FCPS, BSMMU, NINS, CMCH) in Feni.",
+    "Life-saving 'BE-FAST' acute stroke recognition protocol (Balance, Eyes, Face drooping, Arm weakness, Slurred speech, and Time to act).",
+    "Clinical guidelines on the 4.5-Hour Golden Window for intravenous thrombolysis (tPA) to dissolve clots and prevent permanent paralysis.",
+    "Critical warnings against pouring water or giving oral aspirin to acute stroke victims at home, preventing fatal aspiration pneumonia.",
+    "Evidence-based differentiation between chronic migraine, tension headaches, and early-morning brain tumor symptoms.",
+    "Diagnosis and management of diabetic peripheral neuropathy, nerve entrapment, and Digital Video Electroencephalogram (EEG) for epilepsy.",
+    "Exclusive 10-30% Health Club member discounts on 1.5 Tesla Brain MRI, Emergency CT Scan, EEG, NCS/EMG, and stroke ICU beds at partner centers.",
+  ],
+  "best-diabetes-doctors-in-feni": [
+    "Chamber schedules and direct serial booking hotlines for 13 leading BMDC-registered endocrinologists and diabetologists (MD Endocrinology, BIRDEM, DMC, BSMMU) in Feni.",
+    "Scientific significance of HbA1c testing and modern international guidelines for maintaining a 3-month average blood glucose below 7.0%.",
+    "Timely screening (75g OGTT) and safe insulin management for Gestational Diabetes Mellitus (GDM) to safeguard maternal and fetal health.",
+    "Comprehensive clinical protocols for thyroid disorders (hypothyroidism & hyperthyroidism), thyroid nodules, and empty-stomach levothyroxine dosing.",
+    "Proper insulin injection techniques, site rotation, and the life-saving 'Rule of 15' for acute hypoglycemia management.",
+    "Daily foot care protocols and 10g Semmes-Weinstein monofilament testing to prevent diabetic foot ulcers, osteomyelitis, and amputations.",
+    "Guaranteed 10-30% Health Club member discounts on HbA1c, thyroid profiles, lipid panels, and urine ACR tests at partner diagnostic labs.",
+  ],
+  "best-psychiatrists-in-feni": [
+    "Chamber schedules and direct serial booking hotlines for 12 leading BMDC-registered psychiatrists and certified clinical psychologists in Feni.",
+    "Eradicating mental health stigma and clarifying the vital complementary roles of psychiatrists (medical prescriptions) and psychologists (psychotherapy & CBT).",
+    "International evidence-based protocols for Major Depressive Disorder (MDD), Generalized Anxiety Disorder (GAD), and panic attacks.",
+    "Scientific sleep hygiene and CBT-I guidelines to overcome chronic insomnia without perilous over-the-counter sleeping pill addiction.",
+    "Modern therapeutic management for Obsessive-Compulsive Disorder (OCD), bipolar mood disorder, and intrusive thoughts.",
+    "Specialized neurodevelopmental screening for child autism (ASD), ADHD, developmental speech delays, and adolescent screen addiction.",
+    "Substance abuse de-addiction protocols, medical detoxification, and 100% confidential family counseling for long-term rehabilitation.",
+    "Guaranteed 10-30% Health Club member discounts on Digital Video EEG, Brain MRI, Thyroid/Vitamin B12 panels, and psychotherapy sessions at partner centers.",
   ],
   "best-ent-doctors-in-feni": [
     "Verified chamber schedules and direct serial hotlines for 12 top BMDC-registered ENT specialists and head-neck surgeons in Feni.",
@@ -175,6 +235,81 @@ export const ARTICLE_SELECTION_GUIDES: Record<
   string,
   { title: string; points: { title: string; desc: string }[] }
 > = {
+  "best-surgeons-in-feni": {
+    title: "5 Essential Clinical Guidelines for Choosing a Surgeon & Hospital in Feni",
+    points: [
+      {
+        title: "1. Board Certification & Minimal Access Fellowship (FCPS/MS/FACS)",
+        desc: "Ensure your surgeon holds recognized postgraduate qualifications (FCPS, MS, MRCS, FACS) and accredited fellowship training in advanced laparoscopy or colorectal surgery.",
+      },
+      {
+        title: "2. Strictly Avoid Quack Chemical Burning for Piles & Fistulae",
+        desc: "Never allow unqualified practitioners to apply caustic pastes or acid injections to anal tissues; modern laser hemorrhoidoplasty (LHP) is safe and sphincter-preserving.",
+      },
+      {
+        title: "3. Pre-Anesthetic Checkup (PAC) & Critical Fasting (NPO)",
+        desc: "Complete mandatory pre-op testing (CBC, coagulation profile, ECG, CXR, blood grouping) and adhere strictly to 6-8 hours fasting before surgery.",
+      },
+      {
+        title: "4. Operating Theater (OT) Sterilization & ICU Backup",
+        desc: "Verify that the hospital maintains laminar airflow OT filtration, modern laparoscopy towers, Class-B autoclaves, and ready ICU/post-op monitoring.",
+      },
+      {
+        title: "5. Membership Savings on Surgical OT & Post-Op Cabin Charges",
+        desc: "Health Club members enjoy 10-30% guaranteed savings on hospital bed charges, OT equipment fees, and pathology tests across partner clinics.",
+      },
+    ],
+  },
+  "best-neurologists-in-feni": {
+    title: "5 Essential Clinical Guidelines for Neurological Care & Stroke Emergencies in Feni",
+    points: [
+      {
+        title: "1. Recognize Stroke Instantly via BE-FAST & Rush to Hospital",
+        desc: "If face asymmetry, arm weakness, or slurred speech suddenly develops, do not wait or give water; rush immediately to a hospital equipped with a 24/7 CT scan within the 4.5-hour golden window.",
+      },
+      {
+        title: "2. Certified Neurologist Qualification (MD Neurology / FCPS)",
+        desc: "Ensure your consultant holds dedicated post-graduate credentials in neurology (MD Neurology, FCPS Neurology) from premier institutes like BSMMU, NINS, DMC, or CMCH.",
+      },
+      {
+        title: "3. Precision Neuroimaging (1.5 Tesla MRI & Emergency CT)",
+        desc: "Opt for diagnostic centers equipped with superconductive 1.5T MRI and multi-slice CT scanners for clear visualization of cerebral ischemia, microbleeds, and spine nerve roots.",
+      },
+      {
+        title: "4. Digital Video EEG & Nerve Conduction Studies (NCS/EMG)",
+        desc: "For seizure disorders and limb tingling/numbness, confirm the facility has calibrated Digital Video EEG and multi-channel EMG/NCS technology with consultant reporting.",
+      },
+      {
+        title: "5. Cashless 10-30% Savings with Health Club Digital Membership",
+        desc: "Present your Health Club card to claim guaranteed 10% to 30% member discounts on Brain MRI, CT scans, digital EEG, and stroke ICU admissions at partner hospitals in Feni.",
+      },
+    ],
+  },
+  "best-diabetes-doctors-in-feni": {
+    title: "5 Essential Clinical Guidelines for Diabetes & Hormone Care in Feni",
+    points: [
+      {
+        title: "1. Consultant Specialization (MD Endocrinology vs. Certified Diabetology)",
+        desc: "For complex insulin titration, pituitary disorders, and thyroid nodules, consult an endocrinologist; for routine Type 2 diabetes control, seek BIRDEM-trained diabetologists.",
+      },
+      {
+        title: "2. Prioritize HbA1c and Comprehensive Metabolic Monitoring",
+        desc: "Ensure your diabetes management is guided by regular 3-month automated HbA1c testing, lipid panels, and urine spot ACR rather than isolated fingerstick checks.",
+      },
+      {
+        title: "3. Master the Life-Saving 'Rule of 15' for Hypoglycemia",
+        desc: "Always carry fast-acting glucose tablets or candy; if acute hypoglycemia occurs (shakiness, cold sweat, palpitations), ingest 15g simple carbs and re-test in 15 minutes.",
+      },
+      {
+        title: "4. Rigorous Daily Diabetic Foot Inspection & Care",
+        desc: "Never walk barefoot indoors or outdoors; inspect feet daily and seek prompt clinical debridement for any calluses, blisters, or skin cracks to prevent diabetic ulcers.",
+      },
+      {
+        title: "5. Cashless 10-30% Savings with Health Club Digital Membership",
+        desc: "Present your Health Club card to claim guaranteed 10% to 30% member discounts on HbA1c, thyroid panels, lipid profiles, and urine ACR tests at partner labs in Feni.",
+      },
+    ],
+  },
   "best-ent-doctors-in-feni": {
     title: "5 Essential Guidelines for Choosing an ENT Specialist & Head-Neck Surgeon in Feni",
     points: [

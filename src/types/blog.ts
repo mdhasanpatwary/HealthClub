@@ -359,6 +359,11 @@ export interface EntCarePackageItem {
   durationOrTurnaroundBn: string;
 }
 
+export type SurgicalCarePackageItem = EntCarePackageItem;
+export type NeurologyCarePackageItem = EntCarePackageItem;
+export type DiabetesCarePackageItem = EntCarePackageItem;
+export type PsychiatryCarePackageItem = EntCarePackageItem;
+
 export interface BlogPost {
   slug: string;
   titleBn: string;
@@ -406,46 +411,18 @@ export interface BlogPost {
     subtitleBn: string;
     treatments: PhysiotherapyTreatmentPriceItem[];
   };
-  maternityCarePricingBn?: {
-    titleBn: string;
-    subtitleBn: string;
-    packages: MaternityCarePackageItem[];
-  };
-  cardiacCarePricingBn?: {
-    titleBn: string;
-    subtitleBn: string;
-    packages: CardiacPackagePriceItem[];
-  };
-  kidneyCarePricingBn?: {
-    titleBn: string;
-    subtitleBn: string;
-    packages: KidneyPackagePriceItem[];
-  };
-  pediatricCarePricingBn?: {
-    titleBn: string;
-    subtitleBn: string;
-    packages: PediatricCarePackageItem[];
-  };
-  skinCarePricingBn?: {
-    titleBn: string;
-    subtitleBn: string;
-    packages: SkinCarePackageItem[];
-  };
-  eyeCarePricingBn?: {
-    titleBn: string;
-    subtitleBn: string;
-    packages: EyeCarePackageItem[];
-  };
-  orthopedicCarePricingBn?: {
-    titleBn: string;
-    subtitleBn: string;
-    packages: OrthopedicCarePackageItem[];
-  };
-  entCarePricingBn?: {
-    titleBn: string;
-    subtitleBn: string;
-    packages: EntCarePackageItem[];
-  };
+  maternityCarePricingBn?: { titleBn: string; subtitleBn: string; packages: MaternityCarePackageItem[] };
+  cardiacCarePricingBn?: { titleBn: string; subtitleBn: string; packages: CardiacPackagePriceItem[] };
+  kidneyCarePricingBn?: { titleBn: string; subtitleBn: string; packages: KidneyPackagePriceItem[] };
+  pediatricCarePricingBn?: { titleBn: string; subtitleBn: string; packages: PediatricCarePackageItem[] };
+  skinCarePricingBn?: { titleBn: string; subtitleBn: string; packages: SkinCarePackageItem[] };
+  eyeCarePricingBn?: { titleBn: string; subtitleBn: string; packages: EyeCarePackageItem[] };
+  orthopedicCarePricingBn?: { titleBn: string; subtitleBn: string; packages: OrthopedicCarePackageItem[] };
+  entCarePricingBn?: { titleBn: string; subtitleBn: string; packages: EntCarePackageItem[] };
+  surgicalCarePricingBn?: { titleBn: string; subtitleBn: string; packages: SurgicalCarePackageItem[] };
+  neurologyCarePricingBn?: { titleBn: string; subtitleBn: string; packages: NeurologyCarePackageItem[] };
+  diabetesCarePricingBn?: { titleBn: string; subtitleBn: string; packages: DiabetesCarePackageItem[] };
+  psychiatryCarePricingBn?: { titleBn: string; subtitleBn: string; packages: PsychiatryCarePackageItem[] };
   bookingGuideBn?: {
     titleBn: string;
     stepsBn: { step: string; title: string; desc: string }[];
@@ -473,5 +450,3 @@ export interface BlogPost {
   faqs: BlogFAQItem[];
   relatedSlugs?: string[];
 }
-
-

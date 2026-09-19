@@ -54,7 +54,15 @@ export function BlogPostDetailView({
     post.physiotherapyTreatmentPricingBn ||
     post.maternityCarePricingBn ||
     post.cardiacCarePricingBn ||
-    post.kidneyCarePricingBn
+    post.kidneyCarePricingBn ||
+    post.pediatricCarePricingBn ||
+    post.skinCarePricingBn ||
+    post.eyeCarePricingBn ||
+    post.orthopedicCarePricingBn ||
+    post.entCarePricingBn ||
+    post.surgicalCarePricingBn ||
+    post.neurologyCarePricingBn ||
+    post.diabetesCarePricingBn
   );
 
   const selectionGuideNumber = hasPricingGuide ? 5 : 4;
@@ -265,6 +273,10 @@ export function BlogPostDetailView({
               hasEyePricing={!!post.eyeCarePricingBn}
               hasOrthopedicPricing={!!post.orthopedicCarePricingBn}
               hasEntPricing={!!post.entCarePricingBn}
+              hasSurgeryPricing={!!post.surgicalCarePricingBn}
+              hasNeurologyPricing={!!post.neurologyCarePricingBn}
+              hasDiabetesPricing={!!post.diabetesCarePricingBn}
+              hasPsychiatryPricing={!!post.psychiatryCarePricingBn}
               locale={locale}
             />
           </div>

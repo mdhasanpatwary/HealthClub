@@ -21,6 +21,10 @@ interface BlogSidebarProps {
   hasEyePricing?: boolean;
   hasOrthopedicPricing?: boolean;
   hasEntPricing?: boolean;
+  hasSurgeryPricing?: boolean;
+  hasNeurologyPricing?: boolean;
+  hasDiabetesPricing?: boolean;
+  hasPsychiatryPricing?: boolean;
   locale?: string;
 }
 
@@ -28,6 +32,10 @@ const CLUSTER_QUICK_LINKS = [
   { slug: "best-10-hospitals-in-feni", titleBn: "ফেনীর সেরা হাসপাতাল", titleEn: "Top 10 Hospitals" },
   { slug: "best-doctors-in-feni", titleBn: "সেরা বিশেষজ্ঞ ডাক্তার", titleEn: "Specialist Doctors" },
   { slug: "best-orthopedic-doctors-in-feni", titleBn: "অর্থোপেডিক ও হাড় বিশেষজ্ঞ", titleEn: "Orthopedic & Bone" },
+  { slug: "best-neurologists-in-feni", titleBn: "নিউরোমেডিসিন ও স্ট্রোক", titleEn: "Neurologists & Stroke" },
+  { slug: "best-diabetes-doctors-in-feni", titleBn: "ডায়াবেটিস ও হরমোন", titleEn: "Diabetes & Hormone" },
+  { slug: "best-psychiatrists-in-feni", titleBn: "মানসিক রোগ ও সাইকিয়াট্রি", titleEn: "Psychiatrists & Mental Health" },
+  { slug: "best-surgeons-in-feni", titleBn: "জেনারেল ও পাইলস সার্জন", titleEn: "General & Laparoscopic" },
   { slug: "best-ent-doctors-in-feni", titleBn: "নাক, কান ও গলা বিশেষজ্ঞ", titleEn: "ENT & Head-Neck" },
   { slug: "best-eye-specialists-in-feni", titleBn: "চক্ষু বিশেষজ্ঞ ও হাসপাতাল", titleEn: "Eye Specialists & Care" },
   { slug: "best-child-specialists-in-feni", titleBn: "শিশু ও নবজাতক বিশেষজ্ঞ", titleEn: "Child Specialists & NICU" },
@@ -56,6 +64,10 @@ export function BlogSidebar({
   hasEyePricing = false,
   hasOrthopedicPricing = false,
   hasEntPricing = false,
+  hasSurgeryPricing = false,
+  hasNeurologyPricing = false,
+  hasDiabetesPricing = false,
+  hasPsychiatryPricing = false,
   locale = "bn",
 }: BlogSidebarProps) {
   const isEn = locale === "en";
@@ -77,6 +89,10 @@ export function BlogSidebar({
           hasEyePricing={hasEyePricing}
           hasOrthopedicPricing={hasOrthopedicPricing}
           hasEntPricing={hasEntPricing}
+          hasSurgeryPricing={hasSurgeryPricing}
+          hasNeurologyPricing={hasNeurologyPricing}
+          hasDiabetesPricing={hasDiabetesPricing}
+          hasPsychiatryPricing={hasPsychiatryPricing}
           locale={locale}
         />
 

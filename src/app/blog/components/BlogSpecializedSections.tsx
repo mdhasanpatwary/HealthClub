@@ -18,6 +18,10 @@ import { SkinPriceTable } from "./SkinPriceTable";
 import { EyePriceTable } from "./EyePriceTable";
 import { OrthopedicPriceTable } from "./OrthopedicPriceTable";
 import { EntPriceTable } from "./EntPriceTable";
+import { SurgeryPriceTable } from "./SurgeryPriceTable";
+import { NeurologyPriceTable } from "./NeurologyPriceTable";
+import { DiabetesPriceTable } from "./DiabetesPriceTable";
+import { PsychiatryPriceTable } from "./PsychiatryPriceTable";
 
 interface BlogSpecializedSectionsProps {
   post: BlogPost;
@@ -236,6 +240,38 @@ export function BlogSpecializedSections({
       {post.entCarePricingBn && (
         <EntPriceTable
           pricingData={post.entCarePricingBn}
+          locale={locale}
+        />
+      )}
+
+      {/* General, Laparoscopic & Laser Surgery Pricing Table */}
+      {post.surgicalCarePricingBn && (
+        <SurgeryPriceTable
+          pricingData={post.surgicalCarePricingBn}
+          locale={locale}
+        />
+      )}
+
+      {/* Neurology, Brain MRI, CT & EEG Pricing Table */}
+      {post.neurologyCarePricingBn && (
+        <NeurologyPriceTable
+          pricingData={post.neurologyCarePricingBn}
+          locale={locale}
+        />
+      )}
+
+      {/* Diabetes, HbA1c, Thyroid & Hormone Pricing Table */}
+      {post.diabetesCarePricingBn && (
+        <DiabetesPriceTable
+          pricingData={post.diabetesCarePricingBn}
+          locale={locale}
+        />
+      )}
+
+      {/* Psychiatry, CBT & Mental Health Pricing Table */}
+      {post.psychiatryCarePricingBn && (
+        <PsychiatryPriceTable
+          pricingData={post.psychiatryCarePricingBn}
           locale={locale}
         />
       )}

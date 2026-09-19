@@ -1,5 +1,9 @@
 import { BlogPost, BlogCategory } from "@/types/blog";
 import { BEST_ORTHOPEDIC_DOCTORS_IN_FENI } from "./posts/bestOrthopedicDoctorsInFeni";
+import { BEST_NEUROLOGISTS_IN_FENI } from "./posts/bestNeurologistsInFeni";
+import { BEST_DIABETES_DOCTORS_IN_FENI } from "./posts/bestDiabetesDoctorsInFeni";
+import { BEST_PSYCHIATRISTS_IN_FENI } from "./posts/bestPsychiatristsInFeni";
+import { BEST_SURGEONS_IN_FENI } from "./posts/bestSurgeonsInFeni";
 import { BEST_ENT_DOCTORS_IN_FENI } from "./posts/bestEntDoctorsInFeni";
 import { BEST_EYE_SPECIALISTS_IN_FENI } from "./posts/bestEyeSpecialistsInFeni";
 import { BEST_SKIN_SPECIALISTS_IN_FENI } from "./posts/bestSkinSpecialistsInFeni";
@@ -23,11 +27,39 @@ export const BLOG_CATEGORIES: BlogCategory[] = [
     descriptionEn: "All healthcare reviews, hospital directories and wellness guides",
   },
   {
+    id: "psychiatry-guide",
+    nameBn: "মানসিক স্বাস্থ্য ও সাইকিয়াট্রি গাইড",
+    nameEn: "Psychiatry & Mental Health",
+    descriptionBn: "ফেনীর সেরা মানসিক রোগ বিশেষজ্ঞ ডাক্তার, বিষণ্নতা, উদ্বেগ, শিশু অটিজম ও সাইকোথেরাপি গাইড",
+    descriptionEn: "Top psychiatrists, mental health doctors, depression, anxiety, child autism, and psychotherapy in Feni",
+  },
+  {
     id: "orthopedic-guide",
     nameBn: "অর্থোপেডিক ও ট্রমা কেয়ার গাইড",
     nameEn: "Orthopedics & Trauma Care",
     descriptionBn: "ফেনীর সেরা অর্থোপেডিক ডাক্তার, হাড় ভাঙা ও জোড়া বিশেষজ্ঞ, স্পাইন ও ট্রমা সেন্টার গাইড",
     descriptionEn: "Top orthopedic doctors, trauma surgeons, fracture care, spine and joint specialists in Feni",
+  },
+  {
+    id: "neurology-guide",
+    nameBn: "নিউরোমেডিসিন ও স্ট্রোক কেয়ার গাইড",
+    nameEn: "Neurology & Stroke Care",
+    descriptionBn: "ফেনীর সেরা নিউরোমেডিসিন বিশেষজ্ঞ ডাক্তার, স্ট্রোক জরুরি চিকিৎসা, প্যারালাইসিস, মাইগ্রেন ও মৃগীরোগ গাইড",
+    descriptionEn: "Top neurologists, stroke emergency protocols, paralysis, migraine and epilepsy care guides in Feni",
+  },
+  {
+    id: "diabetes-guide",
+    nameBn: "ডায়াবেটিস ও হরমোন কেয়ার গাইড",
+    nameEn: "Diabetes & Hormone Care",
+    descriptionBn: "ফেনীর সেরা ডায়াবেটিস ও হরমোন বিশেষজ্ঞ ডাক্তার, থাইরয়েড ও ডায়াবেটিক ফুট কেয়ার গাইড",
+    descriptionEn: "Top endocrinologists, diabetes specialists, thyroid disorders, and diabetic foot care in Feni",
+  },
+  {
+    id: "surgery-guide",
+    nameBn: "জেনারেল ও ল্যাপারোস্কোপিক সার্জারি গাইড",
+    nameEn: "General & Laparoscopic Surgery",
+    descriptionBn: "ফেনীর সেরা জেনারেল ও ল্যাপারোস্কোপিক সার্জন ডাক্তার, পিত্তথলির পাথর, পাইলস ও হার্নিয়া অপারেশন গাইড",
+    descriptionEn: "Top general and laparoscopic surgeons, gallstone cholecystectomy, laser piles and hernia surgery in Feni",
   },
   {
     id: "ent-guide",
@@ -157,6 +189,10 @@ export const BLOG_FILTER_PILLS: BlogFilterPill[] = [
     matchingCategories: [
       "doctor-guide",
       "orthopedic-guide",
+      "neurology-guide",
+      "diabetes-guide",
+      "psychiatry-guide",
+      "surgery-guide",
       "ent-guide",
       "ophthalmology-guide",
       "dermatology-guide",
@@ -185,6 +221,10 @@ export const BLOG_FILTER_PILLS: BlogFilterPill[] = [
     nameEn: "Specialized Care",
     matchingCategories: [
       "orthopedic-guide",
+      "neurology-guide",
+      "diabetes-guide",
+      "psychiatry-guide",
+      "surgery-guide",
       "ent-guide",
       "ophthalmology-guide",
       "dermatology-guide",
@@ -205,6 +245,10 @@ export const BLOG_FILTER_PILLS: BlogFilterPill[] = [
 
 export const BLOG_POSTS: BlogPost[] = [
   BEST_ORTHOPEDIC_DOCTORS_IN_FENI,
+  BEST_NEUROLOGISTS_IN_FENI,
+  BEST_DIABETES_DOCTORS_IN_FENI,
+  BEST_PSYCHIATRISTS_IN_FENI,
+  BEST_SURGEONS_IN_FENI,
   BEST_ENT_DOCTORS_IN_FENI,
   BEST_EYE_SPECIALISTS_IN_FENI,
   BEST_SKIN_SPECIALISTS_IN_FENI,
