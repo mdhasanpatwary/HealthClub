@@ -130,9 +130,10 @@ export default function PartnerCard({ partner, locale, t }: PartnerCardProps) {
               href={mapUrl}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={`${partner.address} - ${partner.name}`}
               className="flex items-center gap-1.5 text-xs text-slate-200 hover:text-emerald-300 transition-colors drop-shadow-sm w-fit"
             >
-              <MapPin className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
+              <MapPin className="h-3.5 w-3.5 shrink-0 text-emerald-400" aria-hidden="true" />
               <span className="line-clamp-1">{partner.address}</span>
             </a>
             {partner.workingHours && (
@@ -159,6 +160,7 @@ export default function PartnerCard({ partner, locale, t }: PartnerCardProps) {
         <div className="flex items-center gap-1.5 shrink-0">
           <Link
             href={`/partner-hospitals/${encodeURIComponent(partner.slug || partner.id)}`}
+            aria-label={`${t("ui.partnerdirectory.details")} - ${partner.name}`}
             className={buttonVariants({
               variant: "outline",
               size: "sm",
@@ -167,7 +169,7 @@ export default function PartnerCard({ partner, locale, t }: PartnerCardProps) {
             })}
           >
             <span>{t("ui.partnerdirectory.details")}</span>
-            <ChevronRight className="h-3.5 w-3.5" />
+            <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
 
           <a
@@ -180,14 +182,15 @@ export default function PartnerCard({ partner, locale, t }: PartnerCardProps) {
               className:
                 "h-8 w-8 text-muted-foreground hover:text-emerald-500 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-950/30",
             })}
-            title="Google Map Location"
-            aria-label="Google Map Location"
+            title={`${partner.name} - Google Map`}
+            aria-label={`${partner.name} - Google Map Location`}
           >
-            <MapPin className="h-4 w-4" />
+            <MapPin className="h-4 w-4" aria-hidden="true" />
           </a>
 
           <a
             href={`tel:${partner.phone}`}
+            aria-label={`${t("ui.partnerdirectory.call")} - ${partner.name}`}
             className={buttonVariants({
               variant: "default",
               size: "sm",
@@ -195,7 +198,7 @@ export default function PartnerCard({ partner, locale, t }: PartnerCardProps) {
                 "h-8 px-3 text-xs bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg gap-1.5 shadow-2xs",
             })}
           >
-            <Phone className="h-3.5 w-3.5" />
+            <Phone className="h-3.5 w-3.5" aria-hidden="true" />
             <span>{t("ui.partnerdirectory.call")}</span>
           </a>
         </div>

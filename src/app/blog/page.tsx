@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import Link from "next/link";
 import Image from "next/image";
 import { Locale } from "@/lib/i18n";
@@ -19,10 +18,10 @@ import { Badge } from "@/components/ui/badge";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 import { formatArticleDate } from "@/lib/dateUtils";
 
+export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
+
 export async function generateMetadata() {
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const isEn = locale === "en";
+  const isEn = false;
 
   const ogTitle = isEn
     ? "Healthcare Blog & Feni Hospital Review Directory | Health Club"
@@ -78,9 +77,8 @@ export async function generateMetadata() {
 }
 
 export default async function BlogPage() {
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const isEn = locale === "en";
+  const locale: Locale = "bn";
+  const isEn = false;
 
   const allPosts = await getAllBlogPostsAction();
   const featuredPost = allPosts[0]; // Flagship article

@@ -77,7 +77,7 @@ export function BlogArticleHeader({
             alt={post.coverImageAlt || title}
             fill
             priority
-            sizes="(max-width: 1024px) 100vw, 896px"
+            sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1024px) calc(100vw - 48px), 896px"
             className="object-cover"
           />
         </div>

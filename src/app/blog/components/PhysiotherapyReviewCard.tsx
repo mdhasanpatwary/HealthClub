@@ -199,10 +199,11 @@ export function PhysiotherapyReviewCard({
             {center.partnerProfileSlug && (
               <Link
                 href={`/partner-hospitals/${encodeURIComponent(center.partnerProfileSlug)}`}
+                aria-label={`${isEn ? "Partner Profile" : "পার্টনার প্রোফাইল"} - ${name}`}
                 className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border hover:bg-muted text-foreground text-xs font-medium transition-colors"
               >
                 <span>{isEn ? "Partner Profile" : "পার্টনার প্রোফাইল"}</span>
-                <ExternalLink className="h-3 w-3" />
+                <ExternalLink className="h-3 w-3" aria-hidden="true" />
               </Link>
             )}
           </div>
@@ -218,9 +219,10 @@ export function PhysiotherapyReviewCard({
               <a
                 key={idx}
                 href={`tel:${cleanNum.replace(/[^0-9]/g, "")}`}
+                aria-label={`${isEn ? "Call" : "কল করুন"} ${name}: ${cleanNum}`}
                 className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold shadow-xs hover:bg-primary/90 transition-colors"
               >
-                <Phone className="h-3.5 w-3.5" />
+                <Phone className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>{cleanNum}</span>
               </a>
             );
@@ -234,11 +236,12 @@ export function PhysiotherapyReviewCard({
             )}`}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={`${isEn ? "View on Google Maps" : "গুগল ম্যাপে লোকেশন"} - ${name}`}
             className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-primary transition-colors"
           >
-            <MapPin className="h-3.5 w-3.5" />
+            <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
             <span>{isEn ? "View on Google Maps" : "গুগল ম্যাপে লোকেশন"}</span>
-            <ExternalLink className="h-3 w-3" />
+            <ExternalLink className="h-3 w-3" aria-hidden="true" />
           </a>
         )}
       </div>

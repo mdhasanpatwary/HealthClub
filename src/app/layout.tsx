@@ -7,11 +7,11 @@ import BottomNav from "@/components/layout/BottomNav";
 import GlobalNoticeBanner from "@/components/layout/GlobalNoticeBanner";
 import DeferredClientComponents from "@/components/layout/DeferredClientComponents";
 import { getCachedNoticeSetting, getCachedContactSettings } from "@/app/actions/systemSettingsActions";
-import { cookies, headers } from "next/headers";
 import { LanguageProvider } from "@/components/layout/LanguageProvider";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Locale } from "@/lib/i18n";
-import { getDictionary, getNamespacesForRoute } from "@/lib/translations";
+import { getDictionary } from "@/lib/translations";
+import type { TranslationNamespace } from "@/lib/translations/types";
 import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
@@ -157,14 +157,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const headersList = await headers();
-  const pathname = headersList.get("x-pathname") || "/";
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const theme = (cookieStore.get("theme")?.value as "light" | "dark") || "light";
+  const locale: Locale = "bn";
+  const theme = "light";
 
-  // Serialize only the active route's translation namespaces (e.g. common + landing)
-  const initialNamespaces = getNamespacesForRoute(pathname);
+  // Serialize foundational namespaces (common + landing) for instant static SSR
+  // Additional route namespaces are dynamically streamed by LanguageProvider on client navigation
+  const initialNamespaces: TranslationNamespace[] = ["common", "landing"];
   const initialDict = getDictionary(locale, initialNamespaces);
   const [notice, contactSettings] = await Promise.all([
     getCachedNoticeSetting(),
@@ -231,7 +229,8 @@ export default async function RootLayout({
   return (
     <html lang={locale} data-scroll-behavior="smooth" className={`${theme} ${inter.variable} ${notoSansBengali.variable}`}>
       <head>
-        <link rel="preload" as="image" href="/images/member-card-bg.webp" type="image/webp" fetchPriority="high" />
+        <link rel="preconnect" href="https://uqtodphwiwzikmhsyiyc.supabase.co" />
+        <link rel="dns-prefetch" href="https://uqtodphwiwzikmhsyiyc.supabase.co" />
       </head>
       <body className="font-sans antialiased bg-background text-foreground min-h-screen flex flex-col">
         {/* Skip to Main Content Link for Keyboard / Screen Reader users */}
@@ -239,7 +238,7 @@ export default async function RootLayout({
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:rounded-xl focus:shadow-2xl focus:font-bold focus:outline-hidden focus:ring-2 focus:ring-ring"
         >
-          {locale === "en" ? "Skip to main content" : "মূল বিষয়বস্তুতে যান"}
+          মূল বিষয়বস্তুতে যান
         </a>
         <JsonLd data={globalJsonLd} />
         <ThemeProvider initialTheme={theme}>

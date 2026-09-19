@@ -191,10 +191,11 @@ export function DiagnosticReviewCard({
             {center.partnerProfileSlug && (
               <Link
                 href={`/partner-hospitals/${encodeURIComponent(center.partnerProfileSlug)}`}
+                aria-label={`${isEn ? "Partner Profile" : "পার্টনার প্রোফাইল"} - ${name}`}
                 className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border hover:bg-muted text-foreground text-xs font-medium transition-colors"
               >
                 <span>{isEn ? "Partner Profile" : "পার্টনার প্রোফাইল"}</span>
-                <ExternalLink className="h-3 w-3" />
+                <ExternalLink className="h-3 w-3" aria-hidden="true" />
               </Link>
             )}
           </div>
@@ -206,15 +207,17 @@ export function DiagnosticReviewCard({
         <div className="flex items-center gap-2">
           <a
             href={`tel:${center.phone.replace(/[^0-9]/g, "")}`}
+            aria-label={`${isEn ? "Call" : "কল করুন"} ${name}: ${center.phone}`}
             className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold shadow-xs hover:bg-primary/90 transition-colors"
           >
-            <Phone className="h-3.5 w-3.5" />
+            <Phone className="h-3.5 w-3.5" aria-hidden="true" />
             <span>{center.phone}</span>
           </a>
 
           {center.hotline && center.hotline !== center.phone && (
             <a
               href={`tel:${center.hotline.replace(/[^0-9]/g, "")}`}
+              aria-label={`${isEn ? "Hotline" : "হটলাইন"} ${name}: ${center.hotline}`}
               className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-border/80 bg-muted/40 hover:bg-muted text-foreground text-xs font-semibold transition-colors"
             >
               <span>{isEn ? "Hotline: " : "হটলাইন: "}{center.hotline}</span>
@@ -229,11 +232,12 @@ export function DiagnosticReviewCard({
             )}`}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={`${isEn ? "View on Google Maps" : "গুগল ম্যাপে দেখুন"} - ${name}`}
             className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-primary transition-colors"
           >
-            <MapPin className="h-3.5 w-3.5" />
+            <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
             <span>{isEn ? "View on Google Maps" : "গুগল ম্যাপে দেখুন"}</span>
-            <ExternalLink className="h-3 w-3" />
+            <ExternalLink className="h-3 w-3" aria-hidden="true" />
           </a>
         )}
       </div>

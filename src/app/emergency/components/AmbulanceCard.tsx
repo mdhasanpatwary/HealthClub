@@ -101,8 +101,9 @@ export function AmbulanceCard({ ambulance, isEn }: AmbulanceCardProps) {
               });
             }}
             className="sm:col-span-3 inline-flex items-center justify-center gap-2 h-10 rounded-xl bg-primary hover:bg-primary-dark text-white font-bold text-xs sm:text-sm shadow-xs transition-all active:scale-[0.98]"
+            aria-label={`${isEn ? "Call" : "কল দিন"}: ${ambulance.name} (${ambulance.phone})`}
           >
-            <PhoneCall className="h-4 w-4" />
+            <PhoneCall className="h-4 w-4" aria-hidden="true" />
             <span className="truncate">
               {isEn ? "Call:" : "কল দিন:"} {ambulance.phone}
             </span>
@@ -111,9 +112,10 @@ export function AmbulanceCard({ ambulance, isEn }: AmbulanceCardProps) {
             href={`https://wa.me/88${cleanPhone}`}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={`WhatsApp: ${ambulance.name}`}
             className="sm:col-span-2 inline-flex items-center justify-center gap-1.5 h-10 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-xs font-bold transition-all active:scale-[0.98]"
           >
-            <MessageCircle className="h-4 w-4" />
+            <MessageCircle className="h-4 w-4" aria-hidden="true" />
             <span>WhatsApp</span>
           </a>
         </div>

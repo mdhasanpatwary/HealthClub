@@ -4,7 +4,6 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { getHomepageStats, getHomepagePartners } from "@/lib/homepageData";
 import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
-import { cookies } from "next/headers";
 import { Locale } from "@/lib/i18n";
 import { tServer } from "@/lib/i18n.server";
 import type { Member } from "@/services/db";
@@ -29,10 +28,10 @@ import { LandingBlogSection } from "@/components/landing/LandingBlogSection";
 import { getAllBlogPostsAction } from "@/app/actions/blogAdminActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
+export const revalidate = 300; // 5-minute Incremental Static Regeneration (ISR)
+
 export async function generateMetadata() {
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const isEn = locale === "en";
+  const isEn = false;
 
   const ogTitle = isEn
     ? "Health Club - Save Up to 30% on Healthcare & Hospital Bills"
@@ -112,9 +111,8 @@ export async function generateMetadata() {
 }
 
 export default async function Home() {
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const isEn = locale === "en";
+  const locale = "bn" as Locale;
+  const isEn = false;
   const t = (key: string) => tServer(locale, key);
 
   // Single cached query for all homepage stats & settings (60s cache)

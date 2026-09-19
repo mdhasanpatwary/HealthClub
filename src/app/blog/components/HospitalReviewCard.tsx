@@ -189,9 +189,10 @@ export function HospitalReviewCard({
           {hospital.emergencyPhone && (
             <a
               href={`tel:${hospital.emergencyPhone.replace(/[^0-9]/g, "")}`}
+              aria-label={`${isEn ? "Emergency Hotline" : "জরুরি হেল্পলাইন"} ${name}: ${hospital.emergencyPhone}`}
               className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-700 dark:text-rose-300 text-xs font-bold transition-colors"
             >
-              <Siren className="h-3.5 w-3.5 text-rose-600" />
+              <Siren className="h-3.5 w-3.5 text-rose-600" aria-hidden="true" />
               <span>{isEn ? "Emergency: " : "জরুরি: "}{hospital.emergencyPhone}</span>
             </a>
           )}
@@ -205,9 +206,10 @@ export function HospitalReviewCard({
             )}`}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={`${isEn ? "View Map" : "গুগল ম্যাপ"} - ${name}`}
             className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-border/80 hover:bg-muted text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
-            <MapPin className="h-3.5 w-3.5" />
+            <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
             <span>{isEn ? "View Map" : "গুগল ম্যাপ"}</span>
           </a>
 
@@ -219,10 +221,11 @@ export function HospitalReviewCard({
                   ? `/partner-hospitals/${encodeURIComponent(hospital.partnerProfileSlug)}`
                   : "/partner-hospitals"
               }
+              aria-label={`${isEn ? "Hospital Profile" : "হাসপাতাল প্রোফাইল"} - ${name}`}
               className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/90 shadow-xs transition-colors"
             >
               <span>{isEn ? "Hospital Profile" : "হাসপাতাল প্রোফাইল"}</span>
-              <ExternalLink className="h-3.5 w-3.5" />
+              <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
             </Link>
           )}
         </div>

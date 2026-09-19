@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { cookies } from "next/headers";
 import { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import { getAllBlogPostsAction, getBlogPostBySlugAction } from "@/app/actions/blogAdminActions";
@@ -12,6 +11,8 @@ interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
 }
 
+export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
+
 export async function generateStaticParams() {
   const posts = await getAllBlogPostsAction();
   return posts.map((post) => ({
@@ -22,9 +23,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: BlogPostPageProps) {
   const { slug } = await params;
   const post = await getBlogPostBySlugAction(slug);
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const isEn = locale === "en";
+  const isEn = false;
 
   if (!post) {
     return {
@@ -99,9 +98,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const isEn = locale === "en";
+  const locale: Locale = "bn";
+  const isEn = false;
 
   const title = isEn ? post.titleEn : post.titleBn;
   const pageUrl = `${SITE_URL}/blog/${post.slug}`;

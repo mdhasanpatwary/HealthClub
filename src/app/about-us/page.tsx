@@ -1,14 +1,13 @@
 import { Heart, ShieldCheck, Users, Award, Target, Zap } from "lucide-react";
-import { cookies } from "next/headers";
 import { Locale } from "@/lib/i18n";
+
+export const revalidate = 86400; // 24-hour ISR
 import { tServer } from "@/lib/i18n.server";
 import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const isEn = locale === "en";
+  const isEn = false;
 
   const ogTitle = isEn ? "About Health Club - Making Healthcare Affordable" : "আমাদের সম্পর্কে - হেলথ ক্লাব";
   const ogDesc = isEn
@@ -42,8 +41,7 @@ export async function generateMetadata() {
 }
 
 export default async function AboutUsPage() {
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
+  const locale = "bn" as Locale;
   const t = (key: string) => tServer(locale, key);
 
   const pillars = [

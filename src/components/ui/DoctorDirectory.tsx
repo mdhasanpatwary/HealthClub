@@ -315,7 +315,7 @@ export default function DoctorDirectory({
                 <div className="p-3.5 sm:p-4 pb-2 sm:pb-2.5 space-y-2.5 sm:space-y-3 flex-1 flex flex-col justify-between">
                   {/* Doctor Header (Image + Basic Info) */}
                   <div className="flex items-start gap-3">
-                    <Link href={`/consultants/${doc.id}`} className="shrink-0 hover:opacity-90 transition-opacity">
+                    <Link href={`/consultants/${doc.id}`} tabIndex={-1} aria-hidden="true" className="shrink-0 hover:opacity-90 transition-opacity">
                       <DoctorAvatar
                         src={doc.imageUrl}
                         alt={doc.name}
@@ -417,17 +417,19 @@ export default function DoctorDirectory({
                     size="sm"
                     variant="outline"
                     onClick={() => setActiveDetailsDoctor(doc)}
+                    aria-label={`${t("consultants.button.details") || (isEn ? "Details" : "বিস্তারিত")} - ${doc.name}`}
                     className="h-8 sm:h-9 text-xs font-semibold rounded-xl border-border/80 hover:bg-muted cursor-pointer"
                   >
-                    <Info className="h-3.5 w-3.5 mr-1" />
+                    <Info className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
                     {t("consultants.button.details") || (isEn ? "Details" : "বিস্তারিত")}
                   </Button>
                   <Button
                     size="sm"
                     onClick={() => setActiveSerialDoctor(doc)}
+                    aria-label={`${t("consultants.button.serial") || (isEn ? "Call Serial" : "সিরিয়াল কল")} - ${doc.name}`}
                     className="h-8 sm:h-9 text-xs font-semibold rounded-xl bg-primary hover:bg-primary/90 text-white shadow-xs cursor-pointer"
                   >
-                    <PhoneCall className="h-3.5 w-3.5 mr-1" />
+                    <PhoneCall className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
                     {t("consultants.button.serial") || (isEn ? "Call Serial" : "সিরিয়াল কল")}
                   </Button>
                 </div>

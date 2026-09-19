@@ -280,14 +280,16 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
                 <Button
                   size="sm"
                   onClick={() => setSelectedDoctorForSerial(doc)}
+                  aria-label={`${isEn ? "Book Serial" : "সিরিয়াল নিন"} - ${doc.name}`}
                   className="flex-1 h-8 rounded-xl bg-primary hover:bg-primary-dark text-white text-xs font-semibold shadow-2xs cursor-pointer"
                 >
-                  <PhoneCall className="h-3.5 w-3.5 mr-1.5 shrink-0" />
+                  <PhoneCall className="h-3.5 w-3.5 mr-1.5 shrink-0" aria-hidden="true" />
                   {isEn ? "Book Serial" : "সিরিয়াল নিন"}
                 </Button>
 
                 <Link
                   href={`/consultants/${doc.id}`}
+                  aria-label={`${isEn ? "Profile" : "প্রোফাইল"} - ${doc.name}`}
                   className={buttonVariants({
                     variant: "outline",
                     size: "sm",
@@ -295,7 +297,7 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
                   })}
                 >
                   <span>{isEn ? "Profile" : "প্রোফাইল"}</span>
-                  <ChevronRight className="h-3.5 w-3.5 ml-0.5 text-muted-foreground" />
+                  <ChevronRight className="h-3.5 w-3.5 ml-0.5 text-muted-foreground" aria-hidden="true" />
                 </Link>
               </div>
             </div>
