@@ -151,7 +151,7 @@ export default function PartnerCard({ partner, locale, t }: PartnerCardProps) {
           <p className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">
             {t("ui.partnerdirectory.discountRate")}
           </p>
-          <p className="text-sm sm:text-base font-bold text-primary font-heading">
+          <p className="text-sm sm:text-base font-bold text-emerald-700 dark:text-emerald-400 font-heading">
             {formatDiscount(partner.discount, locale)}
           </p>
         </div>
@@ -192,7 +192,7 @@ export default function PartnerCard({ partner, locale, t }: PartnerCardProps) {
               variant: "default",
               size: "sm",
               className:
-                "h-8 px-3 text-xs bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg gap-1.5 shadow-2xs",
+                "h-8 px-3 text-xs bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg gap-1.5 shadow-2xs",
             })}
           >
             <Phone className="h-3.5 w-3.5" />

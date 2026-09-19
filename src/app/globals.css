@@ -59,9 +59,9 @@
   --card-foreground: #0f172a;
   --popover: #ffffff;
   --popover-foreground: #0f172a;
-  --primary: #16a34a;
+  --primary: #15803d;
   --primary-light: #f0fdf4;
-  --primary-dark: #15803d;
+  --primary-dark: #166534;
   --primary-foreground: #ffffff;
   --secondary: #0f172a;
   --secondary-foreground: #ffffff;
@@ -368,7 +368,7 @@ label {
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #15803d;
+  color: #166534;
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
   background: color-mix(in srgb, var(--primary) 10%, transparent);

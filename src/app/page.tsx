@@ -218,7 +218,7 @@ export default async function Home() {
               href="/partner-hospitals"
               className={cn(
                 buttonVariants({ variant: "outline" }),
-                "border-primary/40 text-primary hover:bg-primary/5 shrink-0 self-center md:self-end"
+                "border-emerald-600/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 shrink-0 self-center md:self-end"
               )}
             >
               {t("page.viewAllPartnersDetails")}

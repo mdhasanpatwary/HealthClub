@@ -269,7 +269,7 @@ export default function InstallAppBanner() {
             onClick={handleInstallClick}
             disabled={isInstalling}
             size="sm"
-            className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-2 h-10 rounded-xl text-xs shadow-md border border-emerald-400/30 gap-2 justify-center transition-all disabled:opacity-75"
+            className="w-full sm:w-auto bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-5 py-2 h-10 rounded-xl text-xs shadow-md border border-emerald-500/30 gap-2 justify-center transition-all disabled:opacity-75"
           >
             {isInstalling ? (
               <Loader2 className="size-4 animate-spin" />

@@ -77,7 +77,7 @@ export function BlogCard({ post, locale = "bn" }: BlogCardProps) {
         </div>
 
         {/* Action Footer */}
-        <div className="pt-2 border-t border-border/50 flex items-center justify-between text-xs font-semibold text-primary">
+        <div className="pt-2 border-t border-border/50 flex items-center justify-between text-xs font-semibold text-emerald-700 dark:text-emerald-400 group-hover:text-emerald-800 dark:group-hover:text-emerald-300">
           <span className="flex items-center gap-1 group-hover:gap-2 transition-all">
             {isEn ? "Read Full Guide" : "সম্পূর্ণ গাইড পড়ুন"}
             <ArrowRight className="h-3.5 w-3.5" />

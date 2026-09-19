@@ -25,7 +25,7 @@ export function LandingPricing({ t }: LandingPricingProps) {
 
           {/* Plan 1: Founding (Free) */}
           <div className="relative bg-background dark:bg-slate-900 border-2 border-primary rounded-3xl p-5 sm:p-8 flex flex-col justify-between shadow-xl shadow-primary/5">
-            <div className="absolute -top-3.5 right-6 bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+            <div className="absolute -top-3.5 right-6 bg-emerald-800 dark:bg-emerald-700 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
               {t("page.mostPopular")}
             </div>
             <div className="space-y-6">
