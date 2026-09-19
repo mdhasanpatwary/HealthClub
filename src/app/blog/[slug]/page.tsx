@@ -106,10 +106,28 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const title = isEn ? post.titleEn : post.titleBn;
   const pageUrl = `${SITE_URL}/blog/${post.slug}`;
   const allPosts = await getAllBlogPostsAction();
-  const relatedPosts = allPosts.filter((p) => p.slug !== post.slug).slice(0, 3);
+
+  // Prioritize curated relatedSlugs if available
+  let relatedPosts: typeof allPosts = [];
+  if (post.relatedSlugs && post.relatedSlugs.length > 0) {
+    const curated = post.relatedSlugs
+      .map((slugStr) => allPosts.find((p) => p.slug.toLowerCase() === slugStr.toLowerCase()))
+      .filter((p): p is (typeof allPosts)[0] => !!p && p.slug !== post.slug);
+
+    if (curated.length >= 3) {
+      relatedPosts = curated.slice(0, 3);
+    } else {
+      const remaining = allPosts.filter(
+        (p) => p.slug !== post.slug && !curated.some((c) => c.slug === p.slug)
+      );
+      relatedPosts = [...curated, ...remaining].slice(0, 3);
+    }
+  } else {
+    relatedPosts = allPosts.filter((p) => p.slug !== post.slug).slice(0, 3);
+  }
 
   // Schema.org Structured Data
-  const jsonLdData = generateBlogJsonLd(post, title, pageUrl, isEn);
+  const jsonLdData = generateBlogJsonLd(post, title, pageUrl, isEn, relatedPosts);
 
   return (
     <>

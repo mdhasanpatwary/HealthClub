@@ -114,10 +114,15 @@ const getCachedBlogPosts = unstable_cache(
 
       const dbArticles = JSON.parse(setting.value);
       if (Array.isArray(dbArticles)) {
+        const existingSlugs = new Set(dbArticles.map((a: BlogPost) => a.slug.toLowerCase().trim()));
+        const missingStatic = BLOG_POSTS.filter(
+          (p) => !existingSlugs.has(p.slug.toLowerCase().trim()) && !deletedSlugs.includes(p.slug)
+        );
+        const combined = [...missingStatic, ...dbArticles];
         if (deletedSlugs.length > 0) {
-          return dbArticles.filter((a: BlogPost) => !deletedSlugs.includes(a.slug));
+          return combined.filter((a: BlogPost) => !deletedSlugs.includes(a.slug));
         }
-        return dbArticles;
+        return combined;
       }
 
       return BLOG_POSTS;
@@ -126,7 +131,7 @@ const getCachedBlogPosts = unstable_cache(
       return BLOG_POSTS;
     }
   },
-  ["all-blog-posts-admin-v10"],
+  ["all-blog-posts-admin-v12"],
   { tags: [BLOG_POSTS_TAG] }
 );
 

@@ -62,6 +62,7 @@ export const BEST_DOCTORS_IN_FENI: BlogPost = {
     "ফেনী জেলা ও এর পার্শ্ববর্তী পরশুরাম, ফুলগাজী, ছাগলনাইয়া, দাগনভূঞা ও সোনাগাজী উপজেলার মানুষের উন্নত চিকিৎসার প্রধান ভরসাস্থল ফেনী শহর। ঢাকা-চট্টগ্রাম হাইওয়ের সংযোগস্থলে অবস্থিত হওয়ায় প্রতিদিন হাজার হাজার রোগী বিশেষজ্ঞ ডাক্তারের পরামর্শ নিতে ফেনীর বিভিন্ন প্রাইভেট চেম্বার ও হাসপাতালে আসেন।",
     "তবে সঠিক চেম্বার ঠিকানা, কোন ডাক্তার কোন দিন ও সময়ে রোগী দেখেন, নতুন ও পুরাতন রোগীর ভিজিট ফি কত এবং কীভাবে আগেভাগে সিরিয়াল নিশ্চিত করতে হয়—তা নিয়ে রোগী ও স্বজনরা প্রায়ই ভোগান্তিতে পড়েন। অনেক সময় ভুল তথ্যের কারণে দূর-দূরান্ত থেকে এসেও ডাক্তারের সাক্ষাৎ পাওয়া যায় না।",
     "রোগীদের এই ভোগান্তি নিরসনে হেলথ ক্লাবের ক্লিনিক্যাল টিম ফেনী শহরের শীর্ষ হাসপাতাল ও ডায়াগনস্টিক সেন্টারের চেম্বার তথ্য যাচাই করে এই বিশদ গাইড প্রস্তুত করেছে। এখানে প্রধান প্রধান বিভাগের শীর্ষ বিশেষজ্ঞ ডাক্তারদের বিস্তারিত প্রোফাইল, চেম্বার লোকেশন, ফোন নম্বর ও হেলথ ক্লাবে সরাসরি অ্যাপয়েন্টমেন্টের সুযোগ রয়েছে।",
+    "নির্দিষ্ট বিভাগের বিশেষজ্ঞ ডাক্তার ও বিস্তারিত চেম্বার প্রোফাইলের জন্য আমাদের আলাদা বিশেষায়িত গাইডগুলো দেখতে পারেন: [ফেনীর সেরা মেডিসিন বিশেষজ্ঞ ডাক্তার](/blog/best-medicine-doctors-in-feni), [হৃদরোগ ও কার্ডিওলজিস্ট ডাক্তার](/blog/best-cardiologists-in-feni), [গাইনি ও প্রসূতি বিশেষজ্ঞ](/blog/best-gynecologists-in-feni), [কিডনি বিশেষজ্ঞ ও ডায়ালাইসিস](/blog/best-kidney-doctors-in-feni), এবং প্রেসক্রিপশনের টেস্টের জন্য [ফেনীর সেরা ডায়াগনস্টিক সেন্টার](/blog/best-diagnostic-centers-in-feni)।",
   ],
   doctorGroups: FENI_DOCTOR_GROUPS,
   chamberHubsBn: [
@@ -188,5 +189,11 @@ export const BEST_DOCTORS_IN_FENI: BlogPost = {
         "For medical emergencies, immediately contact the Emergency Department of Feni 250-Bed General Hospital or partner hospital 24/7 units. For ambulance and blood donor contacts, visit our /emergency page.",
     },
   ],
-  relatedSlugs: ["best-diagnostic-centers-in-feni", "best-10-hospitals-in-feni"],
+  relatedSlugs: [
+    "best-medicine-doctors-in-feni",
+    "best-cardiologists-in-feni",
+    "best-gynecologists-in-feni",
+    "best-kidney-doctors-in-feni",
+    "best-diagnostic-centers-in-feni",
+  ],
 };

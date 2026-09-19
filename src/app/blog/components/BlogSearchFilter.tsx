@@ -4,18 +4,20 @@ import { useState, useMemo } from "react";
 import { Search, SlidersHorizontal, BookOpen } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { BlogPost, BlogCategory } from "@/types/blog";
+import { BlogFilterPill, BLOG_FILTER_PILLS } from "@/data/blog/blogPosts";
 import { BlogCard } from "./BlogCard";
 import { toBanglaNums } from "@/lib/utils";
 
 interface BlogSearchFilterProps {
   initialPosts: BlogPost[];
-  categories: BlogCategory[];
+  categories?: BlogCategory[];
+  filterPills?: BlogFilterPill[];
   locale?: string;
 }
 
 export function BlogSearchFilter({
   initialPosts,
-  categories,
+  filterPills = BLOG_FILTER_PILLS,
   locale = "bn",
 }: BlogSearchFilterProps) {
   const isEn = locale === "en";
@@ -27,8 +29,17 @@ export function BlogSearchFilter({
 
     return initialPosts.filter((post) => {
       // Category match
-      const matchesCategory =
-        selectedCategory === "all" || post.category === selectedCategory;
+      let matchesCategory = false;
+      if (selectedCategory === "all") {
+        matchesCategory = true;
+      } else {
+        const activePill = filterPills.find((p) => p.id === selectedCategory);
+        if (activePill?.matchingCategories && activePill.matchingCategories.length > 0) {
+          matchesCategory = activePill.matchingCategories.includes(post.category);
+        } else {
+          matchesCategory = post.category === selectedCategory;
+        }
+      }
 
       if (!matchesCategory) return false;
 
@@ -50,7 +61,7 @@ export function BlogSearchFilter({
 
       return titleMatch || excerptMatch || tagMatch || keywordMatch;
     });
-  }, [initialPosts, searchQuery, selectedCategory]);
+  }, [initialPosts, searchQuery, selectedCategory, filterPills]);
 
   return (
     <div className="space-y-8">
@@ -75,20 +86,20 @@ export function BlogSearchFilter({
         {/* Categories Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 md:pb-0">
           <SlidersHorizontal className="h-4 w-4 text-muted-foreground mr-1 shrink-0 hidden sm:block" />
-          {categories.map((cat) => {
-            const isSelected = selectedCategory === cat.id;
+          {filterPills.map((pill) => {
+            const isSelected = selectedCategory === pill.id;
             return (
               <button
-                key={cat.id}
+                key={pill.id}
                 type="button"
-                onClick={() => setSelectedCategory(cat.id)}
+                onClick={() => setSelectedCategory(pill.id)}
                 className={`px-3.5 py-2 text-xs font-semibold rounded-xl whitespace-nowrap transition-all duration-200 cursor-pointer ${
                   isSelected
                     ? "bg-primary text-primary-foreground shadow-xs shadow-primary/20 scale-102"
                     : "bg-muted/70 text-muted-foreground hover:text-foreground hover:bg-muted"
                 }`}
               >
-                {isEn ? cat.nameEn : cat.nameBn}
+                {isEn ? pill.nameEn : pill.nameBn}
               </button>
             );
           })}

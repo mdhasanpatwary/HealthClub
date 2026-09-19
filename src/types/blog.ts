@@ -299,6 +299,16 @@ export interface CardiacPackagePriceItem {
   reportTimeBn: string;
 }
 
+export interface KidneyPackagePriceItem {
+  testOrPackageNameBn: string;
+  testOrPackageNameEn: string;
+  categoryBn: string;
+  regularPriceRangeBn: string;
+  memberPriceRangeBn?: string;
+  discountPercentageBn?: string;
+  turnaroundOrDurationBn: string;
+}
+
 export interface BlogPost {
   slug: string;
   titleBn: string;
@@ -355,6 +365,11 @@ export interface BlogPost {
     titleBn: string;
     subtitleBn: string;
     packages: CardiacPackagePriceItem[];
+  };
+  kidneyCarePricingBn?: {
+    titleBn: string;
+    subtitleBn: string;
+    packages: KidneyPackagePriceItem[];
   };
   bookingGuideBn?: {
     titleBn: string;

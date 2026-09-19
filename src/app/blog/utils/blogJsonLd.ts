@@ -6,11 +6,16 @@ export function generateBlogJsonLd(
   post: BlogPost,
   title: string,
   pageUrl: string,
-  isEn: boolean
+  isEn: boolean,
+  relatedPosts?: BlogPost[]
 ): Record<string, unknown> {
   const coverImageUrl = post.coverImage.startsWith("http")
     ? post.coverImage
     : `${SITE_URL}${post.coverImage}`;
+
+  const relatedUrls = (relatedPosts && relatedPosts.length > 0)
+    ? relatedPosts.map((r) => `${SITE_URL}/blog/${r.slug}`)
+    : (post.relatedSlugs || []).map((s) => `${SITE_URL}/blog/${s}`);
 
   const graph: Record<string, unknown>[] = [
     // WebSite Entity
@@ -31,6 +36,7 @@ export function generateBlogJsonLd(
       inLanguage: isEn ? "en-US" : "bn-BD",
       isPartOf: { "@id": `${SITE_URL}/#website` },
       breadcrumb: { "@id": `${pageUrl}#breadcrumb` },
+      ...(relatedUrls.length > 0 ? { relatedLink: relatedUrls } : {}),
       speakable: {
         "@type": "SpeakableSpecification",
         cssSelector: [
@@ -84,6 +90,12 @@ export function generateBlogJsonLd(
         "@type": "WebPage",
         "@id": pageUrl,
       },
+      ...(relatedUrls.length > 0
+        ? {
+            relatedLink: relatedUrls,
+            significantLink: relatedUrls,
+          }
+        : {}),
       author: {
         "@type": "Organization",
         name: isEn ? post.author.nameEn : post.author.nameBn,

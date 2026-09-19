@@ -20,6 +20,7 @@ interface BlogTableOfContentsProps {
   physiotherapyCenters?: PhysiotherapyCenterReviewItem[];
   hasMaternityPricing?: boolean;
   hasCardiacPricing?: boolean;
+  hasKidneyPricing?: boolean;
   locale?: string;
 }
 
@@ -31,6 +32,7 @@ export function BlogTableOfContents({
   physiotherapyCenters = [],
   hasMaternityPricing = false,
   hasCardiacPricing = false,
+  hasKidneyPricing = false,
   locale = "bn",
 }: BlogTableOfContentsProps) {
   const { locale: contextLocale } = useLanguage();
@@ -135,9 +137,19 @@ export function BlogTableOfContents({
                 </a>
               </li>
             )}
+            {hasKidneyPricing && (
+              <li>
+                <a
+                  href="#kidney-price-guide"
+                  className="hover:text-primary transition-colors block py-0.5"
+                >
+                  {secNum(5)}{isEn ? "Dialysis & Kidney Diagnostic Cost Guide" : "কিডনি টেস্ট ও ডায়ালাইসিস খরচের হিসাব"}
+                </a>
+              </li>
+            )}
             <li>
               <a href="#faq-section" className="hover:text-primary transition-colors block py-0.5">
-                {secNum(hasMaternityPricing || hasCardiacPricing ? 6 : 5)}
+                {secNum(hasMaternityPricing || hasCardiacPricing || hasKidneyPricing ? 6 : 5)}
                 {isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
               </a>
             </li>

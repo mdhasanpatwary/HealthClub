@@ -12,6 +12,7 @@ import { PhysiotherapyReviewCard } from "./PhysiotherapyReviewCard";
 import { PhysiotherapyPriceTable } from "./PhysiotherapyPriceTable";
 import { MaternityPriceTable } from "./MaternityPriceTable";
 import { CardiacPriceTable } from "./CardiacPriceTable";
+import { KidneyPriceTable } from "./KidneyPriceTable";
 
 interface BlogSpecializedSectionsProps {
   post: BlogPost;
@@ -182,6 +183,14 @@ export function BlogSpecializedSections({
       {post.cardiacCarePricingBn && (
         <CardiacPriceTable
           pricingData={post.cardiacCarePricingBn}
+          locale={locale}
+        />
+      )}
+
+      {/* Kidney Care & Dialysis Pricing Table */}
+      {post.kidneyCarePricingBn && (
+        <KidneyPriceTable
+          pricingData={post.kidneyCarePricingBn}
           locale={locale}
         />
       )}

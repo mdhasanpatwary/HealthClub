@@ -1,3 +1,9 @@
+import {
+  ARTICLE_ENGLISH_INTROS,
+  ARTICLE_ENGLISH_HIGHLIGHTS,
+  ARTICLE_SELECTION_GUIDES,
+} from "./articleTranslationsData";
+
 /**
  * Converts Bengali digits (০-৯) to English digits (0-9).
  */
@@ -62,6 +68,13 @@ const CATEGORY_TRANSLATIONS: Record<string, string> = {
   "কার্ডিয়াক ডায়াগনস্টিক": "Cardiac Diagnostics",
   "কার্ডিয়াক হেলথ চেকআপ": "Cardiac Health Checkup",
   "জরুরি কার্ডিয়াক কেয়ার": "Emergency Cardiac Care",
+  "হিমোডায়ালাইসিস সেশন": "Hemodialysis Session",
+  "রেনাল ফাংশন টেস্ট": "Renal Function Test",
+  "ডায়াবেটিক কিডনি ড্যামেজ স্ক্রিনিং": "Diabetic Renal Screening",
+  "রেনাল আল্ট্রাসনোগ্রাফি": "Renal Ultrasonography",
+  "রক্তের ইলেক্ট্রোলাইট ভারসাম্য": "Serum Electrolytes Balance",
+  "ইউরোলজিক্যাল সার্জারি": "Urological Surgery",
+  "কিডনি হেলথ চেকআপ": "Kidney Health Checkup",
 };
 
 export function translateMedicalCategory(categoryBn: string, isEn: boolean): string {
@@ -143,93 +156,10 @@ export function translateComparisonStatus(val: boolean | string, isEn: boolean):
   return toEnglishDigits(val);
 }
 
-const ARTICLE_ENGLISH_INTROS: Record<string, string[]> = {
-  "best-diagnostic-centers-in-feni": [
-    "Accurate diagnosis is the foundational cornerstone of effective medical care. Misdiagnosis or delayed pathology reports can have serious health consequences. As healthcare infrastructure expands across Feni district, access to state-of-the-art diagnostic testing has grown significantly.",
-    "Today, residents of Feni can access automated robotic biochemistry analyzers, multi-slice CT scanning, 4D color Doppler ultrasound, and high-frequency digital radiography locally without traveling to Dhaka or Chittagong.",
-    "However, laboratories vary widely in equipment accuracy, consultant oversight, biosafety, and turnaround times. The Health Club clinical team has verified the top diagnostic centers in Feni to help patients make confident, cost-effective decisions.",
-  ],
-  "best-10-hospitals-in-feni": [
-    "Feni district serves as a strategic healthcare hub in southeast Bangladesh, catering not only to its 1.4 million residents but also to patients from nearby Comilla, Noakhali, and Mirsharai.",
-    "During medical emergencies, trauma cases, acute cardiac events, or planned surgeries, choosing the right hospital is vital. Lack of reliable hospital information often causes costly delays.",
-    "Health Club's medical editorial board conducted on-site reviews of the top government and private hospitals in Feni to provide clear data on bed capacities, ICU facilities, specialist coverage, and member savings.",
-  ],
-  "best-doctors-in-feni": [
-    "Finding an experienced, BMDC-registered specialist doctor in Feni can be challenging when managing acute illness or chronic conditions like diabetes, hypertension, and cardiac issues.",
-    "Feni's central medical hubs along SSK Road, Trunk Road, and Hospital Road host visiting professors and consultants from premier institutions across Bangladesh.",
-    "This curated directory outlines top specialists across medicine, cardiology, surgery, pediatrics, and gynecology, complete with chamber schedules, visiting fees, and verified direct serial booking hotlines.",
-  ],
-  "best-cardiologists-in-feni": [
-    "Cardiovascular diseases, hypertension, and ischemic heart conditions require timely assessment and expert management. Early detection through ECG, Echocardiogram, and ETT tests prevents irreversible cardiac damage.",
-    "Feni is home to distinguished clinical and interventional cardiologists who provide comprehensive consultations, cardiac rehabilitation advice, and specialized CCU care.",
-    "This guide covers Feni's premier heart specialists, their diagnostic chamber timings, consultation fees, and emergency helpline protocols.",
-  ],
-  "best-gynecologists-in-feni": [
-    "Maternal health, safe prenatal monitoring, and specialized gynecological care are critical for every family. From routine antenatal checkups to high-risk pregnancies, choosing a certified specialist ensures safety.",
-    "Leading female gynecologists and laparoscopic surgeons in Feni offer advanced obstetrics, painless normal delivery support, and fertility care.",
-    "Explore our verified guide to top gynecologists in Feni, with chamber schedules, hospital affiliations, and exclusive delivery package discounts for Health Club members.",
-  ],
-  "best-physiotherapy-in-feni": [
-    "Rehabilitation therapy is essential for stroke recovery, chronic PLID back pain, sports injuries, and musculoskeletal conditions. Proper therapeutic exercise prevents long-term physical disability.",
-    "Modern physiotherapy centers in Feni are equipped with computerized lumbar/cervical traction, Shortwave Diathermy (SWD), therapeutic ultrasound, and specialized paralysis rehabilitation units.",
-    "Compare Feni's top 10 physiotherapy clinics, their licensed therapists (BPT/MPT), home session availability, and guaranteed 10-30% member savings.",
-  ],
-  "best-dental-clinics-in-feni": [
-    "Oral health directly impacts overall physical well-being. Avoiding substandard dental practices is crucial to prevent blood-borne infections and nerve complications during treatments.",
-    "Reputed dental surgeries in Feni employ modern digital RVG X-rays, Class-B autoclave sterilization, laser dentistry, and advanced root canal therapy.",
-    "This guide reviews the top 10 dental clinics and BMDC-certified dental surgeons in Feni, including visiting hours, treatment price ranges, and Health Club card savings.",
-  ],
-};
-
 export function getArticleEnglishIntro(slug: string, fallbackBn: string[], isEn: boolean): string[] {
   if (!isEn) return fallbackBn;
   return ARTICLE_ENGLISH_INTROS[slug] || fallbackBn;
 }
-
-const ARTICLE_ENGLISH_HIGHLIGHTS: Record<string, string[]> = {
-  "best-diagnostic-centers-in-feni": [
-    "Verified laboratory equipment, test menus, and direct serial numbers for top 10 labs in Feni.",
-    "Comparison matrix of CT Scan, 4D Ultrasound, Digital X-Ray, and Automated Biochemistry.",
-    "Standard market price guide for routine diagnostic tests with Health Club member savings.",
-    "Guaranteed 10-30% member discounts at official partner diagnostic centers.",
-  ],
-  "best-10-hospitals-in-feni": [
-    "250-bed Feni General Hospital tertiary facility and 24/7 trauma emergency care.",
-    "Up to 25% member savings at Health Club partner hospitals including Al-Aqsa Hospital.",
-    "Top private hospitals equipped with operational ICU, CCU, and NICU units.",
-    "Direct emergency ambulance, blood donor, and admission desk telephone contacts.",
-  ],
-  "best-doctors-in-feni": [
-    "Directory of BMDC-registered specialist doctors across 6 key clinical departments.",
-    "Chamber addresses, visiting schedules, and consultation fees across Feni medical hubs.",
-    "Direct phone contacts for immediate serial booking and minimal clinic waiting times.",
-    "Special discounts on hospital diagnostic investigations for Health Club cardholders.",
-  ],
-  "best-cardiologists-in-feni": [
-    "Top clinical and interventional cardiologists practicing across Feni.",
-    "Comprehensive Echocardiogram, ETT, and cardiac biomarker test pricing guide.",
-    "24/7 CCU availability and emergency acute coronary care facilities.",
-    "Special member privileges on heart health checkup packages.",
-  ],
-  "best-gynecologists-in-feni": [
-    "Feni's top female gynecologists, obstetricians, and laparoscopic surgeons.",
-    "Normal delivery and C-Section package comparison at leading maternity hospitals.",
-    "High-risk pregnancy care, NICU incubators, and fertility management.",
-    "Guaranteed 10-30% member discounts on delivery and prenatal ultrasound services.",
-  ],
-  "best-physiotherapy-in-feni": [
-    "Top 10 rehabilitation centers led by certified physiotherapists (BPT/MPT).",
-    "Modern therapeutic traction, SWD, laser, and stroke paralysis recovery units.",
-    "Home visit physiotherapy session pricing and scheduling guidance.",
-    "Exclusive 10-30% discount per therapy session for Health Club digital card members.",
-  ],
-  "best-dental-clinics-in-feni": [
-    "Top 10 dental clinics with BMDC-licensed Dental Surgeons (BDS/FCPS).",
-    "Digital RVG X-ray, Class-B autoclave sterilization, and rotary root canal facilities.",
-    "Market price guide for scaling, fillings, root canals, crowns, and implants.",
-    "Exclusive 10-30% savings on all dental treatments for Health Club members.",
-  ],
-};
 
 export function getArticleEnglishHighlights(
   slug: string,
@@ -239,76 +169,6 @@ export function getArticleEnglishHighlights(
   if (!isEn) return keyHighlightsBn || [];
   return ARTICLE_ENGLISH_HIGHLIGHTS[slug] || keyHighlightsBn || [];
 }
-
-const ARTICLE_SELECTION_GUIDES: Record<string, { title: string; points: { title: string; desc: string }[] }> = {
-  "best-diagnostic-centers-in-feni": {
-    title: "5 Essential Criteria for Choosing a Reliable Diagnostic Lab",
-    points: [
-      {
-        title: "1. Automated Analyzers & Quality Reagents",
-        desc: "Ensure the lab uses fully automated analyzers (e.g. Roche, Abbott, Beckman) with standardized international reagents for accurate blood analysis.",
-      },
-      {
-        title: "2. Resident Pathologists & Radiologists",
-        desc: "Reports should be reviewed and signed by certified consultant pathologists or radiologists rather than junior technicians alone.",
-      },
-      {
-        title: "3. Digital Radiology & High-Frequency 4D USG",
-        desc: "Choose centers with modern digital radiography and multi-frequency color Doppler transducers to detect subtle tissue anomalies.",
-      },
-      {
-        title: "4. Strict Biosafety & Disposable Consumables",
-        desc: "Verify that phlebotomists follow sterile protocols with single-use vacuum blood tubes and disposable needles to prevent infection.",
-      },
-      {
-        title: "5. Maximize Savings with Health Club Card",
-        desc: "Diagnostic tests can be costly; use your Health Club membership card to receive guaranteed 10-30% savings at verified partner centers.",
-      },
-    ],
-  },
-  "best-10-hospitals-in-feni": {
-    title: "4 Key Factors for Selecting the Right Hospital in Feni",
-    points: [
-      {
-        title: "1. 24/7 ICU, CCU & Emergency Availability",
-        desc: "Confirm the presence of functional intensive care beds, central oxygen, and round-the-clock emergency medical officers before admission.",
-      },
-      {
-        title: "2. Cleanliness, Infection Control & Biosafety",
-        desc: "Choose facilities with sterile operating theaters, adequate post-operative care, and strict sterilization protocols.",
-      },
-      {
-        title: "3. Transparent Billing & Clear Cost Estimates",
-        desc: "Ensure the hospital provides written admission and surgical package quotes to prevent unexpected ancillary charges.",
-      },
-      {
-        title: "4. Health Club Partner Discounts",
-        desc: "Take advantage of up to 25% member savings on cabin rent, pathology tests, and hospital charges at official partner hospitals.",
-      },
-    ],
-  },
-  "default": {
-    title: "Guidelines for Choosing Quality Healthcare in Feni",
-    points: [
-      {
-        title: "1. Certified Medical Professionals",
-        desc: "Ensure practitioners hold recognized BMDC degrees and active credentials in their respective specialties.",
-      },
-      {
-        title: "2. Modern Clinical Equipment",
-        desc: "Verify the clinic uses updated medical technologies and hygienic sterilizing procedures.",
-      },
-      {
-        title: "3. Convenient Booking & Punctuality",
-        desc: "Prioritize chambers with verified serial hotlines to minimize waiting times and crowded conditions.",
-      },
-      {
-        title: "4. Save with Health Club Membership",
-        desc: "Show your digital Health Club card at partner centers to receive guaranteed member discounts on consultations and diagnostics.",
-      },
-    ],
-  },
-};
 
 export function getArticleSelectionGuide(
   slug: string,

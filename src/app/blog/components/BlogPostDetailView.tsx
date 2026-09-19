@@ -17,6 +17,7 @@ import { BlogSpecializedSections } from "./BlogSpecializedSections";
 import { BlogFAQSection } from "./BlogFAQSection";
 import { BlogShareBar } from "./BlogShareBar";
 import { BlogCard } from "./BlogCard";
+import { BlogClusterMesh } from "./BlogClusterMesh";
 import {
   getArticleEnglishIntro,
   getArticleSelectionGuide,
@@ -52,7 +53,8 @@ export function BlogPostDetailView({
     post.dentalProcedurePricingBn ||
     post.physiotherapyTreatmentPricingBn ||
     post.maternityCarePricingBn ||
-    post.cardiacCarePricingBn
+    post.cardiacCarePricingBn ||
+    post.kidneyCarePricingBn
   );
 
   const selectionGuideNumber = hasPricingGuide ? 5 : 4;
@@ -108,9 +110,35 @@ export function BlogPostDetailView({
                   {isEn ? "1. Healthcare Landscape in Feni" : "১. ফেনী জেলার স্বাস্থ্যসেবা ও পটভূমি"}
                 </h2>
                 <div className="space-y-4 text-sm sm:text-base text-foreground/90 leading-relaxed">
-                  {introParagraphs.map((p, idx) => (
-                    <p key={idx}>{p}</p>
-                  ))}
+                  {introParagraphs.map((p, idx) => {
+                    const regex = /\[([^\]]+)\]\(([^)]+)\)/g;
+                    const parts = [];
+                    let lastIndex = 0;
+                    let match;
+
+                    while ((match = regex.exec(p)) !== null) {
+                      if (match.index > lastIndex) {
+                        parts.push(p.substring(lastIndex, match.index));
+                      }
+                      const [, label, href] = match;
+                      parts.push(
+                        <Link
+                          key={`${href}-${match.index}`}
+                          href={href}
+                          className="font-semibold text-primary underline underline-offset-4 decoration-primary/40 hover:decoration-primary transition-colors"
+                        >
+                          {label}
+                        </Link>
+                      );
+                      lastIndex = regex.lastIndex;
+                    }
+
+                    if (lastIndex < p.length) {
+                      parts.push(p.substring(lastIndex));
+                    }
+
+                    return <p key={idx}>{parts.length > 0 ? parts : p}</p>;
+                  })}
                 </div>
               </section>
 
@@ -223,6 +251,7 @@ export function BlogPostDetailView({
 
             {/* Sticky Sidebar */}
             <BlogSidebar
+              currentSlug={post.slug}
               hospitals={post.hospitals}
               doctorGroups={post.doctorGroups}
               diagnosticCenters={post.diagnosticCenters}
@@ -230,10 +259,16 @@ export function BlogPostDetailView({
               physiotherapyCenters={post.physiotherapyCenters}
               hasMaternityPricing={!!post.maternityCarePricingBn}
               hasCardiacPricing={!!post.cardiacCarePricingBn}
+              hasKidneyPricing={!!post.kidneyCarePricingBn}
               locale={locale}
             />
           </div>
         </article>
+
+        {/* Feni Healthcare Topic Cluster Navigation Mesh */}
+        <section aria-label={isEn ? "Feni Healthcare Guide Network" : "ফেনী স্বাস্থ্যসেবা গাইড নেটওয়ার্ক"}>
+          <BlogClusterMesh currentSlug={post.slug} locale={locale} />
+        </section>
 
         {/* Related Posts */}
         {relatedPosts.length > 0 && (

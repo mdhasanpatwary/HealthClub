@@ -281,6 +281,7 @@ export const BEST_DIAGNOSTIC_CENTERS_IN_FENI: BlogPost = {
     "যেকোনো সঠিক চিকিৎসার মূল ভিত্তি হলো নির্ভুল রোগ নির্ণয় বা ডায়াগনসিস। ভুল কিংবা অস্পষ্ট ডায়াগনস্টিক রিপোর্টের কারণে ভুল চিকিৎসা হতে পারে, যার পরিণতি অত্যন্ত বিপজ্জনক। ফেনী জেলা সদর এবং আশেপাশের উপজেলাসমূহে উন্নত চিকিৎসার চাহিদা বৃদ্ধির সাথে সাথে আধুনিক ডায়াগনস্টিক সেন্টারের সংখ্যাও ক্রমাগত বাড়ছে।",
     "বর্তমানে ফেনী শহরে আন্তর্জাতিক মানের রোবোটিক প্যাথলজি অ্যানালাইজার, মাল্টি-স্লাইস সিটি স্ক্যান, কালার ডপলার ৪ডি সোনোগ্রাফি এবং হাই-ফ্রিকোয়েন্সি ডিজিটাল রেডিওগ্রাফি সেবা পাওয়া যাচ্ছে। ফলে সাধারণ রক্ত পরীক্ষা থেকে শুরু করে জটিল ক্যান্সার মার্কার বা নিউরো ইমেজিংয়ের জন্য রোগীদের আর দূরবর্তী ঢাকা বা চট্টগ্রামে ছুটতে হচ্ছে না।",
     "তবে বিভিন্ন ল্যাবের মেশিনের মান, টেকনোলজিস্টদের দক্ষতা, বায়ো-সেফটি এবং রিপোর্টের সময়সীমা এক নয়। রোগীদের সঠিক সেন্টার বেছে নিতে এবং টেস্ট খরচে সর্বোচ্চ সাশ্রয় নিশ্চিত করতে হেলথ ক্লাবের ক্লিনিক্যাল টিম ফেনীর শীর্ষ ১০টি ডায়াগনস্টিক সেন্টারের এই বিশদ গাইড প্রস্তুত করেছে।",
+    "ল্যাব টেস্টের রিপোর্ট পাওয়ার পর অভিজ্ঞ ডাক্তারের পরামর্শের জন্য দেখতে পারেন: [ফেনীর সেরা বিশেষজ্ঞ ডাক্তার তালিকা](/blog/best-doctors-in-feni), রক্তের সুগার ও দীর্ঘমেয়াদী রোগে [মেডিসিন বিশেষজ্ঞ](/blog/best-medicine-doctors-in-feni), হার্টের ইসিজি ও ইকোর পর [হৃদরোগ বিশেষজ্ঞ ডাক্তার](/blog/best-cardiologists-in-feni), ক্রিয়েটিনিন বৃদ্ধিতে [কিডনি ও ডায়ালাইসিস গাইড](/blog/best-kidney-doctors-in-feni), এবং জরুরি চিকিৎসা ও ভর্তির জন্য [ফেনীর সেরা ১০টি হাসপাতাল](/blog/best-10-hospitals-in-feni)।",
   ],
   diagnosticCenters: FENI_DIAGNOSTIC_CENTERS,
   diagnosticComparisonTable: DIAGNOSTIC_COMPARISON_TABLE,
@@ -364,5 +365,11 @@ export const BEST_DIAGNOSTIC_CENTERS_IN_FENI: BlogPost = {
         "Yes, diagnostic centers such as Popular, LabAid, and DD Lab provide home sample collection services for elderly or bedridden patients upon prior phone booking.",
     },
   ],
-  relatedSlugs: ["best-doctors-in-feni", "best-10-hospitals-in-feni"],
+  relatedSlugs: [
+    "best-doctors-in-feni",
+    "best-medicine-doctors-in-feni",
+    "best-cardiologists-in-feni",
+    "best-kidney-doctors-in-feni",
+    "best-10-hospitals-in-feni",
+  ],
 };

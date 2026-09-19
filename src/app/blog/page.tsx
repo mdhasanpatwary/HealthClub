@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
-import { BLOG_CATEGORIES } from "@/data/blog/blogPosts";
+import { BLOG_CATEGORIES, BLOG_FILTER_PILLS } from "@/data/blog/blogPosts";
 import { getAllBlogPostsAction } from "@/app/actions/blogAdminActions";
 import { BlogSearchFilter } from "./components/BlogSearchFilter";
 import {
@@ -313,6 +313,7 @@ export default async function BlogPage() {
           <BlogSearchFilter
             initialPosts={allPosts}
             categories={BLOG_CATEGORIES}
+            filterPills={BLOG_FILTER_PILLS}
             locale={locale}
           />
         </section>

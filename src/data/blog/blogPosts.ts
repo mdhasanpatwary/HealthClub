@@ -1,4 +1,6 @@
 import { BlogPost, BlogCategory } from "@/types/blog";
+import { BEST_KIDNEY_DOCTORS_IN_FENI } from "./posts/bestKidneyDoctorsInFeni";
+import { BEST_MEDICINE_DOCTORS_IN_FENI } from "./posts/bestMedicineDoctorsInFeni";
 import { BEST_CARDIOLOGISTS_IN_FENI } from "./posts/bestCardiologistsInFeni";
 import { BEST_GYNECOLOGISTS_IN_FENI } from "./posts/bestGynecologistsInFeni";
 import { BEST_PHYSIOTHERAPY_IN_FENI } from "./posts/bestPhysiotherapyInFeni";
@@ -14,6 +16,20 @@ export const BLOG_CATEGORIES: BlogCategory[] = [
     nameEn: "All Posts",
     descriptionBn: "স্বাস্থ্যসেবা, হাসপাতাল রিভিউ ও জীবনযাত্রার প্রয়োজনীয় সব গাইড",
     descriptionEn: "All healthcare reviews, hospital directories and wellness guides",
+  },
+  {
+    id: "kidney-guide",
+    nameBn: "কিডনি ও নেফ্রোলজি গাইড",
+    nameEn: "Nephrology & Kidney Care",
+    descriptionBn: "ফেনীর সেরা কিডনি বিশেষজ্ঞ ডাক্তার, ডায়ালাইসিস খরচ ও কিডনি পাথর চিকিৎসা গাইড",
+    descriptionEn: "Top nephrologists, kidney doctors, dialysis costs and urology surgery in Feni",
+  },
+  {
+    id: "medicine-guide",
+    nameBn: "মেডিসিন ও ইন্টারনাল কেয়ার গাইড",
+    nameEn: "Medicine & Internal Care",
+    descriptionBn: "ফেনীর সেরা মেডিসিন বিশেষজ্ঞ ডাক্তার, দীর্ঘমেয়াদী রোগ ও চেম্বার সিরিয়াল গাইড",
+    descriptionEn: "Top medicine specialists, internal care and chamber serial guides in Feni",
   },
   {
     id: "cardiology-guide",
@@ -80,7 +96,66 @@ export const BLOG_CATEGORIES: BlogCategory[] = [
   },
 ];
 
+export interface BlogFilterPill {
+  id: string;
+  nameBn: string;
+  nameEn: string;
+  matchingCategories?: string[];
+  tagKeywords?: string[];
+}
+
+export const BLOG_FILTER_PILLS: BlogFilterPill[] = [
+  {
+    id: "all",
+    nameBn: "সকল ব্লগ",
+    nameEn: "All Posts",
+  },
+  {
+    id: "doctor-list",
+    nameBn: "ডাক্তার তালিকা",
+    nameEn: "Doctor Guides",
+    matchingCategories: [
+      "doctor-guide",
+      "medicine-guide",
+      "cardiology-guide",
+      "gynecology-guide",
+      "kidney-guide",
+    ],
+  },
+  {
+    id: "diagnostic",
+    nameBn: "ডায়াগনস্টিক",
+    nameEn: "Diagnostics",
+    matchingCategories: ["diagnostic-guide"],
+  },
+  {
+    id: "dental-physio",
+    nameBn: "ডেন্টাল ও ফিজিও",
+    nameEn: "Dental & Physio",
+    matchingCategories: ["dental-guide", "physiotherapy-guide"],
+  },
+  {
+    id: "specialized-care",
+    nameBn: "বিশেষায়িত চিকিৎসা",
+    nameEn: "Specialized Care",
+    matchingCategories: [
+      "cardiology-guide",
+      "gynecology-guide",
+      "kidney-guide",
+      "physiotherapy-guide",
+    ],
+  },
+  {
+    id: "hospital-guide",
+    nameBn: "হাসপাতাল গাইড",
+    nameEn: "Hospitals",
+    matchingCategories: ["hospital-guide"],
+  },
+];
+
 export const BLOG_POSTS: BlogPost[] = [
+  BEST_KIDNEY_DOCTORS_IN_FENI,
+  BEST_MEDICINE_DOCTORS_IN_FENI,
   BEST_CARDIOLOGISTS_IN_FENI,
   BEST_GYNECOLOGISTS_IN_FENI,
   BEST_PHYSIOTHERAPY_IN_FENI,
@@ -89,8 +164,6 @@ export const BLOG_POSTS: BlogPost[] = [
   BEST_DOCTORS_IN_FENI,
   BEST_10_HOSPITALS_IN_FENI,
 ];
-
-
 
 export function getAllBlogPosts(): BlogPost[] {
   return BLOG_POSTS;
@@ -106,6 +179,22 @@ export function getBlogPostBySlug(slug: string): BlogPost | undefined {
 export function getRelatedBlogPosts(currentSlug: string, limit = 3): BlogPost[] {
   const current = getBlogPostBySlug(currentSlug);
   if (!current) return [];
+
+  // If curated relatedSlugs exist, prioritize them
+  if (current.relatedSlugs && current.relatedSlugs.length > 0) {
+    const curated = current.relatedSlugs
+      .map((slug) => getBlogPostBySlug(slug))
+      .filter((post): post is BlogPost => !!post && post.slug !== current.slug);
+
+    if (curated.length >= limit) {
+      return curated.slice(0, limit);
+    }
+
+    const remaining = BLOG_POSTS.filter(
+      (post) => post.slug !== current.slug && !curated.some((c) => c.slug === post.slug)
+    );
+    return [...curated, ...remaining].slice(0, limit);
+  }
 
   return BLOG_POSTS.filter((post) => post.slug !== current.slug).slice(0, limit);
 }
