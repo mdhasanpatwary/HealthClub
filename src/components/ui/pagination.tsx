@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import {
   ChevronLeft,
   ChevronRight,
@@ -8,7 +9,7 @@ import {
   ChevronsRight,
   MoreHorizontal,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { formatNum, Locale } from "@/lib/i18n";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { cn } from "@/lib/utils";
@@ -18,7 +19,7 @@ export interface PaginationProps {
   totalPages: number;
   pageSize: number;
   totalItems: number;
-  onPageChange: (page: number) => void;
+  onPageChange?: (page: number) => void;
   onPageSizeChange?: (size: number) => void;
   pageSizeOptions?: number[];
   locale?: Locale;
@@ -26,6 +27,7 @@ export interface PaginationProps {
   itemLabel?: string;
   className?: string;
   disabled?: boolean;
+  getPageUrl?: (page: number) => string;
 }
 
 export function Pagination({
@@ -41,6 +43,7 @@ export function Pagination({
   itemLabel,
   className,
   disabled = false,
+  getPageUrl,
 }: PaginationProps) {
   const lang = useLanguage();
   const locale = propLocale || lang.locale || "bn";
@@ -157,30 +160,80 @@ export function Pagination({
       {/* Right: Navigation Controls */}
       <div className="flex items-center justify-center gap-1 w-full sm:w-auto overflow-x-auto py-1">
         {/* First Page */}
-        <Button
-          variant="outline"
-          size="icon-xs"
-          onClick={() => onPageChange(1)}
-          disabled={disabled || safeCurrentPage <= 1}
-          aria-label={t("admin.pagination.first")}
-          title={t("admin.pagination.first")}
-          className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground disabled:opacity-40"
-        >
-          <ChevronsLeft className="h-4 w-4" />
-        </Button>
+        {safeCurrentPage <= 1 || disabled ? (
+          <Button
+            variant="outline"
+            size="icon-xs"
+            disabled
+            aria-label={t("admin.pagination.first")}
+            title={t("admin.pagination.first")}
+            className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground opacity-40 cursor-not-allowed"
+          >
+            <ChevronsLeft className="h-4 w-4" />
+          </Button>
+        ) : getPageUrl ? (
+          <Link
+            href={getPageUrl(1)}
+            onClick={() => onPageChange?.(1)}
+            aria-label={t("admin.pagination.first")}
+            title={t("admin.pagination.first")}
+            className={cn(
+              buttonVariants({ variant: "outline", size: "icon-xs" }),
+              "h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <ChevronsLeft className="h-4 w-4" />
+          </Link>
+        ) : (
+          <Button
+            variant="outline"
+            size="icon-xs"
+            onClick={() => onPageChange?.(1)}
+            aria-label={t("admin.pagination.first")}
+            title={t("admin.pagination.first")}
+            className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground"
+          >
+            <ChevronsLeft className="h-4 w-4" />
+          </Button>
+        )}
 
         {/* Previous Page */}
-        <Button
-          variant="outline"
-          size="icon-xs"
-          onClick={() => onPageChange(safeCurrentPage - 1)}
-          disabled={disabled || safeCurrentPage <= 1}
-          aria-label={t("admin.pagination.prev")}
-          title={t("admin.pagination.prev")}
-          className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground disabled:opacity-40"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
+        {safeCurrentPage <= 1 || disabled ? (
+          <Button
+            variant="outline"
+            size="icon-xs"
+            disabled
+            aria-label={t("admin.pagination.prev")}
+            title={t("admin.pagination.prev")}
+            className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground opacity-40 cursor-not-allowed"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+        ) : getPageUrl ? (
+          <Link
+            href={getPageUrl(safeCurrentPage - 1)}
+            onClick={() => onPageChange?.(safeCurrentPage - 1)}
+            aria-label={t("admin.pagination.prev")}
+            title={t("admin.pagination.prev")}
+            className={cn(
+              buttonVariants({ variant: "outline", size: "icon-xs" }),
+              "h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Link>
+        ) : (
+          <Button
+            variant="outline"
+            size="icon-xs"
+            onClick={() => onPageChange?.(safeCurrentPage - 1)}
+            aria-label={t("admin.pagination.prev")}
+            title={t("admin.pagination.prev")}
+            className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+        )}
 
         {/* Mobile Compact Page Indicator */}
         <div className="flex sm:hidden items-center px-2 font-medium text-xs text-foreground">
@@ -207,12 +260,36 @@ export function Pagination({
             }
 
             const isActive = page === safeCurrentPage;
+
+            if (getPageUrl && !disabled) {
+              return (
+                <Link
+                  key={page}
+                  href={getPageUrl(page)}
+                  onClick={() => onPageChange?.(page)}
+                  aria-current={isActive ? "page" : undefined}
+                  className={cn(
+                    buttonVariants({
+                      variant: isActive ? "default" : "outline",
+                      size: "icon-xs",
+                    }),
+                    "h-8 w-8 rounded-lg font-semibold text-xs transition-all",
+                    isActive
+                      ? "bg-primary text-white hover:bg-primary-dark font-bold shadow-xs"
+                      : "border-border text-foreground hover:bg-muted"
+                  )}
+                >
+                  {formatNum(page, locale)}
+                </Link>
+              );
+            }
+
             return (
               <Button
                 key={page}
                 variant={isActive ? "default" : "outline"}
                 size="icon-xs"
-                onClick={() => onPageChange(page)}
+                onClick={() => onPageChange?.(page)}
                 disabled={disabled}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
@@ -230,30 +307,80 @@ export function Pagination({
         </div>
 
         {/* Next Page */}
-        <Button
-          variant="outline"
-          size="icon-xs"
-          onClick={() => onPageChange(safeCurrentPage + 1)}
-          disabled={disabled || safeCurrentPage >= safeTotalPages}
-          aria-label={t("admin.pagination.next")}
-          title={t("admin.pagination.next")}
-          className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground disabled:opacity-40"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </Button>
+        {safeCurrentPage >= safeTotalPages || disabled ? (
+          <Button
+            variant="outline"
+            size="icon-xs"
+            disabled
+            aria-label={t("admin.pagination.next")}
+            title={t("admin.pagination.next")}
+            className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground opacity-40 cursor-not-allowed"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        ) : getPageUrl ? (
+          <Link
+            href={getPageUrl(safeCurrentPage + 1)}
+            onClick={() => onPageChange?.(safeCurrentPage + 1)}
+            aria-label={t("admin.pagination.next")}
+            title={t("admin.pagination.next")}
+            className={cn(
+              buttonVariants({ variant: "outline", size: "icon-xs" }),
+              "h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Link>
+        ) : (
+          <Button
+            variant="outline"
+            size="icon-xs"
+            onClick={() => onPageChange?.(safeCurrentPage + 1)}
+            aria-label={t("admin.pagination.next")}
+            title={t("admin.pagination.next")}
+            className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        )}
 
         {/* Last Page */}
-        <Button
-          variant="outline"
-          size="icon-xs"
-          onClick={() => onPageChange(safeTotalPages)}
-          disabled={disabled || safeCurrentPage >= safeTotalPages}
-          aria-label={t("admin.pagination.last")}
-          title={t("admin.pagination.last")}
-          className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground disabled:opacity-40"
-        >
-          <ChevronsRight className="h-4 w-4" />
-        </Button>
+        {safeCurrentPage >= safeTotalPages || disabled ? (
+          <Button
+            variant="outline"
+            size="icon-xs"
+            disabled
+            aria-label={t("admin.pagination.last")}
+            title={t("admin.pagination.last")}
+            className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground opacity-40 cursor-not-allowed"
+          >
+            <ChevronsRight className="h-4 w-4" />
+          </Button>
+        ) : getPageUrl ? (
+          <Link
+            href={getPageUrl(safeTotalPages)}
+            onClick={() => onPageChange?.(safeTotalPages)}
+            aria-label={t("admin.pagination.last")}
+            title={t("admin.pagination.last")}
+            className={cn(
+              buttonVariants({ variant: "outline", size: "icon-xs" }),
+              "h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <ChevronsRight className="h-4 w-4" />
+          </Link>
+        ) : (
+          <Button
+            variant="outline"
+            size="icon-xs"
+            onClick={() => onPageChange?.(safeTotalPages)}
+            aria-label={t("admin.pagination.last")}
+            title={t("admin.pagination.last")}
+            className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground"
+          >
+            <ChevronsRight className="h-4 w-4" />
+          </Button>
+        )}
       </div>
 
     </div>

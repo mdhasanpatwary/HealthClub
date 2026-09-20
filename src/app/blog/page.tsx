@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
-import { BLOG_CATEGORIES, BLOG_FILTER_PILLS } from "@/data/blog/blogPosts";
+import { BLOG_FILTER_PILLS } from "@/data/blog/blogPosts";
 import { getAllBlogPostsAction } from "@/app/actions/blogAdminActions";
 import { BlogSearchFilter } from "./components/BlogSearchFilter";
 import {
@@ -18,25 +18,49 @@ import { Badge } from "@/components/ui/badge";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 import { formatArticleDate } from "@/lib/dateUtils";
 
+import { toBanglaNums } from "@/lib/utils";
+import {
+  paginateBlogPosts,
+  DEFAULT_BLOG_PAGE_SIZE,
+} from "./utils/blogPagination";
+
 export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
 
-export async function generateMetadata() {
+interface BlogPageProps {
+  searchParams?: Promise<{
+    page?: string;
+    category?: string;
+    search?: string;
+  }>;
+}
+
+export async function generateMetadata({ searchParams }: BlogPageProps) {
+  const { page, category, search } = (await searchParams) || {};
   const isEn = false;
+  const currentPage = Math.max(1, parseInt(page || "1", 10) || 1);
+  const pageSuffix = currentPage > 1 ? ` (পৃষ্ঠা ${toBanglaNums(currentPage)})` : "";
+  const pageSuffixEn = currentPage > 1 ? ` (Page ${currentPage})` : "";
 
   const ogTitle = isEn
-    ? "Healthcare Blog & Feni Hospital Review Directory | Health Club"
-    : "স্বাস্থ্যসেবা ব্লগ ও ফেনী হাসপাতাল গাইড | হেলথ ক্লাব";
+    ? `Healthcare Blog & Feni Hospital Review Directory${pageSuffixEn} | Health Club`
+    : `স্বাস্থ্যসেবা ব্লগ ও ফেনী হাসপাতাল গাইড${pageSuffix} | হেলথ ক্লাব`;
   const ogDesc = isEn
     ? "Trusted healthcare reviews, hospital directories in Feni, emergency contacts, and medical cost-saving guides."
     : "ফেনীর সেরা হাসপাতাল ও স্বাস্থ্যসেবা প্রতিষ্ঠানের বিস্তারিত রিভিউ, জরুরি অ্যাম্বুলেন্স তালিকা ও সাশ্রয়ী চিকিৎসার নির্ভরযোগ্য গাইড।";
 
+  const queryParams = new URLSearchParams();
+  if (currentPage > 1) queryParams.set("page", String(currentPage));
+  if (category && category !== "all") queryParams.set("category", category);
+  if (search) queryParams.set("search", search);
+  const canonicalUrl = `${SITE_URL}/blog${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
+
   return {
     title: isEn
-      ? { absolute: "Health Care Blog & Feni Hospital Reviews | Health Club" }
-      : "স্বাস্থ্যসেবা ব্লগ ও ফেনী হাসপাতাল রিভিউ গাইড",
+      ? { absolute: `Health Care Blog & Feni Hospital Reviews${pageSuffixEn} | Health Club` }
+      : `স্বাস্থ্যসেবা ব্লগ ও ফেনী হাসপাতাল রিভিউ গাইড${pageSuffix}`,
     description: ogDesc,
     alternates: {
-      canonical: `${SITE_URL}/blog`,
+      canonical: canonicalUrl,
     },
     robots: {
       index: true,
@@ -52,7 +76,7 @@ export async function generateMetadata() {
     openGraph: {
       title: ogTitle,
       description: ogDesc,
-      url: `${SITE_URL}/blog`,
+      url: canonicalUrl,
       siteName: "হেলথ ক্লাব (Health Club)",
       locale: isEn ? "en_US" : "bn_BD",
       type: "website",
@@ -76,12 +100,25 @@ export async function generateMetadata() {
   };
 }
 
-export default async function BlogPage() {
+export default async function BlogPage({ searchParams }: BlogPageProps) {
+  const resolvedSearchParams = (await searchParams) || {};
   const locale: Locale = "bn";
   const isEn = false;
 
+  const currentPage = Math.max(1, parseInt(resolvedSearchParams.page || "1", 10) || 1);
+  const selectedCategory = resolvedSearchParams.category?.trim() || "all";
+  const searchQuery = resolvedSearchParams.search?.trim() || "";
+
   const allPosts = await getAllBlogPostsAction();
   const featuredPost = allPosts[0]; // Flagship article
+
+  const paginatedResult = paginateBlogPosts(allPosts, {
+    page: currentPage,
+    pageSize: DEFAULT_BLOG_PAGE_SIZE,
+    category: selectedCategory,
+    search: searchQuery,
+    filterPills: BLOG_FILTER_PILLS,
+  });
 
   const ogDesc = isEn
     ? "Trusted healthcare reviews, hospital directories in Feni, emergency contacts, and medical cost-saving guides."
@@ -126,10 +163,13 @@ export default async function BlogPage() {
         mainEntity: {
           "@type": "ItemList",
           itemListOrder: "https://schema.org/ItemListOrderDescending",
-          numberOfItems: allPosts.length,
-          itemListElement: allPosts.map((post, index) => ({
+          numberOfItems: paginatedResult.totalItems,
+          itemListElement: paginatedResult.posts.map((post, index) => ({
             "@type": "ListItem",
-            position: index + 1,
+            position:
+              (paginatedResult.currentPage - 1) * paginatedResult.pageSize +
+              index +
+              1,
             url: `${SITE_URL}/blog/${post.slug}`,
             name: isEn ? post.titleEn : post.titleBn,
             description: isEn ? post.excerptEn : post.excerptBn,
@@ -197,7 +237,7 @@ export default async function BlogPage() {
       {/* Main Content Area */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10 space-y-12">
         {/* Featured Flagship Article Spotlight */}
-        {featuredPost && (
+        {featuredPost && currentPage === 1 && !searchQuery && selectedCategory === "all" && (
           <section aria-labelledby="featured-article-heading">
             <div className="flex items-center gap-2 mb-4">
               <Sparkles className="h-4 w-4 text-primary" />
@@ -309,8 +349,13 @@ export default async function BlogPage() {
           </div>
 
           <BlogSearchFilter
-            initialPosts={allPosts}
-            categories={BLOG_CATEGORIES}
+            posts={paginatedResult.posts}
+            totalItems={paginatedResult.totalItems}
+            totalPages={paginatedResult.totalPages}
+            currentPage={paginatedResult.currentPage}
+            pageSize={paginatedResult.pageSize}
+            currentCategory={selectedCategory}
+            currentSearch={searchQuery}
             filterPills={BLOG_FILTER_PILLS}
             locale={locale}
           />
