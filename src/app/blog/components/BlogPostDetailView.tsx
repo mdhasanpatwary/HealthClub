@@ -62,11 +62,15 @@ export function BlogPostDetailView({
     post.entCarePricingBn ||
     post.surgicalCarePricingBn ||
     post.neurologyCarePricingBn ||
-    post.diabetesCarePricingBn
+    post.diabetesCarePricingBn ||
+    post.psychiatryCarePricingBn ||
+    post.sadarHospitalPricingBn ||
+    post.diabeticHospitalPricingBn
   );
 
-  const selectionGuideNumber = hasPricingGuide ? 5 : 4;
-  const emergencyDirectoryNumber = selectionGuide ? selectionGuideNumber + 1 : selectionGuideNumber;
+  const isPurePriceList = post.slug === "feni-medical-test-price-list";
+  const selectionGuideNumber = isPurePriceList ? 3 : (hasPricingGuide ? 5 : 4);
+  const emergencyDirectoryNumber = isPurePriceList ? 4 : (selectionGuide ? selectionGuideNumber + 1 : selectionGuideNumber);
 
   return (
     <div className="min-h-screen bg-background pb-16">
@@ -115,7 +119,9 @@ export function BlogPostDetailView({
               {/* Overview / Introduction */}
               <section id="overview" className="scroll-mt-24 space-y-4">
                 <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-                  {isEn ? "1. Healthcare Landscape in Feni" : "১. ফেনী জেলার স্বাস্থ্যসেবা ও পটভূমি"}
+                  {isPurePriceList
+                    ? (isEn ? "1. Diagnostic Healthcare Landscape in Feni" : "১. ফেনীর ডায়াগনস্টিক পরিকাঠামো ও প্রেক্ষাপট")
+                    : (isEn ? "1. Healthcare Landscape in Feni" : "১. ফেনী জেলার স্বাস্থ্যসেবা ও পটভূমি")}
                 </h2>
                 <div className="space-y-4 text-sm sm:text-base text-foreground/90 leading-relaxed">
                   {introParagraphs.map((p, idx) => {
@@ -200,8 +206,10 @@ export function BlogPostDetailView({
                 </section>
               )}
 
-              {/* Health Club Member Discount Banner */}
-              <BlogMembershipBanner locale={locale} />
+              {/* Health Club Member Discount Banner (Hidden for pure emergency public directory guides) */}
+              {post.slug !== "feni-ambulance-and-oxygen-service-guide" && (
+                <BlogMembershipBanner locale={locale} />
+              )}
 
               {/* Emergency Hotline Directory */}
               {emergencyDirectory && (
@@ -277,6 +285,14 @@ export function BlogPostDetailView({
               hasNeurologyPricing={!!post.neurologyCarePricingBn}
               hasDiabetesPricing={!!post.diabetesCarePricingBn}
               hasPsychiatryPricing={!!post.psychiatryCarePricingBn}
+              hasSadarHospitalPricing={!!post.sadarHospitalPricingBn}
+              hasDiabeticHospitalPricing={!!post.diabeticHospitalPricingBn}
+              hasPharmacyPricing={!!post.pharmacyCarePricingBn}
+              hasBloodPricing={!!post.bloodCarePricingBn}
+              hasAmbulancePricing={!!post.ambulanceCarePricingBn}
+              pharmacies={post.pharmacies}
+              bloodBanks={post.bloodBanks}
+              ambulances={post.ambulances}
               locale={locale}
             />
           </div>

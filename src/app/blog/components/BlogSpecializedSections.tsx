@@ -4,6 +4,7 @@ import { HospitalComparisonTable } from "./HospitalComparisonTable";
 import { DiagnosticComparisonTable } from "./DiagnosticComparisonTable";
 import { DiagnosticReviewCard } from "./DiagnosticReviewCard";
 import { DiagnosticPriceTable } from "./DiagnosticPriceTable";
+import { MedicalTestPriceTable } from "./MedicalTestPriceTable";
 import { DentalComparisonTable } from "./DentalComparisonTable";
 import { DentalReviewCard } from "./DentalReviewCard";
 import { DentalPriceTable } from "./DentalPriceTable";
@@ -22,6 +23,9 @@ import { SurgeryPriceTable } from "./SurgeryPriceTable";
 import { NeurologyPriceTable } from "./NeurologyPriceTable";
 import { DiabetesPriceTable } from "./DiabetesPriceTable";
 import { PsychiatryPriceTable } from "./PsychiatryPriceTable";
+import { SadarHospitalPriceTable } from "./SadarHospitalPriceTable";
+import { DiabeticHospitalPriceTable } from "./DiabeticHospitalPriceTable";
+import { BlogEmergencyCareSections } from "./BlogEmergencyCareSections";
 
 interface BlogSpecializedSectionsProps {
   post: BlogPost;
@@ -77,12 +81,18 @@ export function BlogSpecializedSections({
       )}
 
       {/* Diagnostic Test Pricing & Member Savings Table */}
-      {post.diagnosticTestPricingBn && (
-        <DiagnosticPriceTable
-          pricingData={post.diagnosticTestPricingBn}
-          locale={locale}
-        />
-      )}
+      {post.diagnosticTestPricingBn &&
+        (post.slug === "feni-medical-test-price-list" ? (
+          <MedicalTestPriceTable
+            pricingData={post.diagnosticTestPricingBn}
+            locale={locale}
+          />
+        ) : (
+          <DiagnosticPriceTable
+            pricingData={post.diagnosticTestPricingBn}
+            locale={locale}
+          />
+        ))}
 
       {/* Dental Clinic Comparison Table */}
       {post.dentalComparisonTable && post.dentalComparisonTable.length > 0 && (
@@ -275,6 +285,25 @@ export function BlogSpecializedSections({
           locale={locale}
         />
       )}
+
+      {/* Feni Sadar Hospital Govt Fee & Diagnostic Pricing Table */}
+      {post.sadarHospitalPricingBn && (
+        <SadarHospitalPriceTable
+          pricingData={post.sadarHospitalPricingBn}
+          locale={locale}
+        />
+      )}
+
+      {/* Feni Diabetic Association Hospital Pricing Table */}
+      {post.diabeticHospitalPricingBn && (
+        <DiabeticHospitalPriceTable
+          pricingData={post.diabeticHospitalPricingBn}
+          locale={locale}
+        />
+      )}
+
+      {/* Emergency Care Specialized Sections: Pharmacies, Blood Banks & Ambulances */}
+      <BlogEmergencyCareSections post={post} locale={locale} />
 
       {/* Hospital Comparison Matrix Table */}
       {post.comparisonTable && post.comparisonTable.length > 0 && (

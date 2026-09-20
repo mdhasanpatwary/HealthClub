@@ -25,10 +25,23 @@ interface BlogSidebarProps {
   hasNeurologyPricing?: boolean;
   hasDiabetesPricing?: boolean;
   hasPsychiatryPricing?: boolean;
+  hasSadarHospitalPricing?: boolean;
+  hasDiabeticHospitalPricing?: boolean;
+  hasPharmacyPricing?: boolean;
+  hasBloodPricing?: boolean;
+  hasAmbulancePricing?: boolean;
+  pharmacies?: import("@/types/pharmacyBlog").PharmacyReviewItem[];
+  bloodBanks?: import("@/types/bloodBankBlog").BloodBankReviewItem[];
+  ambulances?: import("@/types/ambulanceBlog").AmbulanceReviewItem[];
   locale?: string;
 }
 
 const CLUSTER_QUICK_LINKS = [
+  { slug: "feni-ambulance-and-oxygen-service-guide", titleBn: "২৪/৭ অ্যাম্বুলেন্স ও অক্সিজেন", titleEn: "24/7 Ambulances & Oxygen" },
+  { slug: "feni-blood-bank-and-donors-guide", titleBn: "ব্লাড ব্যাংক ও জরুরি রক্তদাতা", titleEn: "Blood Banks & Donors" },
+  { slug: "24-hour-pharmacy-in-feni", titleBn: "২৪ ঘণ্টা ফার্মেসি ও ওষুধ ডেলিভারি", titleEn: "24/7 Pharmacies" },
+  { slug: "feni-sadar-hospital-guide", titleBn: "ফেনী সদর হাসপাতাল গাইড", titleEn: "Feni Sadar Hospital" },
+  { slug: "feni-diabetic-hospital-guide", titleBn: "ফেনী ডায়াবেটিক হাসপাতাল", titleEn: "Diabetic Hospital" },
   { slug: "best-10-hospitals-in-feni", titleBn: "ফেনীর সেরা হাসপাতাল", titleEn: "Top 10 Hospitals" },
   { slug: "best-doctors-in-feni", titleBn: "সেরা বিশেষজ্ঞ ডাক্তার", titleEn: "Specialist Doctors" },
   { slug: "best-orthopedic-doctors-in-feni", titleBn: "অর্থোপেডিক ও হাড় বিশেষজ্ঞ", titleEn: "Orthopedic & Bone" },
@@ -45,6 +58,7 @@ const CLUSTER_QUICK_LINKS = [
   { slug: "best-gynecologists-in-feni", titleBn: "গাইনি ও প্রসূতি সেবা", titleEn: "Gynecologists & Maternity" },
   { slug: "best-kidney-doctors-in-feni", titleBn: "কিডনি ও ডায়ালাইসিস", titleEn: "Kidney & Dialysis" },
   { slug: "best-diagnostic-centers-in-feni", titleBn: "ডায়াগনস্টিক ও ল্যাব", titleEn: "Diagnostic Labs" },
+  { slug: "feni-medical-test-price-list", titleBn: "৮০+ টেস্ট ও প্যাথলজি খরচ", titleEn: "80+ Test Price List" },
   { slug: "best-dental-clinics-in-feni", titleBn: "ডেন্টাল ও দন্ত চিকিৎসা", titleEn: "Dental Clinics" },
   { slug: "best-physiotherapy-centers-in-feni", titleBn: "ফিজিওথেরাপি ও রিহ্যাব", titleEn: "Physiotherapy Centers" },
 ];
@@ -68,6 +82,14 @@ export function BlogSidebar({
   hasNeurologyPricing = false,
   hasDiabetesPricing = false,
   hasPsychiatryPricing = false,
+  hasSadarHospitalPricing = false,
+  hasDiabeticHospitalPricing = false,
+  hasPharmacyPricing = false,
+  hasBloodPricing = false,
+  hasAmbulancePricing = false,
+  pharmacies,
+  bloodBanks,
+  ambulances,
   locale = "bn",
 }: BlogSidebarProps) {
   const isEn = locale === "en";
@@ -81,6 +103,9 @@ export function BlogSidebar({
           diagnosticCenters={diagnosticCenters}
           dentalClinics={dentalClinics}
           physiotherapyCenters={physiotherapyCenters}
+          pharmacies={pharmacies}
+          bloodBanks={bloodBanks}
+          ambulances={ambulances}
           hasMaternityPricing={hasMaternityPricing}
           hasCardiacPricing={hasCardiacPricing}
           hasKidneyPricing={hasKidneyPricing}
@@ -93,6 +118,12 @@ export function BlogSidebar({
           hasNeurologyPricing={hasNeurologyPricing}
           hasDiabetesPricing={hasDiabetesPricing}
           hasPsychiatryPricing={hasPsychiatryPricing}
+          hasSadarHospitalPricing={hasSadarHospitalPricing}
+          hasDiabeticHospitalPricing={hasDiabeticHospitalPricing}
+          hasPharmacyPricing={hasPharmacyPricing}
+          hasBloodPricing={hasBloodPricing}
+          hasAmbulancePricing={hasAmbulancePricing}
+          currentSlug={currentSlug}
           locale={locale}
         />
 

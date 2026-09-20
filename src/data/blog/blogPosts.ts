@@ -17,6 +17,12 @@ import { BEST_DENTAL_CLINICS_IN_FENI } from "./posts/bestDentalClinicsInFeni";
 import { BEST_DIAGNOSTIC_CENTERS_IN_FENI } from "./posts/bestDiagnosticCentersInFeni";
 import { BEST_DOCTORS_IN_FENI } from "./posts/bestDoctorsInFeni";
 import { BEST_10_HOSPITALS_IN_FENI } from "./posts/best10HospitalsInFeni";
+import { FENI_SADAR_HOSPITAL_GUIDE } from "./posts/feniSadarHospitalGuide";
+import { FENI_DIABETIC_HOSPITAL_GUIDE } from "./posts/feniDiabeticHospitalGuide";
+import { FENI_MEDICAL_TEST_PRICE_LIST } from "./posts/feniMedicalTestPriceList";
+import { BEST_PHARMACIES_IN_FENI } from "./posts/bestPharmaciesInFeni";
+import { FENI_BLOOD_BANK_AND_DONORS_GUIDE } from "./posts/feniBloodBankAndDonorsGuide";
+import { FENI_AMBULANCE_AND_OXYGEN_SERVICE_GUIDE } from "./posts/feniAmbulanceAndOxygenServiceGuide";
 
 export const BLOG_CATEGORIES: BlogCategory[] = [
   {
@@ -160,6 +166,13 @@ export const BLOG_CATEGORIES: BlogCategory[] = [
     descriptionEn: "Emergency blood donors, ambulance hotlines and first aid guides",
   },
   {
+    id: "pharmacy-guide",
+    nameBn: "ফার্মেসি ও ওষুধ গাইড",
+    nameEn: "Pharmacy & Medicine",
+    descriptionBn: "ফেনীতে ২৪ ঘণ্টা খোলা ওষুধের দোকান, নাইট কাউন্টার, ইনসুলিন কোল্ড চেইন ও জরুরি হোম ডেলিভারি",
+    descriptionEn: "24/7 pharmacies, emergency medicine delivery, night counters, and insulin cold-chain in Feni",
+  },
+  {
     id: "health-awareness",
     nameBn: "রোগ প্রতিরোধ ও সচেতনতা",
     nameEn: "Health Awareness",
@@ -241,9 +254,24 @@ export const BLOG_FILTER_PILLS: BlogFilterPill[] = [
     nameEn: "Hospitals",
     matchingCategories: ["hospital-guide"],
   },
+  {
+    id: "pharmacy",
+    nameBn: "ফার্মেসি ও ওষুধ",
+    nameEn: "Pharmacies",
+    matchingCategories: ["pharmacy-guide"],
+  },
+  {
+    id: "emergency",
+    nameBn: "জরুরি সেবা ও রক্তদান",
+    nameEn: "Emergency & Blood",
+    matchingCategories: ["emergency-care"],
+  },
 ];
 
 export const BLOG_POSTS: BlogPost[] = [
+  FENI_AMBULANCE_AND_OXYGEN_SERVICE_GUIDE,
+  FENI_BLOOD_BANK_AND_DONORS_GUIDE,
+  BEST_PHARMACIES_IN_FENI,
   BEST_ORTHOPEDIC_DOCTORS_IN_FENI,
   BEST_NEUROLOGISTS_IN_FENI,
   BEST_DIABETES_DOCTORS_IN_FENI,
@@ -262,6 +290,9 @@ export const BLOG_POSTS: BlogPost[] = [
   BEST_DIAGNOSTIC_CENTERS_IN_FENI,
   BEST_DOCTORS_IN_FENI,
   BEST_10_HOSPITALS_IN_FENI,
+  FENI_SADAR_HOSPITAL_GUIDE,
+  FENI_DIABETIC_HOSPITAL_GUIDE,
+  FENI_MEDICAL_TEST_PRICE_LIST,
 ];
 
 export function getAllBlogPosts(): BlogPost[] {

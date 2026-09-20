@@ -68,9 +68,15 @@ export interface DoctorSpecialistItem {
   specialtyEn: string;
   department: string;
   degreesBn: string;
+  degreesEn?: string;
   designationBn: string;
+  designationEn?: string;
   chamberNameBn: string;
+  chamberNameEn?: string;
   chamberAddressBn: string;
+  chamberAddressEn?: string;
+  bmdcRegNo?: string;
+  experienceYears?: number;
   visitingDaysBn: string;
   visitingHoursBn: string;
   serialPhone: string;
@@ -363,6 +369,8 @@ export type SurgicalCarePackageItem = EntCarePackageItem;
 export type NeurologyCarePackageItem = EntCarePackageItem;
 export type DiabetesCarePackageItem = EntCarePackageItem;
 export type PsychiatryCarePackageItem = EntCarePackageItem;
+export type SadarHospitalCarePackageItem = EntCarePackageItem;
+export type DiabeticHospitalPackageItem = EntCarePackageItem;
 
 export interface BlogPost {
   slug: string;
@@ -423,6 +431,17 @@ export interface BlogPost {
   neurologyCarePricingBn?: { titleBn: string; subtitleBn: string; packages: NeurologyCarePackageItem[] };
   diabetesCarePricingBn?: { titleBn: string; subtitleBn: string; packages: DiabetesCarePackageItem[] };
   psychiatryCarePricingBn?: { titleBn: string; subtitleBn: string; packages: PsychiatryCarePackageItem[] };
+  sadarHospitalPricingBn?: { titleBn: string; subtitleBn: string; packages: SadarHospitalCarePackageItem[] };
+  diabeticHospitalPricingBn?: { titleBn: string; subtitleBn: string; packages: DiabeticHospitalPackageItem[] };
+  pharmacies?: import("./pharmacyBlog").PharmacyReviewItem[];
+  pharmacyComparisonTable?: import("./pharmacyBlog").PharmacyComparisonItem[];
+  pharmacyCarePricingBn?: { titleBn: string; subtitleBn: string; packages: import("./pharmacyBlog").PharmacyPackagePriceItem[] };
+  bloodBanks?: import("./bloodBankBlog").BloodBankReviewItem[];
+  bloodBankComparisonTable?: import("./bloodBankBlog").BloodBankComparisonItem[];
+  bloodCarePricingBn?: { titleBn: string; subtitleBn: string; packages: import("./bloodBankBlog").BloodCarePackageItem[] };
+  ambulances?: import("./ambulanceBlog").AmbulanceReviewItem[];
+  ambulanceComparisonTable?: import("./ambulanceBlog").AmbulanceComparisonItem[];
+  ambulanceCarePricingBn?: { titleBn: string; subtitleBn: string; packages: import("./ambulanceBlog").AmbulancePackagePriceItem[] };
   bookingGuideBn?: {
     titleBn: string;
     stepsBn: { step: string; title: string; desc: string }[];
@@ -450,3 +469,7 @@ export interface BlogPost {
   faqs: BlogFAQItem[];
   relatedSlugs?: string[];
 }
+
+export * from "./pharmacyBlog";
+export * from "./bloodBankBlog";
+export * from "./ambulanceBlog";

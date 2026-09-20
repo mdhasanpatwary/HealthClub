@@ -1,0 +1,125 @@
+import { PharmacyPackagePriceItem } from "@/types/pharmacyBlog";
+
+export const FENI_PHARMACY_PRICING: {
+  titleBn: string;
+  subtitleBn: string;
+  packages: PharmacyPackagePriceItem[];
+} = {
+  titleBn: "ফেনীতে জরুরি ওষুধ, ইনসুলিন ও হোম ডেলিভারি ফি তালিকা ২০২৬",
+  subtitleBn:
+    "জীবনরক্ষাকারী শ্বাসকষ্টের ইনহেলার, কোল্ড চেইন ইনসুলিন, ডিজিটাল ডায়াগনস্টিক ডিভাইস, ট্রমা ফার্স্ট এইড কিট ও হোম ডেলিভারি সেবার বাজারদর এবং হেলথ ক্লাব মেম্বার ছাড়।",
+  packages: [
+    {
+      procedureOrTestNameBn: "সালবিউটামল ১০০ এমসিজি ইনহেলার (২০০ পাফ)",
+      procedureOrTestNameEn: "Salbutamol 100mcg Evohaler (200 Puffs)",
+      categoryBn: "জরুরি শ্বাসকষ্ট ও অ্যাজমা ইনহেলার",
+      regularPriceRangeBn: "৳২২০ - ৳২৮০",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      durationOrTurnaroundBn: "তাৎক্ষণিক কাউন্টার / এক্সপ্রেস ডেলিভারি",
+    },
+    {
+      procedureOrTestNameBn: "বুডেসোনাইড + ফর্মোটেরল প্রিমিয়াম ইনহেলার (১২০/২০০ ডোজ)",
+      procedureOrTestNameEn: "Budesonide + Formoterol Inhaler (120/200 Doses)",
+      categoryBn: "জরুরি শ্বাসকষ্ট ও অ্যাজমা ইনহেলার",
+      regularPriceRangeBn: "৳৫৫০ - ৳৭৫০",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      durationOrTurnaroundBn: "প্রেসক্রিপশন যাচাই সাপেক্ষে তাৎক্ষণিক",
+    },
+    {
+      procedureOrTestNameBn: "হিউম্যান ইনসুলিন ৩০/৭০ ভায়াল (১০ মিলি, ১০০ আইইউ)",
+      procedureOrTestNameEn: "Human Insulin 30/70 Vial (10ml, 100 IU/ml)",
+      categoryBn: "ডায়াবেটিস ও কোল্ড চেইন ইনসুলিন",
+      regularPriceRangeBn: "৳৪৫০ - ৳৫৫০",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      durationOrTurnaroundBn: "২°-৮° সে. কোল্ড প্যাক সহ তাৎক্ষণিক",
+    },
+    {
+      procedureOrTestNameBn: "ল্যান্টাস / গ্লারজিন ইনসুলিন রিফিল পেন কার্টিজ (৩ মিলি)",
+      procedureOrTestNameEn: "Glargine 100 IU/ml Long-Acting Insulin Cartridge",
+      categoryBn: "ডায়াবেটিস ও কোল্ড চেইন ইনসুলিন",
+      regularPriceRangeBn: "৳৮৫০ - ৳১,১০০",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      durationOrTurnaroundBn: "আইসপ্যাক সহ তাপমাত্রা-সুরক্ষিত সরবরাহ",
+    },
+    {
+      procedureOrTestNameBn: "ব্লাড গ্লুকোজ টেস্ট স্ট্রিপ ৫০টি প্যাক (অ্যাকু-চেক / ওয়ানটাচ)",
+      procedureOrTestNameEn: "Blood Glucose Test Strips (50 Pcs Pack)",
+      categoryBn: "ডায়াগনস্টিক ডিভাইস ও টেস্ট স্ট্রিপ",
+      regularPriceRangeBn: "৳৯০০ - ৳১,২০০",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      durationOrTurnaroundBn: "সিলপ্যাক জেনুইন অরিজিনাল স্ট্রিপ",
+    },
+    {
+      procedureOrTestNameBn: "নাইট্রোগ্লিসারিন সাবলিঙ্গুয়াল স্প্রে (২০০ ডোজ, জরুরি অ্যানজাইনা)",
+      procedureOrTestNameEn: "Nitroglycerin Sublingual Spray 0.4mg (200 Doses)",
+      categoryBn: "জরুরি কার্ডিয়াক ও হার্ট অ্যাটাক ড্রাগ",
+      regularPriceRangeBn: "৳৩৫০ - ৳৪৫০",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      durationOrTurnaroundBn: "তাৎক্ষণিক জরুরি কাউন্টার সরবরাহ",
+    },
+    {
+      procedureOrTestNameBn: "জরুরি কার্ডিয়াক লোডিং কিট (অ্যাসপিরিন ৩০০ মিগ্রা + ক্লোপিডোগ্রেল ৩০০ মিগ্রা)",
+      procedureOrTestNameEn: "Emergency Cardiac Loading Dose Kit (Aspirin + Clopidogrel)",
+      categoryBn: "জরুরি কার্ডিয়াক ও হার্ট অ্যাটাক ড্রাগ",
+      regularPriceRangeBn: "৳৫০ - ৳১০০",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      durationOrTurnaroundBn: "জরুরি চেস্ট পেইন প্রোটোকল",
+    },
+    {
+      procedureOrTestNameBn: "ডিজিটাল আপার-আর্ম ব্লাড প্রেশার মনিটর (ওমরন / মাইক্রোলাইফ)",
+      procedureOrTestNameEn: "Digital Upper-Arm Blood Pressure Monitor",
+      categoryBn: "মেডিকেল ডিভাইস ও মনিটরিং সামগ্রী",
+      regularPriceRangeBn: "৳২,২০০ - ৳৩,৫০০",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      durationOrTurnaroundBn: "১-৩ বছরের অফিশিয়াল ওয়ারেন্টি",
+    },
+    {
+      procedureOrTestNameBn: "মেডিকেল ফিঙ্গারটিপ পালস অক্সিমিটার (SpO2 ও পালস রেট)",
+      procedureOrTestNameEn: "Fingertip Medical Pulse Oximeter (SpO2 & PR)",
+      categoryBn: "মেডিকেল ডিভাইস ও মনিটরিং সামগ্রী",
+      regularPriceRangeBn: "৳৮৫০ - ৳১,৪০০",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      durationOrTurnaroundBn: "রেডি স্টক ও ব্যাটারিসহ সরবরাহ",
+    },
+    {
+      procedureOrTestNameBn: "পোর্টেবল আল্ট্রাসনিক মেশ নেবুলাইজার মেশিন",
+      procedureOrTestNameEn: "Portable Ultrasonic Mesh Nebulizer Machine",
+      categoryBn: "মেডিকেল ডিভাইস ও মনিটরিং সামগ্রী",
+      regularPriceRangeBn: "৳১,৫০০ - ৳২,৪০০",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      durationOrTurnaroundBn: "ব্যাটারি ও ইউএসবি চালিত হ্যান্ডহেল্ড ডিভাইস",
+    },
+    {
+      procedureOrTestNameBn: "স্টেরাইল ট্রমা ড্রেসিং কিট + পভিডোন আয়োডিন ১০% সলিউশন",
+      procedureOrTestNameEn: "Sterile Trauma Dressing Kit + Povidone Iodine 10%",
+      categoryBn: "জরুরি সার্জিক্যাল ও ফার্স্ট এইড সরবরাহ",
+      regularPriceRangeBn: "৳১৮০ - ৳৩০০",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      durationOrTurnaroundBn: "জীবাণুমুক্ত সিলপ্যাক সরবরাহ",
+    },
+    {
+      procedureOrTestNameBn: "নরমাল স্যালাইন ১০০০ মিলি আইভি + ড্রিপ সেট + ক্যানুলা",
+      procedureOrTestNameEn: "Normal Saline 1000ml IV + Infusion Set + Cannula 20G/22G",
+      categoryBn: "জরুরি সার্জিক্যাল ও ফার্স্ট এইড সরবরাহ",
+      regularPriceRangeBn: "৳১৩০ - ৳২০০",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      durationOrTurnaroundBn: "তাৎক্ষণিক জরুরি সরবরাহ",
+    },
+    {
+      procedureOrTestNameBn: "ফেনী পৌরসভা ডে-টাইম জরুরি ওষুধ হোম ডেলিভারি",
+      procedureOrTestNameEn: "Feni Town Daytime Express Medicine Home Delivery",
+      categoryBn: "জরুরি হোম ডেলিভারি সার্ভিস চার্জ",
+      regularPriceRangeBn: "৳৫০ - ৳১০০",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      durationOrTurnaroundBn: "অর্ডার কনফার্মের ৪৫-৯০ মিনিটের মধ্যে",
+    },
+    {
+      procedureOrTestNameBn: "গভীর রাত (রাত ১২টা - সকাল ৬টা) জরুরি নাইট হোম ডেলিভারি",
+      procedureOrTestNameEn: "Midnight Emergency Medicine Delivery (12 AM - 6 AM)",
+      categoryBn: "জরুরি হোম ডেলিভারি সার্ভিস চার্জ",
+      regularPriceRangeBn: "৳১৫০ - ৳২৫০",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      durationOrTurnaroundBn: "জরুরি হটলাইনে যোগাযোগ সাপেক্ষে দ্রুততম সময়ে",
+    },
+  ],
+};

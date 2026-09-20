@@ -114,23 +114,32 @@ const getCachedBlogPosts = unstable_cache(
 
       const dbArticles = JSON.parse(setting.value);
       if (Array.isArray(dbArticles)) {
-        const existingSlugs = new Set(dbArticles.map((a: BlogPost) => a.slug.toLowerCase().trim()));
+        const staticMap = new Map(BLOG_POSTS.map((p) => [p.slug.toLowerCase().trim(), p]));
+        const syncedDbArticles = dbArticles.map((a: BlogPost) => {
+          const staticMatch = staticMap.get(a.slug.toLowerCase().trim());
+          if (staticMatch) {
+            return staticMatch;
+          }
+          return a;
+        });
+
+        const existingSlugs = new Set(syncedDbArticles.map((a: BlogPost) => a.slug.toLowerCase().trim()));
         const missingStatic = BLOG_POSTS.filter(
           (p) => !existingSlugs.has(p.slug.toLowerCase().trim()) && !deletedSlugs.includes(p.slug)
         );
-        const combined = [...missingStatic, ...dbArticles];
-        if (missingStatic.length > 0) {
-          await prisma.systemSetting
-            .upsert({
-              where: { key: BLOG_SETTING_KEY },
-              create: {
-                key: BLOG_SETTING_KEY,
-                value: JSON.stringify(combined),
-              },
-              update: { value: JSON.stringify(combined) },
-            })
-            .catch(() => {});
-        }
+        const combined = [...missingStatic, ...syncedDbArticles];
+        
+        await prisma.systemSetting
+          .upsert({
+            where: { key: BLOG_SETTING_KEY },
+            create: {
+              key: BLOG_SETTING_KEY,
+              value: JSON.stringify(combined),
+            },
+            update: { value: JSON.stringify(combined) },
+          })
+          .catch(() => {});
+
         if (deletedSlugs.length > 0) {
           return combined.filter((a: BlogPost) => !deletedSlugs.includes(a.slug));
         }
@@ -143,7 +152,7 @@ const getCachedBlogPosts = unstable_cache(
       return BLOG_POSTS;
     }
   },
-  ["all-blog-posts-admin-v13"],
+  ["all-blog-posts-admin-v17"],
   { tags: [BLOG_POSTS_TAG] }
 );
 

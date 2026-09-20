@@ -15,12 +15,17 @@ export function BlogQuickAnswer({ post, locale = "bn" }: BlogQuickAnswerProps) {
 
   // Determine top facilities or specialists count
   const facilityCount =
+    (post.ambulances && post.ambulances.length) ||
+    (post.bloodBanks && post.bloodBanks.length) ||
+    (post.pharmacies && post.pharmacies.length) ||
     (post.hospitals && post.hospitals.length) ||
     (post.diagnosticCenters && post.diagnosticCenters.length) ||
     (post.dentalClinics && post.dentalClinics.length) ||
     (post.physiotherapyCenters && post.physiotherapyCenters.length) ||
     (post.doctorGroups && post.doctorGroups.flatMap((g) => g.doctors).length) ||
     0;
+
+  const isAmbulanceGuide = Boolean(post.ambulances && post.ambulances.length > 0);
 
   // Emergency contact from post if available, else default hotline
   const primaryEmergency =
@@ -63,9 +68,13 @@ export function BlogQuickAnswer({ post, locale = "bn" }: BlogQuickAnswerProps) {
       {/* Direct Factual Summary paragraph for AI engines and patients */}
       <div className="text-sm text-foreground/90 leading-relaxed space-y-2.5">
         <p>
-          {isEn
-            ? `This comprehensive healthcare guide covers verified medical facilities, doctors, and diagnostic services in Feni. For immediate emergency admissions, 24/7 ICU/CCU support, and digital member discounts (10% to 30%), patients can consult the top-ranked options detailed below.`
-            : `ফেনী জেলা ও পার্শ্ববর্তী অঞ্চলের রোগীদের জন্য এই গাইডে শীর্ষ হাসপাতাল, বিশেষজ্ঞ ডাক্তার, ডায়াগনস্টিক ল্যাব ও ফিজিওথেরাপি সেন্টারের যাচাইকৃত তথ্য তুলে ধরা হয়েছে। জরুরি ভর্তি, আইসিইউ/সিসিইউ সুবিধা ও হেলথ ক্লাবের ডিজিটাল কার্ডে সর্বোচ্চ ১০% থেকে ৩০% পর্যন্ত বিশেষ ছাড় সুবিধা পাওয়া যাবে।`}
+          {isAmbulanceGuide
+            ? (isEn
+                ? "This authoritative guide serves as an open emergency public directory for 24/7 ambulance, ICU life-support, and medical oxygen services in Feni. To ensure rapid transit and bypass intermediary commissions, families can contact verified drivers and dispatchers directly at transparent standard public rates."
+                : "ফেনী জেলা ও মহাসড়কে জরুরি অ্যাম্বুলেন্স, আইসিইউ লাইফ সাপোর্ট ও অক্সিজেন সেবার তথ্যে সহায়তা করতে এটি একটি উন্মুক্ত জরুরি পাবলিক ডিরেক্টরি। জরুরি মুহূর্তে রোগী দ্রুত স্থানান্তরের স্বার্থে দালাল চক্র এড়িয়ে সরাসরি যাচাইকৃত ড্রাইভার ও এজেন্সির সাথে কথা বলে সাধারণ প্রমিত ভাড়ায় দ্রুত সেবা নিশ্চিত করা সম্ভব।")
+            : (isEn
+                ? "This comprehensive healthcare guide covers verified medical facilities, doctors, and diagnostic services in Feni. For immediate emergency admissions, 24/7 ICU/CCU support, and digital member discounts (10% to 30%), patients can consult the top-ranked options detailed below."
+                : "ফেনী জেলা ও পার্শ্ববর্তী অঞ্চলের রোগীদের জন্য এই গাইডে শীর্ষ হাসপাতাল, বিশেষজ্ঞ ডাক্তার, ডায়াগনস্টিক ল্যাব ও ফিজিওথেরাপি সেন্টারের যাচাইকৃত তথ্য তুলে ধরা হয়েছে। জরুরি ভর্তি, আইসিইউ/সিসিইউ সুবিধা ও হেলথ ক্লাবের ডিজিটাল কার্ডে সর্বোচ্চ ১০% থেকে ৩০% পর্যন্ত বিশেষ ছাড় সুবিধা পাওয়া যাবে।")}
         </p>
       </div>
 

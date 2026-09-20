@@ -139,6 +139,22 @@ const CATEGORY_TRANSLATIONS: Record<string, string> = {
   "মাদকাসক্তি ও ডি-এডিকশন ল্যাব": "De-Addiction & Substance Screening",
   "জেরিয়াট্রিক মেন্টাল হেলথ": "Geriatric Mental Health",
   "অনিদ্রা ও স্লিপ মেডিসিন": "Insomnia & Sleep Medicine",
+  "বহির্বিভাগ কনসালটেশন": "OPD Consultation",
+  "ইনডোর ভর্তি সেবা": "Indoor Ward Admission",
+  "ইনডোর কেবিন সেবা": "Indoor Cabin Service",
+  "সরকারি রেডিওলজি": "Govt Radiology & Imaging",
+  "কার্ডিওলজি পরীক্ষা": "Cardiology Diagnostics",
+  "সরকারি প্যাথলজি ল্যাব": "Govt Pathology Lab",
+  "ডায়ালাইসিস ইউনিট": "Dialysis Unit Care",
+  "জরুরি জীবনরক্ষাকারী সেবা": "Emergency Life-Saving Care",
+  "প্রসূতি ও গাইনি সেবা": "Maternity & OBGYN Care",
+  "নিবন্ধন ও বহির্বিভাগ সেবা": "Registration & OPD Services",
+  "ল্যাবরেটরি টেস্ট": "Laboratory Diagnostics",
+  "চক্ষু কেয়ার সেবা": "Eye Care Services",
+  "ডেন্টাল কেয়ার সেবা": "Dental Care Services",
+  "ফুট কেয়ার কর্নার": "Foot Care Clinic",
+  "ফিজিওথেরাপি সেবা": "Physiotherapy Services",
+  "জরুরি পরিবহন": "Emergency Ambulance Transfer",
 };
 
 export function translateMedicalCategory(categoryBn: string, isEn: boolean): string {

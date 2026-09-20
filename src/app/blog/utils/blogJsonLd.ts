@@ -214,6 +214,29 @@ export function generateBlogJsonLd(
     });
   }
 
+  // Diagnostic Tests structured data (for pure test price guides)
+  if (!post.diagnosticCenters && post.diagnosticTestPricingBn && post.diagnosticTestPricingBn.tests.length > 0) {
+    graph.push({
+      "@type": "ItemList",
+      "@id": `${pageUrl}#medical-tests-list`,
+      name: isEn
+        ? "Diagnostic & Pathology Test Price List in Feni"
+        : "ফেনীতে প্যাথলজি ও রেডিওলজি টেস্টের খরচ তালিকা",
+      description: isEn ? post.excerptEn : post.excerptBn,
+      numberOfItems: post.diagnosticTestPricingBn.tests.length,
+      itemListElement: post.diagnosticTestPricingBn.tests.slice(0, 30).map((test, idx) => ({
+        "@type": "ListItem",
+        position: idx + 1,
+        item: {
+          "@type": "MedicalTest",
+          name: isEn ? test.testNameEn : test.testNameBn,
+          description: `${test.testNameBn} (${test.categoryBn}). সাধারণ বাজারদর: ${test.regularPriceRangeBn}, হেলথ ক্লাব মেম্বার ছাড়: ১০-৩০%।`,
+          url: pageUrl,
+        },
+      })),
+    });
+  }
+
   // Dental Clinic structured data
   if (post.dentalClinics && post.dentalClinics.length > 0) {
     graph.push({
@@ -275,6 +298,105 @@ export function generateBlogJsonLd(
           url: center.partnerProfileSlug
             ? `${SITE_URL}/partner-hospitals/${encodeURIComponent(center.partnerProfileSlug)}`
             : pageUrl,
+        },
+      })),
+    });
+  }
+
+  // 24/7 Pharmacy structured data
+  if (post.pharmacies && post.pharmacies.length > 0) {
+    graph.push({
+      "@type": "ItemList",
+      "@id": `${pageUrl}#pharmacy-list`,
+      name: isEn
+        ? "24/7 Pharmacies & Emergency Medicine Delivery in Feni"
+        : "ফেনীতে ২৪ ঘণ্টা খোলা ফার্মেসি ও জরুরি ওষুধ ডেলিভারি তালিকা",
+      description: isEn ? post.excerptEn : post.excerptBn,
+      numberOfItems: post.pharmacies.length,
+      itemListElement: post.pharmacies.map((pharmacy) => ({
+        "@type": "ListItem",
+        position: pharmacy.rank,
+        item: {
+          "@type": "Pharmacy",
+          name: isEn ? pharmacy.nameEn : pharmacy.nameBn,
+          description: pharmacy.descriptionBn,
+          telephone: pharmacy.phone.split(",")[0].trim(),
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: isEn ? pharmacy.addressEn : pharmacy.addressBn,
+            addressLocality: "Feni",
+            addressRegion: "Chittagong",
+            addressCountry: "BD",
+          },
+          ...(pharmacy.partnerProfileSlug
+            ? { url: `${SITE_URL}/partner-hospitals/${encodeURIComponent(pharmacy.partnerProfileSlug)}` }
+            : { url: pageUrl }),
+        },
+      })),
+    });
+  }
+
+  // Blood Bank and Voluntary Donor Organization structured data
+  if (post.bloodBanks && post.bloodBanks.length > 0) {
+    graph.push({
+      "@type": "ItemList",
+      "@id": `${pageUrl}#blood-banks-list`,
+      name: isEn
+        ? "Emergency Blood Banks & Voluntary Donor Networks in Feni"
+        : "ফেনী জেলা জরুরি ব্লাড ব্যাংক ও রক্তদান সংগঠন তালিকা",
+      description: isEn ? post.excerptEn : post.excerptBn,
+      numberOfItems: post.bloodBanks.length,
+      itemListElement: post.bloodBanks.map((bank) => ({
+        "@type": "ListItem",
+        position: bank.rank,
+        item: {
+          "@type": "MedicalOrganization",
+          name: isEn ? bank.nameEn : bank.nameBn,
+          description: bank.descriptionBn,
+          telephone: bank.phone.split(",")[0].trim(),
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: isEn ? bank.addressEn : bank.addressBn,
+            addressLocality: "Feni",
+            addressRegion: "Chittagong",
+            addressCountry: "BD",
+          },
+          ...(bank.partnerProfileSlug
+            ? { url: `${SITE_URL}/partner-hospitals/${encodeURIComponent(bank.partnerProfileSlug)}` }
+            : { url: pageUrl }),
+        },
+      })),
+    });
+  }
+
+  // 24/7 Ambulance and Emergency Transport structured data
+  if (post.ambulances && post.ambulances.length > 0) {
+    graph.push({
+      "@type": "ItemList",
+      "@id": `${pageUrl}#ambulance-list`,
+      name: isEn
+        ? "24/7 Emergency Ambulance & Oxygen Services in Feni"
+        : "ফেনী ২৪/৭ জরুরি অ্যাম্বুলেন্স ও অক্সিজেন সেবা তালিকা",
+      description: isEn ? post.excerptEn : post.excerptBn,
+      numberOfItems: post.ambulances.length,
+      itemListElement: post.ambulances.map((amb) => ({
+        "@type": "ListItem",
+        position: amb.rank,
+        item: {
+          "@type": "EmergencyService",
+          name: isEn ? amb.nameEn : amb.nameBn,
+          description: amb.descriptionBn,
+          telephone: amb.phone.split(",")[0].trim(),
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: isEn ? amb.addressEn : amb.addressBn,
+            addressLocality: "Feni",
+            addressRegion: "Chittagong",
+            addressCountry: "BD",
+          },
+          ...(amb.partnerProfileSlug
+            ? { url: `${SITE_URL}/partner-hospitals/${encodeURIComponent(amb.partnerProfileSlug)}` }
+            : { url: pageUrl }),
         },
       })),
     });

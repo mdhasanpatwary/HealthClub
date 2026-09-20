@@ -1,4 +1,46 @@
 export const ARTICLE_ENGLISH_INTROS: Record<string, string[]> = {
+  "feni-ambulance-and-oxygen-service-guide": [
+    "In emergency critical care medicine, saving time is saving life—a principle captured by the vital clinical concept of the 'Golden Hour'. During acute cardiac infarctions (heart attacks), cerebral hemorrhages, major road accidents on the Dhaka-Chittagong highway, or precipitous obstetric emergencies, reaching a tertiary care hospital rapidly is the decisive factor in patient survival. However, families in Feni often face immense distress due to predatory intermediary commissions, delayed driver arrivals, or lack of on-board ICU life support.",
+    "Because Feni is geographically situated at the primary highway transit corridor connecting Dhaka and Chittagong, the demand for both local emergency transport and inter-district transfers is exceptionally high. Patients stabilized at Feni 250-Bed General (Sadar) Hospital or local private clinics are frequently referred to specialized tertiary institutes in Dhaka (BSMMU, NINS, NICVD, Square, Evercare) or Chittagong Medical College Hospital, requiring air-conditioned and ICU-equipped life support ambulances.",
+    "Simultaneously, for elderly citizens with chronic obstructive pulmonary disease (COPD), severe asthma, congestive heart failure, or palliative oncological conditions, rapid access to medical-grade oxygen cylinders is indispensable. Across Hospital Road and key municipal hubs, accredited oxygen supply centers operate round-the-clock home delivery, reaching patients' bedside within 30 to 45 minutes of a single call.",
+    "A paramount financial and clinical risk when booking an ambulance is negotiating with hospital gate intermediaries (dalals). Middlemen inflate journey fares by 30% to 50% while offering zero quality guarantees regarding driver credentials or medical oxygen availability. Dialing verified drivers directly through authorized fleet hotlines guarantees mechanical safety, on-board oxygen readiness, and transparent, pre-negotiated route fares.",
+    "To empower families across Feni with instantaneous access to dependable emergency transit and oxygen support, Health Club's emergency medical team prepared this exhaustive operational guide. Below is a verified directory of 12 top ambulance fleets, mobile ICU units, oxygen rental hubs, standard transfer fare benchmarks, and direct integration with Health Club's Emergency Ambulance Directory.",
+  ],
+  "feni-blood-bank-and-donors-guide": [
+    "In emergency medicine, there is no manufactured substitute for human blood—only the altruistic donation of a healthy individual can salvage the life of a critically injured or hemorrhaging patient. Across Feni district, daily requirements reach 50 to 70 units of screened blood driven by highway vehicular trauma at the Mohipal intersection, post-partum maternal hemorrhages (PPH), emergency surgeries, and pediatric Thalassemia transfusions.",
+    "The primary institutional foundations for safe blood transfusion in Feni are the [Bangladesh Red Crescent Society Blood Center](/blog/feni-sadar-hospital-guide) on Hospital Road and the government-operated Blood Transfusion Unit situated on the 2nd floor of [Feni 250-Bed General Hospital](/blog/feni-sadar-hospital-guide). Both facilities feature continuous pharmaceutical cold-storage refrigeration, automated hematology screening analyzers, and pre-transfusion compatibility cross-matching laboratories.",
+    "Because banked blood reserves cannot fulfill all emergency surges, youth-led voluntary organizations form the district's humanitarian backbone. Networks including Feni Blood Donors Club (FBDC), Sandhani, Badhan, Jagrata Blood Donors Club, and sub-district forums coordinate round-the-clock voluntary donors to hospital bedsides, offering indispensable lifelines for rare Rh-negative blood groups (such as O- and AB-).",
+    "A paramount clinical hazard during blood emergencies is the dangerous temptation to procure blood from commercial paid donors or hospital intermediaries (dalals). Commercial donors are frequently substance abusers or chronic carriers of Hepatitis B, Hepatitis C, and HIV. Under the Bangladesh Safe Blood Transfusion Act, transfusing blood without mandatory 5-point infectious disease (TTI) laboratory screening and cross-matching is strictly illegal.",
+    "To empower families across Feni with instantaneous access to verified blood banks and volunteer donors, Health Club's emergency medical team prepared this comprehensive operational guide. Below is a detailed directory of 12 top blood centers and donor clubs, 24/7 hotline numbers, testing standards, and direct integration with Health Club's verified [Emergency Blood Donor Search](/emergency).",
+  ],
+  "24-hour-pharmacy-in-feni": [
+    "During acute nocturnal medical emergencies—such as sudden crushing chest pain, acute childhood asthma attacks, or severe high fevers—rapid access to authentic prescription medication is the primary determinant of patient survival. However, as standard retail pharmacies in Feni close by 10:00 PM, families frequently struggle to locate dependable 24/7 medicine providers.",
+    "The primary epicenter of round-the-clock emergency pharmaceutical support in Feni is Hospital Road, directly facing the emergency gates of [Feni 250-Bed Sadar Hospital](/blog/feni-sadar-hospital-guide). Establishments such as Al-Shefa Pharmacy, Seba Pharmacy, and Central Drug House maintain dedicated 24-hour night service windows supplying urgent injectables, intravenous fluids, and sterile trauma dressings.",
+    "For daylight and extended-evening pharmaceutical requirements, the model pharmacy clusters along Shahid Shahidullah Kaiser (SSK) Road and Trunk Road lead in clinical dispensing standards. Accredited establishments such as [Lazz Pharma Limited](/partner-hospitals/লাজ-ফার্মা-লিমিটেড) and Model Pharmacy SSK operate under registered full-time Grade-A pharmacists, ensuring strict prescription verification and authentic medicine handling.",
+    "Cold-chain maintenance (2°C to 8°C) is absolutely critical for insulin, biological therapies, and pediatric vaccines. Storing insulin in unmonitored domestic refrigerators or during power outages degrades peptide potency, rendering it clinically ineffective or hazardous. Accredited pharmacies maintain generator-backed pharmaceutical chillers and provide insulated icebox packs for travel.",
+    "To assist families across Feni in securing immediate emergency medication, Health Club's public health and medical research team conducted on-site verification to produce this comprehensive guide. Below is a curated directory of 12 top 24/7 pharmacies, verified hotlines, night counter accessibility, emergency home delivery coverage, and exclusive 10-30% Health Club member savings.",
+  ],
+  "feni-medical-test-price-list": [
+    "Accurate, timely diagnostic investigation is the indispensable foundation of evidence-based medical treatment. Modern clinical management—from routine hematology and metabolic biochemistry to high-resolution neuro-radiology—relies fundamentally on verified laboratory and imaging parameters. However, patients across Feni frequently encounter arbitrary, erratic pricing structures and aggressive broker (dalal) commissions when seeking diagnostic tests.",
+    "A major driver of diagnostic cost discrepancies in Feni is the unofficial commission system, where commercial diagnostic centers inflate customer invoices by 30% to 50% to pay referral intermediaries. Furthermore, charges vary widely depending on reagent quality (FDA-cleared closed automated reagents versus substandard open-system manual reagents), machine specifications (fully automated analyzers versus semi-automated readers), and verification by full-time consultant pathologists and radiologists.",
+    "Significant technological variations also exist across radiology departments. For instance, low-cost open MRI scanners (0.3T or 0.4T) yield low-resolution scans that frequently fail to identify subtle brain strokes or nerve root compressions (PLID). Conversely, modern 1.5 Tesla superconducting closed-bore MRI scanners deliver ultra-sharp anatomical definition. Similarly, 128-slice multi-detector CT scanners deliver rapid, high-resolution lung and vascular imaging with significantly reduced radiation dosages compared to outdated 16-slice systems.",
+    "To protect patients from predatory pricing and ensure complete financial transparency, Health Club's public health and medical research team conducted on-site pricing audits across verified diagnostic centers along Hospital Road, SSK Road, Trunk Road, and Mohipal. Below is an exhaustive, comparative price guide for 80 of the most frequently prescribed pathology and radiology tests in Feni.",
+    "In addition to standard private market rates, this guide details how Health Club members access guaranteed 10% to 30% savings at top accredited diagnostic centers. For additional facility details, explore our guides on [Best Diagnostic Centers in Feni](/blog/best-diagnostic-centers-in-feni), [Feni 250-Bed Sadar Hospital](/blog/feni-sadar-hospital-guide), [Feni Diabetic Association Hospital](/blog/feni-diabetic-hospital-guide), [Top Cardiologists](/blog/best-cardiologists-in-feni), [Top Neurologists](/blog/best-neurologists-in-feni), and [Top Surgeons](/blog/best-surgeons-in-feni).",
+  ],
+  "feni-diabetic-hospital-guide": [
+    "Feni Diabetic Association Hospital (operating under the Diabetic Association of Bangladesh - BADAS) stands as the most reputable and specialized non-profit healthcare institution for metabolic and endocrine disorders across Feni district and adjacent regions.",
+    "Located centrally on Mizan Road, this dedicated institution serves hundreds of diabetes patients daily, offering subsidized clinical consultations, longitudinal glycemic control tracking, complication screening, and medical nutrition education.",
+    "A hallmark feature of the hospital is its lifetime patient tracking system centered on the iconic 'Green Diabetes Guide Book'. Registered patients receive an individualized diabetes passport recording blood glucose readings, blood pressure, weight, and medication changes across years of clinical visits, enabling doctors to instantly evaluate metabolic trends.",
+    "The hospital's central diagnostic laboratory operates automated biochemistry and hormone analyzers delivering fast, reliable testing for fasting blood sugar (FBS), 2-hour post-meal glucose (2HABF), HbA1c (HPLC method), serum creatinine, lipid profiles, and urine microalbumin (ACR) at 30% to 50% below commercial market rates.",
+    "Recognizing that chronic diabetes impacts multiple organ systems, the hospital houses dedicated clinics for diabetic retinopathy screening, periodontal dental care, diabetic foot ulcer management with 10g monofilament testing, computerized physiotherapy, and 24/7 emergency ambulance transport.",
+  ],
+  "feni-sadar-hospital-guide": [
+    "Feni 250-Bed District General Hospital (commonly known as Feni Sadar Hospital) serves as the primary tertiary healthcare lifeline for more than 1.5 million people across Feni district and adjacent upazilas of Mirsharai, Chauddagram, and Senbagh.",
+    "Established on Hospital Road, this public healthcare institution operates comprehensive outpatient departments (OPD) covering medicine, cardiology, surgery, orthopedics, gynecology, pediatrics, eye, ENT, and skin/VD, with outdoor doctor consultations available for a nominal government ticket fee of just ৳10.",
+    "For critical emergencies and highway trauma along the busy Dhaka-Chittagong expressway at Mohipal, the hospital's round-the-clock Emergency Room (ER) provides immediate trauma triage, free Russell's viper and venomous snakebite antivenom, free anti-rabies vaccination (ARV), and emergency resuscitation.",
+    "Furthermore, the hospital houses a modern government-subsidized 10-bed hemodialysis center offering dialysis sessions at a fraction of private market rates, alongside free essential medicine distribution from its central indoor and outdoor dispensary counters.",
+    "This authoritative operational guide details Feni 250-Bed General Hospital's OPD counter workflow, duty doctor roster across key departments, indoor bed admission and paying cabin charges, pathology test price list, blood bank contacts, and emergency hotline directory.",
+  ],
   "best-orthopedic-doctors-in-feni": [
     "A healthy musculoskeletal system—encompassing strong bones, resilient joints, ligaments, and a stable spine—is essential for active mobility and productive living. As the strategic transport junction of southeastern Bangladesh, Feni's highway network (notably the Dhaka-Chittagong expressway at Mohipal) experiences frequent traffic accidents and traumatic injuries requiring urgent orthopedic care.",
     "A catastrophic clinical pitfall in Bangladesh is the reliance on unqualified traditional bone-setters (quack massages and rigid bamboo splinting). Aggressive manipulation frequently crushes vital neurovascular bundles, precipitating severe compartment syndrome, tissue gangrene, and tragic preventable limb amputations. Prompt evaluation by a BMDC-registered orthopedic surgeon utilizing sterile immobilization and digital fluoroscopy guarantees anatomically sound recovery.",
@@ -100,6 +142,56 @@ export const ARTICLE_ENGLISH_INTROS: Record<string, string[]> = {
 };
 
 export const ARTICLE_ENGLISH_HIGHLIGHTS: Record<string, string[]> = {
+  "feni-ambulance-and-oxygen-service-guide": [
+    "Verified direct driver telephone hotlines and dispatch contacts for 12 leading ambulance fleets and oxygen suppliers across Feni Sadar, Mohipal, and upazilas.",
+    "Immediate dispatch protocols for critical ICU life-support ambulances equipped with portable transport ventilators, cardiac monitors, and defibrillators.",
+    "Transparent fare benchmarks for Feni to Dhaka (৳8,000 - ৳12,000) and Feni to Chittagong (৳5,000 - ৳7,500) standard AC and mobile ICU transfers.",
+    "24/7 midnight home delivery of Linde-certified medical oxygen cylinders (1.4m³ / 1360L) with flowmeter regulators and technician setup within 30-45 minutes.",
+    "Specialized mortuary freezer ambulances maintaining -5°C to -20°C deep freeze for dignified long-distance preservation and airport transfers.",
+    "Dedicated standby trauma ambulances stationed at the Mohipal highway intersection for instant road traffic accident triage and extraction.",
+    "Direct click-to-call driver dialing through Health Club's verified emergency portal (/emergency?tab=ambulances) with zero broker commissions.",
+    "Open public emergency directory accessible 24/7 to all citizens without brokerage fees; standard market rates apply directly to drivers.",
+  ],
+  "24-hour-pharmacy-in-feni": [
+    "Curated directory of 12 verified 24/7 pharmacies and night counters across Sadar Hospital Road, SSK Road, Trunk Road, and Daganbhuiyan-Chhagalnaiya hubs.",
+    "Active midnight service windows and direct calling hotlines for emergency injectables, intravenous fluids, and trauma dressing supplies.",
+    "Accredited DGDA Model Pharmacies with full-time licensed Grade-A Pharmacists ensuring 100% genuine dispensing and patient counseling.",
+    "Strict 2°C to 8°C cold-chain pharmaceutical refrigeration with power backup safeguarding insulin, biologicals, and pediatric vaccines.",
+    "Rapid availability of emergency asthma inhalers, nebulizer solutions, and acute coronary sublingual nitroglycerin sprays.",
+    "Emergency doorstep prescription medicine delivery across Feni municipal residential sectors within 1 to 2 hours.",
+    "Guaranteed 10-30% Health Club member discounts on prescription medicines and healthcare devices at partner pharmacy counters.",
+    "Strict consumer health compliance guidelines against illegal over-the-counter antibiotic and sedative sales without a doctor's prescription.",
+  ],
+  "feni-medical-test-price-list": [
+    "Exhaustive 2026 comparative pricing directory covering 80 most commonly prescribed pathology and radiology diagnostic tests in Feni.",
+    "Transparent market benchmark rates for hematology, automated biochemistry, diabetes panels, renal profiles, liver panels, and thyroid hormones.",
+    "High-end imaging cost breakdown including 1.5 Tesla superconducting MRI, 128-slice multi-detector CT scans, and 4D anomaly ultrasounds.",
+    "Cardiac evaluation pricing including digital 12-lead ECG, 2D color Doppler echocardiography, and treadmill exercise tolerance tests (ETT).",
+    "Gastrointestinal endoscopy pricing covering high-definition video upper GI endoscopy and full colonoscopy procedures.",
+    "Zero-broker-commission transparent pricing with guaranteed 10% to 30% savings for digital Health Club membership cardholders.",
+    "Vital patient preparation guidelines including 8 to 12-hour overnight fasting protocols and full-bladder pelvic sonography instructions.",
+    "Verified emergency hotline directory for top diagnostic laboratories and 24/7 oxygen-equipped patient transport ambulances in Feni.",
+  ],
+  "feni-diabetic-hospital-guide": [
+    "Comprehensive guide to Feni Diabetic Association Hospital (Mizan Road): patient registration book, doctor rosters, and outdoor clinic timings.",
+    "Lifetime metabolic tracking through the official 'Green Diabetes Guide Book' ensuring structured follow-up care at subsidized consultation fees.",
+    "Subsidized central diagnostic laboratory testing for HbA1c (HPLC), fasting/post-meal blood glucose, lipid profiles, and urine microalbumin.",
+    "Specialized diabetic eye clinic equipped with slit-lamp biomicroscopy and dilated fundoscopy for early diabetic retinopathy screening.",
+    "Preventive diabetic dental care and ultrasonic scaling unit addressing severe periodontitis and gum disease in diabetic patients.",
+    "Diabetic foot clinic performing 10g monofilament sensory screenings, ulcer debridement, and custom footwear counseling to prevent amputations.",
+    "Advanced physical therapy and stroke rehabilitation center managed by CRP-credentialed clinical physiotherapists.",
+    "Guaranteed 10-30% Health Club member discounts at partner diagnostic labs and private hospitals whenever specialized imaging or inpatient care is referred outside.",
+  ],
+  "feni-sadar-hospital-guide": [
+    "Comprehensive operational guide to Feni 250-bed District General Hospital: ৳10 outdoor OPD tickets, duty doctor schedules, and department room locations.",
+    "Round-the-clock 24/7 emergency room (ER) trauma triage for highway accidents, head injuries, and acute medical emergencies.",
+    "100% free government supply of polyvalent snakebite antivenom (including Russell's viper) and post-exposure anti-rabies vaccine (ARV).",
+    "Indoor bed admission process covering ৳15 admission tickets, general ward diet, and air-conditioned/non-AC paying cabin booking protocols.",
+    "Subsidized 10-bed hemodialysis center offering routine kidney dialysis at ৳400-৳500 per session under registered nephrologist supervision.",
+    "Free essential government medicines distribution protocol from central indoor and outdoor dispensary counters with verified prescription slips.",
+    "Government nominal pathology and digital X-ray user fees compared against private commercial diagnostic benchmarks.",
+    "Guaranteed 10-30% Health Club member discounts at verified partner private diagnostic centers whenever specialized tests are referred outside.",
+  ],
   "best-orthopedic-doctors-in-feni": [
     "Verified chamber schedules and direct serial booking hotlines for 12 leading BMDC-registered orthopedic and trauma surgeons (MS, D-Ortho, FCPS, NITOR/Pangu Hospital alumni) in Feni.",
     "Dhaka-Chittagong Highway (Mohipal corridor) emergency accident triage and 24/7 trauma stabilization protocols at 250-bed Modern Sadar Hospital.",
@@ -231,250 +323,4 @@ export const ARTICLE_ENGLISH_HIGHLIGHTS: Record<string, string[]> = {
   ],
 };
 
-export const ARTICLE_SELECTION_GUIDES: Record<
-  string,
-  { title: string; points: { title: string; desc: string }[] }
-> = {
-  "best-surgeons-in-feni": {
-    title: "5 Essential Clinical Guidelines for Choosing a Surgeon & Hospital in Feni",
-    points: [
-      {
-        title: "1. Board Certification & Minimal Access Fellowship (FCPS/MS/FACS)",
-        desc: "Ensure your surgeon holds recognized postgraduate qualifications (FCPS, MS, MRCS, FACS) and accredited fellowship training in advanced laparoscopy or colorectal surgery.",
-      },
-      {
-        title: "2. Strictly Avoid Quack Chemical Burning for Piles & Fistulae",
-        desc: "Never allow unqualified practitioners to apply caustic pastes or acid injections to anal tissues; modern laser hemorrhoidoplasty (LHP) is safe and sphincter-preserving.",
-      },
-      {
-        title: "3. Pre-Anesthetic Checkup (PAC) & Critical Fasting (NPO)",
-        desc: "Complete mandatory pre-op testing (CBC, coagulation profile, ECG, CXR, blood grouping) and adhere strictly to 6-8 hours fasting before surgery.",
-      },
-      {
-        title: "4. Operating Theater (OT) Sterilization & ICU Backup",
-        desc: "Verify that the hospital maintains laminar airflow OT filtration, modern laparoscopy towers, Class-B autoclaves, and ready ICU/post-op monitoring.",
-      },
-      {
-        title: "5. Membership Savings on Surgical OT & Post-Op Cabin Charges",
-        desc: "Health Club members enjoy 10-30% guaranteed savings on hospital bed charges, OT equipment fees, and pathology tests across partner clinics.",
-      },
-    ],
-  },
-  "best-neurologists-in-feni": {
-    title: "5 Essential Clinical Guidelines for Neurological Care & Stroke Emergencies in Feni",
-    points: [
-      {
-        title: "1. Recognize Stroke Instantly via BE-FAST & Rush to Hospital",
-        desc: "If face asymmetry, arm weakness, or slurred speech suddenly develops, do not wait or give water; rush immediately to a hospital equipped with a 24/7 CT scan within the 4.5-hour golden window.",
-      },
-      {
-        title: "2. Certified Neurologist Qualification (MD Neurology / FCPS)",
-        desc: "Ensure your consultant holds dedicated post-graduate credentials in neurology (MD Neurology, FCPS Neurology) from premier institutes like BSMMU, NINS, DMC, or CMCH.",
-      },
-      {
-        title: "3. Precision Neuroimaging (1.5 Tesla MRI & Emergency CT)",
-        desc: "Opt for diagnostic centers equipped with superconductive 1.5T MRI and multi-slice CT scanners for clear visualization of cerebral ischemia, microbleeds, and spine nerve roots.",
-      },
-      {
-        title: "4. Digital Video EEG & Nerve Conduction Studies (NCS/EMG)",
-        desc: "For seizure disorders and limb tingling/numbness, confirm the facility has calibrated Digital Video EEG and multi-channel EMG/NCS technology with consultant reporting.",
-      },
-      {
-        title: "5. Cashless 10-30% Savings with Health Club Digital Membership",
-        desc: "Present your Health Club card to claim guaranteed 10% to 30% member discounts on Brain MRI, CT scans, digital EEG, and stroke ICU admissions at partner hospitals in Feni.",
-      },
-    ],
-  },
-  "best-diabetes-doctors-in-feni": {
-    title: "5 Essential Clinical Guidelines for Diabetes & Hormone Care in Feni",
-    points: [
-      {
-        title: "1. Consultant Specialization (MD Endocrinology vs. Certified Diabetology)",
-        desc: "For complex insulin titration, pituitary disorders, and thyroid nodules, consult an endocrinologist; for routine Type 2 diabetes control, seek BIRDEM-trained diabetologists.",
-      },
-      {
-        title: "2. Prioritize HbA1c and Comprehensive Metabolic Monitoring",
-        desc: "Ensure your diabetes management is guided by regular 3-month automated HbA1c testing, lipid panels, and urine spot ACR rather than isolated fingerstick checks.",
-      },
-      {
-        title: "3. Master the Life-Saving 'Rule of 15' for Hypoglycemia",
-        desc: "Always carry fast-acting glucose tablets or candy; if acute hypoglycemia occurs (shakiness, cold sweat, palpitations), ingest 15g simple carbs and re-test in 15 minutes.",
-      },
-      {
-        title: "4. Rigorous Daily Diabetic Foot Inspection & Care",
-        desc: "Never walk barefoot indoors or outdoors; inspect feet daily and seek prompt clinical debridement for any calluses, blisters, or skin cracks to prevent diabetic ulcers.",
-      },
-      {
-        title: "5. Cashless 10-30% Savings with Health Club Digital Membership",
-        desc: "Present your Health Club card to claim guaranteed 10% to 30% member discounts on HbA1c, thyroid panels, lipid profiles, and urine ACR tests at partner labs in Feni.",
-      },
-    ],
-  },
-  "best-ent-doctors-in-feni": {
-    title: "5 Essential Guidelines for Choosing an ENT Specialist & Head-Neck Surgeon in Feni",
-    points: [
-      {
-        title: "1. Department Specialization (Otology vs. Rhinology vs. Head-Neck)",
-        desc: "For hearing loss and ear discharge, consult a micro-otologist; for sinus headaches and blocked nose, seek a rhinology/FESS surgeon; for tonsils, thyroid, and neck swelling, choose a head-neck specialist.",
-      },
-      {
-        title: "2. Strictly Avoid Ear Canal Manipulation (No Cotton Swabs)",
-        desc: "Never use cotton buds, pointed hairpins, or unverified herbal ear drops; symptomatic blockage should always be evaluated using clean oto-microscopic suction.",
-      },
-      {
-        title: "3. Diagnostic Audiology & High-Resolution PNS Imaging",
-        desc: "Ensure the clinic or hospital has calibrated Pure Tone Audiometry (PTA), tympanometry, and multi-slice PNS CT imaging for accurate pre-operative mapping.",
-      },
-      {
-        title: "4. Minimally Invasive Video Endoscopy & OT Infrastructure",
-        desc: "Opt for centers equipped with rigid diagnostic nasal endoscopes (DNE), fiber-optic laryngoscopes, and operating theaters with micro-drills and coblation units.",
-      },
-      {
-        title: "5. Maximize Savings with Health Club Digital Membership",
-        desc: "Present your Health Club digital membership card to receive guaranteed 10% to 30% savings on audiometry tests, PNS CT scans, and surgical OT packages at partner centers.",
-      },
-    ],
-  },
-  "best-orthopedic-doctors-in-feni": {
-    title: "5 Crucial Guidelines for Choosing an Orthopedic Specialist & Trauma Center in Feni",
-    points: [
-      {
-        title: "1. Subspecialty Focus (Trauma vs. Spine vs. Arthroplasty)",
-        desc: "For acute fractures, consult a trauma surgeon (MS Ortho, NITOR); for sciatica or numbness, seek a spine specialist; for severe knee arthritis, consult an arthroplasty surgeon.",
-      },
-      {
-        title: "2. Immediate Fracture Immobilization (RICE Protocol)",
-        desc: "Immobilize broken limbs immediately using a firm padded splint and ice packs; never allow unscientific traditional massages or violent bone manipulations.",
-      },
-      {
-        title: "3. Advanced Diagnostic Imaging Support (1.5T MRI & Digital X-Ray)",
-        desc: "Accurate surgical reduction and ligament assessment require high-resolution digital radiography, 3D CT scans, and high-field superconductive MRI.",
-      },
-      {
-        title: "4. Sterile Operating Theater with C-Arm Fluoroscopy",
-        desc: "For surgical fixation (AO plates, interlocking nails, arthroscopy), select hospitals equipped with laminar airflow OTs and real-time C-Arm fluoroscopic guidance.",
-      },
-      {
-        title: "5. Maximize Savings with Health Club Membership",
-        desc: "Present your Health Club digital card to enjoy 10% to 30% member savings on digital X-rays, MRI scans, CT scans, and post-op physiotherapy sessions.",
-      },
-    ],
-  },
-  "best-kidney-doctors-in-feni": {
-    title: "5 Essential Criteria for Choosing a Kidney Specialist & Dialysis Unit in Feni",
-    points: [
-      {
-        title: "1. Nephrologist vs. Urologist Distinction",
-        desc: "Consult a Nephrologist for medical kidney diseases, creatinine, and dialysis; consult a Urologist for kidney stone removal, prostate, and surgery.",
-      },
-      {
-        title: "2. Certified Hemodialysis Facility & ICU Backup",
-        desc: "Ensure the dialysis unit maintains sterile reverse osmosis (R.O.) treated water and has on-site emergency ICU support.",
-      },
-      {
-        title: "3. Automated Biochemistry Lab Standards",
-        desc: "Accurate dosage depends on exact serum creatinine and electrolyte values; choose labs with automated robotic analyzers.",
-      },
-      {
-        title: "4. Minimally Invasive Stone Removal Capabilities",
-        desc: "Prefer centers with endoscopic laser lithotripsy (URS/RIRS/PCNL) to remove stones without large surgical incisions.",
-      },
-      {
-        title: "5. Maximize Long-Term Savings with Health Club Card",
-        desc: "Save 10% to 30% on frequent renal function tests and ultrasound scans using your Health Club membership.",
-      },
-    ],
-  },
-  "best-diagnostic-centers-in-feni": {
-    title: "5 Essential Criteria for Choosing a Reliable Diagnostic Lab",
-    points: [
-      {
-        title: "1. Automated Analyzers & Quality Reagents",
-        desc: "Ensure the lab uses fully automated analyzers (e.g. Roche, Abbott, Beckman) with standardized international reagents for accurate blood analysis.",
-      },
-      {
-        title: "2. Resident Pathologists & Radiologists",
-        desc: "Reports should be reviewed and signed by certified consultant pathologists or radiologists rather than junior technicians alone.",
-      },
-      {
-        title: "3. Digital Radiology & High-Frequency 4D USG",
-        desc: "Choose centers with modern digital radiography and multi-frequency color Doppler transducers to detect subtle tissue anomalies.",
-      },
-      {
-        title: "4. Strict Biosafety & Disposable Consumables",
-        desc: "Verify that phlebotomists follow sterile protocols with single-use vacuum blood tubes and disposable needles to prevent infection.",
-      },
-      {
-        title: "5. Maximize Savings with Health Club Card",
-        desc: "Diagnostic tests can be costly; use your Health Club membership card to receive guaranteed 10-30% savings at verified partner centers.",
-      },
-    ],
-  },
-  "best-10-hospitals-in-feni": {
-    title: "4 Key Factors for Selecting the Right Hospital in Feni",
-    points: [
-      {
-        title: "1. 24/7 ICU, CCU & Emergency Availability",
-        desc: "Confirm the presence of functional intensive care beds, central oxygen, and round-the-clock emergency medical officers before admission.",
-      },
-      {
-        title: "2. Cleanliness, Infection Control & Biosafety",
-        desc: "Choose facilities with sterile operating theaters, adequate post-operative care, and strict sterilization protocols.",
-      },
-      {
-        title: "3. Transparent Billing & Clear Cost Estimates",
-        desc: "Ensure the hospital provides written admission and surgical package quotes to prevent unexpected ancillary charges.",
-      },
-      {
-        title: "4. Health Club Partner Discounts",
-        desc: "Take advantage of up to 25% member savings on cabin rent, pathology tests, and hospital charges at official partner hospitals.",
-      },
-    ],
-  },
-  "best-medicine-doctor-in-feni": {
-    title: "5 Key Considerations for Choosing an Internal Medicine Specialist",
-    points: [
-      {
-        title: "1. Advanced Qualifications (MD, FCPS, MRCP)",
-        desc: "Prioritize BMDC-recognized specialists with postgraduate fellowships in Internal Medicine from national or UK royal colleges.",
-      },
-      {
-        title: "2. Relevant Subspecialty Expertise",
-        desc: "Match symptoms with doctor focus: Gastroenterology for abdominal issues, Rheumatology for joint pain, and Endocrinology for diabetes.",
-      },
-      {
-        title: "3. Thorough Clinical Examination",
-        desc: "Medicine relies on in-depth patient history; choose physicians who listen attentively and perform careful clinical assessments.",
-      },
-      {
-        title: "4. Partner Lab Quality & Accuracy",
-        desc: "Ensure prescribed tests are conducted at modern laboratories with automated analyzers and certified pathologists.",
-      },
-      {
-        title: "5. Member Savings on Prescribed Tests",
-        desc: "Health Club members save 10-30% on laboratory and imaging investigations when using digital member cards at partner clinics.",
-      },
-    ],
-  },
-  "default": {
-    title: "Guidelines for Choosing Quality Healthcare in Feni",
-    points: [
-      {
-        title: "1. Certified Medical Professionals",
-        desc: "Ensure practitioners hold recognized BMDC degrees and active credentials in their respective specialties.",
-      },
-      {
-        title: "2. Modern Clinical Equipment",
-        desc: "Verify the clinic uses updated medical technologies and hygienic sterilizing procedures.",
-      },
-      {
-        title: "3. Convenient Booking & Punctuality",
-        desc: "Prioritize chambers with verified serial hotlines to minimize waiting times and crowded conditions.",
-      },
-      {
-        title: "4. Save with Health Club Membership",
-        desc: "Show your digital Health Club card at partner centers to receive guaranteed member discounts on consultations and diagnostics.",
-      },
-    ],
-  },
-};
+export { ARTICLE_SELECTION_GUIDES } from "./articleTranslationsSelectionGuides";
