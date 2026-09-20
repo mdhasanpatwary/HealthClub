@@ -183,6 +183,7 @@ export async function addMemberAction(
         "error",
         { route: "addMemberAction", action: "signup_otp" }
       );
+      return { error: "ইমেইলে ওটিপি কোড পাঠাতে সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।" };
     }
 
     const now = new Date();
