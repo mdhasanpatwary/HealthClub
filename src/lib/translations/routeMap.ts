@@ -48,6 +48,10 @@ export function getNamespacesForRoute(pathname?: string | null): TranslationName
     return ["common", "landing", "consultants"];
   }
 
+  if (cleanPath.startsWith("/blog")) {
+    return ["common"];
+  }
+
   if (
     cleanPath.startsWith("/login") ||
     cleanPath.startsWith("/register") ||

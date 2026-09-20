@@ -32,6 +32,7 @@ export function MobileNavPublicLinks({
           <Link
             key={link.path}
             href={link.path}
+            prefetch={false}
             onClick={onClose}
             className={`flex items-center rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-colors ${
               isActive(link.path)
@@ -52,6 +53,7 @@ export function MobileNavPublicLinks({
         <div className="grid grid-cols-1 gap-1.5">
           <Link
             href="/emergency"
+            prefetch={false}
             onClick={onClose}
             className="flex items-center gap-3 p-2.5 rounded-xl bg-rose-500/5 hover:bg-rose-500/10 border border-rose-500/20 text-rose-700 dark:text-rose-300 text-xs font-bold"
           >
@@ -63,6 +65,7 @@ export function MobileNavPublicLinks({
 
           <Link
             href="/health-tools"
+            prefetch={false}
             onClick={onClose}
             className="flex items-center gap-3 p-2.5 rounded-xl bg-cyan-500/5 hover:bg-cyan-500/10 border border-cyan-500/20 text-cyan-700 dark:text-cyan-300 text-xs font-bold"
           >
@@ -74,6 +77,7 @@ export function MobileNavPublicLinks({
 
           <Link
             href="/health-tips"
+            prefetch={false}
             onClick={onClose}
             className="flex items-center gap-3 p-2.5 rounded-xl bg-primary/5 hover:bg-primary/10 border border-primary/20 text-primary text-xs font-bold"
           >
@@ -85,6 +89,7 @@ export function MobileNavPublicLinks({
 
           <Link
             href="/blog"
+            prefetch={false}
             onClick={onClose}
             className="flex items-center gap-3 p-2.5 rounded-xl bg-emerald-500/5 hover:bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-bold"
           >
@@ -105,6 +110,7 @@ export function MobileNavPublicLinks({
           <Link
             key={link.path}
             href={link.path}
+            prefetch={false}
             onClick={onClose}
             className={`flex items-center rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-colors ${
               isActive(link.path)

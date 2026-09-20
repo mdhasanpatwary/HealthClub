@@ -20,7 +20,7 @@ export function LanguageProvider({
   children,
   initialLocale,
   initialDict,
-  initialNamespaces = ["common", "landing"],
+  initialNamespaces = ["common"],
 }: {
   children: React.ReactNode;
   initialLocale: Locale;

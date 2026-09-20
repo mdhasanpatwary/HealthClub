@@ -34,8 +34,10 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "fenirdoctor.com" },
       { protocol: "https", hostname: "www.fenirdoctor.com" },
     ],
-    // Serve modern formats (WebP/AVIF) where supported
-    formats: ["image/avif", "image/webp"],
+    deviceSizes: [384, 512, 640, 750, 828, 1080, 1200, 1920],
+    // Serve modern WebP format for fast encoding, smaller payloads, and faster decode on mobile
+    formats: ["image/webp"],
+    qualities: [60, 65, 75],
     // Cache optimized images on the edge CDN for 31 days (2,678,400s) to minimize repeat storage egress
     minimumCacheTTL: 2678400,
   },

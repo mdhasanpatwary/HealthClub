@@ -33,27 +33,32 @@ export default function DeferredClientComponents() {
   const [canLoad, setCanLoad] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-      const handle = (
-        window as Window & {
-          requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number;
-          cancelIdleCallback: (id: number) => void;
-        }
-      ).requestIdleCallback(() => setCanLoad(true), { timeout: 3000 });
+    let triggered = false;
+    const trigger = () => {
+      if (triggered) return;
+      triggered = true;
+      cleanup();
+      setCanLoad(true);
+    };
 
-      return () => {
-        if ("cancelIdleCallback" in window) {
-          (
-            window as Window & {
-              cancelIdleCallback: (id: number) => void;
-            }
-          ).cancelIdleCallback(handle);
-        }
-      };
-    } else {
-      const timer = setTimeout(() => setCanLoad(true), 2500);
-      return () => clearTimeout(timer);
-    }
+    const cleanup = () => {
+      window.removeEventListener("scroll", trigger);
+      window.removeEventListener("touchstart", trigger);
+      window.removeEventListener("click", trigger);
+      window.removeEventListener("keydown", trigger);
+    };
+
+    window.addEventListener("scroll", trigger, { passive: true, once: true });
+    window.addEventListener("touchstart", trigger, { passive: true, once: true });
+    window.addEventListener("click", trigger, { passive: true, once: true });
+    window.addEventListener("keydown", trigger, { passive: true, once: true });
+
+    const timer = setTimeout(trigger, 7000);
+
+    return () => {
+      cleanup();
+      clearTimeout(timer);
+    };
   }, []);
 
   if (!canLoad) return null;

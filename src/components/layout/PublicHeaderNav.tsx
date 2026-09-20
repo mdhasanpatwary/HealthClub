@@ -31,6 +31,7 @@ export default function PublicHeaderNav() {
       {/* 1. Home */}
       <Link
         href="/"
+        prefetch={false}
         aria-current={isActive("/") ? "page" : undefined}
         className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
           isActive("/")
@@ -47,6 +48,7 @@ export default function PublicHeaderNav() {
       {/* 2. Consultants / Doctors */}
       <Link
         href="/consultants"
+        prefetch={false}
         aria-current={isActive("/consultants") ? "page" : undefined}
         className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
           isActive("/consultants")
@@ -63,6 +65,7 @@ export default function PublicHeaderNav() {
       {/* 3. Partner Hospitals */}
       <Link
         href="/partner-hospitals"
+        prefetch={false}
         aria-current={isActive("/partner-hospitals") ? "page" : undefined}
         className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
           isActive("/partner-hospitals")
@@ -98,6 +101,7 @@ export default function PublicHeaderNav() {
           <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
             <Link
               href="/emergency"
+              prefetch={false}
               aria-current={isActive("/emergency") ? "page" : undefined}
               className="flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 hover:bg-rose-500/10 dark:hover:bg-rose-950/40 text-foreground group"
             >
@@ -118,6 +122,7 @@ export default function PublicHeaderNav() {
           <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
             <Link
               href="/health-tools"
+              prefetch={false}
               aria-current={isActive("/health-tools") ? "page" : undefined}
               className="flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 hover:bg-cyan-500/10 dark:hover:bg-cyan-950/40 text-foreground group"
             >
@@ -138,6 +143,7 @@ export default function PublicHeaderNav() {
           <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
             <Link
               href="/health-tips"
+              prefetch={false}
               aria-current={isActive("/health-tips") ? "page" : undefined}
               className="flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 hover:bg-primary/10 dark:hover:bg-primary/20 text-foreground group"
             >
@@ -158,6 +164,7 @@ export default function PublicHeaderNav() {
           <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
             <Link
               href="/blog"
+              prefetch={false}
               aria-current={isActive("/blog") ? "page" : undefined}
               className="flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 hover:bg-emerald-500/10 dark:hover:bg-emerald-950/40 text-foreground group"
             >

@@ -4,15 +4,13 @@ import { useState, useEffect, useRef, useTransition, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Search, SlidersHorizontal, BookOpen, X, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { BlogPost } from "@/types/blog";
-import { BlogFilterPill, BLOG_FILTER_PILLS } from "@/data/blog/blogPosts";
-import { BlogCard } from "./BlogCard";
+import { BlogFilterPill, BLOG_FILTER_PILLS } from "@/data/blog/blogCategories";
 import { Pagination } from "@/components/ui/pagination";
 import { toBanglaNums } from "@/lib/utils";
 import { Locale } from "@/lib/i18n";
 
 interface BlogSearchFilterProps {
-  posts: BlogPost[];
+  children: React.ReactNode;
   totalItems: number;
   totalPages: number;
   currentPage: number;
@@ -24,7 +22,7 @@ interface BlogSearchFilterProps {
 }
 
 export function BlogSearchFilter({
-  posts,
+  children,
   totalItems,
   totalPages,
   currentPage,
@@ -175,14 +173,14 @@ export function BlogSearchFilter({
           <span>
             {isEn ? (
               <>
-                Showing <strong>{posts.length}</strong> of{" "}
+                Showing <strong>{Math.min(pageSize, totalItems)}</strong> of{" "}
                 <strong>{totalItems}</strong>{" "}
                 {totalItems === 1 ? "article" : "articles"}
               </>
             ) : (
               <>
                 মোট <strong>{toBanglaNums(totalItems)}</strong>টি নিবন্ধের মধ্যে{" "}
-                <strong>{toBanglaNums(posts.length)}</strong>টি প্রদর্শিত হচ্ছে
+                <strong>{toBanglaNums(Math.min(pageSize, totalItems))}</strong>টি প্রদর্শিত হচ্ছে
               </>
             )}
           </span>
@@ -211,17 +209,8 @@ export function BlogSearchFilter({
           isPending ? "opacity-60 pointer-events-none" : "opacity-100"
         }`}
       >
-        {posts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {posts.map((post, idx) => (
-              <BlogCard
-                key={post.slug}
-                post={post}
-                locale={locale}
-                priority={idx < 2}
-              />
-            ))}
-          </div>
+        {totalItems > 0 ? (
+          children
         ) : (
           <div className="rounded-2xl border border-dashed border-border/80 bg-card/50 p-12 text-center space-y-3">
             <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-muted text-muted-foreground">

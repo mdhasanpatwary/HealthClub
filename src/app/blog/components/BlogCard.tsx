@@ -2,12 +2,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { Clock, Calendar, ArrowRight, ShieldCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { BlogPost } from "@/types/blog";
+import { BlogPostCardItem } from "@/types/blog";
 import { toBanglaNums } from "@/lib/utils";
 import { formatArticleDate } from "@/lib/dateUtils";
 
 interface BlogCardProps {
-  post: BlogPost;
+  post: BlogPostCardItem;
   locale?: string;
   priority?: boolean;
 }
@@ -19,9 +19,12 @@ export function BlogCard({ post, locale = "bn", priority = false }: BlogCardProp
   const categoryName = isEn ? post.categoryNameEn : post.categoryNameBn;
   const readTime = isEn ? post.readTimeEn : post.readTimeBn;
   const publishedDate = formatArticleDate(post.publishedDate, locale);
+  const hospitalCount = post.hospitalCount ?? 0;
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-border/70 bg-card shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5">
+    <article
+      className="group relative flex flex-col overflow-hidden rounded-2xl border border-border/70 bg-card shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5"
+    >
       {/* Thumbnail Banner */}
       <div className="relative aspect-16/9 w-full overflow-hidden bg-muted">
         <Image
@@ -29,7 +32,8 @@ export function BlogCard({ post, locale = "bn", priority = false }: BlogCardProp
           alt={post.coverImageAlt || title}
           fill
           priority={priority}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          quality={60}
+          sizes="(max-width: 640px) 150px, (max-width: 1024px) 384px, 360px"
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-70" />
@@ -66,7 +70,7 @@ export function BlogCard({ post, locale = "bn", priority = false }: BlogCardProp
 
           {/* Title */}
           <h2 className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground line-clamp-2 group-hover:text-primary transition-colors">
-            <Link href={`/blog/${post.slug}`} className="focus:outline-hidden">
+            <Link href={`/blog/${post.slug}`} prefetch={false} className="focus:outline-hidden">
               <span className="absolute inset-0" aria-hidden="true" />
               {title}
             </Link>
@@ -85,11 +89,11 @@ export function BlogCard({ post, locale = "bn", priority = false }: BlogCardProp
             <ArrowRight className="h-3.5 w-3.5" />
           </span>
 
-          {post.hospitals && post.hospitals.length > 0 && (
+          {hospitalCount > 0 && (
             <span className="text-[11px] font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-md">
               {isEn
-                ? `${post.hospitals.length} Hospitals`
-                : `${toBanglaNums(post.hospitals.length)}টি প্রতিষ্ঠান`}
+                ? `${hospitalCount} Hospitals`
+                : `${toBanglaNums(hospitalCount)}টি প্রতিষ্ঠান`}
             </span>
           )}
         </div>

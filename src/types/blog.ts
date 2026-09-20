@@ -470,6 +470,28 @@ export interface BlogPost {
   relatedSlugs?: string[];
 }
 
+export interface BlogPostCardItem {
+  slug: string;
+  titleBn: string;
+  titleEn: string;
+  excerptBn: string;
+  excerptEn: string;
+  category: string;
+  categoryNameBn: string;
+  categoryNameEn: string;
+  readTimeBn: string;
+  readTimeEn: string;
+  publishedDate: string;
+  coverImage: string;
+  coverImageAlt: string;
+  author: {
+    nameBn: string;
+    nameEn: string;
+  };
+  hospitalCount?: number;
+}
+
 export * from "./pharmacyBlog";
 export * from "./bloodBankBlog";
 export * from "./ambulanceBlog";
+

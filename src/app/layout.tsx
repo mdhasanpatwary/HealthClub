@@ -18,14 +18,15 @@ import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteC
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  display: "swap",
+  display: "optional",
+  preload: false,
 });
 
 const notoSansBengali = Noto_Sans_Bengali({
   variable: "--font-noto-sans-bengali",
   subsets: ["bengali"],
   weight: ["400", "700"],
-  display: "swap",
+  display: "optional",
   preload: true,
 });
 
@@ -91,8 +92,8 @@ export const metadata: Metadata = {
     telephone: true,
   },
   icons: {
-    icon: "/icons/icon-192.png",
-    shortcut: "/icons/icon-192.png",
+    icon: "/icon.png",
+    shortcut: "/icon.png",
     apple: "/icons/apple-touch-icon.png",
   },
   alternates: {
@@ -161,9 +162,9 @@ export default async function RootLayout({
   const locale: Locale = "bn";
   const theme = "light";
 
-  // Serialize foundational namespaces (common + landing) for instant static SSR
+  // Serialize foundational namespace (common) for instant static SSR
   // Additional route namespaces are dynamically streamed by LanguageProvider on client navigation
-  const initialNamespaces: TranslationNamespace[] = ["common", "landing"];
+  const initialNamespaces: TranslationNamespace[] = ["common"];
   const initialDict = getDictionary(locale, initialNamespaces);
   const [notice, contactSettings] = await Promise.all([
     getCachedNoticeSetting(),

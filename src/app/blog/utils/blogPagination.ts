@@ -1,5 +1,5 @@
 import { BlogPost } from "@/types/blog";
-import { BLOG_FILTER_PILLS, BlogFilterPill } from "@/data/blog/blogPosts";
+import { BLOG_FILTER_PILLS, BlogFilterPill } from "@/data/blog/blogCategories";
 
 export interface PaginateBlogPostsOptions {
   page?: number;

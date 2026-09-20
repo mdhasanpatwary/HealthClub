@@ -98,12 +98,15 @@ export default async function Footer({ locale = "bn" }: { locale?: string }) {
 
           {/* Logo & Contact Info */}
           <div className="space-y-6 md:col-span-1">
-            <Link href="/" className="flex items-center space-x-2.5 group">
+            <Link href="/" prefetch={false} className="flex items-center space-x-2.5 group">
               <Image
                 src="/images/member-card-logo.webp"
                 alt="Health Club Logo"
                 width={36}
                 height={36}
+                sizes="36px"
+                quality={60}
+                loading="lazy"
                 className="h-8 w-8 sm:h-9 sm:w-9 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.3)] transition-transform duration-300 group-hover:scale-110 shrink-0"
               />
               <span className="font-heading text-xl font-bold tracking-tight text-white">
@@ -160,6 +163,7 @@ export default async function Footer({ locale = "bn" }: { locale?: string }) {
                   <li key={link.href}>
                     <Link
                       href={link.href}
+                      prefetch={false}
                       className="text-sm text-slate-400 hover:text-white transition-colors duration-200 flex items-center gap-1.5 group"
                     >
                       <span className="h-1 w-1 rounded-full bg-primary/60 group-hover:w-2 transition-all duration-200" />
@@ -210,10 +214,10 @@ export default async function Footer({ locale = "bn" }: { locale?: string }) {
             &copy; {new Date().getFullYear()} {t("layout.footer.healthClubAllRightsReserved")}
           </p>
           <div className="flex space-x-6 text-xs text-slate-400">
-            <Link href="/privacy-policy" className="hover:text-white transition-colors">
+            <Link href="/privacy-policy" prefetch={false} className="hover:text-white transition-colors">
               {t("layout.footer.privacyPolicy")}
             </Link>
-            <Link href="/terms-conditions" className="hover:text-white transition-colors">
+            <Link href="/terms-conditions" prefetch={false} className="hover:text-white transition-colors">
               {t("layout.footer.termsConditions")}
             </Link>
           </div>

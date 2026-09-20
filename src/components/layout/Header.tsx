@@ -11,10 +11,9 @@ import dynamic from "next/dynamic";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { useTheme } from "@/components/layout/ThemeProvider";
-import PublicHeaderNav from "./PublicHeaderNav";
 import { isAdminUser } from "@/lib/permissions";
-import { toast } from "sonner";
 
+const PublicHeaderNav = dynamic(() => import("./PublicHeaderNav"), { ssr: true });
 const UserDropdown = dynamic(() => import("./UserDropdown"), { ssr: false });
 const PartnerDropdown = dynamic(() => import("./PartnerDropdown"), { ssr: false });
 const AdminHeaderNav = dynamic(() => import("./AdminHeaderNav"), { ssr: false });
@@ -84,6 +83,7 @@ export default function Header() {
       const current = authStore.getCurrentUser();
       if (customEvent.detail?.memberId && current && customEvent.detail.memberId === current.id) {
         await authStore.logout();
+        const { toast } = await import("sonner");
         toast.error(tRef.current("dashboard.accountTerminated"));
         window.location.href = "/login";
       }
@@ -123,6 +123,7 @@ export default function Header() {
           {/* Logo */}
           <Link
             href={isAdminMode ? "/admin" : "/"}
+            prefetch={false}
             className="flex items-center space-x-2 group shrink-0"
             onClick={() => setIsOpen(false)}
           >
@@ -132,8 +133,10 @@ export default function Header() {
                 alt="Health Club Logo"
                 width={36}
                 height={36}
-                priority
                 sizes="36px"
+                quality={60}
+                priority
+                loading="eager"
                 className="h-8 w-8 sm:h-9 sm:w-9 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.3)] transition-transform duration-300 group-hover:scale-110"
               />
             </div>

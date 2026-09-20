@@ -86,6 +86,7 @@ export default function BottomNav() {
           {/* 1. Home Tab */}
           <Link
             href="/"
+            prefetch={false}
             aria-current={isActive("/") && !isCardActive && !isProfileActive ? "page" : undefined}
             className={`flex flex-1 flex-col items-center justify-center py-1 touch-active transition-colors ${
               isActive("/") && !isCardActive && !isProfileActive
@@ -107,6 +108,7 @@ export default function BottomNav() {
           {/* 2. Partner Hospitals Tab */}
           <Link
             href="/partner-hospitals"
+            prefetch={false}
             aria-current={isActive("/partner-hospitals") ? "page" : undefined}
             className={`flex flex-1 flex-col items-center justify-center py-1 touch-active transition-colors ${
               isActive("/partner-hospitals")
@@ -128,6 +130,7 @@ export default function BottomNav() {
           {/* 3. Central Digital Card Highlight Button */}
           <Link
             href={getCardPath()}
+            prefetch={false}
             onClick={handleCardClick}
             aria-label={t("layout.bottomNav.card")}
             className="flex flex-1 flex-col items-center justify-center -mt-4 touch-active group"
@@ -140,9 +143,8 @@ export default function BottomNav() {
               }`}
             >
               <CreditCard className="h-6 w-6 stroke-[2.2]" />
-              <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-400"></span>
+              <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400 ring-2 ring-primary"></span>
               </span>
             </div>
             <span
@@ -157,6 +159,7 @@ export default function BottomNav() {
           {/* 4. Profile / Account Tab */}
           <Link
             href={getProfilePath()}
+            prefetch={false}
             aria-current={isProfileActive && !isCardActive ? "page" : undefined}
             className={`flex flex-1 flex-col items-center justify-center py-1 touch-active transition-colors ${
               isProfileActive && !isCardActive

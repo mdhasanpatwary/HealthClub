@@ -85,10 +85,15 @@ const customOfflineCache: RuntimeCaching[] = [
   },
 ];
 
+// Essential offline shell assets precached during SW install.
+// Route-specific chunks are cached dynamically on-demand via runtimeCaching
+// to prevent hundreds of background network downloads from saturating mobile connections on initial page visit.
 const precacheEntries: (PrecacheEntry | string)[] = [
-  ...(self.__SW_MANIFEST || []),
   { url: "/offline", revision: "1.0.0" },
 ];
+
+// Reference injection point required by @serwist/next webpack plugin
+void self.__SW_MANIFEST;
 
 const serwist = new Serwist({
   precacheEntries,
