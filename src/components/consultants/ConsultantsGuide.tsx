@@ -1,10 +1,13 @@
-"use client";
-
-import { useLanguage } from "@/components/layout/LanguageProvider";
+import { Locale } from "@/lib/i18n";
+import { tServer } from "@/lib/i18n.server";
 import { Users, Stethoscope, PhoneCall, Percent, BookOpen, CheckCircle } from "lucide-react";
 
-export default function ConsultantsGuide() {
-  const { t, locale } = useLanguage();
+interface ConsultantsGuideProps {
+  locale?: Locale;
+}
+
+export default function ConsultantsGuide({ locale = "bn" }: ConsultantsGuideProps) {
+  const t = (key: string) => tServer(locale, key);
 
   const stats = [
     {
@@ -39,7 +42,7 @@ export default function ConsultantsGuide() {
       <div className="rounded-3xl border border-border/80 bg-card p-5 sm:p-8 space-y-6 shadow-xs">
         {/* Header */}
         <div className="space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-emerald-800 dark:text-emerald-300 border border-primary/20 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
             <BookOpen className="h-3.5 w-3.5" />
             <span>{t("consultants.guide.badge")}</span>
           </div>

@@ -2,14 +2,23 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Truck, Heart, Building2, PhoneCall, ArrowRight, ShieldCheck, Sparkles } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
-import { BloodDonorRegisterDialog } from "@/app/emergency/components/BloodDonorRegisterDialog";
-import { AmbulanceRegisterDialog } from "@/app/emergency/components/AmbulanceRegisterDialog";
 import { cn, toBanglaNums } from "@/lib/utils";
+
+const BloodDonorRegisterDialog = dynamic(
+  () => import("@/app/emergency/components/BloodDonorRegisterDialog").then((m) => m.BloodDonorRegisterDialog),
+  { ssr: false }
+);
+
+const AmbulanceRegisterDialog = dynamic(
+  () => import("@/app/emergency/components/AmbulanceRegisterDialog").then((m) => m.AmbulanceRegisterDialog),
+  { ssr: false }
+);
 
 interface CommunityNetworkCTAProps {
   hotline?: string;
@@ -38,7 +47,7 @@ export default function CommunityNetworkCTA({ hotline }: CommunityNetworkCTAProp
       <div className="text-center space-y-3 max-w-2xl mx-auto px-4">
         <Badge
           variant="outline"
-          className="bg-primary/10 text-primary border-primary/20 font-bold px-3 py-1 text-xs"
+          className="bg-primary/10 text-emerald-800 dark:text-emerald-300 border-primary/20 font-bold px-3 py-1 text-xs"
         >
           <Sparkles className="h-3.5 w-3.5 mr-1.5" />
           {t("communityCTA.badge")}

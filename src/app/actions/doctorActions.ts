@@ -11,6 +11,7 @@ import { PaginatedResult } from "@/types/pagination";
 import { hasAdminPermission } from "@/lib/permissions";
 import { distributeDoctorsFairly } from "@/lib/doctorDistribution";
 import { ensureStorageUrl } from "@/services/storageService";
+import { detectUpazilaFromText } from "@/data/feniLocations";
 
 const DOCTORS_TAG = "doctors";
 
@@ -45,9 +46,10 @@ const DOCTOR_ADMIN_SELECT_FIELDS = {
   // Note: imageUrl omitted from admin bulk queries to prevent heavy base64 data transfer
 } as const;
 
-type PrismaDoctorRecord =
-  | Prisma.DoctorGetPayload<{ select: typeof DOCTOR_ADMIN_SELECT_FIELDS }>
-  | Prisma.DoctorGetPayload<object>;
+type PrismaDoctorRecord = Omit<Prisma.DoctorGetPayload<{ select: typeof DOCTOR_ADMIN_SELECT_FIELDS }>, "createdAt"> & {
+  imageUrl?: string | null;
+  createdAt?: Date | string | null;
+};
 
 // Helper to format Prisma Doctor record to Doctor interface
 function formatDoctor(d: PrismaDoctorRecord): Doctor {
@@ -67,7 +69,7 @@ function formatDoctor(d: PrismaDoctorRecord): Doctor {
     consultationFee: d.consultationFee || undefined,
     imageUrl: (d as { imageUrl?: string | null }).imageUrl || undefined,
     partnerId: d.partnerId || undefined,
-    upazila: d.upazila || "feni-sadar",
+    upazila: d.upazila || (d.chamberAddress ? detectUpazilaFromText(d.chamberAddress) : undefined) || "feni-sadar",
     isActive: d.isActive,
     availableToday: d.availableToday ?? true,
     onLeaveUntil: d.onLeaveUntil
@@ -194,7 +196,6 @@ export const getDoctorsAction = unstable_cache(
           availableToday: true,
           onLeaveUntil: true,
           notice: true,
-          createdAt: true,
         },
       });
 

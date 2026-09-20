@@ -26,6 +26,7 @@ const notoSansBengali = Noto_Sans_Bengali({
   subsets: ["bengali"],
   weight: ["400", "700"],
   display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -228,10 +229,6 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} data-scroll-behavior="smooth" className={`${theme} ${inter.variable} ${notoSansBengali.variable}`}>
-      <head>
-        <link rel="preconnect" href="https://uqtodphwiwzikmhsyiyc.supabase.co" />
-        <link rel="dns-prefetch" href="https://uqtodphwiwzikmhsyiyc.supabase.co" />
-      </head>
       <body className="font-sans antialiased bg-background text-foreground min-h-screen flex flex-col">
         {/* Skip to Main Content Link for Keyboard / Screen Reader users */}
         <a

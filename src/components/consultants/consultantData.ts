@@ -93,3 +93,24 @@ export const CLINICAL_FOCUS_MAP: Record<string, { bn: string; en: string }> = {
     en: "Specialized clinical consultations, diagnostics, and patient referral services.",
   },
 };
+
+export const DEPARTMENTS = [
+  { id: "all", labelKey: "consultants.filter.all", icon: Stethoscope },
+  { id: "medicine", labelKey: "consultants.filter.medicine", icon: Stethoscope },
+  { id: "cardiology", labelKey: "consultants.filter.cardiology", icon: HeartPulse },
+  { id: "gynecology", labelKey: "consultants.filter.gynecology", icon: UserRound },
+  { id: "pediatrics", labelKey: "consultants.filter.pediatrics", icon: Baby },
+  { id: "orthopedics", labelKey: "consultants.filter.orthopedics", icon: Bone },
+  { id: "dermatology", labelKey: "consultants.filter.dermatology", icon: Sparkles },
+  { id: "eye", labelKey: "consultants.filter.eye", icon: Eye },
+  { id: "ent", labelKey: "consultants.filter.ent", icon: Info },
+  { id: "diabetes", labelKey: "consultants.filter.diabetes", icon: Activity },
+  { id: "psychiatry", labelKey: "consultants.filter.psychiatry", icon: Brain },
+  { id: "nephrology", labelKey: "consultants.filter.nephrology", icon: ShieldCheck },
+  { id: "hepatology", labelKey: "consultants.filter.hepatology", icon: ShieldCheck },
+  { id: "surgery", labelKey: "consultants.filter.surgery", icon: Sparkles },
+  { id: "rheumatology", labelKey: "consultants.filter.rheumatology", icon: Bone },
+  { id: "nutrition", labelKey: "consultants.filter.nutrition", icon: Apple },
+  { id: "dental", labelKey: "consultants.filter.dental", icon: Smile },
+  { id: "other", labelKey: "consultants.filter.other", icon: Sparkles },
+];

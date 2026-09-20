@@ -334,7 +334,7 @@ export default async function ConsultantsPage({ searchParams }: ConsultantsPageP
           <>
             {/* Page Header */}
             <div className="text-center space-y-2 sm:space-y-4 max-w-3xl mx-auto">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-emerald-800 dark:text-emerald-300 border border-primary/20 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
                 <Stethoscope className="h-3.5 w-3.5" />
                 <span>{t("consultants.page.badge")}</span>
               </div>
@@ -403,10 +403,10 @@ export default async function ConsultantsPage({ searchParams }: ConsultantsPageP
         </div>
 
         {/* Generative Engine Optimization (GEO) Healthcare Guide & Authority Block */}
-        <ConsultantsGuide />
+        <ConsultantsGuide locale={locale} />
 
         {/* Answer Engine Optimization (AEO) FAQ Section */}
-        <ConsultantsFAQ />
+        <ConsultantsFAQ locale={locale} />
 
         {/* Healthcare & Emergency Community Collaboration CTA */}
         <CommunityNetworkCTA />

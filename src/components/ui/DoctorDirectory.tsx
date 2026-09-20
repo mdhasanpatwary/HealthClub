@@ -4,17 +4,27 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import {
   Search, PhoneCall, Calendar, Clock, MapPin, Building2,
-  Stethoscope, HeartPulse, Brain, Bone, Baby, Sparkles, ShieldCheck,
-  UserRound, Apple, Eye, Info, X, ChevronDown, Smile, Activity
+  Stethoscope, ShieldCheck, Info, X, ChevronDown
 } from "lucide-react";
 import { Doctor } from "@/services/db";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/layout/LanguageProvider";
-import { DoctorAvatar, DoctorSerialModal, DoctorDetailsModal } from "./doctors/DoctorModals";
+import dynamic from "next/dynamic";
+import { DoctorAvatar } from "./doctors/DoctorModals";
 import { DoctorAvailabilityBadge, DoctorNoticeBanner } from "./doctors/DoctorAvailabilityBadge";
 import { FENI_UPAZILAS, getUpazilaLabel, detectUpazilaFromText } from "@/data/feniLocations";
+import { DEPARTMENTS } from "@/components/consultants/consultantData";
+
+const DoctorSerialModal = dynamic(
+  () => import("./doctors/DoctorModals").then((m) => m.DoctorSerialModal),
+  { ssr: false }
+);
+const DoctorDetailsModal = dynamic(
+  () => import("./doctors/DoctorModals").then((m) => m.DoctorDetailsModal),
+  { ssr: false }
+);
 
 interface DoctorDirectoryProps {
   doctors?: Doctor[];
@@ -23,17 +33,7 @@ interface DoctorDirectoryProps {
   initialUpazila?: string;
 }
 
-const DEPARTMENTS = [
-  { id: "all", labelKey: "consultants.filter.all", icon: Stethoscope }, { id: "medicine", labelKey: "consultants.filter.medicine", icon: Stethoscope },
-  { id: "cardiology", labelKey: "consultants.filter.cardiology", icon: HeartPulse }, { id: "gynecology", labelKey: "consultants.filter.gynecology", icon: UserRound },
-  { id: "pediatrics", labelKey: "consultants.filter.pediatrics", icon: Baby }, { id: "orthopedics", labelKey: "consultants.filter.orthopedics", icon: Bone },
-  { id: "dermatology", labelKey: "consultants.filter.dermatology", icon: Sparkles }, { id: "eye", labelKey: "consultants.filter.eye", icon: Eye },
-  { id: "ent", labelKey: "consultants.filter.ent", icon: Info }, { id: "diabetes", labelKey: "consultants.filter.diabetes", icon: Activity },
-  { id: "psychiatry", labelKey: "consultants.filter.psychiatry", icon: Brain }, { id: "nephrology", labelKey: "consultants.filter.nephrology", icon: ShieldCheck },
-  { id: "hepatology", labelKey: "consultants.filter.hepatology", icon: ShieldCheck }, { id: "surgery", labelKey: "consultants.filter.surgery", icon: Sparkles },
-  { id: "rheumatology", labelKey: "consultants.filter.rheumatology", icon: Bone }, { id: "nutrition", labelKey: "consultants.filter.nutrition", icon: Apple },
-  { id: "dental", labelKey: "consultants.filter.dental", icon: Smile }, { id: "other", labelKey: "consultants.filter.other", icon: Sparkles },
-];
+const INITIAL_VISIBLE_COUNT = 12;
 
 function isDiabetesDoctor(doc: Doctor): boolean {
   if (doc.department === "diabetes") return true;
@@ -64,7 +64,7 @@ export default function DoctorDirectory({
     setSelectedUpazila(initialUpazila || "all");
   }
 
-  const [visibleCount, setVisibleCount] = useState(24);
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
   const [activeSerialDoctor, setActiveSerialDoctor] = useState<Doctor | null>(null);
   const [activeDetailsDoctor, setActiveDetailsDoctor] = useState<Doctor | null>(null);
   const { t, locale } = useLanguage();
@@ -74,28 +74,22 @@ export default function DoctorDirectory({
   const updateUrlParams = (dept: string, upazila: string) => {
     if (typeof window === "undefined") return;
     const url = new URL(window.location.href);
-    if (dept && dept !== "all") {
-      url.searchParams.set("dept", dept);
-    } else {
-      url.searchParams.delete("dept");
-    }
-    if (upazila && upazila !== "all") {
-      url.searchParams.set("upazila", upazila);
-    } else {
-      url.searchParams.delete("upazila");
-    }
+    if (dept && dept !== "all") url.searchParams.set("dept", dept);
+    else url.searchParams.delete("dept");
+    if (upazila && upazila !== "all") url.searchParams.set("upazila", upazila);
+    else url.searchParams.delete("upazila");
     window.history.replaceState(null, "", `${url.pathname}${url.search}`);
   };
 
   const handleDeptChange = (deptId: string) => {
     setSelectedDept(deptId);
-    setVisibleCount(24);
+    setVisibleCount(INITIAL_VISIBLE_COUNT);
     updateUrlParams(deptId, selectedUpazila);
   };
 
   const handleUpazilaChange = (upzId: string) => {
     setSelectedUpazila(upzId);
-    setVisibleCount(24);
+    setVisibleCount(INITIAL_VISIBLE_COUNT);
     updateUrlParams(selectedDept, upzId);
   };
 
@@ -103,17 +97,36 @@ export default function DoctorDirectory({
     setSelectedUpazila("all");
     setSelectedDept("all");
     setSearchQuery("");
-    setVisibleCount(24);
+    setVisibleCount(INITIAL_VISIBLE_COUNT);
     updateUrlParams("all", "all");
   };
 
-  // Precompute upazila for each doctor
+  // Precompute upazila for each doctor (server provides pre-resolved upazila, fallback provided)
   const doctorsWithUpazila = useMemo(() => {
     return doctors.map((doc) => ({
       ...doc,
-      resolvedUpazila: doc.upazila || detectUpazilaFromText(doc.chamberAddress),
+      resolvedUpazila: doc.upazila || (doc.chamberAddress ? detectUpazilaFromText(doc.chamberAddress) : "feni-sadar"),
     }));
   }, [doctors]);
+
+  // Single-pass computation of department and upazila counts for maximum performance
+  const { departmentCounts, upazilaCounts } = useMemo(() => {
+    const deptMap: Record<string, number> = { all: doctorsWithUpazila.length };
+    const upzMap: Record<string, number> = { all: doctorsWithUpazila.length };
+
+    for (let i = 0; i < doctorsWithUpazila.length; i++) {
+      const doc = doctorsWithUpazila[i];
+      const dept = doc.department || "other";
+      deptMap[dept] = (deptMap[dept] || 0) + 1;
+      if (isDiabetesDoctor(doc)) {
+        deptMap["diabetes"] = (deptMap["diabetes"] || 0) + 1;
+      }
+      const upz = doc.resolvedUpazila || "feni-sadar";
+      upzMap[upz] = (upzMap[upz] || 0) + 1;
+    }
+
+    return { departmentCounts: deptMap, upazilaCounts: upzMap };
+  }, [doctorsWithUpazila]);
 
   const filteredDoctors = useMemo(() => {
     return doctorsWithUpazila.filter((doc) => {
@@ -159,7 +172,7 @@ export default function DoctorDirectory({
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);
-            setVisibleCount(24);
+            setVisibleCount(INITIAL_VISIBLE_COUNT);
           }}
           className="pl-12 pr-10 py-3.5 sm:py-6 text-sm sm:text-base rounded-2xl border-border/80 bg-background shadow-xs focus-visible:ring-primary"
         />
@@ -169,7 +182,7 @@ export default function DoctorDirectory({
             aria-label="Clear search"
             onClick={() => {
               setSearchQuery("");
-              setVisibleCount(24);
+              setVisibleCount(INITIAL_VISIBLE_COUNT);
             }}
             className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 cursor-pointer"
           >
@@ -200,10 +213,7 @@ export default function DoctorDirectory({
         <div className="flex items-center gap-2 overflow-x-auto pb-1.5 sm:pb-0 scrollbar-none sm:flex-wrap sm:justify-center">
           {FENI_UPAZILAS.map((upz) => {
             const isSelected = selectedUpazila === upz.id;
-            const count =
-              upz.id === "all"
-                ? doctorsWithUpazila.length
-                : doctorsWithUpazila.filter((d) => d.resolvedUpazila === upz.id).length;
+            const count = upazilaCounts[upz.id] || 0;
 
             return (
               <button
@@ -222,7 +232,7 @@ export default function DoctorDirectory({
                 {count > 0 && (
                   <span
                     className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                      isSelected ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"
+                      isSelected ? "bg-white/30 text-white" : "bg-muted text-muted-foreground"
                     }`}
                   >
                     {count}
@@ -248,12 +258,7 @@ export default function DoctorDirectory({
             className="w-full appearance-none pl-10 pr-10 py-3 text-sm font-semibold rounded-2xl border border-border/80 bg-background text-foreground shadow-xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all cursor-pointer"
           >
             {DEPARTMENTS.map((dept) => {
-              const count =
-                dept.id === "all"
-                  ? doctors.length
-                  : dept.id === "diabetes"
-                  ? doctors.filter(isDiabetesDoctor).length
-                  : doctors.filter((d) => d.department === dept.id).length;
+              const count = departmentCounts[dept.id] || 0;
               return (
                 <option key={dept.id} value={dept.id} className="bg-popover text-popover-foreground py-1">
                   {t(dept.labelKey)} {count > 0 ? `(${count})` : ""}
@@ -272,12 +277,7 @@ export default function DoctorDirectory({
         {DEPARTMENTS.map((dept) => {
           const Icon = dept.icon;
           const isSelected = selectedDept === dept.id;
-          const count =
-            dept.id === "all"
-              ? doctors.length
-              : dept.id === "diabetes"
-              ? doctors.filter(isDiabetesDoctor).length
-              : doctors.filter((d) => d.department === dept.id).length;
+          const count = departmentCounts[dept.id] || 0;
 
           return (
             <button
@@ -315,7 +315,7 @@ export default function DoctorDirectory({
                 <div className="p-3.5 sm:p-4 pb-2 sm:pb-2.5 space-y-2.5 sm:space-y-3 flex-1 flex flex-col justify-between">
                   {/* Doctor Header (Image + Basic Info) */}
                   <div className="flex items-start gap-3">
-                    <Link href={`/consultants/${doc.id}`} tabIndex={-1} aria-hidden="true" className="shrink-0 hover:opacity-90 transition-opacity">
+                    <Link href={`/consultants/${doc.id}`} prefetch={false} tabIndex={-1} aria-hidden="true" className="shrink-0 hover:opacity-90 transition-opacity">
                       <DoctorAvatar
                         src={doc.imageUrl}
                         alt={doc.name}
@@ -326,6 +326,7 @@ export default function DoctorDirectory({
                       <div className="min-w-0">
                         <Link
                           href={`/consultants/${doc.id}`}
+                          prefetch={false}
                           className="font-heading font-bold text-sm sm:text-base text-secondary dark:text-white leading-snug line-clamp-2 hover:text-primary transition-colors"
                           title={doc.name}
                         >
@@ -442,7 +443,7 @@ export default function DoctorDirectory({
             <div className="text-center pt-4">
               <Button
                 variant="outline"
-                onClick={() => setVisibleCount((prev) => prev + 24)}
+                onClick={() => setVisibleCount((prev) => prev + 12)}
                 className="px-6 py-2.5 rounded-xl text-sm font-semibold border-border hover:bg-muted cursor-pointer"
               >
                 {t("consultants.button.loadMore") || (isEn ? "Load More Doctors" : "আরও ডাক্তার দেখুন")} ({filteredDoctors.length - displayedDoctors.length} {t("consultants.button.remaining") || (isEn ? "remaining" : "জন বাকি")})
