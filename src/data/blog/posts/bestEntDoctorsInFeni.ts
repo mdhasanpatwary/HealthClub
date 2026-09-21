@@ -23,7 +23,7 @@ export const BEST_ENT_DOCTORS_IN_FENI: BlogPost = {
     roleEn: "Health Club Clinical & Directory Research",
     avatarUrl: "/images/member-card-logo.webp",
   },
-  coverImage: "/images/placeholders/doctor.webp",
+  coverImage: "/images/blog/best-ent-doctors-feni.webp",
   coverImageAlt: "Best ENT Specialists in Feni Directory 2026 - Health Club",
   tags: [
     "ফেনী নাক কান গলা ডাক্তার",

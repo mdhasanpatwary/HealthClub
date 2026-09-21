@@ -27,7 +27,7 @@ export const BEST_PHARMACIES_IN_FENI: BlogPost = {
     roleEn: "Health Club Public Health & Pharmacy Research",
     avatarUrl: "/images/member-card-logo.webp",
   },
-  coverImage: "/images/placeholders/pharmacy.webp",
+  coverImage: "/images/blog/best-pharmacies-feni.webp",
   coverImageAlt: "24 Hour Pharmacies and Emergency Medicine Delivery in Feni 2026 - Health Club",
   tags: [
     "24 hour pharmacy feni",

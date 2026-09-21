@@ -23,7 +23,7 @@ export const FENI_MEDICAL_TEST_PRICE_LIST: BlogPost = {
     roleEn: "Health Club Public Health & Diagnostic Research",
     avatarUrl: "/images/member-card-logo.webp",
   },
-  coverImage: "/images/placeholders/hospital.webp",
+  coverImage: "/images/blog/feni-medical-test-prices.webp",
   coverImageAlt: "Feni Medical Diagnostic and Pathology Test Price List 2026 - Health Club",
   tags: [
     "feni medical test price",

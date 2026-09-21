@@ -23,7 +23,7 @@ export const BEST_DIABETES_DOCTORS_IN_FENI: BlogPost = {
     roleEn: "Health Club Metabolic & Clinical Research",
     avatarUrl: "/images/member-card-logo.webp",
   },
-  coverImage: "/images/placeholders/doctor.webp",
+  coverImage: "/images/blog/best-diabetes-doctors-feni.webp",
   coverImageAlt: "Best Diabetes and Hormone Specialists in Feni 2026 - Health Club",
   tags: [
     "ফেনী ডায়াবেটিস ডাক্তার",

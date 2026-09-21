@@ -23,7 +23,7 @@ export const BEST_ORTHOPEDIC_DOCTORS_IN_FENI: BlogPost = {
     roleEn: "Health Club Clinical & Directory Research",
     avatarUrl: "/images/member-card-logo.webp",
   },
-  coverImage: "/images/placeholders/doctor.webp",
+  coverImage: "/images/blog/best-orthopedic-doctors-feni.webp",
   coverImageAlt: "Best Orthopedic and Bone Specialists in Feni Directory 2026 - Health Club",
   tags: [
     "ফেনী অর্থোপেডিক ডাক্তার",

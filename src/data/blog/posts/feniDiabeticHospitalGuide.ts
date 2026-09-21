@@ -23,7 +23,7 @@ export const FENI_DIABETIC_HOSPITAL_GUIDE: BlogPost = {
     roleEn: "Health Club Public Health & Hospital Research",
     avatarUrl: "/images/member-card-logo.webp",
   },
-  coverImage: "/images/placeholders/hospital.webp",
+  coverImage: "/images/blog/feni-diabetic-hospital-guide.webp",
   coverImageAlt: "Feni Diabetic Association Hospital Guide 2026 - Health Club",
   tags: [
     "feni diabetic hospital",

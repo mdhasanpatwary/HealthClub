@@ -23,7 +23,7 @@ export const BEST_GYNECOLOGISTS_IN_FENI: BlogPost = {
     roleEn: "Health Club Clinical & Directory Research",
     avatarUrl: "/images/member-card-logo.webp",
   },
-  coverImage: "/images/placeholders/doctor.webp",
+  coverImage: "/images/blog/best-gynecologists-feni.webp",
   coverImageAlt: "Best Gynecologists & Maternity Care in Feni Directory 2026 - Health Club",
   tags: [
     "ফেনীর সেরা গাইনি ডাক্তার",

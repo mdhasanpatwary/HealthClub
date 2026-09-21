@@ -29,7 +29,7 @@ export const FENI_AMBULANCE_AND_OXYGEN_SERVICE_GUIDE: BlogPost = {
     roleEn: "Health Club Public Health & Emergency Care Research",
     avatarUrl: "/images/member-card-logo.webp",
   },
-  coverImage: "/images/placeholders/hospital.webp",
+  coverImage: "/images/blog/feni-ambulance-oxygen-service.webp",
   coverImageAlt:
     "Feni 24/7 Emergency Ambulance, ICU and Oxygen Cylinder Guide 2026 - Health Club",
   tags: [

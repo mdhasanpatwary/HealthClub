@@ -29,7 +29,7 @@ export const FENI_BLOOD_BANK_AND_DONORS_GUIDE: BlogPost = {
     roleEn: "Health Club Public Health & Emergency Care Research",
     avatarUrl: "/images/member-card-logo.webp",
   },
-  coverImage: "/images/placeholders/hospital.webp",
+  coverImage: "/images/blog/feni-blood-bank-donors.webp",
   coverImageAlt:
     "Feni Emergency Blood Bank and Voluntary Donors Guide 2026 - Health Club",
   tags: [

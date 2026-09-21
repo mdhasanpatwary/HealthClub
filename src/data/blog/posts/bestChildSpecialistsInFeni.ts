@@ -23,7 +23,7 @@ export const BEST_CHILD_SPECIALISTS_IN_FENI: BlogPost = {
     roleEn: "Health Club Clinical & Directory Research",
     avatarUrl: "/images/member-card-logo.webp",
   },
-  coverImage: "/images/placeholders/doctor.webp",
+  coverImage: "/images/blog/best-child-specialists-feni.webp",
   coverImageAlt: "Best Pediatricians and Child Specialists in Feni Directory 2026 - Health Club",
   tags: [
     "ফেনীর সেরা শিশু ডাক্তার",

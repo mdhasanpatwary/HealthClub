@@ -23,7 +23,7 @@ export const BEST_10_HOSPITALS_IN_FENI: BlogPost = {
     roleEn: "Health Club Clinical & Health Research",
     avatarUrl: "/images/member-card-logo.webp",
   },
-  coverImage: "/images/placeholders/hospital.webp",
+  coverImage: "/images/blog/best-10-hospitals-feni.webp",
   coverImageAlt: "Best 10 Hospitals in Feni - Health Club Guide",
   tags: [
     "ফেনীর সেরা হাসপাতাল",

@@ -23,7 +23,7 @@ export const FENI_SADAR_HOSPITAL_GUIDE: BlogPost = {
     roleEn: "Health Club Public Health & Hospital Research",
     avatarUrl: "/images/member-card-logo.webp",
   },
-  coverImage: "/images/placeholders/hospital.webp",
+  coverImage: "/images/blog/feni-sadar-hospital-guide.webp",
   coverImageAlt: "Feni 250-Bed General District Hospital Guide 2026 - Health Club",
   tags: [
     "ফেনী সদর হাসপাতাল",

@@ -23,7 +23,7 @@ export const BEST_SURGEONS_IN_FENI: BlogPost = {
     roleEn: "Health Club Clinical & Directory Research",
     avatarUrl: "/images/member-card-logo.webp",
   },
-  coverImage: "/images/placeholders/doctor.webp",
+  coverImage: "/images/blog/best-surgeons-feni.webp",
   coverImageAlt: "Best General and Laparoscopic Surgeons in Feni 2026 - Health Club",
   tags: [
     "ফেনী সার্জন ডাক্তার",

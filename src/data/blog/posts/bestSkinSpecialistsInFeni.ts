@@ -23,7 +23,7 @@ export const BEST_SKIN_SPECIALISTS_IN_FENI: BlogPost = {
     roleEn: "Health Club Clinical & Directory Research",
     avatarUrl: "/images/member-card-logo.webp",
   },
-  coverImage: "/images/placeholders/doctor.webp",
+  coverImage: "/images/blog/best-skin-specialists-feni.webp",
   coverImageAlt: "Best Dermatologists and Skin VD Specialists in Feni Directory 2026 - Health Club",
   tags: [
     "ফেনী চর্ম বিশেষজ্ঞ ডাক্তার",

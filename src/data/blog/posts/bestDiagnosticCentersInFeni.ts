@@ -240,7 +240,7 @@ export const BEST_DIAGNOSTIC_CENTERS_IN_FENI: BlogPost = {
     roleEn: "Health Club Diagnostic & Clinical Research",
     avatarUrl: "/images/member-card-logo.webp",
   },
-  coverImage: "/images/placeholders/diagnostic.webp",
+  coverImage: "/images/blog/best-diagnostic-centers-feni.webp",
   coverImageAlt: "Best Diagnostic Centers and Pathology Labs in Feni 2026 - Health Club",
   tags: [
     "ফেনীর সেরা ডায়াগনস্টিক সেন্টার",

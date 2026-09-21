@@ -23,7 +23,7 @@ export const BEST_PSYCHIATRISTS_IN_FENI: BlogPost = {
     roleEn: "Health Club Psychiatry & Mental Health Research",
     avatarUrl: "/images/member-card-logo.webp",
   },
-  coverImage: "/images/placeholders/doctor.webp",
+  coverImage: "/images/blog/best-psychiatrists-feni.webp",
   coverImageAlt: "Best Psychiatrists and Mental Health Doctors in Feni 2026 - Health Club",
   tags: [
     "ফেনী মানসিক রোগ ডাক্তার",

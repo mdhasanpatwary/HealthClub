@@ -23,7 +23,7 @@ export const BEST_EYE_SPECIALISTS_IN_FENI: BlogPost = {
     roleEn: "Health Club Clinical & Directory Research",
     avatarUrl: "/images/member-card-logo.webp",
   },
-  coverImage: "/images/placeholders/doctor.webp",
+  coverImage: "/images/blog/best-eye-specialists-feni.webp",
   coverImageAlt: "Best Eye Specialists and Eye Hospitals in Feni Directory 2026 - Health Club",
   tags: [
     "ফেনী চক্ষু বিশেষজ্ঞ ডাক্তার",

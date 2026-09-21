@@ -23,7 +23,7 @@ export const BEST_MEDICINE_DOCTORS_IN_FENI: BlogPost = {
     roleEn: "Health Club Clinical & Directory Research",
     avatarUrl: "/images/member-card-logo.webp",
   },
-  coverImage: "/images/placeholders/doctor.webp",
+  coverImage: "/images/blog/best-medicine-doctors-feni.webp",
   coverImageAlt: "Best Medicine Doctor in Feni Chamber & Serial Directory 2026 - Health Club",
   tags: [
     "ফেনীর সেরা মেডিসিন ডাক্তার",

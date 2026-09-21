@@ -1132,4 +1132,38 @@ This roadmap outlines the strategic localized content cluster required to achiev
   - **Target Keywords**: `parshuram upazila health complex`, `fulgazi doctor list`, `পরশুরাম স্বাস্থ্য কমপ্লেক্স`, `ফুলগাজী ক্লিনিক ও ডায়াগনস্টিক`, `পরশুরাম ও ফুলগাজী ডাক্তার চেম্বার`.
   - **Details**: Healthcare guide tailored for northern Feni: Parshuram and Fulgazi Upazila Health Complexes, local private diagnostic centers, emergency ambulance contacts, maternal ANC clinics, and referral guidelines to Feni Sadar tertiary hospitals.
 
+---
+
+### 🎨 Cluster 6: Blog Visual Identity & Unique Editorial Photography (TODO-200)
+
+- [x] **TODO-200**: **Unique & Relatable Photorealistic Editorial Cover Images for All 24 Medical Blog Guides**
+  - **Priority**: High (P1 - CTR, Visual Trust & Social / Google Discover Engagement)
+  - **Status**: Completed (24 of 24 Guides Live with Dedicated High-Definition Imagery)
+  - **Target Resolution & Format**: 1280×720 WebP, LANCZOS resampling, quality 80-82, <150KB per image (average ~105KB)
+  - **Status & Checklist**:
+    - [x] `best-dental-clinics-feni.webp` (`/blog/best-dental-clinics-in-feni`) — Dental clinics & modern chair (90 KB)
+    - [x] `best-physiotherapy-feni.webp` (`/blog/best-physiotherapy-in-feni`) — Physiotherapy rehab & traction therapy (138 KB)
+    - [x] `feni-ambulance-oxygen-service.webp` (`/blog/feni-ambulance-and-oxygen-service-guide`) — 24/7 ambulance & oxygen equipment (148 KB)
+    - [x] `feni-blood-bank-donors.webp` (`/blog/feni-blood-bank-and-donors-guide`) — Voluntary blood donation clinic & storage (145 KB)
+    - [x] `best-pharmacies-feni.webp` (`/blog/24-hour-pharmacy-in-feni`) — 24/7 modern pharmacy & medicine dispensing (165 KB)
+    - [x] `best-orthopedic-doctors-feni.webp` (`/blog/best-orthopedic-doctors-in-feni`) — Orthopedic doctor reviewing bone X-ray & joint model (90 KB)
+    - [x] `best-neurologists-feni.webp` (`/blog/best-neurologists-in-feni`) — Neurologist reviewing brain MRI scan workstation (90 KB)
+    - [x] `best-diabetes-doctors-feni.webp` (`/blog/best-diabetes-doctors-in-feni`) — Diabetes specialist with glucometer & insulin consultation (90 KB)
+    - [x] `best-psychiatrists-feni.webp` (`/blog/best-psychiatrists-in-feni`) — Psychiatrist in warm, empathetic therapy room (120 KB)
+    - [x] `best-surgeons-feni.webp` (`/blog/best-surgeons-in-feni`) — General & laparoscopic surgical operating theater (103 KB)
+    - [x] `best-ent-doctors-feni.webp` (`/blog/best-ent-doctors-in-feni`) — ENT specialist examining patient with diagnostic otoscope (80 KB)
+    - [x] `best-eye-specialists-feni.webp` (`/blog/best-eye-specialists-in-feni`) — Ophthalmologist using slit-lamp microscope in eye clinic (89 KB)
+    - [x] `best-skin-specialists-feni.webp` (`/blog/best-skin-specialists-in-feni`) — Dermatologist with dermatoscope examining skin in aesthetic clinic (68 KB)
+    - [x] `best-child-specialists-feni.webp` (`/blog/best-child-specialists-in-feni`) — Pediatrician gently examining a young child in clinic (117 KB)
+    - [x] `best-kidney-doctors-feni.webp` (`/blog/best-kidney-doctors-in-feni`) — Nephrologist in dialysis center with hemodialysis machines (93 KB)
+    - [x] `best-medicine-doctors-feni.webp` (`/blog/best-medicine-doctors-in-feni`) — Senior internal medicine doctor with stethoscope consulting patient (106 KB)
+    - [x] `best-cardiologists-feni.webp` (`/blog/best-cardiologists-in-feni`) — Cardiologist reviewing ECG & heart ultrasound on diagnostic monitor (86 KB)
+    - [x] `best-gynecologists-feni.webp` (`/blog/best-gynecologists-in-feni`) — Gynecologist conducting prenatal ultrasound consultation (93 KB)
+    - [x] `best-diagnostic-centers-feni.webp` (`/blog/best-diagnostic-centers-in-feni`) — Advanced pathology lab & MRI/CT scanner facility (94 KB)
+    - [x] `best-doctors-feni.webp` (`/blog/best-doctors-in-feni`) — Diverse multi-specialty physician team in modern hospital corridor (103 KB)
+    - [x] `best-10-hospitals-feni.webp` (`/blog/best-10-hospitals-in-feni`) — Modern private multi-story hospital campus exterior (170 KB)
+    - [x] `feni-sadar-hospital-guide.webp` (`/blog/feni-sadar-hospital-guide`) — 250-bed Feni General Sadar Hospital building & emergency (182 KB)
+    - [x] `feni-diabetic-hospital-guide.webp` (`/blog/feni-diabetic-hospital-guide`) — Feni Diabetic Association Hospital building & OPD (153 KB)
+    - [x] `feni-medical-test-prices.webp` (`/blog/feni-medical-test-price-list`) — Pathology lab with blood tubes, requisition checklist & analyzer (104 KB)
+
 
