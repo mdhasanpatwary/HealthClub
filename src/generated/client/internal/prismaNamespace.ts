@@ -1735,6 +1735,7 @@ export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[key
 
 export const DoctorScalarFieldEnum = {
   id: 'id',
+  slug: 'slug',
   name: 'name',
   specialty: 'specialty',
   department: 'department',

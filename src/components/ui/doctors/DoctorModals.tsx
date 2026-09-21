@@ -299,7 +299,7 @@ export function DoctorDetailsModal({ doctor, onClose, onCallSerial, t }: DoctorD
           </Button>
 
           <Link
-            href={`/consultants/${doctor.id}`}
+            href={`/consultants/${encodeURIComponent(doctor.slug || doctor.id)}`}
             className="inline-flex items-center justify-center w-full h-10 rounded-2xl border border-border bg-muted/40 hover:bg-muted text-xs font-bold text-foreground transition-colors"
           >
             {t("consultants.profile.viewFullProfile")}

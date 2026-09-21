@@ -179,7 +179,8 @@ export function generateDoctorJsonLd(
   locale: Locale = "bn"
 ): Record<string, unknown>[] {
   const isEn = locale === "en";
-  const profileUrl = `${SITE_URL}/consultants/${doctor.id}`;
+  const doctorSlugOrId = doctor.slug ? encodeURIComponent(doctor.slug) : doctor.id;
+  const profileUrl = `${SITE_URL}/consultants/${doctorSlugOrId}`;
   const specialtyInfo = SCHEMA_SPECIALTY_MAP[doctor.department] || SCHEMA_SPECIALTY_MAP.other;
   const clinicalFocus = CLINICAL_FOCUS_MAP[doctor.department] || CLINICAL_FOCUS_MAP.other;
 

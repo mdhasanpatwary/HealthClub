@@ -7,6 +7,7 @@ import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { updateTag } from "next/cache";
 import { ensureStorageUrl } from "@/services/storageService";
+import { generateDoctorSlug, resolveUniqueDoctorSlug } from "@/lib/slugify";
 
 const DOCTORS_TAG = "doctors";
 const PARTNERS_TAG = "partners";
@@ -21,7 +22,7 @@ async function getAuthenticatedPartnerId(): Promise<string | null> {
 
 function formatDoctor(d: Prisma.DoctorGetPayload<object>): Doctor {
   return {
-    id: d.id, name: d.name, specialty: d.specialty, department: d.department,
+    id: d.id, slug: (d as { slug?: string | null }).slug || undefined, name: d.name, specialty: d.specialty, department: d.department,
     degrees: d.degrees, designation: d.designation, chamberName: d.chamberName, chamberAddress: d.chamberAddress,
     roomNo: d.roomNo || undefined, visitingDays: d.visitingDays, visitingHours: d.visitingHours,
     serialPhone: d.serialPhone, consultationFee: d.consultationFee || undefined, imageUrl: d.imageUrl || undefined,
@@ -307,9 +308,12 @@ export async function addPartnerDoctorAction(
     }
 
     const newDocId = `doc_${crypto.randomUUID().slice(0, 8)}`;
+    const baseSlug = generateDoctorSlug(input.name.trim()) || `doc-${newDocId.replace(/^doc_/, "")}`;
+    const resolvedSlug = await resolveUniqueDoctorSlug(prisma, baseSlug);
     const created = await prisma.doctor.create({
       data: {
         id: newDocId,
+        slug: resolvedSlug,
         name: input.name.trim(),
         specialty: input.specialty.trim(),
         department: input.department.trim(),

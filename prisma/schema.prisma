@@ -140,6 +140,7 @@ model Transaction {
 
 model Doctor {
   id              String   @id
+  slug            String?  @unique
   name            String
   specialty       String
   department      String   // 'medicine' | 'cardiology' | 'gynecology' | 'orthopedics' | 'neurology' | 'pediatrics' | 'surgery' | 'dermatology' | 'ent' | 'eye' | 'psychiatry' | 'nephrology' | 'hepatology' | 'rheumatology' | 'nutrition' | 'dental' | 'other'
@@ -163,6 +164,7 @@ model Doctor {
 
   partner         Partner?  @relation(fields: [partnerId], references: [id], onDelete: SetNull)
 
+  @@index([slug], map: "doctors_slug_idx")
   @@index([name], map: "doctors_name_idx")
   @@index([department], map: "doctors_department_idx")
   @@index([upazila], map: "doctors_upazila_idx")

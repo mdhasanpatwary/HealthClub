@@ -51,7 +51,7 @@ export default function DoctorProfileView({
   };
 
   const handleShare = async () => {
-    const profileUrl = typeof window !== "undefined" ? window.location.href : `${SITE_URL}/consultants/${doctor.id}`;
+    const profileUrl = typeof window !== "undefined" ? window.location.href : `${SITE_URL}/consultants/${encodeURIComponent(doctor.slug || doctor.id)}`;
     const shareTitle = `${doctor.name} - ${doctor.specialty} | Health Club`;
     const shareText = `${doctor.name} (${doctor.specialty}), ${doctor.chamberName}, Feni. সিরিয়াল হটলাইন: ${doctor.serialPhone}`;
 
@@ -389,7 +389,7 @@ export default function DoctorProfileView({
                   {relatedDoctors.map((relDoc) => (
                     <Link
                       key={relDoc.id}
-                      href={`/consultants/${relDoc.id}`}
+                      href={`/consultants/${encodeURIComponent(relDoc.slug || relDoc.id)}`}
                       className="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-muted/60 transition-colors border border-border/50 group"
                     >
                       <DoctorAvatar

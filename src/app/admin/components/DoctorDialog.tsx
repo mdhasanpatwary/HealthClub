@@ -5,49 +5,35 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ImageUpload } from "@/components/ui/ImageUpload";
 import { Doctor } from "@/services/db";
+import { generateDoctorSlug } from "@/lib/slugify";
+
+export interface DoctorFormData {
+  name: string;
+  slug: string;
+  specialty: string;
+  department: string;
+  degrees: string;
+  designation: string;
+  chamberName: string;
+  chamberAddress: string;
+  roomNo: string;
+  visitingDays: string;
+  visitingHours: string;
+  serialPhone: string;
+  consultationFee: string;
+  imageUrl: string;
+  upazila: string;
+  availableToday: boolean;
+  onLeaveUntil: string;
+  notice: string;
+}
 
 interface DoctorDialogProps {
   isOpen: boolean;
   onClose: () => void;
   editingDoctor: Doctor | null;
-  newDoctor: {
-    name: string;
-    specialty: string;
-    department: string;
-    degrees: string;
-    designation: string;
-    chamberName: string;
-    chamberAddress: string;
-    roomNo: string;
-    visitingDays: string;
-    visitingHours: string;
-    serialPhone: string;
-    consultationFee: string;
-    imageUrl: string;
-    upazila: string;
-    availableToday: boolean;
-    onLeaveUntil: string;
-    notice: string;
-  };
-  setNewDoctor: (doc: {
-    name: string;
-    specialty: string;
-    department: string;
-    degrees: string;
-    designation: string;
-    chamberName: string;
-    chamberAddress: string;
-    roomNo: string;
-    visitingDays: string;
-    visitingHours: string;
-    serialPhone: string;
-    consultationFee: string;
-    imageUrl: string;
-    upazila: string;
-    availableToday: boolean;
-    onLeaveUntil: string;
-    notice: string;
-  }) => void;
+  newDoctor: DoctorFormData;
+  setNewDoctor: (doc: DoctorFormData) => void;
   onSubmit: (e: React.FormEvent) => void;
   t?: (key: string) => string;
 }
@@ -111,11 +97,35 @@ export function DoctorDialog({
                 required
                 placeholder="যেমন: ডাঃ মোঃ শাহাদাত হোসেন"
                 value={newDoctor.name}
-                onChange={(e) => setNewDoctor({ ...newDoctor, name: e.target.value })}
+                onChange={(e) => {
+                  const newName = e.target.value;
+                  setNewDoctor({
+                    ...newDoctor,
+                    name: newName,
+                    ...(!editingDoctor && !newDoctor.slug ? { slug: generateDoctorSlug(newName) } : {}),
+                  });
+                }}
                 className="border-border bg-background"
               />
             </div>
 
+            <div className="space-y-1.5">
+              <label htmlFor="admin-doc-slug" className="text-xs font-semibold text-secondary cursor-pointer">
+                ইউআরএল স্লাগ (URL Slug)
+                <span className="text-[10px] text-muted-foreground ml-1.5 font-normal">(খালি রাখলে স্বয়ংক্রিয় তৈরি হবে)</span>
+              </label>
+              <Input
+                id="admin-doc-slug"
+                type="text"
+                placeholder="যেমন: ডা-মোঃ-শাহাদাত-হোসেন"
+                value={newDoctor.slug || ""}
+                onChange={(e) => setNewDoctor({ ...newDoctor, slug: e.target.value })}
+                className="border-border bg-background font-mono text-xs"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <label htmlFor="admin-doc-dept" className="text-xs font-semibold text-secondary cursor-pointer">বিভাগ (Department) *</label>
               <select
@@ -131,9 +141,7 @@ export function DoctorDialog({
                 ))}
               </select>
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <label htmlFor="admin-doc-specialty" className="text-xs font-semibold text-secondary cursor-pointer">স্পেশালিটি / পদ *</label>
               <Input
@@ -146,19 +154,19 @@ export function DoctorDialog({
                 className="border-border bg-background"
               />
             </div>
+          </div>
 
-            <div className="space-y-1.5">
-              <label htmlFor="admin-doc-degrees" className="text-xs font-semibold text-secondary cursor-pointer">ডিগ্রি ও যোগ্যতা *</label>
-              <Input
-                id="admin-doc-degrees"
-                type="text"
-                required
-                placeholder="যেমন: MBBS, BCS, FCPS (Medicine)"
-                value={newDoctor.degrees}
-                onChange={(e) => setNewDoctor({ ...newDoctor, degrees: e.target.value })}
-                className="border-border bg-background"
-              />
-            </div>
+          <div className="space-y-1.5">
+            <label htmlFor="admin-doc-degrees" className="text-xs font-semibold text-secondary cursor-pointer">ডিগ্রি ও যোগ্যতা *</label>
+            <Input
+              id="admin-doc-degrees"
+              type="text"
+              required
+              placeholder="যেমন: MBBS, BCS, FCPS (Medicine)"
+              value={newDoctor.degrees}
+              onChange={(e) => setNewDoctor({ ...newDoctor, degrees: e.target.value })}
+              className="border-border bg-background"
+            />
           </div>
 
           <div className="space-y-1.5">

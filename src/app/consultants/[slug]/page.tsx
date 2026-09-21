@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import DoctorProfileView from "@/components/consultants/DoctorProfileView";
@@ -8,12 +8,12 @@ import { SITE_URL } from "@/lib/siteConfig";
 import { generateDoctorJsonLd } from "@/lib/seo/doctorSchema";
 
 interface PageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps) {
-  const { id } = await params;
-  const doctor = await getDoctorByIdAction(id);
+  const { slug } = await params;
+  const doctor = await getDoctorByIdAction(slug);
   const cookieStore = await cookies();
   const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const isEn = locale === "en";
@@ -59,7 +59,8 @@ export async function generateMetadata({ params }: PageProps) {
     ? `${doctor.name} (${doctor.specialty}), ${doctor.degrees}. Chamber: ${doctor.chamberName}, ${doctor.chamberAddress}. Visiting: ${doctor.visitingDays} (${doctor.visitingHours}). Call serial: ${doctor.serialPhone}.`
     : `${doctor.name}, ${doctor.specialty}, ${doctor.degrees}। চেম্বার: ${doctor.chamberName}, ${doctor.chamberAddress}। রোগী দেখার সময়: ${doctor.visitingDays} (${doctor.visitingHours})। সরাসরি সিরিয়াল কল করুন: ${doctor.serialPhone}।`;
 
-  const canonicalUrl = `${SITE_URL}/consultants/${doctor.id}`;
+  const doctorCanonicalSegment = doctor.slug ? encodeURIComponent(doctor.slug) : doctor.id;
+  const canonicalUrl = `${SITE_URL}/consultants/${doctorCanonicalSegment}`;
   const rawImage = doctor.imageUrl?.trim();
   const hasValidImage = Boolean(rawImage && rawImage.length > 0);
   const ogImage = hasValidImage
@@ -115,11 +116,24 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 export default async function DoctorDetailPage({ params }: PageProps) {
-  const { id } = await params;
-  const doctor = await getDoctorByIdAction(id);
+  const { slug } = await params;
+  const doctor = await getDoctorByIdAction(slug);
 
   if (!doctor) {
     notFound();
+  }
+
+  // If accessed via ID (e.g. doc_03529e97) or mismatched slug,
+  // permanently redirect to the canonical name slug URL
+  let decodedParam = slug;
+  try {
+    decodedParam = decodeURIComponent(slug);
+  } catch {
+    // Keep as is
+  }
+
+  if (doctor.slug && decodedParam !== doctor.slug) {
+    permanentRedirect(`/consultants/${encodeURIComponent(doctor.slug)}`);
   }
 
   const relatedDoctors = await getRelatedDoctorsAction(doctor.department, doctor.id, 4);

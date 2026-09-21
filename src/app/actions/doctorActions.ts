@@ -2,16 +2,32 @@
 
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@/generated/client/client";
-import { Doctor, initialDoctors, Partner } from "@/services/db";
+import { Doctor, initialDoctors } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
-import { unstable_cache, updateTag } from "next/cache";
-import { cache } from "react";
+import { updateTag } from "next/cache";
 import { PaginatedResult } from "@/types/pagination";
 import { hasAdminPermission } from "@/lib/permissions";
-import { distributeDoctorsFairly } from "@/lib/doctorDistribution";
 import { ensureStorageUrl } from "@/services/storageService";
-import { detectUpazilaFromText } from "@/data/feniLocations";
+import { generateDoctorSlug, sanitizeDoctorSlug, resolveUniqueDoctorSlug } from "@/lib/slugify";
+import {
+  formatDoctor,
+  DOCTOR_SELECT_FIELDS,
+  DOCTOR_ADMIN_SELECT_FIELDS,
+} from "@/lib/doctorFormat";
+import {
+  getDoctorsAction,
+  getDoctorImageAction,
+  getDoctorByIdAction,
+  getRelatedDoctorsAction,
+} from "./doctorQueryActions";
+
+export {
+  getDoctorsAction,
+  getDoctorImageAction,
+  getDoctorByIdAction,
+  getRelatedDoctorsAction,
+};
 
 const DOCTORS_TAG = "doctors";
 
@@ -20,70 +36,6 @@ async function verifyDoctorAdmin(): Promise<boolean> {
   if (!session || session.role !== "admin") return false;
   const role = session.adminRole || "super_admin";
   return hasAdminPermission(role, "manage_doctors");
-}
-
-const DOCTOR_ADMIN_SELECT_FIELDS = {
-  id: true,
-  name: true,
-  specialty: true,
-  department: true,
-  degrees: true,
-  designation: true,
-  chamberName: true,
-  chamberAddress: true,
-  roomNo: true,
-  visitingDays: true,
-  visitingHours: true,
-  serialPhone: true,
-  consultationFee: true,
-  partnerId: true,
-  upazila: true,
-  isActive: true,
-  availableToday: true,
-  onLeaveUntil: true,
-  notice: true,
-  createdAt: true,
-  // Note: imageUrl omitted from admin bulk queries to prevent heavy base64 data transfer
-} as const;
-
-type PrismaDoctorRecord = Omit<Prisma.DoctorGetPayload<{ select: typeof DOCTOR_ADMIN_SELECT_FIELDS }>, "createdAt"> & {
-  imageUrl?: string | null;
-  createdAt?: Date | string | null;
-};
-
-// Helper to format Prisma Doctor record to Doctor interface
-function formatDoctor(d: PrismaDoctorRecord): Doctor {
-  return {
-    id: d.id,
-    name: d.name,
-    specialty: d.specialty,
-    department: d.department,
-    degrees: d.degrees,
-    designation: d.designation,
-    chamberName: d.chamberName,
-    chamberAddress: d.chamberAddress,
-    roomNo: d.roomNo || undefined,
-    visitingDays: d.visitingDays,
-    visitingHours: d.visitingHours,
-    serialPhone: d.serialPhone,
-    consultationFee: d.consultationFee || undefined,
-    imageUrl: (d as { imageUrl?: string | null }).imageUrl || undefined,
-    partnerId: d.partnerId || undefined,
-    upazila: d.upazila || (d.chamberAddress ? detectUpazilaFromText(d.chamberAddress) : undefined) || "feni-sadar",
-    isActive: d.isActive,
-    availableToday: d.availableToday ?? true,
-    onLeaveUntil: d.onLeaveUntil
-      ? typeof d.onLeaveUntil === "string"
-        ? d.onLeaveUntil
-        : d.onLeaveUntil.toISOString().slice(0, 10)
-      : undefined,
-    notice: d.notice || undefined,
-    createdAt: d.createdAt
-      ? typeof d.createdAt === "string"
-        ? d.createdAt
-        : d.createdAt.toISOString()
-      : undefined,
-  };
 }
 
 export interface GetPaginatedDoctorsAdminParams {
@@ -144,7 +96,10 @@ export async function getPaginatedDoctorsAdminAction(
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * pageSize,
         take: pageSize,
-        select: DOCTOR_ADMIN_SELECT_FIELDS,
+        select: {
+          ...DOCTOR_ADMIN_SELECT_FIELDS,
+          imageUrl: false,
+        },
       }),
     ]);
 
@@ -162,55 +117,6 @@ export async function getPaginatedDoctorsAdminAction(
 }
 
 /**
- * Server action to fetch all active doctors.
- * Cached with ISR tags and revalidated on changes.
- */
-export const getDoctorsAction = unstable_cache(
-  async (): Promise<Doctor[]> => {
-    try {
-      if (!prisma?.doctor) {
-        return [];
-      }
-
-      const data = await prisma.doctor.findMany({
-        where: { isActive: true },
-        orderBy: { createdAt: "desc" },
-        select: {
-          id: true,
-          name: true,
-          specialty: true,
-          department: true,
-          degrees: true,
-          designation: true,
-          chamberName: true,
-          chamberAddress: true,
-          roomNo: true,
-          visitingDays: true,
-          visitingHours: true,
-          serialPhone: true,
-          consultationFee: true,
-          imageUrl: true,
-          partnerId: true,
-          upazila: true,
-          isActive: true,
-          availableToday: true,
-          onLeaveUntil: true,
-          notice: true,
-        },
-      });
-
-      const formatted = data.map(formatDoctor);
-      return distributeDoctorsFairly(formatted);
-    } catch (error) {
-      logger.error("Error in getDoctorsAction:", error);
-      return [];
-    }
-  },
-  ["doctors-list"],
-  { revalidate: 60, tags: [DOCTORS_TAG] }
-);
-
-/**
  * Fetch all doctors including inactive ones (for Admin dashboard).
  */
 export async function getAllDoctorsAdminAction(): Promise<Doctor[]> {
@@ -219,7 +125,10 @@ export async function getAllDoctorsAdminAction(): Promise<Doctor[]> {
   try {
     const data = await prisma.doctor.findMany({
       orderBy: { createdAt: "desc" },
-      select: DOCTOR_ADMIN_SELECT_FIELDS,
+      select: {
+        ...DOCTOR_ADMIN_SELECT_FIELDS,
+        imageUrl: false,
+      },
     });
 
     return data.map(formatDoctor);
@@ -228,102 +137,6 @@ export async function getAllDoctorsAdminAction(): Promise<Doctor[]> {
     return [];
   }
 }
-
-/**
- * Fetch doctor image on-demand when opening edit dialog.
- */
-export async function getDoctorImageAction(id: string): Promise<string | null> {
-  try {
-    const doc = await prisma.doctor.findUnique({
-      where: { id },
-      select: { imageUrl: true },
-    });
-    return doc?.imageUrl || null;
-  } catch (error) {
-    logger.error("Error in getDoctorImageAction:", error);
-    return null;
-  }
-}
-
-/**
- * Fetch single doctor by ID with partner hospital details.
- * Request-memoized via React cache() to deduplicate DB queries between generateMetadata and page body.
- */
-export const getDoctorByIdAction = cache(
-  async (
-    id: string
-  ): Promise<(Doctor & { partner?: Partner | null }) | null> => {
-    try {
-      if (!prisma?.doctor) {
-        return null;
-      }
-
-      const d = await prisma.doctor.findUnique({
-        where: { id },
-        include: { partner: true },
-      });
-
-      if (!d) {
-        return null;
-      }
-
-      return {
-        ...formatDoctor(d),
-        partner: d.partner
-          ? {
-              id: d.partner.id,
-              name: d.partner.name,
-              category: d.partner.category as "hospital" | "diagnostic" | "pharmacy",
-              address: d.partner.address,
-              discount: d.partner.discount,
-              phone: d.partner.phone,
-              logoText: d.partner.logoText,
-              mapLink: d.partner.mapLink || undefined,
-              imageUrl: d.partner.imageUrl || undefined,
-              emergencyPhone: d.partner.emergencyPhone || undefined,
-              workingHours: d.partner.workingHours || undefined,
-              departmentDiscounts: d.partner.departmentDiscounts || undefined,
-              upazila: d.partner.upazila || "feni-sadar",
-            }
-          : undefined,
-      };
-    } catch (error) {
-      logger.error("Error in getDoctorByIdAction:", error);
-      return null;
-    }
-  }
-);
-
-/**
- * Fetch related specialist doctors in the same department.
- */
-export async function getRelatedDoctorsAction(
-  department: string,
-  excludeDoctorId: string,
-  limit = 3
-): Promise<Doctor[]> {
-  try {
-    if (!prisma?.doctor) {
-      return [];
-    }
-
-    const data = await prisma.doctor.findMany({
-      where: {
-        department,
-        id: { not: excludeDoctorId },
-        isActive: true,
-      },
-      take: limit,
-      orderBy: { createdAt: "asc" },
-    });
-
-    return data.map(formatDoctor);
-  } catch (error) {
-    logger.error("Error in getRelatedDoctorsAction:", error);
-    return [];
-  }
-}
-
 
 /**
  * Admin action to add a doctor.
@@ -337,9 +150,15 @@ export async function addDoctorAction(
 
   const newDocId = `doc_${crypto.randomUUID().slice(0, 8)}`;
   try {
+    const baseSlug = doctor.slug?.trim()
+      ? sanitizeDoctorSlug(doctor.slug)
+      : generateDoctorSlug(doctor.name) || `doc-${newDocId.replace(/^doc_/, "")}`;
+    const resolvedSlug = await resolveUniqueDoctorSlug(prisma, baseSlug);
+
     const d = await prisma.doctor.create({
       data: {
         id: newDocId,
+        slug: resolvedSlug,
         name: doctor.name,
         specialty: doctor.specialty,
         department: doctor.department,
@@ -360,6 +179,7 @@ export async function addDoctorAction(
         onLeaveUntil: doctor.onLeaveUntil ? new Date(doctor.onLeaveUntil) : null,
         notice: doctor.notice ? doctor.notice.trim() || null : null,
       },
+      select: DOCTOR_SELECT_FIELDS,
     });
 
     updateTag(DOCTORS_TAG);
@@ -386,9 +206,28 @@ export async function updateDoctorAction(
   }
 
   try {
+    let finalSlug: string | undefined = undefined;
+    if (doctor.slug && doctor.slug.trim()) {
+      const sanitized = sanitizeDoctorSlug(doctor.slug);
+      finalSlug = await resolveUniqueDoctorSlug(prisma, sanitized, id);
+    } else if (doctor.name) {
+      const current = await prisma.doctor.findUnique({
+        where: { id },
+        select: { slug: true },
+      });
+      if (!current?.slug) {
+        finalSlug = await resolveUniqueDoctorSlug(
+          prisma,
+          generateDoctorSlug(doctor.name),
+          id
+        );
+      }
+    }
+
     await prisma.doctor.update({
       where: { id },
       data: {
+        ...(finalSlug !== undefined && { slug: finalSlug }),
         ...(doctor.name !== undefined && { name: doctor.name }),
         ...(doctor.specialty !== undefined && { specialty: doctor.specialty }),
         ...(doctor.department !== undefined && { department: doctor.department }),
@@ -452,29 +291,38 @@ export async function seedDoctorsAction(): Promise<{ success: boolean; count?: n
   }
 
   try {
+    const dataWithSlugs = await Promise.all(
+      initialDoctors.map(async (doc) => {
+        const baseSlug = doc.slug || generateDoctorSlug(doc.name) || `doc-${doc.id.replace(/^doc_/, "")}`;
+        const uniqueSlug = await resolveUniqueDoctorSlug(prisma, baseSlug, doc.id);
+        return {
+          id: doc.id,
+          slug: uniqueSlug,
+          name: doc.name,
+          specialty: doc.specialty,
+          department: doc.department,
+          degrees: doc.degrees,
+          designation: doc.designation,
+          chamberName: doc.chamberName,
+          chamberAddress: doc.chamberAddress,
+          roomNo: doc.roomNo || null,
+          visitingDays: doc.visitingDays,
+          visitingHours: doc.visitingHours,
+          serialPhone: doc.serialPhone,
+          consultationFee: doc.consultationFee || null,
+          imageUrl: doc.imageUrl || null,
+          partnerId: doc.partnerId || null,
+          upazila: doc.upazila || "feni-sadar",
+          isActive: doc.isActive ?? true,
+          availableToday: doc.availableToday ?? true,
+          onLeaveUntil: doc.onLeaveUntil ? new Date(doc.onLeaveUntil) : null,
+          notice: doc.notice || null,
+        };
+      })
+    );
+
     const res = await prisma.doctor.createMany({
-      data: initialDoctors.map((doc) => ({
-        id: doc.id,
-        name: doc.name,
-        specialty: doc.specialty,
-        department: doc.department,
-        degrees: doc.degrees,
-        designation: doc.designation,
-        chamberName: doc.chamberName,
-        chamberAddress: doc.chamberAddress,
-        roomNo: doc.roomNo || null,
-        visitingDays: doc.visitingDays,
-        visitingHours: doc.visitingHours,
-        serialPhone: doc.serialPhone,
-        consultationFee: doc.consultationFee || null,
-        imageUrl: doc.imageUrl || null,
-        partnerId: doc.partnerId || null,
-        upazila: doc.upazila || "feni-sadar",
-        isActive: doc.isActive ?? true,
-        availableToday: doc.availableToday ?? true,
-        onLeaveUntil: doc.onLeaveUntil ? new Date(doc.onLeaveUntil) : null,
-        notice: doc.notice || null,
-      })),
+      data: dataWithSlugs,
       skipDuplicates: true,
     });
 

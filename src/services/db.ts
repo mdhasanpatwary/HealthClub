@@ -321,6 +321,7 @@ export const initialTransactions: Transaction[] = [
 
 export interface Doctor {
   id: string;
+  slug?: string;
   name: string;
   specialty: string;
   department: string;

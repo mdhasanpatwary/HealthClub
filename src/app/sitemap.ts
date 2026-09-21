@@ -91,7 +91,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     doctorEntries = doctors
       .filter((doc) => doc.isActive !== false)
       .map((doc) => {
-        const url = `${baseUrl}/consultants/${doc.id}`;
+        const doctorSlug = doc.slug ? encodeURIComponent(doc.slug) : doc.id;
+        const url = `${baseUrl}/consultants/${doctorSlug}`;
         const lastModified =
           doc.createdAt && !isNaN(new Date(doc.createdAt).getTime())
             ? new Date(doc.createdAt)

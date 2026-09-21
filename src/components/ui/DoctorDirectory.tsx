@@ -315,7 +315,7 @@ export default function DoctorDirectory({
                 <div className="p-3.5 sm:p-4 pb-2 sm:pb-2.5 space-y-2.5 sm:space-y-3 flex-1 flex flex-col justify-between">
                   {/* Doctor Header (Image + Basic Info) */}
                   <div className="flex items-start gap-3">
-                    <Link href={`/consultants/${doc.id}`} prefetch={false} tabIndex={-1} aria-hidden="true" className="shrink-0 hover:opacity-90 transition-opacity">
+                    <Link href={`/consultants/${encodeURIComponent(doc.slug || doc.id)}`} prefetch={false} tabIndex={-1} aria-hidden="true" className="shrink-0 hover:opacity-90 transition-opacity">
                       <DoctorAvatar
                         src={doc.imageUrl}
                         alt={doc.name}
@@ -325,7 +325,7 @@ export default function DoctorDirectory({
                     <div className="space-y-0.5 sm:space-y-1 min-w-0 flex-1">
                       <div className="min-w-0">
                         <Link
-                          href={`/consultants/${doc.id}`}
+                          href={`/consultants/${encodeURIComponent(doc.slug || doc.id)}`}
                           prefetch={false}
                           className="font-heading font-bold text-sm sm:text-base text-secondary dark:text-white leading-snug line-clamp-2 hover:text-primary transition-colors"
                           title={doc.name}

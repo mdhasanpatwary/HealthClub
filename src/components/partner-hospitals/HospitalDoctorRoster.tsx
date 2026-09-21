@@ -237,7 +237,7 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
                   </div>
 
                   <Link
-                    href={`/consultants/${doc.id}`}
+                    href={`/consultants/${encodeURIComponent(doc.slug || doc.id)}`}
                     className="block group-hover:text-primary transition-colors"
                   >
                     <h3 className="text-sm font-bold text-secondary dark:text-white line-clamp-2 leading-snug font-heading">
@@ -288,7 +288,7 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
                 </Button>
 
                 <Link
-                  href={`/consultants/${doc.id}`}
+                  href={`/consultants/${encodeURIComponent(doc.slug || doc.id)}`}
                   aria-label={`${isEn ? "Profile" : "প্রোফাইল"} - ${doc.name}`}
                   className={buttonVariants({
                     variant: "outline",
