@@ -23,6 +23,7 @@ import {
   adminAddMemberSchema,
 } from "@/lib/validations/member";
 import { ensureStorageUrl } from "@/services/storageService";
+import { evaluateReferenceCode } from "@/lib/referenceCodes";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "healthclubfeni@gmail.com";
 
@@ -98,6 +99,18 @@ export async function addMemberAction(
     return { error: "ডাটাবেজ সংযোগে সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।" };
   }
 
+  let validatedRefCode: string | undefined = undefined;
+  let computedDiscount = 0;
+
+  if (member.referenceCode && member.referenceCode.trim()) {
+    const refEval = await evaluateReferenceCode(member.referenceCode, member.tier);
+    if (!refEval.valid) {
+      return { error: refEval.messageBn || "রেফারেন্স কোডটি সঠিক নয় বা মেয়াদোত্তীর্ণ।" };
+    }
+    validatedRefCode = refEval.code;
+    computedDiscount = refEval.discountAmount;
+  }
+
   const rawPassword = member.password || "123456";
   const hashedPassword = hashPassword(rawPassword);
   const verificationCode = randomInt(100000, 1000000).toString();
@@ -130,6 +143,8 @@ export async function addMemberAction(
           profession: member.profession || null,
           profilePictureUrl: (await ensureStorageUrl(member.profilePictureUrl, "members", newId)) || null,
           emailVerified: true,
+          referenceCode: validatedRefCode || member.referenceCode || null,
+          discountAmount: member.discountAmount ?? computedDiscount,
         },
       });
 
@@ -144,6 +159,8 @@ export async function addMemberAction(
         birthDate: m.birthDate ? formatDate(m.birthDate) : undefined,
         profession: m.profession || undefined,
         profilePictureUrl: m.profilePictureUrl || undefined,
+        referenceCode: m.referenceCode || undefined,
+        discountAmount: m.discountAmount,
       } as Member;
     } catch (error: unknown) {
       logger.error("Error in addMemberAction (admin):", error);
@@ -170,6 +187,8 @@ export async function addMemberAction(
         birthDate: member.birthDate,
         profession: member.profession,
         profilePictureUrl: pendingProfilePhoto,
+        referenceCode: validatedRefCode,
+        discountAmount: computedDiscount,
       },
       verificationCode
     );
@@ -201,6 +220,8 @@ export async function addMemberAction(
       expiryDate: formatDate(expiry),
       totalSaved: 0,
       emailVerified: false,
+      referenceCode: validatedRefCode,
+      discountAmount: computedDiscount,
     } as Member;
   } catch (error: unknown) {
     logger.error("Error in addMemberAction (public):", error);

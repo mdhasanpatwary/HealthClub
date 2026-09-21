@@ -29,6 +29,8 @@ model Member {
   createdAt         DateTime      @default(now()) @map("created_at") @db.Timestamptz
   bkashSender       String?       @map("bkash_sender")
   bkashTxnId        String?       @map("bkash_txn_id")
+  referenceCode     String?       @map("reference_code")
+  discountAmount    Int           @default(0) @map("discount_amount")
   renewalStatus     String?       @default("none") @map("renewal_status")
   renewalBkashSender String?      @map("renewal_bkash_sender")
   renewalBkashTxnId  String?      @map("renewal_bkash_txn_id")
@@ -40,6 +42,7 @@ model Member {
   @@index([name], map: "members_name_idx")
   @@index([status])
   @@index([tier])
+  @@index([referenceCode], map: "members_reference_code_idx")
   @@index([renewalStatus], map: "members_renewal_status_idx")
   @@index([expiryDate], map: "members_expiry_date_idx")
   @@index([status, expiryDate], map: "members_status_expiry_date_idx")
@@ -66,6 +69,8 @@ model Partner {
   workingHours              String?       @map("working_hours")
   departmentDiscounts       String?       @map("department_discounts")
   socialLinks               String?       @map("social_links")
+  featured                  Boolean?      @default(false)
+  isPartner                 Boolean?      @default(true) @map("is_partner")
   upazila                   String?       @default("feni-sadar") @map("upazila")
   verificationCode          String?       @map("verification_code")
   verificationCodeCreatedAt DateTime?     @map("verification_code_created_at") @db.Timestamptz

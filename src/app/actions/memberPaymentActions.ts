@@ -17,6 +17,8 @@ export interface MemberPaymentInfo {
   status: string;
   bkashTxnId?: string;
   bkashSender?: string;
+  referenceCode?: string;
+  discountAmount?: number;
 }
 
 export async function getMemberForPaymentAction(memberId: string): Promise<MemberPaymentInfo | null> {
@@ -35,6 +37,8 @@ export async function getMemberForPaymentAction(memberId: string): Promise<Membe
         status: true,
         bkashTxnId: true,
         bkashSender: true,
+        referenceCode: true,
+        discountAmount: true,
       },
     });
     if (!m) return null;
@@ -59,6 +63,8 @@ export async function getMemberForPaymentAction(memberId: string): Promise<Membe
       status: m.status,
       bkashTxnId: m.bkashTxnId || undefined,
       bkashSender: m.bkashSender || undefined,
+      referenceCode: m.referenceCode || undefined,
+      discountAmount: m.discountAmount || 0,
     };
   } catch (error) {
     logger.error("Error in getMemberForPaymentAction:", error);

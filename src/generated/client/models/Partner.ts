@@ -41,6 +41,8 @@ export type PartnerMinAggregateOutputType = {
   workingHours: string | null
   departmentDiscounts: string | null
   socialLinks: string | null
+  featured: boolean | null
+  isPartner: boolean | null
   upazila: string | null
   verificationCode: string | null
   verificationCodeCreatedAt: Date | null
@@ -64,6 +66,8 @@ export type PartnerMaxAggregateOutputType = {
   workingHours: string | null
   departmentDiscounts: string | null
   socialLinks: string | null
+  featured: boolean | null
+  isPartner: boolean | null
   upazila: string | null
   verificationCode: string | null
   verificationCodeCreatedAt: Date | null
@@ -87,6 +91,8 @@ export type PartnerCountAggregateOutputType = {
   workingHours: number
   departmentDiscounts: number
   socialLinks: number
+  featured: number
+  isPartner: number
   upazila: number
   verificationCode: number
   verificationCodeCreatedAt: number
@@ -112,6 +118,8 @@ export type PartnerMinAggregateInputType = {
   workingHours?: true
   departmentDiscounts?: true
   socialLinks?: true
+  featured?: true
+  isPartner?: true
   upazila?: true
   verificationCode?: true
   verificationCodeCreatedAt?: true
@@ -135,6 +143,8 @@ export type PartnerMaxAggregateInputType = {
   workingHours?: true
   departmentDiscounts?: true
   socialLinks?: true
+  featured?: true
+  isPartner?: true
   upazila?: true
   verificationCode?: true
   verificationCodeCreatedAt?: true
@@ -158,6 +168,8 @@ export type PartnerCountAggregateInputType = {
   workingHours?: true
   departmentDiscounts?: true
   socialLinks?: true
+  featured?: true
+  isPartner?: true
   upazila?: true
   verificationCode?: true
   verificationCodeCreatedAt?: true
@@ -254,6 +266,8 @@ export type PartnerGroupByOutputType = {
   workingHours: string | null
   departmentDiscounts: string | null
   socialLinks: string | null
+  featured: boolean | null
+  isPartner: boolean | null
   upazila: string | null
   verificationCode: string | null
   verificationCodeCreatedAt: Date | null
@@ -298,6 +312,8 @@ export type PartnerWhereInput = {
   workingHours?: Prisma.StringNullableFilter<"Partner"> | string | null
   departmentDiscounts?: Prisma.StringNullableFilter<"Partner"> | string | null
   socialLinks?: Prisma.StringNullableFilter<"Partner"> | string | null
+  featured?: Prisma.BoolNullableFilter<"Partner"> | boolean | null
+  isPartner?: Prisma.BoolNullableFilter<"Partner"> | boolean | null
   upazila?: Prisma.StringNullableFilter<"Partner"> | string | null
   verificationCode?: Prisma.StringNullableFilter<"Partner"> | string | null
   verificationCodeCreatedAt?: Prisma.DateTimeNullableFilter<"Partner"> | Date | string | null
@@ -325,6 +341,8 @@ export type PartnerOrderByWithRelationInput = {
   workingHours?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentDiscounts?: Prisma.SortOrderInput | Prisma.SortOrder
   socialLinks?: Prisma.SortOrderInput | Prisma.SortOrder
+  featured?: Prisma.SortOrderInput | Prisma.SortOrder
+  isPartner?: Prisma.SortOrderInput | Prisma.SortOrder
   upazila?: Prisma.SortOrderInput | Prisma.SortOrder
   verificationCode?: Prisma.SortOrderInput | Prisma.SortOrder
   verificationCodeCreatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -355,6 +373,8 @@ export type PartnerWhereUniqueInput = Prisma.AtLeast<{
   workingHours?: Prisma.StringNullableFilter<"Partner"> | string | null
   departmentDiscounts?: Prisma.StringNullableFilter<"Partner"> | string | null
   socialLinks?: Prisma.StringNullableFilter<"Partner"> | string | null
+  featured?: Prisma.BoolNullableFilter<"Partner"> | boolean | null
+  isPartner?: Prisma.BoolNullableFilter<"Partner"> | boolean | null
   upazila?: Prisma.StringNullableFilter<"Partner"> | string | null
   verificationCode?: Prisma.StringNullableFilter<"Partner"> | string | null
   verificationCodeCreatedAt?: Prisma.DateTimeNullableFilter<"Partner"> | Date | string | null
@@ -382,6 +402,8 @@ export type PartnerOrderByWithAggregationInput = {
   workingHours?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentDiscounts?: Prisma.SortOrderInput | Prisma.SortOrder
   socialLinks?: Prisma.SortOrderInput | Prisma.SortOrder
+  featured?: Prisma.SortOrderInput | Prisma.SortOrder
+  isPartner?: Prisma.SortOrderInput | Prisma.SortOrder
   upazila?: Prisma.SortOrderInput | Prisma.SortOrder
   verificationCode?: Prisma.SortOrderInput | Prisma.SortOrder
   verificationCodeCreatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -411,6 +433,8 @@ export type PartnerScalarWhereWithAggregatesInput = {
   workingHours?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
   departmentDiscounts?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
   socialLinks?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  featured?: Prisma.BoolNullableWithAggregatesFilter<"Partner"> | boolean | null
+  isPartner?: Prisma.BoolNullableWithAggregatesFilter<"Partner"> | boolean | null
   upazila?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
   verificationCode?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
   verificationCodeCreatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Partner"> | Date | string | null
@@ -434,6 +458,8 @@ export type PartnerCreateInput = {
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  featured?: boolean | null
+  isPartner?: boolean | null
   upazila?: string | null
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
@@ -461,6 +487,8 @@ export type PartnerUncheckedCreateInput = {
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  featured?: boolean | null
+  isPartner?: boolean | null
   upazila?: string | null
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
@@ -488,6 +516,8 @@ export type PartnerUpdateInput = {
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -515,6 +545,8 @@ export type PartnerUncheckedUpdateInput = {
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -542,6 +574,8 @@ export type PartnerCreateManyInput = {
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  featured?: boolean | null
+  isPartner?: boolean | null
   upazila?: string | null
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
@@ -565,6 +599,8 @@ export type PartnerUpdateManyMutationInput = {
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -588,6 +624,8 @@ export type PartnerUncheckedUpdateManyInput = {
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -611,6 +649,8 @@ export type PartnerCountOrderByAggregateInput = {
   workingHours?: Prisma.SortOrder
   departmentDiscounts?: Prisma.SortOrder
   socialLinks?: Prisma.SortOrder
+  featured?: Prisma.SortOrder
+  isPartner?: Prisma.SortOrder
   upazila?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrder
   verificationCodeCreatedAt?: Prisma.SortOrder
@@ -634,6 +674,8 @@ export type PartnerMaxOrderByAggregateInput = {
   workingHours?: Prisma.SortOrder
   departmentDiscounts?: Prisma.SortOrder
   socialLinks?: Prisma.SortOrder
+  featured?: Prisma.SortOrder
+  isPartner?: Prisma.SortOrder
   upazila?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrder
   verificationCodeCreatedAt?: Prisma.SortOrder
@@ -657,6 +699,8 @@ export type PartnerMinOrderByAggregateInput = {
   workingHours?: Prisma.SortOrder
   departmentDiscounts?: Prisma.SortOrder
   socialLinks?: Prisma.SortOrder
+  featured?: Prisma.SortOrder
+  isPartner?: Prisma.SortOrder
   upazila?: Prisma.SortOrder
   verificationCode?: Prisma.SortOrder
   verificationCodeCreatedAt?: Prisma.SortOrder
@@ -671,6 +715,10 @@ export type PartnerScalarRelationFilter = {
 export type PartnerNullableScalarRelationFilter = {
   is?: Prisma.PartnerWhereInput | null
   isNot?: Prisma.PartnerWhereInput | null
+}
+
+export type NullableBoolFieldUpdateOperationsInput = {
+  set?: boolean | null
 }
 
 export type PartnerCreateNestedOneWithoutStaffInput = {
@@ -748,6 +796,8 @@ export type PartnerCreateWithoutStaffInput = {
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  featured?: boolean | null
+  isPartner?: boolean | null
   upazila?: string | null
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
@@ -774,6 +824,8 @@ export type PartnerUncheckedCreateWithoutStaffInput = {
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  featured?: boolean | null
+  isPartner?: boolean | null
   upazila?: string | null
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
@@ -816,6 +868,8 @@ export type PartnerUpdateWithoutStaffInput = {
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -842,6 +896,8 @@ export type PartnerUncheckedUpdateWithoutStaffInput = {
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -868,6 +924,8 @@ export type PartnerCreateWithoutTransactionsInput = {
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  featured?: boolean | null
+  isPartner?: boolean | null
   upazila?: string | null
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
@@ -894,6 +952,8 @@ export type PartnerUncheckedCreateWithoutTransactionsInput = {
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  featured?: boolean | null
+  isPartner?: boolean | null
   upazila?: string | null
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
@@ -936,6 +996,8 @@ export type PartnerUpdateWithoutTransactionsInput = {
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -962,6 +1024,8 @@ export type PartnerUncheckedUpdateWithoutTransactionsInput = {
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -988,6 +1052,8 @@ export type PartnerCreateWithoutDoctorsInput = {
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  featured?: boolean | null
+  isPartner?: boolean | null
   upazila?: string | null
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
@@ -1014,6 +1080,8 @@ export type PartnerUncheckedCreateWithoutDoctorsInput = {
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  featured?: boolean | null
+  isPartner?: boolean | null
   upazila?: string | null
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
@@ -1056,6 +1124,8 @@ export type PartnerUpdateWithoutDoctorsInput = {
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1082,6 +1152,8 @@ export type PartnerUncheckedUpdateWithoutDoctorsInput = {
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1108,6 +1180,8 @@ export type PartnerCreateWithoutReviewsInput = {
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  featured?: boolean | null
+  isPartner?: boolean | null
   upazila?: string | null
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
@@ -1134,6 +1208,8 @@ export type PartnerUncheckedCreateWithoutReviewsInput = {
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  featured?: boolean | null
+  isPartner?: boolean | null
   upazila?: string | null
   verificationCode?: string | null
   verificationCodeCreatedAt?: Date | string | null
@@ -1176,6 +1252,8 @@ export type PartnerUpdateWithoutReviewsInput = {
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1202,6 +1280,8 @@ export type PartnerUncheckedUpdateWithoutReviewsInput = {
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationCodeCreatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1286,6 +1366,8 @@ export type PartnerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   workingHours?: boolean
   departmentDiscounts?: boolean
   socialLinks?: boolean
+  featured?: boolean
+  isPartner?: boolean
   upazila?: boolean
   verificationCode?: boolean
   verificationCodeCreatedAt?: boolean
@@ -1314,6 +1396,8 @@ export type PartnerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   workingHours?: boolean
   departmentDiscounts?: boolean
   socialLinks?: boolean
+  featured?: boolean
+  isPartner?: boolean
   upazila?: boolean
   verificationCode?: boolean
   verificationCodeCreatedAt?: boolean
@@ -1337,6 +1421,8 @@ export type PartnerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   workingHours?: boolean
   departmentDiscounts?: boolean
   socialLinks?: boolean
+  featured?: boolean
+  isPartner?: boolean
   upazila?: boolean
   verificationCode?: boolean
   verificationCodeCreatedAt?: boolean
@@ -1360,13 +1446,15 @@ export type PartnerSelectScalar = {
   workingHours?: boolean
   departmentDiscounts?: boolean
   socialLinks?: boolean
+  featured?: boolean
+  isPartner?: boolean
   upazila?: boolean
   verificationCode?: boolean
   verificationCodeCreatedAt?: boolean
   createdAt?: boolean
 }
 
-export type PartnerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "category" | "address" | "discount" | "phone" | "email" | "password" | "logoText" | "mapLink" | "imageUrl" | "emergencyPhone" | "workingHours" | "departmentDiscounts" | "socialLinks" | "upazila" | "verificationCode" | "verificationCodeCreatedAt" | "createdAt", ExtArgs["result"]["partner"]>
+export type PartnerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "category" | "address" | "discount" | "phone" | "email" | "password" | "logoText" | "mapLink" | "imageUrl" | "emergencyPhone" | "workingHours" | "departmentDiscounts" | "socialLinks" | "featured" | "isPartner" | "upazila" | "verificationCode" | "verificationCodeCreatedAt" | "createdAt", ExtArgs["result"]["partner"]>
 export type PartnerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactions?: boolean | Prisma.Partner$transactionsArgs<ExtArgs>
   doctors?: boolean | Prisma.Partner$doctorsArgs<ExtArgs>
@@ -1402,6 +1490,8 @@ export type $PartnerPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     workingHours: string | null
     departmentDiscounts: string | null
     socialLinks: string | null
+    featured: boolean | null
+    isPartner: boolean | null
     upazila: string | null
     verificationCode: string | null
     verificationCodeCreatedAt: Date | null
@@ -1849,6 +1939,8 @@ export interface PartnerFieldRefs {
   readonly workingHours: Prisma.FieldRef<"Partner", 'String'>
   readonly departmentDiscounts: Prisma.FieldRef<"Partner", 'String'>
   readonly socialLinks: Prisma.FieldRef<"Partner", 'String'>
+  readonly featured: Prisma.FieldRef<"Partner", 'Boolean'>
+  readonly isPartner: Prisma.FieldRef<"Partner", 'Boolean'>
   readonly upazila: Prisma.FieldRef<"Partner", 'String'>
   readonly verificationCode: Prisma.FieldRef<"Partner", 'String'>
   readonly verificationCodeCreatedAt: Prisma.FieldRef<"Partner", 'DateTime'>

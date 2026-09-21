@@ -8,12 +8,7 @@ import { setSessionUser, clearSessionUser } from "@/lib/session";
 import { sendOtpEmail } from "@/lib/mail";
 import { logger } from "@/lib/logger";
 import { telemetry } from "@/lib/telemetry";
-import {
-  checkRateLimit,
-  resetRateLimit,
-  getClientIp,
-  RATE_LIMIT_RULES,
-} from "@/lib/rateLimit";
+import { checkRateLimit, resetRateLimit, getClientIp, RATE_LIMIT_RULES } from "@/lib/rateLimit";
 import {
   getPendingRegistration,
   updatePendingRegistrationAttempts,
@@ -23,6 +18,7 @@ import {
 import { SITE_URL } from "@/lib/siteConfig";
 import { updateTag } from "next/cache";
 import { ensureStorageUrl } from "@/services/storageService";
+import { getCachedPaymentSettings } from "@/app/actions/systemSettingsActions";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "healthclubfeni@gmail.com";
 const MAX_OTP_ATTEMPTS = 5;
@@ -317,7 +313,11 @@ export async function verifyEmailOtpAction(
       const expiry = new Date();
       expiry.setFullYear(joined.getFullYear() + 1);
 
-      const nextStatus = pending.tier === "founding" ? "active" : "inactive";
+      const paymentSettings = await getCachedPaymentSettings();
+      const standardFee = pending.tier === "founding" ? 0 : parseInt(paymentSettings.premiumFee || "500", 10);
+      const discount = pending.discountAmount || 0;
+      const isFree = pending.tier === "founding" || discount >= standardFee;
+      const nextStatus = isFree ? "active" : "inactive";
       const finalProfilePicture = (await ensureStorageUrl(profilePictureUrl || pending.profilePictureUrl, "members", newId)) || null;
 
       const createdMember = await prisma.member.create({
@@ -340,6 +340,8 @@ export async function verifyEmailOtpAction(
           emailVerified: true,
           verificationCode: null,
           verificationCodeCreatedAt: null,
+          referenceCode: pending.referenceCode || null,
+          discountAmount: pending.discountAmount || 0,
         },
       });
 
@@ -349,7 +351,7 @@ export async function verifyEmailOtpAction(
       const safeMember = toSafeMember(createdMember);
 
       await setSessionUser(safeMember.id, "user");
-      const requiresPayment = createdMember.tier === "premium" && createdMember.status === "inactive";
+      const requiresPayment = !isFree;
 
       return { success: true, member: safeMember, requiresPayment };
     }

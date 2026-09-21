@@ -126,5 +126,10 @@ export const authEn = {
   "auth.register.fillRequired": "Please fill in all required fields (*).",
   "auth.register.registerSuccess": "Registration successful! Please complete email verification.",
   "auth.register.registerError": "Registration failed. Please try again.",
-  "auth.register.alreadyHaveAccount": "Already have an account?"
+  "auth.register.alreadyHaveAccount": "Already have an account?",
+  "auth.register.referenceCodeLabel": "Reference Code (Optional)",
+  "auth.register.referenceCodePlaceholder": "e.g., FREECLUB, SPECIAL50 or Member Phone",
+  "auth.register.referenceCodeApply": "Apply",
+  "auth.register.referenceCodeChecking": "Checking...",
+  "auth.register.referenceCodeApplied": "Reference code applied successfully!"
 } as const;

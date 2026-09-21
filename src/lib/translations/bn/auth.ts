@@ -126,5 +126,10 @@ export const authBn = {
   "auth.register.fillRequired": "সবগুলো তারকাচিহ্নিত (*) ঘর পূরণ করুন।",
   "auth.register.registerSuccess": "রেজিস্ট্রেশন সফল হয়েছে! অনুগ্রহ করে ইমেইল ভেরিফিকেশন সম্পন্ন করুন।",
   "auth.register.registerError": "রেজিস্ট্রেশন করতে সমস্যা হচ্ছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
-  "auth.register.alreadyHaveAccount": "ইতিমধ্যে অ্যাকাউন্ট আছে?"
+  "auth.register.alreadyHaveAccount": "ইতিমধ্যে অ্যাকাউন্ট আছে?",
+  "auth.register.referenceCodeLabel": "রেফারেন্স কোড (যদি থাকে)",
+  "auth.register.referenceCodePlaceholder": "যেমন: FREECLUB, SPECIAL50 বা মেম্বার ফোন নম্বর",
+  "auth.register.referenceCodeApply": "যাচাই করুন",
+  "auth.register.referenceCodeChecking": "যাচাই হচ্ছে...",
+  "auth.register.referenceCodeApplied": "রেফারেন্স কোড সফলভাবে যুক্ত হয়েছে!"
 } as const;

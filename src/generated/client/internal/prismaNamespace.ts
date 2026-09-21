@@ -1664,6 +1664,8 @@ export const MemberScalarFieldEnum = {
   createdAt: 'createdAt',
   bkashSender: 'bkashSender',
   bkashTxnId: 'bkashTxnId',
+  referenceCode: 'referenceCode',
+  discountAmount: 'discountAmount',
   renewalStatus: 'renewalStatus',
   renewalBkashSender: 'renewalBkashSender',
   renewalBkashTxnId: 'renewalBkashTxnId'
@@ -1689,6 +1691,8 @@ export const PartnerScalarFieldEnum = {
   workingHours: 'workingHours',
   departmentDiscounts: 'departmentDiscounts',
   socialLinks: 'socialLinks',
+  featured: 'featured',
+  isPartner: 'isPartner',
   upazila: 'upazila',
   verificationCode: 'verificationCode',
   verificationCodeCreatedAt: 'verificationCodeCreatedAt',

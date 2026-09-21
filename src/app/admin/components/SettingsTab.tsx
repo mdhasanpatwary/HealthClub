@@ -23,6 +23,7 @@ import { ContactSettingsCard } from "./settings/ContactSettingsCard";
 import { NoticeSettingsCard } from "./settings/NoticeSettingsCard";
 import { MemberTxSettingsCard } from "./settings/MemberTxSettingsCard";
 import { DatabaseBackupCard } from "./settings/DatabaseBackupCard";
+import { ReferenceCodesCard } from "./settings/ReferenceCodesCard";
 
 export function SettingsTab() {
   const { locale } = useLanguage();
@@ -244,7 +245,12 @@ export function SettingsTab() {
           isEn={isEn}
         />
 
-        {/* 3. Contact & Hotline Setup */}
+        {/* 3. Reference & Discount Codes */}
+        <div className="lg:col-span-2">
+          <ReferenceCodesCard isEn={isEn} />
+        </div>
+
+        {/* 4. Contact & Hotline Setup */}
         <ContactSettingsCard
           register={register}
           errors={errors}

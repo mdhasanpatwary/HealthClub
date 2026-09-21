@@ -88,6 +88,8 @@ export function MembersTab({
                 { header: "Joined Date", accessor: "joinedDate" },
                 { header: "Expiry Date", accessor: "expiryDate" },
                 { header: "Total Saved (BDT)", accessor: "totalSaved" },
+                { header: "Reference Code", accessor: (m) => m.referenceCode || "" },
+                { header: "Discount (BDT)", accessor: (m) => m.discountAmount || 0 },
                 { header: "Address", accessor: (m) => m.address || "" },
               ])
             }
@@ -185,8 +187,15 @@ export function MembersTab({
                       </div>
                     </TableCell>
                     <TableCell className="font-mono whitespace-nowrap">{m.phone}</TableCell>
-                    <TableCell className="capitalize text-xs font-semibold whitespace-nowrap">
-                      {m.tier === "founding" ? t("admin.dashboard.tierFounding") : m.tier === "premium" ? t("admin.dashboard.tierPremium") : t("admin.dashboard.tierFamily")}
+                    <TableCell className="text-xs whitespace-nowrap">
+                      <div className="font-semibold capitalize">
+                        {m.tier === "founding" ? t("admin.dashboard.tierFounding") : m.tier === "premium" ? t("admin.dashboard.tierPremium") : t("admin.dashboard.tierFamily")}
+                      </div>
+                      {m.referenceCode && (
+                        <span className="inline-block mt-0.5 text-[10px] font-mono font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded border border-primary/20">
+                          Ref: {m.referenceCode}
+                        </span>
+                      )}
                     </TableCell>
                     <TableCell className="font-mono font-semibold whitespace-nowrap">৳{formatNum(m.totalSaved || 0, locale)}</TableCell>
                     <TableCell>

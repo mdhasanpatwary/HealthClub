@@ -1,15 +1,16 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Heart, User, Phone, Mail, Lock, MapPin, Calendar, Briefcase,
-  ArrowRight, Star, ShieldCheck
+  ArrowRight, Star, ShieldCheck, Sparkles
 } from "lucide-react";
 import { addMemberAction } from "@/app/actions/memberActions";
+import { validateReferenceCodeAction } from "@/app/actions/referenceCodeActions";
 import {
   memberRegistrationSchema,
   type MemberRegistrationInput,
@@ -21,18 +22,21 @@ import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toast } from "sonner";
+import { ReferenceCodeField, type RefStatusState } from "./components/ReferenceCodeField";
 
 function RegisterForm() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
   const planParam = searchParams.get("plan");
+  const refParam = searchParams.get("ref") || searchParams.get("reference") || "";
 
   const {
     register,
     handleSubmit,
     control,
     setValue,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<MemberRegistrationInput>({
     resolver: zodResolver(memberRegistrationSchema),
@@ -46,10 +50,77 @@ function RegisterForm() {
       birthDate: "",
       profession: "",
       profilePictureUrl: "",
+      referenceCode: refParam,
     },
   });
 
   const selectedTier = useWatch({ control, name: "tier" });
+
+  const [refStatus, setRefStatus] = useState<RefStatusState>({ status: "idle", message: "" });
+
+  const handleVerifyRefCode = useCallback(async (codeToVerify?: string) => {
+    const code = (codeToVerify ?? getValues("referenceCode") ?? "").trim();
+    if (!code) {
+      setRefStatus({ status: "idle", message: "" });
+      return;
+    }
+    setRefStatus({ status: "checking", message: "" });
+    try {
+      const res = await validateReferenceCodeAction(code, selectedTier);
+      if (res.valid) {
+        setRefStatus({
+          status: "valid",
+          message: locale === "en" ? res.messageEn : res.messageBn,
+          discountType: res.discountType,
+          discountAmount: res.discountAmount,
+          finalFee: res.finalFee,
+        });
+      } else {
+        setRefStatus({
+          status: "invalid",
+          message: locale === "en" ? res.messageEn : res.messageBn,
+        });
+      }
+    } catch {
+      setRefStatus({
+        status: "invalid",
+        message: locale === "en" ? "Failed to verify reference code." : "কোড যাচাই করতে সমস্যা হয়েছে।",
+      });
+    }
+  }, [getValues, selectedTier, locale]);
+
+  useEffect(() => {
+    if (!refParam) return;
+    let isMounted = true;
+    validateReferenceCodeAction(refParam, selectedTier)
+      .then((res) => {
+        if (!isMounted) return;
+        setRefStatus(
+          res.valid
+            ? {
+                status: "valid",
+                message: locale === "en" ? res.messageEn : res.messageBn,
+                discountType: res.discountType,
+                discountAmount: res.discountAmount,
+                finalFee: res.finalFee,
+              }
+            : {
+                status: "invalid",
+                message: locale === "en" ? res.messageEn : res.messageBn,
+              }
+        );
+      })
+      .catch(() => {
+        if (!isMounted) return;
+        setRefStatus({
+          status: "invalid",
+          message: locale === "en" ? "Failed to verify reference code." : "কোড যাচাই করতে সমস্যা হয়েছে।",
+        });
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [refParam, selectedTier, locale]);
 
   const onSubmit = async (data: MemberRegistrationInput) => {
     try {
@@ -144,7 +215,18 @@ function RegisterForm() {
             )}
             <ShieldCheck className={`h-5 w-5 mb-2 ${selectedTier === "premium" ? "text-primary" : "text-muted-foreground"}`} />
             <p className="text-xs font-bold text-secondary dark:text-white">{t("auth.register.premiumTier")}</p>
-            <p className="text-[11px] text-muted-foreground font-semibold">{t("auth.register.premiumSub")}</p>
+            {refStatus.status === "valid" && (refStatus.discountType === "free" || refStatus.finalFee === 0) ? (
+              <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+                <Sparkles className="h-3 w-3" />
+                {locale === "en" ? "100% Free with Code" : "রেফারেন্সে ১০০% ফ্রি"}
+              </p>
+            ) : refStatus.status === "valid" && refStatus.discountAmount && refStatus.discountAmount > 0 ? (
+              <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">
+                ৳{refStatus.finalFee} ({locale === "en" ? "Discounted" : "ছাড়সহ"})
+              </p>
+            ) : (
+              <p className="text-[11px] text-muted-foreground font-semibold">{t("auth.register.premiumSub")}</p>
+            )}
           </button>
         </div>
 
@@ -269,6 +351,16 @@ function RegisterForm() {
               )}
             </div>
           </div>
+
+          <ReferenceCodeField
+            register={register}
+            error={errors.referenceCode}
+            refStatus={refStatus}
+            setRefStatus={setRefStatus}
+            onVerify={() => handleVerifyRefCode()}
+            t={t}
+            locale={locale}
+          />
 
           <div className="space-y-1.5">
             <label htmlFor="reg-password" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
