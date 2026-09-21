@@ -98,6 +98,7 @@ export default function MobileNavDrawer({
               alt="Health Club Logo"
               width={32}
               height={32}
+              sizes="32px"
               loading="lazy"
               className="h-8 w-8 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.3)] shrink-0"
             />

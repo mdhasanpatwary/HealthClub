@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import { Locale } from "@/lib/i18n";
 import { tServer } from "@/lib/i18n.server";
 import JsonLd from "@/components/seo/JsonLd";
@@ -12,10 +11,10 @@ import { getEmergencyDataAction } from "@/app/actions/emergencyAdminActions";
 import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
+export const revalidate = 300; // 5-minute Incremental Static Regeneration (ISR)
+
 export async function generateMetadata() {
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const isEn = locale === "en";
+  const isEn = false;
 
   return {
     title: isEn
@@ -92,24 +91,10 @@ export async function generateMetadata() {
   };
 }
 
-export default async function EmergencyPage(props: {
-  searchParams?: Promise<{ tab?: string }>;
-}) {
-  const [cookieStore, resolvedParams] = await Promise.all([
-    cookies(),
-    props.searchParams,
-  ]);
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const isEn = locale === "en";
+export default async function EmergencyPage() {
+  const locale = "bn" as Locale;
+  const isEn = false;
   const t = (key: string) => tServer(locale, key);
-
-  const rawTab = resolvedParams?.tab;
-  const initialTab =
-    rawTab === "ambulances"
-      ? "ambulances"
-      : rawTab === "hotlines"
-      ? "hotlines"
-      : "donors";
 
   const [{ bloodDonors, ambulances, hotlines }, contactSettings] = await Promise.all([
     getEmergencyDataAction(),
@@ -377,7 +362,6 @@ export default async function EmergencyPage(props: {
             initialBloodDonors={approvedDonors}
             initialAmbulances={approvedAmbulances}
             initialHotlines={hotlines}
-            initialTab={initialTab}
           />
         </section>
 

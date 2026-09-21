@@ -157,27 +157,38 @@ export async function ensureStorageUrl(
   folder: StorageFolder,
   entityId?: string
 ): Promise<string | null> {
-  if (!imageUrl) return null;
+  if (!imageUrl || !imageUrl.trim()) return null;
 
-  // Already an external or CDN HTTP URL
-  if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
-    return imageUrl;
+  const trimmed = imageUrl.trim();
+
+  // Already an external CDN HTTP URL or local static path
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://") || trimmed.startsWith("/")) {
+    return trimmed;
   }
 
   // Base64 data URL to be migrated to CDN
-  if (imageUrl.startsWith("data:image/")) {
+  if (trimmed.startsWith("data:image/")) {
     if (!isStorageConfigured()) {
       logger.warn(`[Storage] Cannot migrate base64 image for ${folder}/${entityId || "unknown"}: Storage not configured.`);
-      return imageUrl;
+      return null;
     }
 
-    const res = await uploadBase64Image(imageUrl, folder, entityId);
+    const res = await uploadBase64Image(trimmed, folder, entityId);
     if (res.success && res.url) {
       return res.url;
     }
+
+    logger.error(`[Storage] Failed to upload base64 image to CDN for ${folder}/${entityId || "unknown"}: ${res.error}. Raw base64 persistence prevented.`);
+    return null;
   }
 
-  return imageUrl;
+  // Prevent any raw data URLs or malformed payloads from being stored
+  if (trimmed.startsWith("data:")) {
+    logger.warn(`[Storage] Rejected data URL for ${folder}/${entityId || "unknown"} to prevent database bloat.`);
+    return null;
+  }
+
+  return trimmed;
 }
 
 /**

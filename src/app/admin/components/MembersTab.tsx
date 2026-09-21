@@ -173,6 +173,7 @@ export function MembersTab({
                               alt={m.name}
                               width={32}
                               height={32}
+                              sizes="32px"
                               unoptimized={Boolean(m.profilePictureUrl.startsWith("data:"))}
                               className="h-full w-full object-cover object-left-top"
                             />

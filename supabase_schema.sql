@@ -120,4 +120,49 @@ ON partner_requests FOR INSERT WITH CHECK (true);
 CREATE POLICY "Anyone can send contact messages" 
 ON contact_messages FOR INSERT WITH CHECK (true);
 
+-- Create member notifications table
+CREATE TABLE IF NOT EXISTS member_notifications (
+    id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+    member_id TEXT NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+    type TEXT NOT NULL,
+    title_bn TEXT NOT NULL,
+    title_en TEXT NOT NULL,
+    message_bn TEXT NOT NULL,
+    message_en TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE NOT NULL,
+    link TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_member_notifications_member_id ON member_notifications(member_id);
+CREATE INDEX IF NOT EXISTS idx_member_notifications_member_is_read ON member_notifications(member_id, is_read);
+CREATE INDEX IF NOT EXISTS idx_member_notifications_created_at ON member_notifications(created_at DESC);
+
+ALTER TABLE member_notifications ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage their own notifications" 
+ON member_notifications FOR ALL
+USING (auth.uid()::text = member_id)
+WITH CHECK (auth.uid()::text = member_id);
+
+-- ==============================================================================
+-- Supabase Realtime Publication Optimization
+-- ==============================================================================
+-- Restrict publication to ONLY essential tables listened to via WebSockets/SSE:
+-- 1. member_notifications (for real-time member bell alerts)
+-- 2. transactions (for partner & member real-time transaction updates)
+-- 3. members (for account status termination/suspension events)
+--
+-- This prevents unneeded WAL replication egress and eliminates idle WebSocket bandwidth
+-- from tables not actively listened to by client WebSocket subscriptions.
+-- ==============================================================================
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_publication WHERE pubname = 'supabase_realtime') THEN
+        CREATE PUBLICATION supabase_realtime;
+    END IF;
+END $$;
+
+ALTER PUBLICATION supabase_realtime SET TABLE member_notifications, transactions, members;
+
 

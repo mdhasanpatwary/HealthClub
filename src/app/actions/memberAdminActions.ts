@@ -6,7 +6,6 @@ import { Member } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { PaginatedResult } from "@/types/pagination";
-import { createMemberNotification } from "./memberNotificationActions";
 import { hasAdminPermission } from "@/lib/permissions";
 import { updateTag } from "next/cache";
 import { ensureStorageUrl } from "@/services/storageService";
@@ -19,63 +18,16 @@ async function verifyMemberAdmin(permission: "manage_members" | "approve_renewal
   return hasAdminPermission(role, permission);
 }
 
-const MEMBER_SELECT_FIELDS = {
-  id: true,
-  name: true,
-  phone: true,
-  email: true,
-  tier: true,
-  status: true,
-  joinedDate: true,
-  expiryDate: true,
-  qrCodeUrl: true,
-  totalSaved: true,
-  address: true,
-  birthDate: true,
-  profession: true,
-  // Note: profilePictureUrl omitted to prevent large base64 payload transfer in bulk queries
-  bkashSender: true,
-  bkashTxnId: true,
-  renewalStatus: true,
-  renewalBkashSender: true,
-  renewalBkashTxnId: true,
-} as const;
-
-// Helper to format Date objects as YYYY-MM-DD in local time (not UTC).
-function formatDate(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
-}
-
-type PrismaMemberRecord =
-  | Prisma.MemberGetPayload<{ select: typeof MEMBER_SELECT_FIELDS }>
-  | Prisma.MemberGetPayload<object>;
-
-function mapPrismaMember(m: PrismaMemberRecord): Member {
-  return {
-    id: m.id,
-    name: m.name,
-    phone: m.phone,
-    email: m.email || "",
-    tier: m.tier as Member["tier"],
-    status: m.status as Member["status"],
-    joinedDate: formatDate(m.joinedDate),
-    expiryDate: formatDate(m.expiryDate),
-    qrCodeUrl: m.qrCodeUrl || undefined,
-    totalSaved: m.totalSaved,
-    address: m.address || "",
-    birthDate: m.birthDate ? formatDate(m.birthDate) : "",
-    profession: m.profession || "",
-    profilePictureUrl: (m as { profilePictureUrl?: string | null }).profilePictureUrl || undefined,
-    bkashSender: m.bkashSender || undefined,
-    bkashTxnId: m.bkashTxnId || undefined,
-    renewalStatus: m.renewalStatus || undefined,
-    renewalBkashSender: m.renewalBkashSender || undefined,
-    renewalBkashTxnId: m.renewalBkashTxnId || undefined,
-  };
-}
+import {
+  MEMBER_SELECT_FIELDS,
+  mapPrismaMember,
+} from "@/lib/memberFormat";
+import {
+  getPaginatedRenewalsAction as _getPaginatedRenewalsAction,
+  approveMemberRenewalAction as _approveMemberRenewalAction,
+  rejectMemberRenewalAction as _rejectMemberRenewalAction,
+} from "./memberRenewalActions";
+export type { GetPaginatedRenewalsParams } from "./memberRenewalActions";
 
 export interface GetPaginatedMembersParams {
   page?: number;
@@ -149,72 +101,42 @@ export async function getPaginatedMembersAction(
   }
 }
 
-export interface GetPaginatedRenewalsParams {
-  page?: number;
-  pageSize?: number;
-  search?: string;
-  status?: string;
+export async function getPaginatedRenewalsAction(...args: Parameters<typeof _getPaginatedRenewalsAction>) {
+  return _getPaginatedRenewalsAction(...args);
+}
+export async function approveMemberRenewalAction(id: string) {
+  return _approveMemberRenewalAction(id);
+}
+export async function rejectMemberRenewalAction(id: string) {
+  return _rejectMemberRenewalAction(id);
 }
 
-export async function getPaginatedRenewalsAction(
-  params?: GetPaginatedRenewalsParams
-): Promise<PaginatedResult<Member>> {
-  if (!await verifyMemberAdmin("approve_renewals")) {
-    return {
-      data: [],
-      totalItems: 0,
-      totalPages: 1,
-      currentPage: 1,
-      pageSize: params?.pageSize || 10,
-    };
+export async function getMemberByIdOrPhoneAction(identifier: string): Promise<Member | null> {
+  const session = await getSessionUser();
+  if (!session || session.role !== "admin") return null;
+  const role = session.adminRole || "super_admin";
+  if (!hasAdminPermission(role, "manage_members") && !hasAdminPermission(role, "manage_transactions")) {
+    return null;
   }
 
-  const page = Math.max(1, params?.page || 1);
-  const pageSize = Math.max(1, params?.pageSize || 10);
-  const search = params?.search?.trim();
-  const status = params?.status;
-
-  const where: Prisma.MemberWhereInput = {};
-  if (status && status !== "all") {
-    where.renewalStatus = status;
-  } else {
-    // Default to members who have requested renewal
-    where.renewalStatus = "pending";
-  }
-
-  if (search) {
-    where.OR = [
-      { name: { contains: search, mode: "insensitive" } },
-      { phone: { contains: search, mode: "insensitive" } },
-      { renewalBkashSender: { contains: search, mode: "insensitive" } },
-      { renewalBkashTxnId: { contains: search, mode: "insensitive" } },
-    ];
-  }
+  const trimmed = identifier.trim();
+  if (!trimmed) return null;
 
   try {
-    const [totalItems, data] = await Promise.all([
-      prisma.member.count({ where }),
-      prisma.member.findMany({
-        where,
-        orderBy: { createdAt: "desc" },
-        skip: (page - 1) * pageSize,
-        take: pageSize,
-        select: MEMBER_SELECT_FIELDS,
-      }),
-    ]);
+    const member = await prisma.member.findFirst({
+      where: {
+        OR: [
+          { id: { equals: trimmed, mode: "insensitive" } },
+          { phone: { equals: trimmed } },
+        ],
+      },
+      select: MEMBER_SELECT_FIELDS,
+    });
 
-    const members: Member[] = data.map(mapPrismaMember);
-
-    return {
-      data: members,
-      totalItems,
-      totalPages: Math.max(1, Math.ceil(totalItems / pageSize)),
-      currentPage: page,
-      pageSize,
-    };
+    return member ? mapPrismaMember(member) : null;
   } catch (error) {
-    logger.error("Error in getPaginatedRenewalsAction:", error);
-    return { data: [], totalItems: 0, totalPages: 1, currentPage: 1, pageSize };
+    logger.error("Error in getMemberByIdOrPhoneAction:", error);
+    return null;
   }
 }
 
@@ -371,98 +293,7 @@ export async function deleteMemberAction(id: string): Promise<boolean> {
   }
 }
 
-export async function approveMemberRenewalAction(memberId: string): Promise<boolean> {
-  if (!await verifyMemberAdmin("approve_renewals")) {
-    logger.warn("Unauthorized attempt to approve renewal");
-    return false;
-  }
 
-  try {
-    const member = await prisma.member.findUnique({
-      where: { id: memberId },
-      select: { expiryDate: true },
-    });
-
-    if (!member) return false;
-
-    const currentExpiry = new Date(member.expiryDate);
-    const baseDate = currentExpiry < new Date() ? new Date() : currentExpiry;
-    const newExpiry = new Date(baseDate);
-    newExpiry.setFullYear(baseDate.getFullYear() + 1);
-
-    await prisma.member.update({
-      where: { id: memberId },
-      data: {
-        renewalStatus: "none",
-        renewalBkashSender: null,
-        renewalBkashTxnId: null,
-        status: "active",
-        expiryDate: newExpiry,
-      }
-    });
-    updateTag("admin-stats");
-
-    const expDateBn = newExpiry.toLocaleDateString("bn-BD", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-    const expDateEn = newExpiry.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-
-    await createMemberNotification({
-      memberId,
-      type: "renewal_approved",
-      titleBn: "মেম্বারশিপ নবায়ন অনুমোদিত হয়েছে",
-      titleEn: "Membership Renewal Approved",
-      messageBn: `আপনার মেম্বারশিপ সফলভাবে ১ বছরের জন্য নবায়ন করা হয়েছে। নতুন মেয়াদ: ${expDateBn}।`,
-      messageEn: `Your membership has been successfully renewed for 1 year. New expiry: ${expDateEn}.`,
-      link: "/dashboard",
-    });
-
-    return true;
-  } catch (error) {
-    logger.error("Error in approveMemberRenewalAction:", error);
-    return false;
-  }
-}
-
-export async function rejectMemberRenewalAction(memberId: string): Promise<boolean> {
-  if (!await verifyMemberAdmin("approve_renewals")) {
-    logger.warn("Unauthorized attempt to reject renewal");
-    return false;
-  }
-
-  try {
-    await prisma.member.update({
-      where: { id: memberId },
-      data: {
-        renewalStatus: "none",
-        renewalBkashSender: null,
-        renewalBkashTxnId: null,
-      }
-    });
-    updateTag("admin-stats");
-
-    await createMemberNotification({
-      memberId,
-      type: "renewal_rejected",
-      titleBn: "মেম্বারশিপ নবায়ন আবেদন বাতিল হয়েছে",
-      titleEn: "Membership Renewal Request Rejected",
-      messageBn: "আপনার মেম্বারশিপ নবায়ন আবেদনটি অনুমোদিত হয়নি। অনুগ্রহ করে বিকাশ ট্রানজেকশন তথ্য যাচাই করে পুনরায় আবেদন করুন।",
-      messageEn: "Your membership renewal request was not approved. Please verify your payment transaction details and reapply.",
-      link: "/dashboard/renew",
-    });
-
-    return true;
-  } catch (error) {
-    logger.error("Error in rejectMemberRenewalAction:", error);
-    return false;
-  }
-}
 
 /**
  * Fetch member profile picture on-demand when opening member view or edit dialog.

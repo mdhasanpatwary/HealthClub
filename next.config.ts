@@ -35,6 +35,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "www.fenirdoctor.com" },
     ],
     deviceSizes: [384, 512, 640, 750, 828, 1080, 1200, 1920],
+    // Responsive image sizes for small UI components (avatars, badges, thumbnails)
+    imageSizes: [32, 48, 56, 64, 80, 96, 128, 256, 384],
     // Serve modern WebP format for fast encoding, smaller payloads, and faster decode on mobile
     formats: ["image/webp"],
     qualities: [60, 65, 75],

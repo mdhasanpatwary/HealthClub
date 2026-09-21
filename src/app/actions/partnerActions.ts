@@ -57,85 +57,12 @@ export async function changePartnerPasswordAction(currentPassword: string, newPa
 export async function requestPartnerPasswordResetAction(email: string) { return _requestPartnerPasswordResetAction(email); }
 export async function resetPartnerPasswordAction(email: string, code: string, rawNewPassword: string) { return _resetPartnerPasswordAction(email, code, rawNewPassword); }
 
-const PARTNER_SELECT_FIELDS = {
-  id: true,
-  slug: true,
-  name: true,
-  category: true,
-  address: true,
-  discount: true,
-  phone: true,
-  email: true,
-  logoText: true,
-  mapLink: true,
-  imageUrl: true,
-  emergencyPhone: true,
-  ambulancePhone: true,
-  workingHours: true,
-  departmentDiscounts: true,
-  socialLinks: true,
-  facilities: true,
-  galleryImages: true,
-  upazila: true,
-  createdAt: true,
-} as const;
-
-const PARTNER_ADMIN_SELECT_FIELDS = {
-  id: true,
-  slug: true,
-  name: true,
-  category: true,
-  address: true,
-  discount: true,
-  phone: true,
-  email: true,
-  logoText: true,
-  mapLink: true,
-  emergencyPhone: true,
-  ambulancePhone: true,
-  workingHours: true,
-  departmentDiscounts: true,
-  socialLinks: true,
-  facilities: true,
-  galleryImages: true,
-  upazila: true,
-  createdAt: true,
-  // Note: imageUrl omitted from admin bulk queries to prevent large base64 data transfer
-} as const;
-
-type PrismaPartnerRecord =
-  | Prisma.PartnerGetPayload<{ select: typeof PARTNER_SELECT_FIELDS }>
-  | Prisma.PartnerGetPayload<{ select: typeof PARTNER_ADMIN_SELECT_FIELDS }>
-  | Prisma.PartnerGetPayload<object>;
-
-function formatPartner(p: PrismaPartnerRecord): Partner {
-  return {
-    id: p.id,
-    slug: (p as { slug?: string | null }).slug || undefined,
-    name: p.name,
-    category: p.category as Partner["category"],
-    address: p.address,
-    discount: p.discount,
-    phone: p.phone,
-    email: p.email || undefined,
-    logoText: p.logoText,
-    mapLink: p.mapLink || undefined,
-    imageUrl: (p as { imageUrl?: string | null }).imageUrl || undefined,
-    emergencyPhone: p.emergencyPhone || undefined,
-    ambulancePhone: p.ambulancePhone || undefined,
-    workingHours: p.workingHours || undefined,
-    departmentDiscounts: p.departmentDiscounts || undefined,
-    socialLinks: p.socialLinks || undefined,
-    facilities: p.facilities || undefined,
-    galleryImages: p.galleryImages || undefined,
-    upazila: p.upazila || "feni-sadar",
-    createdAt: p.createdAt
-      ? typeof p.createdAt === "string"
-        ? p.createdAt
-        : p.createdAt.toISOString()
-      : undefined,
-  };
-}
+import {
+  PARTNER_SELECT_FIELDS,
+  PARTNER_CARD_SELECT_FIELDS,
+  PARTNER_ADMIN_SELECT_FIELDS,
+  formatPartner,
+} from "@/lib/partnerFormat";
 
 export interface GetPaginatedPartnersAdminParams {
   page?: number;
@@ -213,7 +140,7 @@ export const getPartnersAction = unstable_cache(
     try {
       const data = await prisma.partner.findMany({
         orderBy: { createdAt: "desc" },
-        select: PARTNER_SELECT_FIELDS,
+        select: PARTNER_CARD_SELECT_FIELDS,
       });
 
       return data.map(formatPartner);
@@ -401,6 +328,25 @@ export async function updatePartnerProfileAction(
   }
 
   try {
+    let sanitizedGalleryImages: string | null = null;
+    if (input.galleryImages) {
+      try {
+        const parsed = JSON.parse(input.galleryImages);
+        if (Array.isArray(parsed)) {
+          const processed = await Promise.all(
+            parsed.map(async (item: Record<string, unknown>) => {
+              if (!item?.url || typeof item.url !== "string") return null;
+              const cleanUrl = await ensureStorageUrl(item.url, "partners", `${session.userId}_gal_${String(item.id || Date.now())}`);
+              return cleanUrl ? { ...item, url: cleanUrl } : null;
+            })
+          );
+          sanitizedGalleryImages = JSON.stringify(processed.filter(Boolean));
+        }
+      } catch (err) {
+        logger.error("[PartnerAction] Error parsing galleryImages JSON:", err);
+      }
+    }
+
     const updated = await prisma.partner.update({
       where: { id: session.userId },
       data: {
@@ -417,7 +363,7 @@ export async function updatePartnerProfileAction(
         departmentDiscounts: input.departmentDiscounts || null,
         socialLinks: input.socialLinks || null,
         facilities: input.facilities || null,
-        galleryImages: input.galleryImages || null,
+        galleryImages: sanitizedGalleryImages,
         ...(input.upazila !== undefined && { upazila: input.upazila || "feni-sadar" }),
       },
       select: PARTNER_SELECT_FIELDS,

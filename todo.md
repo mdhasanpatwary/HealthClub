@@ -1166,4 +1166,41 @@ This roadmap outlines the strategic localized content cluster required to achiev
     - [x] `feni-diabetic-hospital-guide.webp` (`/blog/feni-diabetic-hospital-guide`) — Feni Diabetic Association Hospital building & OPD (153 KB)
     - [x] `feni-medical-test-prices.webp` (`/blog/feni-medical-test-price-list`) — Pathology lab with blood tubes, requisition checklist & analyzer (104 KB)
 
+---
+
+### Cluster 7: Database Load and Bandwidth Optimization (Supabase and Next.js)
+
+- [x] **TODO-201**: **Prisma & Supabase Connection Pooling & Serverless Client Hardening**
+  - **Priority**: High (P0 - Prevents Connection Exhaustion & Server 500 Crashes)
+  - **Files**: `src/lib/prisma.ts`, `.env.example`
+  - **Details**: In `src/lib/prisma.ts`, reduce `pg.Pool` maximum pool size from `max: 15` to `max: 2` or `max: 3` in production to prevent concurrent serverless functions from saturating Supabase's max connection threshold. Ensure `globalForPrisma.prisma = prisma;` is preserved in production runtimes to prevent duplicate PrismaClient instances across warm container invocations. Verify that `DATABASE_URL` uses the Supavisor connection pooler on transaction mode (port `6543`) with `pgbouncer=true`, reserving port `5432` solely for `DIRECT_URL`.
+
+- [x] **TODO-202**: **Eliminate Unpaginated Database Queries & Full-Table Over-Fetching (Admin Members & Quick Tx Modal)**
+  - **Priority**: High (P0 - Cuts Unnecessary Database CPU & Megabytes of Egress)
+  - **Files**: `src/app/admin/members/page.tsx`, `src/app/admin/hooks/useAdminData.ts`, `src/app/actions/memberAdminActions.ts`, `src/app/actions/transactionActions.ts`
+  - **Details**: 
+    1. In `src/app/admin/members/page.tsx`, remove `getTransactionsAction()` from the initial page load. Fetch transactions on-demand only when a member details dialog is opened (`getTransactionsAction(viewingMember.id)` or paginated with `take: 10`).
+    2. In `src/app/admin/hooks/useAdminData.ts` (Quick Transaction Modal), replace `getMembersAction()` (which loads every member in the database into the browser) with a targeted single-record server lookup action `getMemberByIdOrPhoneAction(identifier)`.
+
+- [x] **TODO-203**: **Lightweight Directory Projections (Exclude Heavy JSON & Gallery Fields from Partner Directory)**
+  - **Priority**: Medium (P1 - Cuts Directory Egress by 60–80%)
+  - **Files**: `src/app/actions/partnerActions.ts`, `src/app/actions/partnerProfileQueryActions.ts`
+  - **Details**: Create a lightweight `PARTNER_CARD_SELECT_FIELDS` projection that strips heavy JSON strings (`facilities`, `galleryImages`, `departmentDiscounts`, `socialLinks`, `workingHours`, `mapLink`) when querying partners for the public directory cards and homepage (`getPartnersAction`). Retain full field selection only for single partner profile views (`/partner-hospitals/[slug]`).
+
+- [x] **TODO-204**: **Incremental Static Regeneration (ISR) & Edge CDN Caching for Public Directories (`/consultants`, `/partner-hospitals`, `/emergency`)**
+  - **Priority**: High (P1 - 95% Reduction in Public Database Hits)
+  - **Files**: `src/app/consultants/page.tsx`, `src/app/partner-hospitals/page.tsx`, `src/app/emergency/page.tsx`, `src/app/health-tips/page.tsx`
+  - **Details**: Public directory pages are currently evaluated as dynamic (`ƒ`) due to request-time cookie or searchParams access. Add `export const revalidate = 300;` (5-minute edge caching) and decouple request-time cookie/searchParams reads so the base HTML and cached dataset are served directly from the Edge CDN (Cloudflare/Vercel) without triggering server-side database actions on every page view or search engine crawler hit.
+
+- [x] **TODO-205**: **Realtime WebSocket & Heartbeat Polling Optimization**
+  - **Priority**: Medium (P2 - Reduces Idle WebSocket Bandwidth & Polling Egress)
+  - **Files**: `src/app/dashboard/hooks/useMemberNotifications.ts`, `src/lib/realtimeHub.ts`
+  - **Details**: In `useMemberNotifications.ts`, disable periodic `setInterval` background polling (`autoRefreshInterval = 0`) when an active Supabase Realtime channel or SSE connection is open, using polling only as a dormant fallback when WebSockets are disconnected. In Supabase Dashboard, ensure the `supabase_realtime` publication only replicates essential notification/transaction tables.
+
+- [x] **TODO-206**: **Image Egress Optimization & Responsive Sizing (Eliminate Base64 Overhead & Optimize Edge Cache)**
+  - **Priority**: Medium (P2 - Prevents Supabase Storage Egress Spikes)
+  - **Files**: `src/services/storageService.ts`, `src/components/ui/ImageUpload.tsx`, `next.config.ts`
+  - **Details**: Ensure all image uploads via `ImageUpload.tsx` always migrate to Supabase Storage CDN URLs and prevent any raw base64 data URLs from being persisted to PostgreSQL columns. Enforce responsive `sizes` attributes across all `<Image>` component usage to ensure mobile clients request appropriately dimensioned WebP assets from Next.js image cache rather than full desktop resolutions.
+
+
 

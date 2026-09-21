@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { User, Building, Camera, Trash2, Stethoscope, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -30,6 +30,28 @@ export function ImageUpload({
   const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [localPreview, setLocalPreview] = useState<string | null>(null);
+
+  // Seamlessly migrate legacy base64 values if existing in database records
+  const migratedRef = useRef(false);
+  useEffect(() => {
+    if (!migratedRef.current && value && value.startsWith("data:image/") && !isUploading) {
+      migratedRef.current = true;
+      setIsUploading(true);
+      uploadImageAction(value, folder)
+        .then((res) => {
+          if (res.success && res.url) {
+            onChange(res.url);
+          }
+        })
+        .catch(() => {
+          // silently ignore background migration failure
+        })
+        .finally(() => {
+          setIsUploading(false);
+        });
+    }
+  }, [value, folder, isUploading, onChange]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -94,39 +116,48 @@ export function ImageUpload({
           const ctx = canvas.getContext("2d");
 
           if (!ctx) {
-            // Fallback to original data URL if canvas 2D context fails
-            onChange(result);
+            toast.error(t("ui.imageUpload.processError"));
+            if (fileInputRef.current) fileInputRef.current.value = "";
             return;
           }
 
           ctx.drawImage(img, 0, 0, width, height);
           const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.82);
 
-          // Upload to Supabase Storage CDN asynchronously
+          // Show immediate local preview with loading state
+          setLocalPreview(compressedDataUrl);
           setIsUploading(true);
+
+          // Upload to Supabase Storage CDN asynchronously
           uploadImageAction(compressedDataUrl, folder)
             .then((res) => {
               if (res.success && res.url) {
                 onChange(res.url);
+                setLocalPreview(null);
                 toast.success(t("ui.imageUpload.uploadSuccess"));
-              } else if (!res.isConfigured) {
-                // Storage not configured yet, fallback to compressed base64
-                onChange(compressedDataUrl);
               } else {
-                // Upload failed, retain compressed preview and notify
-                onChange(compressedDataUrl);
+                // Upload failed: clear preview and prevent base64 from being stored in form
+                setLocalPreview(null);
+                if (fileInputRef.current) {
+                  fileInputRef.current.value = "";
+                }
                 toast.error(res.error || t("ui.imageUpload.processError"));
               }
             })
             .catch(() => {
-              onChange(compressedDataUrl);
+              setLocalPreview(null);
+              if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+              }
               toast.error(t("ui.imageUpload.processError"));
             })
             .finally(() => {
               setIsUploading(false);
             });
         } catch {
-          onChange(result);
+          setLocalPreview(null);
+          if (fileInputRef.current) fileInputRef.current.value = "";
+          toast.error(t("ui.imageUpload.processError"));
         }
       };
       img.src = result;
@@ -135,17 +166,20 @@ export function ImageUpload({
     reader.readAsDataURL(file);
   };
 
+  const displayUrl = localPreview || value;
+
   return (
     <div className="space-y-2">
       {label && <label className="text-xs font-semibold text-secondary block">{label}</label>}
       <div className="flex items-center gap-4">
         <div className="relative h-16 w-16 rounded-xl border border-border bg-muted/40 overflow-hidden flex items-center justify-center shrink-0 shadow-sm group">
-          {value ? (
+          {displayUrl ? (
             <Image
-              src={value}
+              src={displayUrl}
               alt={label ? `${label} Preview` : "Image Preview"}
               fill
-              unoptimized={value.startsWith("data:")}
+              sizes="64px"
+              unoptimized={displayUrl.startsWith("data:")}
               className="object-cover object-left-top"
             />
           ) : fallbackType === 'building' ? (
@@ -190,13 +224,14 @@ export function ImageUpload({
             onChange={handleFileChange}
             className="border-border bg-background text-xs cursor-pointer file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
           />
-          {value && (
+          {(value || localPreview) && (
             <Button
               type="button"
               variant="ghost"
               disabled={disabled || isUploading}
               onClick={() => {
                 onChange("");
+                setLocalPreview(null);
                 if (fileInputRef.current) {
                   fileInputRef.current.value = "";
                 }

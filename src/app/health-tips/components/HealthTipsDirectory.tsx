@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
   HEALTH_TIPS_ARTICLES,
@@ -37,6 +37,30 @@ export function HealthTipsDirectory({
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(12);
+
+  // Sync category with URL query parameters on initial client mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const cat = params.get("category");
+    if (cat && (HEALTH_CATEGORIES.some((c) => c.id === cat) || cat === "all")) {
+      queueMicrotask(() => setSelectedCategory(cat));
+    }
+  }, []);
+
+  const handleCategoryChange = (cat: string) => {
+    setSelectedCategory(cat);
+    setVisibleCount(12);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      if (cat === "all") {
+        url.searchParams.delete("category");
+      } else {
+        url.searchParams.set("category", cat);
+      }
+      window.history.replaceState(null, "", `${url.pathname}${url.search}`);
+    }
+  };
 
   // Calculate category counts
   const categoryCounts = useMemo(() => {
@@ -127,10 +151,7 @@ export function HealthTipsDirectory({
             <select
               aria-label={isEn ? "Filter health guides by category" : "ক্যাটাগরি অনুযায়ী ফিল্টার"}
               value={selectedCategory}
-              onChange={(e) => {
-                setSelectedCategory(e.target.value);
-                setVisibleCount(12);
-              }}
+              onChange={(e) => handleCategoryChange(e.target.value)}
               className="w-full h-11 pl-9 pr-10 text-xs font-bold rounded-xl border border-border/80 bg-card text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/20 appearance-none shadow-xs cursor-pointer"
             >
               {HEALTH_CATEGORIES.map((cat) => {
@@ -160,10 +181,7 @@ export function HealthTipsDirectory({
                 role="button"
                 aria-pressed={active}
                 key={cat.id}
-                onClick={() => {
-                  setSelectedCategory(cat.id);
-                  setVisibleCount(12);
-                }}
+                onClick={() => handleCategoryChange(cat.id)}
                 className={`px-3.5 py-2 rounded-xl text-xs font-bold shrink-0 transition-all flex items-center gap-1.5 cursor-pointer ${
                   active
                     ? "bg-primary text-white shadow-sm"

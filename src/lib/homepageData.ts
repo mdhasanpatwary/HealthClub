@@ -3,6 +3,7 @@ import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { logger } from "@/lib/logger";
 import type { Partner } from "@/services/db";
+import { PARTNER_CARD_SELECT_FIELDS, formatPartner } from "@/lib/partnerFormat";
 
 /**
  * Fetches all 4 homepage stat counts in a single raw SQL query.
@@ -73,22 +74,10 @@ export const getHomepagePartners = unstable_cache(
       const data = await prisma.partner.findMany({
         orderBy: { createdAt: "desc" },
         take: limit,
+        select: PARTNER_CARD_SELECT_FIELDS,
       });
 
-      return data.map((p) => ({
-        id: p.id,
-        name: p.name,
-        category: p.category as Partner["category"],
-        address: p.address,
-        discount: p.discount,
-        phone: p.phone,
-        logoText: p.logoText,
-        mapLink: p.mapLink || undefined,
-        imageUrl: p.imageUrl || undefined,
-        emergencyPhone: p.emergencyPhone || undefined,
-        workingHours: p.workingHours || undefined,
-        departmentDiscounts: p.departmentDiscounts || undefined,
-      }));
+      return data.map(formatPartner);
     } catch (error) {
       logger.error("Error fetching homepage partners:", error);
       return [];

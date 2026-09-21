@@ -5,6 +5,7 @@ import { authStore } from "@/services/authStore";
 import {
   subscribeToRealtimeHub,
   isSubscriptionAuthenticated,
+  isRealtimeConnected,
   type ListenerCallbacks,
 } from "@/lib/realtimeHub";
 import type {
@@ -13,7 +14,7 @@ import type {
   RealtimeAdminAlertPayload,
 } from "@/lib/realtimeEmitter";
 
-export { isSubscriptionAuthenticated };
+export { isSubscriptionAuthenticated, isRealtimeConnected };
 
 export interface UseRealtimeOptions {
   role?: "user" | "admin" | "partner" | "partner_staff";
@@ -24,6 +25,7 @@ export interface UseRealtimeOptions {
   onNotification?: (payload: RealtimeMemberNotificationPayload) => void;
   onTransaction?: (payload: RealtimeTransactionPayload) => void;
   onAdminAlert?: (payload: RealtimeAdminAlertPayload) => void;
+  onConnectionChange?: (isConnected: boolean) => void;
 }
 
 export function useRealtimeNotifications(options: UseRealtimeOptions = {}) {
@@ -36,37 +38,11 @@ export function useRealtimeNotifications(options: UseRealtimeOptions = {}) {
     onNotification,
     onTransaction,
     onAdminAlert,
+    onConnectionChange,
   } = options;
 
   const listenerId = useId();
   const [, setAuthTick] = useState(0);
-
-  // Re-evaluate on auth state changes (login, logout, switch account)
-  useEffect(() => {
-    const handleAuthChange = () => {
-      setAuthTick((t) => t + 1);
-    };
-    window.addEventListener("auth-change", handleAuthChange);
-    return () => {
-      window.removeEventListener("auth-change", handleAuthChange);
-    };
-  }, []);
-
-  const callbacksRef = useRef({
-    onNotification,
-    onTransaction,
-    onAdminAlert,
-    enableSound,
-  });
-
-  useEffect(() => {
-    callbacksRef.current = {
-      onNotification,
-      onTransaction,
-      onAdminAlert,
-      enableSound,
-    };
-  }, [onNotification, onTransaction, onAdminAlert, enableSound]);
 
   // Resolve effective entity IDs from authStore if not explicitly provided
   const effectiveMemberId =
@@ -81,6 +57,40 @@ export function useRealtimeNotifications(options: UseRealtimeOptions = {}) {
       ? authStore.getCurrentPartner()?.id
       : undefined);
 
+  const [isConnected, setIsConnected] = useState<boolean>(() =>
+    isRealtimeConnected(role, effectiveMemberId, effectivePartnerId)
+  );
+
+  // Re-evaluate on auth state changes (login, logout, switch account)
+  useEffect(() => {
+    const handleAuthChange = () => {
+      setAuthTick((t) => t + 1);
+      setIsConnected(isRealtimeConnected(role, effectiveMemberId, effectivePartnerId));
+    };
+    window.addEventListener("auth-change", handleAuthChange);
+    return () => {
+      window.removeEventListener("auth-change", handleAuthChange);
+    };
+  }, [role, effectiveMemberId, effectivePartnerId]);
+
+  const callbacksRef = useRef({
+    onNotification,
+    onTransaction,
+    onAdminAlert,
+    onConnectionChange,
+    enableSound,
+  });
+
+  useEffect(() => {
+    callbacksRef.current = {
+      onNotification,
+      onTransaction,
+      onAdminAlert,
+      onConnectionChange,
+      enableSound,
+    };
+  }, [onNotification, onTransaction, onAdminAlert, onConnectionChange, enableSound]);
+
   useEffect(() => {
     if (!enabled) return;
 
@@ -92,12 +102,23 @@ export function useRealtimeNotifications(options: UseRealtimeOptions = {}) {
       onNotification: (payload) => callbacksRef.current.onNotification?.(payload),
       onTransaction: (payload) => callbacksRef.current.onTransaction?.(payload),
       onAdminAlert: (payload) => callbacksRef.current.onAdminAlert?.(payload),
+      onConnectionChange: (connected) => {
+        setIsConnected(connected);
+        callbacksRef.current.onConnectionChange?.(connected);
+      },
     };
 
-    return subscribeToRealtimeHub(listener, {
+    const unsubscribe = subscribeToRealtimeHub(listener, {
       role,
       memberId: effectiveMemberId,
       partnerId: effectivePartnerId,
     });
+
+    return () => {
+      unsubscribe();
+      setIsConnected(false);
+    };
   }, [listenerId, role, effectiveMemberId, effectivePartnerId, enabled]);
+
+  return { isConnected: enabled && isConnected };
 }

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { getStatsAction, addTransactionAction } from "@/app/actions/transactionActions";
 import { getPartnersAction } from "@/app/actions/partnerActions";
-import { getMembersAction } from "@/app/actions/memberAdminActions";
+import { getMemberByIdOrPhoneAction } from "@/app/actions/memberAdminActions";
 import { Partner } from "@/services/db";
 import { parseDiscountPercentage } from "@/lib/utils";
 import { formatNum, Locale } from "@/lib/i18n";
@@ -82,8 +82,7 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
     e.preventDefault();
 
     try {
-      const members = await getMembersAction();
-      const member = members.find((m) => m.id === newTx.memberId || m.phone === newTx.memberId);
+      const member = await getMemberByIdOrPhoneAction(newTx.memberId);
       if (!member) {
         toast.error(t("admin.dashboard.memberNotFound"));
         return;

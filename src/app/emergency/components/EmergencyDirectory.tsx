@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   UPAZILAS_FENI,
   BLOOD_GROUPS,
@@ -59,6 +59,30 @@ export function EmergencyDirectory({
   const [selectedAmbulanceType, setSelectedAmbulanceType] = useState<string>("all");
   const [ambulanceSearch, setAmbulanceSearch] = useState<string>("");
 
+  // Sync tab with URL query parameters on initial client mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get("tab");
+    if (tab === "ambulances" || tab === "hotlines" || tab === "donors") {
+      queueMicrotask(() => setActiveTab(tab));
+    }
+  }, []);
+
+  const handleTabChange = (val: string) => {
+    const tab = val as "donors" | "ambulances" | "hotlines";
+    setActiveTab(tab);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      if (tab === "donors") {
+        url.searchParams.delete("tab");
+      } else {
+        url.searchParams.set("tab", tab);
+      }
+      window.history.replaceState(null, "", `${url.pathname}${url.search}`);
+    }
+  };
+
   const donorsList = useMemo(() => initialBloodDonors ?? [], [initialBloodDonors]);
   const ambulancesList = useMemo(() => initialAmbulances ?? [], [initialAmbulances]);
   const hotlinesList = useMemo(() => initialHotlines ?? [], [initialHotlines]);
@@ -111,7 +135,7 @@ export function EmergencyDirectory({
       {/* Tab Switcher */}
       <Tabs
         value={activeTab}
-        onValueChange={(val) => setActiveTab(val as "donors" | "ambulances" | "hotlines")}
+        onValueChange={handleTabChange}
         className="w-full"
       >
         <TabsList className="grid w-full grid-cols-3 h-12 p-1 bg-muted/80 rounded-2xl">

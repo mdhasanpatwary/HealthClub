@@ -2,7 +2,6 @@ import PartnerDirectory from "@/components/ui/PartnerDirectory";
 import PartnerHospitalsGuide from "@/components/partner-hospitals/PartnerHospitalsGuide";
 import PartnerHospitalsFAQ from "@/components/partner-hospitals/PartnerHospitalsFAQ";
 import CommunityNetworkCTA from "@/components/common/CommunityNetworkCTA";
-import { cookies } from "next/headers";
 import { Locale } from "@/lib/i18n";
 import { tServer } from "@/lib/i18n.server";
 import JsonLd from "@/components/seo/JsonLd";
@@ -10,65 +9,22 @@ import { getPartnersAction } from "@/app/actions/partnerActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 import { Sparkles, ShieldCheck, Tag, Pill, MapPin } from "lucide-react";
 
-interface PartnerHospitalsPageProps {
-  searchParams?: Promise<{ category?: string; upazila?: string }>;
-}
+export const revalidate = 300; // 5-minute Incremental Static Regeneration (ISR)
 
-export async function generateMetadata({ searchParams }: PartnerHospitalsPageProps) {
-  const { category } = (await searchParams) || {};
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const isEn = locale === "en";
-
-  const categoryMeta: Record<string, { titleBn: string; titleEn: string; descBn: string; descEn: string }> = {
-    hospital: {
-      titleBn: "ফেনী হাসপাতাল তালিকা ও চিকিৎসা সেবা ডিসকাউন্ট - হেলথ ক্লাব",
-      titleEn: "Feni Hospital List & Healthcare Discounts - Health Club",
-      descBn: "ফেনীর শীর্ষ বেসরকারি হাসপাতাল ও ক্লিনিকের তালিকা। হেলথ ক্লাব মেম্বারশিপ কার্ডে পান কেবিন, বেড ও চিকিৎসা ফিতে বিশেষ ছাড়।",
-      descEn: "Directory of top private hospitals and clinics in Feni. Get exclusive member discounts on cabin, admissions, and consultations.",
-    },
-    diagnostic: {
-      titleBn: "ফেনী ডায়াগনস্টিক সেন্টার ও প্যাথলজি ল্যাব টেস্ট ছাড় - হেলথ ক্লাব",
-      titleEn: "Feni Diagnostic Centers & Pathology Lab Discounts - Health Club",
-      descBn: "ফেনীর সেরা ডায়াগনস্টিক সেন্টার ও প্যাথলজি ল্যাবের তালিকা। রক্ত পরীক্ষা, এক্স-রে, আল্ট্রাসনোগ্রামসহ সকল টেস্টে ১০% থেকে ৩০% ডিসকাউন্ট।",
-      descEn: "Complete list of diagnostic centers and pathology labs in Feni. Get 10% to 30% instant discounts on blood tests, scans, and investigations.",
-    },
-    pharmacy: {
-      titleBn: "ফেনী মডেল ফার্মেসি ও ঔষধ ডিসকাউন্ট - হেলথ ক্লাব",
-      titleEn: "Feni Model Pharmacies & Medicine Discounts - Health Club",
-      descBn: "ফেনীর অনুমোদিত মডেল ফার্মেসি তালিকা। হেলথ ক্লাব মেম্বার কার্ড ব্যবহারে প্রেসক্রিপশন ঔষধে নিশ্চিত ক্যাশ ডিসকাউন্ট।",
-      descEn: "Verified model pharmacies in Feni offering instant discounts and genuine medications for Health Club members.",
-    },
-  };
-
-  const selectedCat = category && category in categoryMeta ? categoryMeta[category] : null;
-
-  const rawBnTitle = selectedCat
-    ? selectedCat.titleBn.replace(/\s*[-|]\s*হেলথ ক্লাব\s*$/, "")
-    : "ফেনী হাসপাতাল তালিকা, ডায়াগনস্টিক সেন্টার ও প্যাথলজি ডিসকাউন্ট";
-
-  const rawEnTitle = selectedCat
-    ? selectedCat.titleEn
-    : "Feni Hospital List, Diagnostic Centers & Pathology Lab Discounts | Health Club";
+export async function generateMetadata() {
+  const isEn = false;
+  const rawBnTitle = "ফেনী হাসপাতাল তালিকা, ডায়াগনস্টিক সেন্টার ও প্যাথলজি ডিসকাউন্ট";
+  const rawEnTitle = "Feni Hospital List, Diagnostic Centers & Pathology Lab Discounts | Health Club";
 
   const pageTitle = isEn ? { absolute: rawEnTitle } : rawBnTitle;
-  const ogTitle = isEn ? rawEnTitle : (selectedCat ? selectedCat.titleBn : "ফেনী হাসপাতাল তালিকা, ডায়াগনস্টিক সেন্টার ও প্যাথলজি ডিসকাউন্ট - হেলথ ক্লাব");
-
-  const pageDesc = selectedCat
-    ? (isEn ? selectedCat.descEn : selectedCat.descBn)
-    : (isEn ? "Explore verified private hospitals, diagnostic labs, pathology clinics, and model pharmacies in Feni. Enjoy 10% to 30% instant member discounts on medical tests, admissions, and medicines." : "ফেনীর শীর্ষ বেসরকারি হাসপাতাল, প্যাথলজি ল্যাব, ডায়াগনস্টিক সেন্টার ও মডেল ফার্মেসির তালিকা। হেলথ ক্লাব মেম্বার কার্ডে পান ১০% থেকে ৩০% নিশ্চিত ডিসকাউন্ট।");
-
-  const canonicalUrl = category && category in categoryMeta
-    ? `${SITE_URL}/partner-hospitals?category=${category}`
-    : `${SITE_URL}/partner-hospitals`;
-
-  const ogDesc = pageDesc;
+  const ogTitle = "ফেনী হাসপাতাল তালিকা, ডায়াগনস্টিক সেন্টার ও প্যাথলজি ডিসকাউন্ট - হেলথ ক্লাব";
+  const pageDesc = "ফেনীর শীর্ষ বেসরকারি হাসপাতাল, প্যাথলজি ল্যাব, ডায়াগনস্টিক সেন্টার ও মডেল ফার্মেসির তালিকা। হেলথ ক্লাব মেম্বার কার্ডে পান ১০% থেকে ৩০% নিশ্চিত ডিসকাউন্ট।";
 
   return {
     title: pageTitle,
     description: pageDesc,
     alternates: {
-      canonical: canonicalUrl,
+      canonical: `${SITE_URL}/partner-hospitals`,
     },
     keywords: [
       "feni hospital list",
@@ -103,17 +59,17 @@ export async function generateMetadata({ searchParams }: PartnerHospitalsPagePro
     ],
     openGraph: {
       title: ogTitle,
-      description: ogDesc,
+      description: pageDesc,
       url: `${SITE_URL}/partner-hospitals`,
       siteName: "হেলথ ক্লাব (Health Club)",
-      locale: isEn ? "en_US" : "bn_BD",
+      locale: "bn_BD",
       type: "website",
       images: DEFAULT_OG_IMAGES,
     },
     twitter: {
       card: "summary_large_image",
       title: ogTitle,
-      description: ogDesc,
+      description: pageDesc,
       images: DEFAULT_TWITTER_IMAGES,
     },
     robots: {
@@ -130,14 +86,12 @@ export async function generateMetadata({ searchParams }: PartnerHospitalsPagePro
   };
 }
 
-export default async function PartnerHospitalsPage({ searchParams }: PartnerHospitalsPageProps) {
-  const { category } = (await searchParams) || {};
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const isEn = locale === "en";
+export default async function PartnerHospitalsPage() {
+  const locale = "bn" as Locale;
+  const isEn = false;
   const t = (key: string) => tServer(locale, key);
 
-  // Fetch partners server-side (cached)
+  // Fetch partners server-side (cached with ISR)
   const allPartners = await getPartnersAction();
 
   const jsonLdData = [
@@ -162,11 +116,9 @@ export default async function PartnerHospitalsPage({ searchParams }: PartnerHosp
     {
       "@context": "https://schema.org",
       "@type": ["MedicalBusiness", "MedicalOrganization"],
-      "name": isEn ? "Health Club Partner Healthcare Network Feni" : "হেলথ ক্লাব পার্টনার হাসপাতাল ও ডায়াগনস্টিক নেটওয়ার্ক (ফেনী)",
+      "name": "হেলথ ক্লাব পার্টনার হাসপাতাল ও ডায়াগনস্টিক নেটওয়ার্ক (ফেনী)",
       "url": `${SITE_URL}/partner-hospitals`,
-      "description": isEn
-        ? "Network of verified partner hospitals, diagnostic centers, pathology labs, and model pharmacies offering 10% to 30% discounts in Feni, Bangladesh."
-        : "ফেনীর শীর্ষ বেসরকারি হাসপাতাল, প্যাথলজি ল্যাব, ডায়াগনস্টিক সেন্টার ও মডেল ফার্মেসির তালিকা এবং ১০% থেকে ৩০% মেম্বার ডিসকাউন্ট নেটওয়ার্ক।",
+      "description": "ফেনীর শীর্ষ বেসরকারি হাসপাতাল, প্যাথলজি ল্যাব, ডায়াগনস্টিক সেন্টার ও মডেল ফার্মেসির তালিকা এবং ১০% থেকে ৩০% মেম্বার ডিসকাউন্ট নেটওয়ার্ক।",
       "areaServed": [
         "Feni Sadar",
         "Daganbhuiyan",
@@ -294,7 +246,7 @@ export default async function PartnerHospitalsPage({ searchParams }: PartnerHosp
           <h2 id="partner-directory-heading" className="sr-only">
             {isEn ? "Partner Hospitals & Diagnostic Centers Directory" : "পার্টনার হাসপাতাল ও ডায়াগনস্টিক ডিরেক্টরি"}
           </h2>
-          <PartnerDirectory partners={allPartners} initialCategory={category || "all"} />
+          <PartnerDirectory partners={allPartners} />
         </section>
 
         {/* Informational SEO Guide Component (4 Pillars, Popular Test Pricing & 3-Step Redemption) */}
@@ -310,5 +262,3 @@ export default async function PartnerHospitalsPage({ searchParams }: PartnerHosp
     </div>
   );
 }
-
-

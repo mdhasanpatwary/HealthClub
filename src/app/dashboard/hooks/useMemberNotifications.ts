@@ -70,7 +70,7 @@ export function invalidateMemberNotificationsCache() {
 }
 
 export interface UseMemberNotificationsOptions {
-  autoRefreshInterval?: number; // In milliseconds (default 300000ms = 5m lazy heartbeat, 0 to disable)
+  autoRefreshInterval?: number; // In milliseconds (default 300000ms = 5m dormant fallback, 0 to disable)
   unreadOnly?: boolean;
   type?: string;
 }
@@ -84,8 +84,6 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
 
   const unreadOnly = options?.unreadOnly;
   const type = options?.type;
-  // Default to 5-minute lazy heartbeat instead of aggressive 30s polling
-  const autoRefreshInterval = options?.autoRefreshInterval ?? 300000;
 
   const fetchNotifications = useCallback(
     async (force = false) => {
@@ -132,6 +130,71 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
     [unreadOnly, type]
   );
 
+  // Real-time notification handler (Supabase Realtime / SSE)
+  const currentMemberId = typeof window !== "undefined" ? authStore.getCurrentUser()?.id : undefined;
+
+  const handleRealtimeNotification = useCallback(
+    (payload: RealtimeMemberNotificationPayload) => {
+      const incoming = payload.notification;
+      const newNotif: MemberNotification = {
+        id: incoming.id,
+        memberId: payload.memberId,
+        type: incoming.type as MemberNotification["type"],
+        titleBn: incoming.titleBn,
+        titleEn: incoming.titleEn,
+        messageBn: incoming.messageBn,
+        messageEn: incoming.messageEn,
+        isRead: false,
+        link: incoming.link,
+        createdAt: incoming.createdAt,
+      };
+
+      invalidateMemberNotificationsCache();
+
+      setItems((prev) => {
+        if (prev.some((n) => n.id === newNotif.id)) return prev;
+        return [newNotif, ...prev];
+      });
+
+      setUnreadCount((prev) => prev + 1);
+
+      const isHighPriority =
+        newNotif.type === "renewal_approved" ||
+        newNotif.type === "renewal_rejected" ||
+        newNotif.type === "expiring_soon";
+
+      if (isHighPriority) {
+        setHighPriorityCount((prev) => prev + 1);
+      }
+
+      // Deduplicate toast notification if multiple bells are mounted
+      if (!recentlyToastedIds.has(newNotif.id)) {
+        recentlyToastedIds.add(newNotif.id);
+        if (recentlyToastedIds.size > 100) {
+          const oldest = recentlyToastedIds.values().next().value;
+          if (oldest) recentlyToastedIds.delete(oldest);
+        }
+        toast.info(newNotif.titleBn || "নতুন বিজ্ঞপ্তি", {
+          description: newNotif.messageBn,
+        });
+      }
+    },
+    []
+  );
+
+  const { isConnected } = useRealtimeNotifications({
+    role: "user",
+    memberId: currentMemberId,
+    enableSound: true,
+    onNotification: handleRealtimeNotification,
+  });
+
+  // Optimize heartbeat & polling: When active Supabase Realtime channel or SSE is open,
+  // disable periodic background polling (autoRefreshInterval = 0) to eliminate idle egress.
+  // Polling acts only as a dormant fallback when WebSockets / SSE are disconnected.
+  const fallbackInterval = options?.autoRefreshInterval ?? 300000;
+  const effectiveRefreshInterval = isConnected ? 0 : fallbackInterval;
+
   useEffect(() => {
     let isMounted = true;
     Promise.resolve().then(() => {
@@ -141,7 +204,7 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
     });
 
     let timer: NodeJS.Timeout | null = null;
-    if (autoRefreshInterval > 0) {
+    if (effectiveRefreshInterval > 0) {
       timer = setInterval(() => {
         if (!isMounted) return;
         // Skip background polling if tab is hidden to eliminate idle database egress
@@ -149,7 +212,7 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
           return;
         }
         fetchNotifications(false);
-      }, autoRefreshInterval);
+      }, effectiveRefreshInterval);
     }
 
     const MIN_FOCUS_REFETCH_INTERVAL_MS = 300000; // 5 minutes minimum between focus refetches
@@ -215,66 +278,7 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
       window.removeEventListener("member-notification-local-delete", handleLocalDelete);
       window.removeEventListener("auth-change", handleAuthChange);
     };
-  }, [fetchNotifications, autoRefreshInterval]);
-
-  // Real-time notification handler (Supabase Realtime / SSE)
-  const currentMemberId = typeof window !== "undefined" ? authStore.getCurrentUser()?.id : undefined;
-
-  const handleRealtimeNotification = useCallback(
-    (payload: RealtimeMemberNotificationPayload) => {
-      const incoming = payload.notification;
-      const newNotif: MemberNotification = {
-        id: incoming.id,
-        memberId: payload.memberId,
-        type: incoming.type as MemberNotification["type"],
-        titleBn: incoming.titleBn,
-        titleEn: incoming.titleEn,
-        messageBn: incoming.messageBn,
-        messageEn: incoming.messageEn,
-        isRead: false,
-        link: incoming.link,
-        createdAt: incoming.createdAt,
-      };
-
-      invalidateMemberNotificationsCache();
-
-      setItems((prev) => {
-        if (prev.some((n) => n.id === newNotif.id)) return prev;
-        return [newNotif, ...prev];
-      });
-
-      setUnreadCount((prev) => prev + 1);
-
-      const isHighPriority =
-        newNotif.type === "renewal_approved" ||
-        newNotif.type === "renewal_rejected" ||
-        newNotif.type === "expiring_soon";
-
-      if (isHighPriority) {
-        setHighPriorityCount((prev) => prev + 1);
-      }
-
-      // Deduplicate toast notification if multiple bells are mounted
-      if (!recentlyToastedIds.has(newNotif.id)) {
-        recentlyToastedIds.add(newNotif.id);
-        if (recentlyToastedIds.size > 100) {
-          const oldest = recentlyToastedIds.values().next().value;
-          if (oldest) recentlyToastedIds.delete(oldest);
-        }
-        toast.info(newNotif.titleBn || "নতুন বিজ্ঞপ্তি", {
-          description: newNotif.messageBn,
-        });
-      }
-    },
-    []
-  );
-
-  useRealtimeNotifications({
-    role: "user",
-    memberId: currentMemberId,
-    enableSound: true,
-    onNotification: handleRealtimeNotification,
-  });
+  }, [fetchNotifications, effectiveRefreshInterval]);
 
   const markAsRead = useCallback(
     async (notificationId: string) => {
@@ -367,6 +371,7 @@ export function useMemberNotifications(options?: UseMemberNotificationsOptions) 
     unreadCount,
     highPriorityCount,
     loading,
+    isRealtimeConnected: isConnected,
     refresh: () => fetchNotifications(true),
     markAsRead,
     markAllAsRead,

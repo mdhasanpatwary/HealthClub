@@ -247,6 +247,7 @@ export default function InstallAppBanner() {
               alt="Health Club Logo"
               width={40}
               height={40}
+              sizes="40px"
               className="size-10 object-contain"
             />
           </div>

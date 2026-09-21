@@ -40,6 +40,7 @@ export type { PublicMemberVerification } from "@/services/db";
 
 export {
   getMembersAction,
+  getMemberByIdOrPhoneAction,
   getMemberProfilePictureAction,
   updateMemberStatusAction,
   updateMemberProfileAction,

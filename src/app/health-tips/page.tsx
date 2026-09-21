@@ -1,6 +1,4 @@
-import { cookies } from "next/headers";
 import Link from "next/link";
-import { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import { HealthTipsDirectory } from "./components/HealthTipsDirectory";
 import { HealthTipsQuickMatrix } from "./components/HealthTipsQuickMatrix";
@@ -12,10 +10,10 @@ import { buttonVariants } from "@/components/ui/button";
 import { getAllHealthTipsAction } from "@/app/actions/healthTipsAdminActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
+export const revalidate = 300; // 5-minute Incremental Static Regeneration (ISR)
+
 export async function generateMetadata() {
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const isEn = locale === "en";
+  const isEn = false;
 
   const ogTitle = isEn
     ? "Doctor-Verified Health Tips & Disease Prevention Guides | Health Club"
@@ -71,9 +69,7 @@ export async function generateMetadata() {
 }
 
 export default async function HealthTipsPage() {
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const isEn = locale === "en";
+  const isEn = false;
 
   const articles = await getAllHealthTipsAction();
 

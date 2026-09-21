@@ -4,13 +4,13 @@ import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { PlusCircle } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageProvider";
-import { Member, Partner, Transaction } from "@/services/db";
+import { Partner, Transaction } from "@/services/db";
 import {
   getPaginatedTransactionsAction,
   addTransactionAction,
 } from "@/app/actions/transactionActions";
 import { getPartnersAction } from "@/app/actions/partnerActions";
-import { getMembersAction } from "@/app/actions/memberAdminActions";
+import { getMemberByIdOrPhoneAction } from "@/app/actions/memberAdminActions";
 import { parseDiscountPercentage } from "@/lib/utils";
 import { formatNum } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,6 @@ export default function AdminTransactionsPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [partners, setPartners] = useState<Partner[]>([]);
-  const [members, setMembers] = useState<Member[]>([]);
 
   // Dialog States
   const [isTxOpen, setIsTxOpen] = useState(false);
@@ -36,19 +35,17 @@ export default function AdminTransactionsPage() {
 
   const loadData = useCallback(async () => {
     try {
-      const [txRes, partnersRes, membersRes] = await Promise.all([
+      const [txRes, partnersRes] = await Promise.all([
         getPaginatedTransactionsAction({
           page,
           pageSize,
         }),
         getPartnersAction(),
-        getMembersAction(),
       ]);
       setTransactions(txRes.data);
       setTotalItems(txRes.totalItems);
       setTotalPages(txRes.totalPages);
       setPartners(partnersRes);
-      setMembers(membersRes);
     } catch {
       toast.error("লেনদেন লগ লোড করতে সমস্যা হয়েছে।");
     } finally {
@@ -73,9 +70,7 @@ export default function AdminTransactionsPage() {
     e.preventDefault();
 
     try {
-      const member = members.find(
-        (m) => m.id === newTx.memberId || m.phone === newTx.memberId
-      );
+      const member = await getMemberByIdOrPhoneAction(newTx.memberId);
       if (!member) {
         toast.error(t("admin.dashboard.memberNotFound"));
         return;

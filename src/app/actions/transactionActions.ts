@@ -112,7 +112,7 @@ export async function getPaginatedTransactionsAction(
 
 // --- TRANSACTIONS ACTIONS ---
 
-export async function getTransactionsAction(memberId?: string): Promise<Transaction[]> {
+export async function getTransactionsAction(memberId?: string, limit?: number): Promise<Transaction[]> {
   const session = await getSessionUser();
   if (!session) return [];
 
@@ -128,8 +128,7 @@ export async function getTransactionsAction(memberId?: string): Promise<Transact
       // If memberId is provided, filter at DB level — avoids fetching all rows
       where: memberId ? { memberId } : undefined,
       orderBy: { createdAt: "desc" },
-      // Limit to latest 100 for admin view (no memberId) to prevent unbounded growth
-      ...(memberId ? {} : { take: 100 }),
+      take: limit ?? (memberId ? 20 : 100),
     });
 
     return data.map((t) => ({

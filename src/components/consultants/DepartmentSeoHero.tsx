@@ -7,12 +7,14 @@ interface DepartmentSeoHeroProps {
   seoConfig: DepartmentSeoConfig;
   locale: "bn" | "en";
   matchingDoctorsCount: number;
+  onReset?: () => void;
 }
 
 export default function DepartmentSeoHero({
   seoConfig,
   locale,
   matchingDoctorsCount,
+  onReset,
 }: DepartmentSeoHeroProps) {
   const isEn = locale === "en";
   const Icon = DEPT_ICONS[seoConfig.id] || Stethoscope;
@@ -36,6 +38,12 @@ export default function DepartmentSeoHero({
         <div className="flex flex-wrap items-center justify-between gap-2.5">
           <Link
             href="/consultants"
+            onClick={(e) => {
+              if (onReset) {
+                e.preventDefault();
+                onReset();
+              }
+            }}
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-primary transition-colors cursor-pointer"
           >
             <ArrowLeft className="h-3.5 w-3.5" />

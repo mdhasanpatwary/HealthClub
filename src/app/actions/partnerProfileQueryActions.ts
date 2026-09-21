@@ -6,38 +6,20 @@ import { logger } from "@/lib/logger";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 
+import {
+  PARTNER_FULL_SELECT_FIELDS,
+  PARTNER_CARD_SELECT_FIELDS,
+  formatPartner,
+} from "@/lib/partnerFormat";
+
 const PARTNERS_TAG = "partners";
 const DOCTORS_TAG = "doctors";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function formatPartner(p: any): Partner {
-  return {
-    id: p.id,
-    slug: p.slug || undefined,
-    name: p.name,
-    category: p.category as Partner["category"],
-    address: p.address,
-    discount: p.discount,
-    phone: p.phone,
-    email: p.email || undefined,
-    logoText: p.logoText,
-    mapLink: p.mapLink || undefined,
-    imageUrl: p.imageUrl || undefined,
-    emergencyPhone: p.emergencyPhone || undefined,
-    ambulancePhone: p.ambulancePhone || undefined,
-    workingHours: p.workingHours || undefined,
-    departmentDiscounts: p.departmentDiscounts || undefined,
-    socialLinks: p.socialLinks || undefined,
-    facilities: p.facilities || undefined,
-    galleryImages: p.galleryImages || undefined,
-    upazila: p.upazila || "feni-sadar",
-  };
-}
 
 /**
  * Fetch a single partner by ID or Slug.
  * Request-memoized via React cache() to deduplicate DB queries between generateMetadata and page body.
  * Falls back to initialPartners if not found in database.
+ * Retains full field selection (including heavy JSON strings & gallery) for single profile view.
  */
 export const getPartnerByIdAction = cache(
   async (idOrSlug: string): Promise<Partner | null> => {
@@ -65,27 +47,7 @@ export const getPartnerByIdAction = cache(
             { id: decoded },
           ],
         },
-        select: {
-          id: true,
-          slug: true,
-          name: true,
-          category: true,
-          address: true,
-          discount: true,
-          phone: true,
-          email: true,
-          logoText: true,
-          mapLink: true,
-          imageUrl: true,
-          emergencyPhone: true,
-          ambulancePhone: true,
-          workingHours: true,
-          departmentDiscounts: true,
-          socialLinks: true,
-          facilities: true,
-          galleryImages: true,
-          upazila: true,
-        },
+        select: PARTNER_FULL_SELECT_FIELDS,
       });
 
       if (!p) {
@@ -194,27 +156,7 @@ export async function getRelatedPartnersAction(
       },
       take: limit,
       orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        slug: true,
-        name: true,
-        category: true,
-        address: true,
-        discount: true,
-        phone: true,
-        email: true,
-        logoText: true,
-        mapLink: true,
-        imageUrl: true,
-        emergencyPhone: true,
-        ambulancePhone: true,
-        workingHours: true,
-        departmentDiscounts: true,
-        socialLinks: true,
-        facilities: true,
-        galleryImages: true,
-        upazila: true,
-      },
+      select: PARTNER_CARD_SELECT_FIELDS,
     });
 
     // If not enough in same category, fetch other partners
@@ -225,27 +167,7 @@ export async function getRelatedPartnersAction(
         },
         take: limit - data.length,
         orderBy: { createdAt: "desc" },
-        select: {
-          id: true,
-          slug: true,
-          name: true,
-          category: true,
-          address: true,
-          discount: true,
-          phone: true,
-          email: true,
-          logoText: true,
-          mapLink: true,
-          imageUrl: true,
-          emergencyPhone: true,
-          ambulancePhone: true,
-          workingHours: true,
-          departmentDiscounts: true,
-          socialLinks: true,
-          facilities: true,
-          galleryImages: true,
-          upazila: true,
-        },
+        select: PARTNER_CARD_SELECT_FIELDS,
       });
       data.push(...extra);
     }

@@ -126,6 +126,7 @@ export function PartnerVerifiedMemberCard({
             alt={verifiedMember.name}
             width={56}
             height={56}
+            sizes="56px"
             unoptimized={Boolean(verifiedMember.profilePictureUrl.startsWith("data:"))}
             className="h-14 w-14 rounded-full object-cover border border-border shadow-sm shrink-0"
           />

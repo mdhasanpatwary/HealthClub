@@ -16,6 +16,7 @@ export interface ListenerCallbacks {
   onTransaction?: (payload: RealtimeTransactionPayload) => void;
   onAdminAlert?: (payload: RealtimeAdminAlertPayload) => void;
   onAccountTerminated?: (payload: { memberId: string; status: string }) => void;
+  onConnectionChange?: (isConnected: boolean) => void;
 }
 
 export interface SubscriptionEntry {
@@ -28,6 +29,7 @@ export interface SubscriptionEntry {
   eventSource: EventSource | null;
   teardownTimeout: ReturnType<typeof setTimeout> | null;
   reconnectTimeout: ReturnType<typeof setTimeout> | null;
+  isConnected: boolean;
 }
 
 // Module-level multiplexer to prevent duplicate channel creation,
@@ -51,6 +53,30 @@ export function getSubscriptionKey(role?: string, memberId?: string, partnerId?:
   return `${role || "general"}:${memberId || "all"}:${partnerId || "all"}`;
 }
 
+export function isRealtimeConnected(role?: string, memberId?: string, partnerId?: string): boolean {
+  const key = getSubscriptionKey(role, memberId, partnerId);
+  return Boolean(activeSubscriptions.get(key)?.isConnected);
+}
+
+function setEntryConnectionStatus(entry: SubscriptionEntry, connected: boolean) {
+  if (entry.isConnected === connected) return;
+  entry.isConnected = connected;
+  for (const listener of entry.listeners.values()) {
+    try {
+      listener.onConnectionChange?.(connected);
+    } catch (err) {
+      console.warn("[Realtime] Error in onConnectionChange callback:", err);
+    }
+  }
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(
+      new CustomEvent("hc-realtime-connection-change", {
+        detail: { key: entry.key, isConnected: connected },
+      })
+    );
+  }
+}
+
 /**
  * Validates that the client is actively authenticated for the requested role and entity.
  * Prevents unauthorized or dormant/anonymous WebSocket connections from saturating Supabase limits.
@@ -61,29 +87,17 @@ export function isSubscriptionAuthenticated(
   partnerId?: string
 ): boolean {
   if (typeof window === "undefined" || !role) return false;
-
   if (role === "user") {
-    if (!memberId || typeof memberId !== "string" || memberId.trim().length === 0 || memberId === "all") {
-      return false;
-    }
-    const currentUser = authStore.getCurrentUser();
-    return Boolean(currentUser && currentUser.id === memberId);
+    if (!memberId || typeof memberId !== "string" || !memberId.trim() || memberId === "all") return false;
+    return Boolean(authStore.getCurrentUser()?.id === memberId);
   }
-
   if (role === "partner" || role === "partner_staff") {
-    if (!partnerId || typeof partnerId !== "string" || partnerId.trim().length === 0 || partnerId === "all") {
-      return false;
-    }
-    const currentPartner = authStore.getCurrentPartner();
-    const currentStaff = authStore.getCurrentStaff();
-    return Boolean((currentPartner && currentPartner.id === partnerId) || currentStaff);
+    if (!partnerId || typeof partnerId !== "string" || !partnerId.trim() || partnerId === "all") return false;
+    return Boolean(authStore.getCurrentPartner()?.id === partnerId || authStore.getCurrentStaff());
   }
-
   if (role === "admin") {
-    const currentUser = authStore.getCurrentUser();
-    return Boolean(currentUser && currentUser.role === "admin");
+    return Boolean(authStore.getCurrentUser()?.role === "admin");
   }
-
   return false;
 }
 
@@ -185,23 +199,17 @@ function dispatchToListeners(
 }
 
 function dispatchNotification(entry: SubscriptionEntry, payload: RealtimeMemberNotificationPayload) {
-  dispatchToListeners(entry, payload.notification.id, "hc-realtime-notification", payload, (l) =>
-    l.onNotification?.(payload)
-  );
+  dispatchToListeners(entry, payload.notification.id, "hc-realtime-notification", payload, (l) => l.onNotification?.(payload));
 }
 
 function dispatchTransaction(entry: SubscriptionEntry, payload: RealtimeTransactionPayload) {
   const eventId = `tx_${payload.transaction.id}_${payload.transaction.date}`;
-  dispatchToListeners(entry, eventId, "hc-realtime-transaction", payload, (l) =>
-    l.onTransaction?.(payload)
-  );
+  dispatchToListeners(entry, eventId, "hc-realtime-transaction", payload, (l) => l.onTransaction?.(payload));
 }
 
 function dispatchAdminAlert(entry: SubscriptionEntry, payload: RealtimeAdminAlertPayload) {
   const eventId = `alert_${payload.id || payload.category}_${payload.timestamp || ""}`;
-  dispatchToListeners(entry, eventId, "hc-realtime-admin-alert", payload, (l) =>
-    l.onAdminAlert?.(payload)
-  );
+  dispatchToListeners(entry, eventId, "hc-realtime-admin-alert", payload, (l) => l.onAdminAlert?.(payload));
 }
 
 function dispatchAccountTerminated(entry: SubscriptionEntry, payload: { memberId: string; status: string }) {
@@ -209,7 +217,7 @@ function dispatchAccountTerminated(entry: SubscriptionEntry, payload: { memberId
     try {
       listener.onAccountTerminated?.(payload);
     } catch (err) {
-      console.warn("[Realtime] Error in onAccountTerminated callback:", err);
+      console.warn("[Realtime] Error in onAccountTerminated:", err);
     }
   }
   window.dispatchEvent(new CustomEvent("hc-account-terminated", { detail: payload }));
@@ -222,6 +230,7 @@ function connectSSE(entry: SubscriptionEntry) {
     const eventSource = new EventSource("/api/realtime");
     entry.eventSource = eventSource;
 
+    eventSource.onopen = () => setEntryConnectionStatus(entry, true);
     eventSource.addEventListener("notification", (e) => {
       try { dispatchNotification(entry, JSON.parse(e.data)); } catch {}
     });
@@ -240,16 +249,17 @@ function connectSSE(entry: SubscriptionEntry) {
         entry.eventSource.close();
         entry.eventSource = null;
       }
+      setEntryConnectionStatus(entry, false);
       if (entry.listeners.size > 0 && !entry.reconnectTimeout && !isTabDormant) {
         entry.reconnectTimeout = setTimeout(() => {
           entry.reconnectTimeout = null;
-          if (entry.listeners.size > 0 && !isTabDormant) {
-            connectSSE(entry);
-          }
+          if (entry.listeners.size > 0 && !isTabDormant) connectSSE(entry);
         }, 5000);
       }
     };
-  } catch {}
+  } catch {
+    setEntryConnectionStatus(entry, false);
+  }
 }
 
 function initSubscription(entry: SubscriptionEntry) {
@@ -297,24 +307,12 @@ function initSubscription(entry: SubscriptionEntry) {
       if (entry.role === "user" && entry.memberId) {
         channel.on(
           "postgres_changes",
-          {
-            event: "DELETE",
-            schema: "public",
-            table: "members",
-            filter: `id=eq.${entry.memberId}`,
-          },
-          () => {
-            dispatchAccountTerminated(entry, { memberId: entry.memberId || "", status: "deleted" });
-          }
+          { event: "DELETE", schema: "public", table: "members", filter: `id=eq.${entry.memberId}` },
+          () => dispatchAccountTerminated(entry, { memberId: entry.memberId || "", status: "deleted" })
         );
         channel.on(
           "postgres_changes",
-          {
-            event: "UPDATE",
-            schema: "public",
-            table: "members",
-            filter: `id=eq.${entry.memberId}`,
-          },
+          { event: "UPDATE", schema: "public", table: "members", filter: `id=eq.${entry.memberId}` },
           (payload) => {
             const row = payload.new as Record<string, unknown>;
             if (row && row.status && row.status !== "active") {
@@ -325,12 +323,7 @@ function initSubscription(entry: SubscriptionEntry) {
       }
 
       // Listen on transactions table
-      if (
-        entry.role === "admin" ||
-        entry.role === "partner" ||
-        entry.role === "partner_staff" ||
-        entry.role === "user"
-      ) {
+      if (entry.role === "admin" || entry.role === "partner" || entry.role === "partner_staff" || entry.role === "user") {
         channel.on(
           "postgres_changes",
           {
@@ -361,8 +354,13 @@ function initSubscription(entry: SubscriptionEntry) {
       }
 
       channel.subscribe((status, err) => {
-        if (err || status === "CHANNEL_ERROR") {
+        if (status === "SUBSCRIBED") {
+          setEntryConnectionStatus(entry, true);
+        } else if (err || status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") {
           console.warn("[Realtime] Supabase subscription status:", status, err || "");
+          if (!entry.eventSource || entry.eventSource.readyState !== EventSource.OPEN) {
+            setEntryConnectionStatus(entry, false);
+          }
           connectSSE(entry);
         }
       });
@@ -399,6 +397,7 @@ function teardownEntryConnection(entry: SubscriptionEntry) {
     } catch {}
     entry.eventSource = null;
   }
+  setEntryConnectionStatus(entry, false);
 }
 
 function teardownEntry(entry: SubscriptionEntry) {
@@ -410,17 +409,10 @@ function teardownEntry(entry: SubscriptionEntry) {
 }
 
 function checkAndDisconnectIdleSocket() {
-  let hasActiveChannel = false;
-  for (const entry of activeSubscriptions.values()) {
-    if (entry.channel || entry.eventSource) {
-      hasActiveChannel = true;
-      break;
-    }
-  }
-  if (!hasActiveChannel) {
+  const hasActive = Array.from(activeSubscriptions.values()).some((e) => e.channel || e.eventSource);
+  if (!hasActive) {
     try {
-      const supabase = getSupabaseClient();
-      supabase?.realtime?.disconnect?.();
+      getSupabaseClient()?.realtime?.disconnect?.();
     } catch {}
   }
 }
@@ -435,7 +427,6 @@ export function subscribeToRealtimeHub(
 ): () => void {
   ensureDormancyListener();
 
-  // Validate authentication before initiating any channel or socket connection
   if (!isSubscriptionAuthenticated(options.role, options.memberId, options.partnerId)) {
     return () => {};
   }
@@ -454,18 +445,22 @@ export function subscribeToRealtimeHub(
       eventSource: null,
       teardownTimeout: null,
       reconnectTimeout: null,
+      isConnected: false,
     };
     activeSubscriptions.set(key, entry);
     entry.listeners.set(listener.id, listener);
-    if (!isTabDormant) {
-      initSubscription(entry);
-    }
+    if (!isTabDormant) initSubscription(entry);
   } else {
     if (entry.teardownTimeout) {
       clearTimeout(entry.teardownTimeout);
       entry.teardownTimeout = null;
     }
     entry.listeners.set(listener.id, listener);
+    if (entry.isConnected) {
+      try {
+        listener.onConnectionChange?.(true);
+      } catch {}
+    }
     if (!entry.channel && !entry.eventSource && !isTabDormant) {
       initSubscription(entry);
     }
@@ -478,9 +473,7 @@ export function subscribeToRealtimeHub(
     currentEntry.listeners.delete(listener.id);
 
     if (currentEntry.listeners.size === 0) {
-      if (currentEntry.teardownTimeout) {
-        clearTimeout(currentEntry.teardownTimeout);
-      }
+      if (currentEntry.teardownTimeout) clearTimeout(currentEntry.teardownTimeout);
       currentEntry.teardownTimeout = setTimeout(() => {
         if (currentEntry.listeners.size === 0) {
           teardownEntry(currentEntry);

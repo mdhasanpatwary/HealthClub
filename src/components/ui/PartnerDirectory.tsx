@@ -48,6 +48,51 @@ export default function PartnerDirectory({
     }
   }
 
+  // Sync with URL query parameters on initial client mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const cat = params.get("category");
+    const upz = params.get("upazila");
+    if (cat && ["hospital", "diagnostic", "pharmacy"].includes(cat)) {
+      queueMicrotask(() => setSelectedCategory(cat));
+    }
+    if (upz && upz !== "all") {
+      queueMicrotask(() => setSelectedUpazila(upz));
+    }
+  }, []);
+
+  // Update browser URL query params without full page reload
+  const updateUrlParams = (cat: string, upz: string) => {
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    if (cat && cat !== "all") url.searchParams.set("category", cat);
+    else url.searchParams.delete("category");
+    if (upz && upz !== "all") url.searchParams.set("upazila", upz);
+    else url.searchParams.delete("upazila");
+    window.history.replaceState(null, "", `${url.pathname}${url.search}`);
+  };
+
+  const handleCategoryChange = (cat: string) => {
+    setSelectedCategory(cat);
+    setVisibleCount(18);
+    updateUrlParams(cat, selectedUpazila);
+  };
+
+  const handleUpazilaChange = (upz: string) => {
+    setSelectedUpazila(upz);
+    setVisibleCount(18);
+    updateUrlParams(selectedCategory, upz);
+  };
+
+  const handleResetFilters = () => {
+    setSelectedCategory("all");
+    setSelectedUpazila("all");
+    setSearchQuery("");
+    setVisibleCount(18);
+    updateUrlParams("all", "all");
+  };
+
   useEffect(() => {
     if (initialPartners && initialPartners.length > 0) {
       return;
@@ -153,10 +198,7 @@ export default function PartnerDirectory({
                   type="button"
                   key={cat.value}
                   aria-pressed={selectedCategory === cat.value}
-                  onClick={() => {
-                    setSelectedCategory(cat.value);
-                    setVisibleCount(18);
-                  }}
+                  onClick={() => handleCategoryChange(cat.value)}
                   className={`px-4 py-2 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
                     selectedCategory === cat.value
                       ? "bg-primary text-white border-primary shadow-xs"
@@ -181,12 +223,7 @@ export default function PartnerDirectory({
               {(selectedUpazila !== "all" || selectedCategory !== "all" || searchQuery) && (
                 <button
                   type="button"
-                  onClick={() => {
-                    setSelectedUpazila("all");
-                    setSelectedCategory("all");
-                    setSearchQuery("");
-                    setVisibleCount(18);
-                  }}
+                  onClick={handleResetFilters}
                   className="text-xs text-primary hover:underline font-semibold cursor-pointer"
                 >
                   {t("ui.partnerdirectory.resetFilters")}
@@ -207,10 +244,7 @@ export default function PartnerDirectory({
                     key={upz.id}
                     type="button"
                     aria-pressed={isSelected}
-                    onClick={() => {
-                      setSelectedUpazila(upz.id);
-                      setVisibleCount(18);
-                    }}
+                    onClick={() => handleUpazilaChange(upz.id)}
                     className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                       isSelected
                         ? "bg-secondary text-white border-secondary shadow-2xs"

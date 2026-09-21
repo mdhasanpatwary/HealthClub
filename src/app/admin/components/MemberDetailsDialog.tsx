@@ -12,11 +12,12 @@ import {
 import { Member, Transaction } from "@/services/db";
 import { formatNum, Locale } from "@/lib/i18n";
 import { getMemberProfilePictureAction } from "@/app/actions/memberAdminActions";
+import { getTransactionsAction } from "@/app/actions/transactionActions";
 
 interface MemberDetailsDialogProps {
   viewingMember: Member | null;
   onClose: () => void;
-  transactions: Transaction[];
+  transactions?: Transaction[];
   onToggleStatus: (id: string) => void;
   onEditClick: (member: Member) => void;
   locale: Locale;
@@ -36,10 +37,14 @@ export function MemberDetailsDialog({
   const [fetchedPic, setFetchedPic] = useState<string | null>(null);
   const [fetchedMemberId, setFetchedMemberId] = useState<string | null>(null);
 
+  const [fetchedTxs, setFetchedTxs] = useState<Transaction[]>([]);
+  const [fetchedTxMemberId, setFetchedTxMemberId] = useState<string | null>(null);
+
   const memberId = viewingMember?.id;
   const initialPicUrl = viewingMember?.profilePictureUrl;
   const profilePic = initialPicUrl || (fetchedMemberId === memberId ? fetchedPic : null);
   const loadingPic = Boolean(memberId && !initialPicUrl && fetchedMemberId !== memberId);
+  const loadingTxs = Boolean(memberId && transactions === undefined && fetchedTxMemberId !== memberId);
 
   useEffect(() => {
     if (!memberId || initialPicUrl) return;
@@ -64,9 +69,34 @@ export function MemberDetailsDialog({
     };
   }, [memberId, initialPicUrl]);
 
+  useEffect(() => {
+    if (!memberId || transactions !== undefined) return;
+
+    let isMounted = true;
+    getTransactionsAction(memberId, 10)
+      .then((txs) => {
+        if (isMounted) {
+          setFetchedTxs(txs);
+          setFetchedTxMemberId(memberId);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setFetchedTxs([]);
+          setFetchedTxMemberId(memberId);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [memberId, transactions]);
+
   if (!viewingMember) return null;
 
-  const memberTxs = transactions.filter((t) => t.memberId === viewingMember.id);
+  const memberTxs = transactions !== undefined
+    ? transactions.filter((t) => t.memberId === viewingMember.id)
+    : (fetchedTxMemberId === memberId ? fetchedTxs : []);
 
   return (
     <>
@@ -103,6 +133,7 @@ export function MemberDetailsDialog({
                       alt={viewingMember.name} 
                       width={56}
                       height={56}
+                      sizes="56px"
                       unoptimized={Boolean(profilePic.startsWith("data:"))}
                       className="h-full w-full object-cover object-left-top transition-transform duration-200 group-hover:scale-105" 
                     />
@@ -275,7 +306,12 @@ export function MemberDetailsDialog({
               <HistoryIcon className="h-4 w-4 text-primary" />
               {t("admin.dashboard.txLogDesc")}
             </h4>
-            {memberTxs.length > 0 ? (
+            {loadingTxs ? (
+              <div className="space-y-2 py-2">
+                <div className="h-8 bg-muted/40 animate-pulse rounded-xl" />
+                <div className="h-8 bg-muted/20 animate-pulse rounded-xl" />
+              </div>
+            ) : memberTxs.length > 0 ? (
               <div className="overflow-x-auto border border-border rounded-xl">
                 <Table>
                   <TableHeader className="bg-muted/40">
@@ -358,6 +394,7 @@ export function MemberDetailsDialog({
                 alt={viewingMember.name}
                 width={480}
                 height={480}
+                sizes="(max-width: 640px) 100vw, 480px"
                 unoptimized={Boolean(profilePic.startsWith("data:"))}
                 className="w-full h-auto max-h-[62vh] object-contain rounded-lg shadow-sm"
               />

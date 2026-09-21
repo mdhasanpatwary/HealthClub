@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { useLanguage } from "@/components/layout/LanguageProvider";
-import { Member, Transaction } from "@/services/db";
+import { Member } from "@/services/db";
 import {
   getPaginatedMembersAction,
   getMemberProfilePictureAction,
@@ -12,7 +12,6 @@ import {
   updateMemberStatusAction,
 } from "@/app/actions/memberAdminActions";
 import { addMemberAction } from "@/app/actions/memberActions";
-import { getTransactionsAction } from "@/app/actions/transactionActions";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -28,7 +27,6 @@ export default function AdminMembersPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [memberSearch, setMemberSearch] = useState("");
   const debouncedSearch = useDebounce(memberSearch, 300);
 
@@ -49,18 +47,14 @@ export default function AdminMembersPage() {
 
   const loadData = useCallback(async () => {
     try {
-      const [membersRes, txRes] = await Promise.all([
-        getPaginatedMembersAction({
-          page,
-          pageSize,
-          search: debouncedSearch,
-        }),
-        getTransactionsAction(),
-      ]);
+      const membersRes = await getPaginatedMembersAction({
+        page,
+        pageSize,
+        search: debouncedSearch,
+      });
       setMembers(membersRes.data);
       setTotalItems(membersRes.totalItems);
       setTotalPages(membersRes.totalPages);
-      setTransactions(txRes);
     } catch {
       toast.error("সদস্য তালিকা লোড করতে সমস্যা হয়েছে।");
     } finally {
@@ -320,7 +314,6 @@ export default function AdminMembersPage() {
         <MemberDetailsDialog
           viewingMember={viewingMember}
           onClose={() => setViewingMember(null)}
-          transactions={transactions}
           onToggleStatus={handleToggleMemberStatus}
           onEditClick={(m) => {
             setViewingMember(null);
