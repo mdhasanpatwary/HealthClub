@@ -3,20 +3,27 @@ export interface TocSubItem {
   name: string;
 }
 
-export function TocSubList({ items }: { items: TocSubItem[] }) {
+export function TocSubList({ items, activeId }: { items: TocSubItem[]; activeId?: string }) {
   if (!items || items.length === 0) return null;
   return (
     <ol className="pl-4 pt-1 space-y-1 text-xs text-muted-foreground/90 border-l border-border/80 ml-2">
-      {items.map((item) => (
-        <li key={item.id}>
-          <a
-            href={`#${item.id}`}
-            className="hover:text-primary transition-colors block truncate py-0.5"
-          >
-            {item.name}
-          </a>
-        </li>
-      ))}
+      {items.map((item) => {
+        const isActive = activeId === item.id;
+        return (
+          <li key={item.id}>
+            <a
+              href={`#${item.id}`}
+              className={`block truncate py-0.5 transition-colors ${
+                isActive
+                  ? "text-primary font-bold bg-primary/10 px-1.5 rounded-sm"
+                  : "hover:text-primary"
+              }`}
+            >
+              {item.name}
+            </a>
+          </li>
+        );
+      })}
     </ol>
   );
 }
@@ -33,6 +40,7 @@ export interface StandardEntityTocProps {
   emergencyTitle?: string;
   secNum: (n: number) => string;
   isEn: boolean;
+  activeId?: string;
 }
 
 export function StandardEntityToc({
@@ -47,18 +55,27 @@ export function StandardEntityToc({
   emergencyTitle,
   secNum,
   isEn,
+  activeId,
 }: StandardEntityTocProps) {
   let cur = 1;
+  const linkClass = (id: string, isBold = false) => {
+    const isActive = activeId === id;
+    if (isActive) {
+      return "text-primary font-bold bg-primary/10 px-2 py-0.5 rounded-md block transition-colors";
+    }
+    return `hover:text-primary transition-colors block py-0.5 ${isBold ? "font-semibold text-foreground" : ""}`;
+  };
+
   return (
     <ol className="space-y-1.5 list-none pl-0">
       <li>
-        <a href="#overview" className="hover:text-primary transition-colors block py-0.5">
+        <a href="#overview" className={linkClass("overview")}>
           {secNum(cur++)}{overviewTitle}
         </a>
       </li>
       {matrixTitle && (
         <li>
-          <a href="#comparison-matrix" className="hover:text-primary transition-colors block py-0.5">
+          <a href="#comparison-matrix" className={linkClass("comparison-matrix")}>
             {secNum(cur++)}{matrixTitle}
           </a>
         </li>
@@ -67,36 +84,36 @@ export function StandardEntityToc({
         <li>
           <a
             href={`#${reviewsId}`}
-            className="hover:text-primary transition-colors font-semibold text-foreground block py-0.5"
+            className={linkClass(reviewsId, true)}
           >
             {secNum(cur++)}{reviewsTitle}
           </a>
-          {subItems && <TocSubList items={subItems} />}
+          {subItems && <TocSubList items={subItems} activeId={activeId} />}
         </li>
       )}
       {priceGuideId && priceGuideTitle && (
         <li>
-          <a href={`#${priceGuideId}`} className="hover:text-primary transition-colors block py-0.5">
+          <a href={`#${priceGuideId}`} className={linkClass(priceGuideId)}>
             {secNum(cur++)}{priceGuideTitle}
           </a>
         </li>
       )}
       {selectionGuideTitle && (
         <li>
-          <a href="#selection-guide" className="hover:text-primary transition-colors block py-0.5">
+          <a href="#selection-guide" className={linkClass("selection-guide")}>
             {secNum(cur++)}{selectionGuideTitle}
           </a>
         </li>
       )}
       {emergencyTitle && (
         <li>
-          <a href="#emergency-directory" className="hover:text-primary transition-colors block py-0.5">
+          <a href="#emergency-directory" className={linkClass("emergency-directory")}>
             {secNum(cur++)}{emergencyTitle}
           </a>
         </li>
       )}
       <li>
-        <a href="#faq-section" className="hover:text-primary transition-colors block py-0.5">
+        <a href="#faq-section" className={linkClass("faq-section")}>
           {secNum(cur)}{isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
         </a>
       </li>

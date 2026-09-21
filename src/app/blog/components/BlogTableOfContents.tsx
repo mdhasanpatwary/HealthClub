@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ListOrdered, ChevronDown } from "lucide-react";
 import {
   HospitalReviewItem,
@@ -41,6 +41,9 @@ interface BlogTableOfContentsProps {
   ambulances?: import("@/types/ambulanceBlog").AmbulanceReviewItem[];
   currentSlug?: string;
   locale?: string;
+  className?: string;
+  id?: string;
+  defaultOpen?: boolean;
 }
 
 export function BlogTableOfContents({
@@ -71,11 +74,56 @@ export function BlogTableOfContents({
   hasAmbulancePricing = false,
   currentSlug,
   locale = "bn",
+  className = "",
+  id = "table-of-contents",
+  defaultOpen = false,
 }: BlogTableOfContentsProps) {
   const { locale: contextLocale } = useLanguage();
   const activeLocale = contextLocale || locale;
   const isEn = activeLocale === "en";
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+  const [activeId, setActiveId] = useState<string>("");
+
+  useEffect(() => {
+    const sectionIds = [
+      "overview",
+      "specialist-doctors",
+      "chamber-hubs",
+      "serial-guide",
+      "comparison-matrix",
+      "diagnostic-reviews",
+      "hospital-reviews",
+      "dental-reviews",
+      "physiotherapy-reviews",
+      "pharmacy-reviews",
+      "blood-bank-reviews",
+      "ambulance-reviews",
+      "price-guide",
+      "selection-guide",
+      "emergency-directory",
+      "faq-section",
+    ];
+
+    const handleScrollSpy = () => {
+      const scrollPosition = window.scrollY + 120;
+      for (let i = sectionIds.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sectionIds[i]);
+        if (el) {
+          const top = el.offsetTop;
+          if (scrollPosition >= top) {
+            setActiveId(sectionIds[i]);
+            return;
+          }
+        }
+      }
+      setActiveId("");
+    };
+
+    window.addEventListener("scroll", handleScrollSpy, { passive: true });
+    handleScrollSpy();
+
+    return () => window.removeEventListener("scroll", handleScrollSpy);
+  }, []);
 
   const hasDoctorPricing =
     hasMaternityPricing ||
@@ -104,6 +152,16 @@ export function BlogTableOfContents({
 
   const secNum = (n: number) => (isEn ? `${n}. ` : `${toBanglaNums(n)}. `);
 
+  const linkClass = (targetId: string, isBold = false) => {
+    const isActive = activeId === targetId;
+    if (isActive) {
+      return "text-primary font-bold bg-primary/10 px-2 py-0.5 rounded-md block transition-colors";
+    }
+    return `hover:text-primary transition-colors block py-0.5 ${
+      isBold ? "font-semibold text-foreground" : ""
+    }`;
+  };
+
   const pricingGuides = getPricingGuides({
     hasMaternityPricing,
     hasCardiacPricing,
@@ -126,8 +184,9 @@ export function BlogTableOfContents({
 
   return (
     <nav
+      id={id}
       aria-label="Table of Contents"
-      className="rounded-2xl border border-border/80 bg-card p-4 sm:p-5 shadow-xs space-y-3"
+      className={`rounded-2xl border border-border/80 bg-card p-4 sm:p-5 shadow-xs space-y-3 ${className}`}
     >
       {/* Header / Toggle Button on Mobile */}
       <button
@@ -158,27 +217,27 @@ export function BlogTableOfContents({
         {isPurePriceList ? (
           <ol className="space-y-1.5 list-none pl-0">
             <li>
-              <a href="#overview" className="hover:text-primary transition-colors block py-0.5">
+              <a href="#overview" className={linkClass("overview")}>
                 {secNum(1)}{isEn ? "Diagnostic Healthcare in Feni" : "ফেনীর ডায়াগনস্টিক পরিকাঠামো ও প্রেক্ষাপট"}
               </a>
             </li>
             <li>
-              <a href="#price-guide" className="hover:text-primary transition-colors block py-0.5">
+              <a href="#price-guide" className={linkClass("price-guide")}>
                 {secNum(2)}{isEn ? "80+ Diagnostic Tests Price List" : "৮০+ টেস্টের মূল্যতালিকা ও মেম্বার ছাড়"}
               </a>
             </li>
             <li>
-              <a href="#selection-guide" className="hover:text-primary transition-colors block py-0.5">
+              <a href="#selection-guide" className={linkClass("selection-guide")}>
                 {secNum(3)}{isEn ? "Guidelines for Choosing Quality Diagnostics" : "নির্ভরযোগ্য ল্যাব ও টেস্ট নির্বাচনের উপায়"}
               </a>
             </li>
             <li>
-              <a href="#emergency-directory" className="hover:text-primary transition-colors block py-0.5">
+              <a href="#emergency-directory" className={linkClass("emergency-directory")}>
                 {secNum(4)}{isEn ? "Diagnostic Assistance & Emergency Contacts" : "ডায়াগনস্টিক সাপোর্ট ও জরুরি হেল্পলাইন"}
               </a>
             </li>
             <li>
-              <a href="#faq-section" className="hover:text-primary transition-colors block py-0.5">
+              <a href="#faq-section" className={linkClass("faq-section")}>
                 {secNum(5)}{isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
               </a>
             </li>
@@ -186,14 +245,14 @@ export function BlogTableOfContents({
         ) : isDoctorArticle ? (
           <ol className="space-y-1.5 list-none pl-0">
             <li>
-              <a href="#overview" className="hover:text-primary transition-colors block py-0.5">
+              <a href="#overview" className={linkClass("overview")}>
                 {secNum(1)}{isEn ? "Healthcare Landscape of Feni" : "ফেনীর স্বাস্থ্যসেবা ও বিশেষজ্ঞ ডাক্তার"}
               </a>
             </li>
             <li>
               <a
                 href="#specialist-doctors"
-                className="hover:text-primary transition-colors font-semibold text-foreground block py-0.5"
+                className={linkClass("specialist-doctors", true)}
               >
                 {secNum(2)}{isEn ? "Specialist Doctors by Department" : "বিভাগভিত্তিক বিশেষজ্ঞ ডাক্তার তালিকা"}
               </a>
@@ -202,27 +261,28 @@ export function BlogTableOfContents({
                   id: `dept-${g.department}`,
                   name: isEn ? `${idx + 1}. ${g.departmentNameEn}` : `${toBanglaNums(idx + 1)}. ${g.departmentNameBn}`,
                 }))}
+                activeId={activeId}
               />
             </li>
             <li>
-              <a href="#chamber-hubs" className="hover:text-primary transition-colors block py-0.5">
+              <a href="#chamber-hubs" className={linkClass("chamber-hubs")}>
                 {secNum(3)}{isEn ? "Major Chamber Locations" : "ফেনী শহরের প্রধান চেম্বার হাবসমূহ"}
               </a>
             </li>
             <li>
-              <a href="#serial-guide" className="hover:text-primary transition-colors block py-0.5">
+              <a href="#serial-guide" className={linkClass("serial-guide")}>
                 {secNum(4)}{isEn ? "Serial Booking Guidelines" : "ডাক্তারের সিরিয়াল নেওয়ার নিয়মাবলী"}
               </a>
             </li>
             {pricingGuides.filter((g) => g.has).map((guide) => (
               <li key={guide.id}>
-                <a href={`#${guide.id}`} className="hover:text-primary transition-colors block py-0.5">
+                <a href={`#${guide.id}`} className={linkClass(guide.id)}>
                   {secNum(5)}{isEn ? guide.en : guide.bn}
                 </a>
               </li>
             ))}
             <li>
-              <a href="#faq-section" className="hover:text-primary transition-colors block py-0.5">
+              <a href="#faq-section" className={linkClass("faq-section")}>
                 {secNum(hasDoctorPricing ? 6 : 5)}
                 {isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
               </a>
@@ -244,6 +304,7 @@ export function BlogTableOfContents({
             emergencyTitle={isEn ? "Emergency Contacts & Ambulance" : "জরুরি যোগাযোগ ও অ্যাম্বুলেন্স হটলাইন"}
             secNum={secNum}
             isEn={isEn}
+            activeId={activeId}
           />
         ) : isDentalArticle ? (
           <StandardEntityToc
@@ -260,6 +321,7 @@ export function BlogTableOfContents({
             selectionGuideTitle={isEn ? "Guidelines for Choosing a Dentist" : "সঠিক ডেন্টাল ক্লিনিক নির্বাচনের উপায়"}
             secNum={secNum}
             isEn={isEn}
+            activeId={activeId}
           />
         ) : isPhysiotherapyArticle ? (
           <StandardEntityToc
@@ -276,6 +338,7 @@ export function BlogTableOfContents({
             selectionGuideTitle={isEn ? "Guidelines for Choosing a Physiotherapist" : "সঠিক ফিজিওথেরাপি সেন্টার নির্বাচনের উপায়"}
             secNum={secNum}
             isEn={isEn}
+            activeId={activeId}
           />
         ) : isPharmacyArticle ? (
           <StandardEntityToc
@@ -293,6 +356,7 @@ export function BlogTableOfContents({
             emergencyTitle={isEn ? "Emergency Contacts & Hotlines" : "জরুরি যোগাযোগ ও ফার্মেসি হটলাইন"}
             secNum={secNum}
             isEn={isEn}
+            activeId={activeId}
           />
         ) : isBloodBankArticle ? (
           <StandardEntityToc
@@ -310,6 +374,7 @@ export function BlogTableOfContents({
             emergencyTitle={isEn ? "Emergency Blood Bank Hotlines" : "জরুরি ব্লাড ব্যাংক ও রক্তদাতা হটলাইন"}
             secNum={secNum}
             isEn={isEn}
+            activeId={activeId}
           />
         ) : isAmbulanceArticle ? (
           <StandardEntityToc
@@ -327,6 +392,7 @@ export function BlogTableOfContents({
             emergencyTitle={isEn ? "Emergency Ambulance Dispatch Hotlines" : "জরুরি অ্যাম্বুলেন্স ও অক্সিজেন হটলাইন"}
             secNum={secNum}
             isEn={isEn}
+            activeId={activeId}
           />
         ) : (
           <StandardEntityToc
@@ -342,6 +408,7 @@ export function BlogTableOfContents({
             emergencyTitle={isEn ? "Emergency Contacts & Ambulance" : "জরুরি যোগাযোগ ও অ্যাম্বুলেন্স হটলাইন"}
             secNum={secNum}
             isEn={isEn}
+            activeId={activeId}
           />
         )}
       </div>

@@ -1,13 +1,13 @@
-"use client";
-
 import Link from "next/link";
 import { ChevronLeft, Phone, Siren } from "lucide-react";
 import { BlogPost } from "@/types/blog";
 import { Locale } from "@/lib/i18n";
 import { toBanglaNums } from "@/lib/utils";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { BlogArticleHeader } from "./BlogArticleHeader";
 import { BlogQuickAnswer } from "./BlogQuickAnswer";
+import { BlogTableOfContents } from "./BlogTableOfContents";
+import { BlogReadingProgress } from "./BlogReadingProgress";
+import { BlogFloatingTocButton } from "./BlogFloatingTocButton";
 import { BlogSidebar } from "./BlogSidebar";
 import { BlogMembershipBanner } from "./BlogMembershipBanner";
 import { DoctorSpecialtySection } from "./DoctorSpecialtySection";
@@ -36,10 +36,9 @@ export function BlogPostDetailView({
   post,
   pageUrl,
   relatedPosts,
-  initialLocale,
+  initialLocale = "bn",
 }: BlogPostDetailViewProps) {
-  const { locale: contextLocale } = useLanguage();
-  const locale = (contextLocale || initialLocale) as Locale;
+  const locale = initialLocale as Locale;
   const isEn = locale === "en";
 
   const title = isEn ? post.titleEn : post.titleBn;
@@ -74,6 +73,8 @@ export function BlogPostDetailView({
 
   return (
     <div className="min-h-screen bg-background pb-16">
+      <BlogReadingProgress />
+
       {/* Breadcrumb Navigation */}
       <nav aria-label="Breadcrumb" className="border-b border-border/50 bg-muted/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between text-xs sm:text-sm text-muted-foreground">
@@ -115,6 +116,40 @@ export function BlogPostDetailView({
 
               {/* AEO Quick Answer / AI Decision Summary */}
               <BlogQuickAnswer post={post} locale={locale} />
+
+              {/* Mobile Table of Contents (Direct in-flow jump menu) */}
+              <div id="mobile-toc" className="lg:hidden scroll-mt-24">
+                <BlogTableOfContents
+                  hospitals={post.hospitals}
+                  doctorGroups={post.doctorGroups}
+                  diagnosticCenters={post.diagnosticCenters}
+                  dentalClinics={post.dentalClinics}
+                  physiotherapyCenters={post.physiotherapyCenters}
+                  hasMaternityPricing={!!post.maternityCarePricingBn}
+                  hasCardiacPricing={!!post.cardiacCarePricingBn}
+                  hasKidneyPricing={!!post.kidneyCarePricingBn}
+                  hasPediatricPricing={!!post.pediatricCarePricingBn}
+                  hasSkinPricing={!!post.skinCarePricingBn}
+                  hasEyePricing={!!post.eyeCarePricingBn}
+                  hasOrthopedicPricing={!!post.orthopedicCarePricingBn}
+                  hasEntPricing={!!post.entCarePricingBn}
+                  hasSurgeryPricing={!!post.surgicalCarePricingBn}
+                  hasNeurologyPricing={!!post.neurologyCarePricingBn}
+                  hasDiabetesPricing={!!post.diabetesCarePricingBn}
+                  hasPsychiatryPricing={!!post.psychiatryCarePricingBn}
+                  hasSadarHospitalPricing={!!post.sadarHospitalPricingBn}
+                  hasDiabeticHospitalPricing={!!post.diabeticHospitalPricingBn}
+                  hasPharmacyPricing={!!post.pharmacyCarePricingBn}
+                  hasBloodPricing={!!post.bloodCarePricingBn}
+                  hasAmbulancePricing={!!post.ambulanceCarePricingBn}
+                  pharmacies={post.pharmacies}
+                  bloodBanks={post.bloodBanks}
+                  ambulances={post.ambulances}
+                  currentSlug={post.slug}
+                  locale={locale}
+                  defaultOpen={false}
+                />
+              </div>
 
               {/* Overview / Introduction */}
               <section id="overview" className="scroll-mt-24 space-y-4">
@@ -327,6 +362,9 @@ export function BlogPostDetailView({
             </div>
           </aside>
         )}
+
+        {/* Floating Mobile TOC / Back to Top Button */}
+        <BlogFloatingTocButton locale={locale} />
       </div>
     </div>
   );

@@ -182,24 +182,31 @@ export function MedicalTestPriceTable({
           </Button>
         </div>
       ) : (
-        <div className="relative overflow-x-auto rounded-2xl border border-border/80 bg-card shadow-xs">
-          <table className="w-full text-left text-xs sm:text-sm">
-            <thead className="bg-muted/80 text-foreground font-bold border-b border-border/80">
-              <tr>
-                <th className="py-3.5 px-3 sm:px-4 min-w-[220px]">
-                  {isEn ? "Test Name & Department" : "পরীক্ষার নাম ও বিভাগ"}
-                </th>
-                <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
-                  {isEn ? "Market Regular Price" : "সাধারণ বাজারদর"}
-                </th>
-                <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
-                  {isEn ? "Health Club Benefit" : "হেলথ ক্লাব মেম্বার সুবিধা"}
-                </th>
-                <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
-                  {isEn ? "Report Time" : "রিপোর্ট সময়"}
-                </th>
-              </tr>
-            </thead>
+        <div className="space-y-1.5">
+          <div className="flex sm:hidden items-center justify-end text-[11px] text-muted-foreground px-1">
+            <span className="inline-flex items-center gap-1">
+              <span aria-hidden="true">↔</span>
+              <span>{isEn ? "Scroll horizontally to view all details" : "সম্পূর্ণ তথ্য দেখতে ডানে-বামে স্ক্রোল করুন"}</span>
+            </span>
+          </div>
+          <div className="relative overflow-x-auto rounded-2xl border border-border/80 bg-card shadow-xs">
+            <table className="w-full text-left text-xs sm:text-sm">
+              <thead className="bg-muted/80 text-foreground font-bold border-b border-border/80">
+                <tr>
+                  <th scope="col" className="py-3.5 px-3 sm:px-4 min-w-[220px]">
+                    {isEn ? "Test Name & Department" : "পরীক্ষার নাম ও বিভাগ"}
+                  </th>
+                  <th scope="col" className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
+                    {isEn ? "Market Regular Price" : "সাধারণ বাজারদর"}
+                  </th>
+                  <th scope="col" className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
+                    {isEn ? "Health Club Benefit" : "হেলথ ক্লাব মেম্বার সুবিধা"}
+                  </th>
+                  <th scope="col" className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
+                    {isEn ? "Report Time" : "রিপোর্ট সময়"}
+                  </th>
+                </tr>
+              </thead>
             <tbody className="divide-y divide-border/60">
               {filteredTests.map((item, idx) => (
                 <tr key={idx} className="hover:bg-muted/40 transition-colors">
@@ -231,6 +238,7 @@ export function MedicalTestPriceTable({
             </tbody>
           </table>
         </div>
+      </div>
       )}
 
       {/* Membership Conversion Banner */}

@@ -117,6 +117,15 @@ export function generateBlogJsonLd(
         "@type": "MedicalAudience",
         medicalAudienceType: "Patient",
       },
+      reviewedBy: {
+        "@type": "Organization",
+        name: isEn
+          ? "Health Club Clinical Editorial Board"
+          : "হেলথ ক্লাব ক্লিনিক্যাল এডিটোরিয়াল বোর্ড",
+        url: `${SITE_URL}/about`,
+      },
+      lastReviewed: getArticleIsoDate(post.modifiedDate),
+      timeRequired: `PT${post.readTimeEn ? (post.readTimeEn.match(/\d+/)?.[0] || "8") : "8"}M`,
     },
   ];
 

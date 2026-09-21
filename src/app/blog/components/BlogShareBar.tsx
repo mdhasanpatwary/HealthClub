@@ -69,17 +69,21 @@ export function BlogShareBar({ url, title, locale = "bn" }: BlogShareBarProps) {
 
       {shareLinks.map((item) => {
         const Icon = item.icon;
+        const shareLabel = isEn
+          ? `Share on ${item.name}`
+          : `${item.name}-এ শেয়ার করুন`;
+
         return (
           <a
             key={item.name}
             href={item.href}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Share on ${item.name}`}
-            className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-border/70 bg-card text-muted-foreground transition-colors ${item.className}`}
+            aria-label={shareLabel}
+            className={`flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] px-3 py-2 rounded-lg border border-border/70 bg-card text-muted-foreground transition-colors active:scale-95 ${item.className}`}
           >
-            <Icon className="h-3.5 w-3.5 fill-current" />
-            <span className="hidden sm:inline font-medium">{item.name}</span>
+            <Icon className="h-4 w-4 fill-current" />
+            <span className="text-xs font-medium">{item.name}</span>
           </a>
         );
       })}
@@ -87,20 +91,24 @@ export function BlogShareBar({ url, title, locale = "bn" }: BlogShareBarProps) {
       <button
         type="button"
         onClick={handleCopy}
-        aria-label="Copy link"
-        className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-border/70 bg-card text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
+        aria-label={
+          isEn
+            ? "Copy article link to clipboard"
+            : "নিবন্ধের লিংক ক্লিপবোর্ডে কপি করুন"
+        }
+        className="flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] px-3 py-2 rounded-lg border border-border/70 bg-card text-muted-foreground hover:bg-muted hover:text-foreground transition-colors active:scale-95 cursor-pointer"
       >
         {copied ? (
           <>
-            <Check className="h-3.5 w-3.5 text-emerald-600" />
-            <span className="font-semibold text-emerald-600">
+            <Check className="h-4 w-4 text-emerald-600" />
+            <span className="text-xs font-semibold text-emerald-600">
               {isEn ? "Copied" : "কপি হয়েছে"}
             </span>
           </>
         ) : (
           <>
-            <LinkIcon className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline font-medium">
+            <LinkIcon className="h-4 w-4" />
+            <span className="text-xs font-medium">
               {isEn ? "Copy Link" : "লিংক কপি"}
             </span>
           </>
