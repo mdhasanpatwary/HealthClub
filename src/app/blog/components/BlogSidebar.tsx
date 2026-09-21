@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { Siren, ShieldCheck, ArrowRight } from "lucide-react";
 import { BlogTableOfContents } from "./BlogTableOfContents";
@@ -116,6 +114,7 @@ export function BlogSidebar({
           </p>
           <Link
             href="/emergency"
+            prefetch={false}
             className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-xs transition-colors"
           >
             <span>{isEn ? "Emergency Directory" : "জরুরি হেল্পলাইন দেখুন"}</span>
@@ -138,6 +137,7 @@ export function BlogSidebar({
           </p>
           <Link
             href="/membership"
+            prefetch={false}
             className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-bold shadow-xs transition-colors"
           >
             <span>{isEn ? "View Membership Plans" : "মেম্বারশিপ প্ল্যান দেখুন"}</span>

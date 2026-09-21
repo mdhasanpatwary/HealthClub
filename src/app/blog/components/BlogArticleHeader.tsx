@@ -40,13 +40,9 @@ export function BlogArticleHeader({
         {title}
       </h1>
 
-      <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-        {isEn ? post.excerptEn : post.excerptBn}
-      </p>
-
       {/* Meta Bar + Social Share */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pt-3 border-y border-border/60 py-3 text-xs sm:text-sm">
-        <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
+      <div className="flex flex-wrap items-center justify-between gap-3 py-2.5 border-y border-border/60 text-xs sm:text-sm">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-muted-foreground">
           <span className="flex items-center gap-1.5 font-medium text-foreground">
             <ShieldCheck className="h-4 w-4 text-primary" />
             {isEn ? post.author.nameEn : post.author.nameBn}
@@ -69,19 +65,27 @@ export function BlogArticleHeader({
         <BlogShareBar url={pageUrl} title={title} locale={locale} />
       </div>
 
-      {/* Featured Hero Cover Image */}
+      {/* Featured Hero Cover Image — LCP Optimized */}
       {post.coverImage && (
-        <div className="relative aspect-16/9 w-full overflow-hidden rounded-3xl border border-border/80 bg-muted shadow-sm">
+        <div className="relative aspect-16/9 w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-border/80 bg-muted shadow-xs">
           <Image
             src={post.coverImage}
             alt={post.coverImageAlt || title}
             fill
             priority
-            sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1024px) calc(100vw - 48px), 896px"
+            fetchPriority="high"
+            decoding="sync"
+            quality={60}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 768px, 896px"
             className="object-cover"
           />
         </div>
       )}
+
+      {/* Lead Excerpt */}
+      <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
+        {isEn ? post.excerptEn : post.excerptBn}
+      </p>
 
 
       {/* Key Highlights Box */}

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ChevronLeft, Phone, Siren } from "lucide-react";
-import { BlogPost } from "@/types/blog";
+import { BlogPost, BlogPostCardItem } from "@/types/blog";
 import { Locale } from "@/lib/i18n";
 import { toBanglaNums } from "@/lib/utils";
 import { BlogArticleHeader } from "./BlogArticleHeader";
@@ -28,7 +28,7 @@ import {
 interface BlogPostDetailViewProps {
   post: BlogPost;
   pageUrl: string;
-  relatedPosts: BlogPost[];
+  relatedPosts: BlogPostCardItem[];
   initialLocale: Locale;
 }
 
@@ -80,6 +80,7 @@ export function BlogPostDetailView({
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between text-xs sm:text-sm text-muted-foreground">
           <Link
             href="/blog"
+            prefetch={false}
             className="inline-flex items-center gap-1 hover:text-primary transition-colors font-medium"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -88,13 +89,13 @@ export function BlogPostDetailView({
 
           <ol className="hidden md:flex items-center gap-2 list-none p-0 m-0">
             <li>
-              <Link href="/" className="hover:text-foreground">
+              <Link href="/" prefetch={false} className="hover:text-foreground">
                 {isEn ? "Home" : "হোম"}
               </Link>
             </li>
             <li aria-hidden="true">/</li>
             <li>
-              <Link href="/blog" className="hover:text-foreground">
+              <Link href="/blog" prefetch={false} className="hover:text-foreground">
                 {isEn ? "Blog" : "ব্লগ"}
               </Link>
             </li>
@@ -350,6 +351,7 @@ export function BlogPostDetailView({
               </h3>
               <Link
                 href="/blog"
+                prefetch={false}
                 className="text-xs sm:text-sm font-semibold text-primary hover:underline"
               >
                 {isEn ? "View all posts →" : "সকল ব্লগ দেখুন →"}

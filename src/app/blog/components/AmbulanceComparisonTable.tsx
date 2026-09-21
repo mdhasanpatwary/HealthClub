@@ -21,7 +21,7 @@ export function AmbulanceComparisonTable({
   const renderStatus = (val: boolean | string) => {
     if (val === true) {
       return (
-        <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold text-xs">
+        <span className="inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-semibold text-xs">
           <CheckCircle2 className="h-3.5 w-3.5" />
           <span>{isEn ? "Yes" : "আছে"}</span>
         </span>
@@ -29,14 +29,14 @@ export function AmbulanceComparisonTable({
     }
     if (val === false) {
       return (
-        <span className="inline-flex items-center gap-1 text-muted-foreground text-xs">
+        <span className="inline-flex items-center gap-1 text-slate-600 dark:text-slate-400 text-xs">
           <XCircle className="h-3.5 w-3.5 text-slate-400" />
           <span>{isEn ? "No" : "নেই"}</span>
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400 font-medium text-xs">
+      <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-400 font-semibold text-xs">
         <Truck className="h-3 w-3 shrink-0" />
         <span>{translateComparisonStatus(val, isEn)}</span>
       </span>
@@ -168,11 +168,11 @@ export function AmbulanceComparisonTable({
                     {renderStatus(item.freezingVan)}
                   </td>
                   <td className="py-3 px-3 sm:px-4">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-sky-500/10 text-sky-700 dark:text-sky-300 border border-sky-500/20">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-sky-500/10 text-sky-800 dark:text-sky-300 border border-sky-500/20">
                       {isEn ? item.discountEn || "Public Directory (Direct Booking)" : item.discountBn || "পাবলিক ডিরেক্টরি (সরাসরি বুকিং)"}
                     </span>
                   </td>
-                  <td className="py-3 px-3 sm:px-4 text-muted-foreground text-xs">
+                  <td className="py-3 px-3 sm:px-4 text-slate-600 dark:text-slate-300 text-xs">
                     {location}
                   </td>
                 </tr>

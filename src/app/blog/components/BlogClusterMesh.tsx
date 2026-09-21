@@ -40,6 +40,7 @@ export function BlogClusterMesh({ currentSlug, locale = "bn" }: BlogClusterMeshP
 
         <Link
           href="/blog"
+          prefetch={false}
           className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline shrink-0"
         >
           <span>{isEn ? "Explore all guides" : "সকল গাইড দেখুন"}</span>
@@ -95,6 +96,7 @@ export function BlogClusterMesh({ currentSlug, locale = "bn" }: BlogClusterMeshP
             <Link
               key={node.slug}
               href={`/blog/${node.slug}`}
+              prefetch={false}
               className={cn(
                 "group relative flex flex-col justify-between p-4 rounded-2xl border border-border/70 bg-card/80 hover:bg-card hover:shadow-md transition-all duration-200",
                 node.borderColor

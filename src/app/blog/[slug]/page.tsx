@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import { getAllBlogPostsAction, getBlogPostBySlugAction } from "@/app/actions/blogAdminActions";
+import { BlogPostCardItem } from "@/types/blog";
 import { BlogPostDetailView } from "../components/BlogPostDetailView";
 import { generateBlogJsonLd } from "../utils/blogJsonLd";
 import { SITE_URL } from "@/lib/siteConfig";
@@ -127,13 +128,35 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   // Schema.org Structured Data
   const jsonLdData = generateBlogJsonLd(post, title, pageUrl, isEn, relatedPosts);
 
+  // Map to lightweight card items for the view to prune hundreds of kilobytes of nested data
+  const cardRelatedPosts: BlogPostCardItem[] = relatedPosts.map((p) => ({
+    slug: p.slug,
+    titleBn: p.titleBn,
+    titleEn: p.titleEn,
+    excerptBn: p.excerptBn,
+    excerptEn: p.excerptEn,
+    category: p.category,
+    categoryNameBn: p.categoryNameBn,
+    categoryNameEn: p.categoryNameEn,
+    readTimeBn: p.readTimeBn,
+    readTimeEn: p.readTimeEn,
+    publishedDate: p.publishedDate,
+    coverImage: p.coverImage,
+    coverImageAlt: p.coverImageAlt,
+    author: {
+      nameBn: p.author.nameBn,
+      nameEn: p.author.nameEn,
+    },
+    hospitalCount: p.hospitals?.length ?? 0,
+  }));
+
   return (
     <>
       <JsonLd data={jsonLdData} />
       <BlogPostDetailView
         post={post}
         pageUrl={pageUrl}
-        relatedPosts={relatedPosts}
+        relatedPosts={cardRelatedPosts}
         initialLocale={locale}
       />
     </>

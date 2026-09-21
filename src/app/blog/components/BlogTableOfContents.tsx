@@ -85,6 +85,9 @@ export function BlogTableOfContents({
   const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {
+    // Only run scroll spy on desktop viewports where sticky sidebar TOC is in view
+    if (typeof window === "undefined" || window.innerWidth < 1024) return;
+
     const sectionIds = [
       "overview",
       "specialist-doctors",
@@ -104,19 +107,24 @@ export function BlogTableOfContents({
       "faq-section",
     ];
 
+    let ticking = false;
     const handleScrollSpy = () => {
-      const scrollPosition = window.scrollY + 120;
-      for (let i = sectionIds.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sectionIds[i]);
-        if (el) {
-          const top = el.offsetTop;
-          if (scrollPosition >= top) {
-            setActiveId(sectionIds[i]);
-            return;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollPosition = window.scrollY + 120;
+          for (let i = sectionIds.length - 1; i >= 0; i--) {
+            const el = document.getElementById(sectionIds[i]);
+            if (el && scrollPosition >= el.offsetTop) {
+              setActiveId(sectionIds[i]);
+              ticking = false;
+              return;
+            }
           }
-        }
+          setActiveId("");
+          ticking = false;
+        });
+        ticking = true;
       }
-      setActiveId("");
     };
 
     window.addEventListener("scroll", handleScrollSpy, { passive: true });
