@@ -4,6 +4,7 @@ import Link from "next/link";
 import {
   Phone,
   PhoneCall,
+  Truck,
   MapPin,
   Clock,
   Navigation,
@@ -151,6 +152,33 @@ export default function HospitalContactSidebar({
                 {isEn
                   ? `Emergency Hotline: ${partner.emergencyPhone}`
                   : `২৪/৭ জরুরি হটলাইন: ${partner.emergencyPhone}`}
+              </span>
+            </a>
+          )}
+
+          {/* Dedicated Ambulance Call Button */}
+          {partner.ambulancePhone && (
+            <a
+              href={`tel:${partner.ambulancePhone}`}
+              onClick={() => {
+                trackEvent("emergency_dial", {
+                  service_type: "ambulance",
+                  target_name: `${partner.name} (Ambulance)`,
+                  phone: partner.ambulancePhone!,
+                  upazila: partner.upazila,
+                });
+              }}
+              className={buttonVariants({
+                variant: "outline",
+                size: "lg",
+                className: "w-full h-11 rounded-2xl border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold text-sm shadow-2xs cursor-pointer",
+              })}
+            >
+              <Truck className="h-4 w-4 mr-2 shrink-0" />
+              <span>
+                {isEn
+                  ? `Ambulance: ${partner.ambulancePhone}`
+                  : `জরুরি অ্যাম্বুলেন্স: ${partner.ambulancePhone}`}
               </span>
             </a>
           )}

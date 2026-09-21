@@ -70,9 +70,12 @@ const PARTNER_SELECT_FIELDS = {
   mapLink: true,
   imageUrl: true,
   emergencyPhone: true,
+  ambulancePhone: true,
   workingHours: true,
   departmentDiscounts: true,
   socialLinks: true,
+  facilities: true,
+  galleryImages: true,
   upazila: true,
   createdAt: true,
 } as const;
@@ -89,9 +92,12 @@ const PARTNER_ADMIN_SELECT_FIELDS = {
   logoText: true,
   mapLink: true,
   emergencyPhone: true,
+  ambulancePhone: true,
   workingHours: true,
   departmentDiscounts: true,
   socialLinks: true,
+  facilities: true,
+  galleryImages: true,
   upazila: true,
   createdAt: true,
   // Note: imageUrl omitted from admin bulk queries to prevent large base64 data transfer
@@ -116,9 +122,12 @@ function formatPartner(p: PrismaPartnerRecord): Partner {
     mapLink: p.mapLink || undefined,
     imageUrl: (p as { imageUrl?: string | null }).imageUrl || undefined,
     emergencyPhone: p.emergencyPhone || undefined,
+    ambulancePhone: p.ambulancePhone || undefined,
     workingHours: p.workingHours || undefined,
     departmentDiscounts: p.departmentDiscounts || undefined,
     socialLinks: p.socialLinks || undefined,
+    facilities: p.facilities || undefined,
+    galleryImages: p.galleryImages || undefined,
     upazila: p.upazila || "feni-sadar",
     createdAt: p.createdAt
       ? typeof p.createdAt === "string"
@@ -367,12 +376,15 @@ export interface UpdatePartnerProfileInput {
   phone: string;
   discount: string;
   emergencyPhone?: string;
+  ambulancePhone?: string;
   workingHours?: string;
   logoText?: string;
   mapLink?: string;
   imageUrl?: string;
   departmentDiscounts?: string;
   socialLinks?: string;
+  facilities?: string;
+  galleryImages?: string;
   upazila?: string;
 }
 
@@ -400,9 +412,12 @@ export async function updatePartnerProfileAction(
         mapLink: input.mapLink?.trim() || null,
         imageUrl: (await ensureStorageUrl(input.imageUrl?.trim(), "partners", session.userId)) || null,
         emergencyPhone: input.emergencyPhone?.trim() || null,
+        ambulancePhone: input.ambulancePhone?.trim() || null,
         workingHours: input.workingHours?.trim() || null,
         departmentDiscounts: input.departmentDiscounts || null,
         socialLinks: input.socialLinks || null,
+        facilities: input.facilities || null,
+        galleryImages: input.galleryImages || null,
         ...(input.upazila !== undefined && { upazila: input.upazila || "feni-sadar" }),
       },
       select: PARTNER_SELECT_FIELDS,
@@ -421,25 +436,10 @@ export async function updatePartnerProfileAction(
   }
 }
 
-export async function getPartnerTransactionsAction() {
-  return _getPartnerTransactionsAction();
-}
-
-export async function addPartnerTransactionAction(
-  ...args: Parameters<typeof _addPartnerTransactionAction>
-) {
-  return _addPartnerTransactionAction(...args);
-}
-
-export async function getPartnerAnalyticsAction() {
-  return _getPartnerAnalyticsAction();
-}
-
-export async function getPartnerMonthlyTransactionsAction(
-  ...args: Parameters<typeof _getPartnerMonthlyTransactionsAction>
-) {
-  return _getPartnerMonthlyTransactionsAction(...args);
-}
+export async function getPartnerTransactionsAction() { return _getPartnerTransactionsAction(); }
+export async function addPartnerTransactionAction(...args: Parameters<typeof _addPartnerTransactionAction>) { return _addPartnerTransactionAction(...args); }
+export async function getPartnerAnalyticsAction() { return _getPartnerAnalyticsAction(); }
+export async function getPartnerMonthlyTransactionsAction(...args: Parameters<typeof _getPartnerMonthlyTransactionsAction>) { return _getPartnerMonthlyTransactionsAction(...args); }
 
 export async function resetPartnerPasswordByAdminAction(
   partnerId: string,
@@ -478,10 +478,7 @@ export async function resetPartnerPasswordByAdminAction(
  */
 export async function getPartnerImageAction(id: string): Promise<string | null> {
   try {
-    const p = await prisma.partner.findUnique({
-      where: { id },
-      select: { imageUrl: true },
-    });
+    const p = await prisma.partner.findUnique({ where: { id }, select: { imageUrl: true } });
     return p?.imageUrl || null;
   } catch (error) {
     logger.error("Error in getPartnerImageAction:", error);

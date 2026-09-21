@@ -38,9 +38,12 @@ export type PartnerMinAggregateOutputType = {
   mapLink: string | null
   imageUrl: string | null
   emergencyPhone: string | null
+  ambulancePhone: string | null
   workingHours: string | null
   departmentDiscounts: string | null
   socialLinks: string | null
+  facilities: string | null
+  galleryImages: string | null
   featured: boolean | null
   isPartner: boolean | null
   upazila: string | null
@@ -63,9 +66,12 @@ export type PartnerMaxAggregateOutputType = {
   mapLink: string | null
   imageUrl: string | null
   emergencyPhone: string | null
+  ambulancePhone: string | null
   workingHours: string | null
   departmentDiscounts: string | null
   socialLinks: string | null
+  facilities: string | null
+  galleryImages: string | null
   featured: boolean | null
   isPartner: boolean | null
   upazila: string | null
@@ -88,9 +94,12 @@ export type PartnerCountAggregateOutputType = {
   mapLink: number
   imageUrl: number
   emergencyPhone: number
+  ambulancePhone: number
   workingHours: number
   departmentDiscounts: number
   socialLinks: number
+  facilities: number
+  galleryImages: number
   featured: number
   isPartner: number
   upazila: number
@@ -115,9 +124,12 @@ export type PartnerMinAggregateInputType = {
   mapLink?: true
   imageUrl?: true
   emergencyPhone?: true
+  ambulancePhone?: true
   workingHours?: true
   departmentDiscounts?: true
   socialLinks?: true
+  facilities?: true
+  galleryImages?: true
   featured?: true
   isPartner?: true
   upazila?: true
@@ -140,9 +152,12 @@ export type PartnerMaxAggregateInputType = {
   mapLink?: true
   imageUrl?: true
   emergencyPhone?: true
+  ambulancePhone?: true
   workingHours?: true
   departmentDiscounts?: true
   socialLinks?: true
+  facilities?: true
+  galleryImages?: true
   featured?: true
   isPartner?: true
   upazila?: true
@@ -165,9 +180,12 @@ export type PartnerCountAggregateInputType = {
   mapLink?: true
   imageUrl?: true
   emergencyPhone?: true
+  ambulancePhone?: true
   workingHours?: true
   departmentDiscounts?: true
   socialLinks?: true
+  facilities?: true
+  galleryImages?: true
   featured?: true
   isPartner?: true
   upazila?: true
@@ -263,9 +281,12 @@ export type PartnerGroupByOutputType = {
   mapLink: string | null
   imageUrl: string | null
   emergencyPhone: string | null
+  ambulancePhone: string | null
   workingHours: string | null
   departmentDiscounts: string | null
   socialLinks: string | null
+  facilities: string | null
+  galleryImages: string | null
   featured: boolean | null
   isPartner: boolean | null
   upazila: string | null
@@ -309,9 +330,12 @@ export type PartnerWhereInput = {
   mapLink?: Prisma.StringNullableFilter<"Partner"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"Partner"> | string | null
   emergencyPhone?: Prisma.StringNullableFilter<"Partner"> | string | null
+  ambulancePhone?: Prisma.StringNullableFilter<"Partner"> | string | null
   workingHours?: Prisma.StringNullableFilter<"Partner"> | string | null
   departmentDiscounts?: Prisma.StringNullableFilter<"Partner"> | string | null
   socialLinks?: Prisma.StringNullableFilter<"Partner"> | string | null
+  facilities?: Prisma.StringNullableFilter<"Partner"> | string | null
+  galleryImages?: Prisma.StringNullableFilter<"Partner"> | string | null
   featured?: Prisma.BoolNullableFilter<"Partner"> | boolean | null
   isPartner?: Prisma.BoolNullableFilter<"Partner"> | boolean | null
   upazila?: Prisma.StringNullableFilter<"Partner"> | string | null
@@ -338,9 +362,12 @@ export type PartnerOrderByWithRelationInput = {
   mapLink?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   emergencyPhone?: Prisma.SortOrderInput | Prisma.SortOrder
+  ambulancePhone?: Prisma.SortOrderInput | Prisma.SortOrder
   workingHours?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentDiscounts?: Prisma.SortOrderInput | Prisma.SortOrder
   socialLinks?: Prisma.SortOrderInput | Prisma.SortOrder
+  facilities?: Prisma.SortOrderInput | Prisma.SortOrder
+  galleryImages?: Prisma.SortOrderInput | Prisma.SortOrder
   featured?: Prisma.SortOrderInput | Prisma.SortOrder
   isPartner?: Prisma.SortOrderInput | Prisma.SortOrder
   upazila?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -370,9 +397,12 @@ export type PartnerWhereUniqueInput = Prisma.AtLeast<{
   mapLink?: Prisma.StringNullableFilter<"Partner"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"Partner"> | string | null
   emergencyPhone?: Prisma.StringNullableFilter<"Partner"> | string | null
+  ambulancePhone?: Prisma.StringNullableFilter<"Partner"> | string | null
   workingHours?: Prisma.StringNullableFilter<"Partner"> | string | null
   departmentDiscounts?: Prisma.StringNullableFilter<"Partner"> | string | null
   socialLinks?: Prisma.StringNullableFilter<"Partner"> | string | null
+  facilities?: Prisma.StringNullableFilter<"Partner"> | string | null
+  galleryImages?: Prisma.StringNullableFilter<"Partner"> | string | null
   featured?: Prisma.BoolNullableFilter<"Partner"> | boolean | null
   isPartner?: Prisma.BoolNullableFilter<"Partner"> | boolean | null
   upazila?: Prisma.StringNullableFilter<"Partner"> | string | null
@@ -399,9 +429,12 @@ export type PartnerOrderByWithAggregationInput = {
   mapLink?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   emergencyPhone?: Prisma.SortOrderInput | Prisma.SortOrder
+  ambulancePhone?: Prisma.SortOrderInput | Prisma.SortOrder
   workingHours?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentDiscounts?: Prisma.SortOrderInput | Prisma.SortOrder
   socialLinks?: Prisma.SortOrderInput | Prisma.SortOrder
+  facilities?: Prisma.SortOrderInput | Prisma.SortOrder
+  galleryImages?: Prisma.SortOrderInput | Prisma.SortOrder
   featured?: Prisma.SortOrderInput | Prisma.SortOrder
   isPartner?: Prisma.SortOrderInput | Prisma.SortOrder
   upazila?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -430,9 +463,12 @@ export type PartnerScalarWhereWithAggregatesInput = {
   mapLink?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
   emergencyPhone?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  ambulancePhone?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
   workingHours?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
   departmentDiscounts?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
   socialLinks?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  facilities?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  galleryImages?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
   featured?: Prisma.BoolNullableWithAggregatesFilter<"Partner"> | boolean | null
   isPartner?: Prisma.BoolNullableWithAggregatesFilter<"Partner"> | boolean | null
   upazila?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
@@ -455,9 +491,12 @@ export type PartnerCreateInput = {
   mapLink?: string | null
   imageUrl?: string | null
   emergencyPhone?: string | null
+  ambulancePhone?: string | null
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  facilities?: string | null
+  galleryImages?: string | null
   featured?: boolean | null
   isPartner?: boolean | null
   upazila?: string | null
@@ -484,9 +523,12 @@ export type PartnerUncheckedCreateInput = {
   mapLink?: string | null
   imageUrl?: string | null
   emergencyPhone?: string | null
+  ambulancePhone?: string | null
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  facilities?: string | null
+  galleryImages?: string | null
   featured?: boolean | null
   isPartner?: boolean | null
   upazila?: string | null
@@ -513,9 +555,12 @@ export type PartnerUpdateInput = {
   mapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ambulancePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facilities?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  galleryImages?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -542,9 +587,12 @@ export type PartnerUncheckedUpdateInput = {
   mapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ambulancePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facilities?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  galleryImages?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -571,9 +619,12 @@ export type PartnerCreateManyInput = {
   mapLink?: string | null
   imageUrl?: string | null
   emergencyPhone?: string | null
+  ambulancePhone?: string | null
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  facilities?: string | null
+  galleryImages?: string | null
   featured?: boolean | null
   isPartner?: boolean | null
   upazila?: string | null
@@ -596,9 +647,12 @@ export type PartnerUpdateManyMutationInput = {
   mapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ambulancePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facilities?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  galleryImages?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -621,9 +675,12 @@ export type PartnerUncheckedUpdateManyInput = {
   mapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ambulancePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facilities?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  galleryImages?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -646,9 +703,12 @@ export type PartnerCountOrderByAggregateInput = {
   mapLink?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   emergencyPhone?: Prisma.SortOrder
+  ambulancePhone?: Prisma.SortOrder
   workingHours?: Prisma.SortOrder
   departmentDiscounts?: Prisma.SortOrder
   socialLinks?: Prisma.SortOrder
+  facilities?: Prisma.SortOrder
+  galleryImages?: Prisma.SortOrder
   featured?: Prisma.SortOrder
   isPartner?: Prisma.SortOrder
   upazila?: Prisma.SortOrder
@@ -671,9 +731,12 @@ export type PartnerMaxOrderByAggregateInput = {
   mapLink?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   emergencyPhone?: Prisma.SortOrder
+  ambulancePhone?: Prisma.SortOrder
   workingHours?: Prisma.SortOrder
   departmentDiscounts?: Prisma.SortOrder
   socialLinks?: Prisma.SortOrder
+  facilities?: Prisma.SortOrder
+  galleryImages?: Prisma.SortOrder
   featured?: Prisma.SortOrder
   isPartner?: Prisma.SortOrder
   upazila?: Prisma.SortOrder
@@ -696,9 +759,12 @@ export type PartnerMinOrderByAggregateInput = {
   mapLink?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   emergencyPhone?: Prisma.SortOrder
+  ambulancePhone?: Prisma.SortOrder
   workingHours?: Prisma.SortOrder
   departmentDiscounts?: Prisma.SortOrder
   socialLinks?: Prisma.SortOrder
+  facilities?: Prisma.SortOrder
+  galleryImages?: Prisma.SortOrder
   featured?: Prisma.SortOrder
   isPartner?: Prisma.SortOrder
   upazila?: Prisma.SortOrder
@@ -793,9 +859,12 @@ export type PartnerCreateWithoutStaffInput = {
   mapLink?: string | null
   imageUrl?: string | null
   emergencyPhone?: string | null
+  ambulancePhone?: string | null
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  facilities?: string | null
+  galleryImages?: string | null
   featured?: boolean | null
   isPartner?: boolean | null
   upazila?: string | null
@@ -821,9 +890,12 @@ export type PartnerUncheckedCreateWithoutStaffInput = {
   mapLink?: string | null
   imageUrl?: string | null
   emergencyPhone?: string | null
+  ambulancePhone?: string | null
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  facilities?: string | null
+  galleryImages?: string | null
   featured?: boolean | null
   isPartner?: boolean | null
   upazila?: string | null
@@ -865,9 +937,12 @@ export type PartnerUpdateWithoutStaffInput = {
   mapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ambulancePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facilities?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  galleryImages?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -893,9 +968,12 @@ export type PartnerUncheckedUpdateWithoutStaffInput = {
   mapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ambulancePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facilities?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  galleryImages?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -921,9 +999,12 @@ export type PartnerCreateWithoutTransactionsInput = {
   mapLink?: string | null
   imageUrl?: string | null
   emergencyPhone?: string | null
+  ambulancePhone?: string | null
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  facilities?: string | null
+  galleryImages?: string | null
   featured?: boolean | null
   isPartner?: boolean | null
   upazila?: string | null
@@ -949,9 +1030,12 @@ export type PartnerUncheckedCreateWithoutTransactionsInput = {
   mapLink?: string | null
   imageUrl?: string | null
   emergencyPhone?: string | null
+  ambulancePhone?: string | null
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  facilities?: string | null
+  galleryImages?: string | null
   featured?: boolean | null
   isPartner?: boolean | null
   upazila?: string | null
@@ -993,9 +1077,12 @@ export type PartnerUpdateWithoutTransactionsInput = {
   mapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ambulancePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facilities?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  galleryImages?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1021,9 +1108,12 @@ export type PartnerUncheckedUpdateWithoutTransactionsInput = {
   mapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ambulancePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facilities?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  galleryImages?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1049,9 +1139,12 @@ export type PartnerCreateWithoutDoctorsInput = {
   mapLink?: string | null
   imageUrl?: string | null
   emergencyPhone?: string | null
+  ambulancePhone?: string | null
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  facilities?: string | null
+  galleryImages?: string | null
   featured?: boolean | null
   isPartner?: boolean | null
   upazila?: string | null
@@ -1077,9 +1170,12 @@ export type PartnerUncheckedCreateWithoutDoctorsInput = {
   mapLink?: string | null
   imageUrl?: string | null
   emergencyPhone?: string | null
+  ambulancePhone?: string | null
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  facilities?: string | null
+  galleryImages?: string | null
   featured?: boolean | null
   isPartner?: boolean | null
   upazila?: string | null
@@ -1121,9 +1217,12 @@ export type PartnerUpdateWithoutDoctorsInput = {
   mapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ambulancePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facilities?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  galleryImages?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1149,9 +1248,12 @@ export type PartnerUncheckedUpdateWithoutDoctorsInput = {
   mapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ambulancePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facilities?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  galleryImages?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1177,9 +1279,12 @@ export type PartnerCreateWithoutReviewsInput = {
   mapLink?: string | null
   imageUrl?: string | null
   emergencyPhone?: string | null
+  ambulancePhone?: string | null
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  facilities?: string | null
+  galleryImages?: string | null
   featured?: boolean | null
   isPartner?: boolean | null
   upazila?: string | null
@@ -1205,9 +1310,12 @@ export type PartnerUncheckedCreateWithoutReviewsInput = {
   mapLink?: string | null
   imageUrl?: string | null
   emergencyPhone?: string | null
+  ambulancePhone?: string | null
   workingHours?: string | null
   departmentDiscounts?: string | null
   socialLinks?: string | null
+  facilities?: string | null
+  galleryImages?: string | null
   featured?: boolean | null
   isPartner?: boolean | null
   upazila?: string | null
@@ -1249,9 +1357,12 @@ export type PartnerUpdateWithoutReviewsInput = {
   mapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ambulancePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facilities?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  galleryImages?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1277,9 +1388,12 @@ export type PartnerUncheckedUpdateWithoutReviewsInput = {
   mapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ambulancePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentDiscounts?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facilities?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  galleryImages?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPartner?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   upazila?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1363,9 +1477,12 @@ export type PartnerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   mapLink?: boolean
   imageUrl?: boolean
   emergencyPhone?: boolean
+  ambulancePhone?: boolean
   workingHours?: boolean
   departmentDiscounts?: boolean
   socialLinks?: boolean
+  facilities?: boolean
+  galleryImages?: boolean
   featured?: boolean
   isPartner?: boolean
   upazila?: boolean
@@ -1393,9 +1510,12 @@ export type PartnerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   mapLink?: boolean
   imageUrl?: boolean
   emergencyPhone?: boolean
+  ambulancePhone?: boolean
   workingHours?: boolean
   departmentDiscounts?: boolean
   socialLinks?: boolean
+  facilities?: boolean
+  galleryImages?: boolean
   featured?: boolean
   isPartner?: boolean
   upazila?: boolean
@@ -1418,9 +1538,12 @@ export type PartnerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   mapLink?: boolean
   imageUrl?: boolean
   emergencyPhone?: boolean
+  ambulancePhone?: boolean
   workingHours?: boolean
   departmentDiscounts?: boolean
   socialLinks?: boolean
+  facilities?: boolean
+  galleryImages?: boolean
   featured?: boolean
   isPartner?: boolean
   upazila?: boolean
@@ -1443,9 +1566,12 @@ export type PartnerSelectScalar = {
   mapLink?: boolean
   imageUrl?: boolean
   emergencyPhone?: boolean
+  ambulancePhone?: boolean
   workingHours?: boolean
   departmentDiscounts?: boolean
   socialLinks?: boolean
+  facilities?: boolean
+  galleryImages?: boolean
   featured?: boolean
   isPartner?: boolean
   upazila?: boolean
@@ -1454,7 +1580,7 @@ export type PartnerSelectScalar = {
   createdAt?: boolean
 }
 
-export type PartnerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "category" | "address" | "discount" | "phone" | "email" | "password" | "logoText" | "mapLink" | "imageUrl" | "emergencyPhone" | "workingHours" | "departmentDiscounts" | "socialLinks" | "featured" | "isPartner" | "upazila" | "verificationCode" | "verificationCodeCreatedAt" | "createdAt", ExtArgs["result"]["partner"]>
+export type PartnerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "category" | "address" | "discount" | "phone" | "email" | "password" | "logoText" | "mapLink" | "imageUrl" | "emergencyPhone" | "ambulancePhone" | "workingHours" | "departmentDiscounts" | "socialLinks" | "facilities" | "galleryImages" | "featured" | "isPartner" | "upazila" | "verificationCode" | "verificationCodeCreatedAt" | "createdAt", ExtArgs["result"]["partner"]>
 export type PartnerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactions?: boolean | Prisma.Partner$transactionsArgs<ExtArgs>
   doctors?: boolean | Prisma.Partner$doctorsArgs<ExtArgs>
@@ -1487,9 +1613,12 @@ export type $PartnerPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     mapLink: string | null
     imageUrl: string | null
     emergencyPhone: string | null
+    ambulancePhone: string | null
     workingHours: string | null
     departmentDiscounts: string | null
     socialLinks: string | null
+    facilities: string | null
+    galleryImages: string | null
     featured: boolean | null
     isPartner: boolean | null
     upazila: string | null
@@ -1936,9 +2065,12 @@ export interface PartnerFieldRefs {
   readonly mapLink: Prisma.FieldRef<"Partner", 'String'>
   readonly imageUrl: Prisma.FieldRef<"Partner", 'String'>
   readonly emergencyPhone: Prisma.FieldRef<"Partner", 'String'>
+  readonly ambulancePhone: Prisma.FieldRef<"Partner", 'String'>
   readonly workingHours: Prisma.FieldRef<"Partner", 'String'>
   readonly departmentDiscounts: Prisma.FieldRef<"Partner", 'String'>
   readonly socialLinks: Prisma.FieldRef<"Partner", 'String'>
+  readonly facilities: Prisma.FieldRef<"Partner", 'String'>
+  readonly galleryImages: Prisma.FieldRef<"Partner", 'String'>
   readonly featured: Prisma.FieldRef<"Partner", 'Boolean'>
   readonly isPartner: Prisma.FieldRef<"Partner", 'Boolean'>
   readonly upazila: Prisma.FieldRef<"Partner", 'String'>

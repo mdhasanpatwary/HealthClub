@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { X, ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react";
-import { Partner } from "@/services/db";
+import { Partner, parsePartnerGallery } from "@/services/db";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 
 interface HospitalGalleryModalProps {
@@ -36,28 +36,48 @@ export default function HospitalGalleryModal({
       ? "/images/placeholders/diagnostic.webp"
       : "/images/placeholders/pharmacy.webp";
 
-  const images = [
-    {
-      src: partner.imageUrl || fallbackImage,
-      captionBn: `${partner.name} - ${t("partnerHospitals.gallery.mainBuilding")}`,
-      captionEn: `${partner.name} - ${t("partnerHospitals.gallery.mainBuilding")}`,
-    },
-    {
-      src: "/images/placeholders/hospital.webp",
-      captionBn: t("partnerHospitals.gallery.indoorFacility"),
-      captionEn: t("partnerHospitals.gallery.indoorFacility"),
-    },
-    {
-      src: "/images/placeholders/diagnostic.webp",
-      captionBn: t("partnerHospitals.gallery.labDiagnostic"),
-      captionEn: t("partnerHospitals.gallery.labDiagnostic"),
-    },
-    {
-      src: "/images/placeholders/pharmacy.webp",
-      captionBn: t("partnerHospitals.gallery.pharmacyCounter"),
-      captionEn: t("partnerHospitals.gallery.pharmacyCounter"),
-    },
-  ];
+  const customPhotos = parsePartnerGallery(partner.galleryImages);
+
+  const images =
+    customPhotos.length > 0
+      ? [
+          ...(partner.imageUrl
+            ? [
+                {
+                  src: partner.imageUrl,
+                  captionBn: `${partner.name} - ${t("partnerHospitals.gallery.mainBuilding")}`,
+                  captionEn: `${partner.name} - ${t("partnerHospitals.gallery.mainBuilding")}`,
+                },
+              ]
+            : []),
+          ...customPhotos.map((photo, i) => ({
+            src: photo.url,
+            captionBn: photo.captionBn || `${partner.name} - ফটো ${i + 1}`,
+            captionEn: photo.captionEn || `${partner.name} - Photo ${i + 1}`,
+          })),
+        ]
+      : [
+          {
+            src: partner.imageUrl || fallbackImage,
+            captionBn: `${partner.name} - ${t("partnerHospitals.gallery.mainBuilding")}`,
+            captionEn: `${partner.name} - ${t("partnerHospitals.gallery.mainBuilding")}`,
+          },
+          {
+            src: "/images/placeholders/hospital.webp",
+            captionBn: t("partnerHospitals.gallery.indoorFacility"),
+            captionEn: t("partnerHospitals.gallery.indoorFacility"),
+          },
+          {
+            src: "/images/placeholders/diagnostic.webp",
+            captionBn: t("partnerHospitals.gallery.labDiagnostic"),
+            captionEn: t("partnerHospitals.gallery.labDiagnostic"),
+          },
+          {
+            src: "/images/placeholders/pharmacy.webp",
+            captionBn: t("partnerHospitals.gallery.pharmacyCounter"),
+            captionEn: t("partnerHospitals.gallery.pharmacyCounter"),
+          },
+        ];
 
   useEffect(() => {
     if (!isOpen) return;

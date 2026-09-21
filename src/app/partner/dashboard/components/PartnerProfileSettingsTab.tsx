@@ -1,20 +1,41 @@
 "use client";
 
 import { useState } from "react";
-import { Building2, PhoneCall, Clock, Percent, Plus, Trash2, Globe, Sparkles, ShieldCheck, Tag } from "lucide-react";
-import { Partner, DepartmentDiscount, PartnerSocialLinks, parsePartnerSocialLinks, formatSocialUrl } from "@/services/db";
+import {
+  Building2,
+  PhoneCall,
+  Clock,
+  Percent,
+  Globe,
+  ShieldCheck,
+  Truck,
+  MapPin,
+} from "lucide-react";
+import {
+  Partner,
+  DepartmentDiscount,
+  PartnerFacilityItem,
+  PartnerGalleryImage,
+  PartnerSocialLinks,
+  parsePartnerSocialLinks,
+  parsePartnerGallery,
+  formatSocialUrl,
+} from "@/services/db";
+import { parsePartnerFacilities, getDefaultFacilities } from "@/lib/facilities";
+import { FENI_UPAZILAS } from "@/data/feniLocations";
 import { authStore } from "@/services/authStore";
 import { updatePartnerProfileAction } from "@/app/actions/partnerActions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { ImageUpload } from "@/components/ui/ImageUpload";
 import { useLanguage } from "@/components/layout/LanguageProvider";
 import { PartnerCardPreview } from "./PartnerCardPreview";
 import { PartnerPasswordCard } from "./PartnerPasswordCard";
 import { PartnerSocialLinksCard } from "./PartnerSocialLinksCard";
-import { PRESET_DEPARTMENTS, createDepartmentDiscountId } from "./presetDepartments";
+import { PartnerDepartmentDiscountsCard } from "./PartnerDepartmentDiscountsCard";
+import { PartnerFacilitiesCard } from "./PartnerFacilitiesCard";
+import { PartnerGalleryCard } from "./PartnerGalleryCard";
 import { toast } from "sonner";
 
 interface PartnerProfileSettingsTabProps {
@@ -28,13 +49,16 @@ export function PartnerProfileSettingsTab({
   isStaff,
   onProfileUpdated,
 }: PartnerProfileSettingsTabProps) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
+  const isEn = locale === "en";
 
   // Basic Form States
   const [name, setName] = useState(partner.name || "");
   const [address, setAddress] = useState(partner.address || "");
+  const [upazila, setUpazila] = useState(partner.upazila || "feni-sadar");
   const [phone, setPhone] = useState(partner.phone || "");
   const [emergencyPhone, setEmergencyPhone] = useState(partner.emergencyPhone || "");
+  const [ambulancePhone, setAmbulancePhone] = useState(partner.ambulancePhone || "");
   const [workingHours, setWorkingHours] = useState(partner.workingHours || "");
   const [discount, setDiscount] = useState(partner.discount || "");
   const [mapLink, setMapLink] = useState(partner.mapLink || "");
@@ -58,56 +82,23 @@ export function PartnerProfileSettingsTab({
     }
   };
 
-  const [departmentDiscounts, setDepartmentDiscounts] = useState<DepartmentDiscount[]>(parseInitialDiscounts());
-  const [newDeptName, setNewDeptName] = useState("");
-  const [newDeptDiscount, setNewDeptDiscount] = useState("");
-  const [newDeptDesc, setNewDeptDesc] = useState("");
-  const [showAddDeptForm, setShowAddDeptForm] = useState(false);
+  const [departmentDiscounts, setDepartmentDiscounts] = useState<DepartmentDiscount[]>(
+    parseInitialDiscounts()
+  );
+
+  // Healthcare Facilities State
+  const [facilities, setFacilities] = useState<PartnerFacilityItem[]>(() => {
+    const custom = parsePartnerFacilities(partner.facilities);
+    if (custom && custom.length > 0) return custom;
+    return getDefaultFacilities(partner.category, partner.emergencyPhone);
+  });
+
+  // Photo Gallery State
+  const [galleryImages, setGalleryImages] = useState<PartnerGalleryImage[]>(() =>
+    parsePartnerGallery(partner.galleryImages)
+  );
+
   const [saving, setSaving] = useState(false);
-
-  const handleAddPreset = (preset: typeof PRESET_DEPARTMENTS[0]) => {
-    const deptName = t(preset.nameKey);
-    const deptDescription = t(preset.descKey);
-    const exists = departmentDiscounts.some(
-      (d) => d.name.toLowerCase() === deptName.toLowerCase()
-    );
-    if (exists) {
-      toast.info(`"${deptName}" ${t("partner.profile.presetAlreadyAdded")}`);
-      return;
-    }
-    const newItem: DepartmentDiscount = {
-      id: createDepartmentDiscountId(),
-      name: deptName,
-      discount: preset.discount,
-      description: deptDescription,
-    };
-    setDepartmentDiscounts((prev) => [...prev, newItem]);
-    toast.success(`"${deptName}" ${t("partner.profile.presetAdded")}`);
-  };
-
-  const handleAddCustomDept = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newDeptName.trim() || !newDeptDiscount.trim()) {
-      toast.error(t("partner.profile.fillDeptNameAndRate"));
-      return;
-    }
-    const newItem: DepartmentDiscount = {
-      id: createDepartmentDiscountId(),
-      name: newDeptName.trim(),
-      discount: newDeptDiscount.trim(),
-      description: newDeptDesc.trim() || undefined,
-    };
-    setDepartmentDiscounts((prev) => [...prev, newItem]);
-    setNewDeptName("");
-    setNewDeptDiscount("");
-    setNewDeptDesc("");
-    setShowAddDeptForm(false);
-    toast.success(t("partner.profile.deptAddedSuccess"));
-  };
-
-  const handleRemoveDept = (id?: string, name?: string) => {
-    setDepartmentDiscounts((prev) => prev.filter((d) => (id ? d.id !== id : d.name !== name)));
-  };
 
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,14 +118,18 @@ export function PartnerProfileSettingsTab({
       const res = await updatePartnerProfileAction({
         name: name.trim(),
         address: address.trim(),
+        upazila: upazila || "feni-sadar",
         phone: phone.trim(),
         discount: discount.trim(),
         emergencyPhone: emergencyPhone.trim() || undefined,
+        ambulancePhone: ambulancePhone.trim() || undefined,
         workingHours: workingHours.trim() || undefined,
         mapLink: mapLink.trim() || undefined,
         imageUrl: imageUrl.trim() || undefined,
         departmentDiscounts: JSON.stringify(departmentDiscounts),
         socialLinks: JSON.stringify(cleanSocialLinks),
+        facilities: JSON.stringify(facilities),
+        galleryImages: JSON.stringify(galleryImages),
       });
 
       if (res.success && res.partner) {
@@ -152,35 +147,43 @@ export function PartnerProfileSettingsTab({
   };
 
   return (
-    <div className="space-y-8">
-      {/* Editor & Live Preview Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Main Settings Form (8 Cols) */}
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-xl font-bold font-heading text-secondary dark:text-white">
+          {t("partner.profile.title")}
+        </h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          {t("partner.profile.subtitle")}
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Form Column (8 Cols) */}
         <div className="lg:col-span-8 space-y-6">
           <form onSubmit={handleSaveProfile} className="space-y-6">
-            {/* Card 1: Basic Information */}
+            {/* Card 1: Core Details */}
             <Card className="border-border shadow-sm rounded-3xl">
               <CardHeader className="p-5 sm:p-6 pb-3 sm:pb-4">
                 <CardTitle className="font-heading text-lg font-bold text-secondary dark:text-white flex items-center gap-2">
                   <Building2 className="h-5 w-5 text-primary" />
-                  {t("partner.profile.basicInfo")}
+                  {t("partner.profile.generalInfo")}
                 </CardTitle>
-                <CardDescription className="text-xs sm:text-sm">
-                  {t("partner.profile.basicInfoDesc")}
+                <CardDescription className="text-xs sm:text-sm mt-0.5">
+                  {t("partner.profile.generalInfoSubtitle")}
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-5 sm:p-6 pt-0 space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5 sm:col-span-2">
                     <label htmlFor="partner-name" className="text-xs font-semibold text-secondary dark:text-slate-200">
-                      {t("partner.profile.orgName")} *
+                      {t("partner.profile.institutionName")} *
                     </label>
                     <Input
                       id="partner-name"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
-                      placeholder={t("partner.profile.orgNamePlaceholder")}
+                      placeholder={t("partner.profile.namePlaceholder")}
                       className="h-10 rounded-xl border-border"
                     />
                   </div>
@@ -199,6 +202,26 @@ export function PartnerProfileSettingsTab({
                     />
                   </div>
 
+                  {/* Upazila Selection */}
+                  <div className="space-y-1.5">
+                    <label htmlFor="partner-upazila" className="text-xs font-semibold text-secondary dark:text-slate-200 flex items-center gap-1">
+                      <MapPin className="h-3.5 w-3.5 text-primary" />
+                      {isEn ? "Upazila (Area) *" : "উপজেলা (এলাকা) *"}
+                    </label>
+                    <select
+                      id="partner-upazila"
+                      value={upazila}
+                      onChange={(e) => setUpazila(e.target.value)}
+                      className="h-10 w-full rounded-xl border border-border bg-background px-3 text-xs text-foreground focus:outline-hidden focus:ring-2 focus:ring-primary/40 cursor-pointer"
+                    >
+                      {FENI_UPAZILAS.filter((u) => u.id !== "all").map((u) => (
+                        <option key={u.id} value={u.id}>
+                          {isEn ? u.nameEn : u.nameBn}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
                   <div className="space-y-1.5">
                     <label htmlFor="partner-phone" className="text-xs font-semibold text-secondary dark:text-slate-200">
                       {t("partner.profile.phone")} *
@@ -213,6 +236,7 @@ export function PartnerProfileSettingsTab({
                     />
                   </div>
 
+                  {/* Emergency Hotline */}
                   <div className="space-y-1.5">
                     <label htmlFor="partner-emergency-phone" className="text-xs font-semibold text-amber-600 dark:text-amber-400 flex items-center gap-1">
                       <PhoneCall className="h-3.5 w-3.5" />
@@ -224,6 +248,21 @@ export function PartnerProfileSettingsTab({
                       onChange={(e) => setEmergencyPhone(e.target.value)}
                       placeholder={t("partner.profile.emergencyPhonePlaceholder")}
                       className="h-10 rounded-xl border-border bg-amber-500/5 focus:border-amber-500"
+                    />
+                  </div>
+
+                  {/* Dedicated Ambulance Hotline */}
+                  <div className="space-y-1.5">
+                    <label htmlFor="partner-ambulance-phone" className="text-xs font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-1">
+                      <Truck className="h-3.5 w-3.5" />
+                      {isEn ? "Ambulance Hotline" : "জরুরি অ্যাম্বুলেন্স হটলাইন"}
+                    </label>
+                    <Input
+                      id="partner-ambulance-phone"
+                      value={ambulancePhone}
+                      onChange={(e) => setAmbulancePhone(e.target.value)}
+                      placeholder={isEn ? "e.g. 018XXXXXXXX" : "উদাঃ ০১৮XXXXXXXX"}
+                      className="h-10 rounded-xl border-border bg-rose-500/5 focus:border-rose-500"
                     />
                   </div>
 
@@ -290,163 +329,26 @@ export function PartnerProfileSettingsTab({
             />
 
             {/* Card 3: Department Discount Breakdown Editor */}
-            <Card className="border-border shadow-sm rounded-3xl">
-              <CardHeader className="p-5 sm:p-6 pb-3 sm:pb-4">
-                <div className="flex items-center justify-between gap-2 flex-wrap">
-                  <div>
-                    <CardTitle className="font-heading text-lg font-bold text-secondary dark:text-white flex items-center gap-2">
-                      <Tag className="h-5 w-5 text-primary" />
-                      {t("partner.profile.departmentDiscountsTitle")}
-                    </CardTitle>
-                    <CardDescription className="text-xs sm:text-sm mt-0.5">
-                      {t("partner.profile.departmentDiscountsSubtitle")}
-                    </CardDescription>
-                  </div>
-                  <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-xs px-2.5 py-1">
-                    {departmentDiscounts.length} {t("partner.profile.deptsActive")}
-                  </Badge>
-                </div>
-              </CardHeader>
+            <PartnerDepartmentDiscountsCard
+              departmentDiscounts={departmentDiscounts}
+              setDepartmentDiscounts={setDepartmentDiscounts}
+              t={t}
+            />
 
-              <CardContent className="p-5 sm:p-6 pt-0 space-y-5">
-                {/* Presets Bar */}
-                <div className="space-y-2 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-border">
-                  <p className="text-xs font-bold text-secondary dark:text-slate-200 flex items-center gap-1.5">
-                    <Sparkles className="h-3.5 w-3.5 text-amber-500" />
-                    {t("partner.profile.quickPresets")}
-                  </p>
-                  <div className="flex flex-wrap gap-2 pt-1">
-                    {PRESET_DEPARTMENTS.map((preset) => {
-                      const deptName = t(preset.nameKey);
-                      const isAdded = departmentDiscounts.some(
-                        (d) => d.name.toLowerCase() === deptName.toLowerCase()
-                      );
-                      return (
-                        <button
-                          key={preset.nameKey}
-                          type="button"
-                          onClick={() => handleAddPreset(preset)}
-                          disabled={isAdded}
-                          className={`text-xs px-3 py-1.5 rounded-xl font-medium border transition-all cursor-pointer flex items-center gap-1.5 ${
-                            isAdded
-                              ? "bg-slate-200 dark:bg-slate-800 text-slate-400 border-transparent cursor-not-allowed"
-                              : "bg-background text-secondary dark:text-slate-200 border-border hover:border-primary hover:text-primary hover:bg-primary/5 shadow-xs"
-                          }`}
-                        >
-                          <Plus className="h-3 w-3" />
-                          <span>{deptName}</span>
-                          <span className="font-bold text-primary font-mono ml-0.5">({preset.discount})</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
+            {/* Card 4: Healthcare Facilities & Infrastructure */}
+            <PartnerFacilitiesCard
+              facilities={facilities}
+              onChange={setFacilities}
+              category={partner.category}
+              isEn={isEn}
+            />
 
-                {/* Add Custom Department Form Toggle */}
-                {!showAddDeptForm ? (
-                  <Button
-                    type="button"
-                    onClick={() => setShowAddDeptForm(true)}
-                    variant="outline"
-                    size="sm"
-                    className="rounded-xl border-dashed border-primary/40 text-primary hover:bg-primary/5 font-semibold text-xs gap-1.5 h-9 cursor-pointer"
-                  >
-                    <Plus className="h-4 w-4" />
-                    {t("partner.profile.addDepartment")}
-                  </Button>
-                ) : (
-                  <div className="p-4 rounded-2xl border border-primary/30 bg-primary/5 space-y-3 animate-in fade-in duration-150">
-                    <p className="text-xs font-bold text-primary">{t("partner.profile.addCustomDeptTitle")}</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
-                      <div className="sm:col-span-5">
-                        <Input
-                          value={newDeptName}
-                          onChange={(e) => setNewDeptName(e.target.value)}
-                          placeholder={t("partner.profile.deptNameCustomPlaceholder")}
-                          className="h-9 text-xs rounded-xl bg-background border-border"
-                        />
-                      </div>
-                      <div className="sm:col-span-3">
-                        <Input
-                          value={newDeptDiscount}
-                          onChange={(e) => setNewDeptDiscount(e.target.value)}
-                          placeholder={t("partner.profile.deptDiscountPlaceholder")}
-                          className="h-9 text-xs rounded-xl bg-background border-border"
-                        />
-                      </div>
-                      <div className="sm:col-span-4">
-                        <Input
-                          value={newDeptDesc}
-                          onChange={(e) => setNewDeptDesc(e.target.value)}
-                          placeholder={t("partner.profile.deptNotePlaceholder")}
-                          className="h-9 text-xs rounded-xl bg-background border-border"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex gap-2 justify-end pt-1">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowAddDeptForm(false)}
-                        className="h-8 text-xs rounded-xl cursor-pointer"
-                      >
-                        {t("common.cancel")}
-                      </Button>
-                      <Button
-                        type="button"
-                        onClick={handleAddCustomDept}
-                        size="sm"
-                        className="h-8 text-xs rounded-xl bg-primary hover:bg-primary-dark text-white font-semibold cursor-pointer"
-                      >
-                        {t("common.add")}
-                      </Button>
-                    </div>
-                  </div>
-                )}
-
-                {/* Added Department Discounts List */}
-                {departmentDiscounts.length === 0 ? (
-                  <div className="py-8 text-center border border-dashed border-border rounded-2xl text-xs text-muted-foreground p-4">
-                    {t("partner.profile.noDepartmentDiscounts")}
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {departmentDiscounts.map((dept, index) => (
-                      <div
-                        key={dept.id || index}
-                        className="p-3.5 rounded-2xl border border-border bg-background shadow-xs flex items-start justify-between gap-3 group hover:border-primary/40 transition-colors"
-                      >
-                        <div className="space-y-1 min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <p className="font-bold text-xs text-secondary dark:text-white truncate">
-                              {dept.name}
-                            </p>
-                            <Badge className="bg-primary/10 text-primary hover:bg-primary/15 border-primary/20 text-[10px] font-extrabold font-mono px-2 py-0.5">
-                              {dept.discount}
-                            </Badge>
-                          </div>
-                          {dept.description && (
-                            <p className="text-[11px] text-muted-foreground line-clamp-1">
-                              {dept.description}
-                            </p>
-                          )}
-                        </div>
-                        <Button
-                          type="button"
-                          onClick={() => handleRemoveDept(dept.id, dept.name)}
-                          variant="ghost"
-                          size="icon"
-                          className="h-7 w-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg shrink-0 cursor-pointer"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            {/* Card 5: Hospital Photo Gallery */}
+            <PartnerGalleryCard
+              galleryImages={galleryImages}
+              onChange={setGalleryImages}
+              isEn={isEn}
+            />
 
             {/* Submit Button */}
             <div className="pt-2">

@@ -111,12 +111,43 @@ export interface Partner {
   email?: string;
   password?: string;
   emergencyPhone?: string;
+  ambulancePhone?: string;
   workingHours?: string;
   departmentDiscounts?: string;
   socialLinks?: string;
+  facilities?: string;
+  galleryImages?: string;
   upazila?: string;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface PartnerFacilityItem {
+  id: string;
+  nameBn: string;
+  nameEn: string;
+  descBn?: string;
+  descEn?: string;
+  icon?: string;
+  isAvailable: boolean;
+  isCustom?: boolean;
+}
+
+export interface PartnerGalleryImage {
+  id: string;
+  url: string;
+  captionBn?: string;
+  captionEn?: string;
+}
+
+export function parsePartnerGallery(raw?: string | null): PartnerGalleryImage[] {
+  if (!raw || typeof raw !== "string" || !raw.trim()) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? (parsed as PartnerGalleryImage[]) : [];
+  } catch {
+    return [];
+  }
 }
 
 export type AdminRole = 'super_admin' | 'content_moderator' | 'support_staff';
