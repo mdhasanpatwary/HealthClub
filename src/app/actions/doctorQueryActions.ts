@@ -35,7 +35,7 @@ export const getDoctorsAction = unstable_cache(
     }
   },
   ["doctors-list"],
-  { revalidate: 60, tags: [DOCTORS_TAG] }
+  { revalidate: 86400, tags: [DOCTORS_TAG] }
 );
 
 /**

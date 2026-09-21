@@ -160,6 +160,7 @@ export default function PartnerCard({ partner, locale, t }: PartnerCardProps) {
         <div className="flex items-center gap-1.5 shrink-0">
           <Link
             href={`/partner-hospitals/${encodeURIComponent(partner.slug || partner.id)}`}
+            prefetch={false}
             aria-label={`${t("ui.partnerdirectory.details")} - ${partner.name}`}
             className={buttonVariants({
               variant: "outline",

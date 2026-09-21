@@ -224,6 +224,9 @@ function dispatchAccountTerminated(entry: SubscriptionEntry, payload: { memberId
 }
 
 function connectSSE(entry: SubscriptionEntry) {
+  // In production serverless environments (Vercel), holding open SSE streams in Node.js lambdas
+  // exhausts active CPU time and memory duration. Rely purely on Supabase WebSockets in production.
+  if (process.env.NODE_ENV === "production") return;
   if (entry.eventSource || typeof window === "undefined" || isTabDormant) return;
 
   try {
@@ -371,10 +374,6 @@ function initSubscription(entry: SubscriptionEntry) {
       connectSSE(entry);
     }
   } else {
-    connectSSE(entry);
-  }
-
-  if (entry.role === "admin" && !entry.eventSource) {
     connectSSE(entry);
   }
 }

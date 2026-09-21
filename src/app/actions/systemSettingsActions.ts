@@ -67,7 +67,7 @@ const getCachedMemberTxSetting = unstable_cache(
     }
   },
   ["allow_member_tx"],
-  { revalidate: 60, tags: [SYSTEM_SETTINGS_TAG] }
+  { revalidate: 86400, tags: [SYSTEM_SETTINGS_TAG] }
 );
 
 /**
@@ -97,7 +97,7 @@ export const getCachedNoticeSetting = unstable_cache(
     }
   },
   ["global_notice_setting"],
-  { revalidate: 60, tags: [SYSTEM_SETTINGS_TAG] }
+  { revalidate: 86400, tags: [SYSTEM_SETTINGS_TAG] }
 );
 
 export async function getAllSystemSettingsAction(): Promise<Record<string, string>> {
@@ -197,7 +197,7 @@ export const getCachedPaymentSettings = unstable_cache(
     }
   },
   ["public_payment_settings"],
-  { revalidate: 60, tags: [SYSTEM_SETTINGS_TAG] }
+  { revalidate: 86400, tags: [SYSTEM_SETTINGS_TAG] }
 );
 
 export async function getPublicPaymentSettingsAction(): Promise<PublicPaymentSettings> {
@@ -335,7 +335,7 @@ export const getCachedContactSettings = unstable_cache(
     }
   },
   ["public_contact_settings"],
-  { revalidate: 60, tags: [SYSTEM_SETTINGS_TAG] }
+  { revalidate: 86400, tags: [SYSTEM_SETTINGS_TAG] }
 );
 
 export async function getPublicContactSettingsAction(): Promise<PublicContactSettings> {

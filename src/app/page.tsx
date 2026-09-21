@@ -28,7 +28,7 @@ import { LandingBlogSection } from "@/components/landing/LandingBlogSection";
 import { getAllBlogPostsAction } from "@/app/actions/blogAdminActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
-export const revalidate = 300; // 5-minute Incremental Static Regeneration (ISR)
+export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
 
 export async function generateMetadata() {
   const isEn = false;

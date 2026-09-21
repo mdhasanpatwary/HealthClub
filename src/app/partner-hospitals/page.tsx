@@ -9,7 +9,7 @@ import { getPartnersAction } from "@/app/actions/partnerActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 import { Sparkles, ShieldCheck, Tag, Pill, MapPin } from "lucide-react";
 
-export const revalidate = 300; // 5-minute Incremental Static Regeneration (ISR)
+export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
 
 export async function generateMetadata() {
   const isEn = false;

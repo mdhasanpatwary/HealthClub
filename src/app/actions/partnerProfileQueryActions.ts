@@ -131,7 +131,7 @@ export const getDoctorsByPartnerIdAction = unstable_cache(
     }
   },
   ["doctors-by-partner"],
-  { revalidate: 60, tags: [DOCTORS_TAG, PARTNERS_TAG] }
+  { revalidate: 86400, tags: [DOCTORS_TAG, PARTNERS_TAG] }
 );
 
 /**

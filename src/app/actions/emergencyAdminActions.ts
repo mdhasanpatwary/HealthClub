@@ -261,7 +261,7 @@ export const getEmergencyDataAction = unstable_cache(
     }
   },
   ["all-emergency-data-v6"],
-  { tags: [EMERGENCY_TAG], revalidate: 60 }
+  { tags: [EMERGENCY_TAG], revalidate: 86400 }
 );
 
 export interface EmergencyCounts {

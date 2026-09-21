@@ -150,7 +150,7 @@ export const getPartnersAction = unstable_cache(
     }
   },
   ["partners-list"],
-  { revalidate: 60, tags: [PARTNERS_TAG] }
+  { revalidate: 86400, tags: [PARTNERS_TAG] }
 );
 
 export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Partner | { error: string }> {
