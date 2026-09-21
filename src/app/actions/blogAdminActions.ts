@@ -152,8 +152,8 @@ const getCachedBlogPosts = unstable_cache(
       return BLOG_POSTS;
     }
   },
-  ["all-blog-posts-admin-v17"],
-  { tags: [BLOG_POSTS_TAG] }
+  ["all-blog-posts-admin-v18"],
+  { revalidate: 86400, tags: [BLOG_POSTS_TAG] }
 );
 
 export async function getAllBlogPostsAction(): Promise<BlogPost[]> {
