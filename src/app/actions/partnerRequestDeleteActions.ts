@@ -2,11 +2,29 @@
 
 import { prisma } from "@/lib/prisma";
 import { logger } from "@/lib/logger";
-import { updateTag } from "next/cache";
+import { updateTag, revalidateTag, revalidatePath } from "next/cache";
 import { getSessionUser } from "@/lib/session";
 import { hasAdminPermission } from "@/lib/permissions";
 
 const PARTNERS_TAG = "partners";
+
+function revalidateRequestCaches() {
+  try {
+    updateTag(PARTNERS_TAG);
+    updateTag("homepage-partners");
+    updateTag("admin-stats");
+    revalidateTag(PARTNERS_TAG, "max");
+    revalidateTag("homepage-partners", "max");
+    revalidateTag("admin-stats", "max");
+    revalidatePath("/partner-hospitals");
+    revalidatePath("/");
+    revalidatePath("/admin/partners");
+    revalidatePath("/admin/partner-requests");
+    revalidatePath("/dashboard");
+  } catch (err) {
+    logger.warn("Failed to revalidate partner request caches:", err);
+  }
+}
 
 async function verifyPartnerRequestAdmin(): Promise<boolean> {
   const session = await getSessionUser();
@@ -86,12 +104,7 @@ export async function deletePartnerRequestAction(id: string): Promise<boolean> {
       where: { id },
     });
 
-    try {
-      updateTag(PARTNERS_TAG);
-      updateTag("admin-stats");
-    } catch (err) {
-      logger.warn("Failed to revalidate partners cache tag on deletion:", err);
-    }
+    revalidateRequestCaches();
 
     return true;
   } catch (error) {
@@ -130,12 +143,7 @@ export async function deleteAllRejectedPartnerRequestsAction(): Promise<{
       where: { status: "rejected" },
     });
 
-    try {
-      updateTag(PARTNERS_TAG);
-      updateTag("admin-stats");
-    } catch (err) {
-      logger.warn("Failed to revalidate partners cache tag on bulk deletion:", err);
-    }
+    revalidateRequestCaches();
 
     return { success: true, count: deleted.count };
   } catch (error) {

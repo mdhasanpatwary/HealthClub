@@ -94,14 +94,11 @@ export default function PartnerDirectory({
   };
 
   useEffect(() => {
-    if (initialPartners && initialPartners.length > 0) {
-      return;
-    }
     let isMounted = true;
     getPartnersAction()
       .then((data) => {
         if (!isMounted) return;
-        if (data && data.length > 0) {
+        if (Array.isArray(data)) {
           setPartners(data);
         }
         setLoading(false);
@@ -109,12 +106,14 @@ export default function PartnerDirectory({
       .catch(() => {
         if (!isMounted) return;
         setLoading(false);
-        toast.error(t("ui.partnerdirectory.loadError"));
+        if (!hasInitialData) {
+          toast.error(t("ui.partnerdirectory.loadError"));
+        }
       });
     return () => {
       isMounted = false;
     };
-  }, [initialPartners, t]);
+  }, [hasInitialData, t]);
 
   // Precompute upazila for each partner
   const partnersWithUpazila = useMemo(() => {

@@ -6,7 +6,7 @@ import { Partner } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
 import { hashPassword } from "@/lib/crypto";
 import { logger } from "@/lib/logger";
-import { unstable_cache, updateTag } from "next/cache";
+import { unstable_cache, updateTag, revalidateTag, revalidatePath } from "next/cache";
 import { cache } from "react";
 import { PaginatedResult } from "@/types/pagination";
 import {
@@ -141,6 +141,26 @@ export async function getPaginatedPartnersAdminAction(
   }
 }
 
+function revalidatePartnerCaches(slugOrId?: string) {
+  try {
+    updateTag(PARTNERS_TAG);
+    updateTag("homepage-partners");
+    updateTag("admin-stats");
+    revalidateTag(PARTNERS_TAG, "max");
+    revalidateTag("homepage-partners", "max");
+    revalidateTag("admin-stats", "max");
+    revalidatePath("/partner-hospitals");
+    revalidatePath("/");
+    revalidatePath("/admin/partners");
+    revalidatePath("/dashboard");
+    if (slugOrId) {
+      revalidatePath(`/partner-hospitals/${slugOrId}`);
+    }
+  } catch (err) {
+    logger.warn("[partnerActions] Revalidation error:", err);
+  }
+}
+
 // --- PARTNERS ACTIONS ---
 
 export const getPartnersAction = unstable_cache(
@@ -190,9 +210,7 @@ export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Pa
       },
     });
 
-    updateTag(PARTNERS_TAG);
-    updateTag("homepage-partners");
-    updateTag("admin-stats");
+    revalidatePartnerCaches(p.slug || p.id);
     return formatPartner(p);
   } catch (error) {
     logger.error("Error in addPartnerAction:", error);
@@ -243,9 +261,7 @@ export async function updatePartnerAction(id: string, partner: Omit<Partner, "id
       },
     });
 
-    updateTag(PARTNERS_TAG);
-    updateTag("homepage-partners");
-    updateTag("admin-stats");
+    revalidatePartnerCaches(finalSlug || id);
     return true;
   } catch (error) {
     logger.error("Error in updatePartnerAction:", error);
@@ -261,9 +277,7 @@ export async function deletePartnerAction(id: string): Promise<boolean> {
       where: { id },
     });
 
-    updateTag(PARTNERS_TAG);
-    updateTag("homepage-partners");
-    updateTag("admin-stats");
+    revalidatePartnerCaches(id);
     return true;
   } catch (error) {
     logger.error("Error in deletePartnerAction:", error);
@@ -377,9 +391,7 @@ export async function updatePartnerProfileAction(
       select: PARTNER_SELECT_FIELDS,
     });
 
-    updateTag(PARTNERS_TAG);
-    updateTag("homepage-partners");
-    updateTag("admin-stats");
+    revalidatePartnerCaches(session.userId);
     return {
       success: true,
       partner: formatPartner(updated),

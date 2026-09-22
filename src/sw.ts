@@ -48,7 +48,26 @@ const customOfflineCache: RuntimeCaching[] = [
     }),
   },
 
-  // 2. Member Card QR Code Generator Service - Cache First with long TTL
+  // 2. Partner Hospitals Directory & Profile Pages - Network First with Fast Timeout and 1-hour TTL
+  {
+    matcher: ({ url: { pathname }, sameOrigin }) =>
+      sameOrigin &&
+      (pathname === "/partner-hospitals" ||
+        pathname.startsWith("/partner-hospitals/")),
+    handler: new NetworkFirst({
+      cacheName: "hc-partner-hospitals-cache",
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: 32,
+          maxAgeSeconds: 3600, // 1 hour max TTL
+          maxAgeFrom: "last-used",
+        }),
+      ],
+      networkTimeoutSeconds: 3,
+    }),
+  },
+
+  // 3. Member Card QR Code Generator Service - Cache First with long TTL
   {
     matcher: ({ url, sameOrigin }) =>
       (sameOrigin && url.pathname.startsWith("/api/qr")) ||
@@ -114,6 +133,32 @@ const serwist = new Serwist({
 });
 
 serwist.addEventListeners();
+
+// Purge stale Next.js RSC and page caches on activate to prevent ghost/deleted records
+self.addEventListener("activate", (event: ExtendableEvent) => {
+  event.waitUntil(
+    (async () => {
+      try {
+        const cacheNames = await caches.keys();
+        await Promise.all(
+          cacheNames.map((name) => {
+            if (
+              name === "pages-rsc" ||
+              name === "pages" ||
+              name === "pages-rsc-prefetch" ||
+              name === "others"
+            ) {
+              return caches.delete(name);
+            }
+            return Promise.resolve(false);
+          })
+        );
+      } catch {
+        // Cache cleanup failure should not block activation
+      }
+    })()
+  );
+});
 
 // ---------------------------------------------------------------------------
 // Web Push Notifications Engine
