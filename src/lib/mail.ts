@@ -3,8 +3,8 @@ import type { Transporter } from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { logger } from "@/lib/logger";
 
-const smtpUser = process.env.SMTP_USER;
-const smtpPassword = process.env.SMTP_PASSWORD;
+export const smtpUser = process.env.SMTP_USER;
+export const smtpPassword = process.env.SMTP_PASSWORD;
 
 const MAX_RETRIES = 2;
 const RETRY_DELAY_MS = 1500;
@@ -60,7 +60,7 @@ async function getVerifiedTransporter(): Promise<Transporter> {
   return _transporter!;
 }
 
-async function sendWithRetry(
+export async function sendWithRetry(
   mailOptions: nodemailer.SendMailOptions
 ): Promise<{ success: boolean; messageId?: string }> {
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
@@ -355,5 +355,14 @@ export async function sendBulkBroadcastEmails(
     failed,
   };
 }
+
+export {
+  sendPartnerApplicationConfirmationEmail,
+  sendPartnerApprovalEmail,
+} from "./partnerMail";
+export type {
+  PartnerApplicationConfirmationEmailOptions,
+  PartnerApprovalEmailOptions,
+} from "./partnerMail";
 
 

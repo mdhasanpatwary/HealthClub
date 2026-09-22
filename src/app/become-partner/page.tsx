@@ -21,18 +21,21 @@ export default function BecomePartnerPage() {
     email: ""
   });
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
     try {
       const res = await addPartnerRequestAction({
-        orgName: formData.orgName,
+        orgName: formData.orgName.trim(),
         category: formData.category as "hospital" | "diagnostic" | "pharmacy",
-        address: formData.address,
-        discount: formData.discount,
-        contactName: formData.contactName,
-        phone: formData.phone,
-        email: formData.email || null,
+        address: formData.address.trim(),
+        discount: formData.discount.trim(),
+        contactName: formData.contactName.trim(),
+        phone: formData.phone.trim(),
+        email: formData.email.trim(),
       });
 
       if (!res?.success) {
@@ -54,6 +57,8 @@ export default function BecomePartnerPage() {
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : t("common.error");
       toast.error(msg);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -245,6 +250,7 @@ export default function BecomePartnerPage() {
                         id="partner-email"
                         type="email"
                         name="email"
+                        required
                         value={formData.email}
                         onChange={handleChange}
                         placeholder="partner@hospital.com"
@@ -253,8 +259,8 @@ export default function BecomePartnerPage() {
                     </div>
                   </div>
 
-                  <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
-                    {t("becomePartner.submit")}
+                  <Button type="submit" disabled={submitting} className="w-full bg-primary hover:bg-primary-dark text-white font-semibold">
+                    {submitting ? t("becomePartner.submitting") : t("becomePartner.submit")}
                   </Button>
                 </form>
               )}

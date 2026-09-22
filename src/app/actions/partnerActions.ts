@@ -16,9 +16,11 @@ import {
   updatePartnerRequestStatusAction as _updatePartnerRequestStatusAction,
   approvePartnerRequestAction as _approvePartnerRequestAction,
   rejectPartnerRequestAction as _rejectPartnerRequestAction,
+} from "./partnerRequestActions";
+import {
   loginPartnerAction as _loginPartnerAction,
   changePartnerPasswordAction as _changePartnerPasswordAction,
-} from "./partnerRequestActions";
+} from "./partnerAuthActions";
 import {
   requestPartnerPasswordResetAction as _requestPartnerPasswordResetAction,
   resetPartnerPasswordAction as _resetPartnerPasswordAction,
