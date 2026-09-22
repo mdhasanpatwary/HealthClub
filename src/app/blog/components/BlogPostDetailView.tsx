@@ -68,8 +68,9 @@ export function BlogPostDetailView({
   );
 
   const isPurePriceList = post.slug === "feni-medical-test-price-list";
-  const selectionGuideNumber = isPurePriceList ? 3 : (hasPricingGuide ? 5 : 4);
-  const emergencyDirectoryNumber = isPurePriceList ? 4 : (selectionGuide ? selectionGuideNumber + 1 : selectionGuideNumber);
+  const isUpazilaArticle = Boolean(post.slug.includes("healthcare-guide"));
+  const selectionGuideNumber = isPurePriceList ? 3 : isUpazilaArticle ? 8 : (hasPricingGuide ? 5 : 4);
+  const emergencyDirectoryNumber = isPurePriceList ? 4 : isUpazilaArticle ? 9 : (selectionGuide ? selectionGuideNumber + 1 : selectionGuideNumber);
 
   return (
     <div className="min-h-screen bg-background pb-16">
@@ -143,6 +144,7 @@ export function BlogPostDetailView({
                   hasPharmacyPricing={!!post.pharmacyCarePricingBn}
                   hasBloodPricing={!!post.bloodCarePricingBn}
                   hasAmbulancePricing={!!post.ambulanceCarePricingBn}
+                  hasUpazilaPricing={!!post.upazilaCarePricingBn}
                   pharmacies={post.pharmacies}
                   bloodBanks={post.bloodBanks}
                   ambulances={post.ambulances}
@@ -326,6 +328,7 @@ export function BlogPostDetailView({
               hasPharmacyPricing={!!post.pharmacyCarePricingBn}
               hasBloodPricing={!!post.bloodCarePricingBn}
               hasAmbulancePricing={!!post.ambulanceCarePricingBn}
+              hasUpazilaPricing={!!post.upazilaCarePricingBn}
               pharmacies={post.pharmacies}
               bloodBanks={post.bloodBanks}
               ambulances={post.ambulances}

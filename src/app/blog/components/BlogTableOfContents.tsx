@@ -36,6 +36,7 @@ interface BlogTableOfContentsProps {
   hasPharmacyPricing?: boolean;
   hasBloodPricing?: boolean;
   hasAmbulancePricing?: boolean;
+  hasUpazilaPricing?: boolean;
   pharmacies?: import("@/types/pharmacyBlog").PharmacyReviewItem[];
   bloodBanks?: import("@/types/bloodBankBlog").BloodBankReviewItem[];
   ambulances?: import("@/types/ambulanceBlog").AmbulanceReviewItem[];
@@ -72,6 +73,7 @@ export function BlogTableOfContents({
   hasPharmacyPricing = false,
   hasBloodPricing = false,
   hasAmbulancePricing = false,
+  hasUpazilaPricing = false,
   currentSlug,
   locale = "bn",
   className = "",
@@ -149,7 +151,8 @@ export function BlogTableOfContents({
     hasSadarHospitalPricing ||
     hasDiabeticHospitalPricing;
 
-  const isDoctorArticle = doctorGroups && doctorGroups.length > 0;
+  const isUpazilaArticle = Boolean(hasUpazilaPricing || currentSlug?.includes("healthcare-guide"));
+  const isDoctorArticle = !isUpazilaArticle && doctorGroups && doctorGroups.length > 0;
   const isDiagnosticArticle = diagnosticCenters && diagnosticCenters.length > 0;
   const isDentalArticle = dentalClinics && dentalClinics.length > 0;
   const isPhysiotherapyArticle = physiotherapyCenters && physiotherapyCenters.length > 0;
@@ -247,6 +250,73 @@ export function BlogTableOfContents({
             <li>
               <a href="#faq-section" className={linkClass("faq-section")}>
                 {secNum(5)}{isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
+              </a>
+            </li>
+          </ol>
+        ) : isUpazilaArticle ? (
+          <ol className="space-y-1.5 list-none pl-0">
+            <li>
+              <a href="#overview" className={linkClass("overview")}>
+                {secNum(1)}{isEn ? "Upazila Healthcare Landscape" : "উপজেলা স্বাস্থ্যসেবা ও পটভূমি"}
+              </a>
+            </li>
+            <li>
+              <a href="#specialist-doctors" className={linkClass("specialist-doctors", true)}>
+                {secNum(2)}{isEn ? "Specialist Doctors by Upazila" : "উপজেলা অনুযায়ী বিশেষজ্ঞ ডাক্তার তালিকা"}
+              </a>
+              <TocSubList
+                items={doctorGroups.map((g, idx) => ({
+                  id: `dept-${g.department}`,
+                  name: isEn ? `${idx + 1}. ${g.departmentNameEn}` : `${toBanglaNums(idx + 1)}. ${g.departmentNameBn}`,
+                }))}
+                activeId={activeId}
+              />
+            </li>
+            <li>
+              <a href="#chamber-hubs" className={linkClass("chamber-hubs")}>
+                {secNum(3)}{isEn ? "Major Upazila Chamber Hubs" : "উপজেলার প্রধান চেম্বার হাবসমূহ"}
+              </a>
+            </li>
+            <li>
+              <a href="#serial-guide" className={linkClass("serial-guide")}>
+                {secNum(4)}{isEn ? "Serial Booking Guidelines" : "ডাক্তারের সিরিয়াল বুকিং নিয়মাবলী"}
+              </a>
+            </li>
+            <li>
+              <a href="#upazila-price-guide" className={linkClass("upazila-price-guide")}>
+                {secNum(5)}{isEn ? "Upazila Healthcare & Diagnostic Fees" : "উপজেলা স্বাস্থ্যসেবা ও টেস্ট ফি তালিকা"}
+              </a>
+            </li>
+            <li>
+              <a href="#comparison-matrix" className={linkClass("comparison-matrix")}>
+                {secNum(6)}{isEn ? "Healthcare Facilities Comparison" : "একনজরে উপজেলা হাসপাতালের তুলনা"}
+              </a>
+            </li>
+            <li>
+              <a href="#hospital-reviews" className={linkClass("hospital-reviews", true)}>
+                {secNum(7)}{isEn ? "Detailed Facility Reviews" : `${toBanglaNums(hospitals.length)}টি চিকিৎসাকেন্দ্রের বিস্তারিত পর্যালোচনা`}
+              </a>
+              <TocSubList
+                items={hospitals.map((h) => ({
+                  id: `hospital-${h.rank}`,
+                  name: isEn ? `#${h.rank} ${h.nameEn}` : `${toBanglaNums(h.rank)}. ${h.nameBn}`,
+                }))}
+                activeId={activeId}
+              />
+            </li>
+            <li>
+              <a href="#selection-guide" className={linkClass("selection-guide")}>
+                {secNum(8)}{isEn ? "Guidelines & Broker Precautions" : "স্বাস্থ্যসেবা নির্বাচন ও দালাল সতর্কতা"}
+              </a>
+            </li>
+            <li>
+              <a href="#emergency-directory" className={linkClass("emergency-directory")}>
+                {secNum(9)}{isEn ? "Emergency Referral Transport" : "জরুরি যোগাযোগ ও সদর রেফারেল অ্যাম্বুলেন্স"}
+              </a>
+            </li>
+            <li>
+              <a href="#faq-section" className={linkClass("faq-section")}>
+                {secNum(10)}{isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
               </a>
             </li>
           </ol>

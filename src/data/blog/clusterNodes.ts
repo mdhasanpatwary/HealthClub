@@ -14,6 +14,7 @@ import {
   Brain,
   Heart,
   Truck,
+  MapPin,
   type LucideIcon,
 } from "lucide-react";
 
@@ -32,6 +33,32 @@ export interface ClusterNode {
 }
 
 export const FENI_CLUSTER_NODES: ClusterNode[] = [
+  {
+    slug: "parshuram-fulgazi-healthcare-guide",
+    titleBn: "পরশুরাম ও ফুলগাজী স্বাস্থ্যসেবা গাইড",
+    titleEn: "Parshuram & Fulgazi Healthcare Guide",
+    subtitleBn: "উত্তর ফেনীর স্বাস্থ্য কমপ্লেক্স, ক্লিনিক, ডায়াগনস্টিক ও সদর রেফারেল",
+    subtitleEn: "Northern Feni health complexes, clinics, diagnostics & Sadar referral",
+    categoryBn: "উপজেলা স্বাস্থ্যসেবা",
+    categoryEn: "Upazila Healthcare",
+    icon: MapPin,
+    accentColor: "text-cyan-600 dark:text-cyan-400",
+    borderColor: "hover:border-cyan-500/50",
+    bgLight: "bg-cyan-500/10",
+  },
+  {
+    slug: "daganbhuiyan-chagalnaiya-sonagazi-healthcare-guide",
+    titleBn: "দাগনভূঞা, ছাগলনাইয়া ও সোনাগাজী স্বাস্থ্যসেবা গাইড",
+    titleEn: "Daganbhuiyan, Chhagalnaiya & Sonagazi Healthcare Guide",
+    subtitleBn: "উপজেলা স্বাস্থ্য কমপ্লেক্স, প্রাইভেট ক্লিনিক, ডায়াগনস্টিক ও স্পেশালিস্ট ডাক্তার",
+    subtitleEn: "Upazila health complexes, private clinics, diagnostics & doctors",
+    categoryBn: "উপজেলা স্বাস্থ্যসেবা",
+    categoryEn: "Upazila Healthcare",
+    icon: MapPin,
+    accentColor: "text-teal-600 dark:text-teal-400",
+    borderColor: "hover:border-teal-500/50",
+    bgLight: "bg-teal-500/10",
+  },
   {
     slug: "feni-ambulance-and-oxygen-service-guide",
     titleBn: "ফেনী ২৪/৭ অ্যাম্বুলেন্স ও অক্সিজেন",

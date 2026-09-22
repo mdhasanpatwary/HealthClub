@@ -23,6 +23,8 @@ import { FENI_MEDICAL_TEST_PRICE_LIST } from "./posts/feniMedicalTestPriceList";
 import { BEST_PHARMACIES_IN_FENI } from "./posts/bestPharmaciesInFeni";
 import { FENI_BLOOD_BANK_AND_DONORS_GUIDE } from "./posts/feniBloodBankAndDonorsGuide";
 import { FENI_AMBULANCE_AND_OXYGEN_SERVICE_GUIDE } from "./posts/feniAmbulanceAndOxygenServiceGuide";
+import { DAGANBHUIYAN_CHHAGALNAIYA_SONAGAZI_HEALTHCARE_GUIDE } from "./posts/daganbhuiyanChhagalnaiyaSonagaziHealthcareGuide";
+import { PARSHURAM_FULGAZI_HEALTHCARE_GUIDE } from "./posts/parshuramFulgaziHealthcareGuide";
 
 export {
   BLOG_CATEGORIES,
@@ -31,6 +33,8 @@ export {
 } from "./blogCategories";
 
 export const BLOG_POSTS: BlogPost[] = [
+  PARSHURAM_FULGAZI_HEALTHCARE_GUIDE,
+  DAGANBHUIYAN_CHHAGALNAIYA_SONAGAZI_HEALTHCARE_GUIDE,
   FENI_AMBULANCE_AND_OXYGEN_SERVICE_GUIDE,
   FENI_BLOOD_BANK_AND_DONORS_GUIDE,
   BEST_PHARMACIES_IN_FENI,

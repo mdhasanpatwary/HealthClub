@@ -2,6 +2,48 @@ export const ARTICLE_SELECTION_GUIDES: Record<
   string,
   { title: string; points: { title: string; desc: string }[] }
 > = {
+  "parshuram-fulgazi-healthcare-guide": {
+    title: "4 Critical Guidelines for Receiving Healthcare & Choosing Clinics in Northern Feni",
+    points: [
+      {
+        title: "1. Utilize Government Upazila Health Complexes for Primary Care & Normal Deliveries",
+        desc: "For routine ailments, institutional normal deliveries, infant immunizations, and free NCD blood pressure/glucose medications, Parshuram and Fulgazi 50-bed Upazila Health Complexes provide exceptional 24/7 care for only ৳3-৳10.",
+      },
+      {
+        title: "2. Be Vigilant with Monsoon Floods, Waterborne Diseases & Snakebites",
+        desc: "Due to the Muhuri river basin's flash flood vulnerabilities, sudden waterborne diarrheal outbreaks and venomous snakebites can occur. Parshuram and Fulgazi Health Complexes maintain free polyvalent antivenom (ASV) and IV rehydration fluids.",
+      },
+      {
+        title: "3. Bypass Hospital Middlemen & Unlicensed Village Bonesetters",
+        desc: "Avoid aggressive middlemen touting uncertified private labs or traditional bonesetters whose crude splints cause limb gangrene. Seek accredited digital imaging and BMDC-registered doctor prescriptions.",
+      },
+      {
+        title: "4. Rapidly Dispatch Emergency Ambulances to Feni Sadar for Severe Traumas",
+        desc: "In acute myocardial infarctions (heart attacks), cerebral strokes, or multi-organ polytrauma, do not delay at local clinics. Arrange an immediate 20-50 minute ambulance transfer to Feni 250-Bed General Hospital or top tertiary ICUs.",
+      },
+    ],
+  },
+  "daganbhuiyan-chagalnaiya-sonagazi-healthcare-guide": {
+    title: "4 Critical Guidelines for Navigating Upazila Healthcare & Choosing Specialist Chambers",
+    points: [
+      {
+        title: "1. Distinguish Primary Upazila Health Complex Capabilities from Secondary Centers",
+        desc: "For emergency normal deliveries, immunization, initial snakebite anti-venom, and minor lacerations, Upazila Health Complexes (UHCs) provide 24/7 care. However, for acute myocardial infarction, severe polytrauma, or premature neonates, stabilize the patient and arrange immediate referral to Feni 250-Bed District Hospital or Chittagong Medical College.",
+      },
+      {
+        title: "2. Confirm Specialist Visiting Schedules and Chamber Tokens in Advance",
+        desc: "Visiting specialist professors and consultants from Chittagong and Dhaka practice in Daganbhuiyan, Chhagalnaiya, and Sonagazi primarily on Thursdays, Fridays, or select weekday afternoons. Confirm doctor serial numbers by phone in the morning to avoid wasted travel.",
+      },
+      {
+        title: "3. Verify Ultrasound & Diagnostic Imaging Equipment Calibration",
+        desc: "Ensure prenatal 4D ultrasounds and cardiac Echo Doppler screenings are performed on digital color Doppler ultrasound machines operated by certified sonologists or radiologists, rather than unaccredited technician interpretations.",
+      },
+      {
+        title: "4. Prevent Middlemen Exploitation & Utilize Health Club Privileges in Feni Sadar",
+        desc: "Never pay unauthorized commissions to ambulance drivers or clinic touts. When referred to partner hospitals in Feni Sadar, present your Health Club digital membership card to claim 10-30% diagnostic and cabin savings.",
+      },
+    ],
+  },
   "feni-ambulance-and-oxygen-service-guide": {
     title: "4 Critical Guidelines for Hiring Emergency Ambulance & Oxygen Services in Feni",
     points: [

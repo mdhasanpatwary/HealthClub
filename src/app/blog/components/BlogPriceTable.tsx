@@ -15,6 +15,7 @@ export interface BlogPriceTableProps {
   subtitle: string;
   items: BlogPriceTableItem[];
   locale?: string;
+  showBenefitColumn?: boolean;
   columnHeaders?: {
     item?: string;
     regularPrice?: string;
@@ -36,6 +37,7 @@ export function BlogPriceTable({
   subtitle,
   items,
   locale = "bn",
+  showBenefitColumn = true,
   columnHeaders,
   conversionBanner,
 }: BlogPriceTableProps) {
@@ -82,9 +84,11 @@ export function BlogPriceTable({
               <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
                 {columnHeaders?.regularPrice || defaultPriceHeader}
               </th>
-              <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
-                {columnHeaders?.benefit || defaultBenefitHeader}
-              </th>
+              {showBenefitColumn && (
+                <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
+                  {columnHeaders?.benefit || defaultBenefitHeader}
+                </th>
+              )}
               <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
                 {columnHeaders?.duration || defaultDurationHeader}
               </th>
@@ -106,14 +110,16 @@ export function BlogPriceTable({
                 <td className="py-3 px-3 sm:px-4 text-center font-mono text-muted-foreground whitespace-nowrap">
                   {item.regularPriceRange}
                 </td>
-                <td className="py-3 px-3 sm:px-4 text-center whitespace-nowrap">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
-                    <Sparkles className="h-3 w-3 shrink-0" />
-                    <span>
-                      {item.discountText || (isEn ? "10-30% Member Discount" : "১০-৩০% মেম্বার ছাড়")}
+                {showBenefitColumn && (
+                  <td className="py-3 px-3 sm:px-4 text-center whitespace-nowrap">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                      <Sparkles className="h-3 w-3 shrink-0" />
+                      <span>
+                        {item.discountText || (isEn ? "10-30% Member Discount" : "১০-৩০% মেম্বার ছাড়")}
+                      </span>
                     </span>
-                  </span>
-                </td>
+                  </td>
+                )}
                 <td className="py-3 px-3 sm:px-4 text-center text-muted-foreground whitespace-nowrap">
                   <span className="inline-flex items-center gap-1 text-xs">
                     <Clock className="h-3 w-3 text-muted-foreground/70" />

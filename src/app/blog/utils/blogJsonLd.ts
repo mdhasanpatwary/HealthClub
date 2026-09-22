@@ -134,7 +134,9 @@ export function generateBlogJsonLd(
     graph.push({
       "@type": "ItemList",
       "@id": `${pageUrl}#hospitals-list`,
-      name: isEn ? "Best 10 Hospitals in Feni" : "ফেনীর সেরা ১০টি হাসপাতাল",
+      name: post.slug.includes("healthcare-guide")
+        ? (isEn ? post.titleEn : post.titleBn)
+        : (isEn ? "Best 10 Hospitals in Feni" : "ফেনীর সেরা ১০টি হাসপাতাল"),
       description: isEn ? post.excerptEn : post.excerptBn,
       numberOfItems: post.hospitals.length,
       itemListElement: post.hospitals.map((h) => ({

@@ -142,6 +142,13 @@ export const BLOG_CATEGORIES: BlogCategory[] = [
     descriptionEn: "Emergency blood donors, ambulance hotlines and first aid guides",
   },
   {
+    id: "upazila-healthcare",
+    nameBn: "উপজেলা স্বাস্থ্যসেবা গাইড",
+    nameEn: "Upazila Healthcare Guides",
+    descriptionBn: "দাগনভূঞা, ছাগলনাইয়া, সোনাগাজী, পরশুরাম ও ফুলগাজীর সরকারি স্বাস্থ্য কমপ্লেক্স, প্রাইভেট ক্লিনিক ও বিশেষজ্ঞ ডাক্তার গাইড",
+    descriptionEn: "Upazila health complexes, private hospitals, diagnostics and specialist doctors across Feni upazilas (Daganbhuiyan, Chhagalnaiya, Sonagazi, Parshuram, and Fulgazi)",
+  },
+  {
     id: "pharmacy-guide",
     nameBn: "ফার্মেসি ও ওষুধ গাইড",
     nameEn: "Pharmacy & Medicine",
@@ -190,6 +197,7 @@ export const BLOG_FILTER_PILLS: BlogFilterPill[] = [
       "cardiology-guide",
       "gynecology-guide",
       "kidney-guide",
+      "upazila-healthcare",
     ],
   },
   {
@@ -241,5 +249,11 @@ export const BLOG_FILTER_PILLS: BlogFilterPill[] = [
     nameBn: "জরুরি সেবা ও রক্তদান",
     nameEn: "Emergency & Blood",
     matchingCategories: ["emergency-care"],
+  },
+  {
+    id: "upazila-guide",
+    nameBn: "উপজেলা স্বাস্থ্যসেবা",
+    nameEn: "Upazila Healthcare",
+    matchingCategories: ["upazila-healthcare"],
   },
 ];

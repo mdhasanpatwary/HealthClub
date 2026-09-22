@@ -77,6 +77,7 @@ export const blogPostSchema = z.object({
   ambulances: z.array(z.any()).optional(),
   ambulanceComparisonTable: z.array(z.any()).optional(),
   ambulanceCarePricingBn: z.any().optional(),
+  upazilaCarePricingBn: z.any().optional(),
   bookingGuideBn: z.any().optional(),
   selectionGuideBn: z.any().optional(),
   emergencyDirectoryBn: z.any().optional(),

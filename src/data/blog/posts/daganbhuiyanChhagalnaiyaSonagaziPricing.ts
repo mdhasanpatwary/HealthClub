@@ -1,0 +1,133 @@
+import { UpazilaCarePackageItem } from "@/types/upazilaBlog";
+
+export const DAGANBHUIYAN_CHHAGALNAIYA_SONAGAZI_PRICING: {
+  titleBn: string;
+  subtitleBn: string;
+  packages: UpazilaCarePackageItem[];
+} = {
+  titleBn: "দাগনভূঞা, ছাগলনাইয়া ও সোনাগাজীতে স্বাস্থ্যসেবা ও টেস্ট ফি তালিকা (২০২৬)",
+  subtitleBn:
+    "উপজেলা সরকারি স্বাস্থ্য কমপ্লেক্সের ইউজার ফি এবং স্থানীয় বেসরকারি ক্লিনিকগুলোর স্ট্যান্ডার্ড বাজারদর তালিকা (সদরে রেফারেল চিকিৎসার জন্য ফেনী সদরের পার্টনার হাসপাতালগুলোতে হেলথ ক্লাব মেম্বার ছাড় প্রযোজ্য)।",
+  packages: [
+    {
+      id: "upazila-opd-ticket",
+      categoryBn: "সরকারি সেবা",
+      procedureOrTestNameBn: "উপজেলা স্বাস্থ্য কমপ্লেক্স বহির্বিভাগ (OPD) টিকেট",
+      procedureOrTestNameEn: "Upazila Health Complex OPD Consultation Ticket",
+      regularPriceRangeBn: "৳৩ - ৳১০",
+      durationOrTurnaroundBn: "সকাল ৮:৩০ - দুপুর ২:৩০",
+    },
+    {
+      id: "upazila-specialist-visit",
+      categoryBn: "প্রাইভেট চেম্বার",
+      procedureOrTestNameBn: "ভিজিটিং বিশেষজ্ঞ চিকিৎসক কনসালটেশন ফি",
+      procedureOrTestNameEn: "Visiting Specialist Doctor Consultation Fee",
+      regularPriceRangeBn: "৳৫০০ - ৳৮০০",
+      durationOrTurnaroundBn: "বিকেল ৩:০০ - রাত ৯:০০",
+    },
+    {
+      id: "upazila-cbc-test",
+      categoryBn: "প্যাথলজি ও ল্যাব",
+      procedureOrTestNameBn: "সম্পূর্ণ রক্তের পরীক্ষা (CBC with ESR)",
+      procedureOrTestNameEn: "Complete Blood Count (CBC with ESR)",
+      regularPriceRangeBn: "৳৩০০ - ৳৪৫০",
+      durationOrTurnaroundBn: "২-৪ ঘণ্টার মধ্যে রিপোর্ট",
+    },
+    {
+      id: "upazila-digital-xray",
+      categoryBn: "ইমেজিং ও এক্স-রে",
+      procedureOrTestNameBn: "ডিজিটাল এক্স-রে (বুক বা হাড়ের জয়েন্ট)",
+      procedureOrTestNameEn: "Digital X-Ray (Chest / Bone Joint)",
+      regularPriceRangeBn: "৳৪০০ - ৳৭০০",
+      durationOrTurnaroundBn: "৩০-৬০ মিনিট",
+    },
+    {
+      id: "upazila-usg-abdomen",
+      categoryBn: "ইমেজিং ও এক্স-রে",
+      procedureOrTestNameBn: "পেটের আল্ট্রাসনোগ্রাফি (USG of Whole Abdomen)",
+      procedureOrTestNameEn: "Ultrasonography of Whole Abdomen",
+      regularPriceRangeBn: "৳৮০০ - ৳১,৪০০",
+      durationOrTurnaroundBn: "১-২ ঘণ্টার মধ্যে রিপোর্ট",
+    },
+    {
+      id: "upazila-ecg-12lead",
+      categoryBn: "কার্ডিয়াক টেস্ট",
+      procedureOrTestNameBn: "১২-লিড ডিজিটাল ইসিজি (12-Lead ECG)",
+      procedureOrTestNameEn: "12-Lead Digital ECG",
+      regularPriceRangeBn: "৳২৫০ - ৳৪০০",
+      durationOrTurnaroundBn: "তাৎক্ষণিক রিপোর্ট",
+    },
+    {
+      id: "upazila-blood-glucose",
+      categoryBn: "প্যাথলজি ও ল্যাব",
+      procedureOrTestNameBn: "রক্তের সুগার পরীক্ষা (FBS / 2HABF)",
+      procedureOrTestNameEn: "Fasting Blood Sugar / 2HABF",
+      regularPriceRangeBn: "৳১০০ - ৳১৮০",
+      durationOrTurnaroundBn: "৩০ মিনিট",
+    },
+    {
+      id: "upazila-lipid-profile",
+      categoryBn: "প্যাথলজি ও ল্যাব",
+      procedureOrTestNameBn: "লিপিড প্রোফাইল টেস্ট (Fasting Lipid Profile)",
+      procedureOrTestNameEn: "Fasting Lipid Profile (Cholesterol, TG, HDL, LDL)",
+      regularPriceRangeBn: "৳৭০০ - ৳১,১০০",
+      durationOrTurnaroundBn: "৩-৫ ঘণ্টার মধ্যে রিপোর্ট",
+    },
+    {
+      id: "upazila-serum-creatinine",
+      categoryBn: "প্যাথলজি ও ল্যাব",
+      procedureOrTestNameBn: "সিরাম ক্রিয়েটিনিন কিডনি টেস্ট (Serum Creatinine)",
+      procedureOrTestNameEn: "Serum Creatinine Kidney Function Test",
+      regularPriceRangeBn: "৳৩০০ - ৳৪৫০",
+      durationOrTurnaroundBn: "২-৩ ঘণ্টা",
+    },
+    {
+      id: "upazila-normal-delivery",
+      categoryBn: "প্রসূতি ও মাতৃত্ব",
+      procedureOrTestNameBn: "নরমাল ডেলিভারি সার্ভিস চার্জ (উপজেলা প্রাইভেট ক্লিনিক)",
+      procedureOrTestNameEn: "Normal Delivery Package (Private Clinic)",
+      regularPriceRangeBn: "৳৩,৫০০ - ৳৬,০০০",
+      durationOrTurnaroundBn: "২৪ ঘণ্টা পর্যবেক্ষণ ও ছাড়পত্র",
+    },
+    {
+      id: "upazila-cesarean-package",
+      categoryBn: "প্রসূতি ও মাতৃত্ব",
+      procedureOrTestNameBn: "সিজারিয়ান অপারেশন প্যাকেজ (LUSCS Package)",
+      procedureOrTestNameEn: "Cesarean Delivery Package (LUSCS)",
+      regularPriceRangeBn: "৳১৫,০০০ - ৳২৫,০০০",
+      durationOrTurnaroundBn: "৩-৪ দিন ইনডোর কেবিন",
+    },
+    {
+      id: "upazila-minor-trauma-suture",
+      categoryBn: "জরুরি সেবা",
+      procedureOrTestNameBn: "জরুরি ক্ষতের ড্রেসিং ও সেলাই (Minor Trauma Suture)",
+      procedureOrTestNameEn: "Emergency Wound Dressing & Suturing",
+      regularPriceRangeBn: "৳৩০০ - ৳৮০০",
+      durationOrTurnaroundBn: "জরুরি বিভাগে তাৎক্ষণিক",
+    },
+    {
+      id: "upazila-ambulance-daganbhuiyan",
+      categoryBn: "অ্যাম্বুলেন্স রেফারেল",
+      procedureOrTestNameBn: "জরুরি এসি অ্যাম্বুলেন্স (দাগনভূঞা ⇄ ফেনী সদর হাসপাতাল)",
+      procedureOrTestNameEn: "Emergency AC Ambulance (Daganbhuiyan to Feni Sadar)",
+      regularPriceRangeBn: "৳১,২০০ - ৳১,৮০০",
+      durationOrTurnaroundBn: "১৫-২৫ মিনিট যাতায়াত সময়",
+    },
+    {
+      id: "upazila-ambulance-chagalnaiya",
+      categoryBn: "অ্যাম্বুলেন্স রেফারেল",
+      procedureOrTestNameBn: "জরুরি এসি অ্যাম্বুলেন্স (ছাগলনাইয়া ⇄ ফেনী সদর হাসপাতাল)",
+      procedureOrTestNameEn: "Emergency AC Ambulance (Chhagalnaiya to Feni Sadar)",
+      regularPriceRangeBn: "৳১,২০০ - ৳১,৮০০",
+      durationOrTurnaroundBn: "২০-৩০ মিনিট যাতায়াত সময়",
+    },
+    {
+      id: "upazila-ambulance-sonagazi",
+      categoryBn: "অ্যাম্বুলেন্স রেফারেল",
+      procedureOrTestNameBn: "জরুরি এসি অ্যাম্বুলেন্স (সোনাগাজী ⇄ ফেনী সদর হাসপাতাল)",
+      procedureOrTestNameEn: "Emergency AC Ambulance (Sonagazi to Feni Sadar)",
+      regularPriceRangeBn: "৳১,৫০০ - ৳২,২০০",
+      durationOrTurnaroundBn: "২৫-৩৫ মিনিট যাতায়াত সময়",
+    },
+  ],
+};

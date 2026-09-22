@@ -442,22 +442,11 @@ export interface BlogPost {
   ambulances?: import("./ambulanceBlog").AmbulanceReviewItem[];
   ambulanceComparisonTable?: import("./ambulanceBlog").AmbulanceComparisonItem[];
   ambulanceCarePricingBn?: { titleBn: string; subtitleBn: string; packages: import("./ambulanceBlog").AmbulancePackagePriceItem[] };
-  bookingGuideBn?: {
-    titleBn: string;
-    stepsBn: { step: string; title: string; desc: string }[];
-  };
-  bookingGuideEn?: {
-    titleEn: string;
-    stepsEn: { step: string; title: string; desc: string }[];
-  };
-  selectionGuideBn?: {
-    titleBn: string;
-    pointsBn: { title: string; desc: string }[];
-  };
-  selectionGuideEn?: {
-    titleEn: string;
-    pointsEn: { title: string; desc: string }[];
-  };
+  upazilaCarePricingBn?: { titleBn: string; subtitleBn: string; titleEn?: string; subtitleEn?: string; packages: import("./upazilaBlog").UpazilaCarePackageItem[] };
+  bookingGuideBn?: { titleBn: string; stepsBn: { step: string; title: string; desc: string }[] };
+  bookingGuideEn?: { titleEn: string; stepsEn: { step: string; title: string; desc: string }[] };
+  selectionGuideBn?: { titleBn: string; pointsBn: { title: string; desc: string }[] };
+  selectionGuideEn?: { titleEn: string; pointsEn: { title: string; desc: string }[] };
   emergencyDirectoryBn?: {
     titleBn: string;
     services: { name: string; phone: string; note: string }[];
@@ -494,4 +483,4 @@ export interface BlogPostCardItem {
 export * from "./pharmacyBlog";
 export * from "./bloodBankBlog";
 export * from "./ambulanceBlog";
-
+export * from "./upazilaBlog";

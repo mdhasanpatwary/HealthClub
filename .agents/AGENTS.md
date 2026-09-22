@@ -85,6 +85,14 @@ Always use the following color variables or class equivalents:
   - English: `"10-30% Member Discount"` or `"10-30% Special Discount"`
 - Regular market price ranges (`regularPriceRangeBn`) can be shown as reference ranges, but the Health Club benefit column must always communicate percentage savings (`10-30%`) rather than an absolute member price.
 
+### Partner Facility Verification & Geographic Scope Rules
+- **Contract Verification Mandatory**: When writing articles, guides, or UI content mentioning Health Club partner hospitals, clinics, diagnostic centers, or doctor chambers, you MUST verify the actual contracted partner organizations (`partners` database/directory) before making any partnership or discount claims. Never invent or assume partnerships.
+- **Geographic Scope (Feni Sadar Only)**: Health Club currently maintains contracted partner healthcare facilities strictly within **Feni Sadar**. Health Club has **NO** active contracts with hospitals, clinics, or diagnostic centers outside Feni Sadar (such as in Daganbhuiyan, Chhagalnaiya, Sonagazi, Parshuram, Fulgazi, etc.).
+- **No False Partner Badges or Claims**:
+  - Never mark facilities or doctor profiles outside Feni Sadar as `partnerStatus: true` or display "অফিসিয়াল পার্টনার চেম্বার" / "Health Club Partner" badges for them.
+  - In sub-district / upazila blog guides outside Feni Sadar, do NOT show "হেলথ ক্লাব সুবিধা" (Health Club Benefit) columns in local test fee tables (`showBenefitColumn={false}`).
+  - Clearly state in upazila content that Health Club member discount benefits (10-30%) apply when patients are referred to verified partner facilities located in **Feni Sadar**.
+
 ### No Hallucinations
 - Do not guess or invent APIs, project structures, schemas, or routing configurations.
 - If any requirement, schema, or route is ambiguous, **stop and ask the user for clarification**.

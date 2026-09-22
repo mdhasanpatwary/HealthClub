@@ -1,4 +1,5 @@
 import { BlogPost } from "@/types/blog";
+import { toBanglaNums } from "@/lib/utils";
 import { HospitalReviewCard } from "./HospitalReviewCard";
 import { HospitalComparisonTable } from "./HospitalComparisonTable";
 import { DiagnosticComparisonTable } from "./DiagnosticComparisonTable";
@@ -25,6 +26,7 @@ import { DiabetesPriceTable } from "./DiabetesPriceTable";
 import { PsychiatryPriceTable } from "./PsychiatryPriceTable";
 import { SadarHospitalPriceTable } from "./SadarHospitalPriceTable";
 import { DiabeticHospitalPriceTable } from "./DiabeticHospitalPriceTable";
+import { UpazilaPriceTable } from "./UpazilaPriceTable";
 import { BlogEmergencyCareSections } from "./BlogEmergencyCareSections";
 
 interface BlogSpecializedSectionsProps {
@@ -37,6 +39,7 @@ export function BlogSpecializedSections({
   locale = "bn",
 }: BlogSpecializedSectionsProps) {
   const isEn = locale === "en";
+  const isUpazila = post.slug.includes("healthcare-guide");
 
   return (
     <>
@@ -100,7 +103,7 @@ export function BlogSpecializedSections({
           <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
             {isEn
               ? "2. Top 10 Dental Clinics Comparison Matrix"
-              : "২. একনজরে ফেনীর সেরা ১০ ডেন্টাল ক্লিনিকের সেবা ও প্রযুক্তি তুলনা"}
+              : "২. একনজরে ফেনীর সেরা ১০ ডেন্টাল ক্লিনিকের সুবিধা তুলনা"}
           </h2>
           <DentalComparisonTable items={post.dentalComparisonTable} locale={locale} />
         </section>
@@ -117,8 +120,8 @@ export function BlogSpecializedSections({
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground mt-1">
               {isEn
-                ? "Detailed breakdown of BMDC dental surgeons, modern equipment, addresses, visiting hours, and member discounts."
-                : "প্রতিটি ক্লিনিকের বিএমডিসি সনদপ্রাপ্ত বিশেষজ্ঞ সার্জন, আধুনিক যন্ত্রপাতি, চেম্বার ঠিকানা, সিরিয়াল নম্বর ও ডিসকাউন্ট তথ্য।"}
+                ? "Detailed evaluation of dental equipment, procedures, sterilization, and member discounts."
+                : "প্রতিটি ডেন্টাল ক্লিনিকের ডেন্টাল চেয়ার, রোটরি আরসিটি, ইমপ্লান্ট সুবিধা ও মেম্বার ছাড়ের তথ্য।"}
             </p>
           </div>
 
@@ -165,8 +168,8 @@ export function BlogSpecializedSections({
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground mt-1">
               {isEn
-                ? "Detailed breakdown of BPT/MPT physiotherapists, advanced equipment, home services, and member discounts."
-                : "প্রতিটি সেন্টারের বিপিটি সনদপ্রাপ্ত ফিজিওথেরাপিস্ট, আধুনিক যন্ত্রপাতি, হোম সার্ভিস সুবিধা, যোগাযোগ ও ডিসকাউন্ট তথ্য।"}
+                ? "Detailed evaluation of electrotherapy equipment, paralysis rehab, home services, and member discounts."
+                : "প্রতিটি সেন্টারের আধুনিক থেরাপি ডিভাইস, বিশেষজ্ঞ ফিজিওথেরাপিস্ট, হোম সার্ভিস ও ছাড়ের তথ্য।"}
             </p>
           </div>
 
@@ -302,14 +305,26 @@ export function BlogSpecializedSections({
         />
       )}
 
+      {/* Upazila Healthcare & Diagnostic Fee Pricing Table */}
+      {post.upazilaCarePricingBn && (
+        <UpazilaPriceTable
+          pricingData={post.upazilaCarePricingBn}
+          locale={locale}
+        />
+      )}
+
       {/* Emergency Care Specialized Sections: Pharmacies, Blood Banks & Ambulances */}
       <BlogEmergencyCareSections post={post} locale={locale} />
 
-      {/* Hospital Comparison Matrix Table */}
+      {/* Hospital / Upazila Comparison Matrix Table */}
       {post.comparisonTable && post.comparisonTable.length > 0 && (
         <section id="comparison-matrix" className="scroll-mt-24 space-y-4">
           <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-            {isEn
+            {isUpazila
+              ? isEn
+                ? "2. Upazila Healthcare Comparison Matrix"
+                : "২. একনজরে উপজেলা হাসপাতাল ও ক্লিনিকের তুলনামূলক তালিকা"
+              : isEn
               ? "2. Top 10 Hospitals Comparison Matrix"
               : "২. একনজরে ফেনীর সেরা ১০ হাসপাতালের তুলনামূলক তালিকা"}
           </h2>
@@ -317,12 +332,16 @@ export function BlogSpecializedSections({
         </section>
       )}
 
-      {/* Hospital Reviews */}
+      {/* Hospital / Upazila Reviews */}
       {post.hospitals && post.hospitals.length > 0 && (
         <section id="hospital-reviews" className="scroll-mt-24 space-y-6">
           <div>
             <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-              {isEn
+              {isUpazila
+                ? isEn
+                  ? `3. In-Depth Reviews of ${post.hospitals.length} Upazila Healthcare Facilities`
+                  : `৩. উপজেলার ${toBanglaNums(post.hospitals.length)}টি শীর্ষ হাসপাতাল ও ক্লিনিকের পূর্ণাঙ্গ পর্যালোচনা`
+                : isEn
                 ? "3. In-Depth Reviews of Top 10 Hospitals"
                 : "৩. ফেনীর সেরা ১০টি হাসপাতালের পূর্ণাঙ্গ পর্যালোচনা"}
             </h2>
