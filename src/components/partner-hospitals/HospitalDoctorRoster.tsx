@@ -1,14 +1,10 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
 import {
   Stethoscope,
   Search,
-  Calendar,
-  Clock,
   PhoneCall,
-  ChevronRight,
   Pill,
 } from "lucide-react";
 import { Doctor, Partner } from "@/services/db";
@@ -16,7 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/layout/LanguageProvider";
-import { DoctorAvatar, DoctorSerialModal } from "@/components/ui/doctors/DoctorModals";
+import { DoctorSerialModal } from "@/components/ui/doctors/DoctorModals";
+import { DoctorCard } from "@/components/ui/doctors/DoctorCard";
 
 interface HospitalDoctorRosterProps {
   doctors: Doctor[];
@@ -196,11 +193,10 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
                   setSelectedDept(dept.id);
                   setVisibleLimit(12);
                 }}
-                className={`text-xs px-3 py-1.5 rounded-xl whitespace-nowrap font-medium transition-all cursor-pointer border ${
-                  isSelected
+                className={`text-xs px-3 py-1.5 rounded-xl whitespace-nowrap font-medium transition-all cursor-pointer border ${isSelected
                     ? "bg-primary text-primary-foreground border-primary shadow-2xs font-semibold"
                     : "bg-background dark:bg-slate-900 text-muted-foreground border-border/80 hover:border-primary/40 hover:text-foreground"
-                }`}
+                  }`}
               >
                 {isEn ? dept.en : dept.bn}
               </button>
@@ -211,96 +207,17 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
 
       {/* Doctor Cards Grid */}
       {displayedDoctors.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
           {displayedDoctors.map((doc) => (
-            <div
+            <DoctorCard
               key={doc.id}
-              className="p-4 rounded-2xl border border-border/80 bg-background dark:bg-slate-900/80 shadow-2xs hover:shadow-xs hover:border-primary/40 transition-all flex flex-col justify-between space-y-3 group"
-            >
-              <div className="flex items-start gap-3.5">
-                <DoctorAvatar
-                  src={doc.imageUrl}
-                  alt={doc.name}
-                  className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl"
-                />
-
-                <div className="min-w-0 flex-1 space-y-1">
-                  <div className="flex items-center justify-between gap-1.5">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-md border border-primary/20 truncate">
-                      {doc.specialty}
-                    </span>
-                    {doc.roomNo && (
-                      <span className="text-[10px] text-muted-foreground font-mono bg-muted px-1.5 py-0.5 rounded">
-                        {isEn ? `Room ${doc.roomNo}` : `রুম #${doc.roomNo}`}
-                      </span>
-                    )}
-                  </div>
-
-                  <Link
-                    href={`/consultants/${encodeURIComponent(doc.slug || doc.id)}`}
-                    className="block group-hover:text-primary transition-colors"
-                  >
-                    <h3 className="text-sm font-bold text-secondary dark:text-white line-clamp-2 leading-snug font-heading">
-                      {doc.name}
-                    </h3>
-                  </Link>
-
-                  <p className="text-[11px] text-muted-foreground line-clamp-2 leading-snug break-words">
-                    {doc.degrees}
-                  </p>
-
-                  <p className="text-[11px] font-medium text-foreground/80 line-clamp-1">
-                    {doc.designation}
-                  </p>
-                </div>
-              </div>
-
-              {/* Visiting Schedule & Fees */}
-              <div className="p-2.5 rounded-xl bg-muted/40 text-[11px] space-y-1 border border-border/40">
-                <div className="flex items-center justify-between gap-2 text-foreground/90 font-medium">
-                  <div className="flex items-center gap-1.5 truncate">
-                    <Calendar className="h-3.5 w-3.5 text-primary shrink-0" />
-                    <span className="truncate">{doc.visitingDays}</span>
-                  </div>
-                  {doc.consultationFee && (
-                    <span className="shrink-0 font-bold text-primary font-mono text-[10px] bg-primary/10 px-1.5 py-0.5 rounded">
-                      {doc.consultationFee}
-                    </span>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-1.5 text-muted-foreground">
-                  <Clock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                  <span className="truncate">{doc.visitingHours}</span>
-                </div>
-              </div>
-
-              {/* Action Buttons: Appointment Serial & Full Profile */}
-              <div className="flex items-center gap-2 pt-1">
-                <Button
-                  size="sm"
-                  onClick={() => setSelectedDoctorForSerial(doc)}
-                  aria-label={`${isEn ? "Book Serial" : "সিরিয়াল নিন"} - ${doc.name}`}
-                  className="flex-1 h-8 rounded-xl bg-primary hover:bg-primary-dark text-white text-xs font-semibold shadow-2xs cursor-pointer"
-                >
-                  <PhoneCall className="h-3.5 w-3.5 mr-1.5 shrink-0" aria-hidden="true" />
-                  {isEn ? "Book Serial" : "সিরিয়াল নিন"}
-                </Button>
-
-                <Link
-                  href={`/consultants/${encodeURIComponent(doc.slug || doc.id)}`}
-                  aria-label={`${isEn ? "Profile" : "প্রোফাইল"} - ${doc.name}`}
-                  className={buttonVariants({
-                    variant: "outline",
-                    size: "sm",
-                    className: "h-8 rounded-xl text-xs px-3 border-border hover:border-primary/40 hover:bg-muted/80 cursor-pointer",
-                  })}
-                >
-                  <span>{isEn ? "Profile" : "প্রোফাইল"}</span>
-                  <ChevronRight className="h-3.5 w-3.5 ml-0.5 text-muted-foreground" aria-hidden="true" />
-                </Link>
-              </div>
-            </div>
+              doctor={doc}
+              locale={locale}
+              isEn={isEn}
+              t={t}
+              variant="partner-roster"
+              onSerialClick={(selectedDoc) => setSelectedDoctorForSerial(selectedDoc)}
+            />
           ))}
         </div>
       ) : (
