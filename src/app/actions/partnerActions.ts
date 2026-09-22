@@ -18,6 +18,10 @@ import {
   rejectPartnerRequestAction as _rejectPartnerRequestAction,
 } from "./partnerRequestActions";
 import {
+  deletePartnerRequestAction as _deletePartnerRequestAction,
+  deleteAllRejectedPartnerRequestsAction as _deleteAllRejectedPartnerRequestsAction,
+} from "./partnerRequestDeleteActions";
+import {
   loginPartnerAction as _loginPartnerAction,
   changePartnerPasswordAction as _changePartnerPasswordAction,
 } from "./partnerAuthActions";
@@ -54,6 +58,8 @@ export async function getPaginatedPartnerRequestsAction(...args: Parameters<type
 export async function updatePartnerRequestStatusAction(id: string, status: "approved" | "rejected") { return _updatePartnerRequestStatusAction(id, status); }
 export async function approvePartnerRequestAction(id: string) { return _approvePartnerRequestAction(id); }
 export async function rejectPartnerRequestAction(id: string) { return _rejectPartnerRequestAction(id); }
+export async function deletePartnerRequestAction(id: string) { return _deletePartnerRequestAction(id); }
+export async function deleteAllRejectedPartnerRequestsAction() { return _deleteAllRejectedPartnerRequestsAction(); }
 export async function loginPartnerAction(identifier: string, password: string) { return _loginPartnerAction(identifier, password); }
 export async function changePartnerPasswordAction(currentPassword: string, newPassword: string) { return _changePartnerPasswordAction(currentPassword, newPassword); }
 export async function requestPartnerPasswordResetAction(email: string) { return _requestPartnerPasswordResetAction(email); }

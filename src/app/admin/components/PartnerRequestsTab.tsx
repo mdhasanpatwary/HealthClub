@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
 import { PartnerRequest } from "@/services/db";
 import { Locale } from "@/lib/i18n";
+import { Trash2 } from "lucide-react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -19,6 +20,11 @@ interface PartnerRequestsTabProps {
   onPageSizeChange: (size: number) => void;
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
+  onDelete?: (req: PartnerRequest) => void;
+  onDeleteAllRejected?: () => void;
+  statusFilter?: string;
+  onStatusFilterChange?: (status: string) => void;
+  hasRejectedRequests?: boolean;
   locale?: Locale;
   t?: (key: string) => string;
   loading?: boolean;
@@ -35,6 +41,11 @@ export function PartnerRequestsTab({
   onPageSizeChange,
   onApprove,
   onReject,
+  onDelete,
+  onDeleteAllRejected,
+  statusFilter = "all",
+  onStatusFilterChange,
+  hasRejectedRequests = false,
   locale = "bn",
   t = (k) => k,
   loading = false,
@@ -42,18 +53,81 @@ export function PartnerRequestsTab({
 }: PartnerRequestsTabProps) {
   const isEn = locale === "en";
 
-
   return (
     <Card className="border-border shadow-md">
-      <CardHeader>
-        <CardTitle className="font-heading text-lg font-bold text-secondary">
-          {t("admin.partnerRequests.title")}
-        </CardTitle>
-        <CardDescription>
-          {t("admin.partnerRequests.desc")}
-        </CardDescription>
+      <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4">
+        <div>
+          <CardTitle className="font-heading text-lg font-bold text-secondary">
+            {t("admin.partnerRequests.title")}
+          </CardTitle>
+          <CardDescription>
+            {t("admin.partnerRequests.desc")}
+          </CardDescription>
+        </div>
+
+        {hasRejectedRequests && onDeleteAllRejected && (
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={onDeleteAllRejected}
+            disabled={loading || Boolean(processingId)}
+            className="text-destructive border-destructive/30 hover:bg-destructive/10 text-xs h-8 px-3 font-semibold inline-flex items-center gap-1.5 cursor-pointer self-start sm:self-auto shrink-0"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+            <span>{t("admin.partnerRequests.deleteAllRejected")}</span>
+          </Button>
+        )}
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Status Filters */}
+        {onStatusFilterChange && (
+          <div className="flex flex-wrap items-center gap-1.5 p-1 bg-muted/40 rounded-xl border border-border/60 w-fit max-w-full overflow-x-auto">
+            <Button
+              type="button"
+              variant={statusFilter === "all" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => onStatusFilterChange("all")}
+              className={`text-xs h-7 px-3 rounded-lg cursor-pointer transition-colors ${
+                statusFilter === "all" ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {t("admin.partnerRequests.filterAll")}
+            </Button>
+            <Button
+              type="button"
+              variant={statusFilter === "pending" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => onStatusFilterChange("pending")}
+              className={`text-xs h-7 px-3 rounded-lg cursor-pointer transition-colors ${
+                statusFilter === "pending" ? "bg-amber-600 text-white hover:bg-amber-700" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {t("admin.partnerRequests.filterPending")}
+            </Button>
+            <Button
+              type="button"
+              variant={statusFilter === "approved" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => onStatusFilterChange("approved")}
+              className={`text-xs h-7 px-3 rounded-lg cursor-pointer transition-colors ${
+                statusFilter === "approved" ? "bg-green-600 text-white hover:bg-green-700" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {t("admin.partnerRequests.filterApproved")}
+            </Button>
+            <Button
+              type="button"
+              variant={statusFilter === "rejected" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => onStatusFilterChange("rejected")}
+              className={`text-xs h-7 px-3 rounded-lg cursor-pointer transition-colors ${
+                statusFilter === "rejected" ? "bg-destructive text-destructive-foreground hover:bg-destructive/90" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {t("admin.partnerRequests.filterRejected")}
+            </Button>
+          </div>
+        )}
         <div className="overflow-hidden border border-border rounded-xl bg-background">
           <Table>
             <TableHeader className="bg-muted/40">
@@ -141,7 +215,7 @@ export function PartnerRequestsTab({
                             size="sm"
                             disabled={loading || Boolean(processingId)}
                             onClick={() => onApprove(req.id)}
-                            className="bg-primary hover:bg-primary-dark text-white text-xs h-7 py-1 px-3 animate-pulse disabled:opacity-50"
+                            className="bg-primary hover:bg-primary-dark text-white text-xs h-7 py-1 px-3 animate-pulse disabled:opacity-50 cursor-pointer"
                           >
                             {processingId === req.id
                               ? (isEn ? "Approving..." : "অনুমোদন হচ্ছে...")
@@ -152,11 +226,26 @@ export function PartnerRequestsTab({
                             variant="outline"
                             disabled={loading || Boolean(processingId)}
                             onClick={() => onReject(req.id)}
-                            className="text-destructive border-destructive/20 hover:bg-destructive/10 text-xs h-7 py-1 px-3 disabled:opacity-50"
+                            className="text-destructive border-destructive/20 hover:bg-destructive/10 text-xs h-7 py-1 px-3 disabled:opacity-50 cursor-pointer"
                           >
                             {processingId === req.id
                               ? (isEn ? "Processing..." : "প্রক্রিয়া হচ্ছে...")
                               : t("admin.partnerRequests.reject")}
+                          </Button>
+                        </div>
+                      )}
+                      {req.status === "rejected" && onDelete && (
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            disabled={loading || Boolean(processingId)}
+                            onClick={() => onDelete(req)}
+                            className="text-destructive border-destructive/30 hover:bg-destructive/10 text-xs h-7 py-1 px-2.5 disabled:opacity-50 inline-flex items-center gap-1 cursor-pointer"
+                            title={t("admin.partnerRequests.delete")}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                            <span>{t("admin.partnerRequests.delete")}</span>
                           </Button>
                         </div>
                       )}

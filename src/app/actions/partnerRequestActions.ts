@@ -359,3 +359,5 @@ export async function approvePartnerRequestAction(id: string): Promise<boolean> 
 export async function rejectPartnerRequestAction(id: string): Promise<boolean> {
   return updatePartnerRequestStatusAction(id, "rejected");
 }
+
+
