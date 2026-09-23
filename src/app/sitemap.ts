@@ -138,9 +138,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     partnerEntries = [];
   }
 
-  // Dynamic specialized doctor department SEO landing routes
+  // Dynamic specialized doctor department clean SEO landing routes
   const departmentEntries: MetadataRoute.Sitemap = getAllDepartmentSlugs().map((slug) => {
-    const url = `${baseUrl}/consultants?dept=${slug}`;
+    const url = `${baseUrl}/consultants/department/${slug}`;
     return {
       url,
       lastModified: STATIC_LAST_MODIFIED,

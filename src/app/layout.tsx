@@ -179,15 +179,19 @@ export default async function RootLayout({
   const globalJsonLd = [
     {
       "@context": "https://schema.org",
-      "@type": "Organization",
+      "@type": ["Organization", "LocalBusiness", "MedicalBusiness"],
       "@id": `${SITE_URL}/#organization`,
       "name": "হেলথ ক্লাব",
-      "alternateName": ["Health Club", "Health Club Feni"],
+      "alternateName": ["Health Club", "Health Club Feni", "হেলথ ক্লাব ফেনী"],
       "url": SITE_URL,
       "logo": `${SITE_URL}/images/member-card-logo.webp`,
-      "description": "স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী - একটি প্রিমিয়াম স্বাস্থ্য মেম্বারশিপ সার্ভিস।",
+      "image": `${SITE_URL}/og-image.png`,
+      "description": "স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী - ফেনী ও দেশের শীর্ষ হাসপাতাল, ল্যাব ও ফার্মেসিতে সর্বোচ্চ ডিসকাউন্ট উপভোগ করার প্রিমিয়াম স্বাস্থ্য মেম্বারশিপ সার্ভিস।",
       "telephone": formattedTel,
       "email": contactSettings.email,
+      "priceRange": "৳৳",
+      "currenciesAccepted": "BDT",
+      "paymentAccepted": "Cash, bKash, Nagad, Credit Card",
       "sameAs": [
         contactSettings.facebookUrl,
         formattedWhatsapp,
@@ -198,9 +202,45 @@ export default async function RootLayout({
       ].filter(Boolean),
       "address": {
         "@type": "PostalAddress",
+        "streetAddress": "SSK Road, Feni Sadar",
         "addressLocality": "Feni",
+        "addressRegion": "Chittagong Division",
+        "postalCode": "3900",
         "addressCountry": "BD"
       },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 23.0159,
+        "longitude": 91.3976
+      },
+      "hasMap": "https://maps.google.com/?q=23.0159,91.3976",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+          ],
+          "opens": "00:00",
+          "closes": "23:59"
+        }
+      ],
+      "areaServed": [
+        {
+          "@type": "City",
+          "name": "Feni",
+          "sameAs": "https://en.wikipedia.org/wiki/Feni,_Bangladesh"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Feni District"
+        }
+      ],
       "contactPoint": {
         "@type": "ContactPoint",
         "telephone": formattedTel,

@@ -15,12 +15,10 @@ import { FENI_UPAZILAS, detectUpazilaFromText } from "@/data/feniLocations";
 import { DEPARTMENTS } from "@/components/consultants/consultantData";
 
 const DoctorSerialModal = dynamic(
-  () => import("./doctors/DoctorModals").then((m) => m.DoctorSerialModal),
-  { ssr: false }
+  () => import("./doctors/DoctorModals").then((m) => m.DoctorSerialModal)
 );
 const DoctorDetailsModal = dynamic(
-  () => import("./doctors/DoctorModals").then((m) => m.DoctorDetailsModal),
-  { ssr: false }
+  () => import("./doctors/DoctorModals").then((m) => m.DoctorDetailsModal)
 );
 
 interface DoctorDirectoryProps {

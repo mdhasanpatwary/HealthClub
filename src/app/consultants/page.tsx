@@ -9,9 +9,45 @@ import { getDoctorsAction } from "@/app/actions/doctorActions";
 import { Stethoscope, ShieldCheck, HeartHandshake, PhoneCall } from "lucide-react";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
+import { getDepartmentSeoConfig } from "@/data/doctorSeoData";
+
 export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
 
-export async function generateMetadata() {
+interface ConsultantsPageProps {
+  searchParams?: Promise<{ dept?: string; upazila?: string }>;
+}
+
+export async function generateMetadata({ searchParams }: ConsultantsPageProps) {
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const dept = resolvedSearchParams.dept;
+  const deptSeo = getDepartmentSeoConfig(dept);
+
+  if (deptSeo) {
+    return {
+      title: deptSeo.metaTitleBn,
+      description: deptSeo.metaDescriptionBn,
+      keywords: deptSeo.keywords,
+      alternates: {
+        canonical: `${SITE_URL}/consultants?dept=${deptSeo.slug}`,
+      },
+      openGraph: {
+        title: deptSeo.metaTitleBn,
+        description: deptSeo.metaDescriptionBn,
+        url: `${SITE_URL}/consultants?dept=${deptSeo.slug}`,
+        siteName: "হেলথ ক্লাব (Health Club)",
+        locale: "bn_BD",
+        type: "website",
+        images: DEFAULT_OG_IMAGES,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: deptSeo.metaTitleBn,
+        description: deptSeo.metaDescriptionBn,
+        images: DEFAULT_TWITTER_IMAGES,
+      },
+    };
+  }
+
   const isEn = false;
   const ogTitle = "ফেনী ডাক্তার তালিকা ও সিরিয়াল নাম্বার | চেম্বার সময়সূচী - হেলথ ক্লাব";
   const ogDesc = "ফেনীর সকল বিশেষজ্ঞ ডাক্তারদের তালিকা, চেম্বার শিডিউল, রোগী দেখার সময় এবং সরাসরি সিরিয়াল নাম্বার ও অ্যাপয়েন্টমেন্ট তথ্য।";
@@ -67,7 +103,10 @@ export async function generateMetadata() {
   };
 }
 
-export default async function ConsultantsPage() {
+export default async function ConsultantsPage({ searchParams }: ConsultantsPageProps) {
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const initialDept = resolvedSearchParams.dept || "all";
+  const initialUpazila = resolvedSearchParams.upazila || "all";
   const locale = "bn" as Locale;
   const isEn = false;
   const t = (key: string) => tServer(locale, key);
@@ -272,7 +311,11 @@ export default async function ConsultantsPage() {
 
         {/* Interactive Directory Component */}
         <div className="sm:bg-muted/30 sm:border sm:border-border/80 sm:rounded-3xl sm:p-8">
-          <DoctorDirectory doctors={doctors} />
+          <DoctorDirectory
+            doctors={doctors}
+            initialDept={initialDept}
+            initialUpazila={initialUpazila}
+          />
         </div>
 
         {/* Generative Engine Optimization (GEO) Healthcare Guide & Authority Block */}

@@ -11,13 +11,11 @@ import { useLanguage } from "@/components/layout/LanguageProvider";
 import { cn, toBanglaNums } from "@/lib/utils";
 
 const BloodDonorRegisterDialog = dynamic(
-  () => import("@/app/emergency/components/BloodDonorRegisterDialog").then((m) => m.BloodDonorRegisterDialog),
-  { ssr: false }
+  () => import("@/app/emergency/components/BloodDonorRegisterDialog").then((m) => m.BloodDonorRegisterDialog)
 );
 
 const AmbulanceRegisterDialog = dynamic(
-  () => import("@/app/emergency/components/AmbulanceRegisterDialog").then((m) => m.AmbulanceRegisterDialog),
-  { ssr: false }
+  () => import("@/app/emergency/components/AmbulanceRegisterDialog").then((m) => m.AmbulanceRegisterDialog)
 );
 
 interface CommunityNetworkCTAProps {
