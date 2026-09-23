@@ -6,6 +6,7 @@ import { getAllHealthTipsAction } from "@/app/actions/healthTipsAdminActions";
 import { HEALTH_TIPS_ARTICLES, HealthTipArticle } from "@/data/healthTipsData";
 import { getAllDepartmentSlugs } from "@/data/doctorSeoData";
 import { getAllBlogPostsAction } from "@/app/actions/blogAdminActions";
+import { BLOG_FILTER_PILLS } from "@/data/blog/blogCategories";
 import { logger } from "@/lib/logger";
 
 import { parseArticleDate, STATIC_FALLBACK_DATE as STATIC_LAST_MODIFIED } from "@/lib/dateUtils";
@@ -26,7 +27,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/about-us",
     "/become-partner",
     "/contact",
-    "/verify",
+    "/register",
+    "/login",
     "/privacy-policy",
     "/terms-conditions",
   ];
@@ -47,9 +49,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     } else if (route === "/health-tips" || route === "/health-tools") {
       priority = 0.85;
       changeFrequency = "daily";
-    } else if (route === "/about-us" || route === "/contact" || route === "/become-partner" || route === "/verify") {
+    } else if (route === "/about-us" || route === "/contact" || route === "/become-partner" || route === "/register") {
       priority = 0.8;
       changeFrequency = "weekly";
+    } else if (route === "/login") {
+      priority = 0.5;
+      changeFrequency = "monthly";
     } else if (route === "/privacy-policy" || route === "/terms-conditions") {
       priority = 0.3;
       changeFrequency = "monthly";
@@ -156,6 +161,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
   });
 
+  // Dynamic blog filter category landing routes (excluding "all" which is covered by /blog)
+  const blogCategoryEntries: MetadataRoute.Sitemap = BLOG_FILTER_PILLS
+    .filter((pill) => pill.id !== "all")
+    .map((pill) => {
+      const url = `${baseUrl}/blog?category=${pill.id}`;
+      return {
+        url,
+        lastModified: STATIC_LAST_MODIFIED,
+        changeFrequency: "weekly",
+        priority: 0.85,
+      };
+    });
+
   // Dynamic blog articles (e.g. Best 10 Hospitals in Feni)
   const blogPosts = await getAllBlogPostsAction();
   const blogPostEntries: MetadataRoute.Sitemap = blogPosts.map((post) => {
@@ -174,6 +192,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...staticEntries,
     ...departmentEntries,
     ...partnerCategoryEntries,
+    ...blogCategoryEntries,
     ...blogPostEntries,
     ...articleEntries,
     ...doctorEntries,

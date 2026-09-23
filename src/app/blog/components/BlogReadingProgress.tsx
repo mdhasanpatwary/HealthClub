@@ -35,7 +35,7 @@ export function BlogReadingProgress() {
 
   return (
     <div
-      className="fixed top-0 left-0 right-0 h-1 bg-primary/20 z-50 pointer-events-none"
+      className="fixed top-[calc(3.5rem+env(safe-area-inset-top,0px))] min-[992px]:top-[calc(4rem+env(safe-area-inset-top,0px))] left-0 right-0 h-1 bg-primary/10 z-40 pointer-events-none"
       aria-hidden="true"
     >
       <div

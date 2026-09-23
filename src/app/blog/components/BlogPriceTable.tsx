@@ -67,14 +67,23 @@ export function BlogPriceTable({
 
   return (
     <section id={id} className="scroll-mt-24 space-y-5">
-      <div className="space-y-1.5">
-        <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-          {title}
-        </h2>
-        <p className="text-xs sm:text-sm text-muted-foreground">{subtitle}</p>
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-1.5">
+        <div className="space-y-1.5">
+          <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
+            {title}
+          </h2>
+          <p className="text-xs sm:text-sm text-muted-foreground">{subtitle}</p>
+        </div>
+        <div className="flex sm:hidden items-center gap-1 text-[11px] font-medium text-muted-foreground/80 self-end">
+          <span>{isEn ? "← Scroll horizontally →" : "← সম্পূর্ণ দেখতে স্ক্রোল করুন →"}</span>
+        </div>
       </div>
 
-      <div className="relative overflow-x-auto rounded-2xl border border-border/80 bg-card shadow-xs">
+      <div
+        className="relative overflow-x-auto rounded-2xl border border-border/80 bg-card shadow-xs focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/40"
+        tabIndex={0}
+        aria-label={title}
+      >
         <table className="w-full text-left text-xs sm:text-sm">
           <thead className="bg-muted/80 text-foreground font-bold border-b border-border/80">
             <tr>

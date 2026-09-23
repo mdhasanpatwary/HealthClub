@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { Share2, Link as LinkIcon, Check } from "lucide-react";
 import {
   FacebookIcon,
@@ -15,12 +15,33 @@ interface BlogShareBarProps {
   locale?: string;
 }
 
+const emptySubscribe = () => () => {};
+
 export function BlogShareBar({ url, title, locale = "bn" }: BlogShareBarProps) {
   const isEn = locale === "en";
   const [copied, setCopied] = useState(false);
+  const canShare = useSyncExternalStore(
+    emptySubscribe,
+    () => typeof navigator !== "undefined" && typeof navigator.share === "function",
+    () => false
+  );
 
   const encodedUrl = encodeURIComponent(url);
   const encodedTitle = encodeURIComponent(title);
+
+  const handleNativeShare = async () => {
+    if (!navigator.share) return;
+    try {
+      await navigator.share({
+        title,
+        url,
+      });
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name !== "AbortError") {
+        handleCopy();
+      }
+    }
+  };
 
   const shareLinks = [
     {
@@ -66,6 +87,18 @@ export function BlogShareBar({ url, title, locale = "bn" }: BlogShareBarProps) {
         <Share2 className="h-3.5 w-3.5 text-primary" />
         <span>{isEn ? "Share:" : "শেয়ার করুন:"}</span>
       </span>
+
+      {canShare && (
+        <button
+          type="button"
+          onClick={handleNativeShare}
+          aria-label={isEn ? "Share via device apps" : "ডিভাইসের অ্যাপে শেয়ার করুন"}
+          className="flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] px-3.5 py-2 rounded-lg border border-primary/30 bg-primary/10 text-primary hover:bg-primary/20 transition-colors active:scale-95 cursor-pointer font-medium"
+        >
+          <Share2 className="h-4 w-4" />
+          <span className="text-xs font-semibold">{isEn ? "Share" : "শেয়ার"}</span>
+        </button>
+      )}
 
       {shareLinks.map((item) => {
         const Icon = item.icon;

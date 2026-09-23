@@ -122,7 +122,7 @@ export function generateBlogJsonLd(
         name: isEn
           ? "Health Club Clinical Editorial Board"
           : "হেলথ ক্লাব ক্লিনিক্যাল এডিটোরিয়াল বোর্ড",
-        url: `${SITE_URL}/about`,
+        url: `${SITE_URL}/about-us`,
       },
       lastReviewed: getArticleIsoDate(post.modifiedDate),
       timeRequired: `PT${post.readTimeEn ? (post.readTimeEn.match(/\d+/)?.[0] || "8") : "8"}M`,
@@ -408,6 +408,45 @@ export function generateBlogJsonLd(
           ...(amb.partnerProfileSlug
             ? { url: `${SITE_URL}/partner-hospitals/${encodeURIComponent(amb.partnerProfileSlug)}` }
             : { url: pageUrl }),
+        },
+      })),
+    });
+  }
+
+  // Surgical and Critical Care procedure structured data
+  if (post.surgicalCarePricingBn?.packages?.length) {
+    graph.push({
+      "@type": "ItemList",
+      "@id": `${pageUrl}#surgery-price-guide`,
+      name: isEn ? (post.surgicalCarePricingBn.titleEn || "Surgery Costs in Feni") : post.surgicalCarePricingBn.titleBn,
+      numberOfItems: post.surgicalCarePricingBn.packages.length,
+      itemListElement: post.surgicalCarePricingBn.packages.map((pkg, idx) => ({
+        "@type": "ListItem",
+        position: idx + 1,
+        item: {
+          "@type": "MedicalProcedure",
+          name: isEn ? pkg.procedureOrTestNameEn : pkg.procedureOrTestNameBn,
+          description: `${pkg.procedureOrTestNameBn}. বাজারদর: ${pkg.regularPriceRangeBn}, মেম্বার ছাড়: ১০-৩০%।`,
+          url: `${pageUrl}#surgery-price-guide`,
+        },
+      })),
+    });
+  }
+
+  if (post.criticalCarePricingBn?.packages?.length) {
+    graph.push({
+      "@type": "ItemList",
+      "@id": `${pageUrl}#critical-care-price-guide`,
+      name: isEn ? (post.criticalCarePricingBn.titleEn || "ICU & CCU Charges in Feni") : post.criticalCarePricingBn.titleBn,
+      numberOfItems: post.criticalCarePricingBn.packages.length,
+      itemListElement: post.criticalCarePricingBn.packages.map((pkg, idx) => ({
+        "@type": "ListItem",
+        position: idx + 1,
+        item: {
+          "@type": "MedicalProcedure",
+          name: isEn ? pkg.serviceOrBedNameEn : pkg.serviceOrBedNameBn,
+          description: `${pkg.serviceOrBedNameBn}. বাজারদর: ${pkg.regularPriceRangeBn}, মেম্বার ছাড়: ১০-৩০%।`,
+          url: `${pageUrl}#critical-care-price-guide`,
         },
       })),
     });

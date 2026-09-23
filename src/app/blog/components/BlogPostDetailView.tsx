@@ -66,13 +66,31 @@ export function BlogPostDetailView({
     post.sadarHospitalPricingBn ||
     post.diabeticHospitalPricingBn ||
     post.criticalCarePricingBn ||
-    post.strokeCardiacPricingBn
+    post.strokeCardiacPricingBn ||
+    post.homeCarePricingBn ||
+    post.oxygenPricingBn ||
+    post.dengueTyphoidPricingBn
   );
 
   const isPurePriceList = post.slug === "feni-medical-test-price-list";
   const isUpazilaArticle = Boolean(post.slug.includes("healthcare-guide"));
-  const selectionGuideNumber = isPurePriceList ? 3 : isUpazilaArticle ? 8 : (hasPricingGuide ? 5 : 4);
-  const emergencyDirectoryNumber = isPurePriceList ? 4 : isUpazilaArticle ? 9 : (selectionGuide ? selectionGuideNumber + 1 : selectionGuideNumber);
+  const hasDoctorGroups = Boolean(post.doctorGroups && post.doctorGroups.length > 0);
+
+  const selectionGuideNumber = isPurePriceList
+    ? 3
+    : isUpazilaArticle
+    ? 8
+    : hasDoctorGroups
+    ? (hasPricingGuide ? 6 : 5)
+    : (hasPricingGuide ? 5 : 4);
+
+  const emergencyDirectoryNumber = isPurePriceList
+    ? 4
+    : isUpazilaArticle
+    ? 9
+    : selectionGuide
+    ? selectionGuideNumber + 1
+    : selectionGuideNumber;
 
   return (
     <div className="min-h-screen bg-background pb-16">

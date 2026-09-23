@@ -28,8 +28,8 @@ export function BlogMembershipBanner({ locale = "bn" }: BlogMembershipBannerProp
 
       <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
         {isEn
-          ? "Get your Health Club digital membership card today to unlock guaranteed discounts on pathological tests, radiology, doctor appointments, and emergency support across Feni."
-          : "হেলথ ক্লাবের ডিজিটাল মেম্বারশিপ কার্ড থাকলে আপনি ও আপনার পরিবারের সদস্যরা আল-কেমী হাসপাতাল, জেড ইউ মডেল হাসপাতালসহ ফেনী জেলার শীর্ষ স্বাস্থ্যসেবা কেন্দ্রগুলোতে নিশ্চিত ছাড় পাবেন।"}
+          ? "Get your Health Club digital membership card today to unlock guaranteed 10% to 30% discounts on pathological tests, radiology, doctor appointments, and emergency care across partner hospitals in Feni Sadar."
+          : "হেলথ ক্লাবের ডিজিটাল মেম্বারশিপ কার্ড থাকলে আপনি ও আপনার পরিবারের সদস্যরা আল-আকসা হাসপাতাল, প্যাসিফিক হেলথ কেয়ারসহ ফেনী সদরের শীর্ষ পার্টনার স্বাস্থ্যসেবা কেন্দ্রগুলোতে ১০-৩০% নিশ্চিত ছাড় পাবেন।"}
       </p>
 
       <div className="flex flex-wrap items-center gap-3 pt-2">

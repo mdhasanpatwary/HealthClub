@@ -87,3 +87,73 @@ export function paginateBlogPosts(
     pageSize,
   };
 }
+
+/**
+ * Extract verified facility or specialist count and localized label from a blog post.
+ */
+export function getPostFacilityMeta(post: BlogPost): {
+  count: number;
+  labelBn: string;
+  labelEn: string;
+} {
+  if (post.hospitals && post.hospitals.length > 0) {
+    return {
+      count: post.hospitals.length,
+      labelBn: "প্রতিষ্ঠান",
+      labelEn: post.hospitals.length === 1 ? "Hospital" : "Hospitals",
+    };
+  }
+  if (post.diagnosticCenters && post.diagnosticCenters.length > 0) {
+    return {
+      count: post.diagnosticCenters.length,
+      labelBn: "ডায়াগনস্টিক",
+      labelEn: post.diagnosticCenters.length === 1 ? "Center" : "Centers",
+    };
+  }
+  if (post.dentalClinics && post.dentalClinics.length > 0) {
+    return {
+      count: post.dentalClinics.length,
+      labelBn: "ক্লিনিক",
+      labelEn: post.dentalClinics.length === 1 ? "Clinic" : "Clinics",
+    };
+  }
+  if (post.physiotherapyCenters && post.physiotherapyCenters.length > 0) {
+    return {
+      count: post.physiotherapyCenters.length,
+      labelBn: "সেন্টার",
+      labelEn: post.physiotherapyCenters.length === 1 ? "Center" : "Centers",
+    };
+  }
+  if (post.pharmacies && post.pharmacies.length > 0) {
+    return {
+      count: post.pharmacies.length,
+      labelBn: "ফার্মেসি",
+      labelEn: post.pharmacies.length === 1 ? "Pharmacy" : "Pharmacies",
+    };
+  }
+  if (post.bloodBanks && post.bloodBanks.length > 0) {
+    return {
+      count: post.bloodBanks.length,
+      labelBn: "ব্লাড ব্যাংক",
+      labelEn: post.bloodBanks.length === 1 ? "Blood Bank" : "Blood Banks",
+    };
+  }
+  if (post.ambulances && post.ambulances.length > 0) {
+    return {
+      count: post.ambulances.length,
+      labelBn: "অ্যাম্বুলেন্স",
+      labelEn: post.ambulances.length === 1 ? "Ambulance" : "Ambulances",
+    };
+  }
+  if (post.doctorGroups && post.doctorGroups.length > 0) {
+    const docCount = post.doctorGroups.flatMap((g) => g.doctors).length;
+    if (docCount > 0) {
+      return {
+        count: docCount,
+        labelBn: "বিশেষজ্ঞ",
+        labelEn: docCount === 1 ? "Specialist" : "Specialists",
+      };
+    }
+  }
+  return { count: 0, labelBn: "প্রতিষ্ঠান", labelEn: "Facilities" };
+}

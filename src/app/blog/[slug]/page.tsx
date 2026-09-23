@@ -8,6 +8,8 @@ import { generateBlogJsonLd } from "../utils/blogJsonLd";
 import { SITE_URL } from "@/lib/siteConfig";
 import { getArticleIsoDate } from "@/lib/dateUtils";
 
+import { getPostFacilityMeta } from "../utils/blogPagination";
+
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
 }
@@ -106,7 +108,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const pageUrl = `${SITE_URL}/blog/${post.slug}`;
   const allPosts = await getAllBlogPostsAction();
 
-  // Prioritize curated relatedSlugs if available
+  // Prioritize curated relatedSlugs, then same category, then general posts
   let relatedPosts: typeof allPosts = [];
   if (post.relatedSlugs && post.relatedSlugs.length > 0) {
     const curated = post.relatedSlugs
@@ -116,39 +118,50 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     if (curated.length >= 3) {
       relatedPosts = curated.slice(0, 3);
     } else {
-      const remaining = allPosts.filter(
-        (p) => p.slug !== post.slug && !curated.some((c) => c.slug === p.slug)
+      const remainingSameCat = allPosts.filter(
+        (p) => p.slug !== post.slug && p.category === post.category && !curated.some((c) => c.slug === p.slug)
       );
-      relatedPosts = [...curated, ...remaining].slice(0, 3);
+      const remainingOthers = allPosts.filter(
+        (p) => p.slug !== post.slug && p.category !== post.category && !curated.some((c) => c.slug === p.slug)
+      );
+      relatedPosts = [...curated, ...remainingSameCat, ...remainingOthers].slice(0, 3);
     }
   } else {
-    relatedPosts = allPosts.filter((p) => p.slug !== post.slug).slice(0, 3);
+    const sameCat = allPosts.filter((p) => p.slug !== post.slug && p.category === post.category);
+    const others = allPosts.filter((p) => p.slug !== post.slug && p.category !== post.category);
+    relatedPosts = [...sameCat, ...others].slice(0, 3);
   }
 
   // Schema.org Structured Data
   const jsonLdData = generateBlogJsonLd(post, title, pageUrl, isEn, relatedPosts);
 
   // Map to lightweight card items for the view to prune hundreds of kilobytes of nested data
-  const cardRelatedPosts: BlogPostCardItem[] = relatedPosts.map((p) => ({
-    slug: p.slug,
-    titleBn: p.titleBn,
-    titleEn: p.titleEn,
-    excerptBn: p.excerptBn,
-    excerptEn: p.excerptEn,
-    category: p.category,
-    categoryNameBn: p.categoryNameBn,
-    categoryNameEn: p.categoryNameEn,
-    readTimeBn: p.readTimeBn,
-    readTimeEn: p.readTimeEn,
-    publishedDate: p.publishedDate,
-    coverImage: p.coverImage,
-    coverImageAlt: p.coverImageAlt,
-    author: {
-      nameBn: p.author.nameBn,
-      nameEn: p.author.nameEn,
-    },
-    hospitalCount: p.hospitals?.length ?? 0,
-  }));
+  const cardRelatedPosts: BlogPostCardItem[] = relatedPosts.map((p) => {
+    const meta = getPostFacilityMeta(p);
+    return {
+      slug: p.slug,
+      titleBn: p.titleBn,
+      titleEn: p.titleEn,
+      excerptBn: p.excerptBn,
+      excerptEn: p.excerptEn,
+      category: p.category,
+      categoryNameBn: p.categoryNameBn,
+      categoryNameEn: p.categoryNameEn,
+      readTimeBn: p.readTimeBn,
+      readTimeEn: p.readTimeEn,
+      publishedDate: p.publishedDate,
+      coverImage: p.coverImage,
+      coverImageAlt: p.coverImageAlt,
+      author: {
+        nameBn: p.author.nameBn,
+        nameEn: p.author.nameEn,
+      },
+      hospitalCount: p.hospitals?.length ?? 0,
+      facilityCount: meta.count,
+      facilityLabelBn: meta.labelBn,
+      facilityLabelEn: meta.labelEn,
+    };
+  });
 
   return (
     <>

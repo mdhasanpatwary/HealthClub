@@ -162,6 +162,13 @@ export const BLOG_CATEGORIES: BlogCategory[] = [
     descriptionBn: "ডায়াবেটিস, হৃদরোগ, মা ও শিশুর পুষ্টি এবং প্রতিরোধমূলক পরামর্শ",
     descriptionEn: "Disease prevention, diabetes, cardiac and maternal health advice",
   },
+  {
+    id: "home-care",
+    nameBn: "হোম স্যাম্পল ও নার্সিং সেবা",
+    nameEn: "Home Sample & Nursing Care",
+    descriptionBn: "ফেনীতে বাসায় এসে রক্ত পরীক্ষা, প্রবীণ সেবা, ক্যাথেটার ও অন-কল নার্সিং সেবা গাইড",
+    descriptionEn: "Home blood collection, geriatric care, catheterization, and on-call nursing in Feni",
+  },
 ];
 
 export interface BlogFilterPill {
@@ -248,7 +255,7 @@ export const BLOG_FILTER_PILLS: BlogFilterPill[] = [
     id: "emergency",
     nameBn: "জরুরি সেবা ও রক্তদান",
     nameEn: "Emergency & Blood",
-    matchingCategories: ["emergency-care"],
+    matchingCategories: ["emergency-care", "home-care"],
   },
   {
     id: "upazila-guide",

@@ -11,7 +11,8 @@ import {
 } from "@/types/blog";
 import { toBanglaNums } from "@/lib/utils";
 import { useLanguage } from "@/components/layout/LanguageProvider";
-import { TocSubList, StandardEntityToc, getPricingGuides, getDiagnosticTocTitles, getHospitalTocTitles } from "./BlogTocList";
+import { StandardEntityToc, getPricingGuides, getDiagnosticTocTitles, getHospitalTocTitles } from "./BlogTocList";
+import { BlogDoctorToc } from "./BlogDoctorToc";
 
 interface BlogTableOfContentsProps {
   hospitals?: HospitalReviewItem[];
@@ -82,10 +83,29 @@ export function BlogTableOfContents({
       "blood-bank-reviews",
       "ambulance-reviews",
       "price-guide",
+      "surgery-price-guide",
+      "maternity-price-guide",
       "critical-care-price-guide",
       "stroke-cardiac-price-guide",
       "home-care-price-guide",
       "oxygen-price-guide",
+      "dengue-typhoid-price-guide",
+      "cardiac-price-guide",
+      "kidney-price-guide",
+      "pediatric-price-guide",
+      "skin-price-guide",
+      "eye-price-guide",
+      "orthopedic-price-guide",
+      "ent-price-guide",
+      "neurology-price-guide",
+      "diabetes-price-guide",
+      "psychiatry-price-guide",
+      "sadar-hospital-price-guide",
+      "diabetic-hospital-price-guide",
+      "pharmacy-price-guide",
+      "blood-price-guide",
+      "ambulance-price-guide",
+      "upazila-price-guide",
       "selection-guide",
       "emergency-directory",
       "faq-section",
@@ -246,119 +266,18 @@ export function BlogTableOfContents({
               </a>
             </li>
           </ol>
-        ) : isUpazilaArticle ? (
-          <ol className="space-y-1.5 list-none pl-0">
-            <li>
-              <a href="#overview" className={linkClass("overview")}>
-                {secNum(1)}{isEn ? "Upazila Healthcare Landscape" : "উপজেলা স্বাস্থ্যসেবা ও পটভূমি"}
-              </a>
-            </li>
-            <li>
-              <a href="#specialist-doctors" className={linkClass("specialist-doctors", true)}>
-                {secNum(2)}{isEn ? "Specialist Doctors by Upazila" : "উপজেলা অনুযায়ী বিশেষজ্ঞ ডাক্তার তালিকা"}
-              </a>
-              <TocSubList
-                items={doctorGroups.map((g, idx) => ({
-                  id: `dept-${g.department}`,
-                  name: isEn ? `${idx + 1}. ${g.departmentNameEn}` : `${toBanglaNums(idx + 1)}. ${g.departmentNameBn}`,
-                }))}
-                activeId={activeId}
-              />
-            </li>
-            <li>
-              <a href="#chamber-hubs" className={linkClass("chamber-hubs")}>
-                {secNum(3)}{isEn ? "Major Upazila Chamber Hubs" : "উপজেলার প্রধান চেম্বার হাবসমূহ"}
-              </a>
-            </li>
-            <li>
-              <a href="#serial-guide" className={linkClass("serial-guide")}>
-                {secNum(4)}{isEn ? "Serial Booking Guidelines" : "ডাক্তারের সিরিয়াল বুকিং নিয়মাবলী"}
-              </a>
-            </li>
-            <li>
-              <a href="#upazila-price-guide" className={linkClass("upazila-price-guide")}>
-                {secNum(5)}{isEn ? "Upazila Healthcare & Diagnostic Fees" : "উপজেলা স্বাস্থ্যসেবা ও টেস্ট ফি তালিকা"}
-              </a>
-            </li>
-            <li>
-              <a href="#comparison-matrix" className={linkClass("comparison-matrix")}>
-                {secNum(6)}{isEn ? "Healthcare Facilities Comparison" : "একনজরে উপজেলা হাসপাতালের তুলনা"}
-              </a>
-            </li>
-            <li>
-              <a href="#hospital-reviews" className={linkClass("hospital-reviews", true)}>
-                {secNum(7)}{isEn ? "Detailed Facility Reviews" : `${toBanglaNums(hospitals.length)}টি চিকিৎসাকেন্দ্রের বিস্তারিত পর্যালোচনা`}
-              </a>
-              <TocSubList
-                items={hospitals.map((h) => ({
-                  id: `hospital-${h.rank}`,
-                  name: isEn ? `#${h.rank} ${h.nameEn}` : `${toBanglaNums(h.rank)}. ${h.nameBn}`,
-                }))}
-                activeId={activeId}
-              />
-            </li>
-            <li>
-              <a href="#selection-guide" className={linkClass("selection-guide")}>
-                {secNum(8)}{isEn ? "Guidelines & Broker Precautions" : "স্বাস্থ্যসেবা নির্বাচন ও দালাল সতর্কতা"}
-              </a>
-            </li>
-            <li>
-              <a href="#emergency-directory" className={linkClass("emergency-directory")}>
-                {secNum(9)}{isEn ? "Emergency Referral Transport" : "জরুরি যোগাযোগ ও সদর রেফারেল অ্যাম্বুলেন্স"}
-              </a>
-            </li>
-            <li>
-              <a href="#faq-section" className={linkClass("faq-section")}>
-                {secNum(10)}{isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
-              </a>
-            </li>
-          </ol>
-        ) : isDoctorArticle ? (
-          <ol className="space-y-1.5 list-none pl-0">
-            <li>
-              <a href="#overview" className={linkClass("overview")}>
-                {secNum(1)}{isEn ? "Healthcare Landscape of Feni" : "ফেনীর স্বাস্থ্যসেবা ও বিশেষজ্ঞ ডাক্তার"}
-              </a>
-            </li>
-            <li>
-              <a
-                href="#specialist-doctors"
-                className={linkClass("specialist-doctors", true)}
-              >
-                {secNum(2)}{isEn ? "Specialist Doctors by Department" : "বিভাগভিত্তিক বিশেষজ্ঞ ডাক্তার তালিকা"}
-              </a>
-              <TocSubList
-                items={doctorGroups.map((g, idx) => ({
-                  id: `dept-${g.department}`,
-                  name: isEn ? `${idx + 1}. ${g.departmentNameEn}` : `${toBanglaNums(idx + 1)}. ${g.departmentNameBn}`,
-                }))}
-                activeId={activeId}
-              />
-            </li>
-            <li>
-              <a href="#chamber-hubs" className={linkClass("chamber-hubs")}>
-                {secNum(3)}{isEn ? "Major Chamber Locations" : "ফেনী শহরের প্রধান চেম্বার হাবসমূহ"}
-              </a>
-            </li>
-            <li>
-              <a href="#serial-guide" className={linkClass("serial-guide")}>
-                {secNum(4)}{isEn ? "Serial Booking Guidelines" : "ডাক্তারের সিরিয়াল নেওয়ার নিয়মাবলী"}
-              </a>
-            </li>
-            {pricingGuides.filter((g) => g.has).map((guide) => (
-              <li key={guide.id}>
-                <a href={`#${guide.id}`} className={linkClass(guide.id)}>
-                  {secNum(5)}{isEn ? guide.en : guide.bn}
-                </a>
-              </li>
-            ))}
-            <li>
-              <a href="#faq-section" className={linkClass("faq-section")}>
-                {secNum(hasDoctorPricing ? 6 : 5)}
-                {isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
-              </a>
-            </li>
-          </ol>
+        ) : isUpazilaArticle || isDoctorArticle ? (
+          <BlogDoctorToc
+            isUpazilaArticle={isUpazilaArticle}
+            doctorGroups={doctorGroups}
+            hospitals={hospitals}
+            pricingGuides={pricingGuides}
+            hasDoctorPricing={hasDoctorPricing}
+            secNum={secNum}
+            linkClass={linkClass}
+            isEn={isEn}
+            activeId={activeId}
+          />
         ) : isDiagnosticArticle ? (
           <StandardEntityToc
             {...getDiagnosticTocTitles(currentSlug, isEn)}

@@ -19,7 +19,10 @@ export function BlogCard({ post, locale = "bn", priority = false }: BlogCardProp
   const categoryName = isEn ? post.categoryNameEn : post.categoryNameBn;
   const readTime = isEn ? post.readTimeEn : post.readTimeBn;
   const publishedDate = formatArticleDate(post.publishedDate, locale);
-  const hospitalCount = post.hospitalCount ?? 0;
+  const facilityCount = post.facilityCount ?? post.hospitalCount ?? 0;
+  const facilityLabel = isEn
+    ? (post.facilityLabelEn || (facilityCount === 1 ? "Facility" : "Facilities"))
+    : (post.facilityLabelBn || "প্রতিষ্ঠান");
 
   return (
     <article
@@ -33,7 +36,7 @@ export function BlogCard({ post, locale = "bn", priority = false }: BlogCardProp
           fill
           priority={priority}
           quality={60}
-          sizes="(max-width: 640px) 150px, (max-width: 1024px) 384px, 360px"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 384px"
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-70" />
@@ -89,11 +92,11 @@ export function BlogCard({ post, locale = "bn", priority = false }: BlogCardProp
             <ArrowRight className="h-3.5 w-3.5" />
           </span>
 
-          {hospitalCount > 0 && (
+          {facilityCount > 0 && (
             <span className="text-[11px] font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-md">
               {isEn
-                ? `${hospitalCount} Hospitals`
-                : `${toBanglaNums(hospitalCount)}টি প্রতিষ্ঠান`}
+                ? `${facilityCount} ${facilityLabel}`
+                : `${toBanglaNums(facilityCount)}টি ${facilityLabel}`}
             </span>
           )}
         </div>
