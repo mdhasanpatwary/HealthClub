@@ -79,7 +79,7 @@ export const FENI_GYNECOLOGY_GROUPS: DoctorSpecialtyGroup[] = [
         serialPhone: "01847222888",
         consultationFeeBn: "৳৭০০",
         consultantProfileUrl: "/consultants/doc_fenir_901",
-        featuredBadgeBn: "পার্টনার হাসপাতাল (NICU সাপোর্ট)",
+        featuredBadgeBn: "এনআইসিইউ ও ওটি সুবিধা",
       },
     ],
   },

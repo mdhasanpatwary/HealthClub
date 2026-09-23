@@ -285,92 +285,23 @@ export interface PhysiotherapyTreatmentPriceItem {
   durationBn: string;
 }
 
-export interface MaternityCarePackageItem {
-  packageNameBn: string;
-  packageNameEn: string;
-  categoryBn: string;
-  regularPriceRangeBn: string;
-  memberPriceRangeBn?: string;
-  discountPercentageBn?: string;
-  stayOrDurationBn: string;
-}
+import type {
+  MaternityCarePackageItem,
+  CardiacPackagePriceItem,
+  KidneyPackagePriceItem,
+  PediatricCarePackageItem,
+  SkinCarePackageItem,
+  EyeCarePackageItem,
+  OrthopedicCarePackageItem,
+  EntCarePackageItem,
+  SurgicalCarePackageItem,
+  NeurologyCarePackageItem,
+  DiabetesCarePackageItem,
+  PsychiatryCarePackageItem,
+  SadarHospitalCarePackageItem,
+  DiabeticHospitalPackageItem,
+} from "./blogCarePackages";
 
-export interface CardiacPackagePriceItem {
-  testOrPackageNameBn: string;
-  testOrPackageNameEn: string;
-  categoryBn: string;
-  regularPriceRangeBn: string;
-  memberPriceRangeBn?: string;
-  discountPercentageBn?: string;
-  reportTimeBn: string;
-}
-
-export interface KidneyPackagePriceItem {
-  testOrPackageNameBn: string;
-  testOrPackageNameEn: string;
-  categoryBn: string;
-  regularPriceRangeBn: string;
-  memberPriceRangeBn?: string;
-  discountPercentageBn?: string;
-  turnaroundOrDurationBn: string;
-}
-
-export interface PediatricCarePackageItem {
-  serviceOrVaccineNameBn: string;
-  serviceOrVaccineNameEn: string;
-  categoryBn: string;
-  regularPriceRangeBn: string;
-  memberPriceRangeBn?: string;
-  discountPercentageBn?: string;
-  ageOrDurationBn: string;
-}
-
-export interface SkinCarePackageItem {
-  procedureOrTestNameBn: string;
-  procedureOrTestNameEn: string;
-  categoryBn: string;
-  regularPriceRangeBn: string;
-  memberPriceRangeBn?: string;
-  discountPercentageBn?: string;
-  durationOrTurnaroundBn: string;
-}
-
-export interface EyeCarePackageItem {
-  procedureOrTestNameBn: string;
-  procedureOrTestNameEn: string;
-  categoryBn: string;
-  regularPriceRangeBn: string;
-  memberPriceRangeBn?: string;
-  discountPercentageBn?: string;
-  durationOrTurnaroundBn: string;
-}
-
-export interface OrthopedicCarePackageItem {
-  procedureOrTestNameBn: string;
-  procedureOrTestNameEn: string;
-  categoryBn: string;
-  regularPriceRangeBn: string;
-  memberPriceRangeBn?: string;
-  discountPercentageBn?: string;
-  durationOrTurnaroundBn: string;
-}
-
-export interface EntCarePackageItem {
-  procedureOrTestNameBn: string;
-  procedureOrTestNameEn: string;
-  categoryBn: string;
-  regularPriceRangeBn: string;
-  memberPriceRangeBn?: string;
-  discountPercentageBn?: string;
-  durationOrTurnaroundBn: string;
-}
-
-export type SurgicalCarePackageItem = EntCarePackageItem;
-export type NeurologyCarePackageItem = EntCarePackageItem;
-export type DiabetesCarePackageItem = EntCarePackageItem;
-export type PsychiatryCarePackageItem = EntCarePackageItem;
-export type SadarHospitalCarePackageItem = EntCarePackageItem;
-export type DiabeticHospitalPackageItem = EntCarePackageItem;
 
 export interface BlogPost {
   slug: string;
@@ -427,7 +358,7 @@ export interface BlogPost {
   eyeCarePricingBn?: { titleBn: string; subtitleBn: string; packages: EyeCarePackageItem[] };
   orthopedicCarePricingBn?: { titleBn: string; subtitleBn: string; packages: OrthopedicCarePackageItem[] };
   entCarePricingBn?: { titleBn: string; subtitleBn: string; packages: EntCarePackageItem[] };
-  surgicalCarePricingBn?: { titleBn: string; subtitleBn: string; packages: SurgicalCarePackageItem[] };
+  surgicalCarePricingBn?: { titleBn: string; subtitleBn: string; titleEn?: string; subtitleEn?: string; packages: SurgicalCarePackageItem[] };
   neurologyCarePricingBn?: { titleBn: string; subtitleBn: string; packages: NeurologyCarePackageItem[] };
   diabetesCarePricingBn?: { titleBn: string; subtitleBn: string; packages: DiabetesCarePackageItem[] };
   psychiatryCarePricingBn?: { titleBn: string; subtitleBn: string; packages: PsychiatryCarePackageItem[] };
@@ -443,6 +374,11 @@ export interface BlogPost {
   ambulanceComparisonTable?: import("./ambulanceBlog").AmbulanceComparisonItem[];
   ambulanceCarePricingBn?: { titleBn: string; subtitleBn: string; packages: import("./ambulanceBlog").AmbulancePackagePriceItem[] };
   upazilaCarePricingBn?: { titleBn: string; subtitleBn: string; titleEn?: string; subtitleEn?: string; packages: import("./upazilaBlog").UpazilaCarePackageItem[] };
+  criticalCarePricingBn?: import("./criticalCareBlog").CriticalCarePricingData;
+  strokeCardiacPricingBn?: import("./strokeCardiacBlog").StrokeCardiacPricingData;
+  homeCarePricingBn?: import("./homeCareBlog").HomeCarePricingData;
+  oxygenPricingBn?: import("./oxygenBlog").OxygenPricingData;
+  dengueTyphoidPricingBn?: import("./dengueTyphoidBlog").DengueTyphoidPricingData;
   bookingGuideBn?: { titleBn: string; stepsBn: { step: string; title: string; desc: string }[] };
   bookingGuideEn?: { titleEn: string; stepsEn: { step: string; title: string; desc: string }[] };
   selectionGuideBn?: { titleBn: string; pointsBn: { title: string; desc: string }[] };
@@ -484,3 +420,9 @@ export * from "./pharmacyBlog";
 export * from "./bloodBankBlog";
 export * from "./ambulanceBlog";
 export * from "./upazilaBlog";
+export * from "./criticalCareBlog";
+export * from "./strokeCardiacBlog";
+export * from "./homeCareBlog";
+export * from "./oxygenBlog";
+export * from "./blogCarePackages";
+

@@ -10,6 +10,8 @@ interface DiagnosticPriceTableProps {
   pricingData: {
     titleBn: string;
     subtitleBn: string;
+    titleEn?: string;
+    subtitleEn?: string;
     tests: DiagnosticTestPriceItem[];
   };
   locale?: string;
@@ -32,10 +34,15 @@ export function DiagnosticPriceTable({
   return (
     <BlogPriceTable
       id="price-guide"
-      title={isEn ? "Common Diagnostic Tests & Cost Guide" : `৪. ${pricingData.titleBn}`}
+      title={
+        isEn
+          ? pricingData.titleEn || "Common Diagnostic Tests & Cost Guide"
+          : `৪. ${pricingData.titleBn}`
+      }
       subtitle={
         isEn
-          ? "Estimated diagnostic test charges in Feni and guaranteed savings with Health Club membership."
+          ? pricingData.subtitleEn ||
+            "Estimated diagnostic test charges in Feni and guaranteed savings with Health Club membership."
           : pricingData.subtitleBn
       }
       items={items}

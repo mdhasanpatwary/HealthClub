@@ -45,7 +45,7 @@ export function BlogPostDetailView({
   const introParagraphs = getArticleEnglishIntro(post.slug, post.introParagraphsBn, isEn);
   const selectionGuide = getArticleSelectionGuide(post.slug, post.selectionGuideBn, isEn);
   const emergencyDirectory = getArticleEmergencyDirectory(post.emergencyDirectoryBn, isEn);
-  const bookingGuide = getArticleBookingGuide(post.bookingGuideBn, isEn);
+  const bookingGuide = getArticleBookingGuide(post.bookingGuideBn, isEn, post.bookingGuideEn);
 
   const hasPricingGuide = Boolean(
     post.diagnosticTestPricingBn ||
@@ -64,7 +64,9 @@ export function BlogPostDetailView({
     post.diabetesCarePricingBn ||
     post.psychiatryCarePricingBn ||
     post.sadarHospitalPricingBn ||
-    post.diabeticHospitalPricingBn
+    post.diabeticHospitalPricingBn ||
+    post.criticalCarePricingBn ||
+    post.strokeCardiacPricingBn
   );
 
   const isPurePriceList = post.slug === "feni-medical-test-price-list";
@@ -144,6 +146,11 @@ export function BlogPostDetailView({
                   hasPharmacyPricing={!!post.pharmacyCarePricingBn}
                   hasBloodPricing={!!post.bloodCarePricingBn}
                   hasAmbulancePricing={!!post.ambulanceCarePricingBn}
+                  hasCriticalCarePricing={!!post.criticalCarePricingBn}
+                  hasStrokeCardiacPricing={!!post.strokeCardiacPricingBn}
+                  hasHomeCarePricing={!!post.homeCarePricingBn}
+                  hasOxygenPricing={!!post.oxygenPricingBn}
+                  hasDengueTyphoidPricing={!!post.dengueTyphoidPricingBn}
                   hasUpazilaPricing={!!post.upazilaCarePricingBn}
                   pharmacies={post.pharmacies}
                   bloodBanks={post.bloodBanks}
@@ -328,6 +335,11 @@ export function BlogPostDetailView({
               hasPharmacyPricing={!!post.pharmacyCarePricingBn}
               hasBloodPricing={!!post.bloodCarePricingBn}
               hasAmbulancePricing={!!post.ambulanceCarePricingBn}
+              hasCriticalCarePricing={!!post.criticalCarePricingBn}
+              hasStrokeCardiacPricing={!!post.strokeCardiacPricingBn}
+              hasHomeCarePricing={!!post.homeCarePricingBn}
+              hasOxygenPricing={!!post.oxygenPricingBn}
+              hasDengueTyphoidPricing={!!post.dengueTyphoidPricingBn}
               hasUpazilaPricing={!!post.upazilaCarePricingBn}
               pharmacies={post.pharmacies}
               bloodBanks={post.bloodBanks}

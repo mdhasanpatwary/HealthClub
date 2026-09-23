@@ -1,7 +1,223 @@
+import { SPECIALIST_SELECTION_GUIDES } from "./articleTranslationsSpecialistGuides";
+import { OXYGEN_SELECTION_GUIDE } from "./articleTranslationsOxygen";
+import { DENGUE_TYPHOID_SELECTION_GUIDE } from "./articleTranslationsDengueTyphoid";
+
 export const ARTICLE_SELECTION_GUIDES: Record<
   string,
   { title: string; points: { title: string; desc: string }[] }
 > = {
+  "dengue-and-typhoid-test-cost-management-guide-feni": DENGUE_TYPHOID_SELECTION_GUIDE,
+  "feni-oxygen-cylinder-refill-and-home-rent-guide": OXYGEN_SELECTION_GUIDE,
+  "home-sample-collection-and-nursing-service-in-feni": {
+    title: "4 Golden Rules for Choosing Home Phlebotomy & Nursing Services in Feni",
+    points: [
+      {
+        title: "1. Certified Phlebotomists & Cold-Chain Specimen Cooler Boxes",
+        desc: "Ensure that the visiting technician is a qualified medical laboratory technologist who transports blood and urine vacutainers in insulated ice-gel cooler boxes (2°C-8°C) to prevent cellular hemolysis.",
+      },
+      {
+        title: "2. Government-Registered Diploma/BSc Nursing Credentials",
+        desc: "Verify that clinical procedures such as Foley catheterization and IV infusion are performed by licensed BNMC/BMDC-registered nurses rather than untrained retail assistants.",
+      },
+      {
+        title: "3. Factory-Sealed Sterile Single-Use Medical Supplies",
+        desc: "Ensure all catheters, IV cannulas, syringes, and wound dressing packs are opened from sealed manufacturer packaging in your presence to eliminate healthcare-associated infections.",
+      },
+      {
+        title: "4. Direct Tertiary Hospital Backup & Emergency Ambulance Access",
+        desc: "Confirm that the home care agency or diagnostic center is backed by an accredited hospital and ambulance dispatch network in case the patient experiences unexpected physiological deterioration.",
+      },
+    ],
+  },
+  "stroke-and-heart-attack-emergency-protocol-feni": {
+    title: "4 Golden Rules for Choosing Emergency Stroke & Cardiac Facilities in Feni",
+    points: [
+      {
+        title: "1. 24/7 Operational Emergency Department & Rapid Triage Capability",
+        desc: "Ensure the hospital operates round-the-clock emergency triage staffed by certified medical officers and continuous central oxygen, prepared to initiate immediate cardiopulmonary resuscitation.",
+      },
+      {
+        title: "2. Immediate In-House 12-Lead ECG, STAT Troponin-I & Emergency Brain CT",
+        desc: "Verify that the facility provides 10-minute door-to-ECG capability, rapid cardiac biomarker quantification, and accessible non-contrast CT scanning to differentiate ischemic from hemorrhagic stroke.",
+      },
+      {
+        title: "3. Dedicated Coronary Care Unit (CCU), Defibrillators & ICU Backup",
+        desc: "Confirm the presence of biphasic cardiac defibrillators, continuous hemodynamic telemetry, emergency thrombolytic management (Streptokinase), and mechanical life support backup.",
+      },
+      {
+        title: "4. Advanced Life Support (ALS) Ambulance Network & Tertiary Referral Protocol",
+        desc: "Ensure the center maintains coordination with ICU-equipped ambulance fleets with transport ventilators and paramedics for safe inter-hospital transfer to tertiary centers in Chittagong or Dhaka.",
+      },
+    ],
+  },
+  "feni-icu-ccu-nicu-bed-charges-and-facilities-guide": {
+    title: "4 Golden Rules for Choosing Critical Care & ICU Facilities in Feni",
+    points: [
+      {
+        title: "1. Functional Mechanical Ventilators & Dedicated Uninterrupted Power Backup",
+        desc: "Ensure the hospital operates modern microprocessor servo ventilators backed by dedicated online UPS and automatic diesel generators, ensuring zero life support interruptions during electrical outages.",
+      },
+      {
+        title: "2. Bulk Central Pipeline Medical Oxygen & Dual Manifold Security",
+        desc: "Prioritize facilities equipped with bulk Liquid Medical Oxygen (LMO) tanks or dual-bank central pipeline manifolds, eliminating dangerous pressure drops associated with switching standalone cylinders.",
+      },
+      {
+        title: "3. 24/7 Certified Intensivist, Anesthesiologist & 1:1 Nursing Care",
+        desc: "Confirm that certified anesthesiologists and critical care medical officers are physically on-duty round-the-clock, supported by ICU-trained nurses delivering dedicated 1:1 patient care and airway suctioning.",
+      },
+      {
+        title: "4. In-House Point-of-Care Arterial Blood Gas (ABG) & Digital Imaging",
+        desc: "Verify that the facility maintains an operational blood gas analyzer and portable bedside digital radiography, enabling rapid minute-by-minute titration of ventilator oxygenation and acid-base parameters.",
+      },
+    ],
+  },
+  "full-body-health-checkup-packages-in-feni": {
+    title: "4 Golden Rules for Choosing Full Body Checkup & Diagnostic Labs in Feni",
+    points: [
+      {
+        title: "1. International Standard Fully Automated Clinical Chemistry Analyzers",
+        desc: "Ensure the center is equipped with world-class robotic analyzer platforms (such as Roche Cobas, Sysmex, or Beckman Coulter) to guarantee precise, operator-error-free hematological and biochemical quantification.",
+      },
+      {
+        title: "2. Daily Internal & External Quality Control (QC) Calibration",
+        desc: "Verify that the diagnostic laboratory routinely runs multi-level control sera and participates in national/international quality assurance schemes before processing patient samples.",
+      },
+      {
+        title: "3. Consultant Pathologist & Clinical Biochemist Oversight",
+        desc: "Confirm that every abnormal parameter and organ profile is critically evaluated, validated, and signed by verified BMDC-registered consultant clinical pathologists rather than unmonitored technicians.",
+      },
+      {
+        title: "4. Integrated Multi-Disciplinary Diagnostics Under One Roof",
+        desc: "Select diagnostic facilities that house phlebotomy, high-frequency digital radiography, 12-lead ECG, and whole abdomen ultrasonography within the same building, ensuring seamless same-day evaluation.",
+      },
+    ],
+  },
+  "pregnancy-ultrasonography-4d-anomaly-scan-in-feni": {
+    title: "4 Golden Rules for Choosing 4D Pregnancy Ultrasound & Anomaly Scan Centers in Feni",
+    points: [
+      {
+        title: "1. GE Voluson 4D HD-Live Technology & Advanced Probes",
+        desc: "Ensure the center is equipped with world-class 4D imaging systems (such as GE Voluson E8/E10) with HD-Live surface rendering to capture sharp anatomical details of the fetal heart, facial features, and spine.",
+      },
+      {
+        title: "2. Certified Sonologists & BMDC-Registered Consultant Radiologists",
+        desc: "Verify that scans are performed and officially signed by certified sonologists with dedicated fetal anomaly training (DMU / DMRD / FCPS) rather than unmonitored technicians.",
+      },
+      {
+        title: "3. Dedicated Female Sonologist Availability & Complete Modesty",
+        desc: "Select facilities that guarantee privacy, dignity, and cultural comfort for expectant mothers by providing experienced female sonologists and female clinical attendants.",
+      },
+      {
+        title: "4. Comprehensive Anatomical Checklist & High-Definition Color Prints",
+        desc: "Confirm that the final diagnostic report includes a structured anatomical organ checklist (cerebral ventricles, 4-chamber heart, kidneys, spine, amniotic fluid, umbilical Doppler) with color prints.",
+      },
+    ],
+  },
+  "feni-ct-scan-and-mri-test-price-guide": {
+    title: "4 Golden Rules for Choosing CT Scan & MRI Centers in Feni",
+    points: [
+      {
+        title: "1. 1.5 Tesla Superconducting Magnet vs. Low-Field Open Scanners",
+        desc: "Confirm that the diagnostic center operates a high-field 1.5 Tesla closed superconducting magnet rather than a weak 0.3-0.4 Tesla open scanner, ensuring sharp diagnostic resolution for subtle brain tumors, micro-infarcts, and spinal disc prolapse (PLID).",
+      },
+      {
+        title: "2. 128-Slice Multi-Detector Helical CT with Low-Dose Protocols",
+        desc: "Verify that the facility utilizes modern multi-detector helical CT systems that complete full body scans in seconds, delivering high-resolution 3D reconstructions with minimal radiation exposure compared to outdated low-slice systems.",
+      },
+      {
+        title: "3. Rigorous Contrast Renal Screening & Anaphylaxis Preparedness",
+        desc: "Ensure the center strictly verifies serum creatinine clearance prior to intravenous iodinated or gadolinium contrast, maintaining an emergency crash cart, oxygen supply, and anesthesiology backup for adverse drug reaction management.",
+      },
+      {
+        title: "4. Certified Consultant Radiologist (FCPS / MD) Reporting",
+        desc: "Select imaging centers where scans are interpreted, validated, and signed by verified BMDC-registered consultant radiologists with tertiary university hospital experience, complete with full digital DICOM film archives.",
+      },
+    ],
+  },
+  "kidney-stone-laser-treatment-and-urology-guide-feni": {
+    title: "4 Golden Rules for Choosing Kidney Stone Laser & Urology Surgery Clinics in Feni",
+    points: [
+      {
+        title: "1. Verified BMDC Credentials & Endourology Fellowship Training",
+        desc: "Ensure your operating urologist holds accredited postgraduate qualifications (MS Urology / FCPS Surgery) with dedicated endourology training in laser lithotripsy (URS/RIRS) and PCNL.",
+      },
+      {
+        title: "2. C-Arm Fluoroscopy Guidance & Precision Holmium/Thulium Laser Units",
+        desc: "Confirm that the surgical theater is equipped with high-resolution C-arm fluoroscopy imaging and authentic laser lithotripsy machines rather than unmonitored blind instrumentation.",
+      },
+      {
+        title: "3. Full-Time Anesthesiologist, HDU Monitoring & Emergency Dialysis Backup",
+        desc: "Verify 24/7 coverage by certified anesthesiologists, sterile laminar airflow OT suites, and immediate access to intensive monitoring or nephrology hemodialysis backup.",
+      },
+      {
+        title: "4. Transparent OT Packages & 10-30% Health Club Member Savings",
+        desc: "Request all-inclusive package estimates covering OT, laser fibers, DJ stent insertion/removal, and cabin stay upfront, and present your Health Club card for guaranteed 10-30% savings.",
+      },
+    ],
+  },
+  "laparoscopic-gallstone-and-hernia-surgery-guide-feni": {
+    title: "4 Golden Rules for Choosing Laparoscopic Gallbladder & Hernia Surgery Clinics in Feni",
+    points: [
+      {
+        title: "1. Verified BMDC Credentials & Minimal Access Fellowship Training",
+        desc: "Ensure your operating surgeon holds accredited postgraduate credentials (FCPS/MS) with dedicated fellowship training in laparoscopic and minimal access surgery (FMS/SELSB).",
+      },
+      {
+        title: "2. Modern 4K / Full-HD Laparoscopic Tower & Advanced Energy Devices",
+        desc: "Verify that the hospital operates state-of-the-art high-definition camera towers and ultrasonic harmonic or bipolar dissecting instruments for bloodless, precise tissue dissection.",
+      },
+      {
+        title: "3. Full-Time Anesthesiologist, HDU Backup & HEPA-Filtered Sterile OT",
+        desc: "Confirm 24/7 coverage by certified anesthesiologists, certified Class-B autoclaving, and high-dependency recovery monitoring to safeguard patient stability during and after general anesthesia.",
+      },
+      {
+        title: "4. All-Inclusive OT Packages & 10-30% Health Club Member Savings",
+        desc: "Request comprehensive package quotes covering OT, cabin stay, and post-op medicines prior to admission, and use your Health Club digital membership for 10-30% savings at partner hospitals.",
+      },
+    ],
+  },
+  "laser-piles-fissure-fistula-treatment-cost-in-feni": {
+    title: "4 Golden Rules for Choosing Laser Piles & Fistula Clinics in Feni",
+    points: [
+      {
+        title: "1. Verified BMDC Credentials & Colorectal Fellowship Training",
+        desc: "Confirm that your surgeon holds accredited postgraduate credentials (FCPS/MS/MRCS) with dedicated fellowship training in colorectal proctology rather than generic practice.",
+      },
+      {
+        title: "2. Authentic 1470nm Diode Radial Fiber Laser Technology",
+        desc: "Ensure the hospital utilizes true dual-radial diode lasers (LHP/FiLaC) that coagulate submucosal tissue without cutting, rather than conventional electrocautery falsely marketed as laser.",
+      },
+      {
+        title: "3. Sterile Operating Theater Standards & Professional Anesthesiology",
+        desc: "Verify that the hospital maintains laminar airflow OT filtration, certified Class-B autoclaves, and full-time anesthesiologist coverage for painless, infection-free procedures.",
+      },
+      {
+        title: "4. Transparent OT Packages & 10-30% Health Club Member Savings",
+        desc: "Request all-inclusive package breakdowns prior to admission to prevent surprise pharmacy or bed markups, and present your Health Club card for 10-30% savings at partner hospitals.",
+      },
+    ],
+  },
+  "feni-normal-delivery-and-cesarean-cost-guide": {
+    title: "4 Golden Rules for Choosing Normal Delivery Clinics & Maternity Hospitals in Feni",
+    points: [
+      {
+        title: "1. Prioritize Clinicians Dedicated to Patient-Centric Normal Vaginal Delivery",
+        desc: "Select obstetricians and maternity clinics that actively encourage physiological labor, practice structured partograph tracking, and avoid hurried, non-medically indicated cesarean deliveries.",
+      },
+      {
+        title: "2. Verify In-House Neonatal ICU (NICU) and Pediatrician On-Call Readiness",
+        desc: "Ensure the delivery facility maintains functioning neonatal incubators and phototherapy units to avoid precarious emergency transit during unexpected birth asphyxia or jaundice.",
+      },
+      {
+        title: "3. Confirm 24/7 Anesthesiology Coverage and Sterile Surgical OT Standards",
+        desc: "Ensure round-the-clock availability of a certified anesthesiologist to facilitate emergency C-section within 15-20 minutes should maternal or fetal vitals deteriorate.",
+      },
+      {
+        title: "4. Clarify Transparent Package Rates & Leverage Health Club Member Savings",
+        desc: "Request all-inclusive package breakdowns prior to admission to avoid unexpected pharmacy or cabin markups, and present your Health Club membership for 10-30% savings.",
+      },
+    ],
+  },
   "parshuram-fulgazi-healthcare-guide": {
     title: "4 Critical Guidelines for Receiving Healthcare & Choosing Clinics in Northern Feni",
     points: [
@@ -182,252 +398,7 @@ export const ARTICLE_SELECTION_GUIDES: Record<
       },
     ],
   },
-  "best-psychiatrists-in-feni": {
-    title: "5 Essential Clinical Guidelines for Choosing a Mental Health Specialist in Feni",
-    points: [
-      {
-        title: "1. Distinguish Between Psychiatrists (Medical) and Psychologists (Therapy)",
-        desc: "Consult an MD/FCPS Psychiatrist when medications are required for severe depression, psychosis, bipolar, or insomnia; consult a Clinical Psychologist for psychotherapy, CBT, and counseling.",
-      },
-      {
-        title: "2. Verify Postgraduate Medical Credentials (MD / FCPS / M.Phil)",
-        desc: "Ensure your mental health specialist holds recognized university degrees in Psychiatry or Clinical Psychology from reputed institutions like NIMH, BSMMU, DU, or CMCH.",
-      },
-      {
-        title: "3. Complete Confidentiality and Stigma-Free Consultation Space",
-        desc: "Choose consultation chambers that guarantee 100% medical privacy and an empathetic, non-judgmental environment to freely discuss sensitive emotions and stressors.",
-      },
-      {
-        title: "4. Never Discontinue Psychiatric Medications Abruptly",
-        desc: "Always taper psychotropic medications under specialist supervision; abrupt cessation can trigger severe neurochemical rebound and symptom relapse.",
-      },
-      {
-        title: "5. Guaranteed 10-30% Savings with Health Club Digital Membership",
-        desc: "Use your Health Club membership card to access guaranteed 10% to 30% savings on Digital Video EEG, Brain MRI, thyroid profiles, drug screening, and psychotherapy sessions in Feni.",
-      },
-    ],
-  },
-  "best-surgeons-in-feni": {
-    title: "5 Essential Clinical Guidelines for Choosing a Surgeon & Hospital in Feni",
-    points: [
-      {
-        title: "1. Board Certification & Minimal Access Fellowship (FCPS/MS/FACS)",
-        desc: "Ensure your surgeon holds recognized postgraduate qualifications (FCPS, MS, MRCS, FACS) and accredited fellowship training in advanced laparoscopy or colorectal surgery.",
-      },
-      {
-        title: "2. Strictly Avoid Quack Chemical Burning for Piles & Fistulae",
-        desc: "Never allow unqualified practitioners to apply caustic pastes or acid injections to anal tissues; modern laser hemorrhoidoplasty (LHP) is safe and sphincter-preserving.",
-      },
-      {
-        title: "3. Pre-Anesthetic Checkup (PAC) & Critical Fasting (NPO)",
-        desc: "Complete mandatory pre-op testing (CBC, coagulation profile, ECG, CXR, blood grouping) and adhere strictly to 6-8 hours fasting before surgery.",
-      },
-      {
-        title: "4. Operating Theater (OT) Sterilization & ICU Backup",
-        desc: "Verify that the hospital maintains laminar airflow OT filtration, modern laparoscopy towers, Class-B autoclaves, and ready ICU/post-op monitoring.",
-      },
-      {
-        title: "5. Membership Savings on Surgical OT & Post-Op Cabin Charges",
-        desc: "Health Club members enjoy 10-30% guaranteed savings on hospital bed charges, OT equipment fees, and pathology tests across partner clinics.",
-      },
-    ],
-  },
-  "best-neurologists-in-feni": {
-    title: "5 Essential Clinical Guidelines for Neurological Care & Stroke Emergencies in Feni",
-    points: [
-      {
-        title: "1. Recognize Stroke Instantly via BE-FAST & Rush to Hospital",
-        desc: "If face asymmetry, arm weakness, or slurred speech suddenly develops, do not wait or give water; rush immediately to a hospital equipped with a 24/7 CT scan within the 4.5-hour golden window.",
-      },
-      {
-        title: "2. Certified Neurologist Qualification (MD Neurology / FCPS)",
-        desc: "Ensure your consultant holds dedicated post-graduate credentials in neurology (MD Neurology, FCPS Neurology) from premier institutes like BSMMU, NINS, DMC, or CMCH.",
-      },
-      {
-        title: "3. Precision Neuroimaging (1.5 Tesla MRI & Emergency CT)",
-        desc: "Opt for diagnostic centers equipped with superconductive 1.5T MRI and multi-slice CT scanners for clear visualization of cerebral ischemia, microbleeds, and spine nerve roots.",
-      },
-      {
-        title: "4. Digital Video EEG & Nerve Conduction Studies (NCS/EMG)",
-        desc: "For seizure disorders and limb tingling/numbness, confirm the facility has calibrated Digital Video EEG and multi-channel EMG/NCS technology with consultant reporting.",
-      },
-      {
-        title: "5. Guaranteed 10-30% Savings with Health Club Digital Membership",
-        desc: "Present your Health Club card to claim guaranteed 10% to 30% member discounts on Brain MRI, NCCT scans, EEG brain mapping, and neuro-rehabilitation sessions at verified partner clinics.",
-      },
-    ],
-  },
-  "best-diabetes-doctors-in-feni": {
-    title: "5 Essential Guidelines for Choosing a Diabetes & Endocrinology Specialist in Feni",
-    points: [
-      {
-        title: "1. Qualified Specialist Credentials (MD / FCPS Endocrinology & Diabetology)",
-        desc: "Ensure your consultant holds formal postgraduate training in Endocrinology or Diabetology (BIRDEM, BSMMU, DMC) rather than general practice.",
-      },
-      {
-        title: "2. Gold-Standard HbA1c Monitoring Every 3 Months",
-        desc: "Rely on automated HPLC HbA1c testing (target < 7.0%) to assess true 90-day glycemic control rather than isolated fasting fingerstick checks.",
-      },
-      {
-        title: "3. Master the Life-Saving 'Rule of 15' for Hypoglycemia",
-        desc: "Always carry fast-acting glucose tablets or candy; if acute hypoglycemia occurs (shakiness, cold sweat, palpitations), ingest 15g simple carbs and re-test in 15 minutes.",
-      },
-      {
-        title: "4. Rigorous Daily Diabetic Foot Inspection & Care",
-        desc: "Never walk barefoot indoors or outdoors; inspect feet daily and seek prompt clinical debridement for any calluses, blisters, or skin cracks to prevent diabetic ulcers.",
-      },
-      {
-        title: "5. Cashless 10-30% Savings with Health Club Digital Membership",
-        desc: "Present your Health Club card to claim guaranteed 10% to 30% member discounts on HbA1c, thyroid panels, lipid profiles, and urine ACR tests at partner labs in Feni.",
-      },
-    ],
-  },
-  "best-ent-doctors-in-feni": {
-    title: "5 Essential Guidelines for Choosing an ENT Specialist & Head-Neck Surgeon in Feni",
-    points: [
-      {
-        title: "1. Department Specialization (Otology vs. Rhinology vs. Head-Neck)",
-        desc: "For hearing loss and ear discharge, consult a micro-otologist; for sinus headaches and blocked nose, seek a rhinology/FESS surgeon; for tonsils, thyroid, and neck swelling, choose a head-neck specialist.",
-      },
-      {
-        title: "2. Strictly Avoid Ear Canal Manipulation (No Cotton Swabs)",
-        desc: "Never use cotton buds, pointed hairpins, or unverified herbal ear drops; symptomatic blockage should always be evaluated using clean oto-microscopic suction.",
-      },
-      {
-        title: "3. Diagnostic Audiology & High-Resolution PNS Imaging",
-        desc: "Ensure the clinic or hospital has calibrated Pure Tone Audiometry (PTA), tympanometry, and multi-slice PNS CT imaging for accurate pre-operative mapping.",
-      },
-      {
-        title: "4. Minimally Invasive Video Endoscopy & OT Infrastructure",
-        desc: "Opt for centers equipped with rigid diagnostic nasal endoscopes (DNE), fiber-optic laryngoscopes, and operating theaters with micro-drills and coblation units.",
-      },
-      {
-        title: "5. Maximize Savings with Health Club Digital Membership",
-        desc: "Present your Health Club digital membership card to receive guaranteed 10% to 30% savings on audiometry tests, PNS CT scans, and surgical OT packages at partner centers.",
-      },
-    ],
-  },
-  "best-orthopedic-doctors-in-feni": {
-    title: "5 Crucial Guidelines for Choosing an Orthopedic Specialist & Trauma Center in Feni",
-    points: [
-      {
-        title: "1. Subspecialty Focus (Trauma vs. Spine vs. Arthroplasty)",
-        desc: "For acute fractures, consult a trauma surgeon (MS Ortho, NITOR); for sciatica or numbness, seek a spine specialist; for severe knee arthritis, consult an arthroplasty surgeon.",
-      },
-      {
-        title: "2. Immediate Fracture Immobilization (RICE Protocol)",
-        desc: "Immobilize broken limbs immediately using a firm padded splint and ice packs; never allow unscientific traditional massages or violent bone manipulations.",
-      },
-      {
-        title: "3. Advanced Diagnostic Imaging Support (1.5T MRI & Digital X-Ray)",
-        desc: "Accurate surgical reduction and ligament assessment require high-resolution digital radiography, 3D CT scans, and high-field superconductive MRI.",
-      },
-      {
-        title: "4. Sterile Operating Theater with C-Arm Fluoroscopy",
-        desc: "For surgical fixation (AO plates, interlocking nails, arthroscopy), select hospitals equipped with laminar airflow OTs and real-time C-Arm fluoroscopic guidance.",
-      },
-      {
-        title: "5. Maximize Savings with Health Club Membership",
-        desc: "Present your Health Club digital card to enjoy 10% to 30% member savings on digital X-rays, MRI scans, CT scans, and post-op physiotherapy sessions.",
-      },
-    ],
-  },
-  "best-kidney-doctors-in-feni": {
-    title: "5 Essential Criteria for Choosing a Kidney Specialist & Dialysis Unit in Feni",
-    points: [
-      {
-        title: "1. Nephrologist vs. Urologist Distinction",
-        desc: "Consult a Nephrologist for medical kidney diseases, creatinine, and dialysis; consult a Urologist for kidney stone removal, prostate, and surgery.",
-      },
-      {
-        title: "2. Certified Hemodialysis Facility & ICU Backup",
-        desc: "Ensure the dialysis unit maintains sterile reverse osmosis (R.O.) treated water and has on-site emergency ICU support.",
-      },
-      {
-        title: "3. Automated Biochemistry Lab Standards",
-        desc: "Accurate dosage depends on exact serum creatinine and electrolyte values; choose labs with automated robotic analyzers.",
-      },
-      {
-        title: "4. Minimally Invasive Stone Removal Capabilities",
-        desc: "Prefer centers with endoscopic laser lithotripsy (URS/RIRS/PCNL) to remove stones without large surgical incisions.",
-      },
-      {
-        title: "5. Maximize Long-Term Savings with Health Club Card",
-        desc: "Save 10% to 30% on frequent renal function tests and ultrasound scans using your Health Club membership.",
-      },
-    ],
-  },
-  "best-diagnostic-centers-in-feni": {
-    title: "5 Essential Criteria for Choosing a Reliable Diagnostic Lab",
-    points: [
-      {
-        title: "1. Automated Analyzers & Quality Reagents",
-        desc: "Ensure the lab uses fully automated analyzers (e.g. Roche, Abbott, Beckman) with standardized international reagents for accurate blood analysis.",
-      },
-      {
-        title: "2. Resident Pathologists & Radiologists",
-        desc: "Reports should be reviewed and signed by certified consultant pathologists or radiologists rather than junior technicians alone.",
-      },
-      {
-        title: "3. Digital Radiology & High-Frequency 4D USG",
-        desc: "Choose centers with modern digital radiography and multi-frequency color Doppler transducers to detect subtle tissue anomalies.",
-      },
-      {
-        title: "4. Strict Biosafety & Disposable Consumables",
-        desc: "Verify that phlebotomists follow sterile protocols with single-use vacuum blood tubes and disposable needles to prevent infection.",
-      },
-      {
-        title: "5. Maximize Savings with Health Club Card",
-        desc: "Diagnostic tests can be costly; use your Health Club membership card to receive guaranteed 10-30% savings at verified partner centers.",
-      },
-    ],
-  },
-  "best-10-hospitals-in-feni": {
-    title: "4 Key Factors for Selecting the Right Hospital in Feni",
-    points: [
-      {
-        title: "1. 24/7 ICU, CCU & Emergency Availability",
-        desc: "Confirm the presence of functional intensive care beds, central oxygen, and round-the-clock emergency medical officers before admission.",
-      },
-      {
-        title: "2. Cleanliness, Infection Control & Biosafety",
-        desc: "Choose facilities with sterile operating theaters, adequate post-operative care, and strict sterilization protocols.",
-      },
-      {
-        title: "3. Transparent Billing & Clear Cost Estimates",
-        desc: "Ensure the hospital provides written admission and surgical package quotes to prevent unexpected ancillary charges.",
-      },
-      {
-        title: "4. Health Club Partner Discounts",
-        desc: "Take advantage of up to 25% member savings on cabin rent, pathology tests, and hospital charges at official partner hospitals.",
-      },
-    ],
-  },
-  "best-medicine-doctor-in-feni": {
-    title: "5 Key Considerations for Choosing an Internal Medicine Specialist",
-    points: [
-      {
-        title: "1. Advanced Qualifications (MD, FCPS, MRCP)",
-        desc: "Prioritize BMDC-recognized specialists with postgraduate fellowships in Internal Medicine from national or UK royal colleges.",
-      },
-      {
-        title: "2. Relevant Subspecialty Expertise",
-        desc: "Match symptoms with doctor focus: Gastroenterology for abdominal issues, Rheumatology for joint pain, and Endocrinology for diabetes.",
-      },
-      {
-        title: "3. Thorough Clinical Examination",
-        desc: "Medicine relies on in-depth patient history; choose physicians who listen attentively and perform careful clinical assessments.",
-      },
-      {
-        title: "4. Partner Lab Quality & Accuracy",
-        desc: "Ensure prescribed tests are conducted at modern laboratories with automated analyzers and certified pathologists.",
-      },
-      {
-        title: "5. Member Savings on Prescribed Tests",
-        desc: "Health Club members save 10-30% on laboratory and imaging investigations when using digital member cards at partner clinics.",
-      },
-    ],
-  },
+  ...SPECIALIST_SELECTION_GUIDES,
   default: {
     title: "Guidelines for Choosing Quality Healthcare in Feni",
     points: [

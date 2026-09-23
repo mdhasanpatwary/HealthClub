@@ -11,7 +11,7 @@ import {
 } from "@/types/blog";
 import { toBanglaNums } from "@/lib/utils";
 import { useLanguage } from "@/components/layout/LanguageProvider";
-import { TocSubList, StandardEntityToc, getPricingGuides } from "./BlogTocList";
+import { TocSubList, StandardEntityToc, getPricingGuides, getDiagnosticTocTitles, getHospitalTocTitles } from "./BlogTocList";
 
 interface BlogTableOfContentsProps {
   hospitals?: HospitalReviewItem[];
@@ -19,24 +19,13 @@ interface BlogTableOfContentsProps {
   diagnosticCenters?: DiagnosticCenterReviewItem[];
   dentalClinics?: DentalClinicReviewItem[];
   physiotherapyCenters?: PhysiotherapyCenterReviewItem[];
-  hasMaternityPricing?: boolean;
-  hasCardiacPricing?: boolean;
-  hasKidneyPricing?: boolean;
-  hasPediatricPricing?: boolean;
-  hasSkinPricing?: boolean;
-  hasEyePricing?: boolean;
-  hasOrthopedicPricing?: boolean;
-  hasEntPricing?: boolean;
-  hasSurgeryPricing?: boolean;
-  hasNeurologyPricing?: boolean;
-  hasDiabetesPricing?: boolean;
-  hasPsychiatryPricing?: boolean;
-  hasSadarHospitalPricing?: boolean;
-  hasDiabeticHospitalPricing?: boolean;
-  hasPharmacyPricing?: boolean;
-  hasBloodPricing?: boolean;
-  hasAmbulancePricing?: boolean;
-  hasUpazilaPricing?: boolean;
+  hasMaternityPricing?: boolean; hasCardiacPricing?: boolean; hasKidneyPricing?: boolean;
+  hasPediatricPricing?: boolean; hasSkinPricing?: boolean; hasEyePricing?: boolean;
+  hasOrthopedicPricing?: boolean; hasEntPricing?: boolean; hasSurgeryPricing?: boolean;
+  hasNeurologyPricing?: boolean; hasDiabetesPricing?: boolean; hasPsychiatryPricing?: boolean;
+  hasSadarHospitalPricing?: boolean; hasDiabeticHospitalPricing?: boolean;
+  hasPharmacyPricing?: boolean; hasBloodPricing?: boolean; hasAmbulancePricing?: boolean;
+  hasCriticalCarePricing?: boolean; hasStrokeCardiacPricing?: boolean; hasHomeCarePricing?: boolean; hasOxygenPricing?: boolean; hasDengueTyphoidPricing?: boolean; hasUpazilaPricing?: boolean;
   pharmacies?: import("@/types/pharmacyBlog").PharmacyReviewItem[];
   bloodBanks?: import("@/types/bloodBankBlog").BloodBankReviewItem[];
   ambulances?: import("@/types/ambulanceBlog").AmbulanceReviewItem[];
@@ -56,24 +45,13 @@ export function BlogTableOfContents({
   pharmacies = [],
   bloodBanks = [],
   ambulances = [],
-  hasMaternityPricing = false,
-  hasCardiacPricing = false,
-  hasKidneyPricing = false,
-  hasPediatricPricing = false,
-  hasSkinPricing = false,
-  hasEyePricing = false,
-  hasOrthopedicPricing = false,
-  hasEntPricing = false,
-  hasSurgeryPricing = false,
-  hasNeurologyPricing = false,
-  hasDiabetesPricing = false,
-  hasPsychiatryPricing = false,
-  hasSadarHospitalPricing = false,
-  hasDiabeticHospitalPricing = false,
-  hasPharmacyPricing = false,
-  hasBloodPricing = false,
-  hasAmbulancePricing = false,
-  hasUpazilaPricing = false,
+  hasMaternityPricing = false, hasCardiacPricing = false, hasKidneyPricing = false,
+  hasPediatricPricing = false, hasSkinPricing = false, hasEyePricing = false,
+  hasOrthopedicPricing = false, hasEntPricing = false, hasSurgeryPricing = false,
+  hasNeurologyPricing = false, hasDiabetesPricing = false, hasPsychiatryPricing = false,
+  hasSadarHospitalPricing = false, hasDiabeticHospitalPricing = false,
+  hasPharmacyPricing = false, hasBloodPricing = false, hasAmbulancePricing = false,
+  hasCriticalCarePricing = false, hasStrokeCardiacPricing = false, hasHomeCarePricing = false, hasOxygenPricing = false, hasDengueTyphoidPricing = false, hasUpazilaPricing = false,
   currentSlug,
   locale = "bn",
   className = "",
@@ -104,6 +82,10 @@ export function BlogTableOfContents({
       "blood-bank-reviews",
       "ambulance-reviews",
       "price-guide",
+      "critical-care-price-guide",
+      "stroke-cardiac-price-guide",
+      "home-care-price-guide",
+      "oxygen-price-guide",
       "selection-guide",
       "emergency-directory",
       "faq-section",
@@ -149,7 +131,12 @@ export function BlogTableOfContents({
     hasDiabetesPricing ||
     hasPsychiatryPricing ||
     hasSadarHospitalPricing ||
-    hasDiabeticHospitalPricing;
+    hasDiabeticHospitalPricing ||
+    hasCriticalCarePricing ||
+    hasStrokeCardiacPricing ||
+    hasHomeCarePricing ||
+    hasOxygenPricing ||
+    hasDengueTyphoidPricing;
 
   const isUpazilaArticle = Boolean(hasUpazilaPricing || currentSlug?.includes("healthcare-guide"));
   const isDoctorArticle = !isUpazilaArticle && doctorGroups && doctorGroups.length > 0;
@@ -191,7 +178,13 @@ export function BlogTableOfContents({
     hasPharmacyPricing,
     hasBloodPricing,
     hasAmbulancePricing,
+    hasCriticalCarePricing,
+    hasStrokeCardiacPricing,
+    hasHomeCarePricing,
+    hasOxygenPricing,
+    hasDengueTyphoidPricing,
   });
+
 
   return (
     <nav
@@ -368,17 +361,13 @@ export function BlogTableOfContents({
           </ol>
         ) : isDiagnosticArticle ? (
           <StandardEntityToc
-            overviewTitle={isEn ? "Diagnostic Healthcare in Feni" : "ফেনীর ডায়াগনস্টিক ও ল্যাব পরিকাঠামো"}
-            matrixTitle={isEn ? "Equipment Comparison Matrix" : "একনজরে সেরা ১০ ডায়াগনস্টিকের তুলনা"}
-            reviewsTitle={isEn ? "Detailed Diagnostic Center Reviews" : "সেরা ১০ ডায়াগনস্টিক সেন্টারের পর্যালোচনা"}
+            {...getDiagnosticTocTitles(currentSlug, isEn)}
             reviewsId="diagnostic-reviews"
             subItems={diagnosticCenters.map((d) => ({
               id: `diagnostic-${d.rank}`,
               name: isEn ? `#${d.rank} ${d.nameEn}` : `${toBanglaNums(d.rank)}. ${d.nameBn}`,
             }))}
             priceGuideId="price-guide"
-            priceGuideTitle={isEn ? "Test Pricing & Member Savings" : "টেস্টের মূল্যতালিকা ও মেম্বার ছাড়"}
-            selectionGuideTitle={isEn ? "Guidelines for Choosing Quality Diagnostics" : "নির্ভরযোগ্য ডায়াগনস্টিক নির্বাচনের উপায়"}
             emergencyTitle={isEn ? "Emergency Contacts & Ambulance" : "জরুরি যোগাযোগ ও অ্যাম্বুলেন্স হটলাইন"}
             secNum={secNum}
             isEn={isEn}
@@ -474,16 +463,12 @@ export function BlogTableOfContents({
           />
         ) : (
           <StandardEntityToc
-            overviewTitle={isEn ? "Healthcare Overview of Feni" : "ফেনী জেলার স্বাস্থ্যসেবা ও পটভূমি"}
-            matrixTitle={isEn ? "Quick Comparison Matrix" : "একনজরে সেরা ১০ হাসপাতালের তুলনা"}
-            reviewsTitle={isEn ? "Detailed Hospital Reviews" : "সেরা ১০ হাসপাতালের বিস্তারিত পর্যালোচনা"}
+            {...getHospitalTocTitles(currentSlug, isEn)}
             reviewsId="hospital-reviews"
             subItems={hospitals.map((h) => ({
               id: `hospital-${h.rank}`,
               name: isEn ? `#${h.rank} ${h.nameEn}` : `${toBanglaNums(h.rank)}. ${h.nameBn}`,
             }))}
-            selectionGuideTitle={isEn ? "How to Choose the Right Hospital" : "সঠিক হাসপাতাল নির্বাচনের উপায়"}
-            emergencyTitle={isEn ? "Emergency Contacts & Ambulance" : "জরুরি যোগাযোগ ও অ্যাম্বুলেন্স হটলাইন"}
             secNum={secNum}
             isEn={isEn}
             activeId={activeId}

@@ -10,6 +10,8 @@ interface SurgeryPriceTableProps {
   pricingData: {
     titleBn: string;
     subtitleBn: string;
+    titleEn?: string;
+    subtitleEn?: string;
     packages: SurgicalCarePackageItem[];
   };
   locale?: string;
@@ -34,12 +36,13 @@ export function SurgeryPriceTable({
       id="surgery-price-guide"
       title={
         isEn
-          ? "General, Laparoscopic & Laser Surgery Cost Guide"
+          ? pricingData.titleEn || "General, Laparoscopic & Laser Surgery Cost Guide"
           : pricingData.titleBn
       }
       subtitle={
         isEn
-          ? "Standard market fees for laparoscopic gallbladder surgery, laser piles procedures, appendix, hernia, and hospital OT charges in Feni with 10-30% Health Club member savings."
+          ? pricingData.subtitleEn ||
+            "Standard market fees for laparoscopic gallbladder surgery, laser piles procedures, appendix, hernia, and hospital OT charges in Feni with 10-30% Health Club member savings."
           : pricingData.subtitleBn
       }
       items={items}

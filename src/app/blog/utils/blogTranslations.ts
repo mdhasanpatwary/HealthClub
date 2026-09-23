@@ -52,6 +52,22 @@ const CATEGORY_TRANSLATIONS: Record<string, string> = {
   "মাইক্রোবায়োলজি": "Microbiology",
   "সেরোলজি": "Serology",
   "ডেন্টাল সার্জারি": "Dental Surgery",
+  "জরুরি কার্ডিয়াক ডায়াগনস্টিক": "Emergency Cardiac Diagnostics",
+  "জরুরি নিউরো ইমেজিং": "Emergency Neuro Imaging",
+  "জরুরি ল্যাব ও বায়োকেমিস্ট্রি": "Emergency Lab & Biochemistry",
+  "ক্রিটিক্যাল মনিটরিং ও বেড": "Critical Monitoring & Bed",
+  "জরুরি অ্যাম্বুলেন্স ও ট্রানজিট": "Emergency Ambulance & Transit",
+  "পোস্ট-স্ট্রোক রিহ্যাবিলিটেশন": "Post-Stroke Rehabilitation",
+  "হোম স্যাম্পল ও প্যাথলজি কালেকশন": "Home Sample & Pathology Collection",
+  "বাসায় নার্সিং ও ক্লিনিক্যাল কেয়ার": "Home Nursing & Clinical Care",
+  "প্রিভেন্টিভ ও হেলথ মনিটরিং": "Preventive & Health Monitoring",
+  "জেরিয়াট্রিক নার্সিং ও রিহ্যাব": "Geriatric Nursing & Rehabilitation",
+  "মেডিকেল অক্সিজেন রিফিল ও গ্যাস": "Medical Oxygen Refill & Gas",
+  "সিলিন্ডার ও ইকুইপমেন্ট ভাড়া": "Cylinder & Equipment Rental",
+  "সিকিউরিটি ডিপোজিট ও জামানত": "Security Deposit & Refund",
+  "অক্সিজেন এক্সেসরিজ ও রেগুলেটর": "Oxygen Accessories & Regulators",
+  "হোম কনসেনট্রেটর ও ভেন্টিলেটর": "Home Concentrators & Ventilators",
+  "জরুরি ডেলিভারি ও সাপোর্ট": "Emergency Delivery & Support",
   "এন্ডোডন্টিক্স": "Endodontics",
   "প্রোস্থোডন্টিক্স": "Prosthodontics",
   "অর্থোডন্টিক্স": "Orthodontics",
@@ -116,6 +132,9 @@ const CATEGORY_TRANSLATIONS: Record<string, string> = {
   "ল্যাপারোস্কোপিক সার্জারি": "Laparoscopic Surgery",
   "হার্নিয়া সার্জারি": "Hernia Surgery",
   "কলোরেক্টাল ও প্রোক্টোলজি": "Colorectal & Proctology",
+  "লেজার প্রোক্টোলজি সার্জারি": "Laser Proctology Surgery",
+  "ফিস্টুলা ও ফিশার সার্জারি": "Fistula & Fissure Surgery",
+  "প্রোক্টোলজি ডায়াগনস্টিক": "Proctology Diagnostics",
   "ব্রেস্ট ও অনকোলজি সার্জারি": "Breast & Oncology Surgery",
   "ইউরোলজি ও জেনারেল সার্জারি": "Urology & General Surgery",
   "ডে-কেয়ার মাইনর সার্জারি": "Day-Care Minor Surgery",
@@ -155,6 +174,11 @@ const CATEGORY_TRANSLATIONS: Record<string, string> = {
   "ফুট কেয়ার কর্নার": "Foot Care Clinic",
   "ফিজিওথেরাপি সেবা": "Physiotherapy Services",
   "জরুরি পরিবহন": "Emergency Ambulance Transfer",
+  "ডেঙ্গু অ্যান্টিজেন ও অ্যান্টিবডি টেস্ট": "Dengue Antigen & Antibody Diagnostics",
+  "সিবিসি ও প্লাটিলেট কাউন্ট": "CBC & Platelet Count Diagnostics",
+  "টাইফয়েড সেরোলজি ও কালচার": "Typhoid Serology & Culture Tests",
+  "জ্বর ও হেপাটিক-রেনাল প্যানেল": "Fever & Hepato-Renal Panel",
+  "ইনডোর ভর্তি ও ফ্লুইড ম্যানেজমেন্ট": "Inpatient Admission & Fluid Care",
 };
 
 export function translateMedicalCategory(categoryBn: string, isEn: boolean): string {
@@ -307,13 +331,21 @@ export function getArticleEmergencyDirectory(
 
 export function getArticleBookingGuide(
   rawBn: { titleBn: string; stepsBn: { step: string; title: string; desc: string }[] } | undefined,
-  isEn: boolean
+  isEn: boolean,
+  rawEn?: { titleEn: string; stepsEn: { step: string; title: string; desc: string }[] }
 ) {
   if (!rawBn) return null;
   if (!isEn) {
     return {
       title: rawBn.titleBn,
       steps: rawBn.stepsBn,
+    };
+  }
+
+  if (rawEn && rawEn.stepsEn && rawEn.stepsEn.length > 0) {
+    return {
+      title: rawEn.titleEn,
+      steps: rawEn.stepsEn,
     };
   }
 

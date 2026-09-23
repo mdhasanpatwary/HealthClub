@@ -25,6 +25,18 @@ import { FENI_BLOOD_BANK_AND_DONORS_GUIDE } from "./posts/feniBloodBankAndDonors
 import { FENI_AMBULANCE_AND_OXYGEN_SERVICE_GUIDE } from "./posts/feniAmbulanceAndOxygenServiceGuide";
 import { DAGANBHUIYAN_CHHAGALNAIYA_SONAGAZI_HEALTHCARE_GUIDE } from "./posts/daganbhuiyanChhagalnaiyaSonagaziHealthcareGuide";
 import { PARSHURAM_FULGAZI_HEALTHCARE_GUIDE } from "./posts/parshuramFulgaziHealthcareGuide";
+import { FENI_NORMAL_DELIVERY_AND_CESAREAN_COST_GUIDE } from "./posts/feniNormalDeliveryCesareanGuide";
+import { FENI_LASER_PILES_FISTULA_GUIDE } from "./posts/feniLaserPilesFistulaGuide";
+import { FENI_LAPAROSCOPIC_GALLSTONE_HERNIA_GUIDE } from "./posts/feniLaparoscopicGallstoneHerniaGuide";
+import { FENI_KIDNEY_STONE_UROLOGY_GUIDE } from "./posts/feniKidneyStoneUrologyGuide";
+import { FENI_CT_SCAN_AND_MRI_TEST_PRICE_GUIDE } from "./posts/feniCtScanMriGuide";
+import { FENI_PREGNANCY_ULTRASONOGRAPHY_GUIDE } from "./posts/feniPregnancyUsgGuide";
+import { FENI_FULL_BODY_HEALTH_CHECKUP_GUIDE } from "./posts/feniFullBodyCheckupGuide";
+import { FENI_ICU_CCU_NICU_GUIDE } from "./posts/feniIcuCcuNicuGuide";
+import { FENI_STROKE_CARDIAC_GUIDE } from "./posts/feniStrokeCardiacGuide";
+import { FENI_HOME_CARE_GUIDE } from "./posts/feniHomeCareGuide";
+import { FENI_OXYGEN_GUIDE } from "./posts/feniOxygenGuide";
+import { FENI_DENGUE_TYPHOID_GUIDE } from "./posts/feniDengueTyphoidGuide";
 
 export {
   BLOG_CATEGORIES,
@@ -33,6 +45,18 @@ export {
 } from "./blogCategories";
 
 export const BLOG_POSTS: BlogPost[] = [
+  FENI_DENGUE_TYPHOID_GUIDE,
+  FENI_OXYGEN_GUIDE,
+  FENI_HOME_CARE_GUIDE,
+  FENI_STROKE_CARDIAC_GUIDE,
+  FENI_ICU_CCU_NICU_GUIDE,
+  FENI_FULL_BODY_HEALTH_CHECKUP_GUIDE,
+  FENI_PREGNANCY_ULTRASONOGRAPHY_GUIDE,
+  FENI_CT_SCAN_AND_MRI_TEST_PRICE_GUIDE,
+  FENI_KIDNEY_STONE_UROLOGY_GUIDE,
+  FENI_LAPAROSCOPIC_GALLSTONE_HERNIA_GUIDE,
+  FENI_LASER_PILES_FISTULA_GUIDE,
+  FENI_NORMAL_DELIVERY_AND_CESAREAN_COST_GUIDE,
   PARSHURAM_FULGAZI_HEALTHCARE_GUIDE,
   DAGANBHUIYAN_CHHAGALNAIYA_SONAGAZI_HEALTHCARE_GUIDE,
   FENI_AMBULANCE_AND_OXYGEN_SERVICE_GUIDE,

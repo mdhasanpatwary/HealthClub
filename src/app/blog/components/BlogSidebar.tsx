@@ -27,6 +27,11 @@ interface BlogSidebarProps {
   hasPharmacyPricing?: boolean;
   hasBloodPricing?: boolean;
   hasAmbulancePricing?: boolean;
+  hasCriticalCarePricing?: boolean;
+  hasStrokeCardiacPricing?: boolean;
+  hasHomeCarePricing?: boolean;
+  hasOxygenPricing?: boolean;
+  hasDengueTyphoidPricing?: boolean;
   hasUpazilaPricing?: boolean;
   pharmacies?: import("@/types/pharmacyBlog").PharmacyReviewItem[];
   bloodBanks?: import("@/types/bloodBankBlog").BloodBankReviewItem[];
@@ -58,6 +63,11 @@ export function BlogSidebar({
   hasPharmacyPricing = false,
   hasBloodPricing = false,
   hasAmbulancePricing = false,
+  hasCriticalCarePricing = false,
+  hasStrokeCardiacPricing = false,
+  hasHomeCarePricing = false,
+  hasOxygenPricing = false,
+  hasDengueTyphoidPricing = false,
   hasUpazilaPricing = false,
   pharmacies,
   bloodBanks,
@@ -97,6 +107,11 @@ export function BlogSidebar({
           hasPharmacyPricing={hasPharmacyPricing}
           hasBloodPricing={hasBloodPricing}
           hasAmbulancePricing={hasAmbulancePricing}
+          hasCriticalCarePricing={hasCriticalCarePricing}
+          hasStrokeCardiacPricing={hasStrokeCardiacPricing}
+          hasHomeCarePricing={hasHomeCarePricing}
+          hasOxygenPricing={hasOxygenPricing}
+          hasDengueTyphoidPricing={hasDengueTyphoidPricing}
           hasUpazilaPricing={hasUpazilaPricing}
           currentSlug={currentSlug}
           locale={locale}

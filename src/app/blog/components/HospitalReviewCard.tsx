@@ -213,12 +213,14 @@ export function HospitalReviewCard({
             <span>{isEn ? "View Map" : "গুগল ম্যাপ"}</span>
           </a>
 
-          {/* Partner Hospital Profile Link if exists */}
-          {hospital.partnerStatus && (
+          {/* Hospital Profile / Details Link */}
+          {(hospital.partnerProfileSlug || hospital.partnerStatus) && (
             <Link
               href={
                 hospital.partnerProfileSlug
-                  ? `/partner-hospitals/${encodeURIComponent(hospital.partnerProfileSlug)}`
+                  ? hospital.partnerProfileSlug.startsWith("/")
+                    ? hospital.partnerProfileSlug
+                    : `/partner-hospitals/${encodeURIComponent(hospital.partnerProfileSlug)}`
                   : "/partner-hospitals"
               }
               aria-label={`${isEn ? "Hospital Profile" : "হাসপাতাল প্রোফাইল"} - ${name}`}

@@ -42,6 +42,8 @@ export function DiagnosticComparisonTable({
     );
   };
 
+  const hasMri = items.some((item) => item.mriAvailable !== undefined);
+
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
@@ -65,6 +67,11 @@ export function DiagnosticComparisonTable({
               <th className="py-3.5 px-3 sm:px-4 min-w-[190px]">
                 {isEn ? "Diagnostic Center" : "ডায়াগনস্টিক সেন্টার"}
               </th>
+              {hasMri && (
+                <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
+                  {isEn ? "1.5T MRI" : "১.৫টি এমআরআই"}
+                </th>
+              )}
               <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
                 {isEn ? "CT Scan" : "সিটি স্ক্যান"}
               </th>
@@ -111,6 +118,11 @@ export function DiagnosticComparisonTable({
                       <span>{name}</span>
                     </a>
                   </td>
+                  {hasMri && (
+                    <td className="py-3 px-3 sm:px-4 text-center whitespace-nowrap">
+                      {renderStatus(item.mriAvailable)}
+                    </td>
+                  )}
                   <td className="py-3 px-3 sm:px-4 text-center whitespace-nowrap">
                     {renderStatus(item.ctScanAvailable)}
                   </td>

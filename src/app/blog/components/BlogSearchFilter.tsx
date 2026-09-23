@@ -115,12 +115,12 @@ export function BlogSearchFilter({
   };
 
   return (
-    <div ref={containerRef} className="space-y-8 scroll-mt-20">
+    <div ref={containerRef} className="space-y-6 sm:space-y-8 scroll-mt-20">
       {/* Search & Category Filter Bar */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between p-4 rounded-2xl bg-card border border-border/70 shadow-xs">
-        {/* Search Input */}
-        <div className="relative flex-1">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      <div className="p-4 sm:p-5 rounded-2xl bg-card border border-border/70 shadow-xs space-y-3.5">
+        {/* Full-Width Search Input */}
+        <div className="relative w-full">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
           <Input
             type="search"
             value={searchQuery}
@@ -130,14 +130,14 @@ export function BlogSearchFilter({
                 ? "Search blog guides, hospitals, tips..."
                 : "হাসপাতাল, বিশেষজ্ঞ ডাক্তার বা স্বাস্থ্য গাইড খুঁজুন..."
             }
-            className="pl-10 pr-10 h-11 bg-background rounded-xl border-border/80 focus-visible:ring-primary text-sm"
+            className="w-full pl-10 pr-10 h-11 bg-background rounded-xl border-border/80 focus-visible:ring-primary text-sm shadow-2xs"
           />
           {searchQuery && (
             <button
               type="button"
               onClick={handleClearSearch}
               aria-label={isEn ? "Clear search" : "সার্চ মুছুন"}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer p-0.5 rounded-full hover:bg-muted"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer p-0.5 rounded-full hover:bg-muted transition-colors"
             >
               <X className="h-4 w-4" />
             </button>
@@ -145,7 +145,7 @@ export function BlogSearchFilter({
         </div>
 
         {/* Categories Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 md:pb-0">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
           <SlidersHorizontal className="h-4 w-4 text-muted-foreground mr-1 shrink-0 hidden sm:block" />
           {filterPills.map((pill) => {
             const isSelected = selectedCategory === pill.id;
@@ -154,7 +154,7 @@ export function BlogSearchFilter({
                 key={pill.id}
                 type="button"
                 onClick={() => handleCategorySelect(pill.id)}
-                className={`px-3.5 py-2 text-xs font-semibold rounded-xl whitespace-nowrap transition-all duration-200 cursor-pointer ${
+                className={`px-3.5 py-2 text-xs font-semibold rounded-xl whitespace-nowrap transition-all duration-200 cursor-pointer shrink-0 ${
                   isSelected
                     ? "bg-primary text-primary-foreground shadow-xs shadow-primary/20 scale-102"
                     : "bg-muted/70 text-muted-foreground hover:text-foreground hover:bg-muted"

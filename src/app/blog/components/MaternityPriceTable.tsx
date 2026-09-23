@@ -52,8 +52,8 @@ export function MaternityPriceTable({
       }}
       conversionBanner={{
         text: isEn
-          ? "Health Club members get a 10-30% discount on maternity and delivery care packages at verified partner hospitals across Feni (including Z.U Model Hospital and Al-Kamy Hospital Ltd.)."
-          : "হেলথ ক্লাব মেম্বার হলে ফেনীর পার্টনার হাসপাতালগুলোতে (জেড.ইউ মডেল হাসপাতাল, আল-কেমি হাসপাতাল ইত্যাদি) প্রসূতি ও ডেলিভারি সেবায় ১০-৩০% ডিসকাউন্ট পাবেন।",
+          ? "Health Club members get a 10-30% discount on maternity and delivery care packages at verified partner hospitals across Feni (including Al-Aqsa Hospital Ltd. and Feni Care Hospital)."
+          : "হেলথ ক্লাব মেম্বার হলে ফেনীর পার্টনার হাসপাতালগুলোতে (আল-আকসা হাসপাতাল লিঃ, ফেনী কেয়ার হসপিটাল ইত্যাদি) প্রসূতি ও ডেলিভারি সেবায় ১০-৩০% ডিসকাউন্ট পাবেন।",
         buttonText: isEn ? "Join Health Club" : "সদস্যপদ নিন",
         href: "/membership",
         variant: "link",

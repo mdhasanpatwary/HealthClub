@@ -12,14 +12,69 @@ import {
   Bone,
   Ear,
   Brain,
-  Heart,
-  Truck,
+  Siren,
   MapPin,
   type LucideIcon,
 } from "lucide-react";
+import { CLUSTER_NODES_PROCEDURES } from "./clusterNodesProcedures";
+
+export type ClusterGroupId =
+  | "hospitals"
+  | "doctors"
+  | "diagnostics"
+  | "procedures"
+  | "emergency"
+  | "upazila";
+
+export interface ClusterGroupMeta {
+  id: ClusterGroupId;
+  labelBn: string;
+  labelEn: string;
+  icon: LucideIcon;
+}
+
+export const CLUSTER_GROUPS: ClusterGroupMeta[] = [
+  {
+    id: "hospitals",
+    labelBn: "হাসপাতাল ও ভর্তি",
+    labelEn: "Hospitals & Admission",
+    icon: Hospital,
+  },
+  {
+    id: "doctors",
+    labelBn: "বিশেষজ্ঞ ডাক্তার",
+    labelEn: "Specialist Doctors",
+    icon: Stethoscope,
+  },
+  {
+    id: "diagnostics",
+    labelBn: "ল্যাব ও টেস্ট ফি",
+    labelEn: "Diagnostics & Labs",
+    icon: Microscope,
+  },
+  {
+    id: "procedures",
+    labelBn: "সার্জারি ও চিকিৎসা",
+    labelEn: "Surgery & Procedures",
+    icon: Activity,
+  },
+  {
+    id: "emergency",
+    labelBn: "জরুরি ও হোম কেয়ার",
+    labelEn: "Emergency & Home Care",
+    icon: Siren,
+  },
+  {
+    id: "upazila",
+    labelBn: "উপজেলা স্বাস্থ্যসেবা",
+    labelEn: "Upazila Guides",
+    icon: MapPin,
+  },
+];
 
 export interface ClusterNode {
   slug: string;
+  clusterGroupId: ClusterGroupId;
   titleBn: string;
   titleEn: string;
   subtitleBn: string;
@@ -33,60 +88,10 @@ export interface ClusterNode {
 }
 
 export const FENI_CLUSTER_NODES: ClusterNode[] = [
-  {
-    slug: "parshuram-fulgazi-healthcare-guide",
-    titleBn: "পরশুরাম ও ফুলগাজী স্বাস্থ্যসেবা গাইড",
-    titleEn: "Parshuram & Fulgazi Healthcare Guide",
-    subtitleBn: "উত্তর ফেনীর স্বাস্থ্য কমপ্লেক্স, ক্লিনিক, ডায়াগনস্টিক ও সদর রেফারেল",
-    subtitleEn: "Northern Feni health complexes, clinics, diagnostics & Sadar referral",
-    categoryBn: "উপজেলা স্বাস্থ্যসেবা",
-    categoryEn: "Upazila Healthcare",
-    icon: MapPin,
-    accentColor: "text-cyan-600 dark:text-cyan-400",
-    borderColor: "hover:border-cyan-500/50",
-    bgLight: "bg-cyan-500/10",
-  },
-  {
-    slug: "daganbhuiyan-chagalnaiya-sonagazi-healthcare-guide",
-    titleBn: "দাগনভূঞা, ছাগলনাইয়া ও সোনাগাজী স্বাস্থ্যসেবা গাইড",
-    titleEn: "Daganbhuiyan, Chhagalnaiya & Sonagazi Healthcare Guide",
-    subtitleBn: "উপজেলা স্বাস্থ্য কমপ্লেক্স, প্রাইভেট ক্লিনিক, ডায়াগনস্টিক ও স্পেশালিস্ট ডাক্তার",
-    subtitleEn: "Upazila health complexes, private clinics, diagnostics & doctors",
-    categoryBn: "উপজেলা স্বাস্থ্যসেবা",
-    categoryEn: "Upazila Healthcare",
-    icon: MapPin,
-    accentColor: "text-teal-600 dark:text-teal-400",
-    borderColor: "hover:border-teal-500/50",
-    bgLight: "bg-teal-500/10",
-  },
-  {
-    slug: "feni-ambulance-and-oxygen-service-guide",
-    titleBn: "ফেনী ২৪/৭ অ্যাম্বুলেন্স ও অক্সিজেন",
-    titleEn: "Feni 24/7 Ambulance & Oxygen Guide",
-    subtitleBn: "আইসিইউ লাইফ সাপোর্ট, ঢাকা-চট্টগ্রাম ভাড়া ও ফ্রিজিং গাড়ি",
-    subtitleEn: "ICU life support, Feni-Dhaka/Ctg fares & freezer vans",
-    categoryBn: "জরুরি অ্যাম্বুলেন্স",
-    categoryEn: "Emergency Ambulance",
-    icon: Truck,
-    accentColor: "text-emerald-600 dark:text-emerald-400",
-    borderColor: "hover:border-emerald-500/50",
-    bgLight: "bg-emerald-500/10",
-  },
-  {
-    slug: "feni-blood-bank-and-donors-guide",
-    titleBn: "ফেনী জেলা ব্লাড ব্যাংক ও রক্তদাতা",
-    titleEn: "Feni Blood Bank & Donors Guide",
-    subtitleBn: "রেড ক্রিসেন্ট, সদর ব্লাড ইউনিট, ৫-পয়েন্ট স্ক্রিনিং ও জরুরি রক্তদাতা",
-    subtitleEn: "Red Crescent, Sadar blood unit, 5-point TTI screening & donors",
-    categoryBn: "জরুরি রক্তদান",
-    categoryEn: "Emergency Blood",
-    icon: Heart,
-    accentColor: "text-rose-600 dark:text-rose-400",
-    borderColor: "hover:border-rose-500/50",
-    bgLight: "bg-rose-500/10",
-  },
+  ...CLUSTER_NODES_PROCEDURES,
   {
     slug: "feni-sadar-hospital-guide",
+    clusterGroupId: "hospitals",
     titleBn: "ফেনী ২৫০ শয্যা সদর হাসপাতাল",
     titleEn: "Feni 250-Bed Sadar Hospital",
     subtitleBn: "বহির্বিভাগ (৳১০ টিকেট), জরুরি বিভাগ, অ্যান্টিভেনম ও ডায়ালাইসিস",
@@ -100,6 +105,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "feni-diabetic-hospital-guide",
+    clusterGroupId: "hospitals",
     titleBn: "ফেনী ডায়াবেটিক সমিতি হাসপাতাল",
     titleEn: "Feni Diabetic Hospital Guide",
     subtitleBn: "রোগী রেজিস্ট্রেশন বই, ল্যাব টেস্ট, ডায়াবেটিক চক্ষু ও ফুট কেয়ার",
@@ -113,6 +119,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "best-10-hospitals-in-feni",
+    clusterGroupId: "hospitals",
     titleBn: "ফেনীর সেরা ১০টি হাসপাতাল",
     titleEn: "Top 10 Hospitals in Feni",
     subtitleBn: "সরকারি-বেসরকারি হাসপাতাল, আইসিইউ ও জরুরি সেবা",
@@ -126,6 +133,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "best-doctors-in-feni",
+    clusterGroupId: "doctors",
     titleBn: "ফেনীর সেরা বিশেষজ্ঞ ডাক্তার",
     titleEn: "Best Specialist Doctors in Feni",
     subtitleBn: "মেডিসিন, সার্জারি, গাইনি ও শিশু বিশেষজ্ঞ ডিরেক্টরি",
@@ -139,6 +147,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "best-child-specialists-in-feni",
+    clusterGroupId: "doctors",
     titleBn: "ফেনীর সেরা শিশু ও নবজাতক বিশেষজ্ঞ",
     titleEn: "Best Child Specialists & Pediatricians",
     subtitleBn: "শিশু বিশেষজ্ঞ, এনআইসিইউ ও টিকাদান গাইড",
@@ -152,6 +161,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "best-orthopedic-doctors-in-feni",
+    clusterGroupId: "doctors",
     titleBn: "ফেনীর সেরা অর্থোপেডিক ও হাড় বিশেষজ্ঞ",
     titleEn: "Best Orthopedic & Bone Specialists",
     subtitleBn: "হাড় ভাঙা, ট্রমা সার্জারি, স্পাইন ও হাঁটু প্রতিস্থাপন গাইড",
@@ -165,6 +175,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "best-surgeons-in-feni",
+    clusterGroupId: "doctors",
     titleBn: "ফেনীর সেরা জেনারেল ও ল্যাপারোস্কোপিক সার্জন",
     titleEn: "Best General & Laparoscopic Surgeons",
     subtitleBn: "গলব্লাডার পাথর, অ্যাপেন্ডিক্স, হার্নিয়া ও পাইলস লেজার সার্জারি",
@@ -178,6 +189,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "best-neurologists-in-feni",
+    clusterGroupId: "doctors",
     titleBn: "ফেনীর সেরা নিউরোমেডিসিন ও স্ট্রোক বিশেষজ্ঞ",
     titleEn: "Best Neurologists & Stroke Specialists",
     subtitleBn: "স্ট্রোক ইমার্জেন্সি, প্যারালাইসিস, মাইগ্রেন ও এপিলেপ্সি গাইড",
@@ -191,6 +203,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "best-diabetes-doctors-in-feni",
+    clusterGroupId: "doctors",
     titleBn: "ফেনীর সেরা ডায়াবেটিস ও হরমোন বিশেষজ্ঞ",
     titleEn: "Best Diabetes & Hormone Specialists",
     subtitleBn: "এন্ডোক্রাইনোলজি, ইনসুলিন টাইট্রেশন, থাইরয়েড ও ডায়াবেটিক ফুট",
@@ -204,6 +217,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "best-psychiatrists-in-feni",
+    clusterGroupId: "doctors",
     titleBn: "ফেনীর সেরা মানসিক রোগ ও সাইকিয়াট্রি বিশেষজ্ঞ",
     titleEn: "Best Psychiatrists & Mental Health Doctors",
     subtitleBn: "বিষণ্নতা, উদ্বেগ, অনিদ্রা, শিশু অটিজম, মাদকাসক্তি ও সাইকোথেরাপি",
@@ -217,6 +231,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "best-ent-doctors-in-feni",
+    clusterGroupId: "doctors",
     titleBn: "ফেনীর সেরা নাক, কান ও গলা বিশেষজ্ঞ",
     titleEn: "Best ENT (Ear, Nose & Throat) Specialists",
     subtitleBn: "কানের পর্দা ফুটো, টনসিল অপারেশন, সাইনাস ও অডিওমেট্রি",
@@ -230,6 +245,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "best-eye-specialists-in-feni",
+    clusterGroupId: "doctors",
     titleBn: "ফেনীর সেরা চক্ষু বিশেষজ্ঞ ও চক্ষু হাসপাতাল",
     titleEn: "Best Eye Specialists & Hospitals",
     subtitleBn: "ফ্যাকো ছানি সার্জারি, গ্লুকোমা, রেটিনা ও চশমার পাওয়ার গাইড",
@@ -243,6 +259,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "best-skin-specialists-in-feni",
+    clusterGroupId: "doctors",
     titleBn: "ফেনীর সেরা চর্ম, এলার্জি ও যৌন বিশেষজ্ঞ",
     titleEn: "Best Dermatologists & Skin Specialists",
     subtitleBn: "চর্ম বিশেষজ্ঞ, দাদ/একজিমা চিকিৎসা ও স্কিন লেজার",
@@ -256,6 +273,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "best-medicine-doctors-in-feni",
+    clusterGroupId: "doctors",
     titleBn: "ফেনীর সেরা মেডিসিন ডাক্তার",
     titleEn: "Best Medicine Specialists in Feni",
     subtitleBn: "ডায়াবেটিস, প্রেশার, লিভার ও জটিল রোগ বিশেষজ্ঞ",
@@ -269,6 +287,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "best-cardiologists-in-feni",
+    clusterGroupId: "doctors",
     titleBn: "ফেনীর সেরা হৃদরোগ ও কার্ডিওলজিস্ট",
     titleEn: "Best Cardiologists in Feni",
     subtitleBn: "হার্ট বিশেষজ্ঞ, ইকো/ইটিটি টেস্ট ও সিসিইউ ট্রায়াজ",
@@ -282,6 +301,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "best-gynecologists-in-feni",
+    clusterGroupId: "doctors",
     titleBn: "ফেনীর সেরা গাইনি বিশেষজ্ঞ",
     titleEn: "Best Gynecologists & Maternity Care",
     subtitleBn: "প্রসূতি সেবা, স্বাভাবিক ডেলিভারি ও এনআইসিইউ গাইড",
@@ -295,6 +315,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "best-kidney-doctors-in-feni",
+    clusterGroupId: "doctors",
     titleBn: "ফেনীর সেরা কিডনি ডাক্তার ও ডায়ালাইসিস",
     titleEn: "Best Kidney Doctors & Dialysis in Feni",
     subtitleBn: "নেফ্রোলজিস্ট, ডায়ালাইসিস খরচ ও ইউরোলজি সার্জারি",
@@ -308,6 +329,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "best-diagnostic-centers-in-feni",
+    clusterGroupId: "diagnostics",
     titleBn: "ফেনীর সেরা ডায়াগনস্টিক সেন্টার",
     titleEn: "Best Diagnostic Centers in Feni",
     subtitleBn: "সিটি স্ক্যান, ৪ডি আল্ট্রাসাউন্ড, রক্ত পরীক্ষা ও মেম্বার ছাড়",
@@ -321,6 +343,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "feni-medical-test-price-list",
+    clusterGroupId: "diagnostics",
     titleBn: "৮০+ টেস্টের খরচ ও ডিসকাউন্ট",
     titleEn: "80+ Test Price List in Feni",
     subtitleBn: "সিবিসি, সুগার, লিপিড, থাইরয়েড, আল্ট্রাসাউন্ড, সিটি ও এমআরআই ফি",
@@ -334,6 +357,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "best-dental-clinics-in-feni",
+    clusterGroupId: "doctors",
     titleBn: "ফেনীর সেরা ডেন্টাল ক্লিনিক",
     titleEn: "Best Dental Clinics & Dentists in Feni",
     subtitleBn: "রুট ক্যানেল, দাঁতের ক্যাপ, ব্রেসেস ও ইমপ্লান্ট গাইড",
@@ -347,6 +371,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "best-physiotherapy-centers-in-feni",
+    clusterGroupId: "doctors",
     titleBn: "ফেনীর সেরা ফিজিওথেরাপি সেন্টার",
     titleEn: "Best Physiotherapy Centers in Feni",
     subtitleBn: "স্ট্রোক প্যারালাইসিস, পিএলআইডি কোমর ব্যথা ও রিহ্যাব",
@@ -360,6 +385,7 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
   },
   {
     slug: "24-hour-pharmacy-in-feni",
+    clusterGroupId: "emergency",
     titleBn: "২৪ ঘণ্টা ফার্মেসি ও জরুরি ওষুধ",
     titleEn: "24/7 Pharmacies & Medicine Delivery",
     subtitleBn: "নাইট কাউন্টার, কোল্ড চেইন ইনসুলিন ও হোম ডেলিভারি",
@@ -372,3 +398,9 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
     bgLight: "bg-amber-500/10",
   },
 ];
+
+export function getClusterGroupIdBySlug(slug: string): ClusterGroupId {
+  const normalized = decodeURIComponent(slug).toLowerCase().trim();
+  const node = FENI_CLUSTER_NODES.find((n) => n.slug.toLowerCase() === normalized);
+  return node?.clusterGroupId || "hospitals";
+}

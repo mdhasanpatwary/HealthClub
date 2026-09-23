@@ -218,16 +218,10 @@ function DoctorCard({
       <div className="space-y-3">
         {/* Badges */}
         <div className="flex flex-wrap items-center gap-1.5">
-          {doctor.partnerStatus && (
-            <Badge className="bg-emerald-600 dark:bg-emerald-700 text-white font-semibold flex items-center gap-1 shadow-xs text-[11px]">
-              <ShieldCheck className="h-3 w-3" />
-              <span>{isEn ? "Health Club Partner" : "অফিসিয়াল পার্টনার চেম্বার"}</span>
-            </Badge>
-          )}
           {doctor.featuredBadgeBn && (
             <Badge
-              variant="secondary"
-              className="text-[11px] font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20"
+              variant="outline"
+              className="text-[11px] font-semibold bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/20 hover:text-emerald-950 dark:hover:bg-emerald-500/25 dark:hover:text-emerald-100 transition-colors cursor-default"
             >
               <CheckCircle2 className="h-3 w-3 mr-1" />
               {isEn
@@ -243,7 +237,7 @@ function DoctorCard({
           )}
           <Badge
             variant="outline"
-            className="text-[11px] font-medium text-muted-foreground"
+            className="text-[11px] font-medium text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors cursor-default"
           >
             {isEn ? doctor.specialtyEn : doctor.specialtyBn}
           </Badge>
