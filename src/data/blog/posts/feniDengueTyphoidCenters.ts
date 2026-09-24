@@ -21,8 +21,7 @@ export const FENI_DENGUE_TYPHOID_PROVIDERS: HospitalReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড় (ইনডোর বেড, জরুরি ফ্লুইড মনিটরিং ও টেস্টে)",
     partnerProfileSlug: "al-aqsa-hospital-feni",
-    imageUrl:
-      "https://uqtodphwiwzikmhsyiyc.supabase.co/storage/v1/object/public/healthclub-public/partners/admin_root_1789052569527_5s8k0l.jpg",
+    imageUrl: "/images/partners/al-aqsa-hospital.webp",
     mapQuery: "Al-Aqsa Hospital Trunk Road Feni",
     descriptionBn:
       "আল-আকসা হাসপাতাল লিঃ ফেনী শহরের প্রাণকেন্দ্র ট্রাংক রোডে অবস্থিত একটি শীর্ষস্থানীয় বেসরকারি হাসপাতাল। ডেঙ্গু হেমোরেজিক ফিভার, প্লাটিলেট সংকট এবং জটিল টাইফয়েড জ্বরে আক্রান্ত রোগীদের জন্য এখানে রয়েছে ২৪ ঘণ্টা জরুরি ট্রাইয়েজ, তাৎক্ষণিক সিবিসি ও এনএস১ ল্যাব সুবিধা, জেনারেল ওয়ার্ড এবং প্রাইভেট কেবিন। গুরুতর জটিলতা বা প্লাজমা লিকেজে আইসিইউ ও এইচডিইউ লাইফ সাপোর্ট ব্যাকআপ সার্বক্ষণিক প্রস্তুত থাকে। হেলথ ক্লাব মেম্বাররা সকল ইনডোর ভর্তি, নার্সিং এবং ডায়াগনস্টিক টেস্টে ১০-৩০% নিশ্চিত ছাড় উপভোগ করেন।",
@@ -71,8 +70,7 @@ export const FENI_DENGUE_TYPHOID_PROVIDERS: HospitalReviewItem[] = [
     emergency24x7: false,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড় (ডেঙ্গু এনএস১, সিবিসি ও ব্লাড কালচারে)",
-    imageUrl:
-      "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "/images/partners/pacific-health-care.webp",
     mapQuery: "Pacific Health Care SSK Road Feni",
     descriptionBn:
       "প্যাসিফিক হেলথ কেয়ার ফেনী জিরো পয়েন্টে অবস্থিত একটি আধুনিক ডায়াগনস্টিক প্রতিষ্ঠান। এখানে রয়েছে আন্তর্জাতিক মানসম্পন্ন জাপানি ৫-পার্ট অটোমেটেড হেমাটোলজি অ্যানালাইজার, যার মাধ্যমে মাত্র ৩০ থেকে ৪৫ মিনিটে নিখুঁত প্লাটিলেট কাউন্ট ও হেমাটোক্রিট রিপোর্ট পাওয়া যায়। এছাড়া ডেঙ্গু এনএস১ এলাইজা, টাইফিডট এবং ব্যাকটেরিয়াল ব্লাড কালচার পরীক্ষায় প্রতিষ্ঠানটি অত্যন্ত বিশ্বস্ত। হেলথ ক্লাব মেম্বাররা সকল জ্বর ও রক্ত পরীক্ষায় ১০-৩০% মেম্বার ছাড় পান।",
@@ -121,8 +119,7 @@ export const FENI_DENGUE_TYPHOID_PROVIDERS: HospitalReviewItem[] = [
     emergency24x7: false,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড় (ল্যাব টেস্ট ও হোম স্যাম্পলে)",
-    imageUrl:
-      "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "/images/partners/life-care-diagnostic.webp",
     mapQuery: "Life Care Diagnostic SSK Road Feni",
     descriptionBn:
       "লাইফ কেয়ার ডায়াগনস্টিক সেন্টার ফেনী শহরের এসএসকে রোডে অবস্থিত। তীব্র জ্বরে আক্রান্ত দুর্বল রোগী যারা ল্যাবে আসতে পারেন না, তাদের জন্য রয়েছে দ্রুত হোম স্যাম্পল কালেকশন সুবিধা। ডেঙ্গু এনএস১, সিবিসি, এসজিপিটি এবং ওয়াইডাল টেস্ট অত্যন্ত সতর্কতার সাথে সম্পন্ন করা হয়। হেলথ ক্লাব মেম্বাররা সকল প্যাথলজি পরীক্ষায় ১০-৩০% মেম্বার ছাড়ের সুবিধা পান।",
@@ -169,8 +166,7 @@ export const FENI_DENGUE_TYPHOID_PROVIDERS: HospitalReviewItem[] = [
     emergency24x7: false,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড়",
-    imageUrl:
-      "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "/images/partners/imperial-neurocare.webp",
     mapQuery: "Imperial Neurocare SSK Road Feni",
     descriptionBn:
       "ইম্পেরিয়াল নিউরোকেয়ার ও ডায়াগনস্টিক সেন্টার ফেনী শহরের এসএসকে রোডে অবস্থিত। আধুনিক বায়োকেমিস্ট্রি ও ক্লিনিক্যাল প্যাথলজি ল্যাবে ডেঙ্গু এনএস১, সিবিসি ও ইলেক্ট্রোলাইটস পরীক্ষা দ্রুততম সময়ে সম্পন্ন করা হয়। মেডিসিন বিশেষজ্ঞদের নিয়মিত চেম্বার পরিচালনা করা হয়। হেলথ ক্লাব মেম্বাররা সকল ডায়াগনস্টিকে ১০-৩০% মেম্বার ছাড় উপভোগ করেন।",
@@ -213,8 +209,7 @@ export const FENI_DENGUE_TYPHOID_PROVIDERS: HospitalReviewItem[] = [
     emergency24x7: false,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড়",
-    imageUrl:
-      "https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "/images/partners/feni-max-diagnostic.webp",
     mapQuery: "Feni Max Diagnostic Trunk Road Feni",
     descriptionBn:
       "ফেনী ম্যাক্স ডায়াগনস্টিক সেন্টার ট্রাংক রোডে অবস্থিত। রুটিন রক্ত পরীক্ষা, প্লাটিলেট কাউন্ট, ওয়াইডাল ও হেপাটাইটিস স্ক্রিনিংয়ে কেন্দ্রটি নির্ভরযোগ্য। হেলথ ক্লাব মেম্বাররা সকল প্যাথলজি টেস্টে ১০-৩০% মেম্বার ছাড় পান।",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { Search, MapPin, Stethoscope, X, ChevronDown } from "lucide-react";
 import { Doctor } from "@/services/db";
 import { Input } from "@/components/ui/input";
@@ -26,6 +27,7 @@ interface DoctorDirectoryProps {
   limit?: number;
   initialDept?: string;
   initialUpazila?: string;
+  isDepartmentPage?: boolean;
 }
 
 const INITIAL_VISIBLE_COUNT = 12;
@@ -43,7 +45,9 @@ export default function DoctorDirectory({
   limit,
   initialDept = "all",
   initialUpazila = "all",
+  isDepartmentPage = false,
 }: DoctorDirectoryProps) {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDept, setSelectedDept] = useState(initialDept || "all");
   const [selectedUpazila, setSelectedUpazila] = useState(initialUpazila || "all");
@@ -71,13 +75,13 @@ export default function DoctorDirectory({
     const params = new URLSearchParams(window.location.search);
     const dept = params.get("dept");
     const upazila = params.get("upazila");
-    if (dept && dept !== "all") {
+    if (!isDepartmentPage && dept && dept !== "all") {
       queueMicrotask(() => setSelectedDept(dept));
     }
     if (upazila && upazila !== "all") {
       queueMicrotask(() => setSelectedUpazila(upazila));
     }
-  }, []);
+  }, [isDepartmentPage]);
 
   // Update browser URL query params without full page reload
   const updateUrlParams = (dept: string, upazila: string) => {
@@ -91,6 +95,14 @@ export default function DoctorDirectory({
   };
 
   const handleDeptChange = (deptId: string) => {
+    if (isDepartmentPage) {
+      if (deptId === "all") {
+        router.push("/consultants");
+      } else if (deptId !== selectedDept) {
+        router.push(`/consultants/department/${deptId}`);
+      }
+      return;
+    }
     setSelectedDept(deptId);
     setVisibleCount(INITIAL_VISIBLE_COUNT);
     updateUrlParams(deptId, selectedUpazila);
@@ -103,6 +115,10 @@ export default function DoctorDirectory({
   };
 
   const handleResetFilters = () => {
+    if (isDepartmentPage) {
+      router.push("/consultants");
+      return;
+    }
     setSelectedUpazila("all");
     setSelectedDept("all");
     setSearchQuery("");
@@ -144,8 +160,8 @@ export default function DoctorDirectory({
         !q ||
         doc.name.toLowerCase().includes(q) ||
         doc.specialty.toLowerCase().includes(q) ||
-        doc.degrees.toLowerCase().includes(q) ||
-        doc.designation.toLowerCase().includes(q) ||
+        (doc.degrees ? doc.degrees.toLowerCase().includes(q) : false) ||
+        (doc.designation ? doc.designation.toLowerCase().includes(q) : false) ||
         doc.chamberName.toLowerCase().includes(q) ||
         doc.chamberAddress.toLowerCase().includes(q);
 

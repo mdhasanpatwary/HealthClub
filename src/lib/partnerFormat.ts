@@ -30,10 +30,10 @@ export const PARTNER_FULL_SELECT_FIELDS = {
 export const PARTNER_SELECT_FIELDS = PARTNER_FULL_SELECT_FIELDS;
 
 /**
- * Lightweight directory projection (TODO-203).
+ * Lightweight directory projection (TODO-203, trimmed in TODO-220).
  * Strips heavy JSON strings (facilities, galleryImages, departmentDiscounts,
- * socialLinks, workingHours, mapLink) when querying partners for the public
- * directory cards, homepage, and related partner lists to cut network egress by 60-80%.
+ * socialLinks) and non-card fields (email, emergencyPhone, ambulancePhone, createdAt, logoText)
+ * when querying partners for the public directory cards, homepage, and related partner lists.
  */
 export const PARTNER_CARD_SELECT_FIELDS = {
   id: true,
@@ -43,18 +43,16 @@ export const PARTNER_CARD_SELECT_FIELDS = {
   address: true,
   discount: true,
   phone: true,
-  email: true,
-  logoText: true,
   imageUrl: true,
-  emergencyPhone: true,
-  ambulancePhone: true,
+  mapLink: true,
+  workingHours: true,
   upazila: true,
-  createdAt: true,
 } as const;
 
 /**
- * Admin bulk query projection.
- * Omits heavy imageUrl base64 data transfer while providing table metadata.
+ * Admin bulk query projection (TODO-220).
+ * Omits heavy imageUrl base64 data transfer AND heavy JSON columns (facilities,
+ * galleryImages, departmentDiscounts, socialLinks) while providing table metadata.
  */
 export const PARTNER_ADMIN_SELECT_FIELDS = {
   id: true,
@@ -70,10 +68,6 @@ export const PARTNER_ADMIN_SELECT_FIELDS = {
   emergencyPhone: true,
   ambulancePhone: true,
   workingHours: true,
-  departmentDiscounts: true,
-  socialLinks: true,
-  facilities: true,
-  galleryImages: true,
   upazila: true,
   createdAt: true,
 } as const;
@@ -87,7 +81,7 @@ export type PrismaPartnerRecord = {
   discount: string;
   phone: string;
   email?: string | null;
-  logoText: string;
+  logoText?: string | null;
   mapLink?: string | null;
   imageUrl?: string | null;
   emergencyPhone?: string | null;
@@ -114,7 +108,7 @@ export function formatPartner(p: PrismaPartnerRecord): Partner {
     discount: p.discount,
     phone: p.phone,
     email: p.email || undefined,
-    logoText: p.logoText,
+    logoText: p.logoText || "",
     mapLink: p.mapLink || undefined,
     imageUrl: p.imageUrl || undefined,
     emergencyPhone: p.emergencyPhone || undefined,

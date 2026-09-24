@@ -1,12 +1,16 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/generated/client/client";
 import { Doctor, Partner } from "@/services/db";
 import { logger } from "@/lib/logger";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import { distributeDoctorsFairly } from "@/lib/doctorDistribution";
-import { formatDoctor, DOCTOR_SELECT_FIELDS } from "@/lib/doctorFormat";
+import {
+  formatDoctor,
+  DOCTOR_CARD_SELECT_FIELDS,
+} from "@/lib/doctorFormat";
 
 const DOCTORS_TAG = "doctors";
 
@@ -24,7 +28,7 @@ export const getDoctorsAction = unstable_cache(
       const data = await prisma.doctor.findMany({
         where: { isActive: true },
         orderBy: { createdAt: "desc" },
-        select: DOCTOR_SELECT_FIELDS,
+        select: DOCTOR_CARD_SELECT_FIELDS,
       });
 
       const formatted = data.map(formatDoctor);
@@ -35,6 +39,64 @@ export const getDoctorsAction = unstable_cache(
     }
   },
   ["doctors-list"],
+  { revalidate: 86400, tags: [DOCTORS_TAG] }
+);
+
+/**
+ * Server action to fetch active doctors by department.
+ * Eliminates over-fetching all doctors across the database when requesting a single department.
+ * Cached with ISR tags and revalidated on changes.
+ */
+export const getDoctorsByDepartmentAction = unstable_cache(
+  async (department: string): Promise<Doctor[]> => {
+    try {
+      if (!prisma?.doctor) {
+        return [];
+      }
+
+      const normalizedDept = (department || "").trim().toLowerCase();
+      if (!normalizedDept || normalizedDept === "all") {
+        return getDoctorsAction();
+      }
+
+      let whereClause: Prisma.DoctorWhereInput;
+
+      if (normalizedDept === "diabetes") {
+        whereClause = {
+          isActive: true,
+          OR: [
+            { department: "diabetes" },
+            { specialty: { contains: "diabetes", mode: "insensitive" } },
+            { specialty: { contains: "ডায়াবেটিস" } },
+            { specialty: { contains: "ডায়াবেটিস" } },
+            { specialty: { contains: "হরমোন" } },
+            { specialty: { contains: "hormone", mode: "insensitive" } },
+            { specialty: { contains: "থাইরয়েড" } },
+            { specialty: { contains: "থাইরয়েড" } },
+            { specialty: { contains: "endocrin", mode: "insensitive" } },
+          ],
+        };
+      } else {
+        whereClause = {
+          department: normalizedDept,
+          isActive: true,
+        };
+      }
+
+      const data = await prisma.doctor.findMany({
+        where: whereClause,
+        orderBy: { createdAt: "desc" },
+        select: DOCTOR_CARD_SELECT_FIELDS,
+      });
+
+      const formatted = data.map(formatDoctor);
+      return distributeDoctorsFairly(formatted);
+    } catch (error) {
+      logger.error(`Error in getDoctorsByDepartmentAction(${department}):`, error);
+      return [];
+    }
+  },
+  ["doctors-by-department"],
   { revalidate: 86400, tags: [DOCTORS_TAG] }
 );
 
@@ -83,7 +145,26 @@ export const getDoctorByIdAction = cache(
             { id: decoded },
           ],
         },
-        include: { partner: true },
+        include: {
+          partner: {
+            select: {
+              id: true,
+              slug: true,
+              name: true,
+              category: true,
+              address: true,
+              discount: true,
+              phone: true,
+              logoText: true,
+              mapLink: true,
+              imageUrl: true,
+              emergencyPhone: true,
+              workingHours: true,
+              departmentDiscounts: true,
+              upazila: true,
+            },
+          },
+        },
       });
 
       if (!d) {
@@ -139,7 +220,7 @@ export async function getRelatedDoctorsAction(
       },
       take: limit,
       orderBy: { createdAt: "asc" },
-      select: DOCTOR_SELECT_FIELDS,
+      select: DOCTOR_CARD_SELECT_FIELDS,
     });
 
     return data.map(formatDoctor);

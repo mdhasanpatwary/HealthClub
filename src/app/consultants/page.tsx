@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { Locale } from "@/lib/i18n";
 import { tServer } from "@/lib/i18n.server";
 import JsonLd from "@/components/seo/JsonLd";
@@ -28,7 +29,7 @@ export async function generateMetadata({ searchParams }: ConsultantsPageProps) {
       description: deptSeo.metaDescriptionBn,
       keywords: deptSeo.keywords,
       alternates: {
-        canonical: `${SITE_URL}/consultants?dept=${deptSeo.slug}`,
+        canonical: `${SITE_URL}/consultants/department/${deptSeo.slug}`,
       },
       openGraph: {
         title: deptSeo.metaTitleBn,
@@ -107,6 +108,16 @@ export default async function ConsultantsPage({ searchParams }: ConsultantsPageP
   const resolvedSearchParams = searchParams ? await searchParams : {};
   const initialDept = resolvedSearchParams.dept || "all";
   const initialUpazila = resolvedSearchParams.upazila || "all";
+
+  // Redirect department-specific queries to dedicated SEO landing pages to avoid over-fetching
+  if (initialDept !== "all") {
+    const deptSeo = getDepartmentSeoConfig(initialDept);
+    if (deptSeo) {
+      const upazilaParam = initialUpazila !== "all" ? `?upazila=${encodeURIComponent(initialUpazila)}` : "";
+      redirect(`/consultants/department/${deptSeo.slug}${upazilaParam}`);
+    }
+  }
+
   const locale = "bn" as Locale;
   const isEn = false;
   const t = (key: string) => tServer(locale, key);

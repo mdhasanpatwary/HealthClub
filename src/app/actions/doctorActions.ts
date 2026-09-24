@@ -12,11 +12,12 @@ import { ensureStorageUrl } from "@/services/storageService";
 import { generateDoctorSlug, sanitizeDoctorSlug, resolveUniqueDoctorSlug } from "@/lib/slugify";
 import {
   formatDoctor,
-  DOCTOR_SELECT_FIELDS,
+  DOCTOR_FULL_SELECT_FIELDS,
   DOCTOR_ADMIN_SELECT_FIELDS,
 } from "@/lib/doctorFormat";
 import {
   getDoctorsAction,
+  getDoctorsByDepartmentAction,
   getDoctorImageAction,
   getDoctorByIdAction,
   getRelatedDoctorsAction,
@@ -24,6 +25,7 @@ import {
 
 export {
   getDoctorsAction,
+  getDoctorsByDepartmentAction,
   getDoctorImageAction,
   getDoctorByIdAction,
   getRelatedDoctorsAction,
@@ -179,7 +181,7 @@ export async function addDoctorAction(
         onLeaveUntil: doctor.onLeaveUntil ? new Date(doctor.onLeaveUntil) : null,
         notice: doctor.notice ? doctor.notice.trim() || null : null,
       },
-      select: DOCTOR_SELECT_FIELDS,
+      select: DOCTOR_FULL_SELECT_FIELDS,
     });
 
     updateTag(DOCTORS_TAG);

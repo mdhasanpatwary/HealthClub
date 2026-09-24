@@ -11,6 +11,7 @@ import {
   PARTNER_CARD_SELECT_FIELDS,
   formatPartner,
 } from "@/lib/partnerFormat";
+import { DOCTOR_CARD_SELECT_FIELDS, formatDoctor } from "@/lib/doctorFormat";
 
 const PARTNERS_TAG = "partners";
 const DOCTORS_TAG = "doctors";
@@ -85,46 +86,10 @@ export const getDoctorsByPartnerIdAction = unstable_cache(
           isActive: true,
         },
         orderBy: { createdAt: "asc" },
-        select: {
-          id: true,
-          name: true,
-          specialty: true,
-          department: true,
-          degrees: true,
-          designation: true,
-          chamberName: true,
-          chamberAddress: true,
-          roomNo: true,
-          visitingDays: true,
-          visitingHours: true,
-          serialPhone: true,
-          consultationFee: true,
-          imageUrl: true,
-          partnerId: true,
-          upazila: true,
-          isActive: true,
-        },
+        select: DOCTOR_CARD_SELECT_FIELDS,
       });
 
-      return data.map((d) => ({
-        id: d.id,
-        name: d.name,
-        specialty: d.specialty,
-        department: d.department,
-        degrees: d.degrees,
-        designation: d.designation,
-        chamberName: d.chamberName,
-        chamberAddress: d.chamberAddress,
-        roomNo: d.roomNo || undefined,
-        visitingDays: d.visitingDays,
-        visitingHours: d.visitingHours,
-        serialPhone: d.serialPhone,
-        consultationFee: d.consultationFee || undefined,
-        imageUrl: d.imageUrl || undefined,
-        partnerId: d.partnerId || undefined,
-        upazila: d.upazila || "feni-sadar",
-        isActive: d.isActive,
-      }));
+      return data.map(formatDoctor);
     } catch (error) {
       logger.error("Error in getDoctorsByPartnerIdAction:", error);
       return [];

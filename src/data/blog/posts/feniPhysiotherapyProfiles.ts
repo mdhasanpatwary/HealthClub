@@ -43,7 +43,7 @@ export const FENI_PHYSIOTHERAPY_CENTERS: PhysiotherapyCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "মেম্বারদের জন্য ১০-৩০% ডিসকাউন্ট সুবিধা",
     partnerProfileSlug: "সেন্ট্রাল-ফিজিওথেরাপি-এন্ড-রিহ্যাবিলিটেশন-সেন্টার",
-    imageUrl: "https://uqtodphwiwzikmhsyiyc.supabase.co/storage/v1/object/public/healthclub-public/partners/admin_root_1789105977401_xtljsf.jpg",
+    imageUrl: "/images/partners/central-physiotherapy.webp",
     mapQuery: "Sujat Mansion SSK Road Feni",
   },
   {
@@ -88,7 +88,7 @@ export const FENI_PHYSIOTHERAPY_CENTERS: PhysiotherapyCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "মেম্বারদের জন্য ১০-৩০% ডিসকাউন্ট সুবিধা",
     partnerProfileSlug: "ইসলামিয়া-ফিজিওথেরাপি-এন্ড-রিহ্যাবিলিটেশন-সেন্টার",
-    imageUrl: "https://uqtodphwiwzikmhsyiyc.supabase.co/storage/v1/object/public/healthclub-public/partners/admin_root_1789106694299_8en9ul.jpg",
+    imageUrl: "/images/partners/islamia-physiotherapy.webp",
     mapQuery: "Jashim Mansion Al Kemy Hospital SSK Road Feni",
   },
   {

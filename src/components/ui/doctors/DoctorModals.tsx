@@ -11,6 +11,7 @@ import { Doctor } from "@/services/db";
 import { Button } from "@/components/ui/button";
 import { DoctorAvailabilityBadge, DoctorNoticeBanner } from "./DoctorAvailabilityBadge";
 import { trackEvent } from "@/lib/analytics";
+import { getDoctorByIdAction } from "@/app/actions/doctorQueryActions";
 
 export function DoctorAvatar({
   src,
@@ -174,7 +175,9 @@ interface DoctorDetailsModalProps {
   t: (key: string) => string;
 }
 
-export function DoctorDetailsModal({ doctor, onClose, onCallSerial, t }: DoctorDetailsModalProps) {
+export function DoctorDetailsModal({ doctor: initialDoctor, onClose, onCallSerial, t }: DoctorDetailsModalProps) {
+  const [doctor, setDoctor] = useState<Doctor>(initialDoctor);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -184,6 +187,24 @@ export function DoctorDetailsModal({ doctor, onClose, onCallSerial, t }: DoctorD
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (!initialDoctor.degrees) {
+      getDoctorByIdAction(initialDoctor.slug || initialDoctor.id)
+        .then((fullDoc) => {
+          if (isMounted && fullDoc) {
+            setDoctor(fullDoc);
+          }
+        })
+        .catch(() => {
+          // Gracefully maintain initialDoctor
+        });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [initialDoctor]);
 
   return (
     <div
@@ -215,9 +236,11 @@ export function DoctorDetailsModal({ doctor, onClose, onCallSerial, t }: DoctorD
             <p className="text-xs sm:text-sm font-semibold text-primary">
               {doctor.specialty}
             </p>
-            <p className="text-xs text-muted-foreground font-mono">
-              {doctor.degrees}
-            </p>
+            {doctor.degrees ? (
+              <p className="text-xs text-muted-foreground font-mono">
+                {doctor.degrees}
+              </p>
+            ) : null}
             <div className="pt-1">
               <DoctorAvailabilityBadge doctor={doctor} size="sm" />
             </div>

@@ -37,8 +37,7 @@ export const FENI_DIAGNOSTIC_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "হেলথ ক্লাব কার্ডে ১০-৩০% পর্যন্ত বিশেষ ছাড়",
     partnerProfileSlug: "pacific-health-care-centre",
-    imageUrl:
-      "https://uqtodphwiwzikmhsyiyc.supabase.co/storage/v1/object/public/healthclub-public/partners/p_b4113be9-bae1-4022-ba03-6e3b3c_1789052570575_5dmlme.jpg",
+    imageUrl: "/images/partners/pacific-health-care.webp",
     mapQuery: "Pacific Health Care Centre SSK Road Zero Point Feni",
   },
   {
@@ -76,8 +75,7 @@ export const FENI_DIAGNOSTIC_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "হেলথ ক্লাব কার্ডে ১০-৩০% পর্যন্ত বিশেষ ছাড়",
     partnerProfileSlug: "life-care-diagnostic-center",
-    imageUrl:
-      "https://uqtodphwiwzikmhsyiyc.supabase.co/storage/v1/object/public/healthclub-public/partners/p_55db306d-13e5-42b6-a4fa-8c0d7e_1789052569226_x098kv.jpg",
+    imageUrl: "/images/partners/life-care-diagnostic.webp",
     mapQuery: "Life Care Diagnostic Center Grand Trunk Road Feni",
   },
   {
@@ -115,8 +113,7 @@ export const FENI_DIAGNOSTIC_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "হেলথ ক্লাব কার্ডে ১০-৩০% পর্যন্ত বিশেষ ছাড়",
     partnerProfileSlug: "imperial-neurocare-diagnostic-center",
-    imageUrl:
-      "https://uqtodphwiwzikmhsyiyc.supabase.co/storage/v1/object/public/healthclub-public/partners/p_6fbae352-2681-4737-a295-5f6d79_1789052570013_bmiyw8.jpg",
+    imageUrl: "/images/partners/imperial-neurocare.webp",
     mapQuery: "Imperial Neurocare Diagnostic Trunk Road Feni",
   },
   {
@@ -154,8 +151,7 @@ export const FENI_DIAGNOSTIC_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "হেলথ ক্লাব কার্ডে ১০-৩০% পর্যন্ত বিশেষ ছাড়",
     partnerProfileSlug: "নিরাময়-ডায়াগনস্টিক-এন্ড-কনসালটেশন-সেন্টার",
-    imageUrl:
-      "https://uqtodphwiwzikmhsyiyc.supabase.co/storage/v1/object/public/healthclub-public/partners/p_b6383465-388d-4c4a-b806-eff03b_1789052569473_j78dnt.jpg",
+    imageUrl: "/images/partners/niramoy-diagnostic.webp",
     mapQuery: "Niramoy Diagnostic Center Khejur Chottor Trunk Road Feni",
   },
   {
@@ -193,8 +189,7 @@ export const FENI_DIAGNOSTIC_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "হেলথ ক্লাব কার্ডে ১০-৩০% পর্যন্ত বিশেষ ছাড়",
     partnerProfileSlug: "feni-max-diagnostic-centre",
-    imageUrl:
-      "https://uqtodphwiwzikmhsyiyc.supabase.co/storage/v1/object/public/healthclub-public/partners/p_1d77f4cf-d357-4e4e-a707-591ccd_1789052570383_i0o0w4.jpg",
+    imageUrl: "/images/partners/feni-max-diagnostic.webp",
     mapQuery: "Feni Max Diagnostic Centre Zahiria Tower Trunk Road Feni",
   },
   {

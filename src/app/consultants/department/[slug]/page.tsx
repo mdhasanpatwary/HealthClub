@@ -4,7 +4,7 @@ import { ChevronRight, Stethoscope, ShieldCheck, PhoneCall, HeartHandshake, Help
 import JsonLd from "@/components/seo/JsonLd";
 import DoctorDirectory from "@/components/ui/DoctorDirectory";
 import CommunityNetworkCTA from "@/components/common/CommunityNetworkCTA";
-import { getDoctorsAction } from "@/app/actions/doctorActions";
+import { getDoctorsByDepartmentAction } from "@/app/actions/doctorActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 import { getDepartmentSeoConfig, getAllDepartmentSlugs, DOCTOR_DEPARTMENTS_SEO } from "@/data/doctorSeoData";
 
@@ -12,6 +12,7 @@ export const revalidate = 86400; // 24-hour ISR
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ upazila?: string }>;
 }
 
 export async function generateStaticParams() {
@@ -56,28 +57,17 @@ export async function generateMetadata({ params }: PageProps) {
   };
 }
 
-export default async function DepartmentLandingPage({ params }: PageProps) {
+export default async function DepartmentLandingPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : {};
   const deptSeo = getDepartmentSeoConfig(slug);
 
   if (!deptSeo) {
     notFound();
   }
 
-  const doctors = await getDoctorsAction();
+  const deptDoctors = await getDoctorsByDepartmentAction(slug);
   const pageUrl = `${SITE_URL}/consultants/department/${deptSeo.slug}`;
-
-  // Filter department physicians for ItemList schema
-  const deptDoctors = doctors.filter((doc) => {
-    if (doc.department === slug) return true;
-    if (slug === "diabetes") {
-      const spec = (doc.specialty || "").toLowerCase();
-      return ["ডায়াবেটিস", "diabetes", "হরমোন", "hormone", "থাইরয়েড", "thyroid", "endocrin"].some((k) =>
-        spec.includes(k)
-      );
-    }
-    return false;
-  });
 
   // Breadcrumb schema
   const breadcrumbItems = [
@@ -255,7 +245,12 @@ export default async function DepartmentLandingPage({ params }: PageProps) {
 
         {/* Interactive Doctor Directory with pre-selected department */}
         <div className="sm:bg-muted/30 sm:border sm:border-border/80 sm:rounded-3xl sm:p-8">
-          <DoctorDirectory doctors={doctors} initialDept={slug} />
+          <DoctorDirectory
+            doctors={deptDoctors}
+            initialDept={slug}
+            initialUpazila={resolvedSearchParams.upazila || "all"}
+            isDepartmentPage={true}
+          />
         </div>
 
         {/* Department-Curated FAQ Section (AEO & Featured Snippets) */}

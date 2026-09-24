@@ -21,8 +21,7 @@ export const FENI_HOME_CARE_PROVIDERS: HospitalReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড় (ইনডোর সেবা, অন-কল নার্স ও ল্যাব টেস্টে)",
     partnerProfileSlug: "al-aqsa-hospital-feni",
-    imageUrl:
-      "https://uqtodphwiwzikmhsyiyc.supabase.co/storage/v1/object/public/healthclub-public/partners/admin_root_1789052569527_5s8k0l.jpg",
+    imageUrl: "/images/partners/al-aqsa-hospital.webp",
     mapQuery: "Al-Aqsa Hospital Trunk Road Feni",
     descriptionBn:
       "আল-আকসা হাসপাতাল লিঃ ফেনী শহরের কেন্দ্রস্থল ট্রাংক রোডে অবস্থিত একটি শীর্ষস্থানীয় বেসরকারি হাসপাতাল। হাসপাতালে রয়েছে অভিজ্ঞ ডিপ্লোমা ও বিএসসি নার্সদের সার্বক্ষণিক টিম, যারা পোস্ট-সার্জিক্যাল রোগী, প্যারালাইজড ব্যক্তি ও বয়স্কদের জন্য অন-কল হোম ভিজিটে মূত্রথলির ক্যাথেটার স্থাপন, আইভি ক্যানুলা ও স্যালাইন পুশ, ট্র্যাকিয়োস্টমি সাকশন এবং জীবাণুমুক্ত ক্ষত ড্রেসিং প্রদান করেন। হেলথ ক্লাব মেম্বাররা সকল সেবা ও ল্যাব টেস্টে ১০-৩০% বিশেষ মেম্বার ছাড় উপভোগ করেন।",
@@ -72,8 +71,7 @@ export const FENI_HOME_CARE_PROVIDERS: HospitalReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড় (হোম স্যাম্পল কালেকশন ও সকল ল্যাব টেস্টে)",
     partnerProfileSlug: "pacific-health-care-feni",
-    imageUrl:
-      "https://uqtodphwiwzikmhsyiyc.supabase.co/storage/v1/object/public/healthclub-public/partners/admin_root_1789052569527_5s8k0l.jpg",
+    imageUrl: "/images/partners/pacific-health-care.webp",
     mapQuery: "Pacific Health Care SSK Road Feni",
     descriptionBn:
       "প্যাসিফিক হেলথ কেয়ার সেন্টার ফেনীর জিরো পয়েন্টে অবস্থিত অন্যতম বিশ্বস্ত ডায়াগনস্টিক ও কার্ডিয়াক সেন্টার। প্রতিষ্ঠানটি ফেনী পৌরসভা এবং সংলগ্ন এলাকায় পেশাদার ল্যাব টেকনোলজিস্টদের মাধ্যমে হোম স্যাম্পল কালেকশন সুবিধা দেয়। কোল্ড-চেইন আইস-বক্সের মাধ্যমে রক্ত ও প্রস্রাবের নমুনা পরিবহন নিশ্চিত করা হয়, ফলে সুগার, লিপিড ও থাইরয়েড টেস্টের সঠিক ফলাফল মেলে। হেলথ ক্লাব মেম্বাররা কল চার্জ এবং ল্যাব বিলে ১০-৩০% মেম্বার ছাড় পান।",
@@ -123,8 +121,7 @@ export const FENI_HOME_CARE_PROVIDERS: HospitalReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড় (হোম প্যাথলজি ও বায়োকেমিস্ট্রি বিলে)",
     partnerProfileSlug: "life-care-diagnostic-feni",
-    imageUrl:
-      "https://uqtodphwiwzikmhsyiyc.supabase.co/storage/v1/object/public/healthclub-public/partners/admin_root_1789052569527_5s8k0l.jpg",
+    imageUrl: "/images/partners/life-care-diagnostic.webp",
     mapQuery: "Life Care Diagnostic GT Road Feni",
     descriptionBn:
       "লাইফ কেয়ার ডায়াগনস্টিক সেন্টার ফেনী শহরের গ্র্যান্ড ট্রাঙ্ক রোডে অবস্থিত একটি আধুনিক প্যাথলজি সেন্টার। বয়োবৃদ্ধ, হার্টের রোগী ও গর্ভবতী মায়েদের জন্য রয়েছে বিশেষ হোম কালেকশন সাপোর্ট। ফোন কলের মাধ্যমে নির্ধারিত সময়ে বাসায় গিয়ে ভেনিপাংচারের মাধ্যমে ব্যথামুক্ত উপায়ে রক্ত সংগ্রহ করা হয়। হেলথ ক্লাব মেম্বারদের জন্য সব ধরনের প্যাথলজিক্যাল পরীক্ষায় ১০-৩০% মেম্বার ছাড় নিশ্চিত করা হয়।",
@@ -174,8 +171,7 @@ export const FENI_HOME_CARE_PROVIDERS: HospitalReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড় (নিউরো ল্যাব টেস্ট ও স্যাম্পল পিকআপে)",
     partnerProfileSlug: "imperial-neurocare-feni",
-    imageUrl:
-      "https://uqtodphwiwzikmhsyiyc.supabase.co/storage/v1/object/public/healthclub-public/partners/p_b4113be9-bae1-4022-ba03-6e3b3c_1789052570575_5dmlme.jpg",
+    imageUrl: "/images/partners/imperial-neurocare.webp",
     mapQuery: "Imperial Neurocare Trunk Road Feni",
     descriptionBn:
       "ইম্পেরিয়াল নিউরোকেয়ার অ্যান্ড ডায়াগনস্টিক সেন্টার ফেনীর ট্রাংক রোডে অবস্থিত বিশেষায়িত চিকিৎসাকেন্দ্র। বিশেষ করে স্ট্রোক পরবর্তী অবশ রোগী এবং নিউরো সমস্যাগ্রস্তদের বাসায় গিয়ে প্রয়োজনীয় রক্ত পরীক্ষা যেমন ইলেক্ট্রোলাইট, ক্রিয়েটিনিন, সিবিসি ও থাইরয়েড প্রোফাইল সংগ্রহে তাদের দল নিয়োজিত। হেলথ ক্লাবের নিবন্ধিত সদস্যরা হোম পিকআপ ও নিউরো ল্যাব টেস্টে নিশ্চিত ১০-৩০% মেম্বার ছাড় পান।",
@@ -225,8 +221,7 @@ export const FENI_HOME_CARE_PROVIDERS: HospitalReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড় (প্যাথলজি টেস্ট ও হোম সার্ভিসে)",
     partnerProfileSlug: "feni-max-diagnostic",
-    imageUrl:
-      "https://uqtodphwiwzikmhsyiyc.supabase.co/storage/v1/object/public/healthclub-public/partners/p_6fbae352-2681-4737-a295-5f6d79_1789052570013_bmiyw8.jpg",
+    imageUrl: "/images/partners/feni-max-diagnostic.webp",
     mapQuery: "Feni Max Diagnostic SSK Road Feni",
     descriptionBn:
       "ফেনী ম্যাক্স ডায়াগনস্টিক সেন্টার এসএসকে রোডের একটি আধুনিক ল্যাবরেটরি। এখানে অটোমেটেড বায়োকেমিস্ট্রি অ্যানালাইজার দ্বারা শতভাগ নির্ভুল ফলাফল দেওয়া হয়। ডায়াবেটিক রোগীদের নিয়মিত ৩ মাসের সুগার (HbA1c), লিপিড প্রোফাইল এবং সিনিয়র সিটিজেনদের প্রস্রাবের কালচার স্যাম্পল বাসায় এসে সংগ্রহ করার ব্যবস্থা রয়েছে। হেলথ ক্লাব মেম্বাররা সকল প্যাথলজি পরীক্ষায় ১০-৩০% মেম্বার ছাড় উপভোগ করেন।",

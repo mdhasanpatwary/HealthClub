@@ -70,12 +70,14 @@ export function DoctorCard({
             >
               {doc.specialty}
             </p>
-            <p
-              className="text-[11px] sm:text-xs text-muted-foreground leading-tight line-clamp-2 h-[2.4em] overflow-hidden break-words"
-              title={doc.degrees}
-            >
-              {doc.degrees}
-            </p>
+            {doc.degrees ? (
+              <p
+                className="text-[11px] sm:text-xs text-muted-foreground leading-tight line-clamp-2 h-[2.4em] overflow-hidden break-words"
+                title={doc.degrees}
+              >
+                {doc.degrees}
+              </p>
+            ) : null}
           </div>
         </div>
 

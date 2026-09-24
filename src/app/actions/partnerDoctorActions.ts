@@ -9,6 +9,12 @@ import { updateTag } from "next/cache";
 import { ensureStorageUrl } from "@/services/storageService";
 import { generateDoctorSlug, resolveUniqueDoctorSlug } from "@/lib/slugify";
 
+import {
+  formatDoctor,
+  DOCTOR_CARD_SELECT_FIELDS,
+  DOCTOR_FULL_SELECT_FIELDS,
+} from "@/lib/doctorFormat";
+
 const DOCTORS_TAG = "doctors";
 const PARTNERS_TAG = "partners";
 
@@ -18,19 +24,6 @@ async function getAuthenticatedPartnerId(): Promise<string | null> {
     return null;
   }
   return session.role === "partner_staff" ? session.partnerId || null : session.userId;
-}
-
-function formatDoctor(d: Prisma.DoctorGetPayload<object>): Doctor {
-  return {
-    id: d.id, slug: (d as { slug?: string | null }).slug || undefined, name: d.name, specialty: d.specialty, department: d.department,
-    degrees: d.degrees, designation: d.designation, chamberName: d.chamberName, chamberAddress: d.chamberAddress,
-    roomNo: d.roomNo || undefined, visitingDays: d.visitingDays, visitingHours: d.visitingHours,
-    serialPhone: d.serialPhone, consultationFee: d.consultationFee || undefined, imageUrl: d.imageUrl || undefined,
-    partnerId: d.partnerId || undefined, upazila: d.upazila || "feni-sadar", isActive: d.isActive,
-    availableToday: d.availableToday ?? true,
-    onLeaveUntil: d.onLeaveUntil ? (typeof d.onLeaveUntil === "string" ? d.onLeaveUntil : d.onLeaveUntil.toISOString().slice(0, 10)) : undefined,
-    notice: d.notice || undefined,
-  };
 }
 
 import {
@@ -63,6 +56,7 @@ export async function getPartnerDoctorsAction(): Promise<{
     const data = await prisma.doctor.findMany({
       where: { partnerId },
       orderBy: { createdAt: "desc" },
+      select: DOCTOR_FULL_SELECT_FIELDS,
     });
 
     return { success: true, doctors: data.map(formatDoctor) };
@@ -126,6 +120,7 @@ export async function getAvailableDoctorsToLinkAction(
         orderBy: { name: "asc" },
         skip,
         take: safeLimit,
+        select: DOCTOR_CARD_SELECT_FIELDS,
       }),
     ]);
 

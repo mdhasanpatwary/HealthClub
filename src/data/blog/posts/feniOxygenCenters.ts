@@ -21,8 +21,7 @@ export const FENI_OXYGEN_PROVIDERS: HospitalReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড় (ইনডোর বেড, জরুরি অক্সিজেন ও ডায়াগনস্টিকে)",
     partnerProfileSlug: "al-aqsa-hospital-feni",
-    imageUrl:
-      "https://uqtodphwiwzikmhsyiyc.supabase.co/storage/v1/object/public/healthclub-public/partners/admin_root_1789052569527_5s8k0l.jpg",
+    imageUrl: "/images/partners/al-aqsa-hospital.webp",
     mapQuery: "Al-Aqsa Hospital Trunk Road Feni",
     descriptionBn:
       "আল-আকসা হাসপাতাল লিঃ ফেনী শহরের প্রাণকেন্দ্র ট্রাংক রোডে অবস্থিত একটি শীর্ষস্থানীয় মাল্টিডিসিপ্লিনারি হাসপাতাল। তীব্র শ্বাসকষ্ট, সিওপিডি (COPD) একিউট এক্সাসারবেশন ও হৃদরোগীদের জন্য হাসপাতালে রয়েছে নিবিড় আইসিইউ ও এইচডিইউ সুবিধাসহ সেন্ট্রাল মেডিকেল অক্সিজেন ব্যবস্থা। এছাড়া জরুরি ভিত্তিতে হোম কেয়ারে থাকা রোগীদের জন্য সিলিন্ডার রিফিল সহায়তা ও ২৪ ঘণ্টা জরুরি অক্সিজেন ব্যাকআপ প্রদান করা হয়। হেলথ ক্লাব মেম্বাররা সকল সেবা, ভর্তি ও ডায়াগনস্টিক টেস্টে ১০-৩০% বিশেষ মেম্বার ছাড় উপভোগ করেন।",
@@ -72,8 +71,7 @@ export const FENI_OXYGEN_PROVIDERS: HospitalReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড় (হোম ইকুইপমেন্ট রেন্টাল ও ল্যাব টেস্টে)",
     partnerProfileSlug: "pacific-health-care-feni",
-    imageUrl:
-      "https://uqtodphwiwzikmhsyiyc.supabase.co/storage/v1/object/public/healthclub-public/partners/admin_root_1789052569527_5s8k0l.jpg",
+    imageUrl: "/images/partners/pacific-health-care.webp",
     mapQuery: "Pacific Health Care SSK Road Feni",
     descriptionBn:
       "প্যাসিফিক হেলথ কেয়ার সেন্টার ফেনী শহরের জিরো পয়েন্টে অবস্থিত অন্যতম বিশ্বস্ত ডায়াগনস্টিক প্রতিষ্ঠান। শ্বাসকষ্ট ও দীর্ঘমেয়াদী ফুসফুসের সমস্যায় ভোগা রোগীদের জন্য প্রতিষ্ঠানটির হোম কেয়ার উইং থেকে ৫-১০ লিটার মেডিকেল গ্রেড অক্সিজেন কনসেনট্রেটর, পোর্টেবল সিলিন্ডার কিট ও ডিজিটাল পালস অক্সিমিটার সরবরাহ করা হয়। এছাড়া বাসায় গিয়ে আর্টেরিয়াল ব্লাড গ্যাস (ABG) ও রক্তের ইলেক্ট্রোলাইট টেস্টের নমুনা সংগ্রহ করা হয়। হেলথ ক্লাব মেম্বাররা সকল ল্যাব পরীক্ষা ও ইকুইপমেন্টে ১০-৩০% মেম্বার ছাড় উপভোগ করেন।",

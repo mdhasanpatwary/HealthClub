@@ -1,7 +1,11 @@
 import { Doctor } from "@/services/db";
 import { detectUpazilaFromText } from "@/data/feniLocations";
 
-export const DOCTOR_SELECT_FIELDS = {
+/**
+ * Full selection projection for single doctor profile view (/consultants/[slug]),
+ * mutations, and full detail views.
+ */
+export const DOCTOR_FULL_SELECT_FIELDS = {
   id: true,
   slug: true,
   name: true,
@@ -26,8 +30,41 @@ export const DOCTOR_SELECT_FIELDS = {
   createdAt: true,
 } as const;
 
+/**
+ * Lightweight directory projection (TODO-220).
+ * Strips heavy uncompressed text columns (degrees, notice, onLeaveUntil, createdAt)
+ * when querying doctors for public directory cards, department lists, related
+ * doctors, and partner hospital rosters to cut network wire payload by 50-70%.
+ */
+export const DOCTOR_CARD_SELECT_FIELDS = {
+  id: true,
+  slug: true,
+  name: true,
+  specialty: true,
+  department: true,
+  designation: true,
+  chamberName: true,
+  chamberAddress: true,
+  roomNo: true,
+  visitingDays: true,
+  visitingHours: true,
+  serialPhone: true,
+  consultationFee: true,
+  imageUrl: true,
+  partnerId: true,
+  upazila: true,
+  isActive: true,
+  availableToday: true,
+} as const;
+
+/**
+ * Default projection for directory listing queries.
+ * Aliased to DOCTOR_CARD_SELECT_FIELDS for wire protocol trimming across all list queries.
+ */
+export const DOCTOR_SELECT_FIELDS = DOCTOR_CARD_SELECT_FIELDS;
+
 export const DOCTOR_ADMIN_SELECT_FIELDS = {
-  ...DOCTOR_SELECT_FIELDS,
+  ...DOCTOR_FULL_SELECT_FIELDS,
   // Note: imageUrl omitted from admin bulk queries to prevent heavy base64 data transfer
   imageUrl: false,
 } as const;
@@ -38,7 +75,7 @@ export type PrismaDoctorRecord = {
   name: string;
   specialty: string;
   department: string;
-  degrees: string;
+  degrees?: string | null;
   designation: string;
   chamberName: string;
   chamberAddress: string;
@@ -65,7 +102,7 @@ export function formatDoctor(d: PrismaDoctorRecord): Doctor {
     name: d.name,
     specialty: d.specialty,
     department: d.department,
-    degrees: d.degrees,
+    degrees: d.degrees || "",
     designation: d.designation,
     chamberName: d.chamberName,
     chamberAddress: d.chamberAddress,

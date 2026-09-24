@@ -208,6 +208,7 @@ export async function addPartnerAction(partner: Omit<Partner, "id">): Promise<Pa
         departmentDiscounts: partner.departmentDiscounts || null,
         upazila: partner.upazila || "feni-sadar",
       },
+      select: PARTNER_SELECT_FIELDS,
     });
 
     revalidatePartnerCaches(p.slug || p.id);
