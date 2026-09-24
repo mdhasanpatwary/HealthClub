@@ -5,6 +5,7 @@ import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { Transaction } from "@/services/db";
 import { PartnerAnalyticsData, MonthlyTrendPoint, DayDistribution, MonthlySettlementStatement } from "@/types/partnerAnalytics";
+import { TRANSACTION_SELECT_FIELDS, mapPrismaTransaction } from "@/lib/transactionFormat";
 
 const BN_MONTHS = [
   "জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন",
@@ -43,18 +44,10 @@ export async function getPartnerAnalyticsAction(): Promise<{
     const rawTransactions = await prisma.transaction.findMany({
       where: { partnerId },
       orderBy: { date: "desc" },
+      select: TRANSACTION_SELECT_FIELDS,
     });
 
-    const transactions = rawTransactions.map((t) => ({
-      id: t.id,
-      memberId: t.memberId,
-      memberName: t.memberName,
-      partnerId: t.partnerId,
-      partnerName: t.partnerName,
-      amount: t.amount,
-      saved: t.saved,
-      date: t.date.toISOString(),
-    }));
+    const transactions = rawTransactions.map(mapPrismaTransaction);
 
     const totalPatientsServed = transactions.length;
     const uniqueMembersSet = new Set(transactions.map((t) => t.memberId));
@@ -305,22 +298,11 @@ export async function getPartnerMonthlyTransactionsAction(
         orderBy: { date: "desc" },
         skip: (page - 1) * pageSize,
         take: pageSize,
+        select: TRANSACTION_SELECT_FIELDS,
       }),
     ]);
 
-    const transactions = rawTxs.map((t) => ({
-      id: t.id,
-      memberId: t.memberId,
-      memberName: t.memberName,
-      partnerId: t.partnerId,
-      partnerName: t.partnerName,
-      staffId: t.staffId || undefined,
-      staffName: t.staffName || undefined,
-      deskName: t.deskName || undefined,
-      amount: t.amount,
-      saved: t.saved,
-      date: t.date.toISOString(),
-    }));
+    const transactions = rawTxs.map(mapPrismaTransaction);
 
     const totalPages = Math.ceil(totalItems / pageSize) || 1;
 

@@ -39,6 +39,11 @@ export async function requestPasswordResetAction(email: string): Promise<{ succe
           mode: "insensitive",
         },
       },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
     });
     if (!member) {
       return { success: true, message: "যদি এই ইমেইলটি আমাদের সিস্টেমে নিবন্ধিত থাকে, তবে পাসওয়ার্ড রিসেট ওটিপি কোড পাঠানো হয়েছে।" };
@@ -95,6 +100,11 @@ export async function resetPasswordAction(
           equals: cleanEmail,
           mode: "insensitive",
         },
+      },
+      select: {
+        id: true,
+        verificationCode: true,
+        verificationCodeCreatedAt: true,
       },
     });
     if (!member) {

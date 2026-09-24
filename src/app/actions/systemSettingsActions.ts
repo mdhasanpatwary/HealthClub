@@ -82,6 +82,7 @@ export const getCachedNoticeSetting = unstable_cache(
         where: {
           key: { in: ["notice_enabled", "notice_text"] },
         },
+        select: { key: true, value: true },
       });
       const map: Record<string, string> = {};
       for (const s of settings) {
@@ -102,7 +103,9 @@ export const getCachedNoticeSetting = unstable_cache(
 
 export async function getAllSystemSettingsAction(): Promise<Record<string, string>> {
   try {
-    const settings = await prisma.systemSetting.findMany();
+    const settings = await prisma.systemSetting.findMany({
+      select: { key: true, value: true },
+    });
     const result: Record<string, string> = {};
     for (const item of settings) {
       result[item.key] = item.value;
@@ -170,6 +173,7 @@ export const getCachedPaymentSettings = unstable_cache(
             ],
           },
         },
+        select: { key: true, value: true },
       });
       const map: Record<string, string> = {};
       for (const s of settings) {
@@ -251,6 +255,7 @@ export const getCachedContactSettings = unstable_cache(
             ],
           },
         },
+        select: { key: true, value: true },
       });
       const map: Record<string, string> = {};
       for (const s of settings) {

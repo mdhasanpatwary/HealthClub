@@ -6,6 +6,7 @@ import { PartnerStaff, Transaction } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
 import { encryptSecret, decryptSecret } from "@/lib/crypto";
 import { logger } from "@/lib/logger";
+import { TRANSACTION_SELECT_FIELDS, mapPrismaTransaction } from "@/lib/transactionFormat";
 
 const createStaffSchema = z.object({
   name: z.string().trim().min(2, "নাম কমপক্ষে ২ অক্ষরের হতে হবে।").max(100),
@@ -91,22 +92,37 @@ export async function getPartnerStaffListAction(): Promise<PartnerStaff[]> {
   if (!partnerId) return [];
 
   try {
-    const staffMembers = await prisma.partnerStaff.findMany({
-      where: { partnerId },
-      include: {
-        _count: { select: { transactions: true } },
-        transactions: { select: { amount: true, saved: true } },
-      },
-      orderBy: [{ isActive: "desc" }, { createdAt: "desc" }],
-    });
+    const [staffMembers, aggregations] = await Promise.all([
+      prisma.partnerStaff.findMany({
+        where: { partnerId },
+        include: {
+          _count: { select: { transactions: true } },
+        },
+        orderBy: [{ isActive: "desc" }, { createdAt: "desc" }],
+      }),
+      prisma.transaction.groupBy({
+        by: ["staffId"],
+        where: { partnerId, staffId: { not: null } },
+        _sum: { amount: true, saved: true },
+      }),
+    ]);
+
+    const aggMap = new Map<string, { bill: number; saved: number }>();
+    for (const a of aggregations) {
+      if (a.staffId) {
+        aggMap.set(a.staffId, {
+          bill: a._sum?.amount ?? 0,
+          saved: a._sum?.saved ?? 0,
+        });
+      }
+    }
 
     return staffMembers.map((staff) => {
-      const totalBill = staff.transactions.reduce((sum, tx) => sum + tx.amount, 0);
-      const totalSaved = staff.transactions.reduce((sum, tx) => sum + tx.saved, 0);
+      const agg = aggMap.get(staff.id) || { bill: 0, saved: 0 };
       return toStaffModel(staff, {
         count: staff._count.transactions,
-        bill: totalBill,
-        saved: totalSaved,
+        bill: agg.bill,
+        saved: agg.saved,
       });
     });
   } catch (error) {
@@ -409,6 +425,7 @@ export async function getPartnerStaffDetailsAction(
         staffId: staff.id,
       },
       orderBy: { date: "desc" },
+      select: TRANSACTION_SELECT_FIELDS,
     });
 
     const now = new Date();
@@ -436,19 +453,7 @@ export async function getPartnerStaffDetailsAction(
         monthSaved += t.saved;
       }
 
-      return {
-        id: t.id,
-        memberId: t.memberId,
-        memberName: t.memberName,
-        partnerId: t.partnerId,
-        partnerName: t.partnerName,
-        staffId: t.staffId || undefined,
-        staffName: t.staffName || undefined,
-        deskName: t.deskName || undefined,
-        amount: t.amount,
-        saved: t.saved,
-        date: t.date.toISOString(),
-      };
+      return mapPrismaTransaction(t);
     });
 
     const totalCount = transactions.length;

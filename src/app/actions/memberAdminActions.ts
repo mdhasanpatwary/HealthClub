@@ -145,6 +145,7 @@ export async function getMembersAction(): Promise<Member[]> {
   try {
     const data = await prisma.member.findMany({
       orderBy: { createdAt: "desc" },
+      take: 200,
       select: MEMBER_SELECT_FIELDS,
     });
 

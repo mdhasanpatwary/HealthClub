@@ -12,6 +12,7 @@ import { HEALTH_TIPS_ARTICLES } from "@/data/healthTipsData";
 import { createMemberNotification } from "./memberNotificationActions";
 import { hasAdminPermission } from "@/lib/permissions";
 import { broadcastTransaction, broadcastAdminAlert } from "@/lib/realtimeEmitter";
+import { TRANSACTION_SELECT_FIELDS, mapPrismaTransaction } from "@/lib/transactionFormat";
 
 const ADMIN_STATS_TAG = "admin-stats";
 
@@ -81,19 +82,11 @@ export async function getPaginatedTransactionsAction(
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * pageSize,
         take: pageSize,
+        select: TRANSACTION_SELECT_FIELDS,
       }),
     ]);
 
-    const transactions: Transaction[] = data.map((t) => ({
-      id: t.id,
-      memberId: t.memberId,
-      memberName: t.memberName,
-      partnerId: t.partnerId,
-      partnerName: t.partnerName,
-      amount: t.amount,
-      saved: t.saved,
-      date: t.date.toISOString(),
-    }));
+    const transactions: Transaction[] = data.map(mapPrismaTransaction);
 
     return {
       data: transactions,
@@ -129,18 +122,10 @@ export async function getTransactionsAction(memberId?: string, limit?: number): 
       where: memberId ? { memberId } : undefined,
       orderBy: { createdAt: "desc" },
       take: limit ?? (memberId ? 20 : 100),
+      select: TRANSACTION_SELECT_FIELDS,
     });
 
-    return data.map((t) => ({
-      id: t.id,
-      memberId: t.memberId,
-      memberName: t.memberName,
-      partnerId: t.partnerId,
-      partnerName: t.partnerName,
-      amount: t.amount,
-      saved: t.saved,
-      date: t.date.toISOString(),
-    }));
+    return data.map(mapPrismaTransaction);
   } catch (error) {
     logger.error("Error in getTransactionsAction:", error);
     return [];

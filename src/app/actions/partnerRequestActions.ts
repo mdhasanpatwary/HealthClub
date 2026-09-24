@@ -41,6 +41,23 @@ export interface PartnerRequest {
   status: "pending" | "approved" | "rejected";
 }
 
+const PARTNER_REQUEST_SELECT_FIELDS = {
+  id: true,
+  orgName: true,
+  category: true,
+  address: true,
+  discount: true,
+  contactName: true,
+  phone: true,
+  email: true,
+  status: true,
+  createdAt: true,
+} as const;
+
+type PrismaPartnerRequestRecord = Prisma.PartnerRequestGetPayload<{
+  select: typeof PARTNER_REQUEST_SELECT_FIELDS;
+}>;
+
 export interface GetPaginatedPartnerRequestsParams {
   page?: number;
   pageSize?: number;
@@ -49,7 +66,7 @@ export interface GetPaginatedPartnerRequestsParams {
   category?: string;
 }
 
-function toPartnerRequest(d: Prisma.PartnerRequestGetPayload<object>): PartnerRequest {
+function toPartnerRequest(d: PrismaPartnerRequestRecord | Prisma.PartnerRequestGetPayload<object>): PartnerRequest {
   return {
     id: d.id,
     orgName: d.orgName,
@@ -97,6 +114,7 @@ export async function getPaginatedPartnerRequestsAction(
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * pageSize,
         take: pageSize,
+        select: PARTNER_REQUEST_SELECT_FIELDS,
       }),
     ]);
 
@@ -230,6 +248,8 @@ export async function getPartnerRequestsAction(): Promise<PartnerRequest[]> {
   try {
     const data = await prisma.partnerRequest.findMany({
       orderBy: { createdAt: "desc" },
+      take: 100,
+      select: PARTNER_REQUEST_SELECT_FIELDS,
     });
     return data.map(toPartnerRequest);
   } catch (error) {

@@ -403,7 +403,7 @@ export async function updatePartnerProfileAction(
   }
 }
 
-export async function getPartnerTransactionsAction() { return _getPartnerTransactionsAction(); }
+export async function getPartnerTransactionsAction(...args: Parameters<typeof _getPartnerTransactionsAction>) { return _getPartnerTransactionsAction(...args); }
 export async function addPartnerTransactionAction(...args: Parameters<typeof _addPartnerTransactionAction>) { return _addPartnerTransactionAction(...args); }
 export async function getPartnerAnalyticsAction() { return _getPartnerAnalyticsAction(); }
 export async function getPartnerMonthlyTransactionsAction(...args: Parameters<typeof _getPartnerMonthlyTransactionsAction>) { return _getPartnerMonthlyTransactionsAction(...args); }

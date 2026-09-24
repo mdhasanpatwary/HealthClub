@@ -23,6 +23,13 @@ export const MEMBER_SELECT_FIELDS = {
   renewalBkashTxnId: true,
 } as const;
 
+export const MEMBER_DETAIL_SELECT_FIELDS = {
+  ...MEMBER_SELECT_FIELDS,
+  profilePictureUrl: true,
+  referenceCode: true,
+  discountAmount: true,
+} as const;
+
 // Helper to format Date objects as YYYY-MM-DD in local time (not UTC).
 export function formatDate(date: Date): string {
   const y = date.getFullYear();
@@ -56,5 +63,7 @@ export function mapPrismaMember(m: PrismaMemberRecord): Member {
     renewalStatus: m.renewalStatus || undefined,
     renewalBkashSender: m.renewalBkashSender || undefined,
     renewalBkashTxnId: m.renewalBkashTxnId || undefined,
+    referenceCode: (m as { referenceCode?: string | null }).referenceCode || undefined,
+    discountAmount: (m as { discountAmount?: number | null }).discountAmount ?? 0,
   };
 }

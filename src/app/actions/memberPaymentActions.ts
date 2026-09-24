@@ -102,6 +102,7 @@ export async function submitBkashPaymentAction(
 
     const member = await prisma.member.findUnique({
       where: { id: cleanId },
+      select: { id: true, status: true },
     });
 
     if (!member) {

@@ -24,6 +24,7 @@ import {
 } from "@/lib/validations/member";
 import { ensureStorageUrl } from "@/services/storageService";
 import { evaluateReferenceCode } from "@/lib/referenceCodes";
+import { MEMBER_DETAIL_SELECT_FIELDS, mapPrismaMember } from "@/lib/memberFormat";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "healthclubfeni@gmail.com";
 
@@ -34,12 +35,6 @@ function formatDate(date: Date): string {
   return `${y}-${m}-${d}`;
 }
 
-function stripSensitive(m: Member): Member {
-  const safe = { ...m } as Partial<Member>;
-  delete safe.password;
-  delete safe.verificationCode;
-  return safe as Member;
-}
 
 // --- MEMBERS ACTIONS ---
 
@@ -268,21 +263,19 @@ export async function getMemberByIdAction(idOrPhone: string): Promise<Member | n
   if (!session) return null;
 
   try {
-    let m = await prisma.member.findUnique({
-      where: { id: idOrPhone },
+    const clean = idOrPhone.trim();
+    const isEmail = clean.includes("@");
+
+    const m = await prisma.member.findFirst({
+      where: {
+        OR: [
+          { id: clean },
+          { phone: clean },
+          ...(isEmail ? [{ email: { equals: clean, mode: "insensitive" as const } }] : []),
+        ],
+      },
+      select: MEMBER_DETAIL_SELECT_FIELDS,
     });
-
-    if (!m) {
-      m = await prisma.member.findUnique({
-        where: { phone: idOrPhone },
-      });
-    }
-
-    if (!m && idOrPhone.includes("@")) {
-      m = await prisma.member.findUnique({
-        where: { email: idOrPhone },
-      });
-    }
 
     if (!m) return null;
 
@@ -290,16 +283,7 @@ export async function getMemberByIdAction(idOrPhone: string): Promise<Member | n
       return null;
     }
 
-    return stripSensitive({
-      ...m,
-      email: m.email || undefined,
-      joinedDate: formatDate(m.joinedDate),
-      expiryDate: formatDate(m.expiryDate),
-      address: m.address || undefined,
-      birthDate: m.birthDate ? formatDate(m.birthDate) : undefined,
-      profession: m.profession || undefined,
-      profilePictureUrl: m.profilePictureUrl || undefined,
-    } as Member);
+    return mapPrismaMember(m);
   } catch (error) {
     logger.error("Error in getMemberByIdAction:", error);
     return null;

@@ -76,6 +76,17 @@ async function getBloodDonorsList(): Promise<BloodDonor[]> {
     const rows = await prisma.bloodDonor.findMany({
       where: { status: "approved" },
       orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        bloodGroup: true,
+        upazila: true,
+        phone: true,
+        lastDonated: true,
+        isAvailable: true,
+        status: true,
+        createdAt: true,
+      },
     });
     return rows.map((r) => ({
       id: r.id,

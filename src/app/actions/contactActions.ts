@@ -31,6 +31,15 @@ export interface ContactMessage {
   createdAt: string; // ISO string for safe serialization
 }
 
+const CONTACT_MESSAGE_SELECT_FIELDS = {
+  id: true,
+  name: true,
+  phone: true,
+  email: true,
+  message: true,
+  createdAt: true,
+} as const;
+
 export interface GetPaginatedContactMessagesParams {
   page?: number;
   pageSize?: number;
@@ -72,6 +81,7 @@ export async function getPaginatedContactMessagesAction(
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * pageSize,
         take: pageSize,
+        select: CONTACT_MESSAGE_SELECT_FIELDS,
       }),
     ]);
 
@@ -164,6 +174,8 @@ export async function getContactMessagesAction(): Promise<ContactMessage[]> {
   try {
     const messages = await prisma.contactMessage.findMany({
       orderBy: { createdAt: "desc" },
+      take: 100,
+      select: CONTACT_MESSAGE_SELECT_FIELDS,
     });
 
     return messages.map((m) => ({

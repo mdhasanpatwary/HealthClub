@@ -32,6 +32,16 @@ function revalidateEmergencyCaches() {
   revalidatePath("/admin/emergency");
 }
 
+const DONOR_SELECT_FIELDS = {
+  id: true, name: true, bloodGroup: true, upazila: true, phone: true,
+  lastDonated: true, isAvailable: true, status: true, createdAt: true, updatedAt: true,
+} as const;
+
+const AMBULANCE_SELECT_FIELDS = {
+  id: true, name: true, type: true, location: true, phone: true,
+  availableHours: true, status: true, createdAt: true, updatedAt: true,
+} as const;
+
 function mapDonorRow(r: {
   id: string; name: string; bloodGroup: string; upazila: string; phone: string;
   lastDonated: string; isAvailable: boolean; status: string; createdAt: Date; updatedAt: Date;
@@ -123,6 +133,7 @@ export async function getPaginatedDonorsAdminAction(
         orderBy: { createdAt: "desc" },
         skip: startIndex,
         take: pageSize,
+        select: DONOR_SELECT_FIELDS,
       }),
     ]);
 
@@ -196,6 +207,7 @@ export async function getPaginatedAmbulancesAdminAction(
         orderBy: { createdAt: "desc" },
         skip: startIndex,
         take: pageSize,
+        select: AMBULANCE_SELECT_FIELDS,
       }),
     ]);
 
@@ -235,10 +247,12 @@ export const getEmergencyDataAction = unstable_cache(
         prisma.bloodDonor.findMany({
           where: { status: "approved" },
           orderBy: { createdAt: "desc" },
+          select: DONOR_SELECT_FIELDS,
         }),
         prisma.ambulanceService.findMany({
           where: { status: "approved" },
           orderBy: { createdAt: "desc" },
+          select: AMBULANCE_SELECT_FIELDS,
         }),
         getHotlinesList(),
       ]);

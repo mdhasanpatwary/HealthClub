@@ -8,8 +8,9 @@ import { updateTag } from "next/cache";
 import { parseDiscountPercentage } from "@/lib/utils";
 import { createMemberNotification } from "./memberNotificationActions";
 import { broadcastTransaction, broadcastAdminAlert } from "@/lib/realtimeEmitter";
+import { TRANSACTION_SELECT_FIELDS, mapPrismaTransaction } from "@/lib/transactionFormat";
 
-export async function getPartnerTransactionsAction(): Promise<Transaction[]> {
+export async function getPartnerTransactionsAction(limit?: number): Promise<Transaction[]> {
   const session = await getSessionUser();
   if (!session || (session.role !== "partner" && session.role !== "partner_staff")) return [];
 
@@ -19,20 +20,10 @@ export async function getPartnerTransactionsAction(): Promise<Transaction[]> {
     const data = await prisma.transaction.findMany({
       where: { partnerId },
       orderBy: { date: "desc" },
+      take: limit ?? 100,
+      select: TRANSACTION_SELECT_FIELDS,
     });
-    return data.map((t) => ({
-      id: t.id,
-      memberId: t.memberId,
-      memberName: t.memberName,
-      partnerId: t.partnerId,
-      partnerName: t.partnerName,
-      staffId: t.staffId || undefined,
-      staffName: t.staffName || undefined,
-      deskName: t.deskName || undefined,
-      amount: t.amount,
-      saved: t.saved,
-      date: t.date.toISOString(),
-    }));
+    return data.map(mapPrismaTransaction);
   } catch (error) {
     logger.error("Error in getPartnerTransactionsAction:", error);
     return [];

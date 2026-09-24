@@ -31,6 +31,11 @@ export async function requestPartnerPasswordResetAction(
 
     const partner = await prisma.partner.findFirst({
       where: { email: { equals: cleanEmail, mode: "insensitive" } },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
     });
     if (!partner) {
       return { success: true, message: "যদি এই ইমেইলটি নিবন্ধিত থাকে, তবে ওটিপি কোড পাঠানো হয়েছে।" };
@@ -80,6 +85,11 @@ export async function resetPartnerPasswordAction(
 
     const partner = await prisma.partner.findFirst({
       where: { email: { equals: cleanEmail, mode: "insensitive" } },
+      select: {
+        id: true,
+        verificationCode: true,
+        verificationCodeCreatedAt: true,
+      },
     });
     if (!partner) return { success: false, message: "পার্টনার অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।" };
     if (!partner.verificationCode || !partner.verificationCodeCreatedAt) {
