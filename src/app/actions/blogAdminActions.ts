@@ -11,8 +11,20 @@ import { hasAdminPermission } from "@/lib/permissions";
 import { blogPostSchema } from "@/lib/validations/blog";
 
 const BLOG_POSTS_TAG = "blog-posts-data";
-const BLOG_SETTING_KEY = "blog_posts";
+
+/**
+ * DB keys — intentionally lightweight:
+ *   blog_admin_posts   : only admin-created posts (not in static BLOG_POSTS) as JSON array
+ *   blog_deleted_slugs : slugs of static posts the admin has deleted, as JSON string[]
+ *
+ * The full 106-post static corpus is NEVER written to the database; it lives
+ * exclusively as a TypeScript import, eliminating ~200 MB/day of Supabase egress.
+ */
+const ADMIN_POSTS_SETTING_KEY = "blog_admin_posts";
 const DELETED_SLUGS_SETTING_KEY = "blog_deleted_slugs";
+
+/** Set of slugs that exist in the static TypeScript corpus. */
+const STATIC_SLUG_SET = new Set(BLOG_POSTS.map((p) => p.slug.toLowerCase().trim()));
 
 async function verifyAdmin(): Promise<boolean> {
   const session = await getSessionUser();
@@ -73,6 +85,21 @@ async function unmarkSlugAsDeleted(slug: string): Promise<void> {
   }
 }
 
+/** Fetch only admin-created posts (those NOT in the static corpus). */
+async function getAdminCreatedPosts(): Promise<BlogPost[]> {
+  try {
+    const setting = await prisma.systemSetting.findUnique({
+      where: { key: ADMIN_POSTS_SETTING_KEY },
+    });
+    if (!setting?.value) return [];
+    const parsed = JSON.parse(setting.value);
+    return Array.isArray(parsed) ? (parsed as BlogPost[]) : [];
+  } catch (err) {
+    logger.error("Failed to parse blog_admin_posts:", err);
+    return [];
+  }
+}
+
 export interface GetPaginatedBlogsAdminParams {
   page?: number;
   pageSize?: number;
@@ -82,77 +109,33 @@ export interface GetPaginatedBlogsAdminParams {
 
 /**
  * Cached reader for all blog posts.
- * Combines database entries with static fallback items while excluding deleted slugs.
+ *
+ * Reads only two tiny DB rows (admin_posts + deleted_slugs), then merges
+ * with the static BLOG_POSTS array — zero full-corpus DB reads.
  */
 const getCachedBlogPosts = unstable_cache(
   async (): Promise<BlogPost[]> => {
     try {
-      const deletedSlugs = await getDeletedSlugs();
-      const setting = await prisma.systemSetting.findUnique({
-        where: { key: BLOG_SETTING_KEY },
-      });
+      const [deletedSlugs, adminPosts] = await Promise.all([
+        getDeletedSlugs(),
+        getAdminCreatedPosts(),
+      ]);
 
-      if (!setting?.value) {
-        // First run seed: write static articles to database
-        const initialArticles =
-          deletedSlugs.length > 0
-            ? BLOG_POSTS.filter((a) => !deletedSlugs.includes(a.slug))
-            : BLOG_POSTS;
+      // Static posts minus any admin-deleted slugs
+      const staticPosts =
+        deletedSlugs.length > 0
+          ? BLOG_POSTS.filter((p) => !deletedSlugs.includes(p.slug))
+          : BLOG_POSTS;
 
-        await prisma.systemSetting
-          .upsert({
-            where: { key: BLOG_SETTING_KEY },
-            create: {
-              key: BLOG_SETTING_KEY,
-              value: JSON.stringify(initialArticles),
-            },
-            update: { value: JSON.stringify(initialArticles) },
-          })
-          .catch(() => {});
-        return initialArticles;
-      }
-
-      const dbArticles = JSON.parse(setting.value);
-      if (Array.isArray(dbArticles)) {
-        const staticMap = new Map(BLOG_POSTS.map((p) => [p.slug.toLowerCase().trim(), p]));
-        const syncedDbArticles = dbArticles.map((a: BlogPost) => {
-          const staticMatch = staticMap.get(a.slug.toLowerCase().trim());
-          if (staticMatch) {
-            return staticMatch;
-          }
-          return a;
-        });
-
-        const existingSlugs = new Set(syncedDbArticles.map((a: BlogPost) => a.slug.toLowerCase().trim()));
-        const missingStatic = BLOG_POSTS.filter(
-          (p) => !existingSlugs.has(p.slug.toLowerCase().trim()) && !deletedSlugs.includes(p.slug)
-        );
-        const combined = [...missingStatic, ...syncedDbArticles];
-        
-        await prisma.systemSetting
-          .upsert({
-            where: { key: BLOG_SETTING_KEY },
-            create: {
-              key: BLOG_SETTING_KEY,
-              value: JSON.stringify(combined),
-            },
-            update: { value: JSON.stringify(combined) },
-          })
-          .catch(() => {});
-
-        if (deletedSlugs.length > 0) {
-          return combined.filter((a: BlogPost) => !deletedSlugs.includes(a.slug));
-        }
-        return combined;
-      }
-
-      return BLOG_POSTS;
+      // Admin-created posts are prepended so they appear first
+      // (their slugs are guaranteed NOT in STATIC_SLUG_SET)
+      return [...adminPosts, ...staticPosts];
     } catch (err) {
-      logger.error("Error in getAllBlogPostsAction:", err);
+      logger.error("Error in getCachedBlogPosts:", err);
       return BLOG_POSTS;
     }
   },
-  ["all-blog-posts-admin-v21"],
+  ["all-blog-posts-admin-v22"],
   { revalidate: 86400, tags: [BLOG_POSTS_TAG] }
 );
 
@@ -162,21 +145,33 @@ export async function getAllBlogPostsAction(): Promise<BlogPost[]> {
 
 /**
  * Fetch a single article by slug.
+ * Checks admin posts first (DB-free fast path for static slugs via unstable_cache).
  */
 export async function getBlogPostBySlugAction(
   slug: string
 ): Promise<BlogPost | null> {
   const raw = decodeURIComponent(slug).toLowerCase().trim();
   const normalized = raw.replace(/^[—–\s-]+|[—–\s-]+$/g, "");
-  const articles = await getAllBlogPostsAction();
-  const found = articles.find(
-    (a) =>
-      a.slug.toLowerCase().trim() === normalized ||
-      a.slug.toLowerCase().trim() === raw
-  );
-  if (found) return found;
-  return (
+
+  // Fast path: static corpus lookup (no DB)
+  const staticMatch =
     BLOG_POSTS.find(
+      (a) =>
+        a.slug.toLowerCase().trim() === normalized ||
+        a.slug.toLowerCase().trim() === raw
+    ) || null;
+
+  if (staticMatch) {
+    // Still respect admin-deleted slugs
+    const deletedSlugs = await getDeletedSlugs();
+    if (deletedSlugs.includes(staticMatch.slug)) return null;
+    return staticMatch;
+  }
+
+  // Fallback: admin-created posts
+  const articles = await getAllBlogPostsAction();
+  return (
+    articles.find(
       (a) =>
         a.slug.toLowerCase().trim() === normalized ||
         a.slug.toLowerCase().trim() === raw
@@ -231,6 +226,10 @@ export async function getPaginatedBlogPostsAdminAction(
 
 /**
  * Create or update a blog post.
+ *
+ * Static posts (those already in BLOG_POSTS) are served from the TypeScript
+ * import and are never persisted to DB. Only admin-created posts (new slugs
+ * absent from the static corpus) are stored in the `blog_admin_posts` row.
  */
 export async function saveBlogPostAction(data: unknown) {
   try {
@@ -241,46 +240,51 @@ export async function saveBlogPostAction(data: unknown) {
 
     const validationResult = blogPostSchema.safeParse(data);
     if (!validationResult.success) {
-      const firstIssue = validationResult.error.issues[0]?.message || "ইনপুট ডাটা সঠিক নয়";
+      const firstIssue = validationResult.error.issues[0]?.message || "ইনপুট ডাটা সঠিক নয়";
       return { success: false, error: firstIssue };
     }
 
     const post = validationResult.data as BlogPost;
-    const articles = await getAllBlogPostsAction();
-    const existingIndex = articles.findIndex(
-      (a) => a.slug.toLowerCase().trim() === post.slug.toLowerCase().trim()
-    );
+    const slugKey = post.slug.toLowerCase().trim();
+    const isStaticPost = STATIC_SLUG_SET.has(slugKey);
 
-    let updatedList: BlogPost[];
+    if (!isStaticPost) {
+      // Persist only non-static (admin-created) posts to DB
+      const adminPosts = await getAdminCreatedPosts();
+      const existingIndex = adminPosts.findIndex(
+        (a) => a.slug.toLowerCase().trim() === slugKey
+      );
 
-    if (existingIndex >= 0) {
-      // Preserve any specialized arrays if not re-provided
-      const existing = articles[existingIndex];
-      const merged: BlogPost = {
-        ...existing,
-        ...post,
-        modifiedDate: new Date().toISOString().split("T")[0],
-      };
-      updatedList = [...articles];
-      updatedList[existingIndex] = merged;
-    } else {
-      const now = new Date().toISOString().split("T")[0];
-      const newPost: BlogPost = {
-        ...post,
-        publishedDate: post.publishedDate || now,
-        modifiedDate: now,
-      };
-      updatedList = [newPost, ...articles];
+      let updatedAdminPosts: BlogPost[];
+
+      if (existingIndex >= 0) {
+        const existing = adminPosts[existingIndex];
+        const merged: BlogPost = {
+          ...existing,
+          ...post,
+          modifiedDate: new Date().toISOString().split("T")[0],
+        };
+        updatedAdminPosts = [...adminPosts];
+        updatedAdminPosts[existingIndex] = merged;
+      } else {
+        const now = new Date().toISOString().split("T")[0];
+        const newPost: BlogPost = {
+          ...post,
+          publishedDate: post.publishedDate || now,
+          modifiedDate: now,
+        };
+        updatedAdminPosts = [newPost, ...adminPosts];
+      }
+
+      await prisma.systemSetting.upsert({
+        where: { key: ADMIN_POSTS_SETTING_KEY },
+        create: {
+          key: ADMIN_POSTS_SETTING_KEY,
+          value: JSON.stringify(updatedAdminPosts),
+        },
+        update: { value: JSON.stringify(updatedAdminPosts) },
+      });
     }
-
-    await prisma.systemSetting.upsert({
-      where: { key: BLOG_SETTING_KEY },
-      create: {
-        key: BLOG_SETTING_KEY,
-        value: JSON.stringify(updatedList),
-      },
-      update: { value: JSON.stringify(updatedList) },
-    });
 
     // Unmark deleted slug if it was previously deleted
     await unmarkSlugAsDeleted(post.slug);
@@ -296,12 +300,15 @@ export async function saveBlogPostAction(data: unknown) {
     return { success: true };
   } catch (err: unknown) {
     logger.error("Error saving blog post:", err);
-    return { success: false, error: "ব্লগ পোস্ট সংরক্ষণ করতে সমস্যা হয়েছে।" };
+    return { success: false, error: "ব্লগ পোস্ট সংরক্ষণ করতে সমস্যা হয়েছে।" };
   }
 }
 
 /**
  * Delete a blog post by slug.
+ *
+ * For static posts: adds slug to `blog_deleted_slugs` (a tiny string array).
+ * For admin-created posts: removes from `blog_admin_posts` and adds to deleted list.
  */
 export async function deleteBlogPostAction(slug: string) {
   try {
@@ -311,21 +318,25 @@ export async function deleteBlogPostAction(slug: string) {
     }
 
     const normalizedSlug = decodeURIComponent(slug).toLowerCase().trim();
-    const articles = await getAllBlogPostsAction();
-    const updatedList = articles.filter(
-      (a) => a.slug.toLowerCase().trim() !== normalizedSlug
-    );
+    const isStaticPost = STATIC_SLUG_SET.has(normalizedSlug);
 
-    await prisma.systemSetting.upsert({
-      where: { key: BLOG_SETTING_KEY },
-      create: {
-        key: BLOG_SETTING_KEY,
-        value: JSON.stringify(updatedList),
-      },
-      update: { value: JSON.stringify(updatedList) },
-    });
+    if (!isStaticPost) {
+      // Remove from admin-created posts list
+      const adminPosts = await getAdminCreatedPosts();
+      const updatedAdminPosts = adminPosts.filter(
+        (a) => a.slug.toLowerCase().trim() !== normalizedSlug
+      );
+      await prisma.systemSetting.upsert({
+        where: { key: ADMIN_POSTS_SETTING_KEY },
+        create: {
+          key: ADMIN_POSTS_SETTING_KEY,
+          value: JSON.stringify(updatedAdminPosts),
+        },
+        update: { value: JSON.stringify(updatedAdminPosts) },
+      });
+    }
 
-    // Permanently record deleted slug so static fallback doesn't revive it
+    // Always record deleted slug to prevent static fallback from reviving it
     await markSlugAsDeleted(normalizedSlug);
 
     updateTag(BLOG_POSTS_TAG);
@@ -338,6 +349,6 @@ export async function deleteBlogPostAction(slug: string) {
     return { success: true };
   } catch (err: unknown) {
     logger.error(`Error deleting blog post ${slug}:`, err);
-    return { success: false, error: "ব্লগ পোস্ট মুছে ফেলতে সমস্যা হয়েছে।" };
+    return { success: false, error: "ব্লগ পোস্ট মুছে ফেলতে সমস্যা হয়েছে।" };
   }
 }

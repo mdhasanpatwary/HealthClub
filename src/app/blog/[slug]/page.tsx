@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import { getAllBlogPostsAction, getBlogPostBySlugAction } from "@/app/actions/blogAdminActions";
+import { BLOG_POSTS } from "@/data/blog/blogPosts";
 import { BlogPostCardItem } from "@/types/blog";
 import { BlogPostDetailView } from "../components/BlogPostDetailView";
 import { generateBlogJsonLd } from "../utils/blogJsonLd";
@@ -16,9 +17,8 @@ interface BlogPostPageProps {
 
 export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
 
-export async function generateStaticParams() {
-  const posts = await getAllBlogPostsAction();
-  return posts.map((post) => ({
+export function generateStaticParams() {
+  return BLOG_POSTS.map((post) => ({
     slug: post.slug,
   }));
 }
