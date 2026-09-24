@@ -17,10 +17,14 @@ export function DoctorAvatar({
   src,
   alt,
   className = "",
+  priority = false,
+  sizes = "(max-width: 640px) 64px, 72px",
 }: {
   src?: string;
   alt: string;
   className?: string;
+  priority?: boolean;
+  sizes?: string;
 }) {
   const [hasError, setHasError] = useState(false);
 
@@ -31,8 +35,9 @@ export function DoctorAvatar({
           src={src}
           alt={alt}
           fill
-          sizes="(max-width: 640px) 64px, 72px"
-          loading="lazy"
+          sizes={sizes}
+          priority={priority}
+          loading={priority ? "eager" : "lazy"}
           unoptimized={Boolean(typeof src === "string" && src.startsWith("data:"))}
           className="object-cover object-top"
           onError={() => setHasError(true)}

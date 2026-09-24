@@ -104,6 +104,8 @@ export default function DoctorProfileView({
               <DoctorAvatar
                 src={doctor.imageUrl}
                 alt={doctor.name}
+                priority
+                sizes="(max-width: 640px) 112px, 144px"
                 className="h-28 w-28 sm:h-36 sm:w-36 rounded-3xl shadow-sm border-2 border-primary/20"
               />
               <div className="absolute -bottom-2 -right-2 bg-primary text-white p-1.5 rounded-full shadow-md border-2 border-background">
