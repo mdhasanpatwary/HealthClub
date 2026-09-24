@@ -1,7 +1,6 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { Prisma } from "@/generated/client/client";
 import { Partner } from "@/services/db";
 import { getSessionUser, setSessionUser } from "@/lib/session";
 import { hashPassword, verifyPassword } from "@/lib/crypto";
@@ -13,7 +12,24 @@ import {
   RATE_LIMIT_RULES,
 } from "@/lib/rateLimit";
 
-function toPartner(p: Prisma.PartnerGetPayload<object>): Partner {
+type PartnerAuthFields = {
+  id: string;
+  name: string;
+  category: string;
+  address: string;
+  discount: string;
+  phone: string;
+  email: string | null;
+  logoText: string;
+  mapLink: string | null;
+  imageUrl: string | null;
+  emergencyPhone: string | null;
+  workingHours: string | null;
+  departmentDiscounts: string | null;
+  password: string | null;
+};
+
+function toPartner(p: PartnerAuthFields): Partner {
   return {
     id: p.id,
     name: p.name,
@@ -63,8 +79,25 @@ export async function loginPartnerAction(
     if (!idLimit.success) return { success: false, error: idLimit.message };
 
     // 1. Try matching primary partner hospital account
+    const partnerAuthSelect = {
+      id: true,
+      name: true,
+      category: true,
+      address: true,
+      discount: true,
+      phone: true,
+      email: true,
+      logoText: true,
+      mapLink: true,
+      imageUrl: true,
+      emergencyPhone: true,
+      workingHours: true,
+      departmentDiscounts: true,
+      password: true,
+    } as const;
     const partnerData = await prisma.partner.findFirst({
       where: { OR: [{ phone: cleanIdentifier }, { email: cleanIdentifier }] },
+      select: partnerAuthSelect,
     });
 
     if (partnerData) {
@@ -78,6 +111,7 @@ export async function loginPartnerAction(
             await prisma.partner.update({
               where: { id: partnerData.id },
               data: { password: hashPassword("123456") },
+              select: { id: true },
             });
           } catch (e) {
             logger.warn("Failed to auto-persist partner default password:", e);
@@ -93,7 +127,36 @@ export async function loginPartnerAction(
     // 2. Try matching partner staff account
     const staffData = await prisma.partnerStaff.findFirst({
       where: { OR: [{ username: cleanIdentifier.toLowerCase() }, { phone: cleanIdentifier }] },
-      include: { partner: true },
+      select: {
+        id: true,
+        name: true,
+        username: true,
+        phone: true,
+        password: true,
+        role: true,
+        deskName: true,
+        isActive: true,
+        partnerId: true,
+        updatedAt: true,
+        partner: {
+          select: {
+            id: true,
+            name: true,
+            category: true,
+            address: true,
+            discount: true,
+            phone: true,
+            email: true,
+            logoText: true,
+            mapLink: true,
+            imageUrl: true,
+            emergencyPhone: true,
+            workingHours: true,
+            departmentDiscounts: true,
+            password: true,
+          },
+        },
+      },
     });
 
     if (staffData) {
@@ -153,7 +216,10 @@ export async function changePartnerPasswordAction(
   }
 
   try {
-    const partner = await prisma.partner.findUnique({ where: { id: session.userId } });
+    const partner = await prisma.partner.findUnique({
+      where: { id: session.userId },
+      select: { id: true, password: true },
+    });
     if (!partner) return { success: false, message: "পার্টনার খুঁজে পাওয়া যায়নি।" };
 
     const isValid = partner.password
@@ -170,7 +236,11 @@ export async function changePartnerPasswordAction(
     }
 
     const hashed = hashPassword(newPassword);
-    await prisma.partner.update({ where: { id: partner.id }, data: { password: hashed } });
+    await prisma.partner.update({
+      where: { id: partner.id },
+      data: { password: hashed },
+      select: { id: true },
+    });
     return { success: true, message: "পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে।" };
   } catch (error) {
     logger.error("Error in changePartnerPasswordAction:", error);

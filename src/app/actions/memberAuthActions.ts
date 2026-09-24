@@ -2,8 +2,8 @@
 
 import { randomInt } from "crypto";
 import { prisma } from "@/lib/prisma";
-import { Member, AdminRole } from "@/services/db";
-import { hashPassword, verifyPassword } from "@/lib/crypto";
+import { Member } from "@/services/db";
+import { verifyPassword } from "@/lib/crypto";
 import { setSessionUser, clearSessionUser } from "@/lib/session";
 import { sendOtpEmail } from "@/lib/mail";
 import { logger } from "@/lib/logger";
@@ -19,9 +19,29 @@ import { SITE_URL } from "@/lib/siteConfig";
 import { updateTag } from "next/cache";
 import { ensureStorageUrl } from "@/services/storageService";
 import { getCachedPaymentSettings } from "@/app/actions/systemSettingsActions";
+import { loginAdminAction as loginAdminActionImpl } from "./adminAuthActions";
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "healthclubfeni@gmail.com";
 const MAX_OTP_ATTEMPTS = 5;
+
+const MEMBER_AUTH_SELECT = {
+  id: true,
+  name: true,
+  phone: true,
+  email: true,
+  password: true,
+  tier: true,
+  status: true,
+  joinedDate: true,
+  expiryDate: true,
+  totalSaved: true,
+  address: true,
+  birthDate: true,
+  profession: true,
+  emailVerified: true,
+  verificationCode: true,
+  verificationCodeCreatedAt: true,
+  bkashTxnId: true,
+} as const;
 
 function formatDate(date: Date): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
@@ -78,11 +98,11 @@ export async function loginMemberAction(
 
     const isEmail = identifier.includes("@");
     let m = isEmail
-      ? await prisma.member.findUnique({ where: { email: identifier } })
-      : await prisma.member.findUnique({ where: { phone: identifier } });
+      ? await prisma.member.findUnique({ where: { email: identifier }, select: MEMBER_AUTH_SELECT })
+      : await prisma.member.findUnique({ where: { phone: identifier }, select: MEMBER_AUTH_SELECT });
 
     if (!m && !isEmail) {
-      m = await prisma.member.findUnique({ where: { id: identifier } });
+      m = await prisma.member.findUnique({ where: { id: identifier }, select: MEMBER_AUTH_SELECT });
     }
 
     if (!m) {
@@ -94,6 +114,7 @@ export async function loginMemberAction(
             { id: identifier.trim() },
           ],
         },
+        select: { id: true },
       });
       if (adminExists) {
         return {
@@ -135,119 +156,7 @@ export async function loginAdminAction(
   identifier: string,
   passwordInput: string
 ): Promise<{ success: boolean; member?: Member; message?: string; error?: string }> {
-  try {
-    const ip = await getClientIp();
-    const normalizedIdentifier = identifier.trim().toLowerCase();
-
-    // 1. IP-level rate limiting for admin login
-    const ipLimit = checkRateLimit(
-      `admin_login_ip:${ip}`,
-      RATE_LIMIT_RULES.ADMIN_LOGIN_PER_IP.limit,
-      RATE_LIMIT_RULES.ADMIN_LOGIN_PER_IP.windowMs
-    );
-    if (!ipLimit.success) {
-      logger.warn(`Admin login rate limit exceeded for IP: ${ip}`);
-      return { success: false, error: "RATE_LIMITED", message: ipLimit.message };
-    }
-
-    // 2. Account-level rate limiting for admin login
-    const idLimit = checkRateLimit(
-      `admin_login_id:${normalizedIdentifier}`,
-      RATE_LIMIT_RULES.ADMIN_LOGIN_PER_IDENTIFIER.limit,
-      RATE_LIMIT_RULES.ADMIN_LOGIN_PER_IDENTIFIER.windowMs
-    );
-    if (!idLimit.success) {
-      logger.warn(`Admin login rate limit exceeded for identifier: ${normalizedIdentifier}`);
-      return { success: false, error: "RATE_LIMITED", message: idLimit.message };
-    }
-
-    const isEmail = identifier.includes("@");
-
-    // 1. Search AdminUser table first
-    let adminUser = isEmail
-      ? await prisma.adminUser.findUnique({ where: { email: normalizedIdentifier } })
-      : await prisma.adminUser.findUnique({ where: { phone: identifier.trim() } });
-
-    if (!adminUser && !isEmail) {
-      adminUser = await prisma.adminUser.findUnique({ where: { id: identifier.trim() } });
-    }
-
-    // 2. Auto-seed initial root super_admin if admin_users table is empty and credentials match existing admin
-    if (!adminUser) {
-      const totalAdminUsers = await prisma.adminUser.count();
-      if (totalAdminUsers === 0 && (normalizedIdentifier === ADMIN_EMAIL.toLowerCase() || identifier.trim() === "01711112222")) {
-        const existingMember = await prisma.member.findFirst({ where: { email: ADMIN_EMAIL } });
-        const isValid = existingMember
-          ? verifyPassword(passwordInput, existingMember.password)
-          : passwordInput === "admin123" || passwordInput === "123456";
-
-        if (isValid) {
-          adminUser = await prisma.adminUser.create({
-            data: {
-              id: "admin_root",
-              name: existingMember?.name || "Super Admin",
-              email: ADMIN_EMAIL,
-              phone: existingMember?.phone || "01711112222",
-              password: existingMember ? existingMember.password : hashPassword(passwordInput),
-              role: "super_admin",
-              isActive: true,
-              lastLoginAt: new Date(),
-            },
-          });
-        }
-      }
-    }
-
-    if (!adminUser) {
-      return { success: false, error: "INVALID_CREDENTIALS", message: "অ্যাডমিন ব্যবহারকারী খুঁজে পাওয়া যায়নি অথবা লগইন তথ্য সঠিক নয়।" };
-    }
-
-    if (!adminUser.isActive) {
-      return { success: false, error: "ACCOUNT_DEACTIVATED", message: "আপনার এডমিন অ্যাকাউন্টটি নিষ্ক্রিয় করা হয়েছে। কর্তৃপক্ষের সাথে যোগাযোগ করুন।" };
-    }
-
-    if (!verifyPassword(passwordInput, adminUser.password)) {
-      return { success: false, error: "INVALID_CREDENTIALS", message: "লগইন তথ্য অথবা পাসওয়ার্ড সঠিক নয়।" };
-    }
-
-    resetRateLimit(`admin_login_id:${normalizedIdentifier}`);
-
-    await prisma.adminUser.update({
-      where: { id: adminUser.id },
-      data: { lastLoginAt: new Date() },
-    });
-
-    await setSessionUser(adminUser.id, "admin", {
-      adminRole: adminUser.role as AdminRole,
-      adminName: adminUser.name,
-      adminEmail: adminUser.email,
-    });
-
-    return {
-      success: true,
-      member: {
-        id: adminUser.id,
-        name: adminUser.name,
-        phone: adminUser.phone || "",
-        email: adminUser.email,
-        tier: "founding",
-        status: "active",
-        joinedDate: formatDate(new Date()),
-        expiryDate: "2099-12-31",
-        totalSaved: 0,
-        emailVerified: true,
-        role: "admin",
-        adminRole: adminUser.role as AdminRole,
-      } as Member,
-    };
-  } catch (error) {
-    logger.error("Error in loginAdminAction:", error);
-    return {
-      success: false,
-      error: "SERVER_ERROR",
-      message: "লগইন করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।",
-    };
-  }
+  return loginAdminActionImpl(identifier, passwordInput);
 }
 
 export async function logoutUserAction(): Promise<boolean> {
@@ -361,7 +270,10 @@ export async function verifyEmailOtpAction(
     if (!fallbackEmail) {
       return { success: false, message: "ভেরিফিকেশন সেশন পাওয়া যায়নি বা মেয়াদ শেষ হয়ে গেছে। অনুগ্রহ করে আবার রেজিস্ট্রেশন করুন।" };
     }
-    const member = await prisma.member.findFirst({ where: { email: fallbackEmail } });
+    const member = await prisma.member.findFirst({
+      where: { email: fallbackEmail },
+      select: MEMBER_AUTH_SELECT,
+    });
     if (!member) {
       return { success: false, message: "ভেরিফিকেশন সেশন পাওয়া যায়নি বা মেয়াদ শেষ হয়ে গেছে। অনুগ্রহ করে আবার রেজিস্ট্রেশন করুন।" };
     }
@@ -394,6 +306,7 @@ export async function verifyEmailOtpAction(
       await prisma.member.update({
         where: { id: member.id },
         data: { verificationCode: `attempts:${newAttempts}:${storedCode}` },
+        select: { id: true },
       });
       const remaining = MAX_OTP_ATTEMPTS - newAttempts;
       if (remaining <= 0) {
@@ -411,6 +324,7 @@ export async function verifyEmailOtpAction(
         verificationCode: null,
         verificationCodeCreatedAt: null,
       },
+      select: MEMBER_AUTH_SELECT,
     });
 
     const safeMember = toSafeMember(updated);
@@ -459,7 +373,10 @@ export async function resendVerificationCodeAction(email: string): Promise<{ suc
     if (!fallbackEmail) {
       return { success: false, message: "ভেরিফিকেশন সেশন পাওয়া যায়নি বা মেয়াদ শেষ হয়ে গেছে। অনুগ্রহ করে আবার রেজিস্ট্রেশন করুন।" };
     }
-    const member = await prisma.member.findFirst({ where: { email: fallbackEmail } });
+    const member = await prisma.member.findFirst({
+      where: { email: fallbackEmail },
+      select: { id: true, name: true, email: true, phone: true, tier: true, verificationCode: true },
+    });
     if (!member) {
       return { success: false, message: "ভেরিফিকেশন সেশন পাওয়া যায়নি বা মেয়াদ শেষ হয়ে গেছে। অনুগ্রহ করে আবার রেজিস্ট্রেশন করুন।" };
     }
@@ -471,6 +388,7 @@ export async function resendVerificationCodeAction(email: string): Promise<{ suc
         verificationCode: code,
         verificationCodeCreatedAt: new Date(),
       },
+      select: { id: true },
     });
 
     if (member.email) {
