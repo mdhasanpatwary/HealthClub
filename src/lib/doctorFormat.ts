@@ -31,10 +31,13 @@ export const DOCTOR_FULL_SELECT_FIELDS = {
 } as const;
 
 /**
- * Lightweight directory projection (TODO-220).
+ * Lightweight directory projection (TODO-220, TODO-223).
  * Strips heavy uncompressed text columns (degrees, notice, onLeaveUntil, createdAt)
- * when querying doctors for public directory cards, department lists, related
- * doctors, and partner hospital rosters to cut network wire payload by 50-70%.
+ * and imageUrl (which may contain large base64 data) when querying doctors for
+ * public directory cards, department lists, related doctors, and partner hospital
+ * rosters to cut network wire payload by 50-70%.
+ * imageUrl is loaded on-demand in DOCTOR_FULL_SELECT_FIELDS (getDoctorByIdAction)
+ * for single profile pages and the details modal.
  */
 export const DOCTOR_CARD_SELECT_FIELDS = {
   id: true,
@@ -50,7 +53,6 @@ export const DOCTOR_CARD_SELECT_FIELDS = {
   visitingHours: true,
   serialPhone: true,
   consultationFee: true,
-  imageUrl: true,
   partnerId: true,
   upazila: true,
   isActive: true,
