@@ -1,11 +1,21 @@
-import { cookies } from "next/headers";
 import { notFound, permanentRedirect } from "next/navigation";
-import { Locale } from "@/lib/i18n";
+import type { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import DoctorProfileView from "@/components/consultants/DoctorProfileView";
-import { getDoctorByIdAction, getRelatedDoctorsAction } from "@/app/actions/doctorActions";
+import { getDoctorByIdAction, getDoctorsAction, getRelatedDoctorsAction } from "@/app/actions/doctorActions";
 import { SITE_URL } from "@/lib/siteConfig";
 import { generateDoctorJsonLd } from "@/lib/seo/doctorSchema";
+
+// ISR: render once every 24h; busted on-demand via updateTag("doctors")
+export const revalidate = 86400;
+
+// Pre-render all active doctor pages at build time so zero CPU is spent on first visit
+export async function generateStaticParams() {
+  const doctors = await getDoctorsAction();
+  return doctors.map((doc) => ({
+    slug: doc.slug || doc.id,
+  }));
+}
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -14,9 +24,9 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   const doctor = await getDoctorByIdAction(slug);
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const isEn = locale === "en";
+  // Public pages are always served in Bengali ("bn") — same as all list pages.
+  // Never read cookies() here — it would force the entire page to be dynamic.
+  const isEn = false;
 
   if (!doctor) {
     const notFoundTitle = isEn ? "Doctor Not Found - Health Club" : "ডাক্তার পাওয়া যায়নি - হেলথ ক্লাব";
@@ -138,8 +148,9 @@ export default async function DoctorDetailPage({ params }: PageProps) {
 
   const relatedDoctors = await getRelatedDoctorsAction(doctor.department, doctor.id, 4);
 
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
+  // Hardcode locale — public detail pages are always Bengali.
+  // Do NOT use cookies() here — it would opt the page out of ISR caching.
+  const locale: Locale = "bn";
 
   const jsonLdData = generateDoctorJsonLd(doctor, locale);
 

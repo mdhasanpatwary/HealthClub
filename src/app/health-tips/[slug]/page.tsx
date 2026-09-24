@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { cookies } from "next/headers";
-import { Locale } from "@/lib/i18n";
+import type { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import {
   getHealthTipBySlugAction,
@@ -29,6 +28,15 @@ import { getArticleReadingTime } from "@/lib/readingTime";
 import { SITE_URL } from "@/lib/siteConfig";
 import { getArticleIsoDate, formatArticleDate } from "@/lib/dateUtils";
 
+// ISR: render once every 24h; busted on-demand via updateTag("health-tips")
+export const revalidate = 86400;
+
+// Pre-render all health tip article pages at build time
+export async function generateStaticParams() {
+  const articles = await getAllHealthTipsAction();
+  return articles.map((a) => ({ slug: a.slug }));
+}
+
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;
 }
@@ -36,9 +44,8 @@ interface ArticlePageProps {
 export async function generateMetadata({ params }: ArticlePageProps) {
   const { slug } = await params;
   const article = await getHealthTipBySlugAction(slug);
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const isEn = locale === "en";
+  // Public pages are always Bengali. Never call cookies() here — it opts the page out of ISR.
+  const isEn = false;
 
   if (!article) {
     const notFoundTitle = isEn ? "Article Not Found - Health Club" : "নিবন্ধ পাওয়া যায়নি - হেলথ ক্লাব";
@@ -123,9 +130,10 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
     })
     .slice(0, 2);
 
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const isEn = locale === "en";
+  // Hardcode locale — public detail pages are always Bengali.
+  // Do NOT use cookies() here — it would opt the page out of ISR caching.
+  const locale: Locale = "bn";
+  const isEn = false;
 
   // Automated reading time calculation
   const readingTimeText = getArticleReadingTime(article, isEn ? "en" : "bn");

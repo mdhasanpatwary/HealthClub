@@ -201,31 +201,37 @@ export const getDoctorByIdAction = cache(
 
 /**
  * Fetch related specialist doctors in the same department.
+ * Wrapped with unstable_cache so identical department queries are served from
+ * the Next.js data cache instead of hitting the DB on every profile render.
  */
-export async function getRelatedDoctorsAction(
-  department: string,
-  excludeDoctorId: string,
-  limit = 3
-): Promise<Doctor[]> {
-  try {
-    if (!prisma?.doctor) {
+export const getRelatedDoctorsAction = unstable_cache(
+  async (
+    department: string,
+    excludeDoctorId: string,
+    limit = 3
+  ): Promise<Doctor[]> => {
+    try {
+      if (!prisma?.doctor) {
+        return [];
+      }
+
+      const data = await prisma.doctor.findMany({
+        where: {
+          department,
+          id: { not: excludeDoctorId },
+          isActive: true,
+        },
+        take: limit,
+        orderBy: { createdAt: "asc" },
+        select: DOCTOR_CARD_SELECT_FIELDS,
+      });
+
+      return data.map(formatDoctor);
+    } catch (error) {
+      logger.error("Error in getRelatedDoctorsAction:", error);
       return [];
     }
-
-    const data = await prisma.doctor.findMany({
-      where: {
-        department,
-        id: { not: excludeDoctorId },
-        isActive: true,
-      },
-      take: limit,
-      orderBy: { createdAt: "asc" },
-      select: DOCTOR_CARD_SELECT_FIELDS,
-    });
-
-    return data.map(formatDoctor);
-  } catch (error) {
-    logger.error("Error in getRelatedDoctorsAction:", error);
-    return [];
-  }
-}
+  },
+  ["related-doctors"],
+  { revalidate: 86400, tags: [DOCTORS_TAG] }
+);

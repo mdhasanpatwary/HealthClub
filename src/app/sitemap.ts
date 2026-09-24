@@ -1,5 +1,8 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/siteConfig";
+
+// Cache the sitemap for 24 hours — prevents 5 DB queries on every bot crawl
+export const revalidate = 86400;
 import { getDoctorsAction } from "@/app/actions/doctorActions";
 import { getPartnersAction } from "@/app/actions/partnerActions";
 import { getAllHealthTipsAction } from "@/app/actions/healthTipsAdminActions";

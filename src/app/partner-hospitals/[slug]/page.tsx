@@ -1,16 +1,27 @@
-import { cookies } from "next/headers";
 import { notFound, permanentRedirect } from "next/navigation";
-import { Locale } from "@/lib/i18n";
+import type { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import HospitalProfileView from "@/components/partner-hospitals/HospitalProfileView";
 import {
   getPartnerByIdAction,
   getDoctorsByPartnerIdAction,
   getRelatedPartnersAction,
+  getPartnersAction,
 } from "@/app/actions/partnerActions";
 import { getPartnerReviewsAction } from "@/app/actions/reviewActions";
 import { SITE_URL } from "@/lib/siteConfig";
 import { generatePartnerJsonLd } from "@/lib/seo/partnerSchema";
+
+// ISR: render once every 24h; busted on-demand via updateTag("partners")
+export const revalidate = 86400;
+
+// Pre-render all active partner hospital pages at build time
+export async function generateStaticParams() {
+  const partners = await getPartnersAction();
+  return partners.map((p) => ({
+    slug: p.slug || p.id,
+  }));
+}
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -19,9 +30,8 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   const partner = await getPartnerByIdAction(slug);
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const isEn = locale === "en";
+  // Public pages are always Bengali. Never call cookies() here — it opts the page out of ISR.
+  const isEn = false;
 
   if (!partner) {
     const notFoundTitle = isEn
@@ -154,8 +164,9 @@ export default async function PartnerHospitalDetailPage({ params }: PageProps) {
     getPartnerReviewsAction(partner.id),
   ]);
 
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
+  // Hardcode locale — public detail pages are always Bengali.
+  // Do NOT use cookies() here — it would opt the page out of ISR caching.
+  const locale: Locale = "bn";
 
   const jsonLdData = generatePartnerJsonLd({
     partner,

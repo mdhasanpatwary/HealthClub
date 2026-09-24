@@ -101,53 +101,59 @@ export const getDoctorsByPartnerIdAction = unstable_cache(
 
 /**
  * Fetch related / recommended partner facilities in Feni.
+ * Cached with unstable_cache so the same category lookups hit the Next.js
+ * data cache instead of making a live DB query on every partner profile render.
  */
-export async function getRelatedPartnersAction(
-  category: string,
-  currentId: string,
-  limit: number = 3
-): Promise<Partner[]> {
-  try {
-    if (!prisma?.partner) {
-      return initialPartners
-        .filter((p) => p.id !== currentId)
-        .slice(0, limit);
-    }
+export const getRelatedPartnersAction = unstable_cache(
+  async (
+    category: string,
+    currentId: string,
+    limit: number = 3
+  ): Promise<Partner[]> => {
+    try {
+      if (!prisma?.partner) {
+        return initialPartners
+          .filter((p) => p.id !== currentId)
+          .slice(0, limit);
+      }
 
-    const data = await prisma.partner.findMany({
-      where: {
-        id: { not: currentId },
-        category: category,
-      },
-      take: limit,
-      orderBy: { createdAt: "desc" },
-      select: PARTNER_CARD_SELECT_FIELDS,
-    });
-
-    // If not enough in same category, fetch other partners
-    if (data.length < limit) {
-      const extra = await prisma.partner.findMany({
+      const data = await prisma.partner.findMany({
         where: {
-          id: { notIn: [currentId, ...data.map((d) => d.id)] },
+          id: { not: currentId },
+          category: category,
         },
-        take: limit - data.length,
+        take: limit,
         orderBy: { createdAt: "desc" },
         select: PARTNER_CARD_SELECT_FIELDS,
       });
-      data.push(...extra);
-    }
 
-    if (data.length === 0) {
+      // If not enough in same category, fetch other partners
+      if (data.length < limit) {
+        const extra = await prisma.partner.findMany({
+          where: {
+            id: { notIn: [currentId, ...data.map((d) => d.id)] },
+          },
+          take: limit - data.length,
+          orderBy: { createdAt: "desc" },
+          select: PARTNER_CARD_SELECT_FIELDS,
+        });
+        data.push(...extra);
+      }
+
+      if (data.length === 0) {
+        return initialPartners
+          .filter((p) => p.id !== currentId)
+          .slice(0, limit);
+      }
+
+      return data.map(formatPartner);
+    } catch (error) {
+      logger.error("Error in getRelatedPartnersAction:", error);
       return initialPartners
         .filter((p) => p.id !== currentId)
         .slice(0, limit);
     }
-
-    return data.map(formatPartner);
-  } catch (error) {
-    logger.error("Error in getRelatedPartnersAction:", error);
-    return initialPartners
-      .filter((p) => p.id !== currentId)
-      .slice(0, limit);
-  }
-}
+  },
+  ["related-partners"],
+  { revalidate: 86400, tags: [PARTNERS_TAG] }
+);

@@ -1338,3 +1338,46 @@ This roadmap outlines the strategic localized content cluster required to achiev
     4. Add explicit `select` to `emergencyAdminActions.ts` (`bloodDonor`, `ambulanceService`) and `broadcastActions.ts`. Add `take: 100` safeguard to `contactActions.ts`.
   - **Details**: Standardized transaction queries by creating `TRANSACTION_SELECT_FIELDS` and `mapPrismaTransaction` in `src/lib/transactionFormat.ts`. Applied targeted projections and pagination limits across transaction actions (`transactionActions.ts`, `partnerTransactionActions.ts`, `partnerAnalyticsActions.ts`). Optimized `partnerStaffActions.ts` with `prisma.transaction.groupBy` to aggregate totals without hydrating individual transaction models. Refactored `getMemberByIdAction` in `memberActions.ts` into a single indexed query with `MEMBER_DETAIL_SELECT_FIELDS`. Added targeted projections to `memberPaymentActions.ts`, `memberPasswordResetActions.ts`, `partnerPasswordResetActions.ts` (excluding heavy JSON blobs like `facilities`, `galleryImages`, `departmentDiscounts`), `emergencyAdminActions.ts`, `broadcastActions.ts`, `contactActions.ts`, `memberAdminActions.ts`, `systemSettingsActions.ts`, and `partnerRequestActions.ts`. All 17 modified files strictly adhere to the 500-line code limit. Cleanly verified via `npx tsc --noEmit` (0 errors), `npm run lint` (0 warnings/errors), and `npm run build` (116/116 routes built).
 
+---
+
+### 🌐 Cluster 10: Multi-Language (i18n) Decommissioning & Full Bengali Default Optimization
+
+- [ ] **TODO-226**: **Remove Header & Mobile Nav Language Switchers & Fix Unused `locale` Warnings**
+  - **Priority**: High (P1 - Immediate UI & Lint Cleanup)
+  - **Files**: `src/components/layout/Header.tsx`, `src/components/layout/MobileNavDrawer.tsx`, `src/app/consultants/[slug]/page.tsx`, `src/app/health-tips/[slug]/page.tsx`, `src/app/partner-hospitals/[slug]/page.tsx`
+  - **Description**: 
+    1. Remove the language toggle button ("বাং / EN") and `setLocale` calls from desktop `Header.tsx` and mobile drawer `MobileNavDrawer.tsx`.
+    2. Stop setting and reading the client-side `locale` cookie.
+    3. Resolve the 3 ESLint warnings where `locale` is assigned but unused in `consultants/[slug]/page.tsx`, `health-tips/[slug]/page.tsx`, and `partner-hospitals/[slug]/page.tsx`.
+
+- [ ] **TODO-227**: **Inline Static Bengali Text in Core Layout & Public Marketing Components**
+  - **Priority**: High (P1 - Eliminates Client-Side Translation Overhead on Public Routes)
+  - **Files**: `src/components/layout/Header.tsx`, `src/components/layout/PublicHeaderNav.tsx`, `src/components/layout/Footer.tsx`, `src/components/layout/BottomNav.tsx`, `src/components/layout/GlobalNoticeBanner.tsx`, `src/components/layout/InstallAppBanner.tsx`, `src/components/common/CommunityNetworkCTA.tsx`, `src/app/page.tsx`, `src/app/about-us/page.tsx`, `src/app/emergency/page.tsx`, `src/app/membership/page.tsx`
+  - **Description**: 
+    1. Replace `useLanguage()` and `t(...)` calls across public layout and marketing sections with clean, native Bengali strings.
+    2. Convert components that previously required `"use client"` solely for `useLanguage()` into React Server Components (RSC) to trim client-side JavaScript execution.
+    3. Replace `formatNum(val, locale)` with direct `toBanglaNums(val)`.
+
+- [ ] **TODO-228**: **Inline Static Bengali Text in Medical Directories, Doctor Profiles & Reviews**
+  - **Priority**: Medium (P1 - Removes Hydration Mismatch & Translation Dependencies in High-Traffic Pages)
+  - **Files**: `src/components/consultants/DoctorProfileView.tsx`, `src/components/partner-hospitals/HospitalDoctorRoster.tsx`, `src/components/partner-hospitals/PartnerHospitalsFAQ.tsx`, `src/components/partner-hospitals/HospitalDiscountsSection.tsx`, `src/components/partner-hospitals/PartnerHospitalsGuide.tsx`, `src/components/partner-hospitals/HospitalGalleryModal.tsx`, `src/components/partner-hospitals/HospitalContactSidebar.tsx`, `src/components/reviews/ReviewCard.tsx`, `src/components/reviews/ReviewSection.tsx`, `src/components/reviews/ReviewForm.tsx`, `src/components/reviews/ReviewFormModal.tsx`, `src/components/reviews/ReviewEligibilityBanner.tsx`, `src/components/health-tips/ArticleReactions.tsx`
+  - **Description**: 
+    1. Replace `useLanguage()` and `t(...)` calls in doctor profiles, hospital directories, review widgets, and article reactions with static Bengali text.
+    2. Keep doctor qualifications (e.g., MBBS, FCPS), medical test names, and phone numbers cleanly formatted in standard mixed format as required.
+
+- [ ] **TODO-229**: **Inline Static Bengali Text in Authenticated Dashboard, Partner Portal & Admin Views**
+  - **Priority**: Medium (P2 - Cleans Authenticated Workflows & Portal Code)
+  - **Files**: `src/app/dashboard/*`, `src/app/partner/*`, `src/app/admin/*`, `src/components/layout/UserDropdown.tsx`, `src/components/layout/PartnerDropdown.tsx`, `src/components/layout/AdminHeaderNav.tsx`, `src/components/layout/AdminNotificationBell.tsx`
+  - **Description**: 
+    1. Replace remaining `useLanguage` / `t(...)` calls in Member Dashboard tabs, Partner Portal views, and Admin tabs/dialogs with direct Bengali strings.
+    2. Eliminate dynamic namespace imports and translation dictionaries across admin views.
+
+- [ ] **TODO-230**: **Decommission `LanguageProvider`, Delete Translation Dictionaries & Finalize Layout**
+  - **Priority**: High (P1 - Bundle Trimming & Final Architectural Cleanup)
+  - **Files**: `src/app/layout.tsx`, `src/components/layout/LanguageProvider.tsx`, `src/lib/translations/*`, `src/lib/translations.en.ts`, `src/lib/translations.bn.ts`, `src/lib/i18n.ts`
+  - **Description**: 
+    1. Remove `LanguageProvider`, `initialDict`, and `initialNamespaces` from `src/app/layout.tsx`. Set `<html lang="bn">` and update JSON-LD schema (`inLanguage: "bn-BD"`).
+    2. Safely delete obsolete translation files: `src/lib/translations/` (`clientLoaders.ts`, `routeMap.ts`, `getDictionary.ts`, `en/`, `bn/`), `translations.en.ts`, and `translations.bn.ts`.
+    3. Simplify `src/lib/i18n.ts` (or consolidate formatting helpers like `toBanglaNums` into `src/lib/utils.ts`).
+    4. Run `npx tsc --noEmit`, `npm run lint`, and verify that the full Next.js production build succeeds with 0 errors and warnings.
+
