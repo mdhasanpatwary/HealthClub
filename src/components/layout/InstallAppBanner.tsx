@@ -17,16 +17,13 @@ interface BeforeInstallPromptEvent extends Event {
 
 const DISMISSAL_KEY = "hc_app_prompt_dismissed_at";
 const INSTALLED_KEY = "hc_app_installed";
-const DISMISS_HOURS = 72;
+const DISMISS_DAYS = 14;
+const DISMISS_MS = DISMISS_DAYS * 24 * 60 * 60 * 1000;
 
-export default function InstallAppBanner() {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const [showIosTip, setShowIosTip] = useState(false);
-  const [isInstalling, setIsInstalling] = useState(false);
-  const hasLoggedShown = useRef(false);
+function isPromptDismissed(): boolean {
+  if (typeof window === "undefined") return true;
 
-  useEffect(() => {
+  try {
     // 1. Standalone / installed check
     const isStandalone =
       window.matchMedia("(display-mode: standalone)").matches ||
@@ -34,23 +31,53 @@ export default function InstallAppBanner() {
       localStorage.getItem(INSTALLED_KEY) === "true";
 
     if (isStandalone) {
+      return true;
+    }
+
+    // 2. Session check (ensures banner never reappears in the current session after dismissal)
+    if (sessionStorage.getItem(DISMISSAL_KEY) === "true") {
+      return true;
+    }
+
+    // 3. Persistent dismissal check (14 days)
+    const dismissedAt = localStorage.getItem(DISMISSAL_KEY);
+    if (dismissedAt) {
+      const parsed = parseInt(dismissedAt, 10);
+      if (!isNaN(parsed)) {
+        const elapsedMs = Date.now() - parsed;
+        if (elapsedMs < DISMISS_MS) {
+          return true;
+        }
+      }
+    }
+  } catch {
+    // In case storage access is restricted, default to not annoying the user
+    return false;
+  }
+
+  return false;
+}
+
+export default function InstallAppBanner() {
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [showIosTip, setShowIosTip] = useState(false);
+  const [isInstalling, setIsInstalling] = useState(false);
+  const hasLoggedShown = useRef(false);
+  const isDismissedRef = useRef(false);
+
+  useEffect(() => {
+    // 1. Check if user already dismissed or installed the app
+    if (isPromptDismissed()) {
+      isDismissedRef.current = true;
       return;
     }
 
-    // 2. 72 Hours dismissal check
-    const dismissedAt = localStorage.getItem(DISMISSAL_KEY);
-    if (dismissedAt) {
-      const elapsedMs = Date.now() - parseInt(dismissedAt, 10);
-      const elapsedHours = elapsedMs / (1000 * 60 * 60);
-      if (elapsedHours < DISMISS_HOURS) {
-        return;
-      }
-    }
-
-    // 3. Mobile screen check
+    // 2. Mobile screen check
     const isMobile = typeof window !== "undefined" && window.matchMedia?.("(max-width: 767px)").matches;
     if (isMobile) {
       requestAnimationFrame(() => {
+        if (isDismissedRef.current || isPromptDismissed()) return;
         setIsVisible(true);
         if (!hasLoggedShown.current) {
           hasLoggedShown.current = true;
@@ -72,6 +99,12 @@ export default function InstallAppBanner() {
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
+
+      // Do NOT show banner if user already dismissed or installed the app
+      if (isDismissedRef.current || isPromptDismissed()) {
+        return;
+      }
+
       if (isMobile) {
         setIsVisible(true);
         if (!hasLoggedShown.current) {
@@ -92,6 +125,7 @@ export default function InstallAppBanner() {
 
     // Listener for when app is installed
     const handleAppInstalled = () => {
+      isDismissedRef.current = true;
       try {
         localStorage.setItem(INSTALLED_KEY, "true");
       } catch {}
@@ -119,10 +153,13 @@ export default function InstallAppBanner() {
   }, []);
 
   const handleDismiss = () => {
+    isDismissedRef.current = true;
     try {
+      sessionStorage.setItem(DISMISSAL_KEY, "true");
       localStorage.setItem(DISMISSAL_KEY, Date.now().toString());
     } catch {}
     setIsVisible(false);
+    setDeferredPrompt(null);
 
     trackEvent("pwa_action", { action: "install_dismissed" });
 
@@ -149,6 +186,7 @@ export default function InstallAppBanner() {
         await deferredPrompt.prompt();
         const choiceResult = await deferredPrompt.userChoice;
         if (choiceResult.outcome === "accepted") {
+          isDismissedRef.current = true;
           try {
             localStorage.setItem(INSTALLED_KEY, "true");
           } catch {}
@@ -164,7 +202,9 @@ export default function InstallAppBanner() {
           }
         } else {
           // If user dismissed the prompt dialog
+          isDismissedRef.current = true;
           try {
+            sessionStorage.setItem(DISMISSAL_KEY, "true");
             localStorage.setItem(DISMISSAL_KEY, Date.now().toString());
           } catch {}
           setIsVisible(false);
@@ -197,7 +237,9 @@ export default function InstallAppBanner() {
         toast.info(
           "Safari ব্রাউজারের Share (শেয়ার) বাটনে ট্যাপ করে 'Add to Home Screen' চাপুন"
         );
+        isDismissedRef.current = true;
         try {
+          sessionStorage.setItem(DISMISSAL_KEY, "true");
           localStorage.setItem(DISMISSAL_KEY, Date.now().toString());
         } catch {}
         setTimeout(() => {

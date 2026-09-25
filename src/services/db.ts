@@ -279,15 +279,15 @@ export const initialPartners: Partner[] = [
     upazila: "feni-sadar"
   },
   {
-    id: "p_ddlab",
-    slug: "ডিডি-ল্যাব",
-    name: "ডিডি ল্যাব",
+    id: "p_lifecare",
+    slug: "লাইফ-কেয়ার-ডায়াগনস্টিক-সেন্টার",
+    name: "লাইফ কেয়ার ডায়াগনস্টিক সেন্টার",
     category: "diagnostic",
-    address: "মা প্লাজা (জিয়া মহিলা কলেজের বিপরীতে), শহীদ শহীদুল্লাহ কায়সার রোড, ফেনী",
+    address: "কেন্দ্রীয় বোরো জামে মসজিদের পূর্ব পাশে, গ্র্যান্ড ট্রাঙ্ক রোড-ফেনী।",
     discount: "১০-৩০% ডিসকাউন্ট",
-    phone: "01898221111, 01898445555, 09666747575",
-    logoText: "DD Lab",
-    imageUrl: "/images/partners/ddlab.webp",
+    phone: "01819112233",
+    logoText: "লাইফ কেয়ার",
+    imageUrl: "/images/partners/life-care-diagnostic.webp",
     upazila: "feni-sadar"
   }
 ];

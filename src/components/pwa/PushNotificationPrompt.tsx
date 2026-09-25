@@ -73,14 +73,19 @@ export function PushNotificationPrompt() {
         } else {
           setIsSubscribed(false);
           // Check dismissal timestamp
-          const dismissedAt = localStorage.getItem(PROMPT_DISMISS_KEY);
-          if (dismissedAt) {
-            const elapsedDays =
-              (Date.now() - parseInt(dismissedAt, 10)) / (1000 * 60 * 60 * 24);
-            if (elapsedDays < REPROMPT_DAYS) {
+          try {
+            if (sessionStorage.getItem(PROMPT_DISMISS_KEY) === "true") {
               return;
             }
-          }
+            const dismissedAt = localStorage.getItem(PROMPT_DISMISS_KEY);
+            if (dismissedAt) {
+              const elapsedDays =
+                (Date.now() - parseInt(dismissedAt, 10)) / (1000 * 60 * 60 * 24);
+              if (elapsedDays < REPROMPT_DAYS) {
+                return;
+              }
+            }
+          } catch {}
 
           // Delay display to prevent simultaneous prompt overlap on mobile
           const isMobile = typeof window !== "undefined" && window.matchMedia?.("(max-width: 767px)").matches;
@@ -107,6 +112,7 @@ export function PushNotificationPrompt() {
 
   const handleDismiss = () => {
     try {
+      sessionStorage.setItem(PROMPT_DISMISS_KEY, "true");
       localStorage.setItem(PROMPT_DISMISS_KEY, Date.now().toString());
     } catch {}
     setIsVisible(false);
