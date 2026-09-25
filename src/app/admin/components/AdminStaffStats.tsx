@@ -1,5 +1,3 @@
-"use client";
-
 import { Card, CardContent } from "@/components/ui/card";
 import { formatNum } from "@/lib/utils";
 import { Users, Shield, CheckCircle2 } from "lucide-react";

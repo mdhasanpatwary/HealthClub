@@ -1,5 +1,3 @@
-"use client";
-
 import { toBanglaNums } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import {

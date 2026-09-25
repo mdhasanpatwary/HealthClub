@@ -1,5 +1,3 @@
-"use client";
-
 import { Star, ShieldCheck, User } from "lucide-react";
 import { Review } from "@/services/db";
 import { toBanglaNums } from "@/lib/utils";

@@ -1,5 +1,3 @@
-"use client";
-
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { RenewalRetentionMetrics, TierBreakdownMetrics } from "@/types/revenueAnalytics";

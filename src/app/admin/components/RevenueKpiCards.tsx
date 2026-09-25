@@ -1,5 +1,3 @@
-"use client";
-
 import { Card, CardContent } from "@/components/ui/card";
 import { RevenueKpis } from "@/types/revenueAnalytics";
 import { formatNum } from "@/lib/utils";

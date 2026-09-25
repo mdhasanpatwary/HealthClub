@@ -1,10 +1,8 @@
-"use client";
-
 import Link from "next/link";
 import { toBanglaNums } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Stethoscope, Droplet, Siren, BookOpen } from "lucide-react";
-import { AdminStatsData } from "./AdminStatsGrid";
+import type { AdminStatsData } from "./AdminStatsGrid";
 
 interface AdminEcosystemGridProps {
   stats: AdminStatsData;

@@ -1,5 +1,3 @@
-"use client";
-
 export {
   DEPT_OPTIONS,
   DAY_PRESETS,

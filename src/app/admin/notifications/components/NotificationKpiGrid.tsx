@@ -1,5 +1,3 @@
-"use client";
-
 import { Bell, Building2, Mail, AlertTriangle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { toBanglaNums } from "@/lib/utils";

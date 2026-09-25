@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import { Building2, MapPin, PhoneCall, Clock, Eye } from "lucide-react";
 import { Partner, DepartmentDiscount, PartnerSocialLinks } from "@/services/db";

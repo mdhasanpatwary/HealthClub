@@ -1,5 +1,3 @@
-"use client";
-
 import { Tag, Check, ShieldCheck } from "lucide-react";
 import { DepartmentDiscount, Partner } from "@/services/db";
 import { Badge } from "@/components/ui/badge";
