@@ -31,14 +31,13 @@ import {
 } from "./PartnerStaffCredentialsModal";
 import { PartnerStaffDetailsModal } from "./PartnerStaffDetailsModal";
 import { toast } from "sonner";
-import { useLanguage } from "@/components/layout/LanguageProvider";
+import { toBanglaNums } from "@/lib/utils";
 
 interface PartnerStaffTabProps {
   partner: Partner;
 }
 
 export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
-  const { t } = useLanguage();
   const [staffList, setStaffList] = useState<PartnerStaff[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -59,11 +58,11 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
       const data = await getPartnerStaffListAction();
       setStaffList(data);
     } catch {
-      toast.error(t("partner.staff.loadError"));
+      toast.error("স্টাফ তালিকা লোড করতে সমস্যা হয়েছে");
     } finally {
       setLoading(false);
     }
-  }, [t]);
+  }, []);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -119,10 +118,10 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
           )
         );
       } else {
-        toast.error(res.message || t("common.error"));
+        toast.error(res.message || "একটি সমস্যা হয়েছে");
       }
     } catch {
-      toast.error(t("common.error.server"));
+      toast.error("সার্ভারে ত্রুটি হয়েছে, অনুগ্রহ করে আবার চেষ্টা করুন");
     }
   };
 
@@ -136,11 +135,11 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
               <Users className="h-5 w-5" />
             </div>
             <h2 className="text-lg sm:text-xl font-bold font-heading text-secondary dark:text-white">
-              {t("partner.staff.title")}
+              কাউন্টার ও স্টাফ টিম
             </h2>
           </div>
           <p className="text-xs sm:text-sm text-muted-foreground">
-            {t("partner.staff.subtitle")}
+            আপনার প্রতিষ্ঠান/হাসপাতালের কাউন্টার ও বিলিং স্টাফদের পরিচালনা করুন
           </p>
         </div>
 
@@ -152,7 +151,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
           className="bg-primary hover:bg-primary-dark text-white font-semibold rounded-2xl gap-2 shadow-sm shrink-0 cursor-pointer h-11"
         >
           <UserPlus className="h-4 w-4" />
-          <span>{t("partner.staff.addNew")}</span>
+          <span>নতুন স্টাফ যোগ করুন</span>
         </Button>
       </div>
 
@@ -165,10 +164,10 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
             </div>
             <div>
               <p className="text-[11px] font-medium text-muted-foreground">
-                {t("partner.staff.kpiTotalStaff")}
+                মোট স্টাফ
               </p>
               <h3 className="text-xl sm:text-2xl font-bold text-secondary dark:text-white font-mono">
-                {totalStaff}
+                {toBanglaNums(totalStaff)}
               </h3>
             </div>
           </CardContent>
@@ -181,10 +180,10 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
             </div>
             <div>
               <p className="text-[11px] font-medium text-muted-foreground">
-                {t("partner.staff.kpiActiveDesks")}
+                সক্রিয় ডেস্ক
               </p>
               <h3 className="text-xl sm:text-2xl font-bold text-secondary dark:text-white font-mono">
-                {activeStaff}
+                {toBanglaNums(activeStaff)}
               </h3>
             </div>
           </CardContent>
@@ -197,10 +196,10 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
             </div>
             <div>
               <p className="text-[11px] font-medium text-muted-foreground">
-                {t("partner.staff.kpiStaffTxns")}
+                মোট লেনদেন
               </p>
               <h3 className="text-xl sm:text-2xl font-bold text-secondary dark:text-white font-mono">
-                {totalStaffTxns}
+                {toBanglaNums(totalStaffTxns)}
               </h3>
             </div>
           </CardContent>
@@ -213,10 +212,10 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
             </div>
             <div>
               <p className="text-[11px] font-medium text-muted-foreground">
-                {t("partner.staff.kpiStaffSavings")}
+                মোট সাশ্রয়
               </p>
               <h3 className="text-xl sm:text-2xl font-bold text-primary font-mono">
-                ৳{totalStaffSavings.toLocaleString("bn-BD")}
+                ৳{toBanglaNums(totalStaffSavings)}
               </h3>
             </div>
           </CardContent>
@@ -231,7 +230,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={t("partner.staff.searchPlaceholder")}
+            placeholder="স্টাফের নাম, ইউজারনেম, বা ফোন খুঁজুন..."
             className="pl-10 h-10 border-border rounded-xl bg-card"
           />
         </div>
@@ -248,7 +247,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
                   : "bg-card hover:bg-muted text-muted-foreground border-border"
               }`}
             >
-              {t("partner.staff.filterAllDesks")}
+              সব ডেস্ক
             </button>
             {deskOptions.map((desk) => (
               <button
@@ -296,13 +295,13 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
           <div className="space-y-1 max-w-sm mx-auto">
             <h3 className="font-bold text-secondary dark:text-white text-base">
               {searchQuery || filterDesk !== "all"
-                ? t("partner.staff.noCashierFound")
-                : t("partner.staff.noCashierYet")}
+                ? "কোনো স্টাফ পাওয়া যায়নি"
+                : "কোনো স্টাফ এখনো যোগ করা হয়নি"}
             </h3>
             <p className="text-xs text-muted-foreground">
               {searchQuery || filterDesk !== "all"
-                ? t("partner.staff.noCashierFoundDesc")
-                : t("partner.staff.noCashierYetDesc")}
+                ? "অনুগ্রহ করে অনুসন্ধান পরিবর্তন করে আবার চেষ্টা করুন"
+                : "কাউন্টার ও বিলিং কাজের সুবিধার্থে নতুন স্টাফ যোগ করুন"}
             </p>
           </div>
           {!searchQuery && filterDesk === "all" && (
@@ -314,7 +313,7 @@ export function PartnerStaffTab({ partner }: PartnerStaffTabProps) {
               className="bg-primary hover:bg-primary-dark text-white rounded-xl font-semibold gap-1.5 cursor-pointer"
             >
               <UserPlus className="h-4 w-4" />
-              {t("partner.staff.addFirstCashier")}
+              প্রথম স্টাফ যোগ করুন
             </Button>
           )}
         </Card>

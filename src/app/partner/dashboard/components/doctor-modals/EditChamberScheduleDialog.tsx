@@ -20,7 +20,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Building2 } from "lucide-react";
 import { DEPT_OPTIONS, DAY_PRESETS } from "./doctorModalConstants";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 
 export interface EditChamberModalProps {
   doctor: Doctor | null;
@@ -38,7 +37,6 @@ function EditChamberForm({
   onClose: () => void;
   onSuccess: () => void;
 }) {
-  const { t } = useLanguage();
 
   const {
     register,
@@ -88,14 +86,14 @@ function EditChamberForm({
       });
 
       if (res.success) {
-        toast.success(t("partner.doctors.updateSuccess"));
+        toast.success("চেম্বার সময়সূচী সফলভাবে আপডেট করা হয়েছে।");
         onSuccess();
         onClose();
       } else {
-        toast.error(res.error || t("partner.doctors.updateFailed"));
+        toast.error(res.error || "চেম্বার তথ্য আপডেট করতে সমস্যা হয়েছে।");
       }
     } catch {
-      toast.error(t("common.error.server"));
+      toast.error("সার্ভারে ত্রুটি হয়েছে, অনুগ্রহ করে আবার চেষ্টা করুন");
     }
   };
 
@@ -104,17 +102,17 @@ function EditChamberForm({
       <DialogHeader className="space-y-1">
         <DialogTitle className="font-heading font-bold text-base sm:text-lg md:text-xl flex items-center gap-2">
           <Building2 className="h-5 w-5 text-primary shrink-0" />
-          <span className="truncate">{t("partner.doctors.editChamberTitle")}</span>
+          <span className="truncate">চেম্বার সময়সূচী পরিবর্তন করুন</span>
         </DialogTitle>
         <DialogDescription className="text-xs text-muted-foreground">
-          {doctor.name} - {t("partner.doctors.editChamberDesc")}
+          {doctor.name} - চেম্বারের সময়সূচী, ফি ও অন্যান্য তথ্য আপডেট করুন
         </DialogDescription>
       </DialogHeader>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-2 w-full max-w-full overflow-x-hidden">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-full">
           <div className="space-y-1.5">
-            <label htmlFor="edit-doc-name" className="text-xs font-semibold text-foreground">{t("partner.doctors.doctorName")}</label>
+            <label htmlFor="edit-doc-name" className="text-xs font-semibold text-foreground">ডাক্তারের নাম</label>
             <Input
               id="edit-doc-name"
               {...register("name")}
@@ -126,7 +124,7 @@ function EditChamberForm({
           </div>
 
           <div className="space-y-1.5">
-            <label htmlFor="edit-doc-dept" className="text-xs font-semibold text-foreground">{t("partner.doctors.department")}</label>
+            <label htmlFor="edit-doc-dept" className="text-xs font-semibold text-foreground">বিভাগ</label>
             <select
               id="edit-doc-dept"
               {...register("department")}
@@ -139,11 +137,11 @@ function EditChamberForm({
           </div>
 
           <div className="space-y-1.5 sm:col-span-2">
-            <label htmlFor="edit-doc-spec" className="text-xs font-semibold text-foreground">{t("partner.doctors.specialtyDegree")}</label>
+            <label htmlFor="edit-doc-spec" className="text-xs font-semibold text-foreground">বিশেষজ্ঞতা ও ডিগ্রী</label>
             <Input
               id="edit-doc-spec"
               {...register("specialty")}
-              placeholder={t("partner.doctors.specPlaceholder")}
+              placeholder="মেডিসিন ও হৃদরোগ বিশেষজ্ঞ"
               className="h-10 text-sm"
             />
             {errors.specialty && (
@@ -153,27 +151,27 @@ function EditChamberForm({
 
           {/* Chamber Fields */}
           <div className="space-y-1.5">
-            <label htmlFor="edit-doc-room" className="text-xs font-semibold text-primary">{t("partner.doctors.roomNo")}</label>
+            <label htmlFor="edit-doc-room" className="text-xs font-semibold text-primary">রুম / চেম্বার নম্বর</label>
             <Input
               id="edit-doc-room"
               {...register("roomNo")}
-              placeholder={t("partner.doctors.roomPlaceholder")}
+              placeholder="রুম নং ২০৪, ২য় তলা"
               className="h-10 text-sm border-primary/40 focus-visible:ring-primary"
             />
           </div>
 
           <div className="space-y-1.5">
-            <label htmlFor="edit-doc-fee" className="text-xs font-semibold text-foreground">{t("partner.doctors.consultationFee")}</label>
+            <label htmlFor="edit-doc-fee" className="text-xs font-semibold text-foreground">পরামর্শ ফি</label>
             <Input
               id="edit-doc-fee"
               {...register("consultationFee")}
-              placeholder={t("partner.doctors.feePlaceholder")}
+              placeholder="৳৮০০"
               className="h-10 text-sm"
             />
           </div>
 
           <div className="space-y-1.5 sm:col-span-2">
-            <label htmlFor="edit-doc-days" className="text-xs font-semibold text-foreground">{t("partner.doctors.visitingDays")} *</label>
+            <label htmlFor="edit-doc-days" className="text-xs font-semibold text-foreground">রোগী দেখার দিনসমূহ *</label>
             <Input
               id="edit-doc-days"
               {...register("visitingDays")}
@@ -197,7 +195,7 @@ function EditChamberForm({
           </div>
 
           <div className="space-y-1.5">
-            <label htmlFor="edit-doc-hours" className="text-xs font-semibold text-foreground">{t("partner.doctors.visitingHours")} *</label>
+            <label htmlFor="edit-doc-hours" className="text-xs font-semibold text-foreground">রোগী দেখার সময় *</label>
             <Input
               id="edit-doc-hours"
               {...register("visitingHours")}
@@ -209,7 +207,7 @@ function EditChamberForm({
           </div>
 
           <div className="space-y-1.5">
-            <label htmlFor="edit-doc-phone" className="text-xs font-semibold text-foreground">{t("partner.doctors.serialPhone")} *</label>
+            <label htmlFor="edit-doc-phone" className="text-xs font-semibold text-foreground">সিরিয়ালের ফোন নম্বর *</label>
             <Input
               id="edit-doc-phone"
               {...register("serialPhone")}
@@ -227,10 +225,10 @@ function EditChamberForm({
             <div className="flex items-center justify-between p-2.5 bg-background border border-border/80 rounded-xl">
               <div>
                 <label htmlFor="edit-doc-available" className="text-xs font-bold text-foreground block cursor-pointer">
-                  {t("partner.doctors.openToday")}
+                  আজ রোগী দেখবেন
                 </label>
                 <span className="text-[10px] text-muted-foreground">
-                  {availableToday ? t("partner.doctors.openTodayDesc") : t("partner.doctors.closedTodayDesc")}
+                  {availableToday ? "চেম্বারে রোগী দেখা চালু রয়েছে" : "আজ চেম্বার বন্ধ রয়েছে"}
                 </span>
               </div>
               <input
@@ -243,7 +241,7 @@ function EditChamberForm({
 
             <div className="space-y-1">
               <label htmlFor="edit-doc-leave" className="text-xs font-semibold text-foreground cursor-pointer">
-                {t("partner.doctors.leaveUntil")}
+                কত তারিখ পর্যন্ত ছুটিতে আছেন
               </label>
               <Input
                 id="edit-doc-leave"
@@ -256,12 +254,12 @@ function EditChamberForm({
 
           <div className="space-y-1">
             <label htmlFor="edit-doc-notice" className="text-xs font-semibold text-foreground cursor-pointer">
-              {t("partner.doctors.chamberNotice")}
+              বিশেষ জরুরি নোটিশ (ঐচ্ছিক)
             </label>
             <Input
               id="edit-doc-notice"
               type="text"
-              placeholder={t("partner.doctors.chamberNoticePlaceholder")}
+              placeholder="আজ সন্ধ্যা ৬টার পর রোগী দেখা শুরু হবে"
               {...register("notice")}
               className="h-9 text-xs"
             />
@@ -270,10 +268,10 @@ function EditChamberForm({
 
         <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-4 border-t border-border w-full">
           <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting} className="rounded-xl w-full sm:w-auto">
-            {t("common.cancel")}
+            বাতিল
           </Button>
           <Button type="submit" disabled={isSubmitting} className="rounded-xl bg-primary text-white hover:bg-primary/90 cursor-pointer w-full sm:w-auto">
-            {isSubmitting ? t("common.saving") : t("partner.doctors.saveChanges")}
+            {isSubmitting ? "সংরক্ষণ করা হচ্ছে..." : "পরিবর্তন সংরক্ষণ করুন"}
           </Button>
         </div>
       </form>

@@ -5,24 +5,21 @@ import { DEPT_ICONS } from "./consultantData";
 
 interface DepartmentSeoHeroProps {
   seoConfig: DepartmentSeoConfig;
-  locale: "bn" | "en";
   matchingDoctorsCount: number;
   onReset?: () => void;
 }
 
 export default function DepartmentSeoHero({
   seoConfig,
-  locale,
   matchingDoctorsCount,
   onReset,
 }: DepartmentSeoHeroProps) {
-  const isEn = locale === "en";
   const Icon = DEPT_ICONS[seoConfig.id] || Stethoscope;
 
-  const badgeText = isEn ? seoConfig.heroBadgeEn : seoConfig.heroBadgeBn;
-  const headline = isEn ? seoConfig.heroHeadlineEn : seoConfig.heroHeadlineBn;
-  const description = isEn ? seoConfig.introDescriptionEn : seoConfig.introDescriptionBn;
-  const clinicalScopes = isEn ? seoConfig.clinicalScopeEn : seoConfig.clinicalScopeBn;
+  const badgeText = seoConfig.heroBadgeBn || seoConfig.heroBadgeEn;
+  const headline = seoConfig.heroHeadlineBn || seoConfig.heroHeadlineEn;
+  const description = seoConfig.introDescriptionBn || seoConfig.introDescriptionEn;
+  const clinicalScopes = seoConfig.clinicalScopeBn || seoConfig.clinicalScopeEn;
 
   return (
     <section
@@ -47,7 +44,7 @@ export default function DepartmentSeoHero({
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-primary transition-colors cursor-pointer"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            <span>{isEn ? "All Specialties" : "সকল বিভাগ"}</span>
+            <span>সকল বিভাগ</span>
           </Link>
 
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
@@ -74,7 +71,7 @@ export default function DepartmentSeoHero({
           <div className="space-y-2 pt-1">
             <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
-              <span>{isEn ? "Specialized Care Scopes in Feni" : "বিশেষায়িত চিকিৎসা সেবা ক্ষেত্র"}</span>
+              <span>বিশেষায়িত চিকিৎসা সেবা ক্ষেত্র</span>
             </span>
             <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {clinicalScopes.map((scope, idx) => (
@@ -97,18 +94,14 @@ export default function DepartmentSeoHero({
               <ShieldCheck className="h-4 w-4 text-primary" />
               <span>
                 {matchingDoctorsCount > 0
-                  ? isEn
-                    ? `${matchingDoctorsCount} Verified Specialists Listed`
-                    : `${matchingDoctorsCount} জন বিএমডিসি নিবন্ধিত বিশেষজ্ঞ তালিকাভুক্ত`
-                  : isEn
-                  ? "Verified BMDC Specialists"
+                  ? `${matchingDoctorsCount} জন বিএমডিসি নিবন্ধিত বিশেষজ্ঞ তালিকাভুক্ত`
                   : "বিএমডিসি নিবন্ধিত বিশেষজ্ঞ"}
               </span>
             </div>
 
             <div className="flex items-center gap-1 text-muted-foreground">
               <MapPin className="h-3.5 w-3.5 text-primary/80" />
-              <span>{isEn ? "SSK Road, Trunk Road, Feni" : "এস.এস.কে রোড, ট্রাঙ্ক রোড, ফেনী"}</span>
+              <span>এস.এস.কে রোড, ট্রাঙ্ক রোড, ফেনী</span>
             </div>
           </div>
 
@@ -116,7 +109,7 @@ export default function DepartmentSeoHero({
             href="/consultants"
             className="text-xs text-primary font-bold hover:underline cursor-pointer"
           >
-            {isEn ? "Reset & View All Doctors →" : "রিসেট করে সকল ডাক্তার দেখুন →"}
+            রিসেট করে সকল ডাক্তার দেখুন →
           </Link>
         </div>
       </div>

@@ -10,7 +10,7 @@ import { Pagination } from "@/components/ui/pagination";
 import { Partner } from "@/services/db";
 import { exportToCsv } from "@/lib/exportUtils";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatNum, Locale } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import { BulkImportDialog } from "./BulkImportDialog";
 
 interface PartnersTabProps {
@@ -35,8 +35,6 @@ interface PartnersTabProps {
   onEditClick: (p: Partner) => void;
   onDeleteClick: (id: string, name: string) => void;
   onResetPasswordClick?: (p: Partner) => void;
-  locale?: Locale;
-  t?: (key: string) => string;
   loading?: boolean;
 }
 
@@ -57,35 +55,32 @@ export function PartnersTab({
   onEditClick,
   onDeleteClick,
   onResetPasswordClick,
-  locale = "bn",
-  t = (k) => k,
   loading = false,
 }: PartnersTabProps) {
-  const isEn = locale === "en";
   const [isImportOpen, setIsImportOpen] = useState(false);
 
   const categories = [
     {
       id: "all",
-      label: isEn ? "All Facilities" : "সকল প্রতিষ্ঠান",
+      label: "সকল প্রতিষ্ঠান",
       icon: LayoutGrid,
       count: categoryCounts?.all,
     },
     {
       id: "hospital",
-      label: isEn ? "Hospitals" : "হাসপাতাল",
+      label: "হাসপাতাল",
       icon: Building2,
       count: categoryCounts?.hospital,
     },
     {
       id: "diagnostic",
-      label: isEn ? "Diagnostic Centers" : "ডায়াগনস্টিক",
+      label: "ডায়াগনস্টিক",
       icon: Activity,
       count: categoryCounts?.diagnostic,
     },
     {
       id: "pharmacy",
-      label: isEn ? "Pharmacies" : "ফার্মেসি",
+      label: "ফার্মেসি",
       icon: Pill,
       count: categoryCounts?.pharmacy,
     },
@@ -97,10 +92,10 @@ export function PartnersTab({
         <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-3">
           <div>
             <CardTitle className="font-heading text-lg font-bold text-secondary">
-              {t("admin.dashboard.partnerHealthcareDirectory")}
+              পার্টনার চিকিৎসাকেন্দ্র ডিরেক্টরি
             </CardTitle>
             <CardDescription>
-              {t("admin.dashboard.contractedFacilitiesDesc")}
+              চুক্তিভুক্ত হাসপাতাল, ডায়াগনস্টিক সেন্টার ও ক্লিনিকসমূহ
             </CardDescription>
           </div>
 
@@ -109,7 +104,7 @@ export function PartnersTab({
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder={t ? t("admin.dashboard.searchPartnerPlaceholder") : "Search partners..."}
+                placeholder="পার্টনারের নাম বা ঠিকানা দিয়ে খুঁজুন..."
                 value={partnerSearch}
                 onChange={(e) => {
                   setPartnerSearch(e.target.value);
@@ -126,7 +121,7 @@ export function PartnersTab({
               className="border-border gap-1.5 text-xs font-semibold shrink-0"
             >
               <UploadCloud className="h-3.5 w-3.5 text-primary" />
-              <span>{isEn ? "Bulk Import" : "বাল্ক ইম্পোর্ট"}</span>
+              <span>বাল্ক ইম্পোর্ট</span>
             </Button>
 
             <Button
@@ -146,10 +141,10 @@ export function PartnersTab({
               className="border-border gap-1.5 text-xs font-semibold shrink-0"
             >
               <Download className="h-3.5 w-3.5" />
-              <span>{isEn ? "Export CSV" : "এক্সপোর্ট"}</span>
+              <span>এক্সপোর্ট</span>
             </Button>
             <Button onClick={onNewPartnerClick} size="sm" className="bg-primary hover:bg-primary-dark text-white shrink-0">
-              {t ? t("admin.dashboard.newPartnerTitle") : "New Partner"}
+              + নতুন পার্টনার যুক্ত করুন
             </Button>
           </div>
         </CardHeader>
@@ -176,148 +171,146 @@ export function PartnersTab({
               <Icon className="h-3.5 w-3.5" />
               <span>{cat.label}</span>
               {cat.count !== undefined && (
-                <span
-                  className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full font-bold ${
-                    isActive
-                      ? "bg-white/20 text-white"
-                      : "bg-muted text-muted-foreground"
-                  }`}
-                >
-                  {formatNum(cat.count, locale)}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
+                  <span
+                    className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full font-bold ${
+                      isActive
+                        ? "bg-white/20 text-white"
+                        : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {toBanglaNums(cat.count)}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
 
-      <CardContent className="p-0">
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t ? t("admin.dashboard.name") : "Name"}</TableHead>
-                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t ? t("admin.dashboard.category") : "Category"}</TableHead>
-                <TableHead className="font-semibold text-secondary">{t ? t("admin.dashboard.addressLabel") : "Address"}</TableHead>
-                <TableHead className="font-semibold text-primary whitespace-nowrap">{t ? t("admin.dashboard.discountRate") : "Discount"}</TableHead>
-                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t ? t("admin.dashboard.hotline") : "Hotline"}</TableHead>
-                <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">{t ? t("admin.dashboard.action") : "Action"}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody className="text-xs sm:text-sm">
-              {loading ? (
-                Array.from({ length: Math.min(pageSize, 10) }).map((_, i) => (
-                  <TableRow key={`skeleton-${i}`} className="hover:bg-transparent">
-                    <TableCell>
-                      <Skeleton className="h-4 w-36" />
-                    </TableCell>
-                    <TableCell>
-                      <Skeleton className="h-4 w-20" />
-                    </TableCell>
-                    <TableCell>
-                      <Skeleton className="h-4 w-48" />
-                    </TableCell>
-                    <TableCell>
-                      <Skeleton className="h-4 w-12" />
-                    </TableCell>
-                    <TableCell>
-                      <Skeleton className="h-4 w-24 font-mono" />
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-1">
-                        <Skeleton className="h-7 w-7 rounded-md" />
-                        <Skeleton className="h-7 w-7 rounded-md" />
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : partners.length > 0 ? (
-                partners.map((p) => (
-                  <TableRow key={p.id}>
-                    <TableCell className="font-bold text-secondary whitespace-nowrap">{p.name}</TableCell>
-                    <TableCell className="capitalize text-xs font-semibold whitespace-nowrap">
-                      {p.category === "hospital" ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 text-xs font-medium">
-                          <Building2 className="h-3 w-3" />
-                          {t ? t("admin.dashboard.hospital") : "Hospital"}
-                        </span>
-                      ) : p.category === "diagnostic" ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-700 dark:text-sky-300 border border-sky-500/20 text-xs font-medium">
-                          <Activity className="h-3 w-3" />
-                          {t ? t("admin.dashboard.diagnostic") : "Diagnostic"}
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20 text-xs font-medium">
-                          <Pill className="h-3 w-3" />
-                          {t ? t("admin.dashboard.pharmacy") : "Pharmacy"}
-                        </span>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">{p.address}</TableCell>
-                    <TableCell className="font-bold text-primary font-heading whitespace-nowrap">{p.discount}</TableCell>
-                    <TableCell className="font-mono text-xs whitespace-nowrap">{p.phone}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-1">
-                        {onResetPasswordClick && (
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="font-semibold text-secondary whitespace-nowrap">হাসপাতাল / সেন্টারের নাম</TableHead>
+                  <TableHead className="font-semibold text-secondary whitespace-nowrap">ক্যাটাগরি</TableHead>
+                  <TableHead className="font-semibold text-secondary">ঠিকানা</TableHead>
+                  <TableHead className="font-semibold text-primary whitespace-nowrap">ডিসকাউন্ট রেট</TableHead>
+                  <TableHead className="font-semibold text-secondary whitespace-nowrap">হটলাইন</TableHead>
+                  <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">অ্যাকশন</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody className="text-xs sm:text-sm">
+                {loading ? (
+                  Array.from({ length: Math.min(pageSize, 10) }).map((_, i) => (
+                    <TableRow key={`skeleton-${i}`} className="hover:bg-transparent">
+                      <TableCell>
+                        <Skeleton className="h-4 w-36" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-20" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-48" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-12" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-24 font-mono" />
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-1">
+                          <Skeleton className="h-7 w-7 rounded-md" />
+                          <Skeleton className="h-7 w-7 rounded-md" />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : partners.length > 0 ? (
+                  partners.map((p) => (
+                    <TableRow key={p.id}>
+                      <TableCell className="font-bold text-secondary whitespace-nowrap">{p.name}</TableCell>
+                      <TableCell className="capitalize text-xs font-semibold whitespace-nowrap">
+                        {p.category === "hospital" ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 text-xs font-medium">
+                            <Building2 className="h-3 w-3" />
+                            হাসপাতাল
+                          </span>
+                        ) : p.category === "diagnostic" ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-700 dark:text-sky-300 border border-sky-500/20 text-xs font-medium">
+                            <Activity className="h-3 w-3" />
+                            ডায়াগনস্টিক
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20 text-xs font-medium">
+                            <Pill className="h-3 w-3" />
+                            ফার্মেসি
+                          </span>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">{p.address}</TableCell>
+                      <TableCell className="font-bold text-primary font-heading whitespace-nowrap">{p.discount}</TableCell>
+                      <TableCell className="font-mono text-xs whitespace-nowrap">{p.phone}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-1">
+                          {onResetPasswordClick && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => onResetPasswordClick(p)}
+                              title={`${p.name} এর পাসওয়ার্ড রিসেট করুন (123456)`}
+                              aria-label={`${p.name} এর পাসওয়ার্ড রিসেট করুন`}
+                              className="h-8 w-8 text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/40 cursor-pointer"
+                            >
+                              <KeyRound className="h-4 w-4" />
+                            </Button>
+                          )}
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => onResetPasswordClick(p)}
-                            title={isEn ? `Reset password for ${p.name} (123456)` : `${p.name} এর পাসওয়ার্ড রিসেট করুন (123456)`}
-                            aria-label={isEn ? `Reset password for ${p.name}` : `${p.name} এর পাসওয়ার্ড রিসেট করুন`}
-                            className="h-8 w-8 text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/40 cursor-pointer"
+                            onClick={() => onEditClick(p)}
+                            aria-label={`${p.name} এর তথ্য এডিট করুন`}
+                            className="h-8 w-8 text-primary hover:text-primary-dark hover:bg-primary-light cursor-pointer"
                           >
-                            <KeyRound className="h-4 w-4" />
+                            <Edit3 className="h-4 w-4" />
                           </Button>
-                        )}
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => onEditClick(p)}
-                          aria-label={isEn ? `Edit ${p.name}` : `${p.name} এর তথ্য এডিট করুন`}
-                          className="h-8 w-8 text-primary hover:text-primary-dark hover:bg-primary-light cursor-pointer"
-                        >
-                          <Edit3 className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => onDeleteClick(p.id, p.name)}
-                          aria-label={isEn ? `Delete ${p.name}` : `${p.name} ডিলিট করুন`}
-                          className="h-8 w-8 text-destructive hover:text-rose-600 hover:bg-rose-50 cursor-pointer"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => onDeleteClick(p.id, p.name)}
+                            aria-label={`${p.name} ডিলিট করুন`}
+                            className="h-8 w-8 text-destructive hover:text-rose-600 hover:bg-rose-50 cursor-pointer"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground text-xs">
+                      কোনো চিকিৎসাকেন্দ্র বা পার্টনার পাওয়া যায়নি।
                     </TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground text-xs">
-                    {isEn ? "No facilities found." : "কোনো চিকিৎসাকেন্দ্র বা পার্টনার পাওয়া যায়নি।"}
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                )}
+              </TableBody>
+            </Table>
+          </div>
 
-        {/* Pagination Footer */}
-        {totalItems > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            pageSize={pageSize}
-            totalItems={totalItems}
-            onPageChange={onPageChange}
-            onPageSizeChange={onPageSizeChange}
-            pageSizeOptions={[10, 20, 50, 100]}
-            locale={locale}
-            t={t}
-            itemLabel={isEn ? "facilities" : "টি প্রতিষ্ঠান"}
-          />
-        )}
+          {/* Pagination Footer */}
+          {totalItems > 0 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              pageSize={pageSize}
+              totalItems={totalItems}
+              onPageChange={onPageChange}
+              onPageSizeChange={onPageSizeChange}
+              pageSizeOptions={[10, 20, 50, 100]}
+              itemLabel="টি প্রতিষ্ঠান"
+            />
+          )}
       </CardContent>
     </Card>
 

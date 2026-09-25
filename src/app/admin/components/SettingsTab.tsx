@@ -15,7 +15,6 @@ import {
 } from "@/lib/validations/settings";
 import { toast } from "sonner";
 import { Save, Loader2, RotateCcw } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FeeSettingsCard } from "./settings/FeeSettingsCard";
 import { PaymentSettingsCard } from "./settings/PaymentSettingsCard";
@@ -26,9 +25,6 @@ import { DatabaseBackupCard } from "./settings/DatabaseBackupCard";
 import { ReferenceCodesCard } from "./settings/ReferenceCodesCard";
 
 export function SettingsTab() {
-  const { locale } = useLanguage();
-  const isEn = locale === "en";
-
   const [loading, setLoading] = useState(true);
 
   const {
@@ -154,7 +150,7 @@ export function SettingsTab() {
 
       const res = await updateMultipleSystemSettingsAction(payload);
       if (res.success) {
-        toast.success(isEn ? "System settings saved successfully!" : res.message);
+        toast.success(res.message);
       } else {
         toast.error(res.message);
       }
@@ -201,29 +197,27 @@ export function SettingsTab() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 rounded-2xl bg-background border border-border">
         <div>
           <h2 className="font-heading font-bold text-lg text-secondary dark:text-white">
-            {isEn ? "System Settings & Configuration" : "সিস্টেম সেটিংস ও কনফিগারেশন"}
+            সিস্টেম সেটিংস ও কনফিগারেশন
           </h2>
           <p className="text-xs text-muted-foreground mt-0.5">
-            {isEn
-              ? "Manage membership pricing, payment details, hotlines, and announcements in real time."
-              : "মেম্বারশিপ ফি, বিকাশ নম্বর, হটলাইন ও অফার ব্যানার ড্যাশবোর্ড থেকে পরিবর্তন করুন।"}
+            মেম্বারশিপ ফি, বিকাশ নম্বর, হটলাইন ও অফার ব্যানার ড্যাশবোর্ড থেকে পরিবর্তন করুন।
           </p>
         </div>
         <div className="flex gap-2">
           <Button type="button" variant="outline" size="sm" onClick={loadSettings}>
             <RotateCcw className="h-3.5 w-3.5 mr-1.5" />
-            {isEn ? "Reset" : "রিলোড"}
+            রিলোড
           </Button>
           <Button type="submit" disabled={isSubmitting} size="sm" className="font-bold">
             {isSubmitting ? (
               <>
                 <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" />
-                {isEn ? "Saving..." : "সংরক্ষণ হচ্ছে..."}
+                সংরক্ষণ হচ্ছে...
               </>
             ) : (
               <>
                 <Save className="h-3.5 w-3.5 mr-1.5" />
-                {isEn ? "Save All Settings" : "সেটিংস সংরক্ষণ করুন"}
+                সেটিংস সংরক্ষণ করুন
               </>
             )}
           </Button>
@@ -235,26 +229,23 @@ export function SettingsTab() {
         <FeeSettingsCard
           register={register}
           errors={errors}
-          isEn={isEn}
         />
 
         {/* 2. Payment & bKash Information */}
         <PaymentSettingsCard
           register={register}
           errors={errors}
-          isEn={isEn}
         />
 
         {/* 3. Reference & Discount Codes */}
         <div className="lg:col-span-2">
-          <ReferenceCodesCard isEn={isEn} />
+          <ReferenceCodesCard />
         </div>
 
         {/* 4. Contact & Hotline Setup */}
         <ContactSettingsCard
           register={register}
           errors={errors}
-          isEn={isEn}
         />
 
         {/* 4. Announcements & Website Banner */}
@@ -263,18 +254,16 @@ export function SettingsTab() {
           noticeEnabled={noticeEnabled}
           setNoticeEnabled={(val) => setValue("notice_enabled", val, { shouldValidate: true })}
           noticeText={noticeText}
-          isEn={isEn}
         />
 
         {/* 5. Member Self-Transaction Entry */}
         <MemberTxSettingsCard
           allowMemberTx={allowMemberTx}
           setAllowMemberTx={(val) => setValue("allow_member_tx", val, { shouldValidate: true })}
-          isEn={isEn}
         />
 
         {/* 6. Database Backup & Disaster Recovery */}
-        <DatabaseBackupCard isEn={isEn} />
+        <DatabaseBackupCard />
       </div>
 
       <div className="flex justify-end pt-2">
@@ -282,12 +271,12 @@ export function SettingsTab() {
           {isSubmitting ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
-              {isEn ? "Saving Settings..." : "সংরক্ষণ করা হচ্ছে..."}
+              সংরক্ষণ করা হচ্ছে...
             </>
           ) : (
             <>
               <Save className="h-4 w-4 mr-2" />
-              {isEn ? "Save All Settings" : "সেটিংস সংরক্ষণ করুন"}
+              সেটিংস সংরক্ষণ করুন
             </>
           )}
         </Button>

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { CheckCircle2, AlertCircle, Trash2, Check, X, Filter } from "lucide-react";
 import { ImportEntityType, ProcessedRow } from "@/types/bulkImport";
 import { ENTITY_CONFIGS } from "@/lib/bulkImportUtils";
-import { useLanguage } from "@/components/layout/LanguageProvider";
+import { toBanglaNums } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -27,8 +27,6 @@ export function BulkImportPreviewTable({
   processedRows,
   onDeleteRow,
 }: BulkImportPreviewTableProps) {
-  const { locale } = useLanguage();
-  const isBn = locale === "bn";
   const [filter, setFilter] = useState<"all" | "valid" | "error">("all");
 
   const config = ENTITY_CONFIGS[entityType];
@@ -59,9 +57,9 @@ export function BulkImportPreviewTable({
             className="h-8 text-xs font-semibold rounded-lg gap-1.5"
           >
             <Filter className="h-3 w-3" />
-            <span>{isBn ? "সকল সারি" : "All Rows"}</span>
+            <span>সকল সারি</span>
             <Badge variant="secondary" className="text-[10px] px-1.5 py-0 ml-1">
-              {totalCount}
+              {toBanglaNums(totalCount)}
             </Badge>
           </Button>
 
@@ -73,9 +71,9 @@ export function BulkImportPreviewTable({
             className="h-8 text-xs font-semibold rounded-lg gap-1.5 text-emerald-700 dark:text-emerald-400"
           >
             <Check className="h-3 w-3" />
-            <span>{isBn ? "সঠিক ডেটা" : "Valid"}</span>
+            <span>সঠিক ডেটা</span>
             <Badge variant="outline" className="bg-emerald-500/10 border-emerald-300 text-emerald-700 dark:text-emerald-400 text-[10px] px-1.5 py-0 ml-1">
-              {validCount}
+              {toBanglaNums(validCount)}
             </Badge>
           </Button>
 
@@ -87,17 +85,15 @@ export function BulkImportPreviewTable({
             className="h-8 text-xs font-semibold rounded-lg gap-1.5 text-rose-600 dark:text-rose-400"
           >
             <X className="h-3 w-3" />
-            <span>{isBn ? "ত্রুটিপূর্ণ সারি" : "Has Errors"}</span>
+            <span>ত্রুটিপূর্ণ সারি</span>
             <Badge variant="outline" className="bg-rose-500/10 border-rose-300 text-rose-600 dark:text-rose-400 text-[10px] px-1.5 py-0 ml-1">
-              {errorCount}
+              {toBanglaNums(errorCount)}
             </Badge>
           </Button>
         </div>
 
         <p className="text-[11px] text-muted-foreground self-end sm:self-center px-1">
-          {isBn
-            ? `${totalCount} টির মধ্যে ${validCount} টি রেকর্ড ইম্পোর্ট উপযোগী`
-            : `${validCount} of ${totalCount} ready to import`}
+          {`${toBanglaNums(totalCount)} টির মধ্যে ${toBanglaNums(validCount)} টি রেকর্ড ইম্পোর্ট উপযোগী`}
         </p>
       </div>
 
@@ -108,14 +104,14 @@ export function BulkImportPreviewTable({
             <TableHeader className="bg-muted/60 sticky top-0 z-10">
               <TableRow className="border-b border-border">
                 <TableHead className="w-12 text-center text-xs font-bold">#</TableHead>
-                <TableHead className="w-24 text-xs font-bold">{isBn ? "স্ট্যাটাস" : "Status"}</TableHead>
+                <TableHead className="w-24 text-xs font-bold">স্ট্যাটাস</TableHead>
                 {primaryColumns.map((col) => (
                   <TableHead key={col.key} className="text-xs font-bold whitespace-nowrap">
-                    {isBn ? col.labelBn : col.labelEn}
+                    {col.labelBn}
                   </TableHead>
                 ))}
-                <TableHead className="text-xs font-bold">{isBn ? "ত্রুটির বিবরণ" : "Validation Issues"}</TableHead>
-                <TableHead className="w-12 text-center text-xs font-bold">{isBn ? "অ্যাকশন" : "Action"}</TableHead>
+                <TableHead className="text-xs font-bold">ত্রুটির বিবরণ</TableHead>
+                <TableHead className="w-12 text-center text-xs font-bold">অ্যাকশন</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -125,7 +121,7 @@ export function BulkImportPreviewTable({
                     colSpan={primaryColumns.length + 3}
                     className="text-center py-8 text-xs text-muted-foreground"
                   >
-                    {isBn ? "কোন সারি পাওয়া যায়নি।" : "No rows found for current filter."}
+                    কোন সারি পাওয়া যায়নি।
                   </TableCell>
                 </TableRow>
               ) : (
@@ -137,19 +133,19 @@ export function BulkImportPreviewTable({
                     }`}
                   >
                     <TableCell className="text-center font-mono font-bold text-muted-foreground">
-                      {row.rowIndex}
+                      {toBanglaNums(row.rowIndex)}
                     </TableCell>
 
                     <TableCell>
                       {row.isValid ? (
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 text-[11px] font-semibold">
                           <CheckCircle2 className="h-3 w-3" />
-                          <span>{isBn ? "সঠিক" : "Valid"}</span>
+                          <span>সঠিক</span>
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-600 text-[11px] font-semibold">
                           <AlertCircle className="h-3 w-3" />
-                          <span>{isBn ? "ত্রুটি" : "Error"}</span>
+                          <span>ত্রুটি</span>
                         </span>
                       )}
                     </TableCell>
@@ -170,7 +166,7 @@ export function BulkImportPreviewTable({
                     <TableCell className="min-w-[200px]">
                       {row.isValid ? (
                         <span className="text-[11px] text-emerald-600 font-medium">
-                          {isBn ? "কোন ত্রুটি নেই" : "Ready to import"}
+                          কোন ত্রুটি নেই
                         </span>
                       ) : (
                         <div className="space-y-1">
@@ -190,7 +186,7 @@ export function BulkImportPreviewTable({
                         size="sm"
                         onClick={() => onDeleteRow(row.id)}
                         className="h-7 w-7 p-0 text-muted-foreground hover:text-rose-600 transition-colors"
-                        title={isBn ? "সারিটি মুছে দিন" : "Remove row"}
+                        title="সারিটি মুছে দিন"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </Button>

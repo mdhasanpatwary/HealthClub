@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
 import { Transaction } from "@/services/db";
-import { formatNum, Locale } from "@/lib/i18n";
+import { formatNum } from "@/lib/utils";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { exportToCsv } from "@/lib/exportUtils";
@@ -19,8 +19,6 @@ interface TransactionsTabProps {
   pageSize: number;
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
-  locale: Locale;
-  t: (key: string) => string;
   loading?: boolean;
 }
 
@@ -32,19 +30,14 @@ export function TransactionsTab({
   pageSize,
   onPageChange,
   onPageSizeChange,
-  locale,
-  t,
   loading = false,
 }: TransactionsTabProps) {
-  const isEn = locale === "en";
-
-
   return (
     <Card className="border-border shadow-md">
       <CardHeader className="flex flex-row justify-between items-center">
         <div>
-          <CardTitle className="font-heading text-lg font-bold text-secondary">{t("admin.dashboard.recentTransactionsTitle")}</CardTitle>
-          <CardDescription>{t("admin.dashboard.txDescLabel")}</CardDescription>
+          <CardTitle className="font-heading text-lg font-bold text-secondary">সাম্প্রতিক লেনদেন সমূহ</CardTitle>
+          <CardDescription>মেম্বারদের ডিসকাউন্ট ও সেভিংসের রেকর্ড</CardDescription>
         </div>
         <Button
           onClick={() =>
@@ -64,7 +57,7 @@ export function TransactionsTab({
           className="border-border gap-1.5 text-xs font-semibold shrink-0"
         >
           <Download className="h-3.5 w-3.5" />
-          <span>{isEn ? "Export CSV" : "এক্সপোর্ট"}</span>
+          <span>এক্সপোর্ট</span>
         </Button>
       </CardHeader>
       <CardContent className="p-0">
@@ -72,11 +65,11 @@ export function TransactionsTab({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.memberName")}</TableHead>
-                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.medicalCenter")}</TableHead>
-                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.date")}</TableHead>
-                <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">{t("admin.dashboard.totalBill")}</TableHead>
-                <TableHead className="font-semibold text-primary text-right whitespace-nowrap">{t("admin.dashboard.savings")}</TableHead>
+                <TableHead className="font-semibold text-secondary whitespace-nowrap">মেম্বারের নাম</TableHead>
+                <TableHead className="font-semibold text-secondary whitespace-nowrap">মেডিক্যাল সেন্টার / পার্টনার</TableHead>
+                <TableHead className="font-semibold text-secondary whitespace-nowrap">তারিখ</TableHead>
+                <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">মোট বিল</TableHead>
+                <TableHead className="font-semibold text-primary text-right whitespace-nowrap">সাশ্রয় (ডিসকাউন্ট)</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className="text-xs sm:text-sm">
@@ -112,14 +105,14 @@ export function TransactionsTab({
                     </TableCell>
                     <TableCell className="text-secondary whitespace-nowrap">{tx.partnerName}</TableCell>
                     <TableCell className="text-muted-foreground whitespace-nowrap">{tx.date}</TableCell>
-                    <TableCell className="text-right font-mono whitespace-nowrap">৳{formatNum(tx.amount, locale)}</TableCell>
-                    <TableCell className="text-right font-mono text-primary font-bold whitespace-nowrap">৳{formatNum(tx.saved, locale)}</TableCell>
+                    <TableCell className="text-right font-mono whitespace-nowrap">৳{formatNum(tx.amount)}</TableCell>
+                    <TableCell className="text-right font-mono text-primary font-bold whitespace-nowrap">৳{formatNum(tx.saved)}</TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center py-8 text-muted-foreground text-xs">
-                    {t("admin.dashboard.noTxsFound") || (isEn ? "No transaction records found." : "কোনো লেনদেনের রেকর্ড পাওয়া যায়নি।")}
+                    কোনো লেনদেনের রেকর্ড পাওয়া যায়নি।
                   </TableCell>
                 </TableRow>
               )}
@@ -137,9 +130,7 @@ export function TransactionsTab({
             onPageChange={onPageChange}
             onPageSizeChange={onPageSizeChange}
             pageSizeOptions={[10, 20, 50, 100]}
-            locale={locale}
-            t={t}
-            itemLabel={isEn ? "transactions" : "টি লেনদেন"}
+            itemLabel="টি লেনদেন"
           />
         )}
       </CardContent>

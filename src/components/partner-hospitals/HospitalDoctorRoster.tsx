@@ -11,9 +11,9 @@ import { Doctor, Partner } from "@/services/db";
 import { Input } from "@/components/ui/input";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { DoctorSerialModal } from "@/components/ui/doctors/DoctorModals";
 import { DoctorCard } from "@/components/ui/doctors/DoctorCard";
+import { toBanglaNums } from "@/lib/utils";
 
 interface HospitalDoctorRosterProps {
   doctors: Doctor[];
@@ -21,26 +21,24 @@ interface HospitalDoctorRosterProps {
 }
 
 const DEPARTMENTS = [
-  { id: "all", bn: "সকল বিভাগ", en: "All Specialties" },
-  { id: "medicine", bn: "মেডিসিন", en: "Medicine" },
-  { id: "cardiology", bn: "হৃদরোগ (কার্ডিওলজি)", en: "Cardiology" },
-  { id: "gynecology", bn: "স্ত্রী ও প্রসূতিরোগ", en: "Gynecology" },
-  { id: "orthopedics", bn: "অর্থোপেডিকস (হাড়-জোড়া)", en: "Orthopedics" },
-  { id: "pediatrics", bn: "শিশু ও নবজাতক", en: "Pediatrics" },
-  { id: "surgery", bn: "জেনারেল ও ল্যাপারোস্কপিক সার্জারি", en: "Surgery" },
-  { id: "dermatology", bn: "চর্ম ও যৌনরোগ", en: "Dermatology" },
-  { id: "ent", bn: "নাক, কান ও গলা (ইএনটি)", en: "ENT" },
-  { id: "eye", bn: "চক্ষু রোগ", en: "Eye (Ophthalmology)" },
-  { id: "dental", bn: "দন্তরোগ ও ডেন্টাল সার্জারি", en: "Dental" },
-  { id: "nephrology", bn: "কিডনি রোগ (নেফ্রোলজি)", en: "Nephrology" },
-  { id: "psychiatry", bn: "মানসিক রোগ (সাইকিয়াট্রি)", en: "Psychiatry" },
-  { id: "hepatology", bn: "লিভার ও পরিপাকতন্ত্র", en: "Hepatology" },
-  { id: "nutrition", bn: "পুষ্টি ও ডায়েট", en: "Nutrition" },
+  { id: "all", label: "সকল বিভাগ" },
+  { id: "medicine", label: "মেডিসিন" },
+  { id: "cardiology", label: "হৃদরোগ (কার্ডিওলজি)" },
+  { id: "gynecology", label: "স্ত্রী ও প্রসূতিরোগ" },
+  { id: "orthopedics", label: "অর্থোপেডিকস (হাড়-জোড়া)" },
+  { id: "pediatrics", label: "শিশু ও নবজাতক" },
+  { id: "surgery", label: "জেনারেল ও ল্যাপারোস্কপিক সার্জারি" },
+  { id: "dermatology", label: "চর্ম ও যৌনরোগ" },
+  { id: "ent", label: "নাক, কান ও গলা (ইএনটি)" },
+  { id: "eye", label: "চক্ষু রোগ" },
+  { id: "dental", label: "দন্তরোগ ও ডেন্টাল সার্জারি" },
+  { id: "nephrology", label: "কিডনি রোগ (নেফ্রোলজি)" },
+  { id: "psychiatry", label: "মানসিক রোগ (সাইকিয়াট্রি)" },
+  { id: "hepatology", label: "লিভার ও পরিপাকতন্ত্র" },
+  { id: "nutrition", label: "পুষ্টি ও ডায়েট" },
 ];
 
 export default function HospitalDoctorRoster({ doctors, partner }: HospitalDoctorRosterProps) {
-  const { locale, t } = useLanguage();
-  const isEn = locale === "en";
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDept, setSelectedDept] = useState("all");
   const [visibleLimit, setVisibleLimit] = useState(12);
@@ -89,12 +87,10 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
           </div>
           <div className="space-y-1">
             <h3 className="text-sm sm:text-base font-bold text-foreground">
-              {isEn ? "Model Pharmacy & Medicine Service" : "মডেল ফার্মেসি ও ঔষধ সেবা"}
+              মডেল ফার্মেসি ও ঔষধ সেবা
             </h3>
             <p className="text-xs text-muted-foreground max-w-md mx-auto leading-relaxed">
-              {isEn
-                ? "This facility operates as a model pharmacy offering 100% genuine medicines, baby products, and medical supplies. Specialist doctor chambers are not currently hosted here."
-                : "এই প্রতিষ্ঠানটি একটি অনুমোদিত মডেল ফার্মেসি হিসেবে খাঁটি প্রেসক্রিপশন মেডিসিন, ইনসুলিন ও চিকিৎসা সামগ্রী সরবরাহ করে। এখানে সরাসরি চেম্বার সেবা নেই।"}
+              এই প্রতিষ্ঠানটি একটি অনুমোদিত মডেল ফার্মেসি হিসেবে খাঁটি প্রেসক্রিপশন মেডিসিন, ইনসুলিন ও চিকিৎসা সামগ্রী সরবরাহ করে। এখানে সরাসরি চেম্বার সেবা নেই।
             </p>
           </div>
           <a
@@ -106,7 +102,7 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
             })}
           >
             <PhoneCall className="h-3.5 w-3.5 mr-1.5" />
-            <span>{isEn ? "Call Pharmacy Counter" : "ফার্মেসিতে কল করুন"}</span>
+            <span>ফার্মেসিতে কল করুন</span>
           </a>
         </div>
       );
@@ -119,12 +115,10 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
         </div>
         <div className="space-y-1">
           <h3 className="text-sm sm:text-base font-bold text-foreground">
-            {isEn ? "No Resident Doctors Listed Yet" : "কোনো বিশেষজ্ঞ ডাক্তার তালিকাভুক্ত নেই"}
+            কোনো বিশেষজ্ঞ ডাক্তার তালিকাভুক্ত নেই
           </h3>
           <p className="text-xs text-muted-foreground max-w-md mx-auto">
-            {isEn
-              ? "Doctors visiting this facility will be updated soon. Please call the hotline for schedule inquiries."
-              : "এই প্রতিষ্ঠানে রোগী দেখার শিডিউল শীঘ্রই আপডেট করা হবে। যেকোনো তথ্যের জন্য সরাসরি হেল্পলাইনে যোগাযোগ করুন।"}
+            এই প্রতিষ্ঠানে রোগী দেখার শিডিউল শীঘ্রই আপডেট করা হবে। যেকোনো তথ্যের জন্য সরাসরি হেল্পলাইনে যোগাযোগ করুন।
           </p>
         </div>
         <a
@@ -137,9 +131,7 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
         >
           <PhoneCall className="h-3.5 w-3.5 mr-1.5" />
           <span>
-            {isDiagnostic
-              ? isEn ? "Call Diagnostic Desk" : "ডায়াগনস্টিকে কল করুন"
-              : isEn ? "Call Hospital Desk" : "হাসপাতাল ডেস্কে কল করুন"}
+            {isDiagnostic ? "ডায়াগনস্টিকে কল করুন" : "হাসপাতাল ডেস্কে কল করুন"}
           </span>
         </a>
       </div>
@@ -153,16 +145,14 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
         <div>
           <div className="flex items-center gap-2">
             <h2 className="text-base sm:text-lg font-bold text-secondary dark:text-white font-heading">
-              {isEn ? "Resident Consultant Doctors" : "চেম্বার ও বিশেষজ্ঞ ডাক্তার তালিকা"}
+              চেম্বার ও বিশেষজ্ঞ ডাক্তার তালিকা
             </h2>
             <Badge variant="secondary" className="font-bold text-xs bg-primary/10 text-primary border-primary/20">
-              {doctors.length} {isEn ? "Specialists" : "জন ডাক্তার"}
+              {toBanglaNums(doctors.length)} জন ডাক্তার
             </Badge>
           </div>
           <p className="text-xs text-muted-foreground mt-0.5">
-            {isEn
-              ? `Specialist doctors practicing and providing outpatient consultations at ${partner.name}`
-              : `${partner.name}-এ নিয়মিত চেম্বার ও রোগী দেখার শিডিউল`}
+            {partner.name}-এ নিয়মিত চেম্বার ও রোগী দেখার শিডিউল
           </p>
         </div>
 
@@ -170,7 +160,7 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
         <div className="relative w-full sm:w-64">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder={isEn ? "Search doctor or specialty..." : "ডাক্তার বা স্পেশালিটি খুঁজুন..."}
+            placeholder="ডাক্তার বা স্পেশালিটি খুঁজুন..."
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
@@ -198,7 +188,7 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
                     : "bg-background dark:bg-slate-900 text-muted-foreground border-border/80 hover:border-primary/40 hover:text-foreground"
                   }`}
               >
-                {isEn ? dept.en : dept.bn}
+                {dept.label}
               </button>
             );
           })}
@@ -212,9 +202,6 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
             <DoctorCard
               key={doc.id}
               doctor={doc}
-              locale={locale}
-              isEn={isEn}
-              t={t}
               variant="partner-roster"
               onSerialClick={(selectedDoc) => setSelectedDoctorForSerial(selectedDoc)}
             />
@@ -223,9 +210,7 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
       ) : (
         <div className="p-8 rounded-2xl border border-dashed border-border text-center">
           <p className="text-xs text-muted-foreground">
-            {isEn
-              ? "No doctors found matching your filter criteria."
-              : "আপনার অনুসন্ধানের সাথে মিল রেখে কোনো ডাক্তার পাওয়া যায়নি।"}
+            আপনার অনুসন্ধানের সাথে মিল রেখে কোনো ডাক্তার পাওয়া যায়নি।
           </p>
         </div>
       )}
@@ -239,9 +224,7 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
             onClick={() => setVisibleLimit((prev) => prev + 12)}
             className="rounded-xl px-6 border-primary/30 text-primary hover:bg-primary hover:text-white text-xs font-semibold cursor-pointer"
           >
-            {isEn
-              ? `Show More Doctors (${filteredDoctors.length - visibleLimit} remaining)`
-              : `আরো ডাক্তার দেখুন (বাকি ${filteredDoctors.length - visibleLimit} জন)`}
+            আরো ডাক্তার দেখুন (বাকি {toBanglaNums(filteredDoctors.length - visibleLimit)} জন)
           </Button>
         </div>
       )}
@@ -251,8 +234,6 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
         <DoctorSerialModal
           doctor={selectedDoctorForSerial}
           onClose={() => setSelectedDoctorForSerial(null)}
-          t={t}
-          locale={locale}
         />
       )}
     </div>

@@ -2,7 +2,6 @@
 
 import { Globe, ExternalLink } from "lucide-react";
 import { Partner, parsePartnerSocialLinks, formatSocialUrl } from "@/services/db";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { buttonVariants } from "@/components/ui/button";
 import { trackEvent } from "@/lib/analytics";
 import {
@@ -22,7 +21,6 @@ export default function HospitalSocialLinks({
   partner,
   variant = "sidebar",
 }: HospitalSocialLinksProps) {
-  const { t } = useLanguage();
   const socials = parsePartnerSocialLinks(partner.socialLinks);
 
   if (!socials) return null;
@@ -63,7 +61,7 @@ export default function HospitalSocialLinks({
             className="h-7 px-2.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-[11px] font-bold flex items-center gap-1.5 transition-all duration-200 cursor-pointer shadow-2xs hover:scale-105"
           >
             <WhatsAppIcon className="h-3.5 w-3.5 fill-current" />
-            <span>{t("partnerHospitals.profile.whatsapp")}</span>
+            <span>হোয়াটসঅ্যাপ চ্যাট</span>
           </a>
         )}
 
@@ -77,7 +75,7 @@ export default function HospitalSocialLinks({
             className="h-7 px-2.5 rounded-full bg-[#1877F2]/10 hover:bg-[#1877F2]/20 text-[#1877F2] border border-[#1877F2]/30 text-[11px] font-bold flex items-center gap-1.5 transition-all duration-200 cursor-pointer shadow-2xs hover:scale-105"
           >
             <FacebookIcon className="h-3 w-3 fill-current" />
-            <span>{t("partnerHospitals.profile.facebook")}</span>
+            <span>ফেসবুক পেজ</span>
           </a>
         )}
 
@@ -91,7 +89,7 @@ export default function HospitalSocialLinks({
             className="h-7 px-2.5 rounded-full bg-sky-500/10 hover:bg-sky-500/20 text-sky-600 dark:text-sky-400 border border-sky-500/30 text-[11px] font-bold flex items-center gap-1.5 transition-all duration-200 cursor-pointer shadow-2xs hover:scale-105"
           >
             <Globe className="h-3.5 w-3.5" />
-            <span>{t("partnerHospitals.profile.website")}</span>
+            <span>অফিসিয়াল ওয়েবসাইট</span>
           </a>
         )}
 
@@ -141,10 +139,10 @@ export default function HospitalSocialLinks({
     <div className="pt-3 border-t border-border/60 space-y-2.5">
       <div>
         <span className="text-[10px] font-bold text-primary uppercase tracking-wider font-mono">
-          {t("partnerHospitals.profile.socialLinks")}
+          সোশ্যাল মিডিয়া ও অনলাইন কানেক্ট
         </span>
         <p className="text-[11px] text-muted-foreground">
-          {t("partnerHospitals.profile.socialSubtitle")}
+          সরাসরি যোগাযোগ ও সাম্প্রতিক তথ্যের জন্য
         </p>
       </div>
 
@@ -162,7 +160,7 @@ export default function HospitalSocialLinks({
             })}
           >
             <WhatsAppIcon className="h-3.5 w-3.5 mr-2 fill-current shrink-0" />
-            <span className="truncate">{t("partnerHospitals.profile.whatsapp")}</span>
+            <span className="truncate">হোয়াটসঅ্যাপ চ্যাট</span>
             <ExternalLink className="h-3 w-3 ml-auto opacity-70" />
           </a>
         )}
@@ -180,7 +178,7 @@ export default function HospitalSocialLinks({
             })}
           >
             <FacebookIcon className="h-3.5 w-3.5 mr-2 fill-current shrink-0" />
-            <span className="truncate">{t("partnerHospitals.profile.facebook")}</span>
+            <span className="truncate">ফেসবুক পেজ</span>
             <ExternalLink className="h-3 w-3 ml-auto opacity-70" />
           </a>
         )}
@@ -198,7 +196,7 @@ export default function HospitalSocialLinks({
             })}
           >
             <Globe className="h-3.5 w-3.5 mr-2 shrink-0 text-sky-600" />
-            <span className="truncate">{t("partnerHospitals.profile.website")}</span>
+            <span className="truncate">অফিসিয়াল ওয়েবসাইট</span>
             <ExternalLink className="h-3 w-3 ml-auto opacity-70" />
           </a>
         )}
@@ -216,7 +214,7 @@ export default function HospitalSocialLinks({
             })}
           >
             <YouTubeIcon className="h-3.5 w-3.5 mr-2 fill-current shrink-0 text-red-600" />
-            <span className="truncate">{t("partnerHospitals.profile.youtube")}</span>
+            <span className="truncate">ইউটিউব চ্যানেল</span>
             <ExternalLink className="h-3 w-3 ml-auto opacity-70" />
           </a>
         )}
@@ -234,7 +232,7 @@ export default function HospitalSocialLinks({
             })}
           >
             <LinkedInIcon className="h-3.5 w-3.5 mr-2 fill-current shrink-0" />
-            <span className="truncate">{t("partnerHospitals.profile.linkedin")}</span>
+            <span className="truncate">লিঙ্কডইন</span>
             <ExternalLink className="h-3 w-3 ml-auto opacity-70" />
           </a>
         )}
@@ -252,7 +250,7 @@ export default function HospitalSocialLinks({
             })}
           >
             <InstagramIcon className="h-3.5 w-3.5 mr-2 fill-current shrink-0" />
-            <span className="truncate">{t("partnerHospitals.profile.instagram")}</span>
+            <span className="truncate">ইনস্টাগ্রাম</span>
             <ExternalLink className="h-3 w-3 ml-auto opacity-70" />
           </a>
         )}

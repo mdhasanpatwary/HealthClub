@@ -13,22 +13,12 @@ import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteC
 export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
 
 export async function generateMetadata() {
-  const isEn = false;
-
-  const ogTitle = isEn
-    ? "Doctor-Verified Health Tips & Disease Prevention Guides | Health Club"
-    : "ডাক্তারদের পরামর্শ ও স্বাস্থ্য গাইড | হেলথ ক্লাব";
-  const ogDesc = isEn
-    ? "Actionable medical advice, nutrition recommendations, and emergency first-aid protocols."
-    : "নিয়মিত স্বাস্থ্য সচেতনতা, খাদ্যতালিকা ও বিভিন্ন রোগ প্রতিরোধের কার্যকরী চিকিৎসকের পরামর্শ।";
+  const ogTitle = "ডাক্তারদের পরামর্শ ও স্বাস্থ্য গাইড | হেলথ ক্লাব";
+  const ogDesc = "নিয়মিত স্বাস্থ্য সচেতনতা, খাদ্যতালিকা ও বিভিন্ন রোগ প্রতিরোধের কার্যকরী চিকিৎসকের পরামর্শ।";
 
   return {
-    title: isEn
-      ? { absolute: "Health Tips, Disease Prevention & Medical Guides | Health Club" }
-      : "স্বাস্থ্য টিপস, রোগ প্রতিরোধ ও মেডিকেল গাইড",
-    description: isEn
-      ? "Verified medical guides, diet charts for diabetes & hypertension, emergency stroke & cardiac symptoms, child immunity, and seasonal illness prevention by registered doctors."
-      : "অভিজ্ঞ বিশেষজ্ঞ চিকিৎসকদের পরামর্শ, ডায়াবেটিস ও উচ্চ রক্তচাপ নিয়ন্ত্রণ, ডেঙ্গু ও হিটস্ট্রোক প্রতিরোধ, হার্ট অ্যাটাক ও স্ট্রোকের লক্ষণ, পুষ্টিকর খাদ্যতালিকা ও স্বাস্থ্যকর জীবনযাপনের নির্ভরযোগ্য গাইড।",
+    title: "স্বাস্থ্য টিপস, রোগ প্রতিরোধ ও মেডিকেল গাইড",
+    description: "অভিজ্ঞ বিশেষজ্ঞ চিকিৎসকদের পরামর্শ, ডায়াবেটিস ও উচ্চ রক্তচাপ নিয়ন্ত্রণ, ডেঙ্গু ও হিটস্ট্রোক প্রতিরোধ, হার্ট অ্যাটাক ও স্ট্রোকের লক্ষণ, পুষ্টিকর খাদ্যতালিকা ও স্বাস্থ্যকর জীবনযাপনের নির্ভরযোগ্য গাইড।",
     alternates: {
       canonical: `${SITE_URL}/health-tips`,
     },
@@ -37,7 +27,6 @@ export async function generateMetadata() {
       description: ogDesc,
       url: `${SITE_URL}/health-tips`,
       siteName: "হেলথ ক্লাব (Health Club)",
-      locale: isEn ? "en_US" : "bn_BD",
       type: "website",
       images: DEFAULT_OG_IMAGES,
     },
@@ -69,61 +58,57 @@ export async function generateMetadata() {
 }
 
 export default async function HealthTipsPage() {
-  const isEn = false;
-
   const articles = await getAllHealthTipsAction();
 
   const jsonLdData = [
     {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
-      "itemListElement": [
+      itemListElement: [
         {
           "@type": "ListItem",
-          "position": 1,
-          "name": isEn ? "Home" : "হোম",
-          "item": SITE_URL,
+          position: 1,
+          name: "হোম",
+          item: SITE_URL,
         },
         {
           "@type": "ListItem",
-          "position": 2,
-          "name": isEn ? "Health Tips" : "স্বাস্থ্য টিপস",
-          "item": `${SITE_URL}/health-tips`,
+          position: 2,
+          name: "স্বাস্থ্য টিপস",
+          item: `${SITE_URL}/health-tips`,
         },
       ],
     },
     {
       "@context": "https://schema.org",
       "@type": "MedicalWebPage",
-      "name": isEn ? "Health Club Medical Guides & Disease Prevention Tips" : "হেলথ ক্লাব স্বাস্থ্য টিপস ও রোগ প্রতিরোধ নির্দেশিকা",
-      "url": `${SITE_URL}/health-tips`,
-      "description": isEn
-        ? "Doctor-verified health advice, emergency symptom recognition, chronic disease management, and nutrition guidelines."
-        : "রেজিস্টার্ড চিকিৎসকদের দ্বারা যাচাইকৃত স্বাস্থ্য টিপস, জরুরি প্রাথমিক চিকিৎসা ও রোগ প্রতিরোধ গাইড।",
-      "about": [
-        { "@type": "MedicalCondition", "name": "Dengue Fever" },
-        { "@type": "MedicalCondition", "name": "Diabetes Mellitus" },
-        { "@type": "MedicalCondition", "name": "Hypertension" },
-        { "@type": "MedicalCondition", "name": "Myocardial Infarction" },
-        { "@type": "MedicalCondition", "name": "Stroke" },
-        { "@type": "MedicalCondition", "name": "Fatty Liver Disease" },
+      name: "হেলথ ক্লাব স্বাস্থ্য টিপস ও রোগ প্রতিরোধ নির্দেশিকা",
+      url: `${SITE_URL}/health-tips`,
+      description: "রেজিস্টার্ড চিকিৎসকদের দ্বারা যাচাইকৃত স্বাস্থ্য টিপস, জরুরি প্রাথমিক চিকিৎসা ও রোগ প্রতিরোধ গাইড।",
+      about: [
+        { "@type": "MedicalCondition", name: "Dengue Fever" },
+        { "@type": "MedicalCondition", name: "Diabetes Mellitus" },
+        { "@type": "MedicalCondition", name: "Hypertension" },
+        { "@type": "MedicalCondition", name: "Myocardial Infarction" },
+        { "@type": "MedicalCondition", name: "Stroke" },
+        { "@type": "MedicalCondition", name: "Fatty Liver Disease" },
       ],
-      "publisher": {
+      publisher: {
         "@type": "Organization",
-        "name": "Health Club",
-        "url": SITE_URL,
-        "logo": `${SITE_URL}/icon.png`,
+        name: "Health Club",
+        url: SITE_URL,
+        logo: `${SITE_URL}/icon.png`,
       },
     },
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      "mainEntity": HEALTH_TIPS_FAQS.map((faq) => ({
+      mainEntity: HEALTH_TIPS_FAQS.map((faq) => ({
         "@type": "Question",
-        "name": isEn ? faq.questionEn : faq.questionBn,
-        "acceptedAnswer": {
+        name: faq.questionBn,
+        acceptedAnswer: {
           "@type": "Answer",
-          "text": isEn ? faq.answerEn : faq.answerBn,
+          text: faq.answerBn,
         },
       })),
     },
@@ -141,17 +126,15 @@ export default async function HealthTipsPage() {
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold shadow-xs">
             <ShieldCheck className="h-3.5 w-3.5" />
-            <span>{isEn ? "Doctor Verified Medical Knowledge Base" : "অভিজ্ঞ চিকিৎসকদের যাচাইকৃত স্বাস্থ্য গাইড"}</span>
+            <span>অভিজ্ঞ চিকিৎসকদের যাচাইকৃত স্বাস্থ্য গাইড</span>
           </div>
 
           <h1 className="font-heading text-2xl sm:text-4xl md:text-5xl font-extrabold text-secondary dark:text-white tracking-tight leading-tight">
-            {isEn ? "Health Tips & Medical Care Guide" : "স্বাস্থ্য টিপস ও সুস্থ জীবনের নির্ভরযোগ্য গাইড"}
+            স্বাস্থ্য টিপস ও সুস্থ জীবনের নির্ভরযোগ্য গাইড
           </h1>
 
           <p className="text-xs sm:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            {isEn
-              ? "Comprehensive medical articles, disease prevention protocols, dietary recommendations, and emergency first aid verified by registered doctors."
-              : "নিয়মিত স্বাস্থ্য সচেতনতা, বিভিন্ন ক্রনিক রোগের প্রতিরোধ, ডায়েট চার্ট ও জরুরি ফার্স্ট এইড সম্পর্কে জেনে পরিবারসহ আজীবন সুস্থ থাকুন।"}
+            নিয়মিত স্বাস্থ্য সচেতনতা, বিভিন্ন ক্রনিক রোগের প্রতিরোধ, ডায়েট চার্ট ও জরুরি ফার্স্ট এইড সম্পর্কে জেনে পরিবারসহ আজীবন সুস্থ থাকুন।
           </p>
         </div>
       </div>
@@ -166,7 +149,7 @@ export default async function HealthTipsPage() {
           <div className="flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-primary" />
             <h2 className="font-heading text-xl sm:text-2xl font-bold text-secondary dark:text-white">
-              {isEn ? "All Health Guides & Articles" : "সকল স্বাস্থ্য আর্টিকেল ও গাইডসমূহ"}
+              সকল স্বাস্থ্য আর্টিকেল ও গাইডসমূহ
             </h2>
           </div>
           <HealthTipsDirectory initialArticles={articles} />
@@ -183,12 +166,10 @@ export default async function HealthTipsPage() {
             </div>
             <div className="space-y-1">
               <h3 className="font-heading font-bold text-lg sm:text-xl text-secondary dark:text-white">
-                {isEn ? "Need In-Person Specialist Doctor Advice?" : "বিশেষজ্ঞ ডাক্তারের পরামর্শ প্রয়োজন?"}
+                বিশেষজ্ঞ ডাক্তারের পরামর্শ প্রয়োজন?
               </h3>
               <p className="text-xs sm:text-sm text-muted-foreground max-w-xl">
-                {isEn
-                  ? "Explore chamber schedules of leading specialist consultants in Feni and get exclusive discounts on consultations and lab tests."
-                  : "ফেনীর সেরা স্পেশালিস্ট ডাক্তারদের চেম্বার শিডিউল দেখুন এবং হেলথ ক্লাব মেম্বারশিপ কার্ডে ডাক্তার ভিজিট ও প্যাথলজি টেস্টে আকর্ষণীয় ছাড় পান।"}
+                ফেনীর সেরা স্পেশালিস্ট ডাক্তারদের চেম্বার শিডিউল দেখুন এবং হেলথ ক্লাব মেম্বারশিপ কার্ডে ডাক্তার ভিজিট ও প্যাথলজি টেস্টে আকর্ষণীয় ছাড় পান।
               </p>
             </div>
           </div>
@@ -198,7 +179,7 @@ export default async function HealthTipsPage() {
               className: "shrink-0 w-full sm:w-auto font-bold h-11 px-6 rounded-xl cursor-pointer",
             })}
           >
-            <span>{isEn ? "Find Specialist Doctors" : "ডাক্তারদের তালিকা দেখুন"}</span>
+            <span>ডাক্তারদের তালিকা দেখুন</span>
             <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </div>

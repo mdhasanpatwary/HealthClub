@@ -23,7 +23,6 @@ import {
   EyeOff,
   Sparkles,
 } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toast } from "sonner";
 
 export interface StaffCredentialsData {
@@ -47,7 +46,6 @@ export function PartnerStaffCredentialsModal({
   onClose,
   data,
 }: PartnerStaffCredentialsModalProps) {
-  const { t } = useLanguage();
   const [showPassword, setShowPassword] = useState(true);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
@@ -60,27 +58,27 @@ export function PartnerStaffCredentialsModal({
 
   const roleText =
     data.role === "manager"
-      ? t("partner.staff.roleManager")
-      : t("partner.staff.roleCashier");
+      ? "ম্যানেজার"
+      : "বিলিং স্টাফ";
 
-  const fullTextToCopy = `🔐 ${t("partner.staff.accessDetails")}:
-🔗 ${t("partner.staff.loginUrlLabel")}: ${loginUrl}
-👤 ${t("partner.staff.usernameLabel").replace(" *", "")}: ${data.username}
-🔑 ${t("partner.staff.passwordLabel").replace(" *", "")}: ${
-    data.password || t("partner.staff.passwordAssignedNote")
+  const fullTextToCopy = `🔐 স্টাফ লগইন বিবরণী:
+🔗 লগইন পেজ লিংক: ${loginUrl}
+👤 ইউজারনেম: ${data.username}
+🔑 পাসওয়ার্ড: ${
+    data.password || "(প্রশাসক দ্বারা নির্ধারিত)"
   }`;
 
   const handleCopySingle = (text: string, key: string, label: string) => {
     navigator.clipboard.writeText(text);
     setCopiedKey(key);
-    toast.success(`${label} ${t("partner.staff.copiedAllCredentials")}`);
+    toast.success(`${label} কপি করা হয়েছে`);
     setTimeout(() => setCopiedKey(null), 2000);
   };
 
   const handleCopyAll = () => {
     navigator.clipboard.writeText(fullTextToCopy);
     setCopiedKey("all");
-    toast.success(t("partner.staff.copiedAllCredentials"));
+    toast.success("সকল লগইন তথ্য কপি করা হয়েছে");
     setTimeout(() => setCopiedKey(null), 2500);
   };
 
@@ -94,10 +92,10 @@ export function PartnerStaffCredentialsModal({
             </div>
             <div>
               <DialogTitle className="text-base sm:text-lg font-bold font-heading text-secondary dark:text-white">
-                {t("partner.staff.credentialModalTitle")}
+                স্টাফ লগইন স্লিপ
               </DialogTitle>
               <DialogDescription className="text-xs text-muted-foreground">
-                {t("partner.staff.credentialModalDesc")}
+                স্টাফকে নিচের তথ্যগুলো দিয়ে পোর্টালে লগইন করতে বলুন
               </DialogDescription>
             </div>
           </div>
@@ -139,7 +137,7 @@ export function PartnerStaffCredentialsModal({
             <div className="space-y-1">
               <span className="text-[11px] font-semibold text-muted-foreground flex items-center gap-1.5">
                 <ExternalLink className="h-3.5 w-3.5 text-primary" />
-                {t("partner.staff.loginUrlLabel")}
+                লগইন পেজ লিংক
               </span>
               <div className="flex items-center gap-2 bg-muted/50 p-2 rounded-xl border border-border/60">
                 <span className="text-xs font-mono text-foreground select-all truncate flex-1">
@@ -153,11 +151,11 @@ export function PartnerStaffCredentialsModal({
                     handleCopySingle(
                       loginUrl,
                       "url",
-                      t("partner.staff.loginUrlLabel")
+                      "লগইন পেজ লিংক"
                     )
                   }
                   className="h-7 w-7 p-0 rounded-lg text-muted-foreground hover:text-foreground cursor-pointer shrink-0"
-                  title={t("partner.staff.copyUrl")}
+                  title="লিংক কপি করুন"
                 >
                   {copiedKey === "url" ? (
                     <Check className="h-3.5 w-3.5 text-emerald-600" />
@@ -172,7 +170,7 @@ export function PartnerStaffCredentialsModal({
             <div className="space-y-1">
               <span className="text-[11px] font-semibold text-muted-foreground flex items-center gap-1.5">
                 <ShieldCheck className="h-3.5 w-3.5 text-primary" />
-                {t("partner.staff.usernameLabel").replace(" *", "")}
+                ইউজারনেম
               </span>
               <div className="flex items-center gap-2 bg-muted/50 p-2 rounded-xl border border-border/60">
                 <span className="text-xs font-mono font-bold text-foreground select-all truncate flex-1">
@@ -186,11 +184,11 @@ export function PartnerStaffCredentialsModal({
                     handleCopySingle(
                       data.username,
                       "username",
-                      t("partner.staff.usernameLabel").replace(" *", "")
+                      "ইউজারনেম"
                     )
                   }
                   className="h-7 w-7 p-0 rounded-lg text-muted-foreground hover:text-foreground cursor-pointer shrink-0"
-                  title={t("partner.staff.copyUsername")}
+                  title="ইউজারনেম কপি করুন"
                 >
                   {copiedKey === "username" ? (
                     <Check className="h-3.5 w-3.5 text-emerald-600" />
@@ -205,7 +203,7 @@ export function PartnerStaffCredentialsModal({
             <div className="space-y-1">
               <span className="text-[11px] font-semibold text-muted-foreground flex items-center gap-1.5">
                 <Lock className="h-3.5 w-3.5 text-primary" />
-                {t("partner.staff.passwordLabel").replace(" *", "")}
+                পাসওয়ার্ড
               </span>
               <div className="flex items-center gap-2 bg-muted/50 p-2 rounded-xl border border-border/60">
                 <span className="text-xs font-mono font-bold text-foreground select-all truncate flex-1">
@@ -213,7 +211,7 @@ export function PartnerStaffCredentialsModal({
                     ? showPassword
                       ? data.password
                       : "••••••••"
-                    : t("partner.staff.passwordAssignedNote")}
+                    : "(প্রশাসক দ্বারা নির্ধারিত)"}
                 </span>
                 {data.password && (
                   <Button
@@ -222,7 +220,7 @@ export function PartnerStaffCredentialsModal({
                     size="sm"
                     onClick={() => setShowPassword(!showPassword)}
                     className="h-7 w-7 p-0 rounded-lg text-muted-foreground hover:text-foreground cursor-pointer shrink-0"
-                    title={showPassword ? "Hide" : "Show"}
+                    title={showPassword ? "পাসওয়ার্ড লুকান" : "পাসওয়ার্ড দেখুন"}
                   >
                     {showPassword ? (
                       <EyeOff className="h-3.5 w-3.5" />
@@ -240,11 +238,11 @@ export function PartnerStaffCredentialsModal({
                       handleCopySingle(
                         data.password || "",
                         "password",
-                        t("partner.staff.passwordLabel").replace(" *", "")
+                        "পাসওয়ার্ড"
                       )
                     }
                     className="h-7 w-7 p-0 rounded-lg text-muted-foreground hover:text-foreground cursor-pointer shrink-0"
-                    title={t("partner.staff.copyPassword")}
+                    title="পাসওয়ার্ড কপি করুন"
                   >
                     {copiedKey === "password" ? (
                       <Check className="h-3.5 w-3.5 text-emerald-600" />
@@ -258,7 +256,7 @@ export function PartnerStaffCredentialsModal({
           </div>
 
           <p className="text-[11px] text-muted-foreground text-center">
-            {t("partner.staff.sendToStaffTip")}
+            টিপ: &apos;পূর্ণ স্লিপ কপি করুন&apos; বাটনে ক্লিক করে WhatsApp বা SMS-এর মাধ্যমে স্টাফকে পাঠান।
           </p>
         </div>
 
@@ -269,7 +267,7 @@ export function PartnerStaffCredentialsModal({
             onClick={onClose}
             className="border-border rounded-xl cursor-pointer order-2 sm:order-1"
           >
-            {t("common.close")}
+            বন্ধ করুন
           </Button>
           <Button
             type="button"
@@ -279,12 +277,12 @@ export function PartnerStaffCredentialsModal({
             {copiedKey === "all" ? (
               <>
                 <Check className="h-4 w-4 text-white" />
-                <span>{t("partner.staff.copiedAllCredentials")}</span>
+                <span>কপি সম্পন্ন হয়েছে</span>
               </>
             ) : (
               <>
                 <Copy className="h-4 w-4" />
-                <span>{t("partner.staff.copySlipBtn")}</span>
+                <span>পূর্ণ স্লিপ কপি করুন</span>
               </>
             )}
           </Button>

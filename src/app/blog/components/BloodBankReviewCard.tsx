@@ -17,34 +17,21 @@ import { BlogReviewCardWrapper } from "./BlogReviewCardWrapper";
 
 interface BloodBankReviewCardProps {
   bank: BloodBankReviewItem;
-  locale?: string;
 }
 
 export function BloodBankReviewCard({
   bank,
-  locale = "bn",
 }: BloodBankReviewCardProps) {
-  const isEn = locale === "en";
-  const name = isEn ? bank.nameEn : bank.nameBn;
-  const address = isEn ? bank.addressEn : bank.addressBn;
-  const typeName = isEn ? bank.typeEn : bank.typeBn;
-  const hubName = isEn ? bank.hubEn : bank.hubBn;
-  const description = isEn
-    ? bank.descriptionEn ||
-      `${bank.nameEn} is a verified blood banking and emergency donor coordination facility located at ${bank.addressEn}, Feni, providing voluntary blood services, pre-transfusion screening, and emergency patient support.`
-    : bank.descriptionBn;
+  const name = bank.nameBn || bank.nameEn;
+  const address = bank.addressBn || bank.addressEn;
+  const typeName = bank.typeBn || bank.typeEn;
+  const hubName = bank.hubBn || bank.hubEn;
+  const description = bank.descriptionBn ||
+    `${bank.nameBn} ফেনীর একটি বিশ্বস্ত রক্ত পরিসঞ্চালন ও রক্তদাতা সমন্বয় কেন্দ্র, যেখানে নিরাপদ রক্ত পরিসঞ্চালন এবং জরুরি রোগী সেবায় স্বেচ্ছাসেবী নেটওয়ার্ক কাজ করে।`;
 
-  const keyFeatures = isEn
-    ? bank.keyFeaturesEn || bank.keyFeaturesBn
-    : bank.keyFeaturesBn;
-
-  const servicesOffered = isEn
-    ? bank.servicesOfferedEn || bank.servicesOfferedBn
-    : bank.servicesOfferedBn;
-
-  const openHours = isEn
-    ? bank.openHoursEn || bank.openHoursBn
-    : bank.openHoursBn;
+  const keyFeatures = bank.keyFeaturesBn;
+  const servicesOffered = bank.servicesOfferedBn;
+  const openHours = bank.openHoursBn;
 
   const sectionId = `blood-bank-${bank.rank}`;
 
@@ -53,7 +40,6 @@ export function BloodBankReviewCard({
       sectionId={sectionId}
       rank={bank.rank}
       partnerStatus={bank.partnerStatus}
-      locale={locale}
     >
       {/* Header: Names + Badges */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
@@ -74,7 +60,7 @@ export function BloodBankReviewCard({
             {bank.partnerStatus && (
               <Badge className="bg-emerald-600 dark:bg-emerald-700 text-white font-semibold flex items-center gap-1 shadow-xs">
                 <ShieldCheck className="h-3.5 w-3.5" />
-                <span>{isEn ? "Health Club Verified" : "হেলথ ক্লাব ভেরিফায়েড পার্টনার"}</span>
+                <span>হেলথ ক্লাব ভেরিফায়েড পার্টনার</span>
               </Badge>
             )}
           </div>
@@ -95,7 +81,7 @@ export function BloodBankReviewCard({
           {bank.is24x7 ? (
             <span className="inline-flex items-center gap-1.5 text-xs bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/20 px-2.5 py-1 rounded-lg font-bold">
               <Droplet className="h-3.5 w-3.5 fill-rose-500 text-rose-500" />
-              <span>{isEn ? "24/7 Emergency Blood Support" : "২৪/৭ জরুরি রক্ত সেবা"}</span>
+              <span>২৪/৭ জরুরি রক্ত সেবা</span>
             </span>
           ) : (
             <span className="inline-flex items-center gap-1.5 text-xs bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 px-2.5 py-1 rounded-lg font-semibold">
@@ -107,21 +93,21 @@ export function BloodBankReviewCard({
           {bank.bloodTestingFacility && (
             <span className="inline-flex items-center gap-1.5 text-xs bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-500/20 px-2.5 py-1 rounded-lg font-semibold">
               <ShieldCheck className="h-3.5 w-3.5" />
-              <span>{isEn ? "5-Point TTI Lab Screening" : "বাধ্যতামূলক ৫টি রোগ স্ক্রিনিং ল্যাব"}</span>
+              <span>বাধ্যতামূলক ৫টি রোগ স্ক্রিনিং ল্যাব</span>
             </span>
           )}
 
           {bank.voluntaryDonorsNetwork && (
             <span className="inline-flex items-center gap-1.5 text-xs bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-lg font-semibold">
               <Users className="h-3.5 w-3.5" />
-              <span>{isEn ? "Youth Voluntary Network" : "স্বেচ্ছাসেবী রক্তদাতা নেটওয়ার্ক"}</span>
+              <span>স্বেচ্ছাসেবী রক্তদাতা নেটওয়ার্ক</span>
             </span>
           )}
 
           {bank.rareGroupSupport && (
             <span className="inline-flex items-center gap-1.5 text-xs bg-purple-500/10 text-purple-700 dark:text-purple-400 border border-purple-500/20 px-2.5 py-1 rounded-lg font-semibold">
               <Heart className="h-3.5 w-3.5 text-purple-500" />
-              <span>{isEn ? "Rare Negative Blood Desk" : "দুর্লভ নেগেটিভ রক্তের জরুরি সেল"}</span>
+              <span>দুর্লভ নেগেটিভ রক্তের জরুরি সেল</span>
             </span>
           )}
         </div>
@@ -136,20 +122,20 @@ export function BloodBankReviewCard({
       <div className="rounded-xl border border-border/70 bg-muted/40 p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
         <div className="space-y-1">
           <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block">
-            {isEn ? "Blood Service Availability" : "রক্ত সেবার ধরন ও প্রাপ্তিসাধ্যতা"}
+            রক্ত সেবার ধরন ও প্রাপ্তিসাধ্যতা
           </span>
           <span className="font-medium text-foreground flex items-center gap-1.5">
             <Droplet className="h-4 w-4 text-rose-600 shrink-0" />
             <span>
               {bank.bloodBagCollection
-                ? (isEn ? "Stored Blood Bank & Testing" : "রক্ত সংরক্ষণাগার ও সার্বক্ষণিক ল্যাব")
-                : (isEn ? "Bedside Voluntary Donor Coordination" : "জরুরি স্বেচ্ছাসেবী রক্তদাতা সমন্বয়")}
+                ? "রক্ত সংরক্ষণাগার ও সার্বক্ষণিক ল্যাব"
+                : "জরুরি স্বেচ্ছাসেবী রক্তদাতা সমন্বয়"}
             </span>
           </span>
         </div>
         <div className="space-y-1">
           <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block">
-            {isEn ? "Operating Hours" : "কার্যক্রম ও হেল্পলাইন সময়সূচি"}
+            কার্যক্রম ও হেল্পলাইন সময়সূচি
           </span>
           <span className="font-medium text-foreground flex items-center gap-1.5">
             <Clock className="h-4 w-4 text-primary shrink-0" />
@@ -164,7 +150,7 @@ export function BloodBankReviewCard({
         <div className="space-y-2">
           <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
             <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
-            <span>{isEn ? "Core Safety Features" : "প্রধান সুবিধা ও নিরাপত্তা বৈশিষ্ট্য"}</span>
+            <span>প্রধান সুবিধা ও নিরাপত্তা বৈশিষ্ট্য</span>
           </h4>
           <ul className="space-y-1.5 text-xs sm:text-sm text-foreground/90">
             {keyFeatures.map((feat, idx) => (
@@ -180,7 +166,7 @@ export function BloodBankReviewCard({
         <div className="space-y-2">
           <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
             <Heart className="h-3.5 w-3.5 text-rose-500" />
-            <span>{isEn ? "Clinical Blood Services" : "সেবা ও সহায়তা কার্যক্রম"}</span>
+            <span>সেবা ও সহায়তা কার্যক্রম</span>
           </h4>
           <ul className="space-y-1.5 text-xs sm:text-sm text-foreground/90">
             {servicesOffered.map((serv, idx) => (
@@ -202,24 +188,24 @@ export function BloodBankReviewCard({
               className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-rose-600 text-white font-semibold text-xs sm:text-sm hover:bg-rose-700 transition-colors shadow-xs"
             >
               <Phone className="h-3.5 w-3.5" />
-              <span>{isEn ? `Call: ${bank.phone}` : `কল করুন: ${bank.phone}`}</span>
+              <span>{`কল করুন: ${bank.phone}`}</span>
             </a>
 
             {bank.hotline && (
               <a
                 href={`tel:${bank.hotline.replace(/[^0-9]/g, "")}`}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-muted text-foreground/90 font-medium text-xs hover:bg-muted/80 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-muted text-foreground/90 font-medium text-xs hover:bg-muted/80 transition-colors"
               >
-                <span>{isEn ? `Hotline: ${bank.hotline}` : `হটলাইন: ${bank.hotline}`}</span>
+                <span>{`হটলাইন: ${bank.hotline}`}</span>
               </a>
             )}
 
             {bank.emergencyContact && (
               <a
                 href={`tel:${bank.emergencyContact.replace(/[^0-9]/g, "")}`}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-muted text-foreground/90 font-medium text-xs hover:bg-muted/80 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-muted text-foreground/90 font-medium text-xs hover:bg-muted/80 transition-colors"
               >
-                <span>{isEn ? `Emergency: ${bank.emergencyContact}` : `জরুরি: ${bank.emergencyContact}`}</span>
+                <span>{`জরুরি: ${bank.emergencyContact}`}</span>
               </a>
             )}
           </div>
@@ -231,14 +217,12 @@ export function BloodBankReviewCard({
             className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-primary/10 text-primary font-semibold text-xs hover:bg-primary/20 transition-colors border border-primary/20"
           >
             <Search className="h-3.5 w-3.5" />
-            <span>{isEn ? "Search Donors Live" : "লাইভ রক্তদাতা খুঁজুন"}</span>
+            <span>লাইভ রক্তদাতা খুঁজুন</span>
             <ExternalLink className="h-3 w-3" />
           </Link>
 
           <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">
-            {isEn
-              ? bank.partnerDiscountEn || bank.partnerDiscountBn || "100% Free Volunteer Service"
-              : bank.partnerDiscountBn || "১০০% নিঃস্বার্থ স্বেচ্ছাসেবী সেবা"}
+            {bank.partnerDiscountBn || "১০০% নিঃস্বার্থ স্বেচ্ছাসেবী সেবা"}
           </span>
         </div>
       </div>

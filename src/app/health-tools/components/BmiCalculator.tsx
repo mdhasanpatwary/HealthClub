@@ -7,14 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Activity, Scale, Sparkles, RotateCcw } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-import { formatNum } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 
 export function BmiCalculator() {
-  const { locale, t } = useLanguage();
-  const isEn = locale === "en";
-
   const [unit, setUnit] = useState<"ft" | "cm">("ft");
   const [feet, setFeet] = useState("");
   const [inches, setInches] = useState("");
@@ -83,35 +79,35 @@ export function BmiCalculator() {
     switch (bmiResult.category) {
       case "underweight":
         return {
-          title: t("healthTools.bmi.underweight"),
+          title: "কম ওজন (আন্ডারওয়েট)",
           color: "text-amber-500",
           bgColor: "bg-amber-500/10 border-amber-500/30",
           badgeBg: "bg-amber-500 text-white",
-          advice: t("healthTools.bmi.underweightAdvice"),
+          advice: "আপনার ওজন স্বাভাবিকের চেয়ে কম। দৈনন্দিন খাদ্যতালিকায় পুষ্টিকর প্রোটিন, বাদাম, দুধ ও সুষম খাবার বাড়ান।",
         };
       case "normal":
         return {
-          title: t("healthTools.bmi.normal"),
+          title: "স্বাভাবিক ও আদর্শ ওজন",
           color: "text-primary",
           bgColor: "bg-primary/10 border-primary/30",
           badgeBg: "bg-primary text-white",
-          advice: t("healthTools.bmi.normalAdvice"),
+          advice: "অভিনন্দন! আপনার বডি ম্যাস ইনডেক্স সম্পূর্ণ স্বাভাবিক ও স্বাস্থ্যকর। নিয়মিত ব্যায়াম ও সুষম খাবার বজায় রাখুন।",
         };
       case "overweight":
         return {
-          title: t("healthTools.bmi.overweight"),
+          title: "অতিরিক্ত ওজন (ওভারওয়েট)",
           color: "text-orange-500",
           bgColor: "bg-orange-500/10 border-orange-500/30",
           badgeBg: "bg-orange-500 text-white",
-          advice: t("healthTools.bmi.overweightAdvice"),
+          advice: "আপনার ওজন কিছুটা বেশি। দৈনিক অন্তত ৩০ মিনিট হাঁটা বা শরীরচর্চা করুন এবং অতিরিক্ত চিনি ও ভাজাপোড়া খাবার পরিহার করুন।",
         };
       case "obese":
         return {
-          title: t("healthTools.bmi.obese"),
+          title: "স্থূলতা / স্থূলকায় (উচ্চ ঝুঁকি)",
           color: "text-rose-500",
           bgColor: "bg-rose-500/10 border-rose-500/30",
           badgeBg: "bg-rose-600 text-white",
-          advice: t("healthTools.bmi.obeseAdvice"),
+          advice: "স্থূলতা হৃদরোগ ও ডায়াবেটিসের ঝুঁকি বাড়ায়। দ্রুত একজন পুষ্টিবিদ বা বিশেষজ্ঞ চিকিৎসকের পরামর্শ নিয়ে ডায়েট চার্ট অনুসরণ করুন।",
         };
     }
   };
@@ -130,10 +126,10 @@ export function BmiCalculator() {
               </div>
               <div>
                 <h3 className="font-heading font-bold text-base sm:text-lg text-secondary dark:text-white">
-                  {t("healthTools.bmi.title")}
+                  বিএমআই (BMI) ক্যালকুলেটর
                 </h3>
                 <p className="text-xs text-muted-foreground">
-                  {t("healthTools.bmi.subtitle")}
+                  উচ্চতা ও ওজনের সঠিক অনুপাত নির্ণয়
                 </p>
               </div>
             </div>
@@ -141,7 +137,7 @@ export function BmiCalculator() {
             {/* Unit Toggle */}
             <div
               role="radiogroup"
-              aria-label={isEn ? "Height measurement unit" : "উচ্চতা পরিমাপের একক"}
+              aria-label="উচ্চতা পরিমাপের একক"
               className="flex bg-muted p-1 rounded-xl text-xs font-semibold"
             >
               <button
@@ -153,7 +149,7 @@ export function BmiCalculator() {
                   unit === "ft" ? "bg-background text-foreground shadow-xs font-bold" : "text-muted-foreground"
                 }`}
               >
-                {t("healthTools.bmi.unitFt")}
+                ফিট/ইঞ্চি
               </button>
               <button
                 type="button"
@@ -164,7 +160,7 @@ export function BmiCalculator() {
                   unit === "cm" ? "bg-background text-foreground shadow-xs font-bold" : "text-muted-foreground"
                 }`}
               >
-                {t("healthTools.bmi.unitCm")}
+                সেমি (CM)
               </button>
             </div>
           </div>
@@ -174,18 +170,18 @@ export function BmiCalculator() {
             {unit === "ft" ? (
               <div className="space-y-1.5">
                 <Label className="text-xs font-semibold">
-                  {t("healthTools.bmi.heightFtIn")}
+                  উচ্চতা (ফিট ও ইঞ্চি)
                 </Label>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <Input
                       id="height-feet"
-                      aria-label={t("healthTools.bmi.heightFtIn")}
+                      aria-label="উচ্চতা (ফিট ও ইঞ্চি)"
                       type="number"
                       step="1"
                       min="1"
                       max="8"
-                      placeholder={t("healthTools.bmi.feetPlaceholder")}
+                      placeholder="ফিট (যেমন: ৫)"
                       value={feet}
                       onChange={(e) => setFeet(e.target.value)}
                       required
@@ -194,12 +190,12 @@ export function BmiCalculator() {
                   <div>
                     <Input
                       id="height-inches"
-                      aria-label={t("healthTools.bmi.heightFtIn")}
+                      aria-label="উচ্চতা (ফিট ও ইঞ্চি)"
                       type="number"
                       step="1"
                       min="0"
                       max="11"
-                      placeholder={t("healthTools.bmi.inchesPlaceholder")}
+                      placeholder="ইঞ্চি (যেমন: ৮)"
                       value={inches}
                       onChange={(e) => setInches(e.target.value)}
                     />
@@ -209,7 +205,7 @@ export function BmiCalculator() {
             ) : (
               <div className="space-y-1.5">
                 <Label htmlFor="height-cm" className="text-xs font-semibold">
-                  {t("healthTools.bmi.heightCm")}
+                  উচ্চতা (সেন্টিমিটার)
                 </Label>
                 <Input
                   id="height-cm"
@@ -217,7 +213,7 @@ export function BmiCalculator() {
                   step="0.5"
                   min="50"
                   max="260"
-                  placeholder={t("healthTools.bmi.cmPlaceholder")}
+                  placeholder="যেমন: ১৭২"
                   value={cm}
                   onChange={(e) => setCm(e.target.value)}
                   required
@@ -228,7 +224,7 @@ export function BmiCalculator() {
             {/* Weight Field */}
             <div className="space-y-1.5">
               <Label htmlFor="weight-kg" className="text-xs font-semibold">
-                {t("healthTools.bmi.weight")}
+                ওজন (কেজি - KG)
               </Label>
               <Input
                 id="weight-kg"
@@ -236,7 +232,7 @@ export function BmiCalculator() {
                 step="0.5"
                 min="10"
                 max="250"
-                placeholder={t("healthTools.bmi.weightPlaceholder")}
+                placeholder="যেমন: ৬৮"
                 value={weightKg}
                 onChange={(e) => setWeightKg(e.target.value)}
                 required
@@ -246,7 +242,7 @@ export function BmiCalculator() {
             <div className="flex gap-2 pt-2">
               <Button type="submit" className="flex-1 font-bold">
                 <Activity className="mr-2 h-4 w-4" />
-                {t("healthTools.bmi.calculate")}
+                বিএমআই হিসেব করুন
               </Button>
               {bmiResult && (
                 <Button
@@ -254,7 +250,7 @@ export function BmiCalculator() {
                   variant="outline"
                   onClick={handleReset}
                   size="icon"
-                  aria-label={isEn ? "Reset calculator" : "ক্যালকুলেটর রিসেট করুন"}
+                  aria-label="ক্যালকুলেটর রিসেট করুন"
                 >
                   <RotateCcw className="h-4 w-4" />
                 </Button>
@@ -271,11 +267,11 @@ export function BmiCalculator() {
             <div className="space-y-5">
               <div className="text-center space-y-2">
                 <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider">
-                  {t("healthTools.bmi.scoreTitle")}
+                  আপনার বিএমআই স্কোর
                 </span>
                 <div className="flex items-baseline justify-center gap-1">
                   <span className={`text-5xl sm:text-6xl font-black font-mono ${catDetails.color}`}>
-                    {formatNum(bmiResult.bmi, locale)}
+                    {toBanglaNums(bmiResult.bmi)}
                   </span>
                   <span className="text-sm font-semibold text-muted-foreground">kg/m²</span>
                 </div>
@@ -290,19 +286,19 @@ export function BmiCalculator() {
               <div className="space-y-1.5 pt-2">
                 <div className="h-3 w-full rounded-full bg-gradient-to-r from-amber-400 via-emerald-500 via-orange-400 to-rose-500 overflow-hidden relative" />
                 <div className="flex justify-between text-[10px] text-muted-foreground font-mono font-semibold px-0.5">
-                  <span>{formatNum(18.5, locale)}</span>
-                  <span>{formatNum(25, locale)}</span>
-                  <span>{formatNum(30, locale)}</span>
+                  <span>{toBanglaNums(18.5)}</span>
+                  <span>{toBanglaNums(25)}</span>
+                  <span>{toBanglaNums(30)}</span>
                 </div>
               </div>
 
               {/* Ideal Weight Box */}
               <div className="p-3.5 rounded-2xl bg-muted/60 border border-border/60 flex items-center justify-between text-xs sm:text-sm">
                 <span className="text-muted-foreground font-medium">
-                  {t("healthTools.bmi.idealRange")}
+                  আপনার জন্য আদর্শ ওজনের মাত্রা:
                 </span>
                 <span className="font-bold text-foreground font-mono">
-                  {formatNum(bmiResult.idealMin, locale)} - {formatNum(bmiResult.idealMax, locale)} {isEn ? "kg" : "কেজি"}
+                  {toBanglaNums(bmiResult.idealMin)} - {toBanglaNums(bmiResult.idealMax)} কেজি
                 </span>
               </div>
 
@@ -310,7 +306,7 @@ export function BmiCalculator() {
               <div className={`p-4 rounded-2xl border ${catDetails.bgColor} space-y-1.5`}>
                 <div className="flex items-center gap-2 font-bold text-xs sm:text-sm text-foreground">
                   <Sparkles className="h-4 w-4 text-primary shrink-0" />
-                  <span>{t("healthTools.bmi.recommendation")}</span>
+                  <span>স্বাস্থ্য পরামর্শ</span>
                 </div>
                 <p className="text-xs text-muted-foreground leading-relaxed">
                   {catDetails.advice}
@@ -324,10 +320,10 @@ export function BmiCalculator() {
               </div>
               <div className="space-y-1 max-w-sm mx-auto">
                 <h4 className="font-heading font-bold text-base text-secondary dark:text-white">
-                  {t("healthTools.bmi.emptyTitle")}
+                  আপনার স্বাস্থ্য ঝুঁকি পরীক্ষা করুন
                 </h4>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  {t("healthTools.bmi.emptyDesc")}
+                  বামপাশের ফর্মে আপনার উচ্চতা ও ওজন প্রবেশ করিয়ে &apos;বিএমআই হিসেব করুন&apos; বাটনে ক্লিক করুন।
                 </p>
               </div>
             </div>

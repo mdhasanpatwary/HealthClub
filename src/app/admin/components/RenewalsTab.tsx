@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
 import { Check, X } from "lucide-react";
 import { Member } from "@/services/db";
-import { Locale } from "@/lib/i18n";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -20,8 +19,6 @@ interface RenewalsTabProps {
   onPageSizeChange: (size: number) => void;
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
-  locale: Locale | string;
-  t?: (key: string) => string;
   loading?: boolean;
 }
 
@@ -35,17 +32,12 @@ export function RenewalsTab({
   onPageSizeChange,
   onApprove,
   onReject,
-  locale = "bn",
-  t = (k) => k,
   loading = false,
 }: RenewalsTabProps) {
-  const isEn = locale === "en";
-
-
   const formatDate = (dateStr: string) => {
     try {
       const date = new Date(dateStr);
-      return date.toLocaleDateString(locale === "bn" ? "bn-BD" : "en-US", {
+      return date.toLocaleDateString("bn-BD", {
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -59,10 +51,10 @@ export function RenewalsTab({
     <Card className="border-border shadow-md">
       <CardHeader>
         <CardTitle className="font-heading text-lg font-bold text-secondary">
-          {t("admin.renewals.title")}
+          মেম্বারশিপ নবায়ন আবেদনসমূহ
         </CardTitle>
         <CardDescription>
-          {t("admin.renewals.desc")}
+          পেন্ডিং থাকা মেম্বারশিপ নবায়ন আবেদনসমূহ যাচাই ও অনুমোদন করুন
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -71,22 +63,22 @@ export function RenewalsTab({
             <TableHeader className="bg-muted/40">
               <TableRow className="hover:bg-transparent border-b border-border">
                 <TableHead className="font-semibold text-secondary w-[180px]">
-                  {t("admin.renewals.memberName")}
+                  মেম্বারের নাম
                 </TableHead>
                 <TableHead className="font-semibold text-secondary w-[140px]">
-                  {t("admin.renewals.memberId")}
+                  মেম্বার আইডি
                 </TableHead>
                 <TableHead className="font-semibold text-secondary w-[140px]">
-                  {t("admin.renewals.paymentDetails")}
+                  পেমেন্ট বিবরণ
                 </TableHead>
                 <TableHead className="font-semibold text-secondary w-[160px]">
-                  {t("admin.renewals.txnId")}
+                  ট্রানজেকশন আইডি
                 </TableHead>
                 <TableHead className="font-semibold text-secondary w-[150px]">
-                  {t("admin.renewals.currentExpiry")}
+                  বর্তমান মেয়াদ
                 </TableHead>
                 <TableHead className="font-semibold text-secondary text-right w-[150px]">
-                  {t("admin.renewals.actions")}
+                  অ্যাকশন
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -120,7 +112,7 @@ export function RenewalsTab({
               ) : members.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-10 text-muted-foreground text-sm">
-                    {t("admin.renewals.noPending")}
+                    কোনো পেন্ডিং নবায়ন আবেদন নেই
                   </TableCell>
                 </TableRow>
               ) : (
@@ -139,7 +131,7 @@ export function RenewalsTab({
                           className="bg-primary hover:bg-primary-dark text-white font-bold h-8 text-[11px] gap-1 rounded-lg shadow-sm"
                         >
                           <Check className="h-3.5 w-3.5" />
-                          {t("admin.renewals.approve")}
+                          অনুমোদন
                         </Button>
                         <Button
                           size="sm"
@@ -148,7 +140,7 @@ export function RenewalsTab({
                           className="h-8 text-[11px] gap-1 rounded-lg shadow-sm"
                         >
                           <X className="h-3.5 w-3.5" />
-                          {t("admin.renewals.reject")}
+                          বাতিল
                         </Button>
                       </div>
                     </TableCell>
@@ -169,9 +161,7 @@ export function RenewalsTab({
             onPageChange={onPageChange}
             onPageSizeChange={onPageSizeChange}
             pageSizeOptions={[10, 20, 50, 100]}
-            locale={locale as Locale}
-            t={t}
-            itemLabel={isEn ? "renewals" : "টি নবায়ন আবেদন"}
+            itemLabel="টি নবায়ন আবেদন"
           />
         )}
       </CardContent>

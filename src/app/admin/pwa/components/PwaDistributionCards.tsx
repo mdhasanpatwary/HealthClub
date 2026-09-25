@@ -1,7 +1,6 @@
 "use client";
 
-import { useLanguage } from "@/components/layout/LanguageProvider";
-import { formatNum } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Monitor, Smartphone, Globe, Laptop, Tablet } from "lucide-react";
 import type { PwaStatsData } from "@/app/actions/pwaActions";
@@ -11,9 +10,6 @@ interface PwaDistributionCardsProps {
 }
 
 export function PwaDistributionCards({ stats }: PwaDistributionCardsProps) {
-  const { locale, t } = useLanguage();
-  const isBn = locale === "bn";
-
   const getPlatformIcon = (platform: string) => {
     const lower = platform.toLowerCase();
     if (lower.includes("android") || lower.includes("ios")) return <Smartphone className="h-4 w-4 text-emerald-500" />;
@@ -35,7 +31,7 @@ export function PwaDistributionCards({ stats }: PwaDistributionCardsProps) {
           <div className="flex items-center justify-between border-b border-border pb-3">
             <h3 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
               <Smartphone className="h-4 w-4 text-emerald-500" />
-              {t("admin.pwa.platformDist") || "অপারেটিং সিস্টেম অনুযায়ী"}
+              অপারেটিং সিস্টেম অনুযায়ী
             </h3>
           </div>
 
@@ -49,7 +45,7 @@ export function PwaDistributionCards({ stats }: PwaDistributionCardsProps) {
                       {item.platform}
                     </span>
                     <span className="font-mono font-semibold text-muted-foreground">
-                      {formatNum(item.count, locale)} ({formatNum(item.percentage, locale)}%)
+                      {toBanglaNums(item.count)} ({toBanglaNums(item.percentage)}%)
                     </span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-muted overflow-hidden">
@@ -63,7 +59,7 @@ export function PwaDistributionCards({ stats }: PwaDistributionCardsProps) {
             </div>
           ) : (
             <p className="text-xs text-muted-foreground py-6 text-center">
-              {isBn ? "কোনো ওএস তথ্য পাওয়া যায়নি" : "No OS data recorded"}
+              কোনো ওএস তথ্য পাওয়া যায়নি
             </p>
           )}
         </CardContent>
@@ -75,7 +71,7 @@ export function PwaDistributionCards({ stats }: PwaDistributionCardsProps) {
           <div className="flex items-center justify-between border-b border-border pb-3">
             <h3 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
               <Globe className="h-4 w-4 text-blue-500" />
-              {t("admin.pwa.browserDist") || "ব্রাউজার পরিসংখ্যান"}
+              ব্রাউজার পরিসংখ্যান
             </h3>
           </div>
 
@@ -86,7 +82,7 @@ export function PwaDistributionCards({ stats }: PwaDistributionCardsProps) {
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-medium text-foreground">{item.browser}</span>
                     <span className="font-mono font-semibold text-muted-foreground">
-                      {formatNum(item.count, locale)} ({formatNum(item.percentage, locale)}%)
+                      {toBanglaNums(item.count)} ({toBanglaNums(item.percentage)}%)
                     </span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-muted overflow-hidden">
@@ -100,7 +96,7 @@ export function PwaDistributionCards({ stats }: PwaDistributionCardsProps) {
             </div>
           ) : (
             <p className="text-xs text-muted-foreground py-6 text-center">
-              {isBn ? "কোনো ব্রাউজার তথ্য পাওয়া যায়নি" : "No browser data recorded"}
+              কোনো ব্রাউজার তথ্য পাওয়া যায়নি
             </p>
           )}
         </CardContent>
@@ -112,7 +108,7 @@ export function PwaDistributionCards({ stats }: PwaDistributionCardsProps) {
           <div className="flex items-center justify-between border-b border-border pb-3">
             <h3 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
               <Laptop className="h-4 w-4 text-purple-500" />
-              {t("admin.pwa.deviceTypeDist") || "ডিভাইস ক্যাটাগরি"}
+              ডিভাইস ক্যাটাগরি
             </h3>
           </div>
 
@@ -123,10 +119,10 @@ export function PwaDistributionCards({ stats }: PwaDistributionCardsProps) {
                   <div className="flex items-center justify-between text-xs capitalize">
                     <span className="font-medium text-foreground flex items-center gap-1.5">
                       {getDeviceIcon(item.deviceType)}
-                      {item.deviceType === "mobile" ? (isBn ? "মোবাইল" : "Mobile") : item.deviceType === "tablet" ? (isBn ? "ট্যাবলেট" : "Tablet") : (isBn ? "ডেস্কটপ / ল্যাপটপ" : "Desktop")}
+                      {item.deviceType === "mobile" ? "মোবাইল" : item.deviceType === "tablet" ? "ট্যাবলেট" : "ডেস্কটপ / ল্যাপটপ"}
                     </span>
                     <span className="font-mono font-semibold text-muted-foreground">
-                      {formatNum(item.count, locale)} ({formatNum(item.percentage, locale)}%)
+                      {toBanglaNums(item.count)} ({toBanglaNums(item.percentage)}%)
                     </span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-muted overflow-hidden">
@@ -140,7 +136,7 @@ export function PwaDistributionCards({ stats }: PwaDistributionCardsProps) {
             </div>
           ) : (
             <p className="text-xs text-muted-foreground py-6 text-center">
-              {isBn ? "কোনো ডিভাইস ক্যাটাগরি তথ্য নেই" : "No device category data"}
+              কোনো ডিভাইস ক্যাটাগরি তথ্য নেই
             </p>
           )}
         </CardContent>

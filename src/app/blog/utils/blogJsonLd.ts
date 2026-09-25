@@ -6,7 +6,6 @@ export function generateBlogJsonLd(
   post: BlogPost,
   title: string,
   pageUrl: string,
-  isEn: boolean,
   relatedPosts?: BlogPost[]
 ): Record<string, unknown> {
   const coverImageUrl = post.coverImage.startsWith("http")
@@ -32,8 +31,8 @@ export function generateBlogJsonLd(
       "@id": `${pageUrl}#webpage`,
       url: pageUrl,
       name: title,
-      description: isEn ? post.excerptEn : post.excerptBn,
-      inLanguage: isEn ? "en-US" : "bn-BD",
+      description: post.excerptBn,
+      inLanguage: "bn-BD",
       isPartOf: { "@id": `${SITE_URL}/#website` },
       breadcrumb: { "@id": `${pageUrl}#breadcrumb` },
       ...(relatedUrls.length > 0 ? { relatedLink: relatedUrls } : {}),
@@ -56,13 +55,13 @@ export function generateBlogJsonLd(
         {
           "@type": "ListItem",
           position: 1,
-          name: isEn ? "Home" : "হোম",
+          name: "হোম",
           item: SITE_URL,
         },
         {
           "@type": "ListItem",
           position: 2,
-          name: isEn ? "Blog" : "ব্লগ",
+          name: "ব্লগ",
           item: `${SITE_URL}/blog`,
         },
         {
@@ -80,11 +79,11 @@ export function generateBlogJsonLd(
       "@id": `${pageUrl}#article`,
       isPartOf: { "@id": `${pageUrl}#webpage` },
       headline: title,
-      description: isEn ? post.excerptEn : post.excerptBn,
+      description: post.excerptBn,
       image: coverImageUrl,
       datePublished: getArticleIsoDate(post.publishedDate),
       dateModified: getArticleIsoDate(post.modifiedDate),
-      inLanguage: isEn ? "en-US" : "bn-BD",
+      inLanguage: "bn-BD",
       isAccessibleForFree: true,
       mainEntityOfPage: {
         "@type": "WebPage",
@@ -98,7 +97,7 @@ export function generateBlogJsonLd(
         : {}),
       author: {
         "@type": "Organization",
-        name: isEn ? post.author.nameEn : post.author.nameBn,
+        name: post.author.nameBn,
         url: SITE_URL,
       },
       publisher: {
@@ -111,7 +110,7 @@ export function generateBlogJsonLd(
           url: `${SITE_URL}/images/member-card-logo.webp`,
         },
       },
-      articleSection: isEn ? post.categoryNameEn : post.categoryNameBn,
+      articleSection: post.categoryNameBn,
       keywords: post.metaKeywords.join(", "),
       medicalAudience: {
         "@type": "MedicalAudience",
@@ -119,9 +118,7 @@ export function generateBlogJsonLd(
       },
       reviewedBy: {
         "@type": "Organization",
-        name: isEn
-          ? "Health Club Clinical Editorial Board"
-          : "হেলথ ক্লাব ক্লিনিক্যাল এডিটোরিয়াল বোর্ড",
+        name: "হেলথ ক্লাব ক্লিনিক্যাল এডিটোরিয়াল বোর্ড",
         url: `${SITE_URL}/about-us`,
       },
       lastReviewed: getArticleIsoDate(post.modifiedDate),
@@ -135,20 +132,20 @@ export function generateBlogJsonLd(
       "@type": "ItemList",
       "@id": `${pageUrl}#hospitals-list`,
       name: post.slug.includes("healthcare-guide")
-        ? (isEn ? post.titleEn : post.titleBn)
-        : (isEn ? "Best 10 Hospitals in Feni" : "ফেনীর সেরা ১০টি হাসপাতাল"),
-      description: isEn ? post.excerptEn : post.excerptBn,
+        ? post.titleBn
+        : "ফেনীর সেরা ১০টি হাসপাতাল",
+      description: post.excerptBn,
       numberOfItems: post.hospitals.length,
       itemListElement: post.hospitals.map((h) => ({
         "@type": "ListItem",
         position: h.rank,
         item: {
           "@type": "Hospital",
-          name: isEn ? h.nameEn : h.nameBn,
+          name: h.nameBn,
           telephone: h.phone,
           address: {
             "@type": "PostalAddress",
-            streetAddress: isEn ? h.addressEn : h.addressBn,
+            streetAddress: h.addressBn,
             addressLocality: "Feni",
             addressRegion: "Chittagong",
             addressCountry: "BD",
@@ -167,16 +164,16 @@ export function generateBlogJsonLd(
     graph.push({
       "@type": "ItemList",
       "@id": `${pageUrl}#doctors-list`,
-      name: isEn ? "Best Doctors in Feni Directory" : "ফেনীর সেরা বিশেষজ্ঞ ডাক্তার তালিকা",
-      description: isEn ? post.excerptEn : post.excerptBn,
+      name: "ফেনীর সেরা বিশেষজ্ঞ ডাক্তার তালিকা",
+      description: post.excerptBn,
       numberOfItems: allDoctors.length,
       itemListElement: allDoctors.map((doc, idx) => ({
         "@type": "ListItem",
         position: idx + 1,
         item: {
           "@type": "Physician",
-          name: isEn ? doc.nameEn : doc.nameBn,
-          medicalSpecialty: isEn ? doc.specialtyEn : doc.specialtyBn,
+          name: doc.nameBn,
+          medicalSpecialty: doc.specialtyBn,
           description: `${doc.designationBn}, ${doc.degreesBn}`,
           telephone: doc.serialPhone.split(",")[0].trim(),
           address: {
@@ -199,20 +196,20 @@ export function generateBlogJsonLd(
     graph.push({
       "@type": "ItemList",
       "@id": `${pageUrl}#diagnostic-list`,
-      name: isEn ? "Best Diagnostic Centers in Feni" : "ফেনীর সেরা ডায়াগনস্টিক সেন্টার ও ল্যাব তালিকা",
-      description: isEn ? post.excerptEn : post.excerptBn,
+      name: "ফেনীর সেরা ডায়াগনস্টিক সেন্টার ও ল্যাব তালিকা",
+      description: post.excerptBn,
       numberOfItems: post.diagnosticCenters.length,
       itemListElement: post.diagnosticCenters.map((diag) => ({
         "@type": "ListItem",
         position: diag.rank,
         item: {
           "@type": "DiagnosticLab",
-          name: isEn ? diag.nameEn : diag.nameBn,
+          name: diag.nameBn,
           description: diag.descriptionBn,
           telephone: diag.phone.split(",")[0].trim(),
           address: {
             "@type": "PostalAddress",
-            streetAddress: isEn ? diag.addressEn : diag.addressBn,
+            streetAddress: diag.addressBn,
             addressLocality: "Feni",
             addressRegion: "Chittagong",
             addressCountry: "BD",
@@ -230,17 +227,15 @@ export function generateBlogJsonLd(
     graph.push({
       "@type": "ItemList",
       "@id": `${pageUrl}#medical-tests-list`,
-      name: isEn
-        ? "Diagnostic & Pathology Test Price List in Feni"
-        : "ফেনীতে প্যাথলজি ও রেডিওলজি টেস্টের খরচ তালিকা",
-      description: isEn ? post.excerptEn : post.excerptBn,
+      name: "ফেনীতে প্যাথলজি ও রেডিওলজি টেস্টের খরচ তালিকা",
+      description: post.excerptBn,
       numberOfItems: post.diagnosticTestPricingBn.tests.length,
       itemListElement: post.diagnosticTestPricingBn.tests.slice(0, 30).map((test, idx) => ({
         "@type": "ListItem",
         position: idx + 1,
         item: {
           "@type": "MedicalTest",
-          name: isEn ? test.testNameEn : test.testNameBn,
+          name: test.testNameBn,
           description: `${test.testNameBn} (${test.categoryBn}). সাধারণ বাজারদর: ${test.regularPriceRangeBn}, হেলথ ক্লাব মেম্বার ছাড়: ১০-৩০%।`,
           url: pageUrl,
         },
@@ -253,21 +248,21 @@ export function generateBlogJsonLd(
     graph.push({
       "@type": "ItemList",
       "@id": `${pageUrl}#dental-list`,
-      name: isEn ? "Best Dental Clinics in Feni" : "ফেনীর সেরা ডেন্টাল ক্লিনিক ও সার্জন তালিকা",
-      description: isEn ? post.excerptEn : post.excerptBn,
+      name: "ফেনীর সেরা ডেন্টাল ক্লিনিক ও সার্জন তালিকা",
+      description: post.excerptBn,
       numberOfItems: post.dentalClinics.length,
       itemListElement: post.dentalClinics.map((clinic) => ({
         "@type": "ListItem",
         position: clinic.rank,
         item: {
           "@type": "Dentist",
-          name: isEn ? clinic.nameEn : clinic.nameBn,
+          name: clinic.nameBn,
           description: `${clinic.doctorInChargeBn} (${clinic.degreesBn}). ${clinic.descriptionBn}`,
           telephone: clinic.phone.split(",")[0].trim(),
           medicalSpecialty: "Dentistry",
           address: {
             "@type": "PostalAddress",
-            streetAddress: isEn ? clinic.addressEn : clinic.addressBn,
+            streetAddress: clinic.addressBn,
             addressLocality: "Feni",
             addressRegion: "Chittagong",
             addressCountry: "BD",
@@ -285,23 +280,21 @@ export function generateBlogJsonLd(
     graph.push({
       "@type": "ItemList",
       "@id": `${pageUrl}#physiotherapy-list`,
-      name: isEn
-        ? "Best Physiotherapy Centers in Feni"
-        : "ফেনীর সেরা ফিজিওথেরাপি সেন্টার ও থেরাপিস্ট তালিকা",
-      description: isEn ? post.excerptEn : post.excerptBn,
+      name: "ফেনীর সেরা ফিজিওথেরাপি সেন্টার ও থেরাপিস্ট তালিকা",
+      description: post.excerptBn,
       numberOfItems: post.physiotherapyCenters.length,
       itemListElement: post.physiotherapyCenters.map((center) => ({
         "@type": "ListItem",
         position: center.rank,
         item: {
           "@type": "MedicalClinic",
-          name: isEn ? center.nameEn : center.nameBn,
+          name: center.nameBn,
           description: `${center.doctorInChargeBn} (${center.degreesBn}). ${center.descriptionBn}`,
           telephone: center.phone.split(",")[0].trim(),
           medicalSpecialty: "Physiotherapy",
           address: {
             "@type": "PostalAddress",
-            streetAddress: isEn ? center.addressEn : center.addressBn,
+            streetAddress: center.addressBn,
             addressLocality: "Feni",
             addressRegion: "Chittagong",
             addressCountry: "BD",
@@ -319,22 +312,20 @@ export function generateBlogJsonLd(
     graph.push({
       "@type": "ItemList",
       "@id": `${pageUrl}#pharmacy-list`,
-      name: isEn
-        ? "24/7 Pharmacies & Emergency Medicine Delivery in Feni"
-        : "ফেনীতে ২৪ ঘণ্টা খোলা ফার্মেসি ও জরুরি ওষুধ ডেলিভারি তালিকা",
-      description: isEn ? post.excerptEn : post.excerptBn,
+      name: "ফেনীতে ২৪ ঘণ্টা খোলা ফার্মেসি ও জরুরি ওষুধ ডেলিভারি তালিকা",
+      description: post.excerptBn,
       numberOfItems: post.pharmacies.length,
       itemListElement: post.pharmacies.map((pharmacy) => ({
         "@type": "ListItem",
         position: pharmacy.rank,
         item: {
           "@type": "Pharmacy",
-          name: isEn ? pharmacy.nameEn : pharmacy.nameBn,
+          name: pharmacy.nameBn,
           description: pharmacy.descriptionBn,
           telephone: pharmacy.phone.split(",")[0].trim(),
           address: {
             "@type": "PostalAddress",
-            streetAddress: isEn ? pharmacy.addressEn : pharmacy.addressBn,
+            streetAddress: pharmacy.addressBn,
             addressLocality: "Feni",
             addressRegion: "Chittagong",
             addressCountry: "BD",
@@ -352,22 +343,20 @@ export function generateBlogJsonLd(
     graph.push({
       "@type": "ItemList",
       "@id": `${pageUrl}#blood-banks-list`,
-      name: isEn
-        ? "Emergency Blood Banks & Voluntary Donor Networks in Feni"
-        : "ফেনী জেলা জরুরি ব্লাড ব্যাংক ও রক্তদান সংগঠন তালিকা",
-      description: isEn ? post.excerptEn : post.excerptBn,
+      name: "ফেনী জেলা জরুরি ব্লাড ব্যাংক ও রক্তদান সংগঠন তালিকা",
+      description: post.excerptBn,
       numberOfItems: post.bloodBanks.length,
       itemListElement: post.bloodBanks.map((bank) => ({
         "@type": "ListItem",
         position: bank.rank,
         item: {
           "@type": "MedicalOrganization",
-          name: isEn ? bank.nameEn : bank.nameBn,
+          name: bank.nameBn,
           description: bank.descriptionBn,
           telephone: bank.phone.split(",")[0].trim(),
           address: {
             "@type": "PostalAddress",
-            streetAddress: isEn ? bank.addressEn : bank.addressBn,
+            streetAddress: bank.addressBn,
             addressLocality: "Feni",
             addressRegion: "Chittagong",
             addressCountry: "BD",
@@ -385,22 +374,20 @@ export function generateBlogJsonLd(
     graph.push({
       "@type": "ItemList",
       "@id": `${pageUrl}#ambulance-list`,
-      name: isEn
-        ? "24/7 Emergency Ambulance & Oxygen Services in Feni"
-        : "ফেনী ২৪/৭ জরুরি অ্যাম্বুলেন্স ও অক্সিজেন সেবা তালিকা",
-      description: isEn ? post.excerptEn : post.excerptBn,
+      name: "ফেনী ২৪/৭ জরুরি অ্যাম্বুলেন্স ও অক্সিজেন সেবা তালিকা",
+      description: post.excerptBn,
       numberOfItems: post.ambulances.length,
       itemListElement: post.ambulances.map((amb) => ({
         "@type": "ListItem",
         position: amb.rank,
         item: {
           "@type": "EmergencyService",
-          name: isEn ? amb.nameEn : amb.nameBn,
+          name: amb.nameBn,
           description: amb.descriptionBn,
           telephone: amb.phone.split(",")[0].trim(),
           address: {
             "@type": "PostalAddress",
-            streetAddress: isEn ? amb.addressEn : amb.addressBn,
+            streetAddress: amb.addressBn,
             addressLocality: "Feni",
             addressRegion: "Chittagong",
             addressCountry: "BD",
@@ -418,14 +405,14 @@ export function generateBlogJsonLd(
     graph.push({
       "@type": "ItemList",
       "@id": `${pageUrl}#surgery-price-guide`,
-      name: isEn ? (post.surgicalCarePricingBn.titleEn || "Surgery Costs in Feni") : post.surgicalCarePricingBn.titleBn,
+      name: post.surgicalCarePricingBn.titleBn,
       numberOfItems: post.surgicalCarePricingBn.packages.length,
       itemListElement: post.surgicalCarePricingBn.packages.map((pkg, idx) => ({
         "@type": "ListItem",
         position: idx + 1,
         item: {
           "@type": "MedicalProcedure",
-          name: isEn ? pkg.procedureOrTestNameEn : pkg.procedureOrTestNameBn,
+          name: pkg.procedureOrTestNameBn,
           description: `${pkg.procedureOrTestNameBn}. বাজারদর: ${pkg.regularPriceRangeBn}, মেম্বার ছাড়: ১০-৩০%।`,
           url: `${pageUrl}#surgery-price-guide`,
         },
@@ -437,14 +424,14 @@ export function generateBlogJsonLd(
     graph.push({
       "@type": "ItemList",
       "@id": `${pageUrl}#critical-care-price-guide`,
-      name: isEn ? (post.criticalCarePricingBn.titleEn || "ICU & CCU Charges in Feni") : post.criticalCarePricingBn.titleBn,
+      name: post.criticalCarePricingBn.titleBn,
       numberOfItems: post.criticalCarePricingBn.packages.length,
       itemListElement: post.criticalCarePricingBn.packages.map((pkg, idx) => ({
         "@type": "ListItem",
         position: idx + 1,
         item: {
           "@type": "MedicalProcedure",
-          name: isEn ? pkg.serviceOrBedNameEn : pkg.serviceOrBedNameBn,
+          name: pkg.serviceOrBedNameBn,
           description: `${pkg.serviceOrBedNameBn}. বাজারদর: ${pkg.regularPriceRangeBn}, মেম্বার ছাড়: ১০-৩০%।`,
           url: `${pageUrl}#critical-care-price-guide`,
         },
@@ -460,10 +447,10 @@ export function generateBlogJsonLd(
       isPartOf: { "@id": `${pageUrl}#webpage` },
       mainEntity: post.faqs.map((faq) => ({
         "@type": "Question",
-        name: isEn ? faq.questionEn : faq.questionBn,
+        name: faq.questionBn,
         acceptedAnswer: {
           "@type": "Answer",
-          text: isEn ? faq.answerEn : faq.answerBn,
+          text: faq.answerBn,
         },
       })),
     });

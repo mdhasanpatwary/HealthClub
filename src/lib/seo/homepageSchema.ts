@@ -1,8 +1,6 @@
 import { SITE_URL } from "@/lib/siteConfig";
 
 interface HomepageSchemaParams {
-  isEn: boolean;
-  t: (key: string) => string;
   hotline?: string;
 }
 
@@ -10,7 +8,7 @@ interface HomepageSchemaParams {
  * Builds structured Schema.org JSON-LD definitions for the Homepage,
  * supporting SEO, Answer Engine Optimization (AEO), and Generative Engine Optimization (GEO).
  */
-export function getHomepageJsonLd({ isEn, t, hotline }: HomepageSchemaParams) {
+export function getHomepageJsonLd({ hotline }: HomepageSchemaParams = {}) {
   const rawHotline = hotline ? hotline.replace(/[^0-9]/g, "") : "01700000000";
   const formattedTel = `+880${rawHotline.replace(/^(880|88|0)/, "")}`;
 
@@ -20,9 +18,7 @@ export function getHomepageJsonLd({ isEn, t, hotline }: HomepageSchemaParams) {
       "@context": "https://schema.org",
       "@type": ["EmergencyService", "MedicalBusiness"],
       "@id": `${SITE_URL}/#emergency-service`,
-      name: isEn
-        ? "Health Club Emergency & Essential Healthcare Directory Feni"
-        : "হেলথ ক্লাব জরুরি স্বাস্থ্য সেবা ও ডিরেক্টরি (ফেনী)",
+      name: "হেলথ ক্লাব জরুরি স্বাস্থ্য সেবা ও ডিরেক্টরি (ফেনী)",
       url: `${SITE_URL}/emergency`,
       image: `${SITE_URL}/og-image.png`,
       telephone: formattedTel,
@@ -52,128 +48,114 @@ export function getHomepageJsonLd({ isEn, t, hotline }: HomepageSchemaParams) {
       },
     },
 
-    // 3. ItemList for Quick Services Hub
+    // 2. ItemList for Quick Services Hub
     {
       "@context": "https://schema.org",
       "@type": "ItemList",
-      name: isEn
-        ? "Essential Emergency & Healthcare Directory"
-        : "ফেনীর জরুরি স্বাস্থ্য সেবা ও ডিরেক্টরি",
+      name: "ফেনীর জরুরি স্বাস্থ্য সেবা ও ডিরেক্টরি",
       itemListElement: [
         {
           "@type": "ListItem",
           position: 1,
-          name: isEn ? "Specialist Doctors & Chamber Schedule" : "ডাক্তার ও চেম্বার শিডিউল",
+          name: "ডাক্তার ও চেম্বার শিডিউল",
           url: `${SITE_URL}/consultants`,
         },
         {
           "@type": "ListItem",
           position: 2,
-          name: isEn ? "Voluntary Blood Donor Directory" : "জরুরি রক্তদাতা খুঁজুন",
+          name: "জরুরি রক্তদাতা খুঁজুন",
           url: `${SITE_URL}/emergency?tab=donors`,
         },
         {
           "@type": "ListItem",
           position: 3,
-          name: isEn ? "24/7 ICU & AC Emergency Ambulance Fleet" : "২৪/৭ জরুরি অ্যাম্বুলেন্স সেবা",
+          name: "২৪/৭ জরুরি অ্যাম্বুলেন্স সেবা",
           url: `${SITE_URL}/emergency?tab=ambulances`,
         },
         {
           "@type": "ListItem",
           position: 4,
-          name: isEn ? "Emergency Hospital Hotlines & Oxygen Supply" : "হাসপাতাল ও অক্সিজেন সেবা",
+          name: "হাসপাতাল ও অক্সিজেন সেবা",
           url: `${SITE_URL}/emergency?tab=hotlines`,
         },
       ],
     },
 
-    // 4. Enhanced FAQPage Schema for Answer Engines (AEO)
+    // 3. Enhanced FAQPage Schema for Answer Engines (AEO)
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
       mainEntity: [
         {
           "@type": "Question",
-          name: t("faq.q1"),
+          name: "হেলথ ক্লাব মেম্বারশিপ কীভাবে কাজ করে?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: t("faq.a1"),
+            text: "হেলথ ক্লাব একটি মেম্বারশিপ ভিত্তিক স্বাস্থ্য সুবিধা প্ল্যাটফর্ম। আমাদের সদস্য হয়ে আপনি আমাদের পার্টনার হাসপাতাল, ডায়াগনস্টিক সেন্টার এবং ফার্মেসিতে ডিজিটাল আইডি কার্ড দেখিয়ে বিশেষ ছাড় পেতে পারেন।",
           },
         },
         {
           "@type": "Question",
-          name: t("faq.q2"),
+          name: "আমি কীভাবে ডিসকাউন্ট বা ছাড় পেতে পারি?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: t("faq.a2"),
+            text: "আমাদের অংশীদার স্বাস্থ্যসেবা কেন্দ্রে যাওয়ার পর বিল করার সময় আপনার ডিজিটাল মেম্বারশিপ আইডি কার্ডটি দেখান। হাসপাতাল কর্তৃপক্ষ কার্ডে থাকা কিউআর (QR) কোডটি স্ক্যান করে আপনার মেম্বারশিপের সত্যতা নিশ্চিত করবে এবং তাৎক্ষণিকভাবে আপনার বিলে ডিসকাউন্ট যোগ করে দেবে।",
           },
         },
         {
           "@type": "Question",
-          name: isEn
-            ? "How do I find voluntary blood donors in Feni on Health Club?"
-            : "ফেনীতে জরুরি রক্তের প্রয়োজনে কীভাবে রক্তদাতা খুঁজে পাব?",
+          name: "ফেনীতে জরুরি রক্তের প্রয়োজনে কীভাবে রক্তদাতা খুঁজে পাব?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: isEn
-              ? "Visit Health Club emergency blood directory at /emergency?tab=donors. You can filter voluntary blood donors by blood group (A+, B+, O+, AB+, etc.) and upazila across Feni and directly call them 24/7 without any broker or fees."
-              : "হেলথ ক্লাবের জরুরি রক্তদাতা ডিরেক্টরি (/emergency?tab=donors) থেকে রক্তের গ্রুপ (A+, B+, O+, AB+) ও উপজেলা সিলেক্ট করে ফেনীর ভেরিফাইড স্বেচ্ছাসেবী রক্তদাতাদের নম্বর পাওয়া যাবে এবং সরাসরি সম্পূর্ণ বিনামূল্যে কল করা যাবে।",
+            text: "হেলথ ক্লাবের জরুরি রক্তদাতা ডিরেক্টরি (/emergency?tab=donors) থেকে রক্তের গ্রুপ (A+, B+, O+, AB+) ও উপজেলা সিলেক্ট করে ফেনীর ভেরিফাইড স্বেচ্ছাসেবী রক্তদাতাদের নম্বর পাওয়া যাবে এবং সরাসরি সম্পূর্ণ বিনামূল্যে কল করা যাবে।",
           },
         },
         {
           "@type": "Question",
-          name: isEn
-            ? "How can I hire a 24/7 ICU or AC ambulance in Feni?"
-            : "ফেনীতে ২৪/৭ আইসিইউ বা এসি অ্যাম্বুলেন্স কীভাবে পাওয়া যাবে?",
+          name: "ফেনীতে ২৪/৭ আইসিইউ বা এসি অ্যাম্বুলেন্স কীভাবে পাওয়া যাবে?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: isEn
-              ? "Check Health Club ambulance fleet at /emergency?tab=ambulances for verified contact numbers of 24/7 ICU, AC, Non-AC, and mortuary freezer ambulances covering Feni, Dhaka, and Chittagong routes."
-              : "হেলথ ক্লাবের অ্যাম্বুলেন্স ডিরেক্টরি (/emergency?tab=ambulances) থেকে ফেনী, ঢাকা ও চট্টগ্রাম রুটের জন্য ২৪ ঘণ্টা প্রস্তুত আইসিইউ, এসি, নন-এসি এবং ফ্রিজার অ্যাম্বুলেন্সের যাচাইকৃত চালক ও সার্ভিস প্রোভাইডারদের নম্বর পাওয়া যাবে।",
+            text: "হেলথ ক্লাবের অ্যাম্বুলেন্স ডিরেক্টরি (/emergency?tab=ambulances) থেকে ফেনী, ঢাকা ও চট্টগ্রাম রুটের জন্য ২৪ ঘণ্টা প্রস্তুত আইসিইউ, এসি, নন-এসি এবং ফ্রিজার অ্যাম্বুলেন্সের যাচাইকৃত চালক ও সার্ভিস প্রোভাইডারদের নম্বর পাওয়া যাবে।",
           },
         },
         {
           "@type": "Question",
-          name: isEn
-            ? "How do I find specialist doctors and appointment serials in Feni?"
-            : "ফেনীর বিশেষজ্ঞ ডাক্তারদের চেম্বার শিডিউল ও সিরিয়াল নম্বর কীভাবে পাব?",
+          name: "ফেনীর বিশেষজ্ঞ ডাক্তারদের চেম্বার শিডিউল ও সিরিয়াল নম্বর কীভাবে পাব?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: isEn
-              ? "Browse Health Club's doctor directory at /consultants to find verified specialist doctors across medicine, gynecology, cardiology, pediatrics, and surgery with visiting hours and direct appointment serial hotlines."
-              : "হেলথ ক্লাবের কনসালট্যান্ট ডিরেক্টরি (/consultants)-তে মেডিসিন, হৃদরোগ, গাইনী, শিশু ও সার্জারিসহ সকল বিভাগের বিশেষজ্ঞ চিকিৎসকদের তালিকা, চেম্বার ভিজিটিং সময় এবং সরাসরি সিরিয়াল বুকিং হেল্পলাইন পাওয়া যাবে।",
+            text: "হেলথ ক্লাবের কনসালট্যান্ট ডিরেক্টরি (/consultants)-তে মেডিসিন, হৃদরোগ, গাইনী, শিশু ও সার্জারিসহ সকল বিভাগের বিশেষজ্ঞ চিকিৎসকদের তালিকা, চেম্বার ভিজিটিং সময় এবং সরাসরি সিরিয়াল বুকিং হেল্পলাইন পাওয়া যাবে।",
           },
         },
         {
           "@type": "Question",
-          name: t("faq.q3"),
+          name: "আমি কোথায় আমার মেম্বারশিপ ব্যবহার করতে পারব?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: t("faq.a3"),
+            text: "আমাদের ওয়েবসাইটে থাকা 'পার্টনার হাসপাতাল' ডিরেক্টরিতে তালিকাভুক্ত সকল হাসপাতাল, ডায়াগনস্টিক সেন্টার এবং ফার্মেসিতে আপনি এই কার্ডটি ব্যবহার করতে পারবেন। পার্টনারদের তালিকা প্রতিনিয়ত বৃদ্ধি পাচ্ছে।",
           },
         },
         {
           "@type": "Question",
-          name: t("faq.q4"),
+          name: "মেম্বারশিপের খরচ কত?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: t("faq.a4"),
+            text: "বর্তমানে প্রথম ১০০ জন সদস্যের জন্য আমরা সম্পূর্ণ ফ্রি 'ফাউন্ডিং মেম্বারশিপ' দিচ্ছি, যা ১ বছরের জন্য ফ্রি থাকবে। পরবর্তীতে প্রিমিয়াম মেম্বারশিপের জন্য বাৎসরিক ৫০০ টাকা ফি প্রযোজ্য হবে।",
           },
         },
         {
           "@type": "Question",
-          name: t("faq.q5"),
+          name: "পার্টনার হাসপাতালগুলো কীভাবে আমার কার্ড ভেরিফাই করবে?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: t("faq.a5"),
+            text: "আপনার ডিজিটাল মেম্বারশিপ কার্ডে একটি অনন্য কিউআর (QR) কোড থাকবে। হাসপাতাল কর্তৃপক্ষ তাদের মোবাইল বা স্ক্যানার দিয়ে এই কিউআর কোডটি স্ক্যান করলে একটি সুরক্ষিত ভেরিফিকেশন পেজ খুলবে, যেখানে আপনার নাম, মেম্বার আইডি এবং মেম্বারশিপ স্ট্যাটাস (Active/Inactive) দেখা যাবে।",
           },
         },
         {
           "@type": "Question",
-          name: t("faq.q6"),
+          name: "আমার কার্ড দিয়ে কি পরিবার বা আত্মীয়দের চিকিৎসার বিল পরিশোধ করে ডিসকাউন্ট পাওয়া যাবে?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: t("faq.a6"),
+            text: "হ্যাঁ! হেলথ ক্লাবের একজন মেম্বার তার কার্ড ব্যবহার করে নিজের পুরো পরিবার এবং আত্মীয়-স্বজনদের চিকিৎসার বিল পরিশোধ করতে পারবেন এবং নির্ধারিত সকল ডিসকাউন্ট সুবিধা উপভোগ করতে পারবেন।",
           },
         },
       ],

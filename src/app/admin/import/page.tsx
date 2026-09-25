@@ -1,16 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { buttonVariants } from "@/components/ui/button";
 import { ArrowLeft, LayoutDashboard, UploadCloud } from "lucide-react";
 import { BulkImportManager } from "../components/BulkImportManager";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 export default function AdminBulkImportPage() {
-  const { locale } = useLanguage();
-  const isBn = locale === "bn";
-
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Breadcrumb & Navigation */}
@@ -21,11 +17,11 @@ export default function AdminBulkImportPage() {
             className="hover:text-primary transition-colors flex items-center gap-1 font-medium"
           >
             <LayoutDashboard className="h-3.5 w-3.5" />
-            <span>{isBn ? "ড্যাশবোর্ড" : "Dashboard"}</span>
+            <span>ড্যাশবোর্ড</span>
           </Link>
           <span>/</span>
           <span className="text-foreground font-semibold">
-            {isBn ? "বাল্ক ডেটা ইম্পোর্ট" : "Bulk Data Import"}
+            বাল্ক ডেটা ইম্পোর্ট
           </span>
         </div>
 
@@ -38,7 +34,7 @@ export default function AdminBulkImportPage() {
           })}
         >
           <ArrowLeft className="h-3.5 w-3.5" />
-          <span>{isBn ? "ড্যাশবোর্ডে ফিরে যান" : "Back to Dashboard"}</span>
+          <span>ড্যাশবোর্ডে ফিরে যান</span>
         </Link>
       </div>
 
@@ -52,14 +48,10 @@ export default function AdminBulkImportPage() {
               </div>
               <div>
                 <CardTitle className="font-heading text-lg sm:text-xl font-bold text-foreground">
-                  {isBn
-                    ? "বাল্ক ডেটা ইম্পোর্টার (Excel ও CSV)"
-                    : "Bulk Data Operations & Spreadsheet Importer"}
+                  বাল্ক ডেটা ইম্পোর্টার (Excel ও CSV)
                 </CardTitle>
                 <CardDescription className="text-xs sm:text-sm mt-0.5">
-                  {isBn
-                    ? "বিশেষজ্ঞ ডাক্তার, পার্টনার হাসপাতাল, রক্তদাতা ও অ্যাম্বুলেন্স সার্ভিস এক ক্লিকে ব্যাচ ইম্পোর্ট করুন।"
-                    : "Easily batch import doctors, partner clinics, blood donors, and ambulance fleets with column auto-mapping."}
+                  বিশেষজ্ঞ ডাক্তার, পার্টনার হাসপাতাল, রক্তদাতা ও অ্যাম্বুলেন্স সার্ভিস এক ক্লিকে ব্যাচ ইম্পোর্ট করুন।
                 </CardDescription>
               </div>
             </div>

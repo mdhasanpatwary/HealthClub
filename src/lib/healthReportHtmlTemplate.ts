@@ -1,14 +1,8 @@
 import { HealthAssessmentReport } from "@/lib/healthReportPdf";
-import { Locale } from "@/lib/i18n";
 
-export function generateHealthReportHtml(
-  report: HealthAssessmentReport,
-  locale: Locale = "bn"
-): string {
-  const isBn = locale === "bn";
-
+export function generateHealthReportHtml(report: HealthAssessmentReport): string {
   return `<!DOCTYPE html>
-<html lang="${locale}">
+<html lang="bn">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
@@ -249,39 +243,39 @@ export function generateHealthReportHtml(
       <div class="logo-container">
         <div class="logo-badge">HC</div>
         <div>
-          <div class="brand-title">${isBn ? "হেলথ ক্লাব (Health Club)" : "Health Club Platform"}</div>
-          <div class="brand-sub">${isBn ? "স্মার্ট ডিজিটাল স্বাস্থ্য সেবা ও প্রিভিলেজ নেটওয়ার্ক • সিলেট, বাংলাদেশ" : "Smart Healthcare Discount & Digital Privilege Network"}</div>
+          <div class="brand-title">হেলথ ক্লাব (Health Club)</div>
+          <div class="brand-sub">স্মার্ট ডিজিটাল স্বাস্থ্য সেবা ও প্রিভিলেজ নেটওয়ার্ক • সিলেট, বাংলাদেশ</div>
         </div>
       </div>
       <div class="report-badge">
-        <div class="badge-tag">${isBn ? "হেলথ অ্যাসেসমেন্ট সামারি" : "HEALTH ASSESSMENT SUMMARY"}</div>
+        <div class="badge-tag">হেলথ অ্যাসেসমেন্ট সামারি</div>
         <div class="meta-line">${report.reportId} | ${report.generatedDate} ${report.generatedTime}</div>
       </div>
     </div>
 
     <div class="patient-card">
       <div>
-        <strong>${isBn ? "নাম / সদস্য" : "Name / User"}</strong>
-        <span>${report.name || (isBn ? "স্বাস্থ্য সচেতন সদস্য" : "Wellness Member")}</span>
+        <strong>নাম / সদস্য</strong>
+        <span>${report.name || "স্বাস্থ্য সচেতন সদস্য"}</span>
       </div>
       <div>
-        <strong>${isBn ? "বয়স ও লিঙ্গ" : "Age & Gender"}</strong>
-        <span>${report.age} ${isBn ? "বছর" : "Yrs"} (${report.gender === "male" ? (isBn ? "পুরুষ" : "Male") : (isBn ? "মহিলা" : "Female")})</span>
+        <strong>বয়স ও লিঙ্গ</strong>
+        <span>${report.age} বছর (${report.gender === "male" ? "পুরুষ" : "মহিলা"})</span>
       </div>
       <div>
-        <strong>${isBn ? "উচ্চতা ও ওজন" : "Height & Weight"}</strong>
+        <strong>উচ্চতা ও ওজন</strong>
         <span>${report.heightCm} cm | ${report.weightKg} kg</span>
       </div>
       <div>
-        <strong>${isBn ? "কাজের মাত্রা" : "Activity Level"}</strong>
+        <strong>কাজের মাত্রা</strong>
         <span>${
           report.activityLevel === "sedentary"
-            ? isBn ? "বসে কাজ" : "Sedentary"
+            ? "বসে কাজ"
             : report.activityLevel === "light"
-            ? isBn ? "হালকা সক্রিয়" : "Light"
+            ? "হালকা সক্রিয়"
             : report.activityLevel === "moderate"
-            ? isBn ? "মাঝারি ব্যায়াম" : "Moderate"
-            : isBn ? "অত্যধিক সক্রিয়" : "Active"
+            ? "মাঝারি ব্যায়াম"
+            : "অত্যধিক সক্রিয়"
         }</span>
       </div>
     </div>
@@ -289,10 +283,10 @@ export function generateHealthReportHtml(
     <div class="score-banner">
       <div>
         <div style="font-weight: 800; font-size: 13px; color: #065f46;">
-          ${isBn ? "সার্বিক স্বাস্থ্য মূল্যায়ন স্কোর (Overall Wellness Score)" : "Overall Health & Wellness Score"}
+          সার্বিক স্বাস্থ্য মূল্যায়ন স্কোর (Overall Wellness Score)
         </div>
         <div style="font-size: 11px; color: #047857; margin-top: 1px;">
-          ${isBn ? report.wellnessStatusBn : report.wellnessStatusEn}
+          ${report.wellnessStatusBn}
         </div>
       </div>
       <div class="score-circle">
@@ -304,29 +298,29 @@ export function generateHealthReportHtml(
     <div class="grid-2">
       <div class="card">
         <div class="card-title">
-          <span>${isBn ? "বডি ম্যাস ইনডেক্স (BMI)" : "Body Mass Index (BMI)"}</span>
+          <span>বডি ম্যাস ইনডেক্স (BMI)</span>
           <span class="metric-status ${report.bmiCategory === "normal" ? "status-normal" : report.bmiCategory === "overweight" ? "status-warning" : "status-danger"}">
-            ${isBn ? report.bmiCategoryBn : report.bmiCategoryEn}
+            ${report.bmiCategoryBn}
           </span>
         </div>
         <div class="metric-value">${report.bmi} <span style="font-size: 11px; font-weight: 500; color: #64748b;">kg/m²</span></div>
         <p style="font-size: 10.5px; color: #475569; margin-bottom: 4px;">
-          ${isBn ? `আদর্শ ওজনের সীমা: ${report.idealMinKg} - ${report.idealMaxKg} কেজি` : `Healthy Weight Range: ${report.idealMinKg} - ${report.idealMaxKg} kg`}
+          আদর্শ ওজনের সীমা: ${report.idealMinKg} - ${report.idealMaxKg} কেজি
         </p>
         <p style="font-size: 10.5px; color: #334155; line-height: 1.35;">
-          ${isBn ? report.weightStatusAdviceBn : report.weightStatusAdviceEn}
+          ${report.weightStatusAdviceBn}
         </p>
       </div>
 
       <div class="card">
         <div class="card-title">
-          <span>${isBn ? "দৈনিক ক্যালোরি ও এনার্জি" : "Daily Calorie Targets (TDEE)"}</span>
+          <span>দৈনিক ক্যালোরি ও এনার্জি</span>
           <span class="metric-status status-normal">${report.maintenanceCalories} kcal/day</span>
         </div>
         <div class="metric-value">${report.maintenanceCalories} <span style="font-size: 11px; font-weight: 500; color: #64748b;">kcal/দিন</span></div>
         <div style="font-size: 10.5px; color: #475569; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 4px;">
-          <div>${isBn ? "BMR বিপাকীয় হার:" : "BMR:"} <strong>${report.bmr} kcal</strong></div>
-          <div>${isBn ? "ওজন হ্রাস টার্গেট:" : "Weight Loss:"} <strong>${report.weightLossCalories} kcal</strong></div>
+          <div>BMR বিপাকীয় হার: <strong>${report.bmr} kcal</strong></div>
+          <div>ওজন হ্রাস টার্গেট: <strong>${report.weightLossCalories} kcal</strong></div>
         </div>
       </div>
     </div>
@@ -334,32 +328,32 @@ export function generateHealthReportHtml(
     <div class="grid-2">
       <div class="card">
         <div class="card-title">
-          <span>${isBn ? "দৈনিক পানির চাহিদা (Hydration)" : "Daily Hydration Target"}</span>
+          <span>দৈনিক পানির চাহিদা (Hydration)</span>
           <span class="metric-status status-normal">${report.dailyWaterLiters} Liters</span>
         </div>
-        <div class="metric-value">${report.dailyWaterLiters} L <span style="font-size: 11px; font-weight: 500; color: #64748b;">(~${report.dailyGlasses} ${isBn ? "গ্লাস" : "Glasses"})</span></div>
+        <div class="metric-value">${report.dailyWaterLiters} L <span style="font-size: 11px; font-weight: 500; color: #64748b;">(~${report.dailyGlasses} গ্লাস)</span></div>
         <p style="font-size: 10.5px; color: #475569;">
-          ${isBn ? `শরীরের ওজন অনুযায়ী প্রতিদিন অন্তত ${report.dailyGlasses} গ্লাস (২৫০ মিলি) পানি পান করুন।` : `Drink at least ${report.dailyGlasses} standard glasses of water daily.`}
+          শরীরের ওজন অনুযায়ী প্রতিদিন অন্তত ${report.dailyGlasses} গ্লাস (২৫০ মিলি) পানি পান করুন।
         </p>
       </div>
 
       <div class="card">
         <div class="card-title">
-          <span>${isBn ? "ক্লিনিক্যাল নির্দেশক (BP ও সুগার)" : "Clinical Vital Indicators"}</span>
+          <span>ক্লিনিক্যাল নির্দেশক (BP ও সুগার)</span>
           <span class="metric-status ${report.bpEvaluation?.urgencyLevel === "normal" || !report.bpEvaluation ? "status-normal" : "status-warning"}">
-            ${report.bpEvaluation ? (isBn ? report.bpEvaluation.badgeBn : report.bpEvaluation.badgeEn) : (isBn ? "রুটিন" : "Routine")}
+            ${report.bpEvaluation ? report.bpEvaluation.badgeBn : "রুটিন"}
           </span>
         </div>
         <div style="font-size: 11px; color: #334155;">
           ${
             report.bpEvaluation
-              ? `<div>${isBn ? "রক্তচাপ:" : "BP:"} <strong>${report.bpEvaluation.systolic}/${report.bpEvaluation.diastolic} mmHg</strong> (${isBn ? report.bpEvaluation.titleBn : report.bpEvaluation.titleEn})</div>`
-              : `<div>${isBn ? "রক্তচাপ: আদর্শ মান < ১২০/৮০ mmHg" : "Blood Pressure: Optimal < 120/80 mmHg"}</div>`
+              ? `<div>রক্তচাপ: <strong>${report.bpEvaluation.systolic}/${report.bpEvaluation.diastolic} mmHg</strong> (${report.bpEvaluation.titleBn})</div>`
+              : `<div>রক্তচাপ: আদর্শ মান < ১২০/৮০ mmHg</div>`
           }
           ${
             report.glucoseEvaluation
-              ? `<div style="margin-top: 3px;">${isBn ? "শর্করা:" : "Sugar:"} <strong>${report.glucoseEvaluation.valueMmol} mmol/L</strong> (${isBn ? report.glucoseEvaluation.titleBn : report.glucoseEvaluation.titleEn})</div>`
-              : `<div style="margin-top: 3px;">${isBn ? "শর্করা: স্বাভাবিক ফাস্টিং ৩.৯ - ৫.৫ mmol/L" : "Fasting Sugar: Optimal 3.9 - 5.5 mmol/L"}</div>`
+              ? `<div style="margin-top: 3px;">শর্করা: <strong>${report.glucoseEvaluation.valueMmol} mmol/L</strong> (${report.glucoseEvaluation.titleBn})</div>`
+              : `<div style="margin-top: 3px;">শর্করা: স্বাভাবিক ফাস্টিং ৩.৯ - ৫.৫ mmol/L</div>`
           }
         </div>
       </div>
@@ -367,44 +361,35 @@ export function generateHealthReportHtml(
 
     <div class="grid-2">
       <div class="card">
-        <div class="card-title">${isBn ? "পুষ্টি ও খাদ্যাভ্যাস নির্দেশনা" : "Nutritional Guidelines"}</div>
+        <div class="card-title">পুষ্টি ও খাদ্যাভ্যাস নির্দেশনা</div>
         <ul class="card-list">
-          ${(isBn ? report.dietRecommendationsBn : report.dietRecommendationsEn)
-            .slice(0, 3)
-            .map((rec) => `<li>${rec}</li>`)
-            .join("")}
+          ${report.dietRecommendationsBn.slice(0, 3).map((rec) => `<li>${rec}</li>`).join("")}
         </ul>
       </div>
 
       <div class="card">
-        <div class="card-title">${isBn ? "শরীরচর্চা ও রেড-ফ্ল্যাগ সংকেত" : "Activity & Warning Signs"}</div>
+        <div class="card-title">শরীরচর্চা ও রেড-ফ্ল্যাগ সংকেত</div>
         <ul class="card-list">
-          ${(isBn ? report.exerciseRecommendationsBn : report.exerciseRecommendationsEn)
-            .slice(0, 2)
-            .map((rec) => `<li>${rec}</li>`)
-            .join("")}
+          ${report.exerciseRecommendationsBn.slice(0, 2).map((rec) => `<li>${rec}</li>`).join("")}
         </ul>
         <ul class="card-list warning" style="margin-top: 4px;">
-          ${(isBn ? report.warningSignsBn : report.warningSignsEn)
-            .slice(0, 1)
-            .map((sign) => `<li>${sign}</li>`)
-            .join("")}
+          ${report.warningSignsBn.slice(0, 1).map((sign) => `<li>${sign}</li>`).join("")}
         </ul>
       </div>
     </div>
 
     <div class="doctor-box">
       <div>
-        <strong style="color: #065f46;">${isBn ? "প্রয়োজনীয় বিশেষজ্ঞ পরামর্শ:" : "Recommended Doctor:"}</strong>
-        <span style="color: #047857; margin-left: 4px;">${isBn ? report.doctorReferralBn : report.doctorReferralEn}</span>
+        <strong style="color: #065f46;">প্রয়োজনীয় বিশেষজ্ঞ পরামর্শ:</strong>
+        <span style="color: #047857; margin-left: 4px;">${report.doctorReferralBn}</span>
       </div>
       <div style="font-weight: 700; color: #16a34a; font-size: 10.5px;">
-        ${isBn ? "হেলথ ক্লাব কার্ডে ২০% পর্যন্ত ডিসকাউন্ট" : "Up to 20% Discount with HC Card"}
+        হেলথ ক্লাব কার্ডে ২০% পর্যন্ত ডিসকাউন্ট
       </div>
     </div>
 
     <div class="footer">
-      <div>${isBn ? "সতর্কবার্তা: এই প্রতিবেদনটি প্রাথমিক স্বাস্থ্য সচেতনতার জন্য তৈরি।" : "Disclaimer: This assessment is for wellness screening and guidance only."}</div>
+      <div>সতর্কবার্তা: এই প্রতিবেদনটি প্রাথমিক স্বাস্থ্য সচেতনতার জন্য তৈরি।</div>
       <div>Health Club • Sylhet, Bangladesh</div>
     </div>
   </div>
@@ -420,10 +405,9 @@ export function generateHealthReportHtml(
 }
 
 export function printHealthAssessmentReport(
-  report: HealthAssessmentReport,
-  locale: Locale = "bn"
+  report: HealthAssessmentReport
 ): void {
-  const htmlContent = generateHealthReportHtml(report, locale);
+  const htmlContent = generateHealthReportHtml(report);
   const printWindow = window.open("", "_blank");
   if (!printWindow) {
     window.print();

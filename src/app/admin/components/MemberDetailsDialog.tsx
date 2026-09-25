@@ -10,7 +10,7 @@ import {
   History as HistoryIcon, ZoomIn, ExternalLink, Loader2, Tag
 } from "lucide-react";
 import { Member, Transaction } from "@/services/db";
-import { formatNum, Locale } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import { getMemberProfilePictureAction } from "@/app/actions/memberAdminActions";
 import { getTransactionsAction } from "@/app/actions/transactionActions";
 
@@ -20,8 +20,6 @@ interface MemberDetailsDialogProps {
   transactions?: Transaction[];
   onToggleStatus: (id: string) => void;
   onEditClick: (member: Member) => void;
-  locale: Locale;
-  t: (key: string) => string;
 }
 
 export function MemberDetailsDialog({
@@ -30,8 +28,6 @@ export function MemberDetailsDialog({
   transactions,
   onToggleStatus,
   onEditClick,
-  locale,
-  t,
 }: MemberDetailsDialogProps) {
   const [isImagePreviewOpen, setIsImagePreviewOpen] = useState(false);
   const [fetchedPic, setFetchedPic] = useState<string | null>(null);
@@ -117,7 +113,7 @@ export function MemberDetailsDialog({
                   }
                 }}
                 disabled={!profilePic}
-                aria-label={profilePic ? (locale === "bn" ? "প্রোফাইল ছবি বড় করে দেখুন" : "View profile picture") : undefined}
+                aria-label={profilePic ? "প্রোফাইল ছবি বড় করে দেখুন" : undefined}
                 className={`h-14 w-14 rounded-xl border border-border bg-muted/40 overflow-hidden flex items-center justify-center shrink-0 shadow-sm relative group text-left ${
                   profilePic 
                     ? "cursor-pointer hover:ring-2 hover:ring-primary/60 hover:shadow-md transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" 
@@ -147,10 +143,10 @@ export function MemberDetailsDialog({
               </button>
               <div>
                 <DialogTitle className="font-heading font-bold text-lg text-secondary">
-                  {t("admin.dashboard.memberProfileDetailsTitle")}
+                  মেম্বার প্রোফাইল বিস্তারিত
                 </DialogTitle>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  {t("admin.dashboard.memberIdLabel")} <span className="font-mono font-bold text-primary">{viewingMember.id}</span>
+                  আইডি: <span className="font-mono font-bold text-primary">{viewingMember.id}</span>
                 </p>
               </div>
             </div>
@@ -160,13 +156,13 @@ export function MemberDetailsDialog({
           {/* Status Badges */}
           <div className="flex items-center justify-between bg-muted/40 p-3 rounded-xl border border-border">
             <div className="flex flex-col gap-0.5">
-              <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("admin.dashboard.planTypeLabel")}</span>
-              <span className="text-xs font-bold text-secondary capitalize">
-                {viewingMember.tier === "founding" ? t("admin.dashboard.tierFounding1Year") : viewingMember.tier === "premium" ? t("admin.dashboard.tierPremium") : t("admin.dashboard.tierFamily")}
+              <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">প্ল্যানের ধরন</span>
+              <span className="text-xs font-bold text-secondary">
+                {viewingMember.tier === "founding" ? "ফাউন্ডিং মেম্বার (১ বছর)" : viewingMember.tier === "premium" ? "প্রিমিয়াম মেম্বার" : "ফ্যামিলি মেম্বার"}
               </span>
             </div>
             <div className="flex flex-col items-end gap-0.5">
-              <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("admin.dashboard.membershipStatusLabel")}</span>
+              <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">সদস্যপদ স্ট্যাটাস</span>
               <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                 viewingMember.status === "active" 
                   ? "bg-green-50 text-green-600 border border-green-200" 
@@ -182,10 +178,10 @@ export function MemberDetailsDialog({
                     : "bg-rose-500"
                 }`} />
                 {viewingMember.status === "active" 
-                  ? t("admin.dashboard.active") 
+                  ? "সক্রিয়" 
                   : viewingMember.status === "pending_approval"
                   ? "অনুমোদন পেন্ডিং"
-                  : t("admin.dashboard.inactive")}
+                  : "নিষ্ক্রিয়"}
               </span>
             </div>
           </div>
@@ -195,7 +191,7 @@ export function MemberDetailsDialog({
             <div className="space-y-1">
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <User className="h-3.5 w-3.5" />
-                <span>{t("admin.dashboard.name")}</span>
+                <span>পুরো নাম</span>
               </div>
               <p className="text-sm font-bold text-secondary">{viewingMember.name}</p>
             </div>
@@ -203,7 +199,7 @@ export function MemberDetailsDialog({
             <div className="space-y-1">
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Phone className="h-3.5 w-3.5" />
-                <span>{t("admin.dashboard.mobileNumberLabel")}</span>
+                <span>মোবাইল নম্বর</span>
               </div>
               <p className="text-sm font-semibold text-secondary font-mono">{viewingMember.phone}</p>
             </div>
@@ -211,64 +207,64 @@ export function MemberDetailsDialog({
             <div className="space-y-1">
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Mail className="h-3.5 w-3.5" />
-                <span>{t("admin.dashboard.emailLabel")}</span>
+                <span>ইমেইল</span>
               </div>
-              <p className="text-sm text-secondary font-mono break-all">{viewingMember.email || t("admin.dashboard.notProvided")}</p>
+              <p className="text-sm text-secondary font-mono break-all">{viewingMember.email || "প্রদান করা হয়নি"}</p>
             </div>
 
             <div className="space-y-1">
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Heart className="h-3.5 w-3.5" />
-                <span>{t("admin.dashboard.totalMedicalSavings")}</span>
+                <span>মেডিকেল সেবায় মোট সঞ্চয়</span>
               </div>
-              <p className="text-sm font-extrabold text-primary font-mono">৳{formatNum(viewingMember.totalSaved || 0, locale)}</p>
+              <p className="text-sm font-extrabold text-primary font-mono">৳{toBanglaNums(viewingMember.totalSaved || 0)}</p>
             </div>
 
             <div className="space-y-1">
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Calendar className="h-3.5 w-3.5" />
-                <span>{t("admin.dashboard.joinedDateLabel")}</span>
+                <span>যুক্ত হওয়ার তারিখ</span>
               </div>
-              <p className="text-sm font-semibold text-secondary font-mono">{viewingMember.joinedDate || "N/A"}</p>
+              <p className="text-sm font-semibold text-secondary font-mono">{viewingMember.joinedDate ? toBanglaNums(viewingMember.joinedDate) : "N/A"}</p>
             </div>
 
             <div className="space-y-1">
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Calendar className="h-3.5 w-3.5" />
-                <span>{t("admin.dashboard.expiryDateLabel")}</span>
+                <span>মেয়াদ উত্তীর্ণের তারিখ</span>
               </div>
-              <p className="text-sm font-semibold text-secondary font-mono">{viewingMember.expiryDate || "N/A"}</p>
+              <p className="text-sm font-semibold text-secondary font-mono">{viewingMember.expiryDate ? toBanglaNums(viewingMember.expiryDate) : "N/A"}</p>
             </div>
 
             <div className="space-y-1">
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <MapPin className="h-3.5 w-3.5" />
-                <span>{t("admin.dashboard.addressLabel")}</span>
+                <span>ঠিকানা</span>
               </div>
-              <p className="text-sm text-secondary">{viewingMember.address || t("admin.dashboard.notProvided")}</p>
+              <p className="text-sm text-secondary">{viewingMember.address || "প্রদান করা হয়নি"}</p>
             </div>
 
             <div className="space-y-1">
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Calendar className="h-3.5 w-3.5" />
-                <span>{t("admin.dashboard.birthDateLabel")}</span>
+                <span>জন্ম তারিখ</span>
               </div>
-              <p className="text-sm font-semibold text-secondary font-mono">{viewingMember.birthDate || t("admin.dashboard.notProvided")}</p>
+              <p className="text-sm font-semibold text-secondary font-mono">{viewingMember.birthDate ? toBanglaNums(viewingMember.birthDate) : "প্রদান করা হয়নি"}</p>
             </div>
 
             <div className="space-y-1 col-span-1 sm:col-span-2">
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Briefcase className="h-3.5 w-3.5" />
-                <span>{t("admin.dashboard.professionLabel")}</span>
+                <span>পেশা</span>
               </div>
-              <p className="text-sm text-secondary">{viewingMember.profession || t("admin.dashboard.notProvided")}</p>
+              <p className="text-sm text-secondary">{viewingMember.profession || "প্রদান করা হয়নি"}</p>
             </div>
 
             {viewingMember.referenceCode && (
               <div className="space-y-1 col-span-1 sm:col-span-2 p-3 rounded-xl bg-primary/5 dark:bg-primary/10 border border-primary/20">
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-semibold">
                   <Tag className="h-3.5 w-3.5 text-primary" />
-                  <span>{locale === "en" ? "Reference / Referral Code:" : "ব্যবহৃত রেফারেন্স কোড:"}</span>
+                  <span>ব্যবহৃত রেফারেন্স কোড:</span>
                 </div>
                 <div className="flex items-center justify-between pt-1">
                   <span className="text-sm font-mono font-bold text-primary bg-primary/10 px-2.5 py-0.5 rounded-md border border-primary/30">
@@ -276,7 +272,7 @@ export function MemberDetailsDialog({
                   </span>
                   {viewingMember.discountAmount ? (
                     <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold">
-                      {locale === "en" ? `Discount: ৳${viewingMember.discountAmount}` : `ছাড়: ৳${viewingMember.discountAmount}`}
+                      ছাড়: ৳{toBanglaNums(viewingMember.discountAmount)}
                     </span>
                   ) : null}
                 </div>
@@ -304,7 +300,7 @@ export function MemberDetailsDialog({
           <div className="border-t border-border pt-4">
             <h4 className="text-xs font-bold text-secondary uppercase font-mono tracking-wider mb-2 flex items-center gap-1">
               <HistoryIcon className="h-4 w-4 text-primary" />
-              {t("admin.dashboard.txLogDesc")}
+              মেম্বার ট্রানজেকশন হিস্ট্রি
             </h4>
             {loadingTxs ? (
               <div className="space-y-2 py-2">
@@ -316,10 +312,10 @@ export function MemberDetailsDialog({
                 <Table>
                   <TableHeader className="bg-muted/40">
                     <TableRow>
-                      <TableHead className="text-[10px] font-semibold text-secondary whitespace-nowrap py-2">{t("admin.dashboard.medicalCenter")}</TableHead>
-                      <TableHead className="text-[10px] font-semibold text-secondary whitespace-nowrap py-2">{t("admin.dashboard.date")}</TableHead>
-                      <TableHead className="text-[10px] font-semibold text-secondary text-right whitespace-nowrap py-2">{t("admin.dashboard.bill")}</TableHead>
-                      <TableHead className="text-[10px] font-semibold text-primary text-right whitespace-nowrap py-2">{t("admin.dashboard.savings")}</TableHead>
+                      <TableHead className="text-[10px] font-semibold text-secondary whitespace-nowrap py-2">মেডিকেল সেন্টার</TableHead>
+                      <TableHead className="text-[10px] font-semibold text-secondary whitespace-nowrap py-2">তারিখ</TableHead>
+                      <TableHead className="text-[10px] font-semibold text-secondary text-right whitespace-nowrap py-2">বিল</TableHead>
+                      <TableHead className="text-[10px] font-semibold text-primary text-right whitespace-nowrap py-2">সাশ্রয়</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody className="text-[11px]">
@@ -327,10 +323,10 @@ export function MemberDetailsDialog({
                       <TableRow key={tx.id}>
                         <TableCell className="font-semibold text-secondary py-2">{tx.partnerName}</TableCell>
                         <TableCell className="text-muted-foreground py-2 font-mono">
-                          {tx.date.includes("T") ? tx.date.split("T")[0] : tx.date.split(" ")[0].replace(/,$/, "")}
+                          {tx.date.includes("T") ? toBanglaNums(tx.date.split("T")[0]) : toBanglaNums(tx.date.split(" ")[0].replace(/,$/, ""))}
                         </TableCell>
-                        <TableCell className="text-right font-mono py-2">৳{tx.amount}</TableCell>
-                        <TableCell className="text-right font-mono text-primary font-bold py-2">৳{tx.saved}</TableCell>
+                        <TableCell className="text-right font-mono py-2">৳{toBanglaNums(tx.amount)}</TableCell>
+                        <TableCell className="text-right font-mono text-primary font-bold py-2">৳{toBanglaNums(tx.saved)}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -338,7 +334,7 @@ export function MemberDetailsDialog({
               </div>
             ) : (
               <p className="text-xs text-muted-foreground text-center py-4 bg-muted/20 border border-dashed border-border rounded-xl">
-                {t("admin.dashboard.noTxsFound")}
+                কোনো ট্রানজেকশন রেকর্ড পাওয়া যায়নি
               </p>
             )}
           </div>
@@ -351,7 +347,7 @@ export function MemberDetailsDialog({
                 className="bg-green-600 hover:bg-green-700 text-white font-semibold gap-1.5 flex-1"
               >
                 <ShieldCheck className="h-4 w-4" />
-                {locale === "bn" ? "অনুমোদন" : "Approve"}
+                অনুমোদন করুন
               </Button>
             )}
             <div className="flex gap-2 flex-1 w-full">
@@ -360,14 +356,14 @@ export function MemberDetailsDialog({
                 className="flex-1 bg-primary hover:bg-primary-dark text-white font-semibold gap-1.5"
               >
                 <Edit3 className="h-4 w-4" />
-                {t("admin.dashboard.editButton")}
+                তথ্য এডিট করুন
               </Button>
               <Button 
                 variant="outline" 
                 onClick={onClose}
                 className="flex-1 border-border text-secondary font-semibold"
               >
-                {t("admin.dashboard.closeButton")}
+                বন্ধ করুন
               </Button>
             </div>
           </div>
@@ -402,7 +398,7 @@ export function MemberDetailsDialog({
 
             <div className="flex items-center justify-between w-full pt-1 text-xs">
               <span className="text-muted-foreground">
-                {locale === "bn" ? "সদস্যের ছবি" : "Member Photo"}
+                সদস্যের ছবি
               </span>
               <a
                 href={profilePic}
@@ -411,7 +407,7 @@ export function MemberDetailsDialog({
                 className="inline-flex items-center gap-1 text-primary hover:text-primary-dark font-semibold hover:underline"
               >
                 <ExternalLink className="h-3.5 w-3.5" />
-                <span>{locale === "bn" ? "আসল ছবি দেখুন" : "View Full Resolution"}</span>
+                <span>আসল ছবি দেখুন</span>
               </a>
             </div>
           </div>

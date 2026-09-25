@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Partner } from "@/services/db";
 import {
   getPaginatedPartnersAdminAction,
@@ -21,7 +20,6 @@ import { PartnersTab } from "../components/PartnersTab";
 import { PartnerDialog, PartnerFormData } from "../components/PartnerDialog";
 
 function AdminPartnersContent() {
-  const { t, locale } = useLanguage();
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -174,7 +172,7 @@ function AdminPartnersContent() {
           upazila: newPartner.upazila || "feni-sadar",
         });
         if ("error" in res) {
-          toast.error(res.error || t("admin.dashboard.partnerAddedFailed"));
+          toast.error(res.error || "পার্টনার যুক্ত করতে ব্যর্থ হয়েছে।");
           return;
         }
       }
@@ -197,31 +195,31 @@ function AdminPartnersContent() {
       notifyChange();
       toast.success(
         editingPartner
-          ? t("admin.dashboard.partnerUpdatedSuccess")
-          : t("admin.dashboard.partnerAddedSuccess")
+          ? "পার্টনার সফলভাবে আপডেট করা হয়েছে!"
+          : "পার্টনার সফলভাবে যুক্ত করা হয়েছে!"
       );
     } catch {
       toast.error(
         editingPartner
-          ? t("admin.dashboard.partnerUpdatedFailed")
-          : t("admin.dashboard.partnerAddedFailed")
+          ? "পার্টনার আপডেট করতে সমস্যা হয়েছে।"
+          : "পার্টনার যুক্ত করতে ব্যর্থ হয়েছে।"
       );
     }
   };
 
   const handleDeletePartner = async (id: string, name: string) => {
-    if (confirm(t("admin.dashboard.confirmDeletePartner").replace("${name}", name))) {
+    if (confirm(`আপনি কি "${name}" পার্টনারকে নিশ্চিতভাবে মুছে ফেলতে চান?`)) {
       try {
         const success = await deletePartnerAction(id);
         if (success) {
-          toast.success(t("admin.dashboard.partnerDeletedSuccess"));
+          toast.success("পার্টনার সফলভাবে মুছে ফেলা হয়েছে।");
           await loadData();
           notifyChange();
         } else {
-          toast.error(t("admin.dashboard.partnerDeletedFailed"));
+          toast.error("পার্টনার মুছে ফেলতে ব্যর্থ হয়েছে।");
         }
       } catch {
-        toast.error(t("admin.dashboard.partnerDeletedFailed"));
+        toast.error("পার্টনার মুছে ফেলতে ব্যর্থ হয়েছে।");
       }
     }
   };
@@ -335,8 +333,6 @@ function AdminPartnersContent() {
         }}
         onDeleteClick={handleDeletePartner}
         onResetPasswordClick={handleResetPassword}
-        locale={locale}
-        t={t}
         loading={loading}
       />
 
@@ -363,7 +359,6 @@ function AdminPartnersContent() {
           newPartner={newPartner}
           setNewPartner={setNewPartner}
           onSubmit={handleSavePartner}
-          t={t}
         />
       )}
     </div>

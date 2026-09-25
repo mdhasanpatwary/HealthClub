@@ -26,7 +26,7 @@ import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { exportToCsv } from "@/lib/exportUtils";
-import { useLanguage } from "@/components/layout/LanguageProvider";
+import { toBanglaNums } from "@/lib/utils";
 import { DoctorAvatar } from "@/components/ui/doctors/DoctorModals";
 import { DoctorAvailabilityBadge, DoctorNoticeBanner } from "@/components/ui/doctors/DoctorAvailabilityBadge";
 import {
@@ -43,7 +43,6 @@ interface PartnerDoctorsTabProps {
 }
 
 export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
-  const { t } = useLanguage();
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -61,14 +60,14 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
       if (res.success) {
         setDoctors(res.doctors);
       } else {
-        toast.error(res.error || t("partner.doctors.loadError"));
+        toast.error(res.error || "ডাক্তার তালিকা লোড করতে সমস্যা হয়েছে");
       }
     } catch {
-      toast.error(t("common.error.server"));
+      toast.error("সার্ভারে ত্রুটি হয়েছে, অনুগ্রহ করে আবার চেষ্টা করুন");
     } finally {
       setLoading(false);
     }
-  }, [t]);
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -108,7 +107,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
 
   const handleExportCsv = () => {
     if (doctors.length === 0) {
-      toast.info(t("partner.doctors.noDoctorsToExport"));
+      toast.info("এক্সপোর্ট করার মতো কোনো ডাক্তার নেই।");
       return;
     }
     exportToCsv(doctors, `${partner.name.replace(/\s+/g, "_")}_doctors`, [
@@ -138,10 +137,10 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
             </div>
             <div>
               <p className="text-xs text-muted-foreground font-medium">
-                {t("partner.doctors.kpiTotal")}
+                মোট ডাক্তার
               </p>
               <h3 className="text-2xl font-extrabold text-foreground tracking-tight">
-                {loading ? <Skeleton className="h-7 w-12 inline-block" /> : totalDoctors}
+                {loading ? <Skeleton className="h-7 w-12 inline-block" /> : toBanglaNums(totalDoctors)}
               </h3>
             </div>
           </CardContent>
@@ -154,10 +153,10 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
             </div>
             <div>
               <p className="text-xs text-muted-foreground font-medium">
-                {t("partner.doctors.kpiActive")}
+                সক্রিয় চেম্বার
               </p>
               <h3 className="text-2xl font-extrabold text-foreground tracking-tight">
-                {loading ? <Skeleton className="h-7 w-12 inline-block" /> : activeChambers}
+                {loading ? <Skeleton className="h-7 w-12 inline-block" /> : toBanglaNums(activeChambers)}
               </h3>
             </div>
           </CardContent>
@@ -170,10 +169,10 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
             </div>
             <div>
               <p className="text-xs text-muted-foreground font-medium">
-                {t("partner.doctors.kpiDepts")}
+                বিভাগ সংখ্যা
               </p>
               <h3 className="text-2xl font-extrabold text-foreground tracking-tight">
-                {loading ? <Skeleton className="h-7 w-12 inline-block" /> : uniqueDepts}
+                {loading ? <Skeleton className="h-7 w-12 inline-block" /> : toBanglaNums(uniqueDepts)}
               </h3>
             </div>
           </CardContent>
@@ -187,10 +186,10 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
             <div>
               <CardTitle className="font-heading text-lg sm:text-xl font-bold flex items-center gap-2 text-foreground">
                 <Stethoscope className="h-5 w-5 text-primary" />
-                <span>{t("partner.doctors.title")}</span>
+                <span>চেম্বার ডাক্তার রোস্টার</span>
               </CardTitle>
               <CardDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                {t("partner.doctors.subtitle")}
+                আপনার প্রতিষ্ঠানে রোগী দেখেন এমন বিশেষজ্ঞ ডাক্তারদের তালিকা ও সময়সূচী পরিচালনা করুন
               </CardDescription>
             </div>
 
@@ -202,7 +201,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
                 className="gap-1.5 rounded-xl text-xs font-semibold shrink-0 cursor-pointer"
               >
                 <Download className="h-3.5 w-3.5" />
-                <span>{t("partner.doctors.exportCsv")}</span>
+                <span>CSV এক্সপোর্ট</span>
               </Button>
 
               <Button
@@ -212,7 +211,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
                 className="gap-1.5 rounded-xl text-xs font-semibold shrink-0 cursor-pointer"
               >
                 <LinkIcon className="h-3.5 w-3.5 text-primary" />
-                <span>{t("partner.doctors.linkDoctor")}</span>
+                <span>ডাক্তার লিঙ্ক করুন</span>
               </Button>
 
               <Button
@@ -221,7 +220,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
                 className="gap-1.5 rounded-xl text-xs font-semibold bg-primary text-white hover:bg-primary/90 shrink-0 cursor-pointer shadow-sm"
               >
                 <Plus className="h-3.5 w-3.5" />
-                <span>{t("partner.doctors.addDoctor")}</span>
+                <span>নতুন ডাক্তার যোগ করুন</span>
               </Button>
             </div>
           </div>
@@ -232,7 +231,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder={t("partner.doctors.searchPlaceholder")}
+                placeholder="ডাক্তার বা বিশেষত্ব খুঁজুন..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-9 h-10 rounded-xl bg-background border-border text-xs sm:text-sm"
@@ -241,12 +240,12 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
 
             <div className="w-full sm:w-64 shrink-0">
               <select
-                aria-label={t("partner.doctors.filterAllDepts")}
+                aria-label="সকল বিভাগ"
                 value={selectedDept}
                 onChange={(e) => setSelectedDept(e.target.value)}
                 className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-xs sm:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <option value="all">{t("partner.doctors.filterAllDepts")}</option>
+                <option value="all">সকল বিভাগ</option>
                 {DEPT_OPTIONS.map((dept) => (
                   <option key={dept.value} value={dept.value}>{dept.label}</option>
                 ))}
@@ -278,13 +277,13 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
               </div>
               <h4 className="text-base font-bold text-foreground">
                 {doctors.length === 0
-                  ? t("partner.doctors.noDoctors")
-                  : t("partner.doctors.noDoctorsFound")}
+                  ? "কোনো বিশেষজ্ঞ ডাক্তার এখনো যুক্ত করা হয়নি"
+                  : "কোনো ডাক্তার পাওয়া যায়নি"}
               </h4>
               <p className="text-xs text-muted-foreground max-w-md mx-auto">
                 {doctors.length === 0
-                  ? t("partner.doctors.noDoctorsDesc")
-                  : t("partner.doctors.noDoctorsFoundDesc")}
+                  ? "আপনার প্রতিষ্ঠানে রোগী দেখেন এমন ডাক্তারদের সহজে যুক্ত করতে উপরের বাটনগুলোতে ক্লিক করুন।"
+                  : "অনুসন্ধানের তথ্যের সাথে মিল পাওয়া যায়নি, অন্য কোনো নামে চেষ্টা করুন।"}
               </p>
               {doctors.length === 0 && (
                 <div className="flex justify-center gap-2 pt-2">
@@ -292,16 +291,16 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
                     onClick={() => setIsLinkOpen(true)}
                     variant="outline"
                     size="sm"
-                    className="rounded-xl text-xs"
+                    className="rounded-xl text-xs cursor-pointer"
                   >
-                    {t("partner.doctors.linkDoctor")}
+                    ডাক্তার লিঙ্ক করুন
                   </Button>
                   <Button
                     onClick={() => setIsAddOpen(true)}
                     size="sm"
-                    className="rounded-xl text-xs bg-primary text-white"
+                    className="rounded-xl text-xs bg-primary text-white cursor-pointer"
                   >
-                    {t("partner.doctors.addDoctor")}
+                    নতুন ডাক্তার যোগ করুন
                   </Button>
                 </div>
               )}
@@ -360,12 +359,12 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
                     <div className="flex items-center justify-between gap-2 text-slate-700 dark:text-slate-300">
                       <span className="flex items-center gap-1 font-semibold text-primary">
                         <Building2 className="h-3.5 w-3.5" />
-                        {doc.roomNo || t("partner.doctors.noRoomAssigned")}
+                        {doc.roomNo || "রুম নির্ধারিত নেই"}
                       </span>
                       {doc.consultationFee && (
                         <span className="inline-flex items-center gap-1 font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">
                           <Banknote className="h-3 w-3" />
-                          {doc.consultationFee}
+                          {toBanglaNums(doc.consultationFee)}
                         </span>
                       )}
                     </div>
@@ -381,7 +380,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
                       </div>
                       <div className="flex items-center gap-1.5 sm:col-span-2 truncate text-slate-700 dark:text-slate-300">
                         <Phone className="h-3.5 w-3.5 text-primary shrink-0" />
-                        <span className="font-semibold">{doc.serialPhone}</span>
+                        <span className="font-semibold">{toBanglaNums(doc.serialPhone)}</span>
                       </div>
                     </div>
                   </div>
@@ -395,7 +394,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
                       className="flex-1 rounded-xl text-xs font-semibold gap-1.5 h-8 border-border hover:border-primary/50 cursor-pointer"
                     >
                       <Edit3 className="h-3.5 w-3.5 text-primary" />
-                      <span>{t("partner.doctors.editChamber")}</span>
+                      <span>চেম্বার এডিট</span>
                     </Button>
 
                     <Button
@@ -405,7 +404,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
                       className="rounded-xl text-xs font-semibold gap-1.5 h-8 text-rose-500 hover:text-rose-600 hover:bg-rose-500/10 cursor-pointer shrink-0"
                     >
                       <Unlink className="h-3.5 w-3.5" />
-                      <span>{t("partner.doctors.unlink")}</span>
+                      <span>অপসারণ</span>
                     </Button>
                   </div>
                 </div>

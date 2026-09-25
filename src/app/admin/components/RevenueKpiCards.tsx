@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { RevenueKpis } from "@/types/revenueAnalytics";
-import { formatNum, Locale } from "@/lib/i18n";
+import { formatNum } from "@/lib/utils";
 import {
   Coins,
   HeartHandshake,
@@ -16,62 +16,50 @@ import {
 
 interface RevenueKpiCardsProps {
   kpis: RevenueKpis;
-  locale: Locale;
 }
 
-export function RevenueKpiCards({ kpis, locale }: RevenueKpiCardsProps) {
-  const isBn = locale === "bn";
+export function RevenueKpiCards({ kpis }: RevenueKpiCardsProps) {
 
   const cards = [
     {
-      title: isBn ? "মোট সাবস্ক্রিপশন রাজস্ব" : "Total Subscription Revenue",
-      value: `৳${formatNum(kpis.totalSubscriptionRevenue, locale)}`,
+      title: "মোট সাবস্ক্রিপশন রাজস্ব",
+      value: `৳${formatNum(kpis.totalSubscriptionRevenue)}`,
       icon: Coins,
-      subtitle: isBn
-        ? `চলতি মাসে: ৳${formatNum(kpis.thisMonthSubscriptionRevenue, locale)}`
-        : `This Month: ৳${formatNum(kpis.thisMonthSubscriptionRevenue, locale)}`,
-      badge: isBn ? "সক্রিয় সদস্য ফি" : "Active Member Fees",
+      subtitle: `চলতি মাসে: ৳${formatNum(kpis.thisMonthSubscriptionRevenue)}`,
+      badge: "সক্রিয় সদস্য ফি",
       gradient: "from-emerald-500/15 via-emerald-500/5 to-transparent",
       borderColor: "border-emerald-500/30",
       iconBg: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
       textColor: "text-emerald-700 dark:text-emerald-300",
     },
     {
-      title: isBn ? "মোট সদস্য চিকিৎসা সাশ্রয়" : "Total Member Medical Savings",
-      value: `৳${formatNum(kpis.totalMemberSavings, locale)}`,
+      title: "মোট সদস্য চিকিৎসা সাশ্রয়",
+      value: `৳${formatNum(kpis.totalMemberSavings)}`,
       icon: HeartHandshake,
-      subtitle: isBn
-        ? `গড় সাশ্রয়: ৳${formatNum(kpis.averageSavingPerTransaction, locale)} / রোগী`
-        : `Avg: ৳${formatNum(kpis.averageSavingPerTransaction, locale)} / patient`,
-      badge: isBn
-        ? `চলতি মাসে ৳${formatNum(kpis.thisMonthMemberSavings, locale)}`
-        : `৳${formatNum(kpis.thisMonthMemberSavings, locale)} this mo`,
+      subtitle: `গড় সাশ্রয়: ৳${formatNum(kpis.averageSavingPerTransaction)} / রোগী`,
+      badge: `চলতি মাসে ৳${formatNum(kpis.thisMonthMemberSavings)}`,
       gradient: "from-teal-500/15 via-teal-500/5 to-transparent",
       borderColor: "border-teal-500/30",
       iconBg: "bg-teal-500/15 text-teal-600 dark:text-teal-400",
       textColor: "text-teal-700 dark:text-teal-300",
     },
     {
-      title: isBn ? "গ্রস মেডিকেল বিলিং ভলিউম" : "Gross Medical Bill Volume",
-      value: `৳${formatNum(kpis.totalMedicalBilled, locale)}`,
+      title: "গ্রস মেডিকেল বিলিং ভলিউম",
+      value: `৳${formatNum(kpis.totalMedicalBilled)}`,
       icon: Building2,
-      subtitle: isBn
-        ? `মোট ${formatNum(kpis.totalTransactions, locale)} টি ডিসকাউন্ট লেনদেন`
-        : `${formatNum(kpis.totalTransactions, locale)} total discount visits`,
-      badge: isBn ? "হাসপাতাল টার্নওভার" : "Hospital Turnover",
+      subtitle: `মোট ${formatNum(kpis.totalTransactions)} টি ডিসকাউন্ট লেনদেন`,
+      badge: "হাসপাতাল টার্নওভার",
       gradient: "from-blue-500/15 via-blue-500/5 to-transparent",
       borderColor: "border-blue-500/30",
       iconBg: "bg-blue-500/15 text-blue-600 dark:text-blue-400",
       textColor: "text-blue-700 dark:text-blue-300",
     },
     {
-      title: isBn ? "নবায়ন রিটেনশন রেট" : "Annual Renewal Retention Rate",
-      value: `${formatNum(kpis.renewalRetentionRate, locale)}%`,
+      title: "নবায়ন রিটেনশন রেট",
+      value: `${formatNum(kpis.renewalRetentionRate)}%`,
       icon: RotateCcw,
-      subtitle: isBn
-        ? `${formatNum(kpis.totalRenewedCount, locale)} জন সফল নবায়ন (${formatNum(kpis.pendingRenewalsCount, locale)} টি পেন্ডিং)`
-        : `${formatNum(kpis.totalRenewedCount, locale)} renewed (${formatNum(kpis.pendingRenewalsCount, locale)} pending)`,
-      badge: isBn ? "মেম্বারশিপ স্থায়িত্ব" : "Member Retention",
+      subtitle: `${formatNum(kpis.totalRenewedCount)} জন সফল নবায়ন (${formatNum(kpis.pendingRenewalsCount)} টি পেন্ডিং)`,
+      badge: "মেম্বারশিপ স্থায়িত্ব",
       gradient: "from-purple-500/15 via-purple-500/5 to-transparent",
       borderColor: "border-purple-500/30",
       iconBg: "bg-purple-500/15 text-purple-600 dark:text-purple-400",
@@ -127,9 +115,9 @@ export function RevenueKpiCards({ kpis, locale }: RevenueKpiCardsProps) {
             <Users className="h-4 w-4" />
           </div>
           <div>
-            <p className="text-[11px] text-muted-foreground">{isBn ? "মোট নিবন্ধিত সদস্য" : "Total Members"}</p>
+            <p className="text-[11px] text-muted-foreground">মোট নিবন্ধিত সদস্য</p>
             <p className="font-bold font-mono text-foreground text-sm">
-              {formatNum(kpis.totalMembersCount, locale)} {isBn ? "জন" : "members"}
+              {formatNum(kpis.totalMembersCount)} জন
             </p>
           </div>
         </div>
@@ -139,9 +127,9 @@ export function RevenueKpiCards({ kpis, locale }: RevenueKpiCardsProps) {
             <CreditCard className="h-4 w-4" />
           </div>
           <div>
-            <p className="text-[11px] text-muted-foreground">{isBn ? "প্রিমিয়াম গ্রাহক" : "Premium Subscribers"}</p>
+            <p className="text-[11px] text-muted-foreground">প্রিমিয়াম গ্রাহক</p>
             <p className="font-bold font-mono text-foreground text-sm">
-              {formatNum(kpis.activePremiumCount, locale)} {isBn ? "জন (পেইড)" : "paid"}
+              {formatNum(kpis.activePremiumCount)} জন (পেইড)
             </p>
           </div>
         </div>
@@ -151,9 +139,9 @@ export function RevenueKpiCards({ kpis, locale }: RevenueKpiCardsProps) {
             <Sparkles className="h-4 w-4" />
           </div>
           <div>
-            <p className="text-[11px] text-muted-foreground">{isBn ? "ফাউন্ডিং সদস্য" : "Founding Members"}</p>
+            <p className="text-[11px] text-muted-foreground">ফাউন্ডিং সদস্য</p>
             <p className="font-bold font-mono text-foreground text-sm">
-              {formatNum(kpis.activeFoundingCount, locale)} {isBn ? "জন" : "founding"}
+              {formatNum(kpis.activeFoundingCount)} জন
             </p>
           </div>
         </div>
@@ -163,9 +151,9 @@ export function RevenueKpiCards({ kpis, locale }: RevenueKpiCardsProps) {
             <TrendingUp className="h-4 w-4" />
           </div>
           <div>
-            <p className="text-[11px] text-muted-foreground">{isBn ? "গড় মেডিকেল বিল" : "Avg Bill / Visit"}</p>
+            <p className="text-[11px] text-muted-foreground">গড় মেডিকেল বিল</p>
             <p className="font-bold font-mono text-foreground text-sm">
-              ৳{formatNum(kpis.averageBillPerTransaction, locale)}
+              ৳{formatNum(kpis.averageBillPerTransaction)}
             </p>
           </div>
         </div>

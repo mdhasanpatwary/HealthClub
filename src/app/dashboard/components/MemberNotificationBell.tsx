@@ -22,8 +22,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-import { formatNum } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import { useMemberNotifications } from "../hooks/useMemberNotifications";
 import {
   isNotificationSoundEnabled,
@@ -67,7 +66,7 @@ function getNotificationBg(type: MemberNotificationType) {
   }
 }
 
-function formatRelativeTime(dateStr: string, isBn: boolean): string {
+function formatRelativeTime(dateStr: string): string {
   try {
     const d = new Date(dateStr);
     const now = new Date();
@@ -77,19 +76,12 @@ function formatRelativeTime(dateStr: string, isBn: boolean): string {
     const diffHour = Math.floor(diffMin / 60);
     const diffDay = Math.floor(diffHour / 24);
 
-    if (diffMin < 1) return isBn ? "এইমাত্র" : "Just now";
-    if (diffMin < 60)
-      return isBn
-        ? `${formatNum(diffMin, "bn")} মিনিট আগে`
-        : `${diffMin}m ago`;
-    if (diffHour < 24)
-      return isBn
-        ? `${formatNum(diffHour, "bn")} ঘণ্টা আগে`
-        : `${diffHour}h ago`;
-    if (diffDay < 7)
-      return isBn ? `${formatNum(diffDay, "bn")} দিন আগে` : `${diffDay}d ago`;
+    if (diffMin < 1) return "এইমাত্র";
+    if (diffMin < 60) return `${toBanglaNums(diffMin)} মিনিট আগে`;
+    if (diffHour < 24) return `${toBanglaNums(diffHour)} ঘণ্টা আগে`;
+    if (diffDay < 7) return `${toBanglaNums(diffDay)} দিন আগে`;
 
-    return d.toLocaleDateString(isBn ? "bn-BD" : "en-US", {
+    return d.toLocaleDateString("bn-BD", {
       month: "short",
       day: "numeric",
     });
@@ -99,8 +91,6 @@ function formatRelativeTime(dateStr: string, isBn: boolean): string {
 }
 
 export function MemberNotificationBell() {
-  const { locale, t } = useLanguage();
-  const isBn = locale === "bn";
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState<"all" | "transactions" | "account">("all");
   const [soundEnabled, setSoundEnabled] = useState(() => isNotificationSoundEnabled());
@@ -142,13 +132,11 @@ export function MemberNotificationBell() {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger
-        aria-label={t("dashboard.notifications.title") || "বিজ্ঞপ্তি"}
+        aria-label="বিজ্ঞপ্তি"
         title={
           unreadCount > 0
-            ? `${formatNum(unreadCount, locale)} ${
-                t("dashboard.notifications.unreadCount") || "টি অপঠিত বিজ্ঞপ্তি"
-              }`
-            : t("dashboard.notifications.title") || "বিজ্ঞপ্তি"
+            ? `${toBanglaNums(unreadCount)}টি অপঠিত বিজ্ঞপ্তি`
+            : "বিজ্ঞপ্তি"
         }
         className="relative inline-flex items-center justify-center size-8 sm:size-9 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-all cursor-pointer outline-hidden focus-visible:ring-2 focus-visible:ring-primary/40 border border-border/50 bg-background/50 shadow-2xs"
       >
@@ -160,7 +148,7 @@ export function MemberNotificationBell() {
               highPriorityCount > 0 ? "bg-rose-500 animate-pulse" : "bg-primary"
             }`}
           >
-            {unreadCount > 9 ? "9+" : formatNum(unreadCount, locale)}
+            {unreadCount > 9 ? "৯+" : toBanglaNums(unreadCount)}
           </span>
         )}
       </DropdownMenuTrigger>
@@ -174,14 +162,14 @@ export function MemberNotificationBell() {
         <div className="flex items-center justify-between p-3 sm:p-3.5 border-b border-border/70 bg-muted/30">
           <div className="flex items-center gap-2">
             <span className="font-heading font-bold text-sm text-foreground">
-              {t("dashboard.notifications.title") || "বিজ্ঞপ্তি ও অ্যালার্ট"}
+              বিজ্ঞপ্তি ও অ্যালার্ট
             </span>
             {unreadCount > 0 && (
               <Badge
                 variant="outline"
                 className="bg-primary/10 text-primary border-primary/20 text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded-full"
               >
-                {formatNum(unreadCount, locale)} {isBn ? "নতুন" : "new"}
+                {toBanglaNums(unreadCount)} নতুন
               </Badge>
             )}
           </div>
@@ -191,8 +179,8 @@ export function MemberNotificationBell() {
               type="button"
               onClick={toggleSound}
               className="p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
-              title={soundEnabled ? (isBn ? "শব্দ বন্ধ করুন" : "Mute Sound") : (isBn ? "শব্দ চালু করুন" : "Unmute Sound")}
-              aria-label={soundEnabled ? "Mute notification sound" : "Unmute notification sound"}
+              title={soundEnabled ? "শব্দ বন্ধ করুন" : "শব্দ চালু করুন"}
+              aria-label={soundEnabled ? "শব্দ বন্ধ করুন" : "শব্দ চালু করুন"}
             >
               {soundEnabled ? (
                 <Volume2 className="h-3.5 w-3.5 text-primary" />
@@ -209,7 +197,7 @@ export function MemberNotificationBell() {
                 className="text-[11px] h-7 px-2 font-medium text-muted-foreground hover:text-primary transition-colors gap-1"
               >
                 <CheckCheck className="h-3.5 w-3.5" />
-                <span>{t("dashboard.notifications.markAllRead") || "সব পঠিত"}</span>
+                <span>সব পঠিত</span>
               </Button>
             )}
           </div>
@@ -226,7 +214,7 @@ export function MemberNotificationBell() {
                 : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
             }`}
           >
-            {t("dashboard.notifications.all") || "সকল"} ({formatNum(items.length, locale)})
+            সকল ({toBanglaNums(items.length)})
           </button>
           <button
             type="button"
@@ -237,7 +225,7 @@ export function MemberNotificationBell() {
                 : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
             }`}
           >
-            {t("dashboard.notifications.transactions") || "লেনদেন"}
+            লেনদেন
           </button>
           <button
             type="button"
@@ -248,7 +236,7 @@ export function MemberNotificationBell() {
                 : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
             }`}
           >
-            {t("dashboard.notifications.accountRenewals") || "অ্যাকাউন্ট ও নবায়ন"}
+            অ্যাকাউন্ট ও নবায়ন
           </button>
         </div>
 
@@ -260,18 +248,17 @@ export function MemberNotificationBell() {
                 <CheckCheck className="h-5 w-5" />
               </div>
               <p className="text-xs font-semibold text-foreground">
-                {t("dashboard.notifications.allCaughtUp") || "সব ক্লিয়ার! কোনো নতুন বিজ্ঞপ্তি নেই।"}
+                সব ক্লিয়ার! কোনো নতুন বিজ্ঞপ্তি নেই।
               </p>
               <p className="text-[11px] text-muted-foreground">
-                {t("dashboard.notifications.emptyDesc") ||
-                  "ডিসকাউন্ট ট্রানজেকশন বা মেম্বারশিপ নবায়নের আপডেট এখানে প্রদর্শিত হবে।"}
+                ডিসকাউন্ট ট্রানজেকশন বা মেম্বারশিপ নবায়নের আপডেট এখানে প্রদর্শিত হবে।
               </p>
             </div>
           ) : (
             previewItems.map((item: MemberNotification) => {
               const isRead = item.isRead;
-              const title = isBn ? item.titleBn : item.titleEn;
-              const msg = isBn ? item.messageBn : item.messageEn;
+              const title = item.titleBn;
+              const msg = item.messageBn;
 
               return (
                 <div
@@ -307,7 +294,7 @@ export function MemberNotificationBell() {
                         {title}
                       </p>
                       <span className="text-[10px] text-muted-foreground whitespace-nowrap shrink-0">
-                        {formatRelativeTime(item.createdAt, isBn)}
+                        {formatRelativeTime(item.createdAt)}
                       </span>
                     </div>
 
@@ -327,7 +314,7 @@ export function MemberNotificationBell() {
                           }}
                           className="inline-flex items-center gap-1 text-[11px] font-bold text-primary hover:underline"
                         >
-                          <span>{t("dashboard.notifications.viewDetails") || "বিস্তারিত দেখুন"}</span>
+                          <span>বিস্তারিত দেখুন</span>
                           <ArrowRight className="h-3 w-3" />
                         </Link>
                       )}
@@ -341,7 +328,7 @@ export function MemberNotificationBell() {
                           }}
                           className="text-[10px] text-muted-foreground hover:text-foreground font-medium ml-auto transition-colors cursor-pointer"
                         >
-                          {t("dashboard.notifications.markRead") || "পঠিত"}
+                          পঠিত
                         </button>
                       )}
 
@@ -354,8 +341,8 @@ export function MemberNotificationBell() {
                         className={`text-[10px] text-muted-foreground hover:text-rose-500 p-1 rounded-md transition-colors opacity-0 group-hover:opacity-100 cursor-pointer ${
                           isRead ? "ml-auto" : ""
                         }`}
-                        title={t("dashboard.notifications.delete") || "মুছে ফেলুন"}
-                        aria-label={t("dashboard.notifications.delete") || "মুছে ফেলুন"}
+                        title="মুছে ফেলুন"
+                        aria-label="মুছে ফেলুন"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>

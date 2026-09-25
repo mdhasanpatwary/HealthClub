@@ -14,16 +14,14 @@ import {
   ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
-import { formatNum, Locale } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import { BpEvaluationResult } from "@/data/clinicalEvaluatorData";
 
 interface BpResultViewProps {
   result: BpEvaluationResult | null;
-  locale: Locale;
 }
 
-export function BpResultView({ result, locale }: BpResultViewProps) {
-  const isEn = locale === "en";
+export function BpResultView({ result }: BpResultViewProps) {
   const [activeSubTab, setActiveSubTab] = useState<"action" | "diet" | "warnings">("action");
 
   if (!result) return null;
@@ -39,14 +37,14 @@ export function BpResultView({ result, locale }: BpResultViewProps) {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <span className="text-[11px] uppercase tracking-wider font-bold text-muted-foreground">
-                {isEn ? "Clinical Evaluation Result" : "ক্লিনিক্যাল ফলাফল"}
+                ক্লিনিক্যাল ফলাফল
               </span>
               <h4 className="text-xl sm:text-2xl font-heading font-black text-secondary dark:text-white">
-                {isEn ? result.titleEn : result.titleBn}
+                {result.titleBn}
               </h4>
             </div>
             <Badge className={`${result.badgeBg} font-bold text-xs py-1.5 px-3 rounded-full shrink-0 shadow-sm`}>
-              {isEn ? result.badgeEn : result.badgeBn}
+              {result.badgeBn}
             </Badge>
           </div>
 
@@ -54,40 +52,40 @@ export function BpResultView({ result, locale }: BpResultViewProps) {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="p-3.5 rounded-2xl bg-background/80 backdrop-blur-sm border border-border/60 text-center">
               <span className="text-[11px] text-muted-foreground font-medium block">
-                {isEn ? "Systolic" : "সিস্টোলিক"}
+                সিস্টোলিক
               </span>
               <div className="text-xl sm:text-2xl font-black font-mono text-secondary dark:text-white">
-                {formatNum(result.systolic, locale)}
+                {toBanglaNums(result.systolic)}
                 <span className="text-xs font-normal text-muted-foreground ml-1">mmHg</span>
               </div>
             </div>
 
             <div className="p-3.5 rounded-2xl bg-background/80 backdrop-blur-sm border border-border/60 text-center">
               <span className="text-[11px] text-muted-foreground font-medium block">
-                {isEn ? "Diastolic" : "ডায়াস্টোলিক"}
+                ডায়াস্টোলিক
               </span>
               <div className="text-xl sm:text-2xl font-black font-mono text-secondary dark:text-white">
-                {formatNum(result.diastolic, locale)}
+                {toBanglaNums(result.diastolic)}
                 <span className="text-xs font-normal text-muted-foreground ml-1">mmHg</span>
               </div>
             </div>
 
             <div className="p-3.5 rounded-2xl bg-background/80 backdrop-blur-sm border border-border/60 text-center">
               <span className="text-[11px] text-muted-foreground font-medium block">
-                {isEn ? "Pulse Pressure" : "পালস প্রেসার"}
+                পালস প্রেসার
               </span>
               <div className="text-xl sm:text-2xl font-black font-mono text-secondary dark:text-white">
-                {formatNum(result.pulsePressure, locale)}
+                {toBanglaNums(result.pulsePressure)}
                 <span className="text-xs font-normal text-muted-foreground ml-1">mmHg</span>
               </div>
             </div>
 
             <div className="p-3.5 rounded-2xl bg-background/80 backdrop-blur-sm border border-border/60 text-center">
               <span className="text-[11px] text-muted-foreground font-medium block">
-                {isEn ? "MAP (Mean)" : "গড় ধমনী চাপ"}
+                গড় ধমনী চাপ
               </span>
               <div className="text-xl sm:text-2xl font-black font-mono text-secondary dark:text-white">
-                {formatNum(result.meanArterialPressure, locale)}
+                {toBanglaNums(result.meanArterialPressure)}
                 <span className="text-xs font-normal text-muted-foreground ml-1">mmHg</span>
               </div>
             </div>
@@ -95,18 +93,18 @@ export function BpResultView({ result, locale }: BpResultViewProps) {
 
           {/* Summary Text */}
           <p className="text-xs sm:text-sm text-secondary/90 dark:text-white/90 leading-relaxed font-medium">
-            {isEn ? result.summaryEn : result.summaryBn}
+            {result.summaryBn}
           </p>
 
           {/* Visual BP Spectrum Bar */}
           <div className="space-y-1.5 pt-1">
             <div className="flex justify-between text-[10px] font-bold text-muted-foreground">
-              <span>{isEn ? "Low" : "লো"}</span>
-              <span>{isEn ? "Normal" : "স্বাভাবিক"}</span>
-              <span>{isEn ? "Elevated" : "উত্তোলিত"}</span>
-              <span>{isEn ? "Stage 1" : "স্টেজ ১"}</span>
-              <span>{isEn ? "Stage 2" : "স্টেজ ২"}</span>
-              <span>{isEn ? "Crisis" : "ক্রাইসিস"}</span>
+              <span>লো</span>
+              <span>স্বাভাবিক</span>
+              <span>উত্তোলিত</span>
+              <span>স্টেজ ১</span>
+              <span>স্টেজ ২</span>
+              <span>ক্রাইসিস</span>
             </div>
             <div className="h-3.5 w-full bg-muted rounded-full overflow-hidden flex gap-0.5 p-0.5 border border-border/80">
               <div
@@ -152,40 +150,40 @@ export function BpResultView({ result, locale }: BpResultViewProps) {
             <button
               type="button"
               onClick={() => setActiveSubTab("action")}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all shrink-0 ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
                 activeSubTab === "action"
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted"
               }`}
             >
               <HeartHandshake className="h-4 w-4" />
-              <span>{isEn ? "Action Plan" : "অ্যাকশন প্ল্যান"}</span>
+              <span>অ্যাকশন প্ল্যান</span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveSubTab("diet")}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all shrink-0 ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
                 activeSubTab === "diet"
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted"
               }`}
             >
               <Apple className="h-4 w-4" />
-              <span>{isEn ? "DASH Diet & Nutrition" : "খাদ্যাভ্যাস ও পুষ্টি"}</span>
+              <span>খাদ্যাভ্যাস ও পুষ্টি</span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveSubTab("warnings")}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all shrink-0 ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
                 activeSubTab === "warnings"
                   ? "bg-rose-600 text-white shadow-sm"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted"
               }`}
             >
               <ShieldAlert className="h-4 w-4" />
-              <span>{isEn ? "Warning Signs" : "সতর্কবার্তা"}</span>
+              <span>সতর্কবার্তা</span>
             </button>
           </div>
 
@@ -193,10 +191,10 @@ export function BpResultView({ result, locale }: BpResultViewProps) {
           {activeSubTab === "action" && (
             <div className="space-y-3 animate-in fade-in-50 duration-200">
               <h5 className="text-xs font-bold text-secondary dark:text-white uppercase tracking-wider">
-                {isEn ? "Recommended Lifestyle Steps:" : "করণীয় পদক্ষেপ ও জীবনযাত্রা:"}
+                করণীয় পদক্ষেপ ও জীবনযাত্রা:
               </h5>
               <ul className="space-y-2.5">
-                {(isEn ? result.actionPlanEn : result.actionPlanBn).map((tip, idx) => (
+                {result.actionPlanBn.map((tip, idx) => (
                   <li key={idx} className="flex items-start gap-2.5 text-xs text-muted-foreground leading-relaxed">
                     <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                     <span>{tip}</span>
@@ -209,10 +207,10 @@ export function BpResultView({ result, locale }: BpResultViewProps) {
           {activeSubTab === "diet" && (
             <div className="space-y-3 animate-in fade-in-50 duration-200">
               <h5 className="text-xs font-bold text-secondary dark:text-white uppercase tracking-wider">
-                {isEn ? "DASH Diet & Sodium Guidelines:" : "সোডিয়াম ও খাদ্যতালিকা নির্দেশনা:"}
+                সোডিয়াম ও খাদ্যতালিকা নির্দেশনা:
               </h5>
               <ul className="space-y-2.5">
-                {(isEn ? result.dietTipsEn : result.dietTipsBn).map((diet, idx) => (
+                {result.dietTipsBn.map((diet, idx) => (
                   <li key={idx} className="flex items-start gap-2.5 text-xs text-muted-foreground leading-relaxed">
                     <Apple className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
                     <span>{diet}</span>
@@ -225,10 +223,10 @@ export function BpResultView({ result, locale }: BpResultViewProps) {
           {activeSubTab === "warnings" && (
             <div className="space-y-3 animate-in fade-in-50 duration-200">
               <h5 className="text-xs font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider">
-                {isEn ? "Red Flag Symptoms (Require Prompt Attention):" : "বিপদচিহ্ন বা জরুরি লক্ষণ:"}
+                বিপদচিহ্ন বা জরুরি লক্ষণ:
               </h5>
               <ul className="space-y-2.5">
-                {(isEn ? result.warningSignsEn : result.warningSignsBn).map((warn, idx) => (
+                {result.warningSignsBn.map((warn, idx) => (
                   <li key={idx} className="flex items-start gap-2.5 text-xs text-muted-foreground leading-relaxed">
                     <AlertTriangle className="h-4 w-4 text-rose-500 shrink-0 mt-0.5" />
                     <span>{warn}</span>
@@ -247,10 +245,10 @@ export function BpResultView({ result, locale }: BpResultViewProps) {
                 </div>
                 <div className="text-xs">
                   <div className="font-bold text-secondary dark:text-white">
-                    {isEn ? "Recommended Consultation:" : "পরামর্শযোগ্য বিশেষজ্ঞ:"}
+                    পরামর্শযোগ্য বিশেষজ্ঞ:
                   </div>
                   <div className="text-muted-foreground font-medium">
-                    {isEn ? result.recommendedDoctorEn : result.recommendedDoctorBn}
+                    {result.recommendedDoctorBn}
                   </div>
                 </div>
               </div>
@@ -261,7 +259,7 @@ export function BpResultView({ result, locale }: BpResultViewProps) {
                   className: "w-full sm:w-auto text-xs font-bold shrink-0",
                 })}
               >
-                <span>{isEn ? "Find Doctor in Feni" : "ফেনীতে ডাক্তার খুঁজুন"}</span>
+                <span>ফেনীতে ডাক্তার খুঁজুন</span>
                 <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
               </Link>
             </div>

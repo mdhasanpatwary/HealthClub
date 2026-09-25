@@ -44,7 +44,6 @@ export async function generateMetadata({ params }: PageProps) {
       description: deptSeo.metaDescriptionBn,
       url: canonicalUrl,
       siteName: "হেলথ ক্লাব (Health Club)",
-      locale: "bn_BD",
       type: "website",
       images: DEFAULT_OG_IMAGES,
     },

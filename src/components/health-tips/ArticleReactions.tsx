@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toBanglaNums } from "@/lib/utils";
 import { submitArticleReactionAction } from "@/app/actions/healthTipsAdminActions";
 import { trackEvent } from "@/lib/analytics";
@@ -35,9 +34,6 @@ export function ArticleReactions({
   initialHelpful = 0,
   initialNotHelpful = 0,
 }: ArticleReactionsProps) {
-  const { locale } = useLanguage();
-  const isEn = locale === "en";
-
   const [helpfulCount, setHelpfulCount] = useState<number>(initialHelpful);
   const [notHelpfulCount, setNotHelpfulCount] = useState<number>(initialNotHelpful);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -68,11 +64,7 @@ export function ArticleReactions({
 
     // If user clicked the same button they already voted for
     if (userReaction === reaction) {
-      toast.info(
-        isEn
-          ? "You have already recorded this feedback."
-          : "আপনি ইতিমধ্যে এই মতামতটি জানিয়েছেন।"
-      );
+      toast.info("আপনি ইতিমধ্যে এই মতামতটি জানিয়েছেন।");
       return;
     }
 
@@ -109,11 +101,7 @@ export function ArticleReactions({
           slug,
           helpful: reaction === "helpful",
         });
-        toast.success(
-          isEn
-            ? "Thank you for your valuable feedback!"
-            : "আপনার মূল্যবান মতামতের জন্য আন্তরিক ধন্যবাদ!"
-        );
+        toast.success("আপনার মূল্যবান মতামতের জন্য আন্তরিক ধন্যবাদ!");
       } else {
         // Rollback
         try {
@@ -124,11 +112,7 @@ export function ArticleReactions({
           }
           window.dispatchEvent(new Event("hc-reaction-change"));
         } catch {}
-        toast.error(
-          isEn
-            ? "Could not record feedback. Please try again."
-            : "মতামত সংরক্ষণ করা যায়নি। আবার চেষ্টা করুন।"
-        );
+        toast.error("মতামত সংরক্ষণ করা যায়নি। আবার চেষ্টা করুন।");
       }
     } catch {
       // Rollback
@@ -140,22 +124,16 @@ export function ArticleReactions({
         }
         window.dispatchEvent(new Event("hc-reaction-change"));
       } catch {}
-      toast.error(
-        isEn
-          ? "Network error. Please try again."
-          : "নেটওয়ার্ক ত্রুটি। আবার চেষ্টা করুন।"
-      );
+      toast.error("নেটওয়ার্ক ত্রুটি। আবার চেষ্টা করুন।");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const formattedHelpful = isEn ? helpfulCount : toBanglaNums(helpfulCount);
-  const formattedNotHelpful = isEn ? notHelpfulCount : toBanglaNums(notHelpfulCount);
-  const formattedTotal = isEn ? totalVotes : toBanglaNums(totalVotes);
-  const formattedPercentage = isEn
-    ? helpfulPercentage
-    : toBanglaNums(helpfulPercentage);
+  const formattedHelpful = toBanglaNums(helpfulCount);
+  const formattedNotHelpful = toBanglaNums(notHelpfulCount);
+  const formattedTotal = toBanglaNums(totalVotes);
+  const formattedPercentage = toBanglaNums(helpfulPercentage);
 
   return (
     <Card className="border border-border/70 bg-gradient-to-br from-card via-card to-muted/20 shadow-xs rounded-3xl overflow-hidden">
@@ -168,15 +146,11 @@ export function ArticleReactions({
                 <Sparkles className="h-3.5 w-3.5" />
               </span>
               <h4 className="font-heading font-bold text-sm sm:text-base text-secondary dark:text-white">
-                {isEn
-                  ? "Was this article helpful?"
-                  : "এই স্বাস্থ্য পরামর্শটি কি আপনার উপকারে এসেছে?"}
+                এই স্বাস্থ্য পরামর্শটি কি আপনার উপকারে এসেছে?
               </h4>
             </div>
             <p className="text-xs text-muted-foreground">
-              {isEn
-                ? "Your feedback helps our doctors and editorial team improve health guides."
-                : "আপনার মতামত আমাদের চিকিৎসকদের গাইড ও কনটেন্টের মান আরো সমৃদ্ধ করতে সহায়তা করে।"}
+              আপনার মতামত আমাদের চিকিৎসকদের গাইড ও কনটেন্টের মান আরো সমৃদ্ধ করতে সহায়তা করে।
             </p>
           </div>
 
@@ -186,9 +160,7 @@ export function ArticleReactions({
               variant="outline"
               className="self-start sm:self-auto bg-primary/5 text-primary border-primary/20 text-xs py-1 px-3 font-semibold rounded-full shrink-0"
             >
-              {isEn
-                ? `${formattedPercentage}% found this helpful (${formattedTotal})`
-                : `${formattedPercentage}% পাঠকদের কাছে সহায়ক (${formattedTotal}টি ভোট)`}
+              {formattedPercentage}% পাঠকদের কাছে সহায়ক ({formattedTotal}টি ভোট)
             </Badge>
           )}
         </div>
@@ -213,7 +185,7 @@ export function ArticleReactions({
             ) : (
               <ThumbsUp className="h-4 w-4 text-primary" />
             )}
-            <span>{isEn ? "Yes, Helpful" : "হ্যাঁ, তথ্যটি সহায়ক"}</span>
+            <span>হ্যাঁ, তথ্যটি সহায়ক</span>
             <span
               className={`text-[11px] px-2 py-0.5 rounded-full font-extrabold ${
                 userReaction === "helpful"
@@ -243,7 +215,7 @@ export function ArticleReactions({
             ) : (
               <ThumbsDown className="h-4 w-4 text-muted-foreground" />
             )}
-            <span>{isEn ? "Not really" : "না, তেমন নয়"}</span>
+            <span>না, তেমন নয়</span>
             <span
               className={`text-[11px] px-2 py-0.5 rounded-full font-extrabold ${
                 userReaction === "not_helpful"

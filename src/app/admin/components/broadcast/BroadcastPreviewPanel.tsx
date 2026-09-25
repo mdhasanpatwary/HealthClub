@@ -2,9 +2,9 @@
 
 import { Eye, ExternalLink, Smartphone, Bell } from "lucide-react";
 import { SmsSegmentCalculation } from "@/lib/sms";
+import { toBanglaNums } from "@/lib/utils";
 
 interface BroadcastPreviewPanelProps {
-  isBn: boolean;
   previewTab: "email" | "sms" | "in_app";
   setPreviewTab: (tab: "email" | "sms" | "in_app") => void;
   title: string;
@@ -16,7 +16,6 @@ interface BroadcastPreviewPanelProps {
 }
 
 export function BroadcastPreviewPanel({
-  isBn,
   previewTab,
   setPreviewTab,
   title,
@@ -32,7 +31,7 @@ export function BroadcastPreviewPanel({
         <div className="flex items-center gap-2">
           <Eye className="h-4 w-4 text-primary" />
           <span className="text-xs font-bold text-foreground">
-            {isBn ? "লাইভ প্রিভিউ (Live Preview)" : "Live Message Preview"}
+            লাইভ প্রিভিউ
           </span>
         </div>
 
@@ -84,11 +83,11 @@ export function BroadcastPreviewPanel({
               </span>
             )}
             <h3 className="font-heading text-sm font-bold text-foreground leading-snug">
-              {title || (isBn ? "ক্যাম্পেইন শিরোনাম এখানে প্রদর্শিত হবে" : "Campaign Headline Here")}
+              {title || "ক্যাম্পেইন শিরোনাম এখানে প্রদর্শিত হবে"}
             </h3>
             <p className="text-[11px] font-medium text-muted-foreground">প্রিয় সদস্য,</p>
             <p className="text-xs text-muted-foreground whitespace-pre-line leading-relaxed">
-              {message || (isBn ? "বার্তার বিস্তারিত বক্তব্য এখানে রিয়েল-টাইমে প্রদর্শিত হবে..." : "Message content preview...")}
+              {message || "বার্তার বিস্তারিত বক্তব্য এখানে রিয়েল-টাইমে প্রদর্শিত হবে..."}
             </p>
             {actionText && (
               <div className="pt-2 text-center">
@@ -99,7 +98,7 @@ export function BroadcastPreviewPanel({
             )}
           </div>
           <div className="bg-slate-100 dark:bg-slate-950 p-2.5 text-center text-[10px] text-muted-foreground border-t border-border">
-            &copy; 2026 হেলথ ক্লাব &bull; ফেনী, বাংলাদেশ
+            &copy; ২০২৬ হেলথ ক্লাব &bull; ফেনী, বাংলাদেশ
           </div>
         </div>
       )}
@@ -112,7 +111,7 @@ export function BroadcastPreviewPanel({
               <Smartphone className="h-3.5 w-3.5" />
               <span>প্রেরক: <strong>HealthClub</strong></span>
             </span>
-            <span className="font-mono">{smsStats.charCount} chars</span>
+            <span className="font-mono">{toBanglaNums(smsStats.charCount)} অক্ষর</span>
           </div>
           <div className="bg-primary/10 border border-primary/20 p-3.5 rounded-2xl rounded-tl-xs text-xs text-foreground whitespace-pre-line leading-relaxed">
             <p className="font-bold text-primary mb-1">{title || "শিরোনাম..."}</p>

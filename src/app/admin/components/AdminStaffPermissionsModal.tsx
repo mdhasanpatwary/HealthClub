@@ -14,123 +14,44 @@ import { ROLE_CONFIGS } from "@/lib/permissions";
 interface AdminStaffPermissionsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  locale?: "bn" | "en";
 }
 
 export function AdminStaffPermissionsModal({
   isOpen,
   onClose,
-  locale = "bn",
 }: AdminStaffPermissionsModalProps) {
-  const isBn = locale === "bn";
-
   const permissionRows = [
     {
-      category: isBn ? "স্টাফ ও সিস্টেম প্রশাসন" : "Staff & Administration",
+      category: "স্টাফ ও সিস্টেম প্রশাসন",
       icon: Settings,
       items: [
-        {
-          name: isBn ? "স্টাফ ম্যানেজমেন্ট ও রোল পরিবর্তন" : "Staff Management & Role Assignment",
-          superAdmin: true,
-          moderator: false,
-          support: false,
-        },
-        {
-          name: isBn ? "সিস্টেম সেটিংস ও লেনদেন কনফিগ" : "System Settings & Tx Config",
-          superAdmin: true,
-          moderator: false,
-          support: false,
-        },
-        {
-          name: isBn ? "আর্থিক ও রাজস্ব অ্যানালিটিক্স" : "Financial & Revenue Analytics",
-          superAdmin: true,
-          moderator: false,
-          support: false,
-        },
-        {
-          name: isBn ? "বাল্ক ডাটা ইম্পোর্ট ও এক্সপোর্ট" : "Bulk Data Import & Export",
-          superAdmin: true,
-          moderator: false,
-          support: false,
-        },
+        { name: "স্টাফ ম্যানেজমেন্ট ও রোল পরিবর্তন", superAdmin: true, moderator: false, support: false },
+        { name: "সিস্টেম সেটিংস ও লেনদেন কনফিগ", superAdmin: true, moderator: false, support: false },
+        { name: "আর্থিক ও রাজস্ব অ্যানালিটিক্স", superAdmin: true, moderator: false, support: false },
+        { name: "বাল্ক ডাটা ইম্পোর্ট ও এক্সপোর্ট", superAdmin: true, moderator: false, support: false },
       ],
     },
     {
-      category: isBn ? "মেম্বারশিপ ও কাস্টমার অপারেশন" : "Membership & Operations",
+      category: "মেম্বারশিপ ও কাস্টমার অপারেশন",
       icon: Users,
       items: [
-        {
-          name: isBn ? "মেম্বার তালিকা দেখা ও সার্চ" : "View & Search Member Directory",
-          superAdmin: true,
-          moderator: false,
-          support: true,
-        },
-        {
-          name: isBn ? "মেম্বারশিপ রিনিউয়াল অনুমোদন ও বাতিল" : "Approve & Reject Renewals",
-          superAdmin: true,
-          moderator: false,
-          support: true,
-        },
-        {
-          name: isBn ? "মেম্বারদের ডিসকাউন্ট লেনদেন লগ দেখা" : "View Member Discount Transaction Logs",
-          superAdmin: true,
-          moderator: false,
-          support: true,
-        },
-        {
-          name: isBn ? "নতুন ডিসকাউন্ট লেনদেন তৈরি ও যোগ" : "Record New Discount Transaction",
-          superAdmin: true,
-          moderator: false,
-          support: false,
-        },
-        {
-          name: isBn ? "অংশীদারিত্ব (Partner) আবেদন যাচাই" : "Review Partner Applications",
-          superAdmin: true,
-          moderator: false,
-          support: true,
-        },
-        {
-          name: isBn ? "গ্রাহক অনুসন্ধানের বার্তা দেখা ও হ্যান্ডেল" : "View & Handle Contact Messages",
-          superAdmin: true,
-          moderator: true,
-          support: true,
-        },
+        { name: "মেম্বার তালিকা দেখা ও সার্চ", superAdmin: true, moderator: false, support: true },
+        { name: "মেম্বারশিপ রিনিউয়াল অনুমোদন ও বাতিল", superAdmin: true, moderator: false, support: true },
+        { name: "মেম্বারদের ডিসকাউন্ট লেনদেন লগ দেখা", superAdmin: true, moderator: false, support: true },
+        { name: "নতুন ডিসকাউন্ট লেনদেন তৈরি ও যোগ", superAdmin: true, moderator: false, support: false },
+        { name: "অংশীদারিত্ব (Partner) আবেদন যাচাই", superAdmin: true, moderator: false, support: true },
+        { name: "গ্রাহক অনুসন্ধানের বার্তা দেখা ও হ্যান্ডেল", superAdmin: true, moderator: true, support: true },
       ],
     },
     {
-      category: isBn ? "চিকিৎসক ও কনটেন্ট নেটওয়ার্ক" : "Medical Network & Content",
+      category: "চিকিৎসক ও কনটেন্ট নেটওয়ার্ক",
       icon: Stethoscope,
       items: [
-        {
-          name: isBn ? "ডাক্তার ও চেম্বার শিডিউল ব্যবস্থাপনা" : "Doctor Profiles & Schedules",
-          superAdmin: true,
-          moderator: true,
-          support: false,
-        },
-        {
-          name: isBn ? "স্বাস্থ্য টিপস ও মেডিক্যাল আর্টিকেল" : "Health Tips & Medical Blogs",
-          superAdmin: true,
-          moderator: true,
-          support: false,
-        },
-        {
-          name: isBn ? "হাসপাতাল রিভিউ ও রেটিং মডারেশন" : "Partner Reviews & Rating Moderation",
-          superAdmin: true,
-          moderator: true,
-          support: true,
-        },
-        {
-          name: isBn ? "জরুরি সেবা (রক্তদাতা, অ্যাম্বুলেন্স, হটলাইন)" : "Emergency Network Management",
-          superAdmin: true,
-          moderator: true,
-          support: false,
-        },
-        {
-          name: isBn ? "গণ ব্রডকাস্ট এসএমএস ও ইমেইল নোটিশ" : "Broadcast SMS & Email Notices",
-          superAdmin: true,
-          moderator: true,
-          support: false,
-        },
+        { name: "ডাক্তার ও চেম্বার শিডিউল ব্যবস্থাপনা", superAdmin: true, moderator: true, support: false },
+        { name: "স্বাস্থ্য টিপস ও মেডিক্যাল আর্টিকেল", superAdmin: true, moderator: true, support: false },
+        { name: "হাসপাতাল রিভিউ ও রেটিং মডারেশন", superAdmin: true, moderator: true, support: true },
+        { name: "জরুরি সেবা (রক্তদাতা, অ্যাম্বুলেন্স, হটলাইন)", superAdmin: true, moderator: true, support: false },
+        { name: "গণ ব্রডকাস্ট এসএমএস ও ইমেইল নোটিশ", superAdmin: true, moderator: true, support: false },
       ],
     },
   ];
@@ -145,18 +66,15 @@ export function AdminStaffPermissionsModal({
             </div>
             <div>
               <DialogTitle className="text-lg sm:text-xl font-bold font-heading text-secondary dark:text-white">
-                {isBn ? "এডমিন পারমিশন ম্যাট্রিক্স (RBAC)" : "Admin Permissions Matrix (RBAC)"}
+                এডমিন পারমিশন ম্যাট্রিক্স (RBAC)
               </DialogTitle>
               <DialogDescription className="text-xs text-muted-foreground">
-                {isBn
-                  ? "হেলথ ক্লাব সিস্টেমে বিভিন্ন রোলের অ্যাক্সেস লেভেল ও সক্ষমতার বিবরণী"
-                  : "Granular access control & capabilities per administrative role"}
+                হেলথ ক্লাব সিস্টেমে বিভিন্ন রোলের অ্যাক্সেস লেভেল ও সক্ষমতার বিবরণী
               </DialogDescription>
             </div>
           </div>
         </DialogHeader>
 
-        {/* Roles Summary Badges */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 py-2">
           {Object.values(ROLE_CONFIGS).map((conf) => (
             <div
@@ -165,17 +83,14 @@ export function AdminStaffPermissionsModal({
             >
               <div className="flex items-center justify-between">
                 <Badge variant="outline" className={`text-xs font-bold ${conf.badgeClass}`}>
-                  {isBn ? conf.titleBn : conf.titleEn}
+                  {conf.titleBn}
                 </Badge>
               </div>
-              <p className="text-[11px] text-muted-foreground leading-relaxed">
-                {isBn ? conf.descriptionBn : conf.descriptionEn}
-              </p>
+              <p className="text-[11px] text-muted-foreground leading-relaxed">{conf.descriptionBn}</p>
             </div>
           ))}
         </div>
 
-        {/* Permissions Comparison Table */}
         <div className="mt-2 space-y-4">
           {permissionRows.map((cat, catIdx) => {
             const CatIcon = cat.icon;
@@ -192,11 +107,8 @@ export function AdminStaffPermissionsModal({
                       key={itemIdx}
                       className="grid grid-cols-12 items-center px-4 py-2.5 text-xs hover:bg-muted/20 transition-colors"
                     >
-                      <div className="col-span-6 font-medium text-foreground pr-2">
-                        {item.name}
-                      </div>
+                      <div className="col-span-6 font-medium text-foreground pr-2">{item.name}</div>
 
-                      {/* Super Admin */}
                       <div className="col-span-2 text-center flex justify-center items-center">
                         {item.superAdmin ? (
                           <div className="h-6 w-6 rounded-full bg-emerald-500/15 text-emerald-600 flex items-center justify-center">
@@ -209,7 +121,6 @@ export function AdminStaffPermissionsModal({
                         )}
                       </div>
 
-                      {/* Moderator */}
                       <div className="col-span-2 text-center flex justify-center items-center">
                         {item.moderator ? (
                           <div className="h-6 w-6 rounded-full bg-blue-500/15 text-blue-600 flex items-center justify-center">
@@ -222,7 +133,6 @@ export function AdminStaffPermissionsModal({
                         )}
                       </div>
 
-                      {/* Support */}
                       <div className="col-span-2 text-center flex justify-center items-center">
                         {item.support ? (
                           <div className="h-6 w-6 rounded-full bg-amber-500/15 text-amber-600 flex items-center justify-center">
@@ -242,7 +152,6 @@ export function AdminStaffPermissionsModal({
           })}
         </div>
 
-        {/* Legend / Table Headers Footer */}
         <div className="flex items-center justify-end gap-6 text-[11px] font-semibold text-muted-foreground pt-3 border-t border-border/50">
           <div className="flex items-center gap-1.5">
             <div className="h-2.5 w-2.5 rounded-full bg-purple-500" />

@@ -15,7 +15,6 @@ interface EmergencyDeleteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   itemName?: string;
-  isEn: boolean;
   deleting: boolean;
   onConfirm: () => void;
 }
@@ -24,7 +23,6 @@ export function EmergencyDeleteDialog({
   open,
   onOpenChange,
   itemName,
-  isEn,
   deleting,
   onConfirm,
 }: EmergencyDeleteDialogProps) {
@@ -34,12 +32,10 @@ export function EmergencyDeleteDialog({
         <DialogHeader>
           <DialogTitle className="text-lg font-bold text-destructive flex items-center gap-2">
             <Trash2 className="h-5 w-5" />
-            <span>{isEn ? "Confirm Deletion" : "মুছে ফেলার নিশ্চিতকরণ"}</span>
+            <span>মুছে ফেলার নিশ্চিতকরণ</span>
           </DialogTitle>
           <DialogDescription className="text-xs text-muted-foreground">
-            {isEn
-              ? `Are you sure you want to permanently remove "${itemName}"?`
-              : `আপনি কি নিশ্চিত যে "${itemName}" স্থায়ীভাবে মুছে ফেলতে চান?`}
+            {`আপনি কি নিশ্চিত যে "${itemName}" স্থায়ীভাবে মুছে ফেলতে চান?`}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="pt-2 gap-2">
@@ -49,7 +45,7 @@ export function EmergencyDeleteDialog({
             onClick={() => onOpenChange(false)}
             disabled={deleting}
           >
-            {isEn ? "Cancel" : "বাতিল"}
+            বাতিল
           </Button>
           <Button
             variant="destructive"
@@ -61,10 +57,10 @@ export function EmergencyDeleteDialog({
             {deleting ? (
               <>
                 <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                {isEn ? "Deleting..." : "মুছে ফেলা হচ্ছে..."}
+                মুছে ফেলা হচ্ছে...
               </>
             ) : (
-              isEn ? "Delete Permanently" : "মুছে ফেলুন"
+              "মুছে ফেলুন"
             )}
           </Button>
         </DialogFooter>

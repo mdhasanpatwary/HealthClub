@@ -11,26 +11,20 @@ import { AmbulancePriceTable } from "./AmbulancePriceTable";
 
 interface BlogEmergencyCareSectionsProps {
   post: BlogPost;
-  locale?: string;
 }
 
 export function BlogEmergencyCareSections({
   post,
-  locale = "bn",
 }: BlogEmergencyCareSectionsProps) {
-  const isEn = locale === "en";
-
   return (
     <>
       {/* 24/7 Pharmacy Comparison Table */}
       {post.pharmacyComparisonTable && post.pharmacyComparisonTable.length > 0 && (
         <section id="comparison-matrix" className="scroll-mt-24 space-y-4">
           <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-            {isEn
-              ? "2. 24/7 Pharmacies & Night Counters Comparison"
-              : "২. একনজরে ফেনীর শীর্ষ ২৪/৭ ফার্মেসির সুবিধা ও সেবা তুলনা"}
+            ২. একনজরে ফেনীর শীর্ষ ২৪/৭ ফার্মেসির সুবিধা ও সেবা তুলনা
           </h2>
-          <PharmacyComparisonTable items={post.pharmacyComparisonTable} locale={locale} />
+          <PharmacyComparisonTable items={post.pharmacyComparisonTable} />
         </section>
       )}
 
@@ -39,14 +33,10 @@ export function BlogEmergencyCareSections({
         <section id="pharmacy-reviews" className="scroll-mt-24 space-y-6">
           <div>
             <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-              {isEn
-                ? "3. In-Depth Reviews of Top 24/7 Pharmacies & Delivery Hubs"
-                : "৩. ফেনীর শীর্ষ ২৪/৭ ফার্মেসি ও জরুরি ওষুধ ডেলিভারি সেন্টারের পর্যালোচনা"}
+              ৩. ফেনীর শীর্ষ ২৪/৭ ফার্মেসি ও জরুরি ওষুধ ডেলিভারি সেন্টারের পর্যালোচনা
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-              {isEn
-                ? "Verified directory of night service counters, direct calling hotlines, insulin cold chains, and home delivery coverage."
-                : "প্রতিটি ফার্মেসির নাইট কাউন্টার স্ট্যাটাস, ভেরিফায়েড হটলাইন নম্বর, ইনসুলিন কোল্ড চেইন এবং জরুরি হোম ডেলিভারি তথ্য।"}
+              প্রতিটি ফার্মেসির নাইট কাউন্টার স্ট্যাটাস, ভেরিফায়েড হটলাইন নম্বর, ইনসুলিন কোল্ড চেইন এবং জরুরি হোম ডেলিভারি তথ্য।
             </p>
           </div>
 
@@ -55,7 +45,6 @@ export function BlogEmergencyCareSections({
               <PharmacyReviewCard
                 key={pharmacy.rank}
                 pharmacy={pharmacy}
-                locale={locale}
               />
             ))}
           </div>
@@ -66,7 +55,6 @@ export function BlogEmergencyCareSections({
       {post.pharmacyCarePricingBn && (
         <PharmacyPriceTable
           pricingData={post.pharmacyCarePricingBn}
-          locale={locale}
         />
       )}
 
@@ -74,11 +62,9 @@ export function BlogEmergencyCareSections({
       {post.bloodBankComparisonTable && post.bloodBankComparisonTable.length > 0 && (
         <section id="comparison-matrix" className="scroll-mt-24 space-y-4">
           <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-            {isEn
-              ? "2. Blood Centers & Voluntary Donor Clubs Comparison"
-              : "২. একনজরে ফেনী ব্লাড ব্যাংক ও স্বেচ্ছাসেবী রক্তদান সংগঠনের তুলনা"}
+            ২. একনজরে ফেনী ব্লাড ব্যাংক ও স্বেচ্ছাসেবী রক্তদান সংগঠনের তুলনা
           </h2>
-          <BloodBankComparisonTable items={post.bloodBankComparisonTable} locale={locale} />
+          <BloodBankComparisonTable items={post.bloodBankComparisonTable} />
         </section>
       )}
 
@@ -87,14 +73,10 @@ export function BlogEmergencyCareSections({
         <section id="blood-bank-reviews" className="scroll-mt-24 space-y-6">
           <div>
             <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-              {isEn
-                ? "3. In-Depth Reviews of Top Blood Centers & Voluntary Clubs"
-                : "৩. ফেনীর শীর্ষ ১২টি ব্লাড ব্যাংক ও রক্তদান সংগঠনের পর্যালোচনা"}
+              ৩. ফেনীর শীর্ষ ১২টি ব্লাড ব্যাংক ও রক্তদান সংগঠনের পর্যালোচনা
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-              {isEn
-                ? "Verified directory of institutional blood banks, student networks, emergency trauma response, rare negative hotlines, and member savings."
-                : "রেড ক্রিসেন্ট, সদর হাসপাতাল ব্লাড ইউনিট, ছাত্র ও স্বেচ্ছাসেবী ক্লাবের হটলাইন, ৫-পয়েন্ট স্ক্রিনিং ও হেলথ ক্লাব সহায়তা।"}
+              রেড ক্রিসেন্ট, সদর হাসপাতাল ব্লাড ইউনিট, ছাত্র ও স্বেচ্ছাসেবী ক্লাবের হটলাইন, ৫-পয়েন্ট স্ক্রিনিং ও হেলথ ক্লাব সহায়তা।
             </p>
           </div>
 
@@ -103,7 +85,6 @@ export function BlogEmergencyCareSections({
               <BloodBankReviewCard
                 key={bank.rank}
                 bank={bank}
-                locale={locale}
               />
             ))}
           </div>
@@ -114,7 +95,6 @@ export function BlogEmergencyCareSections({
       {post.bloodCarePricingBn && (
         <BloodPriceTable
           pricingData={post.bloodCarePricingBn}
-          locale={locale}
         />
       )}
 
@@ -122,11 +102,9 @@ export function BlogEmergencyCareSections({
       {post.ambulanceComparisonTable && post.ambulanceComparisonTable.length > 0 && (
         <section id="comparison-matrix" className="scroll-mt-24 space-y-4">
           <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-            {isEn
-              ? "2. Feni 24/7 Ambulance & Oxygen Services Comparison"
-              : "২. একনজরে ফেনী ২৪/৭ অ্যাম্বুলেন্স ও অক্সিজেন সার্ভিসের তুলনা"}
+            ২. একনজরে ফেনী ২৪/৭ অ্যাম্বুলেন্স ও অক্সিজেন সার্ভিসের তুলনা
           </h2>
-          <AmbulanceComparisonTable items={post.ambulanceComparisonTable} locale={locale} />
+          <AmbulanceComparisonTable items={post.ambulanceComparisonTable} />
         </section>
       )}
 
@@ -135,14 +113,10 @@ export function BlogEmergencyCareSections({
         <section id="ambulance-reviews" className="scroll-mt-24 space-y-6">
           <div>
             <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-              {isEn
-                ? "3. In-Depth Reviews of Top 24/7 Ambulance & Oxygen Services"
-                : "৩. ফেনীর শীর্ষ ১২টি অ্যাম্বুলেন্স ও অক্সিজেন সার্ভিসের পর্যালোচনা"}
+              ৩. ফেনীর শীর্ষ ১২টি অ্যাম্বুলেন্স ও অক্সিজেন সার্ভিসের পর্যালোচনা
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-              {isEn
-                ? "Verified directory of ICU life-support ambulances, standard AC patient carriers, emergency oxygen delivery hubs, and mortuary freezer vans."
-                : "আইসিইউ লাইফ সাপোর্ট অ্যাম্বুলেন্স, এসি পেশেন্ট ক্যারিয়ার, অক্সিজেন সিলিন্ডার হোম ডেলিভারি ও লাশবাহী ফ্রিজিং ভ্যানের বিস্তারিত বিবরণ।"}
+              আইসিইউ লাইফ সাপোর্ট অ্যাম্বুলেন্স, এসি পেশেন্ট ক্যারিয়ার, অক্সিজেন সিলিন্ডার হোম ডেলিভারি ও লাশবাহী ফ্রিজিং ভ্যানের বিস্তারিত বিবরণ।
             </p>
           </div>
 
@@ -151,7 +125,6 @@ export function BlogEmergencyCareSections({
               <AmbulanceReviewCard
                 key={ambulance.rank}
                 ambulance={ambulance}
-                locale={locale}
               />
             ))}
           </div>
@@ -162,7 +135,6 @@ export function BlogEmergencyCareSections({
       {post.ambulanceCarePricingBn && (
         <AmbulancePriceTable
           pricingData={post.ambulanceCarePricingBn}
-          locale={locale}
         />
       )}
     </>

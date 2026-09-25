@@ -18,7 +18,6 @@ import { BLOG_CATEGORIES } from "@/data/blog/blogPosts";
 import { saveBlogPostAction } from "@/app/actions/blogAdminActions";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { BlogBasicTab } from "./blog/BlogBasicTab";
 import { BlogContentTab } from "./blog/BlogContentTab";
 import { BlogAuthorFaqTab } from "./blog/BlogAuthorFaqTab";
@@ -36,9 +35,6 @@ export function BlogDialog({
   post,
   onSuccess,
 }: BlogDialogProps) {
-  const { locale } = useLanguage();
-  const isEn = locale === "en";
-
   // Tab 1: Basic & SEO
   const [slug, setSlug] = useState("");
   const [titleBn, setTitleBn] = useState("");
@@ -134,7 +130,7 @@ export function BlogDialog({
   const handleAutoSlug = () => {
     const source = titleEn || titleBn;
     if (!source) {
-      toast.error(isEn ? "Please enter a title first" : "প্রথমে একটি শিরোনাম লিখুন");
+      toast.error("প্রথমে একটি শিরোনাম লিখুন");
       return;
     }
     const generated = source
@@ -150,26 +146,26 @@ export function BlogDialog({
     e.preventDefault();
 
     if (!slug.trim()) {
-      toast.error(isEn ? "Slug is required" : "স্লাগ আবশ্যক");
+      toast.error("স্লাগ আবশ্যক");
       setActiveTab("basic");
       return;
     }
 
     if (!titleBn.trim() || !titleEn.trim()) {
-      toast.error(isEn ? "Bilingual title is required" : "বাংলা ও ইংরেজি উভয় শিরোনাম আবশ্যক");
+      toast.error("বাংলা ও ইংরেজি উভয় শিরোনাম আবশ্যক");
       setActiveTab("basic");
       return;
     }
 
     if (!excerptBn.trim() || !excerptEn.trim()) {
-      toast.error(isEn ? "Bilingual excerpt is required" : "বাংলা ও ইংরেজি উভয় সারাংশ আবশ্যক");
+      toast.error("বাংলা ও ইংরেজি উভয় সারাংশ আবশ্যক");
       setActiveTab("content");
       return;
     }
 
     const cleanParagraphs = introParagraphsBn.filter((p) => p.trim().length > 0);
     if (cleanParagraphs.length === 0) {
-      toast.error(isEn ? "At least one content paragraph is required" : "কমপক্ষে একটি অনুচ্ছেদ কনটেন্ট লিখুন");
+      toast.error("কমপক্ষে একটি অনুচ্ছেদ কনটেন্ট লিখুন");
       setActiveTab("content");
       return;
     }
@@ -226,20 +222,16 @@ export function BlogDialog({
       if (res.success) {
         toast.success(
           post
-            ? isEn
-              ? "Blog updated successfully!"
-              : "ব্লগ সফলভাবে আপডেট করা হয়েছে!"
-            : isEn
-              ? "Blog created successfully!"
-              : "নতুন ব্লগ সফলভাবে তৈরি করা হয়েছে!"
+            ? "ব্লগ সফলভাবে আপডেট করা হয়েছে!"
+            : "নতুন ব্লগ সফলভাবে তৈরি করা হয়েছে!"
         );
         onOpenChange(false);
         onSuccess();
       } else {
-        toast.error(res.error || (isEn ? "Failed to save blog" : "ব্লগ সংরক্ষণ করতে সমস্যা হয়েছে"));
+        toast.error(res.error || "ব্লগ সংরক্ষণ করতে সমস্যা হয়েছে");
       }
     } catch {
-      toast.error(isEn ? "An unexpected error occurred" : "অপ্রত্যাশিত ত্রুটি ঘটেছে");
+      toast.error("অপ্রত্যাশিত ত্রুটি ঘটেছে");
     } finally {
       setSaving(false);
     }
@@ -250,18 +242,10 @@ export function BlogDialog({
       <DialogContent className="w-full max-w-[calc(100vw-2rem)] sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
         <DialogHeader>
           <DialogTitle className="text-lg sm:text-xl font-bold">
-            {post
-              ? isEn
-                ? "Edit Blog Post"
-                : "ব্লগ পোস্ট সম্পাদনা করুন"
-              : isEn
-                ? "Create New Blog Post"
-                : "নতুন ব্লগ পোস্ট তৈরি করুন"}
+            {post ? "ব্লগ পোস্ট সম্পাদনা করুন" : "নতুন ব্লগ পোস্ট তৈরি করুন"}
           </DialogTitle>
           <DialogDescription className="text-xs sm:text-sm text-muted-foreground">
-            {isEn
-              ? "Fill in bilingual details, SEO parameters and content paragraphs."
-              : "বাংলা ও ইংরেজি উভয় ভাষায় শিরোনাম, বিবরণ এবং এসইও তথ্য পূরণ করুন।"}
+            বাংলা ও ইংরেজি উভয় ভাষায় শিরোনাম, বিবরণ এবং এসইও তথ্য পূরণ করুন।
           </DialogDescription>
         </DialogHeader>
 
@@ -269,22 +253,21 @@ export function BlogDialog({
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid grid-cols-4 w-full h-auto p-1 bg-muted/60">
               <TabsTrigger value="basic" className="text-xs py-2">
-                {isEn ? "Basic & SEO" : "বেসিক ও এসইও"}
+                বেসিক ও এসইও
               </TabsTrigger>
               <TabsTrigger value="content" className="text-xs py-2">
-                {isEn ? "Content" : "কনটেন্ট"}
+                কনটেন্ট
               </TabsTrigger>
               <TabsTrigger value="author" className="text-xs py-2">
-                {isEn ? "Author & FAQs" : "লেখক ও এফএকিউ"}
+                লেখক ও এফএকিউ
               </TabsTrigger>
               <TabsTrigger value="tags" className="text-xs py-2">
-                {isEn ? "Tags & SEO" : "ট্যাগ ও কিওয়ার্ড"}
+                ট্যাগ ও কিওয়ার্ড
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="basic">
               <BlogBasicTab
-                isEn={isEn}
                 isEditing={Boolean(post)}
                 titleBn={titleBn}
                 setTitleBn={setTitleBn}
@@ -308,7 +291,6 @@ export function BlogDialog({
 
             <TabsContent value="content">
               <BlogContentTab
-                isEn={isEn}
                 excerptBn={excerptBn}
                 setExcerptBn={setExcerptBn}
                 excerptEn={excerptEn}
@@ -322,7 +304,6 @@ export function BlogDialog({
 
             <TabsContent value="author">
               <BlogAuthorFaqTab
-                isEn={isEn}
                 authorNameBn={authorNameBn}
                 setAuthorNameBn={setAuthorNameBn}
                 authorNameEn={authorNameEn}
@@ -339,7 +320,7 @@ export function BlogDialog({
             <TabsContent value="tags" className="space-y-4 pt-3">
               <div className="space-y-1.5">
                 <Label htmlFor="tagsInput" className="text-xs font-semibold">
-                  {isEn ? "Tags (Comma-separated)" : "ট্যাগসমূহ (কমা দিয়ে লিখুন)"}
+                  ট্যাগসমূহ (কমা দিয়ে লিখুন)
                 </Label>
                 <Input
                   id="tagsInput"
@@ -351,7 +332,7 @@ export function BlogDialog({
 
               <div className="space-y-1.5">
                 <Label htmlFor="keywordsInput" className="text-xs font-semibold">
-                  {isEn ? "SEO Meta Keywords (Comma-separated)" : "এসইও কিওয়ার্ড (কমা দিয়ে লিখুন)"}
+                  এসইও কিওয়ার্ড (কমা দিয়ে লিখুন)
                 </Label>
                 <Input
                   id="keywordsInput"
@@ -364,7 +345,7 @@ export function BlogDialog({
               {post && (
                 <div className="p-3 border rounded-xl bg-muted/40 text-xs space-y-1">
                   <div className="font-semibold text-foreground">
-                    {isEn ? "Specialized Section Status" : "স্পেশালাইজড ডেটা স্ট্যাটাস"}
+                    স্পেশালাইজড ডেটা স্ট্যাটাস
                   </div>
                   <p className="text-muted-foreground">
                     {post.doctorGroups ? `• ${post.doctorGroups.length} Doctor Specialty Groups` : ""}
@@ -373,12 +354,8 @@ export function BlogDialog({
                     {post.dentalClinics ? ` • ${post.dentalClinics.length} Dental Clinics` : ""}
                     {post.physiotherapyCenters ? ` • ${post.physiotherapyCenters.length} Physio Centers` : ""}
                     {(!post.doctorGroups && !post.hospitals && !post.diagnosticCenters && !post.dentalClinics && !post.physiotherapyCenters)
-                      ? isEn
-                        ? "Standard article format (Rich custom tables not attached)."
-                        : "স্ট্যান্ডার্ড আর্টিকেল ফরম্যাট (কাস্টম স্পেশালাইজড টেবিল নেই)।"
-                      : isEn
-                        ? " (These rich components are safely preserved during edit)."
-                        : " (এই রিচ স্পেশালাইজড ডাটা এডিটের সময় সম্পূর্ণ সংরক্ষিত থাকবে)।"}
+                      ? "স্ট্যান্ডার্ড আর্টিকেল ফরম্যাট (কাস্টম স্পেশালাইজড টেবিল নেই)।"
+                      : " (এই রিচ স্পেশালাইজড ডাটা এডিটের সময় সম্পূর্ণ সংরক্ষিত থাকবে)।"}
                   </p>
                 </div>
               )}
@@ -392,17 +369,11 @@ export function BlogDialog({
               onClick={() => onOpenChange(false)}
               disabled={saving}
             >
-              {isEn ? "Cancel" : "বাতিল"}
+              বাতিল
             </Button>
             <Button type="submit" disabled={saving} className="gap-1.5 font-bold">
               {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-              {post
-                ? isEn
-                  ? "Update Blog"
-                  : "ব্লগ আপডেট করুন"
-                : isEn
-                  ? "Publish Blog"
-                  : "ব্লগ প্রকাশ করুন"}
+              {post ? "ব্লগ আপডেট করুন" : "ব্লগ প্রকাশ করুন"}
             </Button>
           </DialogFooter>
         </form>

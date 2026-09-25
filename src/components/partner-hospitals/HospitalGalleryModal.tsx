@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { X, ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react";
 import { Partner, parsePartnerGallery } from "@/services/db";
-import { useLanguage } from "@/components/layout/LanguageProvider";
+import { toBanglaNums } from "@/lib/utils";
 
 interface HospitalGalleryModalProps {
   partner: Partner;
@@ -19,8 +19,6 @@ export default function HospitalGalleryModal({
   onClose,
   initialIndex = 0,
 }: HospitalGalleryModalProps) {
-  const { locale, t } = useLanguage();
-  const isEn = locale === "en";
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [prevInitialIndex, setPrevInitialIndex] = useState(initialIndex);
 
@@ -45,37 +43,31 @@ export default function HospitalGalleryModal({
             ? [
                 {
                   src: partner.imageUrl,
-                  captionBn: `${partner.name} - ${t("partnerHospitals.gallery.mainBuilding")}`,
-                  captionEn: `${partner.name} - ${t("partnerHospitals.gallery.mainBuilding")}`,
+                  caption: `${partner.name} - মূল ভবন ও রিসেপশন`,
                 },
               ]
             : []),
           ...customPhotos.map((photo, i) => ({
             src: photo.url,
-            captionBn: photo.captionBn || `${partner.name} - ফটো ${i + 1}`,
-            captionEn: photo.captionEn || `${partner.name} - Photo ${i + 1}`,
+            caption: photo.captionBn || `${partner.name} - ফটো ${toBanglaNums(i + 1)}`,
           })),
         ]
       : [
           {
             src: partner.imageUrl || fallbackImage,
-            captionBn: `${partner.name} - ${t("partnerHospitals.gallery.mainBuilding")}`,
-            captionEn: `${partner.name} - ${t("partnerHospitals.gallery.mainBuilding")}`,
+            caption: `${partner.name} - মূল ভবন ও রিসেপশন`,
           },
           {
             src: "/images/placeholders/hospital.webp",
-            captionBn: t("partnerHospitals.gallery.indoorFacility"),
-            captionEn: t("partnerHospitals.gallery.indoorFacility"),
+            caption: "রোগী ভর্তি ও ইনডোর চিকিৎসা সুবিধা",
           },
           {
             src: "/images/placeholders/diagnostic.webp",
-            captionBn: t("partnerHospitals.gallery.labDiagnostic"),
-            captionEn: t("partnerHospitals.gallery.labDiagnostic"),
+            caption: "ডিজিটাল ল্যাবরেটরি ও ডায়াগনস্টিক বিভাগ",
           },
           {
             src: "/images/placeholders/pharmacy.webp",
-            captionBn: t("partnerHospitals.gallery.pharmacyCounter"),
-            captionEn: t("partnerHospitals.gallery.pharmacyCounter"),
+            caption: "ইন-হাউজ ফার্মেসি ও মেডিসিন কাউন্টার",
           },
         ];
 
@@ -114,10 +106,10 @@ export default function HospitalGalleryModal({
             </div>
             <div>
               <h3 id="gallery-modal-title" className="text-xs sm:text-sm font-bold text-foreground font-heading">
-                {partner.name} - {t("partnerHospitals.gallery.title")}
+                {partner.name} - ছবি গ্যালারি
               </h3>
-              <p className="text-[10px] text-muted-foreground">
-                {currentIndex + 1} / {images.length}
+              <p className="text-[10px] text-muted-foreground font-mono">
+                {toBanglaNums(currentIndex + 1)} / {toBanglaNums(images.length)}
               </p>
             </div>
           </div>
@@ -125,7 +117,7 @@ export default function HospitalGalleryModal({
           <button
             onClick={onClose}
             className="p-1.5 text-muted-foreground hover:text-foreground rounded-full hover:bg-muted cursor-pointer transition-colors"
-            aria-label={t("partnerHospitals.gallery.close")}
+            aria-label="গ্যালারি বন্ধ করুন"
           >
             <X className="h-5 w-5" />
           </button>
@@ -145,7 +137,7 @@ export default function HospitalGalleryModal({
           <button
             onClick={() => setCurrentIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1))}
             className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/60 hover:bg-black/80 text-white shadow-lg cursor-pointer transition-all hover:scale-105"
-            aria-label={t("partnerHospitals.gallery.prev")}
+            aria-label="আগের ছবি"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -153,14 +145,14 @@ export default function HospitalGalleryModal({
           <button
             onClick={() => setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0))}
             className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/60 hover:bg-black/80 text-white shadow-lg cursor-pointer transition-all hover:scale-105"
-            aria-label={t("partnerHospitals.gallery.next")}
+            aria-label="পরের ছবি"
           >
             <ChevronRight className="h-5 w-5" />
           </button>
 
           {/* Caption */}
           <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 sm:p-4 text-white text-xs sm:text-sm font-medium text-center">
-            {isEn ? currentImg.captionEn : currentImg.captionBn}
+            {currentImg.caption}
           </div>
         </div>
 

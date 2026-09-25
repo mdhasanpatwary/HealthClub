@@ -12,7 +12,6 @@ import { BLOG_CATEGORIES } from "@/data/blog/blogPosts";
 import { Sparkles } from "lucide-react";
 
 interface BlogBasicTabProps {
-  isEn: boolean;
   isEditing: boolean;
   titleBn: string;
   setTitleBn: (val: string) => void;
@@ -34,7 +33,6 @@ interface BlogBasicTabProps {
 }
 
 export function BlogBasicTab({
-  isEn,
   isEditing,
   titleBn,
   setTitleBn,
@@ -59,7 +57,7 @@ export function BlogBasicTab({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="space-y-1.5">
           <Label htmlFor="titleBn" className="text-xs font-semibold">
-            {isEn ? "Title (Bangla) *" : "বাংলা শিরোনাম *"}
+            বাংলা শিরোনাম *
           </Label>
           <Input
             id="titleBn"
@@ -71,7 +69,7 @@ export function BlogBasicTab({
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="titleEn" className="text-xs font-semibold">
-            {isEn ? "Title (English) *" : "English Title *"}
+            ইংরেজি শিরোনাম *
           </Label>
           <Input
             id="titleEn"
@@ -86,7 +84,7 @@ export function BlogBasicTab({
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
           <Label htmlFor="slug" className="text-xs font-semibold">
-            {isEn ? "URL Slug *" : "URL স্লাগ *"}
+            URL স্লাগ *
           </Label>
           <Button
             type="button"
@@ -96,7 +94,7 @@ export function BlogBasicTab({
             className="h-6 text-xs text-primary gap-1 px-2"
           >
             <Sparkles className="h-3 w-3" />
-            {isEn ? "Auto Generate" : "অটো তৈরি"}
+            অটো তৈরি
           </Button>
         </div>
         <Input
@@ -108,16 +106,14 @@ export function BlogBasicTab({
           required
         />
         <p className="text-[11px] text-muted-foreground">
-          {isEn
-            ? "Unique link identifier (lowercase letters, numbers, hyphens)."
-            : "ইউনিক লিংক আইডি (ছোট হাতের ইংরেজি অক্ষর ও হাইফেন)।"}
+          ইউনিক লিংক আইডি (ছোট হাতের ইংরেজি অক্ষর ও হাইফেন)।
         </p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="space-y-1.5">
           <Label className="text-xs font-semibold">
-            {isEn ? "Category *" : "ক্যাটাগরি *"}
+            ক্যাটাগরি *
           </Label>
           <Select
             value={category}
@@ -141,7 +137,7 @@ export function BlogBasicTab({
         <div className="grid grid-cols-2 gap-2">
           <div className="space-y-1.5">
             <Label htmlFor="readTimeBn" className="text-xs font-semibold">
-              {isEn ? "Read Time (Bn)" : "পড়ার সময় (বাং)"}
+              পড়ার সময় (বাংলা)
             </Label>
             <Input
               id="readTimeBn"
@@ -152,7 +148,7 @@ export function BlogBasicTab({
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="readTimeEn" className="text-xs font-semibold">
-              {isEn ? "Read Time (En)" : "Read Time (En)"}
+              পড়ার সময় (ইংরেজি)
             </Label>
             <Input
               id="readTimeEn"
@@ -167,7 +163,7 @@ export function BlogBasicTab({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="space-y-1.5">
           <Label htmlFor="coverImage" className="text-xs font-semibold">
-            {isEn ? "Cover Image URL *" : "কভার ইমেজ লিঙ্ক *"}
+            কভার ইমেজ লিঙ্ক *
           </Label>
           <Input
             id="coverImage"
@@ -179,7 +175,7 @@ export function BlogBasicTab({
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="coverImageAlt" className="text-xs font-semibold">
-            {isEn ? "Image Alt Text" : "ইমেজ Alt টেক্সট"}
+            ইমেজ Alt টেক্সট
           </Label>
           <Input
             id="coverImageAlt"

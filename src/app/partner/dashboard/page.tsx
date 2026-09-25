@@ -8,7 +8,7 @@ import { Partner, Transaction } from "@/services/db";
 import { getPartnerTransactionsAction, getPartnerProfileAction } from "@/app/actions/partnerActions";
 import { getCurrentPartnerStaffSessionAction } from "@/app/actions/partnerStaffActions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useLanguage } from "@/components/layout/LanguageProvider";
+import { toBanglaNums } from "@/lib/utils";
 import { PartnerDashboardSkeleton } from "./components/PartnerDashboardSkeleton";
 import { PartnerDashboardHeader } from "./components/PartnerDashboardHeader";
 import { PartnerBillingTab } from "./components/PartnerBillingTab";
@@ -40,7 +40,6 @@ export default function PartnerDashboardPage() {
   const [currentStaff, setCurrentStaff] = useState<StaffSessionUser | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loadingTransactions, setLoadingTransactions] = useState(true);
-  const { t, locale } = useLanguage();
 
   const canManageStaff = !currentStaff || currentStaff.role === "manager";
 
@@ -52,20 +51,18 @@ export default function PartnerDashboardPage() {
       const data = await getPartnerTransactionsAction();
       setTransactions(data);
     } catch {
-      toast.error(t("partner.errors.loadTransactionsError"));
+      toast.error("লেনদেন তালিকা লোড করতে সমস্যা হয়েছে");
     } finally {
       setLoadingTransactions(false);
     }
-  }, [t]);
+  }, []);
 
   // Real-time transaction listener (Supabase Realtime / SSE)
   const handleRealtimeTransaction = useCallback(
     (payload: RealtimeTransactionPayload) => {
       const incomingTx = payload.transaction;
       toast.success(
-        locale === "bn"
-          ? `নতুন ডিসকাউন্ট লেনদেন রেকর্ড হয়েছে! (৳${incomingTx.amount}, সাশ্রয়: ৳${incomingTx.saved})`
-          : `New discount transaction recorded! (৳${incomingTx.amount}, saved: ৳${incomingTx.saved})`
+        `নতুন ডিসকাউন্ট লেনদেন রেকর্ড হয়েছে! (৳${toBanglaNums(incomingTx.amount)}, সাশ্রয়: ৳${toBanglaNums(incomingTx.saved)})`
       );
 
       setTransactions((prev) => {
@@ -83,7 +80,7 @@ export default function PartnerDashboardPage() {
         return [formatted, ...prev];
       });
     },
-    [locale]
+    []
   );
 
   useRealtimeNotifications({
@@ -164,7 +161,7 @@ export default function PartnerDashboardPage() {
 
   const handleLogout = () => {
     authStore.logoutPartner();
-    toast.success(t("auth.logoutSuccess"));
+    toast.success("সফলভাবে লগআউট হয়েছেন");
     window.location.href = "/login/partner";
   };
 
@@ -189,21 +186,21 @@ export default function PartnerDashboardPage() {
             className="flex-1 sm:flex-initial min-w-[140px] sm:min-w-[160px] h-auto min-h-[44px] py-2.5 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all data-active:bg-background data-active:text-foreground data-active:shadow-md data-active:border-border/80 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-md cursor-pointer whitespace-nowrap justify-center"
           >
             <Receipt className="h-4 w-4 mr-2 shrink-0 text-emerald-600 dark:text-emerald-400" />
-            <span>{locale === "bn" ? "বিলিং ও ভেরিফিকেশন" : (t("partner.dashboard.tabs.billing") || "POS Billing")}</span>
+            <span>বিলিং ও ভেরিফিকেশন</span>
           </TabsTrigger>
           <TabsTrigger
             value="doctors"
             className="flex-1 sm:flex-initial min-w-[140px] sm:min-w-[160px] h-auto min-h-[44px] py-2.5 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all data-active:bg-background data-active:text-foreground data-active:shadow-md data-active:border-border/80 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-md cursor-pointer whitespace-nowrap justify-center"
           >
             <Stethoscope className="h-4 w-4 mr-2 shrink-0 text-teal-600 dark:text-teal-400" />
-            <span>{locale === "bn" ? "ডাক্তার ও চেম্বার" : (t("partner.dashboard.tabs.doctors") || "Doctor Roster")}</span>
+            <span>ডাক্তার ও চেম্বার</span>
           </TabsTrigger>
           <TabsTrigger
             value="analytics"
             className="flex-1 sm:flex-initial min-w-[140px] sm:min-w-[160px] h-auto min-h-[44px] py-2.5 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all data-active:bg-background data-active:text-foreground data-active:shadow-md data-active:border-border/80 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-md cursor-pointer whitespace-nowrap justify-center"
           >
             <BarChart3 className="h-4 w-4 mr-2 shrink-0 text-amber-500 dark:text-amber-400" />
-            <span>{locale === "bn" ? "অ্যানালিটিক্স ও রিপোর্ট" : (t("partner.dashboard.tabs.analytics") || "Analytics")}</span>
+            <span>অ্যানালিটিক্স ও রিপোর্ট</span>
           </TabsTrigger>
           {canManageStaff && (
             <TabsTrigger
@@ -211,7 +208,7 @@ export default function PartnerDashboardPage() {
               className="flex-1 sm:flex-initial min-w-[140px] sm:min-w-[160px] h-auto min-h-[44px] py-2.5 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all data-active:bg-background data-active:text-foreground data-active:shadow-md data-active:border-border/80 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-md cursor-pointer whitespace-nowrap justify-center"
             >
               <Users className="h-4 w-4 mr-2 shrink-0 text-blue-500 dark:text-blue-400" />
-              <span>{locale === "bn" ? "স্টাফ ও কাউন্টার" : (t("partner.dashboard.tabs.staff") || "Staff & Counters")}</span>
+              <span>স্টাফ ও কাউন্টার</span>
             </TabsTrigger>
           )}
           <TabsTrigger
@@ -219,7 +216,7 @@ export default function PartnerDashboardPage() {
             className="flex-1 sm:flex-initial min-w-[140px] sm:min-w-[160px] h-auto min-h-[44px] py-2.5 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all data-active:bg-background data-active:text-foreground data-active:shadow-md data-active:border-border/80 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-md cursor-pointer whitespace-nowrap justify-center"
           >
             <Building2 className="h-4 w-4 mr-2 shrink-0 text-indigo-500 dark:text-indigo-400" />
-            <span>{locale === "bn" ? "হাসপাতাল প্রোফাইল" : (t("partner.dashboard.tabs.profileSettings") || "Profile Settings")}</span>
+            <span>হাসপাতাল প্রোফাইল</span>
           </TabsTrigger>
         </TabsList>
 

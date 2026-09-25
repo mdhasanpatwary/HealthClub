@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import type { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import {
   getHealthTipBySlugAction,
@@ -44,11 +43,8 @@ interface ArticlePageProps {
 export async function generateMetadata({ params }: ArticlePageProps) {
   const { slug } = await params;
   const article = await getHealthTipBySlugAction(slug);
-  // Public pages are always Bengali. Never call cookies() here — it opts the page out of ISR.
-  const isEn = false;
-
   if (!article) {
-    const notFoundTitle = isEn ? "Article Not Found - Health Club" : "নিবন্ধ পাওয়া যায়নি - হেলথ ক্লাব";
+    const notFoundTitle = "নিবন্ধ পাওয়া যায়নি - হেলথ ক্লাব";
     return {
       title: notFoundTitle,
       openGraph: {
@@ -70,9 +66,9 @@ export async function generateMetadata({ params }: ArticlePageProps) {
     };
   }
 
-  const pageTitle = isEn ? { absolute: `${article.titleEn} | Health Club` } : article.titleBn;
-  const ogTitle = isEn ? `${article.titleEn} - Health Club` : `${article.titleBn} - হেলথ ক্লাব`;
-  const description = isEn ? article.excerptEn : article.excerptBn;
+  const pageTitle = article.titleBn;
+  const ogTitle = `${article.titleBn} - হেলথ ক্লাব`;
+  const description = article.excerptBn;
   const articleIsoDate = getArticleIsoDate(article.publishedDate);
 
   return {
@@ -130,13 +126,8 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
     })
     .slice(0, 2);
 
-  // Hardcode locale — public detail pages are always Bengali.
-  // Do NOT use cookies() here — it would opt the page out of ISR caching.
-  const locale: Locale = "bn";
-  const isEn = false;
-
   // Automated reading time calculation
-  const readingTimeText = getArticleReadingTime(article, isEn ? "en" : "bn");
+  const readingTimeText = getArticleReadingTime(article);
 
   // Fetch reader reactions from database
   const reactionStats = await getArticleReactionsAction(article.slug);
@@ -147,56 +138,56 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
     {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
-      "itemListElement": [
+      itemListElement: [
         {
           "@type": "ListItem",
-          "position": 1,
-          "name": isEn ? "Home" : "হোম",
-          "item": SITE_URL,
+          position: 1,
+          name: "হোম",
+          item: SITE_URL,
         },
         {
           "@type": "ListItem",
-          "position": 2,
-          "name": isEn ? "Health Tips" : "স্বাস্থ্য টিপস",
-          "item": `${SITE_URL}/health-tips`,
+          position: 2,
+          name: "স্বাস্থ্য টিপস",
+          item: `${SITE_URL}/health-tips`,
         },
         {
           "@type": "ListItem",
-          "position": 3,
-          "name": isEn ? article.titleEn : article.titleBn,
-          "item": `${SITE_URL}/health-tips/${article.slug}`,
+          position: 3,
+          name: article.titleBn,
+          item: `${SITE_URL}/health-tips/${article.slug}`,
         },
       ],
     },
     {
       "@context": "https://schema.org",
       "@type": "MedicalWebPage",
-      "headline": isEn ? article.titleEn : article.titleBn,
-      "description": isEn ? article.excerptEn : article.excerptBn,
-      "image": `${SITE_URL}/og-image.png`,
-      "url": `${SITE_URL}/health-tips/${article.slug}`,
-      "mainEntityOfPage": `${SITE_URL}/health-tips/${article.slug}`,
-      "author": {
+      headline: article.titleBn,
+      description: article.excerptBn,
+      image: `${SITE_URL}/og-image.png`,
+      url: `${SITE_URL}/health-tips/${article.slug}`,
+      mainEntityOfPage: `${SITE_URL}/health-tips/${article.slug}`,
+      author: {
         "@type": "Person",
-        "name": isEn ? article.authorEn : article.authorBn,
-        "jobTitle": "Physician / Medical Specialist",
+        name: article.authorBn,
+        jobTitle: "Physician / Medical Specialist",
       },
-      "publisher": {
+      publisher: {
         "@type": "Organization",
-        "name": "Health Club (হেলথ ক্লাব)",
-        "url": SITE_URL,
-        "logo": {
+        name: "Health Club (হেলথ ক্লাব)",
+        url: SITE_URL,
+        logo: {
           "@type": "ImageObject",
-          "url": `${SITE_URL}/images/member-card-logo.webp`,
+          url: `${SITE_URL}/images/member-card-logo.webp`,
         },
       },
-      "datePublished": articleIsoDate,
-      "dateModified": articleIsoDate,
+      datePublished: articleIsoDate,
+      dateModified: articleIsoDate,
     },
   ];
 
-  const contentBlocks = isEn ? article.contentEn : article.contentBn;
-  const keyTakeaways = isEn ? article.keyTakeawaysEn : article.keyTakeawaysBn;
+  const contentBlocks = article.contentBn;
+  const keyTakeaways = article.keyTakeawaysBn;
 
   return (
     <div className="bg-background min-h-screen pb-16">
@@ -211,13 +202,13 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
             className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-muted-foreground hover:text-primary transition-colors cursor-pointer"
           >
             <ChevronLeft className="h-4 w-4" />
-            <span>{isEn ? "Back to all guides" : "সব টিপসে ফিরে যান"}</span>
+            <span>সব টিপসে ফিরে যান</span>
           </Link>
 
           {/* Category & Read Time */}
           <div className="flex flex-wrap items-center gap-3 pt-1">
             <Badge className="bg-primary text-white font-bold text-xs">
-              {isEn ? article.categoryNameEn : article.categoryNameBn}
+              {article.categoryNameBn}
             </Badge>
             <div className="flex items-center gap-1 text-xs text-muted-foreground font-medium">
               <Clock className="h-3.5 w-3.5" />
@@ -225,13 +216,13 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
             </div>
             <div className="flex items-center gap-1 text-xs text-muted-foreground font-medium">
               <Calendar className="h-3.5 w-3.5" />
-              <span>{formatArticleDate(article.publishedDate, locale)}</span>
+              <span>{formatArticleDate(article.publishedDate)}</span>
             </div>
           </div>
 
           {/* Title */}
           <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl font-extrabold text-secondary dark:text-white leading-tight">
-            {isEn ? article.titleEn : article.titleBn}
+            {article.titleBn}
           </h1>
 
           {/* Author */}
@@ -241,10 +232,10 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
             </div>
             <div>
               <p className="text-xs sm:text-sm font-bold text-foreground">
-                {isEn ? article.authorEn : article.authorBn}
+                {article.authorBn}
               </p>
               <p className="text-[11px] text-muted-foreground">
-                {isEn ? "Medically Reviewed & Verified" : "চিকিৎসক দ্বারা পর্যালোচিত ও প্রকাশিত"}
+                চিকিৎসক দ্বারা পর্যালোচিত ও প্রকাশিত
               </p>
             </div>
           </div>
@@ -257,7 +248,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
         <div className="p-5 sm:p-6 rounded-3xl bg-primary/5 border border-primary/20 space-y-3">
           <div className="flex items-center gap-2 text-primary font-bold text-sm sm:text-base font-heading">
             <Sparkles className="h-4 w-4" />
-            <span>{isEn ? "Key Takeaways & Quick Advice" : "একনজরে জরুরি পরামর্শ"}</span>
+            <span>একনজরে জরুরি পরামর্শ</span>
           </div>
           <ul className="space-y-2 text-xs sm:text-sm text-foreground/90">
             {keyTakeaways.map((item, idx) => (
@@ -291,7 +282,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
         {/* Share Bar */}
         <div className="pt-2 border-t border-border/80">
           <ArticleShareBar
-            title={isEn ? article.titleEn : article.titleBn}
+            title={article.titleBn}
             slug={article.slug}
           />
         </div>
@@ -302,7 +293,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
             <div className="flex items-center gap-2">
               <BookOpen className="h-4 w-4 text-primary" />
               <h3 className="font-heading font-bold text-base sm:text-lg text-foreground">
-                {isEn ? "Related Health Guides" : "সম্পর্কিত অন্যান্য স্বাস্থ্য গাইড"}
+                সম্পর্কিত অন্যান্য স্বাস্থ্য গাইড
               </h3>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -313,15 +304,15 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
                 >
                   <CardContent className="p-4 space-y-2.5">
                     <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-[10px]">
-                      {isEn ? rel.categoryNameEn : rel.categoryNameBn}
+                      {rel.categoryNameBn}
                     </Badge>
                     <Link href={`/health-tips/${rel.slug}`}>
                       <h4 className="font-heading font-bold text-sm text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                        {isEn ? rel.titleEn : rel.titleBn}
+                        {rel.titleBn}
                       </h4>
                     </Link>
                     <p className="text-[11px] text-muted-foreground line-clamp-2">
-                      {isEn ? rel.excerptEn : rel.excerptBn}
+                      {rel.excerptBn}
                     </p>
                   </CardContent>
                 </Card>
@@ -338,12 +329,10 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
             </div>
             <div className="space-y-1">
               <h4 className="font-heading font-bold text-base sm:text-lg text-secondary dark:text-white">
-                {isEn ? "Consult Specialist Doctors" : "বিশেষজ্ঞ ডাক্তারের অ্যাপয়েন্টমেন্ট নিন"}
+                বিশেষজ্ঞ ডাক্তারের অ্যাপয়েন্টমেন্ট নিন
               </h4>
               <p className="text-xs sm:text-sm text-muted-foreground">
-                {isEn
-                  ? "Find registered specialist doctors in Feni and get member discounts on your visits."
-                  : "ফেনীর সেরা কনসালট্যান্টদের চেম্বার শিডিউল দেখুন ও মেম্বার ডিসকাউন্টে সেবা গ্রহণ করুন।"}
+                ফেনীর সেরা কনসালট্যান্টদের চেম্বার শিডিউল দেখুন ও মেম্বার ডিসকাউন্টে সেবা গ্রহণ করুন।
               </p>
             </div>
           </div>
@@ -353,7 +342,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
               className: "shrink-0 w-full sm:w-auto font-bold cursor-pointer",
             })}
           >
-            <span>{isEn ? "View Doctors" : "ডাক্তার তালিকা"}</span>
+            <span>ডাক্তার তালিকা</span>
             <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </div>

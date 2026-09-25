@@ -2,25 +2,21 @@
 
 import { Star, ShieldCheck, User } from "lucide-react";
 import { Review } from "@/services/db";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-import { formatNum } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 
 interface ReviewCardProps {
   review: Review;
 }
 
 export function ReviewCard({ review }: ReviewCardProps) {
-  const { t, locale } = useLanguage();
-  const isBn = locale === "bn";
-
-  const memberName = review.member?.name || (isBn ? "সদস্য" : "Member");
+  const memberName = review.member?.name || "সদস্য";
   const memberTier = review.member?.tier;
 
   const formatDate = (dateStr: string) => {
     try {
       const date = new Date(dateStr);
       if (isNaN(date.getTime())) return dateStr;
-      return new Intl.DateTimeFormat(isBn ? "bn-BD" : "en-US", {
+      return new Intl.DateTimeFormat("bn-BD", {
         year: "numeric",
         month: "short",
         day: "numeric",
@@ -52,12 +48,12 @@ export function ReviewCard({ review }: ReviewCardProps) {
               </span>
               {memberTier === "founding" && (
                 <span className="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20">
-                  {isBn ? "ফাউন্ডিং" : "Founding"}
+                  ফাউন্ডিং
                 </span>
               )}
               {memberTier === "premium" && (
                 <span className="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
-                  {isBn ? "প্রিমিয়াম" : "Premium"}
+                  প্রিমিয়াম
                 </span>
               )}
             </div>
@@ -65,7 +61,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
             <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
               <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
                 <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
-                <span>{t("reviews.verifiedVisit")}</span>
+                <span>ভেরিফাইড সেবাগ্রহীতা</span>
               </span>
               <span>•</span>
               <span className="text-[11px] text-muted-foreground/80 font-mono">
@@ -79,7 +75,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
         <div className="flex items-center gap-0.5 bg-amber-500/10 dark:bg-amber-500/15 border border-amber-500/25 px-2 py-1 rounded-xl shrink-0">
           <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-500" />
           <span className="text-xs font-black text-amber-600 dark:text-amber-400 font-heading">
-            {formatNum(review.rating, locale)}
+            {toBanglaNums(review.rating)}
           </span>
         </div>
       </div>

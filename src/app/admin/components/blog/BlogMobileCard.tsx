@@ -8,14 +8,12 @@ import { formatArticleDate } from "@/lib/dateUtils";
 
 interface BlogMobileCardProps {
   post: BlogPost;
-  isEn: boolean;
   onEdit: (post: BlogPost) => void;
   onDelete: (post: BlogPost) => void;
 }
 
 export function BlogMobileCard({
   post,
-  isEn,
   onEdit,
   onDelete,
 }: BlogMobileCardProps) {
@@ -49,7 +47,7 @@ export function BlogMobileCard({
       <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
         <span className="flex items-center gap-1">
           <Calendar className="h-3 w-3" />
-          {formatArticleDate(post.publishedDate, isEn ? "en" : "bn")}
+          {formatArticleDate(post.publishedDate)}
         </span>
         <span className="flex items-center gap-1">
           <Clock className="h-3 w-3" />
@@ -64,7 +62,7 @@ export function BlogMobileCard({
           className="h-8 px-2.5 inline-flex items-center justify-center rounded-lg text-xs font-semibold text-primary hover:bg-primary/10 gap-1 transition-colors"
         >
           <ExternalLink className="h-3.5 w-3.5" />
-          <span>{isEn ? "View" : "দেখুন"}</span>
+          <span>দেখুন</span>
         </Link>
         <Button
           variant="outline"
@@ -73,7 +71,7 @@ export function BlogMobileCard({
           className="h-8 text-xs gap-1"
         >
           <Edit3 className="h-3.5 w-3.5" />
-          <span>{isEn ? "Edit" : "এডিট"}</span>
+          <span>এডিট</span>
         </Button>
         <Button
           variant="ghost"
@@ -82,7 +80,7 @@ export function BlogMobileCard({
           className="h-8 text-xs text-destructive hover:bg-destructive/10 gap-1"
         >
           <Trash2 className="h-3.5 w-3.5" />
-          <span>{isEn ? "Delete" : "মুছুন"}</span>
+          <span>মুছুন</span>
         </Button>
       </div>
     </div>

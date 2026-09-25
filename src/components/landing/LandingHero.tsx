@@ -6,13 +6,12 @@ import type { Member } from "@/services/db";
 
 interface LandingHeroProps {
   sampleMember: Member;
-  t: (key: string) => string;
+  t?: (key: string) => string;
 }
 
-export function LandingHero({ sampleMember, t }: LandingHeroProps) {
+export function LandingHero({ sampleMember }: LandingHeroProps) {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-primary-light/60 via-emerald-50/30 to-background dark:from-slate-950 dark:via-slate-900 dark:to-background py-10 sm:py-20 lg:py-28">
-
       {/* Background orbs (optimized for mobile paint performance) */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden -z-10" aria-hidden="true">
         <div
@@ -36,20 +35,19 @@ export function LandingHero({ sampleMember, t }: LandingHeroProps) {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
-
           {/* Left Content Column */}
           <div className="space-y-4 sm:space-y-7 lg:col-span-7 text-center lg:text-left">
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-primary/10 text-emerald-800 dark:text-emerald-300 border border-primary/20 animate-fade-in shadow-sm">
               <Heart className="h-3.5 w-3.5 fill-primary" />
-              {t("page.healthcareBenefitMembershipPlatform")}
+              স্বাস্থ্য সুবিধা মেম্বারশিপ প্ল্যাটফর্ম
             </span>
 
             <h1 className="font-heading text-4xl sm:text-5xl xl:text-6xl font-extrabold text-secondary dark:text-white leading-[1.3] tracking-tight">
-              {t("page.healthcareIsNow")} <span className="gradient-text">{t("page.easyAndAffordable")}</span> {t("page.healthcareForYou")}
+              স্বাস্থ্য সেবা হোক <span className="gradient-text">সহজ ও সাশ্রয়ী</span> সকলের জন্য
             </h1>
 
             <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-              {t("page.becomeAHealthClubMember")}
+              হেলথ ক্লাবের সদস্য হয়ে যেকোনো পার্টনার হাসপাতালে শুধু ডিজিটাল মেম্বার কার্ড প্রদর্শন করে ১০-৩০% ডিসকাউন্ট উপভোগ করুন।
             </p>
 
             {/* CTA Group */}
@@ -61,7 +59,7 @@ export function LandingHero({ sampleMember, t }: LandingHeroProps) {
                   className: "w-full sm:w-auto",
                 })}
               >
-                <span>{t("page.joinNowFree")}</span>
+                <span>আজই ফাউন্ডিং মেম্বার হোন</span>
                 <ArrowRight className="h-5 w-5" />
               </Link>
 
@@ -73,7 +71,7 @@ export function LandingHero({ sampleMember, t }: LandingHeroProps) {
                   className: "w-full sm:w-auto",
                 })}
               >
-                <span>{t("page.partnerHospitals")}</span>
+                <span>পার্টনার হাসপাতাল</span>
               </Link>
             </div>
 
@@ -82,21 +80,21 @@ export function LandingHero({ sampleMember, t }: LandingHeroProps) {
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
                 <span className="text-xs font-bold text-secondary dark:text-white">
-                  {t("page.100PercentFreeFounding")}
+                  ১০০% ফ্রি ফাউন্ডিং সদস্যতা
                 </span>
               </div>
 
               <div className="flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4 text-primary shrink-0" />
                 <span className="text-xs font-bold text-secondary dark:text-white">
-                  {t("page.instantDigitalVerification")}
+                  তাৎক্ষণিক ডিজিটাল যাচাই
                 </span>
               </div>
 
               <div className="flex items-center gap-2 col-span-2 sm:col-span-1">
                 <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
                 <span className="text-xs font-bold text-secondary dark:text-white">
-                  {t("page.validAcrossAllPartners")}
+                  সকল পার্টনার নেটওয়ার্কে প্রযোজ্য
                 </span>
               </div>
             </div>
@@ -106,7 +104,6 @@ export function LandingHero({ sampleMember, t }: LandingHeroProps) {
           <div className="lg:col-span-5 flex justify-center">
             <HeroCardWrapper demoMember={sampleMember} />
           </div>
-
         </div>
       </div>
     </section>

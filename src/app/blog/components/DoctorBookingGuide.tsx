@@ -7,16 +7,13 @@ interface DoctorBookingGuideProps {
     steps?: { step: string; title: string; desc: string }[];
     stepsBn?: { step: string; title: string; desc: string }[];
   };
-  locale?: string;
 }
 
 export function DoctorBookingGuide({
   guide,
-  locale = "bn",
 }: DoctorBookingGuideProps) {
-  const isEn = locale === "en";
-  const title = guide.title || guide.titleBn || "";
-  const steps = guide.steps || guide.stepsBn || [];
+  const title = guide.titleBn || guide.title || "";
+  const steps = guide.stepsBn || guide.steps || [];
   const isEvenSteps = steps.length % 2 === 0;
 
   return (
@@ -24,15 +21,13 @@ export function DoctorBookingGuide({
       <div>
         <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-wider mb-1.5">
           <PhoneCall className="h-4 w-4" />
-          <span>{isEn ? "Appointment Advice" : "সিরিয়াল গাইডলাইন"}</span>
+          <span>সিরিয়াল গাইডলাইন</span>
         </div>
         <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-          {isEn ? `4. ${title}` : `৪. ${title}`}
+          {`৪. ${title}`}
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-          {isEn
-            ? "Follow these essential steps to book doctor serials smoothly and avoid long waiting times."
-            : "ডাক্তারের সিরিয়াল নিশ্চিত করতে ও চেম্বারে অযথা দীর্ঘ অপেক্ষা এড়াতে এই নিয়মগুলো মেনে চলুন।"}
+          ডাক্তারের সিরিয়াল নিশ্চিত করতে ও চেম্বারে অযথা দীর্ঘ অপেক্ষা এড়াতে এই নিয়মগুলো মেনে চলুন।
         </p>
       </div>
 

@@ -22,11 +22,9 @@ import {
   Plus,
   Sliders,
 } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
+import { toBanglaNums } from "@/lib/utils";
 
 export function DbBackupManager() {
-  const { locale } = useLanguage();
-  const isEn = locale === "en";
 
   const [activeTab, setActiveTab] = useState<"export" | "snapshots" | "retention">("export");
   const [stats, setStats] = useState<BackupTableStats | null>(null);
@@ -55,7 +53,7 @@ export function DbBackupManager() {
       setSnapshots(fetchedSnapshots);
       setSettings(fetchedSettings);
     } catch {
-      toast.error(isEn ? "Failed to load backup data" : "ব্যাকআপ তথ্য লোড করতে ব্যর্থ হয়েছে।");
+      toast.error("ব্যাকআপ তথ্য লোড করতে ব্যর্থ হয়েছে।");
     } finally {
       setLoading(false);
     }
@@ -64,7 +62,6 @@ export function DbBackupManager() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -85,7 +82,7 @@ export function DbBackupManager() {
             }`}
           >
             <Download className="h-3.5 w-3.5" />
-            <span>{isEn ? "One-Click Export" : "ওয়ান-ক্লিক এক্সপোর্ট"}</span>
+            <span>ওয়ান-ক্লিক এক্সপোর্ট</span>
           </button>
           <button
             type="button"
@@ -97,9 +94,9 @@ export function DbBackupManager() {
             }`}
           >
             <Database className="h-3.5 w-3.5" />
-            <span>{isEn ? "Snapshot Registry" : "স্ন্যাপশট রেজিস্ট্রি"}</span>
+            <span>স্ন্যাপশট রেজিস্ট্রি</span>
             <Badge variant="secondary" className="text-[10px] px-1.5 py-0 font-mono">
-              {snapshots.length}
+              {toBanglaNums(snapshots.length)}
             </Badge>
           </button>
           <button
@@ -112,7 +109,7 @@ export function DbBackupManager() {
             }`}
           >
             <Sliders className="h-3.5 w-3.5" />
-            <span>{isEn ? "Auto Schedule & Retention" : "শিডিউল ও রিটেনশন"}</span>
+            <span>শিডিউল ও রিটেনশন</span>
           </button>
         </div>
 
@@ -125,7 +122,7 @@ export function DbBackupManager() {
             className="text-xs h-8 gap-1.5 rounded-xl cursor-pointer"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
-            <span>{isEn ? "Refresh" : "রিফ্রেশ"}</span>
+            <span>রিফ্রেশ</span>
           </Button>
           {activeTab === "snapshots" && (
             <Button
@@ -134,7 +131,7 @@ export function DbBackupManager() {
               className="text-xs h-8 gap-1.5 font-bold rounded-xl cursor-pointer bg-primary text-white"
             >
               <Plus className="h-3.5 w-3.5" />
-              <span>{isEn ? "Create Snapshot" : "নতুন স্ন্যাপশট তৈরি"}</span>
+              <span>নতুন স্ন্যাপশট তৈরি</span>
             </Button>
           )}
         </div>

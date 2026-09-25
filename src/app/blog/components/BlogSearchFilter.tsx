@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { BlogFilterPill, BLOG_FILTER_PILLS } from "@/data/blog/blogCategories";
 import { Pagination } from "@/components/ui/pagination";
 import { toBanglaNums } from "@/lib/utils";
-import { Locale } from "@/lib/i18n";
 
 interface BlogSearchFilterProps {
   children: React.ReactNode;
@@ -18,7 +17,6 @@ interface BlogSearchFilterProps {
   currentCategory?: string;
   currentSearch?: string;
   filterPills?: BlogFilterPill[];
-  locale?: string;
 }
 
 export function BlogSearchFilter({
@@ -30,13 +28,11 @@ export function BlogSearchFilter({
   currentCategory = "all",
   currentSearch = "",
   filterPills = BLOG_FILTER_PILLS,
-  locale = "bn",
 }: BlogSearchFilterProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const isEn = locale === "en";
   const [searchQuery, setSearchQuery] = useState(currentSearch);
   const [prevSearch, setPrevSearch] = useState(currentSearch);
   const [selectedCategory, setSelectedCategory] = useState(currentCategory);
@@ -125,18 +121,14 @@ export function BlogSearchFilter({
             type="search"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={
-              isEn
-                ? "Search blog guides, hospitals, tips..."
-                : "হাসপাতাল, বিশেষজ্ঞ ডাক্তার বা স্বাস্থ্য গাইড খুঁজুন..."
-            }
+            placeholder="হাসপাতাল, বিশেষজ্ঞ ডাক্তার বা স্বাস্থ্য গাইড খুঁজুন..."
             className="w-full pl-10 pr-10 h-11 bg-background rounded-xl border-border/80 focus-visible:ring-primary text-sm shadow-2xs"
           />
           {searchQuery && (
             <button
               type="button"
               onClick={handleClearSearch}
-              aria-label={isEn ? "Clear search" : "সার্চ মুছুন"}
+              aria-label="সার্চ মুছুন"
               className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer p-0.5 rounded-full hover:bg-muted transition-colors"
             >
               <X className="h-4 w-4" />
@@ -160,7 +152,7 @@ export function BlogSearchFilter({
                     : "bg-muted/70 text-muted-foreground hover:text-foreground hover:bg-muted"
                 }`}
               >
-                {isEn ? pill.nameEn : pill.nameBn}
+                {pill.nameBn}
               </button>
             );
           })}
@@ -171,23 +163,13 @@ export function BlogSearchFilter({
       <div className="flex items-center justify-between text-xs text-muted-foreground px-1">
         <div className="flex items-center gap-2">
           <span>
-            {isEn ? (
-              <>
-                Showing <strong>{Math.min(pageSize, totalItems)}</strong> of{" "}
-                <strong>{totalItems}</strong>{" "}
-                {totalItems === 1 ? "article" : "articles"}
-              </>
-            ) : (
-              <>
-                মোট <strong>{toBanglaNums(totalItems)}</strong>টি নিবন্ধের মধ্যে{" "}
-                <strong>{toBanglaNums(Math.min(pageSize, totalItems))}</strong>টি প্রদর্শিত হচ্ছে
-              </>
-            )}
+            মোট <strong>{toBanglaNums(totalItems)}</strong>টি নিবন্ধের মধ্যে{" "}
+            <strong>{toBanglaNums(Math.min(pageSize, totalItems))}</strong>টি প্রদর্শিত হচ্ছে
           </span>
           {isPending && (
             <span className="inline-flex items-center gap-1 text-primary text-xs animate-pulse">
               <Loader2 className="h-3 w-3 animate-spin" />
-              <span>{isEn ? "Updating..." : "লোড হচ্ছে..."}</span>
+              <span>লোড হচ্ছে...</span>
             </span>
           )}
         </div>
@@ -198,7 +180,7 @@ export function BlogSearchFilter({
             onClick={handleResetFilters}
             className="text-primary hover:underline font-medium cursor-pointer"
           >
-            {isEn ? "Reset filters" : "ফিল্টার রিসেট করুন"}
+            ফিল্টার রিসেট করুন
           </button>
         )}
       </div>
@@ -217,12 +199,10 @@ export function BlogSearchFilter({
               <BookOpen className="h-6 w-6" />
             </div>
             <h3 className="font-heading text-lg font-bold text-foreground">
-              {isEn ? "No articles found" : "কোনো নিবন্ধ পাওয়া যায়নি"}
+              কোনো নিবন্ধ পাওয়া যায়নি
             </h3>
             <p className="text-sm text-muted-foreground max-w-md mx-auto">
-              {isEn
-                ? "Try adjusting your search terms or selecting a different category."
-                : "অনুগ্রহ করে ভিন্ন কোনো শব্দ দিয়ে খুঁজুন অথবা অন্য ক্যাটাগরি নির্বাচন করুন।"}
+              অনুগ্রহ করে ভিন্ন কোনো শব্দ দিয়ে খুঁজুন অথবা অন্য ক্যাটাগরি নির্বাচন করুন।
             </p>
             <div className="pt-2">
               <button
@@ -230,7 +210,7 @@ export function BlogSearchFilter({
                 onClick={handleResetFilters}
                 className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-all cursor-pointer"
               >
-                {isEn ? "View all articles" : "সকল নিবন্ধ দেখুন"}
+                সকল নিবন্ধ দেখুন
               </button>
             </div>
           </div>
@@ -247,7 +227,6 @@ export function BlogSearchFilter({
             totalItems={totalItems}
             getPageUrl={(page) => createUrl({ page })}
             onPageChange={(page) => navigate({ page }, true)}
-            locale={locale as Locale}
             disabled={isPending}
             className="rounded-2xl border border-border/70 bg-card shadow-xs"
           />

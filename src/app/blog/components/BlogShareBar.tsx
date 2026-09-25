@@ -12,13 +12,11 @@ import { toast } from "sonner";
 interface BlogShareBarProps {
   url: string;
   title: string;
-  locale?: string;
 }
 
 const emptySubscribe = () => () => {};
 
-export function BlogShareBar({ url, title, locale = "bn" }: BlogShareBarProps) {
-  const isEn = locale === "en";
+export function BlogShareBar({ url, title }: BlogShareBarProps) {
   const [copied, setCopied] = useState(false);
   const canShare = useSyncExternalStore(
     emptySubscribe,
@@ -69,15 +67,11 @@ export function BlogShareBar({ url, title, locale = "bn" }: BlogShareBarProps) {
       if (typeof navigator !== "undefined" && navigator.clipboard) {
         await navigator.clipboard.writeText(url);
         setCopied(true);
-        toast.success(
-          isEn ? "Article link copied to clipboard!" : "নিবন্ধের লিংক কপি করা হয়েছে!"
-        );
+        toast.success("নিবন্ধের লিংক কপি করা হয়েছে!");
         setTimeout(() => setCopied(false), 2500);
       }
     } catch {
-      toast.error(
-        isEn ? "Failed to copy link" : "লিংক কপি করতে ব্যর্থ হয়েছে"
-      );
+      toast.error("লিংক কপি করতে ব্যর্থ হয়েছে");
     }
   };
 
@@ -85,26 +79,24 @@ export function BlogShareBar({ url, title, locale = "bn" }: BlogShareBarProps) {
     <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
       <span className="flex items-center gap-1 font-semibold text-foreground mr-1">
         <Share2 className="h-3.5 w-3.5 text-primary" />
-        <span>{isEn ? "Share:" : "শেয়ার করুন:"}</span>
+        <span>শেয়ার করুন:</span>
       </span>
 
       {canShare && (
         <button
           type="button"
           onClick={handleNativeShare}
-          aria-label={isEn ? "Share via device apps" : "ডিভাইসের অ্যাপে শেয়ার করুন"}
+          aria-label="ডিভাইসের অ্যাপে শেয়ার করুন"
           className="flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] px-3.5 py-2 rounded-lg border border-primary/30 bg-primary/10 text-primary hover:bg-primary/20 transition-colors active:scale-95 cursor-pointer font-medium"
         >
           <Share2 className="h-4 w-4" />
-          <span className="text-xs font-semibold">{isEn ? "Share" : "শেয়ার"}</span>
+          <span className="text-xs font-semibold">শেয়ার</span>
         </button>
       )}
 
       {shareLinks.map((item) => {
         const Icon = item.icon;
-        const shareLabel = isEn
-          ? `Share on ${item.name}`
-          : `${item.name}-এ শেয়ার করুন`;
+        const shareLabel = `${item.name}-এ শেয়ার করুন`;
 
         return (
           <a
@@ -124,25 +116,21 @@ export function BlogShareBar({ url, title, locale = "bn" }: BlogShareBarProps) {
       <button
         type="button"
         onClick={handleCopy}
-        aria-label={
-          isEn
-            ? "Copy article link to clipboard"
-            : "নিবন্ধের লিংক ক্লিপবোর্ডে কপি করুন"
-        }
+        aria-label="নিবন্ধের লিংক ক্লিপবোর্ডে কপি করুন"
         className="flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] px-3 py-2 rounded-lg border border-border/70 bg-card text-muted-foreground hover:bg-muted hover:text-foreground transition-colors active:scale-95 cursor-pointer"
       >
         {copied ? (
           <>
             <Check className="h-4 w-4 text-emerald-600" />
             <span className="text-xs font-semibold text-emerald-600">
-              {isEn ? "Copied" : "কপি হয়েছে"}
+              কপি হয়েছে
             </span>
           </>
         ) : (
           <>
             <LinkIcon className="h-4 w-4" />
             <span className="text-xs font-medium">
-              {isEn ? "Copy Link" : "লিংক কপি"}
+              লিংক কপি
             </span>
           </>
         )}

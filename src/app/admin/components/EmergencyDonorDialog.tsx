@@ -23,7 +23,6 @@ import { BloodDonor, BLOOD_GROUPS, UPAZILAS_FENI } from "@/data/emergencyData";
 import { saveBloodDonorAction } from "@/app/actions/emergencyAdminActions";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 
 interface EmergencyDonorDialogProps {
   open: boolean;
@@ -38,8 +37,6 @@ export function EmergencyDonorDialog({
   donor,
   onSuccess,
 }: EmergencyDonorDialogProps) {
-  const { locale } = useLanguage();
-  const isEn = locale === "en";
 
   const [name, setName] = useState("");
   const [bloodGroup, setBloodGroup] = useState<BloodDonor["bloodGroup"]>("O+");
@@ -80,7 +77,7 @@ export function EmergencyDonorDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !phone.trim()) {
-      toast.error(isEn ? "Please fill all required fields" : "অনুগ্রহ করে সব তথ্য দিন");
+      toast.error("অনুগ্রহ করে সব তথ্য দিন");
       return;
     }
 
@@ -101,16 +98,16 @@ export function EmergencyDonorDialog({
       if (res.success) {
         toast.success(
           donor
-            ? isEn ? "Donor updated successfully!" : "রক্তদাতার তথ্য আপডেট হয়েছে!"
-            : isEn ? "New donor added successfully!" : "নতুন রক্তদাতা যুক্ত করা হয়েছে!"
+            ? "রক্তদাতার তথ্য আপডেট হয়েছে!"
+            : "নতুন রক্তদাতা যুক্ত করা হয়েছে!"
         );
         onSuccess();
         onOpenChange(false);
       } else {
-        toast.error(res.error || (isEn ? "Failed to save donor" : "রক্তদাতা সংরক্ষণ ব্যর্থ হয়েছে"));
+        toast.error(res.error || "রক্তদাতা সংরক্ষণ ব্যর্থ হয়েছে");
       }
     } catch {
-      toast.error(isEn ? "An unexpected error occurred" : "একটি সমস্যা দেখা দিয়েছে");
+      toast.error("একটি সমস্যা দেখা দিয়েছে");
     } finally {
       setSaving(false);
     }
@@ -122,26 +119,24 @@ export function EmergencyDonorDialog({
         <DialogHeader>
           <DialogTitle className="text-lg font-bold text-foreground">
             {donor
-              ? isEn ? "Edit Blood Donor" : "রক্তদাতার তথ্য এডিট করুন"
-              : isEn ? "Add New Blood Donor" : "নতুন রক্তদাতা যুক্ত করুন"}
+              ? "রক্তদাতার তথ্য এডিট করুন"
+              : "নতুন রক্তদাতা যুক্ত করুন"}
           </DialogTitle>
           <DialogDescription className="text-xs text-muted-foreground">
-            {isEn
-              ? "Fill out volunteer details to show in the public emergency directory."
-              : "জরুরি ডিরেক্টরিতে প্রদর্শনের জন্য রক্তদাতার সঠিক তথ্য দিন।"}
+            জরুরি ডিরেক্টরিতে প্রদর্শনের জন্য রক্তদাতার সঠিক তথ্য দিন।
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 py-2">
           <div className="space-y-1.5">
             <Label htmlFor="donor-name" className="text-xs font-semibold">
-              {isEn ? "Full Name" : "রক্তদাতার নাম"} *
+              রক্তদাতার নাম *
             </Label>
             <Input
               id="donor-name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder={isEn ? "e.g. Tanvir Ahmed" : "যেমন: তানভীর আহমেদ"}
+              placeholder="যেমন: তানভীর আহমেদ"
               required
             />
           </div>
@@ -149,7 +144,7 @@ export function EmergencyDonorDialog({
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label className="text-xs font-semibold">
-                {isEn ? "Blood Group" : "রক্তের গ্রুপ"} *
+                রক্তের গ্রুপ *
               </Label>
               <Select
                 value={bloodGroup}
@@ -172,7 +167,7 @@ export function EmergencyDonorDialog({
 
             <div className="space-y-1.5">
               <Label className="text-xs font-semibold">
-                {isEn ? "Upazila" : "উপজেলা"} *
+                উপজেলা *
               </Label>
               <Select
                 value={upazila}
@@ -186,7 +181,7 @@ export function EmergencyDonorDialog({
                 <SelectContent>
                   {UPAZILAS_FENI.filter((u) => u.id !== "all").map((u) => (
                     <SelectItem key={u.id} value={u.id}>
-                      {isEn ? u.nameEn : u.nameBn}
+                      {u.nameBn}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -197,7 +192,7 @@ export function EmergencyDonorDialog({
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="donor-phone" className="text-xs font-semibold">
-                {isEn ? "Phone Number" : "মোবাইল নম্বর"} *
+                মোবাইল নম্বর *
               </Label>
               <Input
                 id="donor-phone"
@@ -210,20 +205,20 @@ export function EmergencyDonorDialog({
 
             <div className="space-y-1.5">
               <Label htmlFor="last-donated" className="text-xs font-semibold">
-                {isEn ? "Last Donated" : "সর্বশেষ রক্তদান"}
+                সর্বশেষ রক্তদান
               </Label>
               <Input
                 id="last-donated"
                 value={lastDonated}
                 onChange={(e) => setLastDonated(e.target.value)}
-                placeholder={isEn ? "e.g. 3 months ago" : "যেমন: ৩ মাস আগে"}
+                placeholder="যেমন: ৩ মাস আগে"
               />
             </div>
           </div>
 
           <div className="space-y-1.5">
             <Label htmlFor="donor-status" className="text-xs font-semibold">
-              {isEn ? "Approval Status" : "অনুমোদন স্ট্যাটাস"}
+              অনুমোদন স্ট্যাটাস
             </Label>
             <Select
               value={status}
@@ -232,14 +227,14 @@ export function EmergencyDonorDialog({
               }}
             >
               <SelectTrigger id="donor-status" className="h-9 text-xs">
-                <SelectValue placeholder={isEn ? "Select Status" : "স্ট্যাটাস নির্বাচন করুন"} />
+                <SelectValue placeholder="স্ট্যাটাস নির্বাচন করুন" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="approved" className="text-xs">
-                  {isEn ? "Approved (Live in Directory)" : "অনুমোদিত (পাবলিক ডিরেক্টরিতে দৃশ্যমান)"}
+                  অনুমোদিত (পাবলিক ডিরেক্টরিতে দৃশ্যমান)
                 </SelectItem>
                 <SelectItem value="pending" className="text-xs">
-                  {isEn ? "Pending Approval (Hidden from public)" : "অনুমোদন অপেক্ষমাণ (পাবলিক থেকে লুকানো)"}
+                  অনুমোদন অপেক্ষমাণ (পাবলিক থেকে লুকানো)
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -248,19 +243,17 @@ export function EmergencyDonorDialog({
           <div className="flex items-center justify-between p-3 rounded-xl bg-muted/40 border border-border">
             <div>
               <Label className="text-xs font-bold text-foreground">
-                {isEn ? "Availability Status" : "রক্তদানের জন্য প্রস্তুত?"}
+                রক্তদানের জন্য প্রস্তুত?
               </Label>
               <p className="text-[11px] text-muted-foreground">
-                {isEn
-                  ? "Mark if donor is ready to donate right now"
-                  : "বর্তমানে রক্তদানে সক্ষম ও প্রস্তুত থাকলে চালু রাখুন"}
+                বর্তমানে রক্তদানে সক্ষম ও প্রস্তুত থাকলে চালু রাখুন
               </p>
             </div>
             <button
               type="button"
               role="switch"
               aria-checked={isAvailable}
-              aria-label={isEn ? "Availability Status" : "রক্তদানের জন্য প্রস্তুত"}
+              aria-label="রক্তদানের জন্য প্রস্তুত"
               onClick={() => setIsAvailable(!isAvailable)}
               className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary ${
                 isAvailable ? "bg-emerald-600" : "bg-muted-foreground/30"
@@ -282,16 +275,16 @@ export function EmergencyDonorDialog({
               disabled={saving}
               className="text-xs"
             >
-              {isEn ? "Cancel" : "বাতিল"}
+              বাতিল
             </Button>
             <Button type="submit" disabled={saving} className="text-xs font-bold">
               {saving ? (
                 <>
                   <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                  {isEn ? "Saving..." : "সংরক্ষণ হচ্ছে..."}
+                  সংরক্ষণ হচ্ছে...
                 </>
               ) : (
-                isEn ? "Save Donor" : "সংরক্ষণ করুন"
+                "সংরক্ষণ করুন"
               )}
             </Button>
           </DialogFooter>

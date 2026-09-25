@@ -14,8 +14,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-import { formatNum } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import {
   BroadcastAudienceCounts,
   BroadcastCampaignRecord,
@@ -26,9 +25,6 @@ import { BroadcastComposer } from "./broadcast/BroadcastComposer";
 import { BroadcastHistoryList } from "./broadcast/BroadcastHistoryList";
 
 export function BroadcastTab() {
-  const { locale, t } = useLanguage();
-  const isBn = locale === "bn";
-
   const [activeTab, setActiveTab] = useState<"compose" | "history">("compose");
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -110,12 +106,11 @@ export function BroadcastTab() {
               <Radio className="h-5 w-5 animate-pulse" />
             </div>
             <h1 className="font-heading text-xl sm:text-2xl font-bold tracking-tight text-foreground">
-              {t("admin.broadcast.title") || "ব্রডকাস্ট এসএমএস ও ইমেইল ক্যাম্পেইন ম্যানেজার"}
+              ব্রডকাস্ট এসএমএস ও ইমেইল ক্যাম্পেইন ম্যানেজার
             </h1>
           </div>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-            {t("admin.broadcast.desc") ||
-              "ফ্রি হেলথ ক্যাম্প, নতুন ডিসকাউন্ট, জরুরি রক্তদান বা নোটিশ সকল সদস্য ও পার্টনারদের কাছে এক ক্লিকে সম্প্রচার করুন"}
+            ফ্রি হেলথ ক্যাম্প, নতুন ডিসকাউন্ট, জরুরি রক্তদান বা নোটিশ সকল সদস্য ও পার্টনারদের কাছে এক ক্লিকে সম্প্রচার করুন
           </p>
         </div>
 
@@ -142,13 +137,13 @@ export function BroadcastTab() {
           <CardContent className="p-4 flex items-center justify-between">
             <div>
               <p className="text-[11px] text-muted-foreground font-semibold uppercase">
-                {isBn ? "সর্বমোট নেটওয়ার্ক রিচ" : "Total Reach"}
+                সর্বমোট নেটওয়ার্ক রিচ
               </p>
               <p className="text-xl font-bold font-mono text-foreground mt-0.5">
-                {formatNum(counts.totalUniqueUsers, locale)}
+                {toBanglaNums(counts.totalUniqueUsers)}
               </p>
               <p className="text-[10px] text-teal-600 dark:text-teal-400 font-medium">
-                {isBn ? "সকল নিবন্ধিত ইউজার" : "all community users"}
+                সকল নিবন্ধিত ইউজার
               </p>
             </div>
             <div className="h-10 w-10 rounded-xl bg-teal-500/10 text-teal-600 flex items-center justify-center shrink-0">
@@ -162,13 +157,13 @@ export function BroadcastTab() {
           <CardContent className="p-4 flex items-center justify-between">
             <div>
               <p className="text-[11px] text-muted-foreground font-semibold uppercase">
-                {isBn ? "সক্রিয় মেম্বারশিপ" : "Active Members"}
+                সক্রিয় মেম্বারশিপ
               </p>
               <p className="text-xl font-bold font-mono text-foreground mt-0.5">
-                {formatNum(counts.activeMembers, locale)}
+                {toBanglaNums(counts.activeMembers)}
               </p>
               <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">
-                {formatNum(counts.allMembers, locale)} {isBn ? "জনের মধ্যে" : "total"}
+                {toBanglaNums(counts.allMembers)} জনের মধ্যে
               </p>
             </div>
             <div className="h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0">
@@ -182,13 +177,13 @@ export function BroadcastTab() {
           <CardContent className="p-4 flex items-center justify-between">
             <div>
               <p className="text-[11px] text-muted-foreground font-semibold uppercase">
-                {isBn ? "জরুরি রক্তদাতা" : "Blood Donors"}
+                জরুরি রক্তদাতা
               </p>
               <p className="text-xl font-bold font-mono text-foreground mt-0.5">
-                {formatNum(counts.bloodDonors, locale)}
+                {toBanglaNums(counts.bloodDonors)}
               </p>
               <p className="text-[10px] text-rose-600 dark:text-rose-400 font-medium">
-                {isBn ? "জরুরি এসএমএস নেটওয়ার্ক" : "emergency network"}
+                জরুরি এসএমএস নেটওয়ার্ক
               </p>
             </div>
             <div className="h-10 w-10 rounded-xl bg-rose-500/10 text-rose-600 flex items-center justify-center shrink-0">
@@ -202,13 +197,13 @@ export function BroadcastTab() {
           <CardContent className="p-4 flex items-center justify-between">
             <div>
               <p className="text-[11px] text-muted-foreground font-semibold uppercase">
-                {isBn ? "পার্টনার চিকিৎসাকেন্দ্র" : "Partner Centers"}
+                পার্টনার চিকিৎসাকেন্দ্র
               </p>
               <p className="text-xl font-bold font-mono text-foreground mt-0.5">
-                {formatNum(counts.partners, locale)}
+                {toBanglaNums(counts.partners)}
               </p>
               <p className="text-[10px] text-blue-600 dark:text-blue-400 font-medium">
-                {isBn ? "হাসপাতাল ও ল্যাব" : "hospitals & labs"}
+                হাসপাতাল ও ল্যাব
               </p>
             </div>
             <div className="h-10 w-10 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center shrink-0">
@@ -230,7 +225,7 @@ export function BroadcastTab() {
           }`}
         >
           <Send className="h-4 w-4" />
-          <span>{isBn ? "নতুন ক্যাম্পেইন সম্প্রচার" : "Compose & Blast"}</span>
+          <span>নতুন ক্যাম্পেইন সম্প্রচার</span>
         </button>
 
         <button
@@ -243,10 +238,10 @@ export function BroadcastTab() {
           }`}
         >
           <History className="h-4 w-4" />
-          <span>{isBn ? "সম্প্রচার ইতিহাস ও রিপোর্ট" : "Campaign History"}</span>
+          <span>সম্প্রচার ইতিহাস ও রিপোর্ট</span>
           {campaigns.length > 0 && (
             <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-background/20 font-bold">
-              {formatNum(campaigns.length, locale)}
+              {toBanglaNums(campaigns.length)}
             </span>
           )}
         </button>
@@ -256,13 +251,11 @@ export function BroadcastTab() {
       {activeTab === "compose" ? (
         <BroadcastComposer
           counts={counts}
-          locale={locale}
           onCampaignSent={handleCampaignSent}
         />
       ) : (
         <BroadcastHistoryList
           campaigns={campaigns}
-          locale={locale}
           onCampaignDeleted={handleCampaignDeleted}
         />
       )}

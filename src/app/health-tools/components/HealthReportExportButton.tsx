@@ -17,7 +17,6 @@ import {
   SlidersHorizontal,
   Eye,
 } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toast } from "sonner";
 import {
   HealthAssessmentInput,
@@ -29,9 +28,6 @@ import { HealthReportInputForm } from "./HealthReportInputForm";
 import { HealthReportLivePreview } from "./HealthReportLivePreview";
 
 export function HealthReportExportButton() {
-  const { locale } = useLanguage();
-  const isEn = locale === "en";
-
   const [isOpen, setIsOpen] = useState(false);
   const [mobileTab, setMobileTab] = useState<"form" | "preview">("form");
 
@@ -94,12 +90,8 @@ export function HealthReportExportButton() {
       report_type: "assessment_pdf",
     });
 
-    printHealthAssessmentReport(currentReport, locale);
-    toast.success(
-      isEn
-        ? "Generating official health report document..."
-        : "স্বাস্থ্য রিপোর্ট ডকুমেন্ট প্রিন্ট করা হচ্ছে..."
-    );
+    printHealthAssessmentReport(currentReport);
+    toast.success("স্বাস্থ্য রিপোর্ট ডকুমেন্ট প্রিন্ট করা হচ্ছে...");
   };
 
   const handleReset = () => {
@@ -127,7 +119,7 @@ export function HealthReportExportButton() {
       >
         <FileDown className="h-4 w-4" />
         <span className="text-xs sm:text-sm">
-          {isEn ? "Export Health Assessment (PDF)" : "সম্পূর্ণ হেলথ রিপোর্ট (PDF প্রিন্ট)"}
+          সম্পূর্ণ হেলথ রিপোর্ট (PDF প্রিন্ট)
         </span>
         <Sparkles className="h-3.5 w-3.5 text-amber-300 animate-pulse hidden sm:inline-block" />
       </Button>
@@ -146,13 +138,11 @@ export function HealthReportExportButton() {
                   <Printer className="h-4 w-4" />
                 </div>
                 <DialogTitle className="text-sm sm:text-lg font-heading font-black text-foreground">
-                  {isEn ? "Generate Comprehensive Health Assessment" : "পূর্ণাঙ্গ স্বাস্থ্য মূল্যায়ন রিপোর্ট তৈরি করুন"}
+                  পূর্ণাঙ্গ স্বাস্থ্য মূল্যায়ন রিপোর্ট তৈরি করুন
                 </DialogTitle>
               </div>
               <DialogDescription className="text-[11px] sm:text-xs text-muted-foreground line-clamp-1">
-                {isEn
-                  ? "Instant multi-parameter health scorecard with BMI, BMR, Water, BP & Clinical Guidance."
-                  : "বিএমআই, ক্যালোরি, রক্তচাপ, ডায়াবেটিস ও স্বাস্থ্য নির্দেশনাসহ অফিশিয়াল স্বাস্থ্য রিপোর্ট।"}
+                বিএমআই, ক্যালোরি, রক্তচাপ, ডায়াবেটিস ও স্বাস্থ্য নির্দেশনাসহ অফিশিয়াল স্বাস্থ্য রিপোর্ট।
               </DialogDescription>
             </div>
 
@@ -161,17 +151,17 @@ export function HealthReportExportButton() {
                 variant="outline"
                 size="sm"
                 onClick={handleReset}
-                className="h-8 px-2.5 text-xs rounded-xl hidden sm:flex items-center gap-1"
-                title={isEn ? "Reset" : "রিসেট"}
+                className="h-8 px-2.5 text-xs rounded-xl hidden sm:flex items-center gap-1 cursor-pointer"
+                title="রিসেট"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
-                <span className="hidden md:inline">{isEn ? "Reset" : "রিসেট"}</span>
+                <span className="hidden md:inline">রিসেট</span>
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsOpen(false)}
-                className="h-8 w-8 rounded-xl"
+                className="h-8 w-8 rounded-xl cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -184,26 +174,26 @@ export function HealthReportExportButton() {
               <button
                 type="button"
                 onClick={() => setMobileTab("form")}
-                className={`py-1.5 px-3 rounded-lg font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                className={`py-1.5 px-3 rounded-lg font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                   mobileTab === "form"
                     ? "bg-background text-primary shadow-xs"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 <SlidersHorizontal className="h-3.5 w-3.5" />
-                <span>{isEn ? "1. Inputs" : "১. তথ্য এন্ট্রি"}</span>
+                <span>১. তথ্য এন্ট্রি</span>
               </button>
               <button
                 type="button"
                 onClick={() => setMobileTab("preview")}
-                className={`py-1.5 px-3 rounded-lg font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                className={`py-1.5 px-3 rounded-lg font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                   mobileTab === "preview"
                     ? "bg-background text-primary shadow-xs"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 <Eye className="h-3.5 w-3.5" />
-                <span>{isEn ? "2. Preview" : "২. প্রিভিউ"}</span>
+                <span>২. প্রিভিউ</span>
                 <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.2 rounded-full font-mono">
                   {currentReport.overallScore}
                 </span>
@@ -215,7 +205,6 @@ export function HealthReportExportButton() {
           <div className="p-3.5 sm:p-6 overflow-y-auto flex-1 space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
               <HealthReportInputForm
-                isEn={isEn}
                 mobileTab={mobileTab}
                 setMobileTab={setMobileTab}
                 name={name}
@@ -247,8 +236,6 @@ export function HealthReportExportButton() {
               />
 
               <HealthReportLivePreview
-                isEn={isEn}
-                locale={locale}
                 mobileTab={mobileTab}
                 currentReport={currentReport}
                 handlePrintReport={handlePrintReport}

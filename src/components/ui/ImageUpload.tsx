@@ -5,7 +5,6 @@ import Image from "next/image";
 import { User, Building, Camera, Trash2, Stethoscope, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { uploadImageAction } from "@/app/actions/uploadActions";
 import { StorageFolder } from "@/services/storageService";
 import { toast } from "sonner";
@@ -27,7 +26,6 @@ export function ImageUpload({
   folder = 'members',
   disabled = false,
 }: ImageUploadProps) {
-  const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [localPreview, setLocalPreview] = useState<string | null>(null);
@@ -60,14 +58,14 @@ export function ImageUpload({
     // Validate file type
     const validMimeTypes = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
     if (!validMimeTypes.includes(file.type.toLowerCase())) {
-      toast.error(t("ui.imageUpload.invalidFormat"));
+      toast.error("শুধুমাত্র JPG, PNG বা WebP ফরম্যাটের ছবি আপলোড করা যাবে।");
       e.target.value = "";
       return;
     }
 
     // Validate file size (max 5MB raw before compression)
     if (file.size > 5 * 1024 * 1024) {
-      toast.error(t("ui.imageUpload.sizeLimit"));
+      toast.error("ছবির সাইজ সর্বোচ্চ ৫ মেগাবাইট হতে পারবে।");
       e.target.value = "";
       return;
     }
@@ -75,7 +73,7 @@ export function ImageUpload({
     const reader = new FileReader();
 
     reader.onerror = () => {
-      toast.error(t("ui.imageUpload.readError"));
+      toast.error("ছবি পড়তে সমস্যা হয়েছে।");
       e.target.value = "";
     };
 
@@ -86,25 +84,27 @@ export function ImageUpload({
     reader.onload = (loadEvent) => {
       const result = loadEvent.target?.result;
       if (typeof result !== "string") {
-        toast.error(t("ui.imageUpload.processError"));
+        toast.error("ছবি প্রসেস করতে ব্যর্থ হয়েছে।");
         return;
       }
 
       // Compress and resize image using offscreen canvas to prevent storage quota issues
       const img = new window.Image();
       img.onerror = () => {
-        toast.error(t("ui.imageUpload.processError"));
+        toast.error("ছবি প্রসেস করতে ব্যর্থ হয়েছে।");
       };
       img.onload = () => {
         try {
           const maxDim = 800; // 800px max width/height
           let { width, height } = img;
 
-          if (width > maxDim || height > maxDim) {
-            if (width > height) {
+          if (width > height) {
+            if (width > maxDim) {
               height = Math.round((height * maxDim) / width);
               width = maxDim;
-            } else {
+            }
+          } else {
+            if (height > maxDim) {
               width = Math.round((width * maxDim) / height);
               height = maxDim;
             }
@@ -116,7 +116,7 @@ export function ImageUpload({
           const ctx = canvas.getContext("2d");
 
           if (!ctx) {
-            toast.error(t("ui.imageUpload.processError"));
+            toast.error("ছবি প্রসেস করতে ব্যর্থ হয়েছে।");
             if (fileInputRef.current) fileInputRef.current.value = "";
             return;
           }
@@ -134,14 +134,13 @@ export function ImageUpload({
               if (res.success && res.url) {
                 onChange(res.url);
                 setLocalPreview(null);
-                toast.success(t("ui.imageUpload.uploadSuccess"));
+                toast.success("ছবি সফলভাবে আপলোড হয়েছে।");
               } else {
-                // Upload failed: clear preview and prevent base64 from being stored in form
                 setLocalPreview(null);
                 if (fileInputRef.current) {
                   fileInputRef.current.value = "";
                 }
-                toast.error(res.error || t("ui.imageUpload.processError"));
+                toast.error(res.error || "ছবি প্রসেস করতে ব্যর্থ হয়েছে।");
               }
             })
             .catch(() => {
@@ -149,7 +148,7 @@ export function ImageUpload({
               if (fileInputRef.current) {
                 fileInputRef.current.value = "";
               }
-              toast.error(t("ui.imageUpload.processError"));
+              toast.error("ছবি প্রসেস করতে ব্যর্থ হয়েছে।");
             })
             .finally(() => {
               setIsUploading(false);
@@ -157,7 +156,7 @@ export function ImageUpload({
         } catch {
           setLocalPreview(null);
           if (fileInputRef.current) fileInputRef.current.value = "";
-          toast.error(t("ui.imageUpload.processError"));
+          toast.error("ছবি প্রসেস করতে ব্যর্থ হয়েছে।");
         }
       };
       img.src = result;
@@ -198,7 +197,7 @@ export function ImageUpload({
             >
               <Loader2 className="h-5 w-5 text-white animate-spin" />
               <span className="text-[8px] text-white/90 font-medium leading-none px-1 text-center truncate">
-                {t("ui.imageUpload.uploading")}
+                আপলোড হচ্ছে...
               </span>
             </div>
           )}
@@ -206,7 +205,7 @@ export function ImageUpload({
           {!isUploading && !disabled && (
             <button
               type="button"
-              aria-label={label ? `${label} ${t("ui.imageUpload.changeImage")}` : t("ui.imageUpload.uploadImage")}
+              aria-label={label ? `${label} ছবি পরিবর্তন করুন` : "ছবি আপলোড করুন"}
               onClick={() => fileInputRef.current?.click()}
               className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity cursor-pointer duration-200 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
             >
@@ -220,7 +219,7 @@ export function ImageUpload({
             type="file"
             accept="image/*"
             disabled={disabled || isUploading}
-            aria-label={label || t("ui.imageUpload.uploadImage")}
+            aria-label={label || "ছবি আপলোড করুন"}
             onChange={handleFileChange}
             className="border-border bg-background text-xs cursor-pointer file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
           />
@@ -239,7 +238,7 @@ export function ImageUpload({
               className="text-[10px] text-rose-600 hover:text-rose-700 p-0 h-auto mt-1 flex items-center gap-1 hover:bg-transparent"
             >
               <Trash2 className="h-3 w-3" />
-              {t("ui.imageUpload.deleteImage")}
+              ছবি মুছুন
             </Button>
           )}
         </div>

@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import {
   getPaginatedContactMessagesAction,
   deleteContactMessageAction,
@@ -23,7 +22,6 @@ import { Trash2, Loader2 } from "lucide-react";
 import { ContactMessagesTab } from "../components/ContactMessagesTab";
 
 export default function AdminMessagesPage() {
-  const { t, locale } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [totalItems, setTotalItems] = useState(0);
@@ -74,16 +72,16 @@ export default function AdminMessagesPage() {
     try {
       const success = await deleteContactMessageAction(deletingId);
       if (success) {
-        toast.success(t("admin.dashboard.messageDeletedSuccess"));
+        toast.success("বার্তা সফলভাবে মুছে ফেলা হয়েছে।");
         setDeleteModalOpen(false);
         setDeletingId(null);
         await loadData();
         window.dispatchEvent(new Event("admin-data-change"));
       } else {
-        toast.error(t("admin.dashboard.messageDeletedFailed"));
+        toast.error("বার্তা মুছতে ব্যর্থ হয়েছে।");
       }
     } catch {
-      toast.error(t("admin.dashboard.messageDeletedFailed"));
+      toast.error("বার্তা মুছতে ব্যর্থ হয়েছে।");
     } finally {
       setDeleting(false);
     }
@@ -126,8 +124,6 @@ export default function AdminMessagesPage() {
         }}
         onDelete={handleDeleteRequest}
         onRefresh={loadData}
-        t={t}
-        locale={locale}
         loading={loading}
       />
 
@@ -138,10 +134,10 @@ export default function AdminMessagesPage() {
           <DialogHeader>
             <DialogTitle className="text-lg font-bold text-destructive flex items-center gap-2">
               <Trash2 className="h-5 w-5" />
-              <span>{t("admin.dashboard.delete")}</span>
+              <span>মুছে ফেলুন</span>
             </DialogTitle>
             <DialogDescription className="text-xs text-muted-foreground">
-              {t("admin.dashboard.deleteMessageConfirm")}
+              আপনি কি নিশ্চিতভাবে এই বার্তাটি মুছে ফেলতে চান? এই পরিবর্তনটি পুনরুদ্ধার করা যাবে না।
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="pt-2 gap-2">
@@ -151,7 +147,7 @@ export default function AdminMessagesPage() {
               onClick={() => setDeleteModalOpen(false)}
               disabled={deleting}
             >
-              {locale === "bn" ? "বাতিল" : "Cancel"}
+              বাতিল
             </Button>
             <Button
               variant="destructive"
@@ -163,10 +159,10 @@ export default function AdminMessagesPage() {
               {deleting ? (
                 <>
                   <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                  {locale === "bn" ? "মুছে ফেলা হচ্ছে..." : "Deleting..."}
+                  মুছে ফেলা হচ্ছে...
                 </>
               ) : (
-                locale === "bn" ? "মুছে ফেলুন" : "Delete"
+                "মুছে ফেলুন"
               )}
             </Button>
           </DialogFooter>

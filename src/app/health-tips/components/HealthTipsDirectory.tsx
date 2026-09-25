@@ -22,7 +22,6 @@ import {
   ChevronDown,
   Filter,
 } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 
 interface HealthTipsDirectoryProps {
   initialArticles?: HealthTipArticle[];
@@ -31,9 +30,6 @@ interface HealthTipsDirectoryProps {
 export function HealthTipsDirectory({
   initialArticles = HEALTH_TIPS_ARTICLES,
 }: HealthTipsDirectoryProps) {
-  const { locale } = useLanguage();
-  const isEn = locale === "en";
-
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(12);
@@ -94,9 +90,7 @@ export function HealthTipsDirectory({
     <div className="space-y-8">
       {/* Screen Reader Live Announcement */}
       <div aria-live="polite" role="status" aria-atomic="true" className="sr-only">
-        {isEn
-          ? `Found ${filteredArticles.length} health guide${filteredArticles.length === 1 ? "" : "s"}`
-          : `${filteredArticles.length}টি স্বাস্থ্য গাইড পাওয়া গেছে`}
+        {filteredArticles.length}টি স্বাস্থ্য গাইড পাওয়া গেছে
       </div>
 
       {/* Search & Category Filter */}
@@ -106,16 +100,8 @@ export function HealthTipsDirectory({
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              aria-label={
-                isEn
-                  ? "Search health guides, diseases, symptoms"
-                  : "রোগ, লক্ষণ বা স্বাস্থ্য বিষয়ে খুঁজুন"
-              }
-              placeholder={
-                isEn
-                  ? "Search health guides, diseases, symptoms..."
-                  : "রোগ, লক্ষণ বা স্বাস্থ্য বিষয়ে খুঁজুন..."
-              }
+              aria-label="রোগ, লক্ষণ বা স্বাস্থ্য বিষয়ে খুঁজুন"
+              placeholder="রোগ, লক্ষণ বা স্বাস্থ্য বিষয়ে খুঁজুন..."
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -136,9 +122,7 @@ export function HealthTipsDirectory({
           </div>
 
           <div className="text-xs text-muted-foreground font-medium self-end sm:self-center">
-            {isEn
-              ? `Showing ${filteredArticles.length} guides`
-              : `মোট ${filteredArticles.length} টি স্বাস্থ্য গাইড`}
+            মোট {filteredArticles.length} টি স্বাস্থ্য গাইড
           </div>
         </div>
 
@@ -149,7 +133,7 @@ export function HealthTipsDirectory({
               <Filter className="h-3.5 w-3.5 text-primary" />
             </div>
             <select
-              aria-label={isEn ? "Filter health guides by category" : "ক্যাটাগরি অনুযায়ী ফিল্টার"}
+              aria-label="ক্যাটাগরি অনুযায়ী ফিল্টার"
               value={selectedCategory}
               onChange={(e) => handleCategoryChange(e.target.value)}
               className="w-full h-11 pl-9 pr-10 text-xs font-bold rounded-xl border border-border/80 bg-card text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/20 appearance-none shadow-xs cursor-pointer"
@@ -159,7 +143,7 @@ export function HealthTipsDirectory({
                 if (cat.id !== "all" && count === 0) return null;
                 return (
                   <option key={cat.id} value={cat.id}>
-                    {isEn ? `${cat.nameEn} (${count})` : `${cat.nameBn} (${count}টি)`}
+                    {`${cat.nameBn} (${count}টি)`}
                   </option>
                 );
               })}
@@ -188,7 +172,7 @@ export function HealthTipsDirectory({
                     : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80 border border-border/60"
                 }`}
               >
-                <span>{isEn ? cat.nameEn : cat.nameBn}</span>
+                <span>{cat.nameBn}</span>
                 <span
                   className={`text-[10px] px-1.5 py-0.2 rounded-full ${
                     active ? "bg-white/20 text-white" : "bg-background text-muted-foreground"
@@ -219,24 +203,24 @@ export function HealthTipsDirectory({
                         variant="outline"
                         className="bg-primary/10 text-primary border-primary/20 text-[11px] font-bold px-2.5 py-0.5"
                       >
-                        {isEn ? article.categoryNameEn : article.categoryNameBn}
+                        {article.categoryNameBn}
                       </Badge>
                       <div className="flex items-center gap-1 text-[11px] text-muted-foreground font-medium">
                         <Clock className="h-3 w-3" />
-                        <span>{isEn ? article.readTimeEn : article.readTimeBn}</span>
+                        <span>{article.readTimeBn}</span>
                       </div>
                     </div>
 
                     {/* Title */}
                     <Link href={`/health-tips/${article.slug}`}>
                       <h3 className="font-heading font-bold text-base sm:text-lg text-secondary dark:text-white group-hover:text-primary transition-colors leading-snug line-clamp-2">
-                        {isEn ? article.titleEn : article.titleBn}
+                        {article.titleBn}
                       </h3>
                     </Link>
 
                     {/* Excerpt */}
                     <p className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">
-                      {isEn ? article.excerptEn : article.excerptBn}
+                      {article.excerptBn}
                     </p>
                   </div>
 
@@ -247,7 +231,7 @@ export function HealthTipsDirectory({
                         <User className="h-3 w-3" />
                       </div>
                       <span className="truncate max-w-[130px] font-medium text-[11px]">
-                        {isEn ? article.authorEn : article.authorBn}
+                        {article.authorBn}
                       </span>
                     </div>
 
@@ -258,7 +242,7 @@ export function HealthTipsDirectory({
                         "text-primary group-hover:bg-primary group-hover:text-white font-bold gap-1 rounded-xl text-xs h-8 px-2.5 transition-all cursor-pointer"
                       )}
                     >
-                      <span>{isEn ? "Read" : "পড়ুন"}</span>
+                      <span>পড়ুন</span>
                       <ArrowRight className="h-3 w-3" />
                     </Link>
                   </div>
@@ -276,14 +260,10 @@ export function HealthTipsDirectory({
                 onClick={() => setVisibleCount((prev) => prev + 12)}
                 className="rounded-2xl px-8 border-primary/30 text-primary hover:bg-primary hover:text-white font-semibold transition-all shadow-xs cursor-pointer"
               >
-                {isEn
-                  ? `Load More Guides (${filteredArticles.length - visibleCount} remaining)`
-                  : `আরো গাইড দেখুন (বাকি ${filteredArticles.length - visibleCount} টি)`}
+                {`আরো গাইড দেখুন (বাকি ${filteredArticles.length - visibleCount} টি)`}
               </Button>
               <p className="text-xs text-muted-foreground">
-                {isEn
-                  ? `Showing ${Math.min(visibleCount, filteredArticles.length)} of ${filteredArticles.length} articles`
-                  : `মোট ${filteredArticles.length} টির মধ্যে ${Math.min(visibleCount, filteredArticles.length)} টি প্রদর্শিত হচ্ছে`}
+                {`মোট ${filteredArticles.length} টির মধ্যে ${Math.min(visibleCount, filteredArticles.length)} টি প্রদর্শিত হচ্ছে`}
               </p>
             </div>
           )}
@@ -293,12 +273,10 @@ export function HealthTipsDirectory({
           <BookOpen className="h-10 w-10 text-muted-foreground mx-auto" />
           <div className="space-y-1">
             <h4 className="font-heading font-bold text-base text-foreground">
-              {isEn ? "No health guides found" : "কোনো স্বাস্থ্য গাইড পাওয়া যায়নি"}
+              কোনো স্বাস্থ্য গাইড পাওয়া যায়নি
             </h4>
             <p className="text-xs text-muted-foreground">
-              {isEn
-                ? "Try searching for keywords like 'diabetes', 'dengue', 'heart', or 'blood pressure'."
-                : "'ডায়াবেটিস', 'ডেঙ্গু', 'হার্ট', বা 'রক্তচাপ' লিখে সার্চ করুন।"}
+              &apos;ডায়াবেটিস&apos;, &apos;ডেঙ্গু&apos;, &apos;হার্ট&apos;, বা &apos;রক্তচাপ&apos; লিখে সার্চ করুন।
             </p>
           </div>
         </div>

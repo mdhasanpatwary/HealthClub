@@ -10,39 +10,30 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { formatNum, Locale } from "@/lib/i18n";
+import { cn, toBanglaNums } from "@/lib/utils";
 
 interface LandingQuickServicesProps {
   doctorCount?: number;
   bloodDonorCount?: number;
   ambulanceCount?: number;
-  t: (key: string) => string;
-  locale: Locale;
 }
 
 export function LandingQuickServices({
   doctorCount = 0,
   bloodDonorCount = 0,
   ambulanceCount = 0,
-  t,
-  locale,
 }: LandingQuickServicesProps) {
-  const isEn = locale === "en";
-
   const services = [
     {
       id: "doctor",
-      badge: t("servicesHub.doctor.badge"),
+      badge: "বিশেষজ্ঞ চিকিৎসক",
       countBadge:
         doctorCount > 0
-          ? `${formatNum(doctorCount, locale)}+ ${isEn ? "Doctors" : "ডাক্তার"}`
-          : isEn
-          ? "Verified"
+          ? `${toBanglaNums(doctorCount)}+ ডাক্তার`
           : "ভেরিফাইড",
-      title: t("servicesHub.doctor.title"),
-      description: t("servicesHub.doctor.desc"),
-      actionText: t("servicesHub.doctor.action"),
+      title: "ডাক্তার ও চেম্বার শিডিউল",
+      description: "ফেনীর শীর্ষ বিশেষজ্ঞ ডাক্তারদের তালিকা, ভিজিটিং আওয়ার ও সরাসরি সিরিয়াল বুকিং হেল্পলাইন।",
+      actionText: "ডাক্তার খুঁজুন",
       href: "/consultants",
       icon: Stethoscope,
       color: {
@@ -56,16 +47,14 @@ export function LandingQuickServices({
     },
     {
       id: "blood",
-      badge: t("servicesHub.blood.badge"),
+      badge: "স্বেচ্ছাসেবী রক্তদাতা",
       countBadge:
         bloodDonorCount > 0
-          ? `${formatNum(bloodDonorCount, locale)}+ ${isEn ? "Donors" : "রক্তদাতা"}`
-          : isEn
-          ? "All Groups"
+          ? `${toBanglaNums(bloodDonorCount)}+ রক্তদাতা`
           : "সব গ্রুপ",
-      title: t("servicesHub.blood.title"),
-      description: t("servicesHub.blood.desc"),
-      actionText: t("servicesHub.blood.action"),
+      title: "জরুরি রক্তদাতা খুঁজুন",
+      description: "A+, B+, O+, AB+ সহ সকল গ্রুপের ভেরিফাইড রক্তদাতাদের সাথে তাৎক্ষণিক যোগাযোগের তালিকা।",
+      actionText: "রক্তদাতা খুঁজুন",
       href: "/emergency?tab=donors",
       icon: Heart,
       color: {
@@ -79,16 +68,14 @@ export function LandingQuickServices({
     },
     {
       id: "ambulance",
-      badge: t("servicesHub.ambulance.badge"),
+      badge: "২৪/৭ অ্যাম্বুলেন্স",
       countBadge:
         ambulanceCount > 0
-          ? `${formatNum(ambulanceCount, locale)}+ ${isEn ? "Ambulances" : "অ্যাম্বুলেন্স"}`
-          : isEn
-          ? "24/7 Available"
+          ? `${toBanglaNums(ambulanceCount)}+ অ্যাম্বুলেন্স`
           : "২৪/৭ প্রস্তুত",
-      title: t("servicesHub.ambulance.title"),
-      description: t("servicesHub.ambulance.desc"),
-      actionText: t("servicesHub.ambulance.action"),
+      title: "জরুরি অ্যাম্বুলেন্স সেবা",
+      description: "ফেনী জেলা ও ঢাকা-চট্টগ্রাম রুটে জরুরি এসি, নন-এসি ও আইসিইউ (ICU) অ্যাম্বুলেন্স সার্ভিস।",
+      actionText: "অ্যাম্বুলেন্স খুঁজুন",
       href: "/emergency?tab=ambulances",
       icon: Truck,
       color: {
@@ -102,11 +89,11 @@ export function LandingQuickServices({
     },
     {
       id: "hotline",
-      badge: t("servicesHub.hotline.badge"),
-      countBadge: isEn ? "Toll-Free" : "হটলাইন ও অক্সিজেন",
-      title: t("servicesHub.hotline.title"),
-      description: t("servicesHub.hotline.desc"),
-      actionText: t("servicesHub.hotline.action"),
+      badge: "জরুরি হটলাইন",
+      countBadge: "হটলাইন ও অক্সিজেন",
+      title: "হাসপাতাল ও অক্সিজেন সেবা",
+      description: "ফেনী সদর হাসপাতাল ইমার্জেন্সি, জরুরি অক্সিজেন সিলিন্ডার হোম ডেলিভারি ও রেড ক্রিসেন্ট হেল্পলাইন।",
+      actionText: "জরুরি সেবা দেখুন",
       href: "/emergency?tab=hotlines",
       icon: PhoneCall,
       color: {
@@ -132,20 +119,20 @@ export function LandingQuickServices({
         <div className="text-center space-y-2.5 sm:space-y-3 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-emerald-800 dark:text-emerald-300 border border-primary/20 text-xs font-bold uppercase tracking-wider">
             <Siren className="h-3.5 w-3.5 text-primary animate-pulse" />
-            <span>{t("servicesHub.badge")}</span>
+            <span>২৪/৭ জরুরি ও প্রয়োজনীয় সেবা</span>
           </div>
           <h2
             id="services-hub-heading"
             itemProp="headline"
             className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-secondary dark:text-white tracking-tight"
           >
-            {t("servicesHub.title")}
+            ফেনীর জরুরি স্বাস্থ্য সেবা ও ডিরেক্টরি
           </h2>
           <p
             itemProp="description"
             className="text-xs sm:text-base text-muted-foreground leading-relaxed"
           >
-            {t("servicesHub.desc")}
+            জরুরি প্রয়োজনে যেকোনো সময় বিশেষজ্ঞ ডাক্তার, রক্তদাতা, অ্যাম্বুলেন্স ও হাসপাতালের হেল্পলাইনে সরাসরি যোগাযোগ করুন।
           </p>
         </div>
 
@@ -237,20 +224,19 @@ export function LandingQuickServices({
           })}
         </div>
 
-
         {/* Public Service Guarantee Strip */}
         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 pt-1 text-xs sm:text-sm text-muted-foreground">
           <div className="inline-flex items-center gap-1.5">
             <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
-            <span>{isEn ? "100% Free Public Directory" : "সম্পূর্ণ ফ্রি জনসেবা ডিরেক্টরি"}</span>
+            <span>সম্পূর্ণ ফ্রি জনসেবা ডিরেক্টরি</span>
           </div>
           <div className="inline-flex items-center gap-1.5">
             <ShieldCheck className="h-4 w-4 text-primary shrink-0" />
-            <span>{isEn ? "Verified Contact Numbers" : "যাচাইকৃত যোগাযোগ নম্বর"}</span>
+            <span>যাচাইকৃত যোগাযোগ নম্বর</span>
           </div>
           <div className="inline-flex items-center gap-1.5">
             <PhoneCall className="h-4 w-4 text-primary shrink-0" />
-            <span>{isEn ? "Direct One-Tap Calling" : "সরাসরি ওয়ান-ট্যাপ কলিং"}</span>
+            <span>সরাসরি ওয়ান-ট্যাপ কলিং</span>
           </div>
         </div>
       </div>

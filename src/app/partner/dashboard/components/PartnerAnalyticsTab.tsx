@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 import { Partner } from "@/services/db";
 import { PartnerAnalyticsData } from "@/types/partnerAnalytics";
 import { getPartnerAnalyticsAction } from "@/app/actions/partnerActions";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { PartnerAnalyticsKpis } from "./PartnerAnalyticsKpis";
 import { PartnerAnalyticsCharts } from "./PartnerAnalyticsCharts";
 import { PartnerSettlementStatementsTable } from "./PartnerSettlementStatementsTable";
@@ -18,8 +17,6 @@ interface PartnerAnalyticsTabProps {
 }
 
 export function PartnerAnalyticsTab({ partner }: PartnerAnalyticsTabProps) {
-  const { t, locale } = useLanguage();
-
   const [analytics, setAnalytics] = useState<PartnerAnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -29,15 +26,14 @@ export function PartnerAnalyticsTab({ partner }: PartnerAnalyticsTabProps) {
       if (res.success && res.data) {
         setAnalytics(res.data);
       } else {
-        const errorMsg = res.errorKey ? t(res.errorKey) : (res.error || t("partner.errors.loadAnalyticsError"));
-        toast.error(errorMsg);
+        toast.error(res.error || "অ্যানালিটিক্স লোড করতে ব্যর্থ হয়েছে");
       }
     } catch {
-      toast.error(t("common.error.server"));
+      toast.error("সার্ভার ত্রুটি, অনুগ্রহ করে আবার চেষ্টা করুন");
     } finally {
       setLoading(false);
     }
-  }, [t]);
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -66,11 +62,11 @@ export function PartnerAnalyticsTab({ partner }: PartnerAnalyticsTabProps) {
               <BarChart2 className="h-5 w-5" />
             </div>
             <h2 className="text-lg sm:text-xl font-bold font-heading text-secondary dark:text-white">
-              {t("partner.analytics.title")}
+              অ্যানালিটিক্স ও সেটেলমেন্ট রিপোর্ট
             </h2>
           </div>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            {t("partner.analytics.subtitle")}
+            মাসিক লেনদেন প্রবণতা, সর্বোচ্চ সেবাদানের দিন এবং আর্থিক বিবরণী পর্যালোচনা করুন
           </p>
         </div>
 
@@ -83,7 +79,7 @@ export function PartnerAnalyticsTab({ partner }: PartnerAnalyticsTabProps) {
             className="rounded-xl border-border text-xs font-semibold gap-1.5 cursor-pointer hover:bg-muted"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin text-primary" : ""}`} />
-            <span>{t("partner.analytics.refresh")}</span>
+            <span>রিফ্রেশ</span>
           </Button>
         </div>
       </div>
@@ -104,25 +100,22 @@ export function PartnerAnalyticsTab({ partner }: PartnerAnalyticsTabProps) {
         </div>
       )}
 
-
       {/* Main Analytics Content */}
       {analytics && (
         <div className="space-y-6 sm:space-y-8">
           {/* 1. Top KPI Summary Cards */}
-          <PartnerAnalyticsKpis analytics={analytics} locale={locale} />
+          <PartnerAnalyticsKpis analytics={analytics} />
 
           {/* 2. Charts & Peak Day Distribution */}
           <PartnerAnalyticsCharts
             monthlyTrends={analytics.monthlyTrends}
             dayDistributions={analytics.dayDistributions}
-            locale={locale}
           />
 
           {/* 3. Monthly Settlement Statements Table */}
           <PartnerSettlementStatementsTable
             statements={analytics.settlementStatements}
             partner={partner}
-            locale={locale}
           />
         </div>
       )}

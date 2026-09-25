@@ -4,8 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Partner } from "@/services/db";
-import { formatNum, Locale } from "@/lib/i18n";
-import { parseDiscountPercentage } from "@/lib/utils";
+import { parseDiscountPercentage, toBanglaNums } from "@/lib/utils";
 
 interface AddMemberTxDialogProps {
   isAddTxOpen: boolean;
@@ -19,8 +18,6 @@ interface AddMemberTxDialogProps {
   setNewTxDiscountPercent: (percent: string) => void;
   partners: Partner[];
   addTxSubmitting: boolean;
-  t: (key: string) => string;
-  locale: Locale;
 }
 
 export function AddMemberTxDialog({
@@ -35,8 +32,6 @@ export function AddMemberTxDialog({
   setNewTxDiscountPercent,
   partners,
   addTxSubmitting,
-  t,
-  locale,
 }: AddMemberTxDialogProps) {
   return (
     <Dialog open={isAddTxOpen} onOpenChange={setIsAddTxOpen}>
@@ -44,17 +39,17 @@ export function AddMemberTxDialog({
         <DialogHeader>
           <DialogTitle className="font-heading font-bold text-secondary dark:text-white flex items-center gap-2">
             <PlusCircle className="h-5 w-5 text-primary" />
-            {t("dashboard.history.addTxTitle")}
+            নতুন ডিসকাউন্ট ট্রানজেকশন
           </DialogTitle>
           <DialogDescription>
-            {t("dashboard.history.addTxDesc")}
+            পার্টনার চিকিৎসাকেন্দ্র থেকে প্রাপ্ত ডিসকাউন্টের বিবরণ লিপিবদ্ধ করুন।
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleAddMemberTransaction} className="space-y-4 pt-2">
           <div className="space-y-2">
             <label htmlFor="member-tx-partner" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">
-              {t("dashboard.history.selectPartner")} *
+              পার্টনার চিকিৎসাকেন্দ্র নির্বাচন করুন *
             </label>
             <select
               id="member-tx-partner"
@@ -74,7 +69,7 @@ export function AddMemberTxDialog({
               }}
               className="w-full h-10 rounded-xl border border-border/60 bg-background px-3 text-sm focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary"
             >
-              <option value="">{t("dashboard.history.selectPartner")}</option>
+              <option value="">পার্টনার চিকিৎসাকেন্দ্র নির্বাচন করুন</option>
               {partners.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.name} ({p.discount})
@@ -85,7 +80,7 @@ export function AddMemberTxDialog({
 
           <div className="space-y-2">
             <label htmlFor="member-tx-amount" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">
-              {t("dashboard.history.billAmount")} *
+              মোট বিলের পরিমাণ (৳) *
             </label>
             <Input
               id="member-tx-amount"
@@ -101,7 +96,7 @@ export function AddMemberTxDialog({
 
           <div className="space-y-2">
             <label htmlFor="member-tx-discount" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">
-              {locale === "bn" ? "ডিসকাউন্ট (%) *" : "Discount (%) *"}
+              ডিসকাউন্ট (%) *
             </label>
             <Input
               id="member-tx-discount"
@@ -118,14 +113,10 @@ export function AddMemberTxDialog({
 
           {newTxPartnerId && newTxAmount && Number(newTxAmount) > 0 && (
             <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl p-3 text-xs text-emerald-700 dark:text-emerald-400 font-medium">
-              {t("dashboard.history.calculatedSavings").replace(
-                "{saved}",
-                formatNum(
-                  Math.round(
-                    Number(newTxAmount) *
-                      (Math.min(Math.max(0, Number(newTxDiscountPercent) || 0), 70) / 100)
-                  ),
-                  locale
+              আনুমানিক সাশ্রয়: ৳{toBanglaNums(
+                Math.round(
+                  Number(newTxAmount) *
+                    (Math.min(Math.max(0, Number(newTxDiscountPercent) || 0), 70) / 100)
                 )
               )}
             </div>
@@ -136,7 +127,7 @@ export function AddMemberTxDialog({
             disabled={addTxSubmitting}
             className="w-full bg-primary hover:bg-primary-dark text-white font-semibold"
           >
-            {addTxSubmitting ? (locale === "bn" ? "সংরক্ষণ হচ্ছে..." : "Saving...") : t("dashboard.history.submitTx")}
+            {addTxSubmitting ? "সংরক্ষণ হচ্ছে..." : "ট্রানজেকশন সংরক্ষণ করুন"}
           </Button>
         </form>
       </DialogContent>

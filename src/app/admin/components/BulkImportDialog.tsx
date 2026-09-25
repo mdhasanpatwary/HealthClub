@@ -10,7 +10,6 @@ import { ImportEntityType } from "@/types/bulkImport";
 import { ENTITY_CONFIGS } from "@/lib/bulkImportUtils";
 import { BulkImportManager } from "./BulkImportManager";
 import { UploadCloud } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 
 interface BulkImportDialogProps {
   isOpen: boolean;
@@ -25,9 +24,6 @@ export function BulkImportDialog({
   entityType = "doctors",
   onSuccess,
 }: BulkImportDialogProps) {
-  const { locale } = useLanguage();
-  const isBn = locale === "bn";
-
   const config = ENTITY_CONFIGS[entityType];
 
   const handleSuccess = () => {
@@ -45,12 +41,10 @@ export function BulkImportDialog({
             </div>
             <div>
               <span>
-                {isBn
-                  ? `${config.titleBn} বাল্ক ইম্পোর্ট (Excel/CSV)`
-                  : `Bulk Import ${config.titleEn} (Excel/CSV)`}
+                {`${config.titleBn} বাল্ক ইম্পোর্ট (Excel/CSV)`}
               </span>
               <p className="text-xs font-normal text-muted-foreground mt-0.5">
-                {isBn ? config.descBn : config.descEn}
+                {config.descBn}
               </p>
             </div>
           </DialogTitle>

@@ -1,29 +1,20 @@
 import { PhysiotherapyComparisonItem } from "@/types/blog";
 import { toBanglaNums } from "@/lib/utils";
 import { CheckCircle2, XCircle, ShieldCheck } from "lucide-react";
-import {
-  translateComparisonStatus,
-  translateDiscount,
-  translateLocation,
-} from "../utils/blogTranslations";
 
 interface PhysiotherapyComparisonTableProps {
   items: PhysiotherapyComparisonItem[];
-  locale?: string;
 }
 
 export function PhysiotherapyComparisonTable({
   items,
-  locale = "bn",
 }: PhysiotherapyComparisonTableProps) {
-  const isEn = locale === "en";
-
   const renderStatus = (val: boolean | string) => {
     if (val === true) {
       return (
         <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold text-xs">
           <CheckCircle2 className="h-3.5 w-3.5" />
-          <span>{isEn ? "Yes" : "আছে"}</span>
+          <span>আছে</span>
         </span>
       );
     }
@@ -31,13 +22,13 @@ export function PhysiotherapyComparisonTable({
       return (
         <span className="inline-flex items-center gap-1 text-muted-foreground text-xs">
           <XCircle className="h-3.5 w-3.5 text-slate-400" />
-          <span>{isEn ? "No" : "নেই"}</span>
+          <span>নেই</span>
         </span>
       );
     }
     return (
       <span className="inline-flex items-center text-amber-600 dark:text-amber-400 font-medium text-xs">
-        {translateComparisonStatus(val, isEn)}
+        {val}
       </span>
     );
   };
@@ -46,12 +37,10 @@ export function PhysiotherapyComparisonTable({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <h3 className="font-heading text-lg sm:text-xl font-bold text-foreground">
-          {isEn
-            ? "Quick Physiotherapy Comparison Matrix (At a Glance)"
-            : "একনজরে ফেনীর সেরা ১০ ফিজিওথেরাপি সেন্টারের প্রযুক্তি ও সুবিধা তুলনা"}
+          একনজরে ফেনীর সেরা ১০ ফিজিওথেরাপি সেন্টারের প্রযুক্তি ও সুবিধা তুলনা
         </h3>
         <span className="text-xs text-muted-foreground hidden sm:inline">
-          {isEn ? "Swipe right to see more →" : "ডানে স্ক্রোল করে বিস্তারিত দেখুন →"}
+          ডানে স্ক্রোল করে বিস্তারিত দেখুন →
         </span>
       </div>
 
@@ -60,34 +49,34 @@ export function PhysiotherapyComparisonTable({
           <thead className="bg-muted/80 text-foreground font-bold border-b border-border/80">
             <tr>
               <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
-                {isEn ? "Rank" : "ক্রম"}
+                ক্রম
               </th>
               <th className="py-3.5 px-3 sm:px-4 min-w-[200px]">
-                {isEn ? "Physiotherapy Center" : "ফিজিওথেরাপি সেন্টার"}
+                ফিজিওথেরাপি সেন্টার
               </th>
               <th className="py-3.5 px-3 sm:px-4 min-w-[170px]">
-                {isEn ? "Lead Therapist" : "ইনচার্জ ফিজিওথেরাপিস্ট"}
+                ইনচার্জ ফিজিওথেরাপিস্ট
               </th>
               <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
-                {isEn ? "Traction & SWD" : "ট্র্যাকশন ও ডায়াথার্মি"}
+                ট্র্যাকশন ও ডায়াথার্মি
               </th>
               <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
-                {isEn ? "Stroke Rehab" : "স্ট্রোক রিহ্যাব"}
+                স্ট্রোক রিহ্যাব
               </th>
               <th className="py-3.5 px-3 sm:px-4 whitespace-nowrap text-center">
-                {isEn ? "Home Service" : "হোম সার্ভিস"}
+                হোম সার্ভিস
               </th>
               <th className="py-3.5 px-3 sm:px-4 min-w-[160px]">
-                {isEn ? "Member Perks" : "মেম্বার ডিসকাউন্ট"}
+                মেম্বার ডিসকাউন্ট
               </th>
               <th className="py-3.5 px-3 sm:px-4 min-w-[120px]">
-                {isEn ? "Location" : "ঠিকানা / এলাকা"}
+                ঠিকানা / এলাকা
               </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border/60">
             {items.map((item) => {
-              const name = isEn ? item.nameEn : item.nameBn;
+              const name = item.nameBn || item.nameEn;
               const isPartner = item.partnerStatus ?? false;
 
               return (
@@ -98,7 +87,7 @@ export function PhysiotherapyComparisonTable({
                   }`}
                 >
                   <td className="py-3 px-3 sm:px-4 text-center font-bold text-foreground">
-                    {isEn ? `#${item.rank}` : toBanglaNums(item.rank)}
+                    {toBanglaNums(item.rank)}
                   </td>
                   <td className="py-3 px-3 sm:px-4">
                     <a
@@ -127,16 +116,16 @@ export function PhysiotherapyComparisonTable({
                   <td className="py-3 px-3 sm:px-4">
                     {isPartner ? (
                       <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
-                        {translateDiscount(item.discountBn, isEn)}
+                        {item.discountBn}
                       </span>
                     ) : (
                       <span className="text-muted-foreground text-xs">
-                        {translateDiscount(item.discountBn, isEn)}
+                        {item.discountBn}
                       </span>
                     )}
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-muted-foreground whitespace-nowrap">
-                    {translateLocation(item.locationBn, isEn)}
+                    {item.locationBn}
                   </td>
                 </tr>
               );

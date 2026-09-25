@@ -7,20 +7,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { exportToCsv } from "@/lib/exportUtils";
-import { Locale } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 
 interface PartnerRecentTransactionsCardProps {
   transactions: Transaction[];
   loadingTransactions: boolean;
-  locale: Locale;
-  t: (key: string) => string;
 }
 
 export function PartnerRecentTransactionsCard({
   transactions,
   loadingTransactions,
-  locale,
-  t,
 }: PartnerRecentTransactionsCardProps) {
   return (
     <Card className="border-border shadow-sm rounded-3xl h-full flex flex-col justify-between">
@@ -28,10 +24,10 @@ export function PartnerRecentTransactionsCard({
         <div className="space-y-0.5">
           <CardTitle className="font-heading text-base font-bold text-secondary dark:text-white flex items-center gap-1.5">
             <History className="h-4 w-4 text-primary" />
-            {t("partner.billing.recentTxTitle")}
+            সাম্প্রতিক লেনদেনসমূহ
           </CardTitle>
           <CardDescription className="text-xs">
-            {t("partner.billing.recentTxSubtitle")}
+            আজকের ও সাম্প্রতিক ডিসকাউন্ট ভেরিফিকেশন
           </CardDescription>
         </div>
         {transactions.length > 0 && (
@@ -53,7 +49,7 @@ export function PartnerRecentTransactionsCard({
             className="border-border gap-1.5 text-xs font-semibold h-8 rounded-xl cursor-pointer"
           >
             <Download className="h-3.5 w-3.5" />
-            <span>{t("partner.billing.export")}</span>
+            <span>এক্সপোর্ট</span>
           </Button>
         )}
       </CardHeader>
@@ -75,7 +71,7 @@ export function PartnerRecentTransactionsCard({
           </div>
         ) : transactions.length === 0 ? (
           <div className="py-16 text-center text-xs sm:text-sm text-muted-foreground px-4">
-            {t("partner.billing.noTxRecorded")}
+            আজ কোনো লেনদেন রেকর্ড করা হয়নি
           </div>
         ) : (
           <div className="divide-y divide-border/60 max-h-[500px] overflow-y-auto">
@@ -87,7 +83,7 @@ export function PartnerRecentTransactionsCard({
                 <div className="space-y-0.5">
                   <p className="font-bold text-secondary dark:text-white">{tx.memberName}</p>
                   <div className="flex items-center gap-1.5 flex-wrap text-[10px] text-muted-foreground">
-                    <span>{t("partner.billing.idPrefix")}: {tx.memberId}</span>
+                    <span>আইডি: {tx.memberId}</span>
                     {tx.deskName && (
                       <span className="bg-primary/10 text-primary font-medium px-1.5 py-0.2 rounded">
                         {tx.deskName}
@@ -95,7 +91,7 @@ export function PartnerRecentTransactionsCard({
                     )}
                   </div>
                   <p className="text-[10px] text-muted-foreground font-mono">
-                    {new Date(tx.date).toLocaleDateString(locale === "bn" ? "bn-BD" : "en-US", {
+                    {new Date(tx.date).toLocaleDateString("bn-BD", {
                       year: "numeric",
                       month: "short",
                       day: "numeric",
@@ -106,10 +102,10 @@ export function PartnerRecentTransactionsCard({
                 </div>
                 <div className="text-right space-y-0.5">
                   <p className="font-bold text-secondary dark:text-white font-mono">
-                    {t("partner.billing.bill")}: ৳{tx.amount}
+                    বিল: ৳{toBanglaNums(tx.amount)}
                   </p>
                   <p className="font-extrabold text-primary font-mono">
-                    {t("partner.billing.discount")}: ৳{tx.saved}
+                    ছাড়: ৳{toBanglaNums(tx.saved)}
                   </p>
                 </div>
               </div>

@@ -6,13 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Droplet, Sparkles, GlassWater, RotateCcw } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-import { formatNum } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 
 export function WaterIntakeCalculator() {
-  const { locale, t } = useLanguage();
-
   const [weightKg, setWeightKg] = useState("");
   const [activityLevel, setActivityLevel] = useState<"sedentary" | "moderate" | "heavy">("sedentary");
   const [weather, setWeather] = useState<"normal" | "hot">("normal");
@@ -69,10 +66,10 @@ export function WaterIntakeCalculator() {
             </div>
             <div>
               <h3 className="font-heading font-bold text-base sm:text-lg text-secondary dark:text-white">
-                {t("healthTools.water.title")}
+                দৈনিক পানির চাহিদা ক্যালকুলেটর
               </h3>
               <p className="text-xs text-muted-foreground">
-                {t("healthTools.water.subtitle")}
+                ওজন ও পরিশ্রমের ভিত্তিতে পানির পরিমাণ
               </p>
             </div>
           </div>
@@ -81,7 +78,7 @@ export function WaterIntakeCalculator() {
             {/* Weight */}
             <div className="space-y-1.5">
               <Label htmlFor="water-weight" className="text-xs font-semibold">
-                {t("healthTools.water.weight")}
+                আপনার ওজন (কেজি - KG)
               </Label>
               <Input
                 id="water-weight"
@@ -89,7 +86,7 @@ export function WaterIntakeCalculator() {
                 step="0.5"
                 min="10"
                 max="250"
-                placeholder={t("healthTools.water.weightPlaceholder")}
+                placeholder="যেমন: ৬৫"
                 value={weightKg}
                 onChange={(e) => setWeightKg(e.target.value)}
                 required
@@ -99,17 +96,17 @@ export function WaterIntakeCalculator() {
             {/* Activity */}
             <div className="space-y-1.5">
               <Label className="text-xs font-semibold">
-                {t("healthTools.water.activity")}
+                দৈনিক কাজের / শারীরিক সক্রিয়তার মাত্রা
               </Label>
               <div
                 role="radiogroup"
-                aria-label={t("healthTools.water.activity")}
+                aria-label="দৈনিক কাজের / শারীরিক সক্রিয়তার মাত্রা"
                 className="grid grid-cols-3 gap-2"
               >
                 {[
-                  { id: "sedentary", label: t("healthTools.water.activityLight") },
-                  { id: "moderate", label: t("healthTools.water.activityModerate") },
-                  { id: "heavy", label: t("healthTools.water.activityHeavy") },
+                  { id: "sedentary", label: "স্বাভাবিক / কম" },
+                  { id: "moderate", label: "মাঝারি পরিশ্রম" },
+                  { id: "heavy", label: "ভারী ব্যায়াম" },
                 ].map((item) => (
                   <button
                     type="button"
@@ -132,11 +129,11 @@ export function WaterIntakeCalculator() {
             {/* Climate / Weather */}
             <div className="space-y-1.5">
               <Label className="text-xs font-semibold">
-                {t("healthTools.water.climate")}
+                আবহাওয়া ও পরিবেশ
               </Label>
               <div
                 role="radiogroup"
-                aria-label={t("healthTools.water.climate")}
+                aria-label="আবহাওয়া ও পরিবেশ"
                 className="grid grid-cols-2 gap-2"
               >
                 <button
@@ -150,7 +147,7 @@ export function WaterIntakeCalculator() {
                       : "bg-background hover:bg-muted text-muted-foreground border-border"
                   }`}
                 >
-                  {t("healthTools.water.climateNormal")}
+                  স্বাভাবিক / শীতকাল
                 </button>
                 <button
                   type="button"
@@ -163,7 +160,7 @@ export function WaterIntakeCalculator() {
                       : "bg-background hover:bg-muted text-muted-foreground border-border"
                   }`}
                 >
-                  {t("healthTools.water.climateHot")}
+                  গরম / অতিরিক্ত ঘাম
                 </button>
               </div>
             </div>
@@ -171,7 +168,7 @@ export function WaterIntakeCalculator() {
             <div className="flex gap-2 pt-2">
               <Button type="submit" className="flex-1 bg-cyan-600 hover:bg-cyan-700 text-white font-bold cursor-pointer">
                 <Droplet className="mr-2 h-4 w-4 fill-white" />
-                {t("healthTools.water.calculate")}
+                পানির পরিমাণ হিসেব করুন
               </Button>
               {result && (
                 <Button
@@ -179,7 +176,7 @@ export function WaterIntakeCalculator() {
                   variant="outline"
                   onClick={handleReset}
                   size="icon"
-                  aria-label={t("healthTools.water.resetAria")}
+                  aria-label="ক্যালকুলেটর রিসেট করুন"
                   className="cursor-pointer"
                 >
                   <RotateCcw className="h-4 w-4" />
@@ -197,14 +194,14 @@ export function WaterIntakeCalculator() {
             <div className="space-y-5 text-center">
               <div className="space-y-2">
                 <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider">
-                  {t("healthTools.water.resultTitle")}
+                  আপনার দৈনিক পানির লক্ষ্যমাত্রা
                 </span>
                 <div className="flex items-baseline justify-center gap-2">
                   <span className="text-5xl sm:text-6xl font-black font-mono text-cyan-600">
-                    {formatNum(result.liters, locale)}
+                    {toBanglaNums(result.liters)}
                   </span>
                   <span className="text-lg font-bold text-muted-foreground">
-                    {t("healthTools.water.litersPerDay")}
+                    লিটার / দিন
                   </span>
                 </div>
               </div>
@@ -213,9 +210,9 @@ export function WaterIntakeCalculator() {
               <div className="p-4 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center gap-3">
                 <GlassWater className="h-6 w-6 text-cyan-600" />
                 <span className="text-sm sm:text-base font-bold text-secondary dark:text-white">
-                  {t("healthTools.water.approx")}{" "}
-                  <strong className="text-cyan-600 font-mono text-lg">{formatNum(result.glasses, locale)}</strong>{" "}
-                  {t("healthTools.water.glassesNote")}
+                  আনুমানিক{" "}
+                  <strong className="text-cyan-600 font-mono text-lg">{toBanglaNums(result.glasses)}</strong>{" "}
+                  গ্লাস (২৫০ মি.লি.) পানি
                 </span>
               </div>
 
@@ -223,12 +220,12 @@ export function WaterIntakeCalculator() {
               <div className="p-4 rounded-2xl bg-muted/60 border border-border text-left space-y-2">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
                   <Sparkles className="h-3.5 w-3.5 text-cyan-600" />
-                  <span>{t("healthTools.water.tipsTitle")}</span>
+                  <span>সুস্থ থাকার হাইড্রেশন টিপস</span>
                 </div>
                 <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside leading-relaxed">
-                  <li>{t("healthTools.water.tip1")}</li>
-                  <li>{t("healthTools.water.tip2")}</li>
-                  <li>{t("healthTools.water.tip3")}</li>
+                  <li>ঘুম থেকে উঠে সকালে ১ গ্লাস স্বাভাবিক তাপমাত্রার পানি পান করুন।</li>
+                  <li>ভারী খাবার খাওয়ার ঠিক সাথে সাথে অতিরিক্ত পানি না খেয়ে ৩০ মিনিট আগে বা পরে পান করুন।</li>
+                  <li>বাইরে বের হলে সব সময় সাথে পানির বোতল রাখুন।</li>
                 </ul>
               </div>
             </div>
@@ -239,10 +236,10 @@ export function WaterIntakeCalculator() {
               </div>
               <div className="space-y-1 max-w-sm mx-auto">
                 <h4 className="font-heading font-bold text-base text-secondary dark:text-white">
-                  {t("healthTools.water.emptyTitle")}
+                  জানুন দৈনিক কতটুকু পানি প্রয়োজন
                 </h4>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  {t("healthTools.water.emptyDesc")}
+                  পর্যাপ্ত পানি পানে কিডনি ও ত্বক সুস্থ থাকে। আপনার শরীরের ওজন দিয়ে সঠিক চাহিদা বের করুন।
                 </p>
               </div>
             </div>

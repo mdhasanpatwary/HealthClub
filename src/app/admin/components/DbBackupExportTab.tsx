@@ -7,12 +7,9 @@ import { Label } from "@/components/ui/label";
 import { exportDatabaseDumpAction } from "@/app/actions/dbBackupActions";
 import { toast } from "sonner";
 import { Download, FileCode, FileJson, ShieldCheck, Loader2 } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
+import { toBanglaNums } from "@/lib/utils";
 
 export function DbBackupExportTab() {
-  const { locale } = useLanguage();
-  const isEn = locale === "en";
-
   const [exportFormat, setExportFormat] = useState<"json" | "sql">("json");
   const [selectedTables, setSelectedTables] = useState<string[]>([
     "members", "partners", "partnerStaff", "transactions", "doctors",
@@ -23,21 +20,21 @@ export function DbBackupExportTab() {
   const [isExporting, setIsExporting] = useState(false);
 
   const allAvailableTables = [
-    { id: "members", label: isEn ? "Members" : "মেম্বার তালিকা" },
-    { id: "partners", label: isEn ? "Partners" : "পার্টনার হাসপাতাল" },
-    { id: "partnerStaff", label: isEn ? "Staff" : "কাউন্টার স্টাফ" },
-    { id: "transactions", label: isEn ? "Transactions" : "লেনদেন লগ" },
-    { id: "doctors", label: isEn ? "Doctors" : "ডাক্তার তালিকা" },
-    { id: "partnerRequests", label: isEn ? "Partner Requests" : "অংশীদার আবেদন" },
-    { id: "contactMessages", label: isEn ? "Contact Messages" : "গ্রাহক বার্তা" },
-    { id: "systemSettings", label: isEn ? "System Settings" : "সিস্টেম সেটিংস" },
-    { id: "pwaInstallations", label: isEn ? "PWA Installs" : "PWA ট্র্যাকিং" },
-    { id: "memberNotifications", label: isEn ? "Notifications" : "নোটিফিকেশন" },
-    { id: "adminUsers", label: isEn ? "Admin Users" : "এডমিন একাউন্ট" },
-    { id: "reviews", label: isEn ? "Reviews" : "রিভিউ ও রেটিং" },
-    { id: "pushSubscriptions", label: isEn ? "Push Subscriptions" : "পুশ সাবস্ক্রিপশন" },
-    { id: "bloodDonors", label: isEn ? "Blood Donors" : "রক্তদাতা তালিকা" },
-    { id: "ambulanceServices", label: isEn ? "Ambulance Services" : "অ্যাম্বুলেন্স সেবা" },
+    { id: "members", label: "মেম্বার তালিকা" },
+    { id: "partners", label: "পার্টনার হাসপাতাল" },
+    { id: "partnerStaff", label: "কাউন্টার স্টাফ" },
+    { id: "transactions", label: "লেনদেন লগ" },
+    { id: "doctors", label: "ডাক্তার তালিকা" },
+    { id: "partnerRequests", label: "অংশীদার আবেদন" },
+    { id: "contactMessages", label: "গ্রাহক বার্তা" },
+    { id: "systemSettings", label: "সিস্টেম সেটিংস" },
+    { id: "pwaInstallations", label: "PWA ট্র্যাকিং" },
+    { id: "memberNotifications", label: "নোটিফিকেশন" },
+    { id: "adminUsers", label: "এডমিন একাউন্ট" },
+    { id: "reviews", label: "রিভিউ ও রেটিং" },
+    { id: "pushSubscriptions", label: "পুশ সাবস্ক্রিপশন" },
+    { id: "bloodDonors", label: "রক্তদাতা তালিকা" },
+    { id: "ambulanceServices", label: "অ্যাম্বুলেন্স সেবা" },
   ];
 
   const toggleTable = (id: string) => {
@@ -60,7 +57,7 @@ export function DbBackupExportTab() {
 
   const handleExportDownload = async () => {
     if (selectedTables.length === 0) {
-      toast.warning(isEn ? "Please select at least one table to export" : "অনুগ্রহ করে কমপক্ষে একটি টেবিল সিলেক্ট করুন।");
+      toast.warning("অনুগ্রহ করে কমপক্ষে একটি টেবিল সিলেক্ট করুন।");
       return;
     }
 
@@ -70,11 +67,7 @@ export function DbBackupExportTab() {
       if (res.success && res.payload && res.filename) {
         const mimeType = exportFormat === "json" ? "application/json" : "application/sql";
         triggerFileDownload(res.filename, res.payload, mimeType);
-        toast.success(
-          isEn
-            ? `Backup export successful! (${res.filename})`
-            : `ডাটাবেস ব্যাকআপ সফলভাবে ডাউনলোড হয়েছে (${res.filename})`
-        );
+        toast.success(`ডাটাবেস ব্যাকআপ সফলভাবে ডাউনলোড হয়েছে (${res.filename})`);
       } else {
         toast.error(res.message || "ব্যাকআপ এক্সপোর্ট ব্যর্থ হয়েছে।");
       }
@@ -91,17 +84,15 @@ export function DbBackupExportTab() {
         <CardHeader className="pb-3">
           <CardTitle className="text-base font-bold flex items-center gap-2">
             <Download className="h-4 w-4 text-primary" />
-            <span>{isEn ? "Direct Database Backup Export" : "ডাটাবেস ডাম্প এক্সপোর্ট"}</span>
+            <span>ডাটাবেস ডাম্প এক্সপোর্ট</span>
           </CardTitle>
           <CardDescription className="text-xs">
-            {isEn
-              ? "Download raw database tables into portable JSON or standard PostgreSQL SQL dump"
-              : "পোস্টগ্রেসকিউএল এসকিউএল (PostgreSQL SQL) বা স্ট্রাকচার্ড JSON ফরম্যাটে ব্যাকআপ ফাইল ডাউনলোড করুন।"}
+            পোস্টগ্রেসকিউএল এসকিউএল (PostgreSQL SQL) বা স্ট্রাকচার্ড JSON ফরম্যাটে ব্যাকআপ ফাইল ডাউনলোড করুন।
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
           <div className="space-y-2">
-            <Label className="text-xs font-semibold">{isEn ? "Export Format" : "এক্সপোর্ট ফরম্যাট"}</Label>
+            <Label className="text-xs font-semibold">এক্সপোর্ট ফরম্যাট</Label>
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
@@ -118,7 +109,7 @@ export function DbBackupExportTab() {
                 <div>
                   <p className="text-xs font-bold text-foreground">JSON Structure (.json)</p>
                   <p className="text-[11px] text-muted-foreground mt-0.5">
-                    {isEn ? "Universal portable JSON with table metadata" : "পোর্টেবল ইউনিভার্সাল ডেটা ও মেটাডাটা"}
+                    পোর্টেবল ইউনিভার্সাল ডেটা ও মেটাডাটা
                   </p>
                 </div>
               </button>
@@ -138,7 +129,7 @@ export function DbBackupExportTab() {
                 <div>
                   <p className="text-xs font-bold text-foreground">PostgreSQL Dump (.sql)</p>
                   <p className="text-[11px] text-muted-foreground mt-0.5">
-                    {isEn ? "Ready-to-run INSERT queries with transactions" : "সরাসরি রান করার উপযোগী SQL কুয়েরি"}
+                    সরাসরি রান করার উপযোগী SQL কুয়েরি
                   </p>
                 </div>
               </button>
@@ -147,14 +138,14 @@ export function DbBackupExportTab() {
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label className="text-xs font-semibold">{isEn ? "Select Tables" : "টেবিল নির্বাচন করুন"}</Label>
+              <Label className="text-xs font-semibold">টেবিল নির্বাচন করুন</Label>
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={() => setSelectedTables(allAvailableTables.map((t) => t.id))}
                   className="text-[11px] text-primary hover:underline font-medium cursor-pointer"
                 >
-                  {isEn ? "Select All" : "সব নির্বাচন"}
+                  সব নির্বাচন
                 </button>
                 <span className="text-muted-foreground text-[11px]">|</span>
                 <button
@@ -162,7 +153,7 @@ export function DbBackupExportTab() {
                   onClick={() => setSelectedTables([])}
                   className="text-[11px] text-muted-foreground hover:underline cursor-pointer"
                 >
-                  {isEn ? "Deselect All" : "মুছে ফেলুন"}
+                  মুছে ফেলুন
                 </button>
               </div>
             </div>
@@ -199,15 +190,13 @@ export function DbBackupExportTab() {
               {isExporting ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>{isEn ? "Generating Backup File..." : "ব্যাকআপ তৈরি হচ্ছে..."}</span>
+                  <span>ব্যাকআপ তৈরি হচ্ছে...</span>
                 </>
               ) : (
                 <>
                   <Download className="h-4 w-4" />
                   <span>
-                    {isEn
-                      ? `Download ${exportFormat.toUpperCase()} Backup (${selectedTables.length} Tables)`
-                      : `${exportFormat.toUpperCase()} ব্যাকআপ ডাউনলোড (${selectedTables.length}টি টেবিল)`}
+                    {exportFormat.toUpperCase()} ব্যাকআপ ডাউনলোড ({toBanglaNums(selectedTables.length)}টি টেবিল)
                   </span>
                 </>
               )}
@@ -220,21 +209,17 @@ export function DbBackupExportTab() {
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-bold flex items-center gap-2 text-foreground">
             <ShieldCheck className="h-4 w-4 text-emerald-500" />
-            <span>{isEn ? "Disaster Recovery Security" : "নিরাপত্তা ও ডেটা সুরক্ষা"}</span>
+            <span>নিরাপত্তা ও ডেটা সুরক্ষা</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 text-xs text-muted-foreground leading-relaxed">
           <p>
-            🔒 <strong>{isEn ? "Super Admin Only" : "শুধুমাত্র সুপার এডমিন"}</strong>:{" "}
-            {isEn
-              ? "Database dumps contain sensitive records. Exports are strictly restricted to verified super admins."
-              : "ডাটাবেস ব্যাকআপে গ্রাহক ও আর্থিক লেনদেনের সংবেদনশীল তথ্য থাকে বিধায় এটি শুধুমাত্র সুপার এডমিন এক্সেস করতে পারেন।"}
+            🔒 <strong>শুধুমাত্র সুপার এডমিন</strong>:{" "}
+            ডাটাবেস ব্যাকআপে গ্রাহক ও আর্থিক লেনদেনের সংবেদনশীল তথ্য থাকে বিধায় এটি শুধুমাত্র সুপার এডমিন এক্সেস করতে পারেন।
           </p>
           <p>
-            💾 <strong>{isEn ? "Full Recovery" : "সম্পূর্ণ রিকভারি"}</strong>:{" "}
-            {isEn
-              ? "PostgreSQL SQL dumps can be executed directly in Supabase SQL editor for instant restore."
-              : "SQL ডাম্প সরাসরি Supabase SQL এডিটর বা psql ক্লায়েন্টে রান করে সম্পূর্ণ সাইট রিস্টোর করা সম্ভব।"}
+            💾 <strong>সম্পূর্ণ রিকভারি</strong>:{" "}
+            SQL ডাম্প সরাসরি Supabase SQL এডিটর বা psql ক্লায়েন্টে রান করে সম্পূর্ণ সাইট রিস্টোর করা সম্ভব।
           </p>
         </CardContent>
       </Card>

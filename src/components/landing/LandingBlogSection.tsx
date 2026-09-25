@@ -9,17 +9,13 @@ import { BlogPost } from "@/types/blog";
 
 interface LandingBlogSectionProps {
   posts: BlogPost[];
-  locale?: string;
   limit?: number;
 }
 
 export function LandingBlogSection({
   posts,
-  locale = "bn",
   limit = 3,
 }: LandingBlogSectionProps) {
-  const isEn = locale === "en";
-
   if (!posts || posts.length === 0) return null;
 
   const displayPosts = posts.slice(0, limit);
@@ -34,17 +30,13 @@ export function LandingBlogSection({
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div className="space-y-1.5 sm:space-y-2 text-center sm:text-left">
             <span className="section-label">
-              {isEn ? "Healthcare Blog & Guides" : "স্বাস্থ্য ব্লগ ও হাসপাতাল গাইড"}
+              স্বাস্থ্য ব্লগ ও হাসপাতাল গাইড
             </span>
             <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-secondary dark:text-white mt-1">
-              {isEn
-                ? "Feni Healthcare Reviews & Guides"
-                : "ফেনীর সেরা হাসপাতাল ও স্বাস্থ্য গাইড"}
+              ফেনীর সেরা হাসপাতাল ও স্বাস্থ্য গাইড
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground max-w-xl">
-              {isEn
-                ? "Verified hospital reviews, specialist doctor guides, diagnostic costs, and member savings in Feni."
-                : "ফেনী জেলার শীর্ষ হাসপাতাল, বিশেষজ্ঞ ডাক্তার, ডায়াগনস্টিক খরচ ও মেম্বার ডিসকাউন্টের তথ্যবহুল গাইড।"}
+              ফেনী জেলার শীর্ষ হাসপাতাল, বিশেষজ্ঞ ডাক্তার, ডায়াগনস্টিক খরচ ও মেম্বার ডিসকাউন্টের তথ্যবহুল গাইড।
             </p>
           </div>
 
@@ -55,7 +47,7 @@ export function LandingBlogSection({
               "border-primary/40 text-primary hover:bg-primary/5 shrink-0 self-center sm:self-end text-xs sm:text-sm hidden sm:inline-flex"
             )}
           >
-            {isEn ? "View All Guides" : "সকল ব্লগ পড়ুন"}
+            সকল ব্লগ পড়ুন
             <ArrowRight className="h-4 w-4 ml-1.5" />
           </Link>
         </div>
@@ -63,12 +55,12 @@ export function LandingBlogSection({
         {/* 3-Column Responsive Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {displayPosts.map((post) => {
-            const title = isEn ? post.titleEn : post.titleBn;
-            const excerpt = isEn ? post.excerptEn : post.excerptBn;
-            const categoryName = isEn ? post.categoryNameEn : post.categoryNameBn;
-            const readTime = isEn ? post.readTimeEn : post.readTimeBn;
-            const authorName = isEn ? post.author.nameEn : post.author.nameBn;
-            const dateStr = formatArticleDate(post.publishedDate, locale);
+            const title = post.titleBn || post.titleEn;
+            const excerpt = post.excerptBn || post.excerptEn;
+            const categoryName = post.categoryNameBn || post.categoryNameEn;
+            const readTime = post.readTimeBn || post.readTimeEn;
+            const authorName = post.author.nameBn || post.author.nameEn;
+            const dateStr = formatArticleDate(post.publishedDate);
 
             const facilityCount =
               post.hospitals?.length ||
@@ -141,15 +133,13 @@ export function LandingBlogSection({
                   {/* Action Footer */}
                   <div className="pt-3 border-t border-border/60 flex items-center justify-between text-xs font-semibold text-emerald-700 dark:text-emerald-400 group-hover:text-emerald-800 dark:group-hover:text-emerald-300">
                     <span className="flex items-center gap-1 group-hover:gap-2 transition-all">
-                      {isEn ? "Read Full Guide" : "সম্পূর্ণ গাইড পড়ুন"}
+                      সম্পূর্ণ গাইড পড়ুন
                       <ArrowRight className="h-3.5 w-3.5" />
                     </span>
 
                     {facilityCount > 0 && (
                       <span className="text-[11px] font-normal text-muted-foreground bg-muted/80 px-2 py-0.5 rounded-md">
-                        {isEn
-                          ? `${facilityCount} Listed`
-                          : `${toBanglaNums(facilityCount)}টি তালিকাভুক্ত`}
+                        {`${toBanglaNums(facilityCount)}টি তালিকাভুক্ত`}
                       </span>
                     )}
                   </div>
@@ -168,7 +158,7 @@ export function LandingBlogSection({
               "w-full border-primary/40 text-primary hover:bg-primary/5 py-2.5 text-xs font-semibold justify-center flex items-center gap-1.5"
             )}
           >
-            {isEn ? "View All Healthcare Articles" : "সকল স্বাস্থ্য ও হাসপাতাল ব্লগ পড়ুন"}
+            সকল স্বাস্থ্য ও হাসপাতাল ব্লগ পড়ুন
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>

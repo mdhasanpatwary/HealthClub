@@ -8,18 +8,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PRESET_DEPARTMENTS, createDepartmentDiscountId } from "./presetDepartments";
+import { toBanglaNums } from "@/lib/utils";
 import { toast } from "sonner";
 
 interface PartnerDepartmentDiscountsCardProps {
   departmentDiscounts: DepartmentDiscount[];
   setDepartmentDiscounts: React.Dispatch<React.SetStateAction<DepartmentDiscount[]>>;
-  t: (key: string) => string;
 }
 
 export function PartnerDepartmentDiscountsCard({
   departmentDiscounts,
   setDepartmentDiscounts,
-  t,
 }: PartnerDepartmentDiscountsCardProps) {
   const [newDeptName, setNewDeptName] = useState("");
   const [newDeptDiscount, setNewDeptDiscount] = useState("");
@@ -27,13 +26,13 @@ export function PartnerDepartmentDiscountsCard({
   const [showAddDeptForm, setShowAddDeptForm] = useState(false);
 
   const handleAddPreset = (preset: (typeof PRESET_DEPARTMENTS)[0]) => {
-    const deptName = t(preset.nameKey);
-    const deptDescription = t(preset.descKey);
+    const deptName = preset.name;
+    const deptDescription = preset.description;
     const exists = departmentDiscounts.some(
       (d) => d.name.toLowerCase() === deptName.toLowerCase()
     );
     if (exists) {
-      toast.info(`"${deptName}" ${t("partner.profile.presetAlreadyAdded")}`);
+      toast.info(`"${deptName}" বিভাগটি ইতিমধ্যে যুক্ত করা হয়েছে।`);
       return;
     }
     const newItem: DepartmentDiscount = {
@@ -43,13 +42,13 @@ export function PartnerDepartmentDiscountsCard({
       description: deptDescription,
     };
     setDepartmentDiscounts((prev) => [...prev, newItem]);
-    toast.success(`"${deptName}" ${t("partner.profile.presetAdded")}`);
+    toast.success(`"${deptName}" বিভাগ সফলভাবে যুক্ত হয়েছে।`);
   };
 
   const handleAddCustomDept = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newDeptName.trim() || !newDeptDiscount.trim()) {
-      toast.error(t("partner.profile.fillDeptNameAndRate"));
+      toast.error("বিভাগের নাম ও ডিসকাউন্টের হার প্রদান করুন।");
       return;
     }
     const newItem: DepartmentDiscount = {
@@ -63,7 +62,7 @@ export function PartnerDepartmentDiscountsCard({
     setNewDeptDiscount("");
     setNewDeptDesc("");
     setShowAddDeptForm(false);
-    toast.success(t("partner.profile.deptAddedSuccess"));
+    toast.success("নতুন বিভাগ সফলভাবে যুক্ত হয়েছে।");
   };
 
   const handleRemoveDept = (id?: string, name?: string) => {
@@ -79,17 +78,17 @@ export function PartnerDepartmentDiscountsCard({
           <div>
             <CardTitle className="font-heading text-lg font-bold text-secondary dark:text-white flex items-center gap-2">
               <Tag className="h-5 w-5 text-primary" />
-              {t("partner.profile.departmentDiscountsTitle")}
+              বিভাগীয় ডিসকাউন্ট রেট (ডিপার্টমেন্টাল অফার)
             </CardTitle>
             <CardDescription className="text-xs sm:text-sm mt-0.5">
-              {t("partner.profile.departmentDiscountsSubtitle")}
+              প্যাথলজি, রেডিওলজি, কেবিন বা ফার্মেসির জন্য আলাদা ডিসকাউন্ট রেট সেট করুন
             </CardDescription>
           </div>
           <Badge
             variant="outline"
             className="bg-primary/10 text-primary border-primary/20 text-xs px-2.5 py-1"
           >
-            {departmentDiscounts.length} {t("partner.profile.deptsActive")}
+            {toBanglaNums(departmentDiscounts.length)} টি বিভাগ সক্রিয়
           </Badge>
         </div>
       </CardHeader>
@@ -99,17 +98,17 @@ export function PartnerDepartmentDiscountsCard({
         <div className="space-y-2 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-border">
           <p className="text-xs font-bold text-secondary dark:text-slate-200 flex items-center gap-1.5">
             <Sparkles className="h-3.5 w-3.5 text-amber-500" />
-            {t("partner.profile.quickPresets")}
+            দ্রুত বিভাগ যুক্ত করুন (ক্লিক করুন):
           </p>
           <div className="flex flex-wrap gap-2 pt-1">
             {PRESET_DEPARTMENTS.map((preset) => {
-              const deptName = t(preset.nameKey);
+              const deptName = preset.name;
               const isAdded = departmentDiscounts.some(
                 (d) => d.name.toLowerCase() === deptName.toLowerCase()
               );
               return (
                 <button
-                  key={preset.nameKey}
+                  key={preset.name}
                   type="button"
                   onClick={() => handleAddPreset(preset)}
                   disabled={isAdded}
@@ -140,19 +139,19 @@ export function PartnerDepartmentDiscountsCard({
             className="rounded-xl border-dashed border-primary/40 text-primary hover:bg-primary/5 font-semibold text-xs gap-1.5 h-9 cursor-pointer"
           >
             <Plus className="h-4 w-4" />
-            {t("partner.profile.addDepartment")}
+            নতুন কাস্টম বিভাগ যোগ করুন
           </Button>
         ) : (
           <div className="p-4 rounded-2xl border border-primary/30 bg-primary/5 space-y-3 animate-in fade-in duration-150">
             <p className="text-xs font-bold text-primary">
-              {t("partner.profile.addCustomDeptTitle")}
+              কাস্টম বিভাগ ও ডিসকাউন্ট রেট যোগ করুন
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
               <div className="sm:col-span-5">
                 <Input
                   value={newDeptName}
                   onChange={(e) => setNewDeptName(e.target.value)}
-                  placeholder={t("partner.profile.deptNameCustomPlaceholder")}
+                  placeholder="বিভাগের নাম (যেমনঃ ডেন্টাল, আই কেয়ার)"
                   className="h-9 text-xs rounded-xl bg-background border-border"
                 />
               </div>
@@ -160,7 +159,7 @@ export function PartnerDepartmentDiscountsCard({
                 <Input
                   value={newDeptDiscount}
                   onChange={(e) => setNewDeptDiscount(e.target.value)}
-                  placeholder={t("partner.profile.deptDiscountPlaceholder")}
+                  placeholder="ডিসকাউন্ট (যেমনঃ ১৫% বা ২০%)"
                   className="h-9 text-xs rounded-xl bg-background border-border"
                 />
               </div>
@@ -168,7 +167,7 @@ export function PartnerDepartmentDiscountsCard({
                 <Input
                   value={newDeptDesc}
                   onChange={(e) => setNewDeptDesc(e.target.value)}
-                  placeholder={t("partner.profile.deptNotePlaceholder")}
+                  placeholder="সংক্ষিপ্ত বিবরণ বা প্রযোজ্য শর্ত (ঐচ্ছিক)"
                   className="h-9 text-xs rounded-xl bg-background border-border"
                 />
               </div>
@@ -181,7 +180,7 @@ export function PartnerDepartmentDiscountsCard({
                 onClick={() => setShowAddDeptForm(false)}
                 className="h-8 text-xs rounded-xl cursor-pointer"
               >
-                {t("common.cancel")}
+                বাতিল
               </Button>
               <Button
                 type="button"
@@ -189,7 +188,7 @@ export function PartnerDepartmentDiscountsCard({
                 size="sm"
                 className="h-8 text-xs rounded-xl bg-primary hover:bg-primary-dark text-white font-semibold cursor-pointer"
               >
-                {t("common.add")}
+                যুক্ত করুন
               </Button>
             </div>
           </div>
@@ -198,7 +197,7 @@ export function PartnerDepartmentDiscountsCard({
         {/* Added Department Discounts List */}
         {departmentDiscounts.length === 0 ? (
           <div className="py-8 text-center border border-dashed border-border rounded-2xl text-xs text-muted-foreground p-4">
-            {t("partner.profile.noDepartmentDiscounts")}
+            এখনো কোনো বিভাগীয় ডিসকাউন্ট যোগ করা হয়নি। উপরের প্রিসেট থেকে বাছাই করুন অথবা কাস্টম বিভাগ যোগ করুন।
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -228,7 +227,7 @@ export function PartnerDepartmentDiscountsCard({
                   variant="ghost"
                   size="icon"
                   className="h-7 w-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg shrink-0 cursor-pointer"
-                  title={t("common.delete")}
+                  title="মুছুন"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </Button>

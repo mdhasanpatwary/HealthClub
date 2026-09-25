@@ -20,12 +20,10 @@ import { Input } from "@/components/ui/input";
 import { ImageUpload } from "@/components/ui/ImageUpload";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toast } from "sonner";
 import { ReferenceCodeField, type RefStatusState } from "./components/ReferenceCodeField";
 
 function RegisterForm() {
-  const { t, locale } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
   const planParam = searchParams.get("plan");
@@ -70,7 +68,7 @@ function RegisterForm() {
       if (res.valid) {
         setRefStatus({
           status: "valid",
-          message: locale === "en" ? res.messageEn : res.messageBn,
+          message: res.messageBn,
           discountType: res.discountType,
           discountAmount: res.discountAmount,
           finalFee: res.finalFee,
@@ -78,16 +76,16 @@ function RegisterForm() {
       } else {
         setRefStatus({
           status: "invalid",
-          message: locale === "en" ? res.messageEn : res.messageBn,
+          message: res.messageBn,
         });
       }
     } catch {
       setRefStatus({
         status: "invalid",
-        message: locale === "en" ? "Failed to verify reference code." : "কোড যাচাই করতে সমস্যা হয়েছে।",
+        message: "কোড যাচাই করতে সমস্যা হয়েছে।",
       });
     }
-  }, [getValues, selectedTier, locale]);
+  }, [getValues, selectedTier]);
 
   useEffect(() => {
     if (!refParam) return;
@@ -99,14 +97,14 @@ function RegisterForm() {
           res.valid
             ? {
                 status: "valid",
-                message: locale === "en" ? res.messageEn : res.messageBn,
+                message: res.messageBn,
                 discountType: res.discountType,
                 discountAmount: res.discountAmount,
                 finalFee: res.finalFee,
               }
             : {
                 status: "invalid",
-                message: locale === "en" ? res.messageEn : res.messageBn,
+                message: res.messageBn,
               }
         );
       })
@@ -114,13 +112,13 @@ function RegisterForm() {
         if (!isMounted) return;
         setRefStatus({
           status: "invalid",
-          message: locale === "en" ? "Failed to verify reference code." : "কোড যাচাই করতে সমস্যা হয়েছে।",
+          message: "কোড যাচাই করতে সমস্যা হয়েছে।",
         });
       });
     return () => {
       isMounted = false;
     };
-  }, [refParam, selectedTier, locale]);
+  }, [refParam, selectedTier]);
 
   const onSubmit = async (data: MemberRegistrationInput) => {
     try {
@@ -139,10 +137,10 @@ function RegisterForm() {
         return;
       }
 
-      toast.success(t("auth.register.registerSuccess"));
+      toast.success("রেজিস্ট্রেশন সফল হয়েছে! আপনার ইমেইল যাচাই করুন।");
       router.push(`/register/verify-email?email=${encodeURIComponent(data.email.trim())}`);
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : t("auth.register.registerError");
+      const errorMessage = err instanceof Error ? err.message : "রেজিস্ট্রেশন সম্পন্ন করা যায়নি। আবার চেষ্টা করুন।";
       toast.error(errorMessage);
     }
   };
@@ -160,21 +158,21 @@ function RegisterForm() {
               <Heart className="h-8 w-8 fill-primary text-primary transition-transform duration-300 group-hover:scale-110" />
             </div>
             <span className="font-heading text-2xl font-bold text-secondary dark:text-white">
-              {t("layout.header.health")} <span className="gradient-text">{t("layout.header.club")}</span>
+              হেলথ <span className="gradient-text">ক্লাব</span>
             </span>
           </Link>
           <h1 className="font-heading text-xl font-bold text-secondary dark:text-white">
-            {t("auth.register.title")}
+            নতুন সদস্য নিবন্ধন
           </h1>
           <p className="text-sm text-muted-foreground mt-1.5">
-            {t("auth.register.subtitle")}
+            হেলথ ক্লাবের মেম্বারশিপ নিয়ে উপভোগ করুন বিশেষ ছাড় ও সেবা
           </p>
         </div>
 
         {/* Plan Selector */}
         <div
           role="radiogroup"
-          aria-label={t("auth.register.selectPlan")}
+          aria-label="মেম্বারশিপ প্ল্যান নির্বাচন করুন"
           className="grid grid-cols-2 gap-3 mb-6"
         >
           <button
@@ -194,8 +192,8 @@ function RegisterForm() {
               </div>
             )}
             <Star className={`h-5 w-5 mb-2 ${selectedTier === "founding" ? "text-primary fill-primary/20" : "text-muted-foreground"}`} />
-            <p className="text-xs font-bold text-secondary dark:text-white">{t("auth.register.foundingTier")}</p>
-            <p className="text-[11px] text-primary font-semibold">{t("auth.register.foundingSub")}</p>
+            <p className="text-xs font-bold text-secondary dark:text-white">ফাউন্ডিং মেম্বার</p>
+            <p className="text-[11px] text-primary font-semibold">আজীবন মেম্বারশিপ</p>
           </button>
           <button
             type="button"
@@ -214,18 +212,18 @@ function RegisterForm() {
               </div>
             )}
             <ShieldCheck className={`h-5 w-5 mb-2 ${selectedTier === "premium" ? "text-primary" : "text-muted-foreground"}`} />
-            <p className="text-xs font-bold text-secondary dark:text-white">{t("auth.register.premiumTier")}</p>
+            <p className="text-xs font-bold text-secondary dark:text-white">প্রিমিয়াম মেম্বার</p>
             {refStatus.status === "valid" && (refStatus.discountType === "free" || refStatus.finalFee === 0) ? (
               <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
                 <Sparkles className="h-3 w-3" />
-                {locale === "en" ? "100% Free with Code" : "রেফারেন্সে ১০০% ফ্রি"}
+                রেফারেন্সে ১০০% ফ্রি
               </p>
             ) : refStatus.status === "valid" && refStatus.discountAmount && refStatus.discountAmount > 0 ? (
               <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">
-                ৳{refStatus.finalFee} ({locale === "en" ? "Discounted" : "ছাড়সহ"})
+                ৳{refStatus.finalFee} (ছাড়সহ)
               </p>
             ) : (
-              <p className="text-[11px] text-muted-foreground font-semibold">{t("auth.register.premiumSub")}</p>
+              <p className="text-[11px] text-muted-foreground font-semibold">১ বছরের মেম্বারশিপ</p>
             )}
           </button>
         </div>
@@ -239,7 +237,7 @@ function RegisterForm() {
                 <ImageUpload
                   value={field.value}
                   onChange={field.onChange}
-                  label={t("auth.register.photoLabel")}
+                  label="প্রোফাইল ছবি"
                   folder="members"
                 />
                 {fieldState.error && (
@@ -252,13 +250,13 @@ function RegisterForm() {
           <div className="space-y-1.5">
             <label htmlFor="reg-name" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
               <User className="h-3.5 w-3.5 text-primary" />
-              {t("auth.register.fullNameLabel")}
+              পূর্ণ নাম (Full Name)
             </label>
             <Input
               id="reg-name"
               type="text"
               {...register("name")}
-              placeholder={t("auth.register.fullNamePlaceholder")}
+              placeholder="আপনার পূর্ণ নাম লিখুন"
               className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
             />
             {errors.name && (
@@ -270,7 +268,7 @@ function RegisterForm() {
             <div className="space-y-1.5">
               <label htmlFor="reg-phone" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
                 <Phone className="h-3.5 w-3.5 text-primary" />
-                {t("auth.register.phoneLabel")}
+                মোবাইল নম্বর
               </label>
               <Input
                 id="reg-phone"
@@ -286,7 +284,7 @@ function RegisterForm() {
             <div className="space-y-1.5">
               <label htmlFor="reg-email" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
                 <Mail className="h-3.5 w-3.5 text-primary" />
-                {t("auth.register.emailLabel")}
+                ইমেইল অ্যাড্রেস
               </label>
               <Input
                 id="reg-email"
@@ -304,13 +302,13 @@ function RegisterForm() {
           <div className="space-y-1.5">
             <label htmlFor="reg-address" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
               <MapPin className="h-3.5 w-3.5 text-primary" />
-              {t("auth.register.addressLabel")}
+              ঠিকানা
             </label>
             <Input
               id="reg-address"
               type="text"
               {...register("address")}
-              placeholder={t("auth.register.addressPlaceholder")}
+              placeholder="বাসা/রোড, এলাকা, জেলা"
               className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
             />
             {errors.address && (
@@ -322,7 +320,7 @@ function RegisterForm() {
             <div className="space-y-1.5">
               <label htmlFor="reg-birthDate" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
                 <Calendar className="h-3.5 w-3.5 text-primary" />
-                {t("auth.register.dobLabel")}
+                জন্ম তারিখ
               </label>
               <Input
                 id="reg-birthDate"
@@ -337,13 +335,13 @@ function RegisterForm() {
             <div className="space-y-1.5">
               <label htmlFor="reg-profession" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
                 <Briefcase className="h-3.5 w-3.5 text-primary" />
-                {t("auth.register.professionLabel")}
+                পেশা
               </label>
               <Input
                 id="reg-profession"
                 type="text"
                 {...register("profession")}
-                placeholder={t("auth.register.professionPlaceholder")}
+                placeholder="যেমন: শিক্ষক, চাকরিজীবী, ব্যবসায়ী"
                 className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
               />
               {errors.profession && (
@@ -358,14 +356,12 @@ function RegisterForm() {
             refStatus={refStatus}
             setRefStatus={setRefStatus}
             onVerify={() => handleVerifyRefCode()}
-            t={t}
-            locale={locale}
           />
 
           <div className="space-y-1.5">
             <label htmlFor="reg-password" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
               <Lock className="h-3.5 w-3.5 text-primary" />
-              {t("auth.register.passwordLabel")}
+              পাসওয়ার্ড
             </label>
             <Input
               id="reg-password"
@@ -389,7 +385,7 @@ function RegisterForm() {
               <div className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
             ) : (
               <>
-                {t("auth.register.submitButton")}
+                পরবর্তী ধাপে যান
                 <ArrowRight className="h-4 w-4" />
               </>
             )}
@@ -397,9 +393,9 @@ function RegisterForm() {
         </form>
 
         <div className="text-center text-sm text-muted-foreground border-t border-border/60 pt-5">
-          {t("auth.register.alreadyHaveAccount")}{" "}
+          ইতিমধ্যে একাউন্ট আছে?{" "}
           <Link href="/login" className="text-primary hover:text-primary-dark font-semibold transition-colors">
-            {t("auth.register.loginLink")}
+            লগইন করুন
           </Link>
         </div>
       </div>

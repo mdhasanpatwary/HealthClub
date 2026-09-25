@@ -1,38 +1,33 @@
-"use client";
-
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { ShieldAlert, Activity, PhoneCall, HeartPulse, FileText } from "lucide-react";
 
 export default function EmergencyProtocol() {
-  const { t, locale } = useLanguage();
-
   const steps = [
     {
       num: 1,
       icon: Activity,
-      title: t("emergency.protocol.step1.title"),
-      desc: t("emergency.protocol.step1.desc"),
+      title: "১. শান্ত থাকুন ও রোগীর অবস্থা দ্রুত পর্যবেক্ষণ করুন",
+      desc: "রোগীর শ্বাস-প্রশ্বাস, জ্ঞান ও রক্তক্ষরণ হচ্ছে কিনা তা দ্রুত নিশ্চিত করুন। অতিরিক্ত আতঙ্কিত না হয়ে রোগীকে নিরাপদ ও সমতল স্থানে রাখুন।",
       badgeColor: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
     },
     {
       num: 2,
       icon: PhoneCall,
-      title: t("emergency.protocol.step2.title"),
-      desc: t("emergency.protocol.step2.desc"),
+      title: "২. তাৎক্ষণিক অ্যাম্বুলেন্স বা হটলাইনে সরাসরি কল দিন",
+      desc: "ফেনী সেন্ট্রাল অ্যাম্বুলেন্স বা জাতীয় জরুরি সেবা ৯৯৯ নম্বরে ফোন দিন। রোগীর সঠিক বর্তমান লোকেশন এবং সমস্যা স্পষ্টভাবে বলুন।",
       badgeColor: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20",
     },
     {
       num: 3,
       icon: HeartPulse,
-      title: t("emergency.protocol.step3.title"),
-      desc: t("emergency.protocol.step3.desc"),
+      title: "৩. রক্তের প্রয়োজনে ডোনারের সাথে যোগাযোগ করুন",
+      desc: "হেলথ ক্লাব ডিরেক্টরিতে রক্তের গ্রুপ ও উপজেলা নির্বাচন করে রক্তদাতার নম্বরে কল অথবা হোয়াটসঅ্যাপে দ্রুত বার্তা পাঠান।",
       badgeColor: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
     },
     {
       num: 4,
       icon: FileText,
-      title: t("emergency.protocol.step4.title"),
-      desc: t("emergency.protocol.step4.desc"),
+      title: "৪. মেডিকেল রিপোর্ট প্রস্তুত রাখুন ও হাসপাতালে রওনা হোন",
+      desc: "রোগীর পূর্ববর্তী প্রেসক্রিপশন ও রিপোর্ট সাথে নিন। হেলথ ক্লাবের মেম্বারশিপ থাকলে পার্টনার হাসপাতালে জরুরি টেস্টে অগ্রাধিকার ও ডিসকাউন্ট নিশ্চিত করুন।",
       badgeColor: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
     },
   ];
@@ -47,16 +42,16 @@ export default function EmergencyProtocol() {
         <div className="space-y-2 text-left">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
             <ShieldAlert className="h-3.5 w-3.5" />
-            <span>{t("emergency.protocol.badge")}</span>
+            <span>জরুরি জীবনরক্ষাকারী পদক্ষেপ</span>
           </div>
           <h2
             id="emergency-protocol-heading"
             className="font-heading text-lg sm:text-2xl font-bold text-secondary dark:text-white tracking-tight"
           >
-            {t("emergency.protocol.title")}
+            মেডিকেল ইমার্জেন্সিতে তাৎক্ষণিক করণীয় ৪টি ধাপ
           </h2>
           <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-            {t("emergency.protocol.subtitle")}
+            অ্যাম্বুলেন্স আসার আগে বা হাসপাতালে নেওয়ার মুহূর্তে এই জরুরি নিয়মগুলো অনুসরণ করুন:
           </p>
         </div>
 
@@ -90,19 +85,18 @@ export default function EmergencyProtocol() {
         {/* Action Callout */}
         <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
           <p className="text-xs font-medium text-rose-950 dark:text-rose-200">
-            {locale === "en"
-              ? "For instant nationwide police, ambulance, or fire service dispatch, dial 999 toll-free."
-              : "সার্বক্ষণিক পুলিশ, ফায়ার ও সরকারি অ্যাম্বুলেন্স সহায়তার জন্য বিনামূল্যে ৯৯৯ নম্বরে ডায়াল করুন।"}
+            সার্বক্ষণিক পুলিশ, ফায়ার ও সরকারি অ্যাম্বুলেন্স সহায়তার জন্য বিনামূল্যে ৯৯৯ নম্বরে ডায়াল করুন।
           </p>
           <a
             href="tel:999"
             className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shrink-0 transition-colors shadow-sm"
           >
             <PhoneCall className="h-3.5 w-3.5" />
-            <span>{locale === "en" ? "Call 999" : "৯৯৯ কল দিন"}</span>
+            <span>৯৯৯ কল দিন</span>
           </a>
         </div>
       </div>
     </section>
   );
 }
+

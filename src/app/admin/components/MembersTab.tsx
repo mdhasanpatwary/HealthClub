@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
 import { Member } from "@/services/db";
-import { formatNum, Locale } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import { exportToCsv } from "@/lib/exportUtils";
 
 import { Skeleton } from "@/components/ui/skeleton";
@@ -28,8 +28,6 @@ interface MembersTabProps {
   onToggleStatus: (id: string) => void;
   onEditClick: (m: Member) => void;
   onDeleteClick: (id: string, name: string) => void;
-  locale: Locale;
-  t: (key: string) => string;
   loading?: boolean;
 }
 
@@ -48,18 +46,14 @@ export function MembersTab({
   onToggleStatus,
   onEditClick,
   onDeleteClick,
-  locale,
-  t,
   loading = false,
 }: MembersTabProps) {
-  const isEn = locale === "en";
-
   return (
     <Card className="border-border shadow-md">
       <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <CardTitle className="font-heading text-lg font-bold text-secondary">{t("admin.dashboard.registeredMembers")}</CardTitle>
-          <CardDescription>{t("admin.dashboard.manageCustomersDesc")}</CardDescription>
+          <CardTitle className="font-heading text-lg font-bold text-secondary">নিবন্ধিত মেম্বারবৃন্দ</CardTitle>
+          <CardDescription>মেম্বারদের তথ্য, সাবস্ক্রিপশন স্ট্যাটাস ও সঞ্চয় পর্যবেক্ষণ করুন</CardDescription>
         </div>
 
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
@@ -67,7 +61,7 @@ export function MembersTab({
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="text"
-              placeholder={t("admin.dashboard.searchMemberPlaceholder")}
+              placeholder="নাম, ফোন বা আইডি দিয়ে খুঁজুন..."
               value={memberSearch}
               onChange={(e) => {
                 setMemberSearch(e.target.value);
@@ -98,10 +92,10 @@ export function MembersTab({
             className="border-border gap-1.5 text-xs font-semibold shrink-0"
           >
             <Download className="h-3.5 w-3.5" />
-            <span>{locale === "en" ? "Export CSV" : "এক্সপোর্ট"}</span>
+            <span>এক্সপোর্ট CSV</span>
           </Button>
           <Button onClick={onNewMemberClick} size="sm" className="bg-primary hover:bg-primary-dark text-white shrink-0">
-            {t("admin.dashboard.newMember")}
+            নতুন মেম্বার যুক্ত করুন
           </Button>
         </div>
       </CardHeader>
@@ -111,13 +105,13 @@ export function MembersTab({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.memberId")}</TableHead>
-                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.name")}</TableHead>
-                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.phoneNumber")}</TableHead>
-                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.plan")}</TableHead>
-                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.totalSavings")}</TableHead>
-                <TableHead className="font-semibold text-secondary whitespace-nowrap">{t("admin.dashboard.status")}</TableHead>
-                <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">{t("admin.dashboard.action")}</TableHead>
+                <TableHead className="font-semibold text-secondary whitespace-nowrap">মেম্বার আইডি</TableHead>
+                <TableHead className="font-semibold text-secondary whitespace-nowrap">নাম</TableHead>
+                <TableHead className="font-semibold text-secondary whitespace-nowrap">মোবাইল নম্বর</TableHead>
+                <TableHead className="font-semibold text-secondary whitespace-nowrap">প্ল্যান / টিয়ার</TableHead>
+                <TableHead className="font-semibold text-secondary whitespace-nowrap">মোট সাশ্রয়</TableHead>
+                <TableHead className="font-semibold text-secondary whitespace-nowrap">স্ট্যাটাস</TableHead>
+                <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">অ্যাকশন</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className="text-xs sm:text-sm">
@@ -189,16 +183,16 @@ export function MembersTab({
                     </TableCell>
                     <TableCell className="font-mono whitespace-nowrap">{m.phone}</TableCell>
                     <TableCell className="text-xs whitespace-nowrap">
-                      <div className="font-semibold capitalize">
-                        {m.tier === "founding" ? t("admin.dashboard.tierFounding") : m.tier === "premium" ? t("admin.dashboard.tierPremium") : t("admin.dashboard.tierFamily")}
+                      <div className="font-semibold">
+                        {m.tier === "founding" ? "ফাউন্ডিং মেম্বার" : m.tier === "premium" ? "প্রিমিয়াম মেম্বার" : "ফ্যামিলি মেম্বার"}
                       </div>
                       {m.referenceCode && (
                         <span className="inline-block mt-0.5 text-[10px] font-mono font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded border border-primary/20">
-                          Ref: {m.referenceCode}
+                          রেফ: {m.referenceCode}
                         </span>
                       )}
                     </TableCell>
-                    <TableCell className="font-mono font-semibold whitespace-nowrap">৳{formatNum(m.totalSaved || 0, locale)}</TableCell>
+                    <TableCell className="font-mono font-semibold whitespace-nowrap">৳{toBanglaNums(m.totalSaved || 0)}</TableCell>
                     <TableCell>
                       <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                         m.status === "active" 
@@ -208,10 +202,10 @@ export function MembersTab({
                           : "bg-rose-50 text-rose-600 border border-rose-200"
                       }`}>
                         {m.status === "active" 
-                          ? t("admin.dashboard.active") 
+                          ? "সক্রিয়" 
                           : m.status === "pending_approval"
                           ? "অনুমোদন পেন্ডিং"
-                          : t("admin.dashboard.inactive")}
+                          : "নিষ্ক্রিয়"}
                       </span>
                     </TableCell>
                     <TableCell className="text-right">
@@ -225,7 +219,7 @@ export function MembersTab({
                           }}
                           className={`text-[10px] h-8 px-2.5 font-bold ${m.status === "active" ? "text-rose-600 hover:bg-rose-50" : "text-primary hover:bg-primary-light"}`}
                         >
-                          {m.status === "active" ? t("admin.dashboard.deactivate") : t("admin.dashboard.activate")}
+                          {m.status === "active" ? "নিষ্ক্রিয় করুন" : "সক্রিয় করুন"}
                         </Button>
                         <Button
                           variant="ghost"
@@ -234,7 +228,7 @@ export function MembersTab({
                             e.stopPropagation();
                             onEditClick(m);
                           }}
-                          aria-label={isEn ? `Edit ${m.name}` : `${m.name} এর তথ্য এডিট করুন`}
+                          aria-label={`${m.name} এর তথ্য এডিট করুন`}
                           className="h-8 w-8 text-primary hover:text-primary-dark hover:bg-primary-light cursor-pointer"
                         >
                           <Edit3 className="h-4 w-4" />
@@ -246,7 +240,7 @@ export function MembersTab({
                             e.stopPropagation();
                             onDeleteClick(m.id, m.name);
                           }}
-                          aria-label={isEn ? `Delete ${m.name}` : `${m.name} ডিলিট করুন`}
+                          aria-label={`${m.name} ডিলিট করুন`}
                           className="h-8 w-8 text-destructive hover:text-rose-600 hover:bg-rose-50 cursor-pointer"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -258,7 +252,7 @@ export function MembersTab({
               ) : (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center py-8 text-muted-foreground text-xs">
-                    {t("admin.dashboard.noMembersFound")}
+                    কোনো মেম্বার পাওয়া যায়নি
                   </TableCell>
                 </TableRow>
               )}
@@ -276,9 +270,7 @@ export function MembersTab({
             onPageChange={onPageChange}
             onPageSizeChange={onPageSizeChange}
             pageSizeOptions={[10, 20, 50, 100]}
-            locale={locale}
-            t={t}
-            itemLabel={isEn ? "members" : "জন সদস্য"}
+            itemLabel="জন মেম্বার"
           />
         )}
       </CardContent>

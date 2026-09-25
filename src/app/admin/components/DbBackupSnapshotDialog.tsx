@@ -15,7 +15,6 @@ import {
 import { createDatabaseSnapshotAction } from "@/app/actions/dbBackupActions";
 import { toast } from "sonner";
 import { Database, FileCode, FileJson, Loader2 } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 
 interface DbBackupSnapshotDialogProps {
   open: boolean;
@@ -28,9 +27,6 @@ export function DbBackupSnapshotDialog({
   onOpenChange,
   onSuccess,
 }: DbBackupSnapshotDialogProps) {
-  const { locale } = useLanguage();
-  const isEn = locale === "en";
-
   const [snapshotName, setSnapshotName] = useState("");
   const [snapshotDesc, setSnapshotDesc] = useState("");
   const [snapshotFormat, setSnapshotFormat] = useState<"json" | "sql">("json");
@@ -53,7 +49,7 @@ export function DbBackupSnapshotDialog({
       });
 
       if (res.success) {
-        toast.success(isEn ? "Database snapshot created successfully!" : res.message);
+        toast.success(res.message || "ডাটাবেস স্ন্যাপশট সফলভাবে তৈরি হয়েছে!");
         onOpenChange(false);
         setSnapshotName("");
         setSnapshotDesc("");
@@ -75,23 +71,21 @@ export function DbBackupSnapshotDialog({
           <DialogHeader>
             <DialogTitle className="text-base font-bold flex items-center gap-2">
               <Database className="h-4 w-4 text-primary" />
-              <span>{isEn ? "Create Point-in-Time Snapshot" : "নতুন ডাটাবেস স্ন্যাপশট নিন"}</span>
+              <span>নতুন ডাটাবেস স্ন্যাপশট নিন</span>
             </DialogTitle>
             <DialogDescription className="text-xs">
-              {isEn
-                ? "Saves a complete snapshot of all active tables to the server's disaster recovery registry."
-                : "বর্তমান ডাটাবেসের সমস্ত তথ্য ও মেটাডাটা সার্ভারে নিরাপদ স্ন্যাপশট হিসেবে সংরক্ষণ করুন।"}
+              বর্তমান ডাটাবেসের সমস্ত তথ্য ও মেটাডাটা সার্ভারে নিরাপদ স্ন্যাপশট হিসেবে সংরক্ষণ করুন।
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-3.5 py-4">
             <div className="space-y-1.5">
               <Label htmlFor="snap-name" className="text-xs font-semibold">
-                {isEn ? "Snapshot Name" : "স্ন্যাপশটের নাম"} *
+                স্ন্যাপশটের নাম *
               </Label>
               <Input
                 id="snap-name"
-                placeholder={isEn ? "e.g. Pre-v2-Deployment" : "যেমন: প্রি-রিলিজ ব্যাকআপ"}
+                placeholder="যেমন: প্রি-রিলিজ ব্যাকআপ"
                 value={snapshotName}
                 onChange={(e) => setSnapshotName(e.target.value)}
                 required
@@ -100,18 +94,18 @@ export function DbBackupSnapshotDialog({
 
             <div className="space-y-1.5">
               <Label htmlFor="snap-desc" className="text-xs font-semibold">
-                {isEn ? "Description / Notes (Optional)" : "বিবরণ বা নোট (ঐচ্ছিক)"}
+                বিবরণ বা নোট (ঐচ্ছিক)
               </Label>
               <Input
                 id="snap-desc"
-                placeholder={isEn ? "e.g. Full system backup before member fee update" : "যেমন: মেম্বার ফি আপডেটের আগের ব্যাকআপ"}
+                placeholder="যেমন: মেম্বার ফি আপডেটের আগের ব্যাকআপ"
                 value={snapshotDesc}
                 onChange={(e) => setSnapshotDesc(e.target.value)}
               />
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold">{isEn ? "Format" : "ফরম্যাট"}</Label>
+              <Label className="text-xs font-semibold">ফরম্যাট</Label>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
@@ -149,16 +143,16 @@ export function DbBackupSnapshotDialog({
               onClick={() => onOpenChange(false)}
               className="text-xs"
             >
-              {isEn ? "Cancel" : "বাতিল"}
+              বাতিল
             </Button>
             <Button type="submit" size="sm" disabled={isCreatingSnapshot} className="font-bold text-xs">
               {isCreatingSnapshot ? (
                 <>
                   <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" />
-                  <span>{isEn ? "Creating..." : "তৈরি হচ্ছে..."}</span>
+                  <span>তৈরি হচ্ছে...</span>
                 </>
               ) : (
-                <span>{isEn ? "Save Snapshot" : "স্ন্যাপশট তৈরি করুন"}</span>
+                <span>স্ন্যাপশট তৈরি করুন</span>
               )}
             </Button>
           </DialogFooter>

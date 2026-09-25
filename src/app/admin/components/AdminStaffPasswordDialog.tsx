@@ -19,7 +19,6 @@ interface AdminStaffPasswordDialogProps {
   onClose: () => void;
   staff: AdminUser | null;
   onReset: (id: string, newPass: string) => Promise<boolean>;
-  locale?: "bn" | "en";
 }
 
 export function AdminStaffPasswordDialog({
@@ -27,12 +26,10 @@ export function AdminStaffPasswordDialog({
   onClose,
   staff,
   onReset,
-  locale = "bn",
 }: AdminStaffPasswordDialogProps) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const isBn = locale === "bn";
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,12 +37,12 @@ export function AdminStaffPasswordDialog({
     if (!staff) return;
 
     if (!newPassword || newPassword.length < 6) {
-      toast.warning(isBn ? "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।" : "Password must be at least 6 characters.");
+      toast.warning("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      toast.error(isBn ? "পাসওয়ার্ড দুটি মেলেনি।" : "Passwords do not match.");
+      toast.error("পাসওয়ার্ড দুটি মেলেনি।");
       return;
     }
 
@@ -74,7 +71,7 @@ export function AdminStaffPasswordDialog({
             </div>
             <div>
               <DialogTitle className="text-lg sm:text-xl font-bold font-heading text-secondary dark:text-white">
-                {isBn ? "পাসওয়ার্ড রিসেট করুন" : "Reset Password"}
+                পাসওয়ার্ড রিসেট করুন
               </DialogTitle>
               <DialogDescription className="text-xs text-muted-foreground">
                 {staff.name} ({staff.email})
@@ -87,7 +84,7 @@ export function AdminStaffPasswordDialog({
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
               <Lock className="h-3.5 w-3.5 text-primary" />
-              {isBn ? "নতুন পাসওয়ার্ড" : "New Password"} *
+              নতুন পাসওয়ার্ড *
             </label>
             <Input
               type="password"
@@ -102,7 +99,7 @@ export function AdminStaffPasswordDialog({
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
               <Lock className="h-3.5 w-3.5 text-primary" />
-              {isBn ? "পাসওয়ার্ড নিশ্চিত করুন" : "Confirm Password"} *
+              পাসওয়ার্ড নিশ্চিত করুন *
             </label>
             <Input
               type="password"
@@ -123,7 +120,7 @@ export function AdminStaffPasswordDialog({
               disabled={loading}
               className="text-xs rounded-xl"
             >
-              {isBn ? "বাতিল" : "Cancel"}
+              বাতিল
             </Button>
             <Button
               type="submit"
@@ -131,13 +128,7 @@ export function AdminStaffPasswordDialog({
               disabled={loading}
               className="text-xs rounded-xl bg-amber-600 hover:bg-amber-700 font-bold text-white px-5"
             >
-              {loading
-                ? isBn
-                  ? "পরিবর্তন হচ্ছে..."
-                  : "Updating..."
-                : isBn
-                ? "পাসওয়ার্ড আপডেট করুন"
-                : "Reset Password"}
+              {loading ? "পরিবর্তন হচ্ছে..." : "পাসওয়ার্ড আপডেট করুন"}
             </Button>
           </div>
         </form>

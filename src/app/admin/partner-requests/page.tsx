@@ -9,7 +9,6 @@ import {
   deleteAllRejectedPartnerRequestsAction,
 } from "@/app/actions/partnerActions";
 import { PartnerRequest } from "@/services/db";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -25,7 +24,6 @@ import { Trash2, Loader2 } from "lucide-react";
 import { PartnerRequestsTab } from "../components/PartnerRequestsTab";
 
 export default function AdminPartnerRequestsPage() {
-  const { t, locale } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [partnerRequests, setPartnerRequests] = useState<PartnerRequest[]>([]);
   const [totalItems, setTotalItems] = useState(0);
@@ -124,16 +122,16 @@ export default function AdminPartnerRequestsPage() {
     try {
       const success = await deletePartnerRequestAction(deletingRequest.id);
       if (success) {
-        toast.success(t("admin.partnerRequests.deleteSuccess"));
+        toast.success("আবেদনটি সফলভাবে মুছে ফেলা হয়েছে।");
         setDeleteModalOpen(false);
         setDeletingRequest(null);
         await loadData();
         window.dispatchEvent(new Event("admin-data-change"));
       } else {
-        toast.error(locale === "bn" ? "আবেদনটি মুছে ফেলা সম্ভব হয়নি।" : "Failed to delete request.");
+        toast.error("আবেদনটি মুছে ফেলা সম্ভব হয়নি।");
       }
     } catch {
-      toast.error(locale === "bn" ? "সার্ভার ত্রুটি।" : "Server error.");
+      toast.error("সার্ভার ত্রুটি।");
     } finally {
       setIsDeleting(false);
     }
@@ -144,15 +142,15 @@ export default function AdminPartnerRequestsPage() {
     try {
       const res = await deleteAllRejectedPartnerRequestsAction();
       if (res.success) {
-        toast.success(t("admin.partnerRequests.deleteAllSuccess"));
+        toast.success("বাতিলকৃত সকল আবেদন সফলভাবে মুছে ফেলা হয়েছে।");
         setDeleteAllModalOpen(false);
         await loadData();
         window.dispatchEvent(new Event("admin-data-change"));
       } else {
-        toast.error(locale === "bn" ? "বাতিলকৃত আবেদনগুলো মুছে ফেলা সম্ভব হয়নি।" : "Failed to delete rejected requests.");
+        toast.error("বাতিলকৃত আবেদনগুলো মুছে ফেলা সম্ভব হয়নি।");
       }
     } catch {
-      toast.error(locale === "bn" ? "সার্ভার ত্রুটি।" : "Server error.");
+      toast.error("সার্ভার ত্রুটি।");
     } finally {
       setIsDeletingAll(false);
     }
@@ -210,8 +208,6 @@ export default function AdminPartnerRequestsPage() {
           setPage(1);
         }}
         hasRejectedRequests={hasRejectedRequests}
-        locale={locale}
-        t={t}
         loading={loading}
         processingId={processingId}
       />
@@ -222,14 +218,13 @@ export default function AdminPartnerRequestsPage() {
           <DialogHeader>
             <DialogTitle className="text-lg font-bold text-destructive flex items-center gap-2">
               <Trash2 className="h-5 w-5" />
-              <span>{t("admin.partnerRequests.deleteConfirmTitle")}</span>
+              <span>আবেদন মুছে ফেলুন</span>
             </DialogTitle>
             <DialogDescription className="text-xs text-muted-foreground pt-1">
-              {t("admin.partnerRequests.deleteConfirmDesc")}
+              আপনি কি নিশ্চিতভাবে এই আবেদনটি মুছে ফেলতে চান? এই পরিবর্তনটি পুনরুদ্ধার করা যাবে না।
               {deletingRequest && (
                 <span className="block mt-2 font-semibold text-foreground">
-                  {locale === "bn" ? "প্রতিষ্ঠান: " : "Organization: "}
-                  {deletingRequest.orgName}
+                  প্রতিষ্ঠান: {deletingRequest.orgName}
                 </span>
               )}
             </DialogDescription>
@@ -242,7 +237,7 @@ export default function AdminPartnerRequestsPage() {
               disabled={isDeleting}
               className="cursor-pointer"
             >
-              {locale === "bn" ? "বাতিল" : "Cancel"}
+              বাতিল
             </Button>
             <Button
               variant="destructive"
@@ -254,10 +249,10 @@ export default function AdminPartnerRequestsPage() {
               {isDeleting ? (
                 <>
                   <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                  {locale === "bn" ? "মুছে ফেলা হচ্ছে..." : "Deleting..."}
+                  মুছে ফেলা হচ্ছে...
                 </>
               ) : (
-                locale === "bn" ? "মুছে ফেলুন" : "Delete"
+                "মুছে ফেলুন"
               )}
             </Button>
           </DialogFooter>
@@ -270,10 +265,10 @@ export default function AdminPartnerRequestsPage() {
           <DialogHeader>
             <DialogTitle className="text-lg font-bold text-destructive flex items-center gap-2">
               <Trash2 className="h-5 w-5" />
-              <span>{t("admin.partnerRequests.deleteAllConfirmTitle")}</span>
+              <span>বাতিলকৃত সকল আবেদন মুছুন</span>
             </DialogTitle>
             <DialogDescription className="text-xs text-muted-foreground pt-1">
-              {t("admin.partnerRequests.deleteAllConfirmDesc")}
+              আপনি কি নিশ্চিতভাবে সকল বাতিলকৃত আবেদন মুছে ফেলতে চান? এই পরিবর্তনটি ফিরিয়ে আনা সম্ভব নয়।
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="pt-2 gap-2">
@@ -284,7 +279,7 @@ export default function AdminPartnerRequestsPage() {
               disabled={isDeletingAll}
               className="cursor-pointer"
             >
-              {locale === "bn" ? "বাতিল" : "Cancel"}
+              বাতিল
             </Button>
             <Button
               variant="destructive"
@@ -296,10 +291,10 @@ export default function AdminPartnerRequestsPage() {
               {isDeletingAll ? (
                 <>
                   <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                  {locale === "bn" ? "মুছে ফেলা হচ্ছে..." : "Deleting..."}
+                  মুছে ফেলা হচ্ছে...
                 </>
               ) : (
-                locale === "bn" ? "সব মুছুন" : "Delete All"
+                "সব মুছুন"
               )}
             </Button>
           </DialogFooter>

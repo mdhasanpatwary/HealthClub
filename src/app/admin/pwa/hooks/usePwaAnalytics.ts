@@ -23,8 +23,7 @@ const DEFAULT_PWA_STATS: PwaStatsData = {
   recentDevices: [],
 };
 
-export function usePwaAnalytics(locale: "bn" | "en") {
-  const isBn = locale === "bn";
+export function usePwaAnalytics() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [stats, setStats] = useState<PwaStatsData>(DEFAULT_PWA_STATS);
@@ -35,15 +34,15 @@ export function usePwaAnalytics(locale: "bn" | "en") {
       const data = await getPwaStatsAction();
       setStats(data);
       if (isManualRefresh) {
-        toast.success(isBn ? "PWA পরিসংখ্যান আপডেট হয়েছে" : "PWA stats refreshed");
+        toast.success("PWA পরিসংখ্যান আপডেট হয়েছে");
       }
     } catch {
-      toast.error(isBn ? "অ্যানালিটিক্স লোড করতে সমস্যা হয়েছে" : "Failed to load analytics");
+      toast.error("অ্যানালিটিক্স লোড করতে সমস্যা হয়েছে");
     } finally {
       setLoading(false);
       if (isManualRefresh) setRefreshing(false);
     }
-  }, [isBn]);
+  }, []);
 
   useEffect(() => {
     let isMounted = true;

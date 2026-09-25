@@ -12,10 +12,9 @@ import { Doctor, Partner } from "@/services/db";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { DoctorAvatar, DoctorSerialModal } from "@/components/ui/doctors/DoctorModals";
 import { DoctorAvailabilityBadge, DoctorNoticeBanner } from "@/components/ui/doctors/DoctorAvailabilityBadge";
-import { DEPT_ICONS, CLINICAL_FOCUS_MAP } from "./consultantData";
+import { DEPT_ICONS, CLINICAL_FOCUS_MAP, DEPT_LABEL_MAP } from "./consultantData";
 import { toast } from "sonner";
 import { SITE_URL } from "@/lib/siteConfig";
 
@@ -28,9 +27,7 @@ export default function DoctorProfileView({
   doctor,
   relatedDoctors = [],
 }: DoctorProfileViewProps) {
-  const { t, locale } = useLanguage();
   const [showSerialModal, setShowSerialModal] = useState(false);
-  const isEn = locale === "en";
 
   const DeptIcon = DEPT_ICONS[doctor.department] || Stethoscope;
   const clinicalFocus = CLINICAL_FOCUS_MAP[doctor.department] || CLINICAL_FOCUS_MAP.other;
@@ -70,11 +67,13 @@ export default function DoctorProfileView({
 
     try {
       await navigator.clipboard.writeText(profileUrl);
-      toast.success(t("consultants.profile.linkCopied") || "Doctor profile link copied!");
+      toast.success("ডাক্তারের প্রোফাইল লিংক কপি করা হয়েছে!");
     } catch {
-      toast.error("Could not copy link.");
+      toast.error("লিংক কপি করা সম্ভব হয়নি।");
     }
   };
+
+  const deptLabel = DEPT_LABEL_MAP[doctor.department] || doctor.department || doctor.specialty;
 
   return (
     <div className="bg-background min-h-screen py-4 sm:py-10">
@@ -82,11 +81,11 @@ export default function DoctorProfileView({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-4 sm:mb-6">
         <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-muted-foreground overflow-x-auto whitespace-nowrap py-1">
           <Link href="/" className="hover:text-primary transition-colors">
-            {t("consultants.profile.breadcrumbHome") || "Home"}
+            হোম
           </Link>
           <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground/60" />
           <Link href="/consultants" className="hover:text-primary transition-colors">
-            {t("consultants.profile.breadcrumbConsultants") || "Specialist Doctors"}
+            বিশেষজ্ঞ ডাক্তার
           </Link>
           <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground/60" />
           <span className="text-foreground font-semibold truncate max-w-[200px] sm:max-w-none">
@@ -118,18 +117,12 @@ export default function DoctorProfileView({
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
                 <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-xs font-bold px-3 py-1 rounded-full gap-1.5">
                   <DeptIcon className="h-3.5 w-3.5" />
-                  <span>
-                    {(() => {
-                      const deptKey = `consultants.filter.${doctor.department}`;
-                      const translated = t(deptKey);
-                      return translated !== deptKey ? translated : (doctor.department || doctor.specialty);
-                    })()}
-                  </span>
+                  <span>{deptLabel}</span>
                 </Badge>
-                <DoctorAvailabilityBadge doctor={doctor} locale={locale} size="md" />
+                <DoctorAvailabilityBadge doctor={doctor} size="md" />
                 <Badge variant="outline" className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 border-emerald-500/30 bg-emerald-50/50 dark:bg-emerald-950/20 px-2.5 py-0.5 rounded-full gap-1">
                   <ShieldCheck className="h-3.5 w-3.5" />
-                  <span>{t("consultants.profile.verifiedSpecialist")}</span>
+                  <span>ভেরিফাইড বিশেষজ্ঞ</span>
                 </Badge>
               </div>
 
@@ -143,7 +136,7 @@ export default function DoctorProfileView({
 
               <div className="bg-muted/40 p-3 sm:p-4 rounded-2xl text-xs sm:text-sm text-foreground/90 font-medium leading-relaxed max-w-3xl">
                 <span className="font-bold text-muted-foreground block mb-0.5 text-[11px] uppercase tracking-wider">
-                  {t("consultants.profile.degreesTitle") || "Qualifications"}
+                  শিক্ষাগত যোগ্যতা ও ডিগ্রি
                 </span>
                 {doctor.degrees}
               </div>
@@ -164,7 +157,7 @@ export default function DoctorProfileView({
                 className="w-full bg-primary hover:bg-primary-dark text-white rounded-2xl h-12 text-sm font-bold shadow-md shadow-primary/20 gap-2 cursor-pointer"
               >
                 <PhoneCall className="h-4 w-4 animate-pulse" />
-                <span>{t("consultants.profile.callSerialNow") || "Call for Serial"}</span>
+                <span>সিরিয়াল নিতে কল দিন</span>
               </Button>
 
               <a
@@ -174,7 +167,7 @@ export default function DoctorProfileView({
                 className="inline-flex items-center justify-center gap-2 h-11 rounded-2xl border border-border bg-background hover:bg-muted text-foreground text-xs sm:text-sm font-semibold transition-colors"
               >
                 <Navigation className="h-4 w-4 text-primary" />
-                <span>{t("consultants.profile.getDirections") || "Map Directions"}</span>
+                <span>গুগল ম্যাপে দিকনির্দেশনা</span>
               </a>
 
               <Button
@@ -183,7 +176,7 @@ export default function DoctorProfileView({
                 className="w-full rounded-2xl h-10 text-xs font-semibold text-muted-foreground hover:text-foreground gap-2 cursor-pointer"
               >
                 <Share2 className="h-3.5 w-3.5" />
-                <span>{t("consultants.profile.shareDoctor") || "Share Profile"}</span>
+                <span>প্রোফাইল শেয়ার করুন</span>
               </Button>
             </div>
           </div>
@@ -197,7 +190,7 @@ export default function DoctorProfileView({
             
             {/* Notice Callout Banner */}
             {doctor.notice && (
-              <DoctorNoticeBanner notice={doctor.notice} locale={locale} />
+              <DoctorNoticeBanner notice={doctor.notice} />
             )}
 
             {/* Chamber Schedule Card */}
@@ -209,14 +202,14 @@ export default function DoctorProfileView({
                   </div>
                   <div>
                     <h2 className="font-heading font-bold text-base sm:text-lg text-foreground">
-                      {t("consultants.profile.chamberSchedule") || "Chamber & Visiting Schedule"}
+                      চেম্বার ও রোগী দেখার সময়সূচী
                     </h2>
                     <p className="text-xs text-muted-foreground">
                       {doctor.chamberName}
                     </p>
                   </div>
                 </div>
-                <DoctorAvailabilityBadge doctor={doctor} locale={locale} size="sm" />
+                <DoctorAvailabilityBadge doctor={doctor} size="sm" />
               </div>
 
               {/* Chamber Details & Address */}
@@ -234,7 +227,7 @@ export default function DoctorProfileView({
                       </p>
                       {doctor.roomNo && (
                         <p className="text-xs font-semibold text-primary inline-flex items-center gap-1 mt-1 bg-primary/10 px-2.5 py-0.5 rounded-lg">
-                          <span>{t("consultants.profile.room") || "Room"}:</span>
+                          <span>রুম নং:</span>
                           <span>{doctor.roomNo}</span>
                         </p>
                       )}
@@ -247,7 +240,7 @@ export default function DoctorProfileView({
                   <div className="p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/20 space-y-1">
                     <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400 font-bold text-xs">
                       <Clock3 className="h-4 w-4 shrink-0" />
-                      <span>{t("consultants.card.visitingDays") || "Visiting Days"}</span>
+                      <span>রোগী দেখার দিন</span>
                     </div>
                     <p className="font-heading font-bold text-sm sm:text-base text-foreground pt-1">
                       {doctor.visitingDays}
@@ -257,7 +250,7 @@ export default function DoctorProfileView({
                   <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20 space-y-1">
                     <div className="flex items-center gap-2 text-primary font-bold text-xs">
                       <Clock className="h-4 w-4 shrink-0" />
-                      <span>{t("consultants.card.visitingHours") || "Visiting Hours"}</span>
+                      <span>সময়সূচী</span>
                     </div>
                     <p className="font-heading font-bold text-sm sm:text-base text-foreground pt-1">
                       {doctor.visitingHours}
@@ -270,7 +263,7 @@ export default function DoctorProfileView({
                   <div className="flex items-center justify-between p-4 rounded-2xl bg-amber-500/5 border border-amber-500/20">
                     <div className="flex items-center gap-2.5 text-xs font-bold text-amber-800 dark:text-amber-300">
                       <CreditCard className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
-                      <span>{t("consultants.profile.fee") || "Consultation Fee"}</span>
+                      <span>পরামর্শ ফি</span>
                     </div>
                     <span className="font-heading font-bold text-sm sm:text-base text-amber-700 dark:text-amber-300">
                       {doctor.consultationFee}
@@ -282,7 +275,7 @@ export default function DoctorProfileView({
               {/* Direct Serial Helpline List */}
               <div className="space-y-3 pt-2">
                 <h3 className="font-heading font-bold text-xs sm:text-sm text-foreground uppercase tracking-wider text-muted-foreground">
-                  {isEn ? "Direct Chamber Phone Serial" : "চেম্বার সিরিয়াল ও বুকিং নাম্বার"}
+                  চেম্বার সিরিয়াল ও বুকিং নাম্বার
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {phoneNumbers.map((phone, idx) => (
@@ -298,7 +291,7 @@ export default function DoctorProfileView({
                         </span>
                       </div>
                       <span className="text-[11px] font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-xl group-hover:bg-primary group-hover:text-white transition-colors">
-                        {isEn ? "Call" : "কল দিন"}
+                        কল দিন
                       </span>
                     </a>
                   ))}
@@ -314,7 +307,7 @@ export default function DoctorProfileView({
                 </div>
                 <div>
                   <h2 className="font-heading font-bold text-base sm:text-lg text-foreground">
-                    {t("consultants.profile.clinicalFocusTitle") || "Specialized Medical Care"}
+                    বিশেষায়িত চিকিৎসাসেবা ও পারদর্শিতা
                   </h2>
                   <p className="text-xs text-muted-foreground">
                     {doctor.specialty}
@@ -323,27 +316,27 @@ export default function DoctorProfileView({
               </div>
 
               <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                {isEn ? clinicalFocus.en : clinicalFocus.bn}
+                {clinicalFocus.bn}
               </p>
 
               {/* Patient Preparation Checklist */}
               <div className="bg-muted/30 border border-border/60 rounded-2xl p-4 sm:p-5 space-y-3 mt-4">
                 <h3 className="font-heading font-bold text-xs sm:text-sm text-foreground flex items-center gap-2">
                   <FileText className="h-4 w-4 text-primary" />
-                  <span>{t("consultants.profile.patientPrepTitle") || "Preparation Before Chamber Visit"}</span>
+                  <span>চেম্বারে আসার পূর্বে রোগীর প্রস্তুতি</span>
                 </h3>
                 <ul className="space-y-2 text-xs text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                    <span>{t("consultants.profile.prepTip1")}</span>
+                    <span>পূর্বের সকল প্রেসক্রিপশন, টেস্ট রিপোর্ট এবং নিয়মিত ঔষধের তালিকা সাথে রাখুন।</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                    <span>{t("consultants.profile.prepTip2")}</span>
+                    <span>সিরিয়াল ফোনে নিশ্চিত করুন এবং নির্ধারিত সময়ের অন্তত ১৫-২০ মিনিট পূর্বে চেম্বারে উপস্থিত হোন।</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                    <span>{t("consultants.profile.prepTip3")}</span>
+                    <span>পার্টনার ডায়াগনস্টিক সেন্টার বা হাসপাতালে ছাড় পেতে হেলথ ক্লাব ডিজিটাল কার্ড প্রদর্শন করুন।</span>
                   </li>
                 </ul>
               </div>
@@ -357,17 +350,17 @@ export default function DoctorProfileView({
             <Card className="rounded-3xl border-2 border-primary/30 bg-primary/5 p-5 sm:p-6 shadow-xs space-y-3 relative overflow-hidden">
               <div className="flex items-center gap-2.5 text-primary font-bold text-sm">
                 <ShieldCheck className="h-5 w-5 shrink-0" />
-                <span>{isEn ? "Health Club Member Benefit" : "হেলথ ক্লাব মেম্বার সুবিধা"}</span>
+                <span>হেলথ ক্লাব মেম্বার সুবিধা</span>
               </div>
               <p className="text-xs text-foreground/80 leading-relaxed">
-                {t("consultants.profile.memberDiscountNotice")}
+                হেলথ ক্লাব মেম্বারগণ এই ডাক্তারের প্রেসক্রিপশন অনুযায়ী সকল ডায়াগনস্টিক টেস্টে পার্টনার হাসপাতালগুলোতে ১০-৩০% পর্যন্ত বিশেষ ছাড় উপভোগ করবেন।
               </p>
               <div className="pt-2">
                 <Link
                   href="/membership"
                   className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary-dark transition-colors shadow-xs"
                 >
-                  {isEn ? "Get Membership Card" : "মেম্বারশিপ কার্ড সংগ্রহ করুন"}
+                  মেম্বারশিপ কার্ড সংগ্রহ করুন
                 </Link>
               </div>
             </Card>
@@ -377,13 +370,13 @@ export default function DoctorProfileView({
               <Card className="rounded-3xl border-border/80 bg-card p-5 sm:p-6 shadow-xs space-y-4">
                 <div className="flex items-center justify-between pb-2 border-b border-border/60">
                   <h3 className="font-heading font-bold text-sm text-foreground">
-                    {t("consultants.profile.relatedDoctors") || "Related Specialists"}
+                    এই বিভাগের অন্যান্য বিশেষজ্ঞ ডাক্তার
                   </h3>
                   <Link
                     href="/consultants"
                     className="text-[11px] font-bold text-primary hover:underline"
                   >
-                    {isEn ? "View All" : "সকল দেখুন"}
+                    সকল দেখুন
                   </Link>
                 </div>
 
@@ -423,7 +416,7 @@ export default function DoctorProfileView({
                 className="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-2xl border border-border bg-card hover:bg-muted text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ArrowLeft className="h-4 w-4" />
-                <span>{t("consultants.profile.viewAllDoctors") || "Back to Doctor Directory"}</span>
+                <span>সকল ডাক্তার তালিকায় ফিরুন</span>
               </Link>
             </div>
           </div>
@@ -435,8 +428,6 @@ export default function DoctorProfileView({
         <DoctorSerialModal
           doctor={doctor}
           onClose={() => setShowSerialModal(false)}
-          t={t}
-          locale={locale}
         />
       )}
     </div>

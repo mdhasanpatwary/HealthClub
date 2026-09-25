@@ -37,7 +37,7 @@ import {
   PartnerStaffTransactionsList,
   FilterPeriod,
 } from "./PartnerStaffTransactionsList";
-import { useLanguage } from "@/components/layout/LanguageProvider";
+import { toBanglaNums } from "@/lib/utils";
 import { toast } from "sonner";
 
 interface PartnerStaffDetailsModalProps {
@@ -63,9 +63,6 @@ export function PartnerStaffDetailsModal({
   onToggleStatus,
   onOpenCredentials,
 }: PartnerStaffDetailsModalProps) {
-  const { t, locale } = useLanguage();
-  const isBn = locale === "bn";
-
   const [loading, setLoading] = useState(true);
   const [detailsStaff, setDetailsStaff] = useState<PartnerStaff | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -86,14 +83,14 @@ export function PartnerStaffDetailsModal({
         setTransactions(res.transactions || []);
         setStats(res.stats || null);
       } else {
-        toast.error(res.error || t("partner.staff.loadError"));
+        toast.error(res.error || "স্টাফ তথ্য লোড করতে সমস্যা হয়েছে");
       }
     } catch {
-      toast.error(t("partner.staff.loadError"));
+      toast.error("স্টাফ তথ্য লোড করতে সমস্যা হয়েছে");
     } finally {
       setLoading(false);
     }
-  }, [t]);
+  }, []);
 
   useEffect(() => {
     if (isOpen && staffId) {
@@ -106,7 +103,7 @@ export function PartnerStaffDetailsModal({
   const handleCopy = (text: string, key: string, label: string) => {
     navigator.clipboard.writeText(text);
     setCopiedKey(key);
-    toast.success(`${label} ${t("partner.staff.credentialsCopied")}`);
+    toast.success(`${label} কপি করা হয়েছে`);
     setTimeout(() => setCopiedKey(null), 2000);
   };
 
@@ -114,14 +111,15 @@ export function PartnerStaffDetailsModal({
 
   const roleText =
     activeStaff?.role === "manager"
-      ? t("partner.staff.roleManager")
-      : t("partner.staff.roleCashier");
+      ? "ম্যানেজার"
+      : "বিলিং স্টাফ";
 
   const formattedJoinDate = activeStaff?.createdAt
-    ? new Date(activeStaff.createdAt).toLocaleDateString(
-        isBn ? "bn-BD" : "en-GB",
-        { day: "numeric", month: "short", year: "numeric" }
-      )
+    ? new Date(activeStaff.createdAt).toLocaleDateString("bn-BD", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })
     : "";
 
   return (
@@ -148,9 +146,7 @@ export function PartnerStaffDetailsModal({
                         : "bg-slate-500/10 text-slate-500 border-slate-500/20"
                     }`}
                   >
-                    {activeStaff?.isActive
-                      ? t("partner.staff.statusActive")
-                      : t("partner.staff.statusInactive")}
+                    {activeStaff?.isActive ? "সক্রিয়" : "নিষ্ক্রিয়"}
                   </span>
                 </div>
                 <DialogDescription className="text-xs text-muted-foreground truncate">
@@ -166,10 +162,10 @@ export function PartnerStaffDetailsModal({
                 size="sm"
                 onClick={() => activeStaff && onOpenCredentials(activeStaff)}
                 className="h-8 px-2.5 rounded-xl text-xs gap-1.5 border-border bg-card hover:bg-muted font-medium cursor-pointer"
-                title={t("partner.staff.viewCredentialsSlip")}
+                title="লগইন তথ্য স্লিপ"
               >
                 <Sparkles className="h-3.5 w-3.5 text-primary" />
-                <span className="hidden sm:inline">{t("partner.staff.viewCredentialsSlip")}</span>
+                <span className="hidden sm:inline">লগইন তথ্য স্লিপ</span>
               </Button>
 
               <Button
@@ -177,10 +173,10 @@ export function PartnerStaffDetailsModal({
                 size="sm"
                 onClick={() => activeStaff && onEdit(activeStaff)}
                 className="h-8 px-2.5 rounded-xl text-xs gap-1.5 border-border hover:text-blue-600 cursor-pointer"
-                title={t("partner.staff.modalEditTitle")}
+                title="স্টাফ এডিট"
               >
                 <Edit2 className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">{t("partner.staff.modalEditTitle")}</span>
+                <span className="hidden sm:inline">স্টাফ এডিট</span>
               </Button>
 
               <Button
@@ -188,7 +184,7 @@ export function PartnerStaffDetailsModal({
                 size="sm"
                 onClick={() => activeStaff && onResetPassword(activeStaff)}
                 className="h-8 px-2.5 rounded-xl text-xs gap-1.5 border-border hover:text-amber-600 cursor-pointer"
-                title={t("partner.staff.resetPassword")}
+                title="পাসওয়ার্ড রিসেট"
               >
                 <KeyRound className="h-3.5 w-3.5" />
               </Button>
@@ -198,7 +194,7 @@ export function PartnerStaffDetailsModal({
                 size="sm"
                 onClick={() => activeStaff && onDelete(activeStaff)}
                 className="h-8 w-8 p-0 rounded-xl text-muted-foreground hover:text-destructive hover:border-destructive/30 cursor-pointer"
-                title={t("partner.staff.deleteStaff")}
+                title="স্টাফ মুছে ফেলুন"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </Button>
@@ -212,7 +208,7 @@ export function PartnerStaffDetailsModal({
             <Building2 className="h-4 w-4 text-primary shrink-0" />
             <div className="truncate min-w-0">
               <span className="text-[10px] text-muted-foreground block">
-                {t("partner.staff.counterDesk")}
+                কাউন্টার / ডেস্ক
               </span>
               <span className="font-semibold text-foreground truncate block">
                 {activeStaff?.deskName}
@@ -225,7 +221,7 @@ export function PartnerStaffDetailsModal({
               <ShieldCheck className="h-4 w-4 text-primary shrink-0" />
               <div className="truncate min-w-0">
                 <span className="text-[10px] text-muted-foreground block">
-                  {t("partner.staff.usernameLabel").replace(" *", "")}
+                  ইউজারনেম
                 </span>
                 <span className="font-mono font-bold text-foreground truncate block">
                   @{activeStaff?.username}
@@ -240,11 +236,11 @@ export function PartnerStaffDetailsModal({
                 handleCopy(
                   activeStaff?.username || "",
                   "username",
-                  t("partner.staff.usernameLabel").replace(" *", "")
+                  "ইউজারনেম"
                 )
               }
               className="h-6 w-6 p-0 rounded-md text-muted-foreground hover:text-foreground cursor-pointer shrink-0"
-              title={t("partner.staff.copyUsername")}
+              title="ইউজারনেম কপি করুন"
             >
               {copiedKey === "username" ? (
                 <Check className="h-3 w-3 text-emerald-600" />
@@ -259,10 +255,10 @@ export function PartnerStaffDetailsModal({
               <Phone className="h-4 w-4 text-primary shrink-0" />
               <div className="truncate min-w-0">
                 <span className="text-[10px] text-muted-foreground block">
-                  {t("partner.staff.phoneLabel")}
+                  ফোন নম্বর
                 </span>
                 <span className="font-mono text-foreground truncate block">
-                  {activeStaff?.phone || t("partner.staff.phoneNotSet")}
+                  {activeStaff?.phone ? toBanglaNums(activeStaff.phone) : "দেওয়া নেই"}
                 </span>
               </div>
             </div>
@@ -275,7 +271,7 @@ export function PartnerStaffDetailsModal({
                   handleCopy(
                     activeStaff.phone || "",
                     "phone",
-                    t("partner.staff.phoneLabel")
+                    "ফোন নম্বর"
                   )
                 }
                 className="h-6 w-6 p-0 rounded-md text-muted-foreground hover:text-foreground cursor-pointer shrink-0"
@@ -303,15 +299,15 @@ export function PartnerStaffDetailsModal({
               <CardContent className="p-3 sm:p-3.5 space-y-1">
                 <div className="flex items-center justify-between text-muted-foreground">
                   <span className="text-[10px] sm:text-[11px] font-medium">
-                    {t("partner.staff.colTxns")}
+                    মোট লেনদেন
                   </span>
                   <Receipt className="h-3.5 w-3.5 text-blue-500" />
                 </div>
                 <div className="text-base sm:text-lg font-bold font-mono text-foreground">
-                  {(stats?.totalCount || 0).toLocaleString(isBn ? "bn-BD" : "en-US")}
+                  {toBanglaNums(stats?.totalCount || 0)}
                 </div>
                 <div className="text-[10px] text-muted-foreground">
-                  {t("partner.staff.todayTxns")}: <span className="font-bold text-foreground">{stats?.todayCount || 0}</span>
+                  আজকের লেনদেন: <span className="font-bold text-foreground">{toBanglaNums(stats?.todayCount || 0)}</span>
                 </div>
               </CardContent>
             </Card>
@@ -320,15 +316,15 @@ export function PartnerStaffDetailsModal({
               <CardContent className="p-3 sm:p-3.5 space-y-1">
                 <div className="flex items-center justify-between text-muted-foreground">
                   <span className="text-[10px] sm:text-[11px] font-medium">
-                    {t("partner.staff.totalBilled")}
+                    মোট বিল
                   </span>
                   <CircleDollarSign className="h-3.5 w-3.5 text-purple-500" />
                 </div>
                 <div className="text-base sm:text-lg font-bold font-mono text-foreground">
-                  ৳{(stats?.totalBill || 0).toLocaleString(isBn ? "bn-BD" : "en-US")}
+                  ৳{toBanglaNums(stats?.totalBill || 0)}
                 </div>
                 <div className="text-[10px] text-muted-foreground truncate">
-                  {t("partner.staff.avgBill")}: ৳{(stats?.avgBill || 0).toLocaleString(isBn ? "bn-BD" : "en-US")}
+                  গড় বিল: ৳{toBanglaNums(stats?.avgBill || 0)}
                 </div>
               </CardContent>
             </Card>
@@ -337,15 +333,15 @@ export function PartnerStaffDetailsModal({
               <CardContent className="p-3 sm:p-3.5 space-y-1">
                 <div className="flex items-center justify-between text-muted-foreground">
                   <span className="text-[10px] sm:text-[11px] font-medium">
-                    {t("partner.staff.colSavings")}
+                    মোট সাশ্রয়
                   </span>
                   <TrendingUp className="h-3.5 w-3.5 text-emerald-500" />
                 </div>
                 <div className="text-base sm:text-lg font-bold font-mono text-emerald-600 dark:text-emerald-400">
-                  ৳{(stats?.totalSaved || 0).toLocaleString(isBn ? "bn-BD" : "en-US")}
+                  ৳{toBanglaNums(stats?.totalSaved || 0)}
                 </div>
                 <div className="text-[10px] text-muted-foreground">
-                  {t("partner.staff.todaySavings")}: <span className="font-bold text-emerald-600">৳{stats?.todaySaved || 0}</span>
+                  আজকের সাশ্রয়: <span className="font-bold text-emerald-600">৳{toBanglaNums(stats?.todaySaved || 0)}</span>
                 </div>
               </CardContent>
             </Card>
@@ -354,16 +350,16 @@ export function PartnerStaffDetailsModal({
               <CardContent className="p-3 sm:p-3.5 space-y-1">
                 <div className="flex items-center justify-between text-muted-foreground">
                   <span className="text-[10px] sm:text-[11px] font-medium">
-                    {t("partner.staff.joinedDate")}
+                    যোগদানের তারিখ
                   </span>
                   <Calendar className="h-3.5 w-3.5 text-amber-500" />
                 </div>
                 <div className="text-xs sm:text-sm font-semibold text-foreground truncate">
-                  {formattedJoinDate || "N/A"}
+                  {formattedJoinDate || "প্রযোজ্য নয়"}
                 </div>
                 <div className="text-[10px] text-muted-foreground flex items-center gap-1">
                   <Clock className="h-3 w-3" />
-                  <span>{activeStaff?.isActive ? t("partner.staff.statusActive") : t("partner.staff.statusInactive")}</span>
+                  <span>{activeStaff?.isActive ? "সক্রিয়" : "নিষ্ক্রিয়"}</span>
                 </div>
               </CardContent>
             </Card>
@@ -393,9 +389,7 @@ export function PartnerStaffDetailsModal({
                 : "text-emerald-600 border-emerald-500/30 hover:bg-emerald-500/10"
             }`}
           >
-            {activeStaff?.isActive
-              ? t("partner.staff.statusInactive")
-              : t("partner.staff.statusActive")}
+            {activeStaff?.isActive ? "নিষ্ক্রিয় করুন" : "সক্রিয় করুন"}
           </Button>
 
           <Button
@@ -403,7 +397,7 @@ export function PartnerStaffDetailsModal({
             onClick={onClose}
             className="bg-primary hover:bg-primary-dark text-white font-semibold rounded-xl text-xs h-8 px-4 cursor-pointer"
           >
-            {t("common.close")}
+            বন্ধ করুন
           </Button>
         </div>
       </DialogContent>

@@ -7,13 +7,13 @@ import { Doctor } from "@/services/db";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import dynamic from "next/dynamic";
 import { DoctorCard } from "./doctors/DoctorCard";
 import DepartmentSeoHero from "@/components/consultants/DepartmentSeoHero";
 import { getDepartmentSeoConfig } from "@/data/doctorSeoData";
 import { FENI_UPAZILAS, detectUpazilaFromText } from "@/data/feniLocations";
 import { DEPARTMENTS } from "@/components/consultants/consultantData";
+import { toBanglaNums } from "@/lib/utils";
 
 const DoctorSerialModal = dynamic(
   () => import("./doctors/DoctorModals").then((m) => m.DoctorSerialModal)
@@ -66,8 +66,6 @@ export default function DoctorDirectory({
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
   const [activeSerialDoctor, setActiveSerialDoctor] = useState<Doctor | null>(null);
   const [activeDetailsDoctor, setActiveDetailsDoctor] = useState<Doctor | null>(null);
-  const { t, locale } = useLanguage();
-  const isEn = locale === "en";
 
   // Sync with URL query parameters on initial client mount
   useEffect(() => {
@@ -184,16 +182,13 @@ export default function DoctorDirectory({
     <div className="space-y-6 sm:space-y-8">
       {/* Screen Reader Live Announcement */}
       <div aria-live="polite" role="status" aria-atomic="true" className="sr-only">
-        {isEn
-          ? `Found ${filteredDoctors.length} doctor${filteredDoctors.length === 1 ? "" : "s"}`
-          : `${filteredDoctors.length} জন ডাক্তার পাওয়া গেছে`}
+        {`${toBanglaNums(filteredDoctors.length)} জন ডাক্তার পাওয়া গেছে`}
       </div>
 
       {/* Contextual Department SEO Hero if a specialty is selected */}
       {deptSeo && (
         <DepartmentSeoHero
           seoConfig={deptSeo}
-          locale={locale}
           matchingDoctorsCount={filteredDoctors.length}
           onReset={() => handleDeptChange("all")}
         />
@@ -204,8 +199,8 @@ export default function DoctorDirectory({
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         <Input
           type="text"
-          aria-label={t("consultants.search.placeholder") || "Search doctors by name, specialty, degree, chamber, or serial phone"}
-          placeholder={t("consultants.search.placeholder")}
+          aria-label="নাম, পদবী, ডিগ্রি, চেম্বার বা বিশেষজ্ঞতা দিয়ে ডাক্তার খুঁজুন"
+          placeholder="নাম, পদবী, ডিগ্রি, চেম্বার বা বিশেষজ্ঞতা দিয়ে খুঁজুন..."
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);
@@ -233,7 +228,7 @@ export default function DoctorDirectory({
         <div className="flex items-center justify-between px-1">
           <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
             <MapPin className="h-3.5 w-3.5 text-primary" />
-            <span>{isEn ? "Filter by Upazila / Area" : "উপজেলা / এলাকা অনুযায়ী খুঁজুন"}</span>
+            <span>উপজেলা / এলাকা অনুযায়ী খুঁজুন</span>
           </span>
           {(selectedUpazila !== "all" || selectedDept !== "all" || searchQuery) && (
             <button
@@ -241,7 +236,7 @@ export default function DoctorDirectory({
               onClick={handleResetFilters}
               className="text-xs text-primary hover:underline font-semibold cursor-pointer"
             >
-              {isEn ? "Reset Filters" : "ফিল্টার মুছুন"}
+              ফিল্টার মুছুন
             </button>
           )}
         </div>
@@ -265,14 +260,14 @@ export default function DoctorDirectory({
                 }`}
               >
                 <MapPin className={`h-3 w-3 ${isSelected ? "text-white" : "text-primary"}`} />
-                <span>{isEn ? upz.nameEn : upz.nameBn}</span>
+                <span>{upz.nameBn}</span>
                 {count > 0 && (
                   <span
                     className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
                       isSelected ? "bg-white/30 text-white" : "bg-muted text-muted-foreground"
                     }`}
                   >
-                    {count}
+                    {toBanglaNums(count)}
                   </span>
                 )}
               </button>
@@ -289,7 +284,7 @@ export default function DoctorDirectory({
           </div>
           <select
             id="mobile-department-select"
-            aria-label={t("consultants.filter.all")}
+            aria-label="সকল বিভাগ"
             value={selectedDept}
             onChange={(e) => handleDeptChange(e.target.value)}
             className="w-full appearance-none pl-10 pr-10 py-3 text-sm font-semibold rounded-2xl border border-border/80 bg-background text-foreground shadow-xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all cursor-pointer"
@@ -298,7 +293,7 @@ export default function DoctorDirectory({
               const count = departmentCounts[dept.id] || 0;
               return (
                 <option key={dept.id} value={dept.id} className="bg-popover text-popover-foreground py-1">
-                  {t(dept.labelKey)} {count > 0 ? `(${count})` : ""}
+                  {dept.labelBn} {count > 0 ? `(${toBanglaNums(count)})` : ""}
                 </option>
               );
             })}
@@ -329,10 +324,10 @@ export default function DoctorDirectory({
               }`}
             >
               <Icon className="h-3.5 w-3.5" />
-              <span>{t(dept.labelKey)}</span>
+              <span>{dept.labelBn}</span>
               {count > 0 && (
                 <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${isSelected ? "bg-white/20 text-white" : "bg-muted-foreground/10 text-muted-foreground"}`}>
-                  {count}
+                  {toBanglaNums(count)}
                 </span>
               )}
             </button>
@@ -348,9 +343,6 @@ export default function DoctorDirectory({
               <DoctorCard
                 key={doc.id}
                 doctor={doc}
-                locale={locale}
-                isEn={isEn}
-                t={t}
                 onDetailsClick={setActiveDetailsDoctor}
                 onSerialClick={setActiveSerialDoctor}
               />
@@ -365,7 +357,7 @@ export default function DoctorDirectory({
                 onClick={() => setVisibleCount((prev) => prev + 12)}
                 className="px-6 py-2.5 rounded-xl text-sm font-semibold border-border hover:bg-muted cursor-pointer"
               >
-                {t("consultants.button.loadMore") || (isEn ? "Load More Doctors" : "আরও ডাক্তার দেখুন")} ({filteredDoctors.length - displayedDoctors.length} {t("consultants.button.remaining") || (isEn ? "remaining" : "জন বাকি")})
+                আরও ডাক্তার দেখুন ({toBanglaNums(filteredDoctors.length - displayedDoctors.length)} জন বাকি)
               </Button>
             </div>
           )}
@@ -374,10 +366,10 @@ export default function DoctorDirectory({
         <Card className="p-8 sm:p-12 text-center rounded-2xl border-dashed border-2 border-border/80 bg-muted/10">
           <Stethoscope className="h-12 w-12 mx-auto text-muted-foreground/50 mb-3" />
           <h3 className="font-heading font-bold text-base sm:text-lg text-secondary dark:text-white mb-1">
-            {t("consultants.empty.title") || (isEn ? "No doctors found" : "কোনো ডাক্তার পাওয়া যায়নি")}
+            কোনো ডাক্তার পাওয়া যায়নি
           </h3>
           <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto mb-4">
-            {t("consultants.empty.desc") || (isEn ? "Please try another search keyword or select a different department." : "অনুগ্রহ করে অন্য কোনো কি-ওয়ার্ড বা বিভাগ দিয়ে পুনরায় চেষ্টা করুন।")}
+            অনুগ্রহ করে অন্য কোনো কি-ওয়ার্ড বা বিভাগ দিয়ে পুনরায় চেষ্টা করুন।
           </p>
           <Button
             variant="outline"
@@ -385,7 +377,7 @@ export default function DoctorDirectory({
             onClick={handleResetFilters}
             className="rounded-xl cursor-pointer"
           >
-            {t("consultants.empty.reset") || (isEn ? "Reset Filters" : "ফিল্টার রিসেট করুন")}
+            ফিল্টার রিসেট করুন
           </Button>
         </Card>
       )}
@@ -395,8 +387,6 @@ export default function DoctorDirectory({
         <DoctorSerialModal
           doctor={activeSerialDoctor}
           onClose={() => setActiveSerialDoctor(null)}
-          t={t}
-          locale={locale}
         />
       )}
 
@@ -408,7 +398,6 @@ export default function DoctorDirectory({
             setActiveDetailsDoctor(null);
             setActiveSerialDoctor(doc);
           }}
-          t={t}
         />
       )}
     </div>

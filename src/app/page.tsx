@@ -4,8 +4,6 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { getHomepageStats, getHomepagePartners } from "@/lib/homepageData";
 import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
-import { Locale } from "@/lib/i18n";
-import { tServer } from "@/lib/i18n.server";
 import type { Member } from "@/services/db";
 import JsonLd from "@/components/seo/JsonLd";
 import { getHomepageJsonLd } from "@/lib/seo/homepageSchema";
@@ -31,23 +29,12 @@ import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteC
 export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
 
 export async function generateMetadata() {
-  const isEn = false;
-
-  const ogTitle = isEn
-    ? "Health Club - Save Up to 30% on Healthcare & Hospital Bills"
-    : "হেলথ ক্লাব - চিকিৎসা ব্যয়ে ৩০% পর্যন্ত ডিসকাউন্ট পান";
-
-  const ogDescription = isEn
-    ? "Join Health Club to get digital discount cards for hospitals, labs, pharmacies, and 24/7 directory of doctors, blood donors, and ambulances in Feni."
-    : "নির্ধারিত হাসপাতাল ও ল্যাবে ডিসকাউন্ট কার্ড এবং ফেনীর বিশেষজ্ঞ ডাক্তার, রক্তদাতা ও অ্যাম্বুলেন্সের ২৪/৭ জরুরি তথ্য সেবা।";
+  const ogTitle = "হেলথ ক্লাব - চিকিৎসা ব্যয়ে ৩০% পর্যন্ত ডিসকাউন্ট পান";
+  const ogDescription = "নির্ধারিত হাসপাতাল ও ল্যাবে ডিসকাউন্ট কার্ড এবং ফেনীর বিশেষজ্ঞ ডাক্তার, রক্তদাতা ও অ্যাম্বুলেন্সের ২৪/৭ জরুরি তথ্য সেবা।";
 
   return {
-    title: isEn
-      ? { absolute: "Health Club - Healthcare Discount Membership Platform in Bangladesh" }
-      : { absolute: "হেলথ ক্লাব - স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী | ডিজিটাল স্বাস্থ্য মেম্বারশিপ" },
-    description: isEn
-      ? "Get instant discounts up to 30% on hospital admission, medical tests, labs, and pharmacies with Health Club digital membership card in Feni and Bangladesh."
-      : "হেলথ ক্লাবের ডিজিটাল মেম্বারশিপ কার্ড দিয়ে পার্টনার হাসপাতাল, ডায়াগনস্টিক ল্যাব ও মডেল ফার্মেসিতে পান আকর্ষণীয় ডিসকাউন্ট ও সাশ্রয়ী চিকিৎসা।",
+    title: { absolute: "হেলথ ক্লাব - স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী | ডিজিটাল স্বাস্থ্য মেম্বারশিপ" },
+    description: "হেলথ ক্লাবের ডিজিটাল মেম্বারশিপ কার্ড দিয়ে পার্টনার হাসপাতাল, ডায়াগনস্টিক ল্যাব ও মডেল ফার্মেসিতে পান আকর্ষণীয় ডিসকাউন্ট ও সাশ্রয়ী চিকিৎসা।",
     alternates: {
       canonical: SITE_URL,
     },
@@ -97,7 +84,6 @@ export async function generateMetadata() {
       description: ogDescription,
       url: SITE_URL,
       siteName: "হেলথ ক্লাব (Health Club)",
-      locale: isEn ? "en_US" : "bn_BD",
       type: "website",
       images: DEFAULT_OG_IMAGES,
     },
@@ -111,9 +97,6 @@ export async function generateMetadata() {
 }
 
 export default async function Home() {
-  const locale = "bn" as Locale;
-  const isEn = false;
-  const t = (key: string) => tServer(locale, key);
 
   // Single cached query for all homepage stats & settings (60s cache)
   const [stats, homepagePartners, contactSettings] = await Promise.all([
@@ -138,7 +121,7 @@ export default async function Home() {
   // Sample member data for the digital card visual in Hero
   const sampleMember: Member = {
     id: "HC-2026-F982A",
-    name: locale === "en" ? "Md. Ashraful Alam" : "মোঃ আশরাফুল আলম",
+    name: "মোঃ আশরাফুল আলম",
     phone: "01712345678",
     email: "ashraful@example.com",
     tier: "founding",
@@ -146,12 +129,10 @@ export default async function Home() {
     joinedDate: "2026-01-15",
     expiryDate: "2027-01-15",
     totalSaved: 10500,
-    address: locale === "en" ? "Mohipal, Feni" : "মহিপাল, ফেনী",
+    address: "মহিপাল, ফেনী",
   };
 
   const homepageJsonLd = getHomepageJsonLd({
-    isEn,
-    t,
     hotline: contactSettings?.hotline,
   });
 
@@ -162,7 +143,6 @@ export default async function Home() {
       {/* 1. HERO SECTION */}
       <LandingHero
         sampleMember={sampleMember}
-        t={t}
       />
 
       {/* 2. STATS SECTION */}
@@ -171,8 +151,6 @@ export default async function Home() {
         hospitalCount={hospitalCount}
         diagnosticCount={diagnosticCount}
         pharmacyCount={pharmacyCount}
-        t={t}
-        locale={locale}
       />
 
       {/* 2.5 EMERGENCY & HEALTHCARE SERVICES HUB */}
@@ -180,23 +158,21 @@ export default async function Home() {
         doctorCount={doctorCount}
         bloodDonorCount={bloodDonorCount}
         ambulanceCount={ambulanceCount}
-        t={t}
-        locale={locale}
       />
 
       {/* 3. HOW IT WORKS SECTION */}
       <div className="content-auto">
-        <LandingHowItWorks t={t} />
+        <LandingHowItWorks />
       </div>
 
       {/* 4. MEMBERSHIP BENEFITS SECTION */}
       <div className="content-auto">
-        <LandingBenefits t={t} />
+        <LandingBenefits />
       </div>
 
       {/* 5. PRICING PLANS SECTION */}
       <div className="content-auto">
-        <LandingPricing t={t} />
+        <LandingPricing />
       </div>
 
       {/* 6. PARTNER DIRECTORY PREVIEW */}
@@ -204,12 +180,12 @@ export default async function Home() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-12">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div className="space-y-2 sm:space-y-3 text-center md:text-left">
-              <span className="section-label">{t("page.partnerClinicsLabs")}</span>
+              <span className="section-label">অংশীদার চিকিৎসাকেন্দ্র</span>
               <h2 className="font-heading text-2xl sm:text-4xl font-bold text-secondary dark:text-white mt-1">
-                {t("page.ourPartnerHospitalsDiagnostics")}
+                আমাদের পার্টনার হাসপাতাল ও ডায়াগনস্টিকসমূহ
               </h2>
               <p className="text-xs sm:text-sm text-muted-foreground max-w-xl">
-                {t("page.getSpecialDiscountsAtTop")}
+                হেলথ ক্লাবের সাথে চুক্তিবদ্ধ দেশের শীর্ষস্থানীয় হাসপাতাল ও ল্যাবগুলোতে বিশেষ ছাড়ের সুবিধা পান।
               </p>
             </div>
             <Link
@@ -219,7 +195,7 @@ export default async function Home() {
                 "border-emerald-600/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 shrink-0 self-center md:self-end"
               )}
             >
-              {t("page.viewAllPartnersDetails")}
+              সকল পার্টনার ও ডিটেইলস দেখুন
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -239,9 +215,9 @@ export default async function Home() {
       <section className="content-auto py-10 sm:py-20 lg:py-28 bg-background">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-3 sm:space-y-8">
           <div className="text-center space-y-2 sm:space-y-3 max-w-xl mx-auto">
-            <span className="section-label">{t("page.memberTestimonials")}</span>
+            <span className="section-label">মেম্বারদের অভিজ্ঞতা</span>
             <h2 className="font-heading text-2xl sm:text-4xl font-bold text-secondary dark:text-white mt-2">
-              {t("page.ourMembersRealSavingsStories")}
+              আমাদের সদস্যদের বাস্তব সঞ্চয়ের গল্প
             </h2>
           </div>
 
@@ -251,7 +227,7 @@ export default async function Home() {
 
       {/* 9. WHY CHOOSE - COMPARISON TABLE */}
       <div className="content-auto">
-        <LandingComparison t={t} />
+        <LandingComparison />
       </div>
 
       {/* CTA BANNER */}
@@ -265,10 +241,10 @@ export default async function Home() {
         />
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center space-y-4 sm:space-y-6">
           <h2 className="font-heading text-2xl sm:text-4xl font-extrabold text-white leading-tight">
-            {t("page.cta.title")}
+            আজই হেলথ ক্লাবের সদস্য হন
           </h2>
           <p className="text-sm sm:text-lg text-white/85 max-w-xl mx-auto">
-            {t("page.cta.description")}
+            বিনামূল্যে সদস্যতা নিন এবং নির্ধারিত হাসপাতাল ও ডায়াগনস্টিক সেন্টারে ১০-৩০% ছাড় উপভোগ করুন।
           </p>
           <Link
             href="/register"
@@ -277,7 +253,7 @@ export default async function Home() {
               "bg-white text-primary hover:bg-white/90 px-8 shadow-xl hover:shadow-2xl hover:-translate-y-0.5"
             )}
           >
-            {t("page.cta.button")}
+            বিনামূল্যে যোগ দিন
             <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </div>
@@ -285,23 +261,23 @@ export default async function Home() {
 
       {/* 9.5 HEALTHCARE BLOG & HOSPITAL GUIDES */}
       <div className="content-auto">
-        <LandingBlogSection posts={blogPosts} locale={locale} />
+        <LandingBlogSection posts={blogPosts} />
       </div>
 
       {/* 10. FAQ SECTION */}
       <section id="faq" className="content-auto py-10 sm:py-20 lg:py-28 bg-background">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-12">
           <div className="text-center space-y-2 sm:space-y-3 max-w-xl mx-auto">
-            <span className="section-label">{t("page.questionsAnswers")}</span>
+            <span className="section-label">প্রশ্ন ও উত্তর</span>
             <h2 className="font-heading text-2xl sm:text-4xl font-bold text-secondary dark:text-white mt-2">
-              {t("page.frequentlyAskedQuestionsFaq")}
+              সাধারণ জিজ্ঞাসা (FAQ)
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground">
-              {t("page.findTheAnswersToFrequently")}
+              হেলথ ক্লাব মেম্বারশিপ সার্ভিস নিয়ে সচরাচর জানতে চাওয়া প্রশ্নগুলোর উত্তর নিচে খুঁজে পাবেন।
             </p>
           </div>
 
-          <FAQSection t={t} />
+          <FAQSection />
         </div>
       </section>
 
@@ -309,12 +285,12 @@ export default async function Home() {
       <section className="content-auto py-10 sm:py-20 lg:py-28 bg-muted/40 dark:bg-slate-950/60 border-t border-border/60">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-12">
           <div className="text-center space-y-2 sm:space-y-3 max-w-xl mx-auto">
-            <span className="section-label">{t("page.contactUs")}</span>
+            <span className="section-label">যোগাযোগ করুন</span>
             <h2 className="font-heading text-2xl sm:text-4xl font-bold text-secondary dark:text-white mt-2">
-              {t("page.letUsKnowAnyQueries")}
+              আপনার যেকোনো জিজ্ঞাসা জানাতে পারেন
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground">
-              {t("page.havingTroubleUnderstandingMembershipBenefits")}
+              মেম্বারশিপ সুবিধা বুঝতে অসুবিধা হচ্ছে অথবা আপনি কি পার্টনার হতে চান? আমাদের মেসেজ পাঠান।
             </p>
           </div>
 

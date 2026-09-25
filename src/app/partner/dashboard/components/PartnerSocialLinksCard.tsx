@@ -4,7 +4,6 @@ import { Share2, Globe } from "lucide-react";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { PartnerSocialLinks } from "@/services/db";
 import {
   FacebookIcon,
@@ -23,8 +22,6 @@ export function PartnerSocialLinksCard({
   socialLinks,
   onChange,
 }: PartnerSocialLinksCardProps) {
-  const { t } = useLanguage();
-
   return (
     <Card className="border-border shadow-xs rounded-3xl overflow-hidden">
       <CardHeader className="p-5 sm:p-6 pb-3 sm:pb-4 bg-muted/20 border-b border-border/50">
@@ -32,10 +29,10 @@ export function PartnerSocialLinksCard({
           <div className="p-1.5 rounded-xl bg-primary/10 text-primary">
             <Share2 className="h-4 w-4" />
           </div>
-          <span>{t("partner.profile.socialLinksTitle")}</span>
+          <span>সোশ্যাল মিডিয়া ও ওয়েবসাইট লিংক</span>
         </CardTitle>
         <CardDescription className="text-xs sm:text-sm">
-          {t("partner.profile.socialLinksSubtitle")}
+          আপনার প্রতিষ্ঠানের ফেসবুক পেজ, হোয়াটসঅ্যাপ, ওয়েবসাইট ও অন্যান্য যোগাযোগ লিংক যুক্ত করুন।
         </CardDescription>
       </CardHeader>
 
@@ -51,14 +48,14 @@ export function PartnerSocialLinksCard({
               <div className="h-4 w-4 rounded-full bg-[#1877F2]/15 text-[#1877F2] flex items-center justify-center shrink-0">
                 <FacebookIcon className="h-2.5 w-2.5" />
               </div>
-              <span>{t("partner.profile.facebook")}</span>
+              <span>ফেসবুক পেজ / প্রোফাইল লিংক</span>
             </Label>
             <Input
               id="partner-social-facebook"
               type="text"
               value={socialLinks.facebook || ""}
               onChange={(e) => onChange("facebook", e.target.value)}
-              placeholder={t("partner.profile.facebookPlaceholder")}
+              placeholder="যেমন: https://facebook.com/yourhospital"
               className="h-10 rounded-xl border-border text-xs"
             />
           </div>
@@ -72,14 +69,14 @@ export function PartnerSocialLinksCard({
               <div className="h-4 w-4 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
                 <WhatsAppIcon className="h-2.5 w-2.5" />
               </div>
-              <span>{t("partner.profile.whatsapp")}</span>
+              <span>হোয়াটসঅ্যাপ নম্বর বা চ্যাট লিংক</span>
             </Label>
             <Input
               id="partner-social-whatsapp"
               type="text"
               value={socialLinks.whatsapp || ""}
               onChange={(e) => onChange("whatsapp", e.target.value)}
-              placeholder={t("partner.profile.whatsappPlaceholder")}
+              placeholder="যেমন: 018XXXXXXXX বা https://wa.me/88018XXXXXXXX"
               className="h-10 rounded-xl border-border bg-emerald-500/5 focus:border-emerald-500 text-xs"
             />
           </div>
@@ -93,14 +90,14 @@ export function PartnerSocialLinksCard({
               <div className="h-4 w-4 rounded-full bg-sky-500/15 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0">
                 <Globe className="h-2.5 w-2.5" />
               </div>
-              <span>{t("partner.profile.website")}</span>
+              <span>অফিসিয়াল ওয়েবসাইট</span>
             </Label>
             <Input
               id="partner-social-website"
               type="text"
               value={socialLinks.website || ""}
               onChange={(e) => onChange("website", e.target.value)}
-              placeholder={t("partner.profile.websitePlaceholder")}
+              placeholder="যেমন: https://yourhospital.com"
               className="h-10 rounded-xl border-border text-xs"
             />
           </div>
@@ -114,14 +111,14 @@ export function PartnerSocialLinksCard({
               <div className="h-4 w-4 rounded-full bg-red-500/15 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0">
                 <YouTubeIcon className="h-2.5 w-2.5" />
               </div>
-              <span>{t("partner.profile.youtube")}</span>
+              <span>ইউটিউব চ্যানেল</span>
             </Label>
             <Input
               id="partner-social-youtube"
               type="text"
               value={socialLinks.youtube || ""}
               onChange={(e) => onChange("youtube", e.target.value)}
-              placeholder={t("partner.profile.youtubePlaceholder")}
+              placeholder="যেমন: https://youtube.com/@yourchannel"
               className="h-10 rounded-xl border-border text-xs"
             />
           </div>
@@ -135,14 +132,14 @@ export function PartnerSocialLinksCard({
               <div className="h-4 w-4 rounded-full bg-[#0A66C2]/15 text-[#0A66C2] flex items-center justify-center shrink-0">
                 <LinkedInIcon className="h-2.5 w-2.5" />
               </div>
-              <span>{t("partner.profile.linkedin")}</span>
+              <span>লিঙ্কডইন পেজ</span>
             </Label>
             <Input
               id="partner-social-linkedin"
               type="text"
               value={socialLinks.linkedin || ""}
               onChange={(e) => onChange("linkedin", e.target.value)}
-              placeholder={t("partner.profile.linkedinPlaceholder")}
+              placeholder="যেমন: https://linkedin.com/company/yourhospital"
               className="h-10 rounded-xl border-border text-xs"
             />
           </div>
@@ -156,14 +153,14 @@ export function PartnerSocialLinksCard({
               <div className="h-4 w-4 rounded-full bg-pink-500/15 text-pink-600 dark:text-pink-400 flex items-center justify-center shrink-0">
                 <InstagramIcon className="h-2.5 w-2.5" />
               </div>
-              <span>{t("partner.profile.instagram")}</span>
+              <span>ইনস্টাগ্রাম প্রোফাইল</span>
             </Label>
             <Input
               id="partner-social-instagram"
               type="text"
               value={socialLinks.instagram || ""}
               onChange={(e) => onChange("instagram", e.target.value)}
-              placeholder={t("partner.profile.instagramPlaceholder")}
+              placeholder="যেমন: https://instagram.com/yourhospital"
               className="h-10 rounded-xl border-border text-xs"
             />
           </div>

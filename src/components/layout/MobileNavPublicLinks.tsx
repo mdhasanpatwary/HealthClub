@@ -6,13 +6,11 @@ import { Siren, Calculator, BookOpen, Newspaper } from "lucide-react";
 interface MobileNavPublicLinksProps {
   pathname: string;
   onClose: () => void;
-  t: (key: string) => string;
 }
 
 export function MobileNavPublicLinks({
   pathname,
   onClose,
-  t,
 }: MobileNavPublicLinksProps) {
   const isActive = (path: string) => {
     if (path === "/") return pathname === path;
@@ -24,10 +22,10 @@ export function MobileNavPublicLinks({
       {/* Main Links */}
       <div className="space-y-1">
         {[
-          { name: t("layout.header.home"), path: "/" },
-          { name: t("layout.header.consultants"), path: "/consultants" },
-          { name: t("layout.header.partnerHospitals"), path: "/partner-hospitals" },
-          { name: t("layout.header.membershipPlans"), path: "/membership" },
+          { name: "হোম", path: "/" },
+          { name: "ডাক্তার ও কনসালট্যান্টস", path: "/consultants" },
+          { name: "পার্টনার হাসপাতাল", path: "/partner-hospitals" },
+          { name: "মেম্বারশিপ প্ল্যান", path: "/membership" },
         ].map((link) => (
           <Link
             key={link.path}
@@ -48,7 +46,7 @@ export function MobileNavPublicLinks({
       {/* Services Group */}
       <div className="space-y-2">
         <div className="px-3.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-          {t("layout.header.services") || "সেবাসমূহ"}
+          সেবাসমূহ
         </div>
         <div className="grid grid-cols-1 gap-1.5">
           <Link
@@ -60,7 +58,7 @@ export function MobileNavPublicLinks({
             <div className="h-7 w-7 rounded-lg bg-rose-500/10 text-rose-600 flex items-center justify-center shrink-0">
               <Siren className="h-4 w-4" />
             </div>
-            <span>{t("layout.header.emergency")} ({t("layout.header.emergencySubtitle") || "রক্তদাতা ও অ্যাম্বুলেন্স"})</span>
+            <span>জরুরি সেবা (রক্তদাতা ও অ্যাম্বুলেন্স)</span>
           </Link>
 
           <Link
@@ -72,7 +70,7 @@ export function MobileNavPublicLinks({
             <div className="h-7 w-7 rounded-lg bg-cyan-500/10 text-cyan-600 flex items-center justify-center shrink-0">
               <Calculator className="h-4 w-4" />
             </div>
-            <span>{t("layout.header.healthTools")} ({t("layout.header.healthToolsSubtitle") || "বিএমআই ও ক্যালোরি"})</span>
+            <span>হেলথ টুলস (বিএমআই ও ক্যালোরি)</span>
           </Link>
 
           <Link
@@ -84,7 +82,7 @@ export function MobileNavPublicLinks({
             <div className="h-7 w-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
               <BookOpen className="h-4 w-4" />
             </div>
-            <span>{t("layout.header.healthTips")} ({t("layout.header.healthTipsSubtitle") || "ডাক্তারের পরামর্শ ও টিপস"})</span>
+            <span>স্বাস্থ্য টিপস (ডাক্তারের পরামর্শ ও টিপস)</span>
           </Link>
 
           <Link
@@ -96,7 +94,7 @@ export function MobileNavPublicLinks({
             <div className="h-7 w-7 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0">
               <Newspaper className="h-4 w-4" />
             </div>
-            <span>{t("layout.header.blog") || "স্বাস্থ্য ব্লগ ও গাইড"} ({t("layout.header.blogSubtitle") || "হাসপাতাল রিভিউ ও তালিকা"})</span>
+            <span>স্বাস্থ্য ব্লগ ও গাইড (হাসপাতাল রিভিউ ও তালিকা)</span>
           </Link>
         </div>
       </div>
@@ -104,8 +102,8 @@ export function MobileNavPublicLinks({
       {/* Company Links */}
       <div className="space-y-1 pt-1 border-t border-border/60">
         {[
-          { name: t("layout.header.aboutUs"), path: "/about-us" },
-          { name: t("layout.header.contact"), path: "/contact" },
+          { name: "আমাদের সম্পর্কে", path: "/about-us" },
+          { name: "যোগাযোগ", path: "/contact" },
         ].map((link) => (
           <Link
             key={link.path}

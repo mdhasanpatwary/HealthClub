@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { PlusCircle } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Partner, Transaction } from "@/services/db";
 import {
   getPaginatedTransactionsAction,
@@ -11,8 +10,7 @@ import {
 } from "@/app/actions/transactionActions";
 import { getPartnersAction } from "@/app/actions/partnerActions";
 import { getMemberByIdOrPhoneAction } from "@/app/actions/memberAdminActions";
-import { parseDiscountPercentage } from "@/lib/utils";
-import { formatNum } from "@/lib/i18n";
+import { parseDiscountPercentage, toBanglaNums } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
@@ -20,7 +18,6 @@ import { TransactionsTab } from "../components/TransactionsTab";
 import { TransactionDialog } from "../components/TransactionDialog";
 
 export default function AdminTransactionsPage() {
-  const { t, locale } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [totalItems, setTotalItems] = useState(0);
@@ -72,24 +69,24 @@ export default function AdminTransactionsPage() {
     try {
       const member = await getMemberByIdOrPhoneAction(newTx.memberId);
       if (!member) {
-        toast.error(t("admin.dashboard.memberNotFound"));
+        toast.error("মেম্বার খুঁজে পাওয়া যায়নি।");
         return;
       }
 
       if (member.status !== "active") {
-        toast.error(t("admin.dashboard.memberNotActive"));
+        toast.error("মেম্বার সক্রিয় নন।");
         return;
       }
 
       const partner = partners.find((p) => p.id === newTx.partnerId);
       if (!partner) {
-        toast.error(t("admin.dashboard.selectedPartnerNotFound"));
+        toast.error("নির্বাচিত পার্টনার পাওয়া যায়নি।");
         return;
       }
 
       const billAmount = Number(newTx.amount);
       if (isNaN(billAmount) || billAmount <= 0) {
-        toast.error(t("admin.dashboard.enterValidBillAmount"));
+        toast.error("সঠিক বিলের পরিমাণ লিখুন।");
         return;
       }
 
@@ -107,21 +104,17 @@ export default function AdminTransactionsPage() {
       });
 
       if ("error" in res) {
-        toast.error(res.error || t("admin.dashboard.txLogFailed"));
+        toast.error(res.error || "লেনদেন সেভ করতে সমস্যা হয়েছে।");
         return;
       }
 
-      const successMsg = t("admin.dashboard.txLoggedSuccess").replace(
-        "${saved}",
-        formatNum(saved, locale)
-      );
-      toast.success(successMsg);
+      toast.success(`মেম্বার সফলভাবে ৳${toBanglaNums(saved)} সাশ্রয় পেয়েছেন এবং লেনদেন রেকর্ড হয়েছে!`);
       setNewTx({ memberId: "", partnerId: "", amount: "" });
       setIsTxOpen(false);
       await loadData();
       window.dispatchEvent(new Event("admin-data-change"));
     } catch {
-      toast.error(t("admin.dashboard.txLogFailed"));
+      toast.error("লেনদেন সেভ করতে সমস্যা হয়েছে।");
     }
   };
 
@@ -151,10 +144,10 @@ export default function AdminTransactionsPage() {
       <div className="flex justify-between items-center bg-card p-4 rounded-2xl border border-border">
         <div>
           <h2 className="font-heading text-lg font-bold text-foreground">
-            {t("admin.dashboard.transactionLog")}
+            লেনদেন লগ
           </h2>
           <p className="text-xs text-muted-foreground">
-            {t("admin.dashboard.txDescLabel")}
+            মেম্বারদের ডিসকাউন্ট ও সেভিংসের রেকর্ড
           </p>
         </div>
         <Button
@@ -163,7 +156,7 @@ export default function AdminTransactionsPage() {
           size="sm"
         >
           <PlusCircle className="h-4 w-4" />
-          {t("admin.dashboard.logMemberDiscountTitle")}
+          + মেম্বার ডিসকাউন্ট এন্ট্রি করুন
         </Button>
       </div>
 
@@ -178,8 +171,6 @@ export default function AdminTransactionsPage() {
           setPageSize(newSize);
           setPage(1);
         }}
-        locale={locale}
-        t={t}
         loading={loading}
       />
 
@@ -192,7 +183,6 @@ export default function AdminTransactionsPage() {
           newTx={newTx}
           setNewTx={setNewTx}
           onSubmit={handleAddTransaction}
-          t={t}
         />
       )}
     </div>

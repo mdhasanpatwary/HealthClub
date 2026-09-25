@@ -16,7 +16,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { formatNum, Locale } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import type {
   AdminNotificationItem,
   NotificationCategory,
@@ -39,42 +39,42 @@ export function getCategoryIcon(category: NotificationCategory) {
   }
 }
 
-export function getCategoryBadge(category: NotificationCategory, isBn: boolean) {
+export function getCategoryBadge(category: NotificationCategory) {
   switch (category) {
     case "renewal":
       return {
-        label: isBn ? "নবায়ন আবেদন" : "Renewal",
+        label: "নবায়ন আবেদন",
         bg: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
       };
     case "partner_request":
       return {
-        label: isBn ? "পার্টনার আবেদন" : "Partner Request",
+        label: "পার্টনার আবেদন",
         bg: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
       };
     case "message":
       return {
-        label: isBn ? "বার্তা" : "Message",
+        label: "বার্তা",
         bg: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20",
       };
     case "member_expiring":
       return {
-        label: isBn ? "মেয়াদ শেষ হবে" : "Expiring",
+        label: "মেয়াদ শেষ হবে",
         bg: "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/20",
       };
     case "member_new":
       return {
-        label: isBn ? "নতুন সদস্য" : "New Member",
+        label: "নতুন সদস্য",
         bg: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
       };
     default:
       return {
-        label: isBn ? "সিস্টেম" : "System",
+        label: "সিস্টেম",
         bg: "bg-primary/10 text-primary border-primary/20",
       };
   }
 }
 
-export function formatRelativeTime(dateStr: string, isBn: boolean): string {
+export function formatRelativeTime(dateStr: string): string {
   try {
     const d = new Date(dateStr);
     const now = new Date();
@@ -84,24 +84,20 @@ export function formatRelativeTime(dateStr: string, isBn: boolean): string {
     const diffHour = Math.floor(diffMin / 60);
     const diffDay = Math.floor(diffHour / 24);
 
-    if (diffMin < 1) return isBn ? "এইমাত্র" : "Just now";
+    if (diffMin < 1) return "এইমাত্র";
     if (diffMin < 60)
-      return isBn
-        ? `${formatNum(diffMin, "bn")} মিনিট আগে`
-        : `${diffMin}m ago`;
+      return `${toBanglaNums(diffMin)} মিনিট আগে`;
     if (diffHour < 24)
-      return isBn
-        ? `${formatNum(diffHour, "bn")} ঘণ্টা আগে`
-        : `${diffHour}h ago`;
+      return `${toBanglaNums(diffHour)} ঘণ্টা আগে`;
     if (diffDay < 7)
-      return isBn ? `${formatNum(diffDay, "bn")} দিন আগে` : `${diffDay}d ago`;
+      return `${toBanglaNums(diffDay)} দিন আগে`;
 
-    return d.toLocaleDateString(isBn ? "bn-BD" : "en-US", {
+    return toBanglaNums(d.toLocaleDateString("bn-BD", {
       month: "short",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
-    });
+    }));
   } catch {
     return dateStr;
   }
@@ -110,7 +106,6 @@ export function formatRelativeTime(dateStr: string, isBn: boolean): string {
 interface NotificationCardProps {
   item: AdminNotificationItem;
   isRead: boolean;
-  locale: Locale;
   onMarkRead: (id: string) => void;
   onDismiss: (id: string) => void;
   dismissText?: string;
@@ -120,17 +115,15 @@ interface NotificationCardProps {
 export function NotificationCard({
   item,
   isRead,
-  locale,
   onMarkRead,
   onDismiss,
   dismissText = "মুছে ফেলুন",
   markAsReadText = "পঠিত করুন",
 }: NotificationCardProps) {
-  const isBn = locale === "bn";
-  const title = isBn ? item.titleBn : item.titleEn;
-  const desc = isBn ? item.descriptionBn : item.descriptionEn;
-  const actionLabel = isBn ? item.actionLabelBn : item.actionLabelEn;
-  const badgeInfo = getCategoryBadge(item.category, isBn);
+  const title = item.titleBn || item.titleEn;
+  const desc = item.descriptionBn || item.descriptionEn;
+  const actionLabel = item.actionLabelBn || item.actionLabelEn;
+  const badgeInfo = getCategoryBadge(item.category);
 
   return (
     <Card
@@ -179,7 +172,7 @@ export function NotificationCard({
             <div className="flex items-center gap-4 text-[11px] text-muted-foreground pt-0.5">
               <span className="inline-flex items-center gap-1">
                 <Clock className="h-3 w-3" />
-                {formatRelativeTime(item.timestamp, isBn)}
+                {formatRelativeTime(item.timestamp)}
               </span>
               {item.meta?.phone && (
                 <span className="font-mono text-foreground/70 font-medium">

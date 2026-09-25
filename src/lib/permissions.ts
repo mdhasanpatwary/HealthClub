@@ -181,13 +181,10 @@ export function hasAdminPermission(
   return config.permissions.includes(permission);
 }
 
-/**
- * Returns the localized label for a role.
- */
-export function getRoleLabel(role: AdminRole, locale: "bn" | "en" = "bn"): string {
+export function getRoleLabel(role: AdminRole): string {
   const config = ROLE_CONFIGS[role];
   if (!config) return role;
-  return locale === "bn" ? config.titleBn : config.titleEn;
+  return config.titleBn;
 }
 
 /**

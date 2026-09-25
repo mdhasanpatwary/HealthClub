@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { LogOut, LayoutDashboard, Settings } from "lucide-react";
 import { Member } from "@/services/db";
 import { authStore } from "@/services/authStore";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { isAdminUser, canAccessAdminRoute } from "@/lib/permissions";
 import {
   DropdownMenu,
@@ -22,7 +21,6 @@ interface UserDropdownProps {
 
 export default function UserDropdown({ user }: UserDropdownProps) {
   const router = useRouter();
-  const { t } = useLanguage();
 
   const handleLogout = () => {
     authStore.logout();
@@ -68,7 +66,7 @@ export default function UserDropdown({ user }: UserDropdownProps) {
               className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md hover:bg-muted text-foreground transition-colors"
             >
               <LayoutDashboard className="h-4 w-4 text-primary" />
-              <span>{t("layout.header.adminPanel")}</span>
+              <span>অ্যাডমিন প্যানেল</span>
             </DropdownMenuItem>
             {canAccessAdminRoute(user.adminRole || "super_admin", "/admin/settings") && (
               <DropdownMenuItem
@@ -76,7 +74,7 @@ export default function UserDropdown({ user }: UserDropdownProps) {
                 className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md hover:bg-muted text-foreground transition-colors"
               >
                 <Settings className="h-4 w-4 text-primary" />
-                <span>{t("admin.nav.settings") || t("profile.page.profileSettings")}</span>
+                <span>সেটিংস</span>
               </DropdownMenuItem>
             )}
           </>
@@ -87,14 +85,14 @@ export default function UserDropdown({ user }: UserDropdownProps) {
               className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md hover:bg-muted text-foreground transition-colors"
             >
               <LayoutDashboard className="h-4 w-4 text-primary" />
-              <span>{t("layout.header.dashboard")}</span>
+              <span>ড্যাশবোর্ড</span>
             </DropdownMenuItem>
             <DropdownMenuItem
               render={<Link href="/dashboard?tab=profile" />}
               className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md hover:bg-muted text-foreground transition-colors"
             >
               <Settings className="h-4 w-4 text-primary" />
-              <span>{t("profile.page.profileSettings")}</span>
+              <span>প্রোফাইল সেটিংস</span>
             </DropdownMenuItem>
           </>
         )}
@@ -107,7 +105,7 @@ export default function UserDropdown({ user }: UserDropdownProps) {
           className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md transition-colors"
         >
           <LogOut className="h-4 w-4" />
-          <span>{t("layout.header.logout")}</span>
+          <span>লগআউট</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

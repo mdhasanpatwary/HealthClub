@@ -15,7 +15,6 @@ import { addPartnerDoctorAction } from "@/app/actions/partnerDoctorActions";
 import { toast } from "sonner";
 import { Stethoscope } from "lucide-react";
 import { DEPT_OPTIONS, DAY_PRESETS } from "./doctorModalConstants";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 
 export interface AddPartnerDoctorModalProps {
   isOpen: boolean;
@@ -30,7 +29,6 @@ export function AddPartnerDoctorModal({
   partnerPhone,
   onSuccess,
 }: AddPartnerDoctorModalProps) {
-  const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -52,7 +50,7 @@ export function AddPartnerDoctorModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.specialty.trim() || !formData.visitingDays.trim() || !formData.visitingHours.trim() || !formData.serialPhone.trim()) {
-      toast.error(t("common.fillRequired") || "সবগুলো প্রয়োজনীয় ফিল্ড পূরণ করুন।");
+      toast.error("সবগুলো প্রয়োজনীয় ফিল্ড পূরণ করুন।");
       return;
     }
 
@@ -60,14 +58,14 @@ export function AddPartnerDoctorModal({
     try {
       const res = await addPartnerDoctorAction(formData);
       if (res.success) {
-        toast.success(t("partner.doctors.saveSuccess") || "নতুন বিশেষজ্ঞ ডাক্তার চেম্বার তালিকায় যুক্ত করা হয়েছে।");
+        toast.success("নতুন বিশেষজ্ঞ ডাক্তার চেম্বার তালিকায় যুক্ত করা হয়েছে।");
         onSuccess();
         onClose();
       } else {
-        toast.error(res.error || t("partner.doctors.saveError") || "ডাক্তার যুক্ত করতে সমস্যা হয়েছে।");
+        toast.error(res.error || "ডাক্তার যুক্ত করতে সমস্যা হয়েছে।");
       }
     } catch {
-      toast.error(t("common.error") || "ডাক্তার যুক্ত করতে সমস্যা হয়েছে।");
+      toast.error("ডাক্তার যুক্ত করতে সমস্যা হয়েছে।");
     } finally {
       setSubmitting(false);
     }
@@ -79,10 +77,10 @@ export function AddPartnerDoctorModal({
         <DialogHeader className="space-y-1">
           <DialogTitle className="font-heading font-bold text-base sm:text-lg md:text-xl flex items-center gap-2">
             <Stethoscope className="h-5 w-5 text-primary shrink-0" />
-            <span className="truncate">{t("partner.doctors.modalAddTitle")}</span>
+            <span className="truncate">নতুন বিশেষজ্ঞ ডাক্তার যুক্ত করুন</span>
           </DialogTitle>
           <DialogDescription className="text-xs text-muted-foreground">
-            {t("partner.doctors.modalAddDesc")}
+            আপনার চেম্বার বা হাসপাতালের বিশেষজ্ঞ ডাক্তারের তথ্য পূরণ করে যুক্ত করুন
           </DialogDescription>
         </DialogHeader>
 
@@ -90,26 +88,26 @@ export function AddPartnerDoctorModal({
           <ImageUpload
             value={formData.imageUrl}
             onChange={(url) => setFormData({ ...formData, imageUrl: url })}
-            label={t("partner.profile.imageUrl") || "ডাক্তারের ছবি (ঐচ্ছিক)"}
+            label="ডাক্তারের ছবি (ঐচ্ছিক)"
             fallbackType="doctor"
             folder="doctors"
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label htmlFor="add-doc-name" className="text-xs font-semibold text-foreground">{t("partner.doctors.nameLabel")}</label>
+              <label htmlFor="add-doc-name" className="text-xs font-semibold text-foreground">ডাক্তারের নাম *</label>
               <Input
                 id="add-doc-name"
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder={t("partner.doctors.namePlaceholder")}
+                placeholder="ডাঃ মোঃ রফিকুল ইসলাম"
                 className="h-10 text-sm"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="add-doc-dept" className="text-xs font-semibold text-foreground">{t("partner.doctors.deptLabel")}</label>
+              <label htmlFor="add-doc-dept" className="text-xs font-semibold text-foreground">বিভাগ *</label>
               <select
                 id="add-doc-dept"
                 value={formData.department}
@@ -123,70 +121,70 @@ export function AddPartnerDoctorModal({
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="add-doc-specialty" className="text-xs font-semibold text-foreground">{t("partner.doctors.specialtyLabel")}</label>
+              <label htmlFor="add-doc-specialty" className="text-xs font-semibold text-foreground">বিশেষজ্ঞতা *</label>
               <Input
                 id="add-doc-specialty"
                 required
                 value={formData.specialty}
                 onChange={(e) => setFormData({ ...formData, specialty: e.target.value })}
-                placeholder={t("partner.doctors.specialtyPlaceholder")}
+                placeholder="মেডিসিন ও হৃদরোগ বিশেষজ্ঞ"
                 className="h-10 text-sm"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="add-doc-degrees" className="text-xs font-semibold text-foreground">{t("partner.doctors.degreesLabel")}</label>
+              <label htmlFor="add-doc-degrees" className="text-xs font-semibold text-foreground">ডিগ্রী / শিক্ষাগত যোগ্যতা</label>
               <Input
                 id="add-doc-degrees"
                 value={formData.degrees}
                 onChange={(e) => setFormData({ ...formData, degrees: e.target.value })}
-                placeholder={t("partner.doctors.degreesPlaceholder")}
+                placeholder="MBBS, FCPS (Medicine)"
                 className="h-10 text-sm"
               />
             </div>
 
             <div className="space-y-1.5 sm:col-span-2">
-              <label htmlFor="add-doc-desig" className="text-xs font-semibold text-foreground">{t("partner.doctors.desigLabel")}</label>
+              <label htmlFor="add-doc-desig" className="text-xs font-semibold text-foreground">পদবী ও বর্তমান প্রতিষ্ঠান</label>
               <Input
                 id="add-doc-desig"
                 value={formData.designation}
                 onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
-                placeholder={t("partner.doctors.desigPlaceholder")}
+                placeholder="সহকারী অধ্যাপক, ফেনী ডায়াবেটিক সমিতি"
                 className="h-10 text-sm"
               />
             </div>
 
             {/* Chamber Specific Fields */}
             <div className="space-y-1.5">
-              <label htmlFor="add-doc-room" className="text-xs font-semibold text-primary">{t("partner.doctors.roomNo")}</label>
+              <label htmlFor="add-doc-room" className="text-xs font-semibold text-primary">রুম / চেম্বার নম্বর</label>
               <Input
                 id="add-doc-room"
                 value={formData.roomNo}
                 onChange={(e) => setFormData({ ...formData, roomNo: e.target.value })}
-                placeholder={t("partner.doctors.roomPlaceholder")}
+                placeholder="রুম নং ২০৪, ২য় তলা"
                 className="h-10 text-sm border-primary/40 focus-visible:ring-primary"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="add-doc-fee" className="text-xs font-semibold text-foreground">{t("partner.doctors.consultationFee")}</label>
+              <label htmlFor="add-doc-fee" className="text-xs font-semibold text-foreground">পরামর্শ ফি</label>
               <Input
                 id="add-doc-fee"
                 value={formData.consultationFee}
                 onChange={(e) => setFormData({ ...formData, consultationFee: e.target.value })}
-                placeholder={t("partner.doctors.feePlaceholder")}
+                placeholder="৳৮০০"
                 className="h-10 text-sm"
               />
             </div>
 
             <div className="space-y-1.5 sm:col-span-2">
-              <label htmlFor="add-doc-days" className="text-xs font-semibold text-foreground">{t("partner.doctors.visitingDays")} *</label>
+              <label htmlFor="add-doc-days" className="text-xs font-semibold text-foreground">রোগী দেখার দিনসমূহ *</label>
               <Input
                 id="add-doc-days"
                 required
                 value={formData.visitingDays}
                 onChange={(e) => setFormData({ ...formData, visitingDays: e.target.value })}
-                placeholder={t("partner.doctors.daysPlaceholder")}
+                placeholder="শনি - বৃহস্পতি"
                 className="h-10 text-sm"
               />
               <div className="flex flex-wrap gap-1.5 pt-1">
@@ -204,25 +202,25 @@ export function AddPartnerDoctorModal({
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="add-doc-hours" className="text-xs font-semibold text-foreground">{t("partner.doctors.visitingHours")} *</label>
+              <label htmlFor="add-doc-hours" className="text-xs font-semibold text-foreground">রোগী দেখার সময় *</label>
               <Input
                 id="add-doc-hours"
                 required
                 value={formData.visitingHours}
                 onChange={(e) => setFormData({ ...formData, visitingHours: e.target.value })}
-                placeholder={t("partner.doctors.hoursPlaceholder")}
+                placeholder="বিকাল ৫:০০ - রাত ৯:০০"
                 className="h-10 text-sm"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="add-doc-phone" className="text-xs font-semibold text-foreground">{t("partner.doctors.serialPhone")} *</label>
+              <label htmlFor="add-doc-phone" className="text-xs font-semibold text-foreground">সিরিয়ালের ফোন নম্বর *</label>
               <Input
                 id="add-doc-phone"
                 required
                 value={formData.serialPhone}
                 onChange={(e) => setFormData({ ...formData, serialPhone: e.target.value })}
-                placeholder={t("partner.doctors.phonePlaceholder")}
+                placeholder="০১৭১২-৩৪৫৬৭৮"
                 className="h-10 text-sm"
               />
             </div>
@@ -234,10 +232,10 @@ export function AddPartnerDoctorModal({
               <div className="flex items-center justify-between p-2.5 bg-background border border-border/80 rounded-xl">
                 <div>
                   <label htmlFor="add-doc-available" className="text-xs font-bold text-foreground block cursor-pointer">
-                    {t("partner.doctors.openToday")}
+                    আজ রোগী দেখবেন
                   </label>
                   <span className="text-[10px] text-muted-foreground">
-                    {formData.availableToday ? t("partner.doctors.openTodayDesc") : t("partner.doctors.closedTodayDesc")}
+                    {formData.availableToday ? "চেম্বারে রোগী দেখা চালু রয়েছে" : "আজ চেম্বার বন্ধ রয়েছে"}
                   </span>
                 </div>
                 <input
@@ -251,7 +249,7 @@ export function AddPartnerDoctorModal({
 
               <div className="space-y-1">
                 <label htmlFor="add-doc-leave" className="text-xs font-semibold text-foreground cursor-pointer">
-                  {t("partner.doctors.leaveUntil")}
+                  কত তারিখ পর্যন্ত ছুটিতে আছেন
                 </label>
                 <Input
                   id="add-doc-leave"
@@ -265,12 +263,12 @@ export function AddPartnerDoctorModal({
 
             <div className="space-y-1">
               <label htmlFor="add-doc-notice" className="text-xs font-semibold text-foreground cursor-pointer">
-                {t("partner.doctors.chamberNotice")}
+                বিশেষ জরুরি নোটিশ (ঐচ্ছিক)
               </label>
               <Input
                 id="add-doc-notice"
                 type="text"
-                placeholder={t("partner.doctors.chamberNoticePlaceholder")}
+                placeholder="আজ সন্ধ্যা ৬টার পর রোগী দেখা শুরু হবে"
                 value={formData.notice}
                 onChange={(e) => setFormData({ ...formData, notice: e.target.value })}
                 className="h-9 text-xs"
@@ -280,10 +278,10 @@ export function AddPartnerDoctorModal({
 
           <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-4 border-t border-border w-full">
             <Button type="button" variant="outline" onClick={onClose} disabled={submitting} className="rounded-xl w-full sm:w-auto">
-              {t("common.cancel")}
+              বাতিল
             </Button>
             <Button type="submit" disabled={submitting} className="rounded-xl bg-primary text-white hover:bg-primary/90 cursor-pointer w-full sm:w-auto">
-              {submitting ? t("partner.doctors.adding") : t("partner.doctors.addDoctorBtn")}
+              {submitting ? "যুক্ত করা হচ্ছে..." : "ডাক্তার যুক্ত করুন"}
             </Button>
           </div>
         </form>

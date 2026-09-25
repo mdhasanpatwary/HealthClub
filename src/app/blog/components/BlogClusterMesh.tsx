@@ -21,11 +21,9 @@ import {
 
 interface BlogClusterMeshProps {
   currentSlug: string;
-  locale?: string;
 }
 
-export function BlogClusterMesh({ currentSlug, locale = "bn" }: BlogClusterMeshProps) {
-  const isEn = locale === "en";
+export function BlogClusterMesh({ currentSlug }: BlogClusterMeshProps) {
   const initialGroup = getClusterGroupIdBySlug(currentSlug);
   const [selectedGroup, setSelectedGroup] = useState<ClusterGroupId>(initialGroup);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -62,17 +60,13 @@ export function BlogClusterMesh({ currentSlug, locale = "bn" }: BlogClusterMeshP
         <div className="space-y-1">
           <div className="inline-flex items-center gap-2 text-xs font-semibold text-primary uppercase tracking-wider">
             <Network className="h-4 w-4" />
-            <span>{isEn ? "Feni Healthcare Guide Network" : "ফেনী স্বাস্থ্যসেবা গাইড নেটওয়ার্ক"}</span>
+            <span>ফেনী স্বাস্থ্যসেবা গাইড নেটওয়ার্ক</span>
           </div>
           <h3 className="font-heading text-lg sm:text-xl font-bold text-foreground">
-            {isEn
-              ? "Interconnected Regional Healthcare Cluster"
-              : "এক নজরে ফেনীর চিকিৎসাসেবার পূর্ণাঙ্গ টপিক ক্লাস্টার"}
+            এক নজরে ফেনীর চিকিৎসাসেবার পূর্ণাঙ্গ টপিক ক্লাস্টার
           </h3>
           <p className="text-xs text-muted-foreground max-w-2xl leading-relaxed">
-            {isEn
-              ? "All hospital, specialist doctor, diagnostic lab, and therapy guides are linked for continuous patient care."
-              : "হাসপাতাল ভর্তি, বিশেষজ্ঞ ডাক্তার চেম্বার, ডায়াগনস্টিক টেস্ট ও ফিজিওথেরাপির প্রতিটি গাইড একে অপরের সাথে সংযুক্ত।"}
+            হাসপাতাল ভর্তি, বিশেষজ্ঞ ডাক্তার চেম্বার, ডায়াগনস্টিক টেস্ট ও ফিজিওথেরাপির প্রতিটি গাইড একে অপরের সাথে সংযুক্ত।
           </p>
         </div>
 
@@ -81,7 +75,7 @@ export function BlogClusterMesh({ currentSlug, locale = "bn" }: BlogClusterMeshP
           prefetch={false}
           className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline shrink-0"
         >
-          <span>{isEn ? "Explore all guides" : "সকল গাইড দেখুন"}</span>
+          <span>সকল গাইড দেখুন</span>
           <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>
@@ -90,12 +84,10 @@ export function BlogClusterMesh({ currentSlug, locale = "bn" }: BlogClusterMeshP
       <div className="space-y-2">
         <div className="flex items-center justify-between text-xs text-muted-foreground px-0.5">
           <span className="font-medium">
-            {isEn ? "Browse by Healthcare Cluster:" : "চিকিৎসাসেবা ক্লাস্টার অনুযায়ী দেখুন:"}
+            চিকিৎসাসেবা ক্লাস্টার অনুযায়ী দেখুন:
           </span>
           <span className="text-[11px]">
-            {isEn
-              ? `${currentGroupNodes.length} guides in this cluster`
-              : `এই ক্লাস্টারে ${toBanglaNums(currentGroupNodes.length)}টি গাইড`}
+            {`এই ক্লাস্টারে ${toBanglaNums(currentGroupNodes.length)}টি গাইড`}
           </span>
         </div>
 
@@ -104,7 +96,7 @@ export function BlogClusterMesh({ currentSlug, locale = "bn" }: BlogClusterMeshP
             const isSelected = selectedGroup === group.id;
             const IconComponent = group.icon;
             const count = groupCounts[group.id] || 0;
-            const label = isEn ? group.labelEn : group.labelBn;
+            const label = group.labelBn;
 
             return (
               <button
@@ -132,7 +124,7 @@ export function BlogClusterMesh({ currentSlug, locale = "bn" }: BlogClusterMeshP
                       : "bg-muted text-muted-foreground"
                   )}
                 >
-                  {isEn ? count : toBanglaNums(count)}
+                  {toBanglaNums(count)}
                 </span>
               </button>
             );
@@ -145,9 +137,9 @@ export function BlogClusterMesh({ currentSlug, locale = "bn" }: BlogClusterMeshP
         {visibleNodes.map((node) => {
           const isCurrent = node.slug === currentSlug;
           const IconComponent = node.icon;
-          const title = isEn ? node.titleEn : node.titleBn;
-          const subtitle = isEn ? node.subtitleEn : node.subtitleBn;
-          const category = isEn ? node.categoryEn : node.categoryBn;
+          const title = node.titleBn;
+          const subtitle = node.subtitleBn;
+          const category = node.categoryBn;
 
           if (isCurrent) {
             return (
@@ -162,7 +154,7 @@ export function BlogClusterMesh({ currentSlug, locale = "bn" }: BlogClusterMeshP
                     </div>
                     <Badge className="bg-primary text-primary-foreground text-[10px] font-bold gap-1 shadow-xs">
                       <CheckCircle2 className="h-3 w-3" />
-                      <span>{isEn ? "Current Guide" : "বর্তমান গাইড"}</span>
+                      <span>বর্তমান গাইড</span>
                     </Badge>
                   </div>
 
@@ -178,7 +170,7 @@ export function BlogClusterMesh({ currentSlug, locale = "bn" }: BlogClusterMeshP
 
                 <div className="pt-3 mt-2 border-t border-primary/20 flex items-center justify-between text-[11px] font-semibold text-primary">
                   <span>{category}</span>
-                  <span className="text-[10px] opacity-80">{isEn ? "Active Reading" : "পড়ছেন"}</span>
+                  <span className="text-[10px] opacity-80">পড়ছেন</span>
                 </div>
               </div>
             );
@@ -221,7 +213,7 @@ export function BlogClusterMesh({ currentSlug, locale = "bn" }: BlogClusterMeshP
               </div>
 
               <div className="pt-3 mt-2 border-t border-border/50 flex items-center justify-between text-[11px] font-semibold text-muted-foreground group-hover:text-primary transition-colors">
-                <span>{isEn ? "Read guide" : "গাইড পড়ুন"}</span>
+                <span>গাইড পড়ুন</span>
                 <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
@@ -241,15 +233,13 @@ export function BlogClusterMesh({ currentSlug, locale = "bn" }: BlogClusterMeshP
           >
             {isExpanded ? (
               <>
-                <span>{isEn ? "Show fewer guides" : "কম গাইড দেখুন"}</span>
+                <span>কম গাইড দেখুন</span>
                 <ChevronUp className="h-3.5 w-3.5" />
               </>
             ) : (
               <>
                 <span>
-                  {isEn
-                    ? `View ${currentGroupNodes.length - 6} more guides in this cluster`
-                    : `এই ক্লাস্টারের আরও ${toBanglaNums(currentGroupNodes.length - 6)}টি গাইড দেখুন`}
+                  {`এই ক্লাস্টারের আরও ${toBanglaNums(currentGroupNodes.length - 6)}টি গাইড দেখুন`}
                 </span>
                 <ChevronDown className="h-3.5 w-3.5" />
               </>
@@ -263,9 +253,7 @@ export function BlogClusterMesh({ currentSlug, locale = "bn" }: BlogClusterMeshP
         <div className="flex items-center gap-2">
           <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
           <span>
-            {isEn
-              ? `Total ${FENI_CLUSTER_NODES.length} interconnected guides available across 6 healthcare clusters.`
-              : `৬টি বিশেষায়িত ক্লাস্টারে সর্বমোট ${toBanglaNums(FENI_CLUSTER_NODES.length)}+টি পারস্পরিক সংযুক্ত স্বাস্থ্য গাইড রয়েছে।`}
+            {`৬টি বিশেষায়িত ক্লাস্টারে সর্বমোট ${toBanglaNums(FENI_CLUSTER_NODES.length)}+টি পারস্পরিক সংযুক্ত স্বাস্থ্য গাইড রয়েছে।`}
           </span>
         </div>
 
@@ -274,7 +262,7 @@ export function BlogClusterMesh({ currentSlug, locale = "bn" }: BlogClusterMeshP
           prefetch={false}
           className="inline-flex items-center gap-1.5 font-bold text-primary hover:underline"
         >
-          <span>{isEn ? "Explore all healthcare topics" : "সকল স্বাস্থ্য গাইড ডিরেক্টরি"}</span>
+          <span>সকল স্বাস্থ্য গাইড ডিরেক্টরি</span>
           <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>

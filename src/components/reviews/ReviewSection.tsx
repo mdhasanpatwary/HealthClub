@@ -11,8 +11,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-import { formatNum } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import { Partner, Review, PartnerReviewStats } from "@/services/db";
 import {
   getPartnerReviewsAction,
@@ -34,9 +33,6 @@ export default function ReviewSection({
   initialStats,
   initialReviews,
 }: ReviewSectionProps) {
-  const { t, locale } = useLanguage();
-  const isBn = locale === "bn";
-
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [reviews, setReviews] = useState<Review[]>(initialReviews || []);
@@ -147,17 +143,15 @@ export default function ReviewSection({
         <div>
           <div className="flex items-center gap-2">
             <h2 className="text-lg sm:text-xl font-black text-secondary dark:text-white font-heading tracking-tight">
-              {t("reviews.title")}
+              সদস্যদের রিভিউ ও রেটিং
             </h2>
             <span className="px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-primary/10 text-primary border border-primary/20 flex items-center gap-1">
               <ShieldCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-              <span>{t("reviews.verifiedBadge")}</span>
+              <span>ভেরিফাইড মেম্বার রিভিউ</span>
             </span>
           </div>
           <p className="text-xs text-muted-foreground mt-0.5">
-            {isBn
-              ? `${partner.name}-এ চিকিৎসাসেবা ও ডিসকাউন্ট গ্রহণকারী ভেরিফাইড সদস্যদের বাস্তব অভিজ্ঞতা।`
-              : `Genuine ratings & reviews from verified members who availed discounts at ${partner.name}.`}
+            {partner.name}-এ চিকিৎসাসেবা ও ডিসকাউন্ট গ্রহণকারী ভেরিফাইড সদস্যদের বাস্তব অভিজ্ঞতা।
           </p>
         </div>
 
@@ -170,7 +164,7 @@ export default function ReviewSection({
           >
             <MessageSquarePlus className="h-3.5 w-3.5 mr-1.5" />
             <span>
-              {eligibility.hasReviewed ? t("reviews.editReview") : t("reviews.writeReview")}
+              {eligibility.hasReviewed ? "আপনার রিভিউ পরিবর্তন করুন" : "রিভিউ লিখুন"}
             </span>
           </Button>
         )}
@@ -181,7 +175,7 @@ export default function ReviewSection({
         {/* Big Score (4 cols) */}
         <div className="sm:col-span-4 flex flex-col items-center justify-center text-center p-3 rounded-xl bg-muted/40 border border-border/50">
           <span className="text-3xl sm:text-4xl font-black text-foreground font-heading tracking-tight">
-            {stats.totalReviews > 0 ? formatNum(stats.averageRating, locale) : "0.0"}
+            {stats.totalReviews > 0 ? toBanglaNums(stats.averageRating) : "০.০"}
           </span>
           <div className="flex items-center gap-1 my-1.5">
             {[1, 2, 3, 4, 5].map((star) => (
@@ -196,8 +190,7 @@ export default function ReviewSection({
             ))}
           </div>
           <p className="text-xs text-muted-foreground font-medium">
-            {t("reviews.outOfFive")} • {formatNum(stats.totalReviews, locale)}{" "}
-            {t("reviews.totalReviews")}
+            ৫ এর মধ্যে • {toBanglaNums(stats.totalReviews)} টি রিভিউ
           </p>
         </div>
 
@@ -215,7 +208,7 @@ export default function ReviewSection({
                     selectedStarFilter === star ? "text-primary font-black" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  <span>{formatNum(star, locale)}</span>
+                  <span>{toBanglaNums(star)}</span>
                   <Star className="h-3 w-3 fill-amber-400 text-amber-500" />
                 </button>
 
@@ -227,7 +220,7 @@ export default function ReviewSection({
                 </div>
 
                 <span className="w-8 text-right text-[11px] text-muted-foreground font-mono">
-                  {formatNum(count, locale)}
+                  {toBanglaNums(count)}
                 </span>
               </div>
             );
@@ -249,7 +242,7 @@ export default function ReviewSection({
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
             <span className="text-muted-foreground flex items-center gap-1 text-[11px] font-semibold mr-1">
               <Filter className="h-3 w-3" />
-              <span>{t("reviews.filter")}</span>
+              <span>ফিল্টার</span>
             </span>
             <Button
               variant={selectedStarFilter === null ? "default" : "outline"}
@@ -257,7 +250,7 @@ export default function ReviewSection({
               onClick={() => handleStarFilterChange(null)}
               className="h-7 text-xs rounded-full cursor-pointer px-3"
             >
-              <span>{t("reviews.allRatings")}</span>
+              <span>সকল রেটিং</span>
             </Button>
             {[5, 4, 3, 2, 1].map((s) => (
               <Button
@@ -267,14 +260,14 @@ export default function ReviewSection({
                 onClick={() => handleStarFilterChange(s)}
                 className="h-7 text-xs rounded-full cursor-pointer px-2.5 flex items-center gap-1"
               >
-                <span>{formatNum(s, locale)}</span>
+                <span>{toBanglaNums(s)}</span>
                 <Star className="h-3 w-3 fill-amber-400 text-amber-500" />
               </Button>
             ))}
           </div>
 
           <span className="text-[11px] text-muted-foreground shrink-0 font-mono hidden sm:inline">
-            {formatNum(reviews.length, locale)} / {formatNum(totalItems, locale)}
+            {toBanglaNums(reviews.length)} / {toBanglaNums(totalItems)}
           </span>
         </div>
       )}
@@ -299,11 +292,11 @@ export default function ReviewSection({
             <div className="space-y-1 max-w-sm mx-auto">
               <h4 className="text-sm font-bold text-foreground font-heading">
                 {selectedStarFilter
-                  ? t("reviews.noReviewsForRating")
-                  : t("reviews.noReviewsAddedYet")}
+                  ? "এই রেটিংয়ের কোনো রিভিউ নেই"
+                  : "কোনো রিভিউ এখনও যোগ হয়নি"}
               </h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                {t("reviews.noReviewsYet")}
+                এই প্রতিষ্ঠানের কোনো রিভিউ এখনও যোগ হয়নি। আপনিই প্রথম সেবাগ্রহীতা হিসেবে আপনার অভিজ্ঞতা শেয়ার করুন!
               </p>
             </div>
           </div>
@@ -321,13 +314,11 @@ export default function ReviewSection({
             >
               {loadingMore && <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />}
               <span>
-                {loadingMore
-                  ? (isBn ? "লোড হচ্ছে..." : "Loading...")
-                  : (isBn ? "আরও রিভিউ দেখুন" : "Load More Reviews")}
+                {loadingMore ? "লোড হচ্ছে..." : "আরও রিভিউ দেখুন"}
               </span>
               {!loadingMore && (
                 <span className="text-[10px] text-muted-foreground font-mono font-normal">
-                  ({formatNum(reviews.length, locale)} / {formatNum(totalItems, locale)})
+                  ({toBanglaNums(reviews.length)} / {toBanglaNums(totalItems)})
                 </span>
               )}
             </Button>

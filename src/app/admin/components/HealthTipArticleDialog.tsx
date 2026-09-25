@@ -26,7 +26,7 @@ import {
 import { saveHealthTipAction } from "@/app/actions/healthTipsAdminActions";
 import { toast } from "sonner";
 import { Loader2, Plus, Trash2 } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
+import { toBanglaNums } from "@/lib/utils";
 
 interface HealthTipArticleDialogProps {
   open: boolean;
@@ -41,9 +41,6 @@ export function HealthTipArticleDialog({
   article,
   onSuccess,
 }: HealthTipArticleDialogProps) {
-  const { locale } = useLanguage();
-  const isEn = locale === "en";
-
   const [slug, setSlug] = useState("");
   const [titleBn, setTitleBn] = useState("");
   const [titleEn, setTitleEn] = useState("");
@@ -121,7 +118,7 @@ export function HealthTipArticleDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!titleBn.trim() || !slug.trim()) {
-      toast.error(isEn ? "Title and Slug are required" : "শিরোনাম ও স্লাগ আবশ্যক");
+      toast.error("শিরোনাম ও স্লাগ আবশ্যক");
       return;
     }
 
@@ -153,17 +150,15 @@ export function HealthTipArticleDialog({
       const res = await saveHealthTipAction(payload);
       if (res.success) {
         toast.success(
-          article
-            ? isEn ? "Article updated successfully!" : "আর্টিকেল আপডেট করা হয়েছে!"
-            : isEn ? "New article published successfully!" : "নতুন আর্টিকেল প্রকাশিত হয়েছে!"
+          article ? "আর্টিকেল আপডেট করা হয়েছে!" : "নতুন আর্টিকেল প্রকাশিত হয়েছে!"
         );
         onSuccess();
         onOpenChange(false);
       } else {
-        toast.error(res.error || (isEn ? "Failed to save article" : "আর্টিকেল সংরক্ষণ ব্যর্থ"));
+        toast.error(res.error || "আর্টিকেল সংরক্ষণ ব্যর্থ");
       }
     } catch {
-      toast.error(isEn ? "An unexpected error occurred" : "একটি সমস্যা দেখা দিয়েছে");
+      toast.error("একটি সমস্যা দেখা দিয়েছে");
     } finally {
       setSaving(false);
     }
@@ -174,14 +169,10 @@ export function HealthTipArticleDialog({
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto bg-background border-border">
         <DialogHeader>
           <DialogTitle className="text-lg font-bold text-foreground">
-            {article
-              ? isEn ? "Edit Health Article" : "স্বাস্থ্য টিপস আর্টিকেল এডিট করুন"
-              : isEn ? "Write New Health Article" : "নতুন স্বাস্থ্য টিপস লিখুন"}
+            {article ? "স্বাস্থ্য টিপস আর্টিকেল এডিট করুন" : "নতুন স্বাস্থ্য টিপস লিখুন"}
           </DialogTitle>
           <DialogDescription className="text-xs text-muted-foreground">
-            {isEn
-              ? "Publish medical guides, prevention tips, and health recommendations."
-              : "চিকিৎসকের পরামর্শ, স্বাস্থ্যকর অভ্যাস ও সচেতনতামূলক গাইড প্রকাশ করুন।"}
+            চিকিৎসকের পরামর্শ, স্বাস্থ্যকর অভ্যাস ও সচেতনতামূলক গাইড প্রকাশ করুন।
           </DialogDescription>
         </DialogHeader>
 
@@ -190,7 +181,7 @@ export function HealthTipArticleDialog({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="art-title-bn" className="text-xs font-semibold">
-                {isEn ? "Title (Bangla)" : "শিরোনাম (বাংলা)"} *
+                শিরোনাম (বাংলা) *
               </Label>
               <Input
                 id="art-title-bn"
@@ -203,7 +194,7 @@ export function HealthTipArticleDialog({
 
             <div className="space-y-1.5">
               <Label htmlFor="art-title-en" className="text-xs font-semibold">
-                {isEn ? "Title (English)" : "শিরোনাম (ইংরেজি)"}
+                শিরোনাম (ইংরেজি)
               </Label>
               <Input
                 id="art-title-en"
@@ -217,7 +208,7 @@ export function HealthTipArticleDialog({
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="art-slug" className="text-xs font-semibold">
-                {isEn ? "URL Slug (Unique)" : "ইউআরএল স্লাগ"} *
+                ইউআরএল স্লাগ *
               </Label>
               <Input
                 id="art-slug"
@@ -230,7 +221,7 @@ export function HealthTipArticleDialog({
 
             <div className="space-y-1.5">
               <Label className="text-xs font-semibold">
-                {isEn ? "Category" : "ক্যাটাগরি"} *
+                ক্যাটাগরি *
               </Label>
               <Select
                 value={category}
@@ -244,7 +235,7 @@ export function HealthTipArticleDialog({
                 <SelectContent>
                   {HEALTH_CATEGORIES.filter((c) => c.id !== "all").map((c) => (
                     <SelectItem key={c.id} value={c.id}>
-                      {isEn ? c.nameEn : c.nameBn}
+                      {c.nameBn}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -253,7 +244,7 @@ export function HealthTipArticleDialog({
 
             <div className="space-y-1.5">
               <Label htmlFor="art-author-bn" className="text-xs font-semibold">
-                {isEn ? "Author / Doctor" : "লেখক / চিকিৎসক"}
+                লেখক / চিকিৎসক
               </Label>
               <Input
                 id="art-author-bn"
@@ -267,7 +258,7 @@ export function HealthTipArticleDialog({
           {/* Excerpts */}
           <div className="space-y-1.5">
             <Label htmlFor="art-excerpt-bn" className="text-xs font-semibold">
-              {isEn ? "Short Summary (Bangla)" : "সংক্ষিপ্ত সারসংক্ষেপ (বাংলা)"}
+              সংক্ষিপ্ত সারসংক্ষেপ (বাংলা)
             </Label>
             <textarea
               id="art-excerpt-bn"
@@ -283,7 +274,7 @@ export function HealthTipArticleDialog({
           <div className="space-y-2 p-3 rounded-xl bg-muted/30 border border-border">
             <div className="flex items-center justify-between">
               <Label className="text-xs font-bold text-foreground">
-                {isEn ? "Key Takeaways (Bullet Points)" : "একনজরে জরুরি পরামর্শসমূহ (পয়েন্টস)"}
+                একনজরে জরুরি পরামর্শসমূহ (পয়েন্টস)
               </Label>
               <Button
                 type="button"
@@ -293,7 +284,7 @@ export function HealthTipArticleDialog({
                 className="h-7 text-[11px] gap-1"
               >
                 <Plus className="h-3 w-3" />
-                <span>{isEn ? "Add Point" : "পয়েন্ট যোগ"}</span>
+                <span>পয়েন্ট যোগ</span>
               </Button>
             </div>
 
@@ -306,7 +297,7 @@ export function HealthTipArticleDialog({
                     next[idx] = e.target.value;
                     setKeyTakeawaysBn(next);
                   }}
-                  placeholder={`পয়েন্ট #${idx + 1}`}
+                  placeholder={`পয়েন্ট #${toBanglaNums(idx + 1)}`}
                   className="h-8 text-xs bg-background"
                 />
                 {keyTakeawaysBn.length > 1 && (
@@ -330,7 +321,7 @@ export function HealthTipArticleDialog({
           <div className="space-y-2 p-3 rounded-xl bg-muted/30 border border-border">
             <div className="flex items-center justify-between">
               <Label className="text-xs font-bold text-foreground">
-                {isEn ? "Article Body Paragraphs (Bangla)" : "আর্টিকেল প্যারাগ্রাফ / বিস্তারিত বিবরণ"}
+                আর্টিকেল প্যারাগ্রাফ / বিস্তারিত বিবরণ
               </Label>
               <Button
                 type="button"
@@ -340,7 +331,7 @@ export function HealthTipArticleDialog({
                 className="h-7 text-[11px] gap-1"
               >
                 <Plus className="h-3 w-3" />
-                <span>{isEn ? "Add Paragraph" : "প্যারাগ্রাফ যোগ"}</span>
+                <span>প্যারাগ্রাফ যোগ</span>
               </Button>
             </div>
 
@@ -354,7 +345,7 @@ export function HealthTipArticleDialog({
                     next[idx] = e.target.value;
                     setContentBn(next);
                   }}
-                  placeholder={`প্যারাগ্রাফ #${idx + 1}...`}
+                  placeholder={`প্যারাগ্রাফ #${toBanglaNums(idx + 1)}...`}
                   className="w-full px-3 py-2 text-xs rounded-lg border border-border bg-background focus:outline-none"
                 />
                 {contentBn.length > 1 && (
@@ -382,16 +373,16 @@ export function HealthTipArticleDialog({
               disabled={saving}
               className="text-xs"
             >
-              {isEn ? "Cancel" : "বাতিল"}
+              বাতিল
             </Button>
             <Button type="submit" disabled={saving} className="text-xs font-bold">
               {saving ? (
                 <>
                   <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                  {isEn ? "Saving..." : "সংরক্ষণ হচ্ছে..."}
+                  সংরক্ষণ হচ্ছে...
                 </>
               ) : (
-                isEn ? "Save & Publish" : "সংরক্ষণ ও প্রকাশ করুন"
+                "সংরক্ষণ ও প্রকাশ করুন"
               )}
             </Button>
           </DialogFooter>

@@ -21,7 +21,6 @@ interface DashboardProfileTabProps {
   setProfileBirthDate: (dob: string) => void;
   profileProfession: string;
   setProfileProfession: (profession: string) => void;
-  t: (key: string) => string;
 }
 
 export function DashboardProfileTab({
@@ -40,17 +39,16 @@ export function DashboardProfileTab({
   setProfileBirthDate,
   profileProfession,
   setProfileProfession,
-  t,
 }: DashboardProfileTabProps) {
   return (
     <Card className="border-border/60 shadow-sm">
       <CardHeader className="border-b border-border/60 bg-muted/30 dark:bg-slate-900/40">
         <CardTitle className="font-heading text-base font-bold text-secondary dark:text-white flex items-center gap-2">
           <LayoutDashboard className="h-4 w-4 text-primary" />
-          {t("dashboard.profile.title")}
+          ব্যক্তিগত তথ্য আপডেট করুন
         </CardTitle>
         <CardDescription>
-          {t("dashboard.profile.description")}
+          আপনার যোগাযোগের তথ্য এবং প্রোফাইল ছবি পরিবর্তন করুন।
         </CardDescription>
       </CardHeader>
       <CardContent className="p-6">
@@ -59,12 +57,12 @@ export function DashboardProfileTab({
           <ImageUpload
             value={profilePictureUrl}
             onChange={setProfilePictureUrl}
-            label={t("dashboard.profile.picture")}
+            label="প্রোফাইল ছবি"
             folder="members"
           />
 
           <div className="space-y-2">
-            <label htmlFor="profile-name" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("dashboard.profile.name")}</label>
+            <label htmlFor="profile-name" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">পুরো নাম *</label>
             <Input
               id="profile-name"
               type="text"
@@ -77,7 +75,7 @@ export function DashboardProfileTab({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label htmlFor="profile-phone" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("dashboard.profile.phone")}</label>
+              <label htmlFor="profile-phone" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">ফোন নম্বর *</label>
               <Input
                 id="profile-phone"
                 type="tel"
@@ -88,7 +86,7 @@ export function DashboardProfileTab({
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="profile-email" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("dashboard.profile.email")}</label>
+              <label htmlFor="profile-email" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">ইমেইল ঠিকানা</label>
               <Input
                 id="profile-email"
                 type="email"
@@ -100,20 +98,20 @@ export function DashboardProfileTab({
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="profile-address" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("dashboard.profile.address")}</label>
+            <label htmlFor="profile-address" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">বর্তমান ঠিকানা</label>
             <Input
               id="profile-address"
               type="text"
               value={profileAddress}
               onChange={(e) => setProfileAddress(e.target.value)}
-              placeholder={t("dashboard.profile.addressPlaceholder")}
+              placeholder="যেমন: হাউজ ১২, রোড ৪, শান্তি কোম্পানি, ফেনী"
               className="border-border/60 rounded-xl focus:border-primary/40"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label htmlFor="profile-dob" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("dashboard.profile.dob")}</label>
+              <label htmlFor="profile-dob" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">জন্ম তারিখ</label>
               <Input
                 id="profile-dob"
                 type="date"
@@ -123,13 +121,13 @@ export function DashboardProfileTab({
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="profile-profession" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">{t("dashboard.profile.profession")}</label>
+              <label htmlFor="profile-profession" className="text-xs font-semibold text-secondary dark:text-white cursor-pointer">পেশা</label>
               <Input
                 id="profile-profession"
                 type="text"
                 value={profileProfession}
                 onChange={(e) => setProfileProfession(e.target.value)}
-                placeholder={t("dashboard.profile.professionPlaceholder")}
+                placeholder="যেমন: শিক্ষক, ব্যবসায়ী, চাকরিজীবী"
                 className="border-border/60 rounded-xl focus:border-primary/40"
               />
             </div>
@@ -138,7 +136,7 @@ export function DashboardProfileTab({
           <div className="pt-1">
             <Button type="submit" size="lg" className="w-full">
               <Save className="h-4 w-4" />
-              {t("dashboard.profile.saveButton")}
+              পরিবর্তন সংরক্ষণ করুন
             </Button>
           </div>
 

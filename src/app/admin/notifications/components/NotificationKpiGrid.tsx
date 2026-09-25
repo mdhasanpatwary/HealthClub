@@ -2,26 +2,20 @@
 
 import { Bell, Building2, Mail, AlertTriangle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { formatNum, Locale } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import type { AdminNotificationSummary } from "@/app/actions/adminNotificationTypes";
 
 interface NotificationKpiGridProps {
   summary: AdminNotificationSummary;
   totalCount: number;
   unreadCount: number;
-  locale: Locale;
-  t: (key: string) => string;
 }
 
 export function NotificationKpiGrid({
   summary,
   totalCount,
   unreadCount,
-  locale,
-  t,
 }: NotificationKpiGridProps) {
-  const isBn = locale === "bn";
-
   return (
     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
       {/* KPI 1: Unread */}
@@ -29,13 +23,13 @@ export function NotificationKpiGrid({
         <CardContent className="p-4 flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-xs font-medium text-muted-foreground">
-              {t("admin.notifications.kpiTotal") || "সর্বমোট বিজ্ঞপ্তি"}
+              সর্বমোট বিজ্ঞপ্তি
             </p>
             <p className="text-xl sm:text-2xl font-extrabold text-foreground">
-              {formatNum(totalCount, locale)}
+              {toBanglaNums(totalCount)}
             </p>
             <span className="text-[11px] font-semibold text-primary">
-              {formatNum(unreadCount, locale)} {isBn ? "অপঠিত" : "unread"}
+              {toBanglaNums(unreadCount)} অপঠিত
             </span>
           </div>
           <div className="size-10 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
@@ -49,16 +43,15 @@ export function NotificationKpiGrid({
         <CardContent className="p-4 flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-xs font-medium text-muted-foreground">
-              {t("admin.notifications.kpiPending") || "অপেক্ষমাণ অ্যাকশন"}
+              অপেক্ষমাণ অ্যাকশন
             </p>
             <p className="text-xl sm:text-2xl font-extrabold text-amber-600 dark:text-amber-400">
-              {formatNum(
-                summary.pendingRenewalsCount + summary.pendingPartnerRequestsCount,
-                locale
+              {toBanglaNums(
+                summary.pendingRenewalsCount + summary.pendingPartnerRequestsCount
               )}
             </p>
             <span className="text-[11px] text-muted-foreground">
-              {isBn ? "নবায়ন ও পার্টনার আবেদন" : "Renewals & Partners"}
+              নবায়ন ও পার্টনার আবেদন
             </span>
           </div>
           <div className="size-10 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
@@ -72,13 +65,13 @@ export function NotificationKpiGrid({
         <CardContent className="p-4 flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-xs font-medium text-muted-foreground">
-              {t("admin.notifications.kpiMessages") || "নতুন বার্তা"}
+              নতুন বার্তা
             </p>
             <p className="text-xl sm:text-2xl font-extrabold text-rose-600 dark:text-rose-400">
-              {formatNum(summary.unreadMessagesCount, locale)}
+              {toBanglaNums(summary.unreadMessagesCount)}
             </p>
             <span className="text-[11px] text-muted-foreground">
-              {isBn ? "যোগাযোগের বার্তা" : "Contact inquiries"}
+              যোগাযোগের বার্তা
             </span>
           </div>
           <div className="size-10 rounded-2xl bg-rose-500/10 text-rose-600 flex items-center justify-center">
@@ -92,13 +85,13 @@ export function NotificationKpiGrid({
         <CardContent className="p-4 flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-xs font-medium text-muted-foreground">
-              {t("admin.notifications.kpiExpiring") || "মেয়াদোত্তীর্ণের সতর্কতা"}
+              মেয়াদোত্তীর্ণের সতর্কতা
             </p>
             <p className="text-xl sm:text-2xl font-extrabold text-purple-600 dark:text-purple-400">
-              {formatNum(summary.expiringMembersCount, locale)}
+              {toBanglaNums(summary.expiringMembersCount)}
             </p>
             <span className="text-[11px] text-muted-foreground">
-              {isBn ? "১৫ দিনের মধ্যে শেষ হবে" : "Within 15 days"}
+              ১৫ দিনের মধ্যে শেষ হবে
             </span>
           </div>
           <div className="size-10 rounded-2xl bg-purple-500/10 text-purple-600 flex items-center justify-center">

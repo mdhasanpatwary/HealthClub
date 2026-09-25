@@ -14,7 +14,6 @@ export interface BlogPriceTableProps {
   title: string;
   subtitle: string;
   items: BlogPriceTableItem[];
-  locale?: string;
   showBenefitColumn?: boolean;
   columnHeaders?: {
     item?: string;
@@ -36,25 +35,18 @@ export function BlogPriceTable({
   title,
   subtitle,
   items,
-  locale = "bn",
   showBenefitColumn = true,
   columnHeaders,
   conversionBanner,
 }: BlogPriceTableProps) {
-  const isEn = locale === "en";
+  const defaultItemHeader = "টেস্ট / প্রসিডিউরের নাম ও ধরন";
+  const defaultPriceHeader = "সাধারণ বাজারদর";
+  const defaultBenefitHeader = "হেলথ ক্লাব সুবিধা";
+  const defaultDurationHeader = "সময়কাল / সুবিধা";
 
-  const defaultItemHeader = isEn ? "Procedure / Test Name" : "টেস্ট / প্রসিডিউরের নাম ও ধরন";
-  const defaultPriceHeader = isEn ? "Standard Rate" : "সাধারণ বাজারদর";
-  const defaultBenefitHeader = isEn ? "Health Club Benefit" : "হেলথ ক্লাব সুবিধা";
-  const defaultDurationHeader = isEn ? "Duration / Turnaround" : "সময়কাল / সুবিধা";
-
-  const defaultBannerTitle = isEn
-    ? "Special member savings with Health Club!"
-    : "হেলথ ক্লাবে বিশেষ মেম্বার ছাড় ও সাশ্রয় পান!";
-  const defaultBannerText = isEn
-    ? "Get your digital Health Club membership card today to save on healthcare."
-    : "আজই হেলথ ক্লাবের মেম্বারশিপ কার্ড সংগ্রহ করে চিকিৎসায় নিশ্চিত ছাড় পান।";
-  const defaultButtonText = isEn ? "Get Membership" : "মেম্বারশিপ গ্রহণ করুন";
+  const defaultBannerTitle = "হেলথ ক্লাবে বিশেষ মেম্বার ছাড় ও সাশ্রয় পান!";
+  const defaultBannerText = "আজই হেলথ ক্লাবের মেম্বারশিপ কার্ড সংগ্রহ করে চিকিৎসায় নিশ্চিত ছাড় পান।";
+  const defaultButtonText = "মেম্বারশিপ গ্রহণ করুন";
 
   const banner = conversionBanner || {
     text: defaultBannerText,
@@ -75,7 +67,7 @@ export function BlogPriceTable({
           <p className="text-xs sm:text-sm text-muted-foreground">{subtitle}</p>
         </div>
         <div className="flex sm:hidden items-center gap-1 text-[11px] font-medium text-muted-foreground/80 self-end">
-          <span>{isEn ? "← Scroll horizontally →" : "← সম্পূর্ণ দেখতে স্ক্রোল করুন →"}</span>
+          <span>← সম্পূর্ণ দেখতে স্ক্রোল করুন →</span>
         </div>
       </div>
 
@@ -124,7 +116,7 @@ export function BlogPriceTable({
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
                       <Sparkles className="h-3 w-3 shrink-0" />
                       <span>
-                        {item.discountText || (isEn ? "10-30% Member Discount" : "১০-৩০% মেম্বার ছাড়")}
+                        {item.discountText || "১০-৩০% মেম্বার ছাড়"}
                       </span>
                     </span>
                   </td>

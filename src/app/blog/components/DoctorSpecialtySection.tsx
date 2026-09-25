@@ -24,11 +24,9 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { BlogReviewCardWrapper } from "./BlogReviewCardWrapper";
-import { toEnglishDigits, translateLocation } from "../utils/blogTranslations";
 
 interface DoctorSpecialtySectionProps {
   doctorGroups: DoctorSpecialtyGroup[];
-  locale?: string;
 }
 
 const DEPARTMENT_ICONS: Record<string, React.ElementType> = {
@@ -82,9 +80,7 @@ const DEPARTMENT_ICONS: Record<string, React.ElementType> = {
 
 export function DoctorSpecialtySection({
   doctorGroups,
-  locale = "bn",
 }: DoctorSpecialtySectionProps) {
-  const isEn = locale === "en";
   const [selectedDept, setSelectedDept] = useState<string>("all");
 
   const filteredGroups =
@@ -97,17 +93,13 @@ export function DoctorSpecialtySection({
       <div>
         <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-wider mb-1.5">
           <Sparkles className="h-4 w-4" />
-          <span>{isEn ? "Verified Specialists" : "যাচাইকৃত বিশেষজ্ঞ তালিকা"}</span>
+          <span>যাচাইকৃত বিশেষজ্ঞ তালিকা</span>
         </div>
         <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-          {isEn
-            ? "2. Top Specialist Doctors in Feni by Department"
-            : "২. ফেনীর শীর্ষ বিশেষজ্ঞ ডাক্তারদের তালিকা ও চেম্বার শিডিউল"}
+          ২. ফেনীর শীর্ষ বিশেষজ্ঞ ডাক্তারদের তালিকা ও চেম্বার শিডিউল
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-          {isEn
-            ? "Direct serial hotlines, chamber addresses, visiting hours, and consultation fees."
-            : "মেডিসিন, হৃদরোগ, সার্জারি, গাইনী, শিশু ও অর্থোপেডিক চিকিৎসকদের চেম্বার, ভিজিটিং সময় ও ফোন নম্বর।"}
+          মেডিসিন, হৃদরোগ, সার্জারি, গাইনী, শিশু ও অর্থোপেডিক চিকিৎসকদের চেম্বার, ভিজিটিং সময় ও ফোন নম্বর।
         </p>
       </div>
 
@@ -122,7 +114,7 @@ export function DoctorSpecialtySection({
               : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
           }`}
         >
-          {isEn ? "All Specialists" : "সকল বিশেষজ্ঞ"}
+          সকল বিশেষজ্ঞ
         </button>
         {doctorGroups.map((group) => {
           const Icon = DEPARTMENT_ICONS[group.department] || Stethoscope;
@@ -139,7 +131,7 @@ export function DoctorSpecialtySection({
               }`}
             >
               <Icon className="h-3.5 w-3.5" />
-              <span>{isEn ? group.departmentNameEn : group.departmentNameBn}</span>
+              <span>{group.departmentNameBn || group.departmentNameEn}</span>
             </button>
           );
         })}
@@ -161,13 +153,11 @@ export function DoctorSpecialtySection({
                 </div>
                 <div>
                   <h3 className="font-heading text-lg sm:text-xl font-bold text-foreground">
-                    {isEn ? group.departmentNameEn : group.departmentNameBn}
+                    {group.departmentNameBn || group.departmentNameEn}
                   </h3>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    {isEn
-                      ? group.descriptionEn ||
-                        `Find experienced ${group.departmentNameEn} specialists and consultation chambers in Feni.`
-                      : group.descriptionBn}
+                    {group.descriptionBn ||
+                      `ফেনীর অভিজ্ঞ ${group.departmentNameBn || group.departmentNameEn} বিশেষজ্ঞ চিকিৎসকদের চেম্বার ও বিস্তারিত তালিকা।`}
                   </p>
                 </div>
               </div>
@@ -179,7 +169,6 @@ export function DoctorSpecialtySection({
                     key={doctor.id}
                     doctor={doctor}
                     rank={doctor.rank ?? docIdx + 1}
-                    locale={locale}
                   />
                 ))}
               </div>
@@ -194,13 +183,10 @@ export function DoctorSpecialtySection({
 function DoctorCard({
   doctor,
   rank,
-  locale = "bn",
 }: {
   doctor: DoctorSpecialistItem;
   rank: number;
-  locale?: string;
 }) {
-  const isEn = locale === "en";
   const primaryPhone = doctor.serialPhone.split(",")[0].trim();
   const cleanPhone = primaryPhone.replace(/[^0-9]/g, "");
 
@@ -209,7 +195,6 @@ function DoctorCard({
       sectionId={`doctor-${doctor.id}`}
       rank={rank}
       partnerStatus={doctor.partnerStatus}
-      locale={locale}
       wrapperClassName="h-full flex flex-col"
       contentPadding="p-4 sm:p-5"
       contentSpacing="space-y-4"
@@ -224,22 +209,14 @@ function DoctorCard({
               className="text-[11px] font-semibold bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/20 hover:text-emerald-950 dark:hover:bg-emerald-500/25 dark:hover:text-emerald-100 transition-colors cursor-default"
             >
               <CheckCircle2 className="h-3 w-3 mr-1" />
-              {isEn
-                ? (doctor.featuredBadgeBn.includes("চিফ") || doctor.featuredBadgeBn.includes("প্রধান")
-                    ? "Chief Specialist"
-                    : doctor.featuredBadgeBn.includes("অন-কল")
-                    ? "On-Call Consultant"
-                    : doctor.featuredBadgeBn.includes("অভিজ্ঞ")
-                    ? "Senior Consultant"
-                    : "Verified Specialist")
-                : doctor.featuredBadgeBn}
+              {doctor.featuredBadgeBn}
             </Badge>
           )}
           <Badge
             variant="outline"
             className="text-[11px] font-medium text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors cursor-default"
           >
-            {isEn ? doctor.specialtyEn : doctor.specialtyBn}
+            {doctor.specialtyBn || doctor.specialtyEn}
           </Badge>
         </div>
 
@@ -247,7 +224,7 @@ function DoctorCard({
         <div>
           <h4 className="font-heading text-base sm:text-lg font-bold text-foreground hover:text-primary transition-colors">
             <Link href={doctor.consultantProfileUrl || `/consultants/${doctor.id}`}>
-              {isEn ? doctor.nameEn : doctor.nameBn}
+              {doctor.nameBn || doctor.nameEn}
             </Link>
           </h4>
           <p className="text-xs text-primary font-medium mt-0.5">
@@ -265,7 +242,7 @@ function DoctorCard({
             <div>
               <span className="font-semibold">{doctor.chamberNameBn}</span>
               <p className="text-[11px] text-muted-foreground mt-0.5">
-                {isEn ? translateLocation(doctor.chamberAddressBn, isEn) : doctor.chamberAddressBn}
+                {doctor.chamberAddressBn}
               </p>
             </div>
           </div>
@@ -282,12 +259,10 @@ function DoctorCard({
 
           <div className="pt-1 flex items-center justify-between border-t border-border/50 text-[11px]">
             <span className="text-muted-foreground">
-              {isEn ? "Consultation Fee:" : "ভিজিট ফি:"}
+              ভিজিট ফি:
             </span>
             <span className="font-bold text-primary">
-              {isEn
-                ? `${toEnglishDigits(doctor.consultationFeeBn)} BDT`
-                : doctor.consultationFeeBn}
+              {doctor.consultationFeeBn}
             </span>
           </div>
 
@@ -295,9 +270,7 @@ function DoctorCard({
             <div className="flex items-center gap-1.5 text-[11px] font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 p-2 rounded-lg">
               <Sparkles className="h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
               <span>
-                {isEn
-                  ? "Health Club Members: 10-30% special discount on hospital services"
-                  : "হেলথ ক্লাব কার্ডধারীদের জন্য হাসপাতালে ১০-৩০% বিশেষ ছাড়"}
+                হেলথ ক্লাব কার্ডধারীদের জন্য হাসপাতালে ১০-৩০% বিশেষ ছাড়
               </span>
             </div>
           )}
@@ -311,14 +284,14 @@ function DoctorCard({
           className="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-primary text-primary-foreground text-xs font-bold shadow-xs hover:bg-primary/90 transition-colors"
         >
           <Phone className="h-3.5 w-3.5" />
-          <span>{isEn ? "Call Serial" : "সিরিয়াল কল"}</span>
+          <span>সিরিয়াল কল</span>
         </a>
 
         <Link
           href={doctor.consultantProfileUrl || `/consultants/${doctor.id}`}
           className="inline-flex items-center justify-center gap-1 py-2 px-3 rounded-xl border border-border bg-muted/50 hover:bg-muted text-foreground text-xs font-semibold transition-colors"
         >
-          <span>{isEn ? "View Profile" : "প্রোফাইল"}</span>
+          <span>প্রোফাইল</span>
           <ExternalLink className="h-3 w-3" />
         </Link>
       </div>

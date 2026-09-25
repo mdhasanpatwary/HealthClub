@@ -4,35 +4,31 @@ import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, Calendar, Clock, Sparkles, CheckCircle2 } from "lucide-react";
 import { BlogShareBar } from "./BlogShareBar";
 import { formatArticleDate, getArticleIsoDate } from "@/lib/dateUtils";
-import { getArticleEnglishHighlights } from "../utils/blogTranslations";
 
 interface BlogArticleHeaderProps {
   post: BlogPost;
   pageUrl: string;
-  locale?: string;
 }
 
 export function BlogArticleHeader({
   post,
   pageUrl,
-  locale = "bn",
 }: BlogArticleHeaderProps) {
-  const isEn = locale === "en";
-  const title = isEn ? post.titleEn : post.titleBn;
-  const highlights = getArticleEnglishHighlights(post.slug, post.keyHighlightsBn, isEn);
+  const title = post.titleBn;
+  const highlights = post.keyHighlightsBn;
 
   return (
     <header className="space-y-6 w-full">
       <div className="flex flex-wrap items-center gap-2">
         <Badge className="bg-primary text-primary-foreground font-semibold">
-          {isEn ? post.categoryNameEn : post.categoryNameBn}
+          {post.categoryNameBn}
         </Badge>
         <Badge variant="outline" className="text-xs border-border/80">
-          {isEn ? "Comprehensive Review" : "তথ্যবহুল পর্যালোচনা ২০২৬"}
+          তথ্যবহুল পর্যালোচনা ২০২৬
         </Badge>
         <Badge variant="outline" className="text-xs border-primary/30 text-primary bg-primary/5 flex items-center gap-1">
           <CheckCircle2 className="h-3 w-3" />
-          <span>{isEn ? "Fact-Checked & Reviewed" : "ক্লিনিক্যাল রিসার্চ টিম কর্তৃক যাচাইকৃত"}</span>
+          <span>ক্লিনিক্যাল রিসার্চ টিম কর্তৃক যাচাইকৃত</span>
         </Badge>
       </div>
 
@@ -45,7 +41,7 @@ export function BlogArticleHeader({
         <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-muted-foreground">
           <span className="flex items-center gap-1.5 font-medium text-foreground">
             <ShieldCheck className="h-4 w-4 text-primary" />
-            {isEn ? post.author.nameEn : post.author.nameBn}
+            {post.author.nameBn}
           </span>
           <span>•</span>
           <time
@@ -53,16 +49,16 @@ export function BlogArticleHeader({
             className="flex items-center gap-1.5"
           >
             <Calendar className="h-4 w-4" />
-            {formatArticleDate(post.publishedDate, locale)}
+            {formatArticleDate(post.publishedDate)}
           </time>
           <span>•</span>
           <span className="flex items-center gap-1.5">
             <Clock className="h-4 w-4" />
-            {isEn ? post.readTimeEn : post.readTimeBn}
+            {post.readTimeBn}
           </span>
         </div>
 
-        <BlogShareBar url={pageUrl} title={title} locale={locale} />
+        <BlogShareBar url={pageUrl} title={title} />
       </div>
 
       {/* Featured Hero Cover Image — LCP Optimized */}
@@ -84,7 +80,7 @@ export function BlogArticleHeader({
 
       {/* Lead Excerpt */}
       <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-        {isEn ? post.excerptEn : post.excerptBn}
+        {post.excerptBn}
       </p>
 
 
@@ -93,7 +89,7 @@ export function BlogArticleHeader({
         <div id="key-highlights" className="rounded-2xl border border-primary/20 bg-primary/5 p-5 sm:p-6 space-y-3">
           <h2 className="font-heading text-sm font-bold uppercase tracking-wider text-primary flex items-center gap-2">
             <Sparkles className="h-4 w-4" />
-            <span>{isEn ? "Article Highlights" : "এই লেখার মূল বিষয়সমূহ"}</span>
+            <span>এই লেখার মূল বিষয়সমূহ</span>
           </h2>
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs sm:text-sm text-foreground/90">
             {highlights.map((hl, idx) => (

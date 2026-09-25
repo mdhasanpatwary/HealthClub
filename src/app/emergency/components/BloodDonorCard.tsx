@@ -9,10 +9,9 @@ import { trackEvent } from "@/lib/analytics";
 interface BloodDonorCardProps {
   donor: BloodDonor;
   areaLabel: string;
-  isEn: boolean;
 }
 
-export function BloodDonorCard({ donor, areaLabel, isEn }: BloodDonorCardProps) {
+export function BloodDonorCard({ donor, areaLabel }: BloodDonorCardProps) {
   const cleanPhone = donor.phone.replace(/[^0-9]/g, "");
 
   return (
@@ -38,7 +37,7 @@ export function BloodDonorCard({ donor, areaLabel, isEn }: BloodDonorCardProps) 
           <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground pt-1 border-t border-border/50">
             <Clock className="h-3 w-3 shrink-0" />
             <span className="truncate">
-              {isEn ? "Last Donated:" : "সর্বশেষ দান:"} {donor.lastDonated}
+              সর্বশেষ দান: {donor.lastDonated}
             </span>
           </div>
         </div>
@@ -55,17 +54,17 @@ export function BloodDonorCard({ donor, areaLabel, isEn }: BloodDonorCardProps) 
               });
             }}
             className="inline-flex items-center justify-center gap-1.5 h-8.5 px-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors shadow-2xs"
-            aria-label={isEn ? `Call blood donor ${donor.name}` : `রক্তদাতা ${donor.name}-কে কল করুন`}
+            aria-label={`রক্তদাতা ${donor.name}-কে কল করুন`}
           >
             <PhoneCall className="h-3.5 w-3.5 shrink-0" />
-            <span>{isEn ? "Call" : "কল করুন"}</span>
+            <span>কল করুন</span>
           </a>
           <a
             href={`https://wa.me/88${cleanPhone}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-1.5 h-8.5 px-2.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-xs font-bold transition-colors"
-            aria-label={isEn ? `WhatsApp message blood donor ${donor.name}` : `রক্তদাতা ${donor.name}-কে হোয়াটসঅ্যাপে বার্তা পাঠান`}
+            aria-label={`রক্তদাতা ${donor.name}-কে হোয়াটসঅ্যাপে বার্তা পাঠান`}
           >
             <MessageCircle className="h-3.5 w-3.5 shrink-0" />
             <span>WhatsApp</span>
@@ -75,3 +74,4 @@ export function BloodDonorCard({ donor, areaLabel, isEn }: BloodDonorCardProps) 
     </Card>
   );
 }
+

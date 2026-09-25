@@ -13,15 +13,14 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { submitReviewAction } from "@/app/actions/reviewActions";
 import { Review } from "@/services/db";
 
 const formSchema = z.object({
-  rating: z.number().int().min(1, "reviews.minRatingError").max(5),
+  rating: z.number().int().min(1, "অনুগ্রহ করে কমপক্ষে ১টি স্টার রেটিং নির্বাচন করুন").max(5),
   comment: z
     .string()
-    .max(1000, "reviews.maxCommentError")
+    .max(1000, "মন্তব্য সর্বোচ্চ ১০০০ অক্ষরের মধ্যে হতে হবে")
     .optional(),
 });
 
@@ -47,8 +46,6 @@ function ReviewFormContent({
   onSuccess: () => void;
   onClose: () => void;
 }) {
-  const { t } = useLanguage();
-
   const [rating, setRating] = useState<number>(existingReview?.rating || 5);
   const [comment, setComment] = useState<string>(existingReview?.comment || "");
   const [hoveredStar, setHoveredStar] = useState<number | null>(null);
@@ -63,8 +60,8 @@ function ReviewFormContent({
     if (!validation.success) {
       const fieldErrors: { rating?: string; comment?: string } = {};
       for (const err of validation.error.issues) {
-        if (err.path[0] === "rating") fieldErrors.rating = t("reviews.minRatingError");
-        if (err.path[0] === "comment") fieldErrors.comment = t("reviews.maxCommentError");
+        if (err.path[0] === "rating") fieldErrors.rating = "অনুগ্রহ করে কমপক্ষে ১টি স্টার রেটিং নির্বাচন করুন";
+        if (err.path[0] === "comment") fieldErrors.comment = "মন্তব্য সর্বোচ্চ ১০০০ অক্ষরের মধ্যে হতে হবে";
       }
       setErrors(fieldErrors);
       return;
@@ -79,14 +76,14 @@ function ReviewFormContent({
       });
 
       if (res.success) {
-        toast.success(res.message || t("reviews.submitSuccess"));
+        toast.success(res.message || "আপনার রিভিউ জমা হয়েছে। এডমিন অনুমোদনের পর প্রদর্শিত হবে।");
         onClose();
         onSuccess();
       } else {
-        toast.error(res.message || t("reviews.submitFailed"));
+        toast.error(res.message || "রিভিউ জমা দিতে ব্যর্থ হয়েছে।");
       }
     } catch {
-      toast.error(t("reviews.serverError"));
+      toast.error("সার্ভারে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
     } finally {
       setIsSubmitting(false);
     }
@@ -95,15 +92,15 @@ function ReviewFormContent({
   const getRatingLabel = (stars: number) => {
     switch (stars) {
       case 5:
-        return t("reviews.ratingExcellent");
+        return "অসাধারণ (Excellent)";
       case 4:
-        return t("reviews.ratingVeryGood");
+        return "খুব ভালো (Very Good)";
       case 3:
-        return t("reviews.ratingGood");
+        return "ভালো (Good)";
       case 2:
-        return t("reviews.ratingFair");
+        return "চলনসই (Fair)";
       case 1:
-        return t("reviews.ratingPoor");
+        return "অসন্তোষজনক (Poor)";
       default:
         return "";
     }
@@ -119,12 +116,12 @@ function ReviewFormContent({
             <MessageSquarePlus className="h-4 w-4" />
           </div>
           <DialogTitle className="text-base sm:text-lg font-bold text-foreground font-heading">
-            {existingReview ? t("reviews.editReview") : t("reviews.writeReview")}
+            {existingReview ? "আপনার রিভিউ পরিবর্তন করুন" : "রিভিউ লিখুন"}
           </DialogTitle>
         </div>
         <DialogDescription className="text-xs text-muted-foreground">
           <span className="font-semibold text-foreground">{partnerName}</span> -{" "}
-          {t("reviews.reviewHelpNotice")}
+          আপনার সৎ অভিজ্ঞতা অন্য সদস্যদের সঠিক হাসপাতাল ও সেবা বেছে নিতে সাহায্য করবে।
         </DialogDescription>
       </DialogHeader>
 
@@ -132,7 +129,7 @@ function ReviewFormContent({
         {/* Star Selector */}
         <div className="space-y-2">
           <label className="text-xs font-semibold text-foreground block">
-            {t("reviews.ratingLabel")} <span className="text-destructive">*</span>
+            আপনার রেটিং <span className="text-destructive">*</span>
           </label>
 
           <div className="p-3 rounded-2xl bg-muted/40 border border-border/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -181,7 +178,7 @@ function ReviewFormContent({
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
             <label className="text-xs font-semibold text-foreground">
-              {t("reviews.commentLabel")}
+              চিকিৎসা সেবার অভিজ্ঞতা (ঐচ্ছিক)
             </label>
             <span className="text-[11px] text-muted-foreground font-mono">
               {comment.length} / 1000
@@ -194,7 +191,7 @@ function ReviewFormContent({
               setComment(e.target.value);
               setErrors((prev) => ({ ...prev, comment: undefined }));
             }}
-            placeholder={t("reviews.commentPlaceholder")}
+            placeholder="ডাক্তার, নার্স, পরিবেশ ও ডিসকাউন্ট সুবিধা নিয়ে আপনার অভিজ্ঞতা শেয়ার করুন..."
             rows={4}
             className="bg-background text-xs sm:text-sm rounded-xl resize-none shadow-2xs"
           />
@@ -211,7 +208,7 @@ function ReviewFormContent({
         <div className="flex items-start gap-2 text-[11px] text-muted-foreground bg-muted/40 p-2.5 rounded-xl border border-border/50">
           <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
           <span>
-            {t("reviews.moderationPolicy")}
+            সব রিভিউ এডমিন মডারেশনের মাধ্যমে ভেরিফাই করা হয়। কোনো অশালীন বা বিভ্রান্তিকর মন্তব্য প্রকাশিত হবে না।
           </span>
         </div>
 
@@ -225,7 +222,7 @@ function ReviewFormContent({
             disabled={isSubmitting}
             className="text-xs rounded-xl"
           >
-            {t("common.cancel")}
+            বাতিল
           </Button>
 
           <Button
@@ -237,10 +234,10 @@ function ReviewFormContent({
             {isSubmitting ? (
               <>
                 <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
-                <span>{t("reviews.submitting")}</span>
+                <span>জমা দেওয়া হচ্ছে...</span>
               </>
             ) : (
-              <span>{t("reviews.submitBtn")}</span>
+              <span>রিভিউ জমা দিন</span>
             )}
           </Button>
         </div>

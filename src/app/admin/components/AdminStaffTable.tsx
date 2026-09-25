@@ -31,7 +31,6 @@ interface AdminStaffTableProps {
   onEdit: (staff: AdminUser) => void;
   onResetPassword: (staff: AdminUser) => void;
   onDelete: (staff: AdminUser) => void;
-  locale: "bn" | "en";
 }
 
 export function AdminStaffTable({
@@ -42,23 +41,19 @@ export function AdminStaffTable({
   onEdit,
   onResetPassword,
   onDelete,
-  locale,
 }: AdminStaffTableProps) {
-  const isBn = locale === "bn";
-
   return (
     <>
-      {/* Desktop Table View */}
       <div className="hidden sm:block border border-border rounded-2xl overflow-hidden bg-card shadow-xs">
         <table className="w-full text-left text-xs">
           <thead className="bg-muted/50 border-b border-border text-muted-foreground font-semibold">
             <tr>
-              <th className="p-3.5 pl-4">{isBn ? "এডমিন / স্টাফ" : "Staff Member"}</th>
-              <th className="p-3.5">{isBn ? "পারমিশন রোল" : "Role"}</th>
-              <th className="p-3.5">{isBn ? "যোগাযোগ" : "Contact"}</th>
-              <th className="p-3.5 text-center">{isBn ? "স্ট্যাটাস" : "Status"}</th>
-              <th className="p-3.5">{isBn ? "সর্বশেষ লগইন" : "Last Login"}</th>
-              <th className="p-3.5 text-right pr-4">{isBn ? "অ্যাকশন" : "Actions"}</th>
+              <th className="p-3.5 pl-4">এডমিন / স্টাফ</th>
+              <th className="p-3.5">পারমিশন রোল</th>
+              <th className="p-3.5">যোগাযোগ</th>
+              <th className="p-3.5 text-center">স্ট্যাটাস</th>
+              <th className="p-3.5">সর্বশেষ লগইন</th>
+              <th className="p-3.5 text-right pr-4">অ্যাকশন</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border/60">
@@ -68,7 +63,6 @@ export function AdminStaffTable({
 
               return (
                 <tr key={staff.id} className="hover:bg-muted/30 transition-colors">
-                  {/* Name & Avatar */}
                   <td className="p-3.5 pl-4">
                     <div className="flex items-center gap-3">
                       <div className="h-9 w-9 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm uppercase shrink-0 border border-primary/20">
@@ -82,30 +76,23 @@ export function AdminStaffTable({
                               variant="outline"
                               className="text-[10px] px-1.5 py-0 bg-primary/10 text-primary border-primary/20"
                             >
-                              {isBn ? "আপনি" : "You"}
+                              আপনি
                             </Badge>
                           )}
                         </div>
-                        <div className="text-[11px] text-muted-foreground font-mono">
-                          {staff.email}
-                        </div>
+                        <div className="text-[11px] text-muted-foreground font-mono">{staff.email}</div>
                       </div>
                     </div>
                   </td>
 
-                  {/* Role */}
                   <td className="p-3.5">
                     <Badge variant="outline" className={`text-xs font-bold ${roleConfig.badgeClass}`}>
-                      {isBn ? roleConfig.titleBn : roleConfig.titleEn}
+                      {roleConfig.titleBn}
                     </Badge>
                   </td>
 
-                  {/* Contact */}
-                  <td className="p-3.5 font-mono text-muted-foreground">
-                    {staff.phone || "—"}
-                  </td>
+                  <td className="p-3.5 font-mono text-muted-foreground">{staff.phone || "—"}</td>
 
-                  {/* Status Toggle */}
                   <td className="p-3.5 text-center">
                     <div className="flex items-center justify-center gap-2">
                       <Switch
@@ -120,24 +107,22 @@ export function AdminStaffTable({
                             : "text-muted-foreground"
                         }`}
                       >
-                        {staff.isActive ? (isBn ? "সক্রিয়" : "Active") : (isBn ? "নিষ্ক্রিয়" : "Inactive")}
+                        {staff.isActive ? "সক্রিয়" : "নিষ্ক্রিয়"}
                       </span>
                     </div>
                   </td>
 
-                  {/* Last Login */}
                   <td className="p-3.5 text-muted-foreground">
                     {staff.lastLoginAt ? (
                       <div className="flex items-center gap-1.5">
                         <Clock className="h-3.5 w-3.5 text-muted-foreground/70" />
-                        <span>{new Date(staff.lastLoginAt).toLocaleDateString(isBn ? "bn-BD" : "en-US")}</span>
+                        <span>{new Date(staff.lastLoginAt).toLocaleDateString("bn-BD")}</span>
                       </div>
                     ) : (
-                      <span className="text-[11px] text-muted-foreground/60">{isBn ? "লগইন হয়নি" : "Never"}</span>
+                      <span className="text-[11px] text-muted-foreground/60">লগইন হয়নি</span>
                     )}
                   </td>
 
-                  {/* Actions */}
                   <td className="p-3.5 text-right pr-4">
                     <DropdownMenu>
                       <DropdownMenuTrigger
@@ -152,7 +137,7 @@ export function AdminStaffTable({
                           className="flex items-center gap-2 text-xs cursor-pointer"
                         >
                           <Edit2 className="h-3.5 w-3.5 text-primary" />
-                          <span>{isBn ? "তথ্য পরিবর্তন" : "Edit Details"}</span>
+                          <span>তথ্য পরিবর্তন</span>
                         </DropdownMenuItem>
 
                         <DropdownMenuItem
@@ -160,7 +145,7 @@ export function AdminStaffTable({
                           className="flex items-center gap-2 text-xs cursor-pointer"
                         >
                           <KeyRound className="h-3.5 w-3.5 text-amber-500" />
-                          <span>{isBn ? "পাসওয়ার্ড রিসেট" : "Reset Password"}</span>
+                          <span>পাসওয়ার্ড রিসেট</span>
                         </DropdownMenuItem>
 
                         {!isCurrent && (
@@ -172,7 +157,7 @@ export function AdminStaffTable({
                               className="flex items-center gap-2 text-xs cursor-pointer"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
-                              <span>{isBn ? "মুছে ফেলুন" : "Delete Account"}</span>
+                              <span>মুছে ফেলুন</span>
                             </DropdownMenuItem>
                           </>
                         )}
@@ -186,7 +171,6 @@ export function AdminStaffTable({
         </table>
       </div>
 
-      {/* Mobile Cards View */}
       <div className="grid grid-cols-1 gap-3 sm:hidden">
         {staffList.map((staff) => {
           const roleConfig = ROLE_CONFIGS[staff.role];
@@ -207,7 +191,7 @@ export function AdminStaffTable({
                           variant="outline"
                           className="text-[10px] px-1.5 py-0 bg-primary/10 text-primary border-primary/20"
                         >
-                          {isBn ? "আপনি" : "You"}
+                          আপনি
                         </Badge>
                       )}
                     </div>
@@ -219,7 +203,7 @@ export function AdminStaffTable({
                 </div>
 
                 <Badge variant="outline" className={`text-[10px] font-bold ${roleConfig.badgeClass}`}>
-                  {isBn ? roleConfig.titleBn : roleConfig.titleEn}
+                  {roleConfig.titleBn}
                 </Badge>
               </div>
 
@@ -231,7 +215,7 @@ export function AdminStaffTable({
 
                 <div className="flex items-center justify-end gap-2">
                   <span className="text-[11px] text-muted-foreground">
-                    {staff.isActive ? (isBn ? "সক্রিয়" : "Active") : (isBn ? "নিষ্ক্রিয়" : "Inactive")}
+                    {staff.isActive ? "সক্রিয়" : "নিষ্ক্রিয়"}
                   </span>
                   <Switch
                     checked={staff.isActive}
@@ -241,7 +225,6 @@ export function AdminStaffTable({
                 </div>
               </div>
 
-              {/* Actions bar for Mobile */}
               <div className="flex items-center justify-end gap-2 pt-2 border-t border-border/40">
                 <Button
                   variant="outline"
@@ -250,7 +233,7 @@ export function AdminStaffTable({
                   className="text-xs h-8 rounded-lg gap-1"
                 >
                   <Edit2 className="h-3.5 w-3.5 text-primary" />
-                  <span>{isBn ? "এডিট" : "Edit"}</span>
+                  <span>এডিট</span>
                 </Button>
 
                 <Button
@@ -260,7 +243,7 @@ export function AdminStaffTable({
                   className="text-xs h-8 rounded-lg gap-1"
                 >
                   <KeyRound className="h-3.5 w-3.5 text-amber-500" />
-                  <span>{isBn ? "পাসওয়ার্ড" : "Pass"}</span>
+                  <span>পাসওয়ার্ড</span>
                 </Button>
 
                 {!isCurrent && (

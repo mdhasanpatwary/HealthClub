@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { TopPartnerPerformance } from "@/types/revenueAnalytics";
-import { formatNum, Locale } from "@/lib/i18n";
+import { formatNum } from "@/lib/utils";
 import {
   Building2,
   Activity,
@@ -19,23 +19,16 @@ import {
 
 interface PartnerPerformanceTableProps {
   partners: TopPartnerPerformance[];
-  locale: Locale;
 }
 
-export function PartnerPerformanceTable({
-  partners,
-  locale,
-}: PartnerPerformanceTableProps) {
-  const isBn = locale === "bn";
+export function PartnerPerformanceTable({ partners }: PartnerPerformanceTableProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
 
   const filteredPartners = partners.filter((p) => {
     const matchesSearch =
-      searchTerm.trim() === "" ||
-      p.partnerName.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      categoryFilter === "all" || p.category === categoryFilter;
+      searchTerm.trim() === "" || p.partnerName.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = categoryFilter === "all" || p.category === categoryFilter;
     return matchesSearch && matchesCategory;
   });
 
@@ -48,7 +41,7 @@ export function PartnerPerformanceTable({
             className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30 text-[11px] gap-1 font-semibold"
           >
             <Building2 className="h-3 w-3" />
-            {isBn ? "হাসপাতাল" : "Hospital"}
+            হাসপাতাল
           </Badge>
         );
       case "diagnostic":
@@ -58,7 +51,7 @@ export function PartnerPerformanceTable({
             className="bg-sky-500/10 text-sky-700 dark:text-sky-300 border-sky-500/30 text-[11px] gap-1 font-semibold"
           >
             <Activity className="h-3 w-3" />
-            {isBn ? "ডায়াগনস্টিক" : "Diagnostic"}
+            ডায়াগনস্টিক
           </Badge>
         );
       case "pharmacy":
@@ -68,15 +61,11 @@ export function PartnerPerformanceTable({
             className="bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-500/30 text-[11px] gap-1 font-semibold"
           >
             <Pill className="h-3 w-3" />
-            {isBn ? "ফার্মেসি" : "Pharmacy"}
+            ফার্মেসি
           </Badge>
         );
       default:
-        return (
-          <Badge variant="outline" className="text-[11px]">
-            {category}
-          </Badge>
-        );
+        return <Badge variant="outline" className="text-[11px]">{category}</Badge>;
     }
   };
 
@@ -89,23 +78,20 @@ export function PartnerPerformanceTable({
               <Trophy className="h-4 w-4" />
             </div>
             <CardTitle className="text-base sm:text-lg font-bold font-heading text-secondary dark:text-white">
-              {isBn ? "শীর্ষ পার্টনার হাসপাতাল ও ডায়াগনস্টিক পারফরম্যান্স" : "Top Partner Hospitals & Clinic Rankings"}
+              শীর্ষ পার্টনার হাসপাতাল ও ডায়াগনস্টিক পারফরম্যান্স
             </CardTitle>
           </div>
           <CardDescription className="text-xs text-muted-foreground">
-            {isBn
-              ? "সদস্যদের চিকিৎসা সাশ্রয় ও রোগী ভলিউমের ভিত্তিতে পার্টনারদের তুলনামূলক র‍্যাংকিং"
-              : "Ranking of partner medical centers by total discount delivered and patient traffic"}
+            সদস্যদের চিকিৎসা সাশ্রয় ও রোগী ভলিউমের ভিত্তিতে পার্টনারদের তুলনামূলক র‍্যাংকিং
           </CardDescription>
         </div>
 
-        {/* Filter Badges & Search */}
         <div className="flex flex-wrap items-center gap-2">
           <div className="relative w-full sm:w-48">
             <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
             <Input
               type="text"
-              placeholder={isBn ? "হাসপাতাল খুঁজুন..." : "Search partner..."}
+              placeholder="হাসপাতাল খুঁজুন..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="h-8 pl-8 text-xs rounded-xl"
@@ -126,21 +112,7 @@ export function PartnerPerformanceTable({
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {cat === "all"
-                  ? isBn
-                    ? "সকল"
-                    : "All"
-                  : cat === "hospital"
-                  ? isBn
-                    ? "হাসপাতাল"
-                    : "Hospitals"
-                  : cat === "diagnostic"
-                  ? isBn
-                    ? "ডায়াগনস্টিক"
-                    : "Diagnostics"
-                  : isBn
-                  ? "ফার্মেসি"
-                  : "Pharmacies"}
+                {cat === "all" ? "সকল" : cat === "hospital" ? "হাসপাতাল" : cat === "diagnostic" ? "ডায়াগনস্টিক" : "ফার্মেসি"}
               </Button>
             ))}
           </div>
@@ -149,81 +121,72 @@ export function PartnerPerformanceTable({
 
       <CardContent className="p-0 sm:p-6">
         {filteredPartners.length === 0 ? (
-          <div className="py-12 text-center text-xs text-muted-foreground">
-            {isBn ? "কোনো পার্টনার রেকর্ড পাওয়া যায়নি।" : "No partner data available matching criteria."}
-          </div>
+          <div className="py-12 text-center text-xs text-muted-foreground">কোনো পার্টনার রেকর্ড পাওয়া যায়নি।</div>
         ) : (
           <div>
-            {/* Desktop Table View */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-xs text-left">
                 <thead className="text-[11px] uppercase tracking-wider text-muted-foreground bg-muted/40 border-y border-border/50">
                   <tr>
-                    <th className="py-3 px-4 font-bold">{isBn ? "র‍্যাংক ও পার্টনার" : "Rank & Partner"}</th>
-                    <th className="py-3 px-4 font-bold">{isBn ? "ক্যাটাগরি" : "Category"}</th>
-                    <th className="py-3 px-4 font-bold text-center">{isBn ? "রোগী লেনদেন" : "Visits"}</th>
-                    <th className="py-3 px-4 font-bold text-right">{isBn ? "মোট বিলিং" : "Total Billed"}</th>
-                    <th className="py-3 px-4 font-bold text-right">{isBn ? "মোট ডিসকাউন্ট সাশ্রয়" : "Total Saved"}</th>
-                    <th className="py-3 px-4 font-bold text-center">{isBn ? "গড় ডিসকাউন্ট হার" : "Avg Discount"}</th>
+                    <th className="py-3 px-4 font-bold">র‍্যাংক ও পার্টনার</th>
+                    <th className="py-3 px-4 font-bold">ক্যাটাগরি</th>
+                    <th className="py-3 px-4 font-bold text-center">রোগী লেনদেন</th>
+                    <th className="py-3 px-4 font-bold text-right">মোট বিলিং</th>
+                    <th className="py-3 px-4 font-bold text-right">মোট ডিসকাউন্ট সাশ্রয়</th>
+                    <th className="py-3 px-4 font-bold text-center">গড় ডিসকাউন্ট হার</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/50 font-medium">
-                  {filteredPartners.map((partner, index) => {
-                    return (
-                      <tr
-                        key={partner.partnerId}
-                        className="hover:bg-muted/30 transition-colors group"
-                      >
-                        <td className="py-3.5 px-4">
-                          <div className="flex items-center gap-3">
-                            <span
-                              className={`h-6 w-6 rounded-full flex items-center justify-center font-mono font-bold text-xs shrink-0 ${
-                                index === 0
-                                  ? "bg-amber-500 text-white shadow-xs"
-                                  : index === 1
-                                  ? "bg-slate-300 text-slate-800 dark:bg-slate-700 dark:text-slate-200"
-                                  : index === 2
-                                  ? "bg-amber-700/60 text-white"
-                                  : "bg-muted text-muted-foreground"
-                              }`}
-                            >
-                              {index + 1}
-                            </span>
-                            <div>
-                              <p className="font-bold text-foreground group-hover:text-primary transition-colors">
-                                {partner.partnerName}
-                              </p>
-                              <p className="text-[11px] text-muted-foreground flex items-center gap-1 font-normal">
-                                <Users className="h-3 w-3" />
-                                {formatNum(partner.uniquePatients, locale)} {isBn ? "জন স্বতন্ত্র সদস্য" : "unique patients"}
-                              </p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="py-3.5 px-4">{getCategoryBadge(partner.category)}</td>
-                        <td className="py-3.5 px-4 text-center font-mono font-bold text-foreground">
-                          {formatNum(partner.transactionCount, locale)}
-                        </td>
-                        <td className="py-3.5 px-4 text-right font-mono text-muted-foreground">
-                          ৳{formatNum(partner.totalBilled, locale)}
-                        </td>
-                        <td className="py-3.5 px-4 text-right font-mono font-bold text-emerald-600 dark:text-emerald-400">
-                          ৳{formatNum(partner.totalSaved, locale)}
-                        </td>
-                        <td className="py-3.5 px-4 text-center">
-                          <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[11px] font-mono font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
-                            <Percent className="h-2.5 w-2.5" />
-                            {formatNum(partner.averageSavingsRate, locale)}%
+                  {filteredPartners.map((partner, index) => (
+                    <tr key={partner.partnerId} className="hover:bg-muted/30 transition-colors group">
+                      <td className="py-3.5 px-4">
+                        <div className="flex items-center gap-3">
+                          <span
+                            className={`h-6 w-6 rounded-full flex items-center justify-center font-mono font-bold text-xs shrink-0 ${
+                              index === 0
+                                ? "bg-amber-500 text-white shadow-xs"
+                                : index === 1
+                                ? "bg-slate-300 text-slate-800 dark:bg-slate-700 dark:text-slate-200"
+                                : index === 2
+                                ? "bg-amber-700/60 text-white"
+                                : "bg-muted text-muted-foreground"
+                            }`}
+                          >
+                            {index + 1}
                           </span>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                          <div>
+                            <p className="font-bold text-foreground group-hover:text-primary transition-colors">
+                              {partner.partnerName}
+                            </p>
+                            <p className="text-[11px] text-muted-foreground flex items-center gap-1 font-normal">
+                              <Users className="h-3 w-3" />
+                              {formatNum(partner.uniquePatients)} জন স্বতন্ত্র সদস্য
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-3.5 px-4">{getCategoryBadge(partner.category)}</td>
+                      <td className="py-3.5 px-4 text-center font-mono font-bold text-foreground">
+                        {formatNum(partner.transactionCount)}
+                      </td>
+                      <td className="py-3.5 px-4 text-right font-mono text-muted-foreground">
+                        ৳{formatNum(partner.totalBilled)}
+                      </td>
+                      <td className="py-3.5 px-4 text-right font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                        ৳{formatNum(partner.totalSaved)}
+                      </td>
+                      <td className="py-3.5 px-4 text-center">
+                        <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[11px] font-mono font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
+                          <Percent className="h-2.5 w-2.5" />
+                          {formatNum(partner.averageSavingsRate)}%
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
 
-            {/* Mobile Card List View */}
             <div className="md:hidden divide-y divide-border/60">
               {filteredPartners.map((partner, index) => (
                 <div key={partner.partnerId} className="p-4 space-y-3">
@@ -235,7 +198,7 @@ export function PartnerPerformanceTable({
                       <div>
                         <h4 className="font-bold text-sm text-foreground">{partner.partnerName}</h4>
                         <p className="text-[11px] text-muted-foreground">
-                          {formatNum(partner.uniquePatients, locale)} {isBn ? "জন সদস্য সেবা নিয়েছেন" : "patients served"}
+                          {formatNum(partner.uniquePatients)} জন সদস্য সেবা নিয়েছেন
                         </p>
                       </div>
                     </div>
@@ -244,16 +207,16 @@ export function PartnerPerformanceTable({
 
                   <div className="grid grid-cols-3 gap-2 pt-1 text-xs border-t border-border/40 font-mono">
                     <div className="p-2 rounded-xl bg-muted/40 text-center">
-                      <span className="text-[10px] text-muted-foreground block font-sans">{isBn ? "মোট লেনদেন" : "Visits"}</span>
-                      <span className="font-bold">{formatNum(partner.transactionCount, locale)}</span>
+                      <span className="text-[10px] text-muted-foreground block font-sans">মোট লেনদেন</span>
+                      <span className="font-bold">{formatNum(partner.transactionCount)}</span>
                     </div>
                     <div className="p-2 rounded-xl bg-muted/40 text-center">
-                      <span className="text-[10px] text-muted-foreground block font-sans">{isBn ? "মোট বিল" : "Billed"}</span>
-                      <span className="font-bold">৳{formatNum(partner.totalBilled, locale)}</span>
+                      <span className="text-[10px] text-muted-foreground block font-sans">মোট বিল</span>
+                      <span className="font-bold">৳{formatNum(partner.totalBilled)}</span>
                     </div>
                     <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-center text-emerald-700 dark:text-emerald-300">
-                      <span className="text-[10px] block font-sans">{isBn ? "মোট সাশ্রয়" : "Saved"}</span>
-                      <span className="font-bold">৳{formatNum(partner.totalSaved, locale)}</span>
+                      <span className="text-[10px] block font-sans">মোট সাশ্রয়</span>
+                      <span className="font-bold">৳{formatNum(partner.totalSaved)}</span>
                     </div>
                   </div>
                 </div>

@@ -1,8 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Phone, Mail, MapPin } from "lucide-react";
-import { Locale } from "@/lib/i18n";
-import { tServer } from "@/lib/i18n.server";
 import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 import { toBanglaNums } from "@/lib/utils";
 import {
@@ -23,18 +21,13 @@ function formatSocialUrl(url?: string): string {
   return `https://${trimmed}`;
 }
 
-export default async function Footer({ locale = "bn" }: { locale?: string }) {
-  const currentLocale = (locale === "en" ? "en" : "bn") as Locale;
-  const t = (key: string) => tServer(currentLocale, key);
+export default async function Footer() {
   const contact = await getCachedContactSettings();
 
   const rawHotline = contact.hotline.replace(/[^0-9]/g, "");
   const normalizedHotline = rawHotline.replace(/^(880|88|0)/, "");
   const hotlineTel = `+880${normalizedHotline}`;
-  const hotlineDisplay =
-    currentLocale === "bn"
-      ? toBanglaNums(`+880 ${normalizedHotline}`)
-      : `+880 ${normalizedHotline}`;
+  const hotlineDisplay = toBanglaNums(`+880 ${normalizedHotline}`);
 
   const rawWhatsapp = contact.whatsapp.replace(/[^0-9]/g, "");
   const normalizedWhatsapp = rawWhatsapp.replace(/^(880|88|0)/, "");
@@ -110,12 +103,12 @@ export default async function Footer({ locale = "bn" }: { locale?: string }) {
                 className="h-8 w-8 sm:h-9 sm:w-9 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.3)] transition-transform duration-300 group-hover:scale-110 shrink-0"
               />
               <span className="font-heading text-xl font-bold tracking-tight text-white">
-                {t("layout.footer.health")}{" "}
-                <span className="gradient-text">{t("layout.footer.club")}</span>
+                হেলথ{" "}
+                <span className="gradient-text">ক্লাব</span>
               </span>
             </Link>
             <p className="text-sm text-slate-400 max-w-xs leading-relaxed">
-              {t("layout.footer.healthcareMadeSimpleAndAffordable")}
+              স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী। হেলথ ক্লাব মেম্বারশিপের সাথে পান নির্ধারিত পার্টনার হাসপাতালে বিশেষ সুবিধা ও ডিসকাউন্ট।
             </p>
             {/* Social Icons */}
             {socialLinks.length > 0 && (
@@ -142,23 +135,20 @@ export default async function Footer({ locale = "bn" }: { locale?: string }) {
             {/* Quick Links */}
             <div>
               <h3 className="text-xs font-semibold text-white/80 tracking-widest uppercase mb-5">
-                {t("layout.footer.quickLinks")}
+                লিঙ্কসমূহ
               </h3>
               <ul role="list" className="space-y-3">
                 {[
-                  { href: "/", label: t("layout.footer.home") },
-                  { href: "/consultants", label: t("layout.footer.consultants") },
-                  { href: "/partner-hospitals", label: t("layout.footer.partnerHospitals") },
-                  { href: "/emergency", label: t("layout.footer.emergencyServices") },
-                  { href: "/health-tools", label: t("layout.footer.healthCalculators") },
-                  { href: "/health-tips", label: t("layout.footer.healthTips") },
-                  {
-                    href: "/blog",
-                    label: t("layout.footer.blog") || (currentLocale === "bn" ? "স্বাস্থ্য ব্লগ ও গাইড" : "Healthcare Blog"),
-                  },
-                  { href: "/membership", label: t("layout.footer.membershipPlans") },
-                  { href: "/become-partner", label: t("layout.footer.becomeAPartner") },
-                  { href: "/about-us", label: t("layout.footer.aboutUs") },
+                  { href: "/", label: "হোম" },
+                  { href: "/consultants", label: "ডাক্তার ও কনসালট্যান্টস" },
+                  { href: "/partner-hospitals", label: "পার্টনার হাসপাতাল" },
+                  { href: "/emergency", label: "জরুরি সেবা" },
+                  { href: "/health-tools", label: "হেলথ ক্যালকুলেটর" },
+                  { href: "/health-tips", label: "স্বাস্থ্য টিপস ও ব্লগ" },
+                  { href: "/blog", label: "স্বাস্থ্য ব্লগ ও গাইড" },
+                  { href: "/membership", label: "মেম্বারশিপ প্ল্যান" },
+                  { href: "/become-partner", label: "পার্টনার হোন" },
+                  { href: "/about-us", label: "আমাদের সম্পর্কে" },
                 ].map((link) => (
                   <li key={link.href}>
                     <Link
@@ -177,14 +167,14 @@ export default async function Footer({ locale = "bn" }: { locale?: string }) {
             {/* Support and Address */}
             <div>
               <h3 className="text-xs font-semibold text-white/80 tracking-widest uppercase mb-5">
-                {t("layout.footer.contactAddress")}
+                যোগাযোগ ও ঠিকানা
               </h3>
               <ul className="space-y-4 text-sm text-slate-400">
                 <li className="flex items-start gap-3">
                   <div className="h-8 w-8 rounded-lg bg-slate-800 border border-slate-700/50 flex items-center justify-center shrink-0 mt-0.5">
                     <MapPin className="h-4 w-4 text-primary" />
                   </div>
-                  <span className="leading-relaxed">{t("layout.footer.mizanRoadFeni3900")}</span>
+                  <span className="leading-relaxed">মিজান রোড, ফেনী - ৩৯০০</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <div className="h-8 w-8 rounded-lg bg-slate-800 border border-slate-700/50 flex items-center justify-center shrink-0">
@@ -211,14 +201,14 @@ export default async function Footer({ locale = "bn" }: { locale?: string }) {
         {/* Bottom bar */}
         <div className="mt-12 border-t border-slate-800/60 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
           <p className="text-xs text-slate-400">
-            &copy; {new Date().getFullYear()} {t("layout.footer.healthClubAllRightsReserved")}
+            &copy; {new Date().getFullYear()} হেলথ ক্লাব। সর্বস্বত্ব সংরক্ষিত।
           </p>
           <div className="flex space-x-6 text-xs text-slate-400">
             <Link href="/privacy-policy" prefetch={false} className="hover:text-white transition-colors">
-              {t("layout.footer.privacyPolicy")}
+              গোপনীয়তা নীতি
             </Link>
             <Link href="/terms-conditions" prefetch={false} className="hover:text-white transition-colors">
-              {t("layout.footer.termsConditions")}
+              শর্তাবলী ও নিয়ম
             </Link>
           </div>
         </div>

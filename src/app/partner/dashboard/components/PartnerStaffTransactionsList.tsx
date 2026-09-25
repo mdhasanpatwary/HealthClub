@@ -5,8 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CreditCard, Receipt, Search } from "lucide-react";
+import { toBanglaNums } from "@/lib/utils";
 import { Transaction } from "@/services/db";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 
 export type FilterPeriod = "all" | "today" | "week" | "month";
 
@@ -27,9 +27,6 @@ export function PartnerStaffTransactionsList({
   filterPeriod,
   onFilterPeriodChange,
 }: PartnerStaffTransactionsListProps) {
-  const { t, locale } = useLanguage();
-  const isBn = locale === "bn";
-
   const filteredTransactions = useMemo(() => {
     if (!transactions.length) return [];
     const now = new Date();
@@ -62,7 +59,7 @@ export function PartnerStaffTransactionsList({
         <div className="flex items-center gap-2">
           <CreditCard className="h-4 w-4 text-primary" />
           <h4 className="text-sm font-bold font-heading text-secondary dark:text-white">
-            {t("partner.staff.transactionHistory")} ({filteredTransactions.length})
+            লেনদেন ইতিহাস ({toBanglaNums(filteredTransactions.length)})
           </h4>
         </div>
 
@@ -70,10 +67,10 @@ export function PartnerStaffTransactionsList({
         <div className="flex flex-wrap items-center gap-1.5">
           {(
             [
-              { id: "all", label: t("partner.staff.filterPeriodAll") },
-              { id: "today", label: t("partner.staff.filterPeriodToday") },
-              { id: "week", label: t("partner.staff.filterPeriodWeek") },
-              { id: "month", label: t("partner.staff.filterPeriodMonth") },
+              { id: "all", label: "সকল" },
+              { id: "today", label: "আজ" },
+              { id: "week", label: "এই সপ্তাহ" },
+              { id: "month", label: "এই মাস" },
             ] as const
           ).map((p) => (
             <button
@@ -99,7 +96,7 @@ export function PartnerStaffTransactionsList({
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder={t("partner.staff.searchTxnPlaceholder")}
+          placeholder="সদস্য নাম, কার্ড নম্বর বা তারিখ দিয়ে খুঁজুন..."
           className="pl-9 h-9 text-xs rounded-xl bg-card border-border"
         />
       </div>
@@ -116,10 +113,10 @@ export function PartnerStaffTransactionsList({
           <Receipt className="h-8 w-8 text-muted-foreground mx-auto opacity-50" />
           <div className="space-y-0.5">
             <p className="text-xs font-semibold text-foreground">
-              {t("partner.staff.noTxnsFound")}
+              কোনো লেনদেন পাওয়া যায়নি
             </p>
             <p className="text-[11px] text-muted-foreground">
-              {t("partner.staff.noTxnsFoundDesc")}
+              নির্বাচিত ফিল্টারের সাথে কোনো রেকর্ড মেলেনি
             </p>
           </div>
         </div>
@@ -127,12 +124,12 @@ export function PartnerStaffTransactionsList({
         <div className="border border-border rounded-2xl overflow-hidden overflow-x-hidden bg-card divide-y divide-border/60 max-h-60 sm:max-h-72 overflow-y-auto">
           {filteredTransactions.map((tx) => {
             const txDate = new Date(tx.date);
-            const dateStr = txDate.toLocaleDateString(isBn ? "bn-BD" : "en-GB", {
+            const dateStr = txDate.toLocaleDateString("bn-BD", {
               day: "numeric",
               month: "short",
               year: "numeric",
             });
-            const timeStr = txDate.toLocaleTimeString(isBn ? "bn-BD" : "en-GB", {
+            const timeStr = txDate.toLocaleTimeString("bn-BD", {
               hour: "2-digit",
               minute: "2-digit",
               hour12: true,
@@ -163,13 +160,13 @@ export function PartnerStaffTransactionsList({
 
                 <div className="text-right shrink-0 space-y-0.5">
                   <div className="text-xs font-mono font-bold text-foreground">
-                    ৳{tx.amount.toLocaleString(isBn ? "bn-BD" : "en-US")}
+                    ৳{toBanglaNums(tx.amount.toLocaleString("bn-BD"))}
                   </div>
                   <div className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold">
-                    -{t("partner.staff.discountLabel")}: ৳{tx.saved.toLocaleString(isBn ? "bn-BD" : "en-US")}
+                    -ছাড়: ৳{toBanglaNums(tx.saved.toLocaleString("bn-BD"))}
                   </div>
                   <div className="text-[10px] text-muted-foreground font-mono">
-                    {t("partner.staff.netPayableLabel")}: ৳{netPayable.toLocaleString(isBn ? "bn-BD" : "en-US")}
+                    পরিশোধিত: ৳{toBanglaNums(netPayable.toLocaleString("bn-BD"))}
                   </div>
                 </div>
               </div>

@@ -9,16 +9,12 @@ import {
 import { Doctor } from "@/services/db";
 import { Card } from "@/components/ui/card";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Locale } from "@/lib/i18n";
 import { DoctorAvatar } from "./DoctorModals";
 import { DoctorAvailabilityBadge, DoctorNoticeBanner } from "./DoctorAvailabilityBadge";
 import { getUpazilaLabel } from "@/data/feniLocations";
 
 interface DoctorCardProps {
   doctor: Doctor & { resolvedUpazila?: string };
-  locale: Locale;
-  isEn: boolean;
-  t?: (key: string) => string;
   variant?: "directory" | "partner-roster";
   onDetailsClick?: (doc: Doctor) => void;
   onSerialClick: (doc: Doctor) => void;
@@ -26,9 +22,6 @@ interface DoctorCardProps {
 
 export function DoctorCard({
   doctor: doc,
-  locale,
-  isEn,
-  t,
   variant = "directory",
   onDetailsClick,
   onSerialClick,
@@ -88,20 +81,20 @@ export function DoctorCard({
               className="font-medium leading-tight line-clamp-2 overflow-hidden break-words"
               title={doc.designation}
             >
-              {doc.designation || (isEn ? "Specialist Physician" : "বিশেষজ্ঞ চিকিৎসক")}
+              {doc.designation || "বিশেষজ্ঞ চিকিৎসক"}
             </p>
           </div>
           <div className="flex items-center justify-between gap-1.5 flex-wrap">
-            <DoctorAvailabilityBadge doctor={doc} locale={locale} size="sm" />
+            <DoctorAvailabilityBadge doctor={doc} size="sm" />
             {doc.roomNo && (
               <span className="inline-flex items-center text-[10px] font-semibold text-muted-foreground font-mono bg-muted px-2 py-0.5 rounded-md border border-border/60">
-                {isEn ? `Room ${doc.roomNo}` : `রুম #${doc.roomNo}`}
+                {`রুম #${doc.roomNo}`}
               </span>
             )}
             {isDirectory && doc.partnerId && (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
                 <ShieldCheck className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
-                <span>{isEn ? "Partner Chamber" : "পার্টনার চেম্বার"}</span>
+                <span>পার্টনার চেম্বার</span>
               </span>
             )}
           </div>
@@ -109,7 +102,7 @@ export function DoctorCard({
 
         {/* Notice Banner if present */}
         {doc.notice && (
-          <DoctorNoticeBanner notice={doc.notice} locale={locale} compact />
+          <DoctorNoticeBanner notice={doc.notice} compact />
         )}
 
         {/* Chamber Schedule & Address with Upazila Badge / Visiting Hours */}
@@ -126,7 +119,7 @@ export function DoctorCard({
                 {doc.resolvedUpazila && (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-primary/10 text-primary border border-primary/20 shrink-0">
                     <MapPin className="h-2.5 w-2.5" />
-                    {getUpazilaLabel(doc.resolvedUpazila, locale)}
+                    {getUpazilaLabel(doc.resolvedUpazila)}
                   </span>
                 )}
               </div>
@@ -170,20 +163,20 @@ export function DoctorCard({
               size="sm"
               variant="outline"
               onClick={() => onDetailsClick?.(doc)}
-              aria-label={`${t?.("consultants.button.details") || (isEn ? "Details" : "বিস্তারিত")} - ${doc.name}`}
+              aria-label={`বিস্তারিত - ${doc.name}`}
               className="h-8 sm:h-9 text-xs font-semibold rounded-xl border-border/80 hover:bg-muted cursor-pointer"
             >
               <Info className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
-              {t?.("consultants.button.details") || (isEn ? "Details" : "বিস্তারিত")}
+              বিস্তারিত
             </Button>
             <Button
               size="sm"
               onClick={() => onSerialClick(doc)}
-              aria-label={`${t?.("consultants.button.serial") || (isEn ? "Call Serial" : "সিরিয়াল কল")} - ${doc.name}`}
+              aria-label={`সিরিয়াল কল - ${doc.name}`}
               className="h-8 sm:h-9 text-xs font-semibold rounded-xl bg-primary hover:bg-primary/90 text-white shadow-xs cursor-pointer"
             >
               <PhoneCall className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
-              {t?.("consultants.button.serial") || (isEn ? "Call Serial" : "সিরিয়াল কল")}
+              সিরিয়াল কল
             </Button>
           </>
         ) : (
@@ -191,22 +184,22 @@ export function DoctorCard({
             <Button
               size="sm"
               onClick={() => onSerialClick(doc)}
-              aria-label={`${isEn ? "Book Serial" : "সিরিয়াল নিন"} - ${doc.name}`}
+              aria-label={`সিরিয়াল নিন - ${doc.name}`}
               className="h-8 sm:h-9 text-xs font-semibold rounded-xl bg-primary hover:bg-primary/90 text-white shadow-xs cursor-pointer"
             >
               <PhoneCall className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
-              {isEn ? "Book Serial" : "সিরিয়াল নিন"}
+              সিরিয়াল নিন
             </Button>
             <Link
               href={`/consultants/${encodeURIComponent(doc.slug || doc.id)}`}
-              aria-label={`${isEn ? "Profile" : "প্রোফাইল"} - ${doc.name}`}
+              aria-label={`প্রোফাইল - ${doc.name}`}
               className={buttonVariants({
                 variant: "outline",
                 size: "sm",
                 className: "h-8 sm:h-9 text-xs font-semibold rounded-xl border-border/80 hover:bg-muted cursor-pointer flex items-center justify-center",
               })}
             >
-              <span>{isEn ? "Profile" : "প্রোফাইল"}</span>
+              <span>প্রোফাইল</span>
               <ChevronRight className="h-3.5 w-3.5 ml-1 text-muted-foreground" aria-hidden="true" />
             </Link>
           </>

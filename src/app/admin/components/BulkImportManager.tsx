@@ -31,7 +31,7 @@ import { BulkImportMapping } from "./import/BulkImportMapping";
 import { BulkImportPreviewTable } from "./import/BulkImportPreviewTable";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useLanguage } from "@/components/layout/LanguageProvider";
+import { toBanglaNums } from "@/lib/utils";
 
 interface BulkImportManagerProps {
   defaultEntity?: ImportEntityType;
@@ -44,9 +44,6 @@ export function BulkImportManager({
   onSuccess,
   isModal = false,
 }: BulkImportManagerProps) {
-  const { locale } = useLanguage();
-  const isBn = locale === "bn";
-
   const [entityType, setEntityType] = useState<ImportEntityType>(defaultEntity);
   const [parsing, setParsing] = useState(false);
   const [importing, setImporting] = useState(false);
@@ -90,9 +87,7 @@ export function BulkImportManager({
     try {
       const parsed = await parseFileToRawData(file);
       if (parsed.rows.length === 0) {
-        toast.error(
-          isBn ? "ফাইলে কোনো তথ্য পাওয়া যায়নি।" : "No data rows found in the uploaded file."
-        );
+        toast.error("ফাইলে কোনো তথ্য পাওয়া যায়নি।");
         setParsing(false);
         return;
       }
@@ -111,14 +106,11 @@ export function BulkImportManager({
 
       const validCount = processed.filter((r) => r.isValid).length;
       toast.success(
-        isBn
-          ? `${parsed.rows.length} টি সারির মধ্যে ${validCount} টি সফলভাবে যাচাই হয়েছে।`
-          : `Parsed ${parsed.rows.length} rows (${validCount} valid).`
+        `${toBanglaNums(parsed.rows.length)} টি সারির মধ্যে ${toBanglaNums(validCount)} টি সফলভাবে যাচাই হয়েছে।`
       );
     } catch (err: unknown) {
       toast.error(
-        (err as Error).message ||
-          (isBn ? "ফাইল পড়তে সমস্যা হয়েছে।" : "Failed to parse spreadsheet.")
+        (err as Error).message || "ফাইল পড়তে সমস্যা হয়েছে।"
       );
     } finally {
       setParsing(false);
@@ -137,17 +129,13 @@ export function BulkImportManager({
 
   const handleDeleteRow = (rowId: string) => {
     setProcessedRows((prev) => prev.filter((r) => r.id !== rowId));
-    toast.info(isBn ? "সারিটি সরানো হয়েছে।" : "Row removed from import list.");
+    toast.info("সারিটি সরানো হয়েছে।");
   };
 
   const handleExecuteImport = async () => {
     const validRows = processedRows.filter((r) => r.isValid);
     if (validRows.length === 0) {
-      toast.error(
-        isBn
-          ? "ইম্পোর্ট করার জন্য কোনো বৈধ সারি পাওয়া যায়নি।"
-          : "No valid rows available to import."
-      );
+      toast.error("ইম্পোর্ট করার জন্য কোনো বৈধ সারি পাওয়া যায়নি।");
       return;
     }
 
@@ -176,9 +164,7 @@ export function BulkImportManager({
 
       if (result.success) {
         toast.success(
-          isBn
-            ? `${result.totalImported} টি রেকর্ড সফলভাবে ডাটাবেজে যুক্ত হয়েছে!`
-            : `Successfully imported ${result.totalImported} records into database!`
+          `${toBanglaNums(result.totalImported)} টি রেকর্ড সফলভাবে ডাটাবেজে যুক্ত হয়েছে!`
         );
         handleReset();
         if (onSuccess) {
@@ -186,12 +172,11 @@ export function BulkImportManager({
         }
       } else {
         toast.error(
-          result.errors?.[0] ||
-            (isBn ? "ইম্পোর্ট করতে সমস্যা হয়েছে।" : "Bulk import execution failed.")
+          result.errors?.[0] || "ইম্পোর্ট করতে সমস্যা হয়েছে।"
         );
       }
     } catch {
-      toast.error(isBn ? "সার্ভারে সমস্যা দেখা দিয়েছে।" : "Server error during bulk import.");
+      toast.error("সার্ভারে সমস্যা দেখা দিয়েছে।");
     } finally {
       setImporting(false);
     }
@@ -235,12 +220,10 @@ export function BulkImportManager({
                       isSelected ? "text-primary" : "text-foreground"
                     }`}
                   >
-                    {isBn ? item.labelBn : item.labelEn}
+                    {item.labelBn}
                   </p>
                   <p className="text-[10px] text-muted-foreground line-clamp-1">
-                    {isBn
-                      ? ENTITY_CONFIGS[item.id].titleBn
-                      : ENTITY_CONFIGS[item.id].titleEn}
+                    {ENTITY_CONFIGS[item.id].titleBn}
                   </p>
                 </div>
               </button>
@@ -282,15 +265,11 @@ export function BulkImportManager({
               <p className="text-sm font-bold text-foreground flex items-center gap-1.5">
                 <CheckCircle className="h-4 w-4 text-primary" />
                 <span>
-                  {isBn
-                    ? `${validRowsCount} টি রেকর্ড ইম্পোর্ট করার জন্য প্রস্তুত`
-                    : `${validRowsCount} valid records ready for database import`}
+                  {`${toBanglaNums(validRowsCount)} টি রেকর্ড ইম্পোর্ট করার জন্য প্রস্তুত`}
                 </span>
               </p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {isBn
-                  ? `লক্ষ্য: ${currentConfig.titleBn}`
-                  : `Target: ${currentConfig.titleEn}`}
+                {`লক্ষ্য: ${currentConfig.titleBn}`}
               </p>
             </div>
 
@@ -303,7 +282,7 @@ export function BulkImportManager({
                 disabled={importing}
                 className="text-xs font-semibold border-border flex-1 sm:flex-initial"
               >
-                {isBn ? "বাতিল" : "Cancel"}
+                বাতিল
               </Button>
 
               <Button
@@ -316,12 +295,8 @@ export function BulkImportManager({
                 {importing && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                 <span>
                   {importing
-                    ? isBn
-                      ? "ইম্পোর্ট হচ্ছে..."
-                      : "Importing..."
-                    : isBn
-                    ? `${validRowsCount} টি ডাটা ইম্পোর্ট করুন`
-                    : `Import ${validRowsCount} Records`}
+                    ? "ইম্পোর্ট হচ্ছে..."
+                    : `${toBanglaNums(validRowsCount)} টি ডাটা ইম্পোর্ট করুন`}
                 </span>
               </Button>
             </div>

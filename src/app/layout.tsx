@@ -7,11 +7,7 @@ import BottomNav from "@/components/layout/BottomNav";
 import GlobalNoticeBanner from "@/components/layout/GlobalNoticeBanner";
 import DeferredClientComponents from "@/components/layout/DeferredClientComponents";
 import { getCachedNoticeSetting, getCachedContactSettings } from "@/app/actions/systemSettingsActions";
-import { LanguageProvider } from "@/components/layout/LanguageProvider";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
-import { Locale } from "@/lib/i18n";
-import { getDictionary } from "@/lib/translations";
-import type { TranslationNamespace } from "@/lib/translations/types";
 import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
@@ -132,7 +128,6 @@ export const metadata: Metadata = {
     description: "নির্ধারিত হাসপাতাল ও ল্যাবে ডিসকাউন্ট পেতে আজই হেলথ ক্লাবের ডিজিটাল মেম্বার কার্ড সংগ্রহ করুন।",
     url: SITE_URL,
     siteName: "হেলথ ক্লাব (Health Club)",
-    locale: "bn_BD",
     type: "website",
     images: DEFAULT_OG_IMAGES,
   },
@@ -159,13 +154,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const locale: Locale = "bn";
   const theme = "light";
 
-  // Serialize foundational namespace (common) for instant static SSR
-  // Additional route namespaces are dynamically streamed by LanguageProvider on client navigation
-  const initialNamespaces: TranslationNamespace[] = ["common"];
-  const initialDict = getDictionary(locale, initialNamespaces);
   const [notice, contactSettings] = await Promise.all([
     getCachedNoticeSetting(),
     getCachedContactSettings(),
@@ -246,7 +236,7 @@ export default async function RootLayout({
         "telephone": formattedTel,
         "contactType": "customer service",
         "areaServed": "BD",
-        "availableLanguage": ["Bengali", "English"]
+        "availableLanguage": ["Bengali"]
       }
     },
 
@@ -256,7 +246,7 @@ export default async function RootLayout({
       "@id": `${SITE_URL}/#website`,
       "name": "হেলথ ক্লাব (Health Club)",
       "url": SITE_URL,
-      "inLanguage": ["bn-BD", "en-US"],
+      "inLanguage": "bn-BD",
       "potentialAction": {
         "@type": "SearchAction",
         "target": {
@@ -269,7 +259,7 @@ export default async function RootLayout({
   ];
 
   return (
-    <html lang={locale} data-scroll-behavior="smooth" className={`${theme} ${inter.variable} ${notoSansBengali.variable}`}>
+    <html lang="bn" data-scroll-behavior="smooth" className={`${theme} ${inter.variable} ${notoSansBengali.variable}`}>
       <body className="font-sans antialiased bg-background text-foreground min-h-screen flex flex-col">
         {/* Skip to Main Content Link for Keyboard / Screen Reader users */}
         <a
@@ -280,20 +270,14 @@ export default async function RootLayout({
         </a>
         <JsonLd data={globalJsonLd} />
         <ThemeProvider initialTheme={theme}>
-          <LanguageProvider
-            initialLocale={locale}
-            initialDict={initialDict}
-            initialNamespaces={initialNamespaces}
-          >
-            <GlobalNoticeBanner notice={notice} />
-            <Header />
-            <main id="main-content" tabIndex={-1} className="flex-grow focus:outline-hidden">
-              {children}
-            </main>
-            <Footer locale={locale} />
-            <BottomNav />
-            <DeferredClientComponents />
-          </LanguageProvider>
+          <GlobalNoticeBanner notice={notice} />
+          <Header />
+          <main id="main-content" tabIndex={-1} className="flex-grow focus:outline-hidden">
+            {children}
+          </main>
+          <Footer />
+          <BottomNav />
+          <DeferredClientComponents />
         </ThemeProvider>
       </body>
     </html>

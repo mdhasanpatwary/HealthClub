@@ -23,136 +23,112 @@ import {
   Settings,
   ShieldCheck,
 } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-
 export interface AdminNavLink {
   href: string;
-  labelBn: string;
-  labelEn: string;
+  label: string;
   icon: React.ComponentType<{ className?: string }>;
 }
 
 export const ADMIN_NAV_LINKS: AdminNavLink[] = [
   {
     href: "/admin",
-    labelBn: "ড্যাশবোর্ড",
-    labelEn: "Dashboard",
+    label: "ড্যাশবোর্ড",
     icon: LayoutDashboard,
   },
   {
     href: "/admin/members",
-    labelBn: "সদস্য তালিকা",
-    labelEn: "Members",
+    label: "সদস্য তালিকা",
     icon: Users,
   },
   {
     href: "/admin/renewals",
-    labelBn: "নবায়ন আবেদন",
-    labelEn: "Renewals",
+    label: "নবায়ন আবেদন",
     icon: RotateCcw,
   },
   {
     href: "/admin/transactions",
-    labelBn: "লেনদেন লগ",
-    labelEn: "Transactions",
+    label: "লেনদেন লগ",
     icon: Receipt,
   },
   {
     href: "/admin/analytics",
-    labelBn: "রাজস্ব অ্যানালিটিক্স",
-    labelEn: "Revenue Analytics",
+    label: "রাজস্ব অ্যানালিটিক্স",
     icon: TrendingUp,
   },
   {
     href: "/admin/doctors",
-    labelBn: "ডাক্তার তালিকা",
-    labelEn: "Doctors",
+    label: "ডাক্তার তালিকা",
     icon: Stethoscope,
   },
   {
     href: "/admin/partners",
-    labelBn: "পার্টনার নেটওয়ার্ক",
-    labelEn: "Partners",
+    label: "পার্টনার নেটওয়ার্ক",
     icon: Building2,
   },
   {
     href: "/admin/partner-requests",
-    labelBn: "অংশীদার আবেদন",
-    labelEn: "Partner Requests",
+    label: "অংশীদার আবেদন",
     icon: FileCheck,
   },
   {
     href: "/admin/reviews",
-    labelBn: "রিভিউ ও রেটিং",
-    labelEn: "Reviews",
+    label: "রিভিউ ও রেটিং",
     icon: Star,
   },
   {
     href: "/admin/emergency",
-    labelBn: "জরুরি সেবা",
-    labelEn: "Emergency",
+    label: "জরুরি সেবা",
     icon: Siren,
   },
   {
     href: "/admin/blogs",
-    labelBn: "ব্লগ পোস্ট",
-    labelEn: "Blog Posts",
+    label: "ব্লগ পোস্ট",
     icon: Newspaper,
   },
   {
     href: "/admin/health-tips",
-    labelBn: "স্বাস্থ্য টিপস",
-    labelEn: "Health Tips",
+    label: "স্বাস্থ্য টিপস",
     icon: BookOpen,
   },
   {
     href: "/admin/broadcast",
-    labelBn: "ব্রডকাস্ট",
-    labelEn: "Broadcast",
+    label: "ব্রডকাস্ট",
     icon: Radio,
   },
   {
     href: "/admin/notifications",
-    labelBn: "বিজ্ঞপ্তি",
-    labelEn: "Notifications",
+    label: "বিজ্ঞপ্তি",
     icon: Bell,
   },
   {
     href: "/admin/messages",
-    labelBn: "বার্তা",
-    labelEn: "Messages",
+    label: "বার্তা",
     icon: Mail,
   },
   {
     href: "/admin/pwa",
-    labelBn: "PWA অ্যানালিটিক্স",
-    labelEn: "PWA",
+    label: "PWA অ্যানালিটিক্স",
     icon: Smartphone,
   },
   {
     href: "/admin/import",
-    labelBn: "বাল্ক ইম্পোর্ট",
-    labelEn: "Bulk Import",
+    label: "বাল্ক ইম্পোর্ট",
     icon: UploadCloud,
   },
   {
     href: "/admin/staff",
-    labelBn: "এডমিন ও স্টাফ",
-    labelEn: "Staff & RBAC",
+    label: "এডমিন ও স্টাফ",
     icon: ShieldCheck,
   },
   {
     href: "/admin/settings",
-    labelBn: "সেটিংস",
-    labelEn: "Settings",
+    label: "সেটিংস",
     icon: Settings,
   },
 ];
 
 export function AdminNav() {
   const pathname = usePathname();
-  const { locale } = useLanguage();
-  const isBn = locale === "bn";
 
   return (
     <nav className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
@@ -174,7 +150,7 @@ export function AdminNav() {
             }`}
           >
             <Icon className="h-3.5 w-3.5 shrink-0" />
-            <span>{isBn ? link.labelBn : link.labelEn}</span>
+            <span>{link.label}</span>
           </Link>
         );
       })}

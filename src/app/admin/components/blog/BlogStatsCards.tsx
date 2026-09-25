@@ -6,10 +6,9 @@ import { toBanglaNums } from "@/lib/utils";
 
 interface BlogStatsCardsProps {
   totalItems: number;
-  isEn: boolean;
 }
 
-export function BlogStatsCards({ totalItems, isEn }: BlogStatsCardsProps) {
+export function BlogStatsCards({ totalItems }: BlogStatsCardsProps) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
       <Card className="p-3 sm:p-4 bg-muted/40">
@@ -19,10 +18,10 @@ export function BlogStatsCards({ totalItems, isEn }: BlogStatsCardsProps) {
           </div>
           <div>
             <p className="text-xs text-muted-foreground font-medium">
-              {isEn ? "Total Posts" : "মোট ব্লগ পোস্ট"}
+              মোট ব্লগ পোস্ট
             </p>
             <h3 className="text-lg sm:text-xl font-extrabold text-foreground">
-              {isEn ? totalItems : toBanglaNums(totalItems)}
+              {toBanglaNums(totalItems)}
             </h3>
           </div>
         </div>
@@ -35,10 +34,10 @@ export function BlogStatsCards({ totalItems, isEn }: BlogStatsCardsProps) {
           </div>
           <div>
             <p className="text-xs text-muted-foreground font-medium">
-              {isEn ? "Categories" : "মোট ক্যাটাগরি"}
+              মোট ক্যাটাগরি
             </p>
             <h3 className="text-lg sm:text-xl font-extrabold text-foreground">
-              {isEn ? BLOG_CATEGORIES.length - 1 : toBanglaNums(BLOG_CATEGORIES.length - 1)}
+              {toBanglaNums(BLOG_CATEGORIES.length - 1)}
             </h3>
           </div>
         </div>
@@ -51,14 +50,14 @@ export function BlogStatsCards({ totalItems, isEn }: BlogStatsCardsProps) {
           </div>
           <div>
             <p className="text-xs text-muted-foreground font-medium">
-              {isEn ? "Live Directory" : "পাবলিক সাইট"}
+              পাবলিক সাইট
             </p>
             <Link
               href="/blog"
               target="_blank"
               className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
             >
-              <span>healthclub.com.bd/blog</span>
+              <span>healthclubbd.org/blog</span>
               <ExternalLink className="h-3 w-3" />
             </Link>
           </div>

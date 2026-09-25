@@ -2,98 +2,78 @@ import ContactForm from "@/components/landing/ContactForm";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { cookies } from "next/headers";
-import { Locale } from "@/lib/i18n";
+import type { Metadata } from "next";
 import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 
-export async function generateMetadata() {
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
-  const isEn = locale === "en";
-
-  const ogTitle = isEn ? "Contact Health Club - Hotline & Support" : "যোগাযোগ করুন - হেলথ ক্লাব";
-  const ogDesc = isEn
-    ? "Contact our helpline for membership queries or hospital partnership applications."
-    : "মেম্বারশিপ অথবা পার্টনারশিপ সংক্রান্ত যেকোনো প্রশ্ন নিয়ে আমাদের সাথে কথা বলুন।";
-
-  return {
-    title: isEn ? { absolute: "Contact Us - Health Club Hotline & Support | Health Club" } : "যোগাযোগ করুন - হটলাইন ও অফিস",
-    description: isEn
-      ? "Get in touch with Health Club support team. Find our hotline number, support email, address, and online inquiry form."
-      : "হেলথ ক্লাবের সাথে যোগাযোগ করুন। আমাদের ফোন নাম্বার, ইমেইল, অফিস ঠিকানা ও সাপোর্ট সেন্টার।",
-    alternates: {
-      canonical: `${SITE_URL}/contact`,
-    },
-    openGraph: {
-      title: ogTitle,
-      description: ogDesc,
-      url: `${SITE_URL}/contact`,
-      siteName: "হেলথ ক্লাব (Health Club)",
-      locale: isEn ? "en_US" : "bn_BD",
-      type: "website",
-      images: DEFAULT_OG_IMAGES,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: ogTitle,
-      description: ogDesc,
-      images: DEFAULT_TWITTER_IMAGES,
-    },
-  };
-}
+export const metadata: Metadata = {
+  title: "যোগাযোগ করুন - হটলাইন ও অফিস",
+  description: "হেলথ ক্লাবের সাথে যোগাযোগ করুন। আমাদের ফোন নাম্বার, ইমেইল, অফিস ঠিকানা ও সাপোর্ট সেন্টার।",
+  alternates: {
+    canonical: `${SITE_URL}/contact`,
+  },
+  openGraph: {
+    title: "যোগাযোগ করুন - হেলথ ক্লাব",
+    description: "মেম্বারশিপ অথবা পার্টনারশিপ সংক্রান্ত যেকোনো প্রশ্ন নিয়ে আমাদের সাথে কথা বলুন।",
+    url: `${SITE_URL}/contact`,
+    siteName: "হেলথ ক্লাব (Health Club)",
+    type: "website",
+    images: DEFAULT_OG_IMAGES,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "যোগাযোগ করুন - হেলথ ক্লাব",
+    description: "মেম্বারশিপ অথবা পার্টনারশিপ সংক্রান্ত যেকোনো প্রশ্ন নিয়ে আমাদের সাথে কথা বলুন।",
+    images: DEFAULT_TWITTER_IMAGES,
+  },
+};
 
 export default async function ContactPage() {
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("locale")?.value as Locale) || "bn";
   const contactSettings = await getCachedContactSettings();
 
   const jsonLdData = [
     {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
-      "itemListElement": [
+      itemListElement: [
         {
           "@type": "ListItem",
-          "position": 1,
-          "name": locale === "en" ? "Home" : "হোম",
-          "item": SITE_URL
+          position: 1,
+          name: "হোম",
+          item: SITE_URL,
         },
         {
           "@type": "ListItem",
-          "position": 2,
-          "name": locale === "en" ? "Contact Us" : "যোগাযোগ করুন",
-          "item": `${SITE_URL}/contact`
-        }
-      ]
+          position: 2,
+          name: "যোগাযোগ করুন",
+          item: `${SITE_URL}/contact`,
+        },
+      ],
     },
     {
       "@context": "https://schema.org",
       "@type": "ContactPage",
-      "name": locale === "en" ? "Contact Health Club" : "হেলথ ক্লাবের সাথে যোগাযোগ",
-      "url": `${SITE_URL}/contact`,
-      "description": "Contact channel for Health Club members and partner healthcare facilities."
-    }
+      name: "হেলথ ক্লাবের সাথে যোগাযোগ",
+      url: `${SITE_URL}/contact`,
+      description: "Contact channel for Health Club members and partner healthcare facilities.",
+    },
   ];
 
   return (
     <div className="bg-background min-h-screen py-12">
       <JsonLd data={jsonLdData} />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
-        
         {/* Header */}
         <div className="text-center space-y-4 max-w-2xl mx-auto">
           <span className="text-xs font-extrabold text-primary tracking-widest uppercase">
-            {locale === "en" ? "Contact Us" : "যোগাযোগ করুন"}
+            যোগাযোগ করুন
           </span>
           <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-secondary dark:text-white">
-            {locale === "en" ? "Get in Touch with Us" : "আমাদের সাথে যোগাযোগ করুন"}
+            আমাদের সাথে যোগাযোগ করুন
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground">
-            {locale === "en"
-              ? "Have questions about membership, partner application, or suggestions? Send us a message."
-              : "মেম্বারশিপ নিয়ে আপনার যেকোনো প্রশ্ন, পার্টনার হতে আবেদন অথবা যেকোনো পরামর্শ জানাতে আমাদের মেসেজ দিন।"}
+            মেম্বারশিপ নিয়ে আপনার যেকোনো প্রশ্ন, পার্টনার হতে আবেদন অথবা যেকোনো পরামর্শ জানাতে আমাদের মেসেজ দিন।
           </p>
         </div>
 
@@ -105,12 +85,10 @@ export default async function ContactPage() {
         {/* Help Center CTA */}
         <div className="max-w-2xl mx-auto text-center space-y-4 pt-6">
           <h3 className="font-heading text-lg font-bold text-secondary dark:text-white">
-            {locale === "en" ? "Looking for quick answers?" : "সাধারণ জিজ্ঞাসাগুলোর উত্তর খুঁজছেন?"}
+            সাধারণ জিজ্ঞাসাগুলোর উত্তর খুঁজছেন?
           </h3>
           <p className="text-sm text-muted-foreground">
-            {locale === "en"
-              ? "Check our Frequently Asked Questions (FAQ) page for details on registration, verification, and discounts."
-              : "রেজিস্ট্রেশন, ভেরিফিকেশন এবং ডিসকাউন্ট নিয়ে বিস্তারিত ও সচরাচর জিজ্ঞাসিত প্রশ্নগুলোর দ্রুত উত্তর জানতে FAQ পেজটি দেখতে পারেন।"}
+            রেজিস্ট্রেশন, ভেরিফিকেশন এবং ডিসকাউন্ট নিয়ে বিস্তারিত ও সচরাচর জিজ্ঞাসিত প্রশ্নগুলোর দ্রুত উত্তর জানতে FAQ পেজটি দেখতে পারেন।
           </p>
           <div>
             <Link
@@ -120,11 +98,10 @@ export default async function ContactPage() {
                 "border-primary text-primary hover:bg-primary-light"
               )}
             >
-              {locale === "en" ? "View FAQ" : "জিজ্ঞাসা ও উত্তরমালা (FAQ) দেখুন"}
+              জিজ্ঞাসা ও উত্তরমালা (FAQ) দেখুন
             </Link>
           </div>
         </div>
-
       </div>
     </div>
   );

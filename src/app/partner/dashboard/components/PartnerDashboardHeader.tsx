@@ -5,8 +5,6 @@ import { Partner } from "@/services/db";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChangePartnerPasswordDialog } from "./ChangePartnerPasswordDialog";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-
 import { authStore } from "@/services/authStore";
 
 interface PartnerDashboardHeaderProps {
@@ -16,17 +14,16 @@ interface PartnerDashboardHeaderProps {
 }
 
 export function PartnerDashboardHeader({ partner, currentStaff: propStaff, onLogout }: PartnerDashboardHeaderProps) {
-  const { t } = useLanguage();
   const currentStaff = propStaff !== undefined ? propStaff : authStore.getCurrentStaff();
 
   const getCategoryLabel = (category: Partner["category"]) => {
     switch (category) {
       case "hospital":
-        return t("partner.dashboard.category.hospital");
+        return "হাসপাতাল";
       case "diagnostic":
-        return t("partner.dashboard.category.diagnostic");
+        return "ডায়াগনস্টিক";
       case "pharmacy":
-        return t("partner.dashboard.category.pharmacy");
+        return "ফার্মেসি";
       default:
         return category;
     }
@@ -51,7 +48,7 @@ export function PartnerDashboardHeader({ partner, currentStaff: propStaff, onLog
 
           <div className="flex flex-wrap items-center gap-y-1 gap-x-3 text-xs text-slate-300">
             <span className="flex items-center gap-1">
-              {t("partner.profile.discountRate")}: <strong className="text-primary font-bold">{partner.discount}</strong>
+              ছাড়ের হার: <strong className="text-primary font-bold">{partner.discount}</strong>
             </span>
             {currentStaff && (
               <span className="inline-flex items-center gap-1.5 text-emerald-300 font-semibold bg-emerald-500/15 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
@@ -87,7 +84,7 @@ export function PartnerDashboardHeader({ partner, currentStaff: propStaff, onLog
           className="gap-1.5 rounded-xl font-semibold shadow-sm cursor-pointer"
         >
           <LogOut className="h-4 w-4" />
-          <span>{t("layout.header.logout")}</span>
+          <span>লগআউট</span>
         </Button>
       </div>
     </div>

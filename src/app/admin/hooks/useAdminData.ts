@@ -6,11 +6,10 @@ import { getStatsAction, addTransactionAction } from "@/app/actions/transactionA
 import { getPartnersAction } from "@/app/actions/partnerActions";
 import { getMemberByIdOrPhoneAction } from "@/app/actions/memberAdminActions";
 import { Partner } from "@/services/db";
-import { parseDiscountPercentage } from "@/lib/utils";
-import { formatNum, Locale } from "@/lib/i18n";
+import { parseDiscountPercentage, toBanglaNums } from "@/lib/utils";
 import { AdminStatsData } from "../components/AdminStatsGrid";
 
-export function useAdminData(t: (key: string) => string, locale: Locale) {
+export function useAdminData() {
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<AdminStatsData>({
     totalMembers: 0,
@@ -84,24 +83,24 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
     try {
       const member = await getMemberByIdOrPhoneAction(newTx.memberId);
       if (!member) {
-        toast.error(t("admin.dashboard.memberNotFound"));
+        toast.error("সদস্য খুঁজে পাওয়া যায়নি।");
         return;
       }
 
       if (member.status !== "active") {
-        toast.error(t("admin.dashboard.memberNotActive"));
+        toast.error("সদস্যের অ্যাকাউন্টটি সক্রিয় নয়।");
         return;
       }
 
       const partner = partners.find((p) => p.id === newTx.partnerId);
       if (!partner) {
-        toast.error(t("admin.dashboard.selectedPartnerNotFound"));
+        toast.error("নির্বাচিত পার্টনার পাওয়া যায়নি।");
         return;
       }
 
       const billAmount = Number(newTx.amount);
       if (isNaN(billAmount) || billAmount <= 0) {
-        toast.error(t("admin.dashboard.enterValidBillAmount"));
+        toast.error("অনুগ্রহ করে সঠিক বিলের পরিমাণ লিখুন।");
         return;
       }
 
@@ -119,17 +118,17 @@ export function useAdminData(t: (key: string) => string, locale: Locale) {
       });
 
       if ("error" in res) {
-        toast.error(res.error || t("admin.dashboard.txLogFailed"));
+        toast.error(res.error || "লেনদেন সংরক্ষণ করতে সমস্যা হয়েছে।");
         return;
       }
 
-      toast.success(t("admin.dashboard.txLoggedSuccess").replace("${saved}", formatNum(saved, locale)));
+      toast.success(`সদস্যের চিকিৎসা ছাড় ৳${toBanglaNums(saved)} সফলভাবে এন্ট্রি হয়েছে!`);
       setNewTx({ memberId: "", partnerId: "", amount: "" });
       setIsTxOpen(false);
       await loadData();
       window.dispatchEvent(new Event("admin-data-change"));
     } catch {
-      toast.error(t("admin.dashboard.txLogFailed"));
+      toast.error("লেনদেন সংরক্ষণ করতে সমস্যা হয়েছে।");
     }
   };
 

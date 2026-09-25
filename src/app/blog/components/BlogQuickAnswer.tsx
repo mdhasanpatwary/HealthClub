@@ -2,16 +2,13 @@ import React from "react";
 import { BlogPost } from "@/types/blog";
 import { Zap, ShieldCheck, Phone, CheckCircle2, Award } from "lucide-react";
 import { toBanglaNums } from "@/lib/utils";
-import { getArticleEnglishHighlights } from "../utils/blogTranslations";
 
 interface BlogQuickAnswerProps {
   post: BlogPost;
-  locale?: string;
 }
 
-export function BlogQuickAnswer({ post, locale = "bn" }: BlogQuickAnswerProps) {
-  const isEn = locale === "en";
-  const highlights = getArticleEnglishHighlights(post.slug, post.keyHighlightsBn, isEn);
+export function BlogQuickAnswer({ post }: BlogQuickAnswerProps) {
+  const highlights = post.keyHighlightsBn;
 
   // Determine top facilities or specialists count
   const facilityCount =
@@ -34,7 +31,7 @@ export function BlogQuickAnswer({ post, locale = "bn" }: BlogQuickAnswerProps) {
   return (
     <section
       id="article-quick-summary"
-      aria-label={isEn ? "Quick Answer & Summary" : "সংক্ষেপে মূল তথ্য ও সারসংক্ষেপ"}
+      aria-label="সংক্ষেপে মূল তথ্য ও সারসংক্ষেপ"
       className="rounded-3xl border-2 border-primary/30 bg-gradient-to-br from-primary/10 via-card to-card p-5 sm:p-7 shadow-sm space-y-4"
     >
       {/* Header Banner */}
@@ -45,12 +42,10 @@ export function BlogQuickAnswer({ post, locale = "bn" }: BlogQuickAnswerProps) {
           </div>
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-primary block">
-              {isEn ? "AEO Quick Answer • Executive Summary" : "একনজরে সরাসরি প্রশ্নোত্তর • এআই সারসংক্ষেপ"}
+              একনজরে সরাসরি প্রশ্নোত্তর • এআই সারসংক্ষেপ
             </span>
             <h2 className="font-heading text-base sm:text-lg font-bold text-foreground">
-              {isEn
-                ? "Key Facts & Decision Summary"
-                : "রোগী ও স্বজনদের জন্য দ্রুত সিদ্ধান্ত গাইড"}
+              রোগী ও স্বজনদের জন্য দ্রুত সিদ্ধান্ত গাইড
             </h2>
           </div>
         </div>
@@ -58,9 +53,7 @@ export function BlogQuickAnswer({ post, locale = "bn" }: BlogQuickAnswerProps) {
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/15 text-primary text-xs font-semibold">
           <Award className="h-3.5 w-3.5" />
           <span>
-            {isEn
-              ? `${facilityCount} Verified Options`
-              : `${toBanglaNums(facilityCount)}টি যাচাইকৃত প্রতিষ্ঠান`}
+            {`${toBanglaNums(facilityCount)}টি যাচাইকৃত প্রতিষ্ঠান`}
           </span>
         </div>
       </div>
@@ -69,12 +62,8 @@ export function BlogQuickAnswer({ post, locale = "bn" }: BlogQuickAnswerProps) {
       <div className="text-sm text-foreground/90 leading-relaxed space-y-2.5">
         <p>
           {isAmbulanceGuide
-            ? (isEn
-                ? "This authoritative guide serves as an open emergency public directory for 24/7 ambulance, ICU life-support, and medical oxygen services in Feni. To ensure rapid transit and bypass intermediary commissions, families can contact verified drivers and dispatchers directly at transparent standard public rates."
-                : "ফেনী জেলা ও মহাসড়কে জরুরি অ্যাম্বুলেন্স, আইসিইউ লাইফ সাপোর্ট ও অক্সিজেন সেবার তথ্যে সহায়তা করতে এটি একটি উন্মুক্ত জরুরি পাবলিক ডিরেক্টরি। জরুরি মুহূর্তে রোগী দ্রুত স্থানান্তরের স্বার্থে দালাল চক্র এড়িয়ে সরাসরি যাচাইকৃত ড্রাইভার ও এজেন্সির সাথে কথা বলে সাধারণ প্রমিত ভাড়ায় দ্রুত সেবা নিশ্চিত করা সম্ভব।")
-            : (isEn
-                ? "This comprehensive healthcare guide covers verified medical facilities, doctors, and diagnostic services in Feni. For immediate emergency admissions, 24/7 ICU/CCU support, and digital member discounts (10% to 30%), patients can consult the top-ranked options detailed below."
-                : "ফেনী জেলা ও পার্শ্ববর্তী অঞ্চলের রোগীদের জন্য এই গাইডে শীর্ষ হাসপাতাল, বিশেষজ্ঞ ডাক্তার, ডায়াগনস্টিক ল্যাব ও ফিজিওথেরাপি সেন্টারের যাচাইকৃত তথ্য তুলে ধরা হয়েছে। জরুরি ভর্তি, আইসিইউ/সিসিইউ সুবিধা ও হেলথ ক্লাবের ডিজিটাল কার্ডে সর্বোচ্চ ১০% থেকে ৩০% পর্যন্ত বিশেষ ছাড় সুবিধা পাওয়া যাবে।")}
+            ? "ফেনী জেলা ও মহাসড়কে জরুরি অ্যাম্বুলেন্স, আইসিইউ লাইফ সাপোর্ট ও অক্সিজেন সেবার তথ্যে সহায়তা করতে এটি একটি উন্মুক্ত জরুরি পাবলিক ডিরেক্টরি। জরুরি মুহূর্তে রোগী দ্রুত স্থানান্তরের স্বার্থে দালাল চক্র এড়িয়ে সরাসরি যাচাইকৃত ড্রাইভার ও এজেন্সির সাথে কথা বলে সাধারণ প্রমিত ভাড়ায় দ্রুত সেবা নিশ্চিত করা সম্ভব।"
+            : "ফেনী জেলা ও পার্শ্ববর্তী অঞ্চলের রোগীদের জন্য এই গাইডে শীর্ষ হাসপাতাল, বিশেষজ্ঞ ডাক্তার, ডায়াগনস্টিক ল্যাব ও ফিজিওথেরাপি সেন্টারের যাচাইকৃত তথ্য তুলে ধরা হয়েছে। জরুরি ভর্তি, আইসিইউ/সিসিইউ সুবিধা ও হেলথ ক্লাবের ডিজিটাল কার্ডে সর্বোচ্চ ১০% থেকে ৩০% পর্যন্ত বিশেষ ছাড় সুবিধা পাওয়া যাবে।"}
         </p>
       </div>
 
@@ -98,9 +87,7 @@ export function BlogQuickAnswer({ post, locale = "bn" }: BlogQuickAnswerProps) {
         <div className="flex items-center gap-2 text-muted-foreground">
           <ShieldCheck className="h-4 w-4 text-primary shrink-0" />
           <span>
-            {isEn
-              ? "Verified by Health Club Clinical Research Editorial Board (2026)"
-              : "হেলথ ক্লাব ক্লিনিক্যাল এডিটোরিয়াল বোর্ড কর্তৃক সরেজমিনে তথ্যের সত্যতা যাচাইকৃত (২০২৬)"}
+            হেলথ ক্লাব ক্লিনিক্যাল এডিটোরিয়াল বোর্ড কর্তৃক সরেজমিনে তথ্যের সত্যতা যাচাইকৃত (২০২৬)
           </span>
         </div>
 
@@ -110,8 +97,7 @@ export function BlogQuickAnswer({ post, locale = "bn" }: BlogQuickAnswerProps) {
         >
           <Phone className="h-3.5 w-3.5" />
           <span>
-            {isEn ? "Emergency: " : "জরুরি হটলাইন: "}
-            {primaryEmergency}
+            জরুরি হটলাইন: {primaryEmergency}
           </span>
         </a>
       </div>

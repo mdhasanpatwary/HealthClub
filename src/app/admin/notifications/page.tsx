@@ -15,8 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination } from "@/components/ui/pagination";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-import { formatNum } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import { useAdminNotifications } from "@/app/admin/hooks/useAdminNotifications";
 import type { AdminNotificationItem } from "@/app/actions/adminNotificationTypes";
 import { NotificationCard } from "./components/NotificationCard";
@@ -24,9 +23,6 @@ import { NotificationKpiGrid } from "./components/NotificationKpiGrid";
 import { PushBroadcastModal } from "./components/PushBroadcastModal";
 
 export default function AdminNotificationsPage() {
-  const { locale, t } = useLanguage();
-  const isBn = locale === "bn";
-
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [filterUnreadOnly, setFilterUnreadOnly] = useState(false);
@@ -114,17 +110,16 @@ export default function AdminNotificationsPage() {
         <div>
           <div className="flex items-center gap-2.5">
             <h1 className="font-heading text-xl sm:text-2xl font-bold tracking-tight text-foreground">
-              {t("admin.notifications.title") || "বিজ্ঞপ্তি ও অ্যাকশন সেন্টার"}
+              বিজ্ঞপ্তি ও অ্যাকশন সেন্টার
             </h1>
             {unreadCount > 0 && (
               <Badge className="bg-rose-500 text-white font-bold text-xs px-2.5 py-0.5 rounded-full shadow-xs">
-                {formatNum(unreadCount, locale)} {isBn ? "অপঠিত" : "unread"}
+                {toBanglaNums(unreadCount)} অপঠিত
               </Badge>
             )}
           </div>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-            {t("admin.notifications.desc") ||
-              "নতুন মেম্বারশিপ আবেদন, নবায়ন, পার্টনার রিকোয়েস্ট ও বার্তার রিয়েল-টাইম নোটিফিকেশন"}
+            নতুন মেম্বারশিপ আবেদন, নবায়ন, পার্টনার রিকোয়েস্ট ও বার্তার রিয়েল-টাইম নোটিফিকেশন
           </p>
         </div>
 
@@ -137,7 +132,7 @@ export default function AdminNotificationsPage() {
             className="rounded-xl text-xs font-bold gap-1.5 shadow-sm bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer"
           >
             <Radio className="h-4 w-4 animate-pulse" />
-            <span>{isBn ? "ওয়েব পুশ পাঠান" : "Broadcast Push"}</span>
+            <span>ওয়েব পুশ পাঠান</span>
           </Button>
 
           {unreadCount > 0 && (
@@ -148,7 +143,7 @@ export default function AdminNotificationsPage() {
               className="rounded-xl text-xs font-semibold gap-1.5 shadow-2xs cursor-pointer"
             >
               <CheckCheck className="h-4 w-4 text-primary" />
-              <span>{t("admin.notifications.markAllRead") || "সব পঠিত করুন"}</span>
+              <span>সব পঠিত করুন</span>
             </Button>
           )}
 
@@ -159,7 +154,7 @@ export default function AdminNotificationsPage() {
             className="rounded-xl text-xs font-semibold gap-1.5 shadow-2xs cursor-pointer text-muted-foreground hover:text-rose-600"
           >
             <Trash2 className="h-3.5 w-3.5" />
-            <span>{t("admin.notifications.clearRead") || "পঠিত মুছুন"}</span>
+            <span>পঠিত মুছুন</span>
           </Button>
 
           <Button
@@ -184,8 +179,6 @@ export default function AdminNotificationsPage() {
         summary={summary}
         totalCount={summary.items.length}
         unreadCount={unreadCount}
-        locale={locale}
-        t={t}
       />
 
       {/* Filter and Search Bar */}
@@ -196,10 +189,7 @@ export default function AdminNotificationsPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               type="text"
-              placeholder={
-                t("admin.notifications.searchPlaceholder") ||
-                "বিজ্ঞপ্তি, প্রেরকের নাম বা নম্বর খুঁজুন..."
-              }
+              placeholder="বিজ্ঞপ্তি, প্রেরকের নাম বা নম্বর খুঁজুন..."
               value={searchQuery}
               onChange={(e) => handleSearchInputChange(e.target.value)}
               className="pl-9 h-10 rounded-xl bg-background border-border text-xs"
@@ -216,8 +206,7 @@ export default function AdminNotificationsPage() {
           >
             <SlidersHorizontal className="h-3.5 w-3.5" />
             <span>
-              {t("admin.notifications.unread") || "শুধুমাত্র অপঠিত"} (
-              {formatNum(unreadCount, locale)})
+              শুধুমাত্র অপঠিত ({toBanglaNums(unreadCount)})
             </span>
           </Button>
         </div>
@@ -225,13 +214,13 @@ export default function AdminNotificationsPage() {
         {/* Category Tabs */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-xs font-medium">
           {[
-            { id: "all", label: t("admin.notifications.all") || "সকল বিজ্ঞপ্তি" },
-            { id: "actions", label: t("admin.notifications.actionRequired") || "প্রয়োজনীয় কাজ" },
-            { id: "renewal", label: t("admin.notifications.renewals") || "নবায়ন আবেদন" },
-            { id: "partner_request", label: t("admin.notifications.partnerRequests") || "অংশীদার আবেদন" },
-            { id: "message", label: t("admin.notifications.messages") || "বার্তা" },
-            { id: "member_new", label: t("admin.notifications.members") || "সদস্য আপডেট" },
-            { id: "member_expiring", label: isBn ? "মেয়াদ শেষ হবে" : "Expiring" },
+            { id: "all", label: "সকল বিজ্ঞপ্তি" },
+            { id: "actions", label: "প্রয়োজনীয় কাজ" },
+            { id: "renewal", label: "নবায়ন আবেদন" },
+            { id: "partner_request", label: "অংশীদার আবেদন" },
+            { id: "message", label: "বার্তা" },
+            { id: "member_new", label: "সদস্য আপডেট" },
+            { id: "member_expiring", label: "মেয়াদ শেষ হবে" },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -257,12 +246,10 @@ export default function AdminNotificationsPage() {
               <CheckCheck className="h-7 w-7" />
             </div>
             <h3 className="font-heading text-base font-bold text-foreground">
-              {t("admin.notifications.allCaughtUp") || "সব ক্লিয়ার! কোনো বিজ্ঞপ্তি পাওয়া যায়নি।"}
+              সব ক্লিয়ার! কোনো বিজ্ঞপ্তি পাওয়া যায়নি।
             </h3>
             <p className="text-xs text-muted-foreground mt-1 max-w-sm mx-auto">
-              {isBn
-                ? "নতুন মেম্বারশিপ নিবন্ধন, নবায়ন বা পার্টনার আবেদন আসলে এখানে রিয়েল-টাইমে প্রদর্শিত হবে।"
-                : "New membership applications, renewals or partner requests will show here automatically."}
+              নতুন মেম্বারশিপ নিবন্ধন, নবায়ন বা পার্টনার আবেদন আসলে এখানে রিয়েল-টাইমে প্রদর্শিত হবে।
             </p>
           </Card>
         ) : (
@@ -273,11 +260,10 @@ export default function AdminNotificationsPage() {
                 key={item.id}
                 item={item}
                 isRead={isRead}
-                locale={locale}
                 onMarkRead={markAsRead}
                 onDismiss={dismissNotification}
-                dismissText={t("admin.notifications.dismiss") || "মুছে ফেলুন"}
-                markAsReadText={t("admin.notifications.markAsRead") || "পঠিত করুন"}
+                dismissText="মুছে ফেলুন"
+                markAsReadText="পঠিত করুন"
               />
             );
           })
@@ -294,9 +280,7 @@ export default function AdminNotificationsPage() {
           onPageChange={setCurrentPage}
           onPageSizeChange={setPageSize}
           pageSizeOptions={[10, 20, 50]}
-          locale={locale}
-          t={t}
-          itemLabel={isBn ? "টি বিজ্ঞপ্তি" : "notifications"}
+          itemLabel="টি বিজ্ঞপ্তি"
           className="rounded-2xl border border-border/80 shadow-xs bg-card/60"
         />
       )}
@@ -305,7 +289,6 @@ export default function AdminNotificationsPage() {
       <PushBroadcastModal
         open={isPushModalOpen}
         onOpenChange={setIsPushModalOpen}
-        locale={locale}
       />
     </div>
   );

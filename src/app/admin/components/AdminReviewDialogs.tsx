@@ -11,7 +11,6 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 
 interface AdminReviewDialogsProps {
   rejectModalOpen: boolean;
@@ -39,9 +38,6 @@ export function AdminReviewDialogs({
   confirmDelete,
   deleting,
 }: AdminReviewDialogsProps) {
-  const { t, locale } = useLanguage();
-  const isBn = locale === "bn";
-
   return (
     <>
       {/* Reject Moderation Dialog */}
@@ -50,10 +46,10 @@ export function AdminReviewDialogs({
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-destructive flex items-center gap-2">
               <XCircle className="h-5 w-5" />
-              <span>{t("admin.reviews.reject")}</span>
+              <span>রিভিউ বাতিল</span>
             </DialogTitle>
             <DialogDescription className="text-xs text-muted-foreground">
-              {t("admin.reviews.feedbackPrompt")}
+              রিভিউটি বাতিলের কারণ উল্লেখ করুন (ঐচ্ছিক):
             </DialogDescription>
           </DialogHeader>
 
@@ -61,7 +57,7 @@ export function AdminReviewDialogs({
             <Textarea
               value={adminFeedback}
               onChange={(e) => setAdminFeedback(e.target.value)}
-              placeholder={isBn ? "বাতিল করার কারণ লিখুন..." : "Reason for rejecting review..."}
+              placeholder="বাতিল করার কারণ লিখুন..."
               rows={3}
               className="text-xs rounded-xl resize-none"
             />
@@ -75,7 +71,7 @@ export function AdminReviewDialogs({
               disabled={moderating}
               className="text-xs rounded-xl"
             >
-              {isBn ? "বাতিল" : "Cancel"}
+              বাতিল
             </Button>
             <Button
               variant="destructive"
@@ -87,10 +83,10 @@ export function AdminReviewDialogs({
               {moderating ? (
                 <>
                   <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
-                  <span>{isBn ? "প্রক্রিয়াধীন..." : "Processing..."}</span>
+                  <span>প্রক্রিয়াধীন...</span>
                 </>
               ) : (
-                <span>{t("admin.reviews.reject")}</span>
+                <span>বাতিল করুন</span>
               )}
             </Button>
           </DialogFooter>
@@ -103,10 +99,10 @@ export function AdminReviewDialogs({
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-destructive flex items-center gap-2">
               <Trash2 className="h-5 w-5" />
-              <span>{t("admin.reviews.delete")}</span>
+              <span>রিভিউ মুছে ফেলুন</span>
             </DialogTitle>
             <DialogDescription className="text-xs text-muted-foreground">
-              {t("admin.reviews.confirmDelete")}
+              আপনি কি নিশ্চিত যে এই রিভিউটি স্থায়ীভাবে মুছে ফেলতে চান?
             </DialogDescription>
           </DialogHeader>
 
@@ -118,7 +114,7 @@ export function AdminReviewDialogs({
               disabled={deleting}
               className="text-xs rounded-xl"
             >
-              {isBn ? "বাতিল" : "Cancel"}
+              বাতিল
             </Button>
             <Button
               variant="destructive"
@@ -130,10 +126,10 @@ export function AdminReviewDialogs({
               {deleting ? (
                 <>
                   <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
-                  <span>{isBn ? "মুছে ফেলা হচ্ছে..." : "Deleting..."}</span>
+                  <span>মুছে ফেলা হচ্ছে...</span>
                 </>
               ) : (
-                <span>{t("admin.reviews.delete")}</span>
+                <span>মুছে ফেলুন</span>
               )}
             </Button>
           </DialogFooter>

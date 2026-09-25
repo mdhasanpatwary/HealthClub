@@ -16,22 +16,21 @@ import { formatArticleDate } from "@/lib/dateUtils";
 
 interface BlogTableProps {
   posts: BlogPost[];
-  isEn: boolean;
   onEdit: (post: BlogPost) => void;
   onDelete: (post: BlogPost) => void;
 }
 
-export function BlogTable({ posts, isEn, onEdit, onDelete }: BlogTableProps) {
+export function BlogTable({ posts, onEdit, onDelete }: BlogTableProps) {
   return (
     <div className="hidden md:block overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/30">
-            <TableHead className="text-xs">{isEn ? "Article" : "আর্টিকেল"}</TableHead>
-            <TableHead className="text-xs">{isEn ? "Category" : "ক্যাটাগরি"}</TableHead>
-            <TableHead className="text-xs">{isEn ? "Author" : "লেখক"}</TableHead>
-            <TableHead className="text-xs">{isEn ? "Date" : "তারিখ"}</TableHead>
-            <TableHead className="text-xs text-right">{isEn ? "Actions" : "অ্যাকশন"}</TableHead>
+            <TableHead className="text-xs">আর্টিকেল</TableHead>
+            <TableHead className="text-xs">ক্যাটাগরি</TableHead>
+            <TableHead className="text-xs">লেখক</TableHead>
+            <TableHead className="text-xs">তারিখ</TableHead>
+            <TableHead className="text-xs text-right">অ্যাকশন</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -69,7 +68,7 @@ export function BlogTable({ posts, isEn, onEdit, onDelete }: BlogTableProps) {
                 {post.author?.nameBn || "টিম"}
               </TableCell>
               <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
-                {formatArticleDate(post.publishedDate, isEn ? "en" : "bn")}
+                {formatArticleDate(post.publishedDate)}
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex items-center justify-end gap-1">
@@ -77,7 +76,7 @@ export function BlogTable({ posts, isEn, onEdit, onDelete }: BlogTableProps) {
                     href={`/blog/${post.slug}`}
                     target="_blank"
                     className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-primary hover:bg-muted transition-colors"
-                    title={isEn ? "View live article" : "লাইভ আর্টিকেল দেখুন"}
+                    title="লাইভ আর্টিকেল দেখুন"
                   >
                     <ExternalLink className="h-4 w-4" />
                   </Link>
@@ -86,7 +85,7 @@ export function BlogTable({ posts, isEn, onEdit, onDelete }: BlogTableProps) {
                     size="icon"
                     onClick={() => onEdit(post)}
                     className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                    title={isEn ? "Edit article" : "আর্টিকেল এডিট করুন"}
+                    title="আর্টিকেল এডিট করুন"
                   >
                     <Edit3 className="h-4 w-4" />
                   </Button>
@@ -95,7 +94,7 @@ export function BlogTable({ posts, isEn, onEdit, onDelete }: BlogTableProps) {
                     size="icon"
                     onClick={() => onDelete(post)}
                     className="h-8 w-8 text-destructive hover:bg-destructive/10"
-                    title={isEn ? "Delete article" : "আর্টিকেল মুছে ফেলুন"}
+                    title="আর্টিকেল মুছে ফেলুন"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

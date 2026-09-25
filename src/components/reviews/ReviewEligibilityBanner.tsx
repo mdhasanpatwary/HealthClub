@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import type { Partner } from "@/services/db";
 import type { ReviewEligibilityResult } from "@/app/actions/reviewHelpers";
 
@@ -30,8 +29,6 @@ export function ReviewEligibilityBanner({
   eligibilityLoading,
   onOpenReviewModal,
 }: ReviewEligibilityBannerProps) {
-  const { t } = useLanguage();
-
   if (eligibilityLoading || !eligibility) return null;
 
   return (
@@ -46,14 +43,14 @@ export function ReviewEligibilityBanner({
             <div className="space-y-0.5">
               <div className="flex items-center gap-2">
                 <h4 className="text-xs sm:text-sm font-bold text-foreground font-heading">
-                  {t("reviews.adminBanner")}
+                  আপনি এডমিন হিসেবে লগইন আছেন
                 </h4>
                 <span className="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-indigo-500/20 text-indigo-600 dark:text-indigo-400">
-                  {t("reviews.adminSession")}
+                  এডমিন সেশন
                 </span>
               </div>
               <p className="text-[11px] sm:text-xs text-muted-foreground leading-relaxed">
-                {t("reviews.adminSessionDesc")}
+                সাধারণত ভেরিফাইড মেম্বারগণ ডিসকাউন্ট ভিজিটের পর রিভিউ দেন। এডমিন হিসেবে আপনি সরাসরি মডারেশন পরিচালনা করতে পারেন অথবা টেস্ট রিভিউ দিতে পারেন।
               </p>
             </div>
           </div>
@@ -67,7 +64,7 @@ export function ReviewEligibilityBanner({
               )}
             >
               <Settings className="h-3.5 w-3.5 mr-1" />
-              <span>{t("reviews.moderateBtn")}</span>
+              <span>মডারেশন প্যানেল</span>
             </Link>
             <Button
               type="button"
@@ -77,7 +74,7 @@ export function ReviewEligibilityBanner({
               className="text-xs rounded-xl cursor-pointer"
             >
               <MessageSquarePlus className="h-3.5 w-3.5 mr-1" />
-              <span>{t("reviews.testReviewBtn")}</span>
+              <span>টেস্ট রিভিউ</span>
             </Button>
           </div>
         </div>
@@ -92,10 +89,10 @@ export function ReviewEligibilityBanner({
             </div>
             <div>
               <h4 className="text-xs sm:text-sm font-bold text-foreground font-heading">
-                {t("reviews.loginToReview")}
+                রিভিউ দিতে মেম্বার লগইন করুন
               </h4>
               <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5">
-                {t("reviews.loginPrompt")}
+                আপনি কি এই প্রতিষ্ঠান থেকে হেলথ ক্লাব ডিসকাউন্টে সেবা নিয়েছেন? রেটিং ও রিভিউ দিতে লগইন করুন।
               </p>
             </div>
           </div>
@@ -106,7 +103,7 @@ export function ReviewEligibilityBanner({
               "bg-primary hover:bg-primary-dark text-white text-xs font-bold rounded-xl shrink-0 self-start sm:self-auto"
             )}
           >
-            <span>{t("reviews.loginBtn")}</span>
+            <span>লগইন করুন</span>
           </Link>
         </div>
       )}
@@ -119,10 +116,10 @@ export function ReviewEligibilityBanner({
           </div>
           <div className="space-y-0.5">
             <h4 className="text-xs sm:text-sm font-bold text-foreground font-heading">
-              {t("reviews.transactionRequired")}
+              রিভিউ দিতে ডিসকাউন্ট সেবা গ্রহণ আবশ্যক
             </h4>
             <p className="text-[11px] sm:text-xs text-muted-foreground leading-relaxed">
-              {t("reviews.transactionRequiredDesc")}
+              শতভাগ নির্ভরযোগ্য রিভিউ নিশ্চিত করতে শুধুমাত্র এই হাসপাতাল থেকে ডিসকাউন্ট সুবিধা গ্রহণকারী সক্রিয় সদস্যগণ রিভিউ প্রদান করতে পারেন।
             </p>
           </div>
         </div>
@@ -133,16 +130,16 @@ export function ReviewEligibilityBanner({
         <div className="p-4 rounded-2xl border border-border bg-card shadow-2xs space-y-2">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 text-xs font-bold text-foreground font-heading">
-              <span>{t("reviews.yourSubmittedReview")}</span>
+              <span>আপনার জমা দেওয়া রিভিউ</span>
               {eligibility.existingReview.status === "pending" ? (
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20 flex items-center gap-1">
                   <Clock className="h-3 w-3" />
-                  <span>{t("reviews.pendingModeration")}</span>
+                  <span>এডমিন অনুমোদনের অপেক্ষায়</span>
                 </span>
               ) : eligibility.existingReview.status === "approved" ? (
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
                   <CheckCircle2 className="h-3 w-3" />
-                  <span>{t("reviews.approvedStatus")}</span>
+                  <span>প্রকাশিত</span>
                 </span>
               ) : null}
             </div>
@@ -153,13 +150,13 @@ export function ReviewEligibilityBanner({
               onClick={onOpenReviewModal}
               className="h-7 text-xs rounded-lg cursor-pointer"
             >
-              <span>{t("reviews.editReview")}</span>
+              <span>আপনার রিভিউ পরিবর্তন করুন</span>
             </Button>
           </div>
 
           {eligibility.existingReview.status === "pending" && (
             <p className="text-xs text-muted-foreground">
-              {t("reviews.underReviewNotice")}
+              আপনার রিভিউটি জমা হয়েছে এবং এডমিন পর্যালোচনার পর এটি ডিরেক্টরিতে প্রকাশিত হবে।
             </p>
           )}
 

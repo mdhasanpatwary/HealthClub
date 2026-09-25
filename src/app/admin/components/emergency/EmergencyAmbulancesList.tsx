@@ -23,7 +23,6 @@ interface EmergencyAmbulancesListProps {
   pageSize: number;
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
-  isEn: boolean;
   onEdit: (ambulance: AmbulanceService) => void;
   onDelete: (id: string, name: string) => void;
   onApprove?: (id: string) => void;
@@ -38,7 +37,6 @@ export function EmergencyAmbulancesList({
   pageSize,
   onPageChange,
   onPageSizeChange,
-  isEn,
   onEdit,
   onDelete,
   onApprove,
@@ -50,13 +48,13 @@ export function EmergencyAmbulancesList({
         <Table>
           <TableHeader className="bg-muted/40">
             <TableRow>
-              <TableHead className="w-[100px]">{isEn ? "Type" : "ধরন"}</TableHead>
-              <TableHead>{isEn ? "Service / Agency" : "অ্যাম্বুলেন্স / এজেন্সি"}</TableHead>
-              <TableHead>{isEn ? "Stand / Location" : "স্ট্যান্ড / এলাকা"}</TableHead>
-              <TableHead>{isEn ? "Phone" : "মোবাইল"}</TableHead>
-              <TableHead>{isEn ? "Hours" : "সময়"}</TableHead>
-              <TableHead>{isEn ? "Status" : "স্ট্যাটাস"}</TableHead>
-              <TableHead className="text-right">{isEn ? "Actions" : "অ্যাকশন"}</TableHead>
+              <TableHead className="w-[100px]">ধরন</TableHead>
+              <TableHead>অ্যাম্বুলেন্স / এজেন্সি</TableHead>
+              <TableHead>স্ট্যান্ড / এলাকা</TableHead>
+              <TableHead>মোবাইল</TableHead>
+              <TableHead>সময়</TableHead>
+              <TableHead>স্ট্যাটাস</TableHead>
+              <TableHead className="text-right">অ্যাকশন</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -92,7 +90,7 @@ export function EmergencyAmbulancesList({
             ) : ambulances.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={7} className="text-center py-8 text-muted-foreground text-xs">
-                  {isEn ? "No ambulance services found." : "কোনো অ্যাম্বুলেন্স পাওয়া যায়নি।"}
+                  কোনো অ্যাম্বুলেন্স পাওয়া যায়নি।
                 </TableCell>
               </TableRow>
             ) : (
@@ -134,11 +132,11 @@ export function EmergencyAmbulancesList({
                     <TableCell>
                       {isPending ? (
                         <Badge variant="outline" className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 text-[10px] font-bold">
-                          {isEn ? "Pending" : "অপেক্ষমাণ"}
+                          অপেক্ষমাণ
                         </Badge>
                       ) : (
                         <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 text-[10px] font-bold">
-                          {isEn ? "Approved" : "অনুমোদিত"}
+                          অনুমোদিত
                         </Badge>
                       )}
                     </TableCell>
@@ -150,8 +148,8 @@ export function EmergencyAmbulancesList({
                             variant="ghost"
                             size="icon-sm"
                             onClick={() => onApprove(a.id)}
-                            title={isEn ? "Approve Ambulance" : "অনুমোদন করুন"}
-                            aria-label={isEn ? `Approve ambulance ${a.name}` : `অ্যাম্বুলেন্স ${a.name} অনুমোদন করুন`}
+                            title="অনুমোদন করুন"
+                            aria-label={`অ্যাম্বুলেন্স ${a.name} অনুমোদন করুন`}
                             className="h-7 w-7 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 cursor-pointer"
                           >
                             <CheckCircle2 className="h-3.5 w-3.5" />
@@ -162,7 +160,7 @@ export function EmergencyAmbulancesList({
                           variant="ghost"
                           size="icon-sm"
                           onClick={() => onEdit(a)}
-                          aria-label={isEn ? `Edit ambulance ${a.name}` : `অ্যাম্বুলেন্স ${a.name} এর তথ্য এডিট করুন`}
+                          aria-label={`অ্যাম্বুলেন্স ${a.name} এর তথ্য এডিট করুন`}
                           className="h-7 w-7 text-muted-foreground hover:text-foreground cursor-pointer"
                         >
                           <Edit3 className="h-3.5 w-3.5" />
@@ -172,7 +170,7 @@ export function EmergencyAmbulancesList({
                           variant="ghost"
                           size="icon-sm"
                           onClick={() => onDelete(a.id, a.name)}
-                          aria-label={isEn ? `Delete ambulance ${a.name}` : `অ্যাম্বুলেন্স ${a.name} ডিলিট করুন`}
+                          aria-label={`অ্যাম্বুলেন্স ${a.name} ডিলিট করুন`}
                           className="h-7 w-7 text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
@@ -197,8 +195,7 @@ export function EmergencyAmbulancesList({
           onPageChange={onPageChange}
           onPageSizeChange={onPageSizeChange}
           pageSizeOptions={[10, 20, 50, 100]}
-          locale={isEn ? "en" : "bn"}
-          itemLabel={isEn ? "ambulances" : "টি অ্যাম্বুলেন্স"}
+          itemLabel="টি অ্যাম্বুলেন্স"
           disabled={loading}
         />
       )}

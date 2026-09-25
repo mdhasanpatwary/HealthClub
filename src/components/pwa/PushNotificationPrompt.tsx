@@ -4,7 +4,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Bell, X, Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { getClientDeviceInfo } from "@/lib/pwaTelemetry";
 import {
   getVapidPublicKeyAction,
@@ -34,9 +33,6 @@ function urlBase64ToUint8Array(base64String: string): Uint8Array {
 }
 
 export function PushNotificationPrompt() {
-  const { locale } = useLanguage();
-  const isBn = locale === "bn";
-
   const [isSupported, setIsSupported] = useState(false);
   const [permission, setPermission] = useState<NotificationPermission>("default");
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -118,11 +114,7 @@ export function PushNotificationPrompt() {
 
   const handleSubscribe = useCallback(async () => {
     if (!isSupported) {
-      toast.error(
-        isBn
-          ? "আপনার ব্রাউজারে পুশ নোটিফিকেশন সমর্থন করে না।"
-          : "Web Push is not supported on this browser."
-      );
+      toast.error("আপনার ব্রাউজারে পুশ নোটিফিকেশন সমর্থন করে না।");
       return;
     }
 
@@ -137,11 +129,7 @@ export function PushNotificationPrompt() {
           localStorage.setItem(PROMPT_DISMISS_KEY, Date.now().toString());
         } catch {}
         if (result === "denied") {
-          toast.error(
-            isBn
-              ? "বিজ্ঞপ্তির অনুমতি প্রত্যাখ্যান করা হয়েছে। ব্রাউজার সেটিংসে গিয়ে অনুমতি দিন।"
-              : "Notification permission was blocked in your browser settings."
-          );
+          toast.error("বিজ্ঞপ্তির অনুমতি প্রত্যাখ্যান করা হয়েছে। ব্রাউজার সেটিংসে গিয়ে অনুমতি দিন।");
         }
         setIsVisible(false);
         return;
@@ -150,12 +138,7 @@ export function PushNotificationPrompt() {
       // 2. Fetch VAPID public key
       const keyRes = await getVapidPublicKeyAction();
       if (!keyRes.success || !keyRes.publicKey) {
-        toast.error(
-          keyRes.error ||
-            (isBn
-              ? "পুশ সার্ভারের সাথে যোগাযোগ ব্যর্থ হয়েছে।"
-              : "Failed to connect to push server.")
-        );
+        toast.error(keyRes.error || "পুশ সার্ভারের সাথে যোগাযোগ ব্যর্থ হয়েছে।");
         return;
       }
 
@@ -189,25 +172,19 @@ export function PushNotificationPrompt() {
           trackEvent("pwa_action", {
             action: "push_subscribed",
           });
-          toast.success(
-            isBn
-              ? "🔔 পুশ নোটিফিকেশন সফলভাবে চালু করা হয়েছে!"
-              : "🔔 Push notifications enabled successfully!"
-          );
+          toast.success("🔔 পুশ নোটিফিকেশন সফলভাবে চালু করা হয়েছে!");
         } else {
           toast.error(saveRes.error || "সাবস্ক্রিপশন সেভ করা সম্ভব হয়নি।");
         }
       }
     } catch (err: unknown) {
       const errorMsg =
-        err instanceof Error ? err.message : "Failed to enable notifications.";
-      toast.error(
-        isBn ? "নোটিফিকেশন সক্রিয় করতে সমস্যা হয়েছে।" : errorMsg
-      );
+        err instanceof Error ? err.message : "নোটিফিকেশন সক্রিয় করতে সমস্যা হয়েছে।";
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }
-  }, [isSupported, isBn]);
+  }, [isSupported]);
 
   if (!isSupported || !isVisible || isSubscribed || permission === "denied") {
     return null;
@@ -215,7 +192,7 @@ export function PushNotificationPrompt() {
 
   return (
     <aside
-      aria-label="Web Push Notification Prompt"
+      aria-label="ওয়েব পুশ নোটিফিকেশন প্রম্পট"
       className="fixed bottom-20 sm:bottom-6 right-3 sm:right-6 z-40 max-w-sm w-[calc(100vw-1.5rem)] sm:w-96 animate-in slide-in-from-bottom-5 fade-in duration-300"
     >
       <div className="bg-card/95 backdrop-blur-xl border border-primary/30 rounded-2xl p-4 sm:p-5 shadow-2xl relative flex flex-col gap-3.5 text-foreground ring-1 ring-primary/20">
@@ -224,7 +201,7 @@ export function PushNotificationPrompt() {
           type="button"
           onClick={handleDismiss}
           disabled={loading}
-          aria-label="Close notification prompt"
+          aria-label="বিজ্ঞপ্তি বন্ধ করুন"
           className="absolute top-3 right-3 p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/80 rounded-xl transition-colors cursor-pointer disabled:opacity-50"
         >
           <X className="h-4 w-4" />
@@ -238,14 +215,10 @@ export function PushNotificationPrompt() {
 
           <div className="flex-1 min-w-0">
             <h4 className="text-sm font-bold tracking-tight text-foreground leading-snug">
-              {isBn
-                ? "জরুরি স্বাস্থ্য ও অফার অ্যালার্ট পান"
-                : "Get Instant Health & Renewal Alerts"}
+              জরুরি স্বাস্থ্য ও অফার অ্যালার্ট পান
             </h4>
             <p className="text-xs text-muted-foreground leading-relaxed mt-1">
-              {isBn
-                ? "রক্তদান ডাক, মেম্বারশিপ নবায়ন তাগাদা ও স্বাস্থ্য ক্যাম্পের তাৎক্ষণিক নোটিফিকেশন পেতে ব্রাউজার পুশ চালু করুন।"
-                : "Receive browser notifications for blood drives, card renewal reminders, and hospital discount alerts."}
+              রক্তদান ডাক, মেম্বারশিপ নবায়ন তাগাদা ও স্বাস্থ্য ক্যাম্পের তাৎক্ষণিক নোটিফিকেশন পেতে ব্রাউজার পুশ চালু করুন।
             </p>
           </div>
         </div>
@@ -260,7 +233,7 @@ export function PushNotificationPrompt() {
             disabled={loading}
             className="h-9 px-3 text-xs font-semibold rounded-xl text-muted-foreground hover:text-foreground cursor-pointer"
           >
-            {isBn ? "পরে মনে করান" : "Later"}
+            পরে মনে করান
           </Button>
 
           <Button
@@ -273,12 +246,12 @@ export function PushNotificationPrompt() {
             {loading ? (
               <>
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                <span>{isBn ? "সংযোগ হচ্ছে..." : "Connecting..."}</span>
+                <span>সংযোগ হচ্ছে...</span>
               </>
             ) : (
               <>
                 <Check className="h-3.5 w-3.5" />
-                <span>{isBn ? "নোটিফিকেশন চালু করুন" : "Enable Alerts"}</span>
+                <span>নোটিফিকেশন চালু করুন</span>
               </>
             )}
           </Button>

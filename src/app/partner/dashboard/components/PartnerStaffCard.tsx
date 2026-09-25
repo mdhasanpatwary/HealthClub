@@ -14,7 +14,7 @@ import { PartnerStaff } from "@/services/db";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useLanguage } from "@/components/layout/LanguageProvider";
+import { toBanglaNums } from "@/lib/utils";
 import { toast } from "sonner";
 
 interface PartnerStaffCardProps {
@@ -35,7 +35,6 @@ export function PartnerStaffCard({
   onDelete,
   onToggleStatus,
 }: PartnerStaffCardProps) {
-  const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
 
   const loginUrl =
@@ -45,21 +44,21 @@ export function PartnerStaffCard({
 
   const roleText =
     staff.role === "manager"
-      ? t("partner.staff.roleManager")
-      : t("partner.staff.roleCashier");
+      ? "ম্যানেজার"
+      : "বিলিং স্টাফ";
 
-  const fullTextToCopy = `🔐 ${t("partner.staff.accessDetails")}:
-🔗 ${t("partner.staff.loginUrlLabel")}: ${loginUrl}
-👤 ${t("partner.staff.usernameLabel").replace(" *", "")}: ${staff.username}
-🔑 ${t("partner.staff.passwordLabel").replace(" *", "")}: ${
-    staff.plainPassword || t("partner.staff.passwordAssignedNote")
+  const fullTextToCopy = `🔐 স্টাফ লগইন বিবরণী:
+🔗 লগইন লিংক: ${loginUrl}
+👤 ইউজারনেম: ${staff.username}
+🔑 পাসওয়ার্ড: ${
+    staff.plainPassword || "(প্রশাসক দ্বারা নির্ধারিত)"
   }`;
 
   const handleCopyCredentials = (e: React.MouseEvent) => {
     e.stopPropagation();
     navigator.clipboard.writeText(fullTextToCopy);
     setCopied(true);
-    toast.success(`"${staff.name}" ${t("partner.staff.credentialsCopied")}`);
+    toast.success(`"${staff.name}"-এর লগইন তথ্য কপি করা হয়েছে`);
     setTimeout(() => setCopied(false), 2500);
   };
 
@@ -91,9 +90,7 @@ export function PartnerStaffCard({
                   : "bg-slate-500/10 text-slate-500 border-slate-500/20"
               }`}
             >
-              {staff.isActive
-                ? t("partner.staff.statusActive")
-                : t("partner.staff.statusInactive")}
+              {staff.isActive ? "সক্রিয়" : "নিষ্ক্রিয়"}
             </span>
           </div>
         </div>
@@ -119,7 +116,7 @@ export function PartnerStaffCard({
             {staff.phone && (
               <span className="flex items-center gap-1 text-[11px]">
                 <Phone className="h-3 w-3" />
-                {staff.phone}
+                {toBanglaNums(staff.phone)}
               </span>
             )}
           </div>
@@ -131,18 +128,18 @@ export function PartnerStaffCard({
         <div className="grid grid-cols-2 gap-2 p-2.5 rounded-2xl bg-muted/40 border border-border/50 text-center group-hover:bg-muted/60 transition-colors">
           <div>
             <span className="text-[10px] text-muted-foreground block">
-              {t("partner.staff.colTxns")}
+              মোট লেনদেন
             </span>
             <span className="text-sm font-bold text-secondary dark:text-white font-mono">
-              {staff.transactionCount || 0}
+              {toBanglaNums(staff.transactionCount || 0)}
             </span>
           </div>
           <div className="border-l border-border/60">
             <span className="text-[10px] text-muted-foreground block">
-              {t("partner.staff.colSavings")}
+              মোট ডিসকাউন্ট
             </span>
             <span className="text-sm font-bold text-primary font-mono">
-              ৳{(staff.totalSavedAmount || 0).toLocaleString("bn-BD")}
+              ৳{toBanglaNums((staff.totalSavedAmount || 0).toLocaleString("bn-BD"))}
             </span>
           </div>
         </div>
@@ -155,7 +152,7 @@ export function PartnerStaffCard({
               onClick={handleCopyCredentials}
               variant="ghost"
               size="sm"
-              title={t("partner.staff.copyAllCredentials") || "Copy Login Credentials"}
+              title="লগইন তথ্য কপি করুন"
               className="h-8 w-8 p-0 rounded-xl text-muted-foreground hover:text-primary hover:bg-primary/10 cursor-pointer"
             >
               {copied ? (
@@ -173,7 +170,7 @@ export function PartnerStaffCard({
               }}
               variant="ghost"
               size="sm"
-              title={t("partner.staff.resetPassword")}
+              title="পাসওয়ার্ড রিসেট"
               className="h-8 w-8 p-0 rounded-xl text-muted-foreground hover:text-amber-600 cursor-pointer"
             >
               <KeyRound className="h-4 w-4" />
@@ -187,7 +184,7 @@ export function PartnerStaffCard({
               }}
               variant="ghost"
               size="sm"
-              title={t("partner.staff.modalEditTitle")}
+              title="স্টাফ তথ্য পরিবর্তন"
               className="h-8 w-8 p-0 rounded-xl text-muted-foreground hover:text-blue-600 cursor-pointer"
             >
               <Edit2 className="h-4 w-4" />
@@ -201,7 +198,7 @@ export function PartnerStaffCard({
               }}
               variant="ghost"
               size="sm"
-              title={t("partner.staff.deleteStaff")}
+              title="স্টাফ মুছুন"
               className="h-8 w-8 p-0 rounded-xl text-muted-foreground hover:text-destructive cursor-pointer"
             >
               <Trash2 className="h-4 w-4" />
@@ -222,9 +219,7 @@ export function PartnerStaffCard({
                 : "text-emerald-600 border-emerald-500/30 hover:bg-emerald-500/10"
             }`}
           >
-            {staff.isActive
-              ? t("partner.staff.statusInactive")
-              : t("partner.staff.statusActive")}
+            {staff.isActive ? "নিষ্ক্রিয় করুন" : "সক্রিয় করুন"}
           </Button>
         </div>
       </CardContent>

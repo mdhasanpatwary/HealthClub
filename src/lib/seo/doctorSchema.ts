@@ -1,7 +1,6 @@
 import { Doctor, Partner } from "@/services/db";
 import { SITE_URL } from "@/lib/siteConfig";
 import { CLINICAL_FOCUS_MAP } from "@/components/consultants/consultantData";
-import { Locale } from "@/lib/i18n";
 
 /**
  * Mapping of internal department slugs to official Schema.org MedicalSpecialty URIs
@@ -175,10 +174,8 @@ function parseVisitingHoursToTimes(visitingHours?: string): { opens: string; clo
  * Generate Google-compliant Schema.org JSON-LD structured data for doctor profile pages.
  */
 export function generateDoctorJsonLd(
-  doctor: Doctor & { partner?: Partner | null },
-  locale: Locale = "bn"
+  doctor: Doctor & { partner?: Partner | null }
 ): Record<string, unknown>[] {
-  const isEn = locale === "en";
   const doctorSlugOrId = doctor.slug ? encodeURIComponent(doctor.slug) : doctor.id;
   const profileUrl = `${SITE_URL}/consultants/${doctorSlugOrId}`;
   const specialtyInfo = SCHEMA_SPECIALTY_MAP[doctor.department] || SCHEMA_SPECIALTY_MAP.other;
@@ -215,19 +212,19 @@ export function generateDoctorJsonLd(
       {
         "@type": "ListItem",
         position: 1,
-        name: isEn ? "Home" : "হোম",
+        name: "হোম",
         item: SITE_URL,
       },
       {
         "@type": "ListItem",
         position: 2,
-        name: isEn ? "Specialist Doctors" : "বিশেষজ্ঞ ডাক্তারগণ",
+        name: "বিশেষজ্ঞ ডাক্তারগণ",
         item: `${SITE_URL}/consultants`,
       },
       {
         "@type": "ListItem",
         position: 3,
-        name: isEn ? specialtyInfo.nameEn : specialtyInfo.nameBn,
+        name: specialtyInfo.nameBn,
         item: `${SITE_URL}/consultants?dept=${doctor.department}`,
       },
       {
@@ -249,9 +246,7 @@ export function generateDoctorJsonLd(
     image: imageUrl,
     telephone: primaryPhone,
     jobTitle: doctor.designation || doctor.specialty,
-    description: isEn
-      ? `${doctor.name} is a ${doctor.specialty} specialist practicing at ${doctor.chamberName}, ${doctor.chamberAddress}, Feni. Qualifications: ${doctor.degrees}. Serial & appointments: ${doctor.serialPhone}.`
-      : `${doctor.name} ফেনীর একজন প্রখ্যাত ${doctor.specialty} বিশেষজ্ঞ। চেম্বার: ${doctor.chamberName}, ${doctor.chamberAddress}। শিক্ষাগত যোগ্যতা ও ডিগ্রি: ${doctor.degrees}। সিরিয়াল বুকিং হটলাইন: ${doctor.serialPhone}।`,
+    description: `${doctor.name} ফেনীর একজন প্রখ্যাত ${doctor.specialty} বিশেষজ্ঞ। চেম্বার: ${doctor.chamberName}, ${doctor.chamberAddress}। শিক্ষাগত যোগ্যতা ও ডিগ্রি: ${doctor.degrees}। সিরিয়াল বুকিং হটলাইন: ${doctor.serialPhone}।`,
     priceRange: doctor.consultationFee || "৳৳",
     currenciesAccepted: "BDT",
     paymentAccepted: "Cash, bKash, Nagad, Rocket, Mobile Banking",
@@ -279,8 +274,8 @@ export function generateDoctorJsonLd(
       {
         "@type": "MedicalSpecialty",
         name: doctor.specialty,
-        alternateName: isEn ? specialtyInfo.nameEn : specialtyInfo.nameBn,
-        description: isEn ? clinicalFocus.en : clinicalFocus.bn,
+        alternateName: specialtyInfo.nameBn,
+        description: clinicalFocus.bn,
       },
     ],
     // Educational Credentials
@@ -332,11 +327,9 @@ export function generateDoctorJsonLd(
     availableService: [
       {
         "@type": "MedicalProcedure",
-        name: isEn ? `${doctor.specialty} Specialist Consultation` : `${doctor.specialty} বিশেষজ্ঞ স্বাস্থ্য পরামর্শ ও কনসাল্টেশন`,
+        name: `${doctor.specialty} বিশেষজ্ঞ স্বাস্থ্য পরামর্শ ও কনসাল্টেশন`,
         serviceType: doctor.department || doctor.specialty,
-        description: isEn
-          ? `${doctor.specialty} specialist consultation and clinical care by ${doctor.name} (${doctor.degrees}). Chamber at ${doctor.chamberName}, ${doctor.chamberAddress}. Visiting: ${doctor.visitingDays} (${doctor.visitingHours}).`
-          : `${doctor.name} (${doctor.degrees}) কর্তৃক ${doctor.specialty} বিশেষজ্ঞ চিকিৎসা ও স্বাস্থ্য পরামর্শ সেবা। চেম্বার: ${doctor.chamberName}, ${doctor.chamberAddress}। রোগী দেখার সময়: ${doctor.visitingDays} (${doctor.visitingHours})।`,
+        description: `${doctor.name} (${doctor.degrees}) কর্তৃক ${doctor.specialty} বিশেষজ্ঞ চিকিৎসা ও স্বাস্থ্য পরামর্শ সেবা। চেম্বার: ${doctor.chamberName}, ${doctor.chamberAddress}। রোগী দেখার সময়: ${doctor.visitingDays} (${doctor.visitingHours})।`,
         provider: {
           "@type": "Physician",
           name: doctor.name,
@@ -379,9 +372,7 @@ export function generateDoctorJsonLd(
     url: profileUrl,
     image: imageUrl,
     name: `${doctor.name} - ${doctor.specialty} (Feni) | Health Club`,
-    description: isEn
-      ? `${doctor.name} (${doctor.specialty}), ${doctor.degrees}. Chamber at ${doctor.chamberName}, ${doctor.chamberAddress}. Call serial: ${doctor.serialPhone}.`
-      : `${doctor.name}, ${doctor.specialty}, ${doctor.degrees}। চেম্বার: ${doctor.chamberName}। সিরিয়াল হটলাইন: ${doctor.serialPhone}।`,
+    description: `${doctor.name}, ${doctor.specialty}, ${doctor.degrees}। চেম্বার: ${doctor.chamberName}। সিরিয়াল হটলাইন: ${doctor.serialPhone}।`,
     mainEntity: {
       "@id": `${profileUrl}#physician`,
     },
@@ -405,38 +396,26 @@ export function generateDoctorJsonLd(
     mainEntity: [
       {
         "@type": "Question",
-        name: isEn
-          ? `Where is Dr. ${doctor.name}'s chamber in Feni and what are the visiting hours?`
-          : `ফেনীতে ${doctor.name}-এর চেম্বার কোথায় এবং রোগী দেখার সময় কখন?`,
+        name: `ফেনীতে ${doctor.name}-এর চেম্বার কোথায় এবং রোগী দেখার সময় কখন?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: isEn
-            ? `Dr. ${doctor.name} attends patients at ${doctor.chamberName}, ${doctor.chamberAddress}. Visiting schedule: ${doctor.visitingDays} (${doctor.visitingHours}). For serial booking, call ${doctor.serialPhone}.`
-            : `${doctor.name}-এর চেম্বার হলো ${doctor.chamberName}, ${doctor.chamberAddress}। রোগী দেখার সময়সূচী: ${doctor.visitingDays} (${doctor.visitingHours})। চেম্বার রুম: ${doctor.roomNo || "নির্ধারিত কনসালটেশন সেন্টার"}। সিরিয়াল দিতে কল করুন: ${doctor.serialPhone}।`,
+          text: `${doctor.name}-এর চেম্বার হলো ${doctor.chamberName}, ${doctor.chamberAddress}। রোগী দেখার সময়সূচী: ${doctor.visitingDays} (${doctor.visitingHours})। চেম্বার রুম: ${doctor.roomNo || "নির্ধারিত কনসালটেশন সেন্টার"}। সিরিয়াল দিতে কল করুন: ${doctor.serialPhone}।`,
         },
       },
       {
         "@type": "Question",
-        name: isEn
-          ? `How can I book a serial or appointment for Dr. ${doctor.name}?`
-          : `${doctor.name}-এর সিরিয়াল বা অ্যাপয়েন্টমেন্ট কীভাবে বুক করবেন?`,
+        name: `${doctor.name}-এর সিরিয়াল বা অ্যাপয়েন্টমেন্ট কীভাবে বুক করবেন?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: isEn
-            ? `You can book a serial directly by calling the chamber hotline number(s): ${doctor.serialPhone}. Health Club members also receive fast-track health discount support.`
-            : `সরাসরি সিরিয়াল বুকিংয়ের জন্য চেম্বার হটলাইন নম্বরে কল করুন: ${doctor.serialPhone}। হেলথ ক্লাব মেম্বারদের জন্য রয়েছে বিশেষ ডিসকাউন্ট ও সহায়তা সুবিধা।`,
+          text: `সরাসরি সিরিয়াল বুকিংয়ের জন্য চেম্বার হটলাইন নম্বরে কল করুন: ${doctor.serialPhone}। হেলথ ক্লাব মেম্বারদের জন্য রয়েছে বিশেষ ডিসকাউন্ট ও সহায়তা সুবিধা।`,
         },
       },
       {
         "@type": "Question",
-        name: isEn
-          ? `What is the consultation fee and qualifications of Dr. ${doctor.name}?`
-          : `${doctor.name}-এর ভিজিট ফি (কনসাল্টেশন ফি) ও শিক্ষাগত যোগ্যতা কী?`,
+        name: `${doctor.name}-এর ভিজিট ফি (কনসাল্টেশন ফি) ও শিক্ষাগত যোগ্যতা কী?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: isEn
-            ? `Qualifications: ${doctor.degrees}. Designation/Affiliation: ${doctor.designation}. Consultation fee: ${doctor.consultationFee || "Standard fee applies, contact chamber serial hotline"} (Accepted: Cash, bKash, Nagad).`
-            : `শিক্ষাগত যোগ্যতা ও ডিগ্রি: ${doctor.degrees}। বর্তমান পদবী/সংযুক্তি: ${doctor.designation}। কনসাল্টেশন ফি: ${doctor.consultationFee || "চেম্বারের নির্ধারিত ভিজিট প্রযোজ্য, বিস্তারিত জানতে সিরিয়ালে কল করুন"} (নগদ, বিকাশ ও রকেট পেমেন্ট গ্রহণযোগ্য)।`,
+          text: `শিক্ষাগত যোগ্যতা ও ডিগ্রি: ${doctor.degrees}। বর্তমান পদবী/সংযুক্তি: ${doctor.designation}। কনসাল্টেশন ফি: ${doctor.consultationFee || "চেম্বারের নির্ধারিত ভিজিট প্রযোজ্য, বিস্তারিত জানতে সিরিয়ালে কল করুন"} (নগদ, বিকাশ ও রকেট পেমেন্ট গ্রহণযোগ্য)।`,
         },
       },
     ],

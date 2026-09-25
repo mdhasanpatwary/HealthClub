@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronDown, Siren, Calculator, BookOpen, Newspaper } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +12,6 @@ import {
 
 export default function PublicHeaderNav() {
   const pathname = usePathname();
-  const { t } = useLanguage();
 
   const isActive = (path: string) => {
     if (path === "/") return pathname === "/";
@@ -39,7 +37,7 @@ export default function PublicHeaderNav() {
             : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
         }`}
       >
-        {t("layout.header.home")}
+        হোম
         {isActive("/") && (
           <span className="absolute bottom-1 left-3 right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
         )}
@@ -56,7 +54,7 @@ export default function PublicHeaderNav() {
             : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
         }`}
       >
-        {t("layout.header.consultants")}
+        ডাক্তার ও কনসালট্যান্টস
         {isActive("/consultants") && (
           <span className="absolute bottom-1 left-3 right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
         )}
@@ -73,7 +71,7 @@ export default function PublicHeaderNav() {
             : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
         }`}
       >
-        {t("layout.header.partnerHospitals")}
+        পার্টনার হাসপাতাল
         {isActive("/partner-hospitals") && (
           <span className="absolute bottom-1 left-3 right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
         )}
@@ -88,7 +86,7 @@ export default function PublicHeaderNav() {
               : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
           }`}
         >
-          <span>{t("layout.header.services") || "সেবাসমূহ"}</span>
+          <span>সেবাসমূহ</span>
           <ChevronDown className="h-3.5 w-3.5 opacity-70" />
           {isServicesActive && (
             <span className="absolute bottom-1 left-3 right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
@@ -110,10 +108,10 @@ export default function PublicHeaderNav() {
               </div>
               <div className="flex-1 min-w-0">
                 <span className="block text-xs font-bold text-foreground group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors truncate">
-                  {t("layout.header.emergency")}
+                  জরুরি সেবা
                 </span>
                 <span className="block text-[11px] text-muted-foreground group-hover:text-foreground/80 dark:group-hover:text-slate-300 font-normal transition-colors truncate">
-                  {t("layout.header.emergencySubtitle") || "রক্তদাতা ও অ্যাম্বুলেন্স"}
+                  রক্তদাতা ও অ্যাম্বুলেন্স
                 </span>
               </div>
             </Link>
@@ -131,10 +129,10 @@ export default function PublicHeaderNav() {
               </div>
               <div className="flex-1 min-w-0">
                 <span className="block text-xs font-bold text-foreground group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors truncate">
-                  {t("layout.header.healthTools")}
+                  হেলথ টুলস
                 </span>
                 <span className="block text-[11px] text-muted-foreground group-hover:text-foreground/80 dark:group-hover:text-slate-300 font-normal transition-colors truncate">
-                  {t("layout.header.healthToolsSubtitle") || "বিএমআই ও ক্যালোরি"}
+                  বিএমআই ও ক্যালোরি
                 </span>
               </div>
             </Link>
@@ -152,10 +150,10 @@ export default function PublicHeaderNav() {
               </div>
               <div className="flex-1 min-w-0">
                 <span className="block text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">
-                  {t("layout.header.healthTips")}
+                  স্বাস্থ্য টিপস
                 </span>
                 <span className="block text-[11px] text-muted-foreground group-hover:text-foreground/80 dark:group-hover:text-slate-300 font-normal transition-colors truncate">
-                  {t("layout.header.healthTipsSubtitle") || "ডাক্তারের পরামর্শ ও টিপস"}
+                  ডাক্তারের পরামর্শ ও টিপস
                 </span>
               </div>
             </Link>
@@ -173,10 +171,10 @@ export default function PublicHeaderNav() {
               </div>
               <div className="flex-1 min-w-0">
                 <span className="block text-xs font-bold text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors truncate">
-                  {t("layout.header.blog") || "স্বাস্থ্য ব্লগ ও গাইড"}
+                  স্বাস্থ্য ব্লগ ও গাইড
                 </span>
                 <span className="block text-[11px] text-muted-foreground group-hover:text-foreground/80 dark:group-hover:text-slate-300 font-normal transition-colors truncate">
-                  {t("layout.header.blogSubtitle") || "হাসপাতাল রিভিউ ও তালিকা"}
+                  হাসপাতাল রিভিউ ও তালিকা
                 </span>
               </div>
             </Link>
@@ -194,7 +192,7 @@ export default function PublicHeaderNav() {
             : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
         }`}
       >
-        {t("layout.header.membershipPlans")}
+        মেম্বারশিপ প্ল্যান
         {isActive("/membership") && (
           <span className="absolute bottom-1 left-3 right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
         )}
@@ -210,7 +208,7 @@ export default function PublicHeaderNav() {
             : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
         }`}
       >
-        {t("layout.header.contact")}
+        যোগাযোগ
         {isActive("/contact") && (
           <span className="absolute bottom-1 left-3 right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
         )}

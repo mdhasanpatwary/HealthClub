@@ -1,21 +1,11 @@
-import { Locale } from "@/lib/i18n";
-
 export const revalidate = 86400; // 24-hour ISR
-import { tServer } from "@/lib/i18n.server";
 import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 export async function generateMetadata() {
-  const locale: Locale = "bn";
-  const isEn = false;
-  const rawTitle = tServer(locale, "pages.termsConditions.metaTitle");
-  const description = tServer(locale, "pages.termsConditions.metaDesc");
-
-  const title = isEn
-    ? { absolute: "Terms & Conditions | Health Club" }
-    : rawTitle.replace(/\s*-\s*হেলথ ক্লাব$/, "");
-
-  const ogTitle = isEn ? "Terms & Conditions - Health Club" : "শর্তাবলী ও নিয়মাবলী - হেলথ ক্লাব";
+  const title = "শর্তাবলী ও নিয়মাবলী";
+  const description = "হেলথ ক্লাবের মেম্বারশিপ ব্যবহারের নিয়ম, পার্টনার হাসপাতাল যাচাইকরণ নীতি এবং শর্তাবলী।";
+  const ogTitle = "শর্তাবলী ও নিয়মাবলী - হেলথ ক্লাব";
 
   return {
     title,
@@ -28,8 +18,7 @@ export async function generateMetadata() {
       description,
       url: `${SITE_URL}/terms-conditions`,
       siteName: "হেলথ ক্লাব (Health Club)",
-      locale: isEn ? "en_US" : "bn_BD",
-      type: "website",
+        type: "website",
       images: DEFAULT_OG_IMAGES,
     },
     twitter: {
@@ -42,9 +31,6 @@ export async function generateMetadata() {
 }
 
 export default async function TermsConditionsPage() {
-  const locale = "bn" as Locale;
-  const t = (key: string) => tServer(locale, key);
-
   const jsonLdData = [
     {
       "@context": "https://schema.org",
@@ -53,13 +39,13 @@ export default async function TermsConditionsPage() {
         {
           "@type": "ListItem",
           "position": 1,
-          "name": locale === "en" ? "Home" : "হোম",
+          "name": "হোম",
           "item": SITE_URL
         },
         {
           "@type": "ListItem",
           "position": 2,
-          "name": locale === "en" ? "Terms & Conditions" : "টার্মস অ্যান্ড কন্ডিশনস",
+          "name": "টার্মস অ্যান্ড কন্ডিশনস",
           "item": `${SITE_URL}/terms-conditions`
         }
       ]
@@ -71,38 +57,38 @@ export default async function TermsConditionsPage() {
       <JsonLd data={jsonLdData} />
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 space-y-8 text-secondary/90 leading-relaxed text-sm sm:text-base">
         <h1 className="font-heading text-3xl sm:text-4xl font-bold text-secondary dark:text-white border-b border-border pb-4">
-          {t("pages.termsConditions.title")}
+          শর্তাবলী ও নিয়মাবলী (Terms & Conditions)
         </h1>
-        <p className="text-muted-foreground">{t("pages.termsConditions.lastUpdated")}</p>
+        <p className="text-muted-foreground">সর্বশেষ আপডেট: ১৪ জুলাই, ২০২৬</p>
         
         <p>
-          {t("pages.termsConditions.intro")}
+          হেলথ ক্লাব (হেলথ ক্লাব)-এর মেম্বারশিপ সেবা গ্রহণের জন্য আপনাকে নিম্নলিখিত শর্তাবলী মেনে চলতে হবে। মেম্বার হিসেবে রেজিস্ট্রেশন সম্পন্ন করার মাধ্যমে আপনি এই শর্তাবলী স্বীকার করছেন বলে গণ্য হবে।
         </p>
 
         <h2 className="font-heading text-xl font-bold text-secondary dark:text-white mt-6">
-          {t("pages.termsConditions.section1Title")}
+          ১. মেম্বারশিপের ব্যবহার ও অপব্যবহার
         </h2>
         <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-          <li>{t("pages.termsConditions.section1Item1")}</li>
-          <li>{t("pages.termsConditions.section1Item2")}</li>
-          <li>{t("pages.termsConditions.section1Item3")}</li>
+          <li>প্রিমিয়াম (Premium) মেম্বারশিপ কার্ড শুধুমাত্র কার্ডধারী ব্যক্তিই ব্যবহার করতে পারবেন। এটি অন্য কারো কাছে হস্তান্তর করা যাবে না।</li>
+          <li>বিলিংয়ের পূর্বে সদস্যকে অবশ্যই তাদের সচল ডিজিটাল আইডি কার্ড কাউন্টারে প্রদর্শন করতে হবে।</li>
+          <li>কার্ডের অপব্যবহার বা মিথ্যা তথ্য প্রদানের ক্ষেত্রে হেলথ ক্লাব যেকোনো মেম্বারশিপ বাতিল করার অধিকার রাখে।</li>
         </ul>
 
         <h2 className="font-heading text-xl font-bold text-secondary dark:text-white mt-6">
-          {t("pages.termsConditions.section2Title")}
+          ২. পার্টনার হাসপাতালের ডিসকাউন্ট ও ভেরিফিকেশন
         </h2>
         <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-          <li>{t("pages.termsConditions.section2Item1")}</li>
-          <li>{t("pages.termsConditions.section2Item2")}</li>
-          <li>{t("pages.termsConditions.section2Item3")}</li>
+          <li>ডিসকাউন্ট সুবিধা পেতে রোগীকে অবশ্যই বিলিং কাউন্টারে পেমেন্ট করার আগে সচল ডিজিটাল মেম্বারশিপ কার্ড দেখাতে হবে। বিল করার পর কার্ড দেখালে ডিসকাউন্ট কার্যকর নাও হতে পারে।</li>
+          <li>পার্টনার হাসপাতাল তাদের নির্ধারিত নীতি অনুযায়ী ছাড়ের হার পরিবর্তন বা পরিবর্ধন করতে পারে, যা হেলথ ক্লাব অফিশিয়াল ওয়েবসাইটে আপডেট করা হবে।</li>
+          <li>হেলথ ক্লাব শুধুমাত্র মেম্বারশিপ ও ডিসকাউন্ট কার্ড সার্ভিস প্রদানকারী প্রতিষ্ঠান। চিকিৎসাগত ত্রুটি, অবহেলা বা ভুল চিকিৎসার জন্য হেলথ ক্লাব কোনোভাবেই দায়ী থাকবে না।</li>
         </ul>
 
         <h2 className="font-heading text-xl font-bold text-secondary dark:text-white mt-6">
-          {t("pages.termsConditions.section3Title")}
+          ৩. পেমেন্ট ও রিফান্ড নীতি
         </h2>
         <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-          <li>{t("pages.termsConditions.section3Item1")}</li>
-          <li>{t("pages.termsConditions.section3Item2")}</li>
+          <li>প্রতিষ্ঠাতা (Founding) মেম্বারদের জন্য মেম্বারশিপ ১ম বছরের জন্য ফ্রি।</li>
+          <li>অন্যান্য পেইড বাৎসরিক মেম্বারশিপ প্ল্যানগুলোর ফি অফেরতযোগ্য (Non-refundable)।</li>
         </ul>
       </div>
     </div>

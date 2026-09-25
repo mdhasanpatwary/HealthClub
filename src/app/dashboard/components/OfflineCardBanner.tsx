@@ -27,10 +27,6 @@ import {
 } from "@/lib/safeStorage";
 import { INITIAL_AMBULANCES, INITIAL_EMERGENCY_HOTLINES } from "@/data/emergencyData";
 
-interface OfflineCardBannerProps {
-  locale?: string;
-}
-
 function subscribeOffline(callback: () => void) {
   window.addEventListener("online", callback);
   window.addEventListener("offline", callback);
@@ -48,8 +44,7 @@ function getServerOfflineSnapshot() {
   return false;
 }
 
-export function OfflineCardBanner({ locale = "bn" }: OfflineCardBannerProps) {
-  const isEn = locale === "en";
+export function OfflineCardBanner() {
   const isOffline = useSyncExternalStore(
     subscribeOffline,
     getOfflineSnapshot,
@@ -66,7 +61,7 @@ export function OfflineCardBanner({ locale = "bn" }: OfflineCardBannerProps) {
         try {
           const date = new Date(meta.memberCardLastSynced);
           setLastSyncTime(
-            date.toLocaleTimeString(isEn ? "en-US" : "bn-BD", {
+            date.toLocaleTimeString("bn-BD", {
               hour: "2-digit",
               minute: "2-digit",
               hour12: true,
@@ -84,7 +79,7 @@ export function OfflineCardBanner({ locale = "bn" }: OfflineCardBannerProps) {
         setOfflineDirectory(data);
       }
     });
-  }, [isEn]);
+  }, []);
 
   if (!isOffline) {
     return null;
@@ -111,25 +106,23 @@ export function OfflineCardBanner({ locale = "bn" }: OfflineCardBannerProps) {
           <div className="space-y-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="font-heading text-sm sm:text-base font-bold text-secondary dark:text-amber-100 flex items-center gap-1.5">
-                {isEn ? "Offline Mode Active" : "অফলাইন মোড সক্রিয়"}
+                অফলাইন মোড সক্রিয়
               </h3>
               <Badge
                 variant="outline"
                 className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 text-[10px] sm:text-xs font-semibold py-0.5 px-2 flex items-center gap-1"
               >
                 <ShieldCheck className="h-3 w-3 shrink-0" />
-                {isEn ? "ID Card Cached" : "কার্ড ও জরুরি সেবা ক্যাশড"}
+                কার্ড ও জরুরি সেবা ক্যাশড
               </Badge>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              {isEn
-                ? "You have zero network connectivity. Your digital member card, QR code, and emergency hotlines are cached locally and 100% functional."
-                : "ইন্টারনেট সংযোগ না থাকলেও আপনার ডিজিটাল মেম্বার কার্ড ও জরুরি অ্যাম্বুলেন্স হটলাইনসমূহ সম্পূর্ণ প্রস্তুত রয়েছে।"}
+              ইন্টারনেট সংযোগ না থাকলেও আপনার ডিজিটাল মেম্বার কার্ড ও জরুরি অ্যাম্বুলেন্স হটলাইনসমূহ সম্পূর্ণ প্রস্তুত রয়েছে।
             </p>
             {lastSyncTime && (
               <p className="text-[11px] text-muted-foreground/80 flex items-center gap-1 font-mono">
                 <Clock className="h-3 w-3 text-amber-500" />
-                {isEn ? `Last synced: ${lastSyncTime}` : `সর্বশেষ সংরক্ষিত: ${lastSyncTime}`}
+                সর্বশেষ সংরক্ষিত: {lastSyncTime}
               </p>
             )}
           </div>
@@ -145,7 +138,7 @@ export function OfflineCardBanner({ locale = "bn" }: OfflineCardBannerProps) {
                   className="w-full sm:w-auto bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs shadow-md rounded-xl gap-2 active:scale-95"
                 >
                   <PhoneCall className="h-3.5 w-3.5 animate-bounce" />
-                  {isEn ? "Offline Emergency Call" : "অফলাইন জরুরি ডায়াল"}
+                  অফলাইন জরুরি ডায়াল
                 </Button>
               }
             />
@@ -154,13 +147,11 @@ export function OfflineCardBanner({ locale = "bn" }: OfflineCardBannerProps) {
                 <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400">
                   <Ambulance className="h-5 w-5" />
                   <DialogTitle className="font-heading text-base sm:text-lg font-bold">
-                    {isEn ? "Offline Emergency Directory" : "অফলাইন জরুরি মেডিকেল ডিরেক্টরি"}
+                    অফলাইন জরুরি মেডিকেল ডিরেক্টরি
                   </DialogTitle>
                 </div>
                 <DialogDescription className="text-xs text-muted-foreground">
-                  {isEn
-                    ? "Direct tap-to-call emergency services. Works without active internet via cellular network."
-                    : "ইন্টারনেট ডাটা ছাড়াই সাধারণ মোবাইল নেটওয়ার্কে সরাসরি কল করতে নিচের নম্বরে ট্যাপ করুন।"}
+                  ইন্টারনেট ডাটা ছাড়াই সাধারণ মোবাইল নেটওয়ার্কে সরাসরি কল করতে নিচের নম্বরে ট্যাপ করুন।
                 </DialogDescription>
               </DialogHeader>
 
@@ -169,7 +160,7 @@ export function OfflineCardBanner({ locale = "bn" }: OfflineCardBannerProps) {
                 <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-3.5 flex items-center justify-between gap-3">
                   <div className="space-y-0.5">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">
-                      {isEn ? "National Emergency" : "জাতীয় জরুরি হেল্পলাইন"}
+                      জাতীয় জরুরি হেল্পলাইন
                     </span>
                     <h4 className="font-heading text-base font-bold text-secondary dark:text-white">
                       999 Ambulance & Police
@@ -180,7 +171,7 @@ export function OfflineCardBanner({ locale = "bn" }: OfflineCardBannerProps) {
                     className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-md active:scale-95 transition-transform"
                   >
                     <Phone className="h-3.5 w-3.5" />
-                    {isEn ? "Call 999" : "৯৯৯ কল দিন"}
+                    ৯৯৯ কল দিন
                   </a>
                 </div>
 
@@ -188,7 +179,7 @@ export function OfflineCardBanner({ locale = "bn" }: OfflineCardBannerProps) {
                 <div className="space-y-2">
                   <h4 className="text-xs font-bold font-heading text-secondary dark:text-white flex items-center gap-1.5">
                     <Ambulance className="h-3.5 w-3.5 text-primary" />
-                    {isEn ? "Ambulance Services (Feni)" : "অ্যাম্বুলেন্স সার্ভিস (ফেনী)"}
+                    অ্যাম্বুলেন্স সার্ভিস (ফেনী)
                   </h4>
                   <div className="grid grid-cols-1 gap-2">
                     {ambulances.map((amb) => (
@@ -220,7 +211,7 @@ export function OfflineCardBanner({ locale = "bn" }: OfflineCardBannerProps) {
                 <div className="space-y-2">
                   <h4 className="text-xs font-bold font-heading text-secondary dark:text-white flex items-center gap-1.5">
                     <Heart className="h-3.5 w-3.5 text-rose-500" />
-                    {isEn ? "Hospital ER & Blood Bank" : "হাসপাতাল জরুরি বিভাগ ও ব্লাড ব্যাংক"}
+                    হাসপাতাল জরুরি বিভাগ ও ব্লাড ব্যাংক
                   </h4>
                   <div className="grid grid-cols-1 gap-2">
                     {hotlines.map((hotline) => (
@@ -230,10 +221,10 @@ export function OfflineCardBanner({ locale = "bn" }: OfflineCardBannerProps) {
                       >
                         <div className="min-w-0">
                           <p className="text-xs font-bold text-secondary dark:text-white truncate">
-                            {isEn ? hotline.titleEn : hotline.titleBn}
+                            {hotline.titleBn}
                           </p>
                           <p className="text-[11px] text-muted-foreground truncate">
-                            {isEn ? hotline.descriptionEn : hotline.descriptionBn}
+                            {hotline.descriptionBn}
                           </p>
                         </div>
                         <a

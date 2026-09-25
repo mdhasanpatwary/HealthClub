@@ -3,7 +3,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { X, Download, Share2, Loader2 } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { getClientDeviceInfo } from "@/lib/pwaTelemetry";
@@ -21,7 +20,6 @@ const INSTALLED_KEY = "hc_app_installed";
 const DISMISS_HOURS = 72;
 
 export default function InstallAppBanner() {
-  const { t } = useLanguage();
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [showIosTip, setShowIosTip] = useState(false);
@@ -197,8 +195,7 @@ export default function InstallAppBanner() {
       } else {
         // Fallback for browsers that don't support beforeinstallprompt directly
         toast.info(
-          t("pwa.iosInstructions") ||
-            "আপনার ব্রাউজার মেনু থেকে 'Add to Home Screen' বা 'Install' বেছে নিন。"
+          "Safari ব্রাউজারের Share (শেয়ার) বাটনে ট্যাপ করে 'Add to Home Screen' চাপুন"
         );
         try {
           localStorage.setItem(DISMISSAL_KEY, Date.now().toString());
@@ -234,7 +231,7 @@ export default function InstallAppBanner() {
           <div className="p-3 bg-emerald-950/90 border border-emerald-500/40 rounded-xl text-xs text-emerald-100 flex items-start gap-2 animate-in fade-in zoom-in-95 duration-200">
             <Share2 className="size-4 shrink-0 text-emerald-400 mt-0.5" />
             <span className="leading-relaxed">
-              {t("pwa.iosInstructions")}
+              Safari ব্রাউজারের Share (শেয়ার) বাটনে ট্যাপ করে &apos;Add to Home Screen&apos; চাপুন
             </span>
           </div>
         )}
@@ -255,10 +252,10 @@ export default function InstallAppBanner() {
           {/* App Info - Full text without clipping */}
           <div className="flex-1 min-w-0">
             <h4 className="text-sm font-bold text-white tracking-wide leading-tight">
-              {t("pwa.installTitle")}
+              হেলথ ক্লাব মোবাইল অ্যাপ
             </h4>
             <p className="text-xs text-slate-300 leading-snug mt-1 break-words">
-              {t("pwa.installDesc")}
+              সহজে ডিসকাউন্ট পেতে হেলথ ক্লাব মোবাইল অ্যাপ ইনস্টল করুন
             </p>
           </div>
         </div>
@@ -277,9 +274,7 @@ export default function InstallAppBanner() {
               <Download className="size-4" />
             )}
             <span>
-              {isInstalling
-                ? t("common.loading") || "প্রসেসিং..."
-                : t("pwa.installBtn")}
+              {isInstalling ? "প্রসেসিং..." : "ইনস্টল করুন"}
             </span>
           </Button>
         </div>

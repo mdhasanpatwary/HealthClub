@@ -50,20 +50,17 @@ export function getArticleReadingTime(
     keyTakeawaysEn?: string[];
     readTimeBn?: string;
     readTimeEn?: string;
-  },
-  locale: "bn" | "en" = "bn"
+  }
 ): string {
-  const isEn = locale === "en";
-  const contentBlocks = isEn
-    ? [...(article.contentEn || []), ...(article.keyTakeawaysEn || [])]
-    : [...(article.contentBn || []), ...(article.keyTakeawaysBn || [])];
+  const contentBlocks = [
+    ...(article.contentBn || article.contentEn || []),
+    ...(article.keyTakeawaysBn || article.keyTakeawaysEn || []),
+  ];
 
   if (contentBlocks.length > 0) {
     const calc = calculateReadingTime(contentBlocks);
-    return isEn ? calc.textEn : calc.textBn;
+    return calc.textBn;
   }
 
-  return isEn
-    ? article.readTimeEn || "2 min read"
-    : article.readTimeBn || "২ মিনিট পড়ার সময়";
+  return article.readTimeBn || "২ মিনিট পড়ার সময়";
 }

@@ -17,8 +17,7 @@ import {
 import { Partner } from "@/services/db";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-import { formatDiscount } from "@/lib/i18n";
+import { formatDiscount } from "@/lib/utils";
 import { toast } from "sonner";
 import { SITE_URL } from "@/lib/siteConfig";
 import { trackEvent } from "@/lib/analytics";
@@ -33,8 +32,6 @@ export default function HospitalContactSidebar({
   partner,
   relatedPartners = [],
 }: HospitalContactSidebarProps) {
-  const { locale } = useLanguage();
-  const isEn = locale === "en";
   const isPharmacy = partner.category === "pharmacy";
   const isDiagnostic = partner.category === "diagnostic";
 
@@ -45,24 +42,24 @@ export default function HospitalContactSidebar({
   };
 
   const deskTitle = isPharmacy
-    ? isEn ? "Pharmacy Contact & Counter" : "ফার্মেসি কাউন্টারে যোগাযোগ"
+    ? "ফার্মেসি কাউন্টারে যোগাযোগ"
     : isDiagnostic
-    ? isEn ? "Diagnostic Center Contact" : "ডায়াগনস্টিক সেন্টারে যোগাযোগ"
-    : isEn ? "Hospital Contact & Desk" : "হাসপাতাল ডেস্কে যোগাযোগ";
+    ? "ডায়াগনস্টিক সেন্টারে যোগাযোগ"
+    : "হাসপাতাল ডেস্কে যোগাযোগ";
 
   const callBtnLabel = isPharmacy
-    ? isEn ? "Call Pharmacy Counter" : "ফার্মেসিতে কল করুন"
+    ? "ফার্মেসিতে কল করুন"
     : isDiagnostic
-    ? isEn ? "Call Diagnostic Desk" : "ডায়াগনস্টিকে কল করুন"
-    : isEn ? "Call Hospital Desk" : "হাসপাতালে কল করুন";
+    ? "ডায়াগনস্টিকে কল করুন"
+    : "হাসপাতালে কল করুন";
 
   const handleShare = async () => {
     const profileUrl =
       typeof window !== "undefined"
         ? window.location.href
         : `${SITE_URL}/partner-hospitals/${encodeURIComponent(partner.slug || partner.id)}`;
-    const shareTitle = `${partner.name} - Health Club Partner`;
-    const shareText = `${partner.name}, ${partner.address}. ডিসকাউন্ট: ${partner.discount}। হেল্পলাইন: ${partner.phone}`;
+    const shareTitle = `${partner.name} - হেলথ ক্লাব পার্টনার`;
+    const shareText = `${partner.name}, ${partner.address}। ডিসকাউন্ট: ${partner.discount}। হেল্পলাইন: ${partner.phone}`;
 
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
@@ -80,17 +77,13 @@ export default function HospitalContactSidebar({
     try {
       await navigator.clipboard.writeText(profileUrl);
       const copiedMsg = isPharmacy
-        ? isEn ? "Pharmacy profile link copied to clipboard!" : "ফার্মেসি প্রোফাইলের লিংক ক্লিপবোর্ডে কপি করা হয়েছে!"
+        ? "ফার্মেসি প্রোফাইলের লিংক ক্লিপবোর্ডে কপি করা হয়েছে!"
         : isDiagnostic
-        ? isEn ? "Diagnostic profile link copied to clipboard!" : "ডায়াগনস্টিক প্রোফাইলের লিংক ক্লিপবোর্ডে কপি করা হয়েছে!"
-        : isEn ? "Hospital profile link copied to clipboard!" : "হাসপাতাল প্রোফাইলের লিংক ক্লিপবোর্ডে কপি করা হয়েছে!";
+        ? "ডায়াগনস্টিক প্রোফাইলের লিংক ক্লিপবোর্ডে কপি করা হয়েছে!"
+        : "হাসপাতাল প্রোফাইলের লিংক ক্লিপবোর্ডে কপি করা হয়েছে!";
       toast.success(copiedMsg);
     } catch {
-      toast.error(
-        isEn
-          ? "Failed to copy link."
-          : "লিংক কপি করা যায়নি।"
-      );
+      toast.error("লিংক কপি করা যায়নি।");
     }
   };
 
@@ -100,7 +93,7 @@ export default function HospitalContactSidebar({
       <Card className="p-4 sm:p-5 rounded-3xl border-border/80 bg-background dark:bg-slate-900/90 shadow-sm space-y-4">
         <div>
           <span className="text-[10px] font-bold text-primary uppercase tracking-wider font-mono">
-            {isEn ? "Direct Helpline" : "সরাসরি যোগাযোগ"}
+            সরাসরি যোগাযোগ
           </span>
           <h3 className="text-base font-bold text-secondary dark:text-white font-heading mt-0.5">
             {deskTitle}
@@ -148,11 +141,7 @@ export default function HospitalContactSidebar({
               })}
             >
               <PhoneCall className="h-4 w-4 mr-2 shrink-0" />
-              <span>
-                {isEn
-                  ? `Emergency Hotline: ${partner.emergencyPhone}`
-                  : `২৪/৭ জরুরি হটলাইন: ${partner.emergencyPhone}`}
-              </span>
+              <span>২৪/৭ জরুরি হটলাইন: {partner.emergencyPhone}</span>
             </a>
           )}
 
@@ -175,11 +164,7 @@ export default function HospitalContactSidebar({
               })}
             >
               <Truck className="h-4 w-4 mr-2 shrink-0" />
-              <span>
-                {isEn
-                  ? `Ambulance: ${partner.ambulancePhone}`
-                  : `জরুরি অ্যাম্বুলেন্স: ${partner.ambulancePhone}`}
-              </span>
+              <span>জরুরি অ্যাম্বুলেন্স: {partner.ambulancePhone}</span>
             </a>
           )}
 
@@ -194,7 +179,7 @@ export default function HospitalContactSidebar({
             })}
           >
             <Navigation className="h-3.5 w-3.5 mr-2 text-primary shrink-0" />
-            <span>{isEn ? "Open in Google Maps" : "গুগল ম্যাপে দিকনির্দেশনা"}</span>
+            <span>গুগল ম্যাপে দিকনির্দেশনা</span>
             <ExternalLink className="h-3 w-3 ml-auto text-muted-foreground" />
           </a>
 
@@ -205,7 +190,7 @@ export default function HospitalContactSidebar({
             className="w-full h-9 rounded-xl text-xs text-muted-foreground hover:text-foreground cursor-pointer"
           >
             <Share2 className="h-3.5 w-3.5 mr-2 shrink-0" />
-            <span>{isEn ? "Share Profile" : "প্রোফাইল শেয়ার করুন"}</span>
+            <span>প্রোফাইল শেয়ার করুন</span>
           </Button>
         </div>
 
@@ -215,7 +200,7 @@ export default function HospitalContactSidebar({
             <MapPin className="h-4 w-4 text-primary shrink-0 mt-0.5" />
             <div>
               <p className="font-semibold text-foreground">
-                {isEn ? "Address & Location" : "ঠিকানা ও অবস্থান"}
+                ঠিকানা ও অবস্থান
               </p>
               <p className="text-[11px] leading-relaxed text-muted-foreground mt-0.5">
                 {partner.address}
@@ -227,13 +212,13 @@ export default function HospitalContactSidebar({
             <Clock className="h-4 w-4 text-primary shrink-0 mt-0.5" />
             <div>
               <p className="font-semibold text-foreground">
-                {isEn ? "Visiting & Working Hours" : "রোগী দেখার ও সেবা সময়"}
+                রোগী দেখার ও সেবা সময়
               </p>
               <p className="text-[11px] leading-relaxed text-muted-foreground mt-0.5">
                 {partner.workingHours ||
                   (partner.category === "pharmacy"
-                    ? isEn ? "8:00 AM - 11:30 PM (Daily)" : "সকাল ৮:০০ - রাত ১১:৩০ (প্রতিদিন)"
-                    : isEn ? "24 Hours Open (Emergency & Inpatient)" : "২৪ ঘণ্টা খোলা (জরুরি ও ইনডোর)")}
+                    ? "সকাল ৮:০০ - রাত ১১:৩০ (প্রতিদিন)"
+                    : "২৪ ঘণ্টা খোলা (জরুরি ও ইনডোর)")}
               </p>
             </div>
           </div>
@@ -251,10 +236,10 @@ export default function HospitalContactSidebar({
           </div>
           <div>
             <h4 className="text-xs sm:text-sm font-bold text-secondary dark:text-white font-heading">
-              {isEn ? "Health Club Member Benefit" : "হেলথ ক্লাব সদস্য সুবিধা"}
+              হেলথ ক্লাব সদস্য সুবিধা
             </h4>
             <p className="text-[10px] text-primary font-bold">
-              {formatDiscount(partner.discount, locale)} {isEn ? "Instant Discount" : "নিশ্চিত ছাড়"}
+              {formatDiscount(partner.discount)} নিশ্চিত ছাড়
             </p>
           </div>
         </div>
@@ -264,11 +249,7 @@ export default function HospitalContactSidebar({
             <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
             <span>
               {isPharmacy
-                ? isEn
-                  ? "Show your digital member card at the pharmacy counter to get instant discounts on medicines."
-                  : "ঔষধ ক্রয়ের পূর্বে ফার্মেসির ক্যাশ কাউন্টারে আপনার ডিজিটাল মেম্বার কার্ড প্রদর্শন করুন।"
-                : isEn
-                ? "Show your digital member card or card QR code at the reception/billing desk."
+                ? "ঔষধ ক্রয়ের পূর্বে ফার্মেসির ক্যাশ কাউন্টারে আপনার ডিজিটাল মেম্বার কার্ড প্রদর্শন করুন।"
                 : "বিলিং বা ক্যাশ কাউন্টারে আপনার ডিজিটাল কার্ড বা মেম্বার আইডি কিউআর কোড প্রদর্শন করুন।"}
             </span>
           </div>
@@ -276,11 +257,7 @@ export default function HospitalContactSidebar({
             <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
             <span>
               {isPharmacy
-                ? isEn
-                  ? "Applicable for all prescription medicines, vitamins, and healthcare supplies."
-                  : "সকল প্রেসক্রিপশন মেডিসিন, ভিটামিন ও স্বাস্থ্য সামগ্রীতে নির্ধারিত ছাড় প্রযোজ্য।"
-                : isEn
-                ? "Applicable for all investigations, outdoor doctor serials, and inpatient cabins."
+                ? "সকল প্রেসক্রিপশন মেডিসিন, ভিটামিন ও স্বাস্থ্য সামগ্রীতে নির্ধারিত ছাড় প্রযোজ্য।"
                 : "সকল প্যাথলজি পরীক্ষা, ডাক্তার চেম্বার ও ইনডোর বেড ভাড়ায় প্রযোজ্য।"}
             </span>
           </div>
@@ -294,7 +271,7 @@ export default function HospitalContactSidebar({
             className: "w-full h-9 rounded-xl border-primary/30 text-primary hover:bg-primary hover:text-white font-semibold text-xs cursor-pointer shadow-2xs",
           })}
         >
-          <span>{isEn ? "Get Membership Card" : "মেম্বারশিপ কার্ড সংগ্রহ করুন"}</span>
+          <span>মেম্বারশিপ কার্ড সংগ্রহ করুন</span>
           <ChevronRight className="h-3.5 w-3.5 ml-1" />
         </Link>
       </Card>
@@ -303,7 +280,7 @@ export default function HospitalContactSidebar({
       {relatedPartners.length > 0 && (
         <Card className="p-4 sm:p-5 rounded-3xl border-border/80 bg-background dark:bg-slate-900/90 shadow-2xs space-y-3">
           <h4 className="text-xs sm:text-sm font-bold text-secondary dark:text-white font-heading">
-            {isEn ? "Other Partner Facilities in Feni" : "ফেনীর অন্যান্য পার্টনার প্রতিষ্ঠান"}
+            ফেনীর অন্যান্য পার্টনার প্রতিষ্ঠান
           </h4>
 
           <div className="space-y-2.5">
@@ -318,7 +295,7 @@ export default function HospitalContactSidebar({
                     {p.name}
                   </span>
                   <span className="text-[10px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded shrink-0">
-                    {formatDiscount(p.discount, locale)}
+                    {formatDiscount(p.discount)}
                   </span>
                 </div>
                 <p className="text-[10px] text-muted-foreground truncate mt-0.5">

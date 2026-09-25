@@ -8,23 +8,18 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { Pagination } from "@/components/ui/pagination";
 import { Transaction, Member } from "@/services/db";
 import { getPaginatedTransactionsAction } from "@/app/actions/transactionActions";
-import { Locale } from "@/lib/i18n";
 
 interface DashboardHistoryTabProps {
   transactions?: Transaction[];
   allowMemberTx: boolean;
   user: Member;
   setIsAddTxOpen: (open: boolean) => void;
-  t: (key: string) => string;
-  locale: Locale;
 }
 
 export function DashboardHistoryTab({
   allowMemberTx,
   user,
   setIsAddTxOpen,
-  t,
-  locale,
 }: DashboardHistoryTabProps) {
   const [paginatedTxs, setPaginatedTxs] = useState<Transaction[]>([]);
   const [totalItems, setTotalItems] = useState(0);
@@ -64,19 +59,16 @@ export function DashboardHistoryTab({
     };
   }, [loadData]);
 
-
-  const isEn = locale === "en";
-
   return (
     <Card className="border-border/60 shadow-sm">
       <CardHeader className="border-b border-border/60 bg-muted/30 dark:bg-slate-900/40 flex flex-row items-center justify-between gap-2 flex-wrap">
         <div>
           <CardTitle className="font-heading text-base font-bold text-secondary dark:text-white flex items-center gap-2">
             <History className="h-4 w-4 text-primary" />
-            {t("dashboard.history.title")}
+            সেভিংস ও ডিসকাউন্ট হিস্ট্রি
           </CardTitle>
           <CardDescription>
-            {t("dashboard.history.description")}
+            পার্টনার চিকিৎসাকেন্দ্রগুলোতে আপনার নেওয়া সেবা এবং সাশ্রয়ের পূর্ণাঙ্গ বিবরণ।
           </CardDescription>
         </div>
         {allowMemberTx && user.status === "active" && (
@@ -86,14 +78,14 @@ export function DashboardHistoryTab({
             className="bg-primary hover:bg-primary-dark text-white text-xs font-semibold gap-1.5 shrink-0 w-full sm:w-auto"
           >
             <PlusCircle className="h-4 w-4" />
-            <span>{t("dashboard.history.addTxButton")}</span>
+            <span>নতুন ডিসকাউন্ট যোগ করুন</span>
           </Button>
         )}
       </CardHeader>
       <CardContent className="p-0">
         {loading ? (
           <div className="text-center py-16 text-muted-foreground text-xs">
-            {isEn ? "Loading history..." : "ইতিহাস লোড হচ্ছে..."}
+            ইতিহাস লোড হচ্ছে...
           </div>
         ) : paginatedTxs.length > 0 ? (
           <div>
@@ -101,10 +93,10 @@ export function DashboardHistoryTab({
               <Table>
                 <TableHeader>
                   <TableRow className="bg-muted/40 dark:bg-slate-900/40">
-                    <TableHead className="font-semibold text-secondary dark:text-white whitespace-nowrap">{t("dashboard.history.table.hospital")}</TableHead>
-                    <TableHead className="font-semibold text-secondary dark:text-white whitespace-nowrap">{t("dashboard.history.table.date")}</TableHead>
-                    <TableHead className="font-semibold text-secondary dark:text-white text-right whitespace-nowrap">{t("dashboard.history.table.bill")}</TableHead>
-                    <TableHead className="font-semibold text-primary text-right whitespace-nowrap">{t("dashboard.history.table.saved")}</TableHead>
+                    <TableHead className="font-semibold text-secondary dark:text-white whitespace-nowrap">পার্টনার চিকিৎসাকেন্দ্র</TableHead>
+                    <TableHead className="font-semibold text-secondary dark:text-white whitespace-nowrap">তারিখ</TableHead>
+                    <TableHead className="font-semibold text-secondary dark:text-white text-right whitespace-nowrap">বিলের পরিমাণ</TableHead>
+                    <TableHead className="font-semibold text-primary text-right whitespace-nowrap">সাশ্রয়</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody className="text-xs sm:text-sm">
@@ -112,8 +104,8 @@ export function DashboardHistoryTab({
                     <TableRow key={tx.id} className="hover:bg-muted/40 dark:hover:bg-slate-800/40 transition-colors">
                       <TableCell className="font-medium text-secondary dark:text-white">{tx.partnerName}</TableCell>
                       <TableCell className="text-muted-foreground">{tx.date}</TableCell>
-                      <TableCell className="text-right font-mono">৳{tx.amount.toLocaleString(locale === "en" ? "en-US" : "bn-BD")}</TableCell>
-                      <TableCell className="text-right font-mono text-emerald-600 dark:text-emerald-400 font-bold">৳{tx.saved.toLocaleString(locale === "en" ? "en-US" : "bn-BD")}</TableCell>
+                      <TableCell className="text-right font-mono">৳{tx.amount.toLocaleString("bn-BD")}</TableCell>
+                      <TableCell className="text-right font-mono text-emerald-600 dark:text-emerald-400 font-bold">৳{tx.saved.toLocaleString("bn-BD")}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -133,17 +125,15 @@ export function DashboardHistoryTab({
                   setCurrentPage(1);
                 }}
                 pageSizeOptions={[10, 20, 50]}
-                locale={locale}
-                t={t}
-                itemLabel={isEn ? "transactions" : "টি লেনদেন"}
+                itemLabel="টি লেনদেন"
               />
             )}
           </div>
         ) : (
           <div className="text-center py-16 text-muted-foreground">
             <ReceiptText className="h-10 w-10 mx-auto mb-3 text-muted-foreground/40" />
-            <p className="text-sm font-medium">{t("dashboard.history.noRecords")}</p>
-            <p className="text-xs mt-1">{t("dashboard.history.noRecordsDesc")}</p>
+            <p className="text-sm font-medium">এখনও কোনো লেনদেনের রেকর্ড নেই</p>
+            <p className="text-xs mt-1">পার্টনার হাসপাতালে সেবা গ্রহণের পর আপনার ডিসকাউন্ট এখানে সংরক্ষিত হবে।</p>
           </div>
         )}
       </CardContent>

@@ -13,8 +13,6 @@ import { Doctor } from "@/services/db";
 import { unlinkDoctorFromPartnerAction } from "@/app/actions/partnerDoctorActions";
 import { toast } from "sonner";
 import { AlertCircle } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-
 export interface UnlinkDoctorDialogProps {
   doctor: Doctor | null;
   isOpen: boolean;
@@ -28,7 +26,6 @@ export function UnlinkDoctorDialog({
   onClose,
   onSuccess,
 }: UnlinkDoctorDialogProps) {
-  const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
 
   if (!doctor) return null;
@@ -38,14 +35,14 @@ export function UnlinkDoctorDialog({
     try {
       const res = await unlinkDoctorFromPartnerAction(doctor.id);
       if (res.success) {
-        toast.success(`${doctor.name} ${t("partner.doctors.unlinkedSuccess")}`);
+        toast.success(`${doctor.name}-কে চেম্বার তালিকা থেকে অপসারণ করা হয়েছে।`);
         onSuccess();
         onClose();
       } else {
-        toast.error(res.error || t("partner.doctors.unlinkFailed"));
+        toast.error(res.error || "ডাক্তার অপসারণ করতে ব্যর্থ হয়েছে।");
       }
     } catch {
-      toast.error(t("common.error.server"));
+      toast.error("সার্ভারে ত্রুটি হয়েছে, অনুগ্রহ করে আবার চেষ্টা করুন");
     } finally {
       setSubmitting(false);
     }
@@ -59,16 +56,16 @@ export function UnlinkDoctorDialog({
             <AlertCircle className="h-6 w-6" />
           </div>
           <DialogTitle className="font-heading font-bold text-base sm:text-lg">
-            {t("partner.doctors.unlinkConfirmTitle")}
+            চেম্বার তালিকা থেকে অপসারণ
           </DialogTitle>
           <DialogDescription className="text-xs text-muted-foreground leading-relaxed pt-1">
-            {t("partner.doctors.unlinkConfirmDesc")} (<strong>{doctor.name}</strong>)
+            আপনি কি নিশ্চিত যে এই বিশেষজ্ঞ ডাক্তারকে আপনার প্রতিষ্ঠানের চেম্বার তালিকা থেকে অপসারণ করতে চান? (<strong>{doctor.name}</strong>)
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-4 border-t border-border w-full mt-2">
           <Button type="button" variant="outline" onClick={onClose} disabled={submitting} className="rounded-xl w-full sm:w-auto">
-            {t("common.cancel")}
+            বাতিল
           </Button>
           <Button
             type="button"
@@ -77,7 +74,7 @@ export function UnlinkDoctorDialog({
             disabled={submitting}
             className="rounded-xl w-full sm:w-auto cursor-pointer"
           >
-            {submitting ? t("partner.doctors.unlinking") : t("partner.doctors.unlinkConfirmBtn")}
+            {submitting ? "অপসারণ করা হচ্ছে..." : "হ্যাঁ, অপসারণ করুন"}
           </Button>
         </div>
       </DialogContent>

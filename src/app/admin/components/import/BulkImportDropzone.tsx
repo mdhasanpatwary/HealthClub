@@ -5,7 +5,7 @@ import { UploadCloud, FileSpreadsheet, Download, CheckCircle2 } from "lucide-rea
 import { Button } from "@/components/ui/button";
 import { ImportEntityType } from "@/types/bulkImport";
 import { ENTITY_CONFIGS, downloadSampleTemplate } from "@/lib/bulkImportUtils";
-import { useLanguage } from "@/components/layout/LanguageProvider";
+import { toBanglaNums } from "@/lib/utils";
 
 interface BulkImportDropzoneProps {
   entityType: ImportEntityType;
@@ -26,8 +26,6 @@ export function BulkImportDropzone({
   onReset,
   loading,
 }: BulkImportDropzoneProps) {
-  const { locale } = useLanguage();
-  const isBn = locale === "bn";
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragOver, setIsDragOver] = useState(false);
 
@@ -67,12 +65,10 @@ export function BulkImportDropzone({
           </div>
           <div>
             <p className="text-xs font-bold text-foreground">
-              {isBn ? `${config.titleBn} এর স্যাম্পল টেমপ্লেট` : `Sample Template for ${config.titleEn}`}
+              {`${config.titleBn} এর স্যাম্পল টেমপ্লেট`}
             </p>
             <p className="text-[11px] text-muted-foreground">
-              {isBn
-                ? "সঠিক কলাম ফরম্যাট ও নমুনা ডেটা দেখতে টেমপ্লেট ডাউনলোড করুন"
-                : "Download pre-formatted spreadsheet template with sample values"}
+              সঠিক কলাম ফরম্যাট ও নমুনা ডেটা দেখতে টেমপ্লেট ডাউনলোড করুন
             </p>
           </div>
         </div>
@@ -86,7 +82,7 @@ export function BulkImportDropzone({
             className="h-8 text-xs font-semibold gap-1.5 border-border flex-1 sm:flex-initial"
           >
             <Download className="h-3.5 w-3.5 text-emerald-600" />
-            <span>{isBn ? "এক্সেল (.xlsx)" : "Excel (.xlsx)"}</span>
+            <span>এক্সেল (.xlsx)</span>
           </Button>
 
           <Button
@@ -97,7 +93,7 @@ export function BulkImportDropzone({
             className="h-8 text-xs font-semibold gap-1.5 border-border flex-1 sm:flex-initial"
           >
             <Download className="h-3.5 w-3.5 text-blue-600" />
-            <span>{isBn ? "সিএসভি (.csv)" : "CSV (.csv)"}</span>
+            <span>সিএসভি (.csv)</span>
           </Button>
         </div>
       </div>
@@ -133,14 +129,10 @@ export function BulkImportDropzone({
 
           <div className="space-y-1 max-w-md">
             <p className="text-sm font-bold text-foreground">
-              {isBn
-                ? "এখানে এক্সেল বা সিএসভি ফাইল ড্রপ করুন অথবা ব্রাউজ করুন"
-                : "Drag & drop your spreadsheet file here, or browse"}
+              এখানে এক্সেল বা সিএসভি ফাইল ড্রপ করুন অথবা ব্রাউজ করুন
             </p>
             <p className="text-xs text-muted-foreground">
-              {isBn
-                ? "সমর্থিত ফাইল ফরম্যাট: .xlsx, .xls, .csv (সর্বোচ্চ ১০ এমবি)"
-                : "Supported file formats: .xlsx, .xls, .csv (up to 10MB)"}
+              সমর্থিত ফাইল ফরম্যাট: .xlsx, .xls, .csv (সর্বোচ্চ ১০ এমবি)
             </p>
           </div>
 
@@ -151,7 +143,7 @@ export function BulkImportDropzone({
             disabled={loading}
             className="mt-2 text-xs font-semibold pointer-events-none"
           >
-            {loading ? (isBn ? "প্রসেসিং হচ্ছে..." : "Processing...") : isBn ? "ফাইল নির্বাচন করুন" : "Select File"}
+            {loading ? "প্রসেসিং হচ্ছে..." : "ফাইল নির্বাচন করুন"}
           </Button>
         </div>
       ) : (
@@ -166,7 +158,7 @@ export function BulkImportDropzone({
                 <span>{fileSize ? formatBytes(fileSize) : ""}</span>
                 <span>•</span>
                 <span className="font-semibold text-primary">
-                  {isBn ? `${rowCount} টি সারি সনাক্ত হয়েছে` : `${rowCount} rows parsed`}
+                  {`${toBanglaNums(rowCount)} টি সারি সনাক্ত হয়েছে`}
                 </span>
               </p>
             </div>
@@ -180,7 +172,7 @@ export function BulkImportDropzone({
             disabled={loading}
             className="text-xs font-semibold border-border shrink-0"
           >
-            {isBn ? "অন্য ফাইল নির্বাচন করুন" : "Change File"}
+            অন্য ফাইল নির্বাচন করুন
           </Button>
         </div>
       )}

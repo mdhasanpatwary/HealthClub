@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { ChevronDown, HelpCircle, PhoneCall } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toBanglaNums } from "@/lib/utils";
 
 interface FAQItem {
@@ -15,24 +14,38 @@ interface EmergencyFAQProps {
 }
 
 export default function EmergencyFAQ({ hotline }: EmergencyFAQProps) {
-  const { t, locale } = useLanguage();
   const [openIndex, setOpenIndex] = useState<number | null>(0); // First FAQ open by default
 
   const rawHotline = (hotline || process.env.NEXT_PUBLIC_HOTLINE_PHONE || "01886763849").replace(/[^0-9]/g, "");
   const normalizedHotline = rawHotline.replace(/^(880|88|0)/, "");
   const hotlineTel = `+880${normalizedHotline}`;
-  const hotlineDisplay =
-    locale === "en"
-      ? `+880 ${normalizedHotline}`
-      : toBanglaNums(`+880 ${normalizedHotline}`);
+  const hotlineDisplay = toBanglaNums(`+880 ${normalizedHotline}`);
 
   const faqs: FAQItem[] = [
-    { question: t("emergency.faq.q1"), answer: t("emergency.faq.a1") },
-    { question: t("emergency.faq.q2"), answer: t("emergency.faq.a2") },
-    { question: t("emergency.faq.q3"), answer: t("emergency.faq.a3") },
-    { question: t("emergency.faq.q4"), answer: t("emergency.faq.a4") },
-    { question: t("emergency.faq.q5"), answer: t("emergency.faq.a5") },
-    { question: t("emergency.faq.q6"), answer: t("emergency.faq.a6") },
+    {
+      question: "ফেনীতে জরুরি রক্তের প্রয়োজনে কীভাবে তাৎক্ষণিক রক্তদাতা ও ব্লাড ব্যাংক খুঁজে পাবেন?",
+      answer: "হেলথ ক্লাবের 'জরুরি সেবা' পেজে যান এবং রক্তের গ্রুপ ফিল্টার থেকে রোগীর প্রয়োজনীয় গ্রুপ (যেমন: A+, B+, O+, AB-) ও উপজেলা (ফেনী সদর, সোনাগাজী, দাগনভূঞা ইত্যাদি) নির্বাচন করুন। তালিকাভুক্ত ভেরিফাইড রক্তদাতার কার্ডে 'কল করুন' অথবা 'WhatsApp' বাটনে চাপ দিয়ে সরাসরি যোগাযোগ করুন। এছাড়া রেড ক্রিসেন্ট রক্ত কেন্দ্রের (01819-887766) সাথেও যোগাযোগ করতে পারেন।",
+    },
+    {
+      question: "ফেনীতে ২৪ ঘণ্টা আইসিইউ (ICU) বা এসি অ্যাম্বুলেন্স সার্ভিস কীভাবে বুক করবেন?",
+      answer: "ডিরেক্টরির 'অ্যাম্বুলেন্স' ট্যাবে গিয়ে ফেনী সেন্ট্রাল অ্যাম্বুলেন্স (01876077777), মেদিনোভা, রবিন বা মহিপাল অ্যাম্বুলেন্স সার্ভিসের কল বাটনে চাপ দিয়ে সরাসরি ড্রাইভার বা ডেস্কে কথা বলুন। গুরুতর ও আশঙ্কাজনক রোগীর ক্ষেত্রে লাইফ-সাপোর্ট ও ভেন্টিলেটর সমৃদ্ধ ICU অ্যাম্বুলেন্সের জন্য অনুরোধ করুন।",
+    },
+    {
+      question: "ফেনীতে ২৪/৭ জরুরি মেডিকেল অক্সিজেন সিলিন্ডার সেবা কীভাবে পাওয়া যাবে?",
+      answer: "জরুরি হটলাইন সেকশনে থাকা 'ফেনী জরুরি অক্সিজেন সিলিন্ডার সেবা' নম্বরে (01815-998877) কল করুন। তারা তাৎক্ষণিক রিফিলিং, ফ্লো-মিটার, রেগুলেটর মাস্ক ও ফেনী শহর ও আশেপাশের এলাকায় দ্রুত হোম ডেলিভারি সাপোর্ট প্রদান করে।",
+    },
+    {
+      question: "ফেনী সদর হাসপাতালের জরুরি বিভাগ ও সরকারি স্বাস্থ্য বাতায়ন নম্বর কী?",
+      answer: "ফেনী ২৫০ শয্যা জেনারেল হাসপাতালের জরুরি বিভাগের সরাসরি হটলাইন নম্বর 0331-74011। এছাড়া জাতীয় জরুরি স্বাস্থ্য পরামর্শের জন্য ১৬২৬৩ (স্বাস্থ্য বাতায়ন) এবং পুলিশ, ফায়ার সার্ভিস ও সরকারি অ্যাম্বুলেন্স সহায়তার জন্য ৯৯৯ সম্পূর্ণ টোল-ফ্রি ২৪/৭ চালু থাকে।",
+    },
+    {
+      question: "হেলথ ক্লাবে স্বেচ্ছাসেবী রক্তদাতা হিসেবে কীভাবে নাম তালিকাভুক্ত করবেন?",
+      answer: "জরুরি পেজের রক্তদাতা ট্যাবে থাকা 'রক্তদাতা হতে যুক্ত হোন' বাটনে ক্লিক করুন। আপনার নাম, রক্তের গ্রুপ, উপজেলা, মোবাইল নম্বর ও সর্বশেষ রক্তদানের তথ্য দিয়ে সাবমিট করলেই হেলথ ক্লাব ডিরেক্টরিতে আপনার নাম যুক্ত হবে।",
+    },
+    {
+      question: "ফেনীর জরুরি ডিরেক্টরি ব্যবহার করতে কি কোনো প্রকার ফি বা চার্জ লাগে?",
+      answer: "না, হেলথ ক্লাবের জরুরি স্বাস্থ্য ডিরেক্টরিটি জনস্বার্থে সম্পূর্ণ বিনামূল্যে উন্মুক্ত। রক্তদাতা, অ্যাম্বুলেন্স ড্রাইভার, অক্সিজেন সরবরাহকারী ও হাসপাতালের সাথে সরাসরি কোনো প্রকার মধ্যস্বত্বভোগী বা ব্রোকারেজ ফি ছাড়া যোগাযোগ করা যায়।",
+    },
   ];
 
   const toggleFAQ = (index: number) => {
@@ -48,16 +61,16 @@ export default function EmergencyFAQ({ hotline }: EmergencyFAQProps) {
       <div className="text-center space-y-2">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
           <HelpCircle className="h-3.5 w-3.5" />
-          <span>{t("emergency.faq.badge")}</span>
+          <span>সাধারণ জরুরি জিজ্ঞাসা (FAQ)</span>
         </div>
         <h2
           id="emergency-faq-heading"
           className="font-heading text-xl sm:text-3xl font-bold text-secondary dark:text-white tracking-tight"
         >
-          {t("emergency.faq.title")}
+          ফেনী রক্তদাতা, অ্যাম্বুলেন্স ও জরুরি স্বাস্থ্য সেবা সম্পর্কিত প্রশ্নোত্তর
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-          {t("emergency.faq.subtitle")}
+          ফেনীতে রক্তদাতা সন্ধান, ব্লাড ব্যাংক কন্টাক্ট নম্বর, অ্যাম্বুলেন্স সেবা, অক্সিজেন সিলিন্ডার ও জরুরি মেডিকেল হটলাইন সম্পর্কিত তথ্যাবলি।
         </p>
       </div>
 
@@ -111,14 +124,10 @@ export default function EmergencyFAQ({ hotline }: EmergencyFAQProps) {
       <div className="rounded-2xl border border-border/70 bg-muted/30 p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
         <div>
           <h4 className="text-xs sm:text-sm font-bold text-foreground">
-            {locale === "en"
-              ? "Need urgent assistance or have questions?"
-              : "জরুরি কোনো তথ্য জানতে বা সহায়তা প্রয়োজন?"}
+            জরুরি কোনো তথ্য জানতে বা সহায়তা প্রয়োজন?
           </h4>
           <p className="text-[11px] sm:text-xs text-muted-foreground">
-            {locale === "en"
-              ? "Contact the Health Club helpline 24/7."
-              : "হেলথ ক্লাবের সেন্ট্রাল হেল্পলাইনে সার্বক্ষণিক কল করতে পারেন।"}
+            হেলথ ক্লাবের সেন্ট্রাল হেল্পলাইনে সার্বক্ষণিক কল করতে পারেন।
           </p>
         </div>
         <a
@@ -132,3 +141,4 @@ export default function EmergencyFAQ({ hotline }: EmergencyFAQProps) {
     </section>
   );
 }
+

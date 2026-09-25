@@ -14,7 +14,6 @@ import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Heart, Loader2 } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 
 interface BloodDonorRegisterDialogProps {
   open: boolean;
@@ -22,9 +21,6 @@ interface BloodDonorRegisterDialogProps {
 }
 
 export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegisterDialogProps) {
-  const { locale, t } = useLanguage();
-  const isEn = locale === "en";
-
   const {
     register,
     handleSubmit,
@@ -48,7 +44,7 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
   const onSubmit = async (data: BloodDonorFormValues) => {
     try {
       const selectedUpazila = UPAZILAS_FENI.find((u) => u.id === data.upazila);
-      const upazilaName = isEn ? selectedUpazila?.nameEn : selectedUpazila?.nameBn;
+      const upazilaName = selectedUpazila?.nameBn;
 
       const res = await registerBloodDonorAction({
         name: data.name,
@@ -60,9 +56,7 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
 
       if (res.success) {
         toast.success(
-          t("emergency.donorModal.successMsg") || (isEn
-            ? "Registration submitted! It will appear in the directory once approved by admin."
-            : res.message)
+          "আপনার আবেদনটি সফলভাবে জমা হয়েছে! অ্যাডমিন যাচাই করার পর ডিরেক্টরিতে প্রদর্শিত হবে।"
         );
         reset();
         onOpenChange(false);
@@ -70,7 +64,7 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
         toast.error(res.message);
       }
     } catch {
-      toast.error(t("emergency.donorModal.errorMsg") || (isEn ? "Failed to submit registration." : "আবেদনটি জমা দেওয়া সম্ভব হয়নি।"));
+      toast.error("আবেদনটি জমা দেওয়া সম্ভব হয়নি।");
     }
   };
 
@@ -82,10 +76,10 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
             <Heart className="h-6 w-6 fill-rose-500/20" />
           </div>
           <DialogTitle className="text-center font-heading text-xl font-bold">
-            {t("emergency.donorModal.title")}
+            রক্তদাতা হিসেবে নিবন্ধন করুন
           </DialogTitle>
           <DialogDescription className="text-center text-xs sm:text-sm text-muted-foreground">
-            {t("emergency.donorModal.desc")}
+            আমাদের স্বেচ্ছাসেবী রক্তদাতা নেটওয়ার্কে যুক্ত হয়ে যেকোনো জরুরি প্রয়োজনে মুমূর্ষু রোগীর পাশে দাঁড়ান।
           </DialogDescription>
         </DialogHeader>
 
@@ -93,11 +87,11 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
           {/* Name */}
           <div className="space-y-1.5">
             <Label htmlFor="donor-name" className="text-xs font-semibold">
-              {t("emergency.donorModal.name")} <span className="text-rose-500">*</span>
+              আপনার পূর্ণ নাম <span className="text-rose-500">*</span>
             </Label>
             <Input
               id="donor-name"
-              placeholder={t("emergency.donorModal.namePlaceholder")}
+              placeholder="যেমন: তানভীর আহমেদ"
               {...register("name")}
             />
             {errors.name && (
@@ -108,12 +102,12 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
           {/* Phone */}
           <div className="space-y-1.5">
             <Label htmlFor="donor-phone" className="text-xs font-semibold">
-              {t("emergency.donorModal.phone")} <span className="text-rose-500">*</span>
+              যোগাযোগের মোবাইল নম্বর <span className="text-rose-500">*</span>
             </Label>
             <Input
               id="donor-phone"
               type="tel"
-              placeholder={t("emergency.donorModal.phonePlaceholder")}
+              placeholder="যেমন: 018XXXXXXXX"
               {...register("phone")}
             />
             {errors.phone && (
@@ -124,7 +118,7 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
           {/* Blood Group Select */}
           <div className="space-y-1.5">
             <Label className="text-xs font-semibold">
-              {t("emergency.donorModal.bloodGroup")} <span className="text-rose-500">*</span>
+              রক্তের গ্রুপ <span className="text-rose-500">*</span>
             </Label>
             <div className="grid grid-cols-4 gap-1.5">
               {BLOOD_GROUPS.map((bg) => (
@@ -150,7 +144,7 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
           {/* Upazila Select */}
           <div className="space-y-1.5">
             <Label htmlFor="donor-upazila" className="text-xs font-semibold">
-              {t("emergency.donorModal.upazila")} <span className="text-rose-500">*</span>
+              উপজেলা / এলাকা (ফেনী) <span className="text-rose-500">*</span>
             </Label>
             <select
               id="donor-upazila"
@@ -159,7 +153,7 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
             >
               {UPAZILAS_FENI.filter((u) => u.id !== "all").map((u) => (
                 <option key={u.id} value={u.id}>
-                  {isEn ? u.nameEn : u.nameBn}
+                  {u.nameBn}
                 </option>
               ))}
             </select>
@@ -171,11 +165,11 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
           {/* Last Donation */}
           <div className="space-y-1.5">
             <Label htmlFor="last-donated" className="text-xs font-semibold text-muted-foreground">
-              {t("emergency.donorModal.lastDonated")}
+              সর্বশেষ রক্তদানের তারিখ (ঐচ্ছিক)
             </Label>
             <Input
               id="last-donated"
-              placeholder={t("emergency.donorModal.lastDonatedPlaceholder")}
+              placeholder="যেমন: ৩ মাস আগে / কখনো দিইনি"
               {...register("lastDonated")}
             />
           </div>
@@ -189,12 +183,12 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t("emergency.donorModal.submitting")}
+                  নিবন্ধন জমা হচ্ছে...
                 </>
               ) : (
                 <>
                   <Heart className="mr-2 h-4 w-4 fill-white" />
-                  {t("emergency.donorModal.submit")}
+                  রক্তদাতা হিসেবে যুক্ত হোন
                 </>
               )}
             </Button>
@@ -204,3 +198,4 @@ export function BloodDonorRegisterDialog({ open, onOpenChange }: BloodDonorRegis
     </Dialog>
   );
 }
+

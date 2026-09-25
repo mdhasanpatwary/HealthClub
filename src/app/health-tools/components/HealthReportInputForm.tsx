@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 
 interface HealthReportInputFormProps {
-  isEn: boolean;
   mobileTab: "form" | "preview";
   setMobileTab: (tab: "form" | "preview") => void;
   name: string;
@@ -42,7 +41,6 @@ interface HealthReportInputFormProps {
 }
 
 export function HealthReportInputForm({
-  isEn,
   mobileTab,
   setMobileTab,
   name,
@@ -76,10 +74,10 @@ export function HealthReportInputForm({
     <div className={`lg:col-span-7 space-y-3.5 ${mobileTab === "form" ? "block" : "hidden lg:block"}`}>
       <div className="flex items-center justify-between">
         <h4 className="text-xs sm:text-sm font-bold text-foreground font-heading">
-          {isEn ? "Health Vitals & Parameters" : "শারীরিক তথ্য ও ভাইটালস"}
+          শারীরিক তথ্য ও ভাইটালস
         </h4>
         <span className="text-[10px] text-muted-foreground">
-          {isEn ? "Real-time sync" : "লাইভ সিঙ্ক"}
+          লাইভ সিঙ্ক
         </span>
       </div>
 
@@ -87,10 +85,10 @@ export function HealthReportInputForm({
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
         <div className="space-y-1">
           <Label className="text-[11px] sm:text-xs font-semibold">
-            {isEn ? "Name (Optional)" : "আপনার নাম (ঐচ্ছিক)"}
+            আপনার নাম (ঐচ্ছিক)
           </Label>
           <Input
-            placeholder={isEn ? "e.g. Member" : "যেমন: মেম্বার"}
+            placeholder="যেমন: মেম্বার"
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="h-8 sm:h-9 text-xs"
@@ -98,7 +96,7 @@ export function HealthReportInputForm({
         </div>
         <div className="space-y-1">
           <Label className="text-[11px] sm:text-xs font-semibold">
-            {isEn ? "Age (Yrs)" : "বয়স (বছর)"}
+            বয়স (বছর)
           </Label>
           <Input
             type="number"
@@ -111,30 +109,30 @@ export function HealthReportInputForm({
         </div>
         <div className="space-y-1">
           <Label className="text-[11px] sm:text-xs font-semibold">
-            {isEn ? "Gender" : "লিঙ্গ"}
+            লিঙ্গ
           </Label>
           <div className="grid grid-cols-2 gap-1 bg-muted p-0.5 rounded-lg h-8 sm:h-9 items-center">
             <button
               type="button"
               onClick={() => setGender("male")}
-              className={`text-[11px] sm:text-xs py-1 rounded-md font-semibold transition-all ${
+              className={`text-[11px] sm:text-xs py-1 rounded-md font-semibold transition-all cursor-pointer ${
                 gender === "male"
                   ? "bg-background text-primary shadow-xs"
                   : "text-muted-foreground"
               }`}
             >
-              {isEn ? "Male" : "পুরুষ"}
+              পুরুষ
             </button>
             <button
               type="button"
               onClick={() => setGender("female")}
-              className={`text-[11px] sm:text-xs py-1 rounded-md font-semibold transition-all ${
+              className={`text-[11px] sm:text-xs py-1 rounded-md font-semibold transition-all cursor-pointer ${
                 gender === "female"
                   ? "bg-background text-pink-600 shadow-xs"
                   : "text-muted-foreground"
               }`}
             >
-              {isEn ? "Female" : "মহিলা"}
+              মহিলা
             </button>
           </div>
         </div>
@@ -145,20 +143,20 @@ export function HealthReportInputForm({
         <div className="space-y-1">
           <div className="flex items-center justify-between">
             <Label className="text-[11px] sm:text-xs font-semibold">
-              {isEn ? "Height" : "উচ্চতা"}
+              উচ্চতা
             </Label>
             <div className="inline-flex text-[9px] bg-muted rounded p-0.5">
               <button
                 type="button"
                 onClick={() => setUnit("ft")}
-                className={`px-1.5 py-0.5 rounded ${unit === "ft" ? "bg-background text-primary font-bold shadow-xs" : "text-muted-foreground"}`}
+                className={`px-1.5 py-0.5 rounded cursor-pointer ${unit === "ft" ? "bg-background text-primary font-bold shadow-xs" : "text-muted-foreground"}`}
               >
                 ft/in
               </button>
               <button
                 type="button"
                 onClick={() => setUnit("cm")}
-                className={`px-1.5 py-0.5 rounded ${unit === "cm" ? "bg-background text-primary font-bold shadow-xs" : "text-muted-foreground"}`}
+                className={`px-1.5 py-0.5 rounded cursor-pointer ${unit === "cm" ? "bg-background text-primary font-bold shadow-xs" : "text-muted-foreground"}`}
               >
                 cm
               </button>
@@ -168,14 +166,14 @@ export function HealthReportInputForm({
             <div className="grid grid-cols-2 gap-1.5">
               <Input
                 type="number"
-                placeholder={isEn ? "Feet" : "ফুট"}
+                placeholder="ফুট"
                 value={feet}
                 onChange={(e) => setFeet(e.target.value)}
                 className="h-8 sm:h-9 text-xs"
               />
               <Input
                 type="number"
-                placeholder={isEn ? "Inches" : "ইঞ্চি"}
+                placeholder="ইঞ্চি"
                 value={inches}
                 onChange={(e) => setInches(e.target.value)}
                 className="h-8 sm:h-9 text-xs"
@@ -194,7 +192,7 @@ export function HealthReportInputForm({
 
         <div className="space-y-1">
           <Label className="text-[11px] sm:text-xs font-semibold">
-            {isEn ? "Weight (kg)" : "ওজন (কেজি)"}
+            ওজন (কেজি)
           </Label>
           <Input
             type="number"
@@ -210,28 +208,28 @@ export function HealthReportInputForm({
       {/* Activity Level */}
       <div className="space-y-1">
         <Label className="text-[11px] sm:text-xs font-semibold">
-          {isEn ? "Daily Activity Level" : "দৈনিক কায়িক পরিশ্রম"}
+          দৈনিক কায়িক পরিশ্রম
         </Label>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 text-[11px]">
           {(
             [
-              { id: "sedentary", bn: "বসে কাজ", en: "Sedentary" },
-              { id: "light", bn: "হালকা হাঁটা", en: "Light" },
-              { id: "moderate", bn: "মাঝারি", en: "Moderate" },
-              { id: "active", bn: "সক্রিয়", en: "Active" },
+              { id: "sedentary", bn: "বসে কাজ" },
+              { id: "light", bn: "হালকা হাঁটা" },
+              { id: "moderate", bn: "মাঝারি" },
+              { id: "active", bn: "সক্রিয়" },
             ] as const
           ).map((lvl) => (
             <button
               key={lvl.id}
               type="button"
               onClick={() => setActivityLevel(lvl.id)}
-              className={`py-1.5 px-2 rounded-xl text-center border font-medium transition-all ${
+              className={`py-1.5 px-2 rounded-xl text-center border font-medium transition-all cursor-pointer ${
                 activityLevel === lvl.id
                   ? "bg-primary/10 border-primary text-primary font-bold shadow-xs"
                   : "border-border/60 bg-muted/20 text-muted-foreground hover:text-foreground"
               }`}
             >
-              {isEn ? lvl.en : lvl.bn}
+              {lvl.bn}
             </button>
           ))}
         </div>
@@ -242,7 +240,7 @@ export function HealthReportInputForm({
         <div className="space-y-1">
           <Label className="text-[11px] sm:text-xs font-semibold flex items-center gap-1 text-rose-600 dark:text-rose-400">
             <HeartPulse className="h-3 w-3" />
-            <span>{isEn ? "BP (Sys / Dia)" : "রক্তচাপ (Sys / Dia)"}</span>
+            <span>রক্তচাপ (Sys / Dia)</span>
           </Label>
           <div className="grid grid-cols-2 gap-1.5">
             <Input
@@ -266,18 +264,16 @@ export function HealthReportInputForm({
           <div className="flex items-center justify-between">
             <Label className="text-[11px] sm:text-xs font-semibold flex items-center gap-1 text-amber-600 dark:text-amber-400">
               <Activity className="h-3 w-3" />
-              <span>{isEn ? "Sugar (mmol/L)" : "শর্করা (mmol/L)"}</span>
+              <span>শর্করা (mmol/L)</span>
             </Label>
             <button
               type="button"
               onClick={() =>
                 setGlucoseContext((prev) => (prev === "fasting" ? "post_meal" : "fasting"))
               }
-              className="text-[9px] text-primary hover:underline font-semibold"
+              className="text-[9px] text-primary hover:underline font-semibold cursor-pointer"
             >
-              {glucoseContext === "fasting"
-                ? isEn ? "Fasting" : "খালি পেট"
-                : isEn ? "Post-Meal" : "খাওয়ার পর"}
+              {glucoseContext === "fasting" ? "খালি পেট" : "খাওয়ার পর"}
             </button>
           </div>
           <Input
@@ -296,9 +292,9 @@ export function HealthReportInputForm({
         <Button
           type="button"
           onClick={() => setMobileTab("preview")}
-          className="w-full bg-secondary hover:bg-secondary/90 text-white font-bold py-2 rounded-xl text-xs gap-1.5"
+          className="w-full bg-secondary hover:bg-secondary/90 text-white font-bold py-2 rounded-xl text-xs gap-1.5 cursor-pointer"
         >
-          <span>{isEn ? "View Report Summary & Print" : "রিপোর্ট প্রিভিউ ও প্রিন্ট দেখুন"}</span>
+          <span>রিপোর্ট প্রিভিউ ও প্রিন্ট দেখুন</span>
           <Eye className="h-3.5 w-3.5" />
         </Button>
       </div>

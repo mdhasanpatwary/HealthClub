@@ -8,11 +8,9 @@ import { authStore } from "@/services/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { loginMemberAction } from "@/app/actions/memberAuthActions";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toast } from "sonner";
 
 export default function LoginPage() {
-  const { t } = useLanguage();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,7 +21,7 @@ export default function LoginPage() {
     setLoading(true);
 
     if (!identifier || !password) {
-      toast.warning(t("auth.login.fillAll"));
+      toast.warning("মোবাইল নম্বর/ইমেইল এবং পাসওয়ার্ড দিন।");
       setLoading(false);
       return;
     }
@@ -31,7 +29,7 @@ export default function LoginPage() {
     const adminEmail = (process.env.NEXT_PUBLIC_ADMIN_EMAIL || "healthclubfeni@gmail.com").toLowerCase();
     const cleanId = identifier.trim().toLowerCase();
     if (cleanId === adminEmail || cleanId.startsWith("admin_")) {
-      toast.warning(t("auth.login.adminHint"));
+      toast.warning("এডমিন লগইন করতে /login/admin এ যান।");
       setLoading(false);
       return;
     }
@@ -40,26 +38,26 @@ export default function LoginPage() {
       const res = await loginMemberAction(identifier, password);
       if (res.success && res.member) {
         if (res.error === "PENDING_VERIFICATION") {
-          toast.warning(t("auth.login.emailNotVerified"));
+          toast.warning("আপনার ইমেইল ভেরিফাই করা হয়নি। ভেরিফিকেশন পেজে পাঠানো হচ্ছে...");
           setTimeout(() => {
             router.push(`/register/verify-email?email=${encodeURIComponent(res.member!.email || "")}`);
           }, 2000);
           return;
         }
         authStore.setCurrentUser(res.member);
-        toast.success(t("auth.login.success"));
+        toast.success("সফলভাবে লগইন করা হয়েছে!");
         window.location.href = "/dashboard";
         return;
       } else {
         if (res.error === "ADMIN_ACCOUNT") {
-          toast.warning(t("auth.login.adminHint"));
+          toast.warning("এডমিন লগইন করতে /login/admin এ যান।");
           return;
         }
-        const errMsg = res.message || res.error || t("auth.login.invalidCredentials");
+        const errMsg = res.message || res.error || "ভুল মোবাইল নম্বর/ইমেইল অথবা পাসওয়ার্ড। অনুগ্রহ করে আবার চেষ্টা করুন।";
         toast.error(errMsg);
       }
     } catch {
-      toast.error(t("auth.login.serverError"));
+      toast.error("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
     } finally {
       setLoading(false);
     }
@@ -95,14 +93,14 @@ export default function LoginPage() {
                   <span className="absolute inset-0 h-8 w-8 rounded-full bg-primary/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
                 <span className="font-heading text-2xl font-bold text-secondary dark:text-white">
-                  {t("layout.header.health")} <span className="gradient-text">{t("layout.header.club")}</span>
+                  হেলথ <span className="gradient-text">ক্লাব</span>
                 </span>
               </Link>
               <h1 className="font-heading text-xl font-bold text-secondary dark:text-white">
-                {t("auth.login.title")}
+                অ্যাকাউন্টে লগইন করুন
               </h1>
               <p className="text-sm text-muted-foreground mt-1.5">
-                {t("auth.login.subtitle")}
+                আপনার মেম্বার আইডি দেখতে এবং ড্যাশবোর্ড অ্যাক্সেস করতে লগইন করুন।
               </p>
             </div>
 
@@ -110,7 +108,7 @@ export default function LoginPage() {
               <div className="space-y-2">
                 <label htmlFor="login-identifier" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
                   <User className="h-3.5 w-3.5 text-primary" />
-                  {t("auth.login.identifierLabel")}
+                  মেম্বার আইডি, মোবাইল নম্বর বা ইমেইল
                 </label>
                 <Input
                   id="login-identifier"
@@ -118,7 +116,7 @@ export default function LoginPage() {
                   required
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
-                  placeholder={t("auth.login.identifierPlaceholder")}
+                  placeholder="যেমন: HC-2026-XXXX বা 017XXXXXXXX"
                   className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-11 focus:border-primary/40"
                 />
               </div>
@@ -126,7 +124,7 @@ export default function LoginPage() {
               <div className="space-y-2">
                 <label htmlFor="login-password" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
                   <Lock className="h-3.5 w-3.5 text-primary" />
-                  {t("auth.login.passwordLabel")}
+                  পাসওয়ার্ড
                 </label>
                 <Input
                   id="login-password"
@@ -134,7 +132,7 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder={t("auth.login.passwordPlaceholder")}
+                  placeholder="••••••••"
                   className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-11 focus:border-primary/40"
                 />
                 <div className="flex justify-end mt-1">
@@ -142,7 +140,7 @@ export default function LoginPage() {
                     href="/forgot-password"
                     className="text-xs font-semibold text-primary hover:text-primary-dark transition-colors"
                   >
-                    {t("auth.login.forgotPassword")}
+                    পাসওয়ার্ড ভুলে গেছেন?
                   </Link>
                 </div>
               </div>
@@ -157,7 +155,7 @@ export default function LoginPage() {
                   <div className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
                 ) : (
                   <>
-                    {t("auth.login.submitButton")}
+                    লগইন করুন
                     <ArrowRight className="h-4 w-4" />
                   </>
                 )}
@@ -165,9 +163,9 @@ export default function LoginPage() {
             </form>
 
             <div className="text-center text-sm text-muted-foreground border-t border-border/60 pt-5 mt-6">
-              {t("auth.login.newMemberPrompt")}{" "}
+              নতুন সদস্য হতে চান?{" "}
               <Link href="/register" className="text-primary hover:text-primary-dark font-semibold transition-colors">
-                {t("auth.login.registerFree")}
+                ফ্রি রেজিস্ট্রেশন করুন →
               </Link>
             </div>
           </div>
@@ -176,7 +174,7 @@ export default function LoginPage() {
         {/* Bottom trust badge */}
         <p className="text-center text-xs text-muted-foreground mt-5 flex items-center justify-center gap-1.5">
           <Heart className="h-3 w-3 fill-primary text-primary" />
-          {t("auth.login.trustBadge")}
+          হেলথ ক্লাব — স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী
         </p>
       </div>
     </div>

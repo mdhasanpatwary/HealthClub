@@ -2,12 +2,9 @@
 
 import { useState } from "react";
 import { ChevronDown, HelpCircle, Sparkles } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { HEALTH_TIPS_FAQS } from "@/data/health-tips/healthTipsFaqs";
 
 export function HealthTipsFAQ() {
-  const { locale } = useLanguage();
-  const isEn = locale === "en";
   const [openId, setOpenId] = useState<string | null>("dengue-platelet-threshold");
 
   const toggle = (id: string) => {
@@ -23,20 +20,16 @@ export function HealthTipsFAQ() {
       <div className="text-center space-y-2">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
           <HelpCircle className="h-3.5 w-3.5" />
-          <span>{isEn ? "Direct Medical Answers (AEO)" : "স্বাস্থ্য জিজ্ঞাসা ও সরাসরি উত্তর"}</span>
+          <span>স্বাস্থ্য জিজ্ঞাসা ও সরাসরি উত্তর</span>
         </div>
         <h2
           id="health-tips-faq-heading"
           className="font-heading text-xl sm:text-3xl font-bold text-secondary dark:text-white tracking-tight"
         >
-          {isEn
-            ? "Frequently Asked Health & Medical Questions"
-            : "জরুরি স্বাস্থ্য প্রশ্নোত্তর ও সাধারণ জিজ্ঞাসা"}
+          জরুরি স্বাস্থ্য প্রশ্নোত্তর ও সাধারণ জিজ্ঞাসা
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-          {isEn
-            ? "Concise, doctor-verified answers to common healthcare, disease prevention, and first-aid queries."
-            : "দৈনন্দিন রোগব্যাধি, লক্ষণ ও প্রাথমিক চিকিৎসা বিষয়ে বিশেষজ্ঞ চিকিৎসকদের নির্ভরযোগ্য প্রশ্নোত্তর।"}
+          দৈনন্দিন রোগব্যাধি, লক্ষণ ও প্রাথমিক চিকিৎসা বিষয়ে বিশেষজ্ঞ চিকিৎসকদের নির্ভরযোগ্য প্রশ্নোত্তর।
         </p>
       </div>
 
@@ -62,7 +55,7 @@ export function HealthTipsFAQ() {
               >
                 <div className="flex items-center gap-2.5">
                   <Sparkles className="h-4 w-4 text-primary shrink-0" />
-                  <span className="leading-snug">{isEn ? faq.questionEn : faq.questionBn}</span>
+                  <span className="leading-snug">{faq.questionBn}</span>
                 </div>
                 <ChevronDown
                   className={`h-5 w-5 text-primary shrink-0 transition-transform duration-300 ${
@@ -81,7 +74,7 @@ export function HealthTipsFAQ() {
                 }`}
               >
                 <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground whitespace-pre-line">
-                  {isEn ? faq.answerEn : faq.answerBn}
+                  {faq.answerBn}
                 </p>
               </div>
             </div>
@@ -91,3 +84,4 @@ export function HealthTipsFAQ() {
     </section>
   );
 }
+

@@ -24,7 +24,6 @@ interface EmergencyFilterBarProps {
   onImportClick: () => void;
   onExportClick: () => void;
   onAddClick: () => void;
-  isEn: boolean;
 }
 
 export function EmergencyFilterBar({
@@ -42,7 +41,6 @@ export function EmergencyFilterBar({
   onImportClick,
   onExportClick,
   onAddClick,
-  isEn,
 }: EmergencyFilterBarProps) {
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 border-t border-border">
@@ -52,15 +50,9 @@ export function EmergencyFilterBar({
           <Input
             placeholder={
               activeSubTab === "donors"
-                ? isEn
-                  ? "Search donor by name, phone..."
-                  : "নাম বা মোবাইল নম্বর দিয়ে খুঁজুন..."
+                ? "নাম বা মোবাইল নম্বর দিয়ে খুঁজুন..."
                 : activeSubTab === "ambulances"
-                ? isEn
-                  ? "Search ambulance by agency, area..."
-                  : "অ্যাম্বুলেন্স বা এলাকা খুঁজুন..."
-                : isEn
-                ? "Search hotline or oxygen..."
+                ? "অ্যাম্বুলেন্স বা এলাকা খুঁজুন..."
                 : "হটলাইন বা অক্সিজেন খুঁজুন..."
             }
             value={search}
@@ -76,7 +68,7 @@ export function EmergencyFilterBar({
               onChange={(e) => onGroupChange(e.target.value)}
               className="h-9 px-2.5 text-xs rounded-md border border-border bg-background focus:outline-none"
             >
-              <option value="all">{isEn ? "All Blood Groups" : "সকল রক্তের গ্রুপ"}</option>
+              <option value="all">সকল রক্তের গ্রুপ</option>
               {BLOOD_GROUPS.map((bg) => (
                 <option key={bg} value={bg}>{bg}</option>
               ))}
@@ -89,7 +81,7 @@ export function EmergencyFilterBar({
             >
               {UPAZILAS_FENI.map((u) => (
                 <option key={u.id} value={u.id}>
-                  {isEn ? u.nameEn : u.nameBn}
+                  {u.nameBn}
                 </option>
               ))}
             </select>
@@ -102,9 +94,9 @@ export function EmergencyFilterBar({
             onChange={(e) => onAmbulanceTypeChange(e.target.value)}
             className="h-9 px-2.5 text-xs rounded-md border border-border bg-background focus:outline-none"
           >
-            <option value="all">{isEn ? "All Types" : "সকল ধরন"}</option>
+            <option value="all">সকল ধরন</option>
             {AMBULANCE_TYPES.map((t) => (
-              <option key={t.id} value={t.id}>{isEn ? t.nameEn : t.nameBn}</option>
+              <option key={t.id} value={t.id}>{t.nameBn}</option>
             ))}
           </select>
         )}
@@ -115,9 +107,9 @@ export function EmergencyFilterBar({
             onChange={(e) => onStatusChange(e.target.value)}
             className="h-9 px-2.5 text-xs rounded-md border border-border bg-background focus:outline-none font-medium"
           >
-            <option value="all">{isEn ? "All Status" : "সকল স্ট্যাটাস"}</option>
-            <option value="approved">{isEn ? "Approved Only" : "অনুমোদিত"}</option>
-            <option value="pending">{isEn ? "Pending Approval" : "অপেক্ষমাণ"}</option>
+            <option value="all">সকল স্ট্যাটাস</option>
+            <option value="approved">অনুমোদিত</option>
+            <option value="pending">অপেক্ষমাণ</option>
           </select>
         )}
       </div>
@@ -130,7 +122,7 @@ export function EmergencyFilterBar({
           className="text-xs h-9 font-semibold gap-1.5 border-border"
         >
           <UploadCloud className="h-3.5 w-3.5 text-primary" />
-          <span>{isEn ? "Bulk Import" : "বাল্ক ইম্পোর্ট"}</span>
+          <span>বাল্ক ইম্পোর্ট</span>
         </Button>
 
         <Button
@@ -140,7 +132,7 @@ export function EmergencyFilterBar({
           className="text-xs h-9 font-semibold gap-1.5 border-border"
         >
           <Download className="h-3.5 w-3.5" />
-          <span>{isEn ? "Export" : "এক্সপোর্ট"}</span>
+          <span>এক্সপোর্ট</span>
         </Button>
 
         {activeSubTab === "donors" && (
@@ -150,7 +142,7 @@ export function EmergencyFilterBar({
             className="bg-rose-600 hover:bg-rose-700 text-white text-xs h-9 font-bold gap-1"
           >
             <Plus className="h-4 w-4" />
-            <span>{isEn ? "Add Donor" : "রক্তদাতা যুক্ত করুন"}</span>
+            <span>রক্তদাতা যুক্ত করুন</span>
           </Button>
         )}
 
@@ -161,7 +153,7 @@ export function EmergencyFilterBar({
             className="bg-cyan-600 hover:bg-cyan-700 text-white text-xs h-9 font-bold gap-1"
           >
             <Plus className="h-4 w-4" />
-            <span>{isEn ? "Add Ambulance" : "অ্যাম্বুলেন্স যুক্ত করুন"}</span>
+            <span>অ্যাম্বুলেন্স যুক্ত করুন</span>
           </Button>
         )}
 
@@ -172,7 +164,7 @@ export function EmergencyFilterBar({
             className="bg-primary hover:bg-primary-dark text-white text-xs h-9 font-bold gap-1"
           >
             <Plus className="h-4 w-4" />
-            <span>{isEn ? "Add Hotline" : "হটলাইন যুক্ত করুন"}</span>
+            <span>হটলাইন যুক্ত করুন</span>
           </Button>
         )}
       </div>

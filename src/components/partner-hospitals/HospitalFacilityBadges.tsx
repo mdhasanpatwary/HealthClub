@@ -18,7 +18,6 @@ import {
   ReceiptText,
 } from "lucide-react";
 import { Partner } from "@/services/db";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { getResolvedFacilities } from "@/lib/facilities";
 
 interface HospitalFacilityBadgesProps {
@@ -138,31 +137,19 @@ const DEFAULT_STYLE = {
 };
 
 export default function HospitalFacilityBadges({ partner }: HospitalFacilityBadgesProps) {
-  const { locale } = useLanguage();
-  const isEn = locale === "en";
   const isDiagnostic = partner.category === "diagnostic";
   const isPharmacy = partner.category === "pharmacy";
 
   const activeFacilities = getResolvedFacilities(partner);
 
   const sectionTitle = isPharmacy
-    ? isEn
-      ? "Pharmacy & Medicine Services"
-      : "ফার্মেসি ও ঔষধ সেবার সুবিধাসমূহ"
+    ? "ফার্মেসি ও ঔষধ সেবার সুবিধাসমূহ"
     : isDiagnostic
-    ? isEn
-      ? "Diagnostic & Pathology Highlights"
-      : "ডায়াগনস্টিক ও ল্যাব সুবিধাসমূহ"
-    : isEn
-    ? "Hospital & Facility Highlights"
+    ? "ডায়াগনস্টিক ও ল্যাব সুবিধাসমূহ"
     : "হাসপাতাল ও চিকিৎসাসেবার সুবিধাসমূহ";
 
   const sectionSubtitle = isPharmacy
-    ? isEn
-      ? "Verified medicine quality standards and services at this pharmacy"
-      : "এই ফার্মেসিতে ঔষধ সংরক্ষণ ও গুণগত মান নিশ্চিতকরণ সুবিধাসমূহ"
-    : isEn
-    ? "Verified modern medical facilities available for patients"
+    ? "এই ফার্মেসিতে ঔষধ সংরক্ষণ ও গুণগত মান নিশ্চিতকরণ সুবিধাসমূহ"
     : "রোগীদের সেবায় প্রতিষ্ঠানের বিদ্যমান ভেরিফাইড চিকিৎসাসেবা সমূহ";
 
   if (activeFacilities.length === 0) {
@@ -198,12 +185,12 @@ export default function HospitalFacilityBadges({ partner }: HospitalFacilityBadg
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5 flex-wrap">
                   <h3 className="text-xs sm:text-sm font-bold text-foreground truncate font-heading">
-                    {isEn ? f.nameEn : f.nameBn}
+                    {f.nameBn}
                   </h3>
                   <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0" />
                 </div>
                 <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed mt-0.5">
-                  {isEn ? f.descEn : f.descBn}
+                  {f.descBn}
                 </p>
               </div>
             </div>

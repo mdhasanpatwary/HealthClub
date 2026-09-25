@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-import { formatNum } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -25,9 +24,6 @@ interface PwaDevicesTableProps {
 }
 
 export function PwaDevicesTable({ devices }: PwaDevicesTableProps) {
-  const { locale, t } = useLanguage();
-  const isBn = locale === "bn";
-
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive" | "browser">("all");
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -52,13 +48,13 @@ export function PwaDevicesTable({ devices }: PwaDevicesTableProps) {
   const handleCopyId = (id: string) => {
     navigator.clipboard.writeText(id);
     setCopiedId(id);
-    toast.success(isBn ? "ডিভাইস আইডি কপি হয়েছে" : "Device ID copied to clipboard");
+    toast.success("ডিভাইস আইডি কপি হয়েছে");
     setTimeout(() => setCopiedId(null), 2000);
   };
 
   const handleExportCsv = () => {
     if (devices.length === 0) {
-      toast.error(isBn ? "এক্সপোর্ট করার মতো কোনো ডেটা নেই" : "No data to export");
+      toast.error("এক্সপোর্ট করার মতো কোনো ডেটা নেই");
       return;
     }
 
@@ -83,13 +79,13 @@ export function PwaDevicesTable({ devices }: PwaDevicesTableProps) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    toast.success(isBn ? "CSV ডাউনলোড সম্পন্ন হয়েছে" : "CSV exported successfully");
+    toast.success("CSV ডাউনলোড সম্পন্ন হয়েছে");
   };
 
   const formatDate = (dateStr: string) => {
     try {
       const d = new Date(dateStr);
-      return d.toLocaleDateString(isBn ? "bn-BD" : "en-US", {
+      return d.toLocaleDateString("bn-BD", {
         month: "short",
         day: "numeric",
         year: "numeric",
@@ -109,10 +105,10 @@ export function PwaDevicesTable({ devices }: PwaDevicesTableProps) {
           <div>
             <h3 className="font-heading text-base font-bold text-foreground flex items-center gap-2">
               <Smartphone className="h-5 w-5 text-emerald-500" />
-              {t("admin.pwa.deviceLog") || "ডিভাইস ও সেশন লগ"}
+              ডিভাইস ও সেশন লগ
             </h3>
             <p className="text-xs text-muted-foreground mt-0.5">
-              {isBn ? `মোট ${formatNum(filteredDevices.length, locale)} টি রেকর্ড প্রদর্শিত` : `Showing ${formatNum(filteredDevices.length, locale)} device records`}
+              মোট {toBanglaNums(filteredDevices.length)} টি রেকর্ড প্রদর্শিত
             </p>
           </div>
 
@@ -121,10 +117,10 @@ export function PwaDevicesTable({ devices }: PwaDevicesTableProps) {
               onClick={handleExportCsv}
               variant="outline"
               size="sm"
-              className="h-9 text-xs gap-1.5 border-border"
+              className="h-9 text-xs gap-1.5 border-border cursor-pointer"
             >
               <Download className="h-3.5 w-3.5" />
-              <span>{t("admin.pwa.exportCsv") || "CSV ডাউনলোড"}</span>
+              <span>CSV ডাউনলোড</span>
             </Button>
           </div>
         </div>
@@ -136,8 +132,8 @@ export function PwaDevicesTable({ devices }: PwaDevicesTableProps) {
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              aria-label={t("admin.pwa.searchPlaceholder") || "ডিভাইস আইডি, ওএস বা ব্রাউজার খুঁজুন"}
-              placeholder={t("admin.pwa.searchPlaceholder") || "ডিভাইস আইডি, ওএস বা ব্রাউজার খুঁজুন..."}
+              aria-label="ডিভাইস আইডি, ওএস বা ব্রাউজার খুঁজুন"
+              placeholder="ডিভাইস আইডি, ওএস বা ব্রাউজার খুঁজুন..."
               className="pl-9 h-9 text-xs bg-background"
             />
           </div>
@@ -154,7 +150,7 @@ export function PwaDevicesTable({ devices }: PwaDevicesTableProps) {
                   : "bg-muted hover:bg-muted/80 text-muted-foreground"
               }`}
             >
-              {t("admin.pwa.filterAll") || "সকল"}
+              সকল
             </button>
             <button
               type="button"
@@ -167,7 +163,7 @@ export function PwaDevicesTable({ devices }: PwaDevicesTableProps) {
                   : "bg-muted hover:bg-muted/80 text-muted-foreground"
               }`}
             >
-              {t("admin.pwa.filterActive") || "সক্রিয় স্ট্যান্ডঅ্যালোন"}
+              সক্রিয় স্ট্যান্ডঅ্যালোন
             </button>
             <button
               type="button"
@@ -180,7 +176,7 @@ export function PwaDevicesTable({ devices }: PwaDevicesTableProps) {
                   : "bg-muted hover:bg-muted/80 text-muted-foreground"
               }`}
             >
-              {t("admin.pwa.filterInactive") || "নিষ্ক্রিয় / আনইনস্টল"}
+              নিষ্ক্রিয় / আনইনস্টল
             </button>
             <button
               type="button"
@@ -193,7 +189,7 @@ export function PwaDevicesTable({ devices }: PwaDevicesTableProps) {
                   : "bg-muted hover:bg-muted/80 text-muted-foreground"
               }`}
             >
-              {t("admin.pwa.filterBrowser") || "ব্রাউজার"}
+              ব্রাউজার
             </button>
           </div>
         </div>
@@ -203,12 +199,12 @@ export function PwaDevicesTable({ devices }: PwaDevicesTableProps) {
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="bg-muted/50 border-b border-border text-muted-foreground font-semibold">
-                <th className="p-3 whitespace-nowrap">{t("admin.pwa.colDeviceId") || "ডিভাইস আইডি"}</th>
-                <th className="p-3 whitespace-nowrap">{t("admin.pwa.colPlatform") || "প্ল্যাটফর্ম ও ব্রাউজার"}</th>
-                <th className="p-3 whitespace-nowrap">{t("admin.pwa.colStatus") || "স্ট্যাটাস"}</th>
-                <th className="p-3 whitespace-nowrap">{t("admin.pwa.colInstalled") || "প্রথম রেকর্ড"}</th>
-                <th className="p-3 whitespace-nowrap">{t("admin.pwa.colLastActive") || "সর্বশেষ সক্রিয়"}</th>
-                <th className="p-3 whitespace-nowrap text-right">{t("admin.pwa.colSessions") || "সেশন"}</th>
+                <th className="p-3 whitespace-nowrap">ডিভাইস আইডি</th>
+                <th className="p-3 whitespace-nowrap">প্ল্যাটফর্ম ও ব্রাউজার</th>
+                <th className="p-3 whitespace-nowrap">স্ট্যাটাস</th>
+                <th className="p-3 whitespace-nowrap">প্রথম রেকর্ড</th>
+                <th className="p-3 whitespace-nowrap">সর্বশেষ সক্রিয়</th>
+                <th className="p-3 whitespace-nowrap text-right">সেশন</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60">
@@ -250,17 +246,17 @@ export function PwaDevicesTable({ devices }: PwaDevicesTableProps) {
                       {device.status === "active" ? (
                         <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30 gap-1 text-[10px]">
                           <CheckCircle2 className="h-3 w-3" />
-                          {isBn ? "সক্রিয় স্ট্যান্ডঅ্যালোন" : "Active PWA"}
+                          সক্রিয় স্ট্যান্ডঅ্যালোন
                         </Badge>
                       ) : device.status === "inactive" ? (
                         <Badge variant="outline" className="bg-slate-500/15 text-slate-600 dark:text-slate-400 border-slate-500/30 gap-1 text-[10px]">
                           <Clock className="h-3 w-3" />
-                          {isBn ? "নিষ্ক্রিয় (>৩০ দিন)" : "Inactive (>30d)"}
+                          নিষ্ক্রিয় (&gt;৩০ দিন)
                         </Badge>
                       ) : (
                         <Badge variant="secondary" className="bg-blue-500/15 text-blue-700 dark:text-blue-300 border-blue-500/30 gap-1 text-[10px]">
                           <Globe className="h-3 w-3" />
-                          {isBn ? "ওয়েব ব্রাউজার" : "Browser"}
+                          ওয়েব ব্রাউজার
                         </Badge>
                       )}
                     </td>
@@ -277,14 +273,14 @@ export function PwaDevicesTable({ devices }: PwaDevicesTableProps) {
 
                     {/* Session Count */}
                     <td className="p-3 whitespace-nowrap text-right font-mono font-bold text-foreground">
-                      {formatNum(device.sessionCount, locale)}
+                      {toBanglaNums(device.sessionCount)}
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
                   <td colSpan={6} className="p-8 text-center text-muted-foreground text-xs">
-                    {t("admin.pwa.noData") || "এখনো কোনো PWA ডিভাইস ডেটা পাওয়া যায়নি।"}
+                    এখনো কোনো PWA ডিভাইস ডেটা পাওয়া যায়নি।
                   </td>
                 </tr>
               )}

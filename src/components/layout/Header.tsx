@@ -1,15 +1,14 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Languages, Globe, Sun, Moon } from "lucide-react";
+import { Menu, X, Globe, Sun, Moon } from "lucide-react";
 import Image from "next/image";
 import { authStore } from "@/services/authStore";
 import { Member, Partner } from "@/services/db";
 import dynamic from "next/dynamic";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { useTheme } from "@/components/layout/ThemeProvider";
 import { isAdminUser } from "@/lib/permissions";
 
@@ -37,13 +36,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const [prevPathname, setPrevPathname] = useState(pathname);
-  const { locale, setLocale, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
-
-  const tRef = useRef(t);
-  useEffect(() => {
-    tRef.current = t;
-  }, [t]);
 
   // Close mobile drawer on navigation during render to avoid cascading effect
   if (pathname !== prevPathname) {
@@ -84,7 +77,7 @@ export default function Header() {
       if (customEvent.detail?.memberId && current && customEvent.detail.memberId === current.id) {
         await authStore.logout();
         const { toast } = await import("sonner");
-        toast.error(tRef.current("dashboard.accountTerminated"));
+        toast.error("আপনার অ্যাকাউন্টটি আর সক্রিয় নেই অথবা মুছে ফেলা হয়েছে।");
         window.location.href = "/login";
       }
     };
@@ -141,8 +134,8 @@ export default function Header() {
               />
             </div>
             <span className="font-heading text-lg sm:text-xl font-bold tracking-tight text-secondary dark:text-white">
-              {t("layout.header.health")}{" "}
-              <span className="gradient-text">{t("layout.header.club")}</span>
+              হেলথ{" "}
+              <span className="gradient-text">ক্লাব</span>
             </span>
           </Link>
 
@@ -158,8 +151,8 @@ export default function Header() {
                 <Link
                   href="/"
                   className="inline-flex items-center justify-center size-8 rounded-lg text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-background/80 transition-all"
-                  title={t("admin.nav.viewSite") || "পাবলিক ওয়েবসাইট দেখুন"}
-                  aria-label={t("admin.nav.viewSite") || "পাবলিক ওয়েবসাইট দেখুন"}
+                  title="পাবলিক ওয়েবসাইট দেখুন"
+                  aria-label="পাবলিক ওয়েবসাইট দেখুন"
                 >
                   <Globe className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                 </Link>
@@ -170,18 +163,6 @@ export default function Header() {
 
               {/* Member Notification Bell (Shown when logged in as member in public/dashboard mode) */}
               {!isAdminMode && user && !isAdmin && <MemberNotificationBell />}
-
-              {/* Language Switcher Button */}
-              <Button
-                variant="ghost"
-                size="icon-xs"
-                onClick={() => setLocale(locale === "bn" ? "en" : "bn")}
-                className="size-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-background/80 transition-all"
-                aria-label={locale === "bn" ? "Switch to English" : "বাংলায় পরিবর্তন করুন"}
-                title={locale === "bn" ? "English" : "বাংলা"}
-              >
-                <Languages className="h-4 w-4" />
-              </Button>
 
               {/* Theme Toggle Button */}
               <Button
@@ -214,7 +195,7 @@ export default function Header() {
                     className: "text-muted-foreground hover:text-foreground rounded-xl font-semibold",
                   })}
                 >
-                  {t("layout.header.login")}
+                  লগইন
                 </Link>
                 <Link
                   href="/register"
@@ -223,7 +204,7 @@ export default function Header() {
                     className: "rounded-xl font-bold",
                   })}
                 >
-                  {t("layout.header.becomeMember")}
+                  সদস্য হোন
                 </Link>
               </>
             )}

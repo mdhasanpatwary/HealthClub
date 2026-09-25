@@ -64,7 +64,6 @@ export function DoctorDialog({
   newDoctor,
   setNewDoctor,
   onSubmit,
-  t = (k) => k,
 }: DoctorDialogProps) {
   return (
     <Dialog
@@ -76,7 +75,7 @@ export function DoctorDialog({
       <DialogContent className="border-border bg-background max-h-[92vh] overflow-y-auto w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl p-5 sm:p-7">
         <DialogHeader>
           <DialogTitle className="font-heading font-bold text-secondary text-lg sm:text-xl">
-            {editingDoctor ? t("admin.doctors.editTitle") : t("admin.doctors.addTitle")}
+            {editingDoctor ? "ডাক্তার সম্পাদনা করুন" : "নতুন ডাক্তার যুক্ত করুন"}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={onSubmit} className="space-y-4 pt-2">
@@ -297,14 +296,14 @@ export function DoctorDialog({
           {/* Availability & Chamber Notices Section */}
           <div className="p-4 bg-muted/20 border border-border/80 rounded-2xl space-y-4">
             <h4 className="text-xs font-bold text-secondary uppercase tracking-wider">
-              {t("admin.doctors.status") || "চেম্বার উপস্থিতি ও বিশেষ বিজ্ঞপ্তি"}
+              চেম্বার উপস্থিতি ও বিশেষ বিজ্ঞপ্তি
             </h4>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
               <div className="flex items-center justify-between p-3 bg-background border border-border/80 rounded-xl">
                 <div>
                   <label htmlFor="admin-doc-available-today" className="text-xs font-bold text-foreground block cursor-pointer">
-                    {t("admin.doctors.availableToday") || "আজ চেম্বার খোলা আছে"}
+                    আজ চেম্বার খোলা আছে
                   </label>
                   <span className="text-[10px] text-muted-foreground">
                     {newDoctor.availableToday ? "রোগীদের জন্য আজ চেম্বার খোলা দেখাবে" : "আজ চেম্বার বন্ধ দেখাবে"}
@@ -321,7 +320,7 @@ export function DoctorDialog({
 
               <div className="space-y-1.5">
                 <label htmlFor="admin-doc-onleaveuntil" className="text-xs font-semibold text-secondary cursor-pointer">
-                  {t("admin.doctors.onLeaveUntil") || "ছুটির শেষ তারিখ (ঐচ্ছিক)"}
+                  ছুটির শেষ তারিখ (ঐচ্ছিক)
                 </label>
                 <Input
                   id="admin-doc-onleaveuntil"
@@ -335,7 +334,7 @@ export function DoctorDialog({
 
             <div className="space-y-1.5">
               <label htmlFor="admin-doc-notice" className="text-xs font-semibold text-secondary cursor-pointer">
-                {t("admin.doctors.notice") || "চেম্বার সংক্রান্ত বিশেষ বিজ্ঞপ্তি (ঐচ্ছিক)"}
+                চেম্বার সংক্রান্ত বিশেষ বিজ্ঞপ্তি (ঐচ্ছিক)
               </label>
               <Input
                 id="admin-doc-notice"

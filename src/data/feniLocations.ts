@@ -25,18 +25,12 @@ export const VALID_UPAZILA_IDS = [
 
 export type UpazilaId = (typeof VALID_UPAZILA_IDS)[number];
 
-/**
- * Returns localized name for an upazila ID
- */
-export function getUpazilaLabel(upazilaId?: string | null, locale = "bn"): string {
+export function getUpazilaLabel(upazilaId?: string | null): string {
   if (!upazilaId) {
-    return locale === "en" ? "Feni Sadar" : "ফেনী সদর";
+    return "ফেনী সদর";
   }
   const match = FENI_UPAZILAS.find((u) => u.id === upazilaId);
-  if (!match) {
-    return locale === "en" ? "Feni Sadar" : "ফেনী সদর";
-  }
-  return locale === "en" ? match.nameEn : match.nameBn;
+  return match ? match.nameBn : "ফেনী সদর";
 }
 
 /**

@@ -35,13 +35,13 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { toBanglaNums } from "@/lib/utils";
 import { toast } from "sonner";
 
 interface PartnerFacilitiesCardProps {
   facilities: PartnerFacilityItem[];
   onChange: (facilities: PartnerFacilityItem[]) => void;
   category: Partner["category"];
-  isEn?: boolean;
 }
 
 const ICON_MAP: Record<string, typeof ShieldAlert> = {
@@ -65,7 +65,6 @@ export function PartnerFacilitiesCard({
   facilities,
   onChange,
   category,
-  isEn = false,
 }: PartnerFacilitiesCardProps) {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [customNameBn, setCustomNameBn] = useState("");
@@ -85,22 +84,14 @@ export function PartnerFacilitiesCard({
   const handleRemoveCustom = (id: string, nameBn: string) => {
     const updated = facilities.filter((f) => f.id !== id);
     onChange(updated);
-    toast.success(
-      isEn
-        ? `"${nameBn}" facility removed`
-        : `"${nameBn}" সুবিধাটি মুছে ফেলা হয়েছে`
-    );
+    toast.success(`"${nameBn}" সুবিধাটি মুছে ফেলা হয়েছে`);
   };
 
   const handleAddCustom = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedBn = customNameBn.trim();
     if (!trimmedBn) {
-      toast.error(
-        isEn
-          ? "Please provide facility name in Bengali"
-          : "অনুগ্রহ করে সুবিধার বাংলা নাম লিখুন"
-      );
+      toast.error("অনুগ্রহ করে সুবিধার বাংলা নাম লিখুন");
       return;
     }
 
@@ -122,24 +113,14 @@ export function PartnerFacilitiesCard({
     setCustomDescBn("");
     setCustomDescEn("");
     setIsAddOpen(false);
-    toast.success(
-      isEn
-        ? `"${trimmedBn}" facility added successfully!`
-        : `"${trimmedBn}" সুবিধা সফলভাবে যুক্ত করা হয়েছে!`
-    );
+    toast.success(`"${trimmedBn}" সুবিধা সফলভাবে যুক্ত করা হয়েছে!`);
   };
 
   const cardTitle =
     category === "pharmacy"
-      ? isEn
-        ? "Pharmacy Services & Quality Standards"
-        : "ফার্মেসি ও ঔষধ সেবার সুবিধাসমূহ"
+      ? "ফার্মেসি ও ঔষধ সেবার সুবিধাসমূহ"
       : category === "diagnostic"
-      ? isEn
-        ? "Diagnostic & Lab Facilities"
-        : "ডায়াগনস্টিক ও ল্যাব সুবিধাসমূহ"
-      : isEn
-      ? "Hospital & Healthcare Facilities"
+      ? "ডায়াগনস্টিক ও ল্যাব সুবিধাসমূহ"
       : "হাসপাতাল ও চিকিৎসাসেবার সুবিধাসমূহ";
 
   return (
@@ -154,9 +135,7 @@ export function PartnerFacilitiesCard({
               </CardTitle>
             </div>
             <CardDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              {isEn
-                ? "Turn ON/OFF facilities available at your institution. Active facilities will display directly on your public page."
-                : "আপনার প্রতিষ্ঠানে বিদ্যমান সুবিধাগুলো চালু বা বন্ধ রাখুন। সক্রিয় সুবিধাগুলো পাবলিক প্রোফাইলে প্রদর্শিত হবে।"}
+              আপনার প্রতিষ্ঠানে বিদ্যমান সুবিধাগুলো চালু বা বন্ধ রাখুন। সক্রিয় সুবিধাগুলো পাবলিক প্রোফাইলে প্রদর্শিত হবে।
             </CardDescription>
           </div>
 
@@ -166,7 +145,7 @@ export function PartnerFacilitiesCard({
               className="bg-primary/10 text-primary border-primary/20 text-xs px-2.5 py-1 font-semibold"
             >
               <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
-              {activeCount} {isEn ? "Active" : "সক্রিয়"}
+              {toBanglaNums(activeCount)} টি সক্রিয়
             </Badge>
 
             <Button
@@ -177,7 +156,7 @@ export function PartnerFacilitiesCard({
               className="text-xs h-8 cursor-pointer hover:border-primary hover:text-primary transition-colors"
             >
               <Plus className="h-3.5 w-3.5 mr-1" />
-              {isEn ? "Add Custom" : "অতিরিক্ত সুবিধা"}
+              অতিরিক্ত সুবিধা
             </Button>
           </div>
         </div>
@@ -211,19 +190,19 @@ export function PartnerFacilitiesCard({
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <p className="text-xs sm:text-sm font-semibold text-foreground truncate">
-                        {isEn ? facility.nameEn : facility.nameBn}
+                        {facility.nameBn || facility.nameEn}
                       </p>
                       {facility.isCustom && (
                         <Badge
                           variant="secondary"
                           className="text-[10px] px-1.5 py-0 h-4 bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20"
                         >
-                          {isEn ? "Custom" : "কাস্টম"}
+                          কাস্টম
                         </Badge>
                       )}
                     </div>
                     <p className="text-[11px] text-muted-foreground line-clamp-1 mt-0.5">
-                      {isEn ? facility.descEn : facility.descBn}
+                      {facility.descBn || facility.descEn}
                     </p>
                   </div>
                 </div>
@@ -236,7 +215,7 @@ export function PartnerFacilitiesCard({
                       size="icon"
                       onClick={() => handleRemoveCustom(facility.id, facility.nameBn)}
                       className="h-7 w-7 text-muted-foreground hover:text-red-500 transition-colors cursor-pointer"
-                      title={isEn ? "Remove" : "মুছুন"}
+                      title="মুছুন"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </Button>
@@ -258,19 +237,17 @@ export function PartnerFacilitiesCard({
         <DialogContent className="sm:max-w-md bg-background border-border">
           <DialogHeader>
             <DialogTitle className="text-base font-bold font-heading text-secondary dark:text-white">
-              {isEn ? "Add Custom Facility / Service" : "অতিরিক্ত সুবিধা বা সেবা যুক্ত করুন"}
+              অতিরিক্ত সুবিধা বা সেবা যুক্ত করুন
             </DialogTitle>
             <DialogDescription className="text-xs text-muted-foreground">
-              {isEn
-                ? "Enter your institution's specialized service details."
-                : "আপনার প্রতিষ্ঠানের নিজস্ব বা বিশেষায়িত সেবার তথ্য লিখুন।"}
+              আপনার প্রতিষ্ঠানের নিজস্ব বা বিশেষায়িত সেবার তথ্য লিখুন।
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleAddCustom} className="space-y-3 pt-2">
             <div className="space-y-1">
               <label className="text-xs font-semibold text-foreground">
-                {isEn ? "Facility Name (Bengali) *" : "সুবিধার নাম (বাংলা) *"}
+                সুবিধার নাম (বাংলা) *
               </label>
               <Input
                 placeholder="উদাঃ আধুনিক ডেন্টাল ইউনিট, এনআইসিইউ"
@@ -283,7 +260,7 @@ export function PartnerFacilitiesCard({
 
             <div className="space-y-1">
               <label className="text-xs font-semibold text-foreground">
-                {isEn ? "Facility Name (English)" : "সুবিধার নাম (ইংরেজি - ঐচ্ছিক)"}
+                সুবিধার নাম (ইংরেজি - ঐচ্ছিক)
               </label>
               <Input
                 placeholder="e.g. Modern Dental Unit, NICU"
@@ -295,7 +272,7 @@ export function PartnerFacilitiesCard({
 
             <div className="space-y-1">
               <label className="text-xs font-semibold text-foreground">
-                {isEn ? "Short Description (Bengali)" : "সংক্ষিপ্ত বিবরণ (বাংলা - ঐচ্ছিক)"}
+                সংক্ষিপ্ত বিবরণ (বাংলা - ঐচ্ছিক)
               </label>
               <Input
                 placeholder="উদাঃ অভিজ্ঞ ডেন্টিস্ট দ্বারা আধুনিক দাঁতের চিকিৎসা"
@@ -307,7 +284,7 @@ export function PartnerFacilitiesCard({
 
             <div className="space-y-1">
               <label className="text-xs font-semibold text-foreground">
-                {isEn ? "Short Description (English)" : "সংক্ষিপ্ত বিবরণ (ইংরেজি - ঐচ্ছিক)"}
+                সংক্ষিপ্ত বিবরণ (ইংরেজি - ঐচ্ছিক)
               </label>
               <Input
                 placeholder="e.g. Advanced dental and oral care by specialists"
@@ -325,7 +302,7 @@ export function PartnerFacilitiesCard({
                 onClick={() => setIsAddOpen(false)}
                 className="text-xs h-8 cursor-pointer"
               >
-                {isEn ? "Cancel" : "বাতিল"}
+                বাতিল
               </Button>
               <Button
                 type="submit"
@@ -333,7 +310,7 @@ export function PartnerFacilitiesCard({
                 className="text-xs h-8 bg-primary hover:bg-primary/90 text-white cursor-pointer"
               >
                 <Plus className="h-3.5 w-3.5 mr-1" />
-                {isEn ? "Add Facility" : "সুবিধা যোগ করুন"}
+                সুবিধা যোগ করুন
               </Button>
             </DialogFooter>
           </form>

@@ -10,9 +10,7 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { formatNum, Locale } from "@/lib/i18n";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-import { cn } from "@/lib/utils";
+import { cn, toBanglaNums } from "@/lib/utils";
 
 export interface PaginationProps {
   currentPage: number;
@@ -22,8 +20,6 @@ export interface PaginationProps {
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (size: number) => void;
   pageSizeOptions?: number[];
-  locale?: Locale;
-  t?: (key: string) => string;
   itemLabel?: string;
   className?: string;
   disabled?: boolean;
@@ -38,17 +34,11 @@ export function Pagination({
   onPageChange,
   onPageSizeChange,
   pageSizeOptions = [10, 20, 50, 100],
-  locale: propLocale,
-  t: propT,
   itemLabel,
   className,
   disabled = false,
   getPageUrl,
 }: PaginationProps) {
-  const lang = useLanguage();
-  const locale = propLocale || lang.locale || "bn";
-  const t = propT || lang.t;
-
   const safeTotalPages = Math.max(1, totalPages);
   const safeCurrentPage = Math.min(Math.max(1, currentPage), safeTotalPages);
 
@@ -90,8 +80,6 @@ export function Pagination({
 
   const pageNumbers = getPageNumbers();
 
-  const isEn = locale === "en";
-
   return (
     <div
       className={cn(
@@ -102,54 +90,36 @@ export function Pagination({
       {/* Left: Summary text & Page Size Selector */}
       <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 w-full sm:w-auto text-muted-foreground">
         <div>
-          {isEn ? (
-            <span>
-              {t("pagination.showing")}{" "}
-              <span className="font-semibold text-foreground">
-                {formatNum(startItem, locale)}
-              </span>
-              {" – "}
-              <span className="font-semibold text-foreground">
-                {formatNum(endItem, locale)}
-              </span>{" "}
-              {t("pagination.entriesOf")}{" "}
-              <span className="font-semibold text-foreground">
-                {formatNum(totalItems, locale)}
-              </span>{" "}
-              {itemLabel || t("admin.pagination.entries")}
+          <span>
+            মোট{" "}
+            <span className="font-semibold text-foreground">
+              {toBanglaNums(totalItems)}
+            </span>{" "}
+            {itemLabel || "টি এন্ট্রি"} এর মধ্যে{" "}
+            <span className="font-semibold text-foreground">
+              {toBanglaNums(startItem)}
             </span>
-          ) : (
-            <span>
-              {t("pagination.total")}{" "}
-              <span className="font-semibold text-foreground">
-                {formatNum(totalItems, locale)}
-              </span>{" "}
-              {itemLabel || t("pagination.entriesOf")}{" "}
-              <span className="font-semibold text-foreground">
-                {formatNum(startItem, locale)}
-              </span>
-              –
-              <span className="font-semibold text-foreground">
-                {formatNum(endItem, locale)}
-              </span>{" "}
-              {t("pagination.showing")}
-            </span>
-          )}
+            –
+            <span className="font-semibold text-foreground">
+              {toBanglaNums(endItem)}
+            </span>{" "}
+            দেখাচ্ছে
+          </span>
         </div>
 
         {onPageSizeChange && (
           <div className="flex items-center gap-1.5 pl-2 sm:border-l border-border">
-            <span className="text-xs">{t("admin.pagination.perPage")}:</span>
+            <span className="text-xs">প্রতি পেজে:</span>
             <select
               value={pageSize}
               onChange={(e) => onPageSizeChange(Number(e.target.value))}
               disabled={disabled}
-              aria-label={t("admin.pagination.perPage")}
+              aria-label="প্রতি পেজে"
               className="h-8 px-2 rounded-lg border border-border bg-background text-xs font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer disabled:opacity-50"
             >
               {pageSizeOptions.map((opt) => (
                 <option key={opt} value={opt}>
-                  {formatNum(opt, locale)}
+                  {toBanglaNums(opt)}
                 </option>
               ))}
             </select>
@@ -165,8 +135,8 @@ export function Pagination({
             variant="outline"
             size="icon-xs"
             disabled
-            aria-label={t("admin.pagination.first")}
-            title={t("admin.pagination.first")}
+            aria-label="প্রথম পেজ"
+            title="প্রথম পেজ"
             className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground opacity-40 cursor-not-allowed"
           >
             <ChevronsLeft className="h-4 w-4" />
@@ -175,8 +145,8 @@ export function Pagination({
           <Link
             href={getPageUrl(1)}
             onClick={() => onPageChange?.(1)}
-            aria-label={t("admin.pagination.first")}
-            title={t("admin.pagination.first")}
+            aria-label="প্রথম পেজ"
+            title="প্রথম পেজ"
             className={cn(
               buttonVariants({ variant: "outline", size: "icon-xs" }),
               "h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground"
@@ -189,8 +159,8 @@ export function Pagination({
             variant="outline"
             size="icon-xs"
             onClick={() => onPageChange?.(1)}
-            aria-label={t("admin.pagination.first")}
-            title={t("admin.pagination.first")}
+            aria-label="প্রথম পেজ"
+            title="প্রথম পেজ"
             className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground"
           >
             <ChevronsLeft className="h-4 w-4" />
@@ -203,8 +173,8 @@ export function Pagination({
             variant="outline"
             size="icon-xs"
             disabled
-            aria-label={t("admin.pagination.prev")}
-            title={t("admin.pagination.prev")}
+            aria-label="পূর্ববর্তী পেজ"
+            title="পূর্ববর্তী পেজ"
             className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground opacity-40 cursor-not-allowed"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -213,8 +183,8 @@ export function Pagination({
           <Link
             href={getPageUrl(safeCurrentPage - 1)}
             onClick={() => onPageChange?.(safeCurrentPage - 1)}
-            aria-label={t("admin.pagination.prev")}
-            title={t("admin.pagination.prev")}
+            aria-label="পূর্ববর্তী পেজ"
+            title="পূর্ববর্তী পেজ"
             className={cn(
               buttonVariants({ variant: "outline", size: "icon-xs" }),
               "h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground"
@@ -227,8 +197,8 @@ export function Pagination({
             variant="outline"
             size="icon-xs"
             onClick={() => onPageChange?.(safeCurrentPage - 1)}
-            aria-label={t("admin.pagination.prev")}
-            title={t("admin.pagination.prev")}
+            aria-label="পূর্ববর্তী পেজ"
+            title="পূর্ববর্তী পেজ"
             className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -237,12 +207,12 @@ export function Pagination({
 
         {/* Mobile Compact Page Indicator */}
         <div className="flex sm:hidden items-center px-2 font-medium text-xs text-foreground">
-          <span>{t("admin.pagination.page")}</span>&nbsp;
+          <span>পেজ</span>&nbsp;
           <span className="font-bold text-primary">
-            {formatNum(safeCurrentPage, locale)}
+            {toBanglaNums(safeCurrentPage)}
           </span>
           &nbsp;/&nbsp;
-          <span>{formatNum(safeTotalPages, locale)}</span>
+          <span>{toBanglaNums(safeTotalPages)}</span>
         </div>
 
         {/* Desktop Page Numbers */}
@@ -279,7 +249,7 @@ export function Pagination({
                       : "border-border text-foreground hover:bg-muted"
                   )}
                 >
-                  {formatNum(page, locale)}
+                  {toBanglaNums(page)}
                 </Link>
               );
             }
@@ -300,7 +270,7 @@ export function Pagination({
                   disabled && "opacity-50 cursor-not-allowed"
                 )}
               >
-                {formatNum(page, locale)}
+                {toBanglaNums(page)}
               </Button>
             );
           })}
@@ -312,8 +282,8 @@ export function Pagination({
             variant="outline"
             size="icon-xs"
             disabled
-            aria-label={t("admin.pagination.next")}
-            title={t("admin.pagination.next")}
+            aria-label="পরবর্তী পেজ"
+            title="পরবর্তী পেজ"
             className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground opacity-40 cursor-not-allowed"
           >
             <ChevronRight className="h-4 w-4" />
@@ -322,8 +292,8 @@ export function Pagination({
           <Link
             href={getPageUrl(safeCurrentPage + 1)}
             onClick={() => onPageChange?.(safeCurrentPage + 1)}
-            aria-label={t("admin.pagination.next")}
-            title={t("admin.pagination.next")}
+            aria-label="পরবর্তী পেজ"
+            title="পরবর্তী পেজ"
             className={cn(
               buttonVariants({ variant: "outline", size: "icon-xs" }),
               "h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground"
@@ -336,8 +306,8 @@ export function Pagination({
             variant="outline"
             size="icon-xs"
             onClick={() => onPageChange?.(safeCurrentPage + 1)}
-            aria-label={t("admin.pagination.next")}
-            title={t("admin.pagination.next")}
+            aria-label="পরবর্তী পেজ"
+            title="পরবর্তী পেজ"
             className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground"
           >
             <ChevronRight className="h-4 w-4" />
@@ -350,8 +320,8 @@ export function Pagination({
             variant="outline"
             size="icon-xs"
             disabled
-            aria-label={t("admin.pagination.last")}
-            title={t("admin.pagination.last")}
+            aria-label="শেষ পেজ"
+            title="শেষ পেজ"
             className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground opacity-40 cursor-not-allowed"
           >
             <ChevronsRight className="h-4 w-4" />
@@ -360,8 +330,8 @@ export function Pagination({
           <Link
             href={getPageUrl(safeTotalPages)}
             onClick={() => onPageChange?.(safeTotalPages)}
-            aria-label={t("admin.pagination.last")}
-            title={t("admin.pagination.last")}
+            aria-label="শেষ পেজ"
+            title="শেষ পেজ"
             className={cn(
               buttonVariants({ variant: "outline", size: "icon-xs" }),
               "h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground"
@@ -374,15 +344,14 @@ export function Pagination({
             variant="outline"
             size="icon-xs"
             onClick={() => onPageChange?.(safeTotalPages)}
-            aria-label={t("admin.pagination.last")}
-            title={t("admin.pagination.last")}
+            aria-label="শেষ পেজ"
+            title="শেষ পেজ"
             className="h-8 w-8 rounded-lg shrink-0 border-border text-muted-foreground hover:text-foreground"
           >
             <ChevronsRight className="h-4 w-4" />
           </Button>
         )}
       </div>
-
     </div>
   );
 }

@@ -17,20 +17,18 @@ import {
   Stethoscope,
 } from "lucide-react";
 import Link from "next/link";
-import { formatNum, Locale } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import { PregnancyCalculationResult } from "@/data/pregnancyMilestones";
 
 interface PregnancyResultViewProps {
   result: PregnancyCalculationResult | null;
-  locale: Locale;
 }
 
-export function PregnancyResultView({ result, locale }: PregnancyResultViewProps) {
-  const isEn = locale === "en";
+export function PregnancyResultView({ result }: PregnancyResultViewProps) {
   const [activeTab, setActiveTab] = useState<"milestone" | "nutrition" | "care" | "warnings">("milestone");
 
   const formatDisplayDate = (date: Date) => {
-    return date.toLocaleDateString(isEn ? "en-US" : "bn-BD", {
+    return date.toLocaleDateString("bn-BD", {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -46,7 +44,7 @@ export function PregnancyResultView({ result, locale }: PregnancyResultViewProps
             <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-pink-500/10 via-purple-500/5 to-primary/10 border border-pink-500/20 text-center space-y-3">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pink-500/10 text-pink-600 dark:text-pink-400 text-xs font-bold">
                 <Sparkles className="h-3.5 w-3.5" />
-                <span>{isEn ? "Expected Delivery Date (EDD)" : "প্রসবের সম্ভাব্য তারিখ (ইডিডি)"}</span>
+                <span>প্রসবের সম্ভাব্য তারিখ (ইডিডি)</span>
               </div>
 
               <div className="text-2xl sm:text-4xl font-extrabold text-foreground font-heading">
@@ -57,17 +55,12 @@ export function PregnancyResultView({ result, locale }: PregnancyResultViewProps
                 <Badge variant="secondary" className="font-mono font-semibold px-3 py-1 bg-background/80">
                   <Clock className="mr-1.5 h-3.5 w-3.5 text-pink-500" />
                   {result.daysRemaining > 0
-                    ? isEn
-                      ? `${formatNum(result.daysRemaining, locale)} days left`
-                      : `${formatNum(result.daysRemaining, locale)} দিন বাকি`
-                    : isEn
-                    ? "Full Term / Delivered"
+                    ? `${toBanglaNums(result.daysRemaining)} দিন বাকি`
                     : "পূর্ণ মেয়াদ সম্পন্ন"}
                 </Badge>
                 <Badge variant="secondary" className="font-mono font-semibold px-3 py-1 bg-background/80">
                   <Calendar className="mr-1.5 h-3.5 w-3.5 text-purple-500" />
-                  {isEn ? "Conception: " : "সম্ভাব্য গর্ভধারণ: "}
-                  {formatDisplayDate(result.conceptionDate)}
+                  সম্ভাব্য গর্ভধারণ: {formatDisplayDate(result.conceptionDate)}
                 </Badge>
               </div>
             </div>
@@ -77,18 +70,16 @@ export function PregnancyResultView({ result, locale }: PregnancyResultViewProps
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                 <div>
                   <span className="text-xs text-muted-foreground font-semibold">
-                    {isEn ? "Current Gestational Age:" : "গর্ভকালীন বর্তমান বয়স:"}
+                    গর্ভকালীন বর্তমান বয়স:
                   </span>
                   <div className="text-base sm:text-lg font-bold text-foreground font-mono">
-                    {isEn
-                      ? `${formatNum(result.weeks, locale)} Weeks ${formatNum(result.days, locale)} Days`
-                      : `${formatNum(result.weeks, locale)} সপ্তাহ ${formatNum(result.days, locale)} দিন`}
+                    {toBanglaNums(result.weeks)} সপ্তাহ {toBanglaNums(result.days)} দিন
                   </div>
                 </div>
                 <Badge className="self-start sm:self-center bg-pink-600 text-white font-bold text-xs px-3 py-1">
-                  {result.trimester === 1 && (isEn ? "1st Trimester" : "১ম ট্রাইমেস্টার")}
-                  {result.trimester === 2 && (isEn ? "2nd Trimester" : "২য় ট্রাইমেস্টার")}
-                  {result.trimester === 3 && (isEn ? "3rd Trimester" : "৩য় ট্রাইমেস্টার")}
+                  {result.trimester === 1 && "১ম ট্রাইমেস্টার"}
+                  {result.trimester === 2 && "২য় ট্রাইমেস্টার"}
+                  {result.trimester === 3 && "৩য় ট্রাইমেস্টার"}
                 </Badge>
               </div>
 
@@ -102,13 +93,13 @@ export function PregnancyResultView({ result, locale }: PregnancyResultViewProps
                 </div>
                 <div className="grid grid-cols-3 text-[10px] text-muted-foreground font-semibold text-center pt-0.5">
                   <span className={result.trimester === 1 ? "text-pink-600 font-bold" : ""}>
-                    {isEn ? "1st (W 1-13)" : "১ম (১-১৩ সপ্তাহ)"}
+                    ১ম (১-১৩ সপ্তাহ)
                   </span>
                   <span className={result.trimester === 2 ? "text-pink-600 font-bold" : ""}>
-                    {isEn ? "2nd (W 14-27)" : "২য় (১৪-২৭ সপ্তাহ)"}
+                    ২য় (১৪-২৭ সপ্তাহ)
                   </span>
                   <span className={result.trimester === 3 ? "text-pink-600 font-bold" : ""}>
-                    {isEn ? "3rd (W 28-40+)" : "৩য় (২৮-৪০+ সপ্তাহ)"}
+                    ৩য় (২৮-৪০+ সপ্তাহ)
                   </span>
                 </div>
               </div>
@@ -127,7 +118,7 @@ export function PregnancyResultView({ result, locale }: PregnancyResultViewProps
                   }`}
                 >
                   <Apple className="h-3.5 w-3.5" />
-                  <span>{isEn ? "Baby Size Milestone" : "শিশুর বৃদ্ধি ও সাইজ"}</span>
+                  <span>শিশুর বৃদ্ধি ও সাইজ</span>
                 </button>
                 <button
                   type="button"
@@ -139,7 +130,7 @@ export function PregnancyResultView({ result, locale }: PregnancyResultViewProps
                   }`}
                 >
                   <Sparkles className="h-3.5 w-3.5" />
-                  <span>{isEn ? "Maternal Nutrition" : "মাতৃ পুষ্টি"}</span>
+                  <span>মাতৃ পুষ্টি</span>
                 </button>
                 <button
                   type="button"
@@ -151,7 +142,7 @@ export function PregnancyResultView({ result, locale }: PregnancyResultViewProps
                   }`}
                 >
                   <HeartHandshake className="h-3.5 w-3.5" />
-                  <span>{isEn ? "Care & Prep" : "প্রসবপূর্ব প্রস্তুতি"}</span>
+                  <span>প্রসবপূর্ব প্রস্তুতি</span>
                 </button>
                 <button
                   type="button"
@@ -163,7 +154,7 @@ export function PregnancyResultView({ result, locale }: PregnancyResultViewProps
                   }`}
                 >
                   <ShieldAlert className="h-3.5 w-3.5" />
-                  <span>{isEn ? "Warning Signs" : "বিপদচিহ্ন"}</span>
+                  <span>বিপদচিহ্ন</span>
                 </button>
               </div>
 
@@ -174,27 +165,27 @@ export function PregnancyResultView({ result, locale }: PregnancyResultViewProps
                     <span className="text-3xl sm:text-4xl">{result.milestone.iconEmoji}</span>
                     <div className="space-y-0.5">
                       <div className="text-xs text-muted-foreground font-semibold">
-                        {isEn ? `Week ${formatNum(result.weeks, locale)} Comparison:` : `${formatNum(result.weeks, locale)} সপ্তাহের তুলনা:`}
+                        {toBanglaNums(result.weeks)} সপ্তাহের তুলনা:
                       </div>
                       <h4 className="font-bold text-sm sm:text-base text-foreground">
-                        {isEn ? result.milestone.fruitEn : result.milestone.fruitBn}
+                        {result.milestone.fruitBn}
                       </h4>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div className="p-2.5 rounded-xl bg-background border border-border/60">
-                      <span className="text-muted-foreground block text-[11px]">{isEn ? "Est. Length:" : "আনুমানিক দৈর্ঘ্য:"}</span>
-                      <span className="font-bold text-foreground font-mono">{result.milestone.sizeCm}</span>
+                      <span className="text-muted-foreground block text-[11px]">আনুমানিক দৈর্ঘ্য:</span>
+                      <span className="font-bold text-foreground font-mono">{toBanglaNums(result.milestone.sizeCm)}</span>
                     </div>
                     <div className="p-2.5 rounded-xl bg-background border border-border/60">
-                      <span className="text-muted-foreground block text-[11px]">{isEn ? "Est. Weight:" : "আনুমানিক ওজন:"}</span>
-                      <span className="font-bold text-foreground font-mono">{result.milestone.weightG}</span>
+                      <span className="text-muted-foreground block text-[11px]">আনুমানিক ওজন:</span>
+                      <span className="font-bold text-foreground font-mono">{toBanglaNums(result.milestone.weightG)}</span>
                     </div>
                   </div>
 
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    {isEn ? result.milestone.developmentEn : result.milestone.developmentBn}
+                    {result.milestone.developmentBn}
                   </p>
                 </div>
               )}
@@ -205,11 +196,11 @@ export function PregnancyResultView({ result, locale }: PregnancyResultViewProps
                   <div className="font-bold text-xs sm:text-sm text-foreground flex items-center gap-2">
                     <Apple className="h-4 w-4 text-pink-600" />
                     <span>
-                      {isEn ? result.trimesterInfo.titleEn : result.trimesterInfo.titleBn} - {isEn ? "Nutrition Advice" : "পুষ্টি পরামর্শ"}
+                      {result.trimesterInfo.titleBn} - পুষ্টি পরামর্শ
                     </span>
                   </div>
                   <ul className="space-y-1.5 text-xs text-muted-foreground">
-                    {(isEn ? result.trimesterInfo.nutritionEn : result.trimesterInfo.nutritionBn).map((tip, idx) => (
+                    {result.trimesterInfo.nutritionBn.map((tip, idx) => (
                       <li key={idx} className="flex items-start gap-2">
                         <span className="text-pink-500 font-bold">•</span>
                         <span>{tip}</span>
@@ -224,10 +215,10 @@ export function PregnancyResultView({ result, locale }: PregnancyResultViewProps
                 <div className="p-4 rounded-2xl bg-muted/40 border border-border/60 space-y-2.5 animate-in fade-in">
                   <div className="font-bold text-xs sm:text-sm text-foreground flex items-center gap-2">
                     <HeartHandshake className="h-4 w-4 text-purple-600" />
-                    <span>{isEn ? "Antenatal Care & Precautions" : "প্রসবপূর্ব যত্ন ও স্বাস্থ্য পরামর্শ"}</span>
+                    <span>প্রসবপূর্ব যত্ন ও স্বাস্থ্য পরামর্শ</span>
                   </div>
                   <ul className="space-y-1.5 text-xs text-muted-foreground">
-                    {(isEn ? result.trimesterInfo.careTipsEn : result.trimesterInfo.careTipsBn).map((tip, idx) => (
+                    {result.trimesterInfo.careTipsBn.map((tip, idx) => (
                       <li key={idx} className="flex items-start gap-2">
                         <span className="text-purple-500 font-bold">•</span>
                         <span>{tip}</span>
@@ -242,10 +233,10 @@ export function PregnancyResultView({ result, locale }: PregnancyResultViewProps
                 <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 space-y-2.5 animate-in fade-in">
                   <div className="font-bold text-xs sm:text-sm text-rose-600 dark:text-rose-400 flex items-center gap-2">
                     <AlertTriangle className="h-4 w-4 shrink-0" />
-                    <span>{isEn ? "Emergency Red Flags (Consult Doctor Immediately)" : "জরুরি বিপদচিহ্ন (অবিলম্বে ডাক্তারের শরণাপন্ন হোন)"}</span>
+                    <span>জরুরি বিপদচিহ্ন (অবিলম্বে ডাক্তারের শরণাপন্ন হোন)</span>
                   </div>
                   <ul className="space-y-1.5 text-xs text-rose-700 dark:text-rose-300">
-                    {(isEn ? result.trimesterInfo.warningSignsEn : result.trimesterInfo.warningSignsBn).map((warning, idx) => (
+                    {result.trimesterInfo.warningSignsBn.map((warning, idx) => (
                       <li key={idx} className="flex items-start gap-2">
                         <span className="font-bold">⚠️</span>
                         <span>{warning}</span>
@@ -264,10 +255,10 @@ export function PregnancyResultView({ result, locale }: PregnancyResultViewProps
                 </div>
                 <div>
                   <span className="font-bold text-foreground block">
-                    {isEn ? "Consult Gynecologists & Obstetricians" : "স্ত্রী ও প্রসূতি বিশেষজ্ঞ ডাক্তার"}
+                    স্ত্রী ও প্রসূতি বিশেষজ্ঞ ডাক্তার
                   </span>
                   <span className="text-[11px] text-muted-foreground">
-                    {isEn ? "View chamber schedules and serial booking in Feni" : "ফেনীর সেরা গাইনী বিশেষজ্ঞদের চেম্বার তালিকা দেখুন"}
+                    ফেনীর সেরা গাইনী বিশেষজ্ঞদের চেম্বার তালিকা দেখুন
                   </span>
                 </div>
               </div>
@@ -279,7 +270,7 @@ export function PregnancyResultView({ result, locale }: PregnancyResultViewProps
                   className: "w-full sm:w-auto font-bold text-xs shrink-0",
                 })}
               >
-                <span>{isEn ? "Find Doctor" : "ডাক্তার খুঁজুন"}</span>
+                <span>ডাক্তার খুঁজুন</span>
                 <ArrowRight className="ml-1 h-3.5 w-3.5" />
               </Link>
             </div>
@@ -291,12 +282,10 @@ export function PregnancyResultView({ result, locale }: PregnancyResultViewProps
             </div>
             <div className="space-y-1 max-w-sm mx-auto">
               <h4 className="font-heading font-bold text-base text-secondary dark:text-white">
-                {isEn ? "Calculate Your Expected Due Date" : "আপনার প্রসবের সম্ভাব্য তারিখ জানুন"}
+                আপনার প্রসবের সম্ভাব্য তারিখ জানুন
               </h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                {isEn
-                  ? "Enter your Last Menstrual Period (LMP) or Ultrasound date on the left to view your trimester milestones and baby development."
-                  : "বামপাশের ফর্মে শেষ মাসিকের তারিখ (LMP) বা আল্ট্রাসনোগ্রাম তথ্য দিয়ে 'প্রসবের তারিখ দেখুন' বাটনে ক্লিক করুন।"}
+                বামপাশের ফর্মে শেষ মাসিকের তারিখ (LMP) বা আল্ট্রাসনোগ্রাম তথ্য দিয়ে &apos;প্রসবের তারিখ দেখুন&apos; বাটনে ক্লিক করুন।
               </p>
             </div>
           </div>

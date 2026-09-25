@@ -11,7 +11,6 @@ import {
   convertContactMessageToEmergencyAction,
 } from "@/app/actions/contactActions";
 import type { ContactMessage } from "@/app/actions/contactActions";
-import { Locale } from "@/lib/i18n";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -25,8 +24,6 @@ interface ContactMessagesTabProps {
   onPageSizeChange: (size: number) => void;
   onDelete: (id: string) => void;
   onRefresh?: () => void;
-  t: (key: string) => string;
-  locale: string;
   loading?: boolean;
 }
 
@@ -40,8 +37,6 @@ export function ContactMessagesTab({
   onPageSizeChange,
   onDelete,
   onRefresh,
-  t,
-  locale,
   loading = false,
 }: ContactMessagesTabProps) {
   const [convertingId, setConvertingId] = useState<string | null>(null);
@@ -49,7 +44,7 @@ export function ContactMessagesTab({
   const formatDate = (isoString: string) => {
     try {
       const date = new Date(isoString);
-      return date.toLocaleDateString(locale === "bn" ? "bn-BD" : "en-US", {
+      return date.toLocaleDateString("bn-BD", {
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -67,25 +62,17 @@ export function ContactMessagesTab({
       const res = await convertContactMessageToEmergencyAction(id);
       if (res.success) {
         if (type === "donor") {
-          toast.success(
-            locale === "bn"
-              ? `${res.name || "রক্তদাতা"} সফলভাবে রক্তদাতা তালিকায় যুক্ত হয়েছে!`
-              : `${res.name || "Blood Donor"} added to emergency donors successfully!`
-          );
+          toast.success(`${res.name || "রক্তদাতা"} সফলভাবে রক্তদাতা তালিকায় যুক্ত হয়েছে!`);
         } else {
-          toast.success(
-            locale === "bn"
-              ? `${res.name || "অ্যাম্বুলেন্স"} সফলভাবে অ্যাম্বুলেন্স তালিকায় যুক্ত হয়েছে!`
-              : `${res.name || "Ambulance"} added to emergency ambulances successfully!`
-          );
+          toast.success(`${res.name || "অ্যাম্বুলেন্স"} সফলভাবে অ্যাম্বুলেন্স তালিকায় যুক্ত হয়েছে!`);
         }
         window.dispatchEvent(new Event("admin-data-change"));
         onRefresh?.();
       } else {
-        toast.error(res.error || (locale === "bn" ? "যুক্ত করতে সমস্যা হয়েছে।" : "Failed to add."));
+        toast.error(res.error || "যুক্ত করতে সমস্যা হয়েছে।");
       }
     } catch {
-      toast.error(locale === "bn" ? "ডাটাবেজে যুক্ত করতে সমস্যা হয়েছে।" : "Error adding to database.");
+      toast.error("ডাটাবেজে যুক্ত করতে সমস্যা হয়েছে।");
     } finally {
       setConvertingId(null);
     }
@@ -101,12 +88,10 @@ export function ContactMessagesTab({
     <Card className="border-border shadow-md">
       <CardHeader>
         <CardTitle className="font-heading text-lg font-bold text-secondary">
-          {t("admin.dashboard.contactMessages")}
+          যোগাযোগের বার্তা
         </CardTitle>
         <CardDescription>
-          {locale === "bn"
-            ? "ব্যবহারকারীদের পাঠানো যোগাযোগের তথ্যের তালিকা ও জরুরি নিবন্ধন ব্যবস্থাপনা"
-            : "List of contact messages and emergency registrations"}
+          ব্যবহারকারীদের পাঠানো যোগাযোগের তথ্যের তালিকা ও জরুরি নিবন্ধন ব্যবস্থাপনা
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -115,22 +100,22 @@ export function ContactMessagesTab({
             <TableHeader className="bg-muted/40">
               <TableRow className="hover:bg-transparent border-b border-border">
                 <TableHead className="font-semibold text-secondary min-w-[160px] w-[180px]">
-                  {t("admin.dashboard.senderName")}
+                  প্রেরকের নাম
                 </TableHead>
                 <TableHead className="font-semibold text-secondary min-w-[130px] w-[150px]">
-                  {t("admin.dashboard.senderPhone")}
+                  ফোন নম্বর
                 </TableHead>
                 <TableHead className="font-semibold text-secondary min-w-[150px] w-[180px]">
-                  {t("admin.dashboard.senderEmail")}
+                  ইমেইল
                 </TableHead>
                 <TableHead className="font-semibold text-secondary min-w-[280px]">
-                  {t("admin.dashboard.senderMessage")}
+                  বার্তা
                 </TableHead>
                 <TableHead className="font-semibold text-secondary min-w-[150px] w-[160px]">
-                  {t("admin.dashboard.sentDate")}
+                  তারিখ ও সময়
                 </TableHead>
                 <TableHead className="font-semibold text-secondary text-right min-w-[120px] w-[140px]">
-                  {t("admin.dashboard.action")}
+                  অ্যাকশন
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -164,7 +149,7 @@ export function ContactMessagesTab({
               ) : messages.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                    {t("admin.dashboard.noMessages")}
+                    কোনো যোগাযোগের বার্তা পাওয়া যায়নি।
                   </TableCell>
                 </TableRow>
               ) : (
@@ -182,7 +167,7 @@ export function ContactMessagesTab({
                             className="mt-1 gap-1 text-[10px] bg-rose-100 text-rose-700 dark:bg-rose-950/50 dark:text-rose-300 border-rose-200 dark:border-rose-800"
                           >
                             <Droplet className="h-3 w-3 fill-rose-500 text-rose-500" />
-                            <span>{locale === "bn" ? "রক্তদাতা নিবন্ধন" : "Blood Donor"}</span>
+                            <span>রক্তদাতা নিবন্ধন</span>
                           </Badge>
                         )}
                         {emergencyType === "ambulance" && (
@@ -191,7 +176,7 @@ export function ContactMessagesTab({
                             className="mt-1 gap-1 text-[10px] bg-cyan-100 text-cyan-800 dark:bg-cyan-950/50 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800"
                           >
                             <Truck className="h-3 w-3 text-cyan-600 dark:text-cyan-400" />
-                            <span>{locale === "bn" ? "অ্যাম্বুলেন্স নিবন্ধন" : "Ambulance"}</span>
+                            <span>অ্যাম্বুলেন্স নিবন্ধন</span>
                           </Badge>
                         )}
                       </TableCell>
@@ -230,14 +215,14 @@ export function ContactMessagesTab({
                               onClick={() => handleConvertToEmergency(msg.id, "donor")}
                               disabled={isProcessing}
                               className="h-8 px-2 text-[11px] font-bold text-rose-600 border-rose-200 hover:bg-rose-50 dark:border-rose-800 dark:hover:bg-rose-950/50 cursor-pointer"
-                              title={locale === "bn" ? "রক্তদাতা ডাটাবেজে যুক্ত করুন" : "Add to Donors"}
+                              title="রক্তদাতা ডাটাবেজে যুক্ত করুন"
                             >
                               {isProcessing ? (
                                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
                               ) : (
                                 <>
                                   <PlusCircle className="h-3.5 w-3.5 mr-1" />
-                                  <span>{locale === "bn" ? "রক্তদাতা যোগ" : "Add Donor"}</span>
+                                  <span>রক্তদাতা যোগ</span>
                                 </>
                               )}
                             </Button>
@@ -250,14 +235,14 @@ export function ContactMessagesTab({
                               onClick={() => handleConvertToEmergency(msg.id, "ambulance")}
                               disabled={isProcessing}
                               className="h-8 px-2 text-[11px] font-bold text-cyan-700 border-cyan-200 hover:bg-cyan-50 dark:border-cyan-800 dark:hover:bg-cyan-950/50 cursor-pointer"
-                              title={locale === "bn" ? "অ্যাম্বুলেন্স ডাটাবেজে যুক্ত করুন" : "Add to Ambulances"}
+                              title="অ্যাম্বুলেন্স ডাটাবেজে যুক্ত করুন"
                             >
                               {isProcessing ? (
                                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
                               ) : (
                                 <>
                                   <PlusCircle className="h-3.5 w-3.5 mr-1" />
-                                  <span>{locale === "bn" ? "অ্যাম্বুলেন্স যোগ" : "Add Amb"}</span>
+                                  <span>অ্যাম্বুলেন্স যোগ</span>
                                 </>
                               )}
                             </Button>
@@ -268,8 +253,8 @@ export function ContactMessagesTab({
                             variant="ghost"
                             onClick={() => onDelete(msg.id)}
                             className="text-destructive hover:bg-destructive/10 h-8 w-8 rounded-lg cursor-pointer shrink-0"
-                            title={t("admin.dashboard.delete")}
-                            aria-label={`${t("admin.dashboard.delete")} ${msg.name}`}
+                            title="মুছে ফেলুন"
+                            aria-label={`মুছে ফেলুন ${msg.name}`}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -293,9 +278,7 @@ export function ContactMessagesTab({
             onPageChange={onPageChange}
             onPageSizeChange={onPageSizeChange}
             pageSizeOptions={[10, 20, 50, 100]}
-            locale={locale as Locale}
-            t={t}
-            itemLabel={locale === "bn" ? "টি বার্তা" : "messages"}
+            itemLabel="টি বার্তা"
           />
         )}
       </CardContent>

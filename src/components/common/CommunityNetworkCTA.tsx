@@ -7,7 +7,6 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Truck, Heart, Building2, PhoneCall, ArrowRight, ShieldCheck, Sparkles } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { cn, toBanglaNums } from "@/lib/utils";
 
 const BloodDonorRegisterDialog = dynamic(
@@ -23,18 +22,13 @@ interface CommunityNetworkCTAProps {
 }
 
 export default function CommunityNetworkCTA({ hotline }: CommunityNetworkCTAProps) {
-  const { t, locale } = useLanguage();
-  const isEn = locale === "en";
-
   const [isDonorModalOpen, setIsDonorModalOpen] = useState(false);
   const [isAmbulanceModalOpen, setIsAmbulanceModalOpen] = useState(false);
 
   const rawHotline = (hotline || process.env.NEXT_PUBLIC_HOTLINE_PHONE || "01886763849").replace(/[^0-9]/g, "");
   const normalizedHotline = rawHotline.replace(/^(880|88|0)/, "");
   const hotlineTel = `+880${normalizedHotline}`;
-  const hotlineDisplay = isEn
-    ? `+880 ${normalizedHotline}`
-    : toBanglaNums(`+880 ${normalizedHotline}`);
+  const hotlineDisplay = toBanglaNums(`+880 ${normalizedHotline}`);
 
   return (
     <section
@@ -48,16 +42,16 @@ export default function CommunityNetworkCTA({ hotline }: CommunityNetworkCTAProp
           className="bg-primary/10 text-emerald-800 dark:text-emerald-300 border-primary/20 font-bold px-3 py-1 text-xs"
         >
           <Sparkles className="h-3.5 w-3.5 mr-1.5" />
-          {t("communityCTA.badge")}
+          জরুরি স্বাস্থ্য সহায়তা নেটওয়ার্ক
         </Badge>
         <h2
           id="community-network-heading"
           className="font-heading text-xl sm:text-3xl md:text-4xl font-bold text-secondary dark:text-white"
         >
-          {t("communityCTA.title")}
+          ফেনীর জরুরি স্বাস্থ্য নেটওয়ার্কে অংশীদার হোন
         </h2>
         <p className="text-xs sm:text-base text-muted-foreground leading-relaxed">
-          {t("communityCTA.desc")}
+          আপনি অ্যাম্বুলেন্স চালক, রক্তদাতা কিংবা স্বাস্থ্যসেবা প্রতিষ্ঠান যাই হোন না কেন—সবার জন্য রয়েছে আলাদা ডেডিকেটেড যুক্ত হওয়ার সুবিধা।
         </p>
       </div>
 
@@ -72,27 +66,27 @@ export default function CommunityNetworkCTA({ hotline }: CommunityNetworkCTAProp
                   <Truck className="h-6 w-6" />
                 </div>
                 <Badge variant="outline" className="text-2xs font-bold text-primary border-primary/30">
-                  {t("communityCTA.ambulance.badge")}
+                  অ্যাম্বুলেন্স চালক/মালিক
                 </Badge>
               </div>
 
               <div className="space-y-1.5">
                 <h3 className="font-heading text-lg sm:text-xl font-bold text-secondary dark:text-white">
-                  {t("communityCTA.ambulance.title")}
+                  অ্যাম্বুলেন্স তালিকাভুক্ত করুন
                 </h3>
                 <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  {t("communityCTA.ambulance.desc")}
+                  ফেনীর ২৪/৭ জরুরি অ্যাম্বুলেন্স তালিকায় আপনার গাড়ির ধরন, স্ট্যান্ড ও ফোন নম্বর যুক্ত করুন।
                 </p>
               </div>
 
               <ul className="text-2xs sm:text-xs text-muted-foreground space-y-1.5 pt-1">
                 <li className="flex items-center gap-1.5">
                   <ShieldCheck className="h-3.5 w-3.5 text-primary shrink-0" />
-                  <span>{t("communityCTA.ambulance.feature1")}</span>
+                  <span>সম্পূর্ণ ফ্রি তালিকাভুক্তি</span>
                 </li>
                 <li className="flex items-center gap-1.5">
                   <ShieldCheck className="h-3.5 w-3.5 text-primary shrink-0" />
-                  <span>{t("communityCTA.ambulance.feature2")}</span>
+                  <span>দালালমুক্ত সরাসরি রোগীর কল</span>
                 </li>
               </ul>
             </div>
@@ -102,7 +96,7 @@ export default function CommunityNetworkCTA({ hotline }: CommunityNetworkCTAProp
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-xl mt-2 cursor-pointer"
             >
               <Truck className="mr-2 h-4 w-4" />
-              {t("communityCTA.ambulance.btn")}
+              অ্যাম্বুলেন্স যুক্ত করুন
             </Button>
           </CardContent>
         </Card>
@@ -116,27 +110,27 @@ export default function CommunityNetworkCTA({ hotline }: CommunityNetworkCTAProp
                   <Heart className="h-6 w-6 fill-rose-500/20" />
                 </div>
                 <Badge variant="outline" className="text-2xs font-bold text-rose-600 border-rose-500/30">
-                  {t("communityCTA.donor.badge")}
+                  রক্তদাতা / ব্লাড ব্যাংক
                 </Badge>
               </div>
 
               <div className="space-y-1.5">
                 <h3 className="font-heading text-lg sm:text-xl font-bold text-secondary dark:text-white">
-                  {t("communityCTA.donor.title")}
+                  রক্তদাতা নেটওয়ার্কে যোগ দিন
                 </h3>
                 <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  {t("communityCTA.donor.desc")}
+                  জরুরি রক্তের প্রয়োজনে মুমূর্ষু রোগীর পাশে দাঁড়াতে রক্তদাতা হিসেবে নাম ও রক্তের গ্রুপ নিবন্ধন করুন।
                 </p>
               </div>
 
               <ul className="text-2xs sm:text-xs text-muted-foreground space-y-1.5 pt-1">
                 <li className="flex items-center gap-1.5">
                   <ShieldCheck className="h-3.5 w-3.5 text-rose-600 shrink-0" />
-                  <span>{t("communityCTA.donor.feature1")}</span>
+                  <span>উপজেলা অনুযায়ী দ্রুত কল পাওয়া</span>
                 </li>
                 <li className="flex items-center gap-1.5">
                   <ShieldCheck className="h-3.5 w-3.5 text-rose-600 shrink-0" />
-                  <span>{t("communityCTA.donor.feature2")}</span>
+                  <span>১০০% মানবিক ও সেবামূলক</span>
                 </li>
               </ul>
             </div>
@@ -146,7 +140,7 @@ export default function CommunityNetworkCTA({ hotline }: CommunityNetworkCTAProp
               className="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl mt-2 cursor-pointer"
             >
               <Heart className="mr-2 h-4 w-4 fill-white" />
-              {t("communityCTA.donor.btn")}
+              রক্তদাতা হিসেবে যুক্ত হোন
             </Button>
           </CardContent>
         </Card>
@@ -160,27 +154,27 @@ export default function CommunityNetworkCTA({ hotline }: CommunityNetworkCTAProp
                   <Building2 className="h-6 w-6" />
                 </div>
                 <Badge variant="outline" className="text-2xs font-bold text-blue-600 border-blue-500/30">
-                  {t("communityCTA.partner.badge")}
+                  হাসপাতাল / ল্যাব / ফার্মেসি
                 </Badge>
               </div>
 
               <div className="space-y-1.5">
                 <h3 className="font-heading text-lg sm:text-xl font-bold text-secondary dark:text-white">
-                  {t("communityCTA.partner.title")}
+                  অফিসিয়াল পার্টনার হোন
                 </h3>
                 <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  {t("communityCTA.partner.desc")}
+                  হেলথ ক্লাবের পার্টনার নেটওয়ার্কে যুক্ত হয়ে ক্লাবের মেম্বারদের বিশেষ ছাড় ও সেবা প্রদান করুন।
                 </p>
               </div>
 
               <ul className="text-2xs sm:text-xs text-muted-foreground space-y-1.5 pt-1">
                 <li className="flex items-center gap-1.5">
                   <ShieldCheck className="h-3.5 w-3.5 text-blue-600 shrink-0" />
-                  <span>{t("communityCTA.partner.feature1")}</span>
+                  <span>১০০+ নিয়মিত মেম্বারদের কাছে প্রচার</span>
                 </li>
                 <li className="flex items-center gap-1.5">
                   <ShieldCheck className="h-3.5 w-3.5 text-blue-600 shrink-0" />
-                  <span>{t("communityCTA.partner.feature2")}</span>
+                  <span>ডিজিটাল কিউআর কার্ড ভেরিফিকেশন</span>
                 </li>
               </ul>
             </div>
@@ -192,7 +186,7 @@ export default function CommunityNetworkCTA({ hotline }: CommunityNetworkCTAProp
                 "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl mt-2 cursor-pointer shadow-md"
               )}
             >
-              <span>{t("communityCTA.partner.btn")}</span>
+              <span>পার্টনার আবেদন ফরম</span>
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </CardContent>
@@ -203,10 +197,10 @@ export default function CommunityNetworkCTA({ hotline }: CommunityNetworkCTAProp
       <div className="p-4 sm:p-5 rounded-2xl bg-muted/60 border border-border/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left mx-4">
         <div className="space-y-0.5">
           <p className="text-xs sm:text-sm font-bold text-secondary dark:text-white">
-            {t("communityCTA.help.title")}
+            অন্য কোনো সহায়তা বা তথ্য প্রয়োজন?
           </p>
           <p className="text-2xs sm:text-xs text-muted-foreground">
-            {t("communityCTA.help.desc")}
+            আমাদের জরুরি সমন্বয়ক টিমের সাথে সরাসরি কথা বলতে পারেন।
           </p>
         </div>
 
@@ -226,7 +220,7 @@ export default function CommunityNetworkCTA({ hotline }: CommunityNetworkCTAProp
               className: "text-xs font-semibold rounded-xl",
             })}
           >
-            {t("communityCTA.help.contactBtn")}
+            যোগাযোগ পেইজ
           </Link>
         </div>
       </div>

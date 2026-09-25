@@ -1,27 +1,20 @@
-"use client";
-
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MonthlyTrendPoint, DayDistribution } from "@/types/partnerAnalytics";
-import { formatNum, Locale } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import { BarChart3, CalendarDays, TrendingUp, Sparkles, UserCheck, Heart } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 
 interface PartnerAnalyticsChartsProps {
   monthlyTrends: MonthlyTrendPoint[];
   dayDistributions: DayDistribution[];
-  locale: Locale;
 }
 
 export function PartnerAnalyticsCharts({
   monthlyTrends,
   dayDistributions,
-  locale,
 }: PartnerAnalyticsChartsProps) {
-  const { t } = useLanguage();
-  const isBn = locale === "bn";
   const [chartMetric, setChartMetric] = useState<"patients" | "discount">("patients");
 
   // Calculate max values for SVG bar chart scaling
@@ -46,11 +39,11 @@ export function PartnerAnalyticsCharts({
                 <BarChart3 className="h-4 w-4" />
               </div>
               <CardTitle className="text-base sm:text-lg font-bold font-heading text-secondary dark:text-white">
-                {t("partner.analytics.chartMonthlyTitle")}
+                মাসিক ট্রেন্ড বিশ্লেষণ
               </CardTitle>
             </div>
             <CardDescription className="text-xs text-muted-foreground">
-              {t("partner.analytics.chartMonthlyDesc")}
+              বিগত মাসসমূহের রোগী সেবা ও ডিসকাউন্ট ভলিউম
             </CardDescription>
           </div>
 
@@ -68,7 +61,7 @@ export function PartnerAnalyticsCharts({
               }`}
             >
               <UserCheck className="h-3 w-3 mr-1" />
-              {t("partner.analytics.chartPatientsMetric")}
+              রোগী সংখ্যা
             </Button>
             <Button
               type="button"
@@ -82,7 +75,7 @@ export function PartnerAnalyticsCharts({
               }`}
             >
               <Heart className="h-3 w-3 mr-1" />
-              {t("partner.analytics.chartDiscountMetric")}
+              ডিসকাউন্ট সাশ্রয়
             </Button>
           </div>
         </CardHeader>
@@ -90,7 +83,7 @@ export function PartnerAnalyticsCharts({
         <CardContent className="p-5 sm:p-6">
           {monthlyTrends.length === 0 ? (
             <div className="py-12 text-center text-xs text-muted-foreground">
-              {t("partner.analytics.noTrendData")}
+              কোনো মাসিক ট্রেন্ড তথ্য নেই
             </div>
           ) : (
             <div className="space-y-4">
@@ -110,19 +103,19 @@ export function PartnerAnalyticsCharts({
                     >
                       {/* Tooltip on Hover */}
                       <div className="absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white text-[11px] py-1 px-2.5 rounded-lg shadow-lg pointer-events-none whitespace-nowrap z-20 border border-slate-700">
-                        <p className="font-bold">{isBn ? trend.monthLabelBn : trend.monthLabelEn}</p>
+                        <p className="font-bold">{trend.monthLabelBn}</p>
                         <p className="text-emerald-400">
                           {chartMetric === "patients"
-                            ? `${formatNum(trend.patientCount, locale)} ${t("partner.analytics.patientsCountLabel")}`
-                            : `৳${formatNum(trend.totalDiscount, locale)} ${t("partner.analytics.discountSavedLabel")}`}
+                            ? `${toBanglaNums(trend.patientCount)} জন রোগী`
+                            : `৳${toBanglaNums(trend.totalDiscount)} সাশ্রয়`}
                         </p>
                       </div>
 
                       {/* Value Label above Bar */}
                       <span className="text-[10px] sm:text-xs font-mono font-bold text-muted-foreground group-hover:text-primary transition-colors mb-1.5 truncate max-w-full">
                         {chartMetric === "patients"
-                          ? formatNum(value, locale)
-                          : `৳${formatNum(value, locale)}`}
+                          ? toBanglaNums(value)
+                          : `৳${toBanglaNums(value)}`}
                       </span>
 
                       {/* Bar Pillar */}
@@ -139,7 +132,7 @@ export function PartnerAnalyticsCharts({
 
                       {/* Month Label below Bar */}
                       <span className="text-[10px] sm:text-xs text-muted-foreground font-medium mt-2 truncate max-w-full group-hover:text-secondary dark:group-hover:text-white transition-colors">
-                        {isBn ? trend.monthLabelBn.split(" ")[0] : trend.monthLabelEn.slice(0, 3)}
+                        {trend.monthLabelBn.split(" ")[0]}
                       </span>
                     </div>
                   );
@@ -152,13 +145,13 @@ export function PartnerAnalyticsCharts({
                   <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500" />
                   <span>
                     {chartMetric === "patients"
-                      ? t("partner.analytics.patientsFooterNote")
-                      : t("partner.analytics.discountFooterNote")}
+                      ? "প্রতি মাসে সেবা গ্রহণকারী হেলথ ক্লাব মেম্বারদের মোট সংখ্যা"
+                      : "হাসপাতাল কর্তৃক প্রদত্ত মোট ছাড়ের পরিমাণ (৳)"}
                   </span>
                 </div>
                 <span className="font-mono text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
                   <TrendingUp className="h-3 w-3" />
-                  {t("partner.analytics.realtimeData")}
+                  রিয়েলটাইম তথ্য
                 </span>
               </div>
             </div>
@@ -175,10 +168,10 @@ export function PartnerAnalyticsCharts({
             </div>
             <div>
               <CardTitle className="text-base font-bold font-heading text-secondary dark:text-white">
-                {t("partner.analytics.peakDaysTitle")}
+                সাপ্তাহিক ভিজিটিং প্যাটার্ন
               </CardTitle>
               <CardDescription className="text-xs text-muted-foreground">
-                {t("partner.analytics.peakDaysDesc")}
+                সপ্তাহের বিভিন্ন দিনে রোগীর উপস্থিতির হার
               </CardDescription>
             </div>
           </div>
@@ -195,18 +188,18 @@ export function PartnerAnalyticsCharts({
                   <div className="flex items-center justify-between text-xs font-semibold">
                     <div className="flex items-center gap-1.5">
                       <span className={isPeak ? "text-amber-600 dark:text-amber-400 font-bold" : "text-secondary dark:text-slate-200"}>
-                        {isBn ? day.dayNameBn : day.dayNameEn}
+                        {day.dayNameBn}
                       </span>
                       {isPeak && (
                         <Badge variant="outline" className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 text-[9px] px-1.5 py-0 font-bold">
                           <Sparkles className="h-2 w-2 mr-0.5 inline" />
-                          {t("partner.analytics.peakBadge")}
+                          পিক ডে
                         </Badge>
                       )}
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground font-mono">
-                      <span>{formatNum(day.count, locale)} {t("partner.analytics.pts")}</span>
-                      <span className="text-[11px] text-slate-400">({formatNum(day.percentage, locale)}%)</span>
+                      <span>{toBanglaNums(day.count)} জন</span>
+                      <span className="text-[11px] text-slate-400">({toBanglaNums(day.percentage)}%)</span>
                     </div>
                   </div>
 
@@ -231,12 +224,10 @@ export function PartnerAnalyticsCharts({
             <Sparkles className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
             <div>
               <p className="font-bold">
-                {`${t("partner.analytics.busiestDayPrefix")} ${isBn ? peakDay.dayNameBn : peakDay.dayNameEn}`}
+                {`সর্বাধিক ভিজিটের দিন: ${peakDay.dayNameBn}`}
               </p>
               <p className="text-[11px] text-amber-700/80 dark:text-amber-400/80">
-                {isBn
-                  ? `মোট সেবাগ্রহীতার ${formatNum(peakDay.percentage, locale)}% রোগী ${peakDay.dayNameBn} সেবা গ্রহণ করেছেন।`
-                  : `${t("partner.analytics.busiestDayDescPrefix")} ${formatNum(peakDay.percentage, locale)}% ${t("partner.analytics.busiestDayDescSuffix")}`}
+                {`মোট সেবাগ্রহীতার ${toBanglaNums(peakDay.percentage)}% রোগী ${peakDay.dayNameBn} সেবা গ্রহণ করেছেন।`}
               </p>
             </div>
           </div>

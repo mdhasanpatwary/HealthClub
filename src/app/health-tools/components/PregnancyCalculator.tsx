@@ -10,7 +10,6 @@ import {
   Calendar,
   RotateCcw,
 } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toast } from "sonner";
 import {
   calculateEddFromLmp,
@@ -34,9 +33,6 @@ function getTodayLocalDateString(): string {
 }
 
 export function PregnancyCalculator() {
-  const { locale, t } = useLanguage();
-  const isEn = locale === "en";
-
   const [method, setMethod] = useState<"lmp" | "ultrasound">("lmp");
   const [lmpDate, setLmpDate] = useState("");
   const [cycleLength, setCycleLength] = useState("28");
@@ -52,7 +48,7 @@ export function PregnancyCalculator() {
 
     if (method === "lmp") {
       if (!lmpDate) {
-        toast.error(isEn ? "Please select your last menstrual period (LMP) date." : "অনুগ্রহ করে শেষ মাসিকের তারিখ সিলেক্ট করুন।");
+        toast.error("অনুগ্রহ করে শেষ মাসিকের তারিখ সিলেক্ট করুন।");
         return;
       }
 
@@ -61,23 +57,19 @@ export function PregnancyCalculator() {
       const todayMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
       if (lmp > todayMid) {
-        toast.error(isEn ? "LMP date cannot be in the future." : "শেষ মাসিকের তারিখ ভবিষ্যতের হতে পারে না।");
+        toast.error("শেষ মাসিকের তারিখ ভবিষ্যতের হতে পারে না।");
         return;
       }
 
       const daysDiff = (todayMid.getTime() - lmp.getTime()) / (24 * 60 * 60 * 1000);
       if (daysDiff > 310) {
-        toast.error(
-          isEn
-            ? "LMP date exceeds 44 weeks. Please verify the date."
-            : "শেষ মাসিকের তারিখ ৪৪ সপ্তাহের বেশি অতীত। অনুগ্রহ করে সঠিক তারিখ দিন।"
-        );
+        toast.error("শেষ মাসিকের তারিখ ৪৪ সপ্তাহের বেশি অতীত। অনুগ্রহ করে সঠিক তারিখ দিন।");
         return;
       }
 
       const cycle = parseInt(cycleLength, 10) || 28;
       if (cycle < 20 || cycle > 45) {
-        toast.error(isEn ? "Cycle length should be between 20 and 45 days." : "মাসিক চক্র ২০ থেকে ৪৫ দিনের মধ্যে হওয়া উচিত।");
+        toast.error("মাসিক চক্র ২০ থেকে ৪৫ দিনের মধ্যে হওয়া উচিত।");
         return;
       }
 
@@ -87,11 +79,11 @@ export function PregnancyCalculator() {
         tool_name: "pregnancy_edd",
         result_status: `LMP_T${calcResult.trimester}`,
       });
-      toast.success(isEn ? "Due date calculated successfully!" : "প্রসবের সম্ভাব্য তারিখ হিসাব সম্পন্ন হয়েছে!");
+      toast.success("প্রসবের সম্ভাব্য তারিখ হিসাব সম্পন্ন হয়েছে!");
     } else {
       // Ultrasound
       if (!scanDate) {
-        toast.error(isEn ? "Please select the ultrasound scan date." : "অনুগ্রহ করে আল্ট্রাসনোগ্রামের তারিখ সিলেক্ট করুন।");
+        toast.error("অনুগ্রহ করে আল্ট্রাসনোগ্রামের তারিখ সিলেক্ট করুন।");
         return;
       }
 
@@ -100,7 +92,7 @@ export function PregnancyCalculator() {
       const todayMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
       if (scan > todayMid) {
-        toast.error(isEn ? "Scan date cannot be in the future." : "আল্ট্রাসনোগ্রামের তারিখ ভবিষ্যতের হতে পারে না।");
+        toast.error("আল্ট্রাসনোগ্রামের তারিখ ভবিষ্যতের হতে পারে না।");
         return;
       }
 
@@ -108,12 +100,12 @@ export function PregnancyCalculator() {
       const days = parseInt(scanDays, 10) || 0;
 
       if (isNaN(weeks) || weeks < 4 || weeks > 42) {
-        toast.error(isEn ? "Please enter valid gestational weeks (4-42)." : "অনুগ্রহ করে শিশুর সঠিক গর্ভকালীন সপ্তাহ (৪-৪২) দিন।");
+        toast.error("অনুগ্রহ করে শিশুর সঠিক গর্ভকালীন সপ্তাহ (৪-৪২) দিন।");
         return;
       }
 
       if (days < 0 || days > 6) {
-        toast.error(isEn ? "Gestational days should be between 0 and 6." : "অতিরিক্ত দিন ০ থেকে ৬ এর মধ্যে হতে হবে।");
+        toast.error("অতিরিক্ত দিন ০ থেকে ৬ এর মধ্যে হতে হবে।");
         return;
       }
 
@@ -123,7 +115,7 @@ export function PregnancyCalculator() {
         tool_name: "pregnancy_edd",
         result_status: `US_T${calcResult.trimester}`,
       });
-      toast.success(isEn ? "Due date calculated successfully!" : "প্রসবের সম্ভাব্য তারিখ হিসাব সম্পন্ন হয়েছে!");
+      toast.success("প্রসবের সম্ভাব্য তারিখ হিসাব সম্পন্ন হয়েছে!");
     }
   };
 
@@ -144,17 +136,17 @@ export function PregnancyCalculator() {
           <div className="space-y-1">
             <h3 className="text-lg font-heading font-black text-secondary dark:text-white flex items-center gap-2">
               <Baby className="h-5 w-5 text-pink-600" />
-              <span>{t("healthTools.pregnancy.title")}</span>
+              <span>গর্ভকালীন ক্যালকুলেটর (ইডিডি)</span>
             </h3>
             <p className="text-xs text-muted-foreground">
-              {t("healthTools.pregnancy.subtitle")}
+              শেষ মাসিকের তারিখ (LMP) বা আল্ট্রাসনোগ্রাম রিপোর্ট দিয়ে সম্ভাব্য প্রসবের তারিখ হিসাব করুন
             </p>
           </div>
 
           {/* Method Selection (LMP vs Ultrasound) */}
           <div className="space-y-2">
             <Label className="text-xs font-semibold text-muted-foreground">
-              {t("healthTools.pregnancy.method")}
+              গণনার পদ্ধতি
             </Label>
             <div className="grid grid-cols-2 gap-2 bg-muted p-1 rounded-2xl">
               <button
@@ -166,7 +158,7 @@ export function PregnancyCalculator() {
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {t("healthTools.pregnancy.methodLmp")}
+                শেষ মাসিকের তারিখ (LMP)
               </button>
               <button
                 type="button"
@@ -177,7 +169,7 @@ export function PregnancyCalculator() {
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {t("healthTools.pregnancy.methodUs")}
+                আল্ট্রাসনোগ্রাম রিপোর্ট
               </button>
             </div>
           </div>
@@ -188,7 +180,7 @@ export function PregnancyCalculator() {
                 {/* LMP Date Input */}
                 <div className="space-y-1.5">
                   <Label htmlFor="lmp-date" className="text-xs font-semibold">
-                    {t("healthTools.pregnancy.lmpDate")}
+                    শেষ মাসিকের প্রথম দিন (LMP)
                   </Label>
                   <Input
                     id="lmp-date"
@@ -200,14 +192,14 @@ export function PregnancyCalculator() {
                     className="cursor-pointer"
                   />
                   <p className="text-[11px] text-muted-foreground">
-                    {t("healthTools.pregnancy.lmpHelp")}
+                    আপনার শেষ পিরিয়ড শুরুর প্রথম তারিখটি দিন
                   </p>
                 </div>
 
                 {/* Average Cycle Length */}
                 <div className="space-y-1.5">
                   <Label htmlFor="cycle-length" className="text-xs font-semibold">
-                    {isEn ? "Average Menstrual Cycle (Days)" : "মাসিক চক্রের গড় স্থায়ীত্ব (দিন)"}
+                    মাসিক চক্রের গড় স্থায়ীত্ব (দিন)
                   </Label>
                   <Input
                     id="cycle-length"
@@ -219,7 +211,7 @@ export function PregnancyCalculator() {
                     onChange={(e) => setCycleLength(e.target.value)}
                   />
                   <p className="text-[11px] text-muted-foreground">
-                    {isEn ? "Standard normal cycle is usually 28 days." : "স্বাভাবিকভাবে মাসিক চক্র ২৮ দিনের হয়ে থাকে।"}
+                    স্বাভাবিকভাবে মাসিক চক্র ২৮ দিনের হয়ে থাকে।
                   </p>
                 </div>
               </>
@@ -228,7 +220,7 @@ export function PregnancyCalculator() {
                 {/* Ultrasound Date */}
                 <div className="space-y-1.5">
                   <Label htmlFor="scan-date" className="text-xs font-semibold">
-                    {isEn ? "Date of Ultrasound Scan" : "আল্ট্রাসনোগ্রাম করার তারিখ"}
+                    আল্ট্রাসনোগ্রাম করার তারিখ
                   </Label>
                   <Input
                     id="scan-date"
@@ -244,17 +236,17 @@ export function PregnancyCalculator() {
                 {/* Gestational Age at Scan */}
                 <div className="space-y-1.5">
                   <Label className="text-xs font-semibold">
-                    {t("healthTools.pregnancy.scanGa")}
+                    রিপোর্ট অনুযায়ী গর্ভকালীন বয়স
                   </Label>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <Input
                         id="scan-weeks"
-                        aria-label={t("healthTools.pregnancy.scanGa")}
+                        aria-label="রিপোর্ট অনুযায়ী গর্ভকালীন বয়স (সপ্তাহ)"
                         type="number"
                         min="4"
                         max="42"
-                        placeholder={t("healthTools.pregnancy.weeksPlaceholder")}
+                        placeholder="সপ্তাহ (যেমন: ১২)"
                         value={scanWeeks}
                         onChange={(e) => setScanWeeks(e.target.value)}
                         required
@@ -263,18 +255,18 @@ export function PregnancyCalculator() {
                     <div>
                       <Input
                         id="scan-days"
-                        aria-label={t("healthTools.pregnancy.scanGa")}
+                        aria-label="রিপোর্ট অনুযায়ী গর্ভকালীন বয়স (দিন)"
                         type="number"
                         min="0"
                         max="6"
-                        placeholder={t("healthTools.pregnancy.daysPlaceholder")}
+                        placeholder="দিন (০-৬)"
                         value={scanDays}
                         onChange={(e) => setScanDays(e.target.value)}
                       />
                     </div>
                   </div>
                   <p className="text-[11px] text-muted-foreground">
-                    {t("healthTools.pregnancy.scanHelp")}
+                    আল্ট্রাসনোগ্রাম রিপোর্টে উল্লেখিত Gestational Age (GA) সপ্তাহ ও দিন দিন
                   </p>
                 </div>
               </>
@@ -283,7 +275,7 @@ export function PregnancyCalculator() {
             <div className="flex gap-2 pt-2">
               <Button type="submit" className="flex-1 font-bold bg-pink-600 hover:bg-pink-700 text-white">
                 <Calendar className="mr-2 h-4 w-4" />
-                {t("healthTools.pregnancy.calculate")}
+                প্রসবের তারিখ দেখুন
               </Button>
               {result && (
                 <Button
@@ -291,7 +283,7 @@ export function PregnancyCalculator() {
                   variant="outline"
                   onClick={handleReset}
                   size="icon"
-                  aria-label={isEn ? "Reset calculator" : "ক্যালকুলেটর রিসেট করুন"}
+                  aria-label="ক্যালকুলেটর রিসেট করুন"
                 >
                   <RotateCcw className="h-4 w-4" />
                 </Button>
@@ -302,7 +294,7 @@ export function PregnancyCalculator() {
       </Card>
 
       {/* Result Display Card */}
-      <PregnancyResultView result={result} locale={locale} />
+      <PregnancyResultView result={result} />
     </div>
   );
 }

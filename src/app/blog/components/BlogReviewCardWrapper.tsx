@@ -5,7 +5,6 @@ interface BlogReviewCardWrapperProps {
   sectionId: string;
   rank: number;
   partnerStatus?: boolean;
-  locale?: string;
   children: ReactNode;
   className?: string;
   wrapperClassName?: string;
@@ -17,21 +16,18 @@ export function BlogReviewCardWrapper({
   sectionId,
   rank,
   partnerStatus,
-  locale = "bn",
   children,
   className = "",
   wrapperClassName = "",
   contentPadding = "p-5 sm:p-7",
   contentSpacing = "space-y-6",
 }: BlogReviewCardWrapperProps) {
-  const isEn = locale === "en";
-
   return (
     <div id={sectionId} className={`scroll-mt-24 space-y-2.5 ${wrapperClassName}`}>
       {/* Serial Number Badge Above Card */}
       <div className="flex items-center gap-2 px-1">
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-primary text-primary-foreground font-heading text-xs sm:text-sm font-bold shadow-xs">
-          <span>{isEn ? `Serial #${rank}` : `ক্রমিক নং ${toBanglaNums(rank)}`}</span>
+          <span>{`ক্রমিক নং ${toBanglaNums(rank)}`}</span>
         </span>
       </div>
 

@@ -1342,42 +1342,53 @@ This roadmap outlines the strategic localized content cluster required to achiev
 
 ### 🌐 Cluster 10: Multi-Language (i18n) Decommissioning & Full Bengali Default Optimization
 
-- [ ] **TODO-226**: **Remove Header & Mobile Nav Language Switchers & Fix Unused `locale` Warnings**
+- [x] **TODO-226**: **Remove Header & Mobile Nav Language Switchers & Fix Unused `locale` Warnings**
   - **Priority**: High (P1 - Immediate UI & Lint Cleanup)
-  - **Files**: `src/components/layout/Header.tsx`, `src/components/layout/MobileNavDrawer.tsx`, `src/app/consultants/[slug]/page.tsx`, `src/app/health-tips/[slug]/page.tsx`, `src/app/partner-hospitals/[slug]/page.tsx`
-  - **Description**: 
-    1. Remove the language toggle button ("বাং / EN") and `setLocale` calls from desktop `Header.tsx` and mobile drawer `MobileNavDrawer.tsx`.
-    2. Stop setting and reading the client-side `locale` cookie.
-    3. Resolve the 3 ESLint warnings where `locale` is assigned but unused in `consultants/[slug]/page.tsx`, `health-tips/[slug]/page.tsx`, and `partner-hospitals/[slug]/page.tsx`.
+  - **Files**: `src/components/layout/Header.tsx`, `src/components/layout/MobileNavDrawer.tsx`, `src/components/layout/LanguageProvider.tsx`, `src/lib/exportUtils.ts`, `src/app/consultants/[slug]/page.tsx`, `src/app/health-tips/[slug]/page.tsx`, `src/app/partner-hospitals/[slug]/page.tsx`
+  - **Details**: Removed the desktop language toggle button ("বাং / EN") and `Languages` icon from `Header.tsx`, and removed the language switcher row from the mobile drawer in `MobileNavDrawer.tsx`. Stopped setting the `locale` cookie in `LanguageProvider.tsx` and stopped reading client-side `locale` cookies in `exportUtils.ts` (defaulting to Bengali directly). Cleaned up the 3 unused `locale` variables and imports in `consultants/[slug]/page.tsx`, `health-tips/[slug]/page.tsx`, and `partner-hospitals/[slug]/page.tsx`. All touched files strictly conform to the 500-line code limit. Cleanly verified with `npx tsc --noEmit` (0 errors), `npm run lint` (0 warnings/errors), and `npm run build` (413/413 static pages generated).
 
-- [ ] **TODO-227**: **Inline Static Bengali Text in Core Layout & Public Marketing Components**
+- [x] **TODO-227**: **Inline Static Bengali Text in Core Layout & Public Marketing Components**
   - **Priority**: High (P1 - Eliminates Client-Side Translation Overhead on Public Routes)
   - **Files**: `src/components/layout/Header.tsx`, `src/components/layout/PublicHeaderNav.tsx`, `src/components/layout/Footer.tsx`, `src/components/layout/BottomNav.tsx`, `src/components/layout/GlobalNoticeBanner.tsx`, `src/components/layout/InstallAppBanner.tsx`, `src/components/common/CommunityNetworkCTA.tsx`, `src/app/page.tsx`, `src/app/about-us/page.tsx`, `src/app/emergency/page.tsx`, `src/app/membership/page.tsx`
-  - **Description**: 
-    1. Replace `useLanguage()` and `t(...)` calls across public layout and marketing sections with clean, native Bengali strings.
-    2. Convert components that previously required `"use client"` solely for `useLanguage()` into React Server Components (RSC) to trim client-side JavaScript execution.
-    3. Replace `formatNum(val, locale)` with direct `toBanglaNums(val)`.
+  - **Details**: Inlined static Bengali text across all 11 core layout and public marketing components and pages. Completely removed `useLanguage()` and `t(...)` translation calls from `Header.tsx`, `PublicHeaderNav.tsx`, `BottomNav.tsx`, `GlobalNoticeBanner.tsx`, `InstallAppBanner.tsx`, and `CommunityNetworkCTA.tsx`. Removed server-side `Locale` and `tServer` dependencies from `Footer.tsx`, `app/page.tsx`, `app/about-us/page.tsx`, `app/emergency/page.tsx`, and `app/membership/page.tsx`, inlining full Bengali metadata, JSON-LD schemas, feature copy, and badge texts. Formatted hotline and telephone numbers with direct `toBanglaNums()`. Every file strictly satisfies the < 500-line limit (ranging between 89 and 393 lines). Verified cleanly with `npx tsc --noEmit` (0 errors), `npm run lint` (0 errors, 0 warnings), and `npm run build` (all 413/413 static pages generated successfully).
 
-- [ ] **TODO-228**: **Inline Static Bengali Text in Medical Directories, Doctor Profiles & Reviews**
+- [x] **TODO-228**: **Inline Static Bengali Text in Medical Directories, Doctor Profiles & Reviews**
   - **Priority**: Medium (P1 - Removes Hydration Mismatch & Translation Dependencies in High-Traffic Pages)
-  - **Files**: `src/components/consultants/DoctorProfileView.tsx`, `src/components/partner-hospitals/HospitalDoctorRoster.tsx`, `src/components/partner-hospitals/PartnerHospitalsFAQ.tsx`, `src/components/partner-hospitals/HospitalDiscountsSection.tsx`, `src/components/partner-hospitals/PartnerHospitalsGuide.tsx`, `src/components/partner-hospitals/HospitalGalleryModal.tsx`, `src/components/partner-hospitals/HospitalContactSidebar.tsx`, `src/components/reviews/ReviewCard.tsx`, `src/components/reviews/ReviewSection.tsx`, `src/components/reviews/ReviewForm.tsx`, `src/components/reviews/ReviewFormModal.tsx`, `src/components/reviews/ReviewEligibilityBanner.tsx`, `src/components/health-tips/ArticleReactions.tsx`
-  - **Description**: 
-    1. Replace `useLanguage()` and `t(...)` calls in doctor profiles, hospital directories, review widgets, and article reactions with static Bengali text.
-    2. Keep doctor qualifications (e.g., MBBS, FCPS), medical test names, and phone numbers cleanly formatted in standard mixed format as required.
+  - **Files**: `src/components/consultants/consultantData.ts`, `src/components/consultants/DoctorProfileView.tsx`, `src/components/partner-hospitals/HospitalDoctorRoster.tsx`, `src/components/partner-hospitals/PartnerHospitalsFAQ.tsx`, `src/components/partner-hospitals/HospitalDiscountsSection.tsx`, `src/components/partner-hospitals/PartnerHospitalsGuide.tsx`, `src/components/partner-hospitals/HospitalGalleryModal.tsx`, `src/components/partner-hospitals/HospitalContactSidebar.tsx`, `src/components/partner-hospitals/HospitalFacilityBadges.tsx`, `src/components/partner-hospitals/HospitalSocialLinks.tsx`, `src/components/partner-hospitals/HospitalProfileView.tsx`, `src/components/reviews/ReviewCard.tsx`, `src/components/reviews/ReviewSection.tsx`, `src/components/reviews/ReviewForm.tsx`, `src/components/reviews/ReviewFormModal.tsx`, `src/components/reviews/ReviewEligibilityBanner.tsx`, `src/components/health-tips/ArticleReactions.tsx`, `src/components/ui/doctors/DoctorModals.tsx`, `src/components/ui/doctors/DoctorCard.tsx`, `src/components/ui/DoctorDirectory.tsx`
+  - **Details**: Completely inlined static Bengali text and eliminated all `useLanguage()` and `t(...)` dependencies across 20 high-traffic directory, doctor, hospital, review, and feedback components. Added `labelBn` and `DEPT_LABEL_MAP` to `consultantData.ts` for zero-lookup department labeling. Replaced translation dictionary calls in `DoctorProfileView.tsx` and `DoctorModals.tsx` with direct Bengali headings, schedules, and serial modals. Inlined all 6 partner hospital FAQs in `PartnerHospitalsFAQ.tsx`, department discount badges in `HospitalDiscountsSection.tsx`, network guide pillars in `PartnerHospitalsGuide.tsx`, photo captions in `HospitalGalleryModal.tsx`, direct helpline desks and sharing triggers in `HospitalContactSidebar.tsx`, facility badges in `HospitalFacilityBadges.tsx`, and platform links in `HospitalSocialLinks.tsx`. Updated `ReviewCard.tsx`, `ReviewSection.tsx`, `ReviewForm.tsx`, `ReviewFormModal.tsx`, and `ReviewEligibilityBanner.tsx` with static Bengali review prompts, scorecards, star ratings, and Zod validation errors. Inlined article feedback prompts and toast notifications in `ArticleReactions.tsx`. Updated `DoctorCard.tsx` and `DoctorDirectory.tsx` with Bengali defaults, search placeholders, and upazila filters. Every touched file strictly satisfies the < 500-line limit (ranging from 91 to 435 lines). Cleanly verified with `npx tsc --noEmit` (0 errors) and `npm run lint` (0 errors, 0 warnings).
 
-- [ ] **TODO-229**: **Inline Static Bengali Text in Authenticated Dashboard, Partner Portal & Admin Views**
+- [x] **TODO-229**: **Inline Static Bengali Text in Authenticated Dashboard, Partner Portal & Admin Views**
   - **Priority**: Medium (P2 - Cleans Authenticated Workflows & Portal Code)
   - **Files**: `src/app/dashboard/*`, `src/app/partner/*`, `src/app/admin/*`, `src/components/layout/UserDropdown.tsx`, `src/components/layout/PartnerDropdown.tsx`, `src/components/layout/AdminHeaderNav.tsx`, `src/components/layout/AdminNotificationBell.tsx`
-  - **Description**: 
-    1. Replace remaining `useLanguage` / `t(...)` calls in Member Dashboard tabs, Partner Portal views, and Admin tabs/dialogs with direct Bengali strings.
-    2. Eliminate dynamic namespace imports and translation dictionaries across admin views.
+  - **Details**: Completely eliminated all `useLanguage`, `t(...)`, dynamic namespace imports, and unused `locale` props across authenticated dashboard, partner portal, and admin views. Cleaned up unused props and ESLint warnings in `DbBackupManager.tsx`, `DoctorsTab.tsx`, `PartnersTab.tsx`, `RenewalsTab.tsx`, `ContactSettingsCard.tsx`, and `SettingsTab.tsx`. Verified all tab navigation, portal buttons, dropdown menus, and admin tables display direct native Bengali text with `toBanglaNums` formatting. Fully verified with `npx tsc --noEmit` (0 errors) and `npm run lint` (0 errors, 0 warnings).
 
-- [ ] **TODO-230**: **Decommission `LanguageProvider`, Delete Translation Dictionaries & Finalize Layout**
+- [x] **TODO-230**: **Decommission `LanguageProvider`, Delete Translation Dictionaries & Finalize Layout**
   - **Priority**: High (P1 - Bundle Trimming & Final Architectural Cleanup)
-  - **Files**: `src/app/layout.tsx`, `src/components/layout/LanguageProvider.tsx`, `src/lib/translations/*`, `src/lib/translations.en.ts`, `src/lib/translations.bn.ts`, `src/lib/i18n.ts`
-  - **Description**: 
-    1. Remove `LanguageProvider`, `initialDict`, and `initialNamespaces` from `src/app/layout.tsx`. Set `<html lang="bn">` and update JSON-LD schema (`inLanguage: "bn-BD"`).
-    2. Safely delete obsolete translation files: `src/lib/translations/` (`clientLoaders.ts`, `routeMap.ts`, `getDictionary.ts`, `en/`, `bn/`), `translations.en.ts`, and `translations.bn.ts`.
-    3. Simplify `src/lib/i18n.ts` (or consolidate formatting helpers like `toBanglaNums` into `src/lib/utils.ts`).
-    4. Run `npx tsc --noEmit`, `npm run lint`, and verify that the full Next.js production build succeeds with 0 errors and warnings.
+  - **Files**: `src/app/layout.tsx`, `src/components/layout/LanguageProvider.tsx`, `src/lib/translations/*`, `src/lib/translations.en.ts`, `src/lib/translations.bn.ts`, `src/lib/translations.ts`, `src/lib/i18n.server.ts`, `src/lib/i18n.ts`, `src/app/page.tsx`, `src/components/landing/*`, `src/app/health-tools/components/*`, `src/app/emergency/components/EmergencyDirectory.tsx`
+  - **Details**:
+    1. Removed `LanguageProvider`, `initialDict`, and `initialNamespaces` from `src/app/layout.tsx`. Updated root tag to `<html lang="bn">` and set JSON-LD schema to `inLanguage: "bn-BD"`. Converted `src/components/layout/LanguageProvider.tsx` into a lightweight 25-line shim.
+    2. Safely eliminated all remaining `useLanguage()`, `t(...)`, and `tServer(...)` calls across Health Tools, Landing subcomponents (`LandingHero`, `LandingStats`, `LandingQuickServices`, `LandingHowItWorks`, `LandingBenefits`, `LandingPricing`, `LandingComparison`, `FAQSection`), `homepageSchema.ts`, Consultants, Partner Hospitals, Terms & Conditions, and Privacy Policy pages.
+    3. Deleted all obsolete translation dictionaries and server modules: `src/lib/translations/` directory, `src/lib/translations.en.ts`, `src/lib/translations.bn.ts`, `src/lib/translations.ts`, and `src/lib/i18n.server.ts`. Simplified `src/lib/i18n.ts`.
+    4. Fixed unescaped entities and non-existent property checks in `HealthTipsDirectory.tsx`, `BmiCalculator.tsx`, and `EmergencyDirectory.tsx`.
+    5. Cleanly verified: `npx tsc --noEmit` (0 errors), `npm run lint` (0 errors, 0 warnings), and `npm run build` (all 413/413 static pages and routes generated successfully).
+
+- [x] **TODO-231**: **Eliminate Dead `isEn` Branches & Vestigial Locales in Auth, Admin, SEO & Common Directories**
+  - **Priority**: High (P1 - Complete Bengali Inlining & Dead Code Removal)
+  - **Files**:
+    - Auth Layouts: `src/app/login/layout.tsx`, `src/app/login/admin/layout.tsx`, `src/app/login/partner/layout.tsx`, `src/app/register/layout.tsx`, `src/app/register/payment/layout.tsx`, `src/app/register/verify-email/layout.tsx`, `src/app/forgot-password/layout.tsx`, `src/app/forgot-password/reset/layout.tsx`, `src/app/verify/layout.tsx`, `src/app/become-partner/layout.tsx`
+    - SEO & Utils: `src/lib/seo/doctorSchema.ts`, `src/lib/seo/partnerSchema.ts`, `src/lib/dateUtils.ts`, `src/lib/readingTime.ts`
+    - Core Directories & Components: `src/app/consultants/page.tsx`, `src/app/consultants/[slug]/page.tsx`, `src/app/health-tips/page.tsx`, `src/app/health-tips/[slug]/page.tsx`, `src/app/health-tools/page.tsx`, `src/app/partner-hospitals/page.tsx`, `src/app/partner-hospitals/[slug]/page.tsx`, `src/app/contact/page.tsx`, `src/components/consultants/DepartmentSeoHero.tsx`, `src/components/landing/LandingBlogSection.tsx`, `src/components/partner-hospitals/HospitalDoctorRoster.tsx`, `src/components/ui/doctors/DoctorAvailabilityBadge.tsx`, `src/components/ui/doctors/DoctorCard.tsx`
+    - Admin Panels: `src/app/admin/components/SettingsTab.tsx`, `src/app/admin/components/settings/*`, `src/app/admin/components/emergency/*`, `src/app/admin/components/blog/*`
+  - **Details**: Inlined pure native Bengali copy and eliminated all dead `isEn` ternary branches and vestigial `locale` parameters across 10 auth layouts, 4 core SEO/utility modules, 13 public directory pages/components, and 17 admin settings/emergency/blog cards and tables. Converted dynamic auth layouts and contact page to static metadata exports (removing unnecessary `cookies()` reads). Retained strict compliance with the 500-line code limit on all files. Verified cleanly with `npx tsc --noEmit` (0 errors).
+
+- [x] **TODO-232**: **Decommission Blog Translation Subsystem (`articleTranslations*.ts`, `blogTranslations.ts`) & Remove `isEn` from Blog System**
+  - **Priority**: High (P1 - Eliminate ~150KB Unused Translation Data & 66 Component Dead Branches)
+  - **Files**:
+    - Blog Subsystem: `src/app/blog/utils/blogTranslations.ts`, `src/app/blog/utils/articleTranslations*.ts`, `src/app/blog/utils/blogJsonLd.ts`
+    - Blog Pages: `src/app/blog/page.tsx`, `src/app/blog/[slug]/page.tsx`
+    - Blog Components: All 26 price tables, 7 comparison tables, 8 review cards, TOC, and search filters under `src/app/blog/components/*`
+  - **Details**: Deleted obsolete English blog translation dictionaries (`articleTranslationsData.ts`, `articleTranslationsOxygen.ts`, `articleTranslationsDengueTyphoid.ts`, `articleTranslationsHomeCare.ts`, `articleTranslationsSelectionGuides.ts`, `articleTranslationsSpecialistGuides.ts`, and `blogTranslations.ts`). Eliminated all dead `isEn` props, ternary branches, and dead translation calls across all 26 price tables, 8 in-depth review cards, 7 comparison matrix tables, specialized care sections, emergency sections, and table-of-contents components. Purged leftover unused `isEn` props from `DoctorCard.tsx`, `partnerSchema.ts`, and 6 admin settings cards. Verified with zero TypeScript compilation errors (`npx tsc --noEmit`), zero ESLint errors (`npm run lint`), and successful static generation of all 413 pages (`npm run build`).
+
+
+
 

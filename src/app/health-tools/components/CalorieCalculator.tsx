@@ -6,14 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Flame, Sparkles, RotateCcw } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-import { formatNum } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 
 export function CalorieCalculator() {
-  const { locale } = useLanguage();
-  const isEn = locale === "en";
-
   const [gender, setGender] = useState<"male" | "female">("male");
   const [age, setAge] = useState("");
   const [heightCm, setHeightCm] = useState("");
@@ -86,10 +82,10 @@ export function CalorieCalculator() {
             </div>
             <div>
               <h3 className="font-heading font-bold text-base sm:text-lg text-secondary dark:text-white">
-                {isEn ? "Daily Calorie & BMR Calculator" : "দৈনিক ক্যালোরি ও BMR ক্যালকুলেটর"}
+                দৈনিক ক্যালোরি ও BMR ক্যালকুলেটর
               </h3>
               <p className="text-xs text-muted-foreground">
-                {isEn ? "Determine calories for weight maintenance/loss" : "ওজন নিয়ন্ত্রণ ও ফিটনেসের জন্য প্রয়োজনীয় ক্যালোরি"}
+                ওজন নিয়ন্ত্রণ ও ফিটনেসের জন্য প্রয়োজনীয় ক্যালোরি
               </p>
             </div>
           </div>
@@ -98,11 +94,11 @@ export function CalorieCalculator() {
             {/* Gender */}
             <div className="space-y-1.5">
               <Label className="text-xs font-semibold">
-                {isEn ? "Gender" : "লিঙ্গ"}
+                লিঙ্গ
               </Label>
               <div
                 role="radiogroup"
-                aria-label={isEn ? "Gender" : "লিঙ্গ"}
+                aria-label="লিঙ্গ"
                 className="grid grid-cols-2 gap-2"
               >
                 <button
@@ -116,7 +112,7 @@ export function CalorieCalculator() {
                       : "bg-background hover:bg-muted text-muted-foreground border-border"
                   }`}
                 >
-                  {isEn ? "Male (পুরুষ)" : "পুরুষ"}
+                  পুরুষ
                 </button>
                 <button
                   type="button"
@@ -129,7 +125,7 @@ export function CalorieCalculator() {
                       : "bg-background hover:bg-muted text-muted-foreground border-border"
                   }`}
                 >
-                  {isEn ? "Female (নারী)" : "নারী"}
+                  নারী
                 </button>
               </div>
             </div>
@@ -138,7 +134,7 @@ export function CalorieCalculator() {
             <div className="grid grid-cols-3 gap-2 sm:gap-3">
               <div className="space-y-1.5">
                 <Label htmlFor="cal-age" className="text-xs font-semibold">
-                  {isEn ? "Age (Years)" : "বয়স (বছর)"}
+                  বয়স (বছর)
                 </Label>
                 <Input
                   id="cal-age"
@@ -151,7 +147,7 @@ export function CalorieCalculator() {
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="cal-height" className="text-xs font-semibold">
-                  {isEn ? "Height (CM)" : "উচ্চতা (CM)"}
+                  উচ্চতা (CM)
                 </Label>
                 <Input
                   id="cal-height"
@@ -164,7 +160,7 @@ export function CalorieCalculator() {
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="cal-weight" className="text-xs font-semibold">
-                  {isEn ? "Weight (KG)" : "ওজন (কেজি)"}
+                  ওজন (কেজি)
                 </Label>
                 <Input
                   id="cal-weight"
@@ -180,7 +176,7 @@ export function CalorieCalculator() {
             {/* Activity Level */}
             <div className="space-y-1.5">
               <Label htmlFor="cal-activity" className="text-xs font-semibold">
-                {isEn ? "Activity Level" : "দৈনিক অ্যাক্টিভিটি লেভেল"}
+                দৈনিক অ্যাক্টিভিটি লেভেল
               </Label>
               <select
                 id="cal-activity"
@@ -189,16 +185,16 @@ export function CalorieCalculator() {
                 className="w-full h-10 px-3 rounded-lg border border-border bg-background text-xs sm:text-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/20"
               >
                 <option value="sedentary">
-                  {isEn ? "Sedentary (Desk job, minimal exercise)" : "ডেস্ক জব / স্বাভাবিক চলাফেরা"}
+                  ডেস্ক জব / স্বাভাবিক চলাফেরা
                 </option>
                 <option value="light">
-                  {isEn ? "Light Activity (1-3 days/week exercise)" : "হালকা ব্যায়াম (সপ্তাহে ১-৩ দিন)"}
+                  হালকা ব্যায়াম (সপ্তাহে ১-৩ দিন)
                 </option>
                 <option value="moderate">
-                  {isEn ? "Moderate (3-5 days/week exercise)" : "মাঝারি ব্যায়াম (সপ্তাহে ৩-৫ দিন)"}
+                  মাঝারি ব্যায়াম (সপ্তাহে ৩-৫ দিন)
                 </option>
                 <option value="active">
-                  {isEn ? "Very Active (Daily intense workout)" : "ভারী শরীরচর্চা / সক্রিয় অ্যাথলেট"}
+                  ভারী শরীরচর্চা / সক্রিয় অ্যাথলেট
                 </option>
               </select>
             </div>
@@ -206,7 +202,7 @@ export function CalorieCalculator() {
             <div className="flex gap-2 pt-2">
               <Button type="submit" className="flex-1 bg-orange-600 hover:bg-orange-700 text-white font-bold cursor-pointer">
                 <Flame className="mr-2 h-4 w-4 fill-white" />
-                {isEn ? "Calculate Calories" : "ক্যালোরি হিসেব করুন"}
+                ক্যালোরি হিসেব করুন
               </Button>
               {result && (
                 <Button
@@ -214,7 +210,7 @@ export function CalorieCalculator() {
                   variant="outline"
                   onClick={handleReset}
                   size="icon"
-                  aria-label={isEn ? "Reset calculator" : "ক্যালকুলেটর রিসেট করুন"}
+                  aria-label="ক্যালকুলেটর রিসেট করুন"
                   className="cursor-pointer"
                 >
                   <RotateCcw className="h-4 w-4" />
@@ -232,13 +228,13 @@ export function CalorieCalculator() {
             <div className="space-y-4">
               <div className="text-center space-y-1">
                 <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider">
-                  {isEn ? "Maintenance Calories" : "ওজন ঠিক রাখতে দৈনিক ক্যালোরি"}
+                  ওজন ঠিক রাখতে দৈনিক ক্যালোরি
                 </span>
                 <div className="flex items-baseline justify-center gap-1.5">
                   <span className="text-5xl font-black font-mono text-orange-600">
-                    {formatNum(result.maintenance, locale)}
+                    {toBanglaNums(result.maintenance)}
                   </span>
-                  <span className="text-sm font-semibold text-muted-foreground">kcal / day</span>
+                  <span className="text-sm font-semibold text-muted-foreground">ক্যালোরি / দিন</span>
                 </div>
               </div>
 
@@ -246,26 +242,26 @@ export function CalorieCalculator() {
               <div className="grid grid-cols-3 gap-2.5 pt-2">
                 <div className="p-3 rounded-2xl bg-muted/60 border border-border/60 text-center space-y-1">
                   <span className="text-[10px] text-muted-foreground font-semibold block uppercase">
-                    {isEn ? "Base BMR" : "বেসিক BMR"}
+                    বেসিক BMR
                   </span>
                   <span className="text-sm font-bold font-mono text-foreground">
-                    {formatNum(result.bmr, locale)}
+                    {toBanglaNums(result.bmr)}
                   </span>
                 </div>
                 <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-center space-y-1">
                   <span className="text-[10px] text-emerald-700 dark:text-emerald-300 font-semibold block uppercase">
-                    {isEn ? "Weight Loss" : "ওজন কমাতে"}
+                    ওজন কমাতে
                   </span>
                   <span className="text-sm font-bold font-mono text-emerald-600">
-                    {formatNum(result.weightLoss, locale)}
+                    {toBanglaNums(result.weightLoss)}
                   </span>
                 </div>
                 <div className="p-3 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-center space-y-1">
                   <span className="text-[10px] text-blue-700 dark:text-blue-300 font-semibold block uppercase">
-                    {isEn ? "Weight Gain" : "ওজন বাড়াতে"}
+                    ওজন বাড়াতে
                   </span>
                   <span className="text-sm font-bold font-mono text-blue-600">
-                    {formatNum(result.weightGain, locale)}
+                    {toBanglaNums(result.weightGain)}
                   </span>
                 </div>
               </div>
@@ -273,9 +269,7 @@ export function CalorieCalculator() {
               <div className="p-3.5 rounded-2xl bg-muted/40 border border-border text-xs text-muted-foreground flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-orange-500 shrink-0" />
                 <span>
-                  {isEn
-                    ? "Based on Mifflin-St Jeor scientific formula. For clinical nutrition, consult our listed doctors."
-                    : "বিজ্ঞানের প্রখ্যাত মিফলিন ফর্মুলা দ্বারা গণনাকৃত। বিশেষ ডায়েট চার্টের জন্য পুষ্টিবিদের পরামর্শ নিন।"}
+                  বিজ্ঞানের প্রখ্যাত মিফলিন ফর্মুলা দ্বারা গণনাকৃত। বিশেষ ডায়েট চার্টের জন্য পুষ্টিবিদের পরামর্শ নিন।
                 </span>
               </div>
             </div>
@@ -286,12 +280,10 @@ export function CalorieCalculator() {
               </div>
               <div className="space-y-1 max-w-sm mx-auto">
                 <h4 className="font-heading font-bold text-base text-secondary dark:text-white">
-                  {isEn ? "Smart Calorie Calculator" : "স্মার্ট ক্যালোরি ট্র্যাকার"}
+                  স্মার্ট ক্যালোরি ট্র্যাকার
                 </h4>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  {isEn
-                    ? "Find out how many calories your body needs every day to stay healthy, lose fat, or build muscle."
-                    : "ফিটনেস ও সুস্বাস্থ্যের জন্য প্রতিদিন কত ক্যালোরি গ্রহণ করা উচিত তা সহজেই গণনা করুন।"}
+                  ফিটনেস ও সুস্বাস্থ্যের জন্য প্রতিদিন কত ক্যালোরি গ্রহণ করা উচিত তা সহজেই গণনা করুন।
                 </p>
               </div>
             </div>

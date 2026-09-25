@@ -6,7 +6,6 @@ import { Doctor } from "@/services/db";
 
 interface DoctorAvailabilityBadgeProps {
   doctor: Doctor;
-  locale?: string;
   size?: "sm" | "md" | "lg";
   className?: string;
 }
@@ -21,13 +20,10 @@ export interface DoctorAvailabilityInfo {
   formattedLeaveDate?: string;
 }
 
-function formatLeaveDate(dateStr: string, isEn: boolean): string {
+function formatLeaveDate(dateStr: string): string {
   try {
     const d = new Date(dateStr.includes("T") ? dateStr : `${dateStr}T00:00:00`);
     if (isNaN(d.getTime())) return dateStr;
-    if (isEn) {
-      return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    }
     return d.toLocaleDateString("bn-BD", { month: "long", day: "numeric", year: "numeric" });
   } catch {
     return dateStr;
@@ -35,20 +31,18 @@ function formatLeaveDate(dateStr: string, isEn: boolean): string {
 }
 
 export function getDoctorAvailabilityInfo(
-  doctor: Pick<Doctor, "availableToday" | "onLeaveUntil">,
-  locale = "bn"
+  doctor: Pick<Doctor, "availableToday" | "onLeaveUntil">
 ): DoctorAvailabilityInfo {
-  const isEn = locale === "en";
   const now = new Date();
   const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 
   if (doctor.onLeaveUntil) {
     const rawDate = typeof doctor.onLeaveUntil === "string" ? doctor.onLeaveUntil.slice(0, 10) : "";
     if (rawDate && rawDate >= todayStr) {
-      const formattedDate = formatLeaveDate(doctor.onLeaveUntil, isEn);
+      const formattedDate = formatLeaveDate(doctor.onLeaveUntil);
       return {
         status: "on_leave",
-        label: isEn ? `On Leave until ${formattedDate}` : `ছুটিতে আছেন (${formattedDate} পর্যন্ত)`,
+        label: `ছুটিতে আছেন (${formattedDate} পর্যন্ত)`,
         badgeClass: "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30",
         dotClass: "bg-amber-500",
         formattedLeaveDate: formattedDate,
@@ -59,7 +53,7 @@ export function getDoctorAvailabilityInfo(
   if (doctor.availableToday === false) {
     return {
       status: "closed_today",
-      label: isEn ? "Chamber Closed Today" : "আজ চেম্বার বন্ধ",
+      label: "আজ চেম্বার বন্ধ",
       badgeClass: "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/30",
       dotClass: "bg-rose-500",
     };
@@ -67,7 +61,7 @@ export function getDoctorAvailabilityInfo(
 
   return {
     status: "available_today",
-    label: isEn ? "Available Today" : "আজ চেম্বার খোলা",
+    label: "আজ চেম্বার খোলা",
     badgeClass: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30",
     dotClass: "bg-emerald-500",
   };
@@ -75,11 +69,10 @@ export function getDoctorAvailabilityInfo(
 
 export function DoctorAvailabilityBadge({
   doctor,
-  locale = "bn",
   size = "md",
   className = "",
 }: DoctorAvailabilityBadgeProps) {
-  const info = useMemo(() => getDoctorAvailabilityInfo(doctor, locale), [doctor, locale]);
+  const info = useMemo(() => getDoctorAvailabilityInfo(doctor), [doctor]);
 
   const sizeClasses = {
     sm: "text-[10px] px-2 py-0.5 gap-1",
@@ -110,20 +103,16 @@ export function DoctorAvailabilityBadge({
 
 interface DoctorNoticeBannerProps {
   notice?: string | null;
-  locale?: string;
   compact?: boolean;
   className?: string;
 }
 
 export function DoctorNoticeBanner({
   notice,
-  locale = "bn",
   compact = false,
   className = "",
 }: DoctorNoticeBannerProps) {
   if (!notice || !notice.trim()) return null;
-
-  const isEn = locale === "en";
 
   if (compact) {
     return (
@@ -144,7 +133,7 @@ export function DoctorNoticeBanner({
       <AlertCircle className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
       <div className="min-w-0 flex-1 space-y-0.5">
         <span className="font-bold text-[11px] sm:text-xs uppercase tracking-wider text-amber-700 dark:text-amber-400 block">
-          {isEn ? "Chamber Notice" : "চেম্বার বিশেষ বিজ্ঞপ্তি"}
+          চেম্বার বিশেষ বিজ্ঞপ্তি
         </span>
         <p className="font-medium text-foreground/90">{notice}</p>
       </div>

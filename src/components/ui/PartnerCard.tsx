@@ -7,13 +7,12 @@ import { MapPin, Phone, Clock, Hospital, ShieldAlert, Pill, HeartHandshake, Chev
 import { Partner } from "@/services/db";
 import { Card } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
-import { formatDiscount, Locale } from "@/lib/i18n";
+import { formatDiscount } from "@/lib/utils";
 import { getUpazilaLabel } from "@/data/feniLocations";
 
 interface PartnerCardProps {
   partner: Partner & { resolvedUpazila?: string };
-  locale: Locale;
-  t: (key: string) => string;
+  t?: (key: string) => string;
 }
 
 function PartnerCardBanner({
@@ -44,7 +43,7 @@ function PartnerCardBanner({
   );
 }
 
-export default function PartnerCard({ partner, locale, t }: PartnerCardProps) {
+export default function PartnerCard({ partner }: PartnerCardProps) {
   const getCategoryFallbackImage = (category: string) => {
     switch (category) {
       case "hospital":
@@ -74,13 +73,13 @@ export default function PartnerCard({ partner, locale, t }: PartnerCardProps) {
   const getCategoryLabel = (category: string) => {
     switch (category) {
       case "hospital":
-        return t("ui.partnerdirectory.hospital");
+        return "হাসপাতাল";
       case "diagnostic":
-        return t("ui.partnerdirectory.diagnostic");
+        return "ডায়াগনস্টিক সেন্টার";
       case "pharmacy":
-        return t("ui.partnerdirectory.pharmacy");
+        return "ফার্মেসি";
       default:
-        return t("ui.partnerdirectory.healthcare");
+        return "স্বাস্থ্যসেবা";
     }
   };
 
@@ -106,7 +105,7 @@ export default function PartnerCard({ partner, locale, t }: PartnerCardProps) {
         <div className="absolute top-3 left-3 z-10">
           <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/20 shadow-xs flex items-center gap-1">
             <MapPin className="h-3 w-3 text-emerald-400" />
-            {getUpazilaLabel(partner.resolvedUpazila, locale)}
+            {getUpazilaLabel(partner.resolvedUpazila)}
           </span>
         </div>
 
@@ -150,10 +149,10 @@ export default function PartnerCard({ partner, locale, t }: PartnerCardProps) {
       <div className="p-3.5 sm:p-4 bg-background dark:bg-slate-900 flex flex-wrap items-center justify-between gap-2 border-t border-border/60">
         <div className="shrink-0">
           <p className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">
-            {t("ui.partnerdirectory.discountRate")}
+            মেম্বার ছাড়
           </p>
           <p className="text-sm sm:text-base font-bold text-emerald-700 dark:text-emerald-400 font-heading">
-            {formatDiscount(partner.discount, locale)}
+            {formatDiscount(partner.discount)}
           </p>
         </div>
 
@@ -161,7 +160,7 @@ export default function PartnerCard({ partner, locale, t }: PartnerCardProps) {
           <Link
             href={`/partner-hospitals/${encodeURIComponent(partner.slug || partner.id)}`}
             prefetch={false}
-            aria-label={`${t("ui.partnerdirectory.details")} - ${partner.name}`}
+            aria-label={`বিস্তারিত - ${partner.name}`}
             className={buttonVariants({
               variant: "outline",
               size: "sm",
@@ -169,7 +168,7 @@ export default function PartnerCard({ partner, locale, t }: PartnerCardProps) {
                 "h-8 px-2.5 text-xs font-semibold rounded-lg border-border/80 hover:bg-muted text-foreground gap-1",
             })}
           >
-            <span>{t("ui.partnerdirectory.details")}</span>
+            <span>বিস্তারিত</span>
             <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
 
@@ -191,7 +190,7 @@ export default function PartnerCard({ partner, locale, t }: PartnerCardProps) {
 
           <a
             href={`tel:${partner.phone}`}
-            aria-label={`${t("ui.partnerdirectory.call")} - ${partner.name}`}
+            aria-label={`কল করুন - ${partner.name}`}
             className={buttonVariants({
               variant: "default",
               size: "sm",
@@ -200,7 +199,7 @@ export default function PartnerCard({ partner, locale, t }: PartnerCardProps) {
             })}
           >
             <Phone className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>{t("ui.partnerdirectory.call")}</span>
+            <span>কল করুন</span>
           </a>
         </div>
       </div>

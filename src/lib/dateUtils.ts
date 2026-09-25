@@ -140,7 +140,6 @@ export function getArticleIsoDate(
  */
 export function formatArticleDate(
   dateStr?: string,
-  locale: string = "bn",
   fallbackDate: Date = STATIC_FALLBACK_DATE
 ): string {
   if (!dateStr || typeof dateStr !== "string" || !dateStr.trim()) {
@@ -148,27 +147,18 @@ export function formatArticleDate(
   }
 
   const trimmed = dateStr.trim();
-  const isEn = locale === "en";
 
   // Check if string already contains a Bengali month name
   const hasBnMonth = Object.keys(BN_MONTHS_MAP).some((m) => trimmed.includes(m));
   if (hasBnMonth) {
-    if (!isEn) {
-      // Return normalized Bengali numerals with standard spacing
-      const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
-      return trimmed
-        .split("")
-        .map((char) => {
-          const parsed = parseInt(char, 10);
-          return isNaN(parsed) ? char : banglaDigits[parsed];
-        })
-        .join("");
-    }
-    const parsed = parseArticleDate(trimmed, fallbackDate);
-    const day = parsed.getUTCDate();
-    const month = EN_MONTH_NAMES[parsed.getUTCMonth()];
-    const year = parsed.getUTCFullYear();
-    return `${month} ${day}, ${year}`;
+    const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+    return trimmed
+      .split("")
+      .map((char) => {
+        const parsed = parseInt(char, 10);
+        return isNaN(parsed) ? char : banglaDigits[parsed];
+      })
+      .join("");
   }
 
   const parsed = parseArticleDate(trimmed, fallbackDate);
@@ -177,7 +167,7 @@ export function formatArticleDate(
   }
 
   try {
-    const formatter = new Intl.DateTimeFormat(isEn ? "en-US" : "bn-BD", {
+    const formatter = new Intl.DateTimeFormat("bn-BD", {
       day: "numeric",
       month: "long",
       year: "numeric",
@@ -188,9 +178,6 @@ export function formatArticleDate(
     const day = parsed.getUTCDate();
     const monthIdx = parsed.getUTCMonth();
     const year = parsed.getUTCFullYear();
-    if (isEn) {
-      return `${EN_MONTH_NAMES[monthIdx]} ${day}, ${year}`;
-    }
     const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
     const toBnNum = (n: number) =>
       n

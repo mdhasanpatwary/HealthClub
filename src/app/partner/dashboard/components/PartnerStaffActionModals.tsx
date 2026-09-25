@@ -18,7 +18,6 @@ import {
 } from "@/app/actions/partnerStaffActions";
 import { toast } from "sonner";
 import { KeyRound, Trash2 } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 
 import { StaffCredentialsData } from "./PartnerStaffCredentialsModal";
 
@@ -40,7 +39,6 @@ export function ResetStaffPasswordModal({
   onSuccessWithCredentials,
   partnerName = "",
 }: ResetStaffPasswordModalProps) {
-  const { t } = useLanguage();
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -56,12 +54,12 @@ export function ResetStaffPasswordModal({
     if (!staff) return;
 
     if (newPassword.length < 6) {
-      toast.error(t("partner.password.minLength"));
+      toast.error("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      toast.error(t("partner.password.mismatch"));
+      toast.error("উভয় পাসওয়ার্ড একই হতে হবে");
       return;
     }
 
@@ -69,7 +67,7 @@ export function ResetStaffPasswordModal({
     try {
       const res = await resetPartnerStaffPasswordAction(staff.id, newPassword);
       if (res.success) {
-        toast.success(res.message || t("common.success"));
+        toast.success(res.message || "পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে");
         onSuccess();
         onClose();
         if (onSuccessWithCredentials) {
@@ -84,10 +82,10 @@ export function ResetStaffPasswordModal({
           });
         }
       } else {
-        toast.error(res.message || t("common.error"));
+        toast.error(res.message || "ত্রুটি হয়েছে, আবার চেষ্টা করুন");
       }
     } catch {
-      toast.error(t("common.error.server"));
+      toast.error("সার্ভার ত্রুটি, অনুগ্রহ করে আবার চেষ্টা করুন");
     } finally {
       setLoading(false);
     }
@@ -99,7 +97,7 @@ export function ResetStaffPasswordModal({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-foreground font-heading">
             <KeyRound className="h-5 w-5 text-amber-500" />
-            {t("partner.staff.resetPassword")}
+            পাসওয়ার্ড রিসেট করুন
           </DialogTitle>
           <DialogDescription className="text-xs text-muted-foreground">
             {staff ? `"${staff.name}" (${staff.deskName})` : ""}
@@ -109,7 +107,7 @@ export function ResetStaffPasswordModal({
         <form onSubmit={handleResetSubmit} className="space-y-4 pt-2">
           <div className="space-y-1.5">
             <label htmlFor="staff-new-pw" className="text-xs font-semibold text-foreground cursor-pointer">
-              {t("partner.staff.passwordMinLength")}
+              নতুন পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর) *
             </label>
             <Input
               id="staff-new-pw"
@@ -124,7 +122,7 @@ export function ResetStaffPasswordModal({
 
           <div className="space-y-1.5">
             <label htmlFor="staff-confirm-pw" className="text-xs font-semibold text-foreground cursor-pointer">
-              {t("partner.password.confirm")}
+              নতুন পাসওয়ার্ড নিশ্চিত করুন *
             </label>
             <Input
               id="staff-confirm-pw"
@@ -144,14 +142,14 @@ export function ResetStaffPasswordModal({
               onClick={onClose}
               className="border-border rounded-xl cursor-pointer"
             >
-              {t("common.cancel")}
+              বাতিল
             </Button>
             <Button
               type="submit"
               disabled={loading}
               className="bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl cursor-pointer"
             >
-              {loading ? t("partner.staff.resetting") : t("partner.staff.resetBtn")}
+              {loading ? "রিসেট হচ্ছে..." : "পাসওয়ার্ড রিসেট করুন"}
             </Button>
           </DialogFooter>
         </form>
@@ -174,7 +172,6 @@ export function DeleteStaffConfirmModal({
   staff,
   onSuccess,
 }: DeleteStaffConfirmModalProps) {
-  const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
 
   const handleDelete = async () => {
@@ -183,14 +180,14 @@ export function DeleteStaffConfirmModal({
     try {
       const res = await deletePartnerStaffAction(staff.id);
       if (res.success) {
-        toast.success(res.message || t("common.success"));
+        toast.success(res.message || "স্টাফ সফলভাবে মুছে ফেলা হয়েছে");
         onSuccess();
         onClose();
       } else {
-        toast.error(res.message || t("common.error"));
+        toast.error(res.message || "ত্রুটি হয়েছে, আবার চেষ্টা করুন");
       }
     } catch {
-      toast.error(t("common.error.server"));
+      toast.error("সার্ভার ত্রুটি, অনুগ্রহ করে আবার চেষ্টা করুন");
     } finally {
       setLoading(false);
     }
@@ -202,10 +199,10 @@ export function DeleteStaffConfirmModal({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-destructive font-heading">
             <Trash2 className="h-5 w-5" />
-            {t("partner.staff.deleteConfirmTitle")}
+            স্টাফ মুছে ফেলার নিশ্চিতকরণ
           </DialogTitle>
           <DialogDescription className="text-xs text-muted-foreground pt-1">
-            {t("partner.staff.deleteConfirmDesc")} <strong>&quot;{staff?.name}&quot;</strong> {t("partner.staff.deletePermanentlyDesc")}
+            আপনি কি নিশ্চিত যে <strong>&quot;{staff?.name}&quot;</strong>-কে স্থায়ীভাবে মুছে ফেলতে চান? তার সমস্ত রেকর্ড মুছে যাবে।
           </DialogDescription>
         </DialogHeader>
 
@@ -216,7 +213,7 @@ export function DeleteStaffConfirmModal({
             onClick={onClose}
             className="border-border rounded-xl cursor-pointer"
           >
-            {t("common.cancel")}
+            বাতিল
           </Button>
           <Button
             type="button"
@@ -225,7 +222,7 @@ export function DeleteStaffConfirmModal({
             onClick={handleDelete}
             className="rounded-xl cursor-pointer"
           >
-            {loading ? t("partner.staff.deleting") : t("partner.staff.deleteConfirmBtn")}
+            {loading ? "মুছে ফেলা হচ্ছে..." : "মুছে ফেলুন"}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -25,19 +25,9 @@ export function exportToCsv<T>(
   options?: string | ExportToCsvOptions
 ): boolean {
   if (!data || data.length === 0) {
-    const isBn =
-      typeof document !== "undefined" &&
-      (document.cookie.includes("locale=bn") ||
-        document.documentElement.lang === "bn" ||
-        !document.cookie.includes("locale=en"));
-
     const customMessage =
       typeof options === "string" ? options : options?.emptyMessage;
-    const defaultMsg = isBn
-      ? "এক্সপোর্ট করার জন্য কোনো তথ্য পাওয়া যায়নি।"
-      : "No data available to export.";
-
-    toast.warning(customMessage || defaultMsg);
+    toast.warning(customMessage || "এক্সপোর্ট করার জন্য কোনো তথ্য পাওয়া যায়নি।");
     return false;
   }
 
@@ -102,16 +92,7 @@ export function exportPartnerSettlementCsv(
   partnerName: string
 ): boolean {
   if (!statement) {
-    const isBn =
-      typeof document !== "undefined" &&
-      (document.cookie.includes("locale=bn") ||
-        document.documentElement.lang === "bn" ||
-        !document.cookie.includes("locale=en"));
-    toast.warning(
-      isBn
-        ? "এক্সপোর্ট করার জন্য কোনো স্টেটমেন্ট পাওয়া যায়নি।"
-        : "No statement data available to export."
-    );
+    toast.warning("এক্সপোর্ট করার জন্য কোনো স্টেটমেন্ট পাওয়া যায়নি।");
     return false;
   }
 

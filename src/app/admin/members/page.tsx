@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Member } from "@/services/db";
 import {
   getPaginatedMembersAction,
@@ -20,7 +19,6 @@ import { MemberDialog } from "../components/MemberDialog";
 import { MemberDetailsDialog } from "../components/MemberDetailsDialog";
 
 export default function AdminMembersPage() {
-  const { t, locale } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [members, setMembers] = useState<Member[]>([]);
   const [totalItems, setTotalItems] = useState(0);
@@ -111,7 +109,7 @@ export default function AdminMembersPage() {
           profilePictureUrl: newMember.profilePictureUrl,
         });
         if ("error" in res) {
-          toast.error(res.error || t("admin.dashboard.memberAddedFailed"));
+          toast.error(res.error || "নতুন মেম্বার যুক্ত করতে সমস্যা হয়েছে।");
           return;
         }
       }
@@ -130,25 +128,25 @@ export default function AdminMembersPage() {
       setIsMemberOpen(false);
       await loadData();
       notifyChange();
-      toast.success(editingMember ? t("admin.dashboard.memberUpdatedSuccess") : t("admin.dashboard.memberAddedSuccess"));
+      toast.success(editingMember ? "মেম্বারের তথ্য সফলভাবে আপডেট করা হয়েছে।" : "নতুন মেম্বার সফলভাবে যুক্ত করা হয়েছে।");
     } catch {
-      toast.error(editingMember ? t("admin.dashboard.memberUpdatedFailed") : t("admin.dashboard.memberAddedFailed"));
+      toast.error(editingMember ? "মেম্বারের তথ্য আপডেট করতে সমস্যা হয়েছে।" : "নতুন মেম্বার যুক্ত করতে সমস্যা হয়েছে।");
     }
   };
 
   const handleDeleteMember = async (id: string, name: string) => {
-    if (confirm(t("admin.dashboard.confirmDeleteMember").replace("${name}", name))) {
+    if (confirm(`আপনি কি নিশ্চিত যে "${name}" মেম্বারকে মুছে ফেলতে চান?`)) {
       try {
         const success = await deleteMemberAction(id);
         if (success) {
-          toast.success(t("admin.dashboard.memberDeletedSuccess"));
+          toast.success("মেম্বার সফলভাবে মুছে ফেলা হয়েছে।");
           await loadData();
           notifyChange();
         } else {
-          toast.error(t("admin.dashboard.memberDeletedFailed"));
+          toast.error("মেম্বার মুছতে সমস্যা হয়েছে।");
         }
       } catch {
-        toast.error(t("admin.dashboard.memberDeletedFailed"));
+        toast.error("মেম্বার মুছতে সমস্যা হয়েছে।");
       }
     }
   };
@@ -165,24 +163,24 @@ export default function AdminMembersPage() {
     } else if (member.status === "inactive") {
       newStatus = "active";
     } else {
-      toast.error(t("admin.dashboard.memberStatusPendingError"));
+      toast.error("পেন্ডিং মেম্বারকে সরাসরি সক্রিয় অথবা নিষ্ক্রিয় করা যাবে না।");
       return;
     }
 
     try {
       const success = await updateMemberStatusAction(id, newStatus);
       if (success) {
-        toast.success(t("admin.dashboard.memberStatusUpdatedSuccess"));
+        toast.success("মেম্বার স্ট্যাটাস সফলভাবে আপডেট করা হয়েছে।");
         if (viewingMember && viewingMember.id === id) {
           setViewingMember({ ...viewingMember, status: newStatus });
         }
         await loadData();
         notifyChange();
       } else {
-        toast.error(t("admin.dashboard.memberStatusUpdatedFailed"));
+        toast.error("মেম্বার স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে।");
       }
     } catch {
-      toast.error(t("admin.dashboard.memberStatusUpdatedFailed"));
+      toast.error("মেম্বার স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে।");
     }
   };
 
@@ -280,8 +278,6 @@ export default function AdminMembersPage() {
         onToggleStatus={handleToggleMemberStatus}
         onEditClick={handleOpenEditMember}
         onDeleteClick={handleDeleteMember}
-        locale={locale}
-        t={t}
         loading={loading}
       />
 
@@ -306,7 +302,6 @@ export default function AdminMembersPage() {
           newMember={newMember}
           setNewMember={setNewMember}
           onSubmit={handleSaveMember}
-          t={t}
         />
       )}
 
@@ -319,8 +314,6 @@ export default function AdminMembersPage() {
             setViewingMember(null);
             handleOpenEditMember(m);
           }}
-          locale={locale}
-          t={t}
         />
       )}
     </div>

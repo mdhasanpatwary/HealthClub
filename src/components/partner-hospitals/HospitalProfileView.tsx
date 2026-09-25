@@ -18,8 +18,8 @@ import {
 } from "lucide-react";
 import { Doctor, Partner, Review, PartnerReviewStats } from "@/services/db";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-import { formatDiscount, formatNum } from "@/lib/i18n";
+import { formatDiscount } from "@/lib/utils";
+import { toBanglaNums } from "@/lib/utils";
 import HospitalFacilityBadges from "./HospitalFacilityBadges";
 import HospitalDiscountsSection from "./HospitalDiscountsSection";
 import HospitalDoctorRoster from "./HospitalDoctorRoster";
@@ -43,7 +43,6 @@ export default function HospitalProfileView({
   initialStats,
   initialReviews,
 }: HospitalProfileViewProps) {
-  const { t, locale } = useLanguage();
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
   const fallbackImage =
@@ -56,13 +55,13 @@ export default function HospitalProfileView({
   const getCategoryLabel = (category: string) => {
     switch (category) {
       case "hospital":
-        return t("partnerHospitals.category.specializedHospital");
+        return "স্পেশালাইজড হাসপাতাল";
       case "diagnostic":
-        return t("partnerHospitals.category.diagnosticCenter");
+        return "ডায়াগনস্টিক ও প্যাথলজি সেন্টার";
       case "pharmacy":
-        return t("partnerHospitals.category.modelPharmacy");
+        return "মডেল ফার্মেসি";
       default:
-        return t("partnerHospitals.category.healthcarePartner");
+        return "স্বাস্থ্যসেবা পার্টনার";
     }
   };
 
@@ -92,14 +91,14 @@ export default function HospitalProfileView({
             href="/"
             className="hover:text-foreground transition-colors shrink-0"
           >
-            {t("partnerHospitals.profile.breadcrumbHome")}
+            হোম
           </Link>
           <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground/60" />
           <Link
             href="/partner-hospitals"
             className="hover:text-foreground transition-colors shrink-0"
           >
-            {t("partnerHospitals.profile.breadcrumbPartnerNetwork")}
+            পার্টনার নেটওয়ার্ক
           </Link>
           <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground/60" />
           <span className="text-foreground font-semibold truncate max-w-[180px] sm:max-w-none">
@@ -114,7 +113,7 @@ export default function HospitalProfileView({
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary-dark transition-colors cursor-pointer"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            <span>{t("partnerHospitals.profile.backToNetwork")}</span>
+            <span>সকল পার্টনার প্রতিষ্ঠানে ফিরে যান</span>
           </Link>
         </div>
 
@@ -141,14 +140,14 @@ export default function HospitalProfileView({
                 </span>
                 <span className="px-2 sm:px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-bold bg-emerald-500/90 text-white backdrop-blur-md shadow-xs flex items-center gap-1">
                   <CheckCircle2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                  <span>{t("partnerHospitals.profile.verifiedPartner")}</span>
+                  <span>ভেরিফাইড পার্টনার</span>
                 </span>
                 {initialStats && initialStats.totalReviews > 0 && (
                   <span className="px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-bold bg-background/95 text-amber-600 dark:text-amber-400 backdrop-blur-md shadow-xs flex items-center gap-1 border border-border/60">
                     <Star className="h-3 w-3 fill-amber-400 text-amber-500" />
-                    <span>{formatNum(initialStats.averageRating, locale)}</span>
+                    <span>{toBanglaNums(initialStats.averageRating)}</span>
                     <span className="text-[10px] text-muted-foreground font-normal">
-                      ({formatNum(initialStats.totalReviews, locale)} {t("reviews.totalReviews")})
+                      ({toBanglaNums(initialStats.totalReviews)} টি রিভিউ)
                     </span>
                   </span>
                 )}
@@ -161,7 +160,7 @@ export default function HospitalProfileView({
                 className="h-7 sm:h-8 px-2.5 sm:px-3 rounded-full text-[11px] sm:text-xs bg-background/95 hover:bg-background text-foreground backdrop-blur-md shadow-xs cursor-pointer border border-border/60 shrink-0"
               >
                 <ImageIcon className="h-3.5 w-3.5 mr-1 text-primary" />
-                <span>{t("partnerHospitals.profile.photos")}</span>
+                <span>ছবি গ্যালারি</span>
               </Button>
             </div>
           </div>
@@ -198,10 +197,10 @@ export default function HospitalProfileView({
               </div>
               <div>
                 <p className="text-[10px] sm:text-[11px] uppercase font-bold text-muted-foreground tracking-wider font-mono">
-                  {t("partnerHospitals.profile.memberDiscount")}
+                  মেম্বার ডিসকাউন্ট
                 </p>
                 <p className="text-base sm:text-xl font-black text-primary font-heading">
-                  {formatDiscount(partner.discount, locale)}
+                  {formatDiscount(partner.discount)}
                 </p>
               </div>
             </div>

@@ -25,7 +25,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { formatNum, Locale } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import {
   getPushSubscriberStatsAction,
   sendPushBroadcastAction,
@@ -35,7 +35,6 @@ import {
 interface PushBroadcastModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  locale: Locale;
 }
 
 type AudienceType = "all" | "members" | "partners" | "emergency" | "advisory";
@@ -43,7 +42,6 @@ type AudienceType = "all" | "members" | "partners" | "emergency" | "advisory";
 interface PresetOption {
   id: string;
   labelBn: string;
-  labelEn: string;
   icon: React.ElementType;
   iconColor: string;
   title: string;
@@ -57,7 +55,6 @@ const PRESETS: PresetOption[] = [
   {
     id: "emergency",
     labelBn: "জরুরি রক্তদান",
-    labelEn: "Blood Drive",
     icon: Flame,
     iconColor: "text-rose-500 bg-rose-500/10",
     title: "জরুরি রক্তদান প্রয়োজন - ফেনী",
@@ -69,7 +66,6 @@ const PRESETS: PresetOption[] = [
   {
     id: "renewal",
     labelBn: "মেম্বারশিপ রিনিউ",
-    labelEn: "Card Renewal",
     icon: Clock,
     iconColor: "text-amber-500 bg-amber-500/10",
     title: "মেম্বারশিপ কার্ডের মেয়াদ নবায়ন করুন",
@@ -81,7 +77,6 @@ const PRESETS: PresetOption[] = [
   {
     id: "advisory",
     labelBn: "ফ্রি স্বাস্থ্য ক্যাম্প",
-    labelEn: "Health Camp",
     icon: Sparkles,
     iconColor: "text-emerald-500 bg-emerald-500/10",
     title: "ফ্রি স্বাস্থ্য ক্যাম্প ও বিশেষ পরামর্শ",
@@ -95,9 +90,7 @@ const PRESETS: PresetOption[] = [
 export function PushBroadcastModal({
   open,
   onOpenChange,
-  locale,
 }: PushBroadcastModalProps) {
-  const isBn = locale === "bn";
 
   const [stats, setStats] = useState<PushSubscriberStats>({
     totalSubscribers: 0,
@@ -157,9 +150,7 @@ export function PushBroadcastModal({
 
   const handleBroadcast = async () => {
     if (!title.trim() || !body.trim()) {
-      toast.error(
-        isBn ? "শিরোনাম ও বিবরণ পূরণ করুন।" : "Please fill in title and message."
-      );
+      toast.error("শিরোনাম ও বিবরণ পূরণ করুন।");
       return;
     }
 
@@ -181,21 +172,17 @@ export function PushBroadcastModal({
         toast.error(res.message);
       }
     } catch {
-      toast.error(
-        isBn
-          ? "ব্রডকাস্ট পাঠানোর সময় ত্রুটি হয়েছে।"
-          : "Failed to broadcast push notification."
-      );
+      toast.error("ব্রডকাস্ট পাঠানোর সময় ত্রুটি হয়েছে।");
     } finally {
       setSending(false);
     }
   };
 
   const audienceOptions: Array<{ id: AudienceType; label: string }> = [
-    { id: "all", label: isBn ? "সকল গ্রাহক" : "All Users" },
-    { id: "emergency", label: isBn ? "জরুরি রক্তদান" : "Blood Donors" },
-    { id: "members", label: isBn ? "মেম্বারগণ" : "Members" },
-    { id: "partners", label: isBn ? "পার্টনারগণ" : "Partners" },
+    { id: "all", label: "সকল গ্রাহক" },
+    { id: "emergency", label: "জরুরি রক্তদান" },
+    { id: "members", label: "মেম্বারগণ" },
+    { id: "partners", label: "পার্টনারগণ" },
   ];
 
   return (
@@ -209,14 +196,10 @@ export function PushBroadcastModal({
               </div>
               <div>
                 <DialogTitle className="text-lg font-bold text-foreground">
-                  {isBn
-                    ? "ওয়েব পুশ নোটিফিকেশন ব্রডকাস্টার"
-                    : "Web Push Notification Broadcaster"}
+                  ওয়েব পুশ নোটিফিকেশন ব্রডকাস্টার
                 </DialogTitle>
                 <DialogDescription className="text-xs text-muted-foreground">
-                  {isBn
-                    ? "সরাসরি ব্যবহারকারীদের ব্রাউজারে রিয়েল-টাইম পুশ অ্যালার্ট পাঠান"
-                    : "Blast real-time browser push notifications to subscribers"}
+                  সরাসরি ব্যবহারকারীদের ব্রাউজারে রিয়েল-টাইম পুশ অ্যালার্ট পাঠান
                 </DialogDescription>
               </div>
             </div>
@@ -240,28 +223,28 @@ export function PushBroadcastModal({
         <div className="grid grid-cols-3 gap-2 py-1">
           <div className="p-2.5 rounded-xl bg-primary/5 border border-primary/20 text-center">
             <p className="text-[10px] uppercase font-bold text-muted-foreground">
-              {isBn ? "মোট পুশ গ্রাহক" : "Subscribers"}
+              মোট পুশ গ্রাহক
             </p>
             <p className="text-base font-extrabold font-mono text-primary mt-0.5">
-              {formatNum(stats.totalSubscribers, locale)}
+              {toBanglaNums(stats.totalSubscribers)}
             </p>
           </div>
 
           <div className="p-2.5 rounded-xl bg-muted/40 border border-border/80 text-center">
             <p className="text-[10px] uppercase font-bold text-muted-foreground">
-              {isBn ? "মেম্বার ডিভাইস" : "Members"}
+              মেম্বার ডিভাইস
             </p>
             <p className="text-base font-extrabold font-mono text-foreground mt-0.5">
-              {formatNum(stats.memberSubscribers, locale)}
+              {toBanglaNums(stats.memberSubscribers)}
             </p>
           </div>
 
           <div className="p-2.5 rounded-xl bg-muted/40 border border-border/80 text-center">
             <p className="text-[10px] uppercase font-bold text-muted-foreground">
-              {isBn ? "পার্টনার/গেস্ট" : "Partners/Guests"}
+              পার্টনার/গেস্ট
             </p>
             <p className="text-base font-extrabold font-mono text-foreground mt-0.5">
-              {formatNum(stats.partnerSubscribers + stats.guestSubscribers, locale)}
+              {toBanglaNums(stats.partnerSubscribers + stats.guestSubscribers)}
             </p>
           </div>
         </div>
@@ -269,7 +252,7 @@ export function PushBroadcastModal({
         {/* Quick Presets */}
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-foreground">
-            {isBn ? "কুইক টেমপ্লেট নির্বাচন করুন" : "Quick Presets"}
+            কুইক টেমপ্লেট নির্বাচন করুন
           </label>
           <div className="grid grid-cols-3 gap-2">
             {PRESETS.map((preset) => {
@@ -295,7 +278,7 @@ export function PushBroadcastModal({
                     )}
                   </div>
                   <span className="truncate">
-                    {isBn ? preset.labelBn : preset.labelEn}
+                    {preset.labelBn}
                   </span>
                 </button>
               );
@@ -306,7 +289,7 @@ export function PushBroadcastModal({
         {/* Target Audience Filter */}
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-foreground">
-            {isBn ? "প্রাপক সেগমেন্ট (Target Audience)" : "Target Audience"}
+            প্রাপক সেগমেন্ট (Target Audience)
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-xs">
             {audienceOptions.map((aud) => (
@@ -333,7 +316,7 @@ export function PushBroadcastModal({
         <div className="space-y-3">
           <div className="space-y-1">
             <label className="text-xs font-bold text-foreground">
-              {isBn ? "বিজ্ঞপ্তির শিরোনাম (Title)" : "Notification Title"}
+              বিজ্ঞপ্তির শিরোনাম
             </label>
             <Input
               value={title}
@@ -341,14 +324,14 @@ export function PushBroadcastModal({
                 setTitle(e.target.value);
                 setSelectedPresetId("");
               }}
-              placeholder={isBn ? "যেমন: জরুরি রক্তদান প্রয়োজন" : "Title..."}
+              placeholder="যেমন: জরুরি রক্তদান প্রয়োজন"
               className="rounded-xl text-xs h-9 bg-background"
             />
           </div>
 
           <div className="space-y-1">
             <label className="text-xs font-bold text-foreground">
-              {isBn ? "বিজ্ঞপ্তির বার্তা (Message Body)" : "Message Details"}
+              বিজ্ঞপ্তির বার্তা
             </label>
             <Textarea
               value={body}
@@ -357,7 +340,7 @@ export function PushBroadcastModal({
                 setSelectedPresetId("");
               }}
               rows={3}
-              placeholder={isBn ? "বিস্তারিত বার্তা লিখুন..." : "Message details..."}
+              placeholder="বিস্তারিত বার্তা লিখুন..."
               className="rounded-xl text-xs bg-background resize-none"
             />
           </div>
@@ -365,7 +348,7 @@ export function PushBroadcastModal({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div className="space-y-1">
               <label className="text-xs font-bold text-foreground">
-                {isBn ? "ক্লিক অ্যাকশন লিংক (URL)" : "Target URL"}
+                ক্লিক অ্যাকশন লিংক (URL)
               </label>
               <Input
                 value={url}
@@ -377,7 +360,7 @@ export function PushBroadcastModal({
 
             <div className="space-y-1">
               <label className="text-xs font-bold text-foreground">
-                {isBn ? "ট্যাগ (Notification Tag)" : "Tag"}
+                ট্যাগ (Notification Tag)
               </label>
               <Input
                 value={tag}
@@ -394,7 +377,7 @@ export function PushBroadcastModal({
           <label className="text-xs font-bold text-muted-foreground flex items-center gap-1.5">
             <Smartphone className="h-3.5 w-3.5" />
             <span>
-              {isBn ? "ব্রাউজার পুশ প্রিভিউ" : "Browser Push Live Preview"}
+              ব্রাউজার পুশ প্রিভিউ
             </span>
           </label>
           <div className="p-3 bg-slate-900 text-white rounded-xl border border-slate-700/80 shadow-md flex items-start gap-3">
@@ -409,10 +392,10 @@ export function PushBroadcastModal({
                 <span>এখনই</span>
               </div>
               <p className="text-xs font-bold text-white mt-0.5 truncate">
-                {title || (isBn ? "বিজ্ঞপ্তির শিরোনাম" : "Notification Title")}
+                {title || "বিজ্ঞপ্তির শিরোনাম"}
               </p>
               <p className="text-[11px] text-slate-300 leading-snug line-clamp-2 mt-0.5">
-                {body || (isBn ? "বিজ্ঞপ্তির বিস্তারিত বিবরণ..." : "Message content...")}
+                {body || "বিজ্ঞপ্তির বিস্তারিত বিবরণ..."}
               </p>
               {url && (
                 <div className="flex items-center gap-1 text-[10px] text-emerald-400 mt-1">
@@ -434,7 +417,7 @@ export function PushBroadcastModal({
             disabled={sending}
             className="rounded-xl text-xs h-9 px-4 cursor-pointer"
           >
-            {isBn ? "বাতিল" : "Cancel"}
+            বাতিল
           </Button>
 
           <Button
@@ -447,15 +430,13 @@ export function PushBroadcastModal({
             {sending ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span>{isBn ? "সম্প্রচার হচ্ছে..." : "Broadcasting..."}</span>
+                <span>সম্প্রচার হচ্ছে...</span>
               </>
             ) : (
               <>
                 <Send className="h-4 w-4" />
                 <span>
-                  {isBn
-                    ? `${formatNum(stats.totalSubscribers, locale)} ডিভাইসে পুশ পাঠান`
-                    : `Blast to ${stats.totalSubscribers} Devices`}
+                  {`${toBanglaNums(stats.totalSubscribers)} ডিভাইসে পুশ পাঠান`}
                 </span>
               </>
             )}

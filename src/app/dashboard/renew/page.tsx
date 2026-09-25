@@ -14,13 +14,11 @@ import type { PublicPaymentSettings } from "@/app/actions/systemSettingsActions"
 import { authStore } from "@/services/authStore";
 import { Member } from "@/services/db";
 import { toast } from "sonner";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Skeleton } from "@/components/ui/skeleton";
 import { trackEvent } from "@/lib/analytics";
 
 export default function RenewalPage() {
   const router = useRouter();
-  const { t } = useLanguage();
   const [member, setMember] = useState<Member | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -63,7 +61,7 @@ export default function RenewalPage() {
 
         if (typeof navigator !== "undefined" && navigator.onLine && !freshUser) {
           await authStore.logout();
-          toast.error(t("dashboard.accountTerminated"));
+          toast.error("আপনার অ্যাকাউন্টটি আর সক্রিয় নেই অথবা মুছে ফেলা হয়েছে।");
           router.replace("/login");
           return;
         }
@@ -83,12 +81,12 @@ export default function RenewalPage() {
     return () => {
       isMounted = false;
     };
-  }, [router, t]);
+  }, [router]);
 
   const handleCopyNumber = () => {
     navigator.clipboard.writeText(bkashNumber);
     setCopied(true);
-    toast.success(t("dashboard.renew.toastCopy"));
+    toast.success("বিকাশ নম্বরটি কপি করা হয়েছে!");
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -96,20 +94,20 @@ export default function RenewalPage() {
     e.preventDefault();
 
     if (!senderNumber || !transactionId) {
-      toast.error(t("dashboard.renew.errorAllFields"));
+      toast.error("অনুগ্রহ করে সবগুলো ঘর পূরণ করুন।");
       return;
     }
 
     const cleanSender = senderNumber.trim();
     const bdPhoneRegex = /^(01)[3-9]\d{8}$/;
     if (!bdPhoneRegex.test(cleanSender)) {
-      toast.error(t("dashboard.renew.errorPhone"));
+      toast.error("সঠিক ১১ সংখ্যার বাংলাদেশী বিকাশ নম্বর দিন (যেমন: 017XXXXXXXX)।");
       return;
     }
 
     const cleanTxnId = transactionId.trim().toUpperCase();
     if (cleanTxnId.length < 6 || cleanTxnId.length > 16) {
-      toast.error(t("dashboard.renew.errorTxn"));
+      toast.error("সঠিক ট্রানজেকশন আইডি দিন (সাধারণত ৮ থেকে ১২ অক্ষরের হয়)।");
       return;
     }
 
@@ -138,10 +136,10 @@ export default function RenewalPage() {
           router.push("/dashboard");
         }, 3000);
       } else {
-        toast.error(res.message || t("dashboard.renew.errorFailed"));
+        toast.error(res.message || "রিনিউয়াল সাবমিট করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।");
       }
     } catch {
-      toast.error(t("dashboard.renew.errorServerError"));
+      toast.error("সার্ভার ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।");
     } finally {
       setIsSubmitting(false);
     }
@@ -192,7 +190,7 @@ export default function RenewalPage() {
       <div className="mx-auto max-w-xl">
         <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-primary mb-5 transition-colors">
           <ArrowLeft className="h-3.5 w-3.5" />
-          {t("dashboard.renew.backToDashboard")}
+          ড্যাশবোর্ডে ফিরে যান
         </Link>
 
         <Card className="border border-border shadow-xl bg-background/80 backdrop-blur">
@@ -200,14 +198,14 @@ export default function RenewalPage() {
             <div className="flex items-center justify-center space-x-2 text-primary mx-auto">
               <Heart className="h-7 w-7 fill-primary" />
               <span className="font-heading text-2xl font-bold text-secondary">
-                {t("layout.footer.health")} <span className="text-primary">{t("layout.footer.club")}</span>
+                হেলথ <span className="text-primary">ক্লাব</span>
               </span>
             </div>
             <CardTitle className="font-heading text-xl font-bold text-secondary">
-              {t("dashboard.renew.title")}
+              মেম্বারশিপ নবায়ন (Membership Renewal)
             </CardTitle>
             <CardDescription>
-              {t("dashboard.renew.description")}
+              মেম্বারশিপ সচল রাখতে ৫০০ টাকা নবায়ন ফি বিকাশ সেন্ড মানি করুন।
             </CardDescription>
           </CardHeader>
 
@@ -217,11 +215,11 @@ export default function RenewalPage() {
                 <div className="h-16 w-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto border border-emerald-200">
                   <CheckCircle2 className="h-10 w-10" />
                 </div>
-                <h3 className="font-heading text-lg font-bold text-secondary dark:text-white">{t("dashboard.renew.successTitle")}</h3>
+                <h3 className="font-heading text-lg font-bold text-secondary dark:text-white">অনুরোধ সম্পন্ন হয়েছে!</h3>
                 <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
-                  {t("dashboard.renew.successDesc")}
+                  আপনার নবায়ন পেমেন্ট ওটি ট্রানজেকশন সফলভাবে জমা দেওয়া হয়েছে। ২৪ ঘণ্টার মধ্যে এডমিন তথ্য যাচাই করে আপনার কার্ডের মেয়াদ ১ বছর বৃদ্ধি করে দেবে।
                 </p>
-                <p className="text-xs text-primary font-semibold">{t("dashboard.renew.redirecting")}</p>
+                <p className="text-xs text-primary font-semibold">ড্যাশবোর্ডে রিডাইরেক্ট করা হচ্ছে...</p>
               </div>
             ) : (
               <>
@@ -232,8 +230,8 @@ export default function RenewalPage() {
                       bKash
                     </div>
                     <div>
-                      <h4 className="font-bold text-sm text-[#e2125d]">{t("dashboard.renew.bkashTitle")}</h4>
-                      <p className="text-xs text-muted-foreground mt-0.5">{t("dashboard.renew.bkashSubtitle")}</p>
+                      <h4 className="font-bold text-sm text-[#e2125d]">বিকাশ সেন্ড মানি করুন (Send Money)</h4>
+                      <p className="text-xs text-muted-foreground mt-0.5">নিচের ব্যক্তিগত নম্বরে ৫০০ টাকা পাঠান।</p>
                     </div>
                   </div>
 
@@ -251,14 +249,14 @@ export default function RenewalPage() {
                       className="hover:bg-slate-100 text-xs cursor-pointer"
                     >
                       {copied ? <Check className="h-3.5 w-3.5 text-primary" /> : <Copy className="h-3.5 w-3.5" />}
-                      {copied ? t("dashboard.renew.copied") : t("dashboard.renew.copy")}
+                      {copied ? "কপি হয়েছে" : "কপি করুন"}
                     </Button>
                   </div>
 
                   <div className="text-xs text-muted-foreground space-y-1.5 pl-1.5 border-l-2 border-[#e2125d]/20">
-                    <p>{t("dashboard.renew.step1")}</p>
-                    <p>{t("dashboard.renew.step2")}</p>
-                    <p>{t("dashboard.renew.step3")}</p>
+                    <p>১. আপনার বিকাশ অ্যাপে লগইন করে <strong>Send Money</strong> অপশনে যান।</p>
+                    <p>২. উপরে দেওয়া নম্বরটি দিন এবং পরিমাণ <strong>৳৫০০</strong> নির্ধারণ করুন।</p>
+                    <p>৩. পেমেন্ট সম্পন্ন করার পর বিকাশ থেকে পাওয়া <strong>Transaction ID</strong> কপি করুন।</p>
                   </div>
                 </div>
 
@@ -267,7 +265,7 @@ export default function RenewalPage() {
                   <div className="space-y-2">
                     <label htmlFor="renew-sender" className="text-xs font-semibold text-secondary flex items-center gap-1.5 cursor-pointer">
                       <Smartphone className="h-3.5 w-3.5 text-primary" />
-                      {t("dashboard.renew.senderLabel")}
+                      যে বিকাশ নম্বর থেকে টাকা পাঠিয়েছেন
                     </label>
                     <Input
                       id="renew-sender"
@@ -275,7 +273,7 @@ export default function RenewalPage() {
                       required
                       value={senderNumber}
                       onChange={(e) => setSenderNumber(e.target.value)}
-                      placeholder={t("dashboard.renew.senderPlaceholder")}
+                      placeholder="যেমন: 018XXXXXXXX"
                       className="h-11 border-border bg-background"
                     />
                   </div>
@@ -283,7 +281,7 @@ export default function RenewalPage() {
                   <div className="space-y-2">
                     <label htmlFor="renew-txn" className="text-xs font-semibold text-secondary flex items-center gap-1.5 cursor-pointer">
                       <ShieldCheck className="h-3.5 w-3.5 text-primary" />
-                      {t("dashboard.renew.txnLabel")}
+                      বিকাশ ট্রানজেকশন আইডি
                     </label>
                     <Input
                       id="renew-txn"
@@ -291,7 +289,7 @@ export default function RenewalPage() {
                       required
                       value={transactionId}
                       onChange={(e) => setTransactionId(e.target.value)}
-                      placeholder={t("dashboard.renew.txnPlaceholder") || "e.g., BGA678UHG"}
+                      placeholder="যেমন: BGA678UHG"
                       className="h-11 border-border bg-background font-mono uppercase"
                     />
                   </div>
@@ -299,20 +297,20 @@ export default function RenewalPage() {
                   <div className="space-y-2">
                     <label htmlFor="renew-profession" className="text-xs font-semibold text-secondary flex items-center gap-1.5 cursor-pointer">
                       <User className="h-3.5 w-3.5 text-primary" />
-                      {t("dashboard.renew.professionLabel")}
+                      পেশা/কর্মক্ষেত্র (পরিবর্তন করতে চাইলে)
                     </label>
                     <Input
                       id="renew-profession"
                       type="text"
                       value={profession}
                       onChange={(e) => setProfession(e.target.value)}
-                      placeholder={t("dashboard.renew.professionPlaceholder")}
+                      placeholder="যেমন: চাকুরিজীবী, ব্যবসায়ী, ছাত্র ইত্যাদি"
                       className="h-11 border-border bg-background"
                     />
                   </div>
 
                   <Button type="submit" disabled={isSubmitting} size="lg" className="w-full active:scale-[0.99] cursor-pointer">
-                    {isSubmitting ? t("dashboard.renew.submittingButton") : t("dashboard.renew.submitButton")}
+                    {isSubmitting ? "অনুরোধ জমা দেওয়া হচ্ছে..." : "রিনিউয়াল অনুরোধ পাঠান (৳৫০০)"}
                   </Button>
                 </form>
               </>

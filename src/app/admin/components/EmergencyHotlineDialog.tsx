@@ -23,8 +23,6 @@ import { EmergencyHotline } from "@/data/emergencyData";
 import { saveHotlineAction } from "@/app/actions/emergencyHotlineActions";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-
 interface EmergencyHotlineDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -38,9 +36,6 @@ export function EmergencyHotlineDialog({
   hotline,
   onSuccess,
 }: EmergencyHotlineDialogProps) {
-  const { locale } = useLanguage();
-  const isEn = locale === "en";
-
   const [titleBn, setTitleBn] = useState("");
   const [titleEn, setTitleEn] = useState("");
   const [category, setCategory] = useState<EmergencyHotline["category"]>("oxygen");
@@ -77,7 +72,7 @@ export function EmergencyHotlineDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!titleBn.trim() || !phone.trim()) {
-      toast.error(isEn ? "Please fill all required fields" : "অনুগ্রহ করে সব তথ্য দিন");
+      toast.error("অনুগ্রহ করে সব তথ্য দিন");
       return;
     }
 
@@ -97,16 +92,16 @@ export function EmergencyHotlineDialog({
       if (res.success) {
         toast.success(
           hotline
-            ? isEn ? "Hotline updated successfully!" : "হটলাইনের তথ্য আপডেট হয়েছে!"
-            : isEn ? "New hotline added successfully!" : "নতুন জরুরি হটলাইন যুক্ত হয়েছে!"
+            ? "হটলাইনের তথ্য আপডেট হয়েছে!"
+            : "নতুন জরুরি হটলাইন যুক্ত হয়েছে!"
         );
         onSuccess();
         onOpenChange(false);
       } else {
-        toast.error(res.error || (isEn ? "Failed to save hotline" : "সংরক্ষণ ব্যর্থ হয়েছে"));
+        toast.error(res.error || "সংরক্ষণ ব্যর্থ হয়েছে");
       }
     } catch {
-      toast.error(isEn ? "An unexpected error occurred" : "একটি সমস্যা দেখা দিয়েছে");
+      toast.error("একটি সমস্যা দেখা দিয়েছে");
     } finally {
       setSaving(false);
     }
@@ -118,13 +113,11 @@ export function EmergencyHotlineDialog({
         <DialogHeader>
           <DialogTitle className="text-lg font-bold text-foreground">
             {hotline
-              ? isEn ? "Edit Emergency Hotline / Oxygen" : "জরুরি হটলাইন / অক্সিজেন এডিট করুন"
-              : isEn ? "Add Emergency Hotline / Oxygen" : "নতুন জরুরি হটলাইন / অক্সিজেন যুক্ত করুন"}
+              ? "জরুরি হটলাইন / অক্সিজেন এডিট করুন"
+              : "নতুন জরুরি হটলাইন / অক্সিজেন যুক্ত করুন"}
           </DialogTitle>
           <DialogDescription className="text-xs text-muted-foreground">
-            {isEn
-              ? "Provide organization name, category, and direct calling number."
-              : "হাসপাতাল, অক্সিজেন বা জরুরি সংস্থার নাম ও হেল্পলাইন নম্বর দিন।"}
+            হাসপাতাল, অক্সিজেন বা জরুরি সংস্থার নাম ও হেল্পলাইন নম্বর দিন।
           </DialogDescription>
         </DialogHeader>
 
@@ -132,7 +125,7 @@ export function EmergencyHotlineDialog({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="hotline-title-bn" className="text-xs font-semibold">
-                {isEn ? "Title (Bangla)" : "নাম (বাংলায়)"} *
+                নাম (বাংলায়) *
               </Label>
               <Input
                 id="hotline-title-bn"
@@ -145,7 +138,7 @@ export function EmergencyHotlineDialog({
 
             <div className="space-y-1.5">
               <Label htmlFor="hotline-title-en" className="text-xs font-semibold">
-                {isEn ? "Title (English)" : "নাম (ইংরেজিতে)"}
+                নাম (ইংরেজিতে)
               </Label>
               <Input
                 id="hotline-title-en"
@@ -159,7 +152,7 @@ export function EmergencyHotlineDialog({
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label className="text-xs font-semibold">
-                {isEn ? "Category" : "ক্যাটাগরি"} *
+                ক্যাটাগরি *
               </Label>
               <Select
                 value={category}
@@ -182,7 +175,7 @@ export function EmergencyHotlineDialog({
 
             <div className="space-y-1.5">
               <Label htmlFor="hotline-phone" className="text-xs font-semibold">
-                {isEn ? "Phone Number" : "ফোন নম্বর"} *
+                ফোন নম্বর *
               </Label>
               <Input
                 id="hotline-phone"
@@ -196,7 +189,7 @@ export function EmergencyHotlineDialog({
 
           <div className="space-y-1.5">
             <Label htmlFor="hotline-desc-bn" className="text-xs font-semibold">
-              {isEn ? "Short Description (Bangla)" : "সংক্ষিপ্ত বিবরণ (বাংলা)"}
+              সংক্ষিপ্ত বিবরণ (বাংলা)
             </Label>
             <Input
               id="hotline-desc-bn"
@@ -214,16 +207,16 @@ export function EmergencyHotlineDialog({
               disabled={saving}
               className="text-xs"
             >
-              {isEn ? "Cancel" : "বাতিল"}
+              বাতিল
             </Button>
             <Button type="submit" disabled={saving} className="text-xs font-bold">
               {saving ? (
                 <>
                   <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                  {isEn ? "Saving..." : "সংরক্ষণ হচ্ছে..."}
+                  সংরক্ষণ হচ্ছে...
                 </>
               ) : (
-                isEn ? "Save Hotline" : "সংরক্ষণ করুন"
+                "সংরক্ষণ করুন"
               )}
             </Button>
           </DialogFooter>

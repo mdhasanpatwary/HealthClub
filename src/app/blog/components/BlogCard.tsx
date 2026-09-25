@@ -8,21 +8,17 @@ import { formatArticleDate } from "@/lib/dateUtils";
 
 interface BlogCardProps {
   post: BlogPostCardItem;
-  locale?: string;
   priority?: boolean;
 }
 
-export function BlogCard({ post, locale = "bn", priority = false }: BlogCardProps) {
-  const isEn = locale === "en";
-  const title = isEn ? post.titleEn : post.titleBn;
-  const excerpt = isEn ? post.excerptEn : post.excerptBn;
-  const categoryName = isEn ? post.categoryNameEn : post.categoryNameBn;
-  const readTime = isEn ? post.readTimeEn : post.readTimeBn;
-  const publishedDate = formatArticleDate(post.publishedDate, locale);
+export function BlogCard({ post, priority = false }: BlogCardProps) {
+  const title = post.titleBn;
+  const excerpt = post.excerptBn;
+  const categoryName = post.categoryNameBn;
+  const readTime = post.readTimeBn;
+  const publishedDate = formatArticleDate(post.publishedDate);
   const facilityCount = post.facilityCount ?? post.hospitalCount ?? 0;
-  const facilityLabel = isEn
-    ? (post.facilityLabelEn || (facilityCount === 1 ? "Facility" : "Facilities"))
-    : (post.facilityLabelBn || "প্রতিষ্ঠান");
+  const facilityLabel = post.facilityLabelBn || "প্রতিষ্ঠান";
 
   return (
     <article
@@ -67,7 +63,7 @@ export function BlogCard({ post, locale = "bn", priority = false }: BlogCardProp
             <span>•</span>
             <span className="flex items-center gap-1 text-primary font-medium">
               <ShieldCheck className="h-3.5 w-3.5" />
-              {isEn ? post.author.nameEn : post.author.nameBn}
+              {post.author.nameBn}
             </span>
           </div>
 
@@ -88,15 +84,13 @@ export function BlogCard({ post, locale = "bn", priority = false }: BlogCardProp
         {/* Action Footer */}
         <div className="pt-2 border-t border-border/50 flex items-center justify-between text-xs font-semibold text-emerald-700 dark:text-emerald-400 group-hover:text-emerald-800 dark:group-hover:text-emerald-300">
           <span className="flex items-center gap-1 group-hover:gap-2 transition-all">
-            {isEn ? "Read Full Guide" : "সম্পূর্ণ গাইড পড়ুন"}
+            সম্পূর্ণ গাইড পড়ুন
             <ArrowRight className="h-3.5 w-3.5" />
           </span>
 
           {facilityCount > 0 && (
             <span className="text-[11px] font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-md">
-              {isEn
-                ? `${facilityCount} ${facilityLabel}`
-                : `${toBanglaNums(facilityCount)}টি ${facilityLabel}`}
+              {`${toBanglaNums(facilityCount)}টি ${facilityLabel}`}
             </span>
           )}
         </div>

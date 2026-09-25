@@ -22,8 +22,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-import { formatNum } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import { useAdminNotifications } from "@/app/admin/hooks/useAdminNotifications";
 import {
   isNotificationSoundEnabled,
@@ -65,7 +64,7 @@ function getCategoryBg(category: NotificationCategory) {
   }
 }
 
-function formatRelativeTime(dateStr: string, isBn: boolean): string {
+function formatRelativeTime(dateStr: string): string {
   try {
     const d = new Date(dateStr);
     const now = new Date();
@@ -75,19 +74,12 @@ function formatRelativeTime(dateStr: string, isBn: boolean): string {
     const diffHour = Math.floor(diffMin / 60);
     const diffDay = Math.floor(diffHour / 24);
 
-    if (diffMin < 1) return isBn ? "এইমাত্র" : "Just now";
-    if (diffMin < 60)
-      return isBn
-        ? `${formatNum(diffMin, "bn")} মিনিট আগে`
-        : `${diffMin}m ago`;
-    if (diffHour < 24)
-      return isBn
-        ? `${formatNum(diffHour, "bn")} ঘণ্টা আগে`
-        : `${diffHour}h ago`;
-    if (diffDay < 7)
-      return isBn ? `${formatNum(diffDay, "bn")} দিন আগে` : `${diffDay}d ago`;
+    if (diffMin < 1) return "এইমাত্র";
+    if (diffMin < 60) return `${toBanglaNums(diffMin)} মিনিট আগে`;
+    if (diffHour < 24) return `${toBanglaNums(diffHour)} ঘণ্টা আগে`;
+    if (diffDay < 7) return `${toBanglaNums(diffDay)} দিন আগে`;
 
-    return d.toLocaleDateString(isBn ? "bn-BD" : "en-US", {
+    return d.toLocaleDateString("bn-BD", {
       month: "short",
       day: "numeric",
     });
@@ -97,8 +89,6 @@ function formatRelativeTime(dateStr: string, isBn: boolean): string {
 }
 
 export function AdminNotificationBell() {
-  const { locale, t } = useLanguage();
-  const isBn = locale === "bn";
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState<"all" | "actions" | "messages">("all");
   const [soundEnabled, setSoundEnabled] = useState(() => isNotificationSoundEnabled());
@@ -134,11 +124,11 @@ export function AdminNotificationBell() {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger
-        aria-label={t("admin.nav.notifications") || "বিজ্ঞপ্তি"}
+        aria-label="বিজ্ঞপ্তি"
         title={
           unreadCount > 0
-            ? `${formatNum(unreadCount, locale)} ${t("admin.notifications.unreadCount") || "টি অপঠিত"}`
-            : t("admin.nav.notifications") || "বিজ্ঞপ্তি"
+            ? `${toBanglaNums(unreadCount)}টি অপঠিত`
+            : "বিজ্ঞপ্তি"
         }
         className="relative inline-flex items-center justify-center size-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-background/80 transition-all cursor-pointer outline-hidden focus-visible:ring-2 focus-visible:ring-primary/40"
       >
@@ -150,7 +140,7 @@ export function AdminNotificationBell() {
               highPriorityCount > 0 ? "bg-rose-500 animate-pulse" : "bg-primary"
             }`}
           >
-            {unreadCount > 9 ? "9+" : formatNum(unreadCount, locale)}
+            {unreadCount > 9 ? "৯+" : toBanglaNums(unreadCount)}
           </span>
         )}
       </DropdownMenuTrigger>
@@ -164,14 +154,14 @@ export function AdminNotificationBell() {
         <div className="flex items-center justify-between p-3.5 border-b border-border/70 bg-muted/30">
           <div className="flex items-center gap-2">
             <span className="font-heading font-bold text-sm text-foreground">
-              {t("admin.nav.notifications") || "বিজ্ঞপ্তি ও অ্যালার্ট"}
+              বিজ্ঞপ্তি ও অ্যালার্ট
             </span>
             {unreadCount > 0 && (
               <Badge
                 variant="outline"
                 className="bg-primary/10 text-primary border-primary/20 text-[11px] font-semibold px-2 py-0.5 rounded-full"
               >
-                {formatNum(unreadCount, locale)} {isBn ? "নতুন" : "new"}
+                {toBanglaNums(unreadCount)} নতুন
               </Badge>
             )}
           </div>
@@ -181,8 +171,8 @@ export function AdminNotificationBell() {
               type="button"
               onClick={toggleSound}
               className="p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
-              title={soundEnabled ? (isBn ? "শব্দ বন্ধ করুন" : "Mute Sound") : (isBn ? "শব্দ চালু করুন" : "Unmute Sound")}
-              aria-label={soundEnabled ? "Mute notification sound" : "Unmute notification sound"}
+              title={soundEnabled ? "শব্দ বন্ধ করুন" : "শব্দ চালু করুন"}
+              aria-label={soundEnabled ? "শব্দ বন্ধ করুন" : "শব্দ চালু করুন"}
             >
               {soundEnabled ? (
                 <Volume2 className="h-3.5 w-3.5 text-primary" />
@@ -199,7 +189,7 @@ export function AdminNotificationBell() {
                 className="text-[11px] h-7 px-2 font-medium text-muted-foreground hover:text-primary transition-colors gap-1"
               >
                 <CheckCheck className="h-3.5 w-3.5" />
-                <span>{t("admin.notifications.markAllRead") || "সব পঠিত"}</span>
+                <span>সব পঠিত</span>
               </Button>
             )}
           </div>
@@ -216,7 +206,7 @@ export function AdminNotificationBell() {
                 : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
             }`}
           >
-            {t("admin.notifications.all") || "সকল"} ({formatNum(items.length, locale)})
+            সকল ({toBanglaNums(items.length)})
           </button>
           <button
             type="button"
@@ -227,7 +217,7 @@ export function AdminNotificationBell() {
                 : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
             }`}
           >
-            {t("admin.notifications.actionRequired") || "প্রয়োজনীয় অ্যাকশন"}
+            প্রয়োজনীয় অ্যাকশন
           </button>
           <button
             type="button"
@@ -238,7 +228,7 @@ export function AdminNotificationBell() {
                 : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
             }`}
           >
-            {t("admin.notifications.messages") || "বার্তা"}
+            বার্তা
           </button>
         </div>
 
@@ -250,20 +240,18 @@ export function AdminNotificationBell() {
                 <CheckCheck className="h-5 w-5" />
               </div>
               <p className="text-xs font-semibold text-foreground">
-                {t("admin.notifications.allCaughtUp") || "সব ক্লিয়ার! কোনো অপেক্ষমাণ নোটিফিকেশন নেই।"}
+                সব ক্লিয়ার! কোনো অপেক্ষমাণ নোটিফিকেশন নেই।
               </p>
               <p className="text-[11px] text-muted-foreground">
-                {isBn
-                  ? "নতুন মেম্বারশিপ বা পার্টনার আবেদন আসলে এখানে দেখতে পাবেন।"
-                  : "New member or partner requests will appear here."}
+                নতুন মেম্বারশিপ বা পার্টনার আবেদন আসলে এখানে দেখতে পাবেন।
               </p>
             </div>
           ) : (
             previewItems.map((item: AdminNotificationItem) => {
               const isRead = readSet.has(item.id);
-              const title = isBn ? item.titleBn : item.titleEn;
-              const desc = isBn ? item.descriptionBn : item.descriptionEn;
-              const actionLabel = isBn ? item.actionLabelBn : item.actionLabelEn;
+              const title = item.titleBn;
+              const desc = item.descriptionBn;
+              const actionLabel = item.actionLabelBn;
 
               return (
                 <div
@@ -299,7 +287,7 @@ export function AdminNotificationBell() {
                         {title}
                       </p>
                       <span className="text-[10px] text-muted-foreground whitespace-nowrap shrink-0">
-                        {formatRelativeTime(item.timestamp, isBn)}
+                        {formatRelativeTime(item.timestamp)}
                       </span>
                     </div>
 
@@ -331,7 +319,7 @@ export function AdminNotificationBell() {
                           }}
                           className="text-[10px] text-muted-foreground hover:text-foreground font-medium ml-auto cursor-pointer"
                         >
-                          {isBn ? "পঠিত করুন" : "Mark read"}
+                          পঠিত করুন
                         </button>
                       )}
                     </div>
@@ -354,7 +342,7 @@ export function AdminNotificationBell() {
             onClick={() => setOpen(false)}
             className="inline-flex items-center justify-center gap-1.5 w-full py-1.5 px-3 rounded-xl text-xs font-bold text-primary hover:bg-primary/10 transition-colors"
           >
-            <span>{t("admin.notifications.viewAll") || "সকল বিজ্ঞপ্তি ও হিস্ট্রি দেখুন"}</span>
+            <span>সকল বিজ্ঞপ্তি ও হিস্ট্রি দেখুন</span>
             <ExternalLink className="h-3.5 w-3.5" />
           </Link>
         </div>

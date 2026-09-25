@@ -1,13 +1,7 @@
 import Link from "next/link";
 import { HeartHandshake, ArrowRight } from "lucide-react";
 
-interface BlogMembershipBannerProps {
-  locale?: string;
-}
-
-export function BlogMembershipBanner({ locale = "bn" }: BlogMembershipBannerProps) {
-  const isEn = locale === "en";
-
+export function BlogMembershipBanner() {
   return (
     <section className="rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/15 via-primary/5 to-card p-6 sm:p-8 space-y-4 shadow-sm">
       <div className="flex items-start gap-4">
@@ -16,20 +10,16 @@ export function BlogMembershipBanner({ locale = "bn" }: BlogMembershipBannerProp
         </div>
         <div className="space-y-1">
           <span className="text-xs font-bold uppercase tracking-wider text-primary">
-            {isEn ? "Health Club Member Privilege" : "হেলথ ক্লাব মেম্বার সুবিধা"}
+            হেলথ ক্লাব মেম্বার সুবিধা
           </span>
           <h3 className="font-heading text-lg sm:text-xl font-bold text-foreground">
-            {isEn
-              ? "Special Member Discounts on Hospital Diagnostic Tests & Services"
-              : "ফেনীর সেরা পার্টনার হাসপাতালগুলোতে পরীক্ষা ও সার্ভিসে বিশেষ মেম্বার ছাড়"}
+            ফেনীর সেরা পার্টনার হাসপাতালগুলোতে পরীক্ষা ও সার্ভিসে বিশেষ মেম্বার ছাড়
           </h3>
         </div>
       </div>
 
       <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-        {isEn
-          ? "Get your Health Club digital membership card today to unlock guaranteed 10% to 30% discounts on pathological tests, radiology, doctor appointments, and emergency care across partner hospitals in Feni Sadar."
-          : "হেলথ ক্লাবের ডিজিটাল মেম্বারশিপ কার্ড থাকলে আপনি ও আপনার পরিবারের সদস্যরা আল-আকসা হাসপাতাল, প্যাসিফিক হেলথ কেয়ারসহ ফেনী সদরের শীর্ষ পার্টনার স্বাস্থ্যসেবা কেন্দ্রগুলোতে ১০-৩০% নিশ্চিত ছাড় পাবেন।"}
+        হেলথ ক্লাবের ডিজিটাল মেম্বারশিপ কার্ড থাকলে আপনি ও আপনার পরিবারের সদস্যরা আল-আকসা হাসপাতাল, প্যাসিফিক হেলথ কেয়ারসহ ফেনী সদরের শীর্ষ পার্টনার স্বাস্থ্যসেবা কেন্দ্রগুলোতে ১০-৩০% নিশ্চিত ছাড় পাবেন।
       </p>
 
       <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -37,7 +27,7 @@ export function BlogMembershipBanner({ locale = "bn" }: BlogMembershipBannerProp
           href="/membership"
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-xs sm:text-sm font-bold shadow-xs hover:bg-primary/90 transition-all"
         >
-          <span>{isEn ? "Get Membership Card" : "মেম্বারশিপ কার্ড গ্রহণ করুন"}</span>
+          <span>মেম্বারশিপ কার্ড গ্রহণ করুন</span>
           <ArrowRight className="h-4 w-4" />
         </Link>
 
@@ -45,7 +35,7 @@ export function BlogMembershipBanner({ locale = "bn" }: BlogMembershipBannerProp
           href="/partner-hospitals"
           className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border/80 bg-card hover:bg-muted text-xs sm:text-sm font-semibold text-foreground transition-all"
         >
-          <span>{isEn ? "Explore Partner Hospitals" : "সকল পার্টনার হাসপাতাল দেখুন"}</span>
+          <span>সকল পার্টনার হাসপাতাল দেখুন</span>
         </Link>
       </div>
     </section>

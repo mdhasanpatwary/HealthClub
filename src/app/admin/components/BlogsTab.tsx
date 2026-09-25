@@ -35,7 +35,6 @@ import {
 } from "@/app/actions/blogAdminActions";
 import { exportToCsv } from "@/lib/exportUtils";
 import { toast } from "sonner";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { BlogDialog } from "./BlogDialog";
 import { BlogStatsCards } from "./blog/BlogStatsCards";
 import { BlogMobileCard } from "./blog/BlogMobileCard";
@@ -44,9 +43,6 @@ import { Pagination } from "@/components/ui/pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 
 export function BlogsTab() {
-  const { locale, t } = useLanguage();
-  const isEn = locale === "en";
-
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [totalItems, setTotalItems] = useState(0);
@@ -78,11 +74,11 @@ export function BlogsTab() {
       setTotalItems(res.totalItems);
       setTotalPages(res.totalPages);
     } catch {
-      toast.error(isEn ? "Failed to load blog posts" : "ব্লগ পোস্ট লোড করতে সমস্যা হয়েছে");
+      toast.error("ব্লগ পোস্ট লোড করতে সমস্যা হয়েছে");
     } finally {
       setLoading(false);
     }
-  }, [currentPage, pageSize, debouncedSearch, selectedCategory, isEn]);
+  }, [currentPage, pageSize, debouncedSearch, selectedCategory]);
 
   useEffect(() => {
     let isMounted = true;
@@ -117,17 +113,15 @@ export function BlogsTab() {
     try {
       const res = await deleteBlogPostAction(deletingPost.slug);
       if (res.success) {
-        toast.success(
-          isEn ? "Blog post deleted successfully!" : "ব্লগ পোস্ট সফলভাবে মুছে ফেলা হয়েছে!"
-        );
+        toast.success("ব্লগ পোস্ট সফলভাবে মুছে ফেলা হয়েছে!");
         setDeleteModalOpen(false);
         setDeletingPost(null);
         loadPosts();
       } else {
-        toast.error(res.error || (isEn ? "Failed to delete post" : "ব্লগ মুছতে সমস্যা হয়েছে"));
+        toast.error(res.error || "ব্লগ মুছতে সমস্যা হয়েছে");
       }
     } catch {
-      toast.error(isEn ? "An unexpected error occurred" : "অপ্রত্যাশিত ত্রুটি ঘটেছে");
+      toast.error("অপ্রত্যাশিত ত্রুটি ঘটেছে");
     } finally {
       setDeleting(false);
     }
@@ -135,7 +129,7 @@ export function BlogsTab() {
 
   const handleExport = () => {
     if (!posts.length) {
-      toast.info(isEn ? "No blog posts to export" : "এক্সপোর্ট করার মতো কোনো ব্লগ নেই");
+      toast.info("এক্সপোর্ট করার মতো কোনো ব্লগ নেই");
       return;
     }
     exportToCsv(posts, "healthclub_blog_posts", [
@@ -155,12 +149,10 @@ export function BlogsTab() {
         <div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
             <Newspaper className="h-6 w-6 text-primary" />
-            <span>{isEn ? "Blog Posts Management" : "ব্লগ পোস্ট ম্যানেজমেন্ট"}</span>
+            <span>ব্লগ পোস্ট ম্যানেজমেন্ট</span>
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-            {isEn
-              ? "Create, edit and manage public health & hospital blog articles."
-              : "নতুন ব্লগ তৈরি করুন, তথ্য আপডেট করুন বা অপ্রয়োজনীয় পোস্ট মুছে ফেলুন।"}
+            নতুন ব্লগ তৈরি করুন, তথ্য আপডেট করুন বা অপ্রয়োজনীয় পোস্ট মুছে ফেলুন।
           </p>
         </div>
 
@@ -173,7 +165,7 @@ export function BlogsTab() {
             className="h-9 gap-1.5 text-xs font-semibold"
           >
             <Download className="h-3.5 w-3.5" />
-            <span>{isEn ? "Export" : "এক্সপোর্ট"}</span>
+            <span>এক্সপোর্ট</span>
           </Button>
           <Button
             size="sm"
@@ -181,13 +173,13 @@ export function BlogsTab() {
             className="h-9 gap-1.5 text-xs font-bold shadow-xs"
           >
             <Plus className="h-4 w-4" />
-            <span>{isEn ? "Write Blog" : "নতুন ব্লগ লিখুন"}</span>
+            <span>নতুন ব্লগ লিখুন</span>
           </Button>
         </div>
       </div>
 
       {/* KPI Cards */}
-      <BlogStatsCards totalItems={totalItems} isEn={isEn} />
+      <BlogStatsCards totalItems={totalItems} />
 
       {/* Main Listing Card */}
       <Card className="border-border">
@@ -195,12 +187,10 @@ export function BlogsTab() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <CardTitle className="text-base sm:text-lg font-bold">
-                {isEn ? "Published Articles" : "প্রকাশিত ব্লগ আর্টিকেলসমূহ"}
+                প্রকাশিত ব্লগ আর্টিকেলসমূহ
               </CardTitle>
               <CardDescription className="text-xs">
-                {isEn
-                  ? "Showing all active and indexed blog articles."
-                  : "সকল সক্রিয় ও সার্চ ইঞ্জিনে ইনডেক্সযোগ্য ব্লগের তালিকা।"}
+                সকল সক্রিয় ও সার্চ ইঞ্জিনে ইনডেক্সযোগ্য ব্লগের তালিকা।
               </CardDescription>
             </div>
 
@@ -214,7 +204,7 @@ export function BlogsTab() {
                     setSearch(e.target.value);
                     setCurrentPage(1);
                   }}
-                  placeholder={isEn ? "Search by title or tag..." : "শিরোনাম বা ট্যাগ খুঁজুন..."}
+                  placeholder="শিরোনাম বা ট্যাগ খুঁজুন..."
                   className="pl-8 text-xs h-9"
                 />
               </div>
@@ -229,7 +219,7 @@ export function BlogsTab() {
               >
                 {BLOG_CATEGORIES.map((cat) => (
                   <option key={cat.id} value={cat.id}>
-                    {isEn ? cat.nameEn : cat.nameBn}
+                    {cat.nameBn}
                   </option>
                 ))}
               </select>
@@ -250,16 +240,14 @@ export function BlogsTab() {
                 <Newspaper className="h-6 w-6" />
               </div>
               <h3 className="text-sm font-semibold text-foreground">
-                {isEn ? "No blog posts found" : "কোনো ব্লগ পোস্ট পাওয়া যায়নি"}
+                কোনো ব্লগ পোস্ট পাওয়া যায়নি
               </h3>
               <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-                {isEn
-                  ? "Try changing your search keywords or write a new blog post."
-                  : "আপনার অনুসন্ধানের শব্দ পরিবর্তন করুন অথবা নতুন ব্লগ পোস্ট তৈরি করুন।"}
+                আপনার অনুসন্ধানের শব্দ পরিবর্তন করুন অথবা নতুন ব্লগ পোস্ট তৈরি করুন।
               </p>
               <Button size="sm" onClick={handleCreateNew} className="text-xs gap-1.5">
                 <Plus className="h-3.5 w-3.5" />
-                {isEn ? "Write First Blog" : "প্রথম ব্লগ লিখুন"}
+                প্রথম ব্লগ লিখুন
               </Button>
             </div>
           ) : (
@@ -270,7 +258,6 @@ export function BlogsTab() {
                   <BlogMobileCard
                     key={post.slug}
                     post={post}
-                    isEn={isEn}
                     onEdit={handleEdit}
                     onDelete={handleDeleteClick}
                   />
@@ -280,7 +267,6 @@ export function BlogsTab() {
               {/* Desktop View: Table Layout */}
               <BlogTable
                 posts={posts}
-                isEn={isEn}
                 onEdit={handleEdit}
                 onDelete={handleDeleteClick}
               />
@@ -301,9 +287,7 @@ export function BlogsTab() {
                   setCurrentPage(1);
                 }}
                 pageSizeOptions={[10, 20, 50]}
-                locale={locale}
-                t={t}
-                itemLabel={isEn ? "posts" : "টি ব্লগ"}
+                itemLabel="টি ব্লগ"
                 disabled={loading}
               />
             </div>
@@ -325,12 +309,10 @@ export function BlogsTab() {
           <DialogHeader>
             <DialogTitle className="text-lg font-bold text-destructive flex items-center gap-2">
               <Trash2 className="h-5 w-5" />
-              <span>{isEn ? "Confirm Blog Deletion" : "ব্লগ মুছে ফেলার নিশ্চিতকরণ"}</span>
+              <span>ব্লগ মুছে ফেলার নিশ্চিতকরণ</span>
             </DialogTitle>
             <DialogDescription className="text-xs text-muted-foreground">
-              {isEn
-                ? `Are you sure you want to permanently delete "${deletingPost?.titleEn}"? This URL will no longer be accessible.`
-                : `আপনি কি নিশ্চিত যে "${deletingPost?.titleBn}" ব্লগটি স্থায়ীভাবে মুছে ফেলতে চান? এটি মুছে ফেললে লিঙ্কে আর ভিজিট করা যাবে না।`}
+              {`আপনি কি নিশ্চিত যে "${deletingPost?.titleBn}" ব্লগটি স্থায়ীভাবে মুছে ফেলতে চান? এটি মুছে ফেললে লিঙ্কে আর ভিজিট করা যাবে না।`}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="pt-2 gap-2">
@@ -340,7 +322,7 @@ export function BlogsTab() {
               onClick={() => setDeleteModalOpen(false)}
               disabled={deleting}
             >
-              {isEn ? "Cancel" : "বাতিল"}
+              বাতিল
             </Button>
             <Button
               variant="destructive"
@@ -352,10 +334,8 @@ export function BlogsTab() {
               {deleting ? (
                 <>
                   <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                  {isEn ? "Deleting..." : "মুছে ফেলা হচ্ছে..."}
+                  মুছে ফেলা হচ্ছে...
                 </>
-              ) : isEn ? (
-                "Delete Permanently"
               ) : (
                 "মুছে ফেলুন"
               )}

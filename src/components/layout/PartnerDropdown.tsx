@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { LogOut, LayoutDashboard } from "lucide-react";
 import { Partner } from "@/services/db";
 import { authStore } from "@/services/authStore";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,7 +20,6 @@ interface PartnerDropdownProps {
 
 export default function PartnerDropdown({ partner }: PartnerDropdownProps) {
   const router = useRouter();
-  const { t } = useLanguage();
 
   const handleLogout = () => {
     authStore.logoutPartner();
@@ -64,7 +62,7 @@ export default function PartnerDropdown({ partner }: PartnerDropdownProps) {
           className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md hover:bg-muted text-foreground transition-colors"
         >
           <LayoutDashboard className="h-4 w-4 text-primary" />
-          <span>{t("layout.header.dashboard")}</span>
+          <span>ড্যাশবোর্ড</span>
         </DropdownMenuItem>
         
         <DropdownMenuSeparator />
@@ -75,7 +73,7 @@ export default function PartnerDropdown({ partner }: PartnerDropdownProps) {
           className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md transition-colors"
         >
           <LogOut className="h-4 w-4" />
-          <span>{t("layout.header.logout")}</span>
+          <span>লগআউট</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

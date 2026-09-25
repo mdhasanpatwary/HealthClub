@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import type { MemberRegistrationInput } from "@/lib/validations/member";
 import type { ReferenceDiscountType } from "@/lib/referenceCodes";
-import type { Locale } from "@/lib/i18n";
 
 export interface RefStatusState {
   status: "idle" | "checking" | "valid" | "invalid";
@@ -22,8 +21,7 @@ interface ReferenceCodeFieldProps {
   refStatus: RefStatusState;
   setRefStatus: (state: RefStatusState) => void;
   onVerify: () => void;
-  t: (key: string) => string;
-  locale: Locale;
+  t?: (key: string) => string;
 }
 
 export function ReferenceCodeField({
@@ -32,8 +30,6 @@ export function ReferenceCodeField({
   refStatus,
   setRefStatus,
   onVerify,
-  t,
-  locale,
 }: ReferenceCodeFieldProps) {
   const isFree = refStatus.discountType === "free" || refStatus.finalFee === 0;
 
@@ -45,14 +41,12 @@ export function ReferenceCodeField({
           className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer"
         >
           <Tag className="h-3.5 w-3.5 text-primary" />
-          {t("auth.register.referenceCodeLabel")}
+          রেফারেন্স কোড (ঐচ্ছিক)
         </label>
         {refStatus.status === "valid" && (
           <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
             <CheckCircle2 className="h-3 w-3" />
-            {isFree
-              ? locale === "en" ? "100% Free Benefit" : "১০০% ফ্রি সুবিধা"
-              : locale === "en" ? "Discount Active" : "ছাড় সক্রিয়"}
+            {isFree ? "১০০% ফ্রি সুবিধা" : "ছাড় সক্রিয়"}
           </span>
         )}
       </div>
@@ -63,7 +57,7 @@ export function ReferenceCodeField({
             id="reg-refCode"
             type="text"
             {...register("referenceCode")}
-            placeholder={t("auth.register.referenceCodePlaceholder")}
+            placeholder="রেফারেন্স কোড লিখুন"
             className={`border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 uppercase tracking-wider font-mono text-xs focus:border-primary/40 ${
               refStatus.status === "valid"
                 ? "border-emerald-500/70 bg-emerald-50/20 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-300 font-bold"
@@ -95,7 +89,7 @@ export function ReferenceCodeField({
           {refStatus.status === "checking" ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" />
           ) : (
-            t("auth.register.referenceCodeApply")
+            "যাচাই করুন"
           )}
         </Button>
       </div>

@@ -15,7 +15,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import Link from "next/link";
-import { formatNum, Locale } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import {
   GlucoseEvaluationResult,
   GlucoseContext,
@@ -24,15 +24,12 @@ import {
 interface DiabetesResultViewProps {
   result: GlucoseEvaluationResult;
   context: GlucoseContext;
-  locale: Locale;
 }
 
 export function DiabetesResultView({
   result,
   context,
-  locale,
 }: DiabetesResultViewProps) {
-  const isEn = locale === "en";
   const [activeSubTab, setActiveSubTab] = useState<"action" | "diet" | "warnings">("action");
 
   return (
@@ -45,14 +42,14 @@ export function DiabetesResultView({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <span className="text-[11px] uppercase tracking-wider font-bold text-muted-foreground">
-                {isEn ? "Clinical Evaluation Result" : "ক্লিনিক্যাল ফলাফল"}
+                ক্লিনিক্যাল ফলাফল
               </span>
               <h4 className="text-xl sm:text-2xl font-heading font-black text-secondary dark:text-white">
-                {isEn ? result.titleEn : result.titleBn}
+                {result.titleBn}
               </h4>
             </div>
             <Badge className={`${result.badgeBg} font-bold text-xs py-1.5 px-3 rounded-full shrink-0 shadow-sm`}>
-              {isEn ? result.badgeEn : result.badgeBn}
+              {result.badgeBn}
             </Badge>
           </div>
 
@@ -61,30 +58,30 @@ export function DiabetesResultView({
             {context === "hba1c" ? (
               <div className="p-3.5 rounded-2xl bg-background/80 backdrop-blur-sm border border-border/60 text-center col-span-2 sm:col-span-1">
                 <span className="text-[11px] text-muted-foreground font-medium block">
-                  {isEn ? "HbA1c Level" : "HbA1c মাত্রা"}
+                  HbA1c মাত্রা
                 </span>
                 <div className="text-2xl font-black font-mono text-secondary dark:text-white">
-                  {formatNum(result.valueMmol, locale)}%
+                  {toBanglaNums(result.valueMmol)}%
                 </div>
               </div>
             ) : (
               <>
                 <div className="p-3.5 rounded-2xl bg-background/80 backdrop-blur-sm border border-border/60 text-center">
                   <span className="text-[11px] text-muted-foreground font-medium block">
-                    {isEn ? "mmol/L Value" : "mmol/L মান"}
+                    mmol/L মান
                   </span>
                   <div className="text-xl sm:text-2xl font-black font-mono text-secondary dark:text-white">
-                    {formatNum(result.valueMmol, locale)}
+                    {toBanglaNums(result.valueMmol)}
                     <span className="text-xs font-normal text-muted-foreground ml-1">mmol/L</span>
                   </div>
                 </div>
 
                 <div className="p-3.5 rounded-2xl bg-background/80 backdrop-blur-sm border border-border/60 text-center">
                   <span className="text-[11px] text-muted-foreground font-medium block">
-                    {isEn ? "mg/dL Equivalent" : "mg/dL সমমান"}
+                    mg/dL সমমান
                   </span>
                   <div className="text-xl sm:text-2xl font-black font-mono text-secondary dark:text-white">
-                    {formatNum(result.valueMgDl, locale)}
+                    {toBanglaNums(result.valueMgDl)}
                     <span className="text-xs font-normal text-muted-foreground ml-1">mg/dL</span>
                   </div>
                 </div>
@@ -93,26 +90,26 @@ export function DiabetesResultView({
 
             <div className="p-3.5 rounded-2xl bg-background/80 backdrop-blur-sm border border-border/60 text-center col-span-2 sm:col-span-1">
               <span className="text-[11px] text-muted-foreground font-medium block">
-                {isEn ? "Target Standard" : "আদর্শ লক্ষ্যমাত্রা"}
+                আদর্শ লক্ষ্যমাত্রা
               </span>
               <div className="text-xs font-bold text-secondary dark:text-white pt-1">
-                {isEn ? result.targetRangeEn : result.targetRangeBn}
+                {result.targetRangeBn}
               </div>
             </div>
           </div>
 
           <p className="text-xs sm:text-sm text-secondary/90 dark:text-white/90 leading-relaxed font-medium">
-            {isEn ? result.summaryEn : result.summaryBn}
+            {result.summaryBn}
           </p>
 
           {/* Spectrum Bar */}
           <div className="space-y-1.5 pt-1">
             <div className="flex justify-between text-[10px] font-bold text-muted-foreground">
-              <span>{isEn ? "Hypo" : "লো সুগার"}</span>
-              <span>{isEn ? "Normal" : "স্বাভাবিক"}</span>
-              <span>{isEn ? "Pre-diabetes" : "প্রাক-ডায়াবেটিস"}</span>
-              <span>{isEn ? "Diabetes" : "ডায়াবেটিস"}</span>
-              <span>{isEn ? "Severe High" : "অত্যন্ত উচ্চ"}</span>
+              <span>লো সুগার</span>
+              <span>স্বাভাবিক</span>
+              <span>প্রাক-ডায়াবেটিস</span>
+              <span>ডায়াবেটিস</span>
+              <span>অত্যন্ত উচ্চ</span>
             </div>
             <div className="h-3.5 w-full bg-muted rounded-full overflow-hidden flex gap-0.5 p-0.5 border border-border/80">
               <div
@@ -154,50 +151,50 @@ export function DiabetesResultView({
             <button
               type="button"
               onClick={() => setActiveSubTab("action")}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all shrink-0 ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
                 activeSubTab === "action"
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted"
               }`}
             >
               <HeartHandshake className="h-4 w-4" />
-              <span>{isEn ? "Action Plan" : "অ্যাকশন প্ল্যান"}</span>
+              <span>অ্যাকশন প্ল্যান</span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveSubTab("diet")}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all shrink-0 ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
                 activeSubTab === "diet"
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted"
               }`}
             >
               <Salad className="h-4 w-4" />
-              <span>{isEn ? "Diabetic Nutrition" : "খাদ্যাভ্যাস ও পুষ্টি"}</span>
+              <span>খাদ্যাভ্যাস ও পুষ্টি</span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveSubTab("warnings")}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all shrink-0 ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
                 activeSubTab === "warnings"
                   ? "bg-rose-600 text-white shadow-sm"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted"
               }`}
             >
               <ShieldAlert className="h-4 w-4" />
-              <span>{isEn ? "Warning Symptoms" : "বিপদ লক্ষণ"}</span>
+              <span>বিপদ লক্ষণ</span>
             </button>
           </div>
 
           {activeSubTab === "action" && (
             <div className="space-y-3 animate-in fade-in-50 duration-200">
               <h5 className="text-xs font-bold text-secondary dark:text-white uppercase tracking-wider">
-                {isEn ? "Medical Care & Lifestyle Steps:" : "করণীয় পদক্ষেপ ও চিকিৎসা নির্দেশনা:"}
+                করণীয় পদক্ষেপ ও চিকিৎসা নির্দেশনা:
               </h5>
               <ul className="space-y-2.5">
-                {(isEn ? result.actionPlanEn : result.actionPlanBn).map((act, idx) => (
+                {result.actionPlanBn.map((act, idx) => (
                   <li key={idx} className="flex items-start gap-2.5 text-xs text-muted-foreground leading-relaxed">
                     <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                     <span>{act}</span>
@@ -210,10 +207,10 @@ export function DiabetesResultView({
           {activeSubTab === "diet" && (
             <div className="space-y-3 animate-in fade-in-50 duration-200">
               <h5 className="text-xs font-bold text-secondary dark:text-white uppercase tracking-wider">
-                {isEn ? "Diabetic Meal & Carbohydrate Advice:" : "ডায়াবেটিস খাদ্যতালিকা ও পুষ্টি পরামর্শ:"}
+                ডায়াবেটিস খাদ্যতালিকা ও পুষ্টি পরামর্শ:
               </h5>
               <ul className="space-y-2.5">
-                {(isEn ? result.dietTipsEn : result.dietTipsBn).map((diet, idx) => (
+                {result.dietTipsBn.map((diet, idx) => (
                   <li key={idx} className="flex items-start gap-2.5 text-xs text-muted-foreground leading-relaxed">
                     <Apple className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
                     <span>{diet}</span>
@@ -226,10 +223,10 @@ export function DiabetesResultView({
           {activeSubTab === "warnings" && (
             <div className="space-y-3 animate-in fade-in-50 duration-200">
               <h5 className="text-xs font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider">
-                {isEn ? "Emergency Symptoms to Watch For:" : "জরুরি লক্ষণ বা বিপদচিহ্ন:"}
+                জরুরি লক্ষণ বা বিপদচিহ্ন:
               </h5>
               <ul className="space-y-2.5">
-                {(isEn ? result.warningSignsEn : result.warningSignsBn).map((warn, idx) => (
+                {result.warningSignsBn.map((warn, idx) => (
                   <li key={idx} className="flex items-start gap-2.5 text-xs text-muted-foreground leading-relaxed">
                     <AlertTriangle className="h-4 w-4 text-rose-500 shrink-0 mt-0.5" />
                     <span>{warn}</span>
@@ -248,10 +245,10 @@ export function DiabetesResultView({
                 </div>
                 <div className="text-xs">
                   <div className="font-bold text-secondary dark:text-white">
-                    {isEn ? "Recommended Consultation:" : "পরামর্শযোগ্য বিশেষজ্ঞ:"}
+                    পরামর্শযোগ্য বিশেষজ্ঞ:
                   </div>
                   <div className="text-muted-foreground font-medium">
-                    {isEn ? result.recommendedDoctorEn : result.recommendedDoctorBn}
+                    {result.recommendedDoctorBn}
                   </div>
                 </div>
               </div>
@@ -262,7 +259,7 @@ export function DiabetesResultView({
                   className: "w-full sm:w-auto text-xs font-bold shrink-0",
                 })}
               >
-                <span>{isEn ? "Find Diabetologist in Feni" : "ডায়াবেটিস ডাক্তার খুঁজুন"}</span>
+                <span>ডায়াবেটিস ডাক্তার খুঁজুন</span>
                 <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
               </Link>
             </div>

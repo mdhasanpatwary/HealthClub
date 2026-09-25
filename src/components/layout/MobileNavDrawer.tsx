@@ -6,7 +6,6 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
   X,
-  Globe,
   Sun,
   Moon,
   LayoutDashboard,
@@ -15,7 +14,6 @@ import {
 import { Member, Partner } from "@/services/db";
 import { authStore } from "@/services/authStore";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { useTheme } from "@/components/layout/ThemeProvider";
 import { useAdminCounts } from "@/app/admin/hooks/useAdminCounts";
 import { isAdminUser } from "@/lib/permissions";
@@ -37,7 +35,6 @@ export default function MobileNavDrawer({
 }: MobileNavDrawerProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const { locale, setLocale, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const {
     doctorsCount,
@@ -103,8 +100,8 @@ export default function MobileNavDrawer({
               className="h-8 w-8 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.3)] shrink-0"
             />
             <span className="font-heading text-lg font-bold tracking-tight text-secondary dark:text-white">
-              {t("layout.header.health")}{" "}
-              <span className="gradient-text">{t("layout.header.club")}</span>
+              হেলথ{" "}
+              <span className="gradient-text">ক্লাব</span>
             </span>
           </Link>
           <button
@@ -122,8 +119,6 @@ export default function MobileNavDrawer({
             <MobileNavAdminLinks
               pathname={pathname}
               onClose={onClose}
-              locale={locale}
-              t={t}
               doctorsCount={doctorsCount}
               pendingPartnerRequests={pendingPartnerRequests}
               pendingRenewals={pendingRenewals}
@@ -133,28 +128,11 @@ export default function MobileNavDrawer({
             <MobileNavPublicLinks
               pathname={pathname}
               onClose={onClose}
-              t={t}
             />
           )}
 
-          {/* Footer controls: Language, Theme & Auth */}
+          {/* Footer controls: Theme & Auth */}
           <div className="border-t border-border/60 pt-4 space-y-3">
-            {/* Language Switcher */}
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5">
-                <Globe className="h-4 w-4" />
-                {t("layout.header.changeLanguage")}
-              </span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setLocale(locale === "bn" ? "en" : "bn")}
-                className="text-xs h-8 border-border px-3 rounded-lg font-bold"
-              >
-                <span>{locale === "bn" ? "English" : "বাংলা"}</span>
-              </Button>
-            </div>
-
             {/* Theme Switcher */}
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5">
@@ -163,7 +141,7 @@ export default function MobileNavDrawer({
                 ) : (
                   <Sun className="h-4 w-4 text-amber-400" />
                 )}
-                {t("layout.header.darkMode")}
+                ডার্ক মোড
               </span>
               <Button
                 variant="outline"
@@ -172,9 +150,7 @@ export default function MobileNavDrawer({
                 className="text-xs h-8 border-border px-3 rounded-lg font-bold"
               >
                 <span>
-                  {theme === "light"
-                    ? t("layout.header.enable")
-                    : t("layout.header.disable")}
+                  {theme === "light" ? "চালু করুন" : "বন্ধ করুন"}
                 </span>
               </Button>
             </div>
@@ -198,7 +174,7 @@ export default function MobileNavDrawer({
                     })}
                   >
                     <LayoutDashboard className="h-4 w-4 mr-2" />
-                    <span>{t("layout.header.adminPanel")}</span>
+                    <span>এডমিন প্যানেল</span>
                   </Link>
                 ) : (
                   <Link
@@ -210,7 +186,7 @@ export default function MobileNavDrawer({
                     })}
                   >
                     <LayoutDashboard className="h-4 w-4 mr-2" />
-                    <span>{t("layout.header.dashboard")}</span>
+                    <span>ড্যাশবোর্ড</span>
                   </Link>
                 )}
                 <Button
@@ -219,7 +195,7 @@ export default function MobileNavDrawer({
                   className="w-full justify-start text-xs text-destructive hover:bg-destructive/10"
                 >
                   <LogOut className="h-4 w-4 mr-2" />
-                  {t("layout.header.logout")}
+                  লগআউট
                 </Button>
               </div>
             ) : partner ? (
@@ -233,7 +209,7 @@ export default function MobileNavDrawer({
                   })}
                 >
                   <LayoutDashboard className="h-4 w-4 mr-2" />
-                  <span>{t("layout.header.dashboard")}</span>
+                  <span>ড্যাশবোর্ড</span>
                 </Link>
                 <Button
                   variant="ghost"
@@ -241,7 +217,7 @@ export default function MobileNavDrawer({
                   className="w-full justify-start text-xs text-destructive hover:bg-destructive/10"
                 >
                   <LogOut className="h-4 w-4 mr-2" />
-                  {t("layout.header.logout")}
+                  লগআউট
                 </Button>
               </div>
             ) : (
@@ -254,7 +230,7 @@ export default function MobileNavDrawer({
                     className: "w-full text-xs font-semibold",
                   })}
                 >
-                  {t("layout.header.login")}
+                  লগইন
                 </Link>
                 <Link
                   href="/register"
@@ -263,7 +239,7 @@ export default function MobileNavDrawer({
                     className: "w-full text-xs font-bold",
                   })}
                 >
-                  {t("layout.header.becomeMember")}
+                  সদস্য হোন
                 </Link>
               </div>
             )}

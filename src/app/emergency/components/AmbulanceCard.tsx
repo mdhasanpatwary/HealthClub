@@ -17,46 +17,45 @@ import { trackEvent } from "@/lib/analytics";
 
 interface AmbulanceCardProps {
   ambulance: AmbulanceService;
-  isEn: boolean;
 }
 
-export function getAmbulanceTypeMeta(type: AmbulanceType, isEn: boolean) {
+export function getAmbulanceTypeMeta(type: AmbulanceType) {
   switch (type) {
     case "ICU":
       return {
-        label: isEn ? "ICU Life Support" : "আইসিইউ সাপোর্ট",
+        label: "আইসিইউ সাপোর্ট",
         badgeClass: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30",
         icon: Activity,
       };
     case "AC":
       return {
-        label: isEn ? "AC Ambulance" : "এসি অ্যাম্বুলেন্স",
+        label: "এসি অ্যাম্বুলেন্স",
         badgeClass: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30",
         icon: Wind,
       };
     case "Non-AC":
       return {
-        label: isEn ? "Non-AC Ambulance" : "নন-এসি অ্যাম্বুলেন্স",
+        label: "নন-এসি অ্যাম্বুলেন্স",
         badgeClass: "bg-slate-500/10 text-slate-700 dark:text-slate-300 border-slate-500/30",
         icon: Truck,
       };
     case "Freezer":
       return {
-        label: isEn ? "Freezing Carrier" : "ফ্রিজিং ক্যারিয়ার",
+        label: "ফ্রিজিং ক্যারিয়ার",
         badgeClass: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/30",
         icon: Snowflake,
       };
     default:
       return {
-        label: `${type} ${isEn ? "Ambulance" : "অ্যাম্বুলেন্স"}`,
+        label: `${type} অ্যাম্বুলেন্স`,
         badgeClass: "bg-muted text-muted-foreground border-border",
         icon: Truck,
       };
   }
 }
 
-export function AmbulanceCard({ ambulance, isEn }: AmbulanceCardProps) {
-  const typeMeta = getAmbulanceTypeMeta(ambulance.type, isEn);
+export function AmbulanceCard({ ambulance }: AmbulanceCardProps) {
+  const typeMeta = getAmbulanceTypeMeta(ambulance.type);
   const TypeIcon = typeMeta.icon;
   const cleanPhone = ambulance.phone.replace(/[^0-9]/g, "");
 
@@ -85,7 +84,7 @@ export function AmbulanceCard({ ambulance, isEn }: AmbulanceCardProps) {
 
           <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-500/5 px-2.5 py-1 rounded-lg border border-emerald-500/10 w-fit">
             <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-            <span>{ambulance.availableHours || (isEn ? "24/7 Service" : "২৪/৭ সার্বক্ষণিক")}</span>
+            <span>{ambulance.availableHours || "২৪/৭ সার্বক্ষণিক"}</span>
           </div>
         </div>
 
@@ -101,11 +100,11 @@ export function AmbulanceCard({ ambulance, isEn }: AmbulanceCardProps) {
               });
             }}
             className="sm:col-span-3 inline-flex items-center justify-center gap-2 h-10 rounded-xl bg-primary hover:bg-primary-dark text-white font-bold text-xs sm:text-sm shadow-xs transition-all active:scale-[0.98]"
-            aria-label={`${isEn ? "Call" : "কল দিন"}: ${ambulance.name} (${ambulance.phone})`}
+            aria-label={`কল দিন: ${ambulance.name} (${ambulance.phone})`}
           >
             <PhoneCall className="h-4 w-4" aria-hidden="true" />
             <span className="truncate">
-              {isEn ? "Call:" : "কল দিন:"} {ambulance.phone}
+              কল দিন: {ambulance.phone}
             </span>
           </a>
           <a
@@ -123,3 +122,4 @@ export function AmbulanceCard({ ambulance, isEn }: AmbulanceCardProps) {
     </Card>
   );
 }
+

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ChevronLeft, Phone, Siren } from "lucide-react";
 import { BlogPost, BlogPostCardItem } from "@/types/blog";
-import { Locale } from "@/lib/i18n";
 import { toBanglaNums } from "@/lib/utils";
 import { BlogArticleHeader } from "./BlogArticleHeader";
 import { BlogQuickAnswer } from "./BlogQuickAnswer";
@@ -18,34 +17,23 @@ import { BlogFAQSection } from "./BlogFAQSection";
 import { BlogShareBar } from "./BlogShareBar";
 import { BlogCard } from "./BlogCard";
 import { BlogClusterMesh } from "./BlogClusterMesh";
-import {
-  getArticleEnglishIntro,
-  getArticleSelectionGuide,
-  getArticleEmergencyDirectory,
-  getArticleBookingGuide,
-} from "../utils/blogTranslations";
 
 interface BlogPostDetailViewProps {
   post: BlogPost;
   pageUrl: string;
   relatedPosts: BlogPostCardItem[];
-  initialLocale: Locale;
 }
 
 export function BlogPostDetailView({
   post,
   pageUrl,
   relatedPosts,
-  initialLocale = "bn",
 }: BlogPostDetailViewProps) {
-  const locale = initialLocale as Locale;
-  const isEn = locale === "en";
-
-  const title = isEn ? post.titleEn : post.titleBn;
-  const introParagraphs = getArticleEnglishIntro(post.slug, post.introParagraphsBn, isEn);
-  const selectionGuide = getArticleSelectionGuide(post.slug, post.selectionGuideBn, isEn);
-  const emergencyDirectory = getArticleEmergencyDirectory(post.emergencyDirectoryBn, isEn);
-  const bookingGuide = getArticleBookingGuide(post.bookingGuideBn, isEn, post.bookingGuideEn);
+  const title = post.titleBn;
+  const introParagraphs = post.introParagraphsBn;
+  const selectionGuide = post.selectionGuideBn;
+  const emergencyDirectory = post.emergencyDirectoryBn;
+  const bookingGuide = post.bookingGuideBn;
 
   const hasPricingGuide = Boolean(
     post.diagnosticTestPricingBn ||
@@ -105,19 +93,19 @@ export function BlogPostDetailView({
             className="inline-flex items-center gap-1 hover:text-primary transition-colors font-medium"
           >
             <ChevronLeft className="h-4 w-4" />
-            <span>{isEn ? "Back to Blog" : "সকল ব্লগ নিবন্ধ"}</span>
+            <span>সকল ব্লগ নিবন্ধ</span>
           </Link>
 
           <ol className="hidden md:flex items-center gap-2 list-none p-0 m-0">
             <li>
               <Link href="/" prefetch={false} className="hover:text-foreground">
-                {isEn ? "Home" : "হোম"}
+                হোম
               </Link>
             </li>
             <li aria-hidden="true">/</li>
             <li>
               <Link href="/blog" prefetch={false} className="hover:text-foreground">
-                {isEn ? "Blog" : "ব্লগ"}
+                ব্লগ
               </Link>
             </li>
             <li aria-hidden="true">/</li>
@@ -134,10 +122,10 @@ export function BlogPostDetailView({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
             <div className="lg:col-span-8 space-y-10 min-w-0">
               {/* Article Header (Title, Author, Highlights) */}
-              <BlogArticleHeader post={post} pageUrl={pageUrl} locale={locale} />
+              <BlogArticleHeader post={post} pageUrl={pageUrl} />
 
               {/* AEO Quick Answer / AI Decision Summary */}
-              <BlogQuickAnswer post={post} locale={locale} />
+              <BlogQuickAnswer post={post} />
 
               {/* Mobile Table of Contents (Direct in-flow jump menu) */}
               <div id="mobile-toc" className="lg:hidden scroll-mt-24">
@@ -174,7 +162,6 @@ export function BlogPostDetailView({
                   bloodBanks={post.bloodBanks}
                   ambulances={post.ambulances}
                   currentSlug={post.slug}
-                  locale={locale}
                   defaultOpen={false}
                 />
               </div>
@@ -183,8 +170,8 @@ export function BlogPostDetailView({
               <section id="overview" className="scroll-mt-24 space-y-4">
                 <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
                   {isPurePriceList
-                    ? (isEn ? "1. Diagnostic Healthcare Landscape in Feni" : "১. ফেনীর ডায়াগনস্টিক পরিকাঠামো ও প্রেক্ষাপট")
-                    : (isEn ? "1. Healthcare Landscape in Feni" : "১. ফেনী জেলার স্বাস্থ্যসেবা ও পটভূমি")}
+                    ? "১. ফেনীর ডায়াগনস্টিক পরিকাঠামো ও প্রেক্ষাপট"
+                    : "১. ফেনী জেলার স্বাস্থ্যসেবা ও পটভূমি"}
                 </h2>
                 <div className="space-y-4 text-sm sm:text-base text-foreground/90 leading-relaxed">
                   {introParagraphs.map((p, idx) => {
@@ -221,37 +208,32 @@ export function BlogPostDetailView({
 
               {/* Doctor Specialty Sections */}
               {post.doctorGroups && post.doctorGroups.length > 0 && (
-                <DoctorSpecialtySection
-                  doctorGroups={post.doctorGroups}
-                  locale={locale}
-                />
+                <DoctorSpecialtySection doctorGroups={post.doctorGroups} />
               )}
 
               {/* Doctor Chamber Hubs */}
               {post.chamberHubsBn && post.chamberHubsBn.length > 0 && (
-                <DoctorChamberHubs hubs={post.chamberHubsBn} locale={locale} />
+                <DoctorChamberHubs hubs={post.chamberHubsBn} />
               )}
 
               {/* Doctor Serial Booking Guide */}
               {bookingGuide && (
-                <DoctorBookingGuide guide={bookingGuide} locale={locale} />
+                <DoctorBookingGuide guide={bookingGuide} />
               )}
 
               {/* Specialized Reviews, Comparison Matrix & Pricing Guides */}
-              <BlogSpecializedSections post={post} locale={locale} />
+              <BlogSpecializedSections post={post} />
 
               {/* Selection Guide */}
               {selectionGuide && (
                 <section id="selection-guide" className="scroll-mt-24 space-y-5">
                   <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-                    {isEn
-                      ? `${selectionGuideNumber}. `
-                      : `${toBanglaNums(selectionGuideNumber)}. `}
-                    {selectionGuide.title}
+                    {`${toBanglaNums(selectionGuideNumber)}. `}
+                    {selectionGuide.titleBn}
                   </h2>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {selectionGuide.points.map((pt, idx) => (
+                    {selectionGuide.pointsBn.map((pt, idx) => (
                       <div
                         key={idx}
                         className="rounded-2xl border border-border/80 bg-card p-5 space-y-2"
@@ -271,7 +253,7 @@ export function BlogPostDetailView({
 
               {/* Health Club Member Discount Banner (Hidden for pure emergency public directory guides) */}
               {post.slug !== "feni-ambulance-and-oxygen-service-guide" && (
-                <BlogMembershipBanner locale={locale} />
+                <BlogMembershipBanner />
               )}
 
               {/* Emergency Hotline Directory */}
@@ -280,10 +262,8 @@ export function BlogPostDetailView({
                   <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400">
                     <Siren className="h-5 w-5" />
                     <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-                      {isEn
-                        ? `${emergencyDirectoryNumber}. `
-                        : `${toBanglaNums(emergencyDirectoryNumber)}. `}
-                      {emergencyDirectory.title}
+                      {`${toBanglaNums(emergencyDirectoryNumber)}. `}
+                      {emergencyDirectory.titleBn}
                     </h2>
                   </div>
 
@@ -315,16 +295,14 @@ export function BlogPostDetailView({
               )}
 
               {/* FAQ Accordion */}
-              <BlogFAQSection faqs={post.faqs} locale={locale} />
+              <BlogFAQSection faqs={post.faqs} />
 
               {/* Bottom Share Bar */}
               <div className="p-5 rounded-2xl border border-border/70 bg-card flex flex-col sm:flex-row items-center justify-between gap-4">
                 <span className="text-xs sm:text-sm font-medium text-foreground">
-                  {isEn
-                    ? "Found this healthcare guide helpful? Share it with family & friends!"
-                    : "তথ্যটি প্রয়োজনীয় মনে হলে পরিবার ও পরিচিতজনদের সাথে শেয়ার করুন!"}
+                  তথ্যটি প্রয়োজনীয় মনে হলে পরিবার ও পরিচিতজনদের সাথে শেয়ার করুন!
                 </span>
-                <BlogShareBar url={pageUrl} title={title} locale={locale} />
+                <BlogShareBar url={pageUrl} title={title} />
               </div>
             </div>
 
@@ -362,44 +340,43 @@ export function BlogPostDetailView({
               pharmacies={post.pharmacies}
               bloodBanks={post.bloodBanks}
               ambulances={post.ambulances}
-              locale={locale}
             />
           </div>
         </article>
 
         {/* Feni Healthcare Topic Cluster Navigation Mesh */}
-        <section aria-label={isEn ? "Feni Healthcare Guide Network" : "ফেনী স্বাস্থ্যসেবা গাইড নেটওয়ার্ক"}>
-          <BlogClusterMesh currentSlug={post.slug} locale={locale} />
+        <section aria-label="ফেনী স্বাস্থ্যসেবা গাইড নেটওয়ার্ক">
+          <BlogClusterMesh currentSlug={post.slug} />
         </section>
 
         {/* Related Posts */}
         {relatedPosts.length > 0 && (
           <aside
-            aria-label={isEn ? "Related Healthcare Guides" : "আরও প্রয়োজনীয় স্বাস্থ্য গাইড"}
+            aria-label="আরও প্রয়োজনীয় স্বাস্থ্য গাইড"
             className="pt-10 border-t border-border/60 space-y-6"
           >
             <div className="flex items-center justify-between">
               <h3 className="font-heading text-2xl font-bold text-foreground">
-                {isEn ? "Related Healthcare Guides" : "আরও প্রয়োজনীয় স্বাস্থ্য গাইড"}
+                আরও প্রয়োজনীয় স্বাস্থ্য গাইড
               </h3>
               <Link
                 href="/blog"
                 prefetch={false}
                 className="text-xs sm:text-sm font-semibold text-primary hover:underline"
               >
-                {isEn ? "View all posts →" : "সকল ব্লগ দেখুন →"}
+                সকল ব্লগ দেখুন →
               </Link>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {relatedPosts.map((rPost) => (
-                <BlogCard key={rPost.slug} post={rPost} locale={locale} />
+                <BlogCard key={rPost.slug} post={rPost} />
               ))}
             </div>
           </aside>
         )}
 
         {/* Floating Mobile TOC / Back to Top Button */}
-        <BlogFloatingTocButton locale={locale} />
+        <BlogFloatingTocButton />
       </div>
     </div>
   );

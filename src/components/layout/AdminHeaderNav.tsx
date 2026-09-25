@@ -24,8 +24,7 @@ import {
   ShieldCheck,
   Newspaper,
 } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-import { formatNum } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import { useAdminCounts } from "@/app/admin/hooks/useAdminCounts";
 import {
   DropdownMenu,
@@ -102,8 +101,6 @@ function AdminNavDropdownItem({
 
 export default function AdminHeaderNav() {
   const pathname = usePathname();
-  const { t, locale } = useLanguage();
-  const isBn = locale === "bn";
   const {
     doctorsCount,
     pendingPartnerRequests,
@@ -149,7 +146,7 @@ export default function AdminHeaderNav() {
         }`}
       >
         <LayoutDashboard className="h-3.5 w-3.5" />
-        <span>{t("admin.nav.dashboard") || "ড্যাশবোর্ড"}</span>
+        <span>ড্যাশবোর্ড</span>
         {pathname === "/admin" && (
           <span className="absolute bottom-0 left-3 right-3 h-0.5 rounded-full bg-primary" />
         )}
@@ -165,7 +162,7 @@ export default function AdminHeaderNav() {
           }`}
         >
           <Users className="h-3.5 w-3.5" />
-          <span>{t("admin.nav.membersAndTx") || "সদস্য ও লেনদেন"}</span>
+          <span>সদস্য ও লেনদেন</span>
           {pendingRenewals > 0 && (
             <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
           )}
@@ -183,8 +180,8 @@ export default function AdminHeaderNav() {
             icon={Users}
             iconBg="bg-indigo-500/15"
             iconColor="text-indigo-600 dark:text-indigo-400"
-            title={t("admin.nav.membersList") || "সদস্য তালিকা"}
-            description={t("admin.nav.membersListDesc") || "নিবন্ধিত সদস্যদের তথ্য ও কার্ড"}
+            title="সদস্য তালিকা"
+            description="নিবন্ধিত সদস্যদের তথ্য ও কার্ড"
             active={pathname.startsWith("/admin/members")}
           />
           <AdminNavDropdownItem
@@ -192,9 +189,9 @@ export default function AdminHeaderNav() {
             icon={RotateCcw}
             iconBg="bg-purple-500/15"
             iconColor="text-purple-600 dark:text-purple-400"
-            title={t("admin.nav.renewals") || "নবায়ন আবেদন"}
-            description={t("admin.nav.renewalsDesc") || "মেম্বারশিপ নবায়ন অনুমোদন"}
-            badge={pendingRenewals > 0 ? formatNum(pendingRenewals, locale) : null}
+            title="নবায়ন আবেদন"
+            description="মেম্বারশিপ নবায়ন অনুমোদন"
+            badge={pendingRenewals > 0 ? toBanglaNums(pendingRenewals) : null}
             badgeVariant="amber"
             active={pathname.startsWith("/admin/renewals")}
           />
@@ -203,8 +200,8 @@ export default function AdminHeaderNav() {
             icon={Receipt}
             iconBg="bg-teal-500/15"
             iconColor="text-teal-600 dark:text-teal-400"
-            title={t("admin.nav.transactions") || "লেনদেন লগ"}
-            description={t("admin.nav.transactionsDesc") || "ডিসকাউন্ট ও সেভিংস ট্রানজেকশন"}
+            title="লেনদেন লগ"
+            description="ডিসকাউন্ট ও সেভিংস ট্রানজেকশন"
             active={pathname.startsWith("/admin/transactions")}
           />
           <AdminNavDropdownItem
@@ -212,8 +209,8 @@ export default function AdminHeaderNav() {
             icon={TrendingUp}
             iconBg="bg-emerald-500/15"
             iconColor="text-emerald-600 dark:text-emerald-400"
-            title={isBn ? "আর্থিক ও রাজস্ব অ্যানালিটিক্স" : "Revenue Analytics"}
-            description={isBn ? "সাবস্ক্রিপশন ফি, রিটেনশন ও পার্টনার সাশ্রয়" : "Subscription revenue & hospital metrics"}
+            title="আর্থিক ও রাজস্ব অ্যানালিটিক্স"
+            description="সাবস্ক্রিপশন ফি, রিটেনশন ও পার্টনার সাশ্রয়"
             active={pathname.startsWith("/admin/analytics")}
           />
         </DropdownMenuContent>
@@ -229,7 +226,7 @@ export default function AdminHeaderNav() {
           }`}
         >
           <Building2 className="h-3.5 w-3.5" />
-          <span>{t("admin.nav.medicalNetwork") || "মেডিকেল নেটওয়ার্ক"}</span>
+          <span>মেডিকেল নেটওয়ার্ক</span>
           {pendingPartnerRequests > 0 && (
             <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
           )}
@@ -247,9 +244,9 @@ export default function AdminHeaderNav() {
             icon={Stethoscope}
             iconBg="bg-blue-500/15"
             iconColor="text-blue-600 dark:text-blue-400"
-            title={t("admin.nav.doctors") || "ডাক্তার তালিকা"}
-            description={t("admin.nav.doctorsDesc") || "বিশেষজ্ঞ ডাক্তার ও চেম্বার শিডিউল"}
-            badge={doctorsCount > 0 ? formatNum(doctorsCount, locale) : null}
+            title="ডাক্তার তালিকা"
+            description="বিশেষজ্ঞ ডাক্তার ও চেম্বার শিডিউল"
+            badge={doctorsCount > 0 ? toBanglaNums(doctorsCount) : null}
             active={pathname.startsWith("/admin/doctors")}
           />
           <AdminNavDropdownItem
@@ -257,8 +254,8 @@ export default function AdminHeaderNav() {
             icon={Building2}
             iconBg="bg-emerald-500/15"
             iconColor="text-emerald-600 dark:text-emerald-400"
-            title={isBn ? "পার্টনার হাসপাতাল" : "Partner Hospitals"}
-            description={isBn ? "চুক্তিবদ্ধ হাসপাতাল ও ক্লিনিক নেটওয়ার্ক" : "Contracted hospitals & clinics"}
+            title="পার্টনার হাসপাতাল"
+            description="চুক্তিবদ্ধ হাসপাতাল ও ক্লিনিক নেটওয়ার্ক"
             active={pathname.startsWith("/admin/partners")}
           />
           <AdminNavDropdownItem
@@ -266,8 +263,8 @@ export default function AdminHeaderNav() {
             icon={Activity}
             iconBg="bg-sky-500/15"
             iconColor="text-sky-600 dark:text-sky-400"
-            title={isBn ? "ডায়াগনস্টিক সেন্টার" : "Diagnostic Centers"}
-            description={isBn ? "ল্যাব ও প্যাথলজি টেস্ট সুবিধা" : "Pathology labs & test centers"}
+            title="ডায়াগনস্টিক সেন্টার"
+            description="ল্যাব ও প্যাথলজি টেস্ট সুবিধা"
             active={false}
           />
           <AdminNavDropdownItem
@@ -275,8 +272,8 @@ export default function AdminHeaderNav() {
             icon={Pill}
             iconBg="bg-purple-500/15"
             iconColor="text-purple-600 dark:text-purple-400"
-            title={isBn ? "ফার্মেসি নেটওয়ার্ক" : "Partner Pharmacies"}
-            description={isBn ? "চুক্তিবদ্ধ ঔষধের দোকান ও ডিসকাউন্ট" : "Contracted retail pharmacy network"}
+            title="ফার্মেসি নেটওয়ার্ক"
+            description="চুক্তিবদ্ধ ঔষধের দোকান ও ডিসকাউন্ট"
             active={false}
           />
           <AdminNavDropdownItem
@@ -284,9 +281,9 @@ export default function AdminHeaderNav() {
             icon={FileCheck}
             iconBg="bg-amber-500/15"
             iconColor="text-amber-600 dark:text-amber-400"
-            title={t("admin.nav.partnerRequests") || "অংশীদার আবেদন"}
-            description={t("admin.nav.partnerRequestsDesc") || "নতুন চিকিৎসাকেন্দ্রের আবেদন"}
-            badge={pendingPartnerRequests > 0 ? formatNum(pendingPartnerRequests, locale) : null}
+            title="অংশীদার আবেদন"
+            description="নতুন চিকিৎসাকেন্দ্রের আবেদন"
+            badge={pendingPartnerRequests > 0 ? toBanglaNums(pendingPartnerRequests) : null}
             badgeVariant="amber"
             active={pathname.startsWith("/admin/partner-requests")}
           />
@@ -303,7 +300,7 @@ export default function AdminHeaderNav() {
           }`}
         >
           <Siren className="h-3.5 w-3.5" />
-          <span>{t("admin.nav.servicesAndContent") || "সেবা ও কন্টেন্ট"}</span>
+          <span>সেবা ও কন্টেন্ট</span>
           <ChevronDown className="h-3 w-3 opacity-70" />
           {isServicesActive && (
             <span className="absolute bottom-0 left-3 right-3 h-0.5 rounded-full bg-primary" />
@@ -318,8 +315,8 @@ export default function AdminHeaderNav() {
             icon={Siren}
             iconBg="bg-rose-500/15"
             iconColor="text-rose-600 dark:text-rose-400"
-            title={t("admin.nav.emergency") || "জরুরি সেবা"}
-            description={t("admin.nav.emergencyDesc") || "রক্তদাতা, অ্যাম্বুলেন্স ও অক্সিজেন"}
+            title="জরুরি সেবা"
+            description="রক্তদাতা, অ্যাম্বুলেন্স ও অক্সিজেন"
             active={pathname.startsWith("/admin/emergency")}
           />
           <AdminNavDropdownItem
@@ -327,8 +324,8 @@ export default function AdminHeaderNav() {
             icon={BookOpen}
             iconBg="bg-primary/15"
             iconColor="text-primary"
-            title={t("admin.nav.healthTips") || "স্বাস্থ্য টিপস"}
-            description={t("admin.nav.healthTipsDesc") || "স্বাস্থ্য বিষয়ক ব্লগ ও আর্টিকেল"}
+            title="স্বাস্থ্য টিপস"
+            description="স্বাস্থ্য বিষয়ক ব্লগ ও আর্টিকেল"
             active={pathname.startsWith("/admin/health-tips")}
           />
           <AdminNavDropdownItem
@@ -336,8 +333,8 @@ export default function AdminHeaderNav() {
             icon={Newspaper}
             iconBg="bg-indigo-500/15"
             iconColor="text-indigo-600 dark:text-indigo-400"
-            title={t("admin.nav.blogs") || (isBn ? "ব্লগ পোস্ট" : "Blog Posts")}
-            description={t("admin.nav.blogsDesc") || (isBn ? "হাসপাতাল রিভিউ ও ব্লগ আর্টিকেল" : "Hospital reviews & blog articles")}
+            title="ব্লগ পোস্ট"
+            description="হাসপাতাল রিভিউ ও ব্লগ আর্টিকেল"
             active={pathname.startsWith("/admin/blogs") || pathname.startsWith("/admin/blog")}
           />
         </DropdownMenuContent>
@@ -353,7 +350,7 @@ export default function AdminHeaderNav() {
           }`}
         >
           <Settings className="h-3.5 w-3.5" />
-          <span>{t("admin.nav.system") || "সিস্টেম ও সাপোর্ট"}</span>
+          <span>সিস্টেম ও সাপোর্ট</span>
           {contactMessagesCount > 0 && (
             <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
           )}
@@ -371,8 +368,8 @@ export default function AdminHeaderNav() {
             icon={Radio}
             iconBg="bg-primary/15"
             iconColor="text-primary"
-            title={t("admin.nav.broadcast") || "ব্রডকাস্ট ক্যাম্পেইন"}
-            description={t("admin.nav.broadcastDesc") || "এসএমএস ও ইমেইল নোটিশ প্রেরণ"}
+            title="ব্রডকাস্ট ক্যাম্পেইন"
+            description="এসএমএস ও ইমেইল নোটিশ প্রেরণ"
             active={pathname.startsWith("/admin/broadcast")}
           />
           <AdminNavDropdownItem
@@ -380,8 +377,8 @@ export default function AdminHeaderNav() {
             icon={Bell}
             iconBg="bg-amber-500/15"
             iconColor="text-amber-600 dark:text-amber-400"
-            title={t("admin.nav.notifications") || "বিজ্ঞপ্তি ও অ্যালার্ট"}
-            description={t("admin.nav.notificationsDesc") || "নতুন আবেদন ও নোটিফিকেশন"}
+            title="বিজ্ঞপ্তি ও অ্যালার্ট"
+            description="নতুন আবেদন ও নোটিফিকেশন"
             active={pathname.startsWith("/admin/notifications")}
           />
           <AdminNavDropdownItem
@@ -389,9 +386,9 @@ export default function AdminHeaderNav() {
             icon={Mail}
             iconBg="bg-rose-500/15"
             iconColor="text-rose-600 dark:text-rose-400"
-            title={t("admin.nav.messages") || "যোগাযোগের বার্তা"}
-            description={t("admin.nav.messagesDesc") || "ভিজিটর অনুসন্ধান ও বার্তা"}
-            badge={contactMessagesCount > 0 ? formatNum(contactMessagesCount, locale) : null}
+            title="যোগাযোগের বার্তা"
+            description="ভিজিটর অনুসন্ধান ও বার্তা"
+            badge={contactMessagesCount > 0 ? toBanglaNums(contactMessagesCount) : null}
             badgeVariant="primary"
             active={pathname.startsWith("/admin/messages")}
           />
@@ -400,8 +397,8 @@ export default function AdminHeaderNav() {
             icon={Smartphone}
             iconBg="bg-emerald-500/15"
             iconColor="text-emerald-600 dark:text-emerald-400"
-            title={t("admin.nav.pwa") || "PWA অ্যানালিটিক্স"}
-            description={t("admin.nav.pwaDesc") || "অ্যাপ ইনস্টল ও সক্রিয় পরিসংখ্যান"}
+            title="PWA অ্যানালিটিক্স"
+            description="অ্যাপ ইনস্টল ও সক্রিয় পরিসংখ্যান"
             active={pathname.startsWith("/admin/pwa")}
           />
           <AdminNavDropdownItem
@@ -409,8 +406,8 @@ export default function AdminHeaderNav() {
             icon={ShieldCheck}
             iconBg="bg-purple-500/15"
             iconColor="text-purple-600 dark:text-purple-400"
-            title={isBn ? "এডমিন ও স্টাফ (RBAC)" : "Staff & RBAC"}
-            description={isBn ? "রোল পারমিশন ও এক্সেস কন্ট্রোল" : "Role permissions & access control"}
+            title="এডমিন ও স্টাফ (RBAC)"
+            description="রোল পারমিশন ও এক্সেস কন্ট্রোল"
             active={pathname.startsWith("/admin/staff")}
           />
           <AdminNavDropdownItem
@@ -418,8 +415,8 @@ export default function AdminHeaderNav() {
             icon={Settings}
             iconBg="bg-slate-500/15"
             iconColor="text-slate-600 dark:text-slate-400"
-            title={t("admin.nav.settings") || "সিস্টেম সেটিংস"}
-            description={t("admin.nav.settingsDesc") || "ফি, পেমেন্ট নম্বর ও নোটিশ"}
+            title="সিস্টেম সেটিংস"
+            description="ফি, পেমেন্ট নম্বর ও নোটিশ"
             active={pathname.startsWith("/admin/settings")}
           />
         </DropdownMenuContent>

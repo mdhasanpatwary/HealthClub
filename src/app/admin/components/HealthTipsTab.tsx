@@ -51,16 +51,12 @@ import {
 } from "@/app/actions/healthTipsAdminActions";
 import { exportToCsv } from "@/lib/exportUtils";
 import { toast } from "sonner";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { HealthTipArticleDialog } from "./HealthTipArticleDialog";
 import { Pagination } from "@/components/ui/pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 import { formatArticleDate } from "@/lib/dateUtils";
 
 export function HealthTipsTab() {
-  const { locale, t } = useLanguage();
-  const isEn = locale === "en";
-
   const [loading, setLoading] = useState(true);
   const [articles, setArticles] = useState<HealthTipArticle[]>([]);
   const [totalItems, setTotalItems] = useState(0);
@@ -92,11 +88,11 @@ export function HealthTipsTab() {
       setTotalItems(res.totalItems);
       setTotalPages(res.totalPages);
     } catch {
-      toast.error(isEn ? "Failed to load articles" : "আর্টিকেল লোড করতে সমস্যা হয়েছে");
+      toast.error("আর্টিকেল লোড করতে সমস্যা হয়েছে");
     } finally {
       setLoading(false);
     }
-  }, [currentPage, pageSize, debouncedSearch, selectedCategory, isEn]);
+  }, [currentPage, pageSize, debouncedSearch, selectedCategory]);
 
   useEffect(() => {
     let isMounted = true;
@@ -117,15 +113,15 @@ export function HealthTipsTab() {
     try {
       const res = await deleteHealthTipAction(deletingArticle.slug);
       if (res.success) {
-        toast.success(isEn ? "Article deleted successfully!" : "আর্টিকেল সফলভাবে মুছে ফেলা হয়েছে!");
+        toast.success("আর্টিকেল সফলভাবে মুছে ফেলা হয়েছে!");
         setDeleteModalOpen(false);
         setDeletingArticle(null);
         loadArticles();
       } else {
-        toast.error(res.error || (isEn ? "Failed to delete article" : "আর্টিকেল মোছা ব্যর্থ হয়েছে"));
+        toast.error(res.error || "আর্টিকেল মোছা ব্যর্থ হয়েছে");
       }
     } catch {
-      toast.error(isEn ? "Error deleting article" : "সমস্যা দেখা দিয়েছে");
+      toast.error("সমস্যা দেখা দিয়েছে");
     } finally {
       setDeleting(false);
     }
@@ -138,12 +134,10 @@ export function HealthTipsTab() {
           <div>
             <CardTitle className="font-heading text-lg font-bold text-secondary dark:text-white flex items-center gap-2">
               <BookOpen className="h-5 w-5 text-primary" />
-              <span>{isEn ? "Health Tips & Medical Knowledge Blog" : "স্বাস্থ্য টিপস ও মেডিকেল ব্লগ ব্যবস্থাপনা"}</span>
+              <span>স্বাস্থ্য টিপস ও মেডিকেল ব্লগ ব্যবস্থাপনা</span>
             </CardTitle>
             <CardDescription className="text-xs">
-              {isEn
-                ? "Create, edit, and manage health guides and disease prevention tips for members."
-                : "সদস্যদের সচেতনতায় স্বাস্থ্য টিপস, রোগ প্রতিরোধ নির্দেশিকা ও ডাক্তারের পরামর্শ পরিচালনা করুন।"}
+              সদস্যদের সচেতনতায় স্বাস্থ্য টিপস, রোগ প্রতিরোধ নির্দেশিকা ও ডাক্তারের পরামর্শ পরিচালনা করুন।
             </CardDescription>
           </div>
 
@@ -155,7 +149,7 @@ export function HealthTipsTab() {
             className="bg-primary hover:bg-primary-dark text-white text-xs h-9 font-bold gap-1 shrink-0"
           >
             <Plus className="h-4 w-4" />
-            <span>{isEn ? "Write New Article" : "নতুন আর্টিকেল লিখুন"}</span>
+            <span>নতুন আর্টিকেল লিখুন</span>
           </Button>
         </CardHeader>
 
@@ -166,7 +160,7 @@ export function HealthTipsTab() {
               <div className="relative flex-1 sm:w-64">
                 <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  placeholder={isEn ? "Search by title, author..." : "শিরোনাম বা লেখক দিয়ে খুঁজুন..."}
+                  placeholder="শিরোনাম বা লেখক দিয়ে খুঁজুন..."
                   value={search}
                   onChange={(e) => {
                     setSearch(e.target.value);
@@ -186,7 +180,7 @@ export function HealthTipsTab() {
               >
                 {HEALTH_CATEGORIES.map((c) => (
                   <option key={c.id} value={c.id}>
-                    {isEn ? c.nameEn : c.nameBn}
+                    {c.nameBn}
                   </option>
                 ))}
               </select>
@@ -209,9 +203,8 @@ export function HealthTipsTab() {
               }
               className="text-xs h-9 font-semibold gap-1.5 border-border shrink-0"
             >
-
               <Download className="h-3.5 w-3.5" />
-              <span>{isEn ? "Export Articles" : "এক্সপোর্ট"}</span>
+              <span>এক্সপোর্ট</span>
             </Button>
           </div>
 
@@ -228,12 +221,12 @@ export function HealthTipsTab() {
               <Table className="table-fixed w-full">
                 <TableHeader className="bg-muted/40">
                   <TableRow>
-                    <TableHead className="w-[120px]">{isEn ? "Category" : "ক্যাটাগরি"}</TableHead>
-                    <TableHead className="w-auto">{isEn ? "Article Title" : "শিরোনাম"}</TableHead>
-                    <TableHead className="w-[140px] hidden sm:table-cell">{isEn ? "Author" : "লেখক"}</TableHead>
-                    <TableHead className="w-[110px] hidden md:table-cell">{isEn ? "Published" : "তারিখ"}</TableHead>
-                    <TableHead className="w-[90px] hidden lg:table-cell">{isEn ? "Read Time" : "পড়ার সময়"}</TableHead>
-                    <TableHead className="w-[110px] text-right">{isEn ? "Actions" : "অ্যাকশন"}</TableHead>
+                    <TableHead className="w-[120px]">ক্যাটাগরি</TableHead>
+                    <TableHead className="w-auto">শিরোনাম</TableHead>
+                    <TableHead className="w-[140px] hidden sm:table-cell">লেখক</TableHead>
+                    <TableHead className="w-[110px] hidden md:table-cell">তারিখ</TableHead>
+                    <TableHead className="w-[90px] hidden lg:table-cell">পড়ার সময়</TableHead>
+                    <TableHead className="w-[110px] text-right">অ্যাকশন</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody className={loading && articles.length > 0 ? "opacity-50 pointer-events-none transition-opacity duration-150" : "transition-opacity duration-150"}>
@@ -270,7 +263,7 @@ export function HealthTipsTab() {
                   ) : articles.length === 0 ? (
                     <TableRow className="h-[200px]">
                       <TableCell colSpan={6} className="text-center py-8 text-muted-foreground text-xs">
-                        {isEn ? "No articles found." : "কোনো আর্টিকেল পাওয়া যায়নি।"}
+                        কোনো আর্টিকেল পাওয়া যায়নি।
                       </TableCell>
                     </TableRow>
                   ) : (
@@ -278,25 +271,25 @@ export function HealthTipsTab() {
                       <TableRow key={art.slug} className="h-[64px] hover:bg-muted/30">
                         <TableCell className="w-[120px]">
                           <Badge className="bg-primary/10 text-primary font-bold border-primary/20 text-[10px] truncate max-w-[100px]">
-                            {isEn ? art.categoryNameEn : art.categoryNameBn}
+                            {art.categoryNameBn}
                           </Badge>
                         </TableCell>
                         <TableCell className="w-auto">
                           <div className="font-bold text-xs text-foreground line-clamp-1">
-                            {isEn ? art.titleEn : art.titleBn}
+                            {art.titleBn}
                           </div>
                           <div className="text-[11px] text-muted-foreground line-clamp-1">
-                            {isEn ? art.excerptEn : art.excerptBn}
+                            {art.excerptBn}
                           </div>
                         </TableCell>
                         <TableCell className="w-[140px] hidden sm:table-cell text-xs text-muted-foreground truncate">
-                          {isEn ? art.authorEn : art.authorBn}
+                          {art.authorBn}
                         </TableCell>
                         <TableCell className="w-[110px] hidden md:table-cell text-xs text-muted-foreground whitespace-nowrap">
-                          {formatArticleDate(art.publishedDate, isEn ? "en" : "bn")}
+                          {formatArticleDate(art.publishedDate)}
                         </TableCell>
                         <TableCell className="w-[90px] hidden lg:table-cell text-xs text-muted-foreground whitespace-nowrap">
-                          {isEn ? art.readTimeEn : art.readTimeBn}
+                          {art.readTimeBn}
                         </TableCell>
                         <TableCell className="w-[110px] text-right">
                           <div className="flex items-center justify-end gap-1">
@@ -304,8 +297,8 @@ export function HealthTipsTab() {
                               href={`/health-tips/${art.slug}`}
                               target="_blank"
                               className="p-1 rounded-md text-muted-foreground hover:text-primary hover:bg-muted/50"
-                              title={isEn ? "View live article" : "আর্টিকেল দেখুন"}
-                              aria-label={isEn ? `View article ${art.titleEn}` : `আর্টিকেল দেখুন: ${art.titleBn}`}
+                              title="আর্টিকেল দেখুন"
+                              aria-label={`আর্টিকেল দেখুন: ${art.titleBn}`}
                             >
                               <ExternalLink className="h-3.5 w-3.5" />
                             </Link>
@@ -317,7 +310,7 @@ export function HealthTipsTab() {
                                 setEditingArticle(art);
                                 setDialogOpen(true);
                               }}
-                              aria-label={isEn ? `Edit article ${art.titleEn}` : `আর্টিকেল এডিট করুন: ${art.titleBn}`}
+                              aria-label={`আর্টিকেল এডিট করুন: ${art.titleBn}`}
                               className="h-7 w-7 text-muted-foreground hover:text-foreground cursor-pointer"
                             >
                               <Edit3 className="h-3.5 w-3.5" />
@@ -330,7 +323,7 @@ export function HealthTipsTab() {
                                 setDeletingArticle(art);
                                 setDeleteModalOpen(true);
                               }}
-                              aria-label={isEn ? `Delete article ${art.titleEn}` : `আর্টিকেল ডিলিট করুন: ${art.titleBn}`}
+                              aria-label={`আর্টিকেল ডিলিট করুন: ${art.titleBn}`}
                               className="h-7 w-7 text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
@@ -345,7 +338,6 @@ export function HealthTipsTab() {
             </div>
           </div>
 
-
           {/* Pagination Footer */}
           {totalItems > 0 && (
             <Pagination
@@ -359,9 +351,7 @@ export function HealthTipsTab() {
                 setCurrentPage(1);
               }}
               pageSizeOptions={[10, 20, 50, 100]}
-              locale={locale}
-              t={t}
-              itemLabel={isEn ? "articles" : "টি আর্টিকেল"}
+              itemLabel="টি আর্টিকেল"
               disabled={loading}
             />
           )}
@@ -384,12 +374,10 @@ export function HealthTipsTab() {
           <DialogHeader>
             <DialogTitle className="text-lg font-bold text-destructive flex items-center gap-2">
               <Trash2 className="h-5 w-5" />
-              <span>{isEn ? "Confirm Deletion" : "মুছে ফেলার নিশ্চিতকরণ"}</span>
+              <span>মুছে ফেলার নিশ্চিতকরণ</span>
             </DialogTitle>
             <DialogDescription className="text-xs text-muted-foreground">
-              {isEn
-                ? `Are you sure you want to permanently delete article "${deletingArticle?.titleEn}"?`
-                : `আপনি কি নিশ্চিত যে "${deletingArticle?.titleBn}" আর্টিকেলটি স্থায়ীভাবে মুছে ফেলতে চান?`}
+              {`আপনি কি নিশ্চিত যে "${deletingArticle?.titleBn}" আর্টিকেলটি স্থায়ীভাবে মুছে ফেলতে চান?`}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="pt-2 gap-2">
@@ -399,7 +387,7 @@ export function HealthTipsTab() {
               onClick={() => setDeleteModalOpen(false)}
               disabled={deleting}
             >
-              {isEn ? "Cancel" : "বাতিল"}
+              বাতিল
             </Button>
             <Button
               variant="destructive"
@@ -411,10 +399,10 @@ export function HealthTipsTab() {
               {deleting ? (
                 <>
                   <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                  {isEn ? "Deleting..." : "মুছে ফেলা হচ্ছে..."}
+                  মুছে ফেলা হচ্ছে...
                 </>
               ) : (
-                isEn ? "Delete Permanently" : "মুছে ফেলুন"
+                "মুছে ফেলুন"
               )}
             </Button>
           </DialogFooter>

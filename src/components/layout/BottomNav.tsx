@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { Home, Building2, CreditCard, User, Menu, X, ArrowUpRight } from "lucide-react";
 import { authStore } from "@/services/authStore";
 import { Member, Partner } from "@/services/db";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import dynamic from "next/dynamic";
 import { Button, buttonVariants } from "@/components/ui/button";
 
@@ -14,7 +13,6 @@ const MemberCard = dynamic(() => import("@/components/ui/MemberCard"), { ssr: fa
 
 export default function BottomNav() {
   const pathname = usePathname();
-  const { t } = useLanguage();
   const [user, setUser] = useState<Member | null>(null);
   const [partner, setPartner] = useState<Partner | null>(null);
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
@@ -101,7 +99,7 @@ export default function BottomNav() {
               )}
             </div>
             <span className="mt-1 text-[10px] tracking-tight">
-              {t("layout.bottomNav.home")}
+              হোম
             </span>
           </Link>
 
@@ -123,7 +121,7 @@ export default function BottomNav() {
               )}
             </div>
             <span className="mt-1 text-[10px] tracking-tight">
-              {t("layout.bottomNav.hospitals")}
+              হাসপাতাল
             </span>
           </Link>
 
@@ -132,7 +130,7 @@ export default function BottomNav() {
             href={getCardPath()}
             prefetch={false}
             onClick={handleCardClick}
-            aria-label={t("layout.bottomNav.card")}
+            aria-label="ডিজিটাল কার্ড"
             className="flex flex-1 flex-col items-center justify-center -mt-4 touch-active group"
           >
             <div
@@ -152,7 +150,7 @@ export default function BottomNav() {
                 isCardActive || isCardModalOpen ? "text-primary" : "text-foreground"
               }`}
             >
-              {t("layout.bottomNav.card")}
+              ডিজিটাল কার্ড
             </span>
           </Link>
 
@@ -174,7 +172,7 @@ export default function BottomNav() {
               )}
             </div>
             <span className="mt-1 text-[10px] tracking-tight">
-              {t("layout.bottomNav.profile")}
+              প্রোফাইল
             </span>
           </Link>
 
@@ -186,7 +184,7 @@ export default function BottomNav() {
           >
             <Menu className="h-5 w-5 stroke-[2.2]" />
             <span className="mt-1 text-[10px] tracking-tight">
-              {t("layout.bottomNav.menu")}
+              মেনু
             </span>
           </button>
         </div>
@@ -215,10 +213,10 @@ export default function BottomNav() {
             <div className="flex items-center justify-between mb-3 px-1">
               <div>
                 <h3 id="quick-card-modal-title" className="font-heading text-lg font-bold text-foreground">
-                  {t("layout.bottomNav.card")}
+                  ডিজিটাল কার্ড
                 </h3>
                 <p className="text-xs text-muted-foreground">
-                  {t("layout.bottomNav.cardScanHint")}
+                  হাসপাতালে ডিসকাউন্টের জন্য এই কিউআর কোডটি দেখান
                 </p>
               </div>
               <button
@@ -244,7 +242,7 @@ export default function BottomNav() {
                   className: "flex-1 bg-primary hover:bg-primary-dark text-white font-semibold gap-1.5 shadow-md",
                 })}
               >
-                <span>{t("layout.header.dashboard")}</span>
+                <span>ড্যাশবোর্ড</span>
                 <ArrowUpRight className="h-4 w-4" />
               </Link>
               <Button
@@ -252,7 +250,7 @@ export default function BottomNav() {
                 onClick={() => setIsCardModalOpen(false)}
                 className="px-5 border-border cursor-pointer"
               >
-                {t("layout.bottomNav.close")}
+                বন্ধ করুন
               </Button>
             </div>
           </div>

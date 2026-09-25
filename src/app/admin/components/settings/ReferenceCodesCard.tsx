@@ -16,11 +16,7 @@ import {
 import type { ReferenceCodeItem, ReferenceDiscountType } from "@/lib/referenceCodes";
 import { toast } from "sonner";
 
-interface ReferenceCodesCardProps {
-  isEn: boolean;
-}
-
-export function ReferenceCodesCard({ isEn }: ReferenceCodesCardProps) {
+export function ReferenceCodesCard() {
   const [codes, setCodes] = useState<ReferenceCodeItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -44,14 +40,14 @@ export function ReferenceCodesCard({ isEn }: ReferenceCodesCardProps) {
       })
       .catch(() => {
         if (isMounted) {
-          toast.error(isEn ? "Failed to load reference codes." : "রেফারেন্স কোড তালিকা লোড করতে সমস্যা হয়েছে।");
+          toast.error("রেফারেন্স কোড তালিকা লোড করতে সমস্যা হয়েছে।");
           setLoading(false);
         }
       });
     return () => {
       isMounted = false;
     };
-  }, [isEn]);
+  }, []);
 
   const handleToggleActive = (index: number) => {
     setCodes((prev) =>
@@ -61,24 +57,24 @@ export function ReferenceCodesCard({ isEn }: ReferenceCodesCardProps) {
 
   const handleDeleteCode = (codeToDelete: string) => {
     setCodes((prev) => prev.filter((c) => c.code !== codeToDelete));
-    toast.info(isEn ? `Removed ${codeToDelete}. Click Save to apply.` : `${codeToDelete} সরানো হয়েছে। প্রয়োগ করতে সংরক্ষণ করুন।`);
+    toast.info(`${codeToDelete} সরানো হয়েছে। প্রয়োগ করতে সংরক্ষণ করুন।`);
   };
 
   const handleAddCode = () => {
     const cleanCode = newCode.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, "");
     if (!cleanCode) {
-      toast.error(isEn ? "Please enter a valid code." : "সঠিক রেফারেন্স কোড লিখুন।");
+      toast.error("সঠিক রেফারেন্স কোড লিখুন।");
       return;
     }
 
     if (codes.some((c) => c.code === cleanCode)) {
-      toast.error(isEn ? "This code already exists." : "এই কোডটি ইতিমধ্যে তালিকায় আছে।");
+      toast.error("এই কোডটি ইতিমধ্যে তালিকায় আছে।");
       return;
     }
 
     const val = newType === "free" ? 100 : Number(newValue) || 0;
     if (newType !== "free" && val <= 0) {
-      toast.error(isEn ? "Please enter a valid discount value." : "সঠিক ছাড়ের পরিমাণ লিখুন।");
+      toast.error("সঠিক ছাড়ের পরিমাণ লিখুন।");
       return;
     }
 
@@ -112,7 +108,7 @@ export function ReferenceCodesCard({ isEn }: ReferenceCodesCardProps) {
     setNewLabelBn("");
     setNewLabelEn("");
     setIsAdding(false);
-    toast.success(isEn ? "Code added to list. Click Save to persist." : "কোড যোগ করা হয়েছে। সংরক্ষণ বাটনে চাপুন।");
+    toast.success("কোড যোগ করা হয়েছে। সংরক্ষণ বাটনে চাপুন।");
   };
 
   const handleSaveAll = async () => {
@@ -120,12 +116,12 @@ export function ReferenceCodesCard({ isEn }: ReferenceCodesCardProps) {
     try {
       const res = await saveAdminReferenceCodesAction(codes);
       if (res.success) {
-        toast.success(isEn ? "Reference codes saved successfully!" : "রেফারেন্স কোড তালিকা সফলভাবে সংরক্ষিত হয়েছে!");
+        toast.success("রেফারেন্স কোড তালিকা সফলভাবে সংরক্ষিত হয়েছে!");
       } else {
         toast.error(res.message);
       }
     } catch {
-      toast.error(isEn ? "Error saving reference codes." : "রেফারেন্স কোড সংরক্ষণ করতে সমস্যা হয়েছে।");
+      toast.error("রেফারেন্স কোড সংরক্ষণ করতে সমস্যা হয়েছে।");
     } finally {
       setIsSaving(false);
     }
@@ -137,12 +133,10 @@ export function ReferenceCodesCard({ isEn }: ReferenceCodesCardProps) {
         <div>
           <CardTitle className="text-base font-bold flex items-center gap-2">
             <Tag className="h-4 w-4 text-primary" />
-            <span>{isEn ? "Reference & Discount Codes" : "রেফারেন্স ও ডিসকাউন্ট কোড ব্যবস্থাপনা"}</span>
+            <span>রেফারেন্স ও ডিসকাউন্ট কোড ব্যবস্থাপনা</span>
           </CardTitle>
           <CardDescription className="text-xs">
-            {isEn
-              ? "Configure promo codes for 100% free or discounted membership fee"
-              : "মেম্বারশিপ ফি সম্পূর্ণ ফ্রি (১০০%) অথবা আংশিক ছাড়ের জন্য রেফারেন্স কোড নির্ধারণ করুন"}
+            মেম্বারশিপ ফি সম্পূর্ণ ফ্রি (১০০%) অথবা আংশিক ছাড়ের জন্য রেফারেন্স কোড নির্ধারণ করুন
           </CardDescription>
         </div>
 
@@ -156,7 +150,7 @@ export function ReferenceCodesCard({ isEn }: ReferenceCodesCardProps) {
               className="text-xs h-8 gap-1.5 cursor-pointer"
             >
               <Plus className="h-3.5 w-3.5" />
-              <span>{isEn ? "New Code" : "নতুন কোড"}</span>
+              <span>নতুন কোড</span>
             </Button>
           )}
           <Button
@@ -167,7 +161,7 @@ export function ReferenceCodesCard({ isEn }: ReferenceCodesCardProps) {
             className="text-xs h-8 gap-1.5 cursor-pointer"
           >
             {isSaving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
-            <span>{isEn ? "Save Codes" : "সংরক্ষণ করুন"}</span>
+            <span>সংরক্ষণ করুন</span>
           </Button>
         </div>
       </CardHeader>
@@ -179,7 +173,7 @@ export function ReferenceCodesCard({ isEn }: ReferenceCodesCardProps) {
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-bold text-secondary dark:text-white flex items-center gap-1.5">
                 <Sparkles className="h-3.5 w-3.5 text-primary" />
-                {isEn ? "Create New Reference Code" : "নতুন রেফারেন্স কোড তৈরি করুন"}
+                নতুন রেফারেন্স কোড তৈরি করুন
               </h4>
               <Button
                 type="button"
@@ -188,14 +182,14 @@ export function ReferenceCodesCard({ isEn }: ReferenceCodesCardProps) {
                 onClick={() => setIsAdding(false)}
                 className="text-xs h-7 px-2 text-muted-foreground hover:text-foreground cursor-pointer"
               >
-                {isEn ? "Cancel" : "বাতিল"}
+                বাতিল
               </Button>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="space-y-1">
                 <Label htmlFor="new-code-name" className="text-xs font-semibold">
-                  {isEn ? "Code (e.g., FREECLUB)" : "কোড (যেমন: FREECLUB)"}
+                  কোড (যেমন: FREECLUB)
                 </Label>
                 <Input
                   id="new-code-name"
@@ -209,7 +203,7 @@ export function ReferenceCodesCard({ isEn }: ReferenceCodesCardProps) {
 
               <div className="space-y-1">
                 <Label htmlFor="new-code-type" className="text-xs font-semibold">
-                  {isEn ? "Discount Type" : "ছাড়ের ধরন"}
+                  ছাড়ের ধরন
                 </Label>
                 <select
                   id="new-code-type"
@@ -221,9 +215,9 @@ export function ReferenceCodesCard({ isEn }: ReferenceCodesCardProps) {
                   }}
                   className="h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-xs shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 >
-                  <option value="free">{isEn ? "100% Free (No Payment)" : "১০০% সম্পূর্ণ ফ্রি (পেমেন্ট ছাড়া)"}</option>
-                  <option value="percent">{isEn ? "Percentage Discount (%)" : "শতকরা ছাড় (%)"}</option>
-                  <option value="fixed">{isEn ? "Fixed Taka (৳)" : "নির্দিষ্ট টাকা ছাড় (৳)"}</option>
+                  <option value="free">১০০% সম্পূর্ণ ফ্রি (পেমেন্ট ছাড়া)</option>
+                  <option value="percent">শতকরা ছাড় (%)</option>
+                  <option value="fixed">নির্দিষ্ট টাকা ছাড় (৳)</option>
                 </select>
               </div>
 
@@ -231,8 +225,8 @@ export function ReferenceCodesCard({ isEn }: ReferenceCodesCardProps) {
                 <div className="space-y-1">
                   <Label htmlFor="new-code-value" className="text-xs font-semibold">
                     {newType === "percent"
-                      ? isEn ? "Discount Percentage (%)" : "ছাড়ের শতকরা হার (%)"
-                      : isEn ? "Discount Amount (৳)" : "ছাড়ের টাকা (৳)"}
+                      ? "ছাড়ের শতকরা হার (%)"
+                      : "ছাড়ের টাকা (৳)"}
                   </Label>
                   <Input
                     id="new-code-value"
@@ -250,7 +244,7 @@ export function ReferenceCodesCard({ isEn }: ReferenceCodesCardProps) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1">
                 <Label htmlFor="new-code-label-bn" className="text-xs font-semibold">
-                  {isEn ? "Label (Bengali)" : "বিবরণ (বাংলা)"}
+                  বিবরণ (বাংলা)
                 </Label>
                 <Input
                   id="new-code-label-bn"
@@ -263,7 +257,7 @@ export function ReferenceCodesCard({ isEn }: ReferenceCodesCardProps) {
               </div>
               <div className="space-y-1">
                 <Label htmlFor="new-code-label-en" className="text-xs font-semibold">
-                  {isEn ? "Label (English)" : "বিবরণ (ইংরেজি)"}
+                  বিবরণ (ইংরেজি)
                 </Label>
                 <Input
                   id="new-code-label-en"
@@ -279,7 +273,7 @@ export function ReferenceCodesCard({ isEn }: ReferenceCodesCardProps) {
             <div className="flex justify-end gap-2 pt-1">
               <Button type="button" size="sm" onClick={handleAddCode} className="text-xs h-8 cursor-pointer">
                 <Plus className="h-3.5 w-3.5 mr-1" />
-                {isEn ? "Add Code to List" : "তালিকায় যুক্ত করুন"}
+                তালিকায় যুক্ত করুন
               </Button>
             </div>
           </div>
@@ -289,23 +283,23 @@ export function ReferenceCodesCard({ isEn }: ReferenceCodesCardProps) {
         {loading ? (
           <div className="py-6 text-center text-xs text-muted-foreground">
             <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2 text-primary" />
-            {isEn ? "Loading codes..." : "রেফারেন্স কোড লোড হচ্ছে..."}
+            রেফারেন্স কোড লোড হচ্ছে...
           </div>
         ) : codes.length === 0 ? (
           <div className="py-6 text-center text-xs text-muted-foreground border border-dashed rounded-xl">
             <AlertCircle className="h-5 w-5 mx-auto mb-1 text-muted-foreground/60" />
-            {isEn ? "No reference codes configured." : "কোনো রেফারেন্স কোড তৈরি করা নেই।"}
+            কোনো রেফারেন্স কোড তৈরি করা নেই।
           </div>
         ) : (
           <div className="overflow-x-auto rounded-xl border border-border">
             <table className="w-full text-left text-xs">
               <thead className="bg-muted/50 border-b border-border text-muted-foreground">
                 <tr>
-                  <th className="p-3 font-semibold">{isEn ? "Code" : "কোড"}</th>
-                  <th className="p-3 font-semibold">{isEn ? "Benefit" : "সুবিধা / ছাড়"}</th>
-                  <th className="p-3 font-semibold hidden sm:table-cell">{isEn ? "Description" : "বিবরণ"}</th>
-                  <th className="p-3 font-semibold text-center">{isEn ? "Status" : "অবস্থা"}</th>
-                  <th className="p-3 font-semibold text-right">{isEn ? "Actions" : "অ্যাকশন"}</th>
+                  <th className="p-3 font-semibold">কোড</th>
+                  <th className="p-3 font-semibold">সুবিধা / ছাড়</th>
+                  <th className="p-3 font-semibold hidden sm:table-cell">বিবরণ</th>
+                  <th className="p-3 font-semibold text-center">অবস্থা</th>
+                  <th className="p-3 font-semibold text-right">অ্যাকশন</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -322,20 +316,20 @@ export function ReferenceCodesCard({ isEn }: ReferenceCodesCardProps) {
                         {isFree ? (
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
                             <Gift className="h-3 w-3" />
-                            {isEn ? "100% Free" : "১০০% ফ্রি"}
+                            ১০০% ফ্রি
                           </span>
                         ) : item.type === "percent" ? (
                           <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300">
-                            {item.value}% {isEn ? "Discount" : "ছাড়"}
+                            {item.value}% ছাড়
                           </span>
                         ) : (
                           <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
-                            ৳{item.value} {isEn ? "Discount" : "ছাড়"}
+                            ৳{item.value} ছাড়
                           </span>
                         )}
                       </td>
                       <td className="p-3 text-muted-foreground hidden sm:table-cell">
-                        {isEn ? item.labelEn : item.labelBn}
+                        {item.labelBn || item.labelEn}
                       </td>
                       <td className="p-3 text-center">
                         <button
@@ -346,12 +340,12 @@ export function ReferenceCodesCard({ isEn }: ReferenceCodesCardProps) {
                           {item.isActive ? (
                             <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                               <CheckCircle2 className="h-3.5 w-3.5" />
-                              {isEn ? "Active" : "সক্রিয়"}
+                              সক্রিয়
                             </span>
                           ) : (
                             <span className="text-muted-foreground flex items-center gap-1">
                               <XCircle className="h-3.5 w-3.5" />
-                              {isEn ? "Inactive" : "নিষ্ক্রিয়"}
+                              নিষ্ক্রিয়
                             </span>
                           )}
                         </button>
@@ -381,11 +375,9 @@ export function ReferenceCodesCard({ isEn }: ReferenceCodesCardProps) {
           <Sparkles className="h-4 w-4 text-primary shrink-0 mt-0.5" />
           <div>
             <span className="font-bold text-secondary dark:text-white">
-              {isEn ? "Referral Info: " : "রেফারেল তথ্য: "}
+              রেফারেল তথ্য: 
             </span>
-            {isEn
-              ? "Existing members' phone numbers or Member IDs also function as auto-referral codes granting a 20% discount. Custom codes listed above override and can offer 100% Free membership or fixed discounts."
-              : "ইতিমধ্যে নিবন্ধিত যে কোনো সক্রিয় মেম্বারের মোবাইল নম্বর বা আইডি স্বয়ংক্রিয় রেফারেল হিসেবে ২০% ছাড় দেয়। আর এখানে তৈরি করা কোডগুলো দিয়ে মেম্বারশিপ ১০০% ফ্রি অথবা ইচ্ছামতো ছাড় দেওয়া যাবে। পরিবর্তন শেষে অবশ্যই 'সংরক্ষণ করুন' বাটনে চাপুন।"}
+            ইতিমধ্যে নিবন্ধিত যে কোনো সক্রিয় মেম্বারের মোবাইল নম্বর বা আইডি স্বয়ংক্রিয় রেফারেল হিসেবে ২০% ছাড় দেয়। আর এখানে তৈরি করা কোডগুলো দিয়ে মেম্বারশিপ ১০০% ফ্রি অথবা ইচ্ছামতো ছাড় দেওয়া যাবে। পরিবর্তন শেষে অবশ্যই &apos;সংরক্ষণ করুন&apos; বাটনে চাপুন।
           </div>
         </div>
       </CardContent>

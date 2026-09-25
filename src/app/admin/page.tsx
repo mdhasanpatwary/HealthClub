@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import {
   PlusCircle,
   Users,
@@ -27,8 +26,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatNum } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
+import { cn, toBanglaNums } from "@/lib/utils";
 import { TransactionDialog } from "./components/TransactionDialog";
 import { AdminStatsGrid } from "./components/AdminStatsGrid";
 import { useAdminData } from "./hooks/useAdminData";
@@ -36,11 +34,9 @@ import { useAdminDoctors } from "./hooks/useAdminDoctors";
 import { useAdminNotifications } from "./hooks/useAdminNotifications";
 
 export default function AdminDashboardPage() {
-  const { t, locale } = useLanguage();
-  const adminData = useAdminData(t, locale);
+  const adminData = useAdminData();
   const doctorData = useAdminDoctors();
   const notificationData = useAdminNotifications();
-  const isBn = locale === "bn";
 
   const {
     loading,
@@ -55,225 +51,189 @@ export default function AdminDashboardPage() {
 
   const quickLinks = [
     {
-      title: t("admin.dashboard.membersList") || "সদস্য তালিকা",
-      description: isBn
-        ? "নিবন্ধিত সদস্যদের তথ্য, স্ট্যাটাস ও কার্ড ম্যানেজমেন্ট"
-        : "Manage registered members, status and digital cards",
+      title: "সদস্য তালিকা",
+      description: "নিবন্ধিত সদস্যদের তথ্য, স্ট্যাটাস ও কার্ড ম্যানেজমেন্ট",
       href: "/admin/members",
       icon: Users,
       count: stats.totalMembers,
-      countLabel: isBn ? "জন সদস্য" : "members",
+      countLabel: "জন সদস্য",
       badge: null,
       color: "indigo",
     },
     {
-      title: isBn ? "পার্টনার হাসপাতাল" : "Partner Hospitals",
-      description: isBn
-        ? "চুক্তিবদ্ধ হাসপাতাল ও ক্লিনিকগুলোর তালিকা ও ছাড়ের হার"
-        : "Contracted hospitals, clinic network and discount rates",
+      title: "পার্টনার হাসপাতাল",
+      description: "চুক্তিবদ্ধ হাসপাতাল ও ক্লিনিকগুলোর তালিকা ও ছাড়ের হার",
       href: "/admin/partners?category=hospital",
       icon: Building2,
       count: stats.partnerHospitals,
-      countLabel: isBn ? "টি হাসপাতাল" : "hospitals",
+      countLabel: "টি হাসপাতাল",
       badge: null,
       color: "emerald",
     },
     {
-      title: isBn ? "ডায়াগনস্টিক ও ল্যাব" : "Diagnostic Centers",
-      description: isBn
-        ? "চুক্তিবদ্ধ ডায়াগনস্টিক সেন্টার ও প্যাথলজি ল্যাব নেটওয়ার্ক"
-        : "Contracted pathology labs and diagnostic test centers",
+      title: "ডায়াগনস্টিক ও ল্যাব",
+      description: "চুক্তিবদ্ধ ডায়াগনস্টিক সেন্টার ও প্যাথলজি ল্যাব নেটওয়ার্ক",
       href: "/admin/partners?category=diagnostic",
       icon: Activity,
       count: stats.partnerDiagnostics,
-      countLabel: isBn ? "টি ডায়াগনস্টিক" : "diagnostics",
+      countLabel: "টি ডায়াগনস্টিক",
       badge: null,
       color: "sky",
     },
     {
-      title: isBn ? "ফার্মেসি নেটওয়ার্ক" : "Partner Pharmacies",
-      description: isBn
-        ? "চুক্তিবদ্ধ ঔষধের দোকান ও ডিসকাউন্ট সুবিধা"
-        : "Contracted retail pharmacy network and medicine discounts",
+      title: "ফার্মেসি নেটওয়ার্ক",
+      description: "চুক্তিবদ্ধ ঔষধের দোকান ও ডিসকাউন্ট সুবিধা",
       href: "/admin/partners?category=pharmacy",
       icon: Pill,
       count: stats.partnerPharmacies,
-      countLabel: isBn ? "টি ফার্মেসি" : "pharmacies",
+      countLabel: "টি ফার্মেসি",
       badge: null,
       color: "purple",
     },
     {
-      title: isBn ? "ডাক্তার তালিকা" : "Doctors Directory",
-      description: isBn
-        ? "বিশেষজ্ঞ ডাক্তার ও কনসালট্যান্টদের তালিকা ও চেম্বার শিডিউল"
-        : "Specialist doctors, chamber info and serial phones",
+      title: "ডাক্তার তালিকা",
+      description: "বিশেষজ্ঞ ডাক্তার ও কনসালট্যান্টদের তালিকা ও চেম্বার শিডিউল",
       href: "/admin/doctors",
       icon: Stethoscope,
       count: doctorData.doctors.length,
-      countLabel: isBn ? "জন ডাক্তার" : "doctors",
+      countLabel: "জন ডাক্তার",
       badge: null,
       color: "blue",
     },
     {
-      title: t("admin.dashboard.transactionLog") || "লেনদেন লগ",
-      description: isBn
-        ? "সদস্যদের চিকিৎসা সেবায় প্রাপ্ত ডিসকাউন্ট ও সেভিংস রেকর্ড"
-        : "Track member discount savings and transaction histories",
+      title: "লেনদেন লগ",
+      description: "সদস্যদের চিকিৎসা সেবায় প্রাপ্ত ডিসকাউন্ট ও সেভিংস রেকর্ড",
       href: "/admin/transactions",
       icon: Receipt,
       count: stats.totalTransactions,
-      countLabel: isBn ? "টি এন্ট্রি" : "transactions",
+      countLabel: "টি এন্ট্রি",
       badge: null,
       color: "teal",
     },
     {
-      title: isBn ? "আর্থিক ও রাজস্ব অ্যানালিটিক্স" : "Revenue Analytics",
-      description: isBn
-        ? "সাবস্ক্রিপশন রাজস্ব, নবায়ন রিটেনশন রেট ও পার্টনার সেভিংস রিপোর্ট"
-        : "Subscription revenue, retention rate and hospital performance",
+      title: "আর্থিক ও রাজস্ব অ্যানালিটিক্স",
+      description: "সাবস্ক্রিপশন রাজস্ব, নবায়ন রিটেনশন রেট ও পার্টনার সেভিংস রিপোর্ট",
       href: "/admin/analytics",
       icon: TrendingUp,
       count: stats.revenue,
-      countLabel: isBn ? "টাকা রাজস্ব" : "BDT revenue",
+      countLabel: "টাকা রাজস্ব",
       badge: null,
       color: "emerald",
     },
     {
-      title: isBn ? "অংশীদার আবেদন" : "Partner Requests",
-      description: isBn
-        ? "নতুন হাসপাতাল ও ক্লিনিকগুলোর অংশীদারিত্ব আবেদন পর্যালোচনা"
-        : "Review pending partner facility applications",
+      title: "অংশীদার আবেদন",
+      description: "নতুন হাসপাতাল ও ক্লিনিকগুলোর অংশীদারিত্ব আবেদন পর্যালোচনা",
       href: "/admin/partner-requests",
       icon: FileCheck,
       count: stats.pendingPartnerRequests,
-      countLabel: isBn ? "টি নতুন আবেদন" : "pending",
-      badge: stats.pendingPartnerRequests > 0 ? `${stats.pendingPartnerRequests}` : null,
+      countLabel: "টি নতুন আবেদন",
+      badge: stats.pendingPartnerRequests > 0 ? toBanglaNums(stats.pendingPartnerRequests) : null,
       badgeColor: "amber",
       color: "amber",
     },
     {
-      title: isBn ? "নবায়ন আবেদন" : "Renewal Requests",
-      description: isBn
-        ? "মেম্বারদের বিকাশ ফি পরিশোধ সাপেক্ষে নবায়ন আবেদন অনুমোদন"
-        : "Approve and extend member annual subscriptions",
+      title: "নবায়ন আবেদন",
+      description: "মেম্বারদের বিকাশ ফি পরিশোধ সাপেক্ষে নবায়ন আবেদন অনুমোদন",
       href: "/admin/renewals",
       icon: RotateCcw,
       count: stats.pendingRenewals,
-      countLabel: isBn ? "টি নবায়ন আবেদন" : "pending",
-      badge: stats.pendingRenewals > 0 ? `${stats.pendingRenewals}` : null,
+      countLabel: "টি নবায়ন আবেদন",
+      badge: stats.pendingRenewals > 0 ? toBanglaNums(stats.pendingRenewals) : null,
       badgeColor: "amber",
       color: "purple",
     },
     {
-      title: isBn ? "সদস্যদের রিভিউ ও রেটিং" : "Member Reviews & Ratings",
-      description: isBn
-        ? "পার্টনার হাসপাতালসমূহের জন্য সদস্যদের দেওয়া রেটিং ও রিভিউ মডারেশন"
-        : "Moderate member ratings & healthcare reviews for partner hospitals",
+      title: "সদস্যদের রিভিউ ও রেটিং",
+      description: "পার্টনার হাসপাতালসমূহের জন্য সদস্যদের দেওয়া রেটিং ও রিভিউ মডারেশন",
       href: "/admin/reviews",
       icon: Star,
       count: 0,
-      countLabel: isBn ? "রিভিউ মডারেশন" : "reviews",
+      countLabel: "রিভিউ মডারেশন",
       color: "amber",
     },
     {
-      title: t("admin.dashboard.contactMessages") || "যোগাযোগের বার্তা",
-      description: isBn
-        ? "ওয়েবসাইট থেকে আসা গ্রাহক ও দর্শনার্থীদের অনুসন্ধান বার্তা"
-        : "Review visitor feedback and general inquiries",
+      title: "যোগাযোগের বার্তা",
+      description: "ওয়েবসাইট থেকে আসা গ্রাহক ও দর্শনার্থীদের অনুসন্ধান বার্তা",
       href: "/admin/messages",
       icon: Mail,
       count: stats.contactMessagesCount,
-      countLabel: isBn ? "টি বার্তা" : "messages",
-      badge: stats.contactMessagesCount > 0 ? `${stats.contactMessagesCount}` : null,
+      countLabel: "টি বার্তা",
+      badge: stats.contactMessagesCount > 0 ? toBanglaNums(stats.contactMessagesCount) : null,
       badgeColor: "indigo",
       color: "rose",
     },
     {
-      title: isBn ? "বিজ্ঞপ্তি ও অ্যালার্ট" : "Notifications & Alerts",
-      description: isBn
-        ? "মেম্বারশিপ নবায়ন, পার্টনার আবেদন ও অনুসন্ধান নোটিফিকেশন"
-        : "Real-time alerts for renewals, partner requests and inquiries",
+      title: "বিজ্ঞপ্তি ও অ্যালার্ট",
+      description: "মেম্বারশিপ নবায়ন, পার্টনার আবেদন ও অনুসন্ধান নোটিফিকেশন",
       href: "/admin/notifications",
       icon: Bell,
       count: notificationData.unreadCount,
-      countLabel: isBn ? "টি অপঠিত" : "unread",
+      countLabel: "টি অপঠিত",
       badge:
         notificationData.unreadCount > 0
-          ? `${notificationData.unreadCount}`
+          ? toBanglaNums(notificationData.unreadCount)
           : null,
       badgeColor:
         notificationData.highPriorityCount > 0 ? "rose" : "amber",
       color: "amber",
     },
     {
-      title: isBn ? "জরুরি সেবা নেটওয়ার্ক" : "Emergency Services",
-      description: isBn
-        ? "রক্তদাতা তালিকা, অ্যাম্বুলেন্স সার্ভিস ও অক্সিজেন হটলাইন"
-        : "Blood donor registry, ambulance fleet & hotlines",
+      title: "জরুরি সেবা নেটওয়ার্ক",
+      description: "রক্তদাতা তালিকা, অ্যাম্বুলেন্স সার্ভিস ও অক্সিজেন হটলাইন",
       href: "/admin/emergency",
       icon: Siren,
       count: stats.emergencyDonorsCount ?? 0,
-      countLabel: isBn ? "জন রক্তদাতা" : "blood donors",
+      countLabel: "জন রক্তদাতা",
       badge:
         (stats.pendingDonorsCount ?? 0) > 0
-          ? `${stats.pendingDonorsCount}`
+          ? toBanglaNums(stats.pendingDonorsCount ?? 0)
           : null,
       badgeColor: "rose",
       color: "rose",
     },
     {
-      title: isBn ? "স্বাস্থ্য টিপস ও গাইড" : "Health Tips & Guides",
-      description: isBn
-        ? "স্বাস্থ্য সচেতনতামূলক ব্লগ ও চিকিৎসা পরামর্শ আর্টিকেল"
-        : "Health awareness blogs, guides & medical articles",
+      title: "স্বাস্থ্য টিপস ও গাইড",
+      description: "স্বাস্থ্য সচেতনতামূলক ব্লগ ও চিকিৎসা পরামর্শ আর্টিকেল",
       href: "/admin/health-tips",
       icon: BookOpen,
       count: stats.healthTipsCount ?? 0,
-      countLabel: isBn ? "টি আর্টিকেল" : "articles",
+      countLabel: "টি আর্টিকেল",
       color: "emerald",
     },
     {
-      title: isBn ? "ব্লগ পোস্ট ও রিভিউ" : "Blog Posts & Reviews",
-      description: isBn
-        ? "হাসপাতাল রিভিউ প্রোফাইল ও স্বাস্থ্য বিষয়ক ব্লগ আর্টিকেল ম্যানেজমেন্ট"
-        : "Hospital reviews, profiles and published blog articles",
+      title: "ব্লগ পোস্ট ও রিভিউ",
+      description: "হাসপাতাল রিভিউ প্রোফাইল ও স্বাস্থ্য বিষয়ক ব্লগ আর্টিকেল ম্যানেজমেন্ট",
       href: "/admin/blogs",
       icon: Newspaper,
       count: 0,
-      countLabel: isBn ? "ব্লগ পরিচালনা" : "blog posts",
+      countLabel: "ব্লগ পরিচালনা",
       color: "indigo",
     },
     {
-      title: isBn ? "PWA অ্যাপ অ্যানালিটিক্স" : "PWA App Analytics",
-      description: isBn
-        ? "মোবাইল অ্যাপ ইনস্টল, অ্যাক্টিভেশন ও প্ল্যাটফর্ম পরিসংখ্যান"
-        : "App installs, user retention & platform analytics",
+      title: "PWA অ্যাপ অ্যানালিটিক্স",
+      description: "মোবাইল অ্যাপ ইনস্টল, অ্যাক্টিভেশন ও প্ল্যাটফর্ম পরিসংখ্যান",
       href: "/admin/pwa",
       icon: Smartphone,
       count: stats.pwaInstalls ?? 0,
-      countLabel: isBn ? "টি ইনস্টল" : "installs",
+      countLabel: "টি ইনস্টল",
       color: "teal",
     },
     {
-      title: isBn ? "ব্রডকাস্ট মেসেজিং" : "Broadcast Campaigns",
-      description: isBn
-        ? "সকল সদস্য, পার্টনার ও রক্তদাতাদের গণ এসএমএস ও ইমেইল নোটিশ"
-        : "Mass SMS, email & in-app announcements to user segments",
+      title: "ব্রডকাস্ট মেসেজিং",
+      description: "সকল সদস্য, পার্টনার ও রক্তদাতাদের গণ এসএমএস ও ইমেইল নোটিশ",
       href: "/admin/broadcast",
       icon: Radio,
       count: stats.totalMembers,
-      countLabel: isBn ? "জন সম্ভাব্য প্রাপক" : "reach",
+      countLabel: "জন সম্ভাব্য প্রাপক",
       color: "emerald",
     },
     {
-      title: isBn ? "এডমিন ও স্টাফ (RBAC)" : "Staff & RBAC",
-      description: isBn
-        ? "সুপার এডমিন, কন্টেন্ট মডারেটর ও সাপোর্ট স্টাফ পারমিশন পরিচালনা"
-        : "Manage admin users, granular access control and permissions",
+      title: "এডমিন ও স্টাফ (RBAC)",
+      description: "সুপার এডমিন, কন্টেন্ট মডারেটর ও সাপোর্ট স্টাফ পারমিশন পরিচালনা",
       href: "/admin/staff",
       icon: ShieldCheck,
       count: 0,
-      countLabel: isBn ? "রোল পারমিশন" : "access control",
+      countLabel: "রোল পারমিশন",
       color: "purple",
     },
   ];
@@ -313,10 +273,10 @@ export default function AdminDashboardPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border pb-6">
         <div>
           <h1 className="font-heading text-2xl sm:text-3xl font-bold text-secondary dark:text-white">
-            {t("admin.dashboard.adminAnalyticsDashboard")}
+            অ্যাডমিন অ্যানালিটিক্স ড্যাশবোর্ড
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            {t("admin.dashboard.manageStatsDesc")}
+            হেলথ ক্লাবের সামগ্রিক পরিসংখ্যান ও ব্যবস্থাপনা পর্যবেক্ষণ করুন
           </p>
         </div>
 
@@ -329,10 +289,10 @@ export default function AdminDashboardPage() {
             )}
           >
             <Bell className="h-4 w-4 text-amber-500" />
-            <span>{t("admin.nav.notifications") || "বিজ্ঞপ্তি"}</span>
+            <span>বিজ্ঞপ্তি</span>
             {notificationData.unreadCount > 0 && (
               <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white shadow-xs">
-                {formatNum(notificationData.unreadCount, locale)}
+                {toBanglaNums(notificationData.unreadCount)}
               </span>
             )}
           </Link>
@@ -343,7 +303,7 @@ export default function AdminDashboardPage() {
             size="sm"
           >
             <PlusCircle className="h-4 w-4" />
-            {t("admin.dashboard.logMemberDiscountTitle")}
+            মেম্বার ছাড় এন্ট্রি করুন
           </Button>
         </div>
       </div>
@@ -355,12 +315,10 @@ export default function AdminDashboardPage() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="font-heading text-lg font-bold text-foreground">
-            {isBn ? "অ্যাডমিন ম্যানেজমেন্ট হাব" : "Management Sections"}
+            অ্যাডমিন ম্যানেজমেন্ট হাব
           </h2>
           <p className="text-xs text-muted-foreground">
-            {isBn
-              ? "যেকোনো সেকশনে দ্রুত যেতে ক্লিক করুন"
-              : "Click to navigate directly to any section"}
+            যেকোনো সেকশনে দ্রুত যেতে ক্লিক করুন
           </p>
         </div>
 
@@ -377,7 +335,7 @@ export default function AdminDashboardPage() {
                       </div>
                       {item.badge && (
                         <span className="text-[11px] font-mono px-2 py-0.5 rounded-full font-bold bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30">
-                          {item.badge} {isBn ? "পেন্ডিং" : "pending"}
+                          {item.badge} পেন্ডিং
                         </span>
                       )}
                     </div>
@@ -397,7 +355,7 @@ export default function AdminDashboardPage() {
                         {item.countLabel}:
                       </span>
                       <span className="font-mono font-bold text-foreground">
-                        {formatNum(item.count, locale)}
+                        {toBanglaNums(item.count)}
                       </span>
                     </div>
                   </CardContent>
@@ -417,7 +375,6 @@ export default function AdminDashboardPage() {
           newTx={newTx}
           setNewTx={setNewTx}
           onSubmit={handleAddTransaction}
-          t={t}
         />
       )}
     </div>

@@ -26,8 +26,7 @@ import {
 } from "@/app/actions/emergencyHotlineActions";
 import { exportEmergencyData } from "@/lib/emergencyExport";
 import { toast } from "sonner";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-import { formatNum } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import { useDebounce } from "@/hooks/useDebounce";
 import { EmergencyDonorDialog } from "./EmergencyDonorDialog";
 import { EmergencyAmbulanceDialog } from "./EmergencyAmbulanceDialog";
@@ -40,9 +39,6 @@ import { EmergencyFilterBar } from "./emergency/EmergencyFilterBar";
 import { BulkImportDialog } from "./BulkImportDialog";
 
 export function EmergencyTab() {
-  const { locale } = useLanguage();
-  const isEn = locale === "en";
-
   const [activeSubTab, setActiveSubTab] = useState<"donors" | "ambulances" | "hotlines">("donors");
   const [loading, setLoading] = useState(true);
 
@@ -139,11 +135,11 @@ export function EmergencyTab() {
       setTotalItems(listRes.totalItems);
       setTotalPages(listRes.totalPages);
     } catch {
-      toast.error(isEn ? "Failed to load emergency data" : "জরুরি সেবার তথ্য লোড করতে ব্যর্থ");
+      toast.error("জরুরি সেবার তথ্য লোড করতে ব্যর্থ");
     } finally {
       setLoading(false);
     }
-  }, [activeSubTab, page, pageSize, debouncedSearch, selectedGroup, selectedUpazila, ambulanceTypeFilter, statusFilter, isEn]);
+  }, [activeSubTab, page, pageSize, debouncedSearch, selectedGroup, selectedUpazila, ambulanceTypeFilter, statusFilter]);
 
   useEffect(() => {
     let isMounted = true;
@@ -158,30 +154,30 @@ export function EmergencyTab() {
   const handleToggleAvailability = async (id: string) => {
     const res = await toggleBloodDonorAvailabilityAction(id);
     if (res.success) {
-      toast.success(isEn ? "Availability status updated!" : "স্ট্যাটাস পরিবর্তন হয়েছে!");
+      toast.success("স্ট্যাটাস পরিবর্তন হয়েছে!");
       loadData();
     } else {
-      toast.error(res.error || (isEn ? "Failed to update status" : "আপডেট ব্যর্থ হয়েছে"));
+      toast.error(res.error || "আপডেট ব্যর্থ হয়েছে");
     }
   };
 
   const handleApproveDonor = async (id: string) => {
     const res = await approveBloodDonorAction(id);
     if (res.success) {
-      toast.success(isEn ? "Blood donor approved & live in directory!" : "রক্তদাতা সফলভাবে অনুমোদিত হয়েছে!");
+      toast.success("রক্তদাতা সফলভাবে অনুমোদিত হয়েছে!");
       loadData();
     } else {
-      toast.error(res.error || (isEn ? "Failed to approve donor" : "অনুমোদন ব্যর্থ হয়েছে"));
+      toast.error(res.error || "অনুমোদন ব্যর্থ হয়েছে");
     }
   };
 
   const handleApproveAmbulance = async (id: string) => {
     const res = await approveAmbulanceAction(id);
     if (res.success) {
-      toast.success(isEn ? "Ambulance service approved & live in directory!" : "অ্যাম্বুলেন্স সার্ভিস অনুমোদিত হয়েছে!");
+      toast.success("অ্যাম্বুলেন্স সার্ভিস অনুমোদিত হয়েছে!");
       loadData();
     } else {
-      toast.error(res.error || (isEn ? "Failed to approve ambulance" : "অনুমোদন ব্যর্থ হয়েছে"));
+      toast.error(res.error || "অনুমোদন ব্যর্থ হয়েছে");
     }
   };
 
@@ -199,15 +195,15 @@ export function EmergencyTab() {
       }
 
       if (res.success) {
-        toast.success(isEn ? "Deleted successfully!" : "সফলভাবে মুছে ফেলা হয়েছে!");
+        toast.success("সফলভাবে মুছে ফেলা হয়েছে!");
         setDeleteModalOpen(false);
         setDeletingItem(null);
         loadData();
       } else {
-        toast.error(res.error || (isEn ? "Failed to delete" : "মুছে ফেলা ব্যর্থ হয়েছে"));
+        toast.error(res.error || "মুছে ফেলা ব্যর্থ হয়েছে");
       }
     } catch {
-      toast.error(isEn ? "Error deleting item" : "সমস্যা দেখা দিয়েছে");
+      toast.error("সমস্যা দেখা দিয়েছে");
     } finally {
       setDeleting(false);
     }
@@ -224,12 +220,10 @@ export function EmergencyTab() {
           <div>
             <CardTitle className="font-heading text-lg font-bold text-secondary dark:text-white flex items-center gap-2">
               <Siren className="h-5 w-5 text-rose-600" />
-              <span>{isEn ? "Emergency Services Management" : "জরুরি স্বাস্থ্য সেবা ব্যবস্থাপনা"}</span>
+              <span>জরুরি স্বাস্থ্য সেবা ব্যবস্থাপনা</span>
             </CardTitle>
             <CardDescription className="text-xs">
-              {isEn
-                ? "Manage blood donors, ambulances, and emergency hotlines in Feni."
-                : "ফেনীর রক্তদাতা, অ্যাম্বুলেন্স সার্ভিস এবং অক্সিজেন ও জরুরি হটলাইন পরিচালনা করুন।"}
+              ফেনীর রক্তদাতা, অ্যাম্বুলেন্স সার্ভিস এবং অক্সিজেন ও জরুরি হটলাইন পরিচালনা করুন।
             </CardDescription>
           </div>
 
@@ -241,9 +235,9 @@ export function EmergencyTab() {
               className="text-xs h-8 rounded-lg font-bold gap-1.5 flex-1 sm:flex-initial shrink-0 justify-center"
             >
               <Droplet className="h-3.5 w-3.5" />
-              <span>{isEn ? "Blood Donors" : "রক্তদাতা"}</span>
+              <span>রক্তদাতা</span>
               <Badge variant="secondary" className="ml-1 text-[10px] px-1.5 py-0">
-                {formatNum(counts.donors, locale)}
+                {toBanglaNums(counts.donors)}
               </Badge>
             </Button>
 
@@ -254,9 +248,9 @@ export function EmergencyTab() {
               className="text-xs h-8 rounded-lg font-bold gap-1.5 flex-1 sm:flex-initial shrink-0 justify-center"
             >
               <Truck className="h-3.5 w-3.5" />
-              <span>{isEn ? "Ambulances" : "অ্যাম্বুলেন্স"}</span>
+              <span>অ্যাম্বুলেন্স</span>
               <Badge variant="secondary" className="ml-1 text-[10px] px-1.5 py-0">
-                {formatNum(counts.ambulances, locale)}
+                {toBanglaNums(counts.ambulances)}
               </Badge>
             </Button>
 
@@ -267,9 +261,9 @@ export function EmergencyTab() {
               className="text-xs h-8 rounded-lg font-bold gap-1.5 flex-1 sm:flex-initial shrink-0 justify-center"
             >
               <PhoneCall className="h-3.5 w-3.5" />
-              <span>{isEn ? "Hotlines & Oxygen" : "হটলাইন ও অক্সিজেন"}</span>
+              <span>হটলাইন ও অক্সিজেন</span>
               <Badge variant="secondary" className="ml-1 text-[10px] px-1.5 py-0">
-                {formatNum(counts.hotlines, locale)}
+                {toBanglaNums(counts.hotlines)}
               </Badge>
             </Button>
           </div>
@@ -317,7 +311,6 @@ export function EmergencyTab() {
                 setHotlineDialogOpen(true);
               }
             }}
-            isEn={isEn}
           />
 
           {activeSubTab === "donors" ? (
@@ -332,7 +325,6 @@ export function EmergencyTab() {
                 setPageSize(newSize);
                 setPage(1);
               }}
-              isEn={isEn}
               onEdit={(d) => {
                 setEditingDonor(d);
                 setDonorDialogOpen(true);
@@ -357,7 +349,6 @@ export function EmergencyTab() {
                 setPageSize(newSize);
                 setPage(1);
               }}
-              isEn={isEn}
               onEdit={(a) => {
                 setEditingAmbulance(a);
                 setAmbulanceDialogOpen(true);
@@ -381,7 +372,6 @@ export function EmergencyTab() {
                 setPageSize(newSize);
                 setPage(1);
               }}
-              isEn={isEn}
               onEdit={(h) => {
                 setEditingHotline(h);
                 setHotlineDialogOpen(true);
@@ -400,7 +390,7 @@ export function EmergencyTab() {
       <EmergencyDonorDialog open={donorDialogOpen} onOpenChange={setDonorDialogOpen} donor={editingDonor} onSuccess={loadData} />
       <EmergencyAmbulanceDialog open={ambulanceDialogOpen} onOpenChange={setAmbulanceDialogOpen} ambulance={editingAmbulance} onSuccess={loadData} />
       <EmergencyHotlineDialog open={hotlineDialogOpen} onOpenChange={setHotlineDialogOpen} hotline={editingHotline} onSuccess={loadData} />
-      <EmergencyDeleteDialog open={deleteModalOpen} onOpenChange={setDeleteModalOpen} itemName={deletingItem?.name} isEn={isEn} deleting={deleting} onConfirm={confirmDelete} />
+      <EmergencyDeleteDialog open={deleteModalOpen} onOpenChange={setDeleteModalOpen} itemName={deletingItem?.name} deleting={deleting} onConfirm={confirmDelete} />
       {importDialogOpen && (
         <BulkImportDialog
           isOpen={importDialogOpen}

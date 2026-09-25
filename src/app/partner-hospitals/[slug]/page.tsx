@@ -1,5 +1,4 @@
 import { notFound, permanentRedirect } from "next/navigation";
-import type { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import HospitalProfileView from "@/components/partner-hospitals/HospitalProfileView";
 import {
@@ -30,16 +29,10 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   const partner = await getPartnerByIdAction(slug);
-  // Public pages are always Bengali. Never call cookies() here — it opts the page out of ISR.
-  const isEn = false;
 
   if (!partner) {
-    const notFoundTitle = isEn
-      ? "Partner Facility Not Found - Health Club"
-      : "পার্টনার প্রতিষ্ঠান পাওয়া যায়নি - হেলথ ক্লাব";
-    const notFoundDesc = isEn
-      ? "The requested partner hospital or clinic could not be found in Health Club directory."
-      : "অনুরোধকৃত হাসপাতাল বা ডায়াগনস্টিক সেন্টার হেলথ ক্লাব ডিরেক্টরিতে পাওয়া যায়নি।";
+    const notFoundTitle = "পার্টনার প্রতিষ্ঠান পাওয়া যায়নি - হেলথ ক্লাব";
+    const notFoundDesc = "অনুরোধকৃত হাসপাতাল বা ডায়াগনস্টিক সেন্টার হেলথ ক্লাব ডিরেক্টরিতে পাওয়া যায়নি।";
     return {
       title: notFoundTitle,
       description: notFoundDesc,
@@ -66,19 +59,15 @@ export async function generateMetadata({ params }: PageProps) {
 
   const categoryLabel =
     partner.category === "hospital"
-      ? isEn ? "Hospital" : "হাসপাতাল"
+      ? "হাসপাতাল"
       : partner.category === "diagnostic"
-      ? isEn ? "Diagnostic Center" : "ডায়াগনস্টিক সেন্টার"
-      : isEn ? "Pharmacy" : "ফার্মেসি";
+      ? "ডায়াগনস্টিক সেন্টার"
+      : "ফার্মেসি";
 
-  const rawBnTitle = `${partner.name} (${categoryLabel}, ফেনী) | মেম্বার ডিসকাউন্ট, সেবা ও ডাক্তার শিডিউল`;
-  const rawEnTitle = `${partner.name} (${categoryLabel}) in Feni | Member Discounts & Doctor Schedule | Health Club`;
-  const pageTitle = isEn ? { absolute: rawEnTitle } : rawBnTitle;
-  const ogTitle = isEn ? rawEnTitle : `${partner.name} (${categoryLabel}, ফেনী) | মেম্বার ডিসকাউন্ট, সেবা ও ডাক্তার শিডিউল - হেলথ ক্লাব`;
+  const pageTitle = `${partner.name} (${categoryLabel}, ফেনী) | মেম্বার ডিসকাউন্ট, সেবা ও ডাক্তার শিডিউল`;
+  const ogTitle = `${partner.name} (${categoryLabel}, ফেনী) | মেম্বার ডিসকাউন্ট, সেবা ও ডাক্তার শিডিউল - হেলথ ক্লাব`;
 
-  const pageDesc = isEn
-    ? `${partner.name} at ${partner.address}, Feni. Avail ${partner.discount} with Health Club Member Card. Verified facilities, resident specialist doctors & 24/7 hotline: ${partner.phone}.`
-    : `${partner.name}, ${partner.address}, ফেনী। হেলথ ক্লাব মেম্বার কার্ডে পান ${partner.discount}। আধুনিক স্বাস্থ্যসেবা, বিশেষজ্ঞ ডাক্তারদের চেম্বার শিডিউল ও হটলাইন: ${partner.phone}।`;
+  const pageDesc = `${partner.name}, ${partner.address}, ফেনী। হেলথ ক্লাব মেম্বার কার্ডে পান ${partner.discount}। আধুনিক স্বাস্থ্যসেবা, বিশেষজ্ঞ ডাক্তারদের চেম্বার শিডিউল ও হটলাইন: ${partner.phone}।`;
 
   const canonicalSlug = encodeURIComponent(partner.slug || partner.id);
   const canonicalUrl = `${SITE_URL}/partner-hospitals/${canonicalSlug}`;
@@ -164,16 +153,11 @@ export default async function PartnerHospitalDetailPage({ params }: PageProps) {
     getPartnerReviewsAction(partner.id),
   ]);
 
-  // Hardcode locale — public detail pages are always Bengali.
-  // Do NOT use cookies() here — it would opt the page out of ISR caching.
-  const locale: Locale = "bn";
-
   const jsonLdData = generatePartnerJsonLd({
     partner,
     doctors,
     reviews: reviewData.reviews,
     stats: reviewData.stats,
-    locale,
   });
 
   return (

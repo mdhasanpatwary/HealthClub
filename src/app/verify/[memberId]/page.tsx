@@ -8,7 +8,6 @@ import { getPublicMemberVerificationAction } from "@/app/actions/memberActions";
 import { PublicMemberVerification } from "@/services/db";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 
@@ -17,7 +16,6 @@ export default function VerificationPage() {
   const memberId = params?.memberId as string;
   const [member, setMember] = useState<PublicMemberVerification | null>(null);
   const [loading, setLoading] = useState(true);
-  const { t } = useLanguage();
 
   useEffect(() => {
     if (memberId) {
@@ -30,11 +28,11 @@ export default function VerificationPage() {
           setLoading(false);
         })
         .catch(() => {
-          toast.error(t("pages.verify.verifyError"));
+          toast.error("সদস্য তথ্য লোড করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
           setLoading(false);
         });
     }
-  }, [memberId, t]);
+  }, [memberId]);
 
   return (
     <div className="bg-muted/30 min-h-[85vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -93,10 +91,10 @@ export default function VerificationPage() {
             <div className="bg-primary/10 py-6 border-b border-primary/20">
               <ShieldCheck className="h-16 w-16 text-primary mx-auto animate-pulse" />
               <h1 className="font-heading text-2xl font-bold text-primary mt-2">
-                {t("pages.verify.verifiedMember")}
+                ভেরিফাইড মেম্বার (VERIFIED)
               </h1>
               <p className="text-xs text-muted-foreground mt-1">
-                {t("pages.verify.verifiedDatabase")}
+                হেলথ ক্লাব মেম্বারশিপ ডাটাবেজ ভেরিফাইড
               </p>
             </div>
 
@@ -106,31 +104,31 @@ export default function VerificationPage() {
               <div className="space-y-4 text-left bg-muted/40 p-4 rounded-2xl border border-border">
                 
                 <div>
-                  <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberName")}</span>
+                  <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">সদস্যের নাম</span>
                   <p className="text-base font-bold text-secondary dark:text-white">{member.name}</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 border-t border-border/80 pt-3">
                   <div>
-                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberId")}</span>
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">মেম্বার আইডি</span>
                     <p className="text-sm font-semibold text-primary font-mono">{member.id}</p>
                   </div>
                   <div>
-                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberType")}</span>
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">মেম্বারশিপ টাইপ</span>
                     <p className="text-sm font-semibold text-secondary dark:text-white capitalize">{member.tier}</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 border-t border-border/80 pt-3">
                   <div>
-                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.expiryDate")}</span>
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">মেয়াদ উত্তীর্ণের তারিখ</span>
                     <p className="text-sm font-semibold text-secondary dark:text-white font-mono">{member.expiryDate}</p>
                   </div>
                   <div>
-                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.membershipStatus")}</span>
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">মেম্বারশিপ অবস্থা</span>
                     <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20 inline-flex items-center gap-1 mt-0.5">
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                      {t("pages.verify.active")}
+                      সচল (ACTIVE)
                     </p>
                   </div>
                 </div>
@@ -139,9 +137,9 @@ export default function VerificationPage() {
 
               {/* Guideline note for Hospital desk */}
               <div className="text-xs text-muted-foreground border-t border-border pt-4 text-center">
-                <p className="font-semibold text-secondary dark:text-white mb-1">{t("pages.verify.todoAtHospital")}</p>
-                <p>{t("pages.verify.todoStep1")}</p>
-                <p className="mt-0.5">{t("pages.verify.todoStep2")}</p>
+                <p className="font-semibold text-secondary dark:text-white mb-1">হাসপাতাল কাউন্টারে করণীয়:</p>
+                <p>১. মেম্বারশিপ আইডি টি আপনার বিলিং সিস্টেমে এন্ট্রি করুন।</p>
+                <p className="mt-0.5">২. চুক্তি অনুযায়ী বিলে নির্ধারিত ডিসকাউন্ট রেট যোগ করুন।</p>
               </div>
 
               <div className="pt-2">
@@ -153,7 +151,7 @@ export default function VerificationPage() {
                   })}
                 >
                   <ArrowLeft className="h-4 w-4" />
-                  {t("pages.verify.backToHome")}
+                  হোম পেজে ফিরে যান
                 </Link>
               </div>
 
@@ -166,37 +164,37 @@ export default function VerificationPage() {
             <div className="bg-amber-500/10 py-6 border-b border-amber-500/20">
               <ShieldAlert className="h-16 w-16 text-amber-500 mx-auto animate-bounce" />
               <h1 className="font-heading text-2xl font-bold text-amber-600 mt-2">
-                {isExpired ? t("verifyMember.expiredTitle") : t("verifyMember.inactiveTitle")}
+                {isExpired ? "মেম্বারশিপের মেয়াদ উত্তীর্ণ" : "মেম্বারশিপ সচল নয়"}
               </h1>
               <p className="text-xs text-muted-foreground mt-1">
-                {isExpired ? t("verifyMember.expiredDesc") : t("verifyMember.pendingDesc")}
+                {isExpired ? "এই মেম্বারশিপ কার্ডটির মেয়াদ শেষ হয়ে গেছে। রিনিউ করুন।" : "মেম্বারশিপ অ্যাকাউন্টটি বর্তমানে পেন্ডিং বা অনুমোদনের অপেক্ষায় রয়েছে"}
               </p>
             </div>
             <CardContent className="p-6 md:p-8 space-y-6">
               <div className="space-y-4 text-left bg-muted/40 p-4 rounded-2xl border border-border">
                 <div>
-                  <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberName")}</span>
+                  <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">সদস্যের নাম</span>
                   <p className="text-base font-bold text-secondary dark:text-white">{member.name}</p>
                 </div>
                 <div className="grid grid-cols-2 gap-4 border-t border-border/80 pt-3">
                   <div>
-                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberId")}</span>
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">মেম্বার আইডি</span>
                     <p className="text-sm font-semibold text-secondary dark:text-white font-mono">{member.id}</p>
                   </div>
                   <div>
-                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.memberType")}</span>
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">মেম্বারশিপ টাইপ</span>
                     <p className="text-sm font-semibold text-secondary dark:text-white capitalize">{member.tier}</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4 border-t border-border/80 pt-3">
                   <div>
-                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.membershipStatus")}</span>
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">মেম্বারশিপ অবস্থা</span>
                     <p className="text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20 inline-flex items-center gap-1 mt-0.5 uppercase">
                       {isExpired ? "EXPIRED" : "PENDING APPROVAL"}
                     </p>
                   </div>
                   <div>
-                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">{t("pages.verify.expiryDate")}</span>
+                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">মেয়াদ উত্তীর্ণের তারিখ</span>
                     <p className="text-xs font-bold font-mono text-secondary dark:text-white mt-0.5">
                       {member.expiryDate}
                     </p>
@@ -204,7 +202,7 @@ export default function VerificationPage() {
                 </div>
               </div>
               <div className="text-xs text-muted-foreground border-t border-border pt-4 text-center">
-                {isExpired ? t("verifyMember.expiredNote") : t("verifyMember.pendingNote")}
+                {isExpired ? "মেম্বারশিপ রিনিউ করার পর পার্টনার চিকিৎসাকেন্দ্রে ডিসকাউন্ট পাবেন।" : "মেম্বারশিপটি সচল হওয়ার পর হাসপাতাল বা অংশীদার চিকিৎসাকেন্দ্রে ডিসকাউন্ট পাওয়া যাবে।"}
               </div>
               <div className="pt-2">
                 <Link
@@ -215,7 +213,7 @@ export default function VerificationPage() {
                   })}
                 >
                   <ArrowLeft className="h-4 w-4" />
-                  {t("pages.verify.backToHome")}
+                  হোম পেজে ফিরে যান
                 </Link>
               </div>
             </CardContent>
@@ -230,21 +228,21 @@ export default function VerificationPage() {
           <div className="bg-destructive/10 py-6 border-b border-destructive/20">
             <ShieldAlert className="h-16 w-16 text-destructive mx-auto animate-bounce" />
             <h1 className="font-heading text-2xl font-bold text-destructive mt-2">
-              {t("pages.verify.invalidId")}
+              অবৈধ মেম্বার আইডি (INVALID)
             </h1>
             <p className="text-xs text-muted-foreground mt-1">
-              {t("pages.verify.idNotFound")}
+              মেম্বার আইডিটি ডাটাবেজে পাওয়া যায়নি
             </p>
           </div>
 
           <CardContent className="p-6 md:p-8 space-y-6">
             <div className="p-4 bg-muted/40 rounded-2xl border border-border text-sm text-muted-foreground">
-              <p className="font-semibold text-secondary dark:text-white">{t("pages.verify.sorry")}</p>
+              <p className="font-semibold text-secondary dark:text-white">দুঃখিত!</p>
               <p className="mt-1">
-                {t("pages.verify.notFoundMessage")} (<span className="font-mono font-bold text-destructive">{decodeURIComponent(memberId)}</span>)
+                প্রদত্ত মেম্বার আইডি সচল মেম্বার তালিকায় খুঁজে পাওয়া যায়নি। (<span className="font-mono font-bold text-destructive">{decodeURIComponent(memberId)}</span>)
               </p>
               <p className="mt-2 text-xs">
-                {t("pages.verify.invalidDesc")}
+                কার্ডের মেয়াদ উত্তীর্ণ হয়ে থাকতে পারে অথবা কিউআর কোডটি জাল হতে পারে।
               </p>
             </div>
 
@@ -255,7 +253,7 @@ export default function VerificationPage() {
                   className: "w-full bg-primary hover:bg-primary-dark text-white font-semibold",
                 })}
               >
-                <span>{t("pages.verify.goToHome")}</span>
+                <span>হোম পেজে যান</span>
               </Link>
               <Link
                 href="/contact"
@@ -264,7 +262,7 @@ export default function VerificationPage() {
                   className: "w-full text-primary hover:bg-primary-light",
                 })}
               >
-                <span>{t("pages.verify.contactCustomerSupport")}</span>
+                <span>কাস্টমার সাপোর্টে কথা বলুন</span>
               </Link>
             </div>
 
@@ -277,3 +275,4 @@ export default function VerificationPage() {
     </div>
   );
 }
+

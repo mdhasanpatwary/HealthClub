@@ -1,6 +1,4 @@
 import { redirect } from "next/navigation";
-import { Locale } from "@/lib/i18n";
-import { tServer } from "@/lib/i18n.server";
 import JsonLd from "@/components/seo/JsonLd";
 import DoctorDirectory from "@/components/ui/DoctorDirectory";
 import ConsultantsGuide from "@/components/consultants/ConsultantsGuide";
@@ -36,7 +34,6 @@ export async function generateMetadata({ searchParams }: ConsultantsPageProps) {
         description: deptSeo.metaDescriptionBn,
         url: `${SITE_URL}/consultants?dept=${deptSeo.slug}`,
         siteName: "হেলথ ক্লাব (Health Club)",
-        locale: "bn_BD",
         type: "website",
         images: DEFAULT_OG_IMAGES,
       },
@@ -49,7 +46,6 @@ export async function generateMetadata({ searchParams }: ConsultantsPageProps) {
     };
   }
 
-  const isEn = false;
   const ogTitle = "ফেনী ডাক্তার তালিকা ও সিরিয়াল নাম্বার | চেম্বার সময়সূচী - হেলথ ক্লাব";
   const ogDesc = "ফেনীর সকল বিশেষজ্ঞ ডাক্তারদের তালিকা, চেম্বার শিডিউল, রোগী দেখার সময় এবং সরাসরি সিরিয়াল নাম্বার ও অ্যাপয়েন্টমেন্ট তথ্য।";
 
@@ -91,7 +87,6 @@ export async function generateMetadata({ searchParams }: ConsultantsPageProps) {
       description: ogDesc,
       url: `${SITE_URL}/consultants`,
       siteName: "হেলথ ক্লাব (Health Club)",
-      locale: isEn ? "en_US" : "bn_BD",
       type: "website",
       images: DEFAULT_OG_IMAGES,
     },
@@ -118,10 +113,6 @@ export default async function ConsultantsPage({ searchParams }: ConsultantsPageP
     }
   }
 
-  const locale = "bn" as Locale;
-  const isEn = false;
-  const t = (key: string) => tServer(locale, key);
-
   // Fetch doctors server-side (cached with ISR)
   const doctors = await getDoctorsAction();
 
@@ -130,13 +121,13 @@ export default async function ConsultantsPage({ searchParams }: ConsultantsPageP
     {
       "@type": "ListItem",
       position: 1,
-      name: isEn ? "Home" : "হোম",
+      name: "হোম",
       item: SITE_URL,
     },
     {
       "@type": "ListItem",
       position: 2,
-      name: isEn ? "Consultants & Doctors" : "ডাক্তার ও কনসালট্যান্টস",
+      name: "ডাক্তার ও কনসালট্যান্টস",
       item: `${SITE_URL}/consultants`,
     },
   ];
@@ -145,50 +136,50 @@ export default async function ConsultantsPage({ searchParams }: ConsultantsPageP
   const faqItems = [
     {
       "@type": "Question",
-      name: t("consultants.faq.q1"),
+      name: "ফেনীতে বিশেষজ্ঞ ডাক্তারের সিরিয়াল বা অ্যাপয়েন্টমেন্ট কীভাবে বুক করবেন?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: t("consultants.faq.a1"),
+        text: "হেলথ ক্লাব ডিরেক্টরিতে যেকোনো ডাক্তারের প্রোফাইলে 'সিরিয়াল কল করুন' বাটনে চাপ দিন। এতে সরাসরি সংশ্লিষ্ট হাসপাতাল ও চেম্বার কাউন্টারের অফিসিয়াল হটলাইন নাম্বার চলে আসবে। সেখানে কল করে কোনো প্রকার মধ্যস্বত্বভোগী বা বাড়তি ফি ছাড়াই আপনার সিরিয়াল নিশ্চিত করুন।",
       },
     },
     {
       "@type": "Question",
-      name: t("consultants.faq.q2"),
+      name: "ফেনীতে আজ কোন ডাক্তার চেম্বারে বসবেন তা কীভাবে জানব?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: t("consultants.faq.a2"),
+        text: "হেলথ ক্লাব ডিরেক্টরির প্রতিটি ডাক্তারের কার্ডে 'আজ চেম্বার খোলা' বা 'আজ চেম্বার বন্ধ' স্ট্যাটাস ব্যাজ এবং রোগী দেখার দিন ও সময় স্পষ্ট উল্লেখ থাকে। এছাড়া আপনার প্রয়োজনীয় বিভাগ (যেমন মেডিসিন, গাইনী, শিশু রোগ) নির্বাচন করে আজকের শিডিউল অনুযায়ী সহজেই ডাক্তার খুঁজে নিতে পারেন।",
       },
     },
     {
       "@type": "Question",
-      name: t("consultants.faq.q3"),
+      name: "ফেনীর ডাক্তারদের চেম্বার ও সময়সূচী কোথায় পাওয়া যাবে?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: t("consultants.faq.a3"),
+        text: "আমাদের ডিরেক্টরিতে ফেনীর এস.এস.কে রোড, ট্রাঙ্ক রোড, শহীদ শহীদুল্লা কায়সার সড়ক ও গ্র্যান্ড ট্রাঙ্ক রোডের সকল প্রধান ক্লিনিক ও ডায়াগনস্টিক সেন্টারের চিকিৎসকদের চেম্বার নাম, রুম নম্বর, রোগী দেখার দিন এবং সময়সূচী সম্পূর্ণ হালনাগাদ আকারে পাওয়া যায়।",
       },
     },
     {
       "@type": "Question",
-      name: t("consultants.faq.q4"),
+      name: "ফেনীর কোন কোন হাসপাতাল ও ডায়াগনস্টিক সেন্টারের ডাক্তার তালিকা এখানে রয়েছে?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: t("consultants.faq.a4"),
+        text: "ফেনীর শীর্ষ স্বাস্থ্যসেবা প্রতিষ্ঠান যেমন আধুনিক ডায়াগনস্টিক সেন্টার, ফেনী ডায়াবেটিক সমিতি, কনসেপ্ট হাসপাতাল, সাজেদা হাসপাতাল, ড্রিম প্রাইভেট হাসপাতাল, ফেনী হার্ট ফাউন্ডেশন, আল-কেমাল হাসপাতাল সহ শহরের সকল রেজিস্টার্ড সেন্টারের অভিজ্ঞ চিকিৎসকদের তথ্য এখানে অন্তর্ভুক্ত রয়েছে।",
       },
     },
     {
       "@type": "Question",
-      name: t("consultants.faq.q5"),
+      name: "ডাক্তার দেখানোর পর টেস্ট বা পরীক্ষায় হেলথ ক্লাব মেম্বাররা কী সুবিধা পান?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: t("consultants.faq.a5"),
+        text: "ডাক্তার দেখানোর পর চিকিৎসকের পরামর্শ অনুযায়ী সকল প্রয়োজনীয় ডায়াগনস্টিক পরীক্ষা (যেমন: রক্ত পরীক্ষা, ডিজিটাল এক্স-রে, আল্ট্রাসনোগ্রাম, ইকো, এমআরআই, সিটি স্ক্যান)-এ হেলথ ক্লাব মেম্বাররা পার্টনার হাসপাতাল ও ল্যাবগুলোতে ১০% থেকে ৩০% পর্যন্ত তাৎক্ষণিক ডিসকাউন্ট পান।",
       },
     },
     {
       "@type": "Question",
-      name: t("consultants.faq.q6"),
+      name: "চেম্বারে যাওয়ার পূর্বে কী প্রস্তুতি নেওয়া প্রয়োজন ও তথ্য কতটা নির্ভরযোগ্য?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: t("consultants.faq.a6"),
+        text: "আমাদের ডেডিকেটেড হেলথ টিম নিয়মিত হাসপাতাল ও চেম্বারগুলোর সাথে সরাসরি যোগাযোগ রেখে ডাক্তারদের সময়সূচি এবং সিরিয়াল নম্বর যাচাই করে। চেম্বারে যাওয়ার পূর্বে ফোনে সিরিয়াল নিশ্চিত করুন এবং রোগীর পূর্বের প্রেসক্রিপশন ও রিপোর্ট সাথে নিয়ে নির্ধারিত সময়ের ৩০ মিনিট পূর্বে উপস্থিত হোন।",
       },
     },
   ];
@@ -265,13 +256,13 @@ export default async function ConsultantsPage({ searchParams }: ConsultantsPageP
         <div className="text-center space-y-2 sm:space-y-4 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-emerald-800 dark:text-emerald-300 border border-primary/20 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
             <Stethoscope className="h-3.5 w-3.5" />
-            <span>{t("consultants.page.badge")}</span>
+            <span>ফেনী ডাক্তার তালিকা ও চেম্বার ডিরেক্টরি</span>
           </div>
           <h1 className="font-heading text-2xl sm:text-4xl md:text-5xl font-bold text-secondary dark:text-white tracking-tight">
-            {t("consultants.page.title")}
+            ফেনী ডাক্তার তালিকা ও সিরিয়াল বুকিং ডিরেক্টরি
           </h1>
           <p className="text-xs sm:text-base text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-            {t("consultants.page.subtitle")}
+            ফেনীর সকল হাসপাতালের বিশেষজ্ঞ ডাক্তারদের তালিকা, চেম্বার শিডিউল, রোগী দেখার সময়সূচী এবং সরাসরি সিরিয়াল নাম্বার ও অ্যাপয়েন্টমেন্ট তথ্য।
           </p>
         </div>
 
@@ -283,10 +274,10 @@ export default async function ConsultantsPage({ searchParams }: ConsultantsPageP
             </div>
             <div>
               <h2 className="text-xs sm:text-sm font-bold text-foreground">
-                {isEn ? "Verified Specialists" : "যাচাইকৃত বিশেষজ্ঞ"}
+                যাচাইকৃত বিশেষজ্ঞ
               </h2>
               <p className="text-[11px] sm:text-xs text-muted-foreground">
-                {isEn ? "Top hospitals & medical colleges" : "শীর্ষ হাসপাতাল ও মেডিকেল কলেজের চিকিৎসক"}
+                শীর্ষ হাসপাতাল ও মেডিকেল কলেজের চিকিৎসক
               </p>
             </div>
           </div>
@@ -297,10 +288,10 @@ export default async function ConsultantsPage({ searchParams }: ConsultantsPageP
             </div>
             <div>
               <h2 className="text-xs sm:text-sm font-bold text-foreground">
-                {isEn ? "Direct Serial Call" : "সরাসরি সিরিয়াল সুবিধা"}
+                সরাসরি সিরিয়াল সুবিধা
               </h2>
               <p className="text-[11px] sm:text-xs text-muted-foreground">
-                {isEn ? "Direct helpline & phone serials" : "এক ক্লিকেই সিরিয়াল নম্বরে কল করার সুযোগ"}
+                এক ক্লিকেই সিরিয়াল নম্বরে কল করার সুযোগ
               </p>
             </div>
           </div>
@@ -311,10 +302,10 @@ export default async function ConsultantsPage({ searchParams }: ConsultantsPageP
             </div>
             <div>
               <h2 className="text-xs sm:text-sm font-bold text-foreground">
-                {isEn ? "Member Benefits" : "মেম্বার ডিসকাউন্ট"}
+                মেম্বার ডিসকাউন্ট
               </h2>
               <p className="text-[11px] sm:text-xs text-muted-foreground">
-                {isEn ? "Special discount on prescribed tests" : "প্রেসক্রিপশন টেস্টে ১০-৩০% পর্যন্ত ছাড়"}
+                প্রেসক্রিপশন টেস্টে ১০-৩০% পর্যন্ত ছাড়
               </p>
             </div>
           </div>
@@ -330,10 +321,10 @@ export default async function ConsultantsPage({ searchParams }: ConsultantsPageP
         </div>
 
         {/* Generative Engine Optimization (GEO) Healthcare Guide & Authority Block */}
-        <ConsultantsGuide locale={locale} />
+        <ConsultantsGuide />
 
         {/* Answer Engine Optimization (AEO) FAQ Section */}
-        <ConsultantsFAQ locale={locale} />
+        <ConsultantsFAQ />
 
         {/* Healthcare & Emergency Community Collaboration CTA */}
         <CommunityNetworkCTA />

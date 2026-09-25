@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Member } from "@/services/db";
 import {
   getPaginatedRenewalsAction,
@@ -14,7 +13,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { RenewalsTab } from "../components/RenewalsTab";
 
 export default function AdminRenewalsPage() {
-  const { t, locale } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [members, setMembers] = useState<Member[]>([]);
   const [totalItems, setTotalItems] = useState(0);
@@ -121,8 +119,6 @@ export default function AdminRenewalsPage() {
         }}
         onApprove={handleApproveRenewal}
         onReject={handleRejectRenewal}
-        locale={locale}
-        t={t}
         loading={loading}
       />
     </div>

@@ -10,7 +10,6 @@ import {
   PhysiotherapyCenterReviewItem,
 } from "@/types/blog";
 import { toBanglaNums } from "@/lib/utils";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { StandardEntityToc, getPricingGuides, getDiagnosticTocTitles, getHospitalTocTitles } from "./BlogTocList";
 import { BlogDoctorToc } from "./BlogDoctorToc";
 
@@ -31,7 +30,6 @@ interface BlogTableOfContentsProps {
   bloodBanks?: import("@/types/bloodBankBlog").BloodBankReviewItem[];
   ambulances?: import("@/types/ambulanceBlog").AmbulanceReviewItem[];
   currentSlug?: string;
-  locale?: string;
   className?: string;
   id?: string;
   defaultOpen?: boolean;
@@ -54,15 +52,12 @@ export function BlogTableOfContents({
   hasPharmacyPricing = false, hasBloodPricing = false, hasAmbulancePricing = false,
   hasCriticalCarePricing = false, hasStrokeCardiacPricing = false, hasHomeCarePricing = false, hasOxygenPricing = false, hasDengueTyphoidPricing = false, hasUpazilaPricing = false,
   currentSlug,
-  locale = "bn",
   className = "",
   id = "table-of-contents",
   defaultOpen = false,
 }: BlogTableOfContentsProps) {
-  const { locale: contextLocale } = useLanguage();
-  const activeLocale = contextLocale || locale;
-  const isEn = activeLocale === "en";
   const [isOpen, setIsOpen] = useState(defaultOpen);
+
   const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {
@@ -168,7 +163,7 @@ export function BlogTableOfContents({
   const isAmbulanceArticle = ambulances && ambulances.length > 0;
   const isPurePriceList = currentSlug === "feni-medical-test-price-list";
 
-  const secNum = (n: number) => (isEn ? `${n}. ` : `${toBanglaNums(n)}. `);
+  const secNum = (n: number) => `${toBanglaNums(n)}. `;
 
   const linkClass = (targetId: string, isBold = false) => {
     const isActive = activeId === targetId;
@@ -220,10 +215,10 @@ export function BlogTableOfContents({
       >
         <span className="flex items-center gap-2">
           <ListOrdered className="h-4 w-4 text-primary" />
-          <span>{isEn ? "Table of Contents" : "এই লেখার বিষয়বস্তু ও সূচিপত্র"}</span>
+          <span>এই লেখার বিষয়বস্তু ও সূচিপত্র</span>
         </span>
         <span className="flex items-center gap-1 text-xs text-primary font-medium sm:hidden">
-          <span>{isOpen ? (isEn ? "Hide" : "লুকান") : isEn ? "Show" : "দেখুন"}</span>
+          <span>{isOpen ? "লুকান" : "দেখুন"}</span>
           <ChevronDown
             className={`h-3.5 w-3.5 transition-transform duration-200 ${
               isOpen ? "rotate-180" : ""
@@ -242,27 +237,27 @@ export function BlogTableOfContents({
           <ol className="space-y-1.5 list-none pl-0">
             <li>
               <a href="#overview" className={linkClass("overview")}>
-                {secNum(1)}{isEn ? "Diagnostic Healthcare in Feni" : "ফেনীর ডায়াগনস্টিক পরিকাঠামো ও প্রেক্ষাপট"}
+                {secNum(1)}ফেনীর ডায়াগনস্টিক পরিকাঠামো ও প্রেক্ষাপট
               </a>
             </li>
             <li>
               <a href="#price-guide" className={linkClass("price-guide")}>
-                {secNum(2)}{isEn ? "80+ Diagnostic Tests Price List" : "৮০+ টেস্টের মূল্যতালিকা ও মেম্বার ছাড়"}
+                {secNum(2)}৮০+ টেস্টের মূল্যতালিকা ও মেম্বার ছাড়
               </a>
             </li>
             <li>
               <a href="#selection-guide" className={linkClass("selection-guide")}>
-                {secNum(3)}{isEn ? "Guidelines for Choosing Quality Diagnostics" : "নির্ভরযোগ্য ল্যাব ও টেস্ট নির্বাচনের উপায়"}
+                {secNum(3)}নির্ভরযোগ্য ল্যাব ও টেস্ট নির্বাচনের উপায়
               </a>
             </li>
             <li>
               <a href="#emergency-directory" className={linkClass("emergency-directory")}>
-                {secNum(4)}{isEn ? "Diagnostic Assistance & Emergency Contacts" : "ডায়াগনস্টিক সাপোর্ট ও জরুরি হেল্পলাইন"}
+                {secNum(4)}ডায়াগনস্টিক সাপোর্ট ও জরুরি হেল্পলাইন
               </a>
             </li>
             <li>
               <a href="#faq-section" className={linkClass("faq-section")}>
-                {secNum(5)}{isEn ? "Frequently Asked Questions" : "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)"}
+                {secNum(5)}সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)
               </a>
             </li>
           </ol>
@@ -275,121 +270,113 @@ export function BlogTableOfContents({
             hasDoctorPricing={hasDoctorPricing}
             secNum={secNum}
             linkClass={linkClass}
-            isEn={isEn}
             activeId={activeId}
           />
         ) : isDiagnosticArticle ? (
           <StandardEntityToc
-            {...getDiagnosticTocTitles(currentSlug, isEn)}
+            {...getDiagnosticTocTitles(currentSlug)}
             reviewsId="diagnostic-reviews"
             subItems={diagnosticCenters.map((d) => ({
               id: `diagnostic-${d.rank}`,
-              name: isEn ? `#${d.rank} ${d.nameEn}` : `${toBanglaNums(d.rank)}. ${d.nameBn}`,
+              name: `${toBanglaNums(d.rank)}. ${d.nameBn}`,
             }))}
             priceGuideId="price-guide"
-            emergencyTitle={isEn ? "Emergency Contacts & Ambulance" : "জরুরি যোগাযোগ ও অ্যাম্বুলেন্স হটলাইন"}
+            emergencyTitle="জরুরি যোগাযোগ ও অ্যাম্বুলেন্স হটলাইন"
             secNum={secNum}
-            isEn={isEn}
             activeId={activeId}
           />
         ) : isDentalArticle ? (
           <StandardEntityToc
-            overviewTitle={isEn ? "Dental Healthcare in Feni" : "ফেনীর ডেন্টাল চিকিৎসাব্যবস্থা ও পটভূমি"}
-            matrixTitle={isEn ? "Dental Clinics Comparison Matrix" : "একনজরে সেরা ১০ ডেন্টাল ক্লিনিকের তুলনা"}
-            reviewsTitle={isEn ? "Detailed Dental Clinic Reviews" : "সেরা ১০ ডেন্টাল ক্লিনিকের বিস্তারিত পর্যালোচনা"}
+            overviewTitle="ফেনীর ডেন্টাল চিকিৎসাব্যবস্থা ও পটভূমি"
+            matrixTitle="একনজরে সেরা ১০ ডেন্টাল ক্লিনিকের তুলনা"
+            reviewsTitle="সেরা ১০ ডেন্টাল ক্লিনিকের বিস্তারিত পর্যালোচনা"
             reviewsId="dental-reviews"
             subItems={dentalClinics.map((c) => ({
               id: `dental-${c.rank}`,
-              name: isEn ? `#${c.rank} ${c.nameEn}` : `${toBanglaNums(c.rank)}. ${c.nameBn}`,
+              name: `${toBanglaNums(c.rank)}. ${c.nameBn}`,
             }))}
             priceGuideId="price-guide"
-            priceGuideTitle={isEn ? "Treatment Costs & Member Savings" : "চিকিৎসা ফি ও মেম্বার সাশ্রয় তালিকা"}
-            selectionGuideTitle={isEn ? "Guidelines for Choosing a Dentist" : "সঠিক ডেন্টাল ক্লিনিক নির্বাচনের উপায়"}
+            priceGuideTitle="চিকিৎসা ফি ও মেম্বার সাশ্রয় তালিকা"
+            selectionGuideTitle="সঠিক ডেন্টাল ক্লিনিক নির্বাচনের উপায়"
             secNum={secNum}
-            isEn={isEn}
             activeId={activeId}
           />
         ) : isPhysiotherapyArticle ? (
           <StandardEntityToc
-            overviewTitle={isEn ? "Physiotherapy in Feni" : "ফেনীর ফিজিওথেরাপি চিকিৎসাব্যবস্থা ও পটভূমি"}
-            matrixTitle={isEn ? "Physiotherapy Centers Comparison Matrix" : "একনজরে সেরা ৮ ফিজিওথেরাপি সেন্টারের তুলনা"}
-            reviewsTitle={isEn ? "Detailed Physiotherapy Center Reviews" : "সেরা ৮ ফিজিওথেরাপি সেন্টারের বিস্তারিত পর্যালোচনা"}
+            overviewTitle="ফেনীর ফিজিওথেরাপি চিকিৎসাব্যবস্থা ও পটভূমি"
+            matrixTitle="একনজরে সেরা ৮ ফিজিওথেরাপি সেন্টারের তুলনা"
+            reviewsTitle="সেরা ৮ ফিজিওথেরাপি সেন্টারের বিস্তারিত পর্যালোচনা"
             reviewsId="physiotherapy-reviews"
             subItems={physiotherapyCenters.map((c) => ({
               id: `physio-${c.rank}`,
-              name: isEn ? `#${c.rank} ${c.nameEn}` : `${toBanglaNums(c.rank)}. ${c.nameBn}`,
+              name: `${toBanglaNums(c.rank)}. ${c.nameBn}`,
             }))}
             priceGuideId="price-guide"
-            priceGuideTitle={isEn ? "Therapy Costs & Member Savings" : "থেরাপি ফি ও মেম্বার সাশ্রয় তালিকা"}
-            selectionGuideTitle={isEn ? "Guidelines for Choosing a Physiotherapist" : "সঠিক ফিজিওথেরাপি সেন্টার নির্বাচনের উপায়"}
+            priceGuideTitle="থেরাপি ফি ও মেম্বার সাশ্রয় তালিকা"
+            selectionGuideTitle="সঠিক ফিজিওথেরাপি সেন্টার নির্বাচনের উপায়"
             secNum={secNum}
-            isEn={isEn}
             activeId={activeId}
           />
         ) : isPharmacyArticle ? (
           <StandardEntityToc
-            overviewTitle={isEn ? "24/7 Pharmacy Landscape in Feni" : "ফেনীতে জরুরি ওষুধ ও ফার্মেসির পটভূমি"}
-            matrixTitle={isEn ? "24/7 Pharmacies Comparison Matrix" : "একনজরে শীর্ষ ফার্মেসির সুবিধা তুলনা"}
-            reviewsTitle={isEn ? "Detailed 24/7 Pharmacy Reviews" : "সেরা ১২ ফার্মেসির বিস্তারিত পর্যালোচনা"}
+            overviewTitle="ফেনীতে জরুরি ওষুধ ও ফার্মেসির পটভূমি"
+            matrixTitle="একনজরে শীর্ষ ফার্মেসির সুবিধা তুলনা"
+            reviewsTitle="সেরা ১২ ফার্মেসির বিস্তারিত পর্যালোচনা"
             reviewsId="pharmacy-reviews"
             subItems={pharmacies.map((p) => ({
               id: `pharmacy-${p.rank}`,
-              name: isEn ? `#${p.rank} ${p.nameEn}` : `${toBanglaNums(p.rank)}. ${p.nameBn}`,
+              name: `${toBanglaNums(p.rank)}. ${p.nameBn}`,
             }))}
             priceGuideId="pharmacy-price-guide"
-            priceGuideTitle={isEn ? "Emergency Medicine & Delivery Pricing" : "জরুরি ওষুধ ও ডেলিভারি ফি তালিকা"}
-            selectionGuideTitle={isEn ? "Guidelines for Safe Medicine Purchase" : "নিরাপদ ফার্মেসি ও ওষুধ ক্রয়ের নিয়ম"}
-            emergencyTitle={isEn ? "Emergency Contacts & Hotlines" : "জরুরি যোগাযোগ ও ফার্মেসি হটলাইন"}
+            priceGuideTitle="জরুরি ওষুধ ও ডেলিভারি ফি তালিকা"
+            selectionGuideTitle="নিরাপদ ফার্মেসি ও ওষুধ ক্রয়ের নিয়ম"
+            emergencyTitle="জরুরি যোগাযোগ ও ফার্মেসি হটলাইন"
             secNum={secNum}
-            isEn={isEn}
             activeId={activeId}
           />
         ) : isBloodBankArticle ? (
           <StandardEntityToc
-            overviewTitle={isEn ? "Blood Supply Landscape in Feni" : "ফেনীতে জরুরি রক্ত ও রক্তদাতার পটভূমি"}
-            matrixTitle={isEn ? "Blood Centers & Clubs Comparison" : "একনজরে ব্লাড ব্যাংক ও স্বেচ্ছাসেবী ক্লাবের তুলনা"}
-            reviewsTitle={isEn ? "Detailed Blood Bank & Club Reviews" : "শীর্ষ ১২ ব্লাড ব্যাংক ও ক্লাবের পর্যালোচনা"}
+            overviewTitle="ফেনীতে জরুরি রক্ত ও রক্তদাতার পটভূমি"
+            matrixTitle="একনজরে ব্লাড ব্যাংক ও স্বেচ্ছাসেবী ক্লাবের তুলনা"
+            reviewsTitle="শীর্ষ ১২ ব্লাড ব্যাংক ও ক্লাবের পর্যালোচনা"
             reviewsId="blood-bank-reviews"
             subItems={bloodBanks.map((b) => ({
               id: `blood-bank-${b.rank}`,
-              name: isEn ? `#${b.rank} ${b.nameEn}` : `${toBanglaNums(b.rank)}. ${b.nameBn}`,
+              name: `${toBanglaNums(b.rank)}. ${b.nameBn}`,
             }))}
             priceGuideId="blood-price-guide"
-            priceGuideTitle={isEn ? "Transfusion Screening & Supply Costs" : "রক্ত পরীক্ষা ও ট্রান্সফিউশন ফি তালিকা"}
-            selectionGuideTitle={isEn ? "Guidelines for Safe Transfusion" : "নিরাপদ রক্ত পরিসঞ্চালন ও রক্তদাতার শর্তাবলী"}
-            emergencyTitle={isEn ? "Emergency Blood Bank Hotlines" : "জরুরি ব্লাড ব্যাংক ও রক্তদাতা হটলাইন"}
+            priceGuideTitle="রক্ত পরীক্ষা ও ট্রান্সফিউশন ফি তালিকা"
+            selectionGuideTitle="নিরাপদ রক্ত পরিসঞ্চালন ও রক্তদাতার শর্তাবলী"
+            emergencyTitle="জরুরি ব্লাড ব্যাংক ও রক্তদাতা হটলাইন"
             secNum={secNum}
-            isEn={isEn}
             activeId={activeId}
           />
         ) : isAmbulanceArticle ? (
           <StandardEntityToc
-            overviewTitle={isEn ? "Emergency Ambulance & Oxygen in Feni" : "ফেনীতে জরুরি অ্যাম্বুলেন্স ও অক্সিজেনের পটভূমি"}
-            matrixTitle={isEn ? "Ambulance & Oxygen Comparison Matrix" : "একনজরে অ্যাম্বুলেন্স ও অক্সিজেন সেবার তুলনা"}
-            reviewsTitle={isEn ? "Detailed Ambulance & Oxygen Reviews" : "শীর্ষ ১২ অ্যাম্বুলেন্স ও অক্সিজেন সেবার পর্যালোচনা"}
+            overviewTitle="ফেনীতে জরুরি অ্যাম্বুলেন্স ও অক্সিজেনের পটভূমি"
+            matrixTitle="একনজরে অ্যাম্বুলেন্স ও অক্সিজেন সেবার তুলনা"
+            reviewsTitle="শীর্ষ ১২ অ্যাম্বুলেন্স ও অক্সিজেন সেবার পর্যালোচনা"
             reviewsId="ambulance-reviews"
             subItems={ambulances.map((a) => ({
               id: `ambulance-${a.rank}`,
-              name: isEn ? `#${a.rank} ${a.nameEn}` : `${toBanglaNums(a.rank)}. ${a.nameBn}`,
+              name: `${toBanglaNums(a.rank)}. ${a.nameBn}`,
             }))}
             priceGuideId="ambulance-price-guide"
-            priceGuideTitle={isEn ? "Ambulance Fares & Oxygen Cost Guide" : "অ্যাম্বুলেন্স ভাড়া ও অক্সিজেন খরচের হিসাব"}
-            selectionGuideTitle={isEn ? "Guidelines for Booking Ambulance & Oxygen" : "জরুরি অ্যাম্বুলেন্স ও অক্সিজেন বুকিংয়ের নিয়ম"}
-            emergencyTitle={isEn ? "Emergency Ambulance Dispatch Hotlines" : "জরুরি অ্যাম্বুলেন্স ও অক্সিজেন হটলাইন"}
+            priceGuideTitle="অ্যাম্বুলেন্স ভাড়া ও অক্সিজেন খরচের হিসাব"
+            selectionGuideTitle="জরুরি অ্যাম্বুলেন্স ও অক্সিজেন বুকিংয়ের নিয়ম"
+            emergencyTitle="জরুরি অ্যাম্বুলেন্স ও অক্সিজেন হটলাইন"
             secNum={secNum}
-            isEn={isEn}
             activeId={activeId}
           />
         ) : (
           <StandardEntityToc
-            {...getHospitalTocTitles(currentSlug, isEn)}
+            {...getHospitalTocTitles(currentSlug)}
             reviewsId="hospital-reviews"
             subItems={hospitals.map((h) => ({
               id: `hospital-${h.rank}`,
-              name: isEn ? `#${h.rank} ${h.nameEn}` : `${toBanglaNums(h.rank)}. ${h.nameBn}`,
+              name: `${toBanglaNums(h.rank)}. ${h.nameBn}`,
             }))}
             secNum={secNum}
-            isEn={isEn}
             activeId={activeId}
           />
         )}

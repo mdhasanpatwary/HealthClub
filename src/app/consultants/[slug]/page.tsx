@@ -1,5 +1,4 @@
 import { notFound, permanentRedirect } from "next/navigation";
-import type { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import DoctorProfileView from "@/components/consultants/DoctorProfileView";
 import { getDoctorByIdAction, getDoctorsAction, getRelatedDoctorsAction } from "@/app/actions/doctorActions";
@@ -25,14 +24,9 @@ export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   const doctor = await getDoctorByIdAction(slug);
   // Public pages are always served in Bengali ("bn") — same as all list pages.
-  // Never read cookies() here — it would force the entire page to be dynamic.
-  const isEn = false;
-
   if (!doctor) {
-    const notFoundTitle = isEn ? "Doctor Not Found - Health Club" : "ডাক্তার পাওয়া যায়নি - হেলথ ক্লাব";
-    const notFoundDesc = isEn
-      ? "The requested doctor profile could not be found in Health Club directory."
-      : "অনুরোধকৃত ডাক্তারের প্রোফাইল হেলথ ক্লাব ডিরেক্টরিতে পাওয়া যায়নি।";
+    const notFoundTitle = "ডাক্তার পাওয়া যায়নি - হেলথ ক্লাব";
+    const notFoundDesc = "অনুরোধকৃত ডাক্তারের প্রোফাইল হেলথ ক্লাব ডিরেক্টরিতে পাওয়া যায়নি।";
     return {
       title: notFoundTitle,
       description: notFoundDesc,
@@ -57,17 +51,9 @@ export async function generateMetadata({ params }: PageProps) {
     };
   }
 
-  const pageTitle = isEn
-    ? { absolute: `${doctor.name} - ${doctor.specialty} in Feni | Chamber & Serial | Health Club` }
-    : `${doctor.name} - ${doctor.specialty} (ফেনী) | চেম্বার শিডিউল ও সিরিয়াল`;
-
-  const ogTitle = isEn
-    ? `${doctor.name} - ${doctor.specialty} in Feni | Chamber & Serial - Health Club`
-    : `${doctor.name} - ${doctor.specialty} (ফেনী) | চেম্বার শিডিউল ও সিরিয়াল - হেলথ ক্লাব`;
-
-  const pageDesc = isEn
-    ? `${doctor.name} (${doctor.specialty}), ${doctor.degrees}. Chamber: ${doctor.chamberName}, ${doctor.chamberAddress}. Visiting: ${doctor.visitingDays} (${doctor.visitingHours}). Call serial: ${doctor.serialPhone}.`
-    : `${doctor.name}, ${doctor.specialty}, ${doctor.degrees}। চেম্বার: ${doctor.chamberName}, ${doctor.chamberAddress}। রোগী দেখার সময়: ${doctor.visitingDays} (${doctor.visitingHours})। সরাসরি সিরিয়াল কল করুন: ${doctor.serialPhone}।`;
+  const pageTitle = `${doctor.name} - ${doctor.specialty} (ফেনী) | চেম্বার শিডিউল ও সিরিয়াল`;
+  const ogTitle = `${doctor.name} - ${doctor.specialty} (ফেনী) | চেম্বার শিডিউল ও সিরিয়াল - হেলথ ক্লাব`;
+  const pageDesc = `${doctor.name}, ${doctor.specialty}, ${doctor.degrees}। চেম্বার: ${doctor.chamberName}, ${doctor.chamberAddress}। রোগী দেখার সময়: ${doctor.visitingDays} (${doctor.visitingHours})। সরাসরি সিরিয়াল কল করুন: ${doctor.serialPhone}।`;
 
   const doctorCanonicalSegment = doctor.slug ? encodeURIComponent(doctor.slug) : doctor.id;
   const canonicalUrl = `${SITE_URL}/consultants/${doctorCanonicalSegment}`;
@@ -148,11 +134,7 @@ export default async function DoctorDetailPage({ params }: PageProps) {
 
   const relatedDoctors = await getRelatedDoctorsAction(doctor.department, doctor.id, 4);
 
-  // Hardcode locale — public detail pages are always Bengali.
-  // Do NOT use cookies() here — it would opt the page out of ISR caching.
-  const locale: Locale = "bn";
-
-  const jsonLdData = generateDoctorJsonLd(doctor, locale);
+  const jsonLdData = generateDoctorJsonLd(doctor);
 
   return (
     <>

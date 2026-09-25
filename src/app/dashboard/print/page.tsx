@@ -9,14 +9,12 @@ import MemberCard from "@/components/ui/MemberCard";
 import { Button } from "@/components/ui/button";
 import { Printer, X, CreditCard, FileText, CheckCircle2, Sparkles, Scissors } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { toast } from "sonner";
 
 type PrintMode = "cr80" | "sheet";
 
 export default function PrintCardPage() {
   const router = useRouter();
-  const { t } = useLanguage();
   const [member, setMember] = useState<Member | null>(null);
   const [loading, setLoading] = useState(true);
   const [printMode, setPrintMode] = useState<PrintMode>("cr80");
@@ -32,7 +30,7 @@ export default function PrintCardPage() {
       .then(async (freshUser) => {
         if (typeof navigator !== "undefined" && navigator.onLine && !freshUser) {
           await authStore.logout();
-          toast.error(t("dashboard.accountTerminated"));
+          toast.error("আপনার অ্যাকাউন্টটি আর সক্রিয় নেই অথবা মুছে ফেলা হয়েছে।");
           router.replace("/login");
           return;
         }
@@ -52,9 +50,9 @@ export default function PrintCardPage() {
         // Fallback to local currentUser data so user is not stuck on skeleton
         setMember(currentUser);
         setLoading(false);
-        toast.error(t("dashboard.syncError"));
+        toast.error("ড্যাশবোর্ডের কিছু তথ্য আপডেট করতে সমস্যা হয়েছে। ক্যাশড তথ্য প্রদর্শিত হচ্ছে।");
       });
-  }, [router, t]);
+  }, [router]);
 
   const handlePrint = () => {
     window.print();
@@ -90,7 +88,7 @@ export default function PrintCardPage() {
             </div>
             <div>
               <h2 className="font-heading text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100">
-                {t("dashboard.print.title")}
+                কার্ড প্রিন্টিং ও পিডিএফ সংরক্ষণ
               </h2>
               <p className="text-[11px] text-slate-500 dark:text-slate-400">
                 CR80 (85.60 mm × 53.98 mm)
@@ -120,7 +118,7 @@ export default function PrintCardPage() {
             }`}
           >
             <CreditCard className="h-3.5 w-3.5" />
-            <span>{t("dashboard.print.modeCr80")}</span>
+            <span>পিভিসি কার্ড (CR80 সরাসরি)</span>
           </button>
           <button
             type="button"
@@ -132,7 +130,7 @@ export default function PrintCardPage() {
             }`}
           >
             <FileText className="h-3.5 w-3.5" />
-            <span>{t("dashboard.print.modeSheet")}</span>
+            <span>A4 শিট (কাটিং গাইডসহ)</span>
           </button>
         </div>
 
@@ -140,20 +138,20 @@ export default function PrintCardPage() {
         <div className="bg-emerald-500/5 dark:bg-emerald-950/20 border border-emerald-500/20 rounded-2xl p-3 space-y-1.5 text-[11px] text-slate-600 dark:text-slate-300">
           <div className="flex items-center gap-1.5 font-bold text-emerald-700 dark:text-emerald-400">
             <Sparkles className="h-3.5 w-3.5" />
-            <span>{t("dashboard.print.specsTitle")}</span>
+            <span>CR80 ফিজিক্যাল কার্ড স্পেসিফিকেশন</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[10.5px] text-slate-500 dark:text-slate-400">
             <div className="flex items-center gap-1">
               <CheckCircle2 className="h-3 w-3 text-emerald-500 shrink-0" />
-              <span>{t("dashboard.print.specsDimensions")}</span>
+              <span>৮৫.৬০ মিমি × ৫৩.৯৮ মিমি (ISO/IEC 7810 ID-1 স্ট্যান্ডার্ড)</span>
             </div>
             <div className="flex items-center gap-1">
               <CheckCircle2 className="h-3 w-3 text-emerald-500 shrink-0" />
-              <span>{t("dashboard.print.specsCornerRadius")}</span>
+              <span>৩.১৮ মিমি (১/৮ ইঞ্চি) কর্নার রেডিয়াস</span>
             </div>
           </div>
           <p className="text-[10px] text-slate-400 dark:text-slate-500 pt-1 border-t border-emerald-500/10">
-            💡 {t("dashboard.print.tipScale")} {t("dashboard.print.tipBackgrounds")}
+            💡 প্রিন্ট উইন্ডোতে Scale সবসময় &apos;100%&apos; বা &apos;Actual Size&apos; রাখুন (&apos;Fit to Page&apos; দেবেন না)। ব্রাউজারের প্রিন্ট ডায়ালগে &apos;Background graphics&apos; অপশনটি চালু রাখুন।
           </p>
         </div>
 
@@ -164,14 +162,14 @@ export default function PrintCardPage() {
             className="flex-1 bg-primary hover:bg-primary-dark text-white font-semibold text-xs h-10 rounded-xl gap-2 cursor-pointer shadow-md"
           >
             <Printer className="h-4 w-4" />
-            {t("dashboard.print.printButton")}
+            কার্ড প্রিন্ট করুন
           </Button>
           <Button
             variant="outline"
             onClick={handleClose}
             className="border-slate-200 dark:border-slate-800 text-xs font-semibold h-10 rounded-xl cursor-pointer"
           >
-            {t("dashboard.print.closeButton")}
+            বন্ধ করুন
           </Button>
         </div>
       </div>
@@ -203,7 +201,7 @@ export default function PrintCardPage() {
           {printMode === "sheet" && (
             <div className="mt-3 text-center text-[10px] text-slate-400 dark:text-slate-500 font-mono flex items-center justify-center gap-1 print:flex">
               <Scissors className="h-3 w-3" />
-              <span>{t("dashboard.print.cutGuideLabel")}</span>
+              <span>CR80 কাটিং ও ট্রিম লাইন (৮৫.৬০ মিমি × ৫৩.৯৮ মিমি)</span>
             </div>
           )}
         </div>

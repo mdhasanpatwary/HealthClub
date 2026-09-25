@@ -52,11 +52,9 @@ export function DoctorAvatar({
 interface DoctorSerialModalProps {
   doctor: Doctor;
   onClose: () => void;
-  t: (key: string) => string;
-  locale: string;
 }
 
-export function DoctorSerialModal({ doctor, onClose, t, locale }: DoctorSerialModalProps) {
+export function DoctorSerialModal({ doctor, onClose }: DoctorSerialModalProps) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -96,19 +94,19 @@ export function DoctorSerialModal({ doctor, onClose, t, locale }: DoctorSerialMo
           </div>
           <div className="space-y-1">
             <h4 id="serial-modal-title" className="font-heading font-bold text-base text-foreground">
-              {t("consultants.modal.serialModalTitle")}
+              চেম্বার সিরিয়াল ও সরাসরি যোগাযোগ
             </h4>
             <p className="text-xs text-primary font-semibold">
               {doctor.name}
             </p>
             <div className="pt-0.5">
-              <DoctorAvailabilityBadge doctor={doctor} locale={locale} size="sm" />
+              <DoctorAvailabilityBadge doctor={doctor} size="sm" />
             </div>
           </div>
         </div>
 
         {doctor.notice && (
-          <DoctorNoticeBanner notice={doctor.notice} locale={locale} />
+          <DoctorNoticeBanner notice={doctor.notice} />
         )}
 
         <div className="bg-muted/40 p-3.5 rounded-2xl space-y-2 text-xs text-muted-foreground">
@@ -124,14 +122,14 @@ export function DoctorSerialModal({ doctor, onClose, t, locale }: DoctorSerialMo
           </div>
           {doctor.consultationFee && (
             <div className="text-primary font-bold">
-              {t("consultants.card.fee")}: {doctor.consultationFee}
+              পরামর্শ ফি: {doctor.consultationFee}
             </div>
           )}
         </div>
 
         <div className="space-y-2.5">
           <p className="text-xs text-muted-foreground font-medium">
-            {t("consultants.modal.serialModalDesc")}
+            সরাসরি চেম্বার বা রিসিপশনে কল করে সিরিয়াল কনফার্ম করুন:
           </p>
           {parsePhones(doctor.serialPhone).map((phone, idx) => (
             <a
@@ -155,7 +153,7 @@ export function DoctorSerialModal({ doctor, onClose, t, locale }: DoctorSerialMo
                 </span>
               </div>
               <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-xl group-hover:bg-primary group-hover:text-white transition-colors">
-                {locale === "en" ? "Call Now" : "কল দিন"}
+                কল দিন
               </span>
             </a>
           ))}
@@ -166,7 +164,7 @@ export function DoctorSerialModal({ doctor, onClose, t, locale }: DoctorSerialMo
           className="w-full rounded-2xl cursor-pointer"
           onClick={onClose}
         >
-          {t("consultants.modal.close")}
+          বন্ধ করুন
         </Button>
       </div>
     </div>
@@ -177,10 +175,9 @@ interface DoctorDetailsModalProps {
   doctor: Doctor;
   onClose: () => void;
   onCallSerial: (doctor: Doctor) => void;
-  t: (key: string) => string;
 }
 
-export function DoctorDetailsModal({ doctor: initialDoctor, onClose, onCallSerial, t }: DoctorDetailsModalProps) {
+export function DoctorDetailsModal({ doctor: initialDoctor, onClose, onCallSerial }: DoctorDetailsModalProps) {
   const [doctor, setDoctor] = useState<Doctor>(initialDoctor);
 
   useEffect(() => {
@@ -259,7 +256,7 @@ export function DoctorDetailsModal({ doctor: initialDoctor, onClose, onCallSeria
         {/* Workplace / Designation */}
         <div className="space-y-1 bg-muted/40 p-3.5 rounded-2xl text-xs">
           <p className="text-muted-foreground font-semibold">
-            {t("consultants.modal.designation")}
+            বর্তমান পদবী ও কর্মস্থল
           </p>
           <p className="font-medium text-foreground leading-relaxed">
             {doctor.designation}
@@ -270,7 +267,7 @@ export function DoctorDetailsModal({ doctor: initialDoctor, onClose, onCallSeria
         <div className="space-y-3 bg-muted/20 border border-border/70 p-4 rounded-2xl text-xs">
           <div>
             <p className="text-muted-foreground font-semibold">
-              {t("consultants.card.chamber")}
+              চেম্বার ও ঠিকানা
             </p>
             <p className="font-bold text-sm text-foreground">
               {doctor.chamberName}
@@ -288,7 +285,7 @@ export function DoctorDetailsModal({ doctor: initialDoctor, onClose, onCallSeria
           <div className="grid grid-cols-2 gap-2 pt-2 border-t border-border/60">
             <div>
               <p className="text-muted-foreground font-medium">
-                {t("consultants.card.visitingDays")}
+                রোগী দেখার দিন
               </p>
               <p className="font-bold text-foreground">
                 {doctor.visitingDays}
@@ -296,7 +293,7 @@ export function DoctorDetailsModal({ doctor: initialDoctor, onClose, onCallSeria
             </div>
             <div>
               <p className="text-muted-foreground font-medium">
-                {t("consultants.card.visitingHours")}
+                সময়সূচী
               </p>
               <p className="font-bold text-foreground">
                 {doctor.visitingHours}
@@ -307,7 +304,7 @@ export function DoctorDetailsModal({ doctor: initialDoctor, onClose, onCallSeria
           {doctor.consultationFee && (
             <div className="pt-2 border-t border-border/60 flex items-center justify-between">
               <span className="text-muted-foreground font-medium">
-                {t("consultants.card.fee")}:
+                পরামর্শ ফি:
               </span>
               <span className="font-bold text-primary text-sm">
                 {doctor.consultationFee}
@@ -323,14 +320,14 @@ export function DoctorDetailsModal({ doctor: initialDoctor, onClose, onCallSeria
             className="w-full bg-primary hover:bg-primary-dark text-white rounded-2xl h-11 font-semibold cursor-pointer shadow-xs"
           >
             <PhoneCall className="h-4 w-4 mr-2" />
-            {t("consultants.card.callSerial")}
+              সিরিয়াল নিন
           </Button>
 
           <Link
             href={`/consultants/${encodeURIComponent(doctor.slug || doctor.id)}`}
             className="inline-flex items-center justify-center w-full h-10 rounded-2xl border border-border bg-muted/40 hover:bg-muted text-xs font-bold text-foreground transition-colors"
           >
-            {t("consultants.profile.viewFullProfile")}
+              সম্পূর্ণ প্রোফাইল দেখুন
           </Link>
         </div>
       </div>

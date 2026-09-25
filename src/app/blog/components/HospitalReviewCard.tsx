@@ -13,29 +13,19 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { HospitalReviewItem } from "@/types/blog";
 import { BlogReviewCardWrapper } from "./BlogReviewCardWrapper";
-import {
-  toEnglishDigits,
-  translateDiscount,
-  translateMedicalCategory,
-} from "../utils/blogTranslations";
 
 interface HospitalReviewCardProps {
   hospital: HospitalReviewItem;
-  locale?: string;
 }
 
 export function HospitalReviewCard({
   hospital,
-  locale = "bn",
 }: HospitalReviewCardProps) {
-  const isEn = locale === "en";
-  const name = isEn ? hospital.nameEn : hospital.nameBn;
-  const address = isEn ? hospital.addressEn : hospital.addressBn;
-  const typeName = isEn ? hospital.typeEn : hospital.typeBn;
-  const description = isEn
-    ? hospital.descriptionEn ||
-      `${hospital.nameEn} is a leading healthcare facility in Feni, offering modern inpatient services, specialized doctor chambers, emergency response, and verified healthcare solutions.`
-    : hospital.descriptionBn;
+  const name = hospital.nameBn || hospital.nameEn;
+  const address = hospital.addressBn || hospital.addressEn;
+  const typeName = hospital.typeBn || hospital.typeEn;
+  const description = hospital.descriptionBn ||
+    `${hospital.nameBn} ফেনীর একটি অন্যতম নির্ভরযোগ্য স্বাস্থ্যসেবা প্রতিষ্ঠান, যেখানে ইনডোর চিকিৎসা, বিশেষজ্ঞ ডাক্তারদের চেম্বার ও সার্বক্ষণিক সেবা প্রদান করা হয়।`;
 
   const sectionId = `hospital-${hospital.rank}`;
 
@@ -44,7 +34,6 @@ export function HospitalReviewCard({
       sectionId={sectionId}
       rank={hospital.rank}
       partnerStatus={hospital.partnerStatus}
-      locale={locale}
     >
       {/* Header: Names + Badges */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
@@ -57,7 +46,7 @@ export function HospitalReviewCard({
             {hospital.partnerStatus && (
               <Badge className="bg-emerald-600 dark:bg-emerald-700 text-white font-semibold flex items-center gap-1 shadow-xs animate-pulse-subtle">
                 <ShieldCheck className="h-3.5 w-3.5" />
-                {isEn ? "Health Club Partner" : "অফিসিয়াল পার্টনার হাসপাতাল"}
+                অফিসিয়াল পার্টনার হাসপাতাল
               </Badge>
             )}
           </div>
@@ -78,23 +67,21 @@ export function HospitalReviewCard({
           {hospital.bedCountBn && (
             <span className="inline-flex items-center gap-1.5 text-xs bg-muted px-2.5 py-1 rounded-lg font-medium text-foreground">
               <Bed className="h-3.5 w-3.5 text-muted-foreground" />
-              {isEn
-                ? `${toEnglishDigits(hospital.bedCountBn).replace(/[^0-9]/g, "") || toEnglishDigits(hospital.bedCountBn)} Beds`
-                : hospital.bedCountBn}
+              {hospital.bedCountBn}
             </span>
           )}
 
           {hospital.icuAvailable && (
             <span className="inline-flex items-center gap-1 text-xs bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-lg font-semibold">
               <CheckCircle2 className="h-3 w-3" />
-              {isEn ? "ICU Available" : "আইসিইউ (ICU) সুবিধা"}
+              আইসিইউ (ICU) সুবিধা
             </span>
           )}
 
           {hospital.emergency24x7 && (
             <span className="inline-flex items-center gap-1 text-xs bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/20 px-2 py-0.5 rounded-lg font-semibold">
               <Siren className="h-3 w-3" />
-              {isEn ? "24/7 Emergency" : "২৪ ঘণ্টা জরুরি সেবা"}
+              ২৪ ঘণ্টা জরুরি সেবা
             </span>
           )}
         </div>
@@ -114,12 +101,10 @@ export function HospitalReviewCard({
             </div>
             <div>
               <span className="text-xs font-bold uppercase tracking-wider text-primary">
-                {isEn ? "Health Club Member Benefit" : "হেলথ ক্লাব সদস্য সুবিধা"}
+                হেলথ ক্লাব সদস্য সুবিধা
               </span>
               <p className="text-sm font-semibold text-foreground">
-                {isEn
-                  ? translateDiscount(hospital.partnerDiscountBn, isEn)
-                  : hospital.partnerDiscountBn}
+                {hospital.partnerDiscountBn}
               </p>
             </div>
           </div>
@@ -128,7 +113,7 @@ export function HospitalReviewCard({
             href="/membership"
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-bold shadow-xs hover:bg-primary/90 transition-colors whitespace-nowrap self-stretch sm:self-auto justify-center"
           >
-            {isEn ? "Get Discount Card" : "ডিসকাউন্ট কার্ড নিন"}
+            ডিসকাউন্ট কার্ড নিন
             <ExternalLink className="h-3 w-3" />
           </Link>
         </div>
@@ -140,7 +125,7 @@ export function HospitalReviewCard({
         <div className="space-y-2">
           <h4 className="font-bold text-foreground text-xs uppercase tracking-wider flex items-center gap-1.5">
             <CheckCircle2 className="h-4 w-4 text-primary" />
-            {isEn ? "Key Facilities" : "বিশেষ সুবিধাসমূহ"}
+            বিশেষ সুবিধাসমূহ
           </h4>
           <ul className="space-y-1.5 text-muted-foreground">
             {hospital.keyFeaturesBn.map((feat, idx) => (
@@ -156,7 +141,7 @@ export function HospitalReviewCard({
         <div className="space-y-2">
           <h4 className="font-bold text-foreground text-xs uppercase tracking-wider flex items-center gap-1.5">
             <Stethoscope className="h-4 w-4 text-primary" />
-            {isEn ? "Key Departments & Doctors" : "প্রধান বিভাগ ও বিশেষজ্ঞ চেম্বার"}
+            প্রধান বিভাগ ও বিশেষজ্ঞ চেম্বার
           </h4>
           <div className="flex flex-wrap gap-2">
             {hospital.specialtiesBn.map((spec, idx) => (
@@ -164,7 +149,7 @@ export function HospitalReviewCard({
                 key={idx}
                 className="bg-muted/80 text-foreground/90 px-2.5 py-1 rounded-md text-xs font-medium"
               >
-                {translateMedicalCategory(spec, isEn)}
+                {spec}
               </span>
             ))}
           </div>
@@ -189,11 +174,11 @@ export function HospitalReviewCard({
           {hospital.emergencyPhone && (
             <a
               href={`tel:${hospital.emergencyPhone.replace(/[^0-9]/g, "")}`}
-              aria-label={`${isEn ? "Emergency Hotline" : "জরুরি হেল্পলাইন"} ${name}: ${hospital.emergencyPhone}`}
+              aria-label={`জরুরি হেল্পলাইন ${name}: ${hospital.emergencyPhone}`}
               className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-700 dark:text-rose-300 text-xs font-bold transition-colors"
             >
               <Siren className="h-3.5 w-3.5 text-rose-600" aria-hidden="true" />
-              <span>{isEn ? "Emergency: " : "জরুরি: "}{hospital.emergencyPhone}</span>
+              <span>{"জরুরি: "}{hospital.emergencyPhone}</span>
             </a>
           )}
         </div>
@@ -206,11 +191,11 @@ export function HospitalReviewCard({
             )}`}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`${isEn ? "View Map" : "গুগল ম্যাপ"} - ${name}`}
+            aria-label={`গুগল ম্যাপ - ${name}`}
             className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-border/80 hover:bg-muted text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
             <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>{isEn ? "View Map" : "গুগল ম্যাপ"}</span>
+            <span>গুগল ম্যাপ</span>
           </a>
 
           {/* Hospital Profile / Details Link */}
@@ -223,10 +208,10 @@ export function HospitalReviewCard({
                     : `/partner-hospitals/${encodeURIComponent(hospital.partnerProfileSlug)}`
                   : "/partner-hospitals"
               }
-              aria-label={`${isEn ? "Hospital Profile" : "হাসপাতাল প্রোফাইল"} - ${name}`}
+              aria-label={`হাসপাতাল প্রোফাইল - ${name}`}
               className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/90 shadow-xs transition-colors"
             >
-              <span>{isEn ? "Hospital Profile" : "হাসপাতাল প্রোফাইল"}</span>
+              <span>হাসপাতাল প্রোফাইল</span>
               <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
             </Link>
           )}

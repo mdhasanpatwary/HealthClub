@@ -10,7 +10,6 @@ interface NoticeSettingsCardProps {
   noticeEnabled: boolean;
   setNoticeEnabled: (value: boolean) => void;
   noticeText: string;
-  isEn: boolean;
 }
 
 export function NoticeSettingsCard({
@@ -18,27 +17,26 @@ export function NoticeSettingsCard({
   noticeEnabled,
   setNoticeEnabled,
   noticeText,
-  isEn,
 }: NoticeSettingsCardProps) {
   return (
     <Card className="border border-border shadow-xs">
       <CardHeader className="pb-3">
         <CardTitle className="text-base font-bold flex items-center gap-2">
           <Megaphone className="h-4 w-4 text-primary" />
-          <span>{isEn ? "Website Notice Banner" : "ওয়েবসাইট নোটিশ ও ব্যানার"}</span>
+          <span>ওয়েবসাইট নোটিশ ও ব্যানার</span>
         </CardTitle>
         <CardDescription className="text-xs">
-          {isEn ? "Show announcement bar on top of all pages" : "ওয়েবসাইটের শীর্ষে বিশেষ অফার বা জরুরি নোটিশ প্রদর্শন"}
+          ওয়েবসাইটের শীর্ষে বিশেষ অফার বা জরুরি নোটিশ প্রদর্শন
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between p-3 rounded-xl bg-muted/50 border border-border">
           <div className="space-y-0.5">
             <Label className="text-xs font-bold text-foreground">
-              {isEn ? "Enable Global Notice Banner" : "ওয়েবসাইট নোটিশ ব্যানার চালু"}
+              ওয়েবসাইট নোটিশ ব্যানার চালু
             </Label>
             <p className="text-[11px] text-muted-foreground">
-              {isEn ? "Show announcement bar to all visitors" : "চালু থাকলে ভিজিটররা সাইটের উপরে নোটিশ দেখতে পাবে"}
+              চালু থাকলে ভিজিটররা সাইটের উপরে নোটিশ দেখতে পাবে
             </p>
           </div>
           <button
@@ -61,11 +59,11 @@ export function NoticeSettingsCard({
         {noticeEnabled && (
           <div className="space-y-2 animate-in fade-in duration-200">
             <Label htmlFor="notice-text" className="text-xs font-semibold">
-              {isEn ? "Notice Banner Message" : "ব্যানারের বার্তা (টেক্সট)"}
+              ব্যানারের বার্তা (টেক্সট)
             </Label>
             <Input
               id="notice-text"
-              placeholder={isEn ? "e.g. Free Eye Camp on 25th August!" : "যেমন: আগামী ২৫ আগস্ট ফ্রি চক্ষু ক্যাম্প!"}
+              placeholder="যেমন: আগামী ২৫ আগস্ট ফ্রি চক্ষু ক্যাম্প!"
               {...register("notice_text")}
             />
             {noticeText.trim() && (
@@ -77,7 +75,7 @@ export function NoticeSettingsCard({
                   <span className="truncate font-medium">{noticeText}</span>
                 </div>
                 <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-black/20 text-emerald-100 shrink-0">
-                  {isEn ? "Preview" : "প্রিভিউ"}
+                  প্রিভিউ
                 </span>
               </div>
             )}

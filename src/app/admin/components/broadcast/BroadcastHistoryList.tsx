@@ -21,20 +21,17 @@ import {
   BroadcastCampaignRecord,
   deleteBroadcastCampaignAction,
 } from "@/app/actions/broadcastActions";
-import { formatNum, Locale } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 
 interface BroadcastHistoryListProps {
   campaigns: BroadcastCampaignRecord[];
-  locale: Locale;
   onCampaignDeleted: (id: string) => void;
 }
 
 export function BroadcastHistoryList({
   campaigns,
-  locale,
   onCampaignDeleted,
 }: BroadcastHistoryListProps) {
-  const isBn = locale === "bn";
   const [search, setSearch] = useState("");
   const [channelFilter, setChannelFilter] = useState<string>("all");
   const [selectedCampaign, setSelectedCampaign] = useState<BroadcastCampaignRecord | null>(null);
@@ -67,7 +64,7 @@ export function BroadcastHistoryList({
         toast.error(res.message);
       }
     } catch {
-      toast.error(isBn ? "মুছতে সমস্যা হয়েছে।" : "Failed to delete.");
+      toast.error("মুছতে সমস্যা হয়েছে।");
     } finally {
       setDeletingId(null);
     }
@@ -82,14 +79,14 @@ export function BroadcastHistoryList({
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder={isBn ? "ক্যাম্পেইন শিরোনাম বা বক্তব্য খুঁজুন..." : "Search campaign history..."}
+            placeholder="ক্যাম্পেইন শিরোনাম বা বক্তব্য খুঁজুন..."
             className="pl-9 h-9 rounded-xl text-xs"
           />
         </div>
 
         <div className="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0 text-xs">
           {[
-            { id: "all", label: isBn ? "সকল" : "All" },
+            { id: "all", label: "সকল" },
             { id: "email", label: "ইমেইল", icon: Mail },
             { id: "sms", label: "এসএমএস", icon: MessageSquare },
             { id: "in_app", label: "ইন-অ্যাপ", icon: Bell },
@@ -117,12 +114,10 @@ export function BroadcastHistoryList({
             <Sparkles className="h-6 w-6" />
           </div>
           <h3 className="font-heading text-sm font-bold text-foreground">
-            {isBn ? "কোনো ক্যাম্পেইন ইতিহাস পাওয়া যায়নি" : "No Broadcast History Found"}
+            কোনো ক্যাম্পেইন ইতিহাস পাওয়া যায়নি
           </h3>
           <p className="text-xs text-muted-foreground mt-1 max-w-sm mx-auto">
-            {isBn
-              ? "নতুন এসএমএস বা ইমেইল ক্যাম্পেইন সম্প্রচার করলে তার সম্পূর্ণ লগ এখানে জমা হবে।"
-              : "When you send a mass announcement or campaign, full delivery logs will show here."}
+            নতুন এসএমএস বা ইমেইল ক্যাম্পেইন সম্প্রচার করলে তার সম্পূর্ণ লগ এখানে জমা হবে।
           </p>
         </Card>
       ) : (
@@ -142,10 +137,10 @@ export function BroadcastHistoryList({
                     )}
                     <span className="text-[11px] font-mono text-muted-foreground flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
-                      {new Date(c.createdAt).toLocaleString(locale === "bn" ? "bn-BD" : "en-US", {
+                      {toBanglaNums(new Date(c.createdAt).toLocaleString("bn-BD", {
                         dateStyle: "medium",
                         timeStyle: "short",
-                      })}
+                      }))}
                     </span>
                     <span className="text-[10px] font-mono bg-muted text-muted-foreground px-2 py-0.5 rounded-md">
                       Audience: {c.audience}
@@ -163,23 +158,23 @@ export function BroadcastHistoryList({
                   <div className="flex flex-wrap items-center gap-2 pt-1">
                     <span className="text-xs font-mono font-bold text-foreground flex items-center gap-1">
                       <Users className="h-3.5 w-3.5 text-primary" />
-                      {formatNum(c.recipientCount, locale)} {isBn ? "জন প্রাপক" : "recipients"}
+                      {toBanglaNums(c.recipientCount)} জন প্রাপক
                     </span>
                     <span>&bull;</span>
                     <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
                       {c.channels.includes("email") && (
                         <span className="bg-blue-500/10 text-blue-600 dark:text-blue-400 px-1.5 py-0.5 rounded-md font-mono">
-                          Email: {formatNum(c.emailSentCount, locale)}
+                          Email: {toBanglaNums(c.emailSentCount)}
                         </span>
                       )}
                       {c.channels.includes("sms") && (
                         <span className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded-md font-mono">
-                          SMS: {formatNum(c.smsSentCount, locale)}
+                          SMS: {toBanglaNums(c.smsSentCount)}
                         </span>
                       )}
                       {c.channels.includes("in_app") && (
                         <span className="bg-amber-500/10 text-amber-600 dark:text-amber-400 px-1.5 py-0.5 rounded-md font-mono">
-                          In-App: {formatNum(c.inAppSentCount, locale)}
+                          In-App: {toBanglaNums(c.inAppSentCount)}
                         </span>
                       )}
                     </div>
@@ -195,7 +190,7 @@ export function BroadcastHistoryList({
                     className="rounded-xl text-xs gap-1.5 cursor-pointer"
                   >
                     <Eye className="h-3.5 w-3.5 text-primary" />
-                    <span>{isBn ? "বিস্তারিত" : "Details"}</span>
+                    <span>বিস্তারিত</span>
                   </Button>
                   <Button
                     variant="ghost"
@@ -203,7 +198,7 @@ export function BroadcastHistoryList({
                     disabled={deletingId === c.id}
                     onClick={() => handleDelete(c.id)}
                     className="rounded-xl text-muted-foreground hover:text-rose-600 cursor-pointer"
-                    title={isBn ? "মুছে ফেলুন" : "Delete"}
+                    title="মুছে ফেলুন"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -225,7 +220,7 @@ export function BroadcastHistoryList({
                     {selectedCampaign.title}
                   </h3>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    {new Date(selectedCampaign.createdAt).toLocaleString()}
+                    {toBanglaNums(new Date(selectedCampaign.createdAt).toLocaleString("bn-BD"))}
                   </p>
                 </div>
                 {selectedCampaign.badge && (
@@ -238,15 +233,15 @@ export function BroadcastHistoryList({
               <div className="grid grid-cols-3 gap-2 text-center">
                 <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-600">
                   <p className="text-[10px] font-semibold">ইমেইল ডেলিভারি</p>
-                  <p className="text-sm font-bold font-mono mt-0.5">{selectedCampaign.emailSentCount}</p>
+                  <p className="text-sm font-bold font-mono mt-0.5">{toBanglaNums(selectedCampaign.emailSentCount)}</p>
                 </div>
                 <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-600">
                   <p className="text-[10px] font-semibold">এসএমএস ডেলিভারি</p>
-                  <p className="text-sm font-bold font-mono mt-0.5">{selectedCampaign.smsSentCount}</p>
+                  <p className="text-sm font-bold font-mono mt-0.5">{toBanglaNums(selectedCampaign.smsSentCount)}</p>
                 </div>
                 <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-600">
                   <p className="text-[10px] font-semibold">ইন-অ্যাপ নোটিশ</p>
-                  <p className="text-sm font-bold font-mono mt-0.5">{selectedCampaign.inAppSentCount}</p>
+                  <p className="text-sm font-bold font-mono mt-0.5">{toBanglaNums(selectedCampaign.inAppSentCount)}</p>
                 </div>
               </div>
 
@@ -270,7 +265,7 @@ export function BroadcastHistoryList({
                   onClick={() => setSelectedCampaign(null)}
                   className="rounded-xl text-xs cursor-pointer"
                 >
-                  {isBn ? "বন্ধ করুন" : "Close"}
+                  বন্ধ করুন
                 </Button>
               </div>
             </CardContent>

@@ -23,11 +23,18 @@ interface EmergencyHotlinesListProps {
   pageSize: number;
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
-  isEn: boolean;
   onEdit: (hotline: EmergencyHotline) => void;
   onDelete: (id: string, name: string) => void;
   loading?: boolean;
 }
+
+const CATEGORY_NAMES_BN: Record<string, string> = {
+  oxygen: "অক্সিজেন",
+  hospital: "হাসপাতাল",
+  blood_bank: "ব্লাড ব্যাংক",
+  fire: "ফায়ার সার্ভিস",
+  police: "পুলিশ / জাতীয়",
+};
 
 export function EmergencyHotlinesList({
   hotlines,
@@ -37,7 +44,6 @@ export function EmergencyHotlinesList({
   pageSize,
   onPageChange,
   onPageSizeChange,
-  isEn,
   onEdit,
   onDelete,
   loading = false,
@@ -48,11 +54,11 @@ export function EmergencyHotlinesList({
         <Table>
           <TableHeader className="bg-muted/40">
             <TableRow>
-              <TableHead className="w-[100px]">{isEn ? "Category" : "ক্যাটাগরি"}</TableHead>
-              <TableHead>{isEn ? "Title / Organization" : "সংস্থা / সেবার নাম"}</TableHead>
-              <TableHead>{isEn ? "Phone Number" : "হটলাইন নম্বর"}</TableHead>
-              <TableHead>{isEn ? "Description" : "বিবরণ"}</TableHead>
-              <TableHead className="text-right">{isEn ? "Actions" : "অ্যাকশন"}</TableHead>
+              <TableHead className="w-[100px]">ক্যাটাগরি</TableHead>
+              <TableHead>সংস্থা / সেবার নাম</TableHead>
+              <TableHead>হটলাইন নম্বর</TableHead>
+              <TableHead>বিবরণ</TableHead>
+              <TableHead className="text-right">অ্যাকশন</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -82,19 +88,19 @@ export function EmergencyHotlinesList({
             ) : hotlines.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="text-center py-8 text-muted-foreground text-xs">
-                  {isEn ? "No hotlines found." : "কোনো হটলাইন পাওয়া যায়নি।"}
+                  কোনো হটলাইন পাওয়া যায়নি।
                 </TableCell>
               </TableRow>
             ) : (
               hotlines.map((h) => (
                 <TableRow key={h.id} className="hover:bg-muted/30">
                   <TableCell>
-                    <Badge className="bg-primary/10 text-primary font-bold border-primary/20 text-[10px] capitalize">
-                      {h.category.replace("_", " ")}
+                    <Badge className="bg-primary/10 text-primary font-bold border-primary/20 text-[10px]">
+                      {CATEGORY_NAMES_BN[h.category] || h.category}
                     </Badge>
                   </TableCell>
                   <TableCell className="font-bold text-xs text-foreground">
-                    {isEn ? h.titleEn : h.titleBn}
+                    {h.titleBn}
                   </TableCell>
                   <TableCell className="text-xs font-mono">
                     <a href={`tel:${h.phone}`} className="text-primary hover:underline flex items-center gap-1">
@@ -103,7 +109,7 @@ export function EmergencyHotlinesList({
                     </a>
                   </TableCell>
                   <TableCell className="text-xs text-muted-foreground max-w-[250px] truncate">
-                    {isEn ? h.descriptionEn : h.descriptionBn}
+                    {h.descriptionBn || h.descriptionEn}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
@@ -112,7 +118,7 @@ export function EmergencyHotlinesList({
                         variant="ghost"
                         size="icon-sm"
                         onClick={() => onEdit(h)}
-                        aria-label={isEn ? `Edit hotline ${h.titleEn}` : `হটলাইন ${h.titleBn} এর তথ্য এডিট করুন`}
+                        aria-label={`হটলাইন ${h.titleBn} এর তথ্য এডিট করুন`}
                         className="h-7 w-7 text-muted-foreground hover:text-foreground cursor-pointer"
                       >
                         <Edit3 className="h-3.5 w-3.5" />
@@ -121,8 +127,8 @@ export function EmergencyHotlinesList({
                         type="button"
                         variant="ghost"
                         size="icon-sm"
-                        onClick={() => onDelete(h.id, isEn ? h.titleEn : h.titleBn)}
-                        aria-label={isEn ? `Delete hotline ${h.titleEn}` : `হটলাইন ${h.titleBn} ডিলিট করুন`}
+                        onClick={() => onDelete(h.id, h.titleBn)}
+                        aria-label={`হটলাইন ${h.titleBn} ডিলিট করুন`}
                         className="h-7 w-7 text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
@@ -146,8 +152,7 @@ export function EmergencyHotlinesList({
           onPageChange={onPageChange}
           onPageSizeChange={onPageSizeChange}
           pageSizeOptions={[10, 20, 50, 100]}
-          locale={isEn ? "en" : "bn"}
-          itemLabel={isEn ? "hotlines" : "টি হটলাইন"}
+          itemLabel="টি হটলাইন"
           disabled={loading}
         />
       )}

@@ -4,7 +4,6 @@ import Image from "next/image";
 import { Building2, MapPin, PhoneCall, Clock, Eye } from "lucide-react";
 import { Partner, DepartmentDiscount, PartnerSocialLinks } from "@/services/db";
 import { Card } from "@/components/ui/card";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 
 interface PartnerCardPreviewProps {
   partner: Partner;
@@ -28,13 +27,11 @@ export function PartnerCardPreview({
   imageUrl,
   socialLinks,
 }: PartnerCardPreviewProps) {
-  const { t } = useLanguage();
-
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-1.5 text-xs font-bold text-secondary dark:text-white uppercase tracking-wider px-1">
         <Eye className="h-4 w-4 text-primary" />
-        {t("partner.profile.livePreview")}
+        লাইভ কার্ড প্রিভিউ (পাবলিক ডিরেক্টরিতে যেমন দেখাবে)
       </div>
 
       <Card className="overflow-hidden rounded-3xl border-border bg-card shadow-lg hover:shadow-xl transition-all duration-300">
@@ -58,17 +55,17 @@ export function PartnerCardPreview({
 
           <div className="absolute top-3 right-3 z-10">
             <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-emerald-400 border border-emerald-500/30">
-              {partner.category === "hospital" ? t("partner.dashboard.category.hospital") : partner.category === "diagnostic" ? t("partner.dashboard.category.diagnostic") : t("partner.dashboard.category.pharmacy")}
+              {partner.category === "hospital" ? "হাসপাতাল" : partner.category === "diagnostic" ? "ডায়াগনস্টিক" : "ফার্মেসি"}
             </span>
           </div>
 
           <div className="absolute bottom-3 left-4 right-4 z-10 space-y-1">
             <h3 className="font-heading text-base font-bold text-white line-clamp-1">
-              {name || t("partner.profile.hospitalNamePlaceholder")}
+              {name || "হাসপাতালের নাম"}
             </h3>
             <p className="flex items-center gap-1 text-xs text-slate-300 line-clamp-1">
               <MapPin className="h-3 w-3 text-emerald-400 shrink-0" />
-              <span>{address || t("partner.profile.addressPlaceholderShort")}</span>
+              <span>{address || "ঠিকানা"}</span>
             </p>
           </div>
         </div>
@@ -77,13 +74,13 @@ export function PartnerCardPreview({
         <div className="p-4 space-y-3">
           <div className="flex items-center justify-between border-b border-border/60 pb-3">
             <div>
-              <p className="text-[10px] text-muted-foreground uppercase font-mono">{t("partner.profile.discountRate")}</p>
+              <p className="text-[10px] text-muted-foreground uppercase font-mono">ছাড়ের হার</p>
               <p className="text-base font-bold text-primary font-heading">{discount || "20%"}</p>
             </div>
             {emergencyPhone && (
               <div className="text-right">
                 <p className="text-[10px] text-amber-600 dark:text-amber-400 font-bold flex items-center gap-1 justify-end">
-                  <PhoneCall className="h-3 w-3" /> {t("partner.profile.emergency")}
+                  <PhoneCall className="h-3 w-3" /> জরুরি
                 </p>
                 <p className="text-xs font-bold text-secondary dark:text-white font-mono">{emergencyPhone}</p>
               </div>

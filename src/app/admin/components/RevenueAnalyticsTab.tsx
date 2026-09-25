@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { AdminRevenueAnalyticsData } from "@/types/revenueAnalytics";
 import { getAdminRevenueAnalyticsAction } from "@/app/actions/analyticsActions";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { RevenueKpiCards } from "./RevenueKpiCards";
 import { RevenueFinancialCharts } from "./RevenueFinancialCharts";
 import { RenewalRetentionBreakdown } from "./RenewalRetentionBreakdown";
@@ -19,9 +18,6 @@ import { toast } from "sonner";
 import { exportToCsv } from "@/lib/exportUtils";
 
 export function RevenueAnalyticsTab() {
-  const { locale } = useLanguage();
-  const isBn = locale === "bn";
-
   const [data, setData] = useState<AdminRevenueAnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -89,7 +85,7 @@ export function RevenueAnalyticsTab() {
       { header: "New Members Registered", accessor: "newMembersCount" },
     ]);
     if (!exported) return;
-    toast.success(isBn ? "আর্থিক রিপোর্ট CSV ডাউনলোড সম্পন্ন হয়েছে।" : "Revenue report exported to CSV successfully.");
+    toast.success("আর্থিক রিপোর্ট CSV ডাউনলোড সম্পন্ন হয়েছে।");
   };
 
   return (
@@ -102,13 +98,11 @@ export function RevenueAnalyticsTab() {
               <TrendingUp className="h-5 w-5" />
             </div>
             <h2 className="text-lg sm:text-xl font-bold font-heading text-secondary dark:text-white">
-              {isBn ? "আর্থিক ও রাজস্ব অ্যানালিটিক্স ড্যাশবোর্ড" : "Financial & Revenue Analytics"}
+              আর্থিক ও রাজস্ব অ্যানালিটিক্স ড্যাশবোর্ড
             </h2>
           </div>
           <p className="text-xs text-muted-foreground leading-relaxed max-w-3xl">
-            {isBn
-              ? "সদস্যপদ সাবস্ক্রিপশন রাজস্ব, বাৎসরিক নবায়ন রিটেনশন রেট, মাসিক ট্রানজ্যাকশন ভলিউম ও পার্টনার হাসপাতালের সেভিংস পারফরম্যান্স রিপোর্ট।"
-              : "Track membership subscription revenue, renewal retention rates, monthly transaction volumes, and top-performing partner medical centers."}
+            সদস্যপদ সাবস্ক্রিপশন রাজস্ব, বাৎসরিক নবায়ন রিটেনশন রেট, মাসিক ট্রানজ্যাকশন ভলিউম ও পার্টনার হাসপাতালের সেভিংস পারফরম্যান্স রিপোর্ট।
           </p>
         </div>
 
@@ -121,7 +115,7 @@ export function RevenueAnalyticsTab() {
             className="rounded-xl border-border text-xs font-semibold gap-1.5 cursor-pointer hover:bg-muted"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin text-primary" : ""}`} />
-            <span>{isBn ? "রিফ্রেশ" : "Refresh"}</span>
+            <span>রিফ্রেশ</span>
           </Button>
 
           {data && (
@@ -132,7 +126,7 @@ export function RevenueAnalyticsTab() {
               className="rounded-xl text-xs font-semibold gap-1.5 bg-primary hover:bg-primary-dark text-white cursor-pointer shadow-xs"
             >
               <Download className="h-3.5 w-3.5" />
-              <span>{isBn ? "রিপোর্ট এক্সপোর্ট" : "Export CSV"}</span>
+              <span>রিপোর্ট এক্সপোর্ট</span>
             </Button>
           )}
         </div>
@@ -159,25 +153,22 @@ export function RevenueAnalyticsTab() {
       {data && (
         <div className="space-y-6 sm:space-y-8">
           {/* 1. Main KPI Summary Cards */}
-          <RevenueKpiCards kpis={data.kpis} locale={locale} />
+          <RevenueKpiCards kpis={data.kpis} />
 
           {/* 2. Visual Revenue & Transaction Charts */}
           <RevenueFinancialCharts
             monthlyFinancials={data.monthlyFinancials}
-            locale={locale}
           />
 
           {/* 3. Tier Distribution & Renewal Pipeline */}
           <RenewalRetentionBreakdown
             renewalMetrics={data.renewalMetrics}
             tierBreakdown={data.tierBreakdown}
-            locale={locale}
           />
 
           {/* 4. Top Performing Partner Hospitals & Clinics */}
           <PartnerPerformanceTable
             partners={data.topPartners}
-            locale={locale}
           />
         </div>
       )}

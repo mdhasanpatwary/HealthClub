@@ -11,7 +11,6 @@ import {
   deleteAdminUserAction,
   getCurrentAdminSessionAction,
 } from "@/app/actions/adminUserActions";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -40,9 +39,6 @@ import {
 import { toast } from "sonner";
 
 export function AdminStaffTab() {
-  const { locale } = useLanguage();
-  const isBn = locale === "bn";
-
   const [staffList, setStaffList] = useState<AdminUser[]>([]);
   const [currentAdminId, setCurrentAdminId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -70,11 +66,11 @@ export function AdminStaffTab() {
         setCurrentAdminId(session.user.id);
       }
     } catch {
-      toast.error(isBn ? "স্টাফ তথ্য লোড করতে ব্যর্থ হয়েছে।" : "Failed to load staff accounts.");
+      toast.error("স্টাফ তথ্য লোড করতে ব্যর্থ হয়েছে।");
     } finally {
       setLoading(false);
     }
-  }, [isBn]);
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -124,11 +120,11 @@ export function AdminStaffTab() {
         isActive: data.isActive ?? true,
       });
       if (res.success && res.user) {
-        toast.success(isBn ? "স্টাফের তথ্য সফলভাবে আপডেট করা হয়েছে!" : "Staff updated successfully!");
+        toast.success("স্টাফের তথ্য সফলভাবে আপডেট করা হয়েছে!");
         setStaffList((prev) => prev.map((s) => (s.id === res.user!.id ? res.user! : s)));
         return true;
       } else {
-        toast.error(res.error || (isBn ? "আপডেট করতে ব্যর্থ হয়েছে।" : "Update failed."));
+        toast.error(res.error || "আপডেট করতে ব্যর্থ হয়েছে।");
         return false;
       }
     } else {
@@ -140,11 +136,11 @@ export function AdminStaffTab() {
         role: data.role,
       });
       if (res.success && res.user) {
-        toast.success(isBn ? "নতুন এডমিন অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!" : "Staff account created!");
+        toast.success("নতুন এডমিন অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!");
         setStaffList((prev) => [res.user!, ...prev]);
         return true;
       } else {
-        toast.error(res.error || (isBn ? "অ্যাকাউন্ট তৈরি করতে ব্যর্থ হয়েছে।" : "Failed to create account."));
+        toast.error(res.error || "অ্যাকাউন্ট তৈরি করতে ব্যর্থ হয়েছে।");
         return false;
       }
     }
@@ -202,12 +198,10 @@ export function AdminStaffTab() {
             </Badge>
           </div>
           <h2 className="text-xl sm:text-2xl font-bold font-heading text-secondary dark:text-white">
-            {isBn ? "এডমিন ও স্টাফ ব্যবস্থাপনা" : "Admin & Staff Management"}
+            এডমিন ও স্টাফ ব্যবস্থাপনা
           </h2>
           <p className="text-xs text-muted-foreground mt-0.5">
-            {isBn
-              ? "সিস্টেম এডমিনিস্ট্রেটরদের তালিকা, রোল-বেসড এক্সেস এবং পারমিশন কনফিগার করুন"
-              : "Manage admin accounts, assign granular RBAC roles and control system permissions"}
+            সিস্টেম এডমিনিস্ট্রেটরদের তালিকা, রোল-বেসড এক্সেস এবং পারমিশন কনফিগার করুন
           </p>
         </div>
 
@@ -219,7 +213,7 @@ export function AdminStaffTab() {
             className="text-xs font-semibold rounded-xl gap-1.5 h-9 flex-1 sm:flex-initial"
           >
             <FileSpreadsheet className="h-4 w-4 text-purple-600 dark:text-purple-400" />
-            <span>{isBn ? "পারমিশন ম্যাট্রিক্স" : "Permissions"}</span>
+            <span>পারমিশন ম্যাট্রিক্স</span>
           </Button>
 
           <Button
@@ -231,7 +225,7 @@ export function AdminStaffTab() {
             className="text-xs font-bold rounded-xl bg-primary hover:bg-primary-dark text-white gap-1.5 h-9 shadow-xs flex-1 sm:flex-initial"
           >
             <UserPlus className="h-4 w-4" />
-            <span>{isBn ? "নতুন স্টাফ যোগ করুন" : "Add Staff"}</span>
+            <span>নতুন স্টাফ যোগ করুন</span>
           </Button>
         </div>
       </div>
@@ -243,7 +237,6 @@ export function AdminStaffTab() {
         moderatorCount={moderatorCount}
         supportCount={supportCount}
         activeCount={activeCount}
-        locale={locale}
       />
 
       {/* Filter & Search Bar */}
@@ -253,7 +246,7 @@ export function AdminStaffTab() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             type="text"
-            placeholder={isBn ? "নাম, ইমেইল বা ফোন নম্বর দিয়ে খুঁজুন..." : "Search by name, email or phone..."}
+            placeholder="নাম, ইমেইল বা ফোন নম্বর দিয়ে খুঁজুন..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9 bg-background border-border h-9 text-xs rounded-xl"
@@ -263,10 +256,10 @@ export function AdminStaffTab() {
         {/* Role Filter Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
           {[
-            { key: "all", labelBn: "সকল রোল", labelEn: "All Roles" },
-            { key: "super_admin", labelBn: "সুপার এডমিন", labelEn: "Super Admin" },
-            { key: "content_moderator", labelBn: "মডারেটর", labelEn: "Moderator" },
-            { key: "support_staff", labelBn: "সাপোর্ট স্টাফ", labelEn: "Support" },
+            { key: "all", labelBn: "সকল রোল" },
+            { key: "super_admin", labelBn: "সুপার এডমিন" },
+            { key: "content_moderator", labelBn: "মডারেটর" },
+            { key: "support_staff", labelBn: "সাপোর্ট স্টাফ" },
           ].map((item) => (
             <button
               key={item.key}
@@ -277,7 +270,7 @@ export function AdminStaffTab() {
                   : "bg-muted/60 hover:bg-muted text-muted-foreground hover:text-foreground"
               }`}
             >
-              {isBn ? item.labelBn : item.labelEn}
+              {item.labelBn}
             </button>
           ))}
         </div>
@@ -297,16 +290,12 @@ export function AdminStaffTab() {
               <Users className="h-6 w-6" />
             </div>
             <h3 className="text-base font-bold text-foreground">
-              {isBn ? "কোনো স্টাফ পাওয়া যায়নি" : "No staff accounts found"}
+              কোনো স্টাফ পাওয়া যায়নি
             </h3>
             <p className="text-xs text-muted-foreground max-w-sm mx-auto">
               {searchQuery || selectedRole !== "all"
-                ? isBn
-                  ? "অনুসন্ধান ফিল্টার পরিবর্তন করে পুনরায় চেষ্টা করুন।"
-                  : "Try modifying your search query or filter selection."
-                : isBn
-                ? "নতুন স্টাফ যোগ করতে উপরের বাটনে ক্লিক করুন।"
-                : "Click the add button above to create a staff account."}
+                ? "অনুসন্ধান ফিল্টার পরিবর্তন করে পুনরায় চেষ্টা করুন।"
+                : "নতুন স্টাফ যোগ করতে উপরের বাটনে ক্লিক করুন।"}
             </p>
           </CardContent>
         </Card>
@@ -325,7 +314,6 @@ export function AdminStaffTab() {
             setIsPasswordDialogOpen(true);
           }}
           onDelete={(staff) => setStaffToDelete(staff)}
-          locale={locale}
         />
       )}
 
@@ -335,7 +323,6 @@ export function AdminStaffTab() {
         onClose={() => setIsStaffDialogOpen(false)}
         staff={selectedStaffForEdit}
         onSave={handleSaveStaff}
-        locale={locale}
       />
 
       {/* Password Reset Dialog */}
@@ -344,14 +331,12 @@ export function AdminStaffTab() {
         onClose={() => setIsPasswordDialogOpen(false)}
         staff={selectedStaffForPass}
         onReset={handleResetPassword}
-        locale={locale}
       />
 
       {/* Permissions Matrix Modal */}
       <AdminStaffPermissionsModal
         isOpen={isPermissionsModalOpen}
         onClose={() => setIsPermissionsModalOpen(false)}
-        locale={locale}
       />
 
       {/* Delete Confirmation Modal */}
@@ -362,12 +347,10 @@ export function AdminStaffTab() {
               <AlertTriangle className="h-6 w-6" />
             </div>
             <DialogTitle className="text-lg font-bold text-foreground">
-              {isBn ? "এডমিন অ্যাকাউন্ট ডিলিট নিশ্চিতকরণ" : "Confirm Staff Deletion"}
+              এডমিন অ্যাকাউন্ট ডিলিট নিশ্চিতকরণ
             </DialogTitle>
             <DialogDescription className="text-xs text-muted-foreground">
-              {isBn
-                ? `আপনি কি নিশ্চিতভাবে "${staffToDelete?.name}" (${staffToDelete?.email}) এর এডমিন অ্যাকাউন্ট মুছে ফেলতে চান? এটি আর ফিরিয়ে আনা যাবে না।`
-                : `Are you sure you want to delete the staff account for "${staffToDelete?.name}" (${staffToDelete?.email})? This action cannot be undone.`}
+              {`আপনি কি নিশ্চিতভাবে "${staffToDelete?.name}" (${staffToDelete?.email}) এর এডমিন অ্যাকাউন্ট মুছে ফেলতে চান? এটি আর ফিরিয়ে আনা যাবে না।`}
             </DialogDescription>
           </DialogHeader>
 
@@ -380,7 +363,7 @@ export function AdminStaffTab() {
               disabled={isPending}
               className="text-xs rounded-xl"
             >
-              {isBn ? "বাতিল" : "Cancel"}
+              বাতিল
             </Button>
             <Button
               type="button"
@@ -390,7 +373,7 @@ export function AdminStaffTab() {
               disabled={isPending}
               className="text-xs rounded-xl font-bold"
             >
-              {isPending ? (isBn ? "মুছে ফেলা হচ্ছে..." : "Deleting...") : (isBn ? "হ্যাঁ, মুছে ফেলুন" : "Delete Account")}
+              {isPending ? "মুছে ফেলা হচ্ছে..." : "হ্যাঁ, মুছে ফেলুন"}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MonthlyFinancialPoint } from "@/types/revenueAnalytics";
-import { formatNum, Locale } from "@/lib/i18n";
+import { formatNum } from "@/lib/utils";
 import {
   BarChart3,
   TrendingUp,
@@ -17,16 +17,13 @@ import {
 
 interface RevenueFinancialChartsProps {
   monthlyFinancials: MonthlyFinancialPoint[];
-  locale: Locale;
 }
 
 type ChartMetric = "revenue" | "savings" | "billed" | "transactions";
 
 export function RevenueFinancialCharts({
   monthlyFinancials,
-  locale,
 }: RevenueFinancialChartsProps) {
-  const isBn = locale === "bn";
   const [metric, setMetric] = useState<ChartMetric>("revenue");
 
   // Determine active metric values
@@ -46,13 +43,13 @@ export function RevenueFinancialCharts({
   const getMetricLabel = (): string => {
     switch (metric) {
       case "revenue":
-        return isBn ? "সাবস্ক্রিপশন রাজস্ব (৳)" : "Subscription Revenue (৳)";
+        return "সাবস্ক্রিপশন রাজস্ব (৳)";
       case "savings":
-        return isBn ? "সদস্য ডিসকাউন্ট সাশ্রয় (৳)" : "Member Savings (৳)";
+        return "সদস্য ডিসকাউন্ট সাশ্রয় (৳)";
       case "billed":
-        return isBn ? "গ্রস মেডিকেল বিলিং (৳)" : "Gross Medical Billed (৳)";
+        return "গ্রস মেডিকেল বিলিং (৳)";
       case "transactions":
-        return isBn ? "রোগী লেনদেন সংখ্যা" : "Patient Visits";
+        return "রোগী লেনদেন সংখ্যা";
     }
   };
 
@@ -88,13 +85,11 @@ export function RevenueFinancialCharts({
               <BarChart3 className="h-4 w-4" />
             </div>
             <CardTitle className="text-base sm:text-lg font-bold font-heading text-secondary dark:text-white">
-              {isBn ? "মাসিক আর্থিক ও রাজস্ব প্রবৃদ্ধি ট্রেন্ড" : "Monthly Financial & Growth Analytics"}
+              মাসিক আর্থিক ও রাজস্ব প্রবৃদ্ধি ট্রেন্ড
             </CardTitle>
           </div>
           <CardDescription className="text-xs text-muted-foreground">
-            {isBn
-              ? "মাসভিত্তিক রাজস্ব আয়, সদস্য ডিসকাউন্ট বিতরণ ও ক্লিনিক্যাল বিলিং ভলিউমের সামগ্রিক পরিসংখ্যান"
-              : "Month-by-month financial progression, subscription collections, and medical volume"}
+            মাসভিত্তিক রাজস্ব আয়, সদস্য ডিসকাউন্ট বিতরণ ও ক্লিনিক্যাল বিলিং ভলিউমের সামগ্রিক পরিসংখ্যান
           </CardDescription>
         </div>
 
@@ -112,7 +107,7 @@ export function RevenueFinancialCharts({
             }`}
           >
             <Coins className="h-3 w-3 mr-1.5" />
-            {isBn ? "রাজস্ব" : "Revenue"}
+            রাজস্ব
           </Button>
 
           <Button
@@ -127,7 +122,7 @@ export function RevenueFinancialCharts({
             }`}
           >
             <HeartHandshake className="h-3 w-3 mr-1.5" />
-            {isBn ? "সাশ্রয়" : "Savings"}
+            সাশ্রয়
           </Button>
 
           <Button
@@ -142,7 +137,7 @@ export function RevenueFinancialCharts({
             }`}
           >
             <Building2 className="h-3 w-3 mr-1.5" />
-            {isBn ? "বিলিং" : "Billing"}
+            বিলিং
           </Button>
 
           <Button
@@ -157,7 +152,7 @@ export function RevenueFinancialCharts({
             }`}
           >
             <Receipt className="h-3 w-3 mr-1.5" />
-            {isBn ? "লেনদেন" : "Visits"}
+            লেনদেন
           </Button>
         </div>
       </CardHeader>
@@ -165,7 +160,7 @@ export function RevenueFinancialCharts({
       <CardContent className="p-5 sm:p-6 space-y-6">
         {monthlyFinancials.length === 0 ? (
           <div className="py-16 text-center text-xs text-muted-foreground">
-            {isBn ? "কোনো আর্থিক রেকর্ড পাওয়া যায়নি।" : "No financial timeline records found."}
+            কোনো আর্থিক রেকর্ড পাওয়া যায়নি।
           </div>
         ) : (
           <div className="space-y-4">
@@ -183,24 +178,22 @@ export function RevenueFinancialCharts({
                   >
                     {/* Tooltip on Hover */}
                     <div className="absolute -top-16 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white text-[11px] py-1.5 px-3 rounded-xl shadow-xl pointer-events-none whitespace-nowrap z-20 border border-slate-700">
-                      <p className="font-bold">{isBn ? point.monthLabelBn : point.monthLabelEn}</p>
+                      <p className="font-bold">{point.monthLabelBn}</p>
                       <p className="text-emerald-400 font-mono">
                         {metric === "transactions"
-                          ? `${formatNum(val, locale)} ${isBn ? "টি ভিজিট" : "visits"}`
-                          : `৳${formatNum(val, locale)}`}
+                          ? `${formatNum(val)} টি ভিজিট`
+                            : `৳${formatNum(val)}`}
                       </p>
                       <p className="text-[10px] text-slate-400">
-                        {isBn
-                          ? `নতুন সদস্য: ${formatNum(point.newMembersCount, locale)} জন`
-                          : `New: ${formatNum(point.newMembersCount, locale)} members`}
+                        নতুন সদস্য: {formatNum(point.newMembersCount)} জন
                       </p>
                     </div>
 
                     {/* Value above Bar */}
                     <span className="text-[10px] sm:text-xs font-mono font-bold text-muted-foreground group-hover:text-primary transition-colors mb-2 truncate max-w-full">
                       {metric === "transactions"
-                        ? formatNum(val, locale)
-                        : `৳${formatNum(val, locale)}`}
+                        ? formatNum(val)
+                        : `৳${formatNum(val)}`}
                     </span>
 
                     {/* Bar Pillar */}
@@ -214,7 +207,7 @@ export function RevenueFinancialCharts({
                     {/* Month Label */}
                     <div className="mt-2 text-center truncate max-w-full">
                       <span className="text-[10px] sm:text-xs text-muted-foreground font-medium group-hover:text-foreground transition-colors block truncate">
-                        {isBn ? point.monthLabelBn.split(" ")[0] : point.monthLabelEn.slice(0, 3)}
+                        {point.monthLabelBn.split(" ")[0]}
                       </span>
                       {isPeak && (
                         <span className="text-[9px] font-bold text-amber-600 dark:text-amber-400 hidden sm:inline">
@@ -232,13 +225,11 @@ export function RevenueFinancialCharts({
               <div className="flex items-center gap-2">
                 <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500" />
                 <span>
-                  {isBn
-                    ? `সর্বমোট ${getMetricLabel()}: `
-                    : `Total ${getMetricLabel()}: `}
+                  সর্বমোট {getMetricLabel()}: 
                   <strong className="text-foreground font-mono">
                     {metric === "transactions"
-                      ? `${formatNum(totalMetricSum, locale)} ${isBn ? "টি" : "items"}`
-                      : `৳${formatNum(totalMetricSum, locale)}`}
+                      ? `${formatNum(totalMetricSum)} টি`
+                      : `৳${formatNum(totalMetricSum)}`}
                   </strong>
                 </span>
               </div>
@@ -247,16 +238,14 @@ export function RevenueFinancialCharts({
                 <div className="flex items-center gap-1.5 text-amber-700 dark:text-amber-300 bg-amber-500/10 px-2.5 py-1 rounded-xl border border-amber-500/20">
                   <Sparkles className="h-3.5 w-3.5" />
                   <span>
-                    {isBn
-                      ? `শীর্ষ মাস: ${peakMonth.monthLabelBn} (${metric === "transactions" ? formatNum(getMetricValue(peakMonth), locale) : "৳" + formatNum(getMetricValue(peakMonth), locale)})`
-                      : `Peak Month: ${peakMonth.monthLabelEn} (${metric === "transactions" ? formatNum(getMetricValue(peakMonth), locale) : "৳" + formatNum(getMetricValue(peakMonth), locale)})`}
+                    {`শীর্ষ মাস: ${peakMonth.monthLabelBn} (${metric === "transactions" ? formatNum(getMetricValue(peakMonth)) : "৳" + formatNum(getMetricValue(peakMonth))})`}
                   </span>
                 </div>
               )}
 
               <span className="font-mono text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
                 <TrendingUp className="h-3.5 w-3.5" />
-                {isBn ? "রিয়েলটাইম ড্যাশবোর্ড" : "Live Metrics"}
+                রিয়েলটাইম ড্যাশবোর্ড
               </span>
             </div>
           </div>

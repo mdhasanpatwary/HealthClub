@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
 import { Doctor } from "@/services/db";
-import { Locale } from "@/lib/i18n";
 import { exportToCsv } from "@/lib/exportUtils";
 import { BulkImportDialog } from "./BulkImportDialog";
 import { DoctorAvailabilityBadge } from "@/components/ui/doctors/DoctorAvailabilityBadge";
@@ -41,8 +40,6 @@ interface DoctorsTabProps {
   onNewDoctorClick: () => void;
   onEditClick: (doc: Doctor) => void;
   onDeleteClick: (id: string, name: string) => void;
-  locale?: Locale;
-  t?: (key: string) => string;
   loading?: boolean;
 }
 
@@ -59,11 +56,8 @@ export function DoctorsTab({
   onNewDoctorClick,
   onEditClick,
   onDeleteClick,
-  locale = "bn",
-  t = (k) => k,
   loading = false,
 }: DoctorsTabProps) {
-  const isEn = locale === "en";
   const [isImportOpen, setIsImportOpen] = useState(false);
 
   return (
@@ -73,9 +67,9 @@ export function DoctorsTab({
           <div>
             <CardTitle className="font-heading text-lg font-bold text-secondary flex items-center gap-2">
               <Stethoscope className="h-5 w-5 text-primary" />
-              <span>{t("admin.doctors.title")}</span>
+              <span>ডাক্তারদের তালিকা</span>
             </CardTitle>
-            <CardDescription>{t("admin.doctors.desc")}</CardDescription>
+            <CardDescription>ডাক্তারদের তথ্য, চেম্বারের সময়সূচি এবং সিরিয়াল নম্বর পরিচালনা করুন</CardDescription>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
@@ -83,7 +77,7 @@ export function DoctorsTab({
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder={t("admin.doctors.searchPlaceholder")}
+                placeholder="নাম, পদবী বা চেম্বার দিয়ে খুঁজুন..."
                 value={doctorSearch}
                 onChange={(e) => {
                   setDoctorSearch(e.target.value);
@@ -100,7 +94,7 @@ export function DoctorsTab({
               className="border-border gap-1.5 text-xs font-semibold shrink-0"
             >
               <UploadCloud className="h-3.5 w-3.5 text-primary" />
-              <span>{isEn ? "Bulk Import" : "বাল্ক ইম্পোর্ট"}</span>
+              <span>বাল্ক ইম্পোর্ট</span>
             </Button>
 
             <Button
@@ -125,7 +119,7 @@ export function DoctorsTab({
               className="border-border gap-1.5 text-xs font-semibold shrink-0"
             >
               <Download className="h-3.5 w-3.5" />
-              <span>{isEn ? "Export CSV" : "এক্সপোর্ট"}</span>
+              <span>এক্সপোর্ট</span>
             </Button>
 
             <Button
@@ -133,7 +127,7 @@ export function DoctorsTab({
               size="sm"
               className="bg-primary hover:bg-primary-dark text-white shrink-0 font-semibold"
             >
-              {t("admin.doctors.addNew")}
+              + নতুন ডাক্তার যোগ করুন
             </Button>
           </div>
         </CardHeader>
@@ -144,22 +138,22 @@ export function DoctorsTab({
             <TableHeader>
               <TableRow>
                 <TableHead className="font-semibold text-secondary whitespace-nowrap">
-                  {t("admin.doctors.nameSpecialty")}
+                  নাম ও বিশেষজ্ঞতা
                 </TableHead>
                 <TableHead className="font-semibold text-secondary whitespace-nowrap">
-                  {t("admin.dashboard.category")}
+                  বিভাগ
                 </TableHead>
                 <TableHead className="font-semibold text-secondary">
-                  {t("admin.doctors.chamber")}
+                  চেম্বার ও ঠিকানা
                 </TableHead>
                 <TableHead className="font-semibold text-secondary whitespace-nowrap">
-                  {t("admin.doctors.visitingHours")}
+                  রোগী দেখার সময়
                 </TableHead>
                 <TableHead className="font-semibold text-secondary whitespace-nowrap">
-                  {t("admin.doctors.serialPhone")}
+                  সিরিয়াল নম্বর
                 </TableHead>
                 <TableHead className="font-semibold text-secondary text-right whitespace-nowrap">
-                  {t("admin.renewals.actions")}
+                  অ্যাকশন
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -219,7 +213,7 @@ export function DoctorsTab({
                           {doc.specialty}
                         </span>
                         <div>
-                          <DoctorAvailabilityBadge doctor={doc} locale={locale} size="sm" />
+                          <DoctorAvailabilityBadge doctor={doc} size="sm" />
                         </div>
                       </div>
                     </TableCell>
@@ -247,7 +241,7 @@ export function DoctorsTab({
                           variant="ghost"
                           size="icon"
                           onClick={() => onEditClick(doc)}
-                          aria-label={isEn ? `Edit Dr. ${doc.name}` : `ডাঃ ${doc.name} এর তথ্য এডিট করুন`}
+                          aria-label={`ডাঃ ${doc.name} এর তথ্য এডিট করুন`}
                           className="h-8 w-8 text-primary hover:text-primary-dark hover:bg-primary-light cursor-pointer"
                         >
                           <Edit3 className="h-4 w-4" />
@@ -256,7 +250,7 @@ export function DoctorsTab({
                           variant="ghost"
                           size="icon"
                           onClick={() => onDeleteClick(doc.id, doc.name)}
-                          aria-label={isEn ? `Delete Dr. ${doc.name}` : `ডাঃ ${doc.name} ডিলিট করুন`}
+                          aria-label={`ডাঃ ${doc.name} ডিলিট করুন`}
                           className="h-8 w-8 text-destructive hover:text-rose-600 hover:bg-rose-50 cursor-pointer"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -268,7 +262,7 @@ export function DoctorsTab({
               ) : (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                    {t("admin.doctors.noDoctors")}
+                    কোনো ডাক্তার পাওয়া যায়নি
                   </TableCell>
                 </TableRow>
               )}
@@ -286,9 +280,7 @@ export function DoctorsTab({
             onPageChange={onPageChange}
             onPageSizeChange={onPageSizeChange}
             pageSizeOptions={[10, 20, 50, 100]}
-            locale={locale}
-            t={t}
-            itemLabel={isEn ? "doctors" : "জন ডাক্তার"}
+            itemLabel="জন ডাক্তার"
           />
         )}
       </CardContent>

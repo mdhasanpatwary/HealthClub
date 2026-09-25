@@ -5,13 +5,11 @@ import { Receipt } from "lucide-react";
 interface MemberTxSettingsCardProps {
   allowMemberTx: boolean;
   setAllowMemberTx: (value: boolean) => void;
-  isEn: boolean;
 }
 
 export function MemberTxSettingsCard({
   allowMemberTx,
   setAllowMemberTx,
-  isEn,
 }: MemberTxSettingsCardProps) {
   return (
     <Card className="border border-border shadow-xs">
@@ -19,7 +17,7 @@ export function MemberTxSettingsCard({
         <div className="flex items-center justify-between gap-2">
           <CardTitle className="text-base font-bold flex items-center gap-2">
             <Receipt className="h-4 w-4 text-primary" />
-            <span>{isEn ? "Member Self-Transaction Entry" : "মেম্বারদের স্বয়ংক্রিয় লেনদেন এন্ট্রি সুবিধা"}</span>
+            <span>মেম্বারদের স্বয়ংক্রিয় লেনদেন এন্ট্রি সুবিধা</span>
           </CardTitle>
           <span
             className={`text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider ${
@@ -28,25 +26,21 @@ export function MemberTxSettingsCard({
                 : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700"
             }`}
           >
-            {allowMemberTx ? (isEn ? "Enabled" : "চালু রয়েছে") : isEn ? "Disabled" : "বন্ধ রয়েছে"}
+            {allowMemberTx ? "চালু রয়েছে" : "বন্ধ রয়েছে"}
           </span>
         </div>
         <CardDescription className="text-xs">
-          {isEn
-            ? "Allow members to record discount transactions directly from their own dashboard"
-            : "চালু থাকলে মেম্বাররা তাদের নিজ ড্যাশবোর্ড থেকে ডিসকাউন্ট লেনদেন যুক্ত করতে পারবেন।"}
+          চালু থাকলে মেম্বাররা তাদের নিজ ড্যাশবোর্ড থেকে ডিসকাউন্ট লেনদেন যুক্ত করতে পারবেন।
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between p-3.5 rounded-xl bg-muted/50 border border-border">
           <div className="space-y-0.5 pr-3">
             <Label className="text-xs font-bold text-foreground">
-              {isEn ? "Allow Member Self-Transactions" : "মেম্বার স্বয়ংক্রিয় লেনদেন অনুমতি"}
+              মেম্বার স্বয়ংক্রিয় লেনদেন অনুমতি
             </Label>
             <p className="text-[11px] text-muted-foreground">
-              {isEn
-                ? "Allows members to add discounts manually from member dashboard"
-                : "মেম্বাররা নিজে ড্যাশবোর্ড থেকে ডিসকাউন্ট লেনদেন এন্ট্রি দিতে পারবে"}
+              মেম্বাররা নিজে ড্যাশবোর্ড থেকে ডিসকাউন্ট লেনদেন এন্ট্রি দিতে পারবে
             </p>
           </div>
           <button

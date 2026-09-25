@@ -4,7 +4,7 @@ import { useState } from "react";
 import { SlidersHorizontal, CheckCircle, AlertTriangle, ChevronDown, ChevronUp } from "lucide-react";
 import { ImportEntityType } from "@/types/bulkImport";
 import { ENTITY_CONFIGS } from "@/lib/bulkImportUtils";
-import { useLanguage } from "@/components/layout/LanguageProvider";
+import { toBanglaNums } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -21,8 +21,6 @@ export function BulkImportMapping({
   mapping,
   onMappingChange,
 }: BulkImportMappingProps) {
-  const { locale } = useLanguage();
-  const isBn = locale === "bn";
   const [isOpen, setIsOpen] = useState(false);
 
   const config = ENTITY_CONFIGS[entityType];
@@ -47,24 +45,22 @@ export function BulkImportMapping({
           <div>
             <div className="flex items-center gap-2">
               <p className="text-xs font-bold text-foreground">
-                {isBn ? "কলাম ম্যাপিং ও ফিল্ড কনফিগারেশন" : "Column Auto-Mapping & Configuration"}
+                কলাম ম্যাপিং ও ফিল্ড কনফিগারেশন
               </p>
               {mappedRequiredFields ? (
                 <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 border-emerald-200 text-[10px] py-0">
                   <CheckCircle className="h-2.5 w-2.5 mr-1" />
-                  {isBn ? "সকল প্রয়োজনীয় ফিল্ড প্রস্তুত" : "All Required Mapped"}
+                  সকল প্রয়োজনীয় ফিল্ড প্রস্তুত
                 </Badge>
               ) : (
                 <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-200 text-[10px] py-0">
                   <AlertTriangle className="h-2.5 w-2.5 mr-1" />
-                  {isBn ? "প্রয়োজনীয় ফিল্ড ম্যাপিং বাকি" : "Missing Required"}
+                  প্রয়োজনীয় ফিল্ড ম্যাপিং বাকি
                 </Badge>
               )}
             </div>
             <p className="text-[11px] text-muted-foreground mt-0.5">
-              {isBn
-                ? `${totalFields} টির মধ্যে ${mappedCount} টি কলাম সফলভাবে ম্যাচ হয়েছে`
-                : `${mappedCount} of ${totalFields} fields matched from uploaded file`}
+              {`${toBanglaNums(totalFields)} টির মধ্যে ${toBanglaNums(mappedCount)} টি কলাম সফলভাবে ম্যাচ হয়েছে`}
             </p>
           </div>
         </div>
@@ -77,9 +73,7 @@ export function BulkImportMapping({
       {isOpen && (
         <div className="border-t border-border p-4 bg-muted/10 space-y-3">
           <p className="text-[11px] text-muted-foreground">
-            {isBn
-              ? "অটো-ম্যাপিং ভুল হলে নিচে থেকে সঠিক স্প্রেডশিট কলাম নির্বাচন করে দিন:"
-              : "Verify that source columns from your spreadsheet correctly match the required database fields:"}
+            অটো-ম্যাপিং ভুল হলে নিচে থেকে সঠিক স্প্রেডশিট কলাম নির্বাচন করে দিন:
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -99,7 +93,7 @@ export function BulkImportMapping({
                   <div className="space-y-0.5">
                     <div className="flex items-center gap-1.5">
                       <span className="font-semibold text-foreground">
-                        {isBn ? col.labelBn : col.labelEn}
+                        {col.labelBn}
                       </span>
                       {col.required && (
                         <span className="text-[10px] font-bold text-rose-500">*</span>
@@ -117,7 +111,7 @@ export function BulkImportMapping({
                     }
                     className="h-8 px-2 text-xs rounded-md border border-border bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary min-w-[140px]"
                   >
-                    <option value="">{isBn ? "-- নির্বাচন করুন --" : "-- Select Column --"}</option>
+                    <option value="">-- নির্বাচন করুন --</option>
                     {rawHeaders.map((header) => (
                       <option key={header} value={header}>
                         {header}

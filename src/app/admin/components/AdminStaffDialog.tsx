@@ -29,19 +29,16 @@ interface AdminStaffDialogProps {
     role: AdminRole;
     isActive?: boolean;
   }) => Promise<boolean>;
-  locale?: "bn" | "en";
 }
 
 interface AdminStaffFormProps {
   staff: AdminUser | null;
   onClose: () => void;
   onSave: AdminStaffDialogProps["onSave"];
-  locale: "bn" | "en";
 }
 
-function AdminStaffForm({ staff, onClose, onSave, locale }: AdminStaffFormProps) {
+function AdminStaffForm({ staff, onClose, onSave }: AdminStaffFormProps) {
   const isEditing = !!staff;
-  const isBn = locale === "bn";
 
   const [name, setName] = useState(staff?.name || "");
   const [email, setEmail] = useState(staff?.email || "");
@@ -55,17 +52,17 @@ function AdminStaffForm({ staff, onClose, onSave, locale }: AdminStaffFormProps)
     e.preventDefault();
 
     if (!name.trim()) {
-      toast.warning(isBn ? "অনুগ্রহ করে পুরো নাম লিখুন।" : "Please enter the staff member's name.");
+      toast.warning("অনুগ্রহ করে পুরো নাম লিখুন।");
       return;
     }
 
     if (!isEditing && !email.trim()) {
-      toast.warning(isBn ? "অনুগ্রহ করে ইমেইল অ্যাড্রেস লিখুন।" : "Please enter an email address.");
+      toast.warning("অনুগ্রহ করে ইমেইল অ্যাড্রেস লিখুন।");
       return;
     }
 
     if (!isEditing && (!password || password.length < 6)) {
-      toast.warning(isBn ? "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।" : "Password must be at least 6 characters.");
+      toast.warning("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");
       return;
     }
 
@@ -91,28 +88,26 @@ function AdminStaffForm({ staff, onClose, onSave, locale }: AdminStaffFormProps)
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 pt-2">
-      {/* Full Name */}
       <div className="space-y-1.5">
         <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
           <User className="h-3.5 w-3.5 text-primary" />
-          {isBn ? "পুরো নাম" : "Full Name"} *
+          পুরো নাম *
         </label>
         <Input
           type="text"
           required
-          placeholder={isBn ? "যেমন: হাসান মাহমুদ" : "e.g. Hasan Mahmud"}
+          placeholder="যেমন: হাসান মাহমুদ"
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="bg-card border-border h-10 text-sm"
         />
       </div>
 
-      {/* Email & Phone */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
             <Mail className="h-3.5 w-3.5 text-primary" />
-            {isBn ? "ইমেইল অ্যাড্রেস" : "Email Address"} *
+            ইমেইল অ্যাড্রেস *
           </label>
           <Input
             type="email"
@@ -125,17 +120,13 @@ function AdminStaffForm({ staff, onClose, onSave, locale }: AdminStaffFormProps)
               isEditing ? "opacity-60 cursor-not-allowed bg-muted" : ""
             }`}
           />
-          {isEditing && (
-            <p className="text-[11px] text-muted-foreground">
-              {isBn ? "লগইন ইমেইল অপরিবর্তনযোগ্য" : "Login email cannot be modified"}
-            </p>
-          )}
+          {isEditing && <p className="text-[11px] text-muted-foreground">লগইন ইমেইল অপরিবর্তনযোগ্য</p>}
         </div>
 
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
             <Phone className="h-3.5 w-3.5 text-primary" />
-            {isBn ? "মোবাইল নম্বর" : "Phone Number"}
+            মোবাইল নম্বর
           </label>
           <Input
             type="tel"
@@ -147,12 +138,11 @@ function AdminStaffForm({ staff, onClose, onSave, locale }: AdminStaffFormProps)
         </div>
       </div>
 
-      {/* Password (Only on create) */}
       {!isEditing && (
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
             <Lock className="h-3.5 w-3.5 text-primary" />
-            {isBn ? "প্রাথমিক পাসওয়ার্ড" : "Initial Password"} *
+            প্রাথমিক পাসওয়ার্ড *
           </label>
           <Input
             type="password"
@@ -165,11 +155,10 @@ function AdminStaffForm({ staff, onClose, onSave, locale }: AdminStaffFormProps)
         </div>
       )}
 
-      {/* Role Picker (Interactive 3-Card Radio) */}
       <div className="space-y-2 pt-1">
         <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
           <Shield className="h-3.5 w-3.5 text-primary" />
-          {isBn ? "পারমিশন রোল (RBAC Role)" : "Permission Role"} *
+          পারমিশন রোল (RBAC Role) *
         </label>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
           {(Object.keys(ROLE_CONFIGS) as AdminRole[]).map((rKey) => {
@@ -189,9 +178,7 @@ function AdminStaffForm({ staff, onClose, onSave, locale }: AdminStaffFormProps)
               >
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-bold text-foreground">
-                      {isBn ? conf.titleBn : conf.titleEn}
-                    </span>
+                    <span className="text-xs font-bold text-foreground">{conf.titleBn}</span>
                     <div
                       className={`h-3 w-3 rounded-full border flex items-center justify-center ${
                         isSelected ? "border-primary bg-primary" : "border-muted-foreground/40"
@@ -201,7 +188,7 @@ function AdminStaffForm({ staff, onClose, onSave, locale }: AdminStaffFormProps)
                     </div>
                   </div>
                   <p className="text-[11px] text-muted-foreground leading-snug line-clamp-2">
-                    {isBn ? conf.descriptionBn : conf.descriptionEn}
+                    {conf.descriptionBn}
                   </p>
                 </div>
               </button>
@@ -210,28 +197,18 @@ function AdminStaffForm({ staff, onClose, onSave, locale }: AdminStaffFormProps)
         </div>
       </div>
 
-      {/* Active Status Switch (when editing) */}
       {isEditing && (
         <div className="flex items-center justify-between p-3.5 rounded-2xl bg-muted/40 border border-border/70">
           <div>
-            <div className="text-xs font-bold text-foreground">
-              {isBn ? "অ্যাকাউন্ট স্ট্যাটাস" : "Account Status"}
-            </div>
+            <div className="text-xs font-bold text-foreground">অ্যাকাউন্ট স্ট্যাটাস</div>
             <div className="text-[11px] text-muted-foreground">
-              {isActive
-                ? isBn
-                  ? "অ্যাকাউন্টটি সক্রিয় ও লগইন অনুমোদিত"
-                  : "Account is active and can log in"
-                : isBn
-                ? "অ্যাকাউন্টটি নিষ্ক্রিয় (লগইন ব্লক)"
-                : "Account is deactivated (login blocked)"}
+              {isActive ? "অ্যাকাউন্টটি সক্রিয় ও লগইন অনুমোদিত" : "অ্যাকাউন্টটি নিষ্ক্রিয় (লগইন ব্লক)"}
             </div>
           </div>
           <Switch checked={isActive} onCheckedChange={setIsActive} />
         </div>
       )}
 
-      {/* Form Actions */}
       <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-border/60">
         <Button
           type="button"
@@ -241,7 +218,7 @@ function AdminStaffForm({ staff, onClose, onSave, locale }: AdminStaffFormProps)
           disabled={loading}
           className="text-xs rounded-xl"
         >
-          {isBn ? "বাতিল" : "Cancel"}
+          বাতিল
         </Button>
         <Button
           type="submit"
@@ -249,17 +226,7 @@ function AdminStaffForm({ staff, onClose, onSave, locale }: AdminStaffFormProps)
           disabled={loading}
           className="text-xs rounded-xl bg-primary hover:bg-primary-dark font-bold text-white px-5"
         >
-          {loading
-            ? isBn
-              ? "সংরক্ষণ হচ্ছে..."
-              : "Saving..."
-            : isEditing
-            ? isBn
-              ? "আপডেট করুন"
-              : "Update Staff"
-            : isBn
-            ? "অ্যাকাউন্ট তৈরি করুন"
-            : "Create Account"}
+          {loading ? "সংরক্ষণ হচ্ছে..." : isEditing ? "আপডেট করুন" : "অ্যাকাউন্ট তৈরি করুন"}
         </Button>
       </div>
     </form>
@@ -271,10 +238,8 @@ export function AdminStaffDialog({
   onClose,
   staff,
   onSave,
-  locale = "bn",
 }: AdminStaffDialogProps) {
   const isEditing = !!staff;
-  const isBn = locale === "bn";
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -286,22 +251,12 @@ export function AdminStaffDialog({
             </div>
             <div>
               <DialogTitle className="text-lg sm:text-xl font-bold font-heading text-secondary dark:text-white">
-                {isEditing
-                  ? isBn
-                    ? "এডমিন/স্টাফ তথ্য পরিবর্তন"
-                    : "Edit Staff Account"
-                  : isBn
-                  ? "নতুন এডমিন/স্টাফ তৈরি করুন"
-                  : "Create New Staff Account"}
+                {isEditing ? "এডমিন/স্টাফ তথ্য পরিবর্তন" : "নতুন স্টাফ অ্যাকাউন্ট তৈরি করুন"}
               </DialogTitle>
               <DialogDescription className="text-xs text-muted-foreground">
                 {isEditing
-                  ? isBn
-                    ? "স্টাফের নাম, ফোন নম্বর, পারমিশন রোল ও স্ট্যাটাস আপডেট করুন"
-                    : "Update staff details, assigned role & active status"
-                  : isBn
-                  ? "সিস্টেমে নতুন এডমিনিস্ট্রেটিভ ইউজার বা সাপোর্ট টিম মেম্বার যুক্ত করুন"
-                  : "Add a new admin or support staff with specific RBAC role"}
+                  ? "স্টাফের নাম, ফোন নম্বর, পারমিশন রোল ও স্ট্যাটাস আপডেট করুন"
+                  : "সিস্টেমে নতুন এডমিনিস্ট্রেটিভ ইউজার বা সাপোর্ট টিম মেম্বার যুক্ত করুন"}
               </DialogDescription>
             </div>
           </div>
@@ -313,7 +268,6 @@ export function AdminStaffDialog({
             staff={staff}
             onClose={onClose}
             onSave={onSave}
-            locale={locale}
           />
         )}
       </DialogContent>

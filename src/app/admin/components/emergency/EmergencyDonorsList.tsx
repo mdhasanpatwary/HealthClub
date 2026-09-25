@@ -23,7 +23,6 @@ interface EmergencyDonorsListProps {
   pageSize: number;
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
-  isEn: boolean;
   onEdit: (donor: BloodDonor) => void;
   onDelete: (id: string, name: string) => void;
   onToggleStatus: (id: string) => void;
@@ -39,7 +38,6 @@ export function EmergencyDonorsList({
   pageSize,
   onPageChange,
   onPageSizeChange,
-  isEn,
   onEdit,
   onDelete,
   onToggleStatus,
@@ -52,14 +50,14 @@ export function EmergencyDonorsList({
         <Table>
           <TableHeader className="bg-muted/40">
             <TableRow>
-              <TableHead className="w-[60px]">{isEn ? "Group" : "গ্রুপ"}</TableHead>
-              <TableHead>{isEn ? "Name" : "নাম"}</TableHead>
-              <TableHead>{isEn ? "Upazila" : "উপজেলা"}</TableHead>
-              <TableHead>{isEn ? "Phone" : "মোবাইল"}</TableHead>
-              <TableHead>{isEn ? "Last Donated" : "সর্বশেষ দান"}</TableHead>
-              <TableHead>{isEn ? "Available" : "প্রস্তুত"}</TableHead>
-              <TableHead>{isEn ? "Approval" : "অনুমোদন"}</TableHead>
-              <TableHead className="text-right">{isEn ? "Actions" : "অ্যাকশন"}</TableHead>
+              <TableHead className="w-[60px]">গ্রুপ</TableHead>
+              <TableHead>নাম</TableHead>
+              <TableHead>উপজেলা</TableHead>
+              <TableHead>মোবাইল</TableHead>
+              <TableHead>সর্বশেষ দান</TableHead>
+              <TableHead>প্রস্তুত</TableHead>
+              <TableHead>অনুমোদন</TableHead>
+              <TableHead className="text-right">অ্যাকশন</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -98,7 +96,7 @@ export function EmergencyDonorsList({
             ) : donors.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={8} className="text-center py-8 text-muted-foreground text-xs">
-                  {isEn ? "No blood donors found matching criteria." : "কোনো রক্তদাতার তথ্য পাওয়া যায়নি।"}
+                  কোনো রক্তদাতার তথ্য পাওয়া যায়নি।
                 </TableCell>
               </TableRow>
             ) : (
@@ -117,7 +115,7 @@ export function EmergencyDonorsList({
                       {d.name}
                     </TableCell>
                     <TableCell className="text-xs text-muted-foreground">
-                      {isEn ? upazilaObj?.nameEn || d.upazila : upazilaObj?.nameBn || d.upazila}
+                      {upazilaObj?.nameBn || d.upazila}
                     </TableCell>
                     <TableCell className="text-xs font-mono">
                       <a href={`tel:${d.phone}`} className="text-primary hover:underline flex items-center gap-1">
@@ -138,17 +136,17 @@ export function EmergencyDonorsList({
                             : "bg-rose-500/10 text-rose-600 hover:bg-rose-500/20"
                         }`}
                       >
-                        {d.isAvailable ? (isEn ? "Available" : "প্রস্তুত") : (isEn ? "Unavailable" : "অপ্রস্তুত")}
+                        {d.isAvailable ? "প্রস্তুত" : "অপ্রস্তুত"}
                       </button>
                     </TableCell>
                     <TableCell>
                       {isPending ? (
                         <Badge variant="outline" className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 text-[10px] font-bold">
-                          {isEn ? "Pending" : "অপেক্ষমাণ"}
+                          অপেক্ষমাণ
                         </Badge>
                       ) : (
                         <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 text-[10px] font-bold">
-                          {isEn ? "Approved" : "অনুমোদিত"}
+                          অনুমোদিত
                         </Badge>
                       )}
                     </TableCell>
@@ -160,8 +158,8 @@ export function EmergencyDonorsList({
                             variant="ghost"
                             size="icon-sm"
                             onClick={() => onApprove(d.id)}
-                            title={isEn ? "Approve Donor" : "অনুমোদন করুন"}
-                            aria-label={isEn ? `Approve donor ${d.name}` : `রক্তদাতা ${d.name} অনুমোদন করুন`}
+                            title="অনুমোদন করুন"
+                            aria-label={`রক্তদাতা ${d.name} অনুমোদন করুন`}
                             className="h-7 w-7 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 cursor-pointer"
                           >
                             <CheckCircle2 className="h-3.5 w-3.5" />
@@ -172,7 +170,7 @@ export function EmergencyDonorsList({
                           variant="ghost"
                           size="icon-sm"
                           onClick={() => onEdit(d)}
-                          aria-label={isEn ? `Edit donor ${d.name}` : `রক্তদাতা ${d.name} এর তথ্য এডিট করুন`}
+                          aria-label={`রক্তদাতা ${d.name} এর তথ্য এডিট করুন`}
                           className="h-7 w-7 text-muted-foreground hover:text-foreground cursor-pointer"
                         >
                           <Edit3 className="h-3.5 w-3.5" />
@@ -182,7 +180,7 @@ export function EmergencyDonorsList({
                           variant="ghost"
                           size="icon-sm"
                           onClick={() => onDelete(d.id, `${d.name} (${d.bloodGroup})`)}
-                          aria-label={isEn ? `Delete donor ${d.name}` : `রক্তদাতা ${d.name} ডিলিট করুন`}
+                          aria-label={`রক্তদাতা ${d.name} ডিলিট করুন`}
                           className="h-7 w-7 text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
@@ -207,8 +205,7 @@ export function EmergencyDonorsList({
           onPageChange={onPageChange}
           onPageSizeChange={onPageSizeChange}
           pageSizeOptions={[10, 20, 50, 100]}
-          locale={isEn ? "en" : "bn"}
-          itemLabel={isEn ? "donors" : "জন রক্তদাতা"}
+          itemLabel="জন রক্তদাতা"
           disabled={loading}
         />
       )}

@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Share2, Link as LinkIcon, MessageCircle } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 
 interface ArticleShareBarProps {
   title: string;
@@ -11,14 +10,11 @@ interface ArticleShareBarProps {
 }
 
 export function ArticleShareBar({ title, slug }: ArticleShareBarProps) {
-  const { locale } = useLanguage();
-  const isEn = locale === "en";
-
   const handleCopyLink = () => {
     if (typeof window === "undefined") return;
     const url = `${window.location.origin}/health-tips/${slug}`;
     navigator.clipboard.writeText(url);
-    toast.success(isEn ? "Article link copied to clipboard!" : "আর্টিকেলের লিংক কপি করা হয়েছে!");
+    toast.success("আর্টিকেলের লিংক কপি করা হয়েছে!");
   };
 
   const handleFacebookShare = () => {
@@ -37,7 +33,7 @@ export function ArticleShareBar({ title, slug }: ArticleShareBarProps) {
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
       <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5">
         <Share2 className="h-4 w-4" />
-        {isEn ? "Share this health guide:" : "এই স্বাস্থ্য গাইডটি শেয়ার করুন:"}
+        এই স্বাস্থ্য গাইডটি শেয়ার করুন:
       </span>
 
       <div className="flex items-center gap-2">
@@ -67,9 +63,10 @@ export function ArticleShareBar({ title, slug }: ArticleShareBarProps) {
           className="text-xs h-8 gap-1.5 border-border"
         >
           <LinkIcon className="h-3.5 w-3.5" />
-          <span>{isEn ? "Copy Link" : "লিংক কপি"}</span>
+          <span>লিংক কপি</span>
         </Button>
       </div>
     </div>
   );
 }
+

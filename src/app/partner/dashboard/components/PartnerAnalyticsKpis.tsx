@@ -1,9 +1,7 @@
-"use client";
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PartnerAnalyticsData } from "@/types/partnerAnalytics";
-import { formatNum, Locale } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import {
   Users,
   Heart,
@@ -13,17 +11,12 @@ import {
   CreditCard,
   Sparkles,
 } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 
 interface PartnerAnalyticsKpisProps {
   analytics: PartnerAnalyticsData;
-  locale: Locale;
 }
 
-export function PartnerAnalyticsKpis({ analytics, locale }: PartnerAnalyticsKpisProps) {
-  const { t } = useLanguage();
-  const isBn = locale === "bn";
-
+export function PartnerAnalyticsKpis({ analytics }: PartnerAnalyticsKpisProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
       {/* 1. Total Patients Served */}
@@ -31,15 +24,15 @@ export function PartnerAnalyticsKpis({ analytics, locale }: PartnerAnalyticsKpis
         <CardContent className="p-5 flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider font-semibold">
-              {t("partner.analytics.kpiTotalPatients")}
+              মোট সেবাগ্রহীতা রোগী
             </p>
             <p className="text-2xl sm:text-3xl font-extrabold text-secondary dark:text-white font-mono">
-              {formatNum(analytics.totalPatientsServed, locale)}
+              {toBanglaNums(analytics.totalPatientsServed)}
             </p>
             <div className="flex items-center gap-1.5 pt-1 text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
               <Users className="h-3 w-3" />
               <span>
-                {formatNum(analytics.uniquePatientsCount, locale)} {t("partner.analytics.kpiUniqueMembers")}
+                {toBanglaNums(analytics.uniquePatientsCount)} জন স্বতন্ত্র সদস্য
               </span>
             </div>
           </div>
@@ -54,15 +47,15 @@ export function PartnerAnalyticsKpis({ analytics, locale }: PartnerAnalyticsKpis
         <CardContent className="p-5 flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider font-semibold">
-              {t("partner.analytics.kpiTotalDiscount")}
+              মোট ছাড় প্রদান
             </p>
             <p className="text-2xl sm:text-3xl font-extrabold text-primary font-mono">
-              ৳{formatNum(analytics.totalDiscountDispensed, locale)}
+              ৳{toBanglaNums(analytics.totalDiscountDispensed)}
             </p>
             <div className="flex items-center gap-1 pt-1 text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
               <TrendingUp className="h-3 w-3" />
               <span>
-                {t("partner.analytics.kpiThisMonth")} ৳{formatNum(analytics.currentMonthDiscount, locale)}
+                চলতি মাসে: ৳{toBanglaNums(analytics.currentMonthDiscount)}
               </span>
             </div>
           </div>
@@ -77,15 +70,15 @@ export function PartnerAnalyticsKpis({ analytics, locale }: PartnerAnalyticsKpis
         <CardContent className="p-5 flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider font-semibold">
-              {t("partner.analytics.kpiGrossBilled")}
+              গ্রস বিলিং ভলিউম
             </p>
             <p className="text-2xl sm:text-3xl font-extrabold text-secondary dark:text-white font-mono">
-              ৳{formatNum(analytics.totalGrossBilled, locale)}
+              ৳{toBanglaNums(analytics.totalGrossBilled)}
             </p>
             <div className="flex items-center gap-1 pt-1 text-[11px] text-muted-foreground font-medium">
               <CreditCard className="h-3 w-3" />
               <span>
-                {t("partner.analytics.kpiAvgDiscount")} ৳{formatNum(analytics.averageDiscountPerPatient, locale)}
+                গড় ছাড়/রোগী: ৳{toBanglaNums(analytics.averageDiscountPerPatient)}
               </span>
             </div>
           </div>
@@ -100,19 +93,19 @@ export function PartnerAnalyticsKpis({ analytics, locale }: PartnerAnalyticsKpis
         <CardContent className="p-5 flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-xs text-muted-foreground uppercase font-mono tracking-wider font-semibold">
-              {t("partner.analytics.kpiPeakDay")}
+              পিক ভিজিটিং ডে
             </p>
             <div className="flex items-center gap-2">
               <p className="text-xl sm:text-2xl font-bold text-secondary dark:text-white truncate">
-                {isBn ? analytics.peakVisitingDay.dayNameBn : analytics.peakVisitingDay.dayNameEn}
+                {analytics.peakVisitingDay.dayNameBn}
               </p>
             </div>
             <div className="flex items-center gap-1.5 pt-1">
               <Badge variant="outline" className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 text-[10px] px-2 py-0 font-semibold">
                 <Sparkles className="h-2.5 w-2.5 mr-1 inline" />
                 {analytics.peakVisitingDay.count > 0
-                  ? `${formatNum(analytics.peakVisitingDay.count, locale)} tx (${formatNum(analytics.peakVisitingDay.percentage, locale)}%)`
-                  : t("partner.analytics.noVisits")}
+                  ? `${toBanglaNums(analytics.peakVisitingDay.count)} লেনদেন (${toBanglaNums(analytics.peakVisitingDay.percentage)}%)`
+                  : "তথ্য নেই"}
               </Badge>
             </div>
           </div>

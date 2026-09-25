@@ -11,8 +11,7 @@ import {
   Phone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-import { formatNum } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import { Review } from "@/services/db";
 
 interface AdminReviewCardProps {
@@ -32,9 +31,6 @@ export function AdminReviewCard({
   onReject,
   onDelete,
 }: AdminReviewCardProps) {
-  const { t, locale } = useLanguage();
-  const isBn = locale === "bn";
-
   const isPending = review.status === "pending";
   const isApproved = review.status === "approved";
   const isRejected = review.status === "rejected";
@@ -42,7 +38,7 @@ export function AdminReviewCard({
   const formatDate = (dateStr: string) => {
     try {
       const d = new Date(dateStr);
-      return new Intl.DateTimeFormat(isBn ? "bn-BD" : "en-US", {
+      return new Intl.DateTimeFormat("bn-BD", {
         year: "numeric",
         month: "short",
         day: "numeric",
@@ -63,7 +59,7 @@ export function AdminReviewCard({
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-bold text-sm text-foreground flex items-center gap-1.5 font-heading">
               <User className="h-4 w-4 text-primary" />
-              <span>{review.member?.name || (isBn ? "সদস্য" : "Member")}</span>
+              <span>{review.member?.name || "সদস্য"}</span>
             </span>
 
             {review.member?.phone && (
@@ -75,12 +71,12 @@ export function AdminReviewCard({
 
             {review.member?.tier === "founding" && (
               <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20">
-                {isBn ? "ফাউন্ডিং" : "Founding"}
+                ফাউন্ডিং
               </span>
             )}
             {review.member?.tier === "premium" && (
               <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
-                {isBn ? "প্রিমিয়াম" : "Premium"}
+                প্রিমিয়াম
               </span>
             )}
           </div>
@@ -88,7 +84,7 @@ export function AdminReviewCard({
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             <span className="font-semibold text-foreground flex items-center gap-1">
               <Building2 className="h-3.5 w-3.5 text-primary" />
-              <span>{review.partner?.name || (isBn ? "পার্টনার" : "Partner")}</span>
+              <span>{review.partner?.name || "পার্টনার"}</span>
             </span>
             <span>•</span>
             <span className="font-mono text-[11px]">{formatDate(review.createdAt)}</span>
@@ -100,26 +96,26 @@ export function AdminReviewCard({
           <div className="flex items-center gap-1 bg-amber-500/10 border border-amber-500/25 px-2.5 py-1 rounded-xl">
             <Star className="h-4 w-4 fill-amber-400 text-amber-500" />
             <span className="text-xs font-black text-amber-600 dark:text-amber-400 font-heading">
-              {formatNum(review.rating, locale)}
+              {toBanglaNums(review.rating)}
             </span>
           </div>
 
           {isPending && (
             <span className="px-2.5 py-1 rounded-xl text-xs font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20 flex items-center gap-1">
               <Clock className="h-3.5 w-3.5" />
-              <span>{t("reviews.pendingModeration")}</span>
+              <span>মডারেশন পেন্ডিং</span>
             </span>
           )}
           {isApproved && (
             <span className="px-2.5 py-1 rounded-xl text-xs font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
               <CheckCircle2 className="h-3.5 w-3.5" />
-              <span>{t("reviews.approvedStatus")}</span>
+              <span>অনুমোদিত</span>
             </span>
           )}
           {isRejected && (
             <span className="px-2.5 py-1 rounded-xl text-xs font-bold bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/20 flex items-center gap-1">
               <XCircle className="h-3.5 w-3.5" />
-              <span>{t("reviews.rejectedStatus")}</span>
+              <span>বাতিলকৃত</span>
             </span>
           )}
         </div>
@@ -135,7 +131,7 @@ export function AdminReviewCard({
       {/* Admin Rejection / Moderation Feedback */}
       {review.adminFeedback && (
         <div className="text-xs text-rose-600 dark:text-rose-400 bg-rose-500/10 p-2.5 rounded-xl border border-rose-500/20">
-          <span className="font-bold">{isBn ? "মডারেশন নোট: " : "Moderation Note: "}</span>
+          <span className="font-bold">মডারেশন নোট: </span>
           <span>{review.adminFeedback}</span>
         </div>
       )}
@@ -151,7 +147,7 @@ export function AdminReviewCard({
             className="h-8 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-2xs cursor-pointer"
           >
             <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
-            <span>{t("admin.reviews.approve")}</span>
+            <span>অনুমোদন</span>
           </Button>
         )}
 
@@ -165,7 +161,7 @@ export function AdminReviewCard({
             className="h-8 text-rose-600 border-rose-500/30 hover:bg-rose-500/10 text-xs font-bold rounded-xl cursor-pointer"
           >
             <XCircle className="h-3.5 w-3.5 mr-1" />
-            <span>{t("admin.reviews.reject")}</span>
+            <span>বাতিল</span>
           </Button>
         )}
 

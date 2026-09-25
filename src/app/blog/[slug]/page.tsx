@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { Locale } from "@/lib/i18n";
 import JsonLd from "@/components/seo/JsonLd";
 import { getAllBlogPostsAction, getBlogPostBySlugAction } from "@/app/actions/blogAdminActions";
 import { BLOG_POSTS } from "@/data/blog/blogPosts";
@@ -26,21 +25,16 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: BlogPostPageProps) {
   const { slug } = await params;
   const post = await getBlogPostBySlugAction(slug);
-  const isEn = false;
 
   if (!post) {
     return {
-      title: isEn ? "Article Not Found - Health Club" : "নিবন্ধ পাওয়া যায়নি - হেলথ ক্লাব",
+      title: "নিবন্ধ পাওয়া যায়নি - হেলথ ক্লাব",
     };
   }
 
-  const pageTitle = isEn
-    ? { absolute: `${post.titleEn} | Health Club` }
-    : post.titleBn;
-  const description = isEn ? post.excerptEn : post.excerptBn;
-  const fullBrandTitle = isEn
-    ? `${post.titleEn} | Health Club`
-    : `${post.titleBn} | হেলথ ক্লাব`;
+  const pageTitle = post.titleBn;
+  const description = post.excerptBn;
+  const fullBrandTitle = `${post.titleBn} | হেলথ ক্লাব`;
 
   const ogImageUrl = post.coverImage?.startsWith("http")
     ? post.coverImage
@@ -81,7 +75,6 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
       publishedTime: getArticleIsoDate(post.publishedDate),
       modifiedTime: getArticleIsoDate(post.modifiedDate),
       siteName: "হেলথ ক্লাব (Health Club)",
-      locale: isEn ? "en_US" : "bn_BD",
       images: articleImages,
     },
     twitter: {
@@ -101,10 +94,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
-  const locale: Locale = "bn";
-  const isEn = false;
-
-  const title = isEn ? post.titleEn : post.titleBn;
+  const title = post.titleBn;
   const pageUrl = `${SITE_URL}/blog/${post.slug}`;
   const allPosts = await getAllBlogPostsAction();
 
@@ -133,7 +123,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   // Schema.org Structured Data
-  const jsonLdData = generateBlogJsonLd(post, title, pageUrl, isEn, relatedPosts);
+  const jsonLdData = generateBlogJsonLd(post, title, pageUrl, relatedPosts);
 
   // Map to lightweight card items for the view to prune hundreds of kilobytes of nested data
   const cardRelatedPosts: BlogPostCardItem[] = relatedPosts.map((p) => {
@@ -170,7 +160,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         post={post}
         pageUrl={pageUrl}
         relatedPosts={cardRelatedPosts}
-        initialLocale={locale}
       />
     </>
   );

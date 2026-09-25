@@ -3,12 +3,9 @@ import { BlogFAQItem } from "@/types/blog";
 
 interface BlogFAQSectionProps {
   faqs: BlogFAQItem[];
-  locale?: string;
 }
 
-export function BlogFAQSection({ faqs, locale = "bn" }: BlogFAQSectionProps) {
-  const isEn = locale === "en";
-
+export function BlogFAQSection({ faqs }: BlogFAQSectionProps) {
   if (!faqs || faqs.length === 0) return null;
 
   return (
@@ -16,14 +13,14 @@ export function BlogFAQSection({ faqs, locale = "bn" }: BlogFAQSectionProps) {
       <div className="flex items-center gap-2 text-primary">
         <HelpCircle className="h-5 w-5" />
         <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-          {isEn ? "Frequently Asked Questions (FAQ)" : "সচরাচর জিজ্ঞাসিত প্রশ্ন ও উত্তর"}
+          সচরাচর জিজ্ঞাসিত প্রশ্ন ও উত্তর
         </h2>
       </div>
 
       <div className="divide-y divide-border/60 rounded-2xl border border-border/80 bg-card shadow-xs overflow-hidden">
         {faqs.map((faq, idx) => {
-          const question = isEn ? faq.questionEn : faq.questionBn;
-          const answer = isEn ? faq.answerEn : faq.answerBn;
+          const question = faq.questionBn;
+          const answer = faq.answerBn;
 
           return (
             <details

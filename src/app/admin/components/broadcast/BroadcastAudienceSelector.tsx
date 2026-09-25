@@ -1,7 +1,7 @@
 "use client";
 
 import { Users, Building2, Droplet, Sparkles, Mail, MessageSquare, Bell } from "lucide-react";
-import { formatNum, Locale } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import {
   BroadcastAudienceType,
   BroadcastChannel,
@@ -14,8 +14,6 @@ interface BroadcastAudienceSelectorProps {
   channels: BroadcastChannel[];
   handleToggleChannel: (ch: BroadcastChannel) => void;
   counts: BroadcastAudienceCounts;
-  locale: Locale;
-  isBn: boolean;
 }
 
 export function BroadcastAudienceSelector({
@@ -24,28 +22,26 @@ export function BroadcastAudienceSelector({
   channels,
   handleToggleChannel,
   counts,
-  locale,
-  isBn,
 }: BroadcastAudienceSelectorProps) {
   return (
     <div className="bg-card rounded-2xl border border-border/80 p-4 space-y-4 shadow-xs">
       <h3 className="font-heading font-bold text-sm text-foreground">
-        {isBn ? "১. প্রাপক ও মাধ্যম নির্বাচন" : "1. Target Audience & Channels"}
+        ১. প্রাপক ও মাধ্যম নির্বাচন
       </h3>
 
       {/* Target Audience Tabs */}
       <div className="space-y-2">
         <label className="text-xs font-semibold text-muted-foreground">
-          {isBn ? "টার্গেট প্রাপক ক্যাটাগরি" : "Target Audience Segment"}
+          টার্গেট প্রাপক ক্যাটাগরি
         </label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {[
-            { type: "all_members" as const, labelBn: "সকল সদস্য", labelEn: "All Members", count: counts.allMembers, icon: Users },
-            { type: "active_members" as const, labelBn: "সক্রিয় মেম্বার", labelEn: "Active Members", count: counts.activeMembers, icon: Users },
-            { type: "inactive_members" as const, labelBn: "মেয়াদোত্তীর্ণ মেম্বার", labelEn: "Expired / Inactive", count: counts.inactiveMembers, icon: Users },
-            { type: "blood_donors" as const, labelBn: "রক্তদাতা সকল", labelEn: "Blood Donors", count: counts.bloodDonors, icon: Droplet },
-            { type: "partners" as const, labelBn: "পার্টনার হাসপাতাল", labelEn: "Partner Hospitals", count: counts.partners, icon: Building2 },
-            { type: "all_users" as const, labelBn: "সমগ্র ইউজার ডাটা", labelEn: "All Unique Users", count: counts.totalUniqueUsers, icon: Sparkles },
+            { type: "all_members" as const, labelBn: "সকল সদস্য", count: counts.allMembers, icon: Users },
+            { type: "active_members" as const, labelBn: "সক্রিয় মেম্বার", count: counts.activeMembers, icon: Users },
+            { type: "inactive_members" as const, labelBn: "মেয়াদোত্তীর্ণ মেম্বার", count: counts.inactiveMembers, icon: Users },
+            { type: "blood_donors" as const, labelBn: "রক্তদাতা সকল", count: counts.bloodDonors, icon: Droplet },
+            { type: "partners" as const, labelBn: "পার্টনার হাসপাতাল", count: counts.partners, icon: Building2 },
+            { type: "all_users" as const, labelBn: "সমগ্র ইউজার ডাটা", count: counts.totalUniqueUsers, icon: Sparkles },
           ].map((item) => {
             const Icon = item.icon;
             const active = audience === item.type;
@@ -63,11 +59,11 @@ export function BroadcastAudienceSelector({
                 <div className="flex items-center justify-between text-xs mb-1">
                   <span className="flex items-center gap-1">
                     <Icon className="h-3.5 w-3.5" />
-                    <span className="truncate">{isBn ? item.labelBn : item.labelEn}</span>
+                    <span className="truncate">{item.labelBn}</span>
                   </span>
                 </div>
                 <p className="text-[11px] font-mono text-muted-foreground font-semibold">
-                  {formatNum(item.count, locale)} {isBn ? "জন" : "users"}
+                  {toBanglaNums(item.count)} জন
                 </p>
               </button>
             );
@@ -79,10 +75,10 @@ export function BroadcastAudienceSelector({
       <div className="space-y-2 pt-1 border-t border-border/60">
         <div className="flex items-center justify-between">
           <label className="text-xs font-semibold text-muted-foreground">
-            {isBn ? "ডেলিভারি চ্যানেলসমূহ *" : "Delivery Channels *"}
+            ডেলিভারি চ্যানেলসমূহ *
           </label>
           <span className="text-[10px] text-muted-foreground">
-            {channels.length} {isBn ? "টি চ্যানেল সক্রিয়" : "selected"}
+            {toBanglaNums(channels.length)} টি চ্যানেল সক্রিয়
           </span>
         </div>
 
@@ -97,7 +93,7 @@ export function BroadcastAudienceSelector({
             }`}
           >
             <Mail className="h-3.5 w-3.5" />
-            <span>{isBn ? "ইমেইল" : "Email"}</span>
+            <span>ইমেইল</span>
           </button>
 
           <button
@@ -110,7 +106,7 @@ export function BroadcastAudienceSelector({
             }`}
           >
             <MessageSquare className="h-3.5 w-3.5" />
-            <span>{isBn ? "এসএমএস" : "SMS"}</span>
+            <span>এসএমএস</span>
           </button>
 
           <button
@@ -123,7 +119,7 @@ export function BroadcastAudienceSelector({
             }`}
           >
             <Bell className="h-3.5 w-3.5" />
-            <span>{isBn ? "ইন-অ্যাপ" : "In-App"}</span>
+            <span>ইন-অ্যাপ</span>
           </button>
         </div>
       </div>

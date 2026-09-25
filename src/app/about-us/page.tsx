@@ -1,24 +1,16 @@
 import { Heart, ShieldCheck, Users, Award, Target, Zap } from "lucide-react";
-import { Locale } from "@/lib/i18n";
-
-export const revalidate = 86400; // 24-hour ISR
-import { tServer } from "@/lib/i18n.server";
 import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
-export async function generateMetadata() {
-  const isEn = false;
+export const revalidate = 86400; // 24-hour ISR
 
-  const ogTitle = isEn ? "About Health Club - Making Healthcare Affordable" : "আমাদের সম্পর্কে - হেলথ ক্লাব";
-  const ogDesc = isEn
-    ? "Discover how Health Club brings medical discounts to middle-class families."
-    : "চিকিৎসা ব্যয় সাশ্রয়ে হেলথ ক্লাবের উদ্যোগ ও লক্ষ্য সম্পর্কে বিস্তারিত জানুন।";
+export async function generateMetadata() {
+  const ogTitle = "আমাদের সম্পর্কে - হেলথ ক্লাব";
+  const ogDesc = "চিকিৎসা ব্যয় সাশ্রয়ে হেলথ ক্লাবের উদ্যোগ ও লক্ষ্য সম্পর্কে বিস্তারিত জানুন।";
 
   return {
-    title: isEn ? { absolute: "About Us - Health Club Mission & Story | Health Club" } : "আমাদের সম্পর্কে - ভিশন ও মিশন",
-    description: isEn
-      ? "Learn about Health Club's mission to make healthcare affordable in Bangladesh through digital membership card discounts at top partner hospitals."
-      : "হেলথ ক্লাবের লক্ষ্য, আমাদের ভিশন এবং কীভাবে আমরা চিকিৎসা খরচ কমিয়ে এনে দেশব্যাপী স্বাস্থ্যসেবা সহজলভ্য করছি তা জানুন।",
+    title: "আমাদের সম্পর্কে - ভিশন ও মিশন",
+    description: "হেলথ ক্লাবের লক্ষ্য, আমাদের ভিশন এবং কীভাবে আমরা চিকিৎসা খরচ কমিয়ে এনে দেশব্যাপী স্বাস্থ্যসেবা সহজলভ্য করছি তা জানুন।",
     alternates: {
       canonical: `${SITE_URL}/about-us`,
     },
@@ -27,7 +19,6 @@ export async function generateMetadata() {
       description: ogDesc,
       url: `${SITE_URL}/about-us`,
       siteName: "হেলথ ক্লাব (Health Club)",
-      locale: isEn ? "en_US" : "bn_BD",
       type: "website",
       images: DEFAULT_OG_IMAGES,
     },
@@ -41,28 +32,25 @@ export async function generateMetadata() {
 }
 
 export default async function AboutUsPage() {
-  const locale = "bn" as Locale;
-  const t = (key: string) => tServer(locale, key);
-
   const pillars = [
     {
       icon: <Heart className="h-6 w-6" />,
-      title: t("aboutUs.page.healthcareForAll"),
-      desc: t("aboutUs.page.bringingTheCostOfHealth"),
+      title: "সবার জন্য চিকিৎসা",
+      desc: "মধ্যবিত্ত ও গ্রামীণ নিম্ন-আয়ের পরিবারগুলোর স্বাস্থ্য পরীক্ষার ব্যয় হাতের নাগালে নিয়ে আসা আমাদের প্রথম লক্ষ্য।",
       gradient: "from-emerald-500 to-green-600",
       bg: "from-emerald-50 to-white dark:from-emerald-950/40 dark:to-slate-900",
     },
     {
       icon: <Award className="h-6 w-6" />,
-      title: t("aboutUs.page.100OfficialPartnership"),
-      desc: t("aboutUs.page.weEnsureValidDiscountsThrough"),
+      title: "শতভাগ অফিশিয়াল পার্টনারশিপ",
+      desc: "সকল অংশীদার হাসপাতাল ও ল্যাবের সাথে অফিশিয়াল চুক্তির মাধ্যমে ভ্যালিড ডিসকাউন্টের নিশ্চয়তা প্রদান করি।",
       gradient: "from-blue-500 to-indigo-600",
       bg: "from-blue-50 to-white dark:from-blue-950/40 dark:to-slate-900",
     },
     {
       icon: <Users className="h-6 w-6" />,
-      title: t("aboutUs.page.simpleDigitalVerification"),
-      desc: t("aboutUs.page.hasslefreeVerificationAtHospitalsUsing"),
+      title: "সহজ ডিজিটাল যাচাইকরণ",
+      desc: "ডিজিটাল মেম্বার আইডি কার্ড ও সহজ কিউআর কোড স্ক্যান ব্যবহার করে ঝামেলাহীন হাসপাতাল ছাড় নিশ্চিত করা।",
       gradient: "from-violet-500 to-purple-600",
       bg: "from-violet-50 to-white dark:from-violet-950/40 dark:to-slate-900",
     },
@@ -76,13 +64,13 @@ export default async function AboutUsPage() {
         {
           "@type": "ListItem",
           "position": 1,
-          "name": locale === "en" ? "Home" : "হোম",
+          "name": "হোম",
           "item": SITE_URL
         },
         {
           "@type": "ListItem",
           "position": 2,
-          "name": locale === "en" ? "About Us" : "আমাদের সম্পর্কে",
+          "name": "আমাদের সম্পর্কে",
           "item": `${SITE_URL}/about-us`
         }
       ]
@@ -90,9 +78,9 @@ export default async function AboutUsPage() {
     {
       "@context": "https://schema.org",
       "@type": "AboutPage",
-      "name": locale === "en" ? "About Health Club" : "হেলথ ক্লাব সম্পর্কে",
+      "name": "হেলথ ক্লাব সম্পর্কে",
       "url": `${SITE_URL}/about-us`,
-      "description": "Health Club is a healthcare membership service in Bangladesh dedicated to reducing medical expenses through partner hospital discounts."
+      "description": "হেলথ ক্লাব একটি সহজ ডিজিটাল মেম্বারশিপ প্ল্যাটফর্ম, যা সাধারণ পরিবারগুলোর সাথে নামকরা পার্টনার হাসপাতালের সরাসরি সেতুবন্ধন তৈরি করে।"
     }
   ];
 
@@ -112,12 +100,12 @@ export default async function AboutUsPage() {
           }}
         />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-4">
-          <span className="section-label">{t("aboutUs.page.ourMission")}</span>
+          <span className="section-label">আওয়ার মিশন</span>
           <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-secondary dark:text-white mt-3">
-            {t("aboutUs.page.ourVisionMission")}
+            আমাদের লক্ষ্য ও পরিচিতি
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">
-            {t("aboutUs.page.makingHealthcareSimpleAndAffordable")}
+            স্বাস্থ্য সেবা হোক সহজ ও সাশ্রয়ী — এই স্লোগানকে সামনে রেখে আমরা কাজ করে যাচ্ছি।
           </p>
         </div>
       </div>
@@ -132,14 +120,14 @@ export default async function AboutUsPage() {
                 <Target className="h-4 w-4 text-primary" />
               </div>
               <h2 className="font-heading text-2xl font-bold text-secondary dark:text-white">
-                {t("aboutUs.page.whyWasHealthClubCreated")}
+                হেলথ ক্লাব কেন তৈরি হয়েছে?
               </h2>
             </div>
             <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-              {t("aboutUs.page.forMiddleclassFamiliesStudentsAnd")}
+              আমাদের দেশের গ্রামীণ ও মফস্বল এলাকার মধ্যবিত্ত পরিবার, শিক্ষার্থী এবং প্রবীণ নাগরিকদের জন্য হঠাৎ আসা বড় ধরনের চিকিৎসা ব্যয় বহন করা অত্যন্ত কষ্টসাধ্য। অনেক সময় ডায়াগনস্টিক টেস্টের অতিরিক্ত মূল্যের কারণে সঠিক সময়ে রোগ নির্ণয় সম্ভব হয় না।
             </p>
             <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-              {t("aboutUs.page.healthClubIsASimple")}
+              হেলথ ক্লাব একটি সহজ ডিজিটাল মেম্বারশিপ প্ল্যাটফর্ম, যা সাধারণ পরিবারগুলোর সাথে নামকরা পার্টনার হাসপাতালের সরাসরি সেতুবন্ধন তৈরি করে। আমাদের অফিশিয়াল চুক্তির মাধ্যমে hospital ও ল্যাবগুলো আমাদের কার্ডধারী সদস্যদের বিশেষ ছাড় প্রদান করে, যার ফলে চিকিৎসায় সাশ্রয় ও সুস্থ জীবন নিশ্চিত করা সহজ হয়।
             </p>
           </div>
 
@@ -153,15 +141,15 @@ export default async function AboutUsPage() {
                 <Zap className="h-4 w-4 text-primary" />
               </div>
               <h3 className="font-heading text-base font-bold text-primary">
-                {t("aboutUs.page.healthClubBrandValues")}
+                হেলথ ক্লাব ব্র্যান্ড ভ্যালু
               </h3>
             </div>
 
             <ul className="space-y-5">
               {[
-                { icon: <ShieldCheck className="h-5 w-5 text-primary shrink-0 mt-0.5" />, text: t("aboutUs.page.trustCredibility100ServiceGuarantee") },
-                { icon: <Heart className="h-5 w-5 text-primary shrink-0 mt-0.5" />, text: t("aboutUs.page.caringServiceWarmAndPrompt") },
-                { icon: <Users className="h-5 w-5 text-primary shrink-0 mt-0.5" />, text: t("aboutUs.page.communityWelfarePlayingARole") },
+                { icon: <ShieldCheck className="h-5 w-5 text-primary shrink-0 mt-0.5" />, text: "ভরসা ও বিশ্বস্ততা: হাসপাতালগুলোর সাথে আইনি চুক্তির মাধ্যমে সেবার শতভাগ নিশ্চয়তা।" },
+                { icon: <Heart className="h-5 w-5 text-primary shrink-0 mt-0.5" />, text: "যত্নশীল সেবা: প্রতিটি মেম্বার এবং তাদের পরিবারের চিকিৎসায় আন্তরিক সমাধান।" },
+                { icon: <Users className="h-5 w-5 text-primary shrink-0 mt-0.5" />, text: "কমিউনিটি ও সমাজকল্যাণ: সাশ্রয়ী স্বাস্থ্যসেবা সবার মৌলিক অধিকার বাস্তবায়নে ভূমিকা রাখা।" },
               ].map((item, i) => (
                 <li key={i} className="flex gap-3 items-start">
                   <div className="h-8 w-8 rounded-lg bg-white/60 dark:bg-slate-800/60 border border-primary/15 flex items-center justify-center shrink-0">
@@ -177,9 +165,9 @@ export default async function AboutUsPage() {
         {/* Values / Pillars Grid */}
         <div className="space-y-10 border-t border-border/60 pt-16">
           <div className="text-center space-y-3">
-            <span className="section-label">{t("aboutUs.page.ourCorePillars")}</span>
+            <span className="section-label">আমাদের মূল স্তম্ভসমূহ (Core Pillars)</span>
             <h2 className="font-heading text-2xl sm:text-3xl font-bold text-secondary dark:text-white mt-3">
-              {t("aboutUs.page.weManageOurMemberServices")}
+              আমরা তিনটি মূল নীতির উপর ভিত্তি করে আমাদের মেম্বার ও পার্টনার হাসপাতাল পরিচালনা করি।
             </h2>
           </div>
 

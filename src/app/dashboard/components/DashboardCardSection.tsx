@@ -11,14 +11,12 @@ interface DashboardCardSectionProps {
   user: Member;
   cardRef: React.RefObject<HTMLDivElement | null>;
   handleDownloadCard: () => void;
-  t: (key: string) => string;
 }
 
 export function DashboardCardSection({
   user,
   cardRef,
   handleDownloadCard,
-  t,
 }: DashboardCardSectionProps) {
   return (
     <div className="lg:col-span-5 space-y-4">
@@ -28,10 +26,10 @@ export function DashboardCardSection({
             <div className="h-8 w-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
               <CreditCard className="h-4 w-4 text-primary" />
             </div>
-            {t("dashboard.card.title")}
+            আপনার ডিজিটাল মেম্বার কার্ড
           </CardTitle>
           <CardDescription>
-            {t("dashboard.card.description")}
+            যেকোনো পার্টনার হাসপাতালে ডিসকাউন্ট পেতে এই কার্ডটি প্রদর্শন করুন।
           </CardDescription>
         </CardHeader>
         <CardContent className="p-3 sm:p-5">
@@ -47,7 +45,7 @@ export function DashboardCardSection({
                   className="w-full text-xs active:scale-[0.98] gap-1.5 cursor-pointer"
                 >
                   <Download className="h-4 w-4 text-primary" />
-                  {t("dashboard.card.downloadPng")}
+                  ডাউনলোড (PNG)
                 </Button>
                 <Link
                   href="/dashboard/print"
@@ -58,7 +56,7 @@ export function DashboardCardSection({
                   )}
                 >
                   <Printer className="h-4 w-4 text-primary" />
-                  {t("dashboard.card.printPhysical")}
+                  প্রিন্ট করুন
                 </Link>
               </div>
             </div>
@@ -68,9 +66,9 @@ export function DashboardCardSection({
               <div className="z-10 bg-rose-500/10 p-2.5 rounded-full border border-rose-500/20">
                 <CreditCard className="h-6 w-6 text-rose-500 animate-pulse" />
               </div>
-              <h4 className="z-10 font-heading text-white font-bold text-sm">{t("dashboard.card.payFee")}</h4>
+              <h4 className="z-10 font-heading text-white font-bold text-sm">ফি পরিশোধ করুন</h4>
               <p className="z-10 text-[11px] text-slate-300 max-w-xs leading-relaxed">
-                {t("dashboard.card.payFeeDesc")}
+                কার্ডটি সক্রিয় করতে এবং সুবিধা পেতে অনুগ্রহ করে ফি পরিশোধ করুন।
               </p>
               <Link
                 href={`/register/payment?memberId=${user.id}`}
@@ -79,7 +77,7 @@ export function DashboardCardSection({
                   "bg-[#e2125d] hover:bg-[#c20f4f] text-white shadow-md cursor-pointer z-10"
                 )}
               >
-                {t("dashboard.card.payButton")}
+                ফি পরিশোধ করুন
               </Link>
             </div>
           ) : (
@@ -90,9 +88,9 @@ export function DashboardCardSection({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m0 0v2m0-2h2m-2 0H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h4 className="z-10 font-heading text-white font-bold text-sm">{t("dashboard.card.pendingApproval")}</h4>
+              <h4 className="z-10 font-heading text-white font-bold text-sm">অনুমোদনের অপেক্ষায়</h4>
               <p className="z-10 text-[11px] text-slate-300 max-w-xs leading-relaxed">
-                {t("dashboard.card.pendingApprovalDesc")}
+                আপনার মেম্বারশিপ আবেদনটি পর্যালোচনা করা হচ্ছে। অনুমোদনের পর কার্ড সক্রিয় হবে।
               </p>
             </div>
           )}

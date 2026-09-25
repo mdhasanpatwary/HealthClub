@@ -5,7 +5,6 @@ import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
 import { PartnerRequest } from "@/services/db";
-import { Locale } from "@/lib/i18n";
 import { Trash2 } from "lucide-react";
 
 import { Skeleton } from "@/components/ui/skeleton";
@@ -25,8 +24,6 @@ interface PartnerRequestsTabProps {
   statusFilter?: string;
   onStatusFilterChange?: (status: string) => void;
   hasRejectedRequests?: boolean;
-  locale?: Locale;
-  t?: (key: string) => string;
   loading?: boolean;
   processingId?: string | null;
 }
@@ -46,22 +43,18 @@ export function PartnerRequestsTab({
   statusFilter = "all",
   onStatusFilterChange,
   hasRejectedRequests = false,
-  locale = "bn",
-  t = (k) => k,
   loading = false,
   processingId = null,
 }: PartnerRequestsTabProps) {
-  const isEn = locale === "en";
-
   return (
     <Card className="border-border shadow-md">
       <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4">
         <div>
           <CardTitle className="font-heading text-lg font-bold text-secondary">
-            {t("admin.partnerRequests.title")}
+            পার্টনার আবেদন তালিকা
           </CardTitle>
           <CardDescription>
-            {t("admin.partnerRequests.desc")}
+            নতুন পার্টনার হতে আগ্রহী ডায়াগনস্টিক, হাসপাতাল ও ক্লিনিকের আবেদন পর্যালোচনা ও অনুমোদন করুন
           </CardDescription>
         </div>
 
@@ -74,7 +67,7 @@ export function PartnerRequestsTab({
             className="text-destructive border-destructive/30 hover:bg-destructive/10 text-xs h-8 px-3 font-semibold inline-flex items-center gap-1.5 cursor-pointer self-start sm:self-auto shrink-0"
           >
             <Trash2 className="h-3.5 w-3.5" />
-            <span>{t("admin.partnerRequests.deleteAllRejected")}</span>
+            <span>বাতিলকৃত সব মুছুন</span>
           </Button>
         )}
       </CardHeader>
@@ -91,7 +84,7 @@ export function PartnerRequestsTab({
                 statusFilter === "all" ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {t("admin.partnerRequests.filterAll")}
+              সকল আবেদন
             </Button>
             <Button
               type="button"
@@ -102,7 +95,7 @@ export function PartnerRequestsTab({
                 statusFilter === "pending" ? "bg-amber-600 text-white hover:bg-amber-700" : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {t("admin.partnerRequests.filterPending")}
+              পেন্ডিং
             </Button>
             <Button
               type="button"
@@ -113,7 +106,7 @@ export function PartnerRequestsTab({
                 statusFilter === "approved" ? "bg-green-600 text-white hover:bg-green-700" : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {t("admin.partnerRequests.filterApproved")}
+              অনুমোদিত
             </Button>
             <Button
               type="button"
@@ -124,7 +117,7 @@ export function PartnerRequestsTab({
                 statusFilter === "rejected" ? "bg-destructive text-destructive-foreground hover:bg-destructive/90" : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {t("admin.partnerRequests.filterRejected")}
+              বাতিলকৃত
             </Button>
           </div>
         )}
@@ -132,12 +125,12 @@ export function PartnerRequestsTab({
           <Table>
             <TableHeader className="bg-muted/40">
               <TableRow className="hover:bg-transparent border-b border-border">
-                <TableHead className="font-semibold text-secondary">{t("admin.partnerRequests.orgAddress")}</TableHead>
-                <TableHead className="font-semibold text-secondary">{t("admin.partnerRequests.category")}</TableHead>
-                <TableHead className="font-semibold text-secondary">{t("admin.partnerRequests.discountRate")}</TableHead>
-                <TableHead className="font-semibold text-secondary">{t("admin.partnerRequests.contact")}</TableHead>
-                <TableHead className="font-semibold text-secondary">{t("admin.partnerRequests.status")}</TableHead>
-                <TableHead className="font-semibold text-secondary text-right">{t("admin.partnerRequests.actions")}</TableHead>
+                <TableHead className="font-semibold text-secondary">প্রতিষ্ঠান ও ঠিকানা</TableHead>
+                <TableHead className="font-semibold text-secondary">ক্যাটাগরি</TableHead>
+                <TableHead className="font-semibold text-secondary">ডিসকাউন্ট অফার</TableHead>
+                <TableHead className="font-semibold text-secondary">যোগাযোগ</TableHead>
+                <TableHead className="font-semibold text-secondary">স্ট্যাটাস</TableHead>
+                <TableHead className="font-semibold text-secondary text-right">অ্যাকশন</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -176,7 +169,7 @@ export function PartnerRequestsTab({
               ) : partnerRequests.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-8 text-muted-foreground text-xs">
-                    {t("admin.partnerRequests.noRequests")}
+                    কোনো আবেদন পাওয়া যায়নি
                   </TableCell>
                 </TableRow>
               ) : (
@@ -187,14 +180,14 @@ export function PartnerRequestsTab({
                       <div className="text-xs text-muted-foreground mt-0.5">{req.address}</div>
                     </TableCell>
                     <TableCell className="capitalize text-xs font-semibold">
-                      {req.category === "hospital" ? (isEn ? "Hospital" : "হাসপাতাল") : req.category === "diagnostic" ? (isEn ? "Diagnostic" : "ডায়াগনস্টিক") : (isEn ? "Pharmacy" : "ফার্মেসি")}
+                      {req.category === "hospital" ? "হাসপাতাল" : req.category === "diagnostic" ? "ডায়াগনস্টিক" : "ফার্মেসি"}
                     </TableCell>
                     <TableCell className="font-mono text-xs font-bold text-primary">
                       {req.discount}
                     </TableCell>
                     <TableCell className="text-xs space-y-0.5">
                       {req.contactName && <div className="font-semibold text-secondary dark:text-white">{req.contactName}</div>}
-                      <div>{isEn ? "Mobile" : "মোবাইল"}: <span className="font-semibold">{req.phone}</span></div>
+                      <div>মোবাইল: <span className="font-semibold">{req.phone}</span></div>
                       {req.email && <div className="text-muted-foreground">{req.email}</div>}
                     </TableCell>
                     <TableCell>
@@ -205,7 +198,7 @@ export function PartnerRequestsTab({
                           ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
                           : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
                       }`}>
-                        {req.status === "pending" ? (isEn ? "Pending" : "পেন্ডিং") : req.status === "approved" ? (isEn ? "Approved" : "অনুমোদিত") : (isEn ? "Rejected" : "বাতিলকৃত")}
+                        {req.status === "pending" ? "পেন্ডিং" : req.status === "approved" ? "অনুমোদিত" : "বাতিলকৃত"}
                       </span>
                     </TableCell>
                     <TableCell className="text-right">
@@ -218,8 +211,8 @@ export function PartnerRequestsTab({
                             className="bg-primary hover:bg-primary-dark text-white text-xs h-7 py-1 px-3 animate-pulse disabled:opacity-50 cursor-pointer"
                           >
                             {processingId === req.id
-                              ? (isEn ? "Approving..." : "অনুমোদন হচ্ছে...")
-                              : t("admin.partnerRequests.approve")}
+                              ? "অনুমোদন হচ্ছে..."
+                              : "অনুমোদন"}
                           </Button>
                           <Button
                             size="sm"
@@ -229,8 +222,8 @@ export function PartnerRequestsTab({
                             className="text-destructive border-destructive/20 hover:bg-destructive/10 text-xs h-7 py-1 px-3 disabled:opacity-50 cursor-pointer"
                           >
                             {processingId === req.id
-                              ? (isEn ? "Processing..." : "প্রক্রিয়া হচ্ছে...")
-                              : t("admin.partnerRequests.reject")}
+                              ? "প্রক্রিয়া হচ্ছে..."
+                              : "বাতিল"}
                           </Button>
                         </div>
                       )}
@@ -242,10 +235,10 @@ export function PartnerRequestsTab({
                             disabled={loading || Boolean(processingId)}
                             onClick={() => onDelete(req)}
                             className="text-destructive border-destructive/30 hover:bg-destructive/10 text-xs h-7 py-1 px-2.5 disabled:opacity-50 inline-flex items-center gap-1 cursor-pointer"
-                            title={t("admin.partnerRequests.delete")}
+                            title="মুছে ফেলুন"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
-                            <span>{t("admin.partnerRequests.delete")}</span>
+                            <span>মুছে ফেলুন</span>
                           </Button>
                         </div>
                       )}
@@ -267,9 +260,7 @@ export function PartnerRequestsTab({
             onPageChange={onPageChange}
             onPageSizeChange={onPageSizeChange}
             pageSizeOptions={[10, 20, 50, 100]}
-            locale={locale}
-            t={t}
-            itemLabel={isEn ? "requests" : "টি আবেদন"}
+            itemLabel="টি আবেদন"
           />
         )}
       </CardContent>

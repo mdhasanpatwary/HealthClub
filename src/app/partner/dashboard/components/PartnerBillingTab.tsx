@@ -11,7 +11,6 @@ import { verifyMemberForPartnerAction } from "@/app/actions/memberActions";
 import { toast } from "sonner";
 import { logger } from "@/lib/logger";
 import type { Html5Qrcode } from "html5-qrcode";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 import { CameraPermissionModal } from "./CameraPermissionModal";
 import { PartnerRecentTransactionsCard } from "./PartnerRecentTransactionsCard";
 import { PartnerVerifiedMemberCard, VerifiedMember } from "./PartnerVerifiedMemberCard";
@@ -29,7 +28,6 @@ export function PartnerBillingTab({
   loadingTransactions,
   onTransactionComplete,
 }: PartnerBillingTabProps) {
-  const { t, locale } = useLanguage();
   const [memberId, setMemberId] = useState("");
   const [loadingVerify, setLoadingVerify] = useState(false);
   const [verifiedMember, setVerifiedMember] = useState<VerifiedMember | null>(null);
@@ -69,18 +67,18 @@ export function PartnerBillingTab({
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         // Close test stream tracks immediately
         stream.getTracks().forEach((track) => track.stop());
-        toast.success(t("partner.billing.cameraSuccessToast"));
+        toast.success("ক্যামেরা এক্সেস সফলভাবে দেওয়া হয়েছে");
         setPermissionModalOpen(false);
         setScanning(true);
       } else {
-        toast.error(t("partner.billing.cameraErrorToast"));
+        toast.error("ক্যামেরা চালু করতে সমস্যা হয়েছে");
       }
     } catch (err: unknown) {
       const error = err as { name?: string };
       if (error?.name === "NotAllowedError" || error?.name === "PermissionDeniedError") {
-        toast.error(t("partner.billing.cameraBlockedToast"));
+        toast.error("ক্যামেরা অনুমতি ব্লক করা হয়েছে। ব্রাউজার সেটিংসে গিয়ে অনুমতি দিন।");
       } else {
-        toast.error(t("partner.billing.cameraErrorToast"));
+        toast.error("ক্যামেরা চালু করতে সমস্যা হয়েছে");
       }
     } finally {
       setRequestingPermission(false);
@@ -105,18 +103,17 @@ export function PartnerBillingTab({
         const res = await verifyMemberForPartnerAction(idToVerify);
         if (res.success && res.member) {
           setVerifiedMember(res.member);
-          toast.success(t("partner.billing.memberVerifiedToast"));
+          toast.success("সদস্য সফলভাবে যাচাই করা হয়েছে!");
         } else {
-          const errMsg = res.errorKey ? t(res.errorKey) : (res.message || t("partner.billing.memberInvalidToast"));
-          toast.error(errMsg);
+          toast.error(res.message || "সদস্য পাওয়া যায়নি বা তথ্য ভুল");
         }
       } catch {
-        toast.error(t("partner.billing.verifyErrorToast"));
+        toast.error("যাচাইকরণে সমস্যা হয়েছে, আবার চেষ্টা করুন");
       } finally {
         setLoadingVerify(false);
       }
     },
-    [t]
+    []
   );
 
   // Scanner mount/start effect
@@ -131,7 +128,7 @@ export function PartnerBillingTab({
 
       const element = document.getElementById("qr-reader");
       if (!element) {
-        toast.error(t("partner.billing.cameraErrorToast"));
+        toast.error("ক্যামেরা চালু করতে সমস্যা হয়েছে");
         setScanning(false);
         return;
       }
@@ -216,7 +213,7 @@ export function PartnerBillingTab({
         if (isPermission) {
           setPermissionModalOpen(true);
         } else {
-          toast.error(t("partner.billing.cameraErrorToast"));
+          toast.error("ক্যামেরা চালু করতে সমস্যা হয়েছে");
         }
       }
     };
@@ -229,7 +226,7 @@ export function PartnerBillingTab({
         html5QrCode.stop().catch(() => {});
       }
     };
-  }, [scanning, t, handleVerifyDirect]);
+  }, [scanning, handleVerifyDirect]);
 
   const handleVerifySubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -247,10 +244,10 @@ export function PartnerBillingTab({
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
                 <CardTitle className="font-heading text-lg sm:text-xl font-bold text-secondary dark:text-white">
-                  {t("partner.billing.cardTitle")}
+                  মেম্বারশিপ যাচাই ও বিলিং কাউন্টার
                 </CardTitle>
                 <CardDescription className="text-xs sm:text-sm">
-                  {t("partner.billing.cardSubtitle")}
+                  QR কোড স্ক্যান করুন অথবা রোগীর হেলথ কার্ড আইডি লিখে ছাড় যাচাই করুন
                 </CardDescription>
               </div>
               {currentStaff && (
@@ -276,7 +273,7 @@ export function PartnerBillingTab({
                     size="sm"
                     className="text-destructive border-destructive/20 hover:bg-destructive/10 rounded-xl cursor-pointer"
                   >
-                    {t("partner.billing.stopScanner")}
+                    স্ক্যানার বন্ধ করুন
                   </Button>
                 </div>
               </div>
@@ -287,10 +284,10 @@ export function PartnerBillingTab({
                   className="bg-primary hover:bg-primary-dark text-white gap-2 font-semibold rounded-xl cursor-pointer"
                 >
                   <Camera className="h-4 w-4" />
-                  {t("partner.billing.scanQr")}
+                  QR স্ক্যান করুন
                 </Button>
                 <span className="text-muted-foreground text-xs sm:text-sm">
-                  {t("partner.billing.orEnterId")}
+                  অথবা কার্ড নম্বর লিখুন
                 </span>
               </div>
             )}
@@ -303,10 +300,10 @@ export function PartnerBillingTab({
                   id="partner-member-id-input"
                   type="text"
                   required
-                  aria-label={t("partner.billing.memberIdAria")}
+                  aria-label="হেলথ কার্ড নম্বর লিখুন"
                   value={memberId}
                   onChange={(e) => setMemberId(e.target.value)}
-                  placeholder={t("partner.billing.memberIdPlaceholder")}
+                  placeholder="হেলথ কার্ড নম্বর লিখুন (উদাঃ HC-XXXXXX)"
                   className="pl-10 h-11 border-border rounded-xl"
                 />
               </div>
@@ -315,7 +312,7 @@ export function PartnerBillingTab({
                 disabled={loadingVerify}
                 className="h-11 bg-secondary text-white hover:bg-slate-800 rounded-xl font-medium cursor-pointer"
               >
-                {loadingVerify ? t("partner.billing.verifying") : t("partner.billing.verifyBtn")}
+                {loadingVerify ? "যাচাই হচ্ছে..." : "যাচাই করুন"}
               </Button>
             </form>
 
@@ -329,7 +326,6 @@ export function PartnerBillingTab({
                   setVerifiedMember(null);
                   setMemberId("");
                 }}
-                t={t}
               />
             )}
           </CardContent>
@@ -341,8 +337,6 @@ export function PartnerBillingTab({
         <PartnerRecentTransactionsCard
           transactions={transactions}
           loadingTransactions={loadingTransactions}
-          locale={locale}
-          t={t}
         />
       </div>
 

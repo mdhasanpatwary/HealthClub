@@ -17,6 +17,29 @@ export function toBanglaNums(num: number | string): string {
     .join("");
 }
 
+export function formatNum(num: number | string): string {
+  if (!num && num !== 0) return "";
+  return toBanglaNums(num);
+}
+
+export function formatDiscount(discount: string): string {
+  if (!discount) return "";
+
+  let converted = discount;
+  for (const [english, bangla] of Object.entries({
+    "0": "০", "1": "১", "2": "২", "3": "৩", "4": "৪",
+    "5": "৫", "6": "৬", "7": "৭", "8": "৮", "9": "৯",
+  })) {
+    converted = converted.replaceAll(english, bangla);
+  }
+
+  return converted
+    .replace(/Flat/gi, "ফ্ল্যাট")
+    .replace(/Discount/gi, "ডিসকাউন্ট")
+    .replace(/Off/gi, "ছাড়")
+    .replace(/\bto\b/gi, "থেকে");
+}
+
 /**
  * Parses a discount string that may contain Bangla or English numerals
  * (e.g., "১০-৫০% ডিসকাউন্ট" or "10-50% Discount") and returns

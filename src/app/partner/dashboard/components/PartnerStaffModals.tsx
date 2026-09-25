@@ -28,18 +28,17 @@ import {
   Shield,
   CreditCard,
 } from "lucide-react";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 
 export { ResetStaffPasswordModal, DeleteStaffConfirmModal } from "./PartnerStaffActionModals";
 
 export const DESK_PRESETS = [
-  "Counter 1 - Billing",
-  "Counter 2 - Billing",
-  "Pharmacy Desk",
-  "Emergency Counter",
-  "Lab & Pathology Desk",
-  "Doctor Serial Desk",
-  "OPD Billing Counter",
+  "কাউন্টার ১ - বিলিং",
+  "কাউন্টার ২ - বিলিং",
+  "ফার্মেসি ডেস্ক",
+  "জরুরি বিভাগ কাউন্টার",
+  "ল্যাব ও প্যাথলজি ডেস্ক",
+  "ডাক্তার সিরিয়াল ডেস্ক",
+  "বহির্বিভাগ (OPD) বিলিং",
 ];
 
 import { StaffCredentialsData } from "./PartnerStaffCredentialsModal";
@@ -62,7 +61,6 @@ export function AddEditStaffModal({
   onSuccessWithCredentials,
   partnerName = "",
 }: AddEditStaffModalProps) {
-  const { t } = useLanguage();
   const isEditing = !!staffToEdit;
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -85,7 +83,7 @@ export function AddEditStaffModal({
       setName("");
       setUsername("");
       setPhone("");
-      setDeskName("Counter 1 - Billing");
+      setDeskName("কাউন্টার ১ - বিলিং");
       setRole("cashier");
       setPassword("");
     }
@@ -94,21 +92,21 @@ export function AddEditStaffModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
-      toast.error(t("partner.profile.fillRequiredFields"));
+      toast.error("দয়া করে সকল বাধ্যতামূলক তথ্য পূরণ করুন।");
       return;
     }
     if (!deskName.trim()) {
-      toast.error(t("partner.profile.fillRequiredFields"));
+      toast.error("দয়া করে সকল বাধ্যতামূলক তথ্য পূরণ করুন।");
       return;
     }
 
     if (!isEditing) {
       if (!username.trim() || username.trim().length < 3) {
-        toast.error(t("partner.staff.usernamePlaceholder"));
+        toast.error("ইউজারনেম কমপক্ষে ৩ অক্ষরের হতে হবে");
         return;
       }
       if (!password || password.length < 6) {
-        toast.error(t("partner.password.minLength"));
+        toast.error("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে");
         return;
       }
     }
@@ -125,11 +123,11 @@ export function AddEditStaffModal({
         });
 
         if (res.success) {
-          toast.success(t("partner.staff.updatedSuccess"));
+          toast.success("স্টাফ তথ্য সফলভাবে আপডেট হয়েছে");
           onSuccess();
           onClose();
         } else {
-          toast.error(res.error || t("common.error"));
+          toast.error(res.error || "ত্রুটি হয়েছে, আবার চেষ্টা করুন");
         }
       } else {
         const res = await createPartnerStaffAction({
@@ -142,7 +140,7 @@ export function AddEditStaffModal({
         });
 
         if (res.success) {
-          toast.success(t("partner.staff.createdSuccess"));
+          toast.success("নতুন স্টাফ সফলভাবে যুক্ত হয়েছে");
           onSuccess();
           onClose();
           if (onSuccessWithCredentials) {
@@ -157,11 +155,11 @@ export function AddEditStaffModal({
             });
           }
         } else {
-          toast.error(res.error || t("common.error"));
+          toast.error(res.error || "ত্রুটি হয়েছে, আবার চেষ্টা করুন");
         }
       }
     } catch {
-      toast.error(t("common.error.server"));
+      toast.error("সার্ভার ত্রুটি, অনুগ্রহ করে আবার চেষ্টা করুন");
     } finally {
       setLoading(false);
     }
@@ -175,17 +173,17 @@ export function AddEditStaffModal({
             {isEditing ? (
               <>
                 <UserCheck className="h-5 w-5 text-primary" />
-                {t("partner.staff.modalEditTitle")}
+                স্টাফ তথ্য সংশোধন
               </>
             ) : (
               <>
                 <UserPlus className="h-5 w-5 text-primary" />
-                {t("partner.staff.modalAddTitle")}
+                নতুন বিলিং স্টাফ যুক্ত করুন
               </>
             )}
           </DialogTitle>
           <DialogDescription className="text-xs text-muted-foreground">
-            {t("partner.staff.modalDesc")}
+            বিলিং কাউন্টারের জন্য স্টাফ নিয়োগ করুন এবং তাদের আলাদা ইউজারনেম ও পাসওয়ার্ড প্রদান করুন।
           </DialogDescription>
         </DialogHeader>
 
@@ -194,13 +192,13 @@ export function AddEditStaffModal({
           <div className="space-y-1.5">
             <label htmlFor="staff-name" className="text-xs font-semibold text-foreground flex items-center gap-1.5 cursor-pointer">
               <User className="h-3.5 w-3.5 text-primary" />
-              {t("partner.staff.nameLabel")}
+              স্টাফের পূর্ণ নাম *
             </label>
             <Input
               id="staff-name"
               type="text"
               required
-              placeholder={t("partner.staff.namePlaceholder")}
+              placeholder="উদাঃ মোহাম্মদ হাসান"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="border-border bg-background h-10"
@@ -211,7 +209,7 @@ export function AddEditStaffModal({
           <div className="space-y-2">
             <label htmlFor="staff-desk-name" className="text-xs font-semibold text-foreground flex items-center gap-1.5 cursor-pointer">
               <Building className="h-3.5 w-3.5 text-primary" />
-              {t("partner.staff.deskLabel")}
+              কাউন্টার / ডেস্কের নাম *
             </label>
             <div className="flex flex-wrap gap-1.5 pb-1">
               {DESK_PRESETS.map((preset) => (
@@ -233,7 +231,7 @@ export function AddEditStaffModal({
               id="staff-desk-name"
               type="text"
               required
-              placeholder={t("partner.staff.deskPlaceholder")}
+              placeholder="উদাঃ কাউন্টার ১ - প্যাথলজি"
               value={deskName}
               onChange={(e) => setDeskName(e.target.value)}
               className="border-border bg-background h-10"
@@ -244,21 +242,21 @@ export function AddEditStaffModal({
           <div className="space-y-1.5">
             <label htmlFor="staff-username" className="text-xs font-semibold text-foreground flex items-center gap-1.5 cursor-pointer">
               <CreditCard className="h-3.5 w-3.5 text-primary" />
-              {t("partner.staff.usernameLabel")} {isEditing ? t("partner.staff.usernameImmutable") : "*"}
+              {isEditing ? "ইউজারনেম (পরিবর্তনযোগ্য নয়)" : "ইউজারনেম (লগইন আইডি) *"}
             </label>
             <Input
               id="staff-username"
               type="text"
               required={!isEditing}
               disabled={isEditing}
-              placeholder={t("partner.staff.usernamePlaceholder")}
+              placeholder="উদাঃ hasan_counter1"
               value={username}
               onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/\s+/g, "_"))}
               className="border-border bg-background h-10 font-mono text-xs"
             />
             {!isEditing && (
               <p className="text-[11px] text-muted-foreground">
-                {t("partner.staff.usernameLoginNote")}
+                স্টাফ এই ইউজারনেম দিয়ে পার্টনার পোর্টালে লগইন করবেন।
               </p>
             )}
           </div>
@@ -267,12 +265,12 @@ export function AddEditStaffModal({
           <div className="space-y-1.5">
             <label htmlFor="staff-phone" className="text-xs font-semibold text-foreground flex items-center gap-1.5 cursor-pointer">
               <Phone className="h-3.5 w-3.5 text-primary" />
-              {t("partner.staff.phoneLabel")}
+              ফোন নম্বর (ঐচ্ছিক)
             </label>
             <Input
               id="staff-phone"
               type="tel"
-              placeholder={t("partner.staff.phonePlaceholder")}
+              placeholder="উদাঃ ০১৮XXXXXXXX"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               className="border-border bg-background h-10"
@@ -283,7 +281,7 @@ export function AddEditStaffModal({
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
               <Shield className="h-3.5 w-3.5 text-primary" />
-              {t("partner.staff.roleRole")}
+              স্টাফ পদবী / ভূমিকা
             </label>
             <div className="grid grid-cols-2 gap-2">
               <button
@@ -295,8 +293,8 @@ export function AddEditStaffModal({
                     : "border-border bg-muted/30 text-muted-foreground hover:border-border/80"
                 }`}
               >
-                <div className="text-xs font-bold">{t("partner.staff.roleCashier")}</div>
-                <div className="text-[10px] text-muted-foreground mt-0.5">{t("partner.staff.roleCashierDesc")}</div>
+                <div className="text-xs font-bold">বিলিং স্টাফ</div>
+                <div className="text-[10px] text-muted-foreground mt-0.5">শুধুমাত্র মেম্বারশিপ ভেরিফাই ও ডিসকাউন্ট লেনদেন এন্ট্রি করতে পারবেন।</div>
               </button>
               <button
                 type="button"
@@ -307,8 +305,8 @@ export function AddEditStaffModal({
                     : "border-border bg-muted/30 text-muted-foreground hover:border-border/80"
                 }`}
               >
-                <div className="text-xs font-bold">{t("partner.staff.roleManager")}</div>
-                <div className="text-[10px] text-muted-foreground mt-0.5">{t("partner.staff.roleManagerDesc")}</div>
+                <div className="text-xs font-bold">ম্যানেজার</div>
+                <div className="text-[10px] text-muted-foreground mt-0.5">বিলিং এর পাশাপাশি রিপোর্ট দেখা ও তথ্য পরিবর্তনের সুবিধা পাবেন।</div>
               </button>
             </div>
           </div>
@@ -318,13 +316,13 @@ export function AddEditStaffModal({
             <div className="space-y-1.5">
               <label htmlFor="staff-password" className="text-xs font-semibold text-foreground flex items-center gap-1.5 cursor-pointer">
                 <Lock className="h-3.5 w-3.5 text-primary" />
-                {t("partner.staff.passwordMinLength")}
+                পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর) *
               </label>
               <Input
                 id="staff-password"
                 type="password"
                 required
-                placeholder={t("partner.staff.passwordPlaceholder")}
+                placeholder="কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="border-border bg-background h-10"
@@ -339,14 +337,14 @@ export function AddEditStaffModal({
               onClick={onClose}
               className="border-border rounded-xl cursor-pointer"
             >
-              {t("common.cancel")}
+              বাতিল
             </Button>
             <Button
               type="submit"
               disabled={loading}
               className="bg-primary hover:bg-primary-dark text-white font-semibold rounded-xl cursor-pointer"
             >
-              {loading ? t("partner.staff.saving") : isEditing ? t("partner.staff.submitUpdate") : t("partner.staff.submitCreate")}
+              {loading ? "সংরক্ষণ হচ্ছে..." : isEditing ? "তথ্য আপডেট করুন" : "স্টাফ তৈরি করুন"}
             </Button>
           </DialogFooter>
         </form>

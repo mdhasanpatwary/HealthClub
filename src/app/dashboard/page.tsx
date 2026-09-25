@@ -12,7 +12,6 @@ import { getTransactionsAction, addTransactionAction } from "@/app/actions/trans
 import { isMemberTxAllowedAction } from "@/app/actions/systemSettingsActions";
 import { getPartnersAction } from "@/app/actions/partnerActions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useLanguage } from "@/components/layout/LanguageProvider";
 
 import { DashboardSkeleton } from "./components/DashboardSkeleton";
 import { DashboardWelcomeHeader } from "./components/DashboardWelcomeHeader";
@@ -34,7 +33,6 @@ function DashboardContent() {
   const searchParams = useSearchParams();
   const requestedTab = searchParams.get("tab") === "profile" ? "profile" : "history";
   const [activeTab, setActiveTab] = useState(requestedTab);
-  const { t, locale } = useLanguage();
   const [user, setUser] = useState<Member | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -117,7 +115,7 @@ function DashboardContent() {
 
         if (typeof navigator !== "undefined" && navigator.onLine && !freshUser) {
           await authStore.logout();
-          toast.error(t("dashboard.accountTerminated"));
+          toast.error("আপনার অ্যাকাউন্টটি আর সক্রিয় নেই অথবা মুছে ফেলা হয়েছে।");
           router.replace("/login");
           return;
         }
@@ -146,7 +144,7 @@ function DashboardContent() {
         setPartners(pts);
       } catch {
         if (isMounted) {
-          toast.error(t("dashboard.syncError"));
+          toast.error("ড্যাশবোর্ডের কিছু তথ্য আপডেট করতে সমস্যা হয়েছে। ক্যাশড তথ্য প্রদর্শিত হচ্ছে।");
         }
       }
     });
@@ -154,7 +152,7 @@ function DashboardContent() {
     return () => {
       isMounted = false;
     };
-  }, [router, t]);
+  }, [router]);
 
   const handleAddMemberTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -162,13 +160,13 @@ function DashboardContent() {
 
     const partner = partners.find((p) => p.id === newTxPartnerId);
     if (!partner) {
-      toast.error(t("dashboard.history.selectedPartnerNotFound"));
+      toast.error("নির্বাচিত পার্টনার হাসপাতাল পাওয়া যায়নি।");
       return;
     }
 
     const billAmount = Number(newTxAmount);
     if (isNaN(billAmount) || billAmount <= 0) {
-      toast.error(t("dashboard.history.enterValidBillAmount"));
+      toast.error("অনুগ্রহ করে সঠিক বিলের পরিমাণ লিখুন।");
       return;
     }
 
@@ -188,7 +186,7 @@ function DashboardContent() {
       });
 
       if ("error" in res) {
-        toast.error(res.error || t("dashboard.history.txAddFailed"));
+        toast.error(res.error || "ট্রানজেকশন যুক্ত করা সম্ভব হয়নি।");
         return;
       }
 
@@ -201,7 +199,7 @@ function DashboardContent() {
         });
       }
 
-      toast.success(t("dashboard.history.txAddedSuccess"));
+      toast.success("ট্রানজেকশন সফলভাবে যুক্ত হয়েছে!");
       setNewTxPartnerId("");
       setNewTxAmount("");
       setNewTxDiscountPercent("10");
@@ -216,7 +214,7 @@ function DashboardContent() {
         authStore.setCurrentUser(freshUser);
       }
     } catch {
-      toast.error(t("dashboard.history.txAddFailed"));
+      toast.error("ট্রানজেকশন যুক্ত করা সম্ভব হয়নি।");
     } finally {
       setAddTxSubmitting(false);
     }
@@ -225,7 +223,7 @@ function DashboardContent() {
   const handleDownloadCard = async () => {
     if (!cardRef.current) return;
 
-    const loadingToast = toast.loading(t("dashboard.card.downloading"));
+    const loadingToast = toast.loading("কার্ড ডাউনলোড হচ্ছে...");
 
     try {
       const { toCanvas } = await import("html-to-image");
@@ -280,10 +278,10 @@ function DashboardContent() {
       link.click();
 
       toast.dismiss(loadingToast);
-      toast.success(t("dashboard.card.downloadSuccess"));
+      toast.success("কার্ড সফলভাবে ডাউনলোড হয়েছে!");
     } catch {
       toast.dismiss(loadingToast);
-      toast.error(t("dashboard.card.downloadFailed"));
+      toast.error("ডাউনলোড ব্যর্থ হয়েছে। আবার চেষ্টা করুন।");
     }
   };
 
@@ -317,12 +315,12 @@ function DashboardContent() {
         };
         authStore.setCurrentUser(updatedUser);
         setUser(updatedUser);
-        toast.success(t("dashboard.profile.success"));
+        toast.success("প্রোফাইল সফলভাবে আপডেট করা হয়েছে!");
       } else {
-        toast.error(t("dashboard.profile.error"));
+        toast.error("প্রোফাইল আপডেট করতে সমস্যা হয়েছে।");
       }
     } catch {
-      toast.error(t("dashboard.profile.serverError"));
+      toast.error("সার্ভার ত্রুটি।");
     }
   };
 
@@ -338,13 +336,11 @@ function DashboardContent() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
 
         {/* Offline Status & Emergency Call Banner */}
-        <OfflineCardBanner locale={locale} />
+        <OfflineCardBanner />
 
         {/* Welcome Banner */}
         <DashboardWelcomeHeader
           user={user}
-          t={t}
-          locale={locale}
           daysRemaining={daysRemaining}
           isExpired={isExpired}
         />
@@ -354,8 +350,6 @@ function DashboardContent() {
           totalSaved={totalSaved}
           totalSpent={totalSpent}
           transactions={transactions}
-          t={t}
-          locale={locale}
         />
 
         {/* Main Dashboard Panel */}
@@ -366,7 +360,6 @@ function DashboardContent() {
             user={user}
             cardRef={cardRef}
             handleDownloadCard={handleDownloadCard}
-            t={t}
           />
 
           {/* Right Column: Dynamic Tabs */}
@@ -375,11 +368,11 @@ function DashboardContent() {
               <TabsList className="grid w-full grid-cols-2 bg-muted/60 dark:bg-slate-900/60 p-1.5 rounded-xl border border-border/60">
                 <TabsTrigger value="history" className="rounded-lg text-xs font-semibold py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm">
                   <History className="h-3.5 w-3.5 mr-1.5" />
-                  {t("dashboard.tabs.history")}
+                  ব্যবহারের ইতিহাস
                 </TabsTrigger>
                 <TabsTrigger value="profile" className="rounded-lg text-xs font-semibold py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm">
                   <LayoutDashboard className="h-3.5 w-3.5 mr-1.5" />
-                  {t("dashboard.tabs.profile")}
+                  প্রোফাইল সেটিংস
                 </TabsTrigger>
               </TabsList>
 
@@ -390,8 +383,6 @@ function DashboardContent() {
                   allowMemberTx={allowMemberTx}
                   user={user}
                   setIsAddTxOpen={setIsAddTxOpen}
-                  t={t}
-                  locale={locale}
                 />
               </TabsContent>
 
@@ -413,7 +404,6 @@ function DashboardContent() {
                   setProfileBirthDate={setProfileBirthDate}
                   profileProfession={profileProfession}
                   setProfileProfession={setProfileProfession}
-                  t={t}
                 />
               </TabsContent>
 
@@ -438,8 +428,6 @@ function DashboardContent() {
           setNewTxDiscountPercent={setNewTxDiscountPercent}
           partners={partners}
           addTxSubmitting={addTxSubmitting}
-          t={t}
-          locale={locale}
         />
       )}
     </div>

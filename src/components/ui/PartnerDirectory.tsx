@@ -7,8 +7,7 @@ import { Partner } from "@/services/db";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/components/layout/LanguageProvider";
-import { formatNum } from "@/lib/i18n";
+import { toBanglaNums } from "@/lib/utils";
 import { PartnerCardSkeleton } from "@/components/ui/skeleton";
 import { FENI_UPAZILAS, detectUpazilaFromText } from "@/data/feniLocations";
 import PartnerCard from "@/components/ui/PartnerCard";
@@ -35,8 +34,6 @@ export default function PartnerDirectory({
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory || "all");
   const [selectedUpazila, setSelectedUpazila] = useState<string>("all");
   const [visibleCount, setVisibleCount] = useState(18);
-  const { locale, t } = useLanguage();
-  const isEn = locale === "en";
 
   if (initialPartners !== prevInitialPartners) {
     setPrevInitialPartners(initialPartners);
@@ -98,24 +95,26 @@ export default function PartnerDirectory({
     getPartnersAction()
       .then((data) => {
         if (!isMounted) return;
-        if (Array.isArray(data)) {
+        if (data && data.length > 0) {
           setPartners(data);
         }
-        setLoading(false);
       })
       .catch(() => {
         if (!isMounted) return;
-        setLoading(false);
         if (!hasInitialData) {
-          toast.error(t("ui.partnerdirectory.loadError"));
+          toast.error("পার্টনার তালিকা লোড করা যায়নি।");
         }
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
       });
+
     return () => {
       isMounted = false;
     };
-  }, [hasInitialData, t]);
+  }, [hasInitialData]);
 
-  // Precompute upazila for each partner
+  // Pre-resolve upazila for each partner once
   const partnersWithUpazila = useMemo(() => {
     return partners.map((p) => ({
       ...p,
@@ -123,7 +122,7 @@ export default function PartnerDirectory({
     }));
   }, [partners]);
 
-  // Filter partners by name, address, category, or department discount tests (e.g. CBC, USG, X-Ray, etc.)
+  // Filter partners by search, category, and upazila
   const filteredPartners = useMemo(() => {
     return partnersWithUpazila.filter((p) => {
       const q = searchQuery.toLowerCase().trim();
@@ -131,7 +130,7 @@ export default function PartnerDirectory({
         !q ||
         p.name.toLowerCase().includes(q) ||
         p.address.toLowerCase().includes(q) ||
-        p.category.toLowerCase().includes(q) ||
+        (p.facilities && p.facilities.toLowerCase().includes(q)) ||
         (p.departmentDiscounts && p.departmentDiscounts.toLowerCase().includes(q));
 
       const matchesCategory = selectedCategory === "all" || p.category === selectedCategory;
@@ -145,19 +144,17 @@ export default function PartnerDirectory({
   const displayedPartners = limit ? filteredPartners.slice(0, limit) : filteredPartners.slice(0, visibleCount);
 
   const categories = [
-    { value: "all", label: t("ui.partnerdirectory.allCategories") },
-    { value: "hospital", label: t("ui.partnerdirectory.hospital") },
-    { value: "diagnostic", label: t("ui.partnerdirectory.diagnosticCenter") },
-    { value: "pharmacy", label: t("ui.partnerdirectory.pharmacy") },
+    { value: "all", label: "সব প্রতিষ্ঠান" },
+    { value: "hospital", label: "হাসপাতাল" },
+    { value: "diagnostic", label: "ডায়াগনস্টিক সেন্টার" },
+    { value: "pharmacy", label: "ফার্মেসি" },
   ];
 
   return (
     <div className="space-y-6">
       {/* Screen Reader Live Announcement */}
       <div aria-live="polite" role="status" aria-atomic="true" className="sr-only">
-        {isEn
-          ? `Found ${filteredPartners.length} partner hospital${filteredPartners.length === 1 ? "" : "s"}`
-          : `${filteredPartners.length}টি পার্টনার প্রতিষ্ঠান পাওয়া গেছে`}
+        {`${toBanglaNums(filteredPartners.length)}টি পার্টনার প্রতিষ্ঠান পাওয়া গেছে`}
       </div>
 
       {/* Search and Filters Section */}
@@ -168,8 +165,8 @@ export default function PartnerDirectory({
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="text"
-              aria-label={t("ui.partnerdirectory.searchByHospitalNameOr") || "Search partner hospitals"}
-              placeholder={t("ui.partnerdirectory.searchByHospitalNameOr")}
+              aria-label="হাসপাতাল, ল্যাব বা ডায়াগনস্টিক সেন্টারের নাম লিখে খুঁজুন..."
+              placeholder="হাসপাতাল, ল্যাব বা ডায়াগনস্টিক সেন্টারের নাম লিখে খুঁজুন..."
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -217,7 +214,7 @@ export default function PartnerDirectory({
             <div className="flex items-center justify-between px-1">
               <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
                 <MapPin className="h-3 w-3 text-primary" />
-                <span>{t("ui.partnerdirectory.locationUpazila")}</span>
+                <span>উপজেলা</span>
               </span>
               {(selectedUpazila !== "all" || selectedCategory !== "all" || searchQuery) && (
                 <button
@@ -225,7 +222,7 @@ export default function PartnerDirectory({
                   onClick={handleResetFilters}
                   className="text-xs text-primary hover:underline font-semibold cursor-pointer"
                 >
-                  {t("ui.partnerdirectory.resetFilters")}
+                  ফিল্টার মুছুন
                 </button>
               )}
             </div>
@@ -250,14 +247,14 @@ export default function PartnerDirectory({
                         : "bg-background text-muted-foreground border-border/80 hover:bg-muted"
                     }`}
                   >
-                    <span>{isEn ? upz.nameEn : upz.nameBn}</span>
+                    <span>{upz.nameBn}</span>
                     {count > 0 && (
                       <span
                         className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
                           isSelected ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"
                         }`}
                       >
-                        {count}
+                        {toBanglaNums(count)}
                       </span>
                     )}
                   </button>
@@ -282,8 +279,6 @@ export default function PartnerDirectory({
               <PartnerCard
                 key={partner.id}
                 partner={partner}
-                locale={locale}
-                t={t}
               />
             ))}
           </div>
@@ -296,7 +291,7 @@ export default function PartnerDirectory({
                 onClick={() => setVisibleCount((prev) => prev + 18)}
                 className="px-6 py-2.5 rounded-xl text-sm font-semibold border-border hover:bg-muted cursor-pointer"
               >
-                {t("ui.partnerdirectory.loadMorePartners")} ({formatNum(filteredPartners.length - displayedPartners.length, locale)} {t("partnerHospitals.button.remaining")})
+                আরও পার্টনার দেখুন ({toBanglaNums(filteredPartners.length - displayedPartners.length)} টি বাকি)
               </Button>
             </div>
           )}
@@ -305,10 +300,10 @@ export default function PartnerDirectory({
         <Card className="p-8 sm:p-12 text-center rounded-2xl border-dashed border-2 border-border/80 bg-muted/10">
           <Hospital className="h-12 w-12 mx-auto text-muted-foreground/50 mb-3" />
           <h3 className="font-heading font-bold text-base sm:text-lg text-secondary dark:text-white mb-1">
-            {t("ui.partnerdirectory.noPartnersFound")}
+            কোনো পার্টনার পাওয়া যায়নি
           </h3>
           <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto mb-4">
-            {t("ui.partnerdirectory.noPartnersFoundDesc")}
+            আপনার অনুসন্ধানের সাথে মিলে এমন কোনো পার্টনার হাসপাতাল বা ডায়াগনস্টিক পাওয়া যায়নি।
           </p>
           <Button
             variant="outline"
@@ -320,11 +315,10 @@ export default function PartnerDirectory({
             }}
             className="rounded-xl cursor-pointer"
           >
-            {t("ui.partnerdirectory.viewAllPartners")}
+            সকল পার্টনার দেখুন
           </Button>
         </Card>
       )}
     </div>
   );
 }
-
