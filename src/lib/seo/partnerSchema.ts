@@ -223,12 +223,11 @@ export function generatePartnerJsonLd({
   // 2. Primary Medical Organization / Facility Schema
   const facilitySchema: Record<string, unknown> = {
     "@context": "https://schema.org",
-    "@type": categoryConfig.schemaType,
+    "@type": ["LocalBusiness", ...categoryConfig.schemaType],
     "@id": `${profileUrl}#facility`,
     name: partner.name,
     alternateName: `${partner.name} (${categoryConfig.nameBn})`,
     url: profileUrl,
-    ...(sameAsUrls.length > 0 ? { sameAs: sameAsUrls } : {}),
     image: imageUrl,
     logo: imageUrl,
     telephone: partner.phone,
@@ -251,6 +250,7 @@ export function generatePartnerJsonLd({
       latitude: "23.0159",
       longitude: "91.3976",
     },
+    sameAs: sameAsUrls.length > 0 ? sameAsUrls : undefined,
     areaServed: {
       "@type": "AdministrativeArea",
       name: "Feni District, Chittagong Division, Bangladesh",

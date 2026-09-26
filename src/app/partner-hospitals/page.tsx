@@ -10,9 +10,9 @@ import { Sparkles, ShieldCheck, Tag, Pill, MapPin } from "lucide-react";
 export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
 
 export async function generateMetadata() {
-  const pageTitle = "ফেনী হাসপাতাল তালিকা, ডায়াগনস্টিক সেন্টার ও প্যাথলজি ডিসকাউন্ট";
-  const ogTitle = "ফেনী হাসপাতাল তালিকা, ডায়াগনস্টিক সেন্টার ও প্যাথলজি ডিসকাউন্ট - হেলথ ক্লাব";
-  const pageDesc = "ফেনীর শীর্ষ বেসরকারি হাসপাতাল, প্যাথলজি ল্যাব, ডায়াগনস্টিক সেন্টার ও মডেল ফার্মেসির তালিকা। হেলথ ক্লাব মেম্বার কার্ডে পান ১০% থেকে ৩০% নিশ্চিত ডিসকাউন্ট।";
+  const pageTitle = "ফেনী সদর হাসপাতাল ও ডায়াগনস্টিক সেন্টার তালিকা | ১০-৩০% মেম্বার ছাড়";
+  const ogTitle = "ফেনী সদর হাসপাতাল ও ডায়াগনস্টিক সেন্টার তালিকা | ১০-৩০% মেম্বার ছাড় - হেলথ ক্লাব";
+  const pageDesc = "ফেনী সদর, এসএসকে রোড, ট্রাঙ্ক রোড, হাসপাতাল রোড ও আশেপাশের পার্টনার হাসপাতাল, প্যাথলজি ল্যাব, ডায়াগনস্টিক সেন্টার ও মডেল ফার্মেসির তালিকা। হেলথ ক্লাব মেম্বার কার্ডে পান ১০% থেকে ৩০% নিশ্চিত ডিসকাউন্ট।";
 
   return {
     title: pageTitle,
@@ -38,6 +38,7 @@ export async function generateMetadata() {
       "feni clinic list",
       "feni pathology lab",
       "ফেনী ডায়াগনস্টিক সেন্টার তালিকা",
+      "ফেনী সদর হাসপাতাল তালিকা",
       "ফেনী হাসপাতাল তালিকা",
       "ফেনী ক্লিনিক ও ডায়াগনস্টিক",
       "ফেনী প্যাথলজি ল্যাব ছাড়",
@@ -50,6 +51,10 @@ export async function generateMetadata() {
       "ফেনী প্রাইভেট হাসপাতাল",
       "ফেনী সদর হাসপাতাল",
       "ফেনী ল্যাব টেস্ট ডিসকাউন্ট",
+      "ফেনী সদর ডায়াগনস্টিক টেস্টের খরচ",
+      "ফেনী হাসপাতাল ১০-৩০% ছাড়",
+      "Feni Sadar hospital discount",
+      "Feni diagnostic test price",
     ],
     openGraph: {
       title: ogTitle,

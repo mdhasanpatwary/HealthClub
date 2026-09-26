@@ -101,7 +101,7 @@ export default function DepartmentSeoHero({
 
             <div className="flex items-center gap-1 text-muted-foreground">
               <MapPin className="h-3.5 w-3.5 text-primary/80" />
-              <span>এস.এস.কে রোড, ট্রাঙ্ক রোড, ফেনী</span>
+              <span>ফেনী সদর • এস.এস.কে রোড • ট্রাঙ্ক রোড • হাসপাতাল রোড</span>
             </div>
           </div>
 

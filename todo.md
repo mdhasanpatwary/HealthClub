@@ -1390,5 +1390,51 @@ This roadmap outlines the strategic localized content cluster required to achiev
   - **Details**: Deleted obsolete English blog translation dictionaries (`articleTranslationsData.ts`, `articleTranslationsOxygen.ts`, `articleTranslationsDengueTyphoid.ts`, `articleTranslationsHomeCare.ts`, `articleTranslationsSelectionGuides.ts`, `articleTranslationsSpecialistGuides.ts`, and `blogTranslations.ts`). Eliminated all dead `isEn` props, ternary branches, and dead translation calls across all 26 price tables, 8 in-depth review cards, 7 comparison matrix tables, specialized care sections, emergency sections, and table-of-contents components. Purged leftover unused `isEn` props from `DoctorCard.tsx`, `partnerSchema.ts`, and 6 admin settings cards. Verified with zero TypeScript compilation errors (`npx tsc --noEmit`), zero ESLint errors (`npm run lint`), and successful static generation of all 413 pages (`npm run build`).
 
 
+---
 
+## 📍 Phase 11: Local SEO Dominance & Hyper-Local Visibility (TODO-233 to TODO-237)
 
+- [x] **TODO-233**: **Hyper-Local On-Page SEO & Content Strategy (Upazila Guides & Local Keyword Intent)**
+  - **Priority**: High (P1 - Local Search Ranking & Organic User Acquisition)
+  - **Target Areas**:
+    1. **Location-Based Keyword Optimization**: Target high-volume search queries for Feni Sadar and surrounding upazilas (e.g., "ফেনীতে সেরা মেডিসিন বিশেষজ্ঞ", "ফেনী সদর ডায়াগনস্টিক টেস্টের খরচ", "Feni doctor appointment", "ফেনী হাসপাতাল সিরিয়াল").
+    2. **Upazila Directory & Local Landing Guides**: Enhance existing upazila-specific guides/filters (Feni Sadar, Daganbhuiyan, Chhagalnaiya, Sonagazi, Parshuram, Fulgazi) with localized medical guidance, clear geographic context, landmark references, and internal linking to verified Feni Sadar partner hospitals (strictly respecting Feni Sadar partner contract rules).
+    3. **Doctor & Partner Chamber Geolocation Context**: Ensure every doctor and partner profile prominently includes localized area landmarks (e.g., Trunk Road, SSK Road, Hospital Road, Mizan Road) and clear district context for local search relevancy.
+  - **Files**: `src/app/consultants/page.tsx`, `src/app/consultants/[slug]/page.tsx`, `src/app/partner-hospitals/page.tsx`, `src/app/partner-hospitals/[slug]/page.tsx`, `src/app/blog/components/*`, `src/components/consultants/DepartmentSeoHero.tsx`
+
+- [x] **TODO-234**: **Comprehensive Local Structured Data & Schema Markup (JSON-LD)**
+  - **Priority**: High (P1 - Rich Snippets, Local Pack & AEO / Voice Search Optimization)
+  - **Target Areas**:
+    1. **MedicalOrganization & LocalBusiness Schema**: Audit and expand `LocalBusiness` / `MedicalOrganization` schema on partner hospital pages and emergency pages with exact geo-coordinates, operating hours, phone numbers, and postal address details.
+    2. **Physician Schema**: Enhance individual doctor profile JSON-LD (`src/lib/seo/doctorSchema.ts`) with `medicalSpecialty`, `alumniOf`, `hospitalAffiliation`, and `availableService`.
+    3. **DiagnosticService / MedicalWebPage Schema**: Implement structured data for local test pricing and health package guides where relevant.
+    4. **FAQPage Schema**: Ensure all high-traffic landing, directory, and blog pages have structured `FAQPage` JSON-LD to capture rich snippet real estate on Google SERP.
+  - **Files**: `src/lib/seo/doctorSchema.ts`, `src/lib/seo/partnerSchema.ts`, `src/lib/seo/homepageSchema.ts`, `src/app/blog/utils/blogJsonLd.ts`, `src/components/partner-hospitals/PartnerHospitalsFAQ.tsx`
+
+- [ ] **TODO-235**: **Gap-Filling Non-Duplicate Content Strategy (Deduplicated vs 37+ Existing Posts & 263 Doctors)**
+  - **Priority**: High (P1 - Eliminates Keyword Cannibalization & Captures Missing High-Intent Search Traffic)
+  - **Audit Findings**: The repository already contains 37 comprehensive pillar guides (covering all major doctor departments, CT Scan/MRI, Full Body Checkup, Pregnancy USG, Hospital rankings, Sadar Hospital, Diabetic Hospital, Emergency Services) and 263 doctor profiles. Creating duplicate doctor or hospital guides will cannibalize organic rankings.
+  - **New High-Value Gap Topics to Create**:
+    1. `feni-health-club-membership-discount-guide`: "ফেনী হেলথ ক্লাব মেম্বারশিপ কার্ড কী ও কীভাবে হাসপাতালে ১০-৩০% ডিসকাউন্ট পাওয়া যায়" (Pillar conversion guide for search queries like "feni medical discount", "চিকিৎসায় ছাড় ফেনী").
+    2. `feni-endoscopy-colonoscopy-test-cost-guide`: "ফেনীতে এন্ডোস্কোপি ও কোলনোস্কোপি পরীক্ষার খরচ, প্রস্তুতি ও অভিজ্ঞ গ্যাস্ট্রোএন্টারোলজি সেন্টার" (Missing high-frequency diagnostic search query).
+    3. `feni-cardiac-ecg-echo-ett-test-guide`: "ফেনীতে ইসিজি (ECG), ইকো (Echocardiogram) ও ইটিটি (ETT) পরীক্ষার খরচ ও বিশ্বস্ত হার্ট সেন্টার" (Targeting cardiac non-invasive test searches).
+    4. `feni-doctor-serial-appointment-guide`: "ফেনীতে বিশেষজ্ঞ ডাক্তারদের সিরিয়াল নেওয়ার সহজ উপায় ও চেম্বার শিডিউল গাইড" (Addresses dalal/broker free direct appointment booking searches).
+    5. Dedicated sub-district patient guidance (breaking down multi-upazila clusters into targeted landing intent): `daganbhuiyan-patient-guide`, `chhagalnaiya-patient-guide`, `sonagazi-patient-guide` focusing on traveling to verified Feni Sadar partner hospitals.
+  - **Files**: `src/data/blog/posts/*`, `src/data/blog/blogPosts.ts`, `src/app/sitemap.ts`
+
+- [ ] **TODO-236**: **Programmatic Local SEO Landing Routes & Dynamic Intent Metadata**
+  - **Priority**: High (P1 - Scalable Search Real Estate for Long-Tail Geo Keywords)
+  - **Target Areas**:
+    1. **Upazila-Specific Doctor Landing Routes**: Create programmatic routes like `/consultants/location/[upazila]` (e.g. `/consultants/location/feni-sadar`, `/consultants/location/daganbhuiyan`) with static pre-rendering, custom Bengali meta titles ("দাগনভূঞার রোগীদের জন্য ফেনীর বিশেষজ্ঞ ডাক্তার তালিকা"), and upazila-filtered doctor cards.
+    2. **Clean Category Routes for Partner Directory**: Implement indexed canonical landing paths (`/partner-hospitals/category/[type]`) for hospitals, diagnostic labs, and pharmacies with custom local H1s and rich snippets.
+    3. **Dynamic Intent Title/Description Enhancement for 263 Doctor Profiles**: Inject high-converting local keyword patterns into doctor metadata: `"{Name} - {Specialty} | চেম্বার, ভিজিটিং সময় ও সিরিয়াল ফেনী"` to capture direct name and chamber searches.
+  - **Files**: `src/app/consultants/page.tsx`, `src/app/consultants/[slug]/page.tsx`, `src/app/consultants/location/[upazila]/page.tsx`, `src/app/partner-hospitals/page.tsx`, `src/app/partner-hospitals/category/[type]/page.tsx`, `src/data/doctorSeoData.ts`
+
+- [ ] **TODO-237**: **360° Internal Linking Funnel & High-Converting Member CTAs**
+  - **Priority**: High (P1 - PageRank Flow, Dwell Time & Conversion to Health Club Membership)
+  - **Target Areas**:
+    1. **Doctor Profile -> Blog Pillar Linking**: On each of the 263 doctor profile pages, dynamically render a contextual link card to their corresponding department pillar guide (e.g. an Orthopedic doctor links to `/blog/best-orthopedic-doctors-in-feni`).
+    2. **Blog Article -> Live Doctor Roster**: In the 37+ blog articles, integrate a dynamic component fetching verified active doctors from the live database for that department, replacing or augmenting static text.
+    3. **Discount Benefit Banner in Price Tables**: Embed a prominent, standardized Health Club discount badge/banner (`"১০-৩০% মেম্বার ছাড় পেতে আজই কার্ড সংগ্রহ করুন"`) inside all 26 diagnostic and hospital pricing tables linking to `/membership`.
+    4. **Breadcrumbs with Schema**: Add visual breadcrumb navigation and `BreadcrumbList` JSON-LD across all consultants, hospitals, and blog sub-pages to reinforce hierarchical site structure in Google SERP.
+  - **Files**: `src/components/consultants/DoctorProfileView.tsx`, `src/app/blog/[slug]/page.tsx`, `src/app/blog/components/*`, `src/components/ui/Breadcrumbs.tsx`

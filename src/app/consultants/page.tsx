@@ -46,12 +46,12 @@ export async function generateMetadata({ searchParams }: ConsultantsPageProps) {
     };
   }
 
-  const ogTitle = "ফেনী ডাক্তার তালিকা ও সিরিয়াল নাম্বার | চেম্বার সময়সূচী - হেলথ ক্লাব";
-  const ogDesc = "ফেনীর সকল বিশেষজ্ঞ ডাক্তারদের তালিকা, চেম্বার শিডিউল, রোগী দেখার সময় এবং সরাসরি সিরিয়াল নাম্বার ও অ্যাপয়েন্টমেন্ট তথ্য।";
+  const ogTitle = "ফেনী ডাক্তার তালিকা ও সিরিয়াল নাম্বার | ফেনী সদর ও উপজেলা ভিত্তিক চেম্বার তথ্য - হেলথ ক্লাব";
+  const ogDesc = "ফেনীর সেরা মেডিসিন, গাইনী, শিশু, হৃদরোগ ও কিডনি বিশেষজ্ঞ ডাক্তার, চেম্বার শিডিউল, রোগী দেখার সময় এবং সরাসরি সিরিয়াল নাম্বার ও অ্যাপয়েন্টমেন্ট তথ্য।";
 
   return {
-    title: "ফেনী ডাক্তার তালিকা ও সিরিয়াল নাম্বার | চেম্বার সময়সূচী ও অ্যাপয়েন্টমেন্ট",
-    description: "ফেনী ডাক্তার তালিকা, চেম্বার সময়সূচী ও সরাসরি সিরিয়াল নাম্বার। ফেনীর বিশেষজ্ঞ ডাক্তারদের (মেডিসিন, গাইনী, শিশু, হৃদরোগ) চেম্বার, রোগী দেখার সময় এবং অ্যাপয়েন্টমেন্ট বুকিংয়ের বিস্তারিত তথ্য।",
+    title: "ফেনী ডাক্তার তালিকা ও সিরিয়াল নাম্বার | ফেনী সদর ও উপজেলা ভিত্তিক চেম্বার সময়সূচী",
+    description: "ফেনী ডাক্তার তালিকা, ফেনী সদর ও উপজেলা ভিত্তিক চেম্বার সময়সূচী, ডাক্তার সিরিয়াল এবং অ্যাপয়েন্টমেন্ট তথ্য। ফেনীর বিশেষজ্ঞ ডাক্তারদের মেডিসিন, গাইনী, শিশু, হৃদরোগ এবং ডায়াগনস্টিক সহযোগী সেবা খুঁজুন।",
     alternates: {
       canonical: `${SITE_URL}/consultants`,
     },
@@ -62,10 +62,14 @@ export async function generateMetadata({ searchParams }: ConsultantsPageProps) {
       "feni doctors info",
       "feni doctor schedule",
       "ফেনী ডাক্তার তালিকা",
+      "ফেনী সদর ডাক্তার তালিকা",
       "ফেনী ডাক্তারদের তথ্য",
       "ফেনী ডাক্তার সিরিয়াল",
       "ফেনীর ডাক্তারদের চেম্বার ও সময়সূচী",
       "ফেনীতে আজ কোন ডাক্তার বসেন",
+      "ফেনীতে সেরা মেডিসিন বিশেষজ্ঞ",
+      "ফেনী সদর ডায়াগনস্টিক টেস্টের খরচ",
+      "ফেনী হাসপাতাল সিরিয়াল",
       "feni doctor",
       "feni doctor info",
       "feni specialist doctors",
@@ -81,6 +85,8 @@ export async function generateMetadata({ searchParams }: ConsultantsPageProps) {
       "Orthopedic doctor in Feni",
       "Cardiologist in Feni",
       "Health Club doctor directory",
+      "Feni Sadar doctor serial",
+      "doctor appointment Feni Bangladesh",
     ],
     openGraph: {
       title: ogTitle,

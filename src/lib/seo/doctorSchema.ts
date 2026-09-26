@@ -190,11 +190,22 @@ export function generateDoctorJsonLd(
     : `${SITE_URL}/og-image.png`;
 
   // Parse phone numbers
-  const phoneList = doctor.serialPhone
+  const phoneList = (doctor.serialPhone || "01898221111")
     .split(/[,/|]+/)
-    .map((p) => p.trim())
+    .map((p: string) => p.trim())
     .filter(Boolean);
   const primaryPhone = phoneList[0] || "01898221111";
+
+  const hospitalAffiliationName = doctor.partner?.name || doctor.chamberName || "ফেনী স্বাস্থ্যসেবা প্রতিষ্ঠান";
+
+  const alumniOfValue = doctor.degrees
+    ? [
+        {
+          "@type": "CollegeOrUniversity",
+          name: `Medical education credentials: ${doctor.degrees}`,
+        },
+      ]
+    : undefined;
 
   // Parse consultation fee for numerical price offer
   const numericFeeMatch = doctor.consultationFee?.match(/(\d+[\d,]*)/);
@@ -278,6 +289,29 @@ export function generateDoctorJsonLd(
         description: clinicalFocus.bn,
       },
     ],
+    ...(alumniOfValue ? { alumniOf: alumniOfValue } : {}),
+    ...(doctor.partner?.name || doctor.chamberName
+      ? {
+          hospitalAffiliation: {
+            "@type": "MedicalOrganization",
+            name: hospitalAffiliationName,
+            address: {
+              "@type": "PostalAddress",
+              streetAddress: doctor.chamberAddress || doctor.partner?.address || "Feni Sadar, Feni",
+              addressLocality: "Feni",
+              addressRegion: "Chittagong Division",
+              postalCode: "3900",
+              addressCountry: "BD",
+            },
+            telephone: primaryPhone,
+            ...(doctor.partnerId
+              ? {
+                  url: `${SITE_URL}/partner-hospitals/${encodeURIComponent(doctor.partner?.slug || doctor.partnerId)}`,
+                }
+              : {}),
+          },
+        }
+      : {}),
     // Educational Credentials
     ...(doctor.degrees
       ? {
@@ -297,10 +331,10 @@ export function generateDoctorJsonLd(
     // Chamber / Hospital / Clinic Organization Affiliation
     worksFor: {
       "@type": "MedicalOrganization",
-      name: doctor.chamberName,
+      name: hospitalAffiliationName,
       address: {
         "@type": "PostalAddress",
-        streetAddress: doctor.chamberAddress,
+        streetAddress: doctor.chamberAddress || doctor.partner?.address || "Feni Sadar, Feni",
         addressLocality: "Feni",
         addressRegion: "Chittagong Division",
         postalCode: "3900",
@@ -335,6 +369,7 @@ export function generateDoctorJsonLd(
           name: doctor.name,
           url: profileUrl,
         },
+        areaServed: "Feni District, Bangladesh",
         ...(numericFee
           ? {
               offers: {
@@ -349,6 +384,10 @@ export function generateDoctorJsonLd(
                     ? "https://schema.org/InStock"
                     : "https://schema.org/OutOfStock",
                 validFrom: "2026-01-01",
+                seller: {
+                  "@type": "MedicalOrganization",
+                  name: hospitalAffiliationName,
+                },
               },
             }
           : {}),

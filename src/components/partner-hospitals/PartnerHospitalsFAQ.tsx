@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown, HelpCircle } from "lucide-react";
+import JsonLd from "@/components/seo/JsonLd";
 
 interface FAQItem {
   question: string;
@@ -42,67 +43,83 @@ export default function PartnerHospitalsFAQ() {
     setOpenIndex(openIndex === index ? null : index);
   };
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQS.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
+
   return (
-    <section aria-labelledby="partner-faq-heading" className="w-full max-w-4xl mx-auto space-y-6 sm:space-y-8">
-      {/* Section Header */}
-      <div className="text-center space-y-2">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
-          <HelpCircle className="h-3.5 w-3.5" />
-          <span>সাধারণ জিজ্ঞাসা</span>
+    <>
+      <JsonLd data={faqSchema} />
+      <section aria-labelledby="partner-faq-heading" className="w-full max-w-4xl mx-auto space-y-6 sm:space-y-8">
+        {/* Section Header */}
+        <div className="text-center space-y-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
+            <HelpCircle className="h-3.5 w-3.5" />
+            <span>সাধারণ জিজ্ঞাসা</span>
+          </div>
+          <h2 id="partner-faq-heading" className="font-heading text-xl sm:text-3xl font-bold text-secondary dark:text-white tracking-tight">
+            হাসপাতাল, ল্যাব টেস্ট ও ফার্মেসি ডিসকাউন্ট সম্পর্কিত প্রশ্নোত্তর
+          </h2>
+          <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            ফেনীতে চিকিৎসা খরচ কমানো, ল্যাব টেস্ট ডিসকাউন্ট এবং ওষুধ কেনার নিয়ম সম্পর্কে বিস্তারিত জানুন।
+          </p>
         </div>
-        <h2 id="partner-faq-heading" className="font-heading text-xl sm:text-3xl font-bold text-secondary dark:text-white tracking-tight">
-          হাসপাতাল, ল্যাব টেস্ট ও ফার্মেসি ডিসকাউন্ট সম্পর্কিত প্রশ্নোত্তর
-        </h2>
-        <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-          ফেনীতে চিকিৎসা খরচ কমানো, ল্যাব টেস্ট ডিসকাউন্ট এবং ওষুধ কেনার নিয়ম সম্পর্কে বিস্তারিত জানুন।
-        </p>
-      </div>
 
-      {/* Accordion List */}
-      <div className="space-y-3">
-        {FAQS.map((faq, idx) => {
-          const isOpen = openIndex === idx;
-          const btnId = `partner-faq-btn-${idx}`;
-          const panelId = `partner-faq-ans-${idx}`;
+        {/* Accordion List */}
+        <div className="space-y-3">
+          {FAQS.map((faq, idx) => {
+            const isOpen = openIndex === idx;
+            const btnId = `partner-faq-btn-${idx}`;
+            const panelId = `partner-faq-ans-${idx}`;
 
-          return (
-            <div
-              key={idx}
-              className="border border-border/80 rounded-2xl bg-card hover:border-primary/40 transition-all duration-200 shadow-xs overflow-hidden"
-            >
-              <button
-                id={btnId}
-                type="button"
-                onClick={() => toggleFAQ(idx)}
-                aria-expanded={isOpen}
-                aria-controls={panelId}
-                className="w-full flex justify-between items-center gap-3 p-4 sm:p-5 text-left font-heading font-bold text-secondary dark:text-white text-sm sm:text-base cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
-              >
-                <span className="leading-snug">{faq.question}</span>
-                <ChevronDown
-                  className={`h-5 w-5 text-primary shrink-0 transition-transform duration-300 ${
-                    isOpen ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
+            return (
               <div
-                id={panelId}
-                role="region"
-                aria-labelledby={btnId}
-                className={`transition-all duration-300 ease-in-out ${
-                  isOpen
-                    ? "max-h-[500px] border-t border-border/60 opacity-100 p-4 sm:p-5 pt-3 sm:pt-4 bg-muted/20"
-                    : "max-h-0 opacity-0 overflow-hidden"
-                }`}
+                key={idx}
+                className="border border-border/80 rounded-2xl bg-card hover:border-primary/40 transition-all duration-200 shadow-xs overflow-hidden"
               >
-                <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
-                  {faq.answer}
-                </p>
+                <button
+                  id={btnId}
+                  type="button"
+                  onClick={() => toggleFAQ(idx)}
+                  aria-expanded={isOpen}
+                  aria-controls={panelId}
+                  className="w-full flex justify-between items-center gap-3 p-4 sm:p-5 text-left font-heading font-bold text-secondary dark:text-white text-sm sm:text-base cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
+                >
+                  <span className="leading-snug">{faq.question}</span>
+                  <ChevronDown
+                    className={`h-5 w-5 text-primary shrink-0 transition-transform duration-300 ${
+                      isOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                <div
+                  id={panelId}
+                  role="region"
+                  aria-labelledby={btnId}
+                  className={`transition-all duration-300 ease-in-out ${
+                    isOpen
+                      ? "max-h-[500px] border-t border-border/60 opacity-100 p-4 sm:p-5 pt-3 sm:pt-4 bg-muted/20"
+                      : "max-h-0 opacity-0 overflow-hidden"
+                  }`}
+                >
+                  <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
+                    {faq.answer}
+                  </p>
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
-    </section>
+            );
+          })}
+        </div>
+      </section>
+    </>
   );
 }

@@ -110,7 +110,7 @@ export default async function EmergencyPage() {
     // 2. EmergencyService & MedicalBusiness Schema
     {
       "@context": "https://schema.org",
-      "@type": ["EmergencyService", "MedicalBusiness"],
+      "@type": ["EmergencyService", "MedicalBusiness", "LocalBusiness"],
       name: "হেলথ ক্লাব জরুরি স্বাস্থ্য সেবা ও রক্তদাতা নেটওয়ার্ক (ফেনী)",
       url: `${SITE_URL}/emergency`,
       logo: `${SITE_URL}/images/member-card-logo.webp`,
@@ -124,7 +124,12 @@ export default async function EmergencyPage() {
         "Fulgazi",
         "Feni, Bangladesh",
       ],
-      openingHours: "Mo-Su 00:00-24:00",
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: "23.0159",
+        longitude: "91.3976",
+      },
+      openingHours: "Mo-Su 00:00-23:59",
       telephone: formattedTel,
       priceRange: "Free / Public Service",
       availableService: [
@@ -135,8 +140,10 @@ export default async function EmergencyPage() {
       ],
       address: {
         "@type": "PostalAddress",
+        streetAddress: "Trunk Road, Feni Sadar",
         addressLocality: "Feni",
         addressRegion: "Chittagong",
+        postalCode: "3900",
         addressCountry: "BD",
       },
     },
