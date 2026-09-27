@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   Phone, PhoneCall, Calendar, Building2,
-  Stethoscope, X
+  Stethoscope, X, Sparkles, ArrowRight
 } from "lucide-react";
 import { Doctor } from "@/services/db";
 import { Button } from "@/components/ui/button";
@@ -157,6 +157,46 @@ export function DoctorSerialModal({ doctor, onClose }: DoctorSerialModalProps) {
               </span>
             </a>
           ))}
+        </div>
+
+        {/* In-Funnel Member Savings Smart Prompt */}
+        <div className="relative overflow-hidden rounded-2xl border-2 border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-primary/5 to-teal-500/10 p-3.5 space-y-2.5">
+          <div className="flex items-start gap-2.5">
+            <div className="h-7 w-7 rounded-xl bg-primary text-white flex items-center justify-center shrink-0 shadow-xs mt-0.5">
+              <Sparkles className="h-4 w-4" />
+            </div>
+            <div className="space-y-1 min-w-0 flex-1">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full">
+                  সীমিত সময়ের অফার
+                </span>
+                <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400">
+                  ১ বছর সম্পূর্ণ ফ্রি
+                </span>
+              </div>
+              <h5 className="font-heading font-bold text-xs sm:text-sm text-foreground leading-snug">
+                ডাক্তারের টেস্টে ১০-৩০% ডিসকাউন্ট চান?
+              </h5>
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                প্রথম ১০০ জন পাচ্ছেন হেলথ ক্লাবের <strong className="text-foreground font-semibold">ফাউন্ডিং মেম্বারশিপ ফ্রি</strong>। ফেনীর পার্টনার হাসপাতালে টেস্ট করানোর পূর্বে ডিজিটাল কার্ডটি সংগ্রহ করে নিন।
+              </p>
+            </div>
+          </div>
+
+          <Link
+            href="/membership"
+            onClick={() => {
+              trackEvent("membership_funnel", {
+                step: "serial_cta_click",
+                source: `doctor_serial_modal_${doctor.id}`,
+              });
+              onClose();
+            }}
+            className="flex items-center justify-center gap-1.5 w-full py-2.5 px-3 rounded-xl bg-primary hover:bg-primary-dark text-white text-xs font-bold transition-all shadow-md shadow-primary/20 hover:shadow-primary/30"
+          >
+            <span>১ মিনিটে ফ্রি মেম্বার কার্ড নিন</span>
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
         </div>
 
         <Button

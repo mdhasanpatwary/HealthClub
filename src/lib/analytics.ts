@@ -70,9 +70,10 @@ export interface AnalyticsEventParams {
     report_type: string;
   };
   membership_funnel: {
-    step: "view_pricing" | "register_submit" | "payment_submit" | "renew_submit";
+    step: "view_pricing" | "register_submit" | "payment_submit" | "renew_submit" | "serial_cta_click";
     tier?: string;
     amount?: number;
+    source?: string;
   };
   health_tip_view: {
     slug: string;

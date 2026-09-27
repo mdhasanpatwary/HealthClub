@@ -6,8 +6,9 @@ import {
   Phone, PhoneCall, Calendar, Clock, MapPin, Building2,
   Stethoscope, CheckCircle2, Share2, Navigation,
   ArrowLeft, ShieldCheck,
-  FileText, Clock3, CreditCard
+  FileText, Clock3, CreditCard, Sparkles, ArrowRight
 } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 import { Doctor, Partner } from "@/services/db";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -298,6 +299,44 @@ export default function DoctorProfileView({
                       </span>
                     </a>
                   ))}
+                </div>
+
+                {/* On-Page Serial Member Discount In-Funnel Prompt */}
+                <div className="p-3.5 sm:p-4 rounded-2xl border-2 border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-primary/5 to-teal-500/10 space-y-2.5">
+                  <div className="flex items-start gap-2.5">
+                    <div className="h-7 w-7 rounded-xl bg-primary text-white flex items-center justify-center shrink-0 shadow-xs mt-0.5">
+                      <Sparkles className="h-4 w-4" />
+                    </div>
+                    <div className="space-y-0.5 min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full">
+                          ফাউন্ডিং মেম্বার অফার
+                        </span>
+                        <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400">
+                          ১ বছর সম্পূর্ণ ফ্রি
+                        </span>
+                      </div>
+                      <p className="font-heading font-bold text-xs sm:text-sm text-foreground leading-snug">
+                        সিরিয়াল বুকিংয়ের পর টেস্টে ১০-৩০% ডিসকাউন্ট চান?
+                      </p>
+                      <p className="text-[11px] text-muted-foreground leading-relaxed">
+                        ডাক্তারের প্রেসক্রিপশন অনুযায়ী সকল টেস্ট ও ডায়াগনস্টিকে ছাড় পেতে এখনই সংগ্রহ করুন হেলথ ক্লাব ডিজিটাল মেম্বার কার্ড।
+                      </p>
+                    </div>
+                  </div>
+                  <Link
+                    href="/membership"
+                    onClick={() => {
+                      trackEvent("membership_funnel", {
+                        step: "serial_cta_click",
+                        source: `doctor_profile_serial_${doctor.id}`,
+                      });
+                    }}
+                    className="flex items-center justify-center gap-1.5 w-full py-2.5 px-3 rounded-xl bg-primary hover:bg-primary-dark text-white text-xs font-bold transition-all shadow-xs"
+                  >
+                    <span>১ মিনিটে ফ্রি মেম্বার কার্ড সংগ্রহ করুন</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
                 </div>
               </div>
             </Card>
