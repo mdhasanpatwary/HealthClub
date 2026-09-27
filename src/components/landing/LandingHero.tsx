@@ -15,12 +15,12 @@ export function LandingHero({ sampleMember }: LandingHeroProps) {
       {/* Background orbs (optimized for mobile paint performance) */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden -z-10" aria-hidden="true">
         <div
-          className="absolute -top-32 sm:-top-48 -right-32 sm:-right-48 w-[280px] h-[280px] sm:w-[500px] sm:h-[500px] rounded-full animate-gradient will-change-transform"
+          className="absolute -top-32 sm:-top-48 -right-32 sm:-right-48 w-[280px] h-[280px] sm:w-[500px] sm:h-[500px] rounded-full sm:animate-gradient will-change-transform"
           style={{
             background: "radial-gradient(circle, rgba(22, 163, 74, 0.18) 0%, rgba(22, 163, 74, 0.04) 50%, transparent 70%)",
           }}
         />
-        <div className="absolute top-36 sm:top-48 -left-32 sm:-left-48 w-[240px] h-[240px] sm:w-[420px] sm:h-[420px] bg-emerald-200/40 dark:bg-emerald-900/20 rounded-full blur-xl sm:blur-2xl will-change-transform" />
+        <div className="absolute top-36 sm:top-48 -left-32 sm:-left-48 w-[240px] h-[240px] sm:w-[420px] sm:h-[420px] bg-emerald-200/40 dark:bg-emerald-900/20 rounded-full blur-lg sm:blur-2xl will-change-transform" />
         <div className="hidden sm:block absolute bottom-0 right-1/3 w-80 h-80 bg-emerald-100/60 dark:bg-emerald-950/30 rounded-full blur-2xl" />
       </div>
 
@@ -42,7 +42,7 @@ export function LandingHero({ sampleMember }: LandingHeroProps) {
               স্বাস্থ্য সুবিধা মেম্বারশিপ প্ল্যাটফর্ম
             </span>
 
-            <h1 className="font-heading text-4xl sm:text-5xl xl:text-6xl font-extrabold text-secondary dark:text-white leading-[1.3] tracking-tight">
+            <h1 className="font-heading text-4xl sm:text-5xl xl:text-6xl font-bold text-secondary dark:text-white leading-[1.3] tracking-tight">
               স্বাস্থ্য সেবা হোক <span className="gradient-text">সহজ ও সাশ্রয়ী</span> সকলের জন্য
             </h1>
 

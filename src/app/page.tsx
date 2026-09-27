@@ -116,7 +116,8 @@ export default async function Home() {
   } = stats;
 
   const remainingSeats = Math.max(0, 100 - (foundingCount ?? memberCount));
-  const blogPosts = await getAllBlogPostsAction();
+  const allBlogPosts = await getAllBlogPostsAction();
+  const blogPosts = allBlogPosts.slice(0, 3);
 
   // Sample member data for the digital card visual in Hero
   const sampleMember: Member = {

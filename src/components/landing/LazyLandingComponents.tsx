@@ -32,7 +32,9 @@ const PartnerDirectory = dynamic(() => import("@/components/ui/PartnerDirectory"
 
 export function LazyPartnerDirectorySection({ partners }: { partners: Partner[] }) {
   return (
-    <PartnerDirectory partners={partners} limit={3} showFilters={false} />
+    <LazyHydrate fallback={<PartnerGridSkeleton count={3} />}>
+      <PartnerDirectory partners={partners} limit={3} showFilters={false} />
+    </LazyHydrate>
   );
 }
 

@@ -50,7 +50,7 @@ export default function HeroCardWrapper({ demoMember }: HeroCardWrapperProps) {
 
   return (
     <div className="w-full">
-      <MemberCard member={member ?? demoMember} priority={true} />
+      <MemberCard member={member ?? demoMember} priority={false} />
     </div>
   );
 }

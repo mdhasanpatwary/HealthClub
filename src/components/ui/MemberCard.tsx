@@ -10,7 +10,7 @@ interface MemberCardProps {
 }
 
 const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCard(
-  { member, priority = true },
+  { member },
   ref
 ) {
   // Determine card tier badge & accent styling
@@ -49,16 +49,10 @@ const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCa
         backgroundColor: "#020617",
       }}
     >
-      {/* Custom Generated Background Texture — uses next/image with priority for instant LCP render */}
-      <Image
-        src="/images/member-card-bg.webp"
-        alt=""
-        fill
-        sizes="(max-width: 448px) 100vw, 448px"
-        className="object-cover opacity-60 mix-blend-screen pointer-events-none rounded-2xl print:rounded-[3.18mm] print:opacity-80"
-        priority={priority}
-        fetchPriority={priority ? "high" : "auto"}
-        loading={priority ? "eager" : "lazy"}
+      {/* Custom Generated Background Texture — uses CSS background to prevent LCP contention and eliminate head preload */}
+      <div
+        className="absolute inset-0 bg-cover bg-center opacity-60 mix-blend-screen pointer-events-none rounded-2xl print:rounded-[3.18mm] print:opacity-80"
+        style={{ backgroundImage: "url('/images/member-card-bg.webp')" }}
         aria-hidden="true"
       />
 

@@ -22,7 +22,7 @@ const notoSansBengali = Noto_Sans_Bengali({
   variable: "--font-noto-sans-bengali",
   subsets: ["bengali"],
   weight: ["400", "700"],
-  display: "optional",
+  display: "swap",
   preload: true,
 });
 

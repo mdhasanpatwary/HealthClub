@@ -107,6 +107,10 @@ export default function PartnerDirectory({
   };
 
   useEffect(() => {
+    // If initial partners were already provided and we only show a limited preview (e.g. homepage),
+    // skip the full directory fetch to prevent blocking the network and CPU on initial page load.
+    if (hasInitialData && limit) return;
+
     let isMounted = true;
     getPartnersAction()
       .then((data) => {
@@ -128,7 +132,7 @@ export default function PartnerDirectory({
     return () => {
       isMounted = false;
     };
-  }, [hasInitialData]);
+  }, [hasInitialData, limit]);
 
   // Pre-resolve upazila for each partner once
   const partnersWithUpazila = useMemo(() => {
