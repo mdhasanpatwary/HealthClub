@@ -153,7 +153,11 @@ export function BlogTableOfContents({
     hasOxygenPricing ||
     hasDengueTyphoidPricing;
 
-  const isUpazilaArticle = Boolean(hasUpazilaPricing || currentSlug?.includes("healthcare-guide"));
+  const isUpazilaArticle = Boolean(
+    hasUpazilaPricing ||
+    currentSlug?.includes("healthcare-guide") ||
+    currentSlug?.includes("patient-guide")
+  );
   const isDoctorArticle = !isUpazilaArticle && doctorGroups && doctorGroups.length > 0;
   const isDiagnosticArticle = diagnosticCenters && diagnosticCenters.length > 0;
   const isDentalArticle = dentalClinics && dentalClinics.length > 0;
@@ -271,6 +275,7 @@ export function BlogTableOfContents({
             secNum={secNum}
             linkClass={linkClass}
             activeId={activeId}
+            currentSlug={currentSlug}
           />
         ) : isDiagnosticArticle ? (
           <StandardEntityToc

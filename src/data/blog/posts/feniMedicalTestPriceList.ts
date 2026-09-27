@@ -48,6 +48,13 @@ export const FENI_MEDICAL_TEST_PRICE_LIST: BlogPost = {
     "feni mri scan cost",
     "feni ct scan price",
     "feni ultrasound price",
+  
+    "feni medical test price list",
+    "diagnostic test cost in feni",
+    "pathology lab test price feni",
+    "blood test charges feni",
+    "xray usg ct scan price feni",
+    "medical test discount in feni",
   ],
   keyHighlightsBn: [
     "ফেনী শহরের বেসরকারি ডায়াগনস্টিক সেন্টার ও প্যাথলজি ল্যাবের ৮০টি সর্বাধিক নির্দেশিত টেস্টের হালনাগাদ ও তুলনামূলক বাজারদর তালিকা।",

@@ -8,6 +8,8 @@ import { getPartnersAction } from "@/app/actions/partnerActions";
 import { getAllHealthTipsAction } from "@/app/actions/healthTipsAdminActions";
 import { HEALTH_TIPS_ARTICLES, HealthTipArticle } from "@/data/healthTipsData";
 import { getAllDepartmentSlugs } from "@/data/doctorSeoData";
+import { getAllUpazilaSlugs } from "@/data/feniLocations";
+import { getAllPartnerCategorySlugs } from "@/data/partnerCategorySeoData";
 import { getAllBlogPostsAction } from "@/app/actions/blogAdminActions";
 import { BLOG_FILTER_PILLS } from "@/data/blog/blogCategories";
 import { logger } from "@/lib/logger";
@@ -152,15 +154,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
   });
 
-  // Dynamic partner category landing routes (hospital, diagnostic, pharmacy)
-  const partnerCategories = ["hospital", "diagnostic", "pharmacy"] as const;
-  const partnerCategoryEntries: MetadataRoute.Sitemap = partnerCategories.map((category) => {
-    const url = `${baseUrl}/partner-hospitals?category=${category}`;
+  // Dynamic programmatic upazila doctor landing routes (e.g. /consultants/location/feni-sadar)
+  const upazilaEntries: MetadataRoute.Sitemap = getAllUpazilaSlugs().map((slug) => {
+    const url = `${baseUrl}/consultants/location/${slug}`;
     return {
       url,
       lastModified: STATIC_LAST_MODIFIED,
       changeFrequency: "daily",
-      priority: 0.85,
+      priority: 0.9,
+    };
+  });
+
+  // Dynamic partner category canonical SEO landing routes (hospital, diagnostic, pharmacy)
+  const partnerCategoryEntries: MetadataRoute.Sitemap = getAllPartnerCategorySlugs().map((category) => {
+    const url = `${baseUrl}/partner-hospitals/category/${category}`;
+    return {
+      url,
+      lastModified: STATIC_LAST_MODIFIED,
+      changeFrequency: "daily",
+      priority: 0.9,
     };
   });
 
@@ -194,6 +206,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...staticEntries,
     ...departmentEntries,
+    ...upazilaEntries,
     ...partnerCategoryEntries,
     ...blogCategoryEntries,
     ...blogPostEntries,

@@ -69,6 +69,7 @@ export function BlogArticleHeader({
             alt={post.coverImageAlt || title}
             fill
             priority
+            loading="eager"
             fetchPriority="high"
             decoding="sync"
             quality={60}

@@ -50,6 +50,11 @@ export const PARSHURAM_FULGAZI_HEALTHCARE_GUIDE: BlogPost = {
     "মুন্সীরহাট ক্লিনিক",
     "উত্তর ফেনী স্বাস্থ্যসেবা",
     "ফেনী উপজেলা ডাক্তার তালিকা",
+  
+    "parshuram doctors",
+    "fulgazi doctors",
+    "parshuram hospital list",
+    "fulgazi healthcare guide",
   ],
   keyHighlightsBn: [
     "পরশুরাম ও ফুলগাজী সরকারি স্বাস্থ্য কমপ্লেক্সে মাত্র ৩-১০ টাকার টিকেটে ডাক্তার দেখানো ও জরুরি সেবা।",

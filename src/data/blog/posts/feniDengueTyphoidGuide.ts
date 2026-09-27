@@ -55,6 +55,11 @@ export const FENI_DENGUE_TYPHOID_GUIDE: BlogPost = {
     "feni sadar hospital dengue corner",
     "al aqsa hospital dengue admission",
     "platelet transfusion feni",
+  
+    "dengue test price in feni",
+    "ns1 antigen test cost feni",
+    "typhoid widal test price feni",
+    "dengue treatment hospital in feni",
   ],
   keyHighlightsBn: [
     "ডেঙ্গু এনএস১ বনাম অ্যান্টিবডি টেস্টের সঠিক সময়: জ্বরের ১ম থেকে ৩য় দিনে এনএস১ (NS1) অ্যান্টিজেন এবং ৫ম দিন থেকে আইজিএম/আইজিজি (IgM/IgG) অ্যান্টিবডি টেস্ট করানো চিকিৎসাগতভাবে নির্ভুল।",

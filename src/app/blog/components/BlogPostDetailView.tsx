@@ -17,17 +17,24 @@ import { BlogFAQSection } from "./BlogFAQSection";
 import { BlogShareBar } from "./BlogShareBar";
 import { BlogCard } from "./BlogCard";
 import { BlogClusterMesh } from "./BlogClusterMesh";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { BlogLiveDoctorRoster } from "./BlogLiveDoctorRoster";
+import { Doctor } from "@/services/db";
 
 interface BlogPostDetailViewProps {
   post: BlogPost;
   pageUrl: string;
   relatedPosts: BlogPostCardItem[];
+  liveDoctors?: Doctor[];
+  liveDepartment?: string;
 }
 
 export function BlogPostDetailView({
   post,
   pageUrl,
   relatedPosts,
+  liveDoctors = [],
+  liveDepartment,
 }: BlogPostDetailViewProps) {
   const title = post.titleBn;
   const introParagraphs = post.introParagraphsBn;
@@ -61,7 +68,9 @@ export function BlogPostDetailView({
   );
 
   const isPurePriceList = post.slug === "feni-medical-test-price-list";
-  const isUpazilaArticle = Boolean(post.slug.includes("healthcare-guide"));
+  const isUpazilaArticle = Boolean(
+    post.slug.includes("healthcare-guide") || post.slug.includes("patient-guide")
+  );
   const hasDoctorGroups = Boolean(post.doctorGroups && post.doctorGroups.length > 0);
 
   const selectionGuideNumber = isPurePriceList
@@ -85,36 +94,26 @@ export function BlogPostDetailView({
       <BlogReadingProgress />
 
       {/* Breadcrumb Navigation */}
-      <nav aria-label="Breadcrumb" className="border-b border-border/50 bg-muted/30">
+      <div className="border-b border-border/50 bg-muted/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between text-xs sm:text-sm text-muted-foreground">
           <Link
             href="/blog"
             prefetch={false}
-            className="inline-flex items-center gap-1 hover:text-primary transition-colors font-medium"
+            className="inline-flex items-center gap-1 hover:text-primary transition-colors font-medium shrink-0 mr-4"
           >
             <ChevronLeft className="h-4 w-4" />
-            <span>সকল ব্লগ নিবন্ধ</span>
+            <span>সকল ব্লগ</span>
           </Link>
 
-          <ol className="hidden md:flex items-center gap-2 list-none p-0 m-0">
-            <li>
-              <Link href="/" prefetch={false} className="hover:text-foreground">
-                হোম
-              </Link>
-            </li>
-            <li aria-hidden="true">/</li>
-            <li>
-              <Link href="/blog" prefetch={false} className="hover:text-foreground">
-                ব্লগ
-              </Link>
-            </li>
-            <li aria-hidden="true">/</li>
-            <li className="text-foreground font-medium truncate max-w-xs" aria-current="page">
-              {title}
-            </li>
-          </ol>
+          <Breadcrumbs
+            items={[
+              { label: "হোম", href: "/" },
+              { label: "ব্লগ", href: "/blog" },
+              { label: title },
+            ]}
+          />
         </div>
-      </nav>
+      </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 space-y-12">
         <article>
@@ -171,6 +170,10 @@ export function BlogPostDetailView({
                 <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
                   {isPurePriceList
                     ? "১. ফেনীর ডায়াগনস্টিক পরিকাঠামো ও প্রেক্ষাপট"
+                    : post.slug === "feni-doctor-serial-appointment-guide"
+                    ? "১. ফেনীতে ডাক্তার সিরিয়াল, চেম্বার শিডিউল ও স্বাস্থ্যসেবা প্রেক্ষাপট"
+                    : isUpazilaArticle
+                    ? "১. উপজেলা স্বাস্থ্যসেবা ও পটভূমি"
                     : "১. ফেনী জেলার স্বাস্থ্যসেবা ও পটভূমি"}
                 </h2>
                 <div className="space-y-4 text-sm sm:text-base text-foreground/90 leading-relaxed">
@@ -208,12 +211,28 @@ export function BlogPostDetailView({
 
               {/* Doctor Specialty Sections */}
               {post.doctorGroups && post.doctorGroups.length > 0 && (
-                <DoctorSpecialtySection doctorGroups={post.doctorGroups} />
+                <DoctorSpecialtySection
+                  doctorGroups={post.doctorGroups}
+                  titleBn={isUpazilaArticle ? "২. উপজেলা অনুযায়ী বিশেষজ্ঞ ডাক্তার তালিকা" : undefined}
+                  subtitleBn={isUpazilaArticle ? "উপজেলার স্থানীয় ভিজিটিং বিশেষজ্ঞ ও ফেনী সদর রেফারেল চিকিৎসকদের চেম্বার শিডিউল।" : undefined}
+                />
+              )}
+
+              {/* Dynamic Live Doctor Roster from Database */}
+              {liveDoctors && liveDoctors.length > 0 && (
+                <BlogLiveDoctorRoster
+                  doctors={liveDoctors}
+                  department={liveDepartment}
+                />
               )}
 
               {/* Doctor Chamber Hubs */}
               {post.chamberHubsBn && post.chamberHubsBn.length > 0 && (
-                <DoctorChamberHubs hubs={post.chamberHubsBn} />
+                <DoctorChamberHubs
+                  hubs={post.chamberHubsBn}
+                  titleBn={isUpazilaArticle ? "৩. উপজেলার প্রধান চেম্বার হাবসমূহ" : undefined}
+                  subtitleBn={isUpazilaArticle ? "পৌর বাজার, হাসপাতাল রোড ও হাইওয়ে সংলগ্ন প্রধান চেম্বার লোকেশন ও যাতায়াত নির্দেশিকা।" : undefined}
+                />
               )}
 
               {/* Doctor Serial Booking Guide */}

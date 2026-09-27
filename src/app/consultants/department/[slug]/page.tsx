@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ChevronRight, Stethoscope, ShieldCheck, PhoneCall, HeartHandshake, HelpCircle } from "lucide-react";
+import { Stethoscope, ShieldCheck, PhoneCall, HeartHandshake, HelpCircle } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
 import DoctorDirectory from "@/components/ui/DoctorDirectory";
 import CommunityNetworkCTA from "@/components/common/CommunityNetworkCTA";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { getDoctorsByDepartmentAction } from "@/app/actions/doctorActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 import { getDepartmentSeoConfig, getAllDepartmentSlugs, DOCTOR_DEPARTMENTS_SEO } from "@/data/doctorSeoData";
@@ -167,19 +168,13 @@ export default async function DepartmentLandingPage({ params, searchParams }: Pa
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-10">
         
         {/* Semantic Breadcrumbs */}
-        <nav aria-label="Breadcrumb" className="flex items-center text-xs text-muted-foreground gap-1.5 flex-wrap">
-          <Link href="/" className="hover:text-primary transition-colors">
-            হোম
-          </Link>
-          <ChevronRight className="h-3.5 w-3.5" />
-          <Link href="/consultants" className="hover:text-primary transition-colors">
-            ডাক্তার তালিকা
-          </Link>
-          <ChevronRight className="h-3.5 w-3.5" />
-          <span className="text-foreground font-semibold" aria-current="page">
-            {deptSeo.nameBn}
-          </span>
-        </nav>
+        <Breadcrumbs
+          items={[
+            { label: "হোম", href: "/" },
+            { label: "বিশেষজ্ঞ ডাক্তার", href: "/consultants" },
+            { label: deptSeo.nameBn },
+          ]}
+        />
 
         {/* Hero Section */}
         <div className="text-center space-y-3 sm:space-y-4 max-w-3xl mx-auto">

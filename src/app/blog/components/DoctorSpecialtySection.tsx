@@ -27,6 +27,8 @@ import { BlogReviewCardWrapper } from "./BlogReviewCardWrapper";
 
 interface DoctorSpecialtySectionProps {
   doctorGroups: DoctorSpecialtyGroup[];
+  titleBn?: string;
+  subtitleBn?: string;
 }
 
 const DEPARTMENT_ICONS: Record<string, React.ElementType> = {
@@ -80,6 +82,8 @@ const DEPARTMENT_ICONS: Record<string, React.ElementType> = {
 
 export function DoctorSpecialtySection({
   doctorGroups,
+  titleBn,
+  subtitleBn,
 }: DoctorSpecialtySectionProps) {
   const [selectedDept, setSelectedDept] = useState<string>("all");
 
@@ -96,10 +100,10 @@ export function DoctorSpecialtySection({
           <span>যাচাইকৃত বিশেষজ্ঞ তালিকা</span>
         </div>
         <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-          ২. ফেনীর শীর্ষ বিশেষজ্ঞ ডাক্তারদের তালিকা ও চেম্বার শিডিউল
+          {titleBn || "২. ফেনীর শীর্ষ বিশেষজ্ঞ ডাক্তারদের তালিকা ও চেম্বার শিডিউল"}
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-          মেডিসিন, হৃদরোগ, সার্জারি, গাইনী, শিশু ও অর্থোপেডিক চিকিৎসকদের চেম্বার, ভিজিটিং সময় ও ফোন নম্বর।
+          {subtitleBn || "মেডিসিন, হৃদরোগ, সার্জারি, গাইনী, শিশু ও অর্থোপেডিক চিকিৎসকদের চেম্বার, ভিজিটিং সময় ও ফোন নম্বর।"}
         </p>
       </div>
 

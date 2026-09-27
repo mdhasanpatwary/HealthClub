@@ -4,6 +4,11 @@ import DoctorProfileView from "@/components/consultants/DoctorProfileView";
 import { getDoctorByIdAction, getDoctorsAction, getRelatedDoctorsAction } from "@/app/actions/doctorActions";
 import { SITE_URL } from "@/lib/siteConfig";
 import { generateDoctorJsonLd } from "@/lib/seo/doctorSchema";
+import {
+  formatDoctorMetaTitle,
+  formatDoctorMetaDescription,
+  generateDoctorKeywords,
+} from "@/data/doctorSeoData";
 
 // ISR: render once every 24h; busted on-demand via updateTag("doctors")
 export const revalidate = 86400;
@@ -51,9 +56,10 @@ export async function generateMetadata({ params }: PageProps) {
     };
   }
 
-  const pageTitle = `${doctor.name} - ${doctor.specialty} (ফেনী) | চেম্বার শিডিউল ও সিরিয়াল`;
-  const ogTitle = `${doctor.name} - ${doctor.specialty} (ফেনী) | চেম্বার শিডিউল ও সিরিয়াল - হেলথ ক্লাব`;
-  const pageDesc = `${doctor.name}, ${doctor.specialty}, ${doctor.degrees}। চেম্বার: ${doctor.chamberName}, ${doctor.chamberAddress}। রোগী দেখার সময়: ${doctor.visitingDays} (${doctor.visitingHours})। সরাসরি সিরিয়াল কল করুন: ${doctor.serialPhone}।`;
+  const pageTitle = formatDoctorMetaTitle(doctor.name, doctor.specialty);
+  const ogTitle = `${pageTitle} - হেলথ ক্লাব`;
+  const pageDesc = formatDoctorMetaDescription(doctor);
+  const keywords = generateDoctorKeywords(doctor);
 
   const doctorCanonicalSegment = doctor.slug ? encodeURIComponent(doctor.slug) : doctor.id;
   const canonicalUrl = `${SITE_URL}/consultants/${doctorCanonicalSegment}`;
@@ -73,21 +79,7 @@ export async function generateMetadata({ params }: PageProps) {
     alternates: {
       canonical: canonicalUrl,
     },
-    keywords: [
-      doctor.name,
-      doctor.specialty,
-      doctor.department,
-      doctor.chamberName,
-      `${doctor.name} serial`,
-      `${doctor.name} chamber`,
-      `${doctor.name} feni`,
-      "feni doctor serial number",
-      "feni specialist doctors",
-      "ফেনী ডাক্তার",
-      "ফেনী ডাক্তার সিরিয়াল",
-      "ফেনীর বিশেষজ্ঞ ডাক্তার",
-      "Health Club doctor directory",
-    ],
+    keywords,
     openGraph: {
       title: ogTitle,
       description: pageDesc,

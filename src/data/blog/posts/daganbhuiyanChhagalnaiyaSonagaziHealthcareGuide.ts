@@ -51,6 +51,11 @@ export const DAGANBHUIYAN_CHHAGALNAIYA_SONAGAZI_HEALTHCARE_GUIDE: BlogPost = {
     "ছাগলনাইয়া ডাক্তার তালিকা",
     "সোনাগাজী ডাক্তার সিরিয়াল",
     "ফেনী উপজেলা স্বাস্থ্যসেবা",
+  
+    "daganbhuiyan chhagalnaiya sonagazi doctors",
+    "feni upazila hospitals",
+    "subdistrict doctors in feni",
+    "upazila healthcare feni",
   ],
   keyHighlightsBn: [
     "দাগনভূঞা, ছাগলনাইয়া ও সোনাগাজীতে ৫০ শয্যার সরকারি স্বাস্থ্য কমপ্লেক্সে ৩-১০ টাকার টিকেটে ডাক্তার ও ফ্রি জরুরি সেবা।",

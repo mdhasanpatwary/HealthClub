@@ -31,6 +31,7 @@ export function BlogCard({ post, priority = false }: BlogCardProps) {
           alt={post.coverImageAlt || title}
           fill
           priority={priority}
+          loading={priority ? "eager" : "lazy"}
           quality={60}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 384px"
           className="object-cover transition-transform duration-500 group-hover:scale-105"

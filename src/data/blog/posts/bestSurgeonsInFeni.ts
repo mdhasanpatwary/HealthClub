@@ -48,6 +48,15 @@ export const BEST_SURGEONS_IN_FENI: BlogPost = {
     "গলব্লাডার পাথর অপারেশন খরচ ফেনী",
     "feni surgeon chamber list",
     "laser piles surgery in feni",
+  
+    "best surgeons in feni",
+    "general surgeons in feni",
+    "laparoscopic surgeon in feni",
+    "colorectal surgeon in feni",
+    "piles surgeon in feni",
+    "hernia surgeon in feni",
+    "gallbladder surgeon in feni",
+    "feni surgery doctor list",
   ],
   keyHighlightsBn: [
     "ফেনীর শীর্ষ ১৩ জন বিএমডিসি নিবন্ধিত জেনারেল, ল্যাপারোস্কোপিক ও কলোরেক্টাল সার্জনদের (FCPS, MS, MRCS, FACS, ফেলোশিপ ট্রেইন্ড) হালনাগাদ চেম্বার শিডিউল ও সরাসরি সিরিয়াল হটলাইন।",

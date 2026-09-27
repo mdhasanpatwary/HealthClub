@@ -50,6 +50,12 @@ export const BEST_10_HOSPITALS_IN_FENI: BlogPost = {
     "ফেনীর সেরা হাসপাতাল",
     "ফেনী হাসপাতাল তালিকা",
     "ফেনী ডাক্তার ও ডায়াগনস্টিক",
+  
+    "private hospitals in feni",
+    "feni hospital directory",
+    "best clinics in feni",
+    "24/7 hospital in feni",
+    "emergency hospital admission feni",
   ],
   keyHighlightsBn: [
     "ফেনী জেলার একমাত্র ২৫০ শয্যা বিশিষ্ট প্রধান সরকারি টারশিয়ারি হাসপাতাল ও ট্রমা সেন্টার।",

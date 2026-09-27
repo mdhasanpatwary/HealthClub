@@ -51,6 +51,13 @@ export const BEST_PHARMACIES_IN_FENI: BlogPost = {
     "feni 24/7 pharmacy contact number",
     "ফেনী নাইট ফার্মেসি",
     "ইনসুলিন কোল্ড চেইন ফেনী",
+  
+    "24 hour pharmacy in feni",
+    "night pharmacy in feni",
+    "emergency medicine delivery feni",
+    "all night pharmacy feni",
+    "model pharmacy feni",
+    "online medicine home delivery feni",
   ],
   keyHighlightsBn: [
     "ফেনী সদর হাসপাতাল সংলগ্ন হাসপাতাল রোড, এসএসকে রোড, ট্রাঙ্ক রোড ও দাগনভূঞা-ছাগলনাইয়ার ১২টি যাচাইকৃত ফার্মেসির পূর্ণাঙ্গ তালিকা।",

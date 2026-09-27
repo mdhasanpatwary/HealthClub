@@ -48,6 +48,14 @@ export const BEST_PSYCHIATRISTS_IN_FENI: BlogPost = {
     "feni depression anxiety treatment",
     "feni insomnia sleep doctor",
     "feni ocd doctor serial",
+  
+    "best psychiatrists in feni",
+    "mental health specialists in feni",
+    "psychiatrist doctor in feni",
+    "depression anxiety doctor feni",
+    "clinical psychologist in feni",
+    "psychotherapy counseling feni",
+    "mental hospital doctor feni",
   ],
   keyHighlightsBn: [
     "ফেনীর শীর্ষ ১২ জন বিএমডিসি নিবন্ধিত সাইকিয়াট্রিস্ট ও পেশাদার ক্লিনিক্যাল সাইকোলজিস্টদের চেম্বার শিডিউল ও সরাসরি সিরিয়াল হটলাইন।",

@@ -47,6 +47,11 @@ export const FENI_SADAR_HOSPITAL_GUIDE: BlogPost = {
     "feni sadar hospital doctor list",
     "feni govt hospital opd timing",
     "feni sadar hospital emergency number",
+  
+    "feni sadar hospital",
+    "feni government hospital",
+    "sadar hospital opd ticket schedule",
+    "feni sadar hospital emergency",
   ],
   keyHighlightsBn: [
     "মাত্র ১০ টাকার সরকারি টিকেটে মেডিসিন, সার্জারি, গাইনি, শিশু, চক্ষু, ইএনটি ও অর্থোপেডিক বিশেষজ্ঞ ডাক্তারদের বহির্বিভাগ কনসালটেশন।",

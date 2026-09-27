@@ -48,6 +48,14 @@ export const BEST_ENT_DOCTORS_IN_FENI: BlogPost = {
     "ফেনী ইএনটি সার্জন",
     "ফেনী অডিওমেট্রি টেস্ট খরচ",
     "feni head neck surgeon",
+  
+    "best ent specialists in feni",
+    "ent doctor in feni",
+    "ear nose throat doctor in feni",
+    "ent surgeon in feni",
+    "sinus specialist doctor feni",
+    "tonsil specialist in feni",
+    "feni ent doctor chamber",
   ],
   keyHighlightsBn: [
     "ফেনীর শীর্ষ ১২ জন বিএমডিসি নিবন্ধিত নাক, কান ও গলা বিশেষজ্ঞ এবং হেড-নেক সার্জনদের (MS ENT, FCPS, DLO, বিএসএমএমইউ ও ডিএমসি) হালনাগাদ চেম্বার শিডিউল ও সরাসরি সিরিয়াল হটলাইন।",

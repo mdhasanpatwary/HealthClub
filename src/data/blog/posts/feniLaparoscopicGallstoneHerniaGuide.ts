@@ -53,6 +53,12 @@ export const FENI_LAPAROSCOPIC_GALLSTONE_HERNIA_GUIDE: BlogPost = {
     "অ্যাপেন্ডিক্স অপারেশন ফেনী",
     "cholecystectomy cost in feni",
     "best laparoscopic surgeon in feni",
+  
+    "gallbladder stone surgery cost in feni",
+    "laparoscopic hernia surgery in feni",
+    "laparoscopic surgeon in feni",
+    "gallstone removal cost feni",
+    "hernia operation hospital feni",
   ],
   keyHighlightsBn: [
     "ফেনীর বেসরকারি হাসপাতালসমূহে সর্বাধুনিক ল্যাপারোস্কোপিক গলব্লাডার ওটি প্যাকেজ (৳২৮,০০০ - ৳৪৫,০০০) এবং হার্নিয়া মেশ রিপেয়ারের (৳২৫,০০০ - ৳৪০,০০০) বাস্তবসম্মত বাজারদর।",

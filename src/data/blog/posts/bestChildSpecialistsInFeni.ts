@@ -50,6 +50,14 @@ export const BEST_CHILD_SPECIALISTS_IN_FENI: BlogPost = {
     "ফেনী শিশু চেম্বার ও সিরিয়াল",
     "ফেনী শিশু হাসপাতাল",
     "ফেনী এনআইসিইউ ফটোথেরাপি খরচ",
+  
+    "best child specialists in feni",
+    "pediatricians in feni",
+    "child doctor in feni",
+    "baby doctor in feni",
+    "shishu specialist in feni",
+    "neonatologist in feni",
+    "pediatric doctor chamber feni",
   ],
   keyHighlightsBn: [
     "ফেনীর শীর্ষ ১১ জন বিএমডিসি নিবন্ধিত শিশু রোগ বিশেষজ্ঞ (MD Pediatrics, FCPS, DCH) ও সাব-স্পেশালিস্টদের (শিশু নিউরো, শিশু হৃদরোগ ও শিশু সার্জন) হালনাগাদ চেম্বার ও সরাসরি সিরিয়াল হটলাইন।",

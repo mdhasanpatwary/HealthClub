@@ -272,6 +272,13 @@ export const BEST_PHYSIOTHERAPY_IN_FENI: BlogPost = {
     "Cerebral palsy treatment Feni",
     "Shortwave diathermy Feni",
     "ফেনী প্যারালাইসিস ডাক্তার",
+  
+    "physiotherapy centers in feni",
+    "physiotherapist in feni",
+    "stroke rehabilitation in feni",
+    "paralysis treatment in feni",
+    "plid back pain therapy feni",
+    "physiotherapy clinic feni",
   ],
   keyHighlightsBn: [
     "ঢাকা বিশ্ববিদ্যালয় ও সিআরপি সনদপ্রাপ্ত বিপিটি (BPT) ও এমপিটি (MPT) গ্র্যাজুয়েট কনসালট্যান্টদের সঠিক দিকনির্দেশনা",

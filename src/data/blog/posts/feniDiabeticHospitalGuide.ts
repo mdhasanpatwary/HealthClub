@@ -45,6 +45,12 @@ export const FENI_DIABETIC_HOSPITAL_GUIDE: BlogPost = {
     "feni diabetic hospital mizan road",
     "feni diabetic test cost",
     "feni diabetic eye care and dental",
+  
+    "feni diabetic association hospital",
+    "diabetic samity hospital feni",
+    "feni diabetic hospital doctor list",
+    "diabetes hospital mizan road feni",
+    "green book registration feni",
   ],
   keyHighlightsBn: [
     "মিজান রোডে অবস্থিত ফেনী ডায়াবেটিক সমিতি হাসপাতালে আজীবন 'সবুজ বই' রেজিস্ট্রেশনের মাধ্যমে নামমাত্র খরচে আজীবন ফলোআপ সুবিধা।",

@@ -50,6 +50,14 @@ export const BEST_CARDIOLOGISTS_IN_FENI: BlogPost = {
     "ফেনী হার্ট ডাক্তার চেম্বার",
     "ফেনী সিসিইউ আইসিইউ নম্বর",
     "ফেনী ইকোকার্ডিওগ্রাফি খরচ",
+  
+    "best cardiologists in feni",
+    "heart specialists in feni",
+    "best heart doctor in feni",
+    "cardiac specialist in feni",
+    "hypertension specialist feni",
+    "heart foundation feni doctors",
+    "feni cardiology chamber",
   ],
   keyHighlightsBn: [
     "ফেনীর শীর্ষ কার্ডিওলজিস্ট ও হৃদরোগ বিশেষজ্ঞদের (MD Cardiology, FCPS, D-Card) যাচাইকৃত চেম্বার শিডিউল ও সরাসরি সিরিয়াল নম্বর।",

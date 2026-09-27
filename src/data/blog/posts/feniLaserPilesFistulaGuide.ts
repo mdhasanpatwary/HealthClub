@@ -53,6 +53,12 @@ export const FENI_LASER_PILES_FISTULA_GUIDE: BlogPost = {
     "পাইলস অপারেশন প্যাকেজ",
     "fissure treatment cost feni",
     "laser proctology clinic in feni",
+  
+    "piles laser surgery cost in feni",
+    "fistula laser treatment in feni",
+    "fissure surgery cost feni",
+    "colorectal laser surgeon in feni",
+    "laser proctology clinic feni",
   ],
   keyHighlightsBn: [
     "ফেনীর বেসরকারি হাসপাতালসমূহে সর্বাধুনিক পাইলস লেজার সার্জারি (LHP: ৳২৫,০০০ - ৳৪০,০০০) ও ফিস্টুলা লেজার সিলিং (FiLaC: ৳৩০,০০০ - ৳৪৫,০০০) ওটি প্যাকেজের বাস্তবসম্মত বাজারদর।",

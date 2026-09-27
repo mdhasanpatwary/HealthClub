@@ -241,7 +241,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                 <BlogCard
                   key={post.slug}
                   post={post}
-                  priority={idx === 0}
+                  priority={idx < 3}
                 />
               ))}
             </div>

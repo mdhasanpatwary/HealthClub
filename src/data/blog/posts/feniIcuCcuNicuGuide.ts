@@ -54,6 +54,13 @@ export const FENI_ICU_CCU_NICU_GUIDE: BlogPost = {
     "incubator baby care feni",
     "sadar hospital icu feni",
     "critical care hospital feni",
+  
+    "icu bed charges in feni",
+    "nicu incubator cost in feni",
+    "ccu bed rent in feni",
+    "ventilator hospital in feni",
+    "critical care life support feni",
+    "icu hospital list feni",
   ],
   keyHighlightsBn: [
     "ফেনীর বেসরকারি হাসপাতালে জেনারেল আইসিইউ বেড ভাড়া প্রতিদিন গড়ে ৳৪,০০০ - ৳৭,৫০০ এবং ইনভেসিভ মেকানিক্যাল ভেন্টিলেটর চার্জ ৳৩,০০০ - ৳৬,০০০।",

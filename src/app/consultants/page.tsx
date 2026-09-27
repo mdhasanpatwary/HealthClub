@@ -9,6 +9,7 @@ import { Stethoscope, ShieldCheck, HeartHandshake, PhoneCall } from "lucide-reac
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 import { getDepartmentSeoConfig } from "@/data/doctorSeoData";
+import { getUpazilaSeoConfig } from "@/data/feniLocations";
 
 export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
 
@@ -41,6 +42,33 @@ export async function generateMetadata({ searchParams }: ConsultantsPageProps) {
         card: "summary_large_image",
         title: deptSeo.metaTitleBn,
         description: deptSeo.metaDescriptionBn,
+        images: DEFAULT_TWITTER_IMAGES,
+      },
+    };
+  }
+
+  const upazila = resolvedSearchParams.upazila;
+  const upazilaSeo = upazila && upazila !== "all" ? getUpazilaSeoConfig(upazila) : null;
+  if (upazilaSeo) {
+    return {
+      title: upazilaSeo.metaTitleBn,
+      description: upazilaSeo.metaDescriptionBn,
+      keywords: upazilaSeo.keywords,
+      alternates: {
+        canonical: `${SITE_URL}/consultants/location/${upazilaSeo.slug}`,
+      },
+      openGraph: {
+        title: upazilaSeo.metaTitleBn,
+        description: upazilaSeo.metaDescriptionBn,
+        url: `${SITE_URL}/consultants/location/${upazilaSeo.slug}`,
+        siteName: "হেলথ ক্লাব (Health Club)",
+        type: "website",
+        images: DEFAULT_OG_IMAGES,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: upazilaSeo.metaTitleBn,
+        description: upazilaSeo.metaDescriptionBn,
         images: DEFAULT_TWITTER_IMAGES,
       },
     };
@@ -116,6 +144,14 @@ export default async function ConsultantsPage({ searchParams }: ConsultantsPageP
     if (deptSeo) {
       const upazilaParam = initialUpazila !== "all" ? `?upazila=${encodeURIComponent(initialUpazila)}` : "";
       redirect(`/consultants/department/${deptSeo.slug}${upazilaParam}`);
+    }
+  }
+
+  // Redirect upazila-specific queries to dedicated location landing pages
+  if (initialUpazila !== "all") {
+    const upzSeo = getUpazilaSeoConfig(initialUpazila);
+    if (upzSeo) {
+      redirect(`/consultants/location/${upzSeo.slug}`);
     }
   }
 

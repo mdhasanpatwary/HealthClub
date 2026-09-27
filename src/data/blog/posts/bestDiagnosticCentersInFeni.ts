@@ -270,6 +270,13 @@ export const BEST_DIAGNOSTIC_CENTERS_IN_FENI: BlogPost = {
     "ফেনী প্যাথলজি ল্যাব",
     "ফেনী রক্ত পরীক্ষা খরচ",
     "ফেনী সিটি স্ক্যান খরচ",
+  
+    "top diagnostic centers in feni",
+    "pathology lab in feni",
+    "medical test lab feni",
+    "blood test center in feni",
+    "ct scan mri center feni",
+    "diagnostic lab feni",
   ],
   keyHighlightsBn: [
     "ফেনী শহরের শীর্ষ ১০টি ডায়াগনস্টিক সেন্টারের যাচাইকৃত সরঞ্জাম, ঠিকানা ও যোগাযোগ নম্বর।",

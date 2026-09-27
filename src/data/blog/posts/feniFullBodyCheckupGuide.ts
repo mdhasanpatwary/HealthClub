@@ -53,6 +53,11 @@ export const FENI_FULL_BODY_HEALTH_CHECKUP_GUIDE: BlogPost = {
     "cardiac screening package feni",
     "senior citizen health checkup feni",
     "master health checkup cost",
+  
+    "executive health checkup feni",
+    "annual health checkup packages in feni",
+    "wellness screening feni",
+    "preventive medical test package feni",
   ],
   keyHighlightsBn: [
     "ফেনীর বেসরকারি ডায়াগনস্টিক সেন্টারে বেসিক প্রিভেন্টিভ চেকআপ (৳১,২০০ - ৳১,৮০০), এক্সিকিউটিভ ফুল বডি প্যাকেজ (৳৪,৫০০ - ৳৭,২০০) এবং সিনিয়র সিটিজেন প্যাকেজের (৳৫,২০০ - ৳৮,৫০০) বাস্তবসম্মত বাজারদর।",

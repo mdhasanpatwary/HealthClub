@@ -54,6 +54,11 @@ export const FENI_KIDNEY_STONE_UROLOGY_GUIDE: BlogPost = {
     "পিসিএনএল কি হোল সার্জারি",
     "আরআইআরএস লেজার সার্জারি খরচ",
     "best urologist in feni",
+  
+    "kidney stone laser surgery cost feni",
+    "pcnl surgery cost in feni",
+    "kidney stone removal in feni",
+    "laser urology hospital feni",
   ],
   keyHighlightsBn: [
     "ফেনীর শীর্ষ বেসরকারি হাসপাতালে পেট না কেটে লেজার ইউআরএস (৳২৫,০০০ - ৳৪০,০০০) ও আধুনিক পিসিএনএল কি-হোল ওটি প্যাকেজের (৳৩৫,০০০ - ৳৫৫,০০০) নির্ভরযোগ্য বাজারদর।",

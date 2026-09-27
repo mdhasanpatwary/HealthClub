@@ -55,6 +55,10 @@ export const FENI_OXYGEN_GUIDE: BlogPost = {
     "linde oxygen distributor mahipal",
     "feni emergency oxygen delivery",
     "copd oxygen therapy feni",
+  
+    "bipap machine rent in feni",
+    "oxygen concentrator feni",
+    "emergency medical oxygen feni",
   ],
   keyHighlightsBn: [
     "৯৯.৫% সার্টিফায়েড মেডিকেল অক্সিজেন গ্যাস: শিল্প গ্রেড গ্যাসের ক্ষতিকর বিষাক্ত কার্বন মনোক্সাইড ঝুঁকি এড়িয়ে আন্তর্জাতিক ফার্মাকোপিয়া মানদণ্ডের বিশুদ্ধ গ্যাস ব্যবহার নিশ্চিত করা।",

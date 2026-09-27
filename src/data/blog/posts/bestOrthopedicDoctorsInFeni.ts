@@ -50,6 +50,16 @@ export const BEST_ORTHOPEDIC_DOCTORS_IN_FENI: BlogPost = {
     "top orthopedic surgeons in feni",
     "feni trauma center hospital",
     "ফেনী পঙ্গু হাসপাতাল ডাক্তার",
+  
+    "best orthopedic doctors in feni",
+    "orthopedic specialists in feni",
+    "bone specialist doctor in feni",
+    "orthopedic surgeon in feni",
+    "feni fracture doctor",
+    "trauma surgeon in feni",
+    "joint pain specialist feni",
+    "spine doctor in feni",
+    "feni orthopedic chamber list",
   ],
   keyHighlightsBn: [
     "ফেনীর শীর্ষ ১২ জন বিএমডিসি নিবন্ধিত অর্থোপেডিক ও ট্রমা সার্জনদের (MS, D-Ortho, FCPS, NITOR/পঙ্গু হাসপাতাল ও AO ফেলো) হালনাগাদ চেম্বার শিডিউল ও সরাসরি সিরিয়াল হটলাইন।",

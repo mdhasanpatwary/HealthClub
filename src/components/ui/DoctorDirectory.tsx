@@ -28,6 +28,7 @@ interface DoctorDirectoryProps {
   initialDept?: string;
   initialUpazila?: string;
   isDepartmentPage?: boolean;
+  isLocationPage?: boolean;
 }
 
 const INITIAL_VISIBLE_COUNT = 12;
@@ -46,6 +47,7 @@ export default function DoctorDirectory({
   initialDept = "all",
   initialUpazila = "all",
   isDepartmentPage = false,
+  isLocationPage = false,
 }: DoctorDirectoryProps) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
@@ -76,10 +78,10 @@ export default function DoctorDirectory({
     if (!isDepartmentPage && dept && dept !== "all") {
       queueMicrotask(() => setSelectedDept(dept));
     }
-    if (upazila && upazila !== "all") {
+    if (!isLocationPage && upazila && upazila !== "all") {
       queueMicrotask(() => setSelectedUpazila(upazila));
     }
-  }, [isDepartmentPage]);
+  }, [isDepartmentPage, isLocationPage]);
 
   // Update browser URL query params without full page reload
   const updateUrlParams = (dept: string, upazila: string) => {
@@ -107,13 +109,21 @@ export default function DoctorDirectory({
   };
 
   const handleUpazilaChange = (upzId: string) => {
+    if (isLocationPage) {
+      if (upzId === "all") {
+        router.push("/consultants");
+      } else if (upzId !== selectedUpazila) {
+        router.push(`/consultants/location/${upzId}`);
+      }
+      return;
+    }
     setSelectedUpazila(upzId);
     setVisibleCount(INITIAL_VISIBLE_COUNT);
     updateUrlParams(selectedDept, upzId);
   };
 
   const handleResetFilters = () => {
-    if (isDepartmentPage) {
+    if (isDepartmentPage || isLocationPage) {
       router.push("/consultants");
       return;
     }

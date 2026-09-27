@@ -17,6 +17,7 @@ interface BlogDoctorTocProps {
   secNum: (n: number) => string;
   linkClass: (targetId: string, isBold?: boolean) => string;
   activeId?: string;
+  currentSlug?: string;
 }
 
 export function BlogDoctorToc({
@@ -28,6 +29,7 @@ export function BlogDoctorToc({
   secNum,
   linkClass,
   activeId,
+  currentSlug,
 }: BlogDoctorTocProps) {
   if (isUpazilaArticle) {
     return (
@@ -100,11 +102,16 @@ export function BlogDoctorToc({
     );
   }
 
+  const isDoctorAppointment = currentSlug === "feni-doctor-serial-appointment-guide";
+
   return (
     <ol className="space-y-1.5 list-none pl-0">
       <li>
         <a href="#overview" className={linkClass("overview")}>
-          {secNum(1)}ফেনীর স্বাস্থ্যসেবা ও বিশেষজ্ঞ ডাক্তার
+          {secNum(1)}
+          {isDoctorAppointment
+            ? "ফেনীতে ডাক্তার সিরিয়াল ও স্বাস্থ্যসেবা প্রেক্ষাপট"
+            : "ফেনীর স্বাস্থ্যসেবা ও বিশেষজ্ঞ ডাক্তার"}
         </a>
       </li>
       <li>
@@ -112,7 +119,10 @@ export function BlogDoctorToc({
           href="#specialist-doctors"
           className={linkClass("specialist-doctors", true)}
         >
-          {secNum(2)}বিভাগভিত্তিক বিশেষজ্ঞ ডাক্তার তালিকা
+          {secNum(2)}
+          {isDoctorAppointment
+            ? "বিভাগভিত্তিক বিশেষজ্ঞ ডাক্তার ও চেম্বার শিডিউল"
+            : "বিভাগভিত্তিক বিশেষজ্ঞ ডাক্তার তালিকা"}
         </a>
         <TocSubList
           items={doctorGroups.map((g, idx) => ({
@@ -129,7 +139,10 @@ export function BlogDoctorToc({
       </li>
       <li>
         <a href="#serial-guide" className={linkClass("serial-guide")}>
-          {secNum(4)}ডাক্তারের সিরিয়াল নেওয়ার নিয়মাবলী
+          {secNum(4)}
+          {isDoctorAppointment
+            ? "দালালমুক্ত সরাসরি সিরিয়াল নেওয়ার সহজ উপায়"
+            : "ডাক্তারের সিরিয়াল নেওয়ার নিয়মাবলী"}
         </a>
       </li>
       {pricingGuides.filter((g) => g.has).map((guide) => (
@@ -141,7 +154,10 @@ export function BlogDoctorToc({
       ))}
       <li>
         <a href="#selection-guide" className={linkClass("selection-guide")}>
-          {secNum(hasDoctorPricing ? 6 : 5)}সঠিক ডাক্তার ও ক্লিনিক নির্বাচনের উপায়
+          {secNum(hasDoctorPricing ? 6 : 5)}
+          {isDoctorAppointment
+            ? "নির্ভরযোগ্য ডাক্তার নির্বাচন ও দালাল প্রতিরোধের উপায়"
+            : "সঠিক ডাক্তার ও ক্লিনিক নির্বাচনের উপায়"}
         </a>
       </li>
       <li>

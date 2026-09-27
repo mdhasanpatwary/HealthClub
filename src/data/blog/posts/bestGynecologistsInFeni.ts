@@ -50,6 +50,14 @@ export const BEST_GYNECOLOGISTS_IN_FENI: BlogPost = {
     "ফেনী নরমাল ডেলিভারি খরচ",
     "ফেনী গাইনি ডাক্তার সিরিয়াল নম্বর",
     "ফেনী এনআইসিইউ হাসপাতাল",
+  
+    "best gynecologists in feni",
+    "female gynecologist in feni",
+    "female doctor in feni",
+    "maternity specialist in feni",
+    "obs gynae doctor in feni",
+    "pregnancy doctor in feni",
+    "normal delivery doctor feni",
   ],
   keyHighlightsBn: [
     "ফেনীর খ্যাতিমান নারী গাইনি ও প্রসূতি সার্জনদের (FCPS, MS, DGO) যাচাইকৃত চেম্বার শিডিউল ও সরাসরি সিরিয়াল নম্বর।",

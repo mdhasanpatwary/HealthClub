@@ -51,6 +51,12 @@ export const BEST_DOCTORS_IN_FENI: BlogPost = {
     "ফেনী বিশেষজ্ঞ ডাক্তার তালিকা",
     "ফেনী ডাক্তার চেম্বার সিরিয়াল",
     "ফেনী ডাক্তারদের ফোন নম্বর",
+  
+    "specialist doctor list in feni",
+    "feni doctor chamber list",
+    "feni doctor appointment",
+    "top medical specialists in feni",
+    "feni hospital doctors list",
   ],
   keyHighlightsBn: [
     "মেডিসিন, হৃদরোগ, গাইনী, সার্জারি, শিশু ও অর্থোপেডিকসের খ্যাতিমান বিশেষজ্ঞদের যাচাইকৃত তালিকা।",

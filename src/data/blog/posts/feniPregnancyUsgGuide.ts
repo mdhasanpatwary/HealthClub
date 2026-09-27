@@ -54,6 +54,10 @@ export const FENI_PREGNANCY_ULTRASONOGRAPHY_GUIDE: BlogPost = {
     "fetal echocardiography cost feni",
     "best sonologist in feni",
     "tvs scan in feni",
+  
+    "pregnancy ultrasound cost in feni",
+    "pregnancy usg centers in feni",
+    "fetal anomaly scan price feni",
   ],
   keyHighlightsBn: [
     "ফেনীর বেসরকারি ডায়াগনস্টিক সেন্টারে প্রেগন্যান্সি আল্ট্রাসাউন্ড (৳১,০০০ - ৳১,৫০০), ৪ডি অ্যানোমালি স্ক্যান (৳৩,০০০ - ৳৪,৫০০) এবং ফিটাল কালার ডপলারের (৳২,৫০০ - ৳৩,৮০০) নির্ভরযোগ্য বাজারদর।",

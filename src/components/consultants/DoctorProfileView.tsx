@@ -5,7 +5,7 @@ import Link from "next/link";
 import {
   Phone, PhoneCall, Calendar, Clock, MapPin, Building2,
   Stethoscope, CheckCircle2, Share2, Navigation,
-  ChevronRight, ArrowLeft, ShieldCheck,
+  ArrowLeft, ShieldCheck,
   FileText, Clock3, CreditCard
 } from "lucide-react";
 import { Doctor, Partner } from "@/services/db";
@@ -15,6 +15,8 @@ import { Badge } from "@/components/ui/badge";
 import { DoctorAvatar, DoctorSerialModal } from "@/components/ui/doctors/DoctorModals";
 import { DoctorAvailabilityBadge, DoctorNoticeBanner } from "@/components/ui/doctors/DoctorAvailabilityBadge";
 import { DEPT_ICONS, CLINICAL_FOCUS_MAP, DEPT_LABEL_MAP } from "./consultantData";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { DoctorPillarGuideCard } from "./DoctorPillarGuideCard";
 import { toast } from "sonner";
 import { SITE_URL } from "@/lib/siteConfig";
 
@@ -79,19 +81,14 @@ export default function DoctorProfileView({
     <div className="bg-background min-h-screen py-4 sm:py-10">
       {/* Breadcrumb Navigation */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-4 sm:mb-6">
-        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-muted-foreground overflow-x-auto whitespace-nowrap py-1">
-          <Link href="/" className="hover:text-primary transition-colors">
-            হোম
-          </Link>
-          <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground/60" />
-          <Link href="/consultants" className="hover:text-primary transition-colors">
-            বিশেষজ্ঞ ডাক্তার
-          </Link>
-          <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground/60" />
-          <span className="text-foreground font-semibold truncate max-w-[200px] sm:max-w-none">
-            {doctor.name}
-          </span>
-        </nav>
+        <Breadcrumbs
+          items={[
+            { label: "হোম", href: "/" },
+            { label: "বিশেষজ্ঞ ডাক্তার", href: "/consultants" },
+            { label: deptLabel, href: `/consultants/department/${doctor.department}` },
+            { label: doctor.name },
+          ]}
+        />
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
@@ -341,6 +338,12 @@ export default function DoctorProfileView({
                 </ul>
               </div>
             </Card>
+
+            {/* Contextual Department Blog Pillar Guide Card */}
+            <DoctorPillarGuideCard
+              department={doctor.department}
+              specialty={doctor.specialty}
+            />
           </div>
 
           {/* Right Column: Member Discount Callout & Related Doctors */}

@@ -7,8 +7,9 @@ import { BlogPostDetailView } from "../components/BlogPostDetailView";
 import { generateBlogJsonLd } from "../utils/blogJsonLd";
 import { SITE_URL } from "@/lib/siteConfig";
 import { getArticleIsoDate } from "@/lib/dateUtils";
-
 import { getPostFacilityMeta } from "../utils/blogPagination";
+import { getBlogDoctorDepartment } from "@/data/blog/departmentBlogMapping";
+import { getDoctorsByDepartmentAction } from "@/app/actions/doctorActions";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -32,9 +33,14 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
     };
   }
 
-  const pageTitle = post.titleBn;
+  // If titleBn does not have English letters, append primary English keywords from titleEn
+  const hasEnglishInTitle = /[a-zA-Z]{3,}/.test(post.titleBn);
+  const primaryEnPart = post.titleEn.split(" - ")[0].split(":")[0].trim();
+  const pageTitle = hasEnglishInTitle
+    ? post.titleBn
+    : `${post.titleBn} (${primaryEnPart})`;
   const description = post.excerptBn;
-  const fullBrandTitle = `${post.titleBn} | হেলথ ক্লাব`;
+  const fullBrandTitle = `${pageTitle} | হেলথ ক্লাব`;
 
   const ogImageUrl = post.coverImage?.startsWith("http")
     ? post.coverImage
@@ -49,10 +55,19 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
     },
   ];
 
+  const allKeywords = Array.from(
+    new Set([
+      ...(post.metaKeywords || []),
+      ...(post.tags || []),
+      post.titleEn,
+      post.categoryNameEn,
+    ])
+  ).filter(Boolean);
+
   return {
     title: pageTitle,
     description,
-    keywords: post.metaKeywords,
+    keywords: allKeywords,
     alternates: {
       canonical: `${SITE_URL}/blog/${post.slug}`,
     },
@@ -72,6 +87,8 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
       description,
       url: `${SITE_URL}/blog/${post.slug}`,
       type: "article",
+      locale: "bn_BD",
+      alternateLocale: ["en_US"],
       publishedTime: getArticleIsoDate(post.publishedDate),
       modifiedTime: getArticleIsoDate(post.modifiedDate),
       siteName: "হেলথ ক্লাব (Health Club)",
@@ -153,6 +170,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     };
   });
 
+  // Fetch live active doctors for this department to augment blog guides
+  const targetDepartment = getBlogDoctorDepartment(
+    post.slug,
+    post.doctorGroups?.[0]?.department
+  );
+  const liveDoctors = await getDoctorsByDepartmentAction(targetDepartment);
+
   return (
     <>
       <JsonLd data={jsonLdData} />
@@ -160,6 +184,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         post={post}
         pageUrl={pageUrl}
         relatedPosts={cardRelatedPosts}
+        liveDoctors={liveDoctors}
+        liveDepartment={targetDepartment}
       />
     </>
   );

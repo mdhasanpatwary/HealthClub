@@ -61,6 +61,13 @@ export const FENI_BLOOD_BANK_AND_DONORS_GUIDE: BlogPost = {
     "সন্ধানী ফেনী পলিটেকনিক",
     "বাঁধন ফেনী সরকারি কলেজ",
     "রেড ক্রিসেন্ট ফেনী ইউনিট",
+  
+    "feni blood bank",
+    "emergency blood donors in feni",
+    "red crescent blood bank feni",
+    "blood donors club feni",
+    "feni blood group hotline",
+    "safe blood transfusion feni",
   ],
   keyHighlightsBn: [
     "ফেনী রেড ক্রিসেন্ট রক্ত কেন্দ্র, ২৫০ শয্যা সদর হাসপাতাল ট্রান্সফিউশন ইউনিট ও শীর্ষ ১০টি স্বেচ্ছাসেবী রক্তদান ক্লাবের যাচাইকৃত ফোন ও হটলাইন।",

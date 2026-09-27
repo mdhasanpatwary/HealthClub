@@ -47,6 +47,14 @@ export const BEST_NEUROLOGISTS_IN_FENI: BlogPost = {
     "stroke emergency hospital feni",
     "feni neurologist chamber serial",
     "neuropathy treatment in feni",
+  
+    "best neurologists in feni",
+    "neurology specialists in feni",
+    "brain and nerve doctor feni",
+    "neuro medicine specialist in feni",
+    "stroke specialist doctor feni",
+    "spine and headache doctor feni",
+    "feni neurology chamber",
   ],
   keyHighlightsBn: [
     "ফেনীর শীর্ষ ১৩ জন বিএমডিসি নিবন্ধিত নিউরোমেডিসিন ও স্ট্রোক কনসালটেন্টদের (FCPS, MD Neurology, BSMMU, NINS, CMCH) হালনাগাদ চেম্বার শিডিউল ও সরাসরি সিরিয়াল হটলাইন।",

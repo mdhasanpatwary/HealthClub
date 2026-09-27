@@ -54,6 +54,10 @@ export const FENI_HOME_CARE_GUIDE: BlogPost = {
     "feni diabetic wound dressing home",
     "bedridden patient care feni",
     "elderly vital signs tracking feni",
+  
+    "home sample collection in feni",
+    "home blood test feni",
+    "on-call nurse in feni",
   ],
   keyHighlightsBn: [
     "ঘরে বসে রক্ত ও নমুনা সংগ্রহ: ডায়াবেটিস, কিডনি বা হাঁটাচলায় অক্ষম বয়োবৃদ্ধদের হাসপাতালে না এনে ঘরে বসেই ভ্যাকুটেইনার টিউবে শতভাগ জীবাণুমুক্ত রক্ত কালেকশন।",

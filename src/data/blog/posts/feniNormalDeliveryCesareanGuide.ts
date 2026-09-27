@@ -51,6 +51,11 @@ export const FENI_NORMAL_DELIVERY_AND_CESAREAN_COST_GUIDE: BlogPost = {
     "nicu incubator cost feni",
     "normal delivery doctor in feni",
     "feni sadar hospital maternity delivery",
+  
+    "normal delivery cost in feni",
+    "c section cost in feni",
+    "normal delivery clinic in feni",
+    "maternity package feni",
   ],
   keyHighlightsBn: [
     "ফেনীর প্রাইভেট হাসপাতালসমূহে স্বাভাবিক প্রসব (৳৬,০০০ - ৳১০,০০০) ও সিজারিয়ান অপারেশনের (৳১৮,০০০ - ৳২৮,০০০) বাস্তবসম্মত বাজারদর প্যাকেজ।",

@@ -48,6 +48,13 @@ export const BEST_MEDICINE_DOCTORS_IN_FENI: BlogPost = {
     "ফেনী মেডিসিন বিশেষজ্ঞ তালিকা",
     "ফেনী ডাক্তার চেম্বার সিরিয়াল",
     "ফেনী ইন্টারনাল মেডিসিন বিশেষজ্ঞ",
+  
+    "best medicine specialists in feni",
+    "internal medicine specialist in feni",
+    "general physician in feni",
+    "fcps medicine doctor in feni",
+    "feni medicine doctor list",
+    "medicine consultant chamber feni",
   ],
   keyHighlightsBn: [
     "ডিডি ল্যাব, নিউ ইবনে সিনা ও ল্যাবএইডের মতো হেলথ ক্লাব পার্টনার প্রতিষ্ঠানে কর্মরত শীর্ষ মেডিসিন বিশেষজ্ঞদের অগ্রাধিকারভিত্তিক তালিকা।",

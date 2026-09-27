@@ -48,6 +48,13 @@ export const BEST_SKIN_SPECIALISTS_IN_FENI: BlogPost = {
     "ফেনী লেজার স্কিন চিকিৎসা",
     "ফেনী যৌন রোগ ডাক্তার",
     "top dermatologists in feni",
+  
+    "best skin specialists in feni",
+    "dermatologists in feni",
+    "skin doctor in feni",
+    "skin and vd specialist in feni",
+    "allergy specialist doctor in feni",
+    "fungal infection specialist feni",
   ],
   keyHighlightsBn: [
     "ফেনীর শীর্ষ ১৩ জন বিএমডিসি নিবন্ধিত চর্ম, অ্যালার্জি, যৌন রোগ (VD) বিশেষজ্ঞ ও ডার্মাটোসার্জনদের (FCPS, DDV, MD) হালনাগাদ চেম্বার ও সরাসরি সিরিয়াল হটলাইন।",

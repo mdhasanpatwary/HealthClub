@@ -51,6 +51,13 @@ export const BEST_KIDNEY_DOCTORS_IN_FENI: BlogPost = {
     "ফেনী কিডনি হাসপাতাল",
     "ফেনী ইউরোলজিস্ট সার্জন",
     "ফেনী কিডনি পাথর লেজার অপারেশন",
+  
+    "best kidney doctors in feni",
+    "nephrologists in feni",
+    "kidney specialist doctor in feni",
+    "dialysis specialist in feni",
+    "nephrology consultant feni",
+    "feni kidney doctor list",
   ],
   keyHighlightsBn: [
     "ফেনীর শীর্ষ বিএমডিসি নিবন্ধিত কিডনি বিশেষজ্ঞ (MD Nephrology, FCPS) ও ইউরোলজি সার্জনদের (MS Urology) হালনাগাদ চেম্বার শিডিউল ও সরাসরি সিরিয়াল হটলাইন।",

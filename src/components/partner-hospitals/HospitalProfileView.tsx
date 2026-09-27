@@ -9,7 +9,6 @@ import {
   Pill,
   HeartHandshake,
   MapPin,
-  ChevronRight,
   ArrowLeft,
   CheckCircle2,
   Tag,
@@ -23,6 +22,7 @@ import { toBanglaNums } from "@/lib/utils";
 import HospitalFacilityBadges from "./HospitalFacilityBadges";
 import HospitalDiscountsSection from "./HospitalDiscountsSection";
 import HospitalDoctorRoster from "./HospitalDoctorRoster";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import HospitalContactSidebar from "./HospitalContactSidebar";
 import HospitalGalleryModal from "./HospitalGalleryModal";
 import HospitalSocialLinks from "./HospitalSocialLinks";
@@ -83,28 +83,14 @@ export default function HospitalProfileView({
       <div className="mx-auto max-w-7xl px-3.5 sm:px-6 lg:px-8 space-y-4 sm:space-y-6">
         
         {/* Breadcrumb Navigation */}
-        <nav
-          aria-label="Breadcrumb"
-          className="flex items-center gap-1.5 text-xs text-muted-foreground overflow-x-auto no-scrollbar py-0.5"
-        >
-          <Link
-            href="/"
-            className="hover:text-foreground transition-colors shrink-0"
-          >
-            হোম
-          </Link>
-          <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground/60" />
-          <Link
-            href="/partner-hospitals"
-            className="hover:text-foreground transition-colors shrink-0"
-          >
-            পার্টনার নেটওয়ার্ক
-          </Link>
-          <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground/60" />
-          <span className="text-foreground font-semibold truncate max-w-[180px] sm:max-w-none">
-            {partner.name}
-          </span>
-        </nav>
+        <Breadcrumbs
+          items={[
+            { label: "হোম", href: "/" },
+            { label: "পার্টনার নেটওয়ার্ক", href: "/partner-hospitals" },
+            { label: getCategoryLabel(partner.category), href: `/partner-hospitals/category/${partner.category}` },
+            { label: partner.name },
+          ]}
+        />
 
         {/* Back Link */}
         <div>

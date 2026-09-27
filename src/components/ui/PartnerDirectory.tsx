@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { Search, MapPin, Hospital, X } from "lucide-react";
 import { getPartnersAction } from "@/app/actions/partnerActions";
 import { Partner } from "@/services/db";
@@ -18,6 +19,7 @@ interface PartnerDirectoryProps {
   limit?: number;
   showFilters?: boolean;
   initialCategory?: string;
+  isCategoryPage?: boolean;
 }
 
 export default function PartnerDirectory({
@@ -25,7 +27,9 @@ export default function PartnerDirectory({
   limit,
   showFilters = true,
   initialCategory = "all",
+  isCategoryPage = false,
 }: PartnerDirectoryProps) {
+  const router = useRouter();
   const hasInitialData = Boolean(initialPartners && initialPartners.length > 0);
   const [partners, setPartners] = useState<Partner[]>(initialPartners ?? []);
   const [loading, setLoading] = useState(!hasInitialData);
@@ -71,6 +75,14 @@ export default function PartnerDirectory({
   };
 
   const handleCategoryChange = (cat: string) => {
+    if (isCategoryPage) {
+      if (cat === "all") {
+        router.push("/partner-hospitals");
+      } else if (cat !== selectedCategory) {
+        router.push(`/partner-hospitals/category/${cat}`);
+      }
+      return;
+    }
     setSelectedCategory(cat);
     setVisibleCount(18);
     updateUrlParams(cat, selectedUpazila);
@@ -83,6 +95,10 @@ export default function PartnerDirectory({
   };
 
   const handleResetFilters = () => {
+    if (isCategoryPage) {
+      router.push("/partner-hospitals");
+      return;
+    }
     setSelectedCategory("all");
     setSelectedUpazila("all");
     setSearchQuery("");

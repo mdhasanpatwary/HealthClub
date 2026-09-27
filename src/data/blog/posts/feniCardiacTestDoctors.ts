@@ -1,0 +1,150 @@
+import {
+  DoctorSpecialtyGroup,
+  DoctorChamberHub,
+  DoctorSpecialistItem,
+} from "@/types/blog";
+
+const FENI_CARDIOLOGY_TEST_SPECIALISTS: DoctorSpecialistItem[] = [
+  {
+    id: "doc_feni_ashraf_ali",
+    nameBn: "অধ্যাপক ডা. মোঃ আশরাফ আলী",
+    nameEn: "Prof. Dr. Md. Ashraf Ali",
+    specialtyBn: "মেডিসিন, বাতজ্বর, হৃদরোগ ও ইন্টারভেনশনাল কার্ডিওলজি বিশেষজ্ঞ",
+    specialtyEn: "Medicine, Rheumatic Fever & Interventional Cardiology Specialist",
+    department: "cardiology",
+    degreesBn: "এমবিবিএস, বিসিএস (স্বাস্থ্য), এমসিপিএস (মেডিসিন), এমডি (কার্ডিওলজি)",
+    degreesEn: "MBBS, BCS (Health), MCPS (Medicine), MD (Cardiology)",
+    designationBn: "অধ্যাপক ও বিভাগীয় প্রধান (কার্ডিওলজি বিভাগ), কুমিল্লা মেডিকেল কলেজ ও হাসপাতাল",
+    designationEn: "Professor & Head of Cardiology, Comilla Medical College & Hospital",
+    chamberNameBn: "আল-কেমি হাসপাতাল",
+    chamberAddressBn: "হাসপাতাল রোড মোড়, এসএসকে রোড, ফেনী সদর",
+    visitingDaysBn: "শনি, সোম, মঙ্গল ও বুধবার",
+    visitingHoursBn: "বিকাল ৪টা - সন্ধ্যা ৭:৩০",
+    serialPhone: "01839994132",
+    consultationFeeBn: "৳১,০০০",
+    consultantProfileUrl: "/consultants/doc_fenir_280",
+    partnerStatus: false,
+    featuredBadgeBn: "সিনিয়র প্রফেসর ও কার্ডিওলজিস্ট",
+    rank: 1,
+  },
+  {
+    id: "doc_feni_abdul_matin",
+    nameBn: "সহকারী অধ্যাপক ডা. মোহাম্মদ আবদুল মতিন",
+    nameEn: "Asst. Prof. Dr. Mohammad Abdul Matin",
+    specialtyBn: "হৃদরোগ, মেডিসিন ও বাতজ্বর বিশেষজ্ঞ চিকিৎসক",
+    specialtyEn: "Cardiologist, Medicine & Rheumatic Heart Specialist",
+    department: "cardiology",
+    degreesBn: "এমবিবিএস, বিসিএস (স্বাস্থ্য), ডি-কার্ড (বিএসএমএমইউ), এমডি কার্ডিওলজি (এনআইসিভিডি)",
+    degreesEn: "MBBS, BCS (Health), D-Card (BSMMU), MD Cardiology (NICVD)",
+    designationBn: "সহকারী অধ্যাপক ও কনসালট্যান্ট, ২৫০ শয্যা জেলা সদর হাসপাতাল, ফেনী",
+    designationEn: "Assistant Professor & Consultant, 250-Bed District Sadar Hospital, Feni",
+    chamberNameBn: "লাইফ কেয়ার ডায়াগনস্টিক সেন্টার",
+    chamberAddressBn: "গ্র্যান্ড ট্রাঙ্ক রোড (শহীদ মিনার সংলগ্ন), ফেনী সদর",
+    visitingDaysBn: "প্রতিদিন (শুক্রবার বিকাল ব্যতীত)",
+    visitingHoursBn: "বিকাল ৪টা - রাত ৯টা",
+    serialPhone: "01882462650",
+    consultationFeeBn: "৳৮০০",
+    consultantProfileUrl: "/consultants/doc_fenir_311",
+    partnerStatus: true,
+    featuredBadgeBn: "অফিসিয়াল পার্টনার চেম্বার",
+    rank: 2,
+  },
+  {
+    id: "doc_feni_mofazzal_rayhan",
+    nameBn: "ডা. মোঃ মোফাজ্জল হক রায়হান",
+    nameEn: "Dr. Md. Mofazzal Hoque Rayhan",
+    specialtyBn: "হৃদরোগ, মেডিসিন ও ডায়াবেটিস বিশেষজ্ঞ",
+    specialtyEn: "Cardiologist, Medicine & Diabetes Specialist",
+    department: "cardiology",
+    degreesBn: "এমবিবিএস, বিসিএস (স্বাস্থ্য), এমডি (কার্ডিওলজি), এফসিপিএস (মেডিসিন-এফপি), সিসিডি (বারডেম)",
+    degreesEn: "MBBS, BCS (Health), MD (Cardiology), FCPS (Medicine-FP), CCD (BIRDEM)",
+    designationBn: "কনসালট্যান্ট (কার্ডিওলজি), চট্টগ্রাম মেডিকেল কলেজ হাসপাতাল",
+    designationEn: "Consultant (Cardiology), Chittagong Medical College Hospital",
+    chamberNameBn: "শেভরন ডায়াগনস্টিক সেন্টার",
+    chamberAddressBn: "বড় মসজিদের দক্ষিণ পাশে, ট্রাঙ্ক রোড, ফেনী সদর",
+    visitingDaysBn: "রবি, মঙ্গল ও বৃহস্পতিবার",
+    visitingHoursBn: "বিকাল ৩টা - সন্ধ্যা ৬:৩০",
+    serialPhone: "01847116688",
+    consultationFeeBn: "৳৮০০",
+    consultantProfileUrl: "/consultants/doc_fenir_402",
+    partnerStatus: false,
+    featuredBadgeBn: "সিএমসি কনসালট্যান্ট",
+    rank: 3,
+  },
+  {
+    id: "doc_feni_ismail_hossain",
+    nameBn: "ডাঃ মোঃ ইসমাইল হোসেন",
+    nameEn: "Dr. Md. Ismail Hossain",
+    specialtyBn: "হৃদরোগ, উচ্চ রক্তচাপ, বাতজ্বর ও মেডিসিন বিশেষজ্ঞ",
+    specialtyEn: "Cardiology, Hypertension & Rheumatic Heart Specialist",
+    department: "cardiology",
+    degreesBn: "এমবিবিএস, বিসিএস (স্বাস্থ্য), ডি-কার্ড (কার্ডিওলজি), সিসিডি (বারডেম)",
+    degreesEn: "MBBS, BCS (Health), D-Card (Cardiology), CCD (BIRDEM)",
+    designationBn: "কনসালট্যান্ট কার্ডিওলজিস্ট, আধুনিক হৃদরোগ সেবা কেন্দ্র",
+    designationEn: "Consultant Cardiologist, Modern Heart Care Center",
+    chamberNameBn: "প্যাসিফিক হেলথ কেয়ার সেন্টার",
+    chamberAddressBn: "জিরো পয়েন্ট, শহীদ শহীদুল্লাহ কায়সার সড়ক (এসএসকে রোড), ফেনী সদর",
+    visitingDaysBn: "প্রতিদিন (শুক্রবার বিকাল বন্ধ)",
+    visitingHoursBn: "বিকাল ৫টা - রাত ৮:৩০",
+    serialPhone: "01711365956",
+    consultationFeeBn: "৳৭০০",
+    partnerStatus: true,
+    featuredBadgeBn: "অফিসিয়াল পার্টনার চেম্বার",
+    rank: 4,
+  },
+];
+
+export const FENI_CARDIAC_TEST_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
+  {
+    department: "cardiology",
+    departmentNameBn: "ফেনীর শীর্ষ হৃদরোগ বিশেষজ্ঞ ও কার্ডিয়াক কনসালট্যান্ট",
+    departmentNameEn: "Top Cardiologists & Cardiac Consultants in Feni",
+    iconName: "HeartPulse",
+    descriptionBn:
+      "ইসিজি, ২ডি ইকো ও ইটিটি পরীক্ষার ফলাফল নিখুঁতভাবে পর্যালোচনা এবং করোনারি আর্টারি ডিজিজ, উচ্চ রক্তচাপ, হার্ট ফেইলিউর ও রিউম্যাটিক ভালভুলার ডিজিজের আধুনিক ব্যবস্থাপনার অভিজ্ঞ কার্ডিওলজিস্টবৃন্দ।",
+    doctors: FENI_CARDIOLOGY_TEST_SPECIALISTS,
+  },
+];
+
+export const FENI_CARDIAC_TEST_CHAMBER_HUBS: DoctorChamberHub[] = [
+  {
+    areaNameBn: "এসএসকে রোড ও জিরো পয়েন্ট কার্ডিয়াক করিডোর",
+    areaNameEn: "SSK Road & Zero Point Cardiac Corridor",
+    descriptionBn:
+      "ফেনী শহরের প্রধান কার্ডিয়াক টেস্ট করিডোর। এখানে প্যাসিফিক হেলথ কেয়ার সেন্টার, পপুলার ডায়াগনস্টিক, আল-কেমি হাসপাতাল এবং শেভরন ক্লিনিক অবস্থিত। এখানে অভিজ্ঞ কার্ডিওলজিস্টদের নিয়মিত চেম্বার এবং ডিজিটাল ইসিজি, কালার ডপলার ইকো ও জরুরি কার্ডিয়াক ট্রোপোনিন ল্যাব সেবা সার্বক্ষণিক চালু থাকে।",
+    popularHospitalsChambersBn: [
+      "প্যাসিফিক হেলথ কেয়ার সেন্টার (জিরো পয়েন্ট, এসএসকে রোড)",
+      "পপুলার ডায়াগনস্টিক সেন্টার (এসএসকে রোড)",
+      "আল-কেমি হাসপাতাল (হাসপাতাল রোড মোড়, এসএসকে রোড)",
+    ],
+    tipsBn:
+      "ইসিজি ও ইকো টেস্টের জন্য সকালে বা সান্ধ্যকালীন ভিজিটের অন্তত ১ ঘণ্টা আগে যোগাযোগ করে স্লট নিশ্চিত করা সুবিধাজনক।",
+  },
+  {
+    areaNameBn: "গ্র্যান্ড ট্রাঙ্ক রোড ও বড় মসজিদ জোন",
+    areaNameEn: "Grand Trunk Road & Grand Mosque Corridor",
+    descriptionBn:
+      "ফেনীর কেন্দ্রীয় সংযোগস্থলে অবস্থিত এই অঞ্চলে লাইফ কেয়ার ডায়াগনস্টিক, ইম্পেরিয়াল নিউরোকেয়ার, ফেনী ম্যাক্স ডায়াগনস্টিক সেন্টার এবং আল-আকসা হাসপাতাল অবস্থিত। এখানে কম্পিউটারাইজড ট্রেডমিল টেস্ট (ETT), ২৪ ঘণ্টা হোল্টার মনিটরিং এবং সার্বক্ষণিক জরুরি বেডসাইড ইসিজি সুবিধা পাওয়া যায়।",
+    popularHospitalsChambersBn: [
+      "লাইফ কেয়ার ডায়াগনস্টিক সেন্টার (শহীদ মিনার সংলগ্ন, ট্রাঙ্ক রোড)",
+      "ইম্পেরিয়াল নিউরোকেয়ার অ্যান্ড ডায়াগনস্টিক (বড় মসজিদ মার্কেট)",
+      "ফেনী ম্যাক্স ডায়াগনস্টিক সেন্টার (জাহিরিয়া টাওয়ার, ট্রাঙ্ক রোড)",
+      "আল-আকসা হাসপাতাল লিঃ (খাজুরিয়া কোট বিল্ডিং, ট্রাঙ্ক রোড)",
+    ],
+    tipsBn:
+      "ইটিটি (ETT) পরীক্ষার জন্য আগের দিন টেলিফোনে স্লট বুকিং এবং কার্ডিওলজিস্টের নির্দেশিত ওষুধের প্রস্তুতি নেওয়া আবশ্যক।",
+  },
+  {
+    areaNameBn: "রামপুর ও মিজান রোড হার্ট কেয়ার জোন",
+    areaNameEn: "Rampur & Mizan Road Heart Care Zone",
+    descriptionBn:
+      "বিশেষায়িত হৃদরোগ চিকিৎসার জন্য ফেনীর রামপুর এলাকায় 'ফেনী ন্যাশনাল হার্ট ফাউন্ডেশন হাসপাতাল' এবং মিজান রোডে 'ফেনী ডায়াবেটিক সমিতি হাসপাতাল' অবস্থিত। এখানে সার্বক্ষণিক সিসিইউ, ইসিজি, ইকো ও কার্ডিয়াক জরুরি অ্যাম্বুলেন্স সেবা পাওয়া যায়।",
+    popularHospitalsChambersBn: [
+      "ফেনী ন্যাশনাল হার্ট ফাউন্ডেশন হাসপাতাল (রামপুর)",
+      "ফেনী ডায়াবেটিক সমিতি হাসপাতাল (মিজান রোড)",
+      "ল্যাবএইড স্পেশালাইজড হাসপাতাল (মিজান রোড)",
+    ],
+    tipsBn:
+      "তীব্র বুকে ব্যথা, বুক চেপে ধরা বা হার্ট অ্যাটাকের লক্ষণ দেখা দিলে কালক্ষেপণ না করে দ্রুত জরুরি সিসিইউ বিভাগে নিয়ে যান।",
+  },
+];

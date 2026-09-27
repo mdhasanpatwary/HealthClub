@@ -54,6 +54,14 @@ export const FENI_CT_SCAN_AND_MRI_TEST_PRICE_GUIDE: BlogPost = {
     "১.৫ টেসলা এমআরআই ফেনী",
     "এইচআরসিটি চেস্ট টেস্ট খরচ",
     "best diagnostic centers in feni",
+  
+    "ct scan cost in feni",
+    "mri scan price in feni",
+    "128 slice ct scan feni",
+    "1.5 tesla mri feni",
+    "brain mri cost in feni",
+    "ct scan centers in feni",
+    "imaging lab feni",
   ],
   keyHighlightsBn: [
     "ফেনীর বেসরকারি ডায়াগনস্টিক ও হাসপাতালে ১২৮-স্লাইস সিটি স্ক্যান (৳৪,০০০ - ৳৭,০০০) এবং ১.৫ টেসলা এমআরআই পরীক্ষার (৳৭,৫০০ - ৳১২,৫০০) নির্ভরযোগ্য বাজারদর।",

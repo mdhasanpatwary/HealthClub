@@ -53,6 +53,11 @@ export const FENI_STROKE_CARDIAC_GUIDE: BlogPost = {
     "stroke emergency ct scan feni",
     "chest pain emergency feni",
     "heart attack aspirin loading feni",
+  
+    "stroke emergency treatment in feni",
+    "stroke golden hour hospital feni",
+    "cardiac emergency in feni",
+    "acute stroke hospital feni",
   ],
   keyHighlightsBn: [
     "স্ট্রোকের গোল্ডেন আওয়ার (Golden Hour): লক্ষণ প্রকাশের প্রথম ৩ থেকে ৪.৫ ঘণ্টার মধ্যে জরুরি নন-কনট্রাস্ট সিটি স্ক্যান ও রক্ত জমাট গলানোর ইনজেকশন (r-tPA) দেওয়ার নির্ধারিত সময়সীমা।",

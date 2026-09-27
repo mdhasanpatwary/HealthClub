@@ -44,18 +44,16 @@ export function BlogPriceTable({
   const defaultBenefitHeader = "হেলথ ক্লাব সুবিধা";
   const defaultDurationHeader = "সময়কাল / সুবিধা";
 
-  const defaultBannerTitle = "হেলথ ক্লাবে বিশেষ মেম্বার ছাড় ও সাশ্রয় পান!";
-  const defaultBannerText = "আজই হেলথ ক্লাবের মেম্বারশিপ কার্ড সংগ্রহ করে চিকিৎসায় নিশ্চিত ছাড় পান।";
-  const defaultButtonText = "মেম্বারশিপ গ্রহণ করুন";
+  const defaultBannerTitle = "ফেনীর শীর্ষ পার্টনার হাসপাতাল ও ডায়াগনস্টিক ল্যাবে সাশ্রয়ী চিকিৎসা";
+  const defaultBannerText = "আজই হেলথ ক্লাবের মেম্বারশিপ কার্ড সংগ্রহ করে চিকিৎসায় নিশ্চিত ১০-৩০% ছাড় পান।";
+  const defaultButtonText = "মেম্বারশিপ কার্ড নিন";
 
   const banner = conversionBanner || {
     text: defaultBannerText,
     buttonText: defaultButtonText,
     href: "/membership",
-    variant: "link",
+    variant: "button",
   };
-
-  const isButtonVariant = banner.variant === "button" || Boolean(banner.title);
 
   return (
     <section id={id} className="scroll-mt-24 space-y-5">
@@ -133,39 +131,30 @@ export function BlogPriceTable({
         </table>
       </div>
 
-      {isButtonVariant ? (
-        <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 text-primary font-bold text-sm sm:text-base">
-              <ShieldCheck className="h-5 w-5 shrink-0" />
-              <span>{banner.title || defaultBannerTitle}</span>
-            </div>
-            <p className="text-xs text-muted-foreground">{banner.text}</p>
+      {/* Prominent Standardized Health Club Member Discount Banner */}
+      <div className="rounded-2xl border-2 border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-card p-4 sm:p-6 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="space-y-1.5 max-w-2xl">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 text-xs font-bold border border-emerald-500/30">
+            <Sparkles className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <span>১০-৩০% মেম্বার ছাড় পেতে আজই কার্ড সংগ্রহ করুন</span>
           </div>
+          <h3 className="font-heading text-base sm:text-lg font-bold text-foreground">
+            {banner.title || defaultBannerTitle}
+          </h3>
+          <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+            {banner.text || defaultBannerText}
+          </p>
+        </div>
 
-          <Link
-            href={banner.href || "/membership"}
-            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs sm:text-sm font-bold shadow-xs transition-colors shrink-0"
-          >
-            <span>{banner.buttonText}</span>
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-      ) : (
-        <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs sm:text-sm">
-          <div className="flex items-center gap-2.5">
-            <ShieldCheck className="h-5 w-5 text-primary shrink-0" />
-            <p className="text-foreground">{banner.text}</p>
-          </div>
-          <Link
-            href={banner.href || "/membership"}
-            className="inline-flex items-center gap-1.5 font-bold text-primary hover:underline shrink-0"
-          >
-            <span>{banner.buttonText}</span>
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        </div>
-      )}
+        <Link
+          href={banner.href || "/membership"}
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs sm:text-sm font-bold shadow-xs transition-all hover:gap-3 shrink-0 w-full sm:w-auto self-start sm:self-auto"
+        >
+          <ShieldCheck className="h-4 w-4" />
+          <span>{banner.buttonText || defaultButtonText}</span>
+          <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
     </section>
   );
 }

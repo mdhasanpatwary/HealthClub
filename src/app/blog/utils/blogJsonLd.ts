@@ -31,8 +31,9 @@ export function generateBlogJsonLd(
       "@id": `${pageUrl}#webpage`,
       url: pageUrl,
       name: title,
+      alternateName: post.titleEn,
       description: post.excerptBn,
-      inLanguage: "bn-BD",
+      inLanguage: ["bn-BD", "en-US"],
       isPartOf: { "@id": `${SITE_URL}/#website` },
       breadcrumb: { "@id": `${pageUrl}#breadcrumb` },
       ...(relatedUrls.length > 0 ? { relatedLink: relatedUrls } : {}),
@@ -79,11 +80,15 @@ export function generateBlogJsonLd(
       "@id": `${pageUrl}#article`,
       isPartOf: { "@id": `${pageUrl}#webpage` },
       headline: title,
+      alternativeHeadline: post.titleEn,
+      name: post.titleBn,
+      alternateName: post.titleEn,
       description: post.excerptBn,
+      abstract: post.excerptEn,
       image: coverImageUrl,
       datePublished: getArticleIsoDate(post.publishedDate),
       dateModified: getArticleIsoDate(post.modifiedDate),
-      inLanguage: "bn-BD",
+      inLanguage: ["bn-BD", "en-US"],
       isAccessibleForFree: true,
       mainEntityOfPage: {
         "@type": "WebPage",
@@ -111,7 +116,7 @@ export function generateBlogJsonLd(
         },
       },
       articleSection: post.categoryNameBn,
-      keywords: post.metaKeywords.join(", "),
+      keywords: Array.from(new Set([...post.metaKeywords, ...post.tags, post.titleEn, post.categoryNameEn])).join(", "),
       medicalAudience: {
         "@type": "MedicalAudience",
         medicalAudienceType: "Patient",
@@ -131,9 +136,10 @@ export function generateBlogJsonLd(
     graph.push({
       "@type": "ItemList",
       "@id": `${pageUrl}#hospitals-list`,
-      name: post.slug.includes("healthcare-guide")
-        ? post.titleBn
-        : "ফেনীর সেরা ১০টি হাসপাতাল",
+      name:
+        post.slug.includes("healthcare-guide") || post.slug.includes("patient-guide")
+          ? post.titleBn
+          : "ফেনীর সেরা ১০টি হাসপাতাল",
       description: post.excerptBn,
       numberOfItems: post.hospitals.length,
       itemListElement: post.hospitals.map((h) => ({

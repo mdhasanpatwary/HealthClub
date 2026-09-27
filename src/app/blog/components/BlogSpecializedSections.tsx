@@ -20,7 +20,8 @@ interface BlogSpecializedSectionsProps {
 export function BlogSpecializedSections({
   post,
 }: BlogSpecializedSectionsProps) {
-  const isUpazila = post.slug.includes("healthcare-guide");
+  const isUpazila =
+    post.slug.includes("healthcare-guide") || post.slug.includes("patient-guide");
   const isIcu = post.slug === "feni-icu-ccu-nicu-bed-charges-and-facilities-guide";
   const isStrokeCardiac = post.slug === "stroke-and-heart-attack-emergency-protocol-feni";
   const isHomeCare = post.slug === "home-sample-collection-and-nursing-service-in-feni";
@@ -39,6 +40,10 @@ export function BlogSpecializedSections({
               ? "২. একনজরে ফেনীর শীর্ষ ৪ডি প্রেগন্যান্সি আল্ট্রাসাউন্ড সেন্টারের সুবিধা তুলনা"
               : post.slug === "full-body-health-checkup-packages-in-feni"
               ? "২. একনজরে ফেনীর শীর্ষ হোল বডি চেকআপ সেন্টারের সুবিধা তুলনা"
+              : post.slug === "feni-endoscopy-colonoscopy-test-cost-guide"
+              ? "২. একনজরে ফেনীর শীর্ষ এন্ডোস্কোপি ও কোলনোস্কোপি সেন্টারের সুবিধা তুলনা"
+              : post.slug === "feni-cardiac-ecg-echo-ett-test-guide"
+              ? "২. একনজরে ফেনীর শীর্ষ ইসিজি, ইকো ও ইটিটি হার্ট সেন্টারের সুবিধা তুলনা"
               : "২. একনজরে ফেনীর সেরা ১০ ডায়াগনস্টিকের প্রযুক্তি ও সুবিধা তুলনা"}
           </h2>
           <DiagnosticComparisonTable items={post.diagnosticComparisonTable} />
@@ -56,6 +61,10 @@ export function BlogSpecializedSections({
                 ? "৩. ফেনীর শীর্ষ ৪ডি আল্ট্রাসাউন্ড ও প্রেগন্যান্সি ডায়াগনস্টিক সেন্টারের পর্যালোচনা"
                 : post.slug === "full-body-health-checkup-packages-in-feni"
                 ? "৩. ফেনীর শীর্ষ হোল বডি চেকআপ ও এক্সিকিউটিভ ডায়াগনস্টিক সেন্টারের পর্যালোচনা"
+                : post.slug === "feni-endoscopy-colonoscopy-test-cost-guide"
+                ? "৩. ফেনীর শীর্ষ এন্ডোস্কোপি, কোলনোস্কোপি ও গ্যাস্ট্রো সেন্টারের পর্যালোচনা"
+                : post.slug === "feni-cardiac-ecg-echo-ett-test-guide"
+                ? "৩. ফেনীর শীর্ষ কার্ডিয়াক ডায়াগনস্টিক ও হার্ট সেন্টারের পর্যালোচনা"
                 : "৩. ফেনীর সেরা ১০টি ডায়াগনস্টিক সেন্টারের পূর্ণাঙ্গ পর্যালোচনা"}
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground mt-1">
@@ -65,6 +74,10 @@ export function BlogSpecializedSections({
                 ? "প্রতিটি সেন্টারের ৪ডি ভলিউসন মেশিন, নারী সনোলজিস্টের সুবিধা, অ্যানোমালি স্ক্যান, ঠিকানা ও মেম্বার ছাড়ের তথ্য।"
                 : post.slug === "full-body-health-checkup-packages-in-feni"
                 ? "প্রতিটি সেন্টারের অটোমেটেড বায়োকেমিস্ট্রি প্ল্যাটফর্ম, চেকআপ প্যাকেজ, হোম স্যাম্পল সংগ্রহ, ঠিকানা ও মেম্বার ছাড়ের তথ্য।"
+                : post.slug === "feni-endoscopy-colonoscopy-test-cost-guide"
+                ? "প্রতিটি সেন্টারের এইচডি ভিডিও এন্ডোস্কোপি, ব্যথাহীন কোলনোস্কোপি, বায়োপ্সি সুবিধা, ঠিকানা ও মেম্বার ছাড়ের তথ্য।"
+                : post.slug === "feni-cardiac-ecg-echo-ett-test-guide"
+                ? "প্রতিটি সেন্টারের কালার ডপলার ইকো, কম্পিউটারাইজড ইটিটি, জরুরি ট্রোপোনিন ল্যাব, ঠিকানা ও মেম্বার ছাড়ের তথ্য।"
                 : "প্রতিটি সেন্টারের আধুনিক যন্ত্রপাতি, বিশেষায়িত টেস্ট, ঠিকানা, যোগাযোগের নম্বর ও ডিসকাউন্ট তথ্য।"}
             </p>
           </div>
@@ -169,7 +182,7 @@ export function BlogSpecializedSections({
         <section id="comparison-matrix" className="scroll-mt-24 space-y-4">
           <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
             {isUpazila
-              ? "২. একনজরে উপজেলা হাসপাতাল ও ক্লিনিকের তুলনামূলক তালিকা"
+              ? "৬. একনজরে উপজেলা হাসপাতাল ও ক্লিনিকের তুলনামূলক তালিকা"
               : isIcu
               ? "২. একনজরে ফেনীর শীর্ষ আইসিইউ, সিসিইউ ও এনআইসিইউ সুবিধা তুলনা"
               : isStrokeCardiac
@@ -192,7 +205,7 @@ export function BlogSpecializedSections({
           <div>
             <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
               {isUpazila
-                ? `৩. উপজেলার ${toBanglaNums(post.hospitals.length)}টি শীর্ষ হাসপাতাল ও ক্লিনিকের পূর্ণাঙ্গ পর্যালোচনা`
+                ? `৭. উপজেলার ${toBanglaNums(post.hospitals.length)}টি শীর্ষ হাসপাতাল ও ক্লিনিকের পূর্ণাঙ্গ পর্যালোচনা`
                 : isIcu
                 ? "৩. ফেনীর শীর্ষ আইসিইউ, সিসিইউ ও নিওনেটাল হাসপাতালের পর্যালোচনা"
                 : isStrokeCardiac

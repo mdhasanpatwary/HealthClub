@@ -37,6 +37,13 @@ import { FENI_STROKE_CARDIAC_GUIDE } from "./posts/feniStrokeCardiacGuide";
 import { FENI_HOME_CARE_GUIDE } from "./posts/feniHomeCareGuide";
 import { FENI_OXYGEN_GUIDE } from "./posts/feniOxygenGuide";
 import { FENI_DENGUE_TYPHOID_GUIDE } from "./posts/feniDengueTyphoidGuide";
+import { FENI_HEALTH_CLUB_MEMBERSHIP_DISCOUNT_GUIDE } from "./posts/feniMembershipDiscountGuide";
+import { FENI_ENDOSCOPY_COLONOSCOPY_TEST_COST_GUIDE } from "./posts/feniEndoscopyColonoscopyGuide";
+import { FENI_CARDIAC_ECG_ECHO_ETT_TEST_GUIDE } from "./posts/feniCardiacTestGuide";
+import { FENI_DOCTOR_SERIAL_APPOINTMENT_GUIDE } from "./posts/feniDoctorAppointmentGuide";
+import { DAGANBHUIYAN_PATIENT_GUIDE } from "./posts/daganbhuiyanPatientGuide";
+import { CHHAGALNAIYA_PATIENT_GUIDE } from "./posts/chhagalnaiyaPatientGuide";
+import { SONAGAZI_PATIENT_GUIDE } from "./posts/sonagaziPatientGuide";
 
 export {
   BLOG_CATEGORIES,
@@ -45,6 +52,13 @@ export {
 } from "./blogCategories";
 
 export const BLOG_POSTS: BlogPost[] = [
+  FENI_DOCTOR_SERIAL_APPOINTMENT_GUIDE,
+  FENI_CARDIAC_ECG_ECHO_ETT_TEST_GUIDE,
+  FENI_ENDOSCOPY_COLONOSCOPY_TEST_COST_GUIDE,
+  FENI_HEALTH_CLUB_MEMBERSHIP_DISCOUNT_GUIDE,
+  DAGANBHUIYAN_PATIENT_GUIDE,
+  CHHAGALNAIYA_PATIENT_GUIDE,
+  SONAGAZI_PATIENT_GUIDE,
   FENI_DENGUE_TYPHOID_GUIDE,
   FENI_OXYGEN_GUIDE,
   FENI_HOME_CARE_GUIDE,

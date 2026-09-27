@@ -61,6 +61,11 @@ export const FENI_AMBULANCE_AND_OXYGEN_SERVICE_GUIDE: BlogPost = {
     "আঞ্জুমান মুফিদুল ইসলাম ফেনী",
     "মেদিনোভা অ্যাম্বুলেন্স ফেনী",
     "ফেনী ফ্রিজিং অ্যাম্বুলেন্স",
+  
+    "icu ambulance in feni",
+    "emergency oxygen cylinder in feni",
+    "freezer van ambulance feni",
+    "feni to dhaka ambulance rent",
   ],
   keyHighlightsBn: [
     "ফেনী সদর, মহিপাল হাইওয়ে জংশন ও উপজেলাগুলোর ১২টি শীর্ষ অ্যাম্বুলেন্স ও অক্সিজেন সার্ভিসের সরাসরি যাচাইকৃত ড্রাইভার ও হেল্পলাইন নম্বর।",

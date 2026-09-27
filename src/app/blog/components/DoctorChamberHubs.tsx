@@ -3,9 +3,11 @@ import { Building2, Navigation, Lightbulb, MapPin } from "lucide-react";
 
 interface DoctorChamberHubsProps {
   hubs: DoctorChamberHub[];
+  titleBn?: string;
+  subtitleBn?: string;
 }
 
-export function DoctorChamberHubs({ hubs }: DoctorChamberHubsProps) {
+export function DoctorChamberHubs({ hubs, titleBn, subtitleBn }: DoctorChamberHubsProps) {
   return (
     <section id="chamber-hubs" className="scroll-mt-24 space-y-6">
       <div>
@@ -14,10 +16,10 @@ export function DoctorChamberHubs({ hubs }: DoctorChamberHubsProps) {
           <span>চেম্বার হাব গাইড</span>
         </div>
         <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-          ৩. ফেনী শহরের প্রধান ডাক্তার চেম্বার ও ক্লিনিক্যাল হাবসমূহ
+          {titleBn || "৩. ফেনী শহরের প্রধান ডাক্তার চেম্বার ও ক্লিনিক্যাল হাবসমূহ"}
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-          এসএসকে রোড, হাসপাতাল রোড, ট্রাঙ্ক রোড ও মিজান রোডের বিশিষ্ট চেম্বার লোকেশন ও যাতায়াত নির্দেশিকা।
+          {subtitleBn || "এসএসকে রোড, হাসপাতাল রোড, ট্রাঙ্ক রোড ও মিজান রোডের বিশিষ্ট চেম্বার লোকেশন ও যাতায়াত নির্দেশিকা।"}
         </p>
       </div>
 

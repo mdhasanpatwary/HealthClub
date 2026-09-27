@@ -50,6 +50,14 @@ export const BEST_EYE_SPECIALISTS_IN_FENI: BlogPost = {
     "ফেনী ফ্যাকো সার্জারি",
     "ফেনী চশমার পাওয়ার টেস্ট",
     "top ophthalmologists in feni",
+  
+    "best eye specialists in feni",
+    "ophthalmologists in feni",
+    "eye doctor in feni",
+    "cataract surgeon in feni",
+    "phaco eye surgeon feni",
+    "glaucoma specialist in feni",
+    "feni eye hospital doctor list",
   ],
   keyHighlightsBn: [
     "ফেনীর শীর্ষ ১২ জন বিএমডিসি নিবন্ধিত চক্ষু বিশেষজ্ঞ, ফ্যাকো সার্জন ও রেটিনা কনসালটেন্টদের (FCPS, MS, DO, ICO) হালনাগাদ চেম্বার ও সরাসরি সিরিয়াল হটলাইন।",

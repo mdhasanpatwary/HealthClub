@@ -175,6 +175,8 @@ export function getDiagnosticTocTitles(currentSlug: string | undefined) {
   const isCtMri = currentSlug === "feni-ct-scan-and-mri-test-price-guide";
   const isPregnancyUsg = currentSlug === "pregnancy-ultrasonography-4d-anomaly-scan-in-feni";
   const isCheckup = currentSlug === "full-body-health-checkup-packages-in-feni";
+  const isEndoscopy = currentSlug === "feni-endoscopy-colonoscopy-test-cost-guide";
+  const isCardiacTest = currentSlug === "feni-cardiac-ecg-echo-ett-test-guide";
   return {
     overviewTitle: isCtMri
       ? "ফেনীতে সিটি স্ক্যান ও এমআরআই পরিকাঠামো"
@@ -182,6 +184,10 @@ export function getDiagnosticTocTitles(currentSlug: string | undefined) {
       ? "ফেনীতে প্রেগন্যান্সি আল্ট্রাসোনোগ্রাফির গুরুত্ব ও প্রেক্ষাপট"
       : isCheckup
       ? "ফেনীতে প্রিভেন্টিভ হেলথ স্ক্রিনিংয়ের গুরুত্ব ও প্রেক্ষাপট"
+      : isEndoscopy
+      ? "ফেনীতে এন্ডোস্কোপি ও গ্যাস্ট্রো ডায়াগনস্টিক প্রেক্ষাপট"
+      : isCardiacTest
+      ? "ফেনীতে কার্ডিয়াক ডায়াগনস্টিক ও হার্ট কেয়ার প্রেক্ষাপট"
       : "ফেনীর ডায়াগনস্টিক ও ল্যাব পরিকাঠামো",
     matrixTitle: isCtMri
       ? "একনজরে শীর্ষ সিটি স্ক্যান ও এমআরআই তুলনা"
@@ -189,6 +195,10 @@ export function getDiagnosticTocTitles(currentSlug: string | undefined) {
       ? "একনজরে শীর্ষ ৪ডি আল্ট্রাসাউন্ড ডায়াগনস্টিক তুলনা"
       : isCheckup
       ? "একনজরে শীর্ষ হোল বডি চেকআপ সেন্টারের তুলনা"
+      : isEndoscopy
+      ? "একনজরে শীর্ষ এন্ডোস্কোপি ও কোলনোস্কোপি সেন্টারের তুলনা"
+      : isCardiacTest
+      ? "একনজরে শীর্ষ কার্ডিয়াক টেস্ট সেন্টারের তুলনা"
       : "একনজরে সেরা ১০ ডায়াগনস্টিকের তুলনা",
     reviewsTitle: isCtMri
       ? "শীর্ষ সিটি স্ক্যান ও এমআরআই সেন্টারের পর্যালোচনা"
@@ -196,6 +206,10 @@ export function getDiagnosticTocTitles(currentSlug: string | undefined) {
       ? "ফেনীর শীর্ষ ৪ডি আল্ট্রাসাউন্ড ও ডায়াগনস্টিক সেন্টারের পর্যালোচনা"
       : isCheckup
       ? "ফেনীর শীর্ষ চেকআপ ও ডায়াগনস্টিক সেন্টারের পর্যালোচনা"
+      : isEndoscopy
+      ? "শীর্ষ এন্ডোস্কোপি, কোলনোস্কোপি ও গ্যাস্ট্রো সেন্টারের পর্যালোচনা"
+      : isCardiacTest
+      ? "শীর্ষ কার্ডিয়াক ডায়াগনস্টিক ও হার্ট সেন্টারের পর্যালোচনা"
       : "সেরা ১০ ডায়াগনস্টিক সেন্টারের পর্যালোচনা",
     priceGuideTitle: isCtMri
       ? "সিটি স্ক্যান ও এমআরআই মূল্যতালিকা ও ছাড়"
@@ -203,6 +217,10 @@ export function getDiagnosticTocTitles(currentSlug: string | undefined) {
       ? "প্রেগন্যান্সি ইউএসজি ও ৪ডি টেস্ট মূল্যতালিকা ও ছাড়"
       : isCheckup
       ? "হোল বডি চেকআপ প্যাকেজ মূল্যতালিকা ও ছাড়"
+      : isEndoscopy
+      ? "এন্ডোস্কোপি ও কোলনোস্কোপি মূল্যতালিকা ও ছাড়"
+      : isCardiacTest
+      ? "ইসিজি, ইকো ও ইটিটি মূল্যতালিকা ও ছাড়"
       : "টেস্টের মূল্যতালিকা ও মেম্বার ছাড়",
     selectionGuideTitle: isCtMri
       ? "সঠিক সিটি স্ক্যান ও এমআরআই সেন্টার নির্বাচনের উপায়"
@@ -210,6 +228,10 @@ export function getDiagnosticTocTitles(currentSlug: string | undefined) {
       ? "সঠিক আল্ট্রাসাউন্ড ও অ্যানোমালি স্ক্যান সেন্টার নির্বাচনের উপায়"
       : isCheckup
       ? "সঠিক হোল বডি চেকআপ ল্যাব নির্বাচনের উপায়"
+      : isEndoscopy
+      ? "সঠিক এন্ডোস্কোপি ও কোলনোস্কোপি সেন্টার নির্বাচনের উপায়"
+      : isCardiacTest
+      ? "সঠিক কার্ডিয়াক টেস্ট সেন্টার নির্বাচনের উপায়"
       : "নির্ভরযোগ্য ডায়াগনস্টিক নির্বাচনের উপায়",
   };
 }

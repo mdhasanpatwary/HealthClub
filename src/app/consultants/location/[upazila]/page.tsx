@@ -1,7 +1,5 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import {
-  ChevronRight,
   HeartHandshake,
   MapPin,
   PhoneCall,
@@ -11,6 +9,7 @@ import {
 import JsonLd from "@/components/seo/JsonLd";
 import DoctorDirectory from "@/components/ui/DoctorDirectory";
 import CommunityNetworkCTA from "@/components/common/CommunityNetworkCTA";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { getDoctorsAction } from "@/app/actions/doctorActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 import {
@@ -124,6 +123,25 @@ export default async function UpazilaDoctorLandingPage({ params }: PageProps) {
     },
     {
       "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: `${seo.nameBn} বিশেষজ্ঞ ডাক্তার তালিকা`,
+      itemListElement: (filteredDoctors.length > 0 ? filteredDoctors : allDoctors.slice(0, 10)).slice(0, 15).map((doc, idx) => ({
+        "@type": "ListItem",
+        position: idx + 1,
+        item: {
+          "@type": "Physician",
+          name: doc.name,
+          medicalSpecialty: doc.specialty,
+          telephone: doc.serialPhone,
+          worksFor: {
+            "@type": "MedicalOrganization",
+            name: doc.chamberName,
+          },
+        },
+      })),
+    },
+    {
+      "@context": "https://schema.org",
       "@type": "FAQPage",
       mainEntity: faqItems,
     },
@@ -133,19 +151,13 @@ export default async function UpazilaDoctorLandingPage({ params }: PageProps) {
     <div className="bg-background min-h-screen py-4 sm:py-10">
       <JsonLd data={jsonLdData} />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-10">
-        <nav aria-label="Breadcrumb" className="flex items-center text-xs text-muted-foreground gap-1.5 flex-wrap">
-          <Link href="/" className="hover:text-primary transition-colors">
-            হোম
-          </Link>
-          <ChevronRight className="h-3.5 w-3.5" />
-          <Link href="/consultants" className="hover:text-primary transition-colors">
-            ডাক্তার তালিকা
-          </Link>
-          <ChevronRight className="h-3.5 w-3.5" />
-          <span className="text-foreground font-semibold" aria-current="page">
-            {seo.nameBn}
-          </span>
-        </nav>
+        <Breadcrumbs
+          items={[
+            { label: "হোম", href: "/" },
+            { label: "বিশেষজ্ঞ ডাক্তার", href: "/consultants" },
+            { label: seo.nameBn },
+          ]}
+        />
 
         <div className="text-center space-y-3 sm:space-y-4 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-emerald-800 dark:text-emerald-300 border border-primary/20 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
@@ -186,27 +198,28 @@ export default async function UpazilaDoctorLandingPage({ params }: PageProps) {
               <HeartHandshake className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-xs sm:text-sm font-bold text-foreground">স্থানীয় সুবিধা</h2>
-              <p className="text-[11px] sm:text-xs text-muted-foreground">ফেনী সদর রেফারেল ও ডায়াগনস্টিক তথ্য</p>
+              <h2 className="text-xs sm:text-sm font-bold text-foreground">স্থানীয় রেফারেল সুবিধা</h2>
+              <p className="text-[11px] sm:text-xs text-muted-foreground">ফেনী সদর পার্টনার সেন্টারে ১০-৩০% ছাড়</p>
             </div>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border/80 bg-primary/5 p-3 sm:p-4 text-sm text-foreground">
-          <div className="flex items-center gap-2 font-semibold text-primary">
-            <MapPin className="h-4 w-4" />
-            <span>{seo.nameBn} এলাকার ফোকাস</span>
+        <div className="rounded-2xl border border-primary/20 bg-primary/5 p-3.5 sm:p-4 text-xs sm:text-sm text-foreground">
+          <div className="flex items-center gap-2 font-bold text-primary">
+            <MapPin className="h-4 w-4 shrink-0" />
+            <span>{seo.nameBn} এলাকার রোগীদের চিকিৎসা পরামর্শ ও ফেনী সদর রেফারেল</span>
           </div>
-          <p className="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
-            ফেনী শহর, সড়ক, রোড ও হাসপাতাল এলাকায় বসা ডাক্তার, চেম্বার, ডায়াগনস্টিক সেন্টার এবং রেফারেল তথ্য একসাথে খুঁজুন। এই পেজটি {seo.nameBn} থেকে ফেনী সদর পার্টনার হাসপাতাল ও ডায়াগনস্টিক সুবিধা খুঁজে নিতে সাহায্য করে।
+          <p className="mt-1.5 text-muted-foreground leading-relaxed">
+            {seo.nameBn} এলাকা থেকে ফেনী সদরের প্রধান চিকিৎসা কেন্দ্রগুলো (ট্রাঙ্ক রোড, এসএসকে রোড, শহীদ শহীদুল্লা কায়সার সড়ক ও হাসপাতাল রোড) মাত্র ১৫ থেকে ৩৫ মিনিটের দূরত্বে অবস্থিত। জটিল রোগ, ডিজিটাল প্যাথলজি টেস্ট ও বিশেষজ্ঞ ডাক্তার কনসালটেশনের জন্য ফেনী সদরের ভেরিফাইড পার্টনার হাসপাতালে হেলথ ক্লাব মেম্বারশিপ কার্ডে ১০% থেকে ৩০% নিশ্চিত ছাড় সুবিধা উপভোগ করুন।
           </p>
         </div>
 
         <div className="sm:bg-muted/30 sm:border sm:border-border/80 sm:rounded-3xl sm:p-8">
           <DoctorDirectory
-            doctors={filteredDoctors}
+            doctors={allDoctors}
             initialDept="all"
             initialUpazila={seo.id}
+            isLocationPage={true}
           />
         </div>
 

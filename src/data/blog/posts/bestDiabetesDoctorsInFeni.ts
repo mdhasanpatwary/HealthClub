@@ -47,6 +47,13 @@ export const BEST_DIABETES_DOCTORS_IN_FENI: BlogPost = {
     "feni thyroid specialist doctor",
     "diabetic foot doctor in feni",
     "insulin dose calibration feni",
+  
+    "best diabetes doctors in feni",
+    "diabetes specialists in feni",
+    "diabetologists in feni",
+    "endocrinologist in feni",
+    "hormone and thyroid specialist in feni",
+    "feni diabetic doctor list",
   ],
   keyHighlightsBn: [
     "ফেনীর শীর্ষ ১৩ জন বিএমডিসি নিবন্ধিত ডায়াবেটোলজিস্ট ও এন্ডোক্রাইনোলজিস্টদের (MD Endocrinology, BIRDEM, DMC, BSMMU) চেম্বার শিডিউল ও সরাসরি সিরিয়াল হটলাইন।",
