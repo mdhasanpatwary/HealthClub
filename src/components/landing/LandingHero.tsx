@@ -102,7 +102,7 @@ export function LandingHero({ sampleMember }: LandingHeroProps) {
 
           {/* Right Digital Card Visual Column */}
           <div className="lg:col-span-5 flex justify-center">
-            <HeroCardWrapper demoMember={sampleMember} />
+            <HeroCardWrapper demoMember={sampleMember} priority={true} />
           </div>
         </div>
       </div>

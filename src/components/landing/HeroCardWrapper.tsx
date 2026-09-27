@@ -9,9 +9,10 @@ import MemberCard from "@/components/ui/MemberCard";
 interface HeroCardWrapperProps {
   /** Demo member data shown when no user is logged in */
   demoMember: Member;
+  priority?: boolean;
 }
 
-export default function HeroCardWrapper({ demoMember }: HeroCardWrapperProps) {
+export default function HeroCardWrapper({ demoMember, priority = true }: HeroCardWrapperProps) {
   // Always start null on first render (matches SSR output) to avoid hydration mismatch.
   // localStorage is unavailable on the server, so both server and client must agree on null.
   const [member, setMember] = useState<Member | null>(null);
@@ -50,7 +51,7 @@ export default function HeroCardWrapper({ demoMember }: HeroCardWrapperProps) {
 
   return (
     <div className="w-full">
-      <MemberCard member={member ?? demoMember} priority={false} />
+      <MemberCard member={member ?? demoMember} priority={priority} />
     </div>
   );
 }
