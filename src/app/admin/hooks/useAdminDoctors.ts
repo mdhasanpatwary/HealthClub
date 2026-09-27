@@ -28,6 +28,7 @@ export function useAdminDoctors() {
 
   const [newDoctor, setNewDoctor] = useState({
     name: "",
+    nameEn: "",
     slug: "",
     specialty: "",
     department: "medicine",
@@ -82,6 +83,7 @@ export function useAdminDoctors() {
     setEditingDoctor(null);
     setNewDoctor({
       name: "",
+      nameEn: "",
       slug: "",
       specialty: "",
       department: "medicine",
@@ -107,6 +109,7 @@ export function useAdminDoctors() {
     setEditingDoctor(doc);
     setNewDoctor({
       name: doc.name,
+      nameEn: doc.nameEn || "",
       slug: doc.slug || "",
       specialty: doc.specialty,
       department: doc.department,

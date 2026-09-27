@@ -41,6 +41,33 @@ function isDiabetesDoctor(doc: Doctor): boolean {
   );
 }
 
+const PARTNER_HOSPITAL_ALIASES: Record<string, string> = {
+  p_ddlab: "dd lab ddlab d.d. lab dd lab consultation centre",
+  p1: "popular popular diagnostic popular hospital",
+  p2: "labaid labaid hospital labaid specialized",
+  p3: "lazz lazz pharma",
+  p5: "ibn sina ibnsina ibn sina diagnostic",
+  p6: "square square hospital",
+  p_lifecare: "life care lifecare life care diagnostic",
+};
+
+function getChamberSearchAliases(doc: Doctor): string {
+  const parts: string[] = [];
+  if (doc.partnerId && PARTNER_HOSPITAL_ALIASES[doc.partnerId]) {
+    parts.push(PARTNER_HOSPITAL_ALIASES[doc.partnerId]);
+  }
+  const chamber = (doc.chamberName || "").toLowerCase();
+  if (chamber.includes("ডিডি ল্যাব")) parts.push("dd lab ddlab d.d. lab");
+  if (chamber.includes("পপুলার")) parts.push("popular popular diagnostic");
+  if (chamber.includes("ল্যাবএইড")) parts.push("labaid labaid specialized hospital");
+  if (chamber.includes("ইবনে সিনা")) parts.push("ibn sina ibnsina");
+  if (chamber.includes("স্কয়ার") || chamber.includes("স্কয়ার")) parts.push("square square hospital");
+  if (chamber.includes("লাইফ কেয়ার") || chamber.includes("লাইফ কেয়ার")) parts.push("life care lifecare");
+  if (chamber.includes("হার্ট ফাউন্ডেশন")) parts.push("heart foundation national heart foundation");
+  if (chamber.includes("জেনারেল হাসপাতাল")) parts.push("general hospital 250 bed general hospital");
+  return parts.join(" ");
+}
+
 export default function DoctorDirectory({
   doctors = [],
   limit,
@@ -164,14 +191,21 @@ export default function DoctorDirectory({
   const filteredDoctors = useMemo(() => {
     return doctorsWithUpazila.filter((doc) => {
       const q = searchQuery.toLowerCase().trim();
-      const matchesSearch =
-        !q ||
-        doc.name.toLowerCase().includes(q) ||
-        doc.specialty.toLowerCase().includes(q) ||
-        (doc.degrees ? doc.degrees.toLowerCase().includes(q) : false) ||
-        (doc.designation ? doc.designation.toLowerCase().includes(q) : false) ||
-        doc.chamberName.toLowerCase().includes(q) ||
-        doc.chamberAddress.toLowerCase().includes(q);
+      let matchesSearch = true;
+
+      if (q) {
+        const searchableText = `${doc.name} ${doc.nameEn || ""} ${doc.specialty} ${doc.degrees || ""} ${doc.designation || ""} ${doc.chamberName} ${doc.chamberAddress} ${getChamberSearchAliases(doc)}`.toLowerCase();
+        matchesSearch = searchableText.includes(q);
+
+        // If direct match fails, test tokenized words (e.g. "Dr Asma" without punctuation)
+        if (!matchesSearch) {
+          const cleaned = q.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, " ").replace(/\s+/g, " ").trim();
+          const tokens = cleaned.split(" ").filter((t) => t.length > 1 && t !== "dr" && t !== "ডাঃ");
+          if (tokens.length > 0) {
+            matchesSearch = tokens.every((token) => searchableText.includes(token));
+          }
+        }
+      }
 
       const matchesDept =
         selectedDept === "all" ||
@@ -209,8 +243,8 @@ export default function DoctorDirectory({
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         <Input
           type="text"
-          aria-label="নাম, পদবী, ডিগ্রি, চেম্বার বা বিশেষজ্ঞতা দিয়ে ডাক্তার খুঁজুন"
-          placeholder="নাম, পদবী, ডিগ্রি, চেম্বার বা বিশেষজ্ঞতা দিয়ে খুঁজুন..."
+          aria-label="ডাক্তারের নাম, হাসপাতাল বা বিশেষজ্ঞতা দিয়ে খুঁজুন"
+          placeholder="ডাক্তারের নাম, হাসপাতাল/চেম্বার বা বিশেষজ্ঞতা দিয়ে খুঁজুন..."
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);

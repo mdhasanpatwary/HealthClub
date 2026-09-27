@@ -87,6 +87,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
       const matchesSearch =
         !q ||
         doc.name.toLowerCase().includes(q) ||
+        (doc.nameEn ? doc.nameEn.toLowerCase().includes(q) : false) ||
         doc.specialty.toLowerCase().includes(q) ||
         doc.degrees.toLowerCase().includes(q) ||
         (doc.roomNo && doc.roomNo.toLowerCase().includes(q)) ||

@@ -43,6 +43,7 @@ export const PARTNER_CARD_SELECT_FIELDS = {
   address: true,
   discount: true,
   phone: true,
+  logoText: true,
   imageUrl: true,
   mapLink: true,
   workingHours: true,

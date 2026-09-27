@@ -66,13 +66,12 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
       if (!matchDept) return false;
 
       if (!q) return true;
-      return (
-        doc.name.toLowerCase().includes(q) ||
-        doc.specialty.toLowerCase().includes(q) ||
-        doc.degrees.toLowerCase().includes(q) ||
-        doc.designation.toLowerCase().includes(q) ||
-        doc.visitingDays.toLowerCase().includes(q)
-      );
+      const searchableText = `${doc.name} ${doc.nameEn || ""} ${doc.specialty} ${doc.degrees} ${doc.designation} ${doc.visitingDays}`.toLowerCase();
+      if (searchableText.includes(q)) return true;
+
+      const cleaned = q.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, " ").replace(/\s+/g, " ").trim();
+      const tokens = cleaned.split(" ").filter((t) => t.length > 1 && t !== "dr" && t !== "ডাঃ");
+      return tokens.length > 0 && tokens.every((token) => searchableText.includes(token));
     });
   }, [doctors, selectedDept, searchQuery]);
 

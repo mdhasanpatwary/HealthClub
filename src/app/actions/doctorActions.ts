@@ -82,11 +82,14 @@ export async function getPaginatedDoctorsAdminAction(
   if (search) {
     where.OR = [
       { name: { contains: search, mode: "insensitive" } },
+      { nameEn: { contains: search, mode: "insensitive" } },
       { specialty: { contains: search, mode: "insensitive" } },
       { department: { contains: search, mode: "insensitive" } },
       { chamberName: { contains: search, mode: "insensitive" } },
       { chamberAddress: { contains: search, mode: "insensitive" } },
       { serialPhone: { contains: search, mode: "insensitive" } },
+      { partner: { is: { name: { contains: search, mode: "insensitive" } } } },
+      { partner: { is: { logoText: { contains: search, mode: "insensitive" } } } },
     ];
   }
 
@@ -162,6 +165,7 @@ export async function addDoctorAction(
         id: newDocId,
         slug: resolvedSlug,
         name: doctor.name,
+        nameEn: doctor.nameEn ? doctor.nameEn.trim() || null : null,
         specialty: doctor.specialty,
         department: doctor.department,
         degrees: doctor.degrees,
@@ -231,6 +235,7 @@ export async function updateDoctorAction(
       data: {
         ...(finalSlug !== undefined && { slug: finalSlug }),
         ...(doctor.name !== undefined && { name: doctor.name }),
+        ...(doctor.nameEn !== undefined && { nameEn: doctor.nameEn ? doctor.nameEn.trim() || null : null }),
         ...(doctor.specialty !== undefined && { specialty: doctor.specialty }),
         ...(doctor.department !== undefined && { department: doctor.department }),
         ...(doctor.degrees !== undefined && { degrees: doctor.degrees }),
@@ -301,6 +306,7 @@ export async function seedDoctorsAction(): Promise<{ success: boolean; count?: n
           id: doc.id,
           slug: uniqueSlug,
           name: doc.name,
+          nameEn: doc.nameEn || null,
           specialty: doc.specialty,
           department: doc.department,
           degrees: doc.degrees,

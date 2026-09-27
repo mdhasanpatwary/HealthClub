@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const doctorImportSchema = z.object({
   name: z.string().min(2, "Name must have at least 2 characters"),
+  nameEn: z.string().optional().default(""),
   specialty: z.string().min(2, "Specialty is required"),
   department: z.string().min(2, "Department is required").default("medicine"),
   degrees: z.string().min(2, "Degrees / qualification is required"),

@@ -57,6 +57,7 @@ export async function bulkImportDoctorsAction(
       validDoctors.push({
         id: `doc-${crypto.randomUUID().slice(0, 8)}`,
         name: d.name,
+        nameEn: d.nameEn ? d.nameEn.trim() || null : null,
         specialty: d.specialty,
         department: d.department,
         degrees: d.degrees,

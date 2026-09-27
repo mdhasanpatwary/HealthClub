@@ -150,6 +150,7 @@ model Doctor {
   id              String   @id
   slug            String?  @unique
   name            String
+  nameEn          String?  @map("name_en")
   specialty       String
   department      String   // 'medicine' | 'cardiology' | 'gynecology' | 'orthopedics' | 'neurology' | 'pediatrics' | 'surgery' | 'dermatology' | 'ent' | 'eye' | 'psychiatry' | 'nephrology' | 'hepatology' | 'rheumatology' | 'nutrition' | 'dental' | 'other'
   degrees         String
@@ -174,6 +175,7 @@ model Doctor {
 
   @@index([slug], map: "doctors_slug_idx")
   @@index([name], map: "doctors_name_idx")
+  @@index([nameEn], map: "doctors_name_en_idx")
   @@index([department], map: "doctors_department_idx")
   @@index([upazila], map: "doctors_upazila_idx")
   @@index([isActive], map: "doctors_is_active_idx")

@@ -9,6 +9,7 @@ export const DOCTOR_FULL_SELECT_FIELDS = {
   id: true,
   slug: true,
   name: true,
+  nameEn: true,
   specialty: true,
   department: true,
   degrees: true,
@@ -43,6 +44,7 @@ export const DOCTOR_CARD_SELECT_FIELDS = {
   id: true,
   slug: true,
   name: true,
+  nameEn: true,
   specialty: true,
   department: true,
   designation: true,
@@ -75,6 +77,7 @@ export type PrismaDoctorRecord = {
   id: string;
   slug?: string | null;
   name: string;
+  nameEn?: string | null;
   specialty: string;
   department: string;
   degrees?: string | null;
@@ -102,6 +105,7 @@ export function formatDoctor(d: PrismaDoctorRecord): Doctor {
     id: d.id,
     slug: d.slug || undefined,
     name: d.name,
+    nameEn: d.nameEn || undefined,
     specialty: d.specialty,
     department: d.department,
     degrees: d.degrees || "",

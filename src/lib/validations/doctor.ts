@@ -12,6 +12,7 @@ export type PartnerDoctorChamberFormValues = z.infer<typeof partnerDoctorChamber
 
 export const addPartnerDoctorSchema = z.object({
   name: z.string().trim().min(2, "ডাক্তারের নাম লিখুন।"),
+  nameEn: z.string().trim().optional(),
   specialty: z.string().trim().min(2, "বিশেষজ্ঞতা লিখুন।"),
   department: z.string().trim().min(2, "বিভাগ নির্বাচন করুন।"),
   degrees: z.string().trim().min(2, "ডিগ্রি/যোগ্যতা লিখুন।"),
@@ -33,6 +34,7 @@ export type AddPartnerDoctorFormValues = z.infer<typeof addPartnerDoctorSchema>;
 
 export const updatePartnerDoctorSchema = z.object({
   name: z.string().trim().min(2, "ডাক্তারের নাম লিখুন।").optional(),
+  nameEn: z.string().trim().optional(),
   specialty: z.string().trim().min(2, "বিশেষজ্ঞতা লিখুন।").optional(),
   department: z.string().trim().min(2, "বিভাগ নির্বাচন করুন।").optional(),
   degrees: z.string().trim().optional(),

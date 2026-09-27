@@ -32,6 +32,7 @@ export function getAllDepartmentSlugs(): string[] {
 
 export interface DoctorMetadataSource {
   name: string;
+  nameEn?: string | null;
   specialty: string;
   degrees?: string | null;
   designation?: string | null;
@@ -105,6 +106,22 @@ export function generateDoctorKeywords(doc: DoctorMetadataSource): string[] {
     "ফেনীর বিশেষজ্ঞ ডাক্তার",
     "Health Club doctor directory",
   ];
+
+  if (doc.nameEn && doc.nameEn.trim()) {
+    const cleanNameEn = doc.nameEn.trim();
+    keywords.push(
+      cleanNameEn,
+      `${cleanNameEn} Feni`,
+      `${cleanNameEn} doctor`,
+      `${cleanNameEn} serial`,
+      `${cleanNameEn} appointment`,
+      `${cleanNameEn} chamber`,
+      `${cleanNameEn} visiting time`
+    );
+    if (chamber) {
+      keywords.push(`${cleanNameEn} ${chamber}`);
+    }
+  }
 
   if (doc.department) {
     keywords.push(doc.department);

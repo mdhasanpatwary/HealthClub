@@ -356,6 +356,7 @@ export interface Doctor {
   id: string;
   slug?: string;
   name: string;
+  nameEn?: string;
   specialty: string;
   department: string;
   degrees: string;

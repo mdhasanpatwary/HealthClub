@@ -253,6 +253,7 @@ export function generateDoctorJsonLd(
     "@type": "Physician",
     "@id": `${profileUrl}#physician`,
     name: doctor.name,
+    ...(doctor.nameEn ? { alternateName: [doctor.nameEn] } : {}),
     url: profileUrl,
     image: imageUrl,
     telephone: primaryPhone,

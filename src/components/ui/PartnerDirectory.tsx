@@ -142,12 +142,20 @@ export default function PartnerDirectory({
   const filteredPartners = useMemo(() => {
     return partnersWithUpazila.filter((p) => {
       const q = searchQuery.toLowerCase().trim();
-      const matchesSearch =
-        !q ||
-        p.name.toLowerCase().includes(q) ||
-        p.address.toLowerCase().includes(q) ||
-        (p.facilities && p.facilities.toLowerCase().includes(q)) ||
-        (p.departmentDiscounts && p.departmentDiscounts.toLowerCase().includes(q));
+      let matchesSearch = true;
+
+      if (q) {
+        const searchableText = `${p.name} ${p.logoText || ""} ${p.slug || ""} ${p.address} ${p.facilities || ""} ${p.departmentDiscounts || ""}`.toLowerCase();
+        matchesSearch = searchableText.includes(q);
+
+        if (!matchesSearch) {
+          const cleaned = q.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, " ").replace(/\s+/g, " ").trim();
+          const tokens = cleaned.split(" ").filter((t) => t.length > 1);
+          if (tokens.length > 0) {
+            matchesSearch = tokens.every((token) => searchableText.includes(token));
+          }
+        }
+      }
 
       const matchesCategory = selectedCategory === "all" || p.category === selectedCategory;
       const matchesUpazila = selectedUpazila === "all" || p.resolvedUpazila === selectedUpazila;
@@ -181,8 +189,8 @@ export default function PartnerDirectory({
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="text"
-              aria-label="হাসপাতাল, ল্যাব বা ডায়াগনস্টিক সেন্টারের নাম লিখে খুঁজুন..."
-              placeholder="হাসপাতাল, ল্যাব বা ডায়াগনস্টিক সেন্টারের নাম লিখে খুঁজুন..."
+              aria-label="হাসপাতাল, ল্যাব বা প্রতিষ্ঠানের নাম (বাংলা বা English)..."
+              placeholder="হাসপাতাল, ল্যাব বা প্রতিষ্ঠানের নাম (বাংলা বা English)..."
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);

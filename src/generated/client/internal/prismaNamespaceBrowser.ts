@@ -187,6 +187,7 @@ export const DoctorScalarFieldEnum = {
   id: 'id',
   slug: 'slug',
   name: 'name',
+  nameEn: 'nameEn',
   specialty: 'specialty',
   department: 'department',
   degrees: 'degrees',

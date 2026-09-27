@@ -127,6 +127,12 @@ export default function DoctorProfileView({
                 {doctor.name}
               </h1>
 
+              {doctor.nameEn && (
+                <p className="text-xs sm:text-sm font-semibold text-muted-foreground/85 tracking-wide font-sans -mt-1 sm:-mt-1.5">
+                  {doctor.nameEn}
+                </p>
+              )}
+
               <p className="text-sm sm:text-base font-bold text-primary">
                 {doctor.specialty}
               </p>

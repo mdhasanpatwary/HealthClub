@@ -180,6 +180,7 @@ export async function linkDoctorToPartnerAction(
           data: {
             id: initDoc.id,
             name: initDoc.name,
+            nameEn: initDoc.nameEn || null,
             specialty: initDoc.specialty,
             department: initDoc.department,
             degrees: initDoc.degrees,
@@ -310,6 +311,7 @@ export async function addPartnerDoctorAction(
         id: newDocId,
         slug: resolvedSlug,
         name: input.name.trim(),
+        nameEn: input.nameEn?.trim() || null,
         specialty: input.specialty.trim(),
         department: input.department.trim(),
         degrees: input.degrees?.trim() || "",
@@ -375,6 +377,7 @@ export async function updatePartnerDoctorChamberAction(
       where: { id: doctorId },
       data: {
         ...(input.name && { name: input.name.trim() }),
+        ...(input.nameEn !== undefined && { nameEn: input.nameEn?.trim() || null }),
         ...(input.specialty && { specialty: input.specialty.trim() }),
         ...(input.department && { department: input.department.trim() }),
         ...(input.degrees !== undefined && { degrees: input.degrees.trim() }),
