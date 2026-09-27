@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Siren, Calculator, BookOpen, Newspaper } from "lucide-react";
+import { ChevronDown, Siren, Calculator, BookOpen } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,17 +21,16 @@ export default function PublicHeaderNav() {
   const isServicesActive =
     isActive("/emergency") ||
     isActive("/health-tools") ||
-    isActive("/health-tips") ||
-    isActive("/blog");
+    isActive("/health-tips");
 
   return (
-    <nav aria-label="Main Navigation" className="hidden min-[992px]:flex items-center space-x-1">
+    <nav aria-label="Main Navigation" className="hidden min-[992px]:flex items-center space-x-0.5 lg:space-x-1">
       {/* 1. Home */}
       <Link
         href="/"
         prefetch={false}
         aria-current={isActive("/") ? "page" : undefined}
-        className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
+        className={`relative rounded-lg px-2.5 lg:px-3 py-2 text-sm font-medium transition-all duration-200 ${
           isActive("/")
             ? "text-primary font-bold"
             : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
@@ -39,7 +38,7 @@ export default function PublicHeaderNav() {
       >
         হোম
         {isActive("/") && (
-          <span className="absolute bottom-1 left-3 right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
+          <span className="absolute bottom-1 left-2.5 lg:left-3 right-2.5 lg:right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
         )}
       </Link>
 
@@ -48,7 +47,7 @@ export default function PublicHeaderNav() {
         href="/consultants"
         prefetch={false}
         aria-current={isActive("/consultants") ? "page" : undefined}
-        className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
+        className={`relative rounded-lg px-2.5 lg:px-3 py-2 text-sm font-medium transition-all duration-200 ${
           isActive("/consultants")
             ? "text-primary font-bold"
             : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
@@ -56,7 +55,7 @@ export default function PublicHeaderNav() {
       >
         ডাক্তার ও কনসালট্যান্টস
         {isActive("/consultants") && (
-          <span className="absolute bottom-1 left-3 right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
+          <span className="absolute bottom-1 left-2.5 lg:left-3 right-2.5 lg:right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
         )}
       </Link>
 
@@ -65,7 +64,7 @@ export default function PublicHeaderNav() {
         href="/partner-hospitals"
         prefetch={false}
         aria-current={isActive("/partner-hospitals") ? "page" : undefined}
-        className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
+        className={`relative rounded-lg px-2.5 lg:px-3 py-2 text-sm font-medium transition-all duration-200 ${
           isActive("/partner-hospitals")
             ? "text-primary font-bold"
             : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
@@ -73,14 +72,31 @@ export default function PublicHeaderNav() {
       >
         পার্টনার হাসপাতাল
         {isActive("/partner-hospitals") && (
-          <span className="absolute bottom-1 left-3 right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
+          <span className="absolute bottom-1 left-2.5 lg:left-3 right-2.5 lg:right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
         )}
       </Link>
 
-      {/* 4. Services Dropdown (Emergency, Calculators, Health Tips) */}
+      {/* 4. Health Blog */}
+      <Link
+        href="/blog"
+        prefetch={false}
+        aria-current={isActive("/blog") ? "page" : undefined}
+        className={`relative rounded-lg px-2.5 lg:px-3 py-2 text-sm font-medium transition-all duration-200 ${
+          isActive("/blog")
+            ? "text-primary font-bold"
+            : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+        }`}
+      >
+        স্বাস্থ্য ব্লগ
+        {isActive("/blog") && (
+          <span className="absolute bottom-1 left-2.5 lg:left-3 right-2.5 lg:right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
+        )}
+      </Link>
+
+      {/* 5. Services Dropdown (Emergency, Calculators, Health Tips) */}
       <DropdownMenu>
         <DropdownMenuTrigger
-          className={`relative inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 outline-hidden cursor-pointer select-none ${
+          className={`relative inline-flex items-center gap-1 rounded-lg px-2.5 lg:px-3 py-2 text-sm font-medium transition-all duration-200 outline-hidden cursor-pointer select-none ${
             isServicesActive
               ? "text-primary font-bold"
               : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
@@ -89,7 +105,7 @@ export default function PublicHeaderNav() {
           <span>সেবাসমূহ</span>
           <ChevronDown className="h-3.5 w-3.5 opacity-70" />
           {isServicesActive && (
-            <span className="absolute bottom-1 left-3 right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
+            <span className="absolute bottom-1 left-2.5 lg:left-3 right-2.5 lg:right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
           )}
         </DropdownMenuTrigger>
         <DropdownMenuContent
@@ -158,35 +174,14 @@ export default function PublicHeaderNav() {
               </div>
             </Link>
           </DropdownMenuItem>
-
-          <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
-            <Link
-              href="/blog"
-              prefetch={false}
-              aria-current={isActive("/blog") ? "page" : undefined}
-              className="flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 hover:bg-emerald-500/10 dark:hover:bg-emerald-950/40 text-foreground group"
-            >
-              <div className="h-8 w-8 rounded-xl bg-emerald-500/15 dark:bg-emerald-500/25 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <Newspaper className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <span className="block text-xs font-bold text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors truncate">
-                  স্বাস্থ্য ব্লগ ও গাইড
-                </span>
-                <span className="block text-[11px] text-muted-foreground group-hover:text-foreground/80 dark:group-hover:text-slate-300 font-normal transition-colors truncate">
-                  হাসপাতাল রিভিউ ও তালিকা
-                </span>
-              </div>
-            </Link>
-          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* 5. Membership */}
+      {/* 6. Membership */}
       <Link
         href="/membership"
         aria-current={isActive("/membership") ? "page" : undefined}
-        className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
+        className={`relative rounded-lg px-2.5 lg:px-3 py-2 text-sm font-medium transition-all duration-200 ${
           isActive("/membership")
             ? "text-primary font-bold"
             : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
@@ -194,15 +189,15 @@ export default function PublicHeaderNav() {
       >
         মেম্বারশিপ প্ল্যান
         {isActive("/membership") && (
-          <span className="absolute bottom-1 left-3 right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
+          <span className="absolute bottom-1 left-2.5 lg:left-3 right-2.5 lg:right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
         )}
       </Link>
 
-      {/* 6. Contact */}
+      {/* 7. Contact */}
       <Link
         href="/contact"
         aria-current={isActive("/contact") ? "page" : undefined}
-        className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
+        className={`relative rounded-lg px-2.5 lg:px-3 py-2 text-sm font-medium transition-all duration-200 ${
           isActive("/contact")
             ? "text-primary font-bold"
             : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
@@ -210,7 +205,7 @@ export default function PublicHeaderNav() {
       >
         যোগাযোগ
         {isActive("/contact") && (
-          <span className="absolute bottom-1 left-3 right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
+          <span className="absolute bottom-1 left-2.5 lg:left-3 right-2.5 lg:right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
         )}
       </Link>
     </nav>

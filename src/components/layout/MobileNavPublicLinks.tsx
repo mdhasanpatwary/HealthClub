@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Siren, Calculator, BookOpen, Newspaper } from "lucide-react";
+import { Siren, Calculator, BookOpen } from "lucide-react";
 
 interface MobileNavPublicLinksProps {
   pathname: string;
@@ -25,6 +25,7 @@ export function MobileNavPublicLinks({
           { name: "হোম", path: "/" },
           { name: "ডাক্তার ও কনসালট্যান্টস", path: "/consultants" },
           { name: "পার্টনার হাসপাতাল", path: "/partner-hospitals" },
+          { name: "স্বাস্থ্য ব্লগ", path: "/blog" },
           { name: "মেম্বারশিপ প্ল্যান", path: "/membership" },
         ].map((link) => (
           <Link
@@ -83,18 +84,6 @@ export function MobileNavPublicLinks({
               <BookOpen className="h-4 w-4" />
             </div>
             <span>স্বাস্থ্য টিপস (ডাক্তারের পরামর্শ ও টিপস)</span>
-          </Link>
-
-          <Link
-            href="/blog"
-            prefetch={false}
-            onClick={onClose}
-            className="flex items-center gap-3 p-2.5 rounded-xl bg-emerald-500/5 hover:bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-bold"
-          >
-            <div className="h-7 w-7 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0">
-              <Newspaper className="h-4 w-4" />
-            </div>
-            <span>স্বাস্থ্য ব্লগ ও গাইড (হাসপাতাল রিভিউ ও তালিকা)</span>
           </Link>
         </div>
       </div>
