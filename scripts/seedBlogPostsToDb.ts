@@ -3,11 +3,13 @@ import { prisma } from "../src/lib/prisma";
 import { BLOG_POSTS } from "../src/data/blog/blogPosts";
 import { getPostFacilityMeta } from "../src/app/blog/utils/blogPagination";
 
+const ALL_SEED_POSTS = [...BLOG_POSTS];
+
 async function main() {
-  console.log(`Starting migration/seeding of ${BLOG_POSTS.length} blog posts into PostgreSQL database...`);
+  console.log(`Starting migration/seeding of ${ALL_SEED_POSTS.length} blog posts into PostgreSQL database...`);
 
   let count = 0;
-  for (const post of BLOG_POSTS) {
+  for (const post of ALL_SEED_POSTS) {
     const facilityMeta = getPostFacilityMeta(post);
     const hospitalCount = post.hospitals?.length ?? 0;
     const facilityCount = facilityMeta.count;
@@ -59,8 +61,8 @@ async function main() {
     });
 
     count++;
-    if (count % 10 === 0 || count === BLOG_POSTS.length) {
-      console.log(`Synced ${count}/${BLOG_POSTS.length} posts...`);
+    if (count % 10 === 0 || count === ALL_SEED_POSTS.length) {
+      console.log(`Synced ${count}/${ALL_SEED_POSTS.length} posts...`);
     }
   }
 

@@ -55,3 +55,7 @@ next-env.d.ts
 /public/serwist-*.js
 /public/serwist-*.js.map
 
+# Database backups
+/backups/
+/scratch/
+

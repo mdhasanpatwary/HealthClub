@@ -229,6 +229,23 @@ export const BLOG_SLUG_TO_DEPARTMENT_MAP: Record<string, string> = {
   "feni-cataract-phaco-eye-surgery-cost-guide": "eye",
   "feni-tonsil-adenoid-surgery-cost-guide": "ent",
   "feni-appendix-appendectomy-surgery-cost-guide": "surgery",
+  "feni-dialysis-kidney-hemodialysis-guide": "nephrology",
+  "feni-orthopedic-fracture-bone-surgery-cost-guide": "orthopedics",
+  "feni-root-canal-cap-dental-braces-cost-guide": "dental",
+  "best-dental-specialists-in-feni": "dental",
+  "feni-hydrocele-varicocele-surgery-cost-guide": "surgery",
+  "feni-hysterectomy-uterus-removal-surgery-guide": "gynecology",
+  "feni-skin-laser-wart-mole-removal-cost-guide": "dermatology",
+  "feni-circumcision-khatna-cost-guide": "pediatrics",
+  "feni-back-pain-spine-slip-disc-treatment-guide": "orthopedics",
+  "feni-knee-pain-osteoarthritis-treatment-guide": "orthopedics",
+  "feni-headache-migraine-treatment-guide": "neurology",
+  "feni-gastric-ulcer-acidity-treatment-guide": "medicine",
+  "feni-hair-fall-prp-treatment-guide": "dermatology",
+  "feni-infertility-treatment-ivf-iui-guide": "gynecology",
+  "feni-pediatric-child-fever-convulsion-emergency-guide": "pediatrics",
+  "feni-vertigo-dizziness-imbalance-treatment-guide": "ent",
+  "feni-allergy-skin-rash-eczema-treatment-guide": "dermatology",
 };
 
 /**

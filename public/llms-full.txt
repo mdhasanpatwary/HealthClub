@@ -278,6 +278,23 @@ A single registered Health Club membership extends discount benefits to:
 - **Cataract & Phaco Eye Surgery Guide Feni**: `https://www.healthclubfeni.com/blog/feni-cataract-phaco-eye-surgery-cost-guide`
 - **Tonsil & Adenoid Surgery Guide Feni**: `https://www.healthclubfeni.com/blog/feni-tonsil-adenoid-surgery-cost-guide`
 - **Appendicitis Surgery Cost & Laparoscopic Appendectomy Guide Feni**: `https://www.healthclubfeni.com/blog/feni-appendix-appendectomy-surgery-cost-guide`
+- **Kidney Hemodialysis Centers & Dialysis Cost Guide Feni**: `https://www.healthclubfeni.com/blog/feni-dialysis-kidney-hemodialysis-guide`
+- **Bone Fracture Surgery & Orthopedic Implant Cost Guide Feni**: `https://www.healthclubfeni.com/blog/feni-orthopedic-fracture-bone-surgery-cost-guide`
+- **Root Canal, Dental Cap & Braces Cost Guide Feni**: `https://www.healthclubfeni.com/blog/feni-root-canal-cap-dental-braces-cost-guide`
+- **Best Dental Specialists & Surgeons Directory Feni**: `https://www.healthclubfeni.com/blog/best-dental-specialists-in-feni`
+- **Hydrocele & Varicocele Surgery Cost & Urology Care Guide Feni**: `https://www.healthclubfeni.com/blog/feni-hydrocele-varicocele-surgery-cost-guide`
+- **Hysterectomy & Fibroid Uterus Removal Surgery Cost Guide Feni**: `https://www.healthclubfeni.com/blog/feni-hysterectomy-uterus-removal-surgery-guide`
+- **Skin Wart, Mole & Skin Tag Laser Removal Cost Guide Feni**: `https://www.healthclubfeni.com/blog/feni-skin-laser-wart-mole-removal-cost-guide`
+- **Child Circumcision (Khatna) & Plastibell Surgery Cost Guide Feni**: `https://www.healthclubfeni.com/blog/feni-circumcision-khatna-cost-guide`
+- **Chronic Back Pain, Sciatica & Slip Disc (PLID) Treatment Guide Feni**: `https://www.healthclubfeni.com/blog/feni-back-pain-spine-slip-disc-treatment-guide`
+- **Knee Pain & Osteoarthritis (OA) Injections & Rehab Guide Feni**: `https://www.healthclubfeni.com/blog/feni-knee-pain-osteoarthritis-treatment-guide`
+- **Migraine & Chronic Headache Treatment Guide Feni**: `https://www.healthclubfeni.com/blog/feni-headache-migraine-treatment-guide`
+- **Chronic Gastric, Peptic Ulcer & Acidity Treatment Guide Feni**: `https://www.healthclubfeni.com/blog/feni-gastric-ulcer-acidity-treatment-guide`
+- **Hair Fall Treatment & PRP Therapy Cost Guide Feni**: `https://www.healthclubfeni.com/blog/feni-hair-fall-prp-treatment-guide`
+- **Infertility Treatment, IUI & Conception Care Guide Feni**: `https://www.healthclubfeni.com/blog/feni-infertility-treatment-ivf-iui-guide`
+- **Child High Fever & Febrile Convulsion Emergency Guide Feni**: `https://www.healthclubfeni.com/blog/feni-pediatric-child-fever-convulsion-emergency-guide`
+- **Vertigo, Dizziness & Inner Ear Balance Guide Feni**: `https://www.healthclubfeni.com/blog/feni-vertigo-dizziness-imbalance-treatment-guide`
+- **Skin Allergy, Ringworm & Eczema Treatment Guide Feni**: `https://www.healthclubfeni.com/blog/feni-allergy-skin-rash-eczema-treatment-guide`
 - **Emergency & Blood Services**: `https://www.healthclubfeni.com/emergency`
 - **Specialist Doctors Directory**: `https://www.healthclubfeni.com/consultants`
 - **Partner Hospitals & Diagnostic Centers**: `https://www.healthclubfeni.com/partner-hospitals`

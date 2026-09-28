@@ -393,6 +393,9 @@ export interface BlogPost {
   };
   faqs: BlogFAQItem[];
   relatedSlugs?: string[];
+  facilityCount?: number;
+  facilityLabelBn?: string;
+  facilityLabelEn?: string;
 }
 
 export interface BlogPostCardItem {

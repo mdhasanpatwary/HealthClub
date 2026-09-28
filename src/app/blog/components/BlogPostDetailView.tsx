@@ -20,6 +20,7 @@ import { BlogClusterMesh } from "./BlogClusterMesh";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { BlogLiveDoctorRoster } from "./BlogLiveDoctorRoster";
 import { Doctor } from "@/services/db";
+import { getDiagnosticTocTitles } from "@/app/blog/utils/blogDiagnosticMetadata";
 
 interface BlogPostDetailViewProps {
   post: BlogPost;
@@ -172,41 +173,11 @@ export function BlogPostDetailView({
                     ? "১. ফেনীর ডায়াগনস্টিক পরিকাঠামো ও প্রেক্ষাপট"
                     : post.slug === "feni-doctor-serial-appointment-guide"
                     ? "১. ফেনীতে ডাক্তার সিরিয়াল, চেম্বার শিডিউল ও স্বাস্থ্যসেবা প্রেক্ষাপট"
-                    : post.slug === "feni-blood-test-cbc-cost-guide"
-                    ? "১. ফেনীতে সিবিসি টেস্ট ও প্যাথলজি প্রেক্ষাপট"
-                    : post.slug === "feni-lipid-profile-cholesterol-test-guide"
-                    ? "১. ফেনীতে লিপিড প্রোফাইল টেস্ট ও হৃদরোগ প্রতিরোধ প্রেক্ষাপট"
-                    : post.slug === "feni-thyroid-tsh-test-cost-guide"
-                    ? "১. ফেনীতে থাইরয়েড টেস্ট ও হরমোন কেয়ার প্রেক্ষাপট"
-                    : post.slug === "feni-hba1c-diabetes-test-guide"
-                    ? "১. ফেনীতে HbA1c ও ডায়াবেটিস কেয়ার প্রেক্ষাপট"
-                    : post.slug === "feni-liver-function-sgpt-test-guide"
-                    ? "১. ফেনীতে লিভার ফাংশন টেস্ট ও লিভার কেয়ার প্রেক্ষাপট"
-                    : post.slug === "feni-kidney-creatinine-urea-test-guide"
-                    ? "১. ফেনীতে কিডনি ফাংশন টেস্ট ও রেনাল কেয়ার প্রেক্ষাপট"
-                    : post.slug === "feni-urine-re-culture-test-guide"
-                    ? "১. ফেনীতে প্রস্রাব পরীক্ষা ও ইউটিআই ডায়াগনস্টিক প্রেক্ষাপট"
-                    : post.slug === "feni-x-ray-digital-dr-cost-guide"
-                    ? "১. ফেনীতে ডিজিটাল এক্স-রে ও রেডিওলজি ডায়াগনস্টিক প্রেক্ষাপট"
-                    : post.slug === "feni-hormone-test-fertility-guide"
-                    ? "১. ফেনীতে হরমোন টেস্ট ও প্রজনন স্বাস্থ্য প্রেক্ষাপট"
-                    : post.slug === "feni-pap-smear-cervical-cancer-screening-guide"
-                    ? "১. ফেনীতে প্যাপ স্মিয়ার ও জরায়ুমুখের ক্যান্সার স্ক্রিনিং প্রেক্ষাপট"
-                    : post.slug === "feni-allergy-asthma-test-guide"
-                    ? "১. ফেনীতে অ্যালার্জি ও অ্যাজমা ডায়াগনস্টিক প্রেক্ষাপট"
-                    : post.slug === "feni-semen-analysis-infertility-test-guide"
-                    ? "১. ফেনীতে সিমেন অ্যানালাইসিস ও পুরুষ প্রজনন স্বাস্থ্য প্রেক্ষাপট"
-                    : post.slug === "feni-biopsy-fnac-tumor-test-guide"
-                    ? "১. ফেনীতে এফএনএসি, বায়োপসি ও টিউমার ডায়াগনস্টিক প্রেক্ষাপট"
-                    : post.slug === "feni-cataract-phaco-eye-surgery-cost-guide"
-                    ? "১. ফেনীতে চোখের ছানি, আধুনিক ফ্যাকো সার্জারি ও আইওএল লেন্স প্রেক্ষাপট"
-                    : post.slug === "feni-tonsil-adenoid-surgery-cost-guide"
-                    ? "১. ফেনীতে টনসিল ও এডিনয়েড ইনফেকশন, আধুনিক সার্জারি প্রেক্ষাপট"
-                    : post.slug === "feni-appendix-appendectomy-surgery-cost-guide"
-                    ? "১. ফেনীতে এপেন্ডিসাইটিস, জরুরি লক্ষণ ও আধুনিক সার্জারি প্রেক্ষাপট"
+                    : post.slug === "best-dental-specialists-in-feni"
+                    ? "১. ফেনীতে আধুনিক ডেন্টাল কেয়ার ও বিশেষজ্ঞ দন্ত চিকিৎসকের ভূমিকা"
                     : isUpazilaArticle
                     ? "১. উপজেলা স্বাস্থ্যসেবা ও পটভূমি"
-                    : "১. ফেনী জেলার স্বাস্থ্যসেবা ও পটভূমি"}
+                    : `১. ${getDiagnosticTocTitles(post.slug).overviewTitle}`}
                 </h2>
                 <div className="space-y-4 text-sm sm:text-base text-foreground/90 leading-relaxed">
                   {introParagraphs.map((p, idx) => {

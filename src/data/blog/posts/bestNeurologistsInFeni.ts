@@ -3,10 +3,10 @@ import { FENI_NEUROLOGY_GROUPS } from "./feniNeurologyProfiles";
 
 export const BEST_NEUROLOGISTS_IN_FENI: BlogPost = {
   slug: "best-neurologists-in-feni",
-  titleBn: "ফেনীর সেরা নিউরোমেডিসিন ও স্ট্রোক বিশেষজ্ঞ ডাক্তার ২০২৬ | Best Neurologists in Feni",
+  titleBn: "ফেনীর সেরা নিউরোলজি ও নিউরোমেডিসিন বিশেষজ্ঞ ডাক্তার ২০২৬ | Best Neurologists in Feni",
   titleEn: "Best Neurologists & Stroke Specialists in Feni (2026) - Chamber Schedules, BE-FAST Emergency & EEG/MRI Guide",
   excerptBn:
-    "ফেনীর শীর্ষ বিএমডিসি নিবন্ধিত নিউরোমেডিসিন ও ব্রেন স্ট্রোক বিশেষজ্ঞ ডাক্তারদের চেম্বার শিডিউল, একিউট স্ট্রোক জরুরি প্রটোকল (BE-FAST), ব্রেন এমআরআই/সিটি স্ক্যান এবং ইইজি পরীক্ষার পূর্ণাঙ্গ গাইড।",
+    "ফেনীর শীর্ষ বিএমডিসি নিবন্ধিত নিউরোলজি ও নিউরোমেডিসিন বিশেষজ্ঞ ডাক্তারদের চেম্বার শিডিউল, একিউট স্ট্রোক জরুরি প্রটোকল (BE-FAST), ব্রেন এমআরআই/সিটি স্ক্যান এবং ইইজি পরীক্ষার পূর্ণাঙ্গ গাইড।",
   excerptEn:
     "Authoritative directory of BMDC-registered neurologists and stroke specialists in Feni. Acute stroke emergency triage, 4.5-hour golden window, Brain MRI/CT scan, EEG diagnostics, and chamber serial contacts.",
   category: "neurology-guide",
@@ -26,6 +26,8 @@ export const BEST_NEUROLOGISTS_IN_FENI: BlogPost = {
   coverImage: "/images/blog/best-neurologists-feni.webp",
   coverImageAlt: "Best Neurologists and Stroke Specialists in Feni 2026 - Health Club",
   tags: [
+    "নিউরোলজি বিশেষজ্ঞ ডাক্তার ফেনী",
+    "ফেনী নিউরোলজি বিশেষজ্ঞ ডাক্তার",
     "ফেনী নিউরোমেডিসিন ডাক্তার",
     "ফেনীর সেরা নিউরোলজিস্ট",
     "feni neurology doctor",
@@ -36,6 +38,8 @@ export const BEST_NEUROLOGISTS_IN_FENI: BlogPost = {
     "Health Club Feni Neurology",
   ],
   metaKeywords: [
+    "নিউরোলজি বিশেষজ্ঞ ডাক্তার ফেনী",
+    "ফেনী নিউরোলজি ডাক্তার",
     "feni neurology doctor",
     "ফেনীর সেরা নিউরোমেডিসিন ডাক্তার",
     "ফেনী স্ট্রোক ও প্যারালাইসিস বিশেষজ্ঞ",
