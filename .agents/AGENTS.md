@@ -93,6 +93,46 @@ Always use the following color variables or class equivalents:
   - In sub-district / upazila blog guides outside Feni Sadar, do NOT show "হেলথ ক্লাব সুবিধা" (Health Club Benefit) columns in local test fee tables (`showBenefitColumn={false}`).
   - Clearly state in upazila content that Health Club member discount benefits (10-30%) apply when patients are referred to verified partner facilities located in **Feni Sadar**.
 
+### Blog Architecture & Database-Driven Standards
+- **Database Storage for Blog Posts**: All blog posts must be stored in the database (`BlogPost` model/table) rather than creating multiple separate static TypeScript files per post (`*Pricing.ts`, `*ComparisonTable.ts`, `*Centers.ts`, `*Guide.ts`). Do NOT spawn new static TypeScript data files when adding or updating articles.
+- **Lightweight Card Projection for `/blog` Listing**: The `/blog` directory and search listing page must ONLY query and load lightweight card metadata (`BlogPostCardItem` containing `slug`, `titleBn`, `titleEn`, `excerptBn`, `category`, `coverImage`, `readTimeBn`, `publishedDate`, facility counts) via Prisma `select`. Never fetch or deserialize full post bodies, detailed pricing tables, comparison matrices, or extensive hospital reviews on the listing page to prevent excessive memory usage and database egress.
+- **Single-Post Query for `/blog/[slug]`**: The individual blog page `/blog/[slug]` retrieves its full document by `slug` from the database. Static site generation (SSG) is preserved via `generateStaticParams()` querying only slugs from the database at build time.
+- **Strict 500-Line Code Limit**: All blog-related components, actions, and utilities must strictly remain below 500 lines per file.
+
+### SEO, AEO & GEO First-Priority Directive (Search, Ask & Generative Engine Optimization)
+
+**Mandatory Directive**: In ALL development tasks (pages, layouts, UI components, schemas, metadata, routing) AND all article/content writing (medical guides, directories, doctor profiles, health tips, FAQs), **SEO** (Search Engine Optimization), **AEO** (Ask/Answer Engine Optimization), and **GEO** (Generative Engine Optimization) are the **FIRST PRIORITY**.
+
+Modern users increasingly discover healthcare information through AI software and answer engines (e.g., **ChatGPT, Gemini, Grok, Perplexity, Copilot**), in addition to traditional search engines (Google, Bing) and voice assistants (Siri, Google Assistant). All code, page structures, and content MUST be engineered for maximum visibility, precise answer extraction, and generative AI citation.
+
+#### 1. Generative Engine Optimization (GEO) Standards (for ChatGPT, Gemini, Grok, Perplexity)
+- **Entity Clarity & Disambiguation**: Always explicitly name entities (e.g. "Health Club", "Feni Sadar", "BMDC-registered specialist doctor", exact hospital/diagnostic center names, test names, ultrasound/MRI machine models) rather than using vague pronouns ("তারা", "এখানে", "সেবা"). Generative AI models index, synthesize, and cite content based on explicit entity associations.
+- **Direct Answer Capsules (BLUF — Bottom Line Up Front)**:
+  - Immediately below every H2 or H3 question heading, provide a 40–60 word concise, factual, direct answer capsule before expanding into details. AI engines (ChatGPT Search, Perplexity, Google Gemini AI Overviews) extract this exact snippet for their citations and summary answer boxes.
+- **High Information Density & Structured Tables**:
+  - Always format fees, chamber schedules, diagnostic test preparations, doctor rosters, and comparisons in clean HTML tables (`<table>`) or structured lists (`<ul>`, `<ol>`). LLMs parse, summarize, and quote tabular data far more reliably and accurately than unstructured paragraphs.
+- **Unique Local Information Gain**:
+  - Provide concrete, verified local data (e.g., realistic Feni Sadar diagnostic fee ranges in BDT, exact chamber visiting hours, Friday schedules, serial hotline numbers) that generic AI base models do not have in their training weights.
+- **Crawlability & Server-Side Rendering (RSC)**:
+  - All public pages, articles, and directory hubs must be rendered via React Server Components (RSC) to serve 100% crawlable, pure HTML. AI search bots (`GPTBot`, `PerplexityBot`, `Google-Extended`, `ClaudeBot`, `GrokBot`, `OAI-SearchBot`) must never receive blank client-rendered JavaScript shells.
+  - Maintain and synchronize `public/llms.txt` and `public/llms-full.txt` knowledge bases with structured, up-to-date markdown representing all platform doctors, partner facilities, test pricing, and emergency helplines.
+- **Verifiable Medical E-E-A-T & Citations**:
+  - Every medical article must feature doctor fact-checking attribution (`reviewedBy: Physician`), author credentials, verified BMDC references, editorial policy links, and dynamic modification dates (`dateModified`) to earn authoritative AI citation.
+
+#### 2. Answer Engine Optimization (AEO) Standards (for Voice & Zero-Click Answers)
+- **Conversational Query Headings**: Frame H2 and H3 headings as natural questions people speak or ask in conversational Bengali & English (e.g. *"ফেনীতে এমআরআই টেস্টের খরচ কত?"*, *"শুক্রবার ফেনীতে কোন কোন বিশেষজ্ঞ ডাক্তার বসেন?"*, *"Health Club মেম্বারশিপ কীভাবে নিব?"*).
+- **FAQ Schema (`FAQPage`)**: Every medical guide and directory page must include structured `FAQPage` JSON-LD with exact Q&A pairs matching on-page text.
+- **Speakable Specification**: Configure Schema.org `speakable` selectors (`#article-quick-summary`, `#overview`, `#faq-section`) so voice assistants (Google Assistant, Siri) can instantly parse and read out key answers.
+- **Concise Definitiveness**: Ensure the opening sentence of any answer can stand alone as a complete, self-contained response.
+
+#### 3. Search Engine Optimization (SEO) Standards (for Google, Bing & Traditional Search)
+- **Strict Semantic HTML**: Exactly one `h1` per page; logical `h2` and `h3` depth without skipping levels; semantic tags (`<article>`, `<section>`, `<header>`, `<table>`, `<time>`, `<address>`).
+- **Comprehensive Metadata & Social Cards**: Every page must declare unique, keyword-optimized `title` (50–60 characters) and `description` (140–160 characters with clear value proposition), along with complete OpenGraph (`og:image` 1200x630) and Twitter Card tags.
+- **Rich JSON-LD Schema Graphs**: Inject appropriate Schema.org types (`MedicalWebPage`, `Physician`, `Hospital`, `MedicalCondition`, `BreadcrumbList`, `FAQPage`, `SoftwareApplication`, `Organization`).
+- **Canonical & Multilingual Indexing**: Always declare accurate canonical URLs. Use `<html lang="bn">` with `inLanguage: "bn-BD"`.
+- **Core Web Vitals & Speed**: Zero Cumulative Layout Shift (CLS), high performance, and optimized WebP images with descriptive bilingual `alt` attributes.
+- **Internal Linking & Topical Clusters**: Connect articles, doctor directory categories, and hospital profiles contextually using descriptive anchor text to distribute topical authority.
+
 ### No Hallucinations
 - Do not guess or invent APIs, project structures, schemas, or routing configurations.
 - If any requirement, schema, or route is ambiguous, **stop and ask the user for clarification**.

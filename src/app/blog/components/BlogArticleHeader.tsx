@@ -72,7 +72,7 @@ export function BlogArticleHeader({
             loading="eager"
             fetchPriority="high"
             decoding="sync"
-            quality={60}
+            quality={75}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 768px, 896px"
             className="object-cover"
           />

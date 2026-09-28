@@ -44,6 +44,24 @@ import { FENI_DOCTOR_SERIAL_APPOINTMENT_GUIDE } from "./posts/feniDoctorAppointm
 import { DAGANBHUIYAN_PATIENT_GUIDE } from "./posts/daganbhuiyanPatientGuide";
 import { CHHAGALNAIYA_PATIENT_GUIDE } from "./posts/chhagalnaiyaPatientGuide";
 import { SONAGAZI_PATIENT_GUIDE } from "./posts/sonagaziPatientGuide";
+import { PARSHURAM_PATIENT_GUIDE } from "./posts/parshuramPatientGuide";
+import { FULGAZI_PATIENT_GUIDE } from "./posts/fulgaziPatientGuide";
+import { FENI_BLOOD_TEST_CBC_COST_GUIDE } from "./posts/feniCbcBloodTestGuide";
+import { FENI_LIPID_PROFILE_CHOLESTEROL_TEST_GUIDE } from "./posts/feniLipidProfileGuide";
+import { FENI_THYROID_TSH_TEST_COST_GUIDE } from "./posts/feniThyroidTestGuide";
+import { FENI_HBA1C_DIABETES_TEST_GUIDE } from "./posts/feniHba1cDiabetesGuide";
+import { FENI_LIVER_FUNCTION_SGPT_TEST_GUIDE } from "./posts/feniLftGuide";
+import { FENI_KIDNEY_CREATININE_UREA_TEST_GUIDE } from "./posts/feniKidneyTestGuide";
+import { FENI_URINE_RE_CULTURE_TEST_GUIDE } from "./posts/feniUrineTestGuide";
+import { FENI_X_RAY_DIGITAL_DR_COST_GUIDE } from "./posts/feniXRayGuide";
+import { FENI_HORMONE_TEST_FERTILITY_GUIDE } from "./posts/feniHormoneGuide";
+import { FENI_PAP_SMEAR_CERVICAL_CANCER_SCREENING_GUIDE } from "./posts/feniPapSmearGuide";
+import { FENI_ALLERGY_ASTHMA_TEST_GUIDE } from "./posts/feniAllergyAsthmaGuide";
+import { FENI_SEMEN_ANALYSIS_TEST_GUIDE } from "./posts/feniSemenAnalysisGuide";
+import { FENI_BIOPSY_FNAC_TUMOR_TEST_GUIDE } from "./posts/feniBiopsyFnacGuide";
+import { FENI_CATARACT_EYE_SURGERY_GUIDE } from "./posts/feniCataractEyeSurgeryGuide";
+import { FENI_TONSIL_ADENOID_SURGERY_GUIDE } from "./posts/feniTonsilSurgeryGuide";
+import { FENI_APPENDIX_SURGERY_GUIDE } from "./posts/feniAppendixSurgeryGuide";
 
 export {
   BLOG_CATEGORIES,
@@ -52,10 +70,28 @@ export {
 } from "./blogCategories";
 
 export const BLOG_POSTS: BlogPost[] = [
+  FENI_APPENDIX_SURGERY_GUIDE,
+  FENI_TONSIL_ADENOID_SURGERY_GUIDE,
+  FENI_CATARACT_EYE_SURGERY_GUIDE,
+  FENI_BIOPSY_FNAC_TUMOR_TEST_GUIDE,
+  FENI_SEMEN_ANALYSIS_TEST_GUIDE,
+  FENI_ALLERGY_ASTHMA_TEST_GUIDE,
+  FENI_PAP_SMEAR_CERVICAL_CANCER_SCREENING_GUIDE,
+  FENI_HORMONE_TEST_FERTILITY_GUIDE,
+  FENI_X_RAY_DIGITAL_DR_COST_GUIDE,
+  FENI_URINE_RE_CULTURE_TEST_GUIDE,
+  FENI_KIDNEY_CREATININE_UREA_TEST_GUIDE,
+  FENI_LIVER_FUNCTION_SGPT_TEST_GUIDE,
+  FENI_HBA1C_DIABETES_TEST_GUIDE,
+  FENI_THYROID_TSH_TEST_COST_GUIDE,
+  FENI_LIPID_PROFILE_CHOLESTEROL_TEST_GUIDE,
+  FENI_BLOOD_TEST_CBC_COST_GUIDE,
   FENI_DOCTOR_SERIAL_APPOINTMENT_GUIDE,
   FENI_CARDIAC_ECG_ECHO_ETT_TEST_GUIDE,
   FENI_ENDOSCOPY_COLONOSCOPY_TEST_COST_GUIDE,
   FENI_HEALTH_CLUB_MEMBERSHIP_DISCOUNT_GUIDE,
+  PARSHURAM_PATIENT_GUIDE,
+  FULGAZI_PATIENT_GUIDE,
   DAGANBHUIYAN_PATIENT_GUIDE,
   CHHAGALNAIYA_PATIENT_GUIDE,
   SONAGAZI_PATIENT_GUIDE,

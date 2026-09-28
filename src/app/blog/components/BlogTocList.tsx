@@ -177,6 +177,22 @@ export function getDiagnosticTocTitles(currentSlug: string | undefined) {
   const isCheckup = currentSlug === "full-body-health-checkup-packages-in-feni";
   const isEndoscopy = currentSlug === "feni-endoscopy-colonoscopy-test-cost-guide";
   const isCardiacTest = currentSlug === "feni-cardiac-ecg-echo-ett-test-guide";
+  const isCbc = currentSlug === "feni-blood-test-cbc-cost-guide";
+  const isLipid = currentSlug === "feni-lipid-profile-cholesterol-test-guide";
+  const isThyroid = currentSlug === "feni-thyroid-tsh-test-cost-guide";
+  const isHba1c = currentSlug === "feni-hba1c-diabetes-test-guide";
+  const isLft = currentSlug === "feni-liver-function-sgpt-test-guide";
+  const isKidney = currentSlug === "feni-kidney-creatinine-urea-test-guide";
+  const isUrine = currentSlug === "feni-urine-re-culture-test-guide";
+  const isXray = currentSlug === "feni-x-ray-digital-dr-cost-guide";
+  const isHormone = currentSlug === "feni-hormone-test-fertility-guide";
+  const isPapSmear = currentSlug === "feni-pap-smear-cervical-cancer-screening-guide";
+  const isAllergyAsthma = currentSlug === "feni-allergy-asthma-test-guide";
+  const isSemenAnalysis = currentSlug === "feni-semen-analysis-infertility-test-guide";
+  const isBiopsyFnac = currentSlug === "feni-biopsy-fnac-tumor-test-guide";
+  const isCataract = currentSlug === "feni-cataract-phaco-eye-surgery-cost-guide";
+  const isTonsil = currentSlug === "feni-tonsil-adenoid-surgery-cost-guide";
+  const isAppendix = currentSlug === "feni-appendix-appendectomy-surgery-cost-guide";
   return {
     overviewTitle: isCtMri
       ? "ফেনীতে সিটি স্ক্যান ও এমআরআই পরিকাঠামো"
@@ -188,6 +204,38 @@ export function getDiagnosticTocTitles(currentSlug: string | undefined) {
       ? "ফেনীতে এন্ডোস্কোপি ও গ্যাস্ট্রো ডায়াগনস্টিক প্রেক্ষাপট"
       : isCardiacTest
       ? "ফেনীতে কার্ডিয়াক ডায়াগনস্টিক ও হার্ট কেয়ার প্রেক্ষাপট"
+      : isCbc
+      ? "ফেনীতে সিবিসি টেস্ট ও প্যাথলজি প্রেক্ষাপট"
+      : isLipid
+      ? "ফেনীতে লিপিড প্রোফাইল ও হৃদরোগ প্রতিরোধ প্রেক্ষাপট"
+      : isThyroid
+      ? "ফেনীতে থাইরয়েড টেস্ট ও হরমোন কেয়ার প্রেক্ষাপট"
+      : isHba1c
+      ? "ফেনীতে HbA1c ও ডায়াবেটিস কেয়ার প্রেক্ষাপট"
+      : isLft
+      ? "ফেনীতে লিভার ফাংশন টেস্ট ও লিভার কেয়ার প্রেক্ষাপট"
+      : isKidney
+      ? "ফেনীতে কিডনি ফাংশন টেস্ট ও রেনাল কেয়ার প্রেক্ষাপট"
+      : isUrine
+      ? "ফেনীতে প্রস্রাব পরীক্ষা ও ইউটিআই ডায়াগনস্টিক প্রেক্ষাপট"
+      : isXray
+      ? "ফেনীতে ডিজিটাল এক্স-রে ও রেডিওলজি পরিকাঠামো"
+      : isHormone
+      ? "ফেনীতে হরমোন ও প্রজনন স্বাস্থ্য পরীক্ষার প্রেক্ষাপট"
+      : isPapSmear
+      ? "ফেনীতে প্যাপ স্মিয়ার ও ক্যান্সার স্ক্রিনিং প্রেক্ষাপট"
+      : isAllergyAsthma
+      ? "ফেনীতে অ্যালার্জি ও অ্যাজমা ডায়াগনস্টিক প্রেক্ষাপট"
+      : isSemenAnalysis
+      ? "ফেনীতে সিমেন অ্যানালাইসিস ও প্রজনন স্বাস্থ্য প্রেক্ষাপট"
+      : isBiopsyFnac
+      ? "ফেনীতে এফএনএসি, বায়োপসি ও টিউমার ডায়াগনস্টিক প্রেক্ষাপট"
+      : isCataract
+      ? "ফেনীতে চোখের ছানি, আধুনিক ফ্যাকো সার্জারি ও আইওএল লেন্স প্রেক্ষাপট"
+      : isTonsil
+      ? "ফেনীতে টনসিল ও এডিনয়েড ইনফেকশন, আধুনিক সার্জারি প্রেক্ষাপট"
+      : isAppendix
+      ? "ফেনীতে এপেন্ডিসাইটিস, জরুরি লক্ষণ ও আধুনিক সার্জারি প্রেক্ষাপট"
       : "ফেনীর ডায়াগনস্টিক ও ল্যাব পরিকাঠামো",
     matrixTitle: isCtMri
       ? "একনজরে শীর্ষ সিটি স্ক্যান ও এমআরআই তুলনা"
@@ -199,6 +247,38 @@ export function getDiagnosticTocTitles(currentSlug: string | undefined) {
       ? "একনজরে শীর্ষ এন্ডোস্কোপি ও কোলনোস্কোপি সেন্টারের তুলনা"
       : isCardiacTest
       ? "একনজরে শীর্ষ কার্ডিয়াক টেস্ট সেন্টারের তুলনা"
+      : isCbc
+      ? "একনজরে শীর্ষ সিবিসি ও প্যাথলজি ল্যাব তুলনা"
+      : isLipid
+      ? "একনজরে শীর্ষ লিপিড প্রোফাইল ল্যাব তুলনা"
+      : isThyroid
+      ? "একনজরে শীর্ষ থাইরয়েড ও হরমোন ল্যাব তুলনা"
+      : isHba1c
+      ? "একনজরে শীর্ষ ডায়াবেটিস ও বায়োকেমিস্ট্রি ল্যাব তুলনা"
+      : isLft
+      ? "একনজরে শীর্ষ লিভার ফাংশন ল্যাব তুলনা"
+      : isKidney
+      ? "একনজরে শীর্ষ কিডনি ফাংশন ল্যাব তুলনা"
+      : isUrine
+      ? "একনজরে শীর্ষ ইউরিন ও কালচার ল্যাব তুলনা"
+      : isXray
+      ? "একনজরে শীর্ষ ডিজিটাল এক্স-রে সেন্টার তুলনা"
+      : isHormone
+      ? "একনজরে শীর্ষ হরমোন ও ফার্টিলিটি ল্যাব তুলনা"
+      : isPapSmear
+      ? "একনজরে শীর্ষ প্যাপ স্মিয়ার ও স্ক্রিনিং সেন্টার তুলনা"
+      : isAllergyAsthma
+      ? "একনজরে শীর্ষ অ্যালার্জি ও পালমোনারি ল্যাব তুলনা"
+      : isSemenAnalysis
+      ? "একনজরে শীর্ষ সিমেন অ্যানালাইসিস ল্যাব তুলনা"
+      : isBiopsyFnac
+      ? "একনজরে শীর্ষ এফএনএসি ও বায়োপসি ল্যাব তুলনা"
+      : isCataract
+      ? "একনজরে শীর্ষ চক্ষু হাসপাতাল ও ফ্যাকো সেন্টারের তুলনা"
+      : isTonsil
+      ? "একনজরে শীর্ষ ইএনটি হাসপাতাল ও সার্জারি সেন্টারের তুলনা"
+      : isAppendix
+      ? "একনজরে শীর্ষ সার্জারি হাসপাতাল ও ল্যাপারোস্কোপিক ওটি তুলনা"
       : "একনজরে সেরা ১০ ডায়াগনস্টিকের তুলনা",
     reviewsTitle: isCtMri
       ? "শীর্ষ সিটি স্ক্যান ও এমআরআই সেন্টারের পর্যালোচনা"
@@ -210,6 +290,38 @@ export function getDiagnosticTocTitles(currentSlug: string | undefined) {
       ? "শীর্ষ এন্ডোস্কোপি, কোলনোস্কোপি ও গ্যাস্ট্রো সেন্টারের পর্যালোচনা"
       : isCardiacTest
       ? "শীর্ষ কার্ডিয়াক ডায়াগনস্টিক ও হার্ট সেন্টারের পর্যালোচনা"
+      : isCbc
+      ? "শীর্ষ প্যাথলজি ল্যাব ও ডায়াগনস্টিক সেন্টারের পর্যালোচনা"
+      : isLipid
+      ? "শীর্ষ লিপিড প্রোফাইল ও বায়োকেমিস্ট্রি ল্যাব পর্যালোচনা"
+      : isThyroid
+      ? "শীর্ষ থাইরয়েড ও হরমোন ডায়াগনস্টিক ল্যাব পর্যালোচনা"
+      : isHba1c
+      ? "শীর্ষ ডায়াবেটিস ও প্যাথলজি ল্যাব পর্যালোচনা"
+      : isLft
+      ? "শীর্ষ লিভার ফাংশন ও প্যাথলজি ল্যাব পর্যালোচনা"
+      : isKidney
+      ? "শীর্ষ কিডনি ফাংশন ও প্যাথলজি ল্যাব পর্যালোচনা"
+      : isUrine
+      ? "শীর্ষ ইউরিন ও মাইক্রোবায়োলজি ল্যাব পর্যালোচনা"
+      : isXray
+      ? "শীর্ষ ডিজিটাল এক্স-রে ও ইমেজিং সেন্টারের পর্যালোচনা"
+      : isHormone
+      ? "শীর্ষ হরমোন ও প্রজনন ডায়াগনস্টিক ল্যাব পর্যালোচনা"
+      : isPapSmear
+      ? "শীর্ষ প্যাপ স্মিয়ার ও স্ক্রিনিং সেন্টারের পর্যালোচনা"
+      : isAllergyAsthma
+      ? "শীর্ষ অ্যালার্জি ও স্পাইরোমেট্রি সেন্টারের পর্যালোচনা"
+      : isSemenAnalysis
+      ? "শীর্ষ সিমেন অ্যানালাইসিস ও ফার্টিলিটি ল্যাব পর্যালোচনা"
+      : isBiopsyFnac
+      ? "শীর্ষ এফএনএসি ও বায়োপসি ডায়াগনস্টিক ল্যাব পর্যালোচনা"
+      : isCataract
+      ? "শীর্ষ চক্ষু হাসপাতাল ও ফ্যাকো সার্জারি সেন্টার পর্যালোচনা"
+      : isTonsil
+      ? "শীর্ষ ইএনটি হাসপাতাল ও টনসিল সার্জারি সেন্টার পর্যালোচনা"
+      : isAppendix
+      ? "শীর্ষ সার্জারি হাসপাতাল ও ল্যাপারোস্কোপিক সেন্টার পর্যালোচনা"
       : "সেরা ১০ ডায়াগনস্টিক সেন্টারের পর্যালোচনা",
     priceGuideTitle: isCtMri
       ? "সিটি স্ক্যান ও এমআরআই মূল্যতালিকা ও ছাড়"
@@ -221,6 +333,38 @@ export function getDiagnosticTocTitles(currentSlug: string | undefined) {
       ? "এন্ডোস্কোপি ও কোলনোস্কোপি মূল্যতালিকা ও ছাড়"
       : isCardiacTest
       ? "ইসিজি, ইকো ও ইটিটি মূল্যতালিকা ও ছাড়"
+      : isCbc
+      ? "সিবিসি ও হেমাটোলজি টেস্টের মূল্যতালিকা ও ছাড়"
+      : isLipid
+      ? "লিপিড প্রোফাইল ও রক্তে চর্বি টেস্টের মূল্যতালিকা ও ছাড়"
+      : isThyroid
+      ? "থাইরয়েড ও হরমোন টেস্টের মূল্যতালিকা ও ছাড়"
+      : isHba1c
+      ? "HbA1c ও ডায়াবেটিস টেস্টের মূল্যতালিকা ও ছাড়"
+      : isLft
+      ? "লিভার ফাংশন ও এসজিপিটি টেস্ট মূল্যতালিকা ও ছাড়"
+      : isKidney
+      ? "কিডনি ফাংশন ও ক্রিয়েটিনিন টেস্ট মূল্যতালিকা ও ছাড়"
+      : isUrine
+      ? "ইউরিন আর/ই ও কালচার টেস্ট মূল্যতালিকা ও ছাড়"
+      : isXray
+      ? "ডিজিটাল এক্স-রে (DR/CR) মূল্যতালিকা ও ছাড়"
+      : isHormone
+      ? "হরমোন ও প্রজনন টেস্টের মূল্যতালিকা ও ছাড়"
+      : isPapSmear
+      ? "প্যাপ স্মিয়ার ও ক্যান্সার স্ক্রিনিং মূল্যতালিকা ও ছাড়"
+      : isAllergyAsthma
+      ? "অ্যালার্জি ও স্পাইরোমেট্রি টেস্টের মূল্যতালিকা ও ছাড়"
+      : isSemenAnalysis
+      ? "সিমেন অ্যানালাইসিস ও স্পার্ম টেস্ট মূল্যতালিকা ও ছাড়"
+      : isBiopsyFnac
+      ? "এফএনএসি ও বায়োপসি টেস্ট মূল্যতালিকা ও ছাড়"
+      : isCataract
+      ? "ছানি অপারেশন (ফ্যাকো) ও লেন্সের মূল্যতালিকা ও ছাড়"
+      : isTonsil
+      ? "টনসিল ও এডিনয়েড অপারেশন মূল্যতালিকা ও ছাড়"
+      : isAppendix
+      ? "এপেন্ডিসাইটিস অপারেশন মূল্যতালিকা ও ছাড়"
       : "টেস্টের মূল্যতালিকা ও মেম্বার ছাড়",
     selectionGuideTitle: isCtMri
       ? "সঠিক সিটি স্ক্যান ও এমআরআই সেন্টার নির্বাচনের উপায়"
@@ -232,6 +376,38 @@ export function getDiagnosticTocTitles(currentSlug: string | undefined) {
       ? "সঠিক এন্ডোস্কোপি ও কোলনোস্কোপি সেন্টার নির্বাচনের উপায়"
       : isCardiacTest
       ? "সঠিক কার্ডিয়াক টেস্ট সেন্টার নির্বাচনের উপায়"
+      : isCbc
+      ? "সঠিক ও নির্ভরযোগ্য প্যাথলজি ল্যাব নির্বাচনের উপায়"
+      : isLipid
+      ? "সঠিক ও নির্ভরযোগ্য বায়োকেমিস্ট্রি ল্যাব নির্বাচনের উপায়"
+      : isThyroid
+      ? "সঠিক ও নির্ভরযোগ্য হরমোন ল্যাব নির্বাচনের উপায়"
+      : isHba1c
+      ? "সঠিক ও নির্ভরযোগ্য ডায়াবেটিস ল্যাব নির্বাচনের উপায়"
+      : isLft
+      ? "সঠিক ও নির্ভরযোগ্য লিভার ডায়াগনস্টিক ল্যাব নির্বাচনের উপায়"
+      : isKidney
+      ? "সঠিক ও নির্ভরযোগ্য কিডনি ডায়াগনস্টিক ল্যাব নির্বাচনের উপায়"
+      : isUrine
+      ? "সঠিক ও নির্ভরযোগ্য ইউরিন ও কালচার ল্যাব নির্বাচনের উপায়"
+      : isXray
+      ? "সঠিক ও নির্ভরযোগ্য ডিজিটাল এক্স-রে সেন্টার নির্বাচনের উপায়"
+      : isHormone
+      ? "সঠিক ও নির্ভরযোগ্য হরমোন ল্যাব নির্বাচনের উপায়"
+      : isPapSmear
+      ? "সঠিক ও নির্ভরযোগ্য ক্যান্সার স্ক্রিনিং ল্যাব নির্বাচনের উপায়"
+      : isAllergyAsthma
+      ? "সঠিক ও নির্ভরযোগ্য অ্যালার্জি ও অ্যাজমা ল্যাব নির্বাচনের উপায়"
+      : isSemenAnalysis
+      ? "সঠিক ও নির্ভরযোগ্য বীর্য পরীক্ষা ল্যাব নির্বাচনের উপায়"
+      : isBiopsyFnac
+      ? "সঠিক ও নির্ভরযোগ্য এফএনএসি ও বায়োপসি ল্যাব নির্বাচনের উপায়"
+      : isCataract
+      ? "সঠিক ও নির্ভরযোগ্য চক্ষু হাসপাতাল ও সার্জন নির্বাচনের উপায়"
+      : isTonsil
+      ? "সঠিক ও নির্ভরযোগ্য ইএনটি হাসপাতাল ও সার্জন নির্বাচনের উপায়"
+      : isAppendix
+      ? "সঠিক ও নির্ভরযোগ্য সার্জারি হাসপাতাল ও সার্জন নির্বাচনের উপায়"
       : "নির্ভরযোগ্য ডায়াগনস্টিক নির্বাচনের উপায়",
   };
 }

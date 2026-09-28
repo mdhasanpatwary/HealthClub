@@ -320,9 +320,10 @@ export const PARSHURAM_FULGAZI_HEALTHCARE_GUIDE: BlogPost = {
     },
   ],
   relatedSlugs: [
+    "fulgazi-patient-guide",
+    "parshuram-patient-guide",
     "best-10-hospitals-in-feni",
     "feni-sadar-hospital-guide",
-    "daganbhuiyan-chagalnaiya-sonagazi-healthcare-guide",
     "feni-ambulance-and-oxygen-service-guide",
     "feni-blood-bank-and-donors-guide",
   ],

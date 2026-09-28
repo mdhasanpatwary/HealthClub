@@ -17,6 +17,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { CLUSTER_NODES_PROCEDURES } from "./clusterNodesProcedures";
+import { CLUSTER_NODES_SURGERIES } from "./clusterNodesSurgeries";
 
 export type ClusterGroupId =
   | "hospitals"
@@ -89,6 +90,7 @@ export interface ClusterNode {
 
 export const FENI_CLUSTER_NODES: ClusterNode[] = [
   ...CLUSTER_NODES_PROCEDURES,
+  ...CLUSTER_NODES_SURGERIES,
   {
     slug: "feni-sadar-hospital-guide",
     clusterGroupId: "hospitals",

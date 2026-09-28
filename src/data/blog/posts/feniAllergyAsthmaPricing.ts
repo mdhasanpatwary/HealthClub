@@ -1,0 +1,135 @@
+import { DiagnosticTestPriceItem } from "@/types/blog";
+
+export const FENI_ALLERGY_ASTHMA_TEST_PRICING: {
+  titleBn: string;
+  subtitleBn: string;
+  titleEn: string;
+  subtitleEn: string;
+  tests: DiagnosticTestPriceItem[];
+} = {
+  titleBn: "ফেনীতে অ্যালার্জি ও অ্যাজমা স্পাইরোমেট্রি টেস্টের খরচ ও মেম্বার ছাড় ২০২৬",
+  subtitleBn:
+    "ফেনী সদর উপজেলার অনুমোদিত ডায়াগনস্টিক সেন্টারে সিরাম টোটাল আইজিই (Total IgE), স্পেসিফিক অ্যালার্জেন প্যানেল, স্কিন প্রিক টেস্ট (SPT) এবং স্পাইরোমেট্রি (PFT with Reversibility) পরীক্ষার নিয়মিত ফি বনাম হেলথ ক্লাব মেম্বার কার্ডে ১০-৩০% নিশ্চিত ছাড়ের তালিকা।",
+  titleEn: "Allergy & Asthma Spirometry (PFT) Test Price Guide in Feni (2026)",
+  subtitleEn:
+    "Comprehensive comparison of regular market fees and 10-30% Health Club member discounts across Feni Sadar pulmonary and allergy diagnostic labs.",
+  tests: [
+    {
+      testNameBn: "সিরাম টোটাল আইজিই রক্ত পরীক্ষা (Serum Total IgE Antibody Test)",
+      testNameEn: "Serum Total Immunoglobulin E (Total IgE by Automated CLIA / ECLIA)",
+      categoryBn: "ইমিউনোলজি ও অ্যালার্জি সেরোলজি",
+      regularPriceRangeBn: "৳৫০০ - ৳৮০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "৪ - ৬ ঘণ্টা",
+    },
+    {
+      testNameBn: "স্পাইরোমেট্রি / পিএফটি বেসলাইন টেস্ট (Computerized Spirometry / Baseline PFT)",
+      testNameEn: "Computerized Baseline Spirometry / Pulmonary Function Test (FEV1, FVC, FEV1/FVC Ratio)",
+      categoryBn: "পালমোনারি ফাংশন টেস্ট (PFT)",
+      regularPriceRangeBn: "৳৮০০ - ৳১,৪০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "তাৎক্ষণিক (১৫-২০ মিনিট)",
+    },
+    {
+      testNameBn: "স্পাইরোমেট্রি উইথ ব্রঙ্কোডাইলেটর রিভার্সিবিলিটি (Spirometry Pre & Post BDR Test)",
+      testNameEn: "Spirometry with Pre & Post Bronchodilator Reversibility (Inhaled Salbutamol 400 mcg Response)",
+      categoryBn: "অ্যাজমা নিশ্চিতকরণ ও রিভার্সিবিলিটি",
+      regularPriceRangeBn: "৳১,২০০ - ৳১,৮০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "৩০ - ৪৫ মিনিট",
+    },
+    {
+      testNameBn: "স্পেসিফিক আইজিই ইনহ্যালেন্ট অ্যালার্জেন প্যানেল (Specific IgE Inhalant Panel)",
+      testNameEn: "Specific IgE Inhalant Screen (House Dust Mite, Pollen, Animal Dander, Mold Fungi)",
+      categoryBn: "মলিকিউলার ইনহ্যালেন্ট অ্যালার্জি",
+      regularPriceRangeBn: "৳২,৫০০ - ৳৪,২০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "৩ - ৫ দিন",
+    },
+    {
+      testNameBn: "স্পেসিফিক আইজিই ফুড অ্যালার্জেন প্যানেল (Specific IgE Food Allergy Panel)",
+      testNameEn: "Specific IgE Food Panel (Shrimp, Beef, Egg, Cow's Milk, Peanut, Wheat)",
+      categoryBn: "খাদ্য অ্যালার্জেন সেরোলজি",
+      regularPriceRangeBn: "৳২,৫০০ - ৳৪,৫০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "৩ - ৫ দিন",
+    },
+    {
+      testNameBn: "স্কিন প্রিক টেস্ট (Skin Prick Test - SPT for Inhalant / Food Allergens)",
+      testNameEn: "Epidermal Skin Prick Test with Standardized Allergen Extracts & Histamine Control",
+      categoryBn: "ত্বকীয় অ্যালার্জি স্ক্রিনিং",
+      regularPriceRangeBn: "৳১,৫০০ - ৳২,৮০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "তাৎক্ষণিক (২০-৩০ মিনিট)",
+    },
+    {
+      testNameBn: "অ্যাবসলিউট ইওসিনোফিল কাউন্ট (Absolute Eosinophil Count - AEC)",
+      testNameEn: "Absolute Eosinophil Count (AEC / Microscopic & Automated Chamber)",
+      categoryBn: "রক্তের অ্যালার্জিক কোষ পরীক্ষা",
+      regularPriceRangeBn: "৳২০০ - ৳৩৫০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "১ - ২ ঘণ্টা",
+    },
+    {
+      testNameBn: "কমপ্লিট ব্লাড কাউন্ট উইথ ইএসআর (CBC with ESR & Differential Eosinophil %)",
+      testNameEn: "Complete Blood Count with 5-Part Differential WBC & ESR (Sysmex / Mindray)",
+      categoryBn: "হেমাটোলজি ও ইনফেকশন স্ক্রিনিং",
+      regularPriceRangeBn: "৳৩০০ - ৳৪৫০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "৩০ - ৪৫ মিনিট",
+    },
+    {
+      testNameBn: "ফ্র্যাকশনাল এক্সহেল্ড নাইট্রিক অক্সাইড টেস্ট (FeNO Breath Test)",
+      testNameEn: "Fractional Exhaled Nitric Oxide (FeNO - Eosinophilic Airway Inflammation Marker)",
+      categoryBn: "অ্যাডভান্সড রেসপিরেটরি মার্কার",
+      regularPriceRangeBn: "৳১,৮০০ - ৳৩,০০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "তাৎক্ষণিক (১৫ মিনিট)",
+    },
+    {
+      testNameBn: "পিক এক্সপিরেটরি ফ্লো রেট মনিটরিং (Peak Expiratory Flow Rate - PEFR Test)",
+      testNameEn: "Peak Expiratory Flow Rate Measurement (Mini-Wright Peak Flow Meter Evaluation)",
+      categoryBn: "শ্বাস-প্রশ্বাস গতি পরিমাপ",
+      regularPriceRangeBn: "৳২০০ - ৳৪০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "তাৎক্ষণিক (১০ মিনিট)",
+    },
+    {
+      testNameBn: "ডিজিটাল চেস্ট এক্স-রে পি/এ ভিউ (Digital Chest X-Ray P/A View)",
+      testNameEn: "High-Frequency Digital Chest Radiography (DR/CR PA View / Lungs & Heart Assessment)",
+      categoryBn: "রেডিওলজি ও ফুসফুস ইমেজিং",
+      regularPriceRangeBn: "৳৪৫০ - ৳৭০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "১ - ২ ঘণ্টা",
+    },
+    {
+      testNameBn: "স্পুটাম ফর ইওসিনোফিল ও সাইটোলজি (Sputum Cytology for Eosinophils)",
+      testNameEn: "Microscopic Sputum Examination for Eosinophils & Charcot-Leyden Crystals",
+      categoryBn: "ক্লিনিক্যাল সাইটোপ্যাথলজি",
+      regularPriceRangeBn: "৳৩৫০ - ৳৬০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "২৪ ঘণ্টা",
+    },
+    {
+      testNameBn: "কমপ্রিহেনসিভ অ্যাজমা ও অ্যালার্জি ডায়াগনস্টিক প্যাকেজ (Asthma & Allergy Workup Bundle)",
+      testNameEn: "Comprehensive Asthma & Respiratory Allergy Bundle (Total IgE + AEC + Spirometry with BDR + Chest X-Ray + CBC)",
+      categoryBn: "সমন্বিত কম্বো স্ক্রিনিং প্যাকেজ",
+      regularPriceRangeBn: "৳২,৮০০ - ৳৪,৫০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "একই দিনে ডেলিভারি",
+    },
+  ],
+};

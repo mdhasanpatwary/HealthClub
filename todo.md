@@ -1,6 +1,13 @@
-# Health Club (হেলথ ক্লাব) — Consistency Fixes TODO List
+# Health Club (হেলথ ক্লাব) — Consistency Fixes & Master Implementation TODO List
 
-This document lists all tasks required to resolve the 21 architectural, data, API, business logic, and UI/UX inconsistencies discovered during the consistency audit.
+> ### ⚡ PERMANENT CORE DIRECTIVE: SEO, AEO & GEO FIRST-PRIORITY ARCHITECTURE
+> In **ALL code development** (pages, layouts, UI components, schemas, metadata, routing) AND **all article/content writing** (medical guides, directories, doctor profiles, health tips, FAQs), **SEO** (Google, Bing), **AEO** (Ask/Answer Engines: Siri, Google Assistant, voice search, position-zero snippets), and **GEO** (Generative Engine Optimization: ChatGPT, Gemini, Grok, Perplexity, Copilot) are the **STRICT FIRST PRIORITY**.
+>
+> Modern users increasingly discover healthcare and local medical services through AI software and answer engines. Every page, component, and guide must feature:
+> 1. **GEO Readiness**: Explicit entity naming (Health Club, Feni Sadar, BMDC credentials), Direct Answer Capsules (BLUF: 40–60 word factual summaries under H2/H3s), high-density comparison tables, unique local information gain, pure server-rendered HTML (RSC) for AI scrapers (`GPTBot`, `PerplexityBot`, `Google-Extended`, etc.), and live `/llms.txt` / `/llms-full.txt` knowledge bases.
+> 2. **AEO Readiness**: Conversational question headings (*"কী"*, *"কেন"*, *"কীভাবে"*, *"খরচ কত"*, *"কোথায় করাবেন"*), structured `FAQPage` schemas matching on-page text verbatim, and Schema.org `speakable` selectors for voice synthesis.
+> 3. **SEO Excellence**: Single `h1`, strict semantic hierarchy, dynamic OpenGraph/Twitter cards, comprehensive JSON-LD schemas (`MedicalWebPage`, `Physician`, `Hospital`, `BreadcrumbList`), canonical indexing, and sub-second Core Web Vitals.
+> 4. **Strict Business Integrity**: Health Club benefits must strictly display **"১০-৩০% মেম্বার ছাড়"** text/badges (NEVER calculated or fixed discounted Taka amounts). Contracted partner claims are strictly restricted to **Feni Sadar**. Strict **500-line code limit** per file.
 
 ---
 
@@ -1450,3 +1457,538 @@ This roadmap outlines the strategic localized content cluster required to achiev
     4. **Comprehensive English Keyword Expansion Across All 45 Blog Post Files**: Systematically enriched `metaKeywords` across all 44 remaining blog posts with target English queries (covering specialist variations, surgeons, hospitals, diagnostics, test costs, doctor serials, ambulance, blood banks, and upazila healthcare). Utilized compact array formatting for files near the 500-line limit (`chhagalnaiyaPatientGuide.ts`: 482 lines, `daganbhuiyanPatientGuide.ts`: 482 lines, `sonagaziPatientGuide.ts`: 481 lines).
     5. **Strict Verification**: Cleanly verified with `npx tsc --noEmit` (0 errors), `npm run lint` (0 errors, 0 warnings), and `npm run build` (all 433 static pages generated successfully).
   - **Files**: `src/app/blog/[slug]/page.tsx`, `src/app/blog/utils/blogJsonLd.ts`, `src/data/blog/posts/bestDentalClinicsInFeni.ts`, `src/data/blog/posts/*.ts` (all 45 post files), `todo.md`
+
+---
+
+## 📍 Phase 12: 100-Article SEO Organic Traffic Dominance (TODO-239 to TODO-293)
+
+> **Objective**: Scale from 45 existing blog pillar guides to **100 comprehensive SEO articles** to achieve #1–#2 ranking on Google across **all** medical, diagnostic, doctor, surgical, emergency, and healthcare queries in Feni (Bangla & English).
+>
+> **Core Compliance & Quality Guardrails**:
+> 1. **No Absolute Discount Taka in Price Tables**: Member savings strictly display `"১০-৩০% মেম্বার ছাড়"` / `"10-30% Member Discount"`.
+> 2. **Geographic Scope (Feni Sadar Only)**: Partner facilities and discount claims are strictly limited to verified Feni Sadar partners (`partners` directory). Upazila guides guide patients to travel to Sadar for discounts (`showBenefitColumn={false}`, `partnerStatus: false`).
+> 3. **Modular Code Architecture (<500 lines/file)**: Heavy articles must split pricing tables, center rosters, and doctor lists into dedicated helper files.
+> 4. **Bilingual Exact-Match Search Indexing**: Every guide must have dedicated `titleEn`, `excerptEn`, and rich Bengali + English `metaKeywords`.
+
+---
+
+### 🗺️ Cluster 1: Dedicated Upazila Patient Guidance (Sub-District Expansion)
+
+- [x] **TODO-239**: **Article #46** — `parshuram-patient-guide`
+  - **Bangla Title**: পরশুরামবাসীর জন্য ফেনী স্বাস্থ্যসেবা ও হাসপাতাল গাইড: যাতায়াত, ডাক্তার সিরিয়াল ও ছাড় সুবিধা
+  - **English Title**: Parshuram Patient Healthcare Guide: Feni Sadar Hospital Travel, Specialist Serials & Member Discounts
+  - **Primary Keywords**: পরশুরাম স্বাস্থ্যসেবা, পরশুরাম থেকে ফেনী হাসপাতাল, পরশুরাম ডাক্তার সিরিয়াল, Parshuram patient guide Feni, Parshuram to Feni hospital transport
+  - **Target Intent**: Dedicated travel route (CNG/Bus 40-50 min), local Parshuram Upazila Health Complex vs Sadar Hospital referral, verified Feni Sadar partner hospital discounts (10-30%).
+  - **Details**: Built modular architecture across `src/data/blog/posts/parshuramPricing.ts`, `src/data/blog/posts/parshuramHospitals.ts`, and `src/data/blog/posts/parshuramPatientGuide.ts`. Configured local Parshuram Upazila Health Complex, private clinics (`partnerStatus: false`), visiting specialist doctor schedules, flood & snakebite antivenom protocol, highway route & fares (CNG ৳80-130, Bus ৳50-70, Ambulance ৳1,400-2,000, 40-50 min), referral to verified Feni Sadar partner facilities for 10-30% member discounts, registered in `blogPosts.ts`, `clusterNodesProcedures.ts`, and `departmentBlogMapping.ts`. Strictly respects 500-line file limit (355 lines, 176 lines, 128 lines). Verified with zero TypeScript errors (`npx tsc --noEmit`), zero ESLint errors (`npm run lint`), and successful SSG generation (434/434 pages in `npm run build`).
+
+- [x] **TODO-240**: **Article #47** — `fulgazi-patient-guide`
+  - **Bangla Title**: ফুলগাজীর রোগীদের জন্য ফেনী স্বাস্থ্যসেবা ও ডাক্তার গাইড: যাতায়াত, জরুরি সেবা ও ১০-৩০% ডিসকাউন্ট
+  - **English Title**: Fulgazi Patient Healthcare Guide: Feni Sadar Hospital Transport, Emergency Doctors & Discounts
+  - **Primary Keywords**: ফুলগাজী স্বাস্থ্যসেবা, ফুলগাজী থেকে ফেনী সদর হাসপাতাল, ফুলগাজী ডাক্তার, Fulgazi patient guide Feni, Fulgazi to Feni hospital transport
+  - **Target Intent**: Route from Fulgazi/Munshirhat (20-30 min), emergency referral criteria, local clinics vs Feni Sadar partner centers, 10-30% member discount guidance.
+  - **Details**: Built modular architecture across `src/data/blog/posts/fulgaziPricing.ts`, `src/data/blog/posts/fulgaziHospitals.ts`, and `src/data/blog/posts/fulgaziPatientGuide.ts`. Configured local Fulgazi 50-bed Upazila Health Complex, Munshirhat commercial health hub, private clinics (`partnerStatus: false`), visiting specialist doctor schedules, highway transport route & fares (CNG ৳40-60, Bus ৳30-50, Ambulance ৳1,000-1,500, 20-30 min to Feni Sadar), referral guidance to verified Feni Sadar partner facilities for 10-30% member discounts, registered in `blogPosts.ts`, `clusterNodesProcedures.ts`, and `departmentBlogMapping.ts`. Strictly adheres to 500-line code limit on all files (118 lines, 173 lines, 355 lines). Verified cleanly with zero TypeScript errors (`npx tsc --noEmit`), zero ESLint warnings (`npm run lint`), and successful static site generation (438/438 pages in `npm run build`).
+
+---
+
+### 🧪 Cluster 2: High-Search Diagnostic Lab Tests & Investigations
+
+- [x] **TODO-241**: **Article #48** — `feni-blood-test-cbc-cost-guide`
+  - **Bangla Title**: ফেনীতে সিবিসি (CBC) রক্তের পরীক্ষা খরচ, ল্যাব তালিকা ও রিপোর্ট বোঝার সহজ উপায়
+  - **English Title**: CBC Blood Test Cost in Feni: Best Diagnostic Labs, Normal Range & Report Guide
+  - **Primary Keywords**: ফেনীতে সিবিসি টেস্ট খরচ, রক্তের সিবিসি পরীক্ষা ফেনী, সিবিসি রিপোর্ট ফেনী, CBC test cost in Feni, Complete Blood Count test price Feni
+  - **Target Intent**: High-volume routine prescription query; test breakdown (Hb, WBC, Platelets, ESR), preparation, top diagnostic centers in Feni Sadar, 10-30% member discount.
+  - **Details**: Built modular architecture across `src/data/blog/posts/feniCbcPricing.ts`, `src/data/blog/posts/feniCbcCenters.ts`, and `src/data/blog/posts/feniCbcBloodTestGuide.ts`. Configured comprehensive pricing for 15 hematology tests (Automated 5-Part CBC with ESR ৳৪০০-৬০০, routine CBC ৳৩৫০-৫০০, emergency platelet stat ৳১৫০-২৫০, PBF ৳৬০০-৯০০, CRP ৳৫০০-৮০০, Ferritin ৳৮০০-১,২০০), comparison table and in-depth reviews of Feni Sadar pathology labs with verified partner status (`Pacific Health Care`, `Life Care Diagnostic`, `Imperial Neurocare`, `Feni Max`, `Al-Aqsa Hospital`), strict 10-30% member discount badges, non-fasting preparation rules, 4-step blood collection guide, 5 lab selection criteria, 8 conversational bilingual FAQs, registered in `blogPosts.ts`, `clusterNodesProcedures.ts`, `BlogSpecializedSections.tsx`, `BlogTocList.tsx`, and `BlogPostDetailView.tsx`. All created and modified files strictly satisfy the 500-line code limit (146 lines, 353 lines, 225 lines). Verified cleanly with `npx tsc --noEmit` (0 errors), `npm run lint` (0 errors, 0 warnings), and successful static generation of all 439 pages (`npm run build`).
+
+- [x] **TODO-242**: **Article #49** — `feni-lipid-profile-cholesterol-test-guide`
+  - **Bangla Title**: ফেনীতে লিপিড প্রোফাইল (রক্তে চর্বি/কোলেস্টেরল) টেস্ট খরচ, ফাস্টিং নিয়ম ও সেরা ল্যাব
+  - **English Title**: Lipid Profile & Cholesterol Test Cost in Feni: Fasting Rules, Best Labs & Report Guide
+  - **Primary Keywords**: লিপিড প্রোফাইল টেস্ট খরচ ফেনী, কোলেস্টেরল পরীক্ষা ফেনী, Lipid profile test cost in Feni, Cholesterol test price Feni
+  - **Target Intent**: Fasting guidelines (10-12 hrs), HDL/LDL/Triglycerides explanation, local lab pricing ranges, heart specialist consultation links.
+  - **Details**: Built modular architecture across `src/data/blog/posts/feniLipidPricing.ts`, `src/data/blog/posts/feniLipidCenters.ts`, and `src/data/blog/posts/feniLipidProfileGuide.ts`. Configured comprehensive pricing for 12 clinical chemistry lipid and cardiac investigations (Complete Lipid Profile ৳৬০০-১,০০০, Total Cholesterol ৳২০০-৩৫০, Triglycerides ৳২৫০-৪০০, HDL ৳৩০০-৪৫০, LDL ৳৩০০-৫০০, hs-CRP ৳৮০০-১,২০০, Statin Safety monitoring bundle ৳১,১০০-১,৮০০, Diabetic dyslipidemia bundle ৳১,২০০-১,৯০০, Troponin I stat ৳১,০০০-১,৫০০), comparison table and in-depth reviews of Feni Sadar pathology labs with verified partner status (`Pacific Health Care`, `Life Care Diagnostic`, `Imperial Neurocare`, `Feni Max`, `Al-Aqsa Hospital`), strict 10-30% member discount badges, 10-12 hour fasting instructions, 4-step blood collection guide, 5 lab selection criteria, 8 conversational bilingual FAQs, registered in `blogPosts.ts`, `clusterNodesProcedures.ts`, `departmentBlogMapping.ts`, `BlogSpecializedSections.tsx`, `BlogTocList.tsx`, and `BlogPostDetailView.tsx`. All created and modified files strictly satisfy the 500-line code limit (135 lines, 342 lines, 209 lines). Cleanly verified with `npx tsc --noEmit` (0 errors), `npm run lint` (0 errors, 0 warnings), and successful static generation of all 440 pages (`npm run build`).
+
+- [x] **TODO-243**: **Article #50** — `feni-thyroid-tsh-test-cost-guide`
+  - **Bangla Title**: ফেনীতে থাইরয়েড টেস্ট (TSH, T3, T4) খরচ, লক্ষণ ও বিশ্বস্ত ডায়াগনস্টিক সেন্টার
+  - **English Title**: Thyroid Hormone Test (TSH, FT3, FT4) Cost in Feni: Symptoms, Best Diagnostic Labs & Prices
+  - **Primary Keywords**: থাইরয়েড টেস্ট খরচ ফেনী, টিএসএইচ পরীক্ষা ফেনী, Thyroid test price in Feni, TSH test cost Feni, Thyroid specialist in Feni
+  - **Target Intent**: Huge search volume among females; hypothyroid/hyperthyroid indicators, lab pricing, linking with hormone/endocrinology specialists.
+  - **Details**: Built modular architecture across `src/data/blog/posts/feniThyroidPricing.ts`, `src/data/blog/posts/feniThyroidCenters.ts`, and `src/data/blog/posts/feniThyroidTestGuide.ts`. Configured comprehensive pricing for 12 thyroid and hormone investigations (TSH ৳৪০০-৬৫০, FT4 ৳৫০০-৮০০, FT3 ৳৫০০-৮০০, Complete Thyroid Combo ৳১,২০০-২,০০০, Total T3 ৳৪০০-৬০০, Total T4 ৳৪০০-৬০০, Maternal Thyroid combo ৳৯০০-১,৪০০, Anti-TPO ৳১,২০০-১,৮০০, Anti-TG ৳১,৩০০-১,৯০০, Serum TG ৳১,২০০-১,৭০০, Thyroid USG with Color Doppler ৳১,০০০-১,৬০০, USG-guided FNAC ৳১,৫০০-২,২০০), comparison table and in-depth reviews of Feni Sadar pathology labs with verified partner status (`Pacific Health Care`, `Life Care Diagnostic`, `Imperial Neurocare`, `Feni Max`, `Al-Aqsa Hospital`), strict 10-30% member discount badges, morning diurnal collection instructions, 4-step blood draw and medication guide, 5 lab selection criteria, 8 conversational bilingual FAQs, registered in `blogPosts.ts`, `clusterNodesProcedures.ts`, `departmentBlogMapping.ts`, `BlogSpecializedSections.tsx`, `BlogTocList.tsx`, and `BlogPostDetailView.tsx`. All created and modified files strictly satisfy the 500-line code limit (131 lines, 336 lines, 212 lines). Cleanly verified with `npx tsc --noEmit` (0 errors), `npm run lint` (0 errors, 0 warnings), and successful static generation of all 441 pages (`npm run build`).
+
+- [x] **TODO-244**: **Article #51** — `feni-hba1c-diabetes-test-guide`
+  - **Bangla Title**: ফেনীতে HbA1c (৩ মাসের গড় ডায়াবেটিস) ও ব্লাড সুগার টেস্ট খরচ ও ডায়াবেটিস গাইড
+  - **English Title**: HbA1c Diabetes Test Cost in Feni: 3-Month Average Blood Sugar Test, Labs & Normal Range
+  - **Primary Keywords**: ফেনীতে এইচবিএ১সি টেস্ট খরচ, ডায়াবেটিস পরীক্ষা ফেনী, ব্লাড সুগার টেস্ট, HbA1c test price Feni, Fasting blood glucose test Feni
+  - **Target Intent**: Captures diabetic patients in Feni; fasting vs PP vs HbA1c, Feni Diabetic Hospital and top private lab test comparison.
+  - **Details**: Built modular architecture across `src/data/blog/posts/feniHba1cPricing.ts`, `src/data/blog/posts/feniHba1cCenters.ts`, and `src/data/blog/posts/feniHba1cDiabetesGuide.ts`. Configured comprehensive pricing for 12 clinical biochemistry and diabetes investigations (HbA1c by HPLC ৳৭০০-১,১০০, Fasting Blood Sugar ৳৮০-১৫০, 2hABF / PPBS ৳৮০-১৫০, Random Blood Sugar ৳৮০-১৩০, OGTT 75g ৳৩০০-৫০০, Gestational GDM 3-sample profile ৳৪৫০-৭০০, Complete Diabetic Health Profile ৳১,৮০০-২,৮০০, Urine Microalbumin/ACR ৳৬০০-১,০০০, Serum Fasting C-Peptide ৳১,২০০-১,৮০০, Fasting Serum Insulin ৳১,০০০-১,৬০০, Urinalysis for Glucose & Ketones ৳১০০-২০০, Diabetic Neuropathy & Foot Ulcer panel ৳১,৪০০-২,২০০), comparison table and in-depth reviews of Feni Sadar pathology labs with verified partner status (`Pacific Health Care`, `Life Care Diagnostic`, `Imperial Neurocare`, `Feni Max`, `Al-Aqsa Hospital`), non-partner facilities (`Feni Diabetic Association & General Hospital`, `Popular Diagnostic`, `LabAid Diagnostic`), strict 10-30% member discount badges, 8-10 hour fasting vs unfasted HbA1c instructions, phlebotomy tube selection (EDTA purple top & grey fluoride tube), 4-step blood collection guide, 5 lab selection criteria, 8 conversational bilingual FAQs, registered in `blogPosts.ts`, `clusterNodesProcedures.ts`, `departmentBlogMapping.ts`, `BlogSpecializedSections.tsx`, `BlogTocList.tsx`, and `BlogPostDetailView.tsx`. All created and modified files strictly satisfy the 500-line code limit (131 lines, 437 lines, 214 lines). Cleanly verified with `npx tsc --noEmit` (0 errors), `npm run lint` (0 errors, 0 warnings), and successful static generation of all 442 pages (`npm run build`).
+
+- [x] **TODO-245**: **Article #52** — `feni-liver-function-sgpt-test-guide`
+  - **Bangla Title**: ফেনীতে লিভার ফাংশন টেস্ট (SGPT, SGOT, Bilirubin) খরচ, জন্ডিস ও ফ্যাটি লিভার গাইড
+  - **English Title**: Liver Function Test (LFT, SGPT, Bilirubin) Cost in Feni: Jaundice, Fatty Liver & Best Labs
+  - **Primary Keywords**: লিভার ফাংশন টেস্ট খরচ ফেনী, এসজিপিটি পরীক্ষা ফেনী, জন্ডিস টেস্ট, Liver function test cost Feni, SGPT test price Feni
+  - **Target Intent**: Viral hepatitis, jaundice, alcohol/fatty liver test inquiries, preparation, diagnostic pricing and gastroenterologist referrals.
+  - **Details**: Built modular architecture across `src/data/blog/posts/feniLftPricing.ts`, `src/data/blog/posts/feniLftCenters.ts`, and `src/data/blog/posts/feniLftGuide.ts`. Configured comprehensive pricing for 12 clinical chemistry and hepatic investigations (Complete LFT 8-parameter profile ৳৮০০-১,৪০০, SGPT/ALT ৳২০০-৩৫০, SGOT/AST ৳২০০-৩৫০, Serum Bilirubin Total/Direct/Indirect ৳২৫০-৪০০, Alkaline Phosphatase ৳২৫০-৪০০, Gamma-GT ৳৩৫০-৬০০, Total Protein & Albumin with A/G ratio ৳৩০০-৫০০, Prothrombin Time with INR ৳৫০০-৮০০, HBsAg screening ৳৩০০-৬০০, Anti-HCV screening ৳৪০০-৮০০, USG Whole Abdomen for Fatty Liver grading ৳৮০০-১,৪০০, Comprehensive Liver Care Package ৳২,২০০-৩,৫০০), comparison table and in-depth reviews of Feni Sadar pathology labs with verified partner status (`Pacific Health Care`, `Life Care Diagnostic`, `Imperial Neurocare`, `Feni Max`, `Al-Aqsa Hospital`), non-partner facilities (`Popular Diagnostic`, `LabAid Diagnostic`), strict 10-30% member discount badges, 8-10 hour fasting instructions for LFT & ultrasound, clot activator gel tube collection protocol, 4-step blood collection guide, 5 lab selection criteria, 8 conversational bilingual FAQs, registered in `blogPosts.ts`, `clusterNodesProcedures.ts`, `departmentBlogMapping.ts`, `BlogSpecializedSections.tsx`, `BlogTocList.tsx`, and `BlogPostDetailView.tsx`. All created and modified files strictly satisfy the 500-line code limit (131 lines, 382 lines, 215 lines). Cleanly verified with `npx tsc --noEmit` (0 errors), `npm run lint` (0 errors, 0 warnings), and successful static generation of all 443 pages (`npm run build`).
+
+- [x] **TODO-246**: **Article #53** — `feni-kidney-creatinine-urea-test-guide`
+  - **Bangla Title**: ফেনীতে সিরাম ক্রিয়েটিনিন ও কিডনি টেস্ট খরচ, স্বাভাবিক মাত্রা ও সেরা ডায়াগনস্টিক ল্যাব
+  - **English Title**: Serum Creatinine & Kidney Function Test Cost in Feni: Normal Range, Labs & Renal Care
+  - **Primary Keywords**: ক্রিয়েটিনিন টেস্ট খরচ ফেনী, কিডনি পরীক্ষা ফেনী, ইউরিয়া টেস্ট, Serum creatinine test cost Feni, Kidney function test price Feni
+  - **Target Intent**: Routine renal health screening, eGFR, urea, creatinine values, nephrologist chamber references.
+  - **Details**: Built modular architecture across `src/data/blog/posts/feniKidneyPricing.ts`, `src/data/blog/posts/feniKidneyCenters.ts`, and `src/data/blog/posts/feniKidneyTestGuide.ts`. Configured comprehensive pricing for 12 clinical chemistry and renal investigations (Serum Creatinine ৳২০০-৩৫০, Blood Urea & BUN ৳২০০-৩৫০, Complete KFT/RFT 6-parameter profile ৳১,০০০-১,৮০০, Serum Uric Acid ৳২৫০-৪০০, Serum Electrolytes ISE ৳৬০০-১,০০০, Serum Calcium & Phosphorus ৳৫০০-৮০০, eGFR calculation by CKD-EPI ৳১৫০-৩০০, Urine R/M/E ৳১০০-২০০, Spot Urine ACR for diabetic nephropathy ৳৬০০-১,০০০, 24-Hour Urinary Total Protein ৳৪০০-৭০০, USG of KUB & Prostate with PVR ৳৮০০-১,৪০০, Comprehensive Kidney Screening Package ৳২,২০০-৩,৬০০), comparison table and in-depth reviews of Feni Sadar pathology labs with verified partner status (`Pacific Health Care`, `Life Care Diagnostic`, `Imperial Neurocare`, `Feni Max`, `Al-Aqsa Hospital`), non-partner facilities (`Popular Diagnostic`, `LabAid Diagnostic`), strict 10-30% member discount badges, normal hydration and red meat moderation instructions, SST clot activator tube collection protocol, 4-step blood collection guide, 5 lab selection criteria, 8 conversational bilingual FAQs, registered in `blogPosts.ts`, `clusterNodesProcedures.ts`, `departmentBlogMapping.ts`, `BlogSpecializedSections.tsx`, `BlogTocList.tsx`, and `BlogPostDetailView.tsx`. All created and modified files strictly satisfy the 500-line code limit (132 lines, 366 lines, 215 lines). Cleanly verified with `npx tsc --noEmit` (0 errors), `npm run lint` (0 errors, 0 warnings), and successful static generation of all 444 pages (`npm run build`).
+
+- [x] **TODO-247**: **Article #54** — `feni-urine-re-culture-test-guide`
+  - **Bangla Title**: ফেনীতে প্রস্রাব পরীক্ষা (Urine R/E ও Culture) খরচ, ইউটিআই লক্ষণ ও সঠিক নমুনা সংগ্রহ নিয়ম
+  - **English Title**: Urine R/E & Culture Sensitivity Test Cost in Feni: UTI Symptoms, Best Labs & Sample Rules
+  - **Primary Keywords**: প্রস্রাব পরীক্ষা খরচ ফেনী, ইউরিন কালচার টেস্ট ফেনী, ইউটিআই টেস্ট, Urine RE test cost Feni, Urine culture sensitivity price Feni
+  - **Target Intent**: High recurring search for urinary tract infections (UTI), mid-stream clean catch instructions, antibiotic sensitivity reporting.
+  - **Details**: Built modular architecture across `src/data/blog/posts/feniUrinePricing.ts`, `src/data/blog/posts/feniUrineCenters.ts`, and `src/data/blog/posts/feniUrineTestGuide.ts`. Configured comprehensive pricing for 12 urinalysis and microbiology investigations (Urine R/M/E ৳১০০-২০০, Automated Urine Strip with Flow Cytometry ৳৩০০-৫০০, Urine hCG Pregnancy Spot Card Test ৳১০০-২০০, Urine Ketone Bodies ৳১০০-২০০, Urine Culture & Sensitivity with AST panel ৳৬০০-১,০০০, Pediatric Urine Bag Collection C/S ৳৭৫০-১,২০০, Spot Urine Microalbumin & ACR ৳৬০০-১,০০০, 24-Hour Urinary Total Protein ৳৪০০-৭০০, 24-Hour Urine Stone Risk panel ৳৬০০-১,১০০, Urine Bence Jones Protein ৳৪০০-৭০০, Urgent UTI Diagnostic Combo with CBC ৳১,১০০-১,৮০০, Recurrent UTI & Stone Workup with USG KUB ৳২,০০০-৩,২০০), comparison table and in-depth reviews of Feni Sadar pathology labs with verified partner status (`Pacific Health Care`, `Life Care Diagnostic`, `Imperial Neurocare`, `Feni Max`, `Al-Aqsa Hospital`), non-partner benchmark facilities (`Popular Diagnostic`, `LabAid Diagnostic`, `Feni Diabetic Hospital`), strict 10-30% member discount badges, mid-stream clean catch urine collection rules, sterile screw-cap container protocol, 4-step collection guide, 5 lab selection criteria, 8 conversational bilingual FAQs, registered in `blogPosts.ts`, `clusterNodesProcedures.ts`, `departmentBlogMapping.ts`, `BlogSpecializedSections.tsx`, `BlogTocList.tsx`, and `BlogPostDetailView.tsx`. All created and modified files strictly satisfy the 500-line code limit (133 lines, 403 lines, 217 lines). Cleanly verified with `npx tsc --noEmit` (0 errors), `npm run lint` (0 errors, 0 warnings), and successful static generation of all 445 pages (`npm run build`).
+
+- [x] **TODO-248**: **Article #55** — `feni-x-ray-digital-dr-cost-guide`
+  - **Bangla Title**: ফেনীতে ডিজিটাল এক্স-রে (DR X-Ray) খরচ, বিভিন্ন অঙ্গের ভিউ ও সেরা ডায়াগনস্টিক সেন্টার
+  - **English Title**: Digital X-Ray (DR / CR) Cost in Feni: Chest, Bone & Joint Views, Best Centers & Prices
+  - **Primary Keywords**: এক্স-রে খরচ ফেনী, ডিজিটাল এক্স-রে ফেনী, বুকের এক্স-রে, Digital X-Ray cost in Feni, Chest X-Ray price Feni
+  - **Target Intent**: Orthopedic injuries, chest/lung exams, digital flat-panel DR vs traditional film, pricing table and partner discount badge.
+  - **Details**: Built modular architecture across `src/data/blog/posts/feniXRayPricing.ts`, `src/data/blog/posts/feniXRayCenters.ts`, and `src/data/blog/posts/feniXRayGuide.ts`. Configured comprehensive pricing for 16 digital radiography investigations (Chest X-Ray P/A ৳৩০০-৫০০, Chest 2-view P/A & Lat ৳৬০০-৯৫০, PNS Water's view ৳৩৫০-৫৫০, Cervical Spine 2 views ৳৬০০-১,০০০, L/S Spine 2 views ৳৬০০-১,০০০, Thoracic Spine ৳৬০০-১,০০০, Single Knee ৳৩৫০-৬০০, Both Knees Standing ৳৬০০-১,১০০, Pelvis with both hips ৳৪০০-৭০০, Shoulder Joint ৳৪০০-৭০০, Hand/Wrist/Elbow ৳৩৫০-৬০০, Ankle/Foot ৳৩৫০-৬০০, Abdomen Plain/Erect ৳৪০০-৭০০, KUB ৳৪০০-৭০০, Barium Swallow/Meal ৳১,৫০০-২,৬০০, Emergency Portable Bedside DR X-Ray ৳৮০০-১,৫০০), comparison table and in-depth reviews of Feni Sadar imaging centers with verified partner status (`Pacific Health Care`, `Life Care Diagnostic`, `Imperial Neurocare`, `Feni Max`, `Al-Aqsa Hospital`), non-partner benchmark facilities (`Popular Diagnostic`, `LabAid Diagnostic`, `Feni Diabetic Hospital`), strict 10-30% member discount badges, direct flat-panel DR vs CR technology comparison, 4-step preparation and scan guide (metal removal, lead apron shielding, breath holding, film delivery), 5 center selection criteria, 8 conversational bilingual FAQs, registered in `blogPosts.ts`, `clusterNodesProcedures.ts`, `departmentBlogMapping.ts`, `BlogSpecializedSections.tsx`, `BlogTocList.tsx`, and `BlogPostDetailView.tsx`. All created and modified files strictly satisfy the 500-line code limit (154 lines, 387 lines, 214 lines). Cleanly verified with `npx tsc --noEmit` (0 errors), `npm run lint` (0 errors, 0 warnings), and successful static generation of all 446 pages (`npm run build`).
+
+- [x] **TODO-249**: **Article #56** — `feni-hormone-test-fertility-guide`
+  - **Bangla Title**: ফেনীতে হরমোন টেস্ট (FSH, LH, Prolactin, Testosterone) খরচ ও প্রজনন স্বাস্থ্য পরীক্ষা
+  - **English Title**: Female & Male Hormone Test Cost in Feni: Fertility Blood Tests, Labs & Specialist Guide
+  - **Primary Keywords**: হরমোন টেস্ট খরচ ফেনী, প্রোল্যাকটিন টেস্ট, টেস্টোস্টেরন পরীক্ষা, Hormone test cost in Feni, Fertility hormone profile price Feni
+  - **Target Intent**: Reproductive health, PCOD/PCOS screening, male/female fertility investigations, testing labs and gynecology/urology links.
+  - **Details**: Built modular architecture across `src/data/blog/posts/feniHormonePricing.ts`, `src/data/blog/posts/feniHormoneCenters.ts`, and `src/data/blog/posts/feniHormoneGuide.ts`. Configured comprehensive pricing for 16 reproductive endocrinology investigations (Serum Prolactin ৳৫০০-৮০০, Serum FSH ৳৫০০-৮৫০, Serum LH ৳৫০০-৮৫০, Serum Estradiol E2 ৳৬০০-১,০০০, Serum Progesterone Day 21 ৳৬০০-১,০০০, Serum AMH ৳১,৫০০-২,৬০০, Serum Total Testosterone ৳৬০০-১,০০০, Serum Free Testosterone ৳১,০০০-১,৮০০, Serum DHEA-S ৳১,০০০-১,৮০০, Quantitative Beta-hCG ৳৫০০-৮৫০, Serum TSH ৳৩০০-৫০০, Serum Morning Cortisol ৳৬০০-১,০০০, Basic Female Fertility Profile ৳১,৮০০-২,৯০০, Comprehensive PCOS Panel ৳২,৮০০-৪,৫০০, Male Fertility Hormone Profile ৳১,৮০০-৩,০০০, Advanced Infertility & Ovarian Reserve Workup ৳৩,৮০০-৬,২০০), comparison table and in-depth reviews of Feni Sadar immunoassay labs with verified partner status (`Pacific Health Care`, `Life Care Diagnostic`, `Imperial Neurocare`, `Feni Max`, `Al-Aqsa Hospital`), non-partner benchmark facilities (`Popular Diagnostic`, `LabAid Diagnostic`, `Feni Diabetic Hospital`), strict 10-30% member discount badges, Day 2-3 follicular baseline sample collection rules, prolactin rest and stress avoidance protocol, morning 8-10 AM fasting for testosterone, 4-step preparation guide, 5 lab selection criteria, 8 conversational bilingual FAQs, registered in `blogPosts.ts`, `clusterNodesProcedures.ts`, `departmentBlogMapping.ts`, `BlogSpecializedSections.tsx`, `BlogTocList.tsx`, and `BlogPostDetailView.tsx`. All created and modified files strictly satisfy the 500-line code limit (173 lines, 405 lines, 214 lines). Cleanly verified with `npx tsc --noEmit` (0 errors), `npm run lint` (0 errors, 0 warnings), and successful static generation of all 447 pages (`npm run build`).
+
+- [x] **TODO-250**: **Article #57** — `feni-pap-smear-cervical-cancer-screening-guide`
+  - **Bangla Title**: ফেনীতে প্যাপ স্মিয়ার (Pap Smear) ও জরায়ুমুখের ক্যান্সার স্ক্রিনিং টেস্ট খরচ ও বিশেষজ্ঞ সেন্টার
+  - **English Title**: Pap Smear & Cervical Cancer Screening Test in Feni: Cost, Procedure & Best Gynecology Centers
+  - **Primary Keywords**: প্যাপ স্মিয়ার টেস্ট খরচ ফেনী, জরায়ুমুখের ক্যান্সার পরীক্ষা ফেনী, Pap smear test cost Feni, Cervical cancer screening Feni
+  - **Target Intent**: Preventive women's health screening, VIA test vs Pap smear, sample collection procedure, female doctors in Feni.
+  - **Details**: Built modular architecture across `src/data/blog/posts/feniPapSmearPricing.ts`, `src/data/blog/posts/feniPapSmearCenters.ts`, and `src/data/blog/posts/feniPapSmearGuide.ts`. Configured comprehensive pricing for 12 cervical cytopathology and screening investigations (Conventional Pap Smear ৳৬০০-১,০০০, Liquid-Based Cytology LBC/ThinPrep ৳১,৫০০-২,৫০০, High-Risk HPV DNA PCR ৳২,৫০০-৪,২০০, Co-Testing Combined Profile ৳৩,২০০-৫,০০০, VIA Screening Test ৳০-৪০০, Video Colposcopy ৳১,৫০০-২,৫০০, Cervical Punch Biopsy with Histopathology ৳১,৮০০-৩,০০০, Endocervical Curettage ECC ৳২,০০০-৩,৫০০, Transvaginal Ultrasound TVS ৳১,০০০-১,৮০০, Clinical Cusco Speculum & Pelvic Exam ৳৬০০-১,০০০, Vaginal Discharge Gram Stain ৳৩৫০-৬০০, Comprehensive Well-Woman Cervical Screening Package ৳২,৮০০-৪,৫০০), comparison table and in-depth reviews of Feni Sadar gynecology and pathology centers with verified partner status (`Pacific Health Care`, `Life Care Diagnostic`, `Imperial Neurocare`, `Feni Max`, `Al-Aqsa Hospital`), non-partner facilities (`Popular Diagnostic`, `LabAid Diagnostic`, `Feni 250-Bed General Hospital VIA Clinic`), strict 10-30% member discount badges, mid-cycle (10-20 days after menses onset) timing, 48-hour sexual abstinence, douching and vaginal medication restrictions, gentle Cusco speculum exam with female gynecologist/technologist in private suites, 4-step preparation guide, 5 lab selection criteria, 8 conversational bilingual FAQs, registered in `blogPosts.ts`, `clusterNodesProcedures.ts`, `departmentBlogMapping.ts`, `BlogSpecializedSections.tsx`, `BlogTocList.tsx`, and `BlogPostDetailView.tsx`. All created and modified files strictly satisfy the 500-line code limit (130 lines, 387 lines, 214 lines). Cleanly verified with `npx tsc --noEmit` (0 errors), `npm run lint` (0 errors, 0 warnings), and successful static generation of all 448 pages (`npm run build`).
+
+- [x] **TODO-251**: **Article #58** — `feni-allergy-asthma-test-guide`
+  - **Bangla Title**: ফেনীতে অ্যালার্জি টেস্ট (Total IgE, Skin Prick) ও অ্যাজমা স্পাইরোমেট্রি টেস্ট খরচ
+  - **English Title**: Allergy Test & Asthma Spirometry (PFT) Cost in Feni: Best Labs & Pulmonary Specialists
+  - **Primary Keywords**: অ্যালার্জি টেস্ট খরচ ফেনী, রক্তে আইজিই টেস্ট, স্পাইরোমেট্রি টেস্ট ফেনী, Allergy test cost in Feni, Spirometry PFT cost Feni
+  - **Target Intent**: Seasonal dust, breathing difficulty, food/environmental allergy testing, pulmonary function tests.
+  - **Details**: Built modular architecture across `src/data/blog/posts/feniAllergyAsthmaPricing.ts`, `src/data/blog/posts/feniAllergyAsthmaCenters.ts`, and `src/data/blog/posts/feniAllergyAsthmaGuide.ts`. Configured comprehensive pricing for 13 pulmonary and allergy investigations (Serum Total IgE Antibody ৳৫০০-৮০০, Baseline Computerized Spirometry ৳৮০০-১,৪০০, Spirometry with Bronchodilator Reversibility BDR ৳১,২০০-১,৮০০, Specific IgE Inhalant Allergen Panel ৳২,৫০০-৪,২০০, Specific IgE Food Allergen Panel ৳২,৫০০-৪,৫০০, Skin Prick Test SPT ৳১,৫০০-২,৮০০, Absolute Eosinophil Count AEC ৳২০০-৩৫০, Complete Blood Count with ESR ৳৩০০-৪৫০, Fractional Exhaled Nitric Oxide FeNO ৳১,৮০০-৩,০০০, Peak Flow Rate PEFR ৳২০০-৪০০, Digital Chest X-Ray PA View ৳৪৫০-৭০০, Sputum Cytology for Eosinophils ৳৩৫০-৬০০, Comprehensive Asthma & Allergy Screening Bundle ৳২,৮০০-৪,৫০০), comparison matrix and in-depth reviews of Feni Sadar pulmonary and allergy diagnostic facilities with verified partner status (`Pacific Health Care`, `Life Care Diagnostic`, `Imperial Neurocare`, `Feni Max`, `Al-Aqsa Hospital`), non-partner benchmark centers (`Popular Diagnostic`, `LabAid Diagnostic`, `Feni 250-Bed General Hospital Asthma Clinic`), strict 10-30% member discount badges, 5-7 day antihistamine withdrawal protocol for Skin Prick Test, 4-6 hour bronchodilator inhaler withholding rule for spirometry reversibility, 6-second maximal forced exhalation technique with 3 reproducible efforts, 4-step preparation guide, 5 lab selection criteria, 8 conversational bilingual FAQs, registered in `blogPosts.ts`, `clusterNodesProcedures.ts`, `departmentBlogMapping.ts`, `BlogSpecializedSections.tsx`, `BlogTocList.tsx`, and `BlogPostDetailView.tsx`. All created and modified files strictly satisfy the 500-line code limit (135 lines, 485 lines, 213 lines). Cleanly verified with `npx tsc --noEmit` (0 errors), `npm run lint` (0 errors, 0 warnings), and successful static generation of all 449 pages (`npm run build`).
+
+- [x] **TODO-252**: **Article #59** — `feni-semen-analysis-infertility-test-guide`
+  - **Bangla Title**: ফেনীতে সিমেন অ্যানালাইসিস (শুক্রাণু পরীক্ষা) খরচ, প্রস্তুতি ও বিশ্বস্ত ল্যাব গাইড
+  - **English Title**: Semen Analysis Test Cost in Feni: Male Fertility Evaluation, Preparation & Best Diagnostic Labs
+  - **Primary Keywords**: বীর্য পরীক্ষা খরচ ফেনী, সিমেন এনালাইসিস টেস্ট ফেনী, Semen analysis test cost Feni, Sperm count test price Feni
+  - **Target Intent**: Discreet male fertility screening, abstinence days rule, sperm count/motility/morphology interpretation, partner lab facilities.
+  - **Details**: Built modular architecture across `src/data/blog/posts/feniSemenAnalysisPricing.ts`, `src/data/blog/posts/feniSemenAnalysisCenters.ts`, and `src/data/blog/posts/feniSemenAnalysisGuide.ts`. Configured comprehensive pricing for 13 reproductive and semen investigations (Routine Semen Analysis / Semen R/E ৳৬০০-১,০০০, Computer-Assisted Semen Analysis CASA ৳১,২০০-২,০০০, Sperm Concentration & Total Count ৳৫০০-৮০০, Sperm Motility Grading PR/NP/IM ৳৫০০-৮০০, Kruger Strict Sperm Morphology ৳৮০০-১,৪০০, Eosin-Nigrosin Sperm Vitality Test ৳৬০০-১,০০০, Seminal Fructose Qualitative/Quantitative Test ৳৫০০-৯০০, Semen Culture & Antimicrobial Sensitivity C&S ৳৮০০-১,২০০, Peroxidase Test for Leukocytospermia ৳৪০০-৭০০, Scrotal Color Doppler USG for Varicocele ৳১,৫০০-২,৫০০, Male Reproductive Hormone Panel Testosterone/FSH/LH/Prolactin ৳২,৫০০-৪,২০০, Anti-Sperm Antibodies MAR Test ৳১,৮০০-৩,০০০, Comprehensive Male Fertility Workup Bundle ৳৩,৫০০-৫,৫০০), comparison matrix and in-depth reviews of Feni Sadar reproductive pathology facilities with verified partner status (`Pacific Health Care`, `Life Care Diagnostic`, `Imperial Neurocare`, `Feni Max`, `Al-Aqsa Hospital`), non-partner benchmark centers (`Popular Diagnostic`, `LabAid Diagnostic`, `Feni 250-Bed General Hospital Pathology & Reproductive Clinic`), strict 10-30% member discount badges, 2-7 day (ideal 3-5 day) abstinence window rule, on-site private collection room preference, 30-45 minute transport protocol keeping sample at 37°C body temperature (under armpit / inner pocket), 4-step preparation guide, 5 lab selection criteria, 8 conversational bilingual FAQs, registered in `blogPosts.ts`, `clusterNodesProcedures.ts`, `departmentBlogMapping.ts`, `BlogSpecializedSections.tsx`, `BlogTocList.tsx`, `BlogPostDetailView.tsx`, and `public/llms-full.txt`. All created and modified files strictly satisfy the 500-line code limit (135 lines, 447 lines, 212 lines, etc.). Cleanly verified with `npx tsc --noEmit` (0 errors), `npm run lint` (0 errors, 0 warnings), and successful static generation of all 450 pages (`npm run build`).
+
+- [x] **TODO-253**: **Article #60** — `feni-biopsy-fnac-tumor-test-guide`
+  - **Bangla Title**: ফেনীতে এফএনএসি (FNAC) ও বায়োপসি (Biopsy) টিউমার টেস্ট খরচ ও হিস্টোপ্যাথলজি ল্যাব
+  - **English Title**: FNAC & Biopsy Test Cost in Feni: Lump & Tumor Diagnosis, Best Labs & Histopathology Guide
+  - **Primary Keywords**: বায়োপসি টেস্ট খরচ ফেনী, এফএনএসি পরীক্ষা ফেনী, টিউমার টেস্ট, Biopsy test cost Feni, FNAC test price in Feni
+  - **Target Intent**: Neck lump, breast lump, lymph node diagnosis, sample collection vs histopathology analysis, cancer screening protocols.
+  - **Details**: Built modular architecture across `src/data/blog/posts/feniBiopsyFnacPricing.ts`, `src/data/blog/posts/feniBiopsyFnacCenters.ts`, and `src/data/blog/posts/feniBiopsyFnacGuide.ts`. Configured comprehensive pricing for 14 tumor, cytopathology, biopsy, and histopathology investigations (FNAC Superficial Lump ৳৮০০-১,৫০০, USG-Guided FNAC Deep Mass/Thyroid ৳১,৮০০-৩,০০০, Tru-Cut Core Needle Biopsy ৳২,৫০০-৪,৫০০, USG-Guided Core Needle Biopsy ৳৩,৫০০-৫,৫০০, Excisional Biopsy with Complete Histopathology ৳২,৫০০-৪,৫০০, Incisional Biopsy with Histopathology ৳২,০০০-৩,৫০০, Skin Punch Biopsy ৳১,৫০০-২,৮০০, Endoscopic/Colonoscopic Mucosal Biopsy ৳১,২০০-২,২০০, Small Biopsy Specimen Histopathology ৳১,২০০-২,২০০, Large/Radical Surgical Specimen Histopathology ৳২,৫০০-৫,০০০, Pleural/Ascitic Fluid Cytology for Malignant Cells ৳৮০০-১,৫০০, Immunohistochemistry IHC Panel ৳৫,০০০-৯,৫০০, Bone Marrow Aspiration & Trephine Biopsy ৳৩,৫০০-৬,৫০০, Comprehensive Lump Evaluation Bundle ৳৩,২০০-৫,৫০০), comparison matrix and in-depth reviews of Feni Sadar pathology facilities with verified partner status (`Pacific Health Care`, `Life Care Diagnostic`, `Imperial Neurocare`, `Feni Max`, `Al-Aqsa Hospital`), non-partner benchmark centers (`Popular Diagnostic`, `LabAid Diagnostic`, `Feni 250-Bed General Hospital Pathology Wing`), strict 10-30% member discount badges, 10% Neutral Buffered Formalin (NBF) fixation protocol (never plain water/saline), debunking cancer-spread biopsy myths, 4-step preparation guide, 5 lab selection criteria, 8 conversational bilingual FAQs, registered in `blogPosts.ts`, `clusterNodesProcedures.ts`, `departmentBlogMapping.ts`, `BlogSpecializedSections.tsx`, `BlogTocList.tsx`, `BlogPostDetailView.tsx`, and `public/llms-full.txt`. All created and modified files strictly satisfy the 500-line code limit (142 lines, 385 lines, 213 lines, 459 lines, 496 lines, etc.). Cleanly verified with `npx tsc --noEmit` (0 errors), `npm run lint` (0 errors, 0 warnings), and successful static generation of all 451 pages (`npm run build`).
+
+---
+
+### 🏥 Cluster 3: Common Surgeries, Operations & Interventions
+
+- [x] **TODO-254**: **Article #61** — `feni-cataract-phaco-eye-surgery-cost-guide`
+  - **Bangla Title**: ফেনীতে চোখের ছানি অপারেশন (ফ্যাকো সার্জারি) খরচ, লেন্সের প্রকারভেদ ও চক্ষু হাসপাতাল গাইড
+  - **English Title**: Cataract Surgery (Phaco Surgery) Cost in Feni: Lens Options, Best Eye Hospitals & Surgeons
+  - **Primary Keywords**: ফেনীতে চোখের ছানি অপারেশন খরচ, ফ্যাকো সার্জারি ফেনী, চোখের লেন্সের দাম ফেনী, Cataract surgery cost in Feni, Phaco eye surgery price Feni
+  - **Target Intent**: Extremely high volume among elderly; foldable/monofocal/multifocal lens options, day care eye surgery, post-op care.
+  - **Details**: Built modular architecture across `src/data/blog/posts/feniCataractPricing.ts`, `src/data/blog/posts/feniCataractCenters.ts`, `src/data/blog/posts/feniCataractEyeSurgeryGuide.ts`, and `src/data/blog/clusterNodesSurgeries.ts`. Configured comprehensive pricing for 14 cataract, lens, and diagnostic investigations (SICS with PMMA lens ৳৮,০০০-১২,০০০, Standard Phaco with Indian foldable lens ৳১৫,০০০-২২,০০০, US/European Hydrophobic Monofocal IOL ৳২২,০০০-৩৫,০০০, Aspheric Blue-Light Filtering lens ৳২৮,০০০-৪০,০০০, Toric Monofocal IOL ৳৩৮,০০০-৫৫,০০০, Multifocal IOL ৳৫০,০০০-৭৫,০০০, EDOF IOL ৳৬০,০০০-৯০,০০০, Trifocal Premium IOL ৳৭৫,০০০-১,১০,০০০, Nd:YAG Laser Capsulotomy ৳১,৫০০-২,৮০০, Pre-op Biometry package ৳১,২০০-২,০০০, OCT Scan ৳১,৫০০-২,৫০০, Eye B-Scan USG ৳৮০০-১,৪০০, Pre-op Surgical Blood & Cardiac Fitness panel ৳১,৫০০-২,৫০০, Post-op Drops & Shield kit ৳৮০০-১,৫০০), comparison matrix and in-depth reviews of Feni Sadar eye hospitals (`Feni Eye Hospital`, `Feni Vision Eye Hospital`, `Al-Ahad Eye Hospital`, `Feni Diabetic Association Eye Unit`, `Feni 250-Bed General Hospital Eye Department`) and verified partner facilities (`Pacific Health Care`, `Life Care Diagnostic`, `Imperial Neurocare`, `Feni Max`, `Al-Aqsa Hospital`), strict 10-30% member discount badges, stitchless 2.2mm micro-incision phaco protocol, lens selection breakdown, 4-step surgical and recovery journey, 5 eye center selection criteria, 8 conversational bilingual FAQs, registered in `blogPosts.ts`, `clusterNodes.ts`, `clusterNodesSurgeries.ts`, `departmentBlogMapping.ts`, `BlogSpecializedSections.tsx`, `BlogTocList.tsx`, `BlogPostDetailView.tsx`, and `public/llms-full.txt`. All created and modified files strictly satisfy the 500-line code limit. Cleanly verified with `npx tsc --noEmit` (0 errors), `npm run lint` (0 errors, 0 warnings), and successful static generation of all 452 pages (`npm run build`).
+
+- [x] **TODO-255**: **Article #62** — `feni-tonsil-adenoid-surgery-cost-guide`
+  - **Bangla Title**: ফেনীতে টনসিল ও এডিনয়েড অপারেশন খরচ, আধুনিক পদ্ধতি ও ইএনটি বিশেষজ্ঞ সার্জন
+  - **English Title**: Tonsil & Adenoid Surgery Cost in Feni: Modern Coblation/Dissection, Recovery & ENT Surgeons
+  - **Primary Keywords**: টনসিল অপারেশন খরচ ফেনী, এডিনয়েড সার্জারি ফেনী, টনসিল ডাক্তার, Tonsil surgery cost in Feni, Tonsillectomy price Feni
+  - **Target Intent**: Recurrent childhood tonsillitis, sleep apnea, coblation vs conventional surgery, surgery cost brackets, recovery timeline.
+  - **Details**: Built modular architecture across `src/data/blog/posts/feniTonsilPricing.ts`, `src/data/blog/posts/feniTonsilComparisonTable.ts`, `src/data/blog/posts/feniTonsilCenters.ts`, `src/data/blog/posts/feniTonsilSurgeryGuide.ts`, and `src/data/blog/clusterNodesSurgeries.ts`. Configured comprehensive pricing for 14 tonsil, adenoid, and ENT surgical investigations (Cold Knife Dissection Tonsillectomy ৳১২,০০০-১৮,০০০, Coblation Plasma Tonsillectomy ৳২৫,০০০-৩৫,০০০, Electrocautery Tonsillectomy ৳১৫,০০০-২২,০০০, Curettage Adenoidectomy ৳১০,০০০-১৬,০০০, Endoscopic Microdebrider Adenoidectomy ৳১৮,০০০-২৮,০০০, Combined Tonsil & Adenoid T&A package ৳২২,০০০-৩৪,০০০, Premium Coblation T&A Complete Surgery ৳৩২,০০০-৪৫,০০০, Myringotomy with Grommet Tube ৳৮,০০০-১৪,০০০, Combined Adenoidectomy + Grommets ৳২০,০০০-৩০,০০০, X-Ray Soft Tissue Nasopharynx Lateral ৳৪০০-৭০০, Diagnostic Video Nasopharyngoscopy ৳১,০০০-১,৮০০, Pre-op Blood & Coagulation profile ৳১,২০০-২,০০০, Pre-op Viral marker profile ৳৮০০-১,৫০০, Post-op Recovery & Ice-Care Kit ৳৬০০-১,২০০), comparison matrix and in-depth reviews of Feni Sadar ENT surgery centers (`Al-Aqsa Hospital`, `Central Hospital Feni`, `Feni 250-Bed General Hospital ENT Wing`, `Mission Hospital Feni`, `United Medical Center`, `Popular Diagnostic Center Feni`) and verified partner facilities (`Al-Aqsa Hospital`, `Pacific Health Care`, `Life Care Diagnostic`, `Imperial Neurocare`, `Feni Max`), strict 10-30% member discount badges, Paradise Criteria guidance, pediatric obstructive sleep apnea (OSA) and glue ear (OME) protocols, 4-step surgical and cold-diet recovery journey, 5 ENT center selection criteria, 8 conversational bilingual FAQs, registered in `blogPosts.ts`, `clusterNodesSurgeries.ts`, `departmentBlogMapping.ts`, `BlogSpecializedSections.tsx`, `BlogTocList.tsx`, `BlogPostDetailView.tsx`, and `public/llms-full.txt`. All created and modified files strictly satisfy the 500-line code limit (144 lines, 154 lines, 401 lines, 208 lines, etc.). Cleanly verified with `npx tsc --noEmit` (0 errors), `npm run lint` (0 errors, 0 warnings), and successful static generation of all 453 pages (`npm run build`).
+
+- [x] **TODO-256**: **Article #63** — `feni-appendix-appendectomy-surgery-cost-guide`
+  - **Bangla Title**: ফেনীতে এপেন্ডিসাইটিস অপারেশন (এপেনডেক্টমি) খরচ, জরুরি লক্ষণ ও ল্যাপারোস্কোপিক সার্জারি
+  - **English Title**: Appendicitis Surgery Cost in Feni: Emergency Symptoms, Laparoscopic vs Open Appendectomy
+  - **Primary Keywords**: এপেন্ডিসাইটিস অপারেশন খরচ ফেনী, এপেন্ডিক্স সার্জারি ফেনী, জরুরি এপেন্ডিক্স অপারেশন, Appendicitis surgery cost in Feni, Appendectomy price Feni
+  - **Target Intent**: Emergency right lower abdomen pain, emergency hospitalization, open vs laparoscopy cost breakdown, verified Feni Sadar surgeons.
+  - **Details**: Built modular architecture across `src/data/blog/posts/feniAppendixPricing.ts`, `src/data/blog/posts/feniAppendixComparisonTable.ts`, `src/data/blog/posts/feniAppendixCenters.ts`, `src/data/blog/posts/feniAppendixSurgeryGuide.ts`, and `src/data/blog/clusterNodesSurgeries.ts`. Configured comprehensive pricing for 14 appendicitis, laparoscopic, and pre-op investigations (Conventional Open Appendectomy with McBurney Incision ৳১৫,০০০-২২,০০০, Modern 3-Port Laparoscopic Appendectomy ৳২৫,০০০-৩৮,০০০, Single-Incision Laparoscopic SILS ৳৩৫,০০০-৫০,০০০, Complicated / Ruptured Appendicitis with Peritonitis Washout ৳২৮,০০০-৪৫,০০০, Appendicular Lump Conservative Ochsner-Sherren Regimen ৳৮,০০০-১৫,০০০, Interval Laparoscopic Appendectomy ৳২৫,০০০-৩৬,০০০, High-Resolution Graded Compression Ultrasound ৳১,০০০-১,৮০০, 128-Slice CECT Abdomen & Pelvis ৳৫,৫০০-৮,৫০০, Pre-op Emergency CBC with Neutrophilic Leukocytosis & Coagulation ৳১,২০০-১,৯০০, Renal & Electrolytes Profile ৳১,০০০-১,৬০০, Urine R/E & Urine hCG Pregnancy Strip ৳৩৫০-৬৫০, Viral Marker Screening ৳৮০০-১,৫০০, Emergency IV Antibiotic & Hydration Pack ৳১,৫০০-২,৮০০, Post-Op Sterile Wound Care & Suture Kit ৳৫০০-১,০০০), comparison matrix and in-depth reviews of Feni Sadar surgical centers (`Al-Aqsa Hospital`, `Central Hospital Feni`, `Feni 250-Bed General Hospital Emergency Surgery OT`, `Mission Hospital Feni`, `United Medical Center`, `Popular Diagnostic Center Feni`) and verified partner facilities (`Al-Aqsa Hospital`, `Pacific Health Care`, `Life Care Diagnostic`, `Imperial Neurocare`, `Feni Max`), strict 10-30% member discount badges, Alvarado score (MANTRELS) evaluation, warning against taking painkillers/laxatives that mask symptoms or trigger rupture, 4-step emergency and recovery journey, 5 surgical hospital selection criteria, 8 conversational bilingual FAQs, registered in `blogPosts.ts`, `clusterNodesSurgeries.ts`, `departmentBlogMapping.ts`, `BlogSpecializedSections.tsx`, `BlogTocList.tsx`, `BlogPostDetailView.tsx`, and `public/llms-full.txt`. All created and modified files strictly satisfy the 500-line code limit (145 lines, 147 lines, 310 lines, 210 lines, etc.). Cleanly verified with `npx tsc --noEmit` (0 errors), `npm run lint` (0 errors, 0 warnings), and successful static generation of all 454 pages (`npm run build`).
+
+- [ ] **TODO-256.1**: **Database-Driven Blog Engine & Lightweight Card Architecture Migration**
+  - **Priority**: High (P0 - Architectural Optimization & Elimination of Static File Sprawl)
+  - **Objectives**:
+    1. **Prisma Model `BlogPost`**: Add `BlogPost` model to `prisma/schema.prisma` with indexed `slug`, `category`, `publishedDate`, lightweight card columns (`titleBn`, `titleEn`, `excerptBn`, `excerptEn`, `readTimeBn`, `readTimeEn`, `coverImage`, `coverImageAlt`, `author`, `hospitalCount`, `facilityCount`, `facilityLabelBn`, `facilityLabelEn`), and structured JSON / text columns (`keyHighlightsBn`, `introParagraphsBn`, `diagnosticComparisonTable`, `diagnosticCenters`, `diagnosticTestPricingBn`, `bookingGuideBn`, `selectionGuideBn`, `faqs`, `relatedSlugs`, `metaKeywords`, `tags`).
+    2. **One-Time Database Seeding Script**: Create a Node/TypeScript seed script (`scripts/seedBlogPostsToDb.ts`) that imports all 63 existing static posts from `src/data/blog/blogPosts.ts` and upserts them into PostgreSQL / Supabase with proper JSON parsing.
+    3. **Lightweight Card Querying for `/blog` Listing**: Update `src/app/actions/blogAdminActions.ts` and `src/app/blog/page.tsx` to query only lightweight card projections via Prisma `findMany({ select: { slug: true, titleBn: true, ... } })`, completely eliminating the need to load full blog post payloads across the 63+ post corpus on `/blog`.
+    4. **Single-Post Retrieval for `/blog/[slug]`**: Update `src/app/blog/[slug]/page.tsx` to fetch individual posts from the database via Prisma `findUnique({ where: { slug } })`, with `generateStaticParams()` querying only slugs from DB during build time for SSG.
+    5. **Transition Subsequent Guides (TODO-257 onwards)**: Ensure all future guides (Articles #64–70) are seeded/inserted directly into the database rather than spawning multiple static TypeScript files per post (`*Pricing.ts`, `*ComparisonTable.ts`, `*Centers.ts`, `*Guide.ts`).
+
+- [ ] **TODO-257**: **Article #64** — `feni-dialysis-kidney-hemodialysis-guide` (Database-Driven)
+  - **Bangla Title**: ফেনীতে কিডনি ডায়ালাইসিস খরচ, শিডিউল, সেন্টার তালিকা ও রোগীদের সহায়তা গাইড
+  - **English Title**: Kidney Hemodialysis Centers in Feni: Dialysis Cost per Session, Package & Nephrology Care
+  - **Primary Keywords**: ফেনীতে ডায়ালাইসিস খরচ, কিডনি ডায়ালাইসিস সেন্টার ফেনী, Hemodialysis cost in Feni, Kidney dialysis price Feni
+  - **Target Intent**: Dialysis cost per cycle, catheter/fistula maintenance, Sadar Hospital Dialysis Unit vs private partner centers, 10-30% member discount.
+  - **Implementation Method**: Insert/seed directly into `BlogPost` database table with lightweight card projection; zero separate static TypeScript file proliferation.
+
+- [ ] **TODO-258**: **Article #65** — `feni-orthopedic-fracture-bone-surgery-cost-guide`
+  - **Bangla Title**: ফেনীতে হাড়ভাঙা অপারেশন, রড/স্ক্রু বসানো ও অর্থোপেডিক ট্রমা সার্জারি খরচ গাইড
+  - **English Title**: Bone Fracture Surgery & Rod/Plate Implant Cost in Feni: Orthopedic Trauma & Recovery
+  - **Primary Keywords**: হাড়ভাঙা অপারেশন খরচ ফেনী, অর্থোপেডিক সার্জারি ফেনী, রড প্লেট বসানোর খরচ, Bone fracture surgery cost Feni, Orthopedic implant price Feni
+  - **Target Intent**: Road accidents, falls, femur/tibia/arm fractures, implant titanium vs stainless steel, orthopedic surgeon directory in Feni Sadar.
+
+- [ ] **TODO-259**: **Article #66** — `feni-root-canal-cap-dental-braces-cost-guide`
+  - **Bangla Title**: ফেনীতে দাঁতের রুট ক্যানেল, ক্যাপ ও আঁকাবাঁকা দাঁতে ব্রেসেস পরানোর খরচ ও সেরা ডেন্টাল ক্লিনিক
+  - **English Title**: Root Canal, Dental Cap & Braces Cost in Feni: RCT, Crown & Orthodontic Teeth Straightening
+  - **Primary Keywords**: রুট ক্যানেল খরচ ফেনী, দাঁতে ক্যাপ লাগানো খরচ ফেনী, দাঁতে তার পরানো খরচ, Root canal cost in Feni, Dental braces price Feni
+  - **Target Intent**: High search dental treatments, single-sitting RCT vs multi-visit, porcelain/zirconia crown pricing, orthodontics clinics in Feni Sadar.
+
+- [ ] **TODO-260**: **Article #67** — `feni-hydrocele-varicocele-surgery-cost-guide`
+  - **Bangla Title**: ফেনীতে হাইড্রোসিল ও ভেরিকোসিল অপারেশন খরচ, লক্ষণ ও বিশেষজ্ঞ ইউরোলজিস্ট সার্জন
+  - **English Title**: Hydrocele & Varicocele Surgery Cost in Feni: Symptoms, Urology Surgeons & Recovery
+  - **Primary Keywords**: হাইড্রোসিল অপারেশন খরচ ফেনী, ভেরিকোসিল সার্জারি ফেনী, Hydrocele surgery cost in Feni, Varicocele surgery price Feni
+  - **Target Intent**: Common male testicular swelling, open vs microscopic varicocelectomy, surgical costs, urologist consultation chambers.
+
+- [ ] **TODO-261**: **Article #68** — `feni-hysterectomy-uterus-removal-surgery-guide`
+  - **Bangla Title**: ফেনীতে জরায়ু অপারেশন (হিস্টেরেক্টমি) খরচ, টিউমার/ফাইব্রয়েড চিকিৎসা ও গাইনোকোলজি গাইড
+  - **English Title**: Hysterectomy (Uterus Removal) Surgery Cost in Feni: Fibroid Treatment, Laparoscopic & Open
+  - **Primary Keywords**: জরায়ু অপারেশন খরচ ফেনী, হিস্টেরেক্টমি খরচ ফেনী, জরায়ু টিউমার অপারেশন, Hysterectomy surgery cost in Feni, Uterus removal price Feni
+  - **Target Intent**: Major women's surgical inquiry; abdominal vs vaginal vs laparoscopic hysterectomy, hospital stay, post-surgery recovery.
+
+- [ ] **TODO-262**: **Article #69** — `feni-skin-laser-wart-mole-removal-cost-guide`
+  - **Bangla Title**: ফেনীতে তিল, আঁচিল ও স্কিন লেজার ট্রিটমেন্ট খরচ, কসমেটিক ডার্মাটোলজি ক্লিনিক
+  - **English Title**: Skin Wart, Mole & Skin Tag Laser Removal Cost in Feni: Cosmetic Dermatology Centers
+  - **Primary Keywords**: আঁচিল কাটার খরচ ফেনী, তিল দূর করার লেজার ফেনী, স্কিন লেজার ট্রিটমেন্ট, Skin wart removal cost Feni, Mole removal laser price Feni
+  - **Target Intent**: Aesthetic skin procedures (electrocautery, CO2 laser, cryotherapy), dermatologist clinics, cost per lesion.
+
+- [ ] **TODO-263**: **Article #70** — `feni-circumcision-khatna-cost-guide`
+  - **Bangla Title**: ফেনীতে শিশুর খাতনা বা মুসলমানি (সারকামসিশন) খরচ: প্লাস্টিবেল ও লেজার আধুনিক পদ্ধতি
+  - **English Title**: Child Circumcision (Khatna) Cost in Feni: Plastibell, Laser & Conventional Surgical Methods
+  - **Primary Keywords**: শিশুর খাতনা খরচ ফেনী, মুসলমানি অপারেশন ফেনী, প্লাস্টিবেল খাতনা, Circumcision cost in Feni, Plastibell khatna price Feni
+  - **Target Intent**: High seasonal search (winter/school holidays); painless Plastibell ring method vs surgical clamp, child surgeons in Feni.
+
+---
+
+### 🩺 Cluster 4: Symptom-to-Specialist & Urgent Care Decision Guides
+
+- [ ] **TODO-264**: **Article #71** — `feni-back-pain-spine-slip-disc-treatment-guide`
+  - **Bangla Title**: ফেনীতে কোমর ব্যথা, স্পাইন স্লিপ ডিস্ক (PLID) ও বাতের ব্যথার চিকিৎসা ও বিশেষজ্ঞ ডাক্তার
+  - **English Title**: Chronic Back Pain, Sciatica & Slip Disc (PLID) Treatment in Feni: Spine Specialists & Rehab
+  - **Primary Keywords**: কোমর ব্যথা বিশেষজ্ঞ ফেনী, পিএলআইডি চিকিৎসা ফেনী, স্পাইন ডাক্তার ফেনী, Back pain doctor in Feni, Slip disc treatment Feni
+  - **Target Intent**: Symptom-to-specialist decision (Orthopedics vs Neuro-spine vs Physiotherapy), MRI spine diagnosis, non-surgical traction care.
+
+- [ ] **TODO-265**: **Article #72** — `feni-knee-pain-osteoarthritis-treatment-guide`
+  - **Bangla Title**: ফেনীতে হাঁটু ব্যথা ও অস্টিওআর্থ্রাইটিস চিকিৎসা: পিআরপি ইনজেকশন, থেরাপি ও অর্থোপেডিক পরামর্শ
+  - **English Title**: Knee Pain & Osteoarthritis Treatment in Feni: Knee Injections, Physical Therapy & Specialists
+  - **Primary Keywords**: হাঁটু ব্যথা ডাক্তার ফেনী, বাতের ব্যথা চিকিৎসা ফেনী, Knee pain specialist in Feni, Knee arthritis treatment Feni
+  - **Target Intent**: Elderly mobility issues, synovial fluid degeneration, intra-articular gel/steroid/PRP injections, exercise and specialist guide.
+
+- [ ] **TODO-266**: **Article #73** — `feni-headache-migraine-treatment-guide`
+  - **Bangla Title**: ফেনীতে মাইগ্রেন ও তীব্র মাথাব্যথার কারণ, লক্ষণ ও অভিজ্ঞ স্নায়ুরোগ (নিউরোলজি) বিশেষজ্ঞ
+  - **English Title**: Migraine & Chronic Headache Treatment in Feni: Triggers, Diagnosis & Top Neurologists
+  - **Primary Keywords**: মাইগ্রেনের ডাক্তার ফেনী, তীব্র মাথাব্যথা চিকিৎসা ফেনী, Migraine doctor in Feni, Headache specialist Feni
+  - **Target Intent**: Distinguishing tension headache vs migraine vs sinus headache vs stroke warning signs, brain CT/MRI check, neurologist chamber roster.
+
+- [ ] **TODO-267**: **Article #74** — `feni-gastric-ulcer-acidity-treatment-guide`
+  - **Bangla Title**: ফেনীতে দীর্ঘস্থায়ী গ্যাস্ট্রিক, পেপটিক আলসার ও বুক জ্বালাপোড়ার স্থায়ী সমাধান ও বিশেষজ্ঞ ডাক্তার
+  - **English Title**: Chronic Gastric, Peptic Ulcer & Acidity Treatment in Feni: Gastroenterology Specialists & Tests
+  - **Primary Keywords**: গ্যাস্ট্রিকের ভালো ডাক্তার ফেনী, আলসার চিকিৎসা ফেনী, বুক জ্বালাপোড়া, Gastric doctor in Feni, Acidity ulcer specialist Feni
+  - **Target Intent**: Number 1 gastrointestinal complaint in Bangladesh; H. Pylori stool/blood test, endoscopy timing, medication vs lifestyle.
+
+- [ ] **TODO-268**: **Article #75** — `feni-hair-fall-prp-treatment-guide`
+  - **Bangla Title**: ফেনীতে চুল পড়া বন্ধের চিকিৎসা, খুশকি ও পিআরপি (PRP) থেরাপি খরচ ও স্কিন স্পেশালিস্ট
+  - **English Title**: Hair Fall Treatment & PRP Therapy Cost in Feni: Alopecia, Dandruff & Best Dermatologists
+  - **Primary Keywords**: চুল পড়া চিকিৎসা ফেনী, পিআরপি থেরাপি খরচ ফেনী, Hair fall doctor in Feni, PRP therapy cost Feni
+  - **Target Intent**: Trending youth aesthetic query; androgenetic alopecia, plasma centrifuge PRP session charges, dermatologists in Feni Sadar.
+
+- [ ] **TODO-269**: **Article #76** — `feni-infertility-treatment-ivf-iui-guide`
+  - **Bangla Title**: ফেনীতে বন্ধ্যাত্ব চিকিৎসা ও সন্তানহীনতার সমাধান: আইইউআই, আইভিএফ পরামর্শ ও বিশেষজ্ঞ ডাক্তার
+  - **English Title**: Infertility Treatment & Conception Care in Feni: IUI, IVF Counseling & Fertility Specialists
+  - **Primary Keywords**: বন্ধ্যাত্ব বিশেষজ্ঞ ডাক্তার ফেনী, সন্তান না হওয়ার চিকিৎসা ফেনী, Infertility specialist in Feni, IVF counseling Feni
+  - **Target Intent**: Infertility diagnostic battery (tubal patency, semen, follicular study), local fertility consultants, Dhaka/Chittagong referral coordination.
+
+- [ ] **TODO-270**: **Article #77** — `feni-pediatric-child-fever-convulsion-emergency-guide`
+  - **Bangla Title**: শিশুর তীব্র জ্বর ও জ্বরের খিঁচুনি হলে ফেনীতে তাৎক্ষণিক করণীয় ও জরুরি শিশু বিশেষজ্ঞ গাইড
+  - **English Title**: Child High Fever & Febrile Convulsion Emergency Guide in Feni: First Aid & Pediatricians
+  - **Primary Keywords**: শিশুর জ্বর খিঁচুনি করণীয়, শিশু বিশেষজ্ঞ ফেনী জরুরি, Child fever emergency Feni, Febrile seizure child doctor Feni
+  - **Target Intent**: Panicked parents searching at night; first-aid sponging, what NOT to do, 24/7 pediatric emergency chambers in Feni Sadar.
+
+- [ ] **TODO-271**: **Article #78** — `feni-vertigo-dizziness-imbalance-treatment-guide`
+  - **Bangla Title**: ফেনীতে মাথা ঘোরা (Vertigo), কান ভোঁ ভোঁ করা ও ভারসাম্য হারানোর সঠিক চিকিৎসা ও ডাক্তার
+  - **English Title**: Vertigo & Dizziness Treatment in Feni: Inner Ear Imbalance, BPPV & ENT / Neuro Consultation
+  - **Primary Keywords**: মাথা ঘোরা ডাক্তার ফেনী, ভার্টিগো চিকিৎসা ফেনী, Vertigo specialist in Feni, Dizziness treatment Feni
+  - **Target Intent**: Labyrinthitis, cervical vertigo, BPPV Epley maneuver vs neurology issue, ENT vs medicine doctor selection.
+
+- [ ] **TODO-272**: **Article #79** — `feni-allergy-skin-rash-eczema-treatment-guide`
+  - **Bangla Title**: ফেনীতে চর্মরোগ, চুলকানি, দাদ ও একজিমা রোগের স্থায়ী চিকিৎসা ও অভিজ্ঞ স্কিন বিশেষজ্ঞ
+  - **English Title**: Skin Allergy, Ringworm & Eczema Treatment in Feni: Fungal Infection Care & Dermatologists
+  - **Primary Keywords**: চর্মরোগ বিশেষজ্ঞ ফেনী, চুলকানি ও একজিমা চিকিৎসা ফেনী, Skin disease doctor in Feni, Eczema specialist Feni
+  - **Target Intent**: Humid climate fungal infections (Tinea/Ringworm), scabies epidemic management, over-the-counter steroid abuse warning.
+
+- [ ] **TODO-273**: **Article #80** — `feni-thyroid-swelling-goiter-treatment-guide`
+  - **Bangla Title**: ফেনীতে থাইরয়েড গ্রন্থি ফোলা (গলগণ্ড বা নডিউল) চিকিৎসা ও এন্ডোক্রাইনোলজি বিশেষজ্ঞ গাইড
+  - **English Title**: Thyroid Swelling & Goiter Treatment in Feni: Thyroid Nodules, FNAC & Specialists
+  - **Primary Keywords**: থাইরয়েড ফোলা চিকিৎসা ফেনী, গলগণ্ড ডাক্তার ফেনী, Thyroid goiter doctor in Feni, Thyroid nodule specialist Feni
+  - **Target Intent**: Physical neck swelling queries, USG thyroid + FNAC, medical management vs thyroid surgery, specialist directory.
+
+- [ ] **TODO-274**: **Article #81** — `feni-depression-anxiety-mental-health-counseling-guide`
+  - **Bangla Title**: ফেনীতে ডিপ্রেশন, অতিরিক্ত চিন্তা ও মানসিক স্বাস্থ্য কাউন্সেলিং: সাইকিয়াট্রিস্ট ও থেরাপিস্ট গাইড
+  - **English Title**: Depression, Anxiety & Mental Health Counseling in Feni: Psychiatrists & Psychologists
+  - **Primary Keywords**: মানসিক ডাক্তার ফেনী, ডিপ্রেশন কাউন্সেলিং ফেনী, Psychiatrist in Feni, Mental health counseling Feni
+  - **Target Intent**: Panic attacks, chronic insomnia, depression, de-stigmatized mental health navigation, confidential doctor chambers.
+
+- [ ] **TODO-275**: **Article #82** — `feni-burn-injury-emergency-first-aid-hospital-guide`
+  - **Bangla Title**: ফেনীতে আগুনে পোড়া বা গরম পানিতে ঝলসে গেলে জরুরি প্রাথমিক চিকিৎসা ও হাসপাতাল সেবা
+  - **English Title**: Burn Injury Emergency First Aid & Hospital Care in Feni: Dressing, Burn Unit & Referral
+  - **Primary Keywords**: আগুনে পোড়া চিকিৎসা ফেনী, বার্ন ইউনিট ফেনী হাসপাতাল, Burn injury emergency Feni, Burn treatment hospital Feni
+  - **Target Intent**: Crucial first aid (cool running water, no paste/eggs), minor vs major burn assessment, Sadar Hospital Burn Unit & transfer protocol.
+
+- [ ] **TODO-276**: **Article #83** — `feni-dog-bite-rabies-vaccine-guide`
+  - **Bangla Title**: ফেনীতে কুকুর বা বিড়ালের কামড়ে জলাতঙ্ক রেবিস ভ্যাকসিন (Rabies Vaccine) প্রাপ্তিস্থান ও প্রটোকল
+  - **English Title**: Dog & Cat Bite Rabies Vaccine in Feni: Vaccine Schedule, Government Centers & Emergency Care
+  - **Primary Keywords**: জলাতঙ্ক ভ্যাকসিন ফেনী, কুকুর কামড়ালে ভ্যাকসিন ফেনী, Rabies vaccine in Feni, Dog bite injection Feni
+  - **Target Intent**: Extremely high panic query; soap water wash for 15 mins, Feni Sadar Hospital EPI room free vaccine schedule, RIG immunoglobulin.
+
+- [ ] **TODO-277**: **Article #84** — `feni-snake-bite-antivenom-emergency-guide`
+  - **Bangla Title**: ফেনীতে সাপের কামড় (সর্পদংশন) ও এন্টিভেনম ইনজেকশন সেবা: তাৎক্ষণিক করণীয় ও হাসপাতাল
+  - **English Title**: Snakebite Emergency & Antivenom in Feni: Immediate First Aid, Antivenom Centers & Protocol
+  - **Primary Keywords**: সাপের কামড়ের চিকিৎসা ফেনী, এন্টিভেনম ফেনী সদর হাসপাতাল, Snake bite antivenom in Feni, Snakebite treatment Feni
+  - **Target Intent**: Highly searched across rural and coastal areas (Sonagazi, Daganbhuiyan, Fulgazi); venomous vs non-venomous, Sadar Hospital 24/7 antivenom.
+
+- [ ] **TODO-278**: **Article #85** — `feni-hypertension-high-blood-pressure-control-guide`
+  - **Bangla Title**: ফেনীতে উচ্চ রক্তচাপ (High BP) নিয়ন্ত্রণ, স্ট্রোক ঝুঁকি ও অভিজ্ঞ কার্ডিওলজি/মেডিসিন বিশেষজ্ঞ
+  - **English Title**: High Blood Pressure (Hypertension) Management in Feni: Stroke Prevention & Heart Specialists
+  - **Primary Keywords**: উচ্চ রক্তচাপ ডাক্তার ফেনী, প্রেশারের ডাক্তার ফেনী, High BP specialist in Feni, Hypertension doctor Feni
+  - **Target Intent**: Silent killer risks, regular digital monitor calibration, dietary sodium, stroke risk prevention, top medicine/cardiology doctors.
+
+---
+
+### 🏛️ Cluster 5: Government & Specialized Public Healthcare Facilities
+
+- [ ] **TODO-279**: **Article #86** — `feni-maternal-and-child-welfare-centre-matri-sadan-guide`
+  - **Bangla Title**: ফেনী মা ও শিশু কল্যাণ কেন্দ্র (মাতৃসদন) সেবা গাইড: স্বাভাবিক প্রসব, ওপিডি ও বিনামূল্যে ওষুধ
+  - **English Title**: Feni Maternal & Child Welfare Centre (Matri Sadan) Guide: Normal Delivery, ANC/PNC & OPD
+  - **Primary Keywords**: ফেনী মাতৃসদন হাসপাতাল, মা ও শিশু কল্যাণ কেন্দ্র ফেনী, Feni Matri Sadan Hospital, MCWC Feni
+  - **Target Intent**: Free/low-cost safe institutional delivery, antenatal checkups (ANC), family planning, doctor timings, location on Shaheed Shahidullah Kaiser Road.
+
+- [ ] **TODO-280**: **Article #87** — `feni-chest-disease-tb-hospital-guide`
+  - **Bangla Title**: ফেনী বক্ষব্যাধি ক্লিনিক ও হাসপাতাল: যক্ষ্মা (TB) জিনএক্সপার্ট বিনামূল্যে টেস্ট ও ডটস ওষুধ
+  - **English Title**: Feni Chest Disease Hospital & TB Clinic: Free GeneXpert Test, DOTS Treatment & Asthma Care
+  - **Primary Keywords**: ফেনী বক্ষব্যাধি হাসপাতাল, যক্ষ্মা টেস্ট ফেনী, Feni Chest Disease Hospital, TB clinic Feni GeneXpert
+  - **Target Intent**: Government free tuberculosis testing (GeneXpert sputum test), 6-month DOTS treatment regimen, chronic respiratory care.
+
+- [ ] **TODO-281**: **Article #88** — `feni-trauma-center-emergency-highway-accident-guide`
+  - **Bangla Title**: ফেনী ট্রমা সেন্টার ও মহাসড়ক দুর্ঘটনা জরুরি সেবা: মহিপাল ট্রমা সেন্টারের সেবা ও জরুরি হেল্পলাইন
+  - **English Title**: Feni Trauma Center & Highway Accident Emergency Guide: Mohipal Emergency Services & Trauma Care
+  - **Primary Keywords**: ফেনী ট্রমা সেন্টার মহিপাল, মহাসড়ক দুর্ঘটনা ফেনী হাসপাতাল, Feni Trauma Center Mohipal, Accident emergency hospital Feni
+  - **Target Intent**: Dhaka-Chittagong highway accident care near Mohipal, orthopedics trauma initial management, emergency contacts.
+
+- [ ] **TODO-282**: **Article #89** — `feni-epi-child-vaccination-schedule-centers-guide`
+  - **Bangla Title**: ফেনীতে শিশুর সরকারি ইপিআই (EPI) টিকা দেওয়ার কেন্দ্র, বয়স অনুযায়ী শিডিউল ও জরুরি তথ্য
+  - **English Title**: Child EPI Vaccination Centers & Schedule in Feni: Municipal Wards, Routine Immunization
+  - **Primary Keywords**: শিশুর টিকা কেন্দ্র ফেনী, ইপিআই টিকা শিডিউল ফেনী, Child vaccination centers in Feni, EPI immunization schedule Feni
+  - **Target Intent**: BCG, Pentavalent, PCV, Polio, MR vaccine schedules, Feni Pourashava health centers, Upazila hospital EPI days.
+
+---
+
+### 🔬 Cluster 6: Advanced Diagnostic Modalities & Technology
+
+- [ ] **TODO-283**: **Article #90** — `feni-4d-anomaly-scan-pregnancy-ultrasound-guide`
+  - **Bangla Title**: ফেনীতে প্রেগন্যান্সি ৪ডি অ্যানোমালি স্ক্যান (Anomaly Scan) খরচ, সঠিক সময় ও বিশেষজ্ঞ সোনোলজিস্ট
+  - **English Title**: 4D Pregnancy Anomaly Scan Cost in Feni: Best Sonologists, Week 18-22 Timing & 3D/4D Labs
+  - **Primary Keywords**: এনোমালি স্ক্যান খরচ ফেনী, ৪ডি আল্ট্রাসনোগ্রাফি ফেনী, Anomaly scan cost in Feni, 4D pregnancy USG price Feni
+  - **Target Intent**: Weeks 18-22 congenital anomaly scan queries, high-resolution sonography centers in Feni Sadar, qualified radiologist/sonologist list.
+
+- [ ] **TODO-284**: **Article #91** — `feni-eeg-brain-test-cost-guide`
+  - **Bangla Title**: ফেনীতে ইইজি (EEG) ব্রেন টেস্টের খরচ, মৃগীরোগ নির্ণয় ও অভিজ্ঞ নিউরোলজিস্ট সেন্টার
+  - **English Title**: EEG Brain Wave Test Cost in Feni: Epilepsy Diagnosis, Preparation & Neurology Centers
+  - **Primary Keywords**: ইইজি টেস্ট খরচ ফেনী, ব্রেন পরীক্ষা ফেনী, EEG test cost in Feni, Electroencephalogram price Feni
+  - **Target Intent**: Child/adult seizure diagnosis, sleep deprivation instructions, reporting accuracy, centers equipped with digital EEG in Feni Sadar.
+
+- [ ] **TODO-285**: **Article #92** — `feni-bone-mineral-density-bmd-test-guide`
+  - **Bangla Title**: ফেনীতে বিএমডি (BMD / DEXA Scan) হাড়ের ক্ষয়রোগ পরীক্ষা খরচ ও অস্টিওপোরোসিস গাইড
+  - **English Title**: Bone Mineral Density (BMD DEXA Scan) Cost in Feni: Osteoporosis Screening & Best Labs
+  - **Primary Keywords**: বিএমডি টেস্ট খরচ ফেনী, ডেক্সা স্ক্যান ফেনী, হাড়ের ক্ষয় পরীক্ষা, BMD test cost in Feni, DEXA scan price Feni
+  - **Target Intent**: Post-menopausal women, bone density T-score/Z-score interpretation, calcium deficiency, diagnostic labs.
+
+- [ ] **TODO-286**: **Article #93** — `feni-mammography-breast-cancer-screening-guide`
+  - **Bangla Title**: ফেনীতে ম্যামোগ্রাফি (Mammography) টেস্ট খরচ, স্তন ক্যান্সার সচেতনতা ও সেরা ল্যাব
+  - **English Title**: Mammography Test Cost in Feni: Breast Cancer Screening, Preparation & Diagnostic Centers
+  - **Primary Keywords**: ম্যামোগ্রাফি টেস্ট খরচ ফেনী, স্তন ক্যান্সার পরীক্ষা ফেনী, Mammography test cost in Feni, Breast cancer screening Feni
+  - **Target Intent**: Age 40+ annual breast screening, digital mammography vs breast ultrasound, female technician availability, price table.
+
+- [ ] **TODO-287**: **Article #94** — `feni-echocardiogram-color-doppler-heart-test-guide`
+  - **Bangla Title**: ফেনীতে কালার ডপলার ২ডি ইকোকার্ডিওগ্রাফি (Echo) টেস্ট খরচ, চেম্বার ও হার্ট সেন্টার
+  - **English Title**: 2D Color Doppler Echocardiogram (Echo) Cost in Feni: Heart Valve Evaluation & Centers
+  - **Primary Keywords**: কালার ডপলার ইকো খরচ ফেনী, ইকো টেস্ট ফেনী, Color Doppler Echo cost in Feni, Echocardiogram test price Feni
+  - **Target Intent**: Valve stenosis/regurgitation, heart failure EF (ejection fraction), cardiologist sonographers, discount benefits.
+
+---
+
+### 🏙️ Cluster 7: Local Healthcare Navigation, Chamber Hubs & Patient Access
+
+- [ ] **TODO-288**: **Article #95** — `feni-hospital-road-ss-k-road-chamber-hub-guide`
+  - **Bangla Title**: ফেনী হাসপাতাল রোড ও এসএসকে রোড ডাক্তার চেম্বার গাইড: প্রধান ক্লিনিক, ল্যাব ও সিরিয়াল পয়েন্ট
+  - **English Title**: Feni Hospital Road & SSK Road Doctor Chamber Directory: Clinics, Labs & Appointment Hubs
+  - **Primary Keywords**: হাসপাতাল রোড ফেনী ডাক্তার চেম্বার, এসএসকে রোড ক্লিনিক ফেনী, Hospital Road doctors Feni, SSK Road clinics Feni
+  - **Target Intent**: Physical geography navigation; where to park, where to get medicines, walking distance hubs, chamber concentrations.
+
+- [ ] **TODO-289**: **Article #96** — `feni-trunk-road-mizan-road-clinic-pharmacy-hub-guide`
+  - **Bangla Title**: ফেনী ট্রাঙ্ক রোড ও মিজান রোড স্বাস্থ্যসেবা হাব: বিশেষজ্ঞ ডাক্তার, ডায়াগনস্টিক ও ২৪ ঘণ্টা ফার্মেসি
+  - **English Title**: Feni Trunk Road & Mizan Road Healthcare Hub: Specialist Chambers, Labs & 24/7 Pharmacies
+  - **Primary Keywords**: ট্রাঙ্ক রোড ফেনী ডাক্তার, মিজান রোড ক্লিনিক ফেনী, Trunk Road doctor chambers Feni, Mizan Road healthcare Feni
+  - **Target Intent**: Downtown commercial hub medical chambers, evening access, night-shift pharmacies, transport drops.
+
+- [ ] **TODO-290**: **Article #97** — `feni-friday-weekend-doctor-chamber-serial-guide`
+  - **Bangla Title**: ফেনীতে শুক্রবার ও ছুটির দিনে বসা বিশেষজ্ঞ ডাক্তারদের তালিকা, সময়সূচি ও অগ্রিম সিরিয়াল গাইড
+  - **English Title**: Friday & Weekend Specialist Doctor Chambers in Feni: Visiting Schedule & Advance Booking
+  - **Primary Keywords**: শুক্রবার ফেনীতে বসা ডাক্তার, ছুটির দিনে ডাক্তার ফেনী, Friday doctor chamber in Feni, Weekend specialist doctor Feni
+  - **Target Intent**: Expat families, job holders who can only visit doctors on Friday/Saturday, Dhaka/Chittagong visiting professors.
+
+- [ ] **TODO-291**: **Article #98** — `feni-female-gynecologist-doctor-chamber-list`
+  - **Bangla Title**: ফেনীর শীর্ষ মহিলা গাইনী ও প্রসূতিরোগ বিশেষজ্ঞ ডাক্তার তালিকা: চেম্বার, সময়সূচি ও সিরিয়াল
+  - **English Title**: Top Female Gynecologists & Obstetricians in Feni: Chamber Timing, Locations & Direct Serials
+  - **Primary Keywords**: ফেনীর সেরা মহিলা গাইনী ডাক্তার, মহিলা ডাক্তার ফেনী, Female gynecologist in Feni, Best lady doctor in Feni
+  - **Target Intent**: High cultural preference for female doctors for pregnancy, menstrual disorders, vaginal issues; direct serial list in Feni Sadar.
+
+- [ ] **TODO-292**: **Article #99** — `feni-evening-doctor-chambers-after-5pm-guide`
+  - **Bangla Title**: ফেনীতে বিকেল ও সন্ধ্যায় (সন্ধ্যা ৫টার পর) বসা বিশেষজ্ঞ ডাক্তারদের চেম্বার ও ভিজিটিং তালিকা
+  - **English Title**: Evening Doctor Chambers in Feni (After 5 PM): Working Patient Healthcare Guide & Serials
+  - **Primary Keywords**: সন্ধ্যায় ডাক্তার ফেনী, অফিস টাইমের পর ডাক্তার চেম্বার ফেনী, Evening doctor chamber in Feni, After 5pm doctor serial Feni
+  - **Target Intent**: Service holders, teachers, shopkeepers who need medical consultations after working hours (5:00 PM – 10:00 PM).
+
+- [ ] **TODO-293**: **Article #100** — `feni-hearing-aid-audiometry-hearing-test-guide`
+  - **Bangla Title**: ফেনীতে কানের শ্রবণশক্তি পরীক্ষা (PTA Audiometry) খরচ ও হিয়ারিং এইড ডিজিটাল মেশিনের দোকান
+  - **English Title**: Pure Tone Audiometry (PTA) Test & Hearing Aid Machine Cost in Feni: ENT Hearing Centers
+  - **Primary Keywords**: কানে কম শোনার পরীক্ষা ফেনী, অডিওমেট্রি টেস্ট খরচ ফেনী, হিয়ারিং এইড দাম ফেনী, Audiometry test cost in Feni, Hearing aid price Feni
+  - **Target Intent**: Deafness, age-related hearing loss, PTA and Tympanometry tests, digital rechargeable hearing aids in Feni.
+
+---
+
+## 📍 Phase 13: Medical E-E-A-T, Conversion Funnels & Interactive SEO Infrastructure (TODO-294 to TODO-300)
+
+> **Objective**: Implement concrete, code-level features to satisfy Google's strict medical **YMYL (Your Money Your Life)** algorithms, dramatically increase on-page **Dwell Time**, and maximize conversion of organic search visitors into paying **Health Club Members**.
+
+- [ ] **TODO-294**: **Medical E-E-A-T Reviewer Badge Component & Schema.org `reviewedBy: Physician` Markup**
+  - **Priority**: High (P1 - Required for Ranking #1–#2 on Google for Medical Queries)
+  - **Files**: `src/types/blog.ts`, `src/app/blog/utils/blogJsonLd.ts`, `src/app/blog/components/BlogMedicalReviewerBadge.tsx`, `src/app/blog/[slug]/page.tsx`, `src/app/blog/components/BlogPostDetailView.tsx`
+  - **Details**:
+    1. Add `reviewedBy?: { doctorNameBn: string; doctorNameEn?: string; degreesBn: string; specialtyBn: string; profileSlug?: string; photoUrl?: string }` to the `BlogPost` type.
+    2. Build a reusable, premium `BlogMedicalReviewerBadge.tsx` component displaying: *"মেডিকেল তথ্য যাচাই ও পর্যালোচনা করেছেন: ডাঃ [নাম] [ডিগ্রী] - ভিউ প্রোফাইল"*, BMDC/specialty tag, and verification date.
+    3. Update `generateBlogJsonLd` in `blogJsonLd.ts` to inject standard Schema.org `reviewedBy: { "@type": "Physician", "name": ..., "jobTitle": ..., "medicalSpecialty": ... }` into `MedicalWebPage` and `BlogPosting` structured data.
+
+- [ ] **TODO-295**: **Editorial Guidelines, Fact-Checking Protocol & Medical Disclaimer Page (`/editorial-policy`)**
+  - **Priority**: High (P1 - Critical Trust Signal for Google Search Quality Raters)
+  - **Files**: `src/app/editorial-policy/page.tsx`, `src/components/layout/Footer.tsx`, `src/app/sitemap.ts`
+  - **Details**:
+    1. Create a dedicated static Server Component page `/editorial-policy` detailing Health Club's medical content guidelines, doctor fact-checking protocols, clinical sourcing from DGHS/WHO/standard medical literature, correction policy, and patient medical disclaimers.
+    2. Implement complete metadata, Breadcrumbs, and `WebPage` JSON-LD schema.
+    3. Add link to `Footer.tsx` in the legal/info column and reference it under all blog author and reviewer badges.
+
+- [ ] **TODO-296**: **Embeddable Interactive Health Calculators for Blog Articles (Dwell Time Multiplier)**
+  - **Priority**: High (P1 - Skyrockets Dwell Time & Signals Quality to Google Ranking Algorithm)
+  - **Files**: `src/components/health-tools/PregnancyDueDateTool.tsx`, `src/components/health-tools/BloodPressureCategoryTool.tsx`, `src/app/blog/components/BlogEmbeddedTool.tsx`, `src/types/blog.ts`, `src/app/blog/components/BlogPostDetailView.tsx`
+  - **Details**:
+    1. Build lightweight, embeddable mini-calculators: `PregnancyDueDateTool.tsx` (Naegele's rule for pregnancy/USG articles) and `BloodPressureCategoryTool.tsx` (AHA/DGHS BP classification for hypertension/cardiac articles).
+    2. Add `embeddedTool?: "bmi" | "pregnancy-due-date" | "blood-pressure"` to `BlogPost`.
+    3. Render the interactive tool directly inside the reading flow of relevant articles, allowing readers to calculate their health status on the spot without leaving the page.
+
+- [ ] **TODO-297**: **Sticky Mobile Conversion Bar & Quick Action Helpdesk for Blog Readers**
+  - **Priority**: High (P1 - Converts Organic Readers into Club Members & Direct Leads)
+  - **Files**: `src/app/blog/components/BlogStickyActionBar.tsx`, `src/app/blog/[slug]/page.tsx`
+  - **Details**:
+    1. Implement a sleek, non-intrusive mobile floating action bar (`BlogStickyActionBar.tsx`) that slides up smoothly when the user scrolls 25% down any blog post.
+    2. Includes two high-converting touchpoints:
+       - 💳 **১০-৩০% মেম্বার ছাড় নিন** (Direct link to `/membership`)
+       - 📞 **সিরিয়াল হেল্পলাইন** (Direct `tel:` dialer or WhatsApp trigger)
+    3. Features a subtle close (`X`) button, saves dismissed state per session, and automatically hides near the footer to prevent visual overlap.
+
+- [ ] **TODO-298**: **Printable Partner Facility QR Code & Discount Poster Generator (`/admin/marketing/partner-posters`)**
+  - **Priority**: Medium (P2 - Bridges Physical Clinic Footprint with Branded Online Search Authority)
+  - **Files**: `src/app/admin/marketing/posters/page.tsx`, `src/components/marketing/PartnerPrintPoster.tsx`
+  - **Details**:
+    1. Build a print-ready (`@media print`) high-resolution vector poster generator for contracted Feni Sadar partner hospitals, clinics, and diagnostic centers.
+    2. Formats: A4 wall poster and table-top acrylic stand card.
+    3. Displays official Health Club branding, partner name, verified *"হেলথ ক্লাব মেম্বারদের জন্য এখানে ১০-৩০% বিশেষ ছাড়"* highlight, and a clean SVG QR code pointing directly to membership registration and partner profile verification.
+
+- [ ] **TODO-299**: **Google Search Snippet Preview & Technical SERP Validator in Admin Portal**
+  - **Priority**: Medium (P2 - Optimizes Click-Through Rates on Google Search Engine Results)
+  - **Files**: `src/app/admin/components/blog/BlogSeoPreviewModal.tsx`, `src/app/admin/components/blog/BlogManagementCard.tsx`
+  - **Details**:
+    1. Create a real-time Google Mobile & Desktop SERP snippet preview modal inside the admin blog manager.
+    2. Dynamically shows title pixel length (50-60 characters), meta description truncation (140-160 characters), star rating rich snippet simulation, and FAQ accordion view.
+    3. Validates against missing bilingual keywords, broken images, or code-limit violations before publishing.
+
+- [ ] **TODO-300**: **Automated IndexNow Search Engine Notification & Sitemap Verification**
+  - **Priority**: Medium (P2 - Fast-Tracks Immediate Indexing for All 100 Guides & Landing Pages)
+  - **Files**: `src/lib/seo/indexNowHelper.ts`, `src/app/api/indexnow/route.ts`, `scripts/verify-sitemap.mjs`
+  - **Details**:
+    1. Implement IndexNow API integration (`indexNowHelper.ts`) to immediately ping search engines (Bing, Yandex, IndexNow network) whenever a blog post is published or updated.
+    2. Create automated script `scripts/verify-sitemap.mjs` to crawl all 100 blog URLs, doctor profile routes, and upazila landing pages, verifying 200 HTTP status, zero redirect chains, and Schema.org JSON-LD validity.
+    3. Add `npm run seo:audit` command to `package.json`.
+
+---
+
+## 📍 Phase 14: Generative Engine Optimization (GEO), Answer Engine Optimization (AEO) & AI Search Dominance (TODO-301 to TODO-308)
+
+> **Objective**: Position Health Club (হেলথ ক্লাব) as the undisputed #1 authoritative healthcare knowledge source cited by generative AI engines (**ChatGPT, Gemini, Grok, Perplexity, Copilot**) and voice/answer engines (Google Assistant, Siri, voice search). All code development and content must satisfy strict GEO, AEO, and SEO first-priority requirements.
+
+- [ ] **TODO-301**: **Dynamic `llms.txt` & `llms-full.txt` Auto-Sync Pipeline for AI Search Engines (ChatGPT, Perplexity, Claude, Grok)**
+  - **Priority**: High (P1 - Generative AI Knowledge Base)
+  - **Files**: `src/app/llms.txt/route.ts`, `src/app/llms-full.txt/route.ts`, `scripts/generate-llms-txt.ts`
+  - **Details**:
+    1. Create automated route handlers or static generator that dynamically feeds `llms.txt` and `llms-full.txt` with verified specialist consultant directories, partner hospital profiles in Feni Sadar, 100+ diagnostic test fee ranges, and 24/7 emergency blood/ambulance hotlines.
+    2. Ensure AI web scrapers (`GPTBot`, `PerplexityBot`, `Google-Extended`, `ClaudeBot`, `GrokBot`, `OAI-SearchBot`) can consume structured markdown directly without token bloat or scraping friction.
+    3. Maintain `<link rel="alternate" type="text/markdown" href="/llms.txt" title="LLM Knowledge Base">` in root `layout.tsx`.
+
+- [ ] **TODO-302**: **Standardized `<GeoAnswerCapsule />` (BLUF) Component for All 100 Medical Guides & Directory Hubs**
+  - **Priority**: High (P1 - GEO AI Snippet Extraction & Perplexity/ChatGPT Citations)
+  - **Files**: `src/app/blog/components/GeoAnswerCapsule.tsx`, `src/app/blog/[slug]/page.tsx`, `src/types/blog.ts`
+  - **Details**:
+    1. Create a dedicated `<GeoAnswerCapsule />` component placed immediately under the article H1/intro, providing:
+       - 40–60 word direct factual answer in clear Bengali (*"ফেনীতে এই টেস্টের খরচ সাধারণতঃ ৳X–৳Y, মেম্বারদের জন্য ১০-৩০% বিশেষ ছাড়..."*).
+       - *"একনজরে গুরুত্বপূর্ণ তথ্য"* (Quick Takeaways bullet points).
+       - High-contrast reference fee table with standard regular price ranges (`৳X–৳Y`) and Health Club discount badges (`১০-৩০% মেম্বার ছাড়`).
+    2. Attach Schema.org `speakable` selector `#geo-answer-capsule` and CSS class `.geo-answer-capsule` for zero-friction extraction by Google AI Overviews and Perplexity search answers.
+
+- [ ] **TODO-303**: **Automated `FAQPage` & `Speakable` Schema Generator for Voice/Answer Engines (AEO)**
+  - **Priority**: High (P1 - Voice Search & Position-Zero Snippets)
+  - **Files**: `src/app/blog/utils/blogJsonLd.ts`, `src/app/consultants/utils/consultantJsonLd.ts`, `src/app/partner-hospitals/utils/hospitalJsonLd.ts`
+  - **Details**:
+    1. Ensure every article, consultant directory category, and hospital hub generates a high-density Schema.org `FAQPage` graph with 5–8 conversational questions and precise answers.
+    2. Integrate `speakable: { "@type": "SpeakableSpecification", "cssSelector": [".geo-answer-capsule", ".faq-answer", "#overview"] }` across all public pages for Google Assistant and Siri voice search readouts.
+
+- [ ] **TODO-304**: **Semantic Medical Entity Knowledge Graph (`MedicalCondition` ↔ `MedicalTest` ↔ `Physician` ↔ `Hospital`)**
+  - **Priority**: High (P1 - AI Knowledge Graph & Entity Disambiguation)
+  - **Files**: `src/app/blog/utils/blogJsonLd.ts`, `src/lib/seo/doctorSchema.ts`, `src/lib/seo/partnerSchema.ts`
+  - **Details**:
+    1. Build interconnected Schema.org JSON-LD entities linking diseases and symptoms (`MedicalCondition`: e.g. ডেঙ্গু, হার্ট অ্যাটাক, ডায়াবেটিস, ব্রেইন স্ট্রোক) to required investigations (`MedicalTest`: CBC, Echo, MRI, HbA1c), qualified specialists (`Physician`), and verified partner hospitals (`Hospital`/`MedicalBusiness`) in Feni Sadar.
+    2. Connect entities using Schema.org properties: `relevantSpecialty`, `signOrSymptom`, `possibleTreatment`, and `recognizingAuthority` (BMDC, DGHS). This enables LLM knowledge engines to map end-to-end care pathways directly to Health Club Feni.
+
+- [ ] **TODO-305**: **AEO Conversational Natural Language Query & Voice Search Heading Audit (All 100 Guides)**
+  - **Priority**: High (P1 - Natural Language Voice Queries)
+  - **Files**: `src/app/blog/data/*.ts`, `src/app/blog/[slug]/page.tsx`, `src/app/blog/components/BlogPostDetailView.tsx`
+  - **Details**:
+    1. Audit and standardize heading phrasing across all 100 blog guides to match real voice search queries in Bengali: *"কী"*, *"কেন"*, *"কীভাবে"*, *"খরচ কত"*, *"কোথায় করাবেন"*, and *"কখন জরুরি বিভাগে যাবেন"*.
+    2. Ensure each H2/H3 question has a self-contained, 1–2 sentence direct answer in the very next paragraph before expanding on clinical context.
+
+- [ ] **TODO-306**: **GEO Citation Attribution Badge & Structured Citation Metadata for AI Scrapers**
+  - **Priority**: Medium (P2 - Source Attribution in ChatGPT, Perplexity & Grok)
+  - **Files**: `src/app/blog/components/BlogCitationBlock.tsx`, `src/app/blog/components/BlogPostDetailView.tsx`
+  - **Details**:
+    1. Render an official citation attribution block at the bottom of each medical article: *"এই তথ্যের উৎস ও উদ্ধৃতি (Citation): হেলথ ক্লাব ফেনী (Health Club Feni), [তারিখ], [ক্যানোনিকাল URL]"*, with a 1-click "উদ্ধৃতি কপি করুন" (Copy Citation) button.
+    2. Include semantic `<cite>` tags, Schema.org `citation`, `copyrightHolder`, and `license` metadata, providing clean attribution signals for AI crawlers like PerplexityBot and SearchGPT to cite Health Club Feni as the authoritative primary source.
+
+- [ ] **TODO-307**: **Information Gain & Freshness Engine: BMDC/DGHS Clinical Citations & `dateModified` Sync**
+  - **Priority**: Medium (P2 - Google Helpful Content & LLM Freshness Signals)
+  - **Files**: `src/types/blog.ts`, `src/app/blog/utils/blogJsonLd.ts`, `src/app/blog/components/BlogClinicalSources.tsx`
+  - **Details**:
+    1. Add a structured `clinicalSources` field (DGHS National Treatment Guidelines, WHO, BMDC, standard clinical textbooks) with verified outbound references (`rel="noopener noreferrer"`).
+    2. Programmatically update `dateModified` in `MedicalWebPage` JSON-LD whenever local partner diagnostic fees or doctor rosters are updated, signaling ongoing algorithmic freshness to search engines and AI models.
+
+- [ ] **TODO-308**: **Automated AI & Search Engine SERP Audit Script (`scripts/audit-seo-aeo-geo.mjs`)**
+  - **Priority**: Medium (P2 - Continuous Compliance Verification)
+  - **Files**: `scripts/audit-seo-aeo-geo.mjs`, `package.json`
+  - **Details**:
+    1. Build an automated auditing script (`npm run audit:geo`) that crawls all 100 guides, doctor profiles, and directory pages to verify:
+       - JSON-LD Schema.org validity (no missing required fields or broken URLs).
+       - Presence of direct answer capsules / BLUF under question headings.
+       - 10–30% discount compliance (zero fixed taka amounts).
+       - Feni Sadar geographic scope compliance (no partner claims outside Feni Sadar).
+       - `llms.txt` and `robots.ts` health and AI bot crawlability.
+       - Strict 500-line code limit compliance across all source files.
+
+---

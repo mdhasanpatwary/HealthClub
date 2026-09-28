@@ -135,7 +135,7 @@ const getCachedBlogPosts = unstable_cache(
       return BLOG_POSTS;
     }
   },
-  ["all-blog-posts-admin-v22"],
+  ["all-blog-posts-admin-v23"],
   { revalidate: 86400, tags: [BLOG_POSTS_TAG] }
 );
 

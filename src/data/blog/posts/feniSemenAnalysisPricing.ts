@@ -1,0 +1,135 @@
+import { DiagnosticTestPriceItem } from "@/types/blog";
+
+export const FENI_SEMEN_ANALYSIS_TEST_PRICING: {
+  titleBn: string;
+  subtitleBn: string;
+  titleEn: string;
+  subtitleEn: string;
+  tests: DiagnosticTestPriceItem[];
+} = {
+  titleBn: "ফেনীতে সিমেন অ্যানালাইসিস ও শুক্রাণু পরীক্ষার খরচ ও মেম্বার ছাড় ২০২৬",
+  subtitleBn:
+    "ফেনী সদর উপজেলার অনুমোদিত ডায়াগনস্টিক সেন্টারে রুটিন সিমেন অ্যানালাইসিস (Semen R/E), কম্পিউটার-অ্যাসিস্টেড স্পার্ম টেস্ট (CASA), স্পার্ম মরফোলজি, ফ্রুকটোজ ও প্রজনন হরমোন পরীক্ষার নিয়মিত ফি বনাম হেলথ ক্লাব মেম্বার কার্ডে ১০-৩০% নিশ্চিত ছাড়ের তালিকা।",
+  titleEn: "Semen Analysis & Male Fertility Test Price Guide in Feni (2026)",
+  subtitleEn:
+    "Comprehensive comparison of regular market fees and 10-30% Health Club member discounts across Feni Sadar reproductive pathology and diagnostic labs.",
+  tests: [
+    {
+      testNameBn: "রুটিন সিমেন অ্যানালাইসিস / স্পার্ম রুটিন এক্সামিনেশন (Routine Semen Analysis / Semen R/E)",
+      testNameEn: "Routine Semen Analysis (Volume, pH, Liquefaction, Count, Motility, Morphology by WHO Standards)",
+      categoryBn: "ক্লিনিক্যাল প্যাথলজি ও বীর্য পরীক্ষা",
+      regularPriceRangeBn: "৳৬০০ - ৳১,০০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "৩ - ৪ ঘণ্টা",
+    },
+    {
+      testNameBn: "কম্পিউটার-অ্যাসিস্টেড সিমেন অ্যানালাইসিস (CASA - Automated Sperm Analysis)",
+      testNameEn: "Computer-Assisted Semen Analysis (CASA - Kinematics, VCL, VSL, VAP & Automated Track)",
+      categoryBn: "অ্যাডভান্সড ডিজিটাল স্পার্ম টেস্ট",
+      regularPriceRangeBn: "৳১,২০০ - ৳২,০০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "৪ - ৬ ঘণ্টা",
+    },
+    {
+      testNameBn: "শুক্রাণুর ঘনত্ব ও মোট সংখ্যা নিরূপণ (Sperm Concentration & Total Sperm Count)",
+      testNameEn: "Sperm Concentration per mL & Total Ejaculate Sperm Count (Improved Neubauer Chamber / Counting Grid)",
+      categoryBn: "স্পার্মাটোলজি ও কোয়ান্টিটেটিভ টেস্ট",
+      regularPriceRangeBn: "৳৫০০ - ৳৮০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "২ - ৩ ঘণ্টা",
+    },
+    {
+      testNameBn: "শুক্রাণুর গতিশীলতা ও প্রগ্রেসিভ মটিলিটি গ্রেডিং (Sperm Motility Assessment - PR/NP/IM)",
+      testNameEn: "Sperm Motility Grading (Progressive Motility PR %, Non-Progressive NP %, Immotile IM %)",
+      categoryBn: "স্পার্ম কাইনেটিক্স মূল্যায়ন",
+      regularPriceRangeBn: "৳৫০০ - ৳৮০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "২ - ৩ ঘণ্টা",
+    },
+    {
+      testNameBn: "শুক্রাণুর গঠন ও মরফোলজি পরীক্ষা (Sperm Morphology - Kruger Strict Criteria)",
+      testNameEn: "Sperm Strict Morphology Evaluation (Kruger Strict Criteria by Papanicolaou / Giemsa Staining)",
+      categoryBn: "সাইটোলজিক্যাল স্ট্রাকচার অ্যানালাইসিস",
+      regularPriceRangeBn: "৳৮০০ - ৳১,৪০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "২৪ ঘণ্টা",
+    },
+    {
+      testNameBn: "স্পার্ম ভাইটালিটি / লাইভ-ডেড ভায়াবিলিটি টেস্ট (Sperm Vitality Test - Eosin-Nigrosin Stain)",
+      testNameEn: "Sperm Vitality & Membrane Integrity Test (Eosin-Nigrosin Dye Exclusion Viability Assay)",
+      categoryBn: "ভাইটালিটি ও সেল ইনটিগ্রিটি",
+      regularPriceRangeBn: "৳৬০০ - ৳১,০০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "৪ - ৬ ঘণ্টা",
+    },
+    {
+      testNameBn: "বীর্যে ফ্রুকটোজ পরীক্ষা (Semen Fructose Qualitative / Quantitative Test)",
+      testNameEn: "Seminal Fructose Biochemical Test (Seminal Vesicle Function & Obstructive Azoospermia Marker)",
+      categoryBn: "বায়োকেমিক্যাল অ্যানালাইসিস",
+      regularPriceRangeBn: "৳৫০০ - ৳৯০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "৪ - ৬ ঘণ্টা",
+    },
+    {
+      testNameBn: "সিমেন কালচার অ্যান্ড সেনসিটিভিটি (Semen Culture & Antimicrobial Sensitivity - C&S)",
+      testNameEn: "Semen Aerobic Culture & Sensitivity Test (Pathogen Isolation & Antibiotic Susceptibility)",
+      categoryBn: "মাইক্রোবায়োলজি ও ইনফেকশন স্ক্রিনিং",
+      regularPriceRangeBn: "৳৮০০ - ৳১,২০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "৪৮ - ৭২ ঘণ্টা",
+    },
+    {
+      testNameBn: "বীর্যে শ্বেতকণিকা ও পারঅক্সিডেজ স্টেইন (Peroxidase Test for Leukocytospermia)",
+      testNameEn: "Peroxidase Staining for Seminal Leukocytes (Endogenous Peroxidase Activity / Pyospermia Assessment)",
+      categoryBn: "প্রজনন নালী প্রদাহ চিহ্নিতকরণ",
+      regularPriceRangeBn: "৳৪০০ - ৳৭০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "৩ - ৪ ঘণ্টা",
+    },
+    {
+      testNameBn: "স্ক্রোটাল কালার ডপলার আল্ট্রাসাউন্ড (Scrotal / Testicular Color Doppler USG)",
+      testNameEn: "High-Resolution Scrotal & Testicular Color Doppler Ultrasonography (Varicocele & Blood Flow Evaluation)",
+      categoryBn: "রেডিওলজি ও অণ্ডকোষ ইমেজিং",
+      regularPriceRangeBn: "৳১,৫০০ - ৳২,৫০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "১ - ২ ঘণ্টা",
+    },
+    {
+      testNameBn: "মেল ফার্টিলিটি হরমোন প্রোফাইল (Serum Testosterone, FSH, LH, Prolactin Panel)",
+      testNameEn: "Male Reproductive Hormone Profile (Serum Total Testosterone, FSH, LH & Prolactin by Automated CLIA)",
+      categoryBn: "এন্ডোক্রিনোলজি ও হরমোন প্যানেল",
+      regularPriceRangeBn: "৳২,৫০০ - ৳৪,২০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "একই দিনে (৪-৬ ঘণ্টা)",
+    },
+    {
+      testNameBn: "বীর্যের অ্যান্টি-স্পার্ম অ্যান্টিবডি টেস্ট (Anti-Sperm Antibodies - MAR Test)",
+      testNameEn: "Direct Mixed Antiglobulin Reaction (MAR Test for Seminal Anti-Sperm Antibodies IgG/IgA)",
+      categoryBn: "ইমিউনোলজিক্যাল ফার্টিলিটি টেস্ট",
+      regularPriceRangeBn: "৳১,৮০০ - ৳৩,০০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "২৪ - ৪৮ ঘণ্টা",
+    },
+    {
+      testNameBn: "কমপ্রিহেনসিভ মেল ফার্টিলিটি স্ক্রিনিং প্যাকেজ (Comprehensive Male Fertility Bundle)",
+      testNameEn: "Comprehensive Male Fertility Bundle (Semen R/E + Semen C&S + Scrotal USG + Serum Testosterone & FSH)",
+      categoryBn: "সমন্বিত পুরুষ প্রজনন স্ক্রিনিং",
+      regularPriceRangeBn: "৳৩,৫০০ - ৳৫,৫০০",
+      memberPriceRangeBn: "১০-৩০% মেম্বার ছাড়",
+      discountPercentageBn: "১০-৩০% মেম্বার ছাড়",
+      turnaroundTimeBn: "একই দিনে সম্পূর্ণ",
+    },
+  ],
+};

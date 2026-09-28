@@ -273,6 +273,11 @@ A single registered Health Club membership extends discount benefits to:
 - **Top Physiotherapy Centers Guide Feni**: `https://www.healthclubfeni.com/blog/best-physiotherapy-in-feni`
 - **Top Cardiologists Guide Feni**: `https://www.healthclubfeni.com/blog/best-cardiologists-in-feni`
 - **Top Gynecologists & Maternity Guide Feni**: `https://www.healthclubfeni.com/blog/best-gynecologists-in-feni`
+- **Semen Analysis & Male Fertility Test Guide Feni**: `https://www.healthclubfeni.com/blog/feni-semen-analysis-infertility-test-guide`
+- **FNAC & Biopsy Tumor Test Guide Feni**: `https://www.healthclubfeni.com/blog/feni-biopsy-fnac-tumor-test-guide`
+- **Cataract & Phaco Eye Surgery Guide Feni**: `https://www.healthclubfeni.com/blog/feni-cataract-phaco-eye-surgery-cost-guide`
+- **Tonsil & Adenoid Surgery Guide Feni**: `https://www.healthclubfeni.com/blog/feni-tonsil-adenoid-surgery-cost-guide`
+- **Appendicitis Surgery Cost & Laparoscopic Appendectomy Guide Feni**: `https://www.healthclubfeni.com/blog/feni-appendix-appendectomy-surgery-cost-guide`
 - **Emergency & Blood Services**: `https://www.healthclubfeni.com/emergency`
 - **Specialist Doctors Directory**: `https://www.healthclubfeni.com/consultants`
 - **Partner Hospitals & Diagnostic Centers**: `https://www.healthclubfeni.com/partner-hospitals`
