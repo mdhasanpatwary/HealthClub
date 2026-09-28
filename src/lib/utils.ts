@@ -5,7 +5,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function toBanglaNums(num: number | string): string {
+export function toBanglaNums(num: number | string | undefined | null): string {
+  if (num === undefined || num === null) return "";
   const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
   return num
     .toString()

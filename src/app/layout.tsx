@@ -10,6 +10,7 @@ import { getCachedNoticeSetting, getCachedContactSettings } from "@/app/actions/
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -278,6 +279,7 @@ export default async function RootLayout({
           <Footer />
           <BottomNav />
           <DeferredClientComponents />
+          <SpeedInsights />
         </ThemeProvider>
       </body>
     </html>

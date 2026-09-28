@@ -82,19 +82,19 @@ export function DiagnosticComparisonTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-border/60">
-            {items.map((item) => {
+            {items.map((item, idx) => {
               const name = item.nameBn || item.nameEn;
-              const isPartner = item.partnerStatus ?? (item.discountBn.includes("হেলথ ক্লাব") || item.discountBn.includes("১০-৩০%"));
+              const isPartner = item.partnerStatus ?? (item.discountBn?.includes("হেলথ ক্লাব") || item.discountBn?.includes("১০-৩০%") || false);
 
               return (
                 <tr
-                  key={item.rank}
+                  key={item.rank ?? idx}
                   className={`hover:bg-muted/40 transition-colors ${
                     isPartner ? "bg-primary/5 font-medium" : ""
                   }`}
                 >
                   <td className="py-3 px-3 sm:px-4 text-center font-bold text-foreground">
-                    {toBanglaNums(item.rank)}
+                    {toBanglaNums(item.rank ?? idx + 1)}
                   </td>
                   <td className="py-3 px-3 sm:px-4">
                     <a
@@ -113,31 +113,31 @@ export function DiagnosticComparisonTable({
                     </td>
                   )}
                   <td className="py-3 px-3 sm:px-4 text-center whitespace-nowrap">
-                    {renderStatus(item.ctScanAvailable)}
+                    {renderStatus(item.ctScanAvailable ?? false)}
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-center whitespace-nowrap">
-                    {renderStatus(item.ultrasound4D)}
+                    {renderStatus(item.ultrasound4D ?? false)}
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-center whitespace-nowrap">
-                    {renderStatus(item.digitalXray)}
+                    {renderStatus(item.digitalXray ?? false)}
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-center whitespace-nowrap">
-                    {renderStatus(item.automatedLab)}
+                    {renderStatus(item.automatedLab ?? false)}
                   </td>
                   <td className="py-3 px-3 sm:px-4">
                     {isPartner ? (
                       <span className="inline-flex items-center gap-1 text-primary font-bold text-xs bg-primary/10 px-2 py-0.5 rounded-md">
                         <ShieldCheck className="h-3 w-3 shrink-0" />
-                        <span>{item.discountBn}</span>
+                        <span>{item.discountBn || "১০-৩০% মেম্বার ছাড়"}</span>
                       </span>
                     ) : (
                       <span className="text-muted-foreground text-xs">
-                        {item.discountBn}
+                        {item.discountBn || "—"}
                       </span>
                     )}
                   </td>
                   <td className="py-3 px-3 sm:px-4 text-muted-foreground text-xs whitespace-nowrap">
-                    {item.locationBn}
+                    {item.locationBn || ""}
                   </td>
                 </tr>
               );
