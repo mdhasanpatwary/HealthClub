@@ -1,4 +1,4 @@
-import { BlogPost } from "@/types/blog";
+import { BlogPost, BlogPostCardItem } from "@/types/blog";
 import { SITE_URL } from "@/lib/siteConfig";
 import { getArticleIsoDate } from "@/lib/dateUtils";
 
@@ -6,7 +6,7 @@ export function generateBlogJsonLd(
   post: BlogPost,
   title: string,
   pageUrl: string,
-  relatedPosts?: BlogPost[]
+  relatedPosts?: (BlogPost | BlogPostCardItem)[]
 ): Record<string, unknown> {
   const coverImageUrl = post.coverImage.startsWith("http")
     ? post.coverImage

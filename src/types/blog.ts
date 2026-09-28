@@ -417,6 +417,8 @@ export interface BlogPostCardItem {
   facilityCount?: number;
   facilityLabelBn?: string;
   facilityLabelEn?: string;
+  tags?: string[];
+  metaKeywords?: string[];
 }
 
 export * from "./pharmacyBlog";

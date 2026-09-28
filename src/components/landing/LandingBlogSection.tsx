@@ -5,10 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { cn, toBanglaNums } from "@/lib/utils";
 import { formatArticleDate } from "@/lib/dateUtils";
-import { BlogPost } from "@/types/blog";
+import { BlogPost, BlogPostCardItem } from "@/types/blog";
 
 interface LandingBlogSectionProps {
-  posts: BlogPost[];
+  posts: (BlogPost | BlogPostCardItem)[];
   limit?: number;
 }
 
@@ -63,12 +63,13 @@ export function LandingBlogSection({
             const dateStr = formatArticleDate(post.publishedDate);
 
             const facilityCount =
-              post.hospitals?.length ||
-              post.diagnosticCenters?.length ||
-              post.dentalClinics?.length ||
-              post.physiotherapyCenters?.length ||
-              post.doctorGroups?.reduce((acc, g) => acc + g.doctors.length, 0) ||
-              0;
+              ("facilityCount" in post && post.facilityCount !== undefined)
+                ? post.facilityCount
+                : ("hospitalCount" in post && post.hospitalCount !== undefined)
+                ? post.hospitalCount
+                : ("hospitals" in post && post.hospitals)
+                ? post.hospitals.length
+                : 0;
 
             return (
               <article

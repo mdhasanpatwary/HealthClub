@@ -1,6 +1,6 @@
 import JsonLd from "@/components/seo/JsonLd";
 import { BLOG_FILTER_PILLS } from "@/data/blog/blogCategories";
-import { getAllBlogPostsAction } from "@/app/actions/blogAdminActions";
+import { getAllBlogPostCardsAction } from "@/app/actions/blogAdminActions";
 import { BlogSearchFilter } from "./components/BlogSearchFilter";
 import { BlogCard } from "./components/BlogCard";
 import {
@@ -14,7 +14,6 @@ import { toBanglaNums } from "@/lib/utils";
 import {
   paginateBlogPosts,
   DEFAULT_BLOG_PAGE_SIZE,
-  getPostFacilityMeta,
 } from "./utils/blogPagination";
 
 export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
@@ -127,8 +126,8 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const selectedCategory = resolvedSearchParams.category?.trim() || "all";
   const searchQuery = resolvedSearchParams.search?.trim() || "";
 
-  const allPosts = await getAllBlogPostsAction();
-  const paginatedResult = paginateBlogPosts(allPosts, {
+  const allCardPosts = await getAllBlogPostCardsAction();
+  const paginatedResult = paginateBlogPosts(allCardPosts, {
     page: currentPage,
     pageSize: DEFAULT_BLOG_PAGE_SIZE,
     category: selectedCategory,
@@ -136,32 +135,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     filterPills: BLOG_FILTER_PILLS,
   });
 
-  const cardPosts = paginatedResult.posts.map((post) => {
-    const facilityMeta = getPostFacilityMeta(post);
-    return {
-      slug: post.slug,
-      titleBn: post.titleBn,
-      titleEn: post.titleEn,
-      excerptBn: post.excerptBn,
-      excerptEn: post.excerptEn,
-      category: post.category,
-      categoryNameBn: post.categoryNameBn,
-      categoryNameEn: post.categoryNameEn,
-      readTimeBn: post.readTimeBn,
-      readTimeEn: post.readTimeEn,
-      publishedDate: post.publishedDate,
-      coverImage: post.coverImage,
-      coverImageAlt: post.coverImageAlt || post.titleBn,
-      author: {
-        nameBn: post.author?.nameBn || "হেলথ ক্লাব টিম",
-        nameEn: post.author?.nameEn || "Health Club Team",
-      },
-      hospitalCount: post.hospitals?.length || 0,
-      facilityCount: facilityMeta.count,
-      facilityLabelBn: facilityMeta.labelBn,
-      facilityLabelEn: facilityMeta.labelEn,
-    };
-  });
+  const cardPosts = paginatedResult.posts;
 
   const jsonLdData = {
     "@context": "https://schema.org",

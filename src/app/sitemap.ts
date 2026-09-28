@@ -10,7 +10,7 @@ import { HEALTH_TIPS_ARTICLES, HealthTipArticle } from "@/data/healthTipsData";
 import { getAllDepartmentSlugs } from "@/data/doctorSeoData";
 import { getAllUpazilaSlugs } from "@/data/feniLocations";
 import { getAllPartnerCategorySlugs } from "@/data/partnerCategorySeoData";
-import { getAllBlogPostsAction } from "@/app/actions/blogAdminActions";
+import { getAllBlogPostCardsAction } from "@/app/actions/blogAdminActions";
 import { BLOG_FILTER_PILLS } from "@/data/blog/blogCategories";
 import { logger } from "@/lib/logger";
 
@@ -190,10 +190,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
 
   // Dynamic blog articles (e.g. Best 10 Hospitals in Feni)
-  const blogPosts = await getAllBlogPostsAction();
+  const blogPosts = await getAllBlogPostCardsAction();
   const blogPostEntries: MetadataRoute.Sitemap = blogPosts.map((post) => {
     const url = `${baseUrl}/blog/${encodeURIComponent(post.slug)}`;
-    const lastModified = parseArticleDate(post.modifiedDate, STATIC_LAST_MODIFIED);
+    const lastModified = parseArticleDate(post.publishedDate, STATIC_LAST_MODIFIED);
 
     return {
       url,

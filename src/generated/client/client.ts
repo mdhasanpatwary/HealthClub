@@ -121,3 +121,8 @@ export type BloodDonor = Prisma.BloodDonorModel
  * 
  */
 export type AmbulanceService = Prisma.AmbulanceServiceModel
+/**
+ * Model BlogPost
+ * 
+ */
+export type BlogPost = Prisma.BlogPostModel

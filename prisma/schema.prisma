@@ -386,3 +386,48 @@ model AmbulanceService {
   @@map("ambulance_services")
 }
 
+model BlogPost {
+  id                        String   @id @default(uuid())
+  slug                      String   @unique
+  titleBn                   String   @map("title_bn")
+  titleEn                   String   @map("title_en")
+  excerptBn                 String   @db.Text @map("excerpt_bn")
+  excerptEn                 String   @db.Text @map("excerpt_en")
+  category                  String
+  categoryNameBn            String   @default("") @map("category_name_bn")
+  categoryNameEn            String   @default("") @map("category_name_en")
+  publishedDate             String   @map("published_date")
+  modifiedDate              String   @default("") @map("modified_date")
+  readTimeBn                String   @map("read_time_bn")
+  readTimeEn                String   @map("read_time_en")
+  coverImage                String   @map("cover_image")
+  coverImageAlt             String   @default("") @map("cover_image_alt")
+  author                    Json
+  hospitalCount             Int      @default(0) @map("hospital_count")
+  facilityCount             Int      @default(0) @map("facility_count")
+  facilityLabelBn           String?  @map("facility_label_bn")
+  facilityLabelEn           String?  @map("facility_label_en")
+
+  keyHighlightsBn           Json?    @map("key_highlights_bn")
+  introParagraphsBn         Json?    @map("intro_paragraphs_bn")
+  diagnosticComparisonTable Json?    @map("diagnostic_comparison_table")
+  diagnosticCenters         Json?    @map("diagnostic_centers")
+  diagnosticTestPricingBn   Json?    @map("diagnostic_test_pricing_bn")
+  bookingGuideBn            Json?    @map("booking_guide_bn")
+  selectionGuideBn          Json?    @map("selection_guide_bn")
+  faqs                      Json?
+  relatedSlugs              Json?    @map("related_slugs")
+  metaKeywords              Json?    @map("meta_keywords")
+  tags                      Json?
+  contentPayload            Json?    @map("content_payload")
+
+  createdAt                 DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt                 DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([slug], map: "blog_posts_slug_idx")
+  @@index([category], map: "blog_posts_category_idx")
+  @@index([publishedDate], map: "blog_posts_published_date_idx")
+  @@index([category, publishedDate], map: "blog_posts_category_published_date_idx")
+  @@map("blog_posts")
+}
+

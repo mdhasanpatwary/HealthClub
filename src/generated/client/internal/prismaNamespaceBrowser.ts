@@ -66,7 +66,8 @@ export const ModelName = {
   Review: 'Review',
   PushSubscription: 'PushSubscription',
   BloodDonor: 'BloodDonor',
-  AmbulanceService: 'AmbulanceService'
+  AmbulanceService: 'AmbulanceService',
+  BlogPost: 'BlogPost'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -380,12 +381,67 @@ export const AmbulanceServiceScalarFieldEnum = {
 export type AmbulanceServiceScalarFieldEnum = (typeof AmbulanceServiceScalarFieldEnum)[keyof typeof AmbulanceServiceScalarFieldEnum]
 
 
+export const BlogPostScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  titleBn: 'titleBn',
+  titleEn: 'titleEn',
+  excerptBn: 'excerptBn',
+  excerptEn: 'excerptEn',
+  category: 'category',
+  categoryNameBn: 'categoryNameBn',
+  categoryNameEn: 'categoryNameEn',
+  publishedDate: 'publishedDate',
+  modifiedDate: 'modifiedDate',
+  readTimeBn: 'readTimeBn',
+  readTimeEn: 'readTimeEn',
+  coverImage: 'coverImage',
+  coverImageAlt: 'coverImageAlt',
+  author: 'author',
+  hospitalCount: 'hospitalCount',
+  facilityCount: 'facilityCount',
+  facilityLabelBn: 'facilityLabelBn',
+  facilityLabelEn: 'facilityLabelEn',
+  keyHighlightsBn: 'keyHighlightsBn',
+  introParagraphsBn: 'introParagraphsBn',
+  diagnosticComparisonTable: 'diagnosticComparisonTable',
+  diagnosticCenters: 'diagnosticCenters',
+  diagnosticTestPricingBn: 'diagnosticTestPricingBn',
+  bookingGuideBn: 'bookingGuideBn',
+  selectionGuideBn: 'selectionGuideBn',
+  faqs: 'faqs',
+  relatedSlugs: 'relatedSlugs',
+  metaKeywords: 'metaKeywords',
+  tags: 'tags',
+  contentPayload: 'contentPayload',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BlogPostScalarFieldEnum = (typeof BlogPostScalarFieldEnum)[keyof typeof BlogPostScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -402,4 +458,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

@@ -23,7 +23,7 @@ import { LandingBenefits } from "@/components/landing/LandingBenefits";
 import { LandingPricing } from "@/components/landing/LandingPricing";
 import { LandingComparison } from "@/components/landing/LandingComparison";
 import { LandingBlogSection } from "@/components/landing/LandingBlogSection";
-import { getAllBlogPostsAction } from "@/app/actions/blogAdminActions";
+import { getAllBlogPostCardsAction } from "@/app/actions/blogAdminActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
@@ -116,8 +116,8 @@ export default async function Home() {
   } = stats;
 
   const remainingSeats = Math.max(0, 100 - (foundingCount ?? memberCount));
-  const allBlogPosts = await getAllBlogPostsAction();
-  const blogPosts = allBlogPosts.slice(0, 3);
+  const allBlogCards = await getAllBlogPostCardsAction();
+  const blogPosts = allBlogCards.slice(0, 3);
 
   // Sample member data for the digital card visual in Hero
   const sampleMember: Member = {

@@ -399,7 +399,8 @@ export const ModelName = {
   Review: 'Review',
   PushSubscription: 'PushSubscription',
   BloodDonor: 'BloodDonor',
-  AmbulanceService: 'AmbulanceService'
+  AmbulanceService: 'AmbulanceService',
+  BlogPost: 'BlogPost'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -415,7 +416,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "member" | "partner" | "partnerStaff" | "transaction" | "doctor" | "partnerRequest" | "contactMessage" | "systemSetting" | "pwaInstallation" | "memberNotification" | "adminUser" | "databaseSnapshot" | "review" | "pushSubscription" | "bloodDonor" | "ambulanceService"
+    modelProps: "member" | "partner" | "partnerStaff" | "transaction" | "doctor" | "partnerRequest" | "contactMessage" | "systemSetting" | "pwaInstallation" | "memberNotification" | "adminUser" | "databaseSnapshot" | "review" | "pushSubscription" | "bloodDonor" | "ambulanceService" | "blogPost"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1603,6 +1604,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    BlogPost: {
+      payload: Prisma.$BlogPostPayload<ExtArgs>
+      fields: Prisma.BlogPostFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BlogPostFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BlogPostFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>
+        }
+        findFirst: {
+          args: Prisma.BlogPostFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BlogPostFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>
+        }
+        findMany: {
+          args: Prisma.BlogPostFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>[]
+        }
+        create: {
+          args: Prisma.BlogPostCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>
+        }
+        createMany: {
+          args: Prisma.BlogPostCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BlogPostCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>[]
+        }
+        delete: {
+          args: Prisma.BlogPostDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>
+        }
+        update: {
+          args: Prisma.BlogPostUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>
+        }
+        deleteMany: {
+          args: Prisma.BlogPostDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BlogPostUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BlogPostUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>[]
+        }
+        upsert: {
+          args: Prisma.BlogPostUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>
+        }
+        aggregate: {
+          args: Prisma.BlogPostAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBlogPost>
+        }
+        groupBy: {
+          args: Prisma.BlogPostGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BlogPostGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BlogPostCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BlogPostCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1937,12 +2012,67 @@ export const AmbulanceServiceScalarFieldEnum = {
 export type AmbulanceServiceScalarFieldEnum = (typeof AmbulanceServiceScalarFieldEnum)[keyof typeof AmbulanceServiceScalarFieldEnum]
 
 
+export const BlogPostScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  titleBn: 'titleBn',
+  titleEn: 'titleEn',
+  excerptBn: 'excerptBn',
+  excerptEn: 'excerptEn',
+  category: 'category',
+  categoryNameBn: 'categoryNameBn',
+  categoryNameEn: 'categoryNameEn',
+  publishedDate: 'publishedDate',
+  modifiedDate: 'modifiedDate',
+  readTimeBn: 'readTimeBn',
+  readTimeEn: 'readTimeEn',
+  coverImage: 'coverImage',
+  coverImageAlt: 'coverImageAlt',
+  author: 'author',
+  hospitalCount: 'hospitalCount',
+  facilityCount: 'facilityCount',
+  facilityLabelBn: 'facilityLabelBn',
+  facilityLabelEn: 'facilityLabelEn',
+  keyHighlightsBn: 'keyHighlightsBn',
+  introParagraphsBn: 'introParagraphsBn',
+  diagnosticComparisonTable: 'diagnosticComparisonTable',
+  diagnosticCenters: 'diagnosticCenters',
+  diagnosticTestPricingBn: 'diagnosticTestPricingBn',
+  bookingGuideBn: 'bookingGuideBn',
+  selectionGuideBn: 'selectionGuideBn',
+  faqs: 'faqs',
+  relatedSlugs: 'relatedSlugs',
+  metaKeywords: 'metaKeywords',
+  tags: 'tags',
+  contentPayload: 'contentPayload',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BlogPostScalarFieldEnum = (typeof BlogPostScalarFieldEnum)[keyof typeof BlogPostScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -1959,6 +2089,15 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
 
@@ -2013,6 +2152,20 @@ export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -2155,6 +2308,7 @@ export type GlobalOmitConfig = {
   pushSubscription?: Prisma.PushSubscriptionOmit
   bloodDonor?: Prisma.BloodDonorOmit
   ambulanceService?: Prisma.AmbulanceServiceOmit
+  blogPost?: Prisma.BlogPostOmit
 }
 
 /* Types for Logging */

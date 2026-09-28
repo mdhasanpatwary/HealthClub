@@ -9,8 +9,19 @@ export interface PaginateBlogPostsOptions {
   filterPills?: BlogFilterPill[];
 }
 
-export interface PaginatedBlogPostsResult {
-  posts: BlogPost[];
+export interface BlogFilterableItem {
+  slug: string;
+  category: string;
+  titleBn: string;
+  titleEn: string;
+  excerptBn: string;
+  excerptEn: string;
+  tags?: string[];
+  metaKeywords?: string[];
+}
+
+export interface PaginatedBlogPostsResult<T = BlogPost> {
+  posts: T[];
   totalItems: number;
   totalPages: number;
   currentPage: number;
@@ -20,12 +31,12 @@ export interface PaginatedBlogPostsResult {
 export const DEFAULT_BLOG_PAGE_SIZE = 9;
 
 /**
- * Filter and paginate blog posts deterministically for server-side rendering.
+ * Filter and paginate blog posts or cards deterministically for server-side rendering.
  */
-export function paginateBlogPosts(
-  allPosts: BlogPost[],
+export function paginateBlogPosts<T extends BlogFilterableItem = BlogPost>(
+  allPosts: T[],
   options: PaginateBlogPostsOptions = {}
-): PaginatedBlogPostsResult {
+): PaginatedBlogPostsResult<T> {
   const pageSize = Math.max(1, options.pageSize || DEFAULT_BLOG_PAGE_SIZE);
   const rawPage = Math.max(1, options.page || 1);
   const selectedCategory = options.category?.trim() || "all";

@@ -4,27 +4,15 @@ import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag, revalidatePath } from "next/cache";
-import { BlogPost } from "@/types/blog";
+import { BlogPost, BlogPostCardItem, BlogAuthor, BlogFAQItem } from "@/types/blog";
 import { BLOG_POSTS } from "@/data/blog/blogPosts";
 import { PaginatedResult } from "@/types/pagination";
 import { hasAdminPermission } from "@/lib/permissions";
 import { blogPostSchema } from "@/lib/validations/blog";
+import { getPostFacilityMeta } from "@/app/blog/utils/blogPagination";
 
 const BLOG_POSTS_TAG = "blog-posts-data";
-
-/**
- * DB keys — intentionally lightweight:
- *   blog_admin_posts   : only admin-created posts (not in static BLOG_POSTS) as JSON array
- *   blog_deleted_slugs : slugs of static posts the admin has deleted, as JSON string[]
- *
- * The full 106-post static corpus is NEVER written to the database; it lives
- * exclusively as a TypeScript import, eliminating ~200 MB/day of Supabase egress.
- */
-const ADMIN_POSTS_SETTING_KEY = "blog_admin_posts";
-const DELETED_SLUGS_SETTING_KEY = "blog_deleted_slugs";
-
-/** Set of slugs that exist in the static TypeScript corpus. */
-const STATIC_SLUG_SET = new Set(BLOG_POSTS.map((p) => p.slug.toLowerCase().trim()));
+const BLOG_CARDS_TAG = "blog-cards-data";
 
 async function verifyAdmin(): Promise<boolean> {
   const session = await getSessionUser();
@@ -33,119 +21,191 @@ async function verifyAdmin(): Promise<boolean> {
   return hasAdminPermission(role, "manage_blogs");
 }
 
-async function getDeletedSlugs(): Promise<string[]> {
-  try {
-    const setting = await prisma.systemSetting.findUnique({
-      where: { key: DELETED_SLUGS_SETTING_KEY },
-    });
-    if (!setting?.value) return [];
-    const parsed = JSON.parse(setting.value);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch (err) {
-    logger.error("Failed to parse blog deleted slugs:", err);
-    return [];
-  }
+function mapStaticPostsToCards(): BlogPostCardItem[] {
+  return BLOG_POSTS.map((post) => {
+    const facilityMeta = getPostFacilityMeta(post);
+    return {
+      slug: post.slug,
+      titleBn: post.titleBn,
+      titleEn: post.titleEn,
+      excerptBn: post.excerptBn,
+      excerptEn: post.excerptEn,
+      category: post.category,
+      categoryNameBn: post.categoryNameBn || "",
+      categoryNameEn: post.categoryNameEn || "",
+      readTimeBn: post.readTimeBn,
+      readTimeEn: post.readTimeEn,
+      publishedDate: post.publishedDate,
+      coverImage: post.coverImage,
+      coverImageAlt: post.coverImageAlt || post.titleBn,
+      author: {
+        nameBn: post.author?.nameBn || "হেলথ ক্লাব টিম",
+        nameEn: post.author?.nameEn || "Health Club Team",
+      },
+      hospitalCount: post.hospitals?.length ?? 0,
+      facilityCount: facilityMeta.count,
+      facilityLabelBn: facilityMeta.labelBn,
+      facilityLabelEn: facilityMeta.labelEn,
+      tags: post.tags,
+      metaKeywords: post.metaKeywords,
+    };
+  });
 }
 
-async function markSlugAsDeleted(slug: string): Promise<void> {
-  try {
-    const current = await getDeletedSlugs();
-    if (!current.includes(slug)) {
-      const updated = [...current, slug];
-      await prisma.systemSetting.upsert({
-        where: { key: DELETED_SLUGS_SETTING_KEY },
-        create: {
-          key: DELETED_SLUGS_SETTING_KEY,
-          value: JSON.stringify(updated),
-        },
-        update: { value: JSON.stringify(updated) },
-      });
-    }
-  } catch (err) {
-    logger.error(`Failed to mark blog slug as deleted: ${slug}`, err);
-  }
-}
-
-async function unmarkSlugAsDeleted(slug: string): Promise<void> {
-  try {
-    const current = await getDeletedSlugs();
-    if (current.includes(slug)) {
-      const updated = current.filter((s) => s !== slug);
-      await prisma.systemSetting.upsert({
-        where: { key: DELETED_SLUGS_SETTING_KEY },
-        create: {
-          key: DELETED_SLUGS_SETTING_KEY,
-          value: JSON.stringify(updated),
-        },
-        update: { value: JSON.stringify(updated) },
-      });
-    }
-  } catch (err) {
-    logger.error(`Failed to unmark blog slug as deleted: ${slug}`, err);
-  }
-}
-
-/** Fetch only admin-created posts (those NOT in the static corpus). */
-async function getAdminCreatedPosts(): Promise<BlogPost[]> {
-  try {
-    const setting = await prisma.systemSetting.findUnique({
-      where: { key: ADMIN_POSTS_SETTING_KEY },
-    });
-    if (!setting?.value) return [];
-    const parsed = JSON.parse(setting.value);
-    return Array.isArray(parsed) ? (parsed as BlogPost[]) : [];
-  } catch (err) {
-    logger.error("Failed to parse blog_admin_posts:", err);
-    return [];
-  }
-}
-
-export interface GetPaginatedBlogsAdminParams {
-  page?: number;
-  pageSize?: number;
-  search?: string;
-  category?: string;
+function mapDbRowToBlogPost(dbPost: {
+  slug: string;
+  titleBn: string;
+  titleEn: string;
+  excerptBn: string;
+  excerptEn: string;
+  category: string;
+  categoryNameBn: string;
+  categoryNameEn: string;
+  publishedDate: string;
+  modifiedDate: string;
+  readTimeBn: string;
+  readTimeEn: string;
+  coverImage: string;
+  coverImageAlt: string;
+  author: unknown;
+  tags?: unknown;
+  metaKeywords?: unknown;
+  keyHighlightsBn?: unknown;
+  introParagraphsBn?: unknown;
+  diagnosticComparisonTable?: unknown;
+  diagnosticCenters?: unknown;
+  diagnosticTestPricingBn?: unknown;
+  bookingGuideBn?: unknown;
+  selectionGuideBn?: unknown;
+  faqs?: unknown;
+  relatedSlugs?: unknown;
+  contentPayload?: unknown;
+}): BlogPost {
+  const payload = (dbPost.contentPayload as unknown as Partial<BlogPost>) || {};
+  return {
+    ...payload,
+    slug: dbPost.slug,
+    titleBn: dbPost.titleBn,
+    titleEn: dbPost.titleEn,
+    excerptBn: dbPost.excerptBn,
+    excerptEn: dbPost.excerptEn,
+    category: dbPost.category,
+    categoryNameBn: dbPost.categoryNameBn,
+    categoryNameEn: dbPost.categoryNameEn,
+    publishedDate: dbPost.publishedDate,
+    modifiedDate: dbPost.modifiedDate,
+    readTimeBn: dbPost.readTimeBn,
+    readTimeEn: dbPost.readTimeEn,
+    coverImage: dbPost.coverImage,
+    coverImageAlt: dbPost.coverImageAlt,
+    author: dbPost.author as unknown as BlogAuthor,
+    tags: (dbPost.tags as unknown as string[]) || payload.tags || [],
+    metaKeywords: (dbPost.metaKeywords as unknown as string[]) || payload.metaKeywords || [],
+    keyHighlightsBn: (dbPost.keyHighlightsBn as unknown as string[]) || payload.keyHighlightsBn,
+    introParagraphsBn: (dbPost.introParagraphsBn as unknown as string[]) || payload.introParagraphsBn || [],
+    diagnosticComparisonTable: (dbPost.diagnosticComparisonTable as unknown as BlogPost["diagnosticComparisonTable"]) || payload.diagnosticComparisonTable,
+    diagnosticCenters: (dbPost.diagnosticCenters as unknown as BlogPost["diagnosticCenters"]) || payload.diagnosticCenters,
+    diagnosticTestPricingBn: (dbPost.diagnosticTestPricingBn as unknown as BlogPost["diagnosticTestPricingBn"]) || payload.diagnosticTestPricingBn,
+    bookingGuideBn: (dbPost.bookingGuideBn as unknown as BlogPost["bookingGuideBn"]) || payload.bookingGuideBn,
+    selectionGuideBn: (dbPost.selectionGuideBn as unknown as BlogPost["selectionGuideBn"]) || payload.selectionGuideBn,
+    faqs: (dbPost.faqs as unknown as BlogFAQItem[]) || payload.faqs || [],
+    relatedSlugs: (dbPost.relatedSlugs as unknown as string[]) || payload.relatedSlugs,
+  };
 }
 
 /**
- * Cached reader for all blog posts.
- *
- * Reads only two tiny DB rows (admin_posts + deleted_slugs), then merges
- * with the static BLOG_POSTS array — zero full-corpus DB reads.
+ * Lightweight Card Querying for `/blog` Listing & Home Page.
+ * Loads ONLY essential card projection columns via Prisma select.
  */
-const getCachedBlogPosts = unstable_cache(
-  async (): Promise<BlogPost[]> => {
+export const getAllBlogPostCardsAction = unstable_cache(
+  async (): Promise<BlogPostCardItem[]> => {
     try {
-      const [deletedSlugs, adminPosts] = await Promise.all([
-        getDeletedSlugs(),
-        getAdminCreatedPosts(),
-      ]);
+      const posts = await prisma.blogPost.findMany({
+        select: {
+          slug: true,
+          titleBn: true,
+          titleEn: true,
+          excerptBn: true,
+          excerptEn: true,
+          category: true,
+          categoryNameBn: true,
+          categoryNameEn: true,
+          readTimeBn: true,
+          readTimeEn: true,
+          publishedDate: true,
+          coverImage: true,
+          coverImageAlt: true,
+          author: true,
+          hospitalCount: true,
+          facilityCount: true,
+          facilityLabelBn: true,
+          facilityLabelEn: true,
+          tags: true,
+          metaKeywords: true,
+        },
+        orderBy: { publishedDate: "desc" },
+      });
 
-      // Static posts minus any admin-deleted slugs
-      const staticPosts =
-        deletedSlugs.length > 0
-          ? BLOG_POSTS.filter((p) => !deletedSlugs.includes(p.slug))
-          : BLOG_POSTS;
+      if (posts && posts.length > 0) {
+        return posts.map((p) => ({
+          slug: p.slug,
+          titleBn: p.titleBn,
+          titleEn: p.titleEn,
+          excerptBn: p.excerptBn,
+          excerptEn: p.excerptEn,
+          category: p.category,
+          categoryNameBn: p.categoryNameBn,
+          categoryNameEn: p.categoryNameEn,
+          readTimeBn: p.readTimeBn,
+          readTimeEn: p.readTimeEn,
+          publishedDate: p.publishedDate,
+          coverImage: p.coverImage,
+          coverImageAlt: p.coverImageAlt,
+          author: p.author as unknown as BlogPostCardItem["author"],
+          hospitalCount: p.hospitalCount,
+          facilityCount: p.facilityCount,
+          facilityLabelBn: p.facilityLabelBn || undefined,
+          facilityLabelEn: p.facilityLabelEn || undefined,
+          tags: (p.tags as unknown as string[]) || undefined,
+          metaKeywords: (p.metaKeywords as unknown as string[]) || undefined,
+        }));
+      }
 
-      // Admin-created posts are prepended so they appear first
-      // (their slugs are guaranteed NOT in STATIC_SLUG_SET)
-      return [...adminPosts, ...staticPosts];
+      return mapStaticPostsToCards();
     } catch (err) {
-      logger.error("Error in getCachedBlogPosts:", err);
-      return BLOG_POSTS;
+      logger.error("Error in getAllBlogPostCardsAction:", err);
+      return mapStaticPostsToCards();
     }
   },
-  ["all-blog-posts-admin-v23"],
+  ["all-blog-post-cards-v1"],
+  { revalidate: 86400, tags: [BLOG_POSTS_TAG, BLOG_CARDS_TAG] }
+);
+
+/**
+ * Fetch all slugs for SSG generateStaticParams.
+ */
+export const getAllBlogSlugsAction = unstable_cache(
+  async (): Promise<string[]> => {
+    try {
+      const posts = await prisma.blogPost.findMany({
+        select: { slug: true },
+        orderBy: { publishedDate: "desc" },
+      });
+      if (posts && posts.length > 0) {
+        return posts.map((p) => p.slug);
+      }
+      return BLOG_POSTS.map((p) => p.slug);
+    } catch (err) {
+      logger.error("Error in getAllBlogSlugsAction:", err);
+      return BLOG_POSTS.map((p) => p.slug);
+    }
+  },
+  ["all-blog-slugs-v1"],
   { revalidate: 86400, tags: [BLOG_POSTS_TAG] }
 );
 
-export async function getAllBlogPostsAction(): Promise<BlogPost[]> {
-  return getCachedBlogPosts();
-}
-
 /**
- * Fetch a single article by slug.
- * Checks admin posts first (DB-free fast path for static slugs via unstable_cache).
+ * Fetch full blog post by slug from database (with static fallback).
  */
 export async function getBlogPostBySlugAction(
   slug: string
@@ -153,30 +213,54 @@ export async function getBlogPostBySlugAction(
   const raw = decodeURIComponent(slug).toLowerCase().trim();
   const normalized = raw.replace(/^[—–\s-]+|[—–\s-]+$/g, "");
 
-  // Fast path: static corpus lookup (no DB)
-  const staticMatch =
-    BLOG_POSTS.find(
-      (a) =>
-        a.slug.toLowerCase().trim() === normalized ||
-        a.slug.toLowerCase().trim() === raw
-    ) || null;
+  try {
+    const dbPost = await prisma.blogPost.findUnique({
+      where: { slug: normalized },
+    });
 
-  if (staticMatch) {
-    // Still respect admin-deleted slugs
-    const deletedSlugs = await getDeletedSlugs();
-    if (deletedSlugs.includes(staticMatch.slug)) return null;
-    return staticMatch;
+    if (dbPost) {
+      return mapDbRowToBlogPost(dbPost);
+    }
+  } catch (err) {
+    logger.error(`Error fetching blog post by slug from DB: ${slug}`, err);
   }
 
-  // Fallback: admin-created posts
-  const articles = await getAllBlogPostsAction();
   return (
-    articles.find(
+    BLOG_POSTS.find(
       (a) =>
         a.slug.toLowerCase().trim() === normalized ||
         a.slug.toLowerCase().trim() === raw
     ) || null
   );
+}
+
+/**
+ * Cached reader for all full blog posts.
+ */
+export const getAllBlogPostsAction = unstable_cache(
+  async (): Promise<BlogPost[]> => {
+    try {
+      const dbPosts = await prisma.blogPost.findMany({
+        orderBy: { publishedDate: "desc" },
+      });
+      if (dbPosts && dbPosts.length > 0) {
+        return dbPosts.map(mapDbRowToBlogPost);
+      }
+      return BLOG_POSTS;
+    } catch (err) {
+      logger.error("Error in getAllBlogPostsAction:", err);
+      return BLOG_POSTS;
+    }
+  },
+  ["all-blog-posts-v24"],
+  { revalidate: 86400, tags: [BLOG_POSTS_TAG] }
+);
+
+export interface GetPaginatedBlogsAdminParams {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  category?: string;
 }
 
 /**
@@ -206,7 +290,7 @@ export async function getPaginatedBlogPostsAdminAction(
         a.excerptBn.toLowerCase().includes(search) ||
         a.excerptEn.toLowerCase().includes(search) ||
         a.slug.toLowerCase().includes(search) ||
-        a.tags.some((t) => t.toLowerCase().includes(search))
+        a.tags?.some((t) => t.toLowerCase().includes(search))
     );
   }
 
@@ -225,11 +309,7 @@ export async function getPaginatedBlogPostsAdminAction(
 }
 
 /**
- * Create or update a blog post.
- *
- * Static posts (those already in BLOG_POSTS) are served from the TypeScript
- * import and are never persisted to DB. Only admin-created posts (new slugs
- * absent from the static corpus) are stored in the `blog_admin_posts` row.
+ * Create or update a blog post directly in PostgreSQL database.
  */
 export async function saveBlogPostAction(data: unknown) {
   try {
@@ -246,51 +326,59 @@ export async function saveBlogPostAction(data: unknown) {
 
     const post = validationResult.data as BlogPost;
     const slugKey = post.slug.toLowerCase().trim();
-    const isStaticPost = STATIC_SLUG_SET.has(slugKey);
 
-    if (!isStaticPost) {
-      // Persist only non-static (admin-created) posts to DB
-      const adminPosts = await getAdminCreatedPosts();
-      const existingIndex = adminPosts.findIndex(
-        (a) => a.slug.toLowerCase().trim() === slugKey
-      );
+    const facilityMeta = getPostFacilityMeta(post);
+    const hospitalCount = post.hospitals?.length ?? 0;
+    const facilityCount = facilityMeta.count;
+    const facilityLabelBn = facilityMeta.labelBn;
+    const facilityLabelEn = facilityMeta.labelEn;
 
-      let updatedAdminPosts: BlogPost[];
+    const rowData = {
+      slug: slugKey,
+      titleBn: post.titleBn,
+      titleEn: post.titleEn,
+      excerptBn: post.excerptBn,
+      excerptEn: post.excerptEn,
+      category: post.category,
+      categoryNameBn: post.categoryNameBn || "",
+      categoryNameEn: post.categoryNameEn || "",
+      publishedDate: post.publishedDate || new Date().toISOString().split("T")[0],
+      modifiedDate: new Date().toISOString().split("T")[0],
+      readTimeBn: post.readTimeBn,
+      readTimeEn: post.readTimeEn,
+      coverImage: post.coverImage,
+      coverImageAlt: post.coverImageAlt || post.titleBn,
+      author: JSON.parse(JSON.stringify(post.author)),
+      hospitalCount,
+      facilityCount,
+      facilityLabelBn,
+      facilityLabelEn,
+      keyHighlightsBn: post.keyHighlightsBn ? JSON.parse(JSON.stringify(post.keyHighlightsBn)) : null,
+      introParagraphsBn: post.introParagraphsBn ? JSON.parse(JSON.stringify(post.introParagraphsBn)) : null,
+      diagnosticComparisonTable: post.diagnosticComparisonTable
+        ? JSON.parse(JSON.stringify(post.diagnosticComparisonTable))
+        : null,
+      diagnosticCenters: post.diagnosticCenters ? JSON.parse(JSON.stringify(post.diagnosticCenters)) : null,
+      diagnosticTestPricingBn: post.diagnosticTestPricingBn
+        ? JSON.parse(JSON.stringify(post.diagnosticTestPricingBn))
+        : null,
+      bookingGuideBn: post.bookingGuideBn ? JSON.parse(JSON.stringify(post.bookingGuideBn)) : null,
+      selectionGuideBn: post.selectionGuideBn ? JSON.parse(JSON.stringify(post.selectionGuideBn)) : null,
+      faqs: post.faqs ? JSON.parse(JSON.stringify(post.faqs)) : null,
+      relatedSlugs: post.relatedSlugs ? JSON.parse(JSON.stringify(post.relatedSlugs)) : null,
+      metaKeywords: post.metaKeywords ? JSON.parse(JSON.stringify(post.metaKeywords)) : null,
+      tags: post.tags ? JSON.parse(JSON.stringify(post.tags)) : null,
+      contentPayload: JSON.parse(JSON.stringify(post)),
+    };
 
-      if (existingIndex >= 0) {
-        const existing = adminPosts[existingIndex];
-        const merged: BlogPost = {
-          ...existing,
-          ...post,
-          modifiedDate: new Date().toISOString().split("T")[0],
-        };
-        updatedAdminPosts = [...adminPosts];
-        updatedAdminPosts[existingIndex] = merged;
-      } else {
-        const now = new Date().toISOString().split("T")[0];
-        const newPost: BlogPost = {
-          ...post,
-          publishedDate: post.publishedDate || now,
-          modifiedDate: now,
-        };
-        updatedAdminPosts = [newPost, ...adminPosts];
-      }
+    await prisma.blogPost.upsert({
+      where: { slug: slugKey },
+      update: rowData,
+      create: rowData,
+    });
 
-      await prisma.systemSetting.upsert({
-        where: { key: ADMIN_POSTS_SETTING_KEY },
-        create: {
-          key: ADMIN_POSTS_SETTING_KEY,
-          value: JSON.stringify(updatedAdminPosts),
-        },
-        update: { value: JSON.stringify(updatedAdminPosts) },
-      });
-    }
-
-    // Unmark deleted slug if it was previously deleted
-    await unmarkSlugAsDeleted(post.slug);
-
-    // Bust Next.js cache and revalidate pages
     updateTag(BLOG_POSTS_TAG);
+    updateTag(BLOG_CARDS_TAG);
     revalidatePath("/blog");
     revalidatePath(`/blog/${post.slug}`);
     revalidatePath("/admin/blogs");
@@ -305,10 +393,7 @@ export async function saveBlogPostAction(data: unknown) {
 }
 
 /**
- * Delete a blog post by slug.
- *
- * For static posts: adds slug to `blog_deleted_slugs` (a tiny string array).
- * For admin-created posts: removes from `blog_admin_posts` and adds to deleted list.
+ * Delete a blog post by slug from database.
  */
 export async function deleteBlogPostAction(slug: string) {
   try {
@@ -318,28 +403,17 @@ export async function deleteBlogPostAction(slug: string) {
     }
 
     const normalizedSlug = decodeURIComponent(slug).toLowerCase().trim();
-    const isStaticPost = STATIC_SLUG_SET.has(normalizedSlug);
 
-    if (!isStaticPost) {
-      // Remove from admin-created posts list
-      const adminPosts = await getAdminCreatedPosts();
-      const updatedAdminPosts = adminPosts.filter(
-        (a) => a.slug.toLowerCase().trim() !== normalizedSlug
-      );
-      await prisma.systemSetting.upsert({
-        where: { key: ADMIN_POSTS_SETTING_KEY },
-        create: {
-          key: ADMIN_POSTS_SETTING_KEY,
-          value: JSON.stringify(updatedAdminPosts),
-        },
-        update: { value: JSON.stringify(updatedAdminPosts) },
+    try {
+      await prisma.blogPost.delete({
+        where: { slug: normalizedSlug },
       });
+    } catch (dbErr) {
+      logger.warn(`Could not delete from DB table blog_posts: ${normalizedSlug}`, dbErr);
     }
 
-    // Always record deleted slug to prevent static fallback from reviving it
-    await markSlugAsDeleted(normalizedSlug);
-
     updateTag(BLOG_POSTS_TAG);
+    updateTag(BLOG_CARDS_TAG);
     revalidatePath("/blog");
     revalidatePath(`/blog/${slug}`);
     revalidatePath("/admin/blogs");
