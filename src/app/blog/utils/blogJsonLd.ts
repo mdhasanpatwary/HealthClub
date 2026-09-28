@@ -2,6 +2,11 @@ import { BlogPost, BlogPostCardItem } from "@/types/blog";
 import { SITE_URL } from "@/lib/siteConfig";
 import { getArticleIsoDate } from "@/lib/dateUtils";
 
+function getFirstPhone(phone?: string | null): string {
+  if (!phone) return "";
+  return phone.split(/[,/|]+/)[0]?.trim() || "";
+}
+
 export function generateBlogJsonLd(
   post: BlogPost,
   title: string,
@@ -148,7 +153,7 @@ export function generateBlogJsonLd(
         item: {
           "@type": "Hospital",
           name: h.nameBn,
-          telephone: h.phone,
+          ...(getFirstPhone(h.phone) ? { telephone: getFirstPhone(h.phone) } : {}),
           address: {
             "@type": "PostalAddress",
             streetAddress: h.addressBn,
@@ -181,7 +186,7 @@ export function generateBlogJsonLd(
           name: doc.nameBn,
           medicalSpecialty: doc.specialtyBn,
           description: `${doc.designationBn}, ${doc.degreesBn}`,
-          telephone: doc.serialPhone.split(",")[0].trim(),
+          ...(getFirstPhone(doc.serialPhone) ? { telephone: getFirstPhone(doc.serialPhone) } : {}),
           address: {
             "@type": "PostalAddress",
             streetAddress: doc.chamberAddressBn,
@@ -211,8 +216,10 @@ export function generateBlogJsonLd(
         item: {
           "@type": "DiagnosticLab",
           name: diag.nameBn,
-          description: diag.descriptionBn,
-          telephone: diag.phone.split(",")[0].trim(),
+          description: diag.descriptionBn || (diag as unknown as { taglineBn?: string }).taglineBn || post.excerptBn,
+          ...(getFirstPhone(diag.phone || (diag as unknown as { contactHotline?: string }).contactHotline)
+            ? { telephone: getFirstPhone(diag.phone || (diag as unknown as { contactHotline?: string }).contactHotline) }
+            : {}),
           address: {
             "@type": "PostalAddress",
             streetAddress: diag.addressBn,
@@ -264,7 +271,7 @@ export function generateBlogJsonLd(
           "@type": "Dentist",
           name: clinic.nameBn,
           description: `${clinic.doctorInChargeBn} (${clinic.degreesBn}). ${clinic.descriptionBn}`,
-          telephone: clinic.phone.split(",")[0].trim(),
+          ...(getFirstPhone(clinic.phone) ? { telephone: getFirstPhone(clinic.phone) } : {}),
           medicalSpecialty: "Dentistry",
           address: {
             "@type": "PostalAddress",
@@ -296,7 +303,7 @@ export function generateBlogJsonLd(
           "@type": "MedicalClinic",
           name: center.nameBn,
           description: `${center.doctorInChargeBn} (${center.degreesBn}). ${center.descriptionBn}`,
-          telephone: center.phone.split(",")[0].trim(),
+          ...(getFirstPhone(center.phone) ? { telephone: getFirstPhone(center.phone) } : {}),
           medicalSpecialty: "Physiotherapy",
           address: {
             "@type": "PostalAddress",
@@ -328,7 +335,7 @@ export function generateBlogJsonLd(
           "@type": "Pharmacy",
           name: pharmacy.nameBn,
           description: pharmacy.descriptionBn,
-          telephone: pharmacy.phone.split(",")[0].trim(),
+          ...(getFirstPhone(pharmacy.phone) ? { telephone: getFirstPhone(pharmacy.phone) } : {}),
           address: {
             "@type": "PostalAddress",
             streetAddress: pharmacy.addressBn,
@@ -359,7 +366,7 @@ export function generateBlogJsonLd(
           "@type": "MedicalOrganization",
           name: bank.nameBn,
           description: bank.descriptionBn,
-          telephone: bank.phone.split(",")[0].trim(),
+          ...(getFirstPhone(bank.phone) ? { telephone: getFirstPhone(bank.phone) } : {}),
           address: {
             "@type": "PostalAddress",
             streetAddress: bank.addressBn,
@@ -390,7 +397,7 @@ export function generateBlogJsonLd(
           "@type": "EmergencyService",
           name: amb.nameBn,
           description: amb.descriptionBn,
-          telephone: amb.phone.split(",")[0].trim(),
+          ...(getFirstPhone(amb.phone) ? { telephone: getFirstPhone(amb.phone) } : {}),
           address: {
             "@type": "PostalAddress",
             streetAddress: amb.addressBn,

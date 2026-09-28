@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
 
   // If titleBn does not have English letters, append primary English keywords from titleEn
   const hasEnglishInTitle = /[a-zA-Z]{3,}/.test(post.titleBn);
-  const primaryEnPart = post.titleEn.split(" - ")[0].split(":")[0].trim();
+  const primaryEnPart = (post.titleEn || "").split(" - ")[0].split(":")[0].trim();
   const pageTitle = hasEnglishInTitle
     ? post.titleBn
     : `${post.titleBn} (${primaryEnPart})`;

@@ -180,13 +180,15 @@ export function AmbulanceReviewCard({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-border/70">
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-2">
-            <a
-              href={`tel:${ambulance.phone.replace(/[^0-9]/g, "")}`}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600 text-white font-semibold text-xs sm:text-sm hover:bg-emerald-700 transition-colors shadow-xs"
-            >
-              <Phone className="h-3.5 w-3.5" />
-              <span>{`ড্রাইভার কল করুন: ${ambulance.phone}`}</span>
-            </a>
+            {ambulance.phone && (
+              <a
+                href={`tel:${ambulance.phone.replace(/[^0-9]/g, "")}`}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600 text-white font-semibold text-xs sm:text-sm hover:bg-emerald-700 transition-colors shadow-xs"
+              >
+                <Phone className="h-3.5 w-3.5" />
+                <span>{`ড্রাইভার কল করুন: ${ambulance.phone}`}</span>
+              </a>
+            )}
 
             {ambulance.hotline && ambulance.hotline !== ambulance.phone && (
               <a

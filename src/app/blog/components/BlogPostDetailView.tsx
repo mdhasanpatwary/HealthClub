@@ -303,13 +303,15 @@ export function BlogPostDetailView({
                             {item.note}
                           </span>
                         </div>
-                        <a
-                          href={`tel:${item.phone.replace(/[^0-9]/g, "")}`}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-600 text-white text-xs font-bold shadow-xs hover:bg-rose-700 transition-colors shrink-0"
-                        >
-                          <Phone className="h-3 w-3" />
-                          <span>{item.phone}</span>
-                        </a>
+                        {item.phone && (
+                          <a
+                            href={`tel:${item.phone.replace(/[^0-9]/g, "")}`}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-600 text-white text-xs font-bold shadow-xs hover:bg-rose-700 transition-colors shrink-0"
+                          >
+                            <Phone className="h-3 w-3" />
+                            <span>{item.phone}</span>
+                          </a>
+                        )}
                       </div>
                     ))}
                   </div>

@@ -191,7 +191,7 @@ export function DentalReviewCard({
       {/* Footer Contact & Action Buttons */}
       <div className="pt-2 border-t border-border/60 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          {clinic.phone.split(",").map((num, idx) => {
+          {clinic.phone && clinic.phone.split(",").map((num, idx) => {
             const cleanNum = num.trim();
             return (
               <a

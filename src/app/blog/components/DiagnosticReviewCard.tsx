@@ -25,9 +25,17 @@ export function DiagnosticReviewCard({
 }: DiagnosticReviewCardProps) {
   const name = center.nameBn || center.nameEn;
   const address = center.addressBn || center.addressEn;
-  const typeName = center.typeBn || center.typeEn;
-  const description = center.descriptionBn ||
-    `${center.nameBn} ফেনীর একটি বিশ্বস্ত ডায়াগনস্টিক সেন্টার, যেখানে নির্ভুল রোগ নির্ণয় ও আধুনিক প্যাথলজি পরীক্ষা সেবা প্রদান করা হয়।`;
+  const typeName =
+    center.typeBn ||
+    center.typeEn ||
+    (center as unknown as { categoryBn?: string }).categoryBn ||
+    "ডায়াগনস্টিক সেন্টার";
+  const description =
+    center.descriptionBn ||
+    (center as unknown as { taglineBn?: string }).taglineBn ||
+    `${name} ফেনীর একটি বিশ্বস্ত ডায়াগনস্টিক সেন্টার, যেখানে নির্ভুল রোগ নির্ণয় ও আধুনিক প্যাথলজি পরীক্ষা সেবা প্রদান করা হয়।`;
+  const phone = center.phone || (center as unknown as { contactHotline?: string }).contactHotline || "";
+  const hotline = center.hotline;
 
   const sectionId = `diagnostic-${center.rank}`;
 
@@ -194,22 +202,24 @@ export function DiagnosticReviewCard({
       {/* Footer Contact & Action Buttons */}
       <div className="pt-2 border-t border-border/60 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <a
-            href={`tel:${center.phone.replace(/[^0-9]/g, "")}`}
-            aria-label={`কল করুন ${name}: ${center.phone}`}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold shadow-xs hover:bg-primary/90 transition-colors"
-          >
-            <Phone className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>{center.phone}</span>
-          </a>
-
-          {center.hotline && center.hotline !== center.phone && (
+          {phone && (
             <a
-              href={`tel:${center.hotline.replace(/[^0-9]/g, "")}`}
-              aria-label={`হটলাইন ${name}: ${center.hotline}`}
+              href={`tel:${phone.replace(/[^0-9]/g, "")}`}
+              aria-label={`কল করুন ${name}: ${phone}`}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold shadow-xs hover:bg-primary/90 transition-colors"
+            >
+              <Phone className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>{phone}</span>
+            </a>
+          )}
+
+          {hotline && hotline !== phone && (
+            <a
+              href={`tel:${hotline.replace(/[^0-9]/g, "")}`}
+              aria-label={`হটলাইন ${name}: ${hotline}`}
               className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-border/80 bg-muted/40 hover:bg-muted text-foreground text-xs font-semibold transition-colors"
             >
-              <span>{"হটলাইন: "}{center.hotline}</span>
+              <span>{"হটলাইন: "}{hotline}</span>
             </a>
           )}
         </div>

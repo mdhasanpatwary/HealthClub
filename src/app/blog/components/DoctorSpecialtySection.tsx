@@ -191,7 +191,7 @@ function DoctorCard({
   doctor: DoctorSpecialistItem;
   rank: number;
 }) {
-  const primaryPhone = doctor.serialPhone.split(",")[0].trim();
+  const primaryPhone = doctor.serialPhone ? doctor.serialPhone.split(",")[0].trim() : "";
   const cleanPhone = primaryPhone.replace(/[^0-9]/g, "");
 
   return (
