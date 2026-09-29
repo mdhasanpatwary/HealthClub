@@ -168,7 +168,7 @@ export function DoctorSpecialtySection({
 
               {/* Doctor Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 items-stretch">
-                {group.doctors.map((doctor, docIdx) => (
+                {(group.doctors || []).map((doctor, docIdx) => (
                   <DoctorCard
                     key={doctor.id}
                     doctor={doctor}

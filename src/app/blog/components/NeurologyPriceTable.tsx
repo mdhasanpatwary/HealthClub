@@ -12,7 +12,7 @@ interface NeurologyPriceTableProps {
 export function NeurologyPriceTable({
   pricingData,
 }: NeurologyPriceTableProps) {
-  const items = pricingData.packages.map((item) => ({
+  const items = (pricingData.packages || []).map((item) => ({
     name: item.procedureOrTestNameBn,
     category: item.categoryBn,
     regularPriceRange: item.regularPriceRangeBn,

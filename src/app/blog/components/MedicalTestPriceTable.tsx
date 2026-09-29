@@ -23,18 +23,23 @@ export function MedicalTestPriceTable({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
+  const tests = useMemo(
+    () => pricingData.tests || (pricingData as unknown as { items?: DiagnosticTestPriceItem[] }).items || [],
+    [pricingData]
+  );
+
   // Distinct category list
   const categories = useMemo(() => {
     const set = new Set<string>();
-    pricingData.tests.forEach((t) => {
+    tests.forEach((t) => {
       if (t.categoryBn) set.add(t.categoryBn);
     });
     return Array.from(set);
-  }, [pricingData.tests]);
+  }, [tests]);
 
   // Filtered test items
   const filteredTests = useMemo(() => {
-    return pricingData.tests.filter((test) => {
+    return tests.filter((test) => {
       const matchesCategory =
         selectedCategory === "all" || test.categoryBn === selectedCategory;
 
@@ -44,12 +49,12 @@ export function MedicalTestPriceTable({
 
       const q = searchQuery.toLowerCase().trim();
       const matchBn = test.testNameBn.toLowerCase().includes(q);
-      const matchEn = test.testNameEn.toLowerCase().includes(q);
-      const matchCatBn = test.categoryBn.toLowerCase().includes(q);
+      const matchEn = test.testNameEn?.toLowerCase().includes(q) ?? false;
+      const matchCatBn = test.categoryBn?.toLowerCase().includes(q) ?? false;
 
       return matchBn || matchEn || matchCatBn;
     });
-  }, [pricingData.tests, selectedCategory, searchQuery]);
+  }, [tests, selectedCategory, searchQuery]);
 
   return (
     <section id="price-guide" className="scroll-mt-24 space-y-6">
@@ -99,7 +104,7 @@ export function MedicalTestPriceTable({
               <span>বিভাগ অনুযায়ী ফিল্টার করুন:</span>
             </span>
             <span className="font-semibold text-primary">
-              {toBanglaNums(filteredTests.length)}টি টেস্ট পাওয়া গেছে (মোট {toBanglaNums(pricingData.tests.length)}টি)
+              {toBanglaNums(filteredTests.length)}টি টেস্ট পাওয়া গেছে (মোট {toBanglaNums(tests.length)}টি)
             </span>
           </div>
 
@@ -113,7 +118,7 @@ export function MedicalTestPriceTable({
                   : "bg-muted/60 text-muted-foreground hover:bg-muted border-border/60"
               }`}
             >
-              সকল টেস্ট ({toBanglaNums(pricingData.tests.length)})
+              সকল টেস্ট ({toBanglaNums(tests.length)})
             </button>
             {categories.map((cat) => {
               const isSelected = selectedCategory === cat;

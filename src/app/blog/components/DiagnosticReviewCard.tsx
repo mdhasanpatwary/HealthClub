@@ -117,20 +117,22 @@ export function DiagnosticReviewCard({
       )}
 
       {/* Key Features / Services */}
-      <div className="space-y-2.5">
-        <h4 className="font-heading text-xs sm:text-sm font-bold text-foreground flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-primary" />
-          <span>ল্যাবের প্রধান বৈশিষ্ট্য ও সেবাসমূহ:</span>
-        </h4>
-        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm text-muted-foreground">
-          {center.keyFeaturesBn.map((feature, idx) => (
-            <li key={idx} className="flex items-start gap-2">
-              <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
-              <span className="leading-snug">{feature}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {center.keyFeaturesBn && center.keyFeaturesBn.length > 0 && (
+        <div className="space-y-2.5">
+          <h4 className="font-heading text-xs sm:text-sm font-bold text-foreground flex items-center gap-2">
+            <Sparkles className="h-4 w-4 text-primary" />
+            <span>ল্যাবের প্রধান বৈশিষ্ট্য ও সেবাসমূহ:</span>
+          </h4>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm text-muted-foreground">
+            {center.keyFeaturesBn.map((feature, idx) => (
+              <li key={idx} className="flex items-start gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                <span className="leading-snug">{feature}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Test Categories Tags */}
       {center.testCategoriesBn && center.testCategoriesBn.length > 0 && (

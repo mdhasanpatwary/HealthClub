@@ -121,7 +121,7 @@ export function generateBlogJsonLd(
         },
       },
       articleSection: post.categoryNameBn,
-      keywords: Array.from(new Set([...post.metaKeywords, ...post.tags, post.titleEn, post.categoryNameEn])).join(", "),
+      keywords: Array.from(new Set([...(post.metaKeywords || []), ...(post.tags || []), post.titleEn, post.categoryNameEn])).join(", "),
       medicalAudience: {
         "@type": "MedicalAudience",
         medicalAudienceType: "Patient",
@@ -171,7 +171,7 @@ export function generateBlogJsonLd(
 
   // Doctor structured data
   if (post.doctorGroups && post.doctorGroups.length > 0) {
-    const allDoctors = post.doctorGroups.flatMap((g) => g.doctors);
+    const allDoctors = post.doctorGroups.flatMap((g) => g.doctors || []);
     graph.push({
       "@type": "ItemList",
       "@id": `${pageUrl}#doctors-list`,
@@ -236,20 +236,21 @@ export function generateBlogJsonLd(
   }
 
   // Diagnostic Tests structured data (for pure test price guides)
-  if (!post.diagnosticCenters && post.diagnosticTestPricingBn && post.diagnosticTestPricingBn.tests.length > 0) {
+  const diagTests = post.diagnosticTestPricingBn?.tests || (post.diagnosticTestPricingBn as unknown as { items?: typeof post.diagnosticTestPricingBn extends { tests: infer T } ? T : never })?.items || [];
+  if (!post.diagnosticCenters && post.diagnosticTestPricingBn && diagTests.length > 0) {
     graph.push({
       "@type": "ItemList",
       "@id": `${pageUrl}#medical-tests-list`,
       name: "ফেনীতে প্যাথলজি ও রেডিওলজি টেস্টের খরচ তালিকা",
       description: post.excerptBn,
-      numberOfItems: post.diagnosticTestPricingBn.tests.length,
-      itemListElement: post.diagnosticTestPricingBn.tests.slice(0, 30).map((test, idx) => ({
+      numberOfItems: diagTests.length,
+      itemListElement: diagTests.slice(0, 30).map((test, idx) => ({
         "@type": "ListItem",
         position: idx + 1,
         item: {
           "@type": "MedicalTest",
           name: test.testNameBn,
-          description: `${test.testNameBn} (${test.categoryBn}). সাধারণ বাজারদর: ${test.regularPriceRangeBn}, হেলথ ক্লাব মেম্বার ছাড়: ১০-৩০%।`,
+          description: `${test.testNameBn} (${test.categoryBn || ""}). সাধারণ বাজারদর: ${test.regularPriceRangeBn || ""}, হেলথ ক্লাব মেম্বার ছাড়: ১০-৩০%।`,
           url: pageUrl,
         },
       })),

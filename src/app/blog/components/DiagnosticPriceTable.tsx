@@ -15,12 +15,13 @@ export function DiagnosticPriceTable({
   pricingData,
 }: DiagnosticPriceTableProps) {
 
-  const items = pricingData.tests.map((test) => ({
-    name: test.testNameBn,
-    category: test.categoryBn,
-    regularPriceRange: test.regularPriceRangeBn,
-    durationOrTurnaround: test.turnaroundTimeBn,
-    discountText: "১০-৩০% বিশেষ ছাড়",
+  const rawTests = pricingData.tests || (pricingData as unknown as { items?: DiagnosticTestPriceItem[] }).items || [];
+  const items = rawTests.map((test) => ({
+    name: test.testNameBn || (test as unknown as { nameBn?: string }).nameBn || "",
+    category: test.categoryBn || (test as unknown as { category?: string }).category || "",
+    regularPriceRange: test.regularPriceRangeBn || (test as unknown as { regularPriceRange?: string }).regularPriceRange || "",
+    durationOrTurnaround: test.turnaroundTimeBn || (test as unknown as { reportDeliveryBn?: string }).reportDeliveryBn || "",
+    discountText: test.discountPercentageBn || (test as unknown as { benefitBn?: string }).benefitBn || "১০-৩০% বিশেষ ছাড়",
   }));
 
   const isProcedure =

@@ -19,7 +19,7 @@ export function BlogQuickAnswer({ post }: BlogQuickAnswerProps) {
     (post.diagnosticCenters && post.diagnosticCenters.length) ||
     (post.dentalClinics && post.dentalClinics.length) ||
     (post.physiotherapyCenters && post.physiotherapyCenters.length) ||
-    (post.doctorGroups && post.doctorGroups.flatMap((g) => g.doctors).length) ||
+    (post.doctorGroups && post.doctorGroups.flatMap((g) => g.doctors || []).length) ||
     0;
 
   const isAmbulanceGuide = Boolean(post.ambulances && post.ambulances.length > 0);

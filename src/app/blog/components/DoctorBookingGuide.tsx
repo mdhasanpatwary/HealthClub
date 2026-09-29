@@ -44,7 +44,7 @@ export function DoctorBookingGuide({
               <div className="space-y-2">
                 <div className="flex items-center justify-between gap-2">
                   <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-primary/10 text-primary border border-primary/20 text-xs font-bold leading-none">
-                    {step.step}
+                    {step.step || ((step as unknown as { stepNumber?: string }).stepNumber ? `ধাপ ${(step as unknown as { stepNumber?: string }).stepNumber}` : `ধাপ ${idx + 1}`)}
                   </span>
                   <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
                 </div>

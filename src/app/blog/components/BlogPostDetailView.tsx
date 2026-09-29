@@ -38,7 +38,7 @@ export function BlogPostDetailView({
   liveDepartment,
 }: BlogPostDetailViewProps) {
   const title = post.titleBn;
-  const introParagraphs = post.introParagraphsBn;
+  const introParagraphs = post.introParagraphsBn || [];
   const selectionGuide = post.selectionGuideBn;
   const emergencyDirectory = post.emergencyDirectoryBn;
   const bookingGuide = post.bookingGuideBn;
@@ -255,7 +255,12 @@ export function BlogPostDetailView({
                   </h2>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {selectionGuide.pointsBn.map((pt, idx) => (
+                    {(
+                      selectionGuide.pointsBn ||
+                      (selectionGuide as unknown as { criteria?: { title: string; desc: string }[] }).criteria ||
+                      (selectionGuide as unknown as { points?: { title: string; desc: string }[] }).points ||
+                      []
+                    ).map((pt, idx) => (
                       <div
                         key={idx}
                         className="rounded-2xl border border-border/80 bg-card p-5 space-y-2"
@@ -290,7 +295,7 @@ export function BlogPostDetailView({
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {emergencyDirectory.services.map((item, idx) => (
+                    {(emergencyDirectory.services || []).map((item, idx) => (
                       <div
                         key={idx}
                         className="rounded-2xl border border-rose-500/20 bg-rose-500/5 p-4 flex items-center justify-between gap-3"

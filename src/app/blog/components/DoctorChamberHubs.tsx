@@ -51,7 +51,7 @@ export function DoctorChamberHubs({ hubs, titleBn, subtitleBn }: DoctorChamberHu
                   <span>উল্লেখযোগ্য চেম্বার ও প্রতিষ্ঠান:</span>
                 </span>
                 <div className="flex flex-wrap gap-1.5">
-                  {hub.popularHospitalsChambersBn.map((item, cIdx) => (
+                  {(hub.popularHospitalsChambersBn || []).map((item, cIdx) => (
                     <span
                       key={cIdx}
                       className="px-2.5 py-1 rounded-lg bg-muted/60 text-foreground/90 text-[11px] font-medium border border-border/60"

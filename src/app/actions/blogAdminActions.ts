@@ -52,6 +52,67 @@ function mapStaticPostsToCards(): BlogPostCardItem[] {
   });
 }
 
+function normalizeDiagnosticPricing(pricing: unknown): BlogPost["diagnosticTestPricingBn"] {
+  if (!pricing || typeof pricing !== "object") return undefined;
+  const p = pricing as Record<string, unknown>;
+  const rawTests = (p.tests || p.items || []) as unknown[];
+  return {
+    titleBn: (p.titleBn as string) || "",
+    subtitleBn: (p.subtitleBn as string) || "",
+    tests: Array.isArray(rawTests)
+      ? rawTests.map((t) => {
+          const item = (t || {}) as Record<string, unknown>;
+          return {
+            testNameBn: (item.testNameBn || item.nameBn || item.name || "") as string,
+            testNameEn: (item.testNameEn || item.nameEn || "") as string,
+            categoryBn: (item.categoryBn || item.category || "") as string,
+            regularPriceRangeBn: (item.regularPriceRangeBn || item.regularPriceRange || "") as string,
+            memberPriceRangeBn: (item.memberPriceRangeBn || item.memberPriceRange || "") as string,
+            discountPercentageBn: (item.discountPercentageBn || item.benefitBn || "১০-৩০% বিশেষ ছাড়") as string,
+            turnaroundTimeBn: (item.turnaroundTimeBn || item.reportDeliveryBn || item.turnaroundTime || "") as string,
+          };
+        })
+      : [],
+  };
+}
+
+function normalizeSelectionGuide(guide: unknown): BlogPost["selectionGuideBn"] {
+  if (!guide || typeof guide !== "object") return undefined;
+  const g = guide as Record<string, unknown>;
+  const rawPoints = (g.pointsBn || g.criteria || g.points || []) as unknown[];
+  return {
+    titleBn: (g.titleBn || g.title || "") as string,
+    pointsBn: Array.isArray(rawPoints)
+      ? rawPoints.map((p) => {
+          const pt = (p || {}) as Record<string, unknown>;
+          return {
+            title: (pt.title || pt.titleBn || "") as string,
+            desc: (pt.desc || pt.descBn || pt.description || "") as string,
+          };
+        })
+      : [],
+  };
+}
+
+function normalizeBookingGuide(guide: unknown): BlogPost["bookingGuideBn"] {
+  if (!guide || typeof guide !== "object") return undefined;
+  const g = guide as Record<string, unknown>;
+  const rawSteps = (g.stepsBn || g.steps || []) as unknown[];
+  return {
+    titleBn: (g.titleBn || g.title || "") as string,
+    stepsBn: Array.isArray(rawSteps)
+      ? rawSteps.map((s) => {
+          const st = (s || {}) as Record<string, unknown>;
+          return {
+            step: (st.step || (st.stepNumber ? `ধাপ ${st.stepNumber}` : "")) as string,
+            title: (st.title || st.titleBn || "") as string,
+            desc: (st.desc || st.descBn || st.description || "") as string,
+          };
+        })
+      : [],
+  };
+}
+
 function mapDbRowToBlogPost(dbPost: {
   slug: string;
   titleBn: string;
@@ -105,9 +166,9 @@ function mapDbRowToBlogPost(dbPost: {
     introParagraphsBn: (dbPost.introParagraphsBn as unknown as string[]) || payload.introParagraphsBn || [],
     diagnosticComparisonTable: (dbPost.diagnosticComparisonTable as unknown as BlogPost["diagnosticComparisonTable"]) || payload.diagnosticComparisonTable,
     diagnosticCenters: (dbPost.diagnosticCenters as unknown as BlogPost["diagnosticCenters"]) || payload.diagnosticCenters,
-    diagnosticTestPricingBn: (dbPost.diagnosticTestPricingBn as unknown as BlogPost["diagnosticTestPricingBn"]) || payload.diagnosticTestPricingBn,
-    bookingGuideBn: (dbPost.bookingGuideBn as unknown as BlogPost["bookingGuideBn"]) || payload.bookingGuideBn,
-    selectionGuideBn: (dbPost.selectionGuideBn as unknown as BlogPost["selectionGuideBn"]) || payload.selectionGuideBn,
+    diagnosticTestPricingBn: normalizeDiagnosticPricing(dbPost.diagnosticTestPricingBn || payload.diagnosticTestPricingBn),
+    bookingGuideBn: normalizeBookingGuide(dbPost.bookingGuideBn || payload.bookingGuideBn),
+    selectionGuideBn: normalizeSelectionGuide(dbPost.selectionGuideBn || payload.selectionGuideBn),
     faqs: (dbPost.faqs as unknown as BlogFAQItem[]) || payload.faqs || [],
     relatedSlugs: (dbPost.relatedSlugs as unknown as string[]) || payload.relatedSlugs,
   };
@@ -177,7 +238,7 @@ export const getAllBlogPostCardsAction = unstable_cache(
       return mapStaticPostsToCards();
     }
   },
-  ["all-blog-post-cards-v1"],
+  ["all-blog-post-cards-v2"],
   { revalidate: 86400, tags: [BLOG_POSTS_TAG, BLOG_CARDS_TAG] }
 );
 
@@ -200,7 +261,7 @@ export const getAllBlogSlugsAction = unstable_cache(
       return BLOG_POSTS.map((p) => p.slug);
     }
   },
-  ["all-blog-slugs-v1"],
+  ["all-blog-slugs-v2"],
   { revalidate: 86400, tags: [BLOG_POSTS_TAG] }
 );
 

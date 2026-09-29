@@ -128,7 +128,7 @@ export function HospitalReviewCard({
             বিশেষ সুবিধাসমূহ
           </h4>
           <ul className="space-y-1.5 text-muted-foreground">
-            {hospital.keyFeaturesBn.map((feat, idx) => (
+            {(hospital.keyFeaturesBn || []).map((feat, idx) => (
               <li key={idx} className="flex items-start gap-2">
                 <span className="h-1.5 w-1.5 rounded-full bg-primary/70 shrink-0 mt-2" />
                 <span className="leading-snug">{feat}</span>
@@ -144,7 +144,7 @@ export function HospitalReviewCard({
             প্রধান বিভাগ ও বিশেষজ্ঞ চেম্বার
           </h4>
           <div className="flex flex-wrap gap-2">
-            {hospital.specialtiesBn.map((spec, idx) => (
+            {(hospital.specialtiesBn || []).map((spec, idx) => (
               <span
                 key={idx}
                 className="bg-muted/80 text-foreground/90 px-2.5 py-1 rounded-md text-xs font-medium"
