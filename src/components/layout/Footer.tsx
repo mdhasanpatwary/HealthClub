@@ -130,14 +130,14 @@ export default async function Footer() {
           </div>
 
           {/* Quick Links Group */}
-          <div className="grid grid-cols-2 gap-8 md:col-span-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:col-span-2">
 
             {/* Quick Links */}
-            <div>
+            <div className="sm:col-span-2">
               <h3 className="text-xs font-semibold text-white/80 tracking-widest uppercase mb-5">
                 লিঙ্কসমূহ
               </h3>
-              <ul role="list" className="space-y-3">
+              <ul role="list" className="grid grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-3">
                 {[
                   { href: "/", label: "হোম" },
                   { href: "/consultants", label: "ডাক্তার ও কনসালট্যান্টস" },
@@ -157,8 +157,8 @@ export default async function Footer() {
                       prefetch={false}
                       className="text-sm text-slate-400 hover:text-white transition-colors duration-200 flex items-center gap-1.5 group"
                     >
-                      <span className="h-1 w-1 rounded-full bg-primary/60 group-hover:w-2 transition-all duration-200" />
-                      {link.label}
+                      <span className="h-1 w-1 rounded-full bg-primary/60 group-hover:w-2 transition-all duration-200 shrink-0" />
+                      <span>{link.label}</span>
                     </Link>
                   </li>
                 ))}
@@ -166,7 +166,7 @@ export default async function Footer() {
             </div>
 
             {/* Support and Address */}
-            <div>
+            <div className="sm:col-span-1">
               <h3 className="text-xs font-semibold text-white/80 tracking-widest uppercase mb-5">
                 যোগাযোগ ও ঠিকানা
               </h3>

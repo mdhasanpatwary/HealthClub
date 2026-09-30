@@ -45,8 +45,24 @@ export function BlogLiveDoctorRoster({
   const deptLabel =
     departmentNameBn || DEPT_LABEL_MAP[department] || "বিশেষজ্ঞ ডাক্তার";
 
-  const displayDoctors = doctors.slice(0, limit);
-  const remainingCount = doctors.length - displayDoctors.length;
+  // Deduplicate doctors by normalized name to guarantee no duplicate doctor cards
+  const uniqueDoctors: Doctor[] = [];
+  const seenDoctorKeys = new Set<string>();
+
+  for (const doc of doctors) {
+    const cleanKey = (doc.name || "")
+      .replace(/^(ডাঃ|ডা\.|ডাক্তার|সহকারী অধ্যাপক ডা\.|সহকারী অধ্যাপক ডাঃ|অধ্যাপক ডা\.|অধ্যাপক ডাঃ)\s*/i, "")
+      .replace(/\s+/g, "")
+      .toLowerCase();
+
+    if (!cleanKey || !seenDoctorKeys.has(cleanKey)) {
+      if (cleanKey) seenDoctorKeys.add(cleanKey);
+      uniqueDoctors.push(doc);
+    }
+  }
+
+  const displayDoctors = uniqueDoctors.slice(0, limit);
+  const remainingCount = uniqueDoctors.length - displayDoctors.length;
   const targetDepartmentUrl =
     department && department !== "all"
       ? `/consultants/department/${department}`
@@ -78,7 +94,7 @@ export function BlogLiveDoctorRoster({
           href={targetDepartmentUrl}
           className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline shrink-0 self-start sm:self-auto"
         >
-          <span>সকল {deptLabel} ডাক্তার ({toBanglaNums(doctors.length)} জন)</span>
+          <span>সকল {deptLabel} ডাক্তার ({toBanglaNums(uniqueDoctors.length)} জন)</span>
           <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>
@@ -229,7 +245,7 @@ export function BlogLiveDoctorRoster({
           </div>
           <div>
             <p className="font-heading text-sm font-bold text-foreground">
-              {deptLabel} বিভাগে আরও {toBanglaNums(remainingCount > 0 ? remainingCount : doctors.length)} জন ভেরিফাইড চিকিৎসক রয়েছেন
+              {deptLabel} বিভাগে আরও {toBanglaNums(remainingCount > 0 ? remainingCount : uniqueDoctors.length)} জন ভেরিফাইড চিকিৎসক রয়েছেন
             </p>
             <p className="text-xs text-muted-foreground mt-0.5">
               চেম্বার লোকেশন, প্রেসক্রিপশন প্রস্তুতি ও সিরিয়াল নম্বর দেখতে ডিরেক্টরি ব্রাউজ করুন।

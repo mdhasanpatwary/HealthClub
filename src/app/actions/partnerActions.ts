@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { prisma, withDbRetry } from "@/lib/prisma";
 import { Prisma } from "@/generated/client/client";
 import { Partner } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
@@ -166,10 +166,12 @@ function revalidatePartnerCaches(slugOrId?: string) {
 export const getPartnersAction = unstable_cache(
   async (): Promise<Partner[]> => {
     try {
-      const data = await prisma.partner.findMany({
-        orderBy: { createdAt: "desc" },
-        select: PARTNER_CARD_SELECT_FIELDS,
-      });
+      const data = await withDbRetry(() =>
+        prisma.partner.findMany({
+          orderBy: { createdAt: "desc" },
+          select: PARTNER_CARD_SELECT_FIELDS,
+        })
+      );
 
       return data.map(formatPartner);
     } catch (error) {

@@ -16,7 +16,6 @@ import { DoctorBookingGuide } from "./DoctorBookingGuide";
 import { BlogSpecializedSections } from "./BlogSpecializedSections";
 import { BlogFAQSection } from "./BlogFAQSection";
 import { BlogClinicalSources } from "./BlogClinicalSources";
-import { BlogCitationBlock } from "./BlogCitationBlock";
 import { BlogShareBar } from "./BlogShareBar";
 import { BlogCard } from "./BlogCard";
 import { BlogClusterMesh } from "./BlogClusterMesh";
@@ -373,15 +372,6 @@ export function BlogPostDetailView({
               {/* Clinical Sources & DGHS/BMDC Evidence Guidelines */}
               <BlogClinicalSources sources={post.clinicalSources} post={post} />
 
-              {/* GEO Citation Attribution Block */}
-              <BlogCitationBlock
-                title={title}
-                titleEn={post.titleEn}
-                publishedDate={post.publishedDate}
-                modifiedDate={post.modifiedDate}
-                canonicalUrl={pageUrl}
-                authorName={post.author.nameBn}
-              />
 
               {/* Bottom Share Bar */}
               <div className="p-5 rounded-2xl border border-border/70 bg-card flex flex-col gap-4">

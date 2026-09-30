@@ -1,9 +1,10 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { prisma, withDbRetry } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag, revalidatePath } from "next/cache";
+import { cache } from "react";
 import { BlogPost, BlogPostCardItem } from "@/types/blog";
 import { BLOG_POSTS } from "@/data/blog/blogPosts";
 import { PaginatedResult } from "@/types/pagination";
@@ -39,31 +40,33 @@ import { SITE_URL } from "@/lib/siteConfig";
 export const getAllBlogPostCardsAction = unstable_cache(
   async (): Promise<BlogPostCardItem[]> => {
     try {
-      const posts = await prisma.blogPost.findMany({
-        select: {
-          slug: true,
-          titleBn: true,
-          titleEn: true,
-          excerptBn: true,
-          excerptEn: true,
-          category: true,
-          categoryNameBn: true,
-          categoryNameEn: true,
-          readTimeBn: true,
-          readTimeEn: true,
-          publishedDate: true,
-          coverImage: true,
-          coverImageAlt: true,
-          author: true,
-          hospitalCount: true,
-          facilityCount: true,
-          facilityLabelBn: true,
-          facilityLabelEn: true,
-          tags: true,
-          metaKeywords: true,
-        },
-        orderBy: { publishedDate: "desc" },
-      });
+      const posts = await withDbRetry(() =>
+        prisma.blogPost.findMany({
+          select: {
+            slug: true,
+            titleBn: true,
+            titleEn: true,
+            excerptBn: true,
+            excerptEn: true,
+            category: true,
+            categoryNameBn: true,
+            categoryNameEn: true,
+            readTimeBn: true,
+            readTimeEn: true,
+            publishedDate: true,
+            coverImage: true,
+            coverImageAlt: true,
+            author: true,
+            hospitalCount: true,
+            facilityCount: true,
+            facilityLabelBn: true,
+            facilityLabelEn: true,
+            tags: true,
+            metaKeywords: true,
+          },
+          orderBy: { publishedDate: "desc" },
+        })
+      );
 
       if (posts && posts.length > 0) {
         return posts.map((p) => ({
@@ -106,10 +109,12 @@ export const getAllBlogPostCardsAction = unstable_cache(
 export const getAllBlogSlugsAction = unstable_cache(
   async (): Promise<string[]> => {
     try {
-      const posts = await prisma.blogPost.findMany({
-        select: { slug: true },
-        orderBy: { publishedDate: "desc" },
-      });
+      const posts = await withDbRetry(() =>
+        prisma.blogPost.findMany({
+          select: { slug: true },
+          orderBy: { publishedDate: "desc" },
+        })
+      );
       if (posts && posts.length > 0) {
         return posts.map((p) => p.slug);
       }
@@ -123,35 +128,59 @@ export const getAllBlogSlugsAction = unstable_cache(
   { revalidate: 86400, tags: [BLOG_POSTS_TAG] }
 );
 
+const fetchDbBlogPostBySlug = unstable_cache(
+  async (normalizedSlug: string): Promise<BlogPost | null> => {
+    try {
+      const dbPost = await withDbRetry(() =>
+        prisma.blogPost.findUnique({
+          where: { slug: normalizedSlug },
+        })
+      );
+
+      if (dbPost) {
+        return mapDbRowToBlogPost(dbPost);
+      }
+    } catch (err) {
+      logger.error(`Error fetching blog post by slug from DB: ${normalizedSlug}`, err);
+    }
+
+    return null;
+  },
+  ["single-blog-post-by-slug-v1"],
+  { revalidate: 86400, tags: [BLOG_POSTS_TAG] }
+);
+
 /**
  * Fetch full blog post by slug from database (with static fallback).
+ * Memoized with React cache to eliminate duplicate queries between
+ * generateMetadata and the page component during the same render pass.
  */
-export async function getBlogPostBySlugAction(
-  slug: string
-): Promise<BlogPost | null> {
-  const raw = decodeURIComponent(slug).toLowerCase().trim();
-  const normalized = raw.replace(/^[—–\s-]+|[—–\s-]+$/g, "");
+export const getBlogPostBySlugAction = cache(
+  async (slug: string): Promise<BlogPost | null> => {
+    const raw = decodeURIComponent(slug).toLowerCase().trim();
+    const normalized = raw.replace(/^[—–\s-]+|[—–\s-]+$/g, "");
 
-  try {
-    const dbPost = await prisma.blogPost.findUnique({
-      where: { slug: normalized },
-    });
-
+    const dbPost = await fetchDbBlogPostBySlug(normalized);
     if (dbPost) {
-      return mapDbRowToBlogPost(dbPost);
+      return dbPost;
     }
-  } catch (err) {
-    logger.error(`Error fetching blog post by slug from DB: ${slug}`, err);
-  }
 
-  return (
-    BLOG_POSTS.find(
-      (a) =>
-        a.slug.toLowerCase().trim() === normalized ||
-        a.slug.toLowerCase().trim() === raw
-    ) || null
-  );
-}
+    if (raw !== normalized) {
+      const rawDbPost = await fetchDbBlogPostBySlug(raw);
+      if (rawDbPost) {
+        return rawDbPost;
+      }
+    }
+
+    return (
+      BLOG_POSTS.find(
+        (a) =>
+          a.slug.toLowerCase().trim() === normalized ||
+          a.slug.toLowerCase().trim() === raw
+      ) || null
+    );
+  }
+);
 
 /**
  * Cached reader for all full blog posts.

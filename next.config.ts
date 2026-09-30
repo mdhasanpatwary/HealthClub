@@ -20,6 +20,9 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "4mb",
     },
     optimizePackageImports: ["lucide-react", "sonner", "@base-ui/react"],
+    cpus: 4,
+    staticGenerationRetryCount: 2,
+    staticGenerationMaxConcurrency: 4,
   },
   images: {
     remotePatterns: [

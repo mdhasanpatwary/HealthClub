@@ -28,10 +28,38 @@ export function distributeDoctorsFairly(doctors: Doctor[]): Doctor[] {
     return doctors || [];
   }
 
+  // Deduplicate doctors: if the same doctor exists multiple times, prefer partner-linked or complete chamber entries
+  const dedupedDoctors: Doctor[] = [];
+  const seenDoctorKeys = new Map<string, number>();
+
+  for (const doc of doctors) {
+    const cleanKey = (doc.name || "")
+      .replace(/^(ডাঃ|ডা\.|ডাক্তার|সহকারী অধ্যাপক ডা\.|সহকারী অধ্যাপক ডাঃ|অধ্যাপক ডা\.|অধ্যাপক ডাঃ)\s*/i, "")
+      .replace(/\s+/g, "")
+      .toLowerCase();
+
+    if (!cleanKey) {
+      dedupedDoctors.push(doc);
+      continue;
+    }
+
+    if (seenDoctorKeys.has(cleanKey)) {
+      const existingIdx = seenDoctorKeys.get(cleanKey)!;
+      const existing = dedupedDoctors[existingIdx];
+      // Prefer partner-linked doctor or non-empty chamber
+      if ((!existing.partnerId && doc.partnerId) || (!existing.chamberName?.trim() && doc.chamberName?.trim())) {
+        dedupedDoctors[existingIdx] = doc;
+      }
+    } else {
+      seenDoctorKeys.set(cleanKey, dedupedDoctors.length);
+      dedupedDoctors.push(doc);
+    }
+  }
+
   const partnerGroups = new Map<string, Doctor[]>();
   const independentDoctors: Doctor[] = [];
 
-  for (const doc of doctors) {
+  for (const doc of dedupedDoctors) {
     const pId = doc.partnerId?.trim();
     if (pId) {
       const group = partnerGroups.get(pId) || [];
