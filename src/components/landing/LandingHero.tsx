@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Heart, ShieldCheck } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import HeroCardWrapper from "./HeroCardWrapper";
 import type { Member } from "@/services/db";
 
@@ -65,11 +66,13 @@ export function LandingHero({ sampleMember }: LandingHeroProps) {
 
               <Link
                 href="/partner-hospitals"
-                className={buttonVariants({
-                  variant: "outline",
-                  size: "xl",
-                  className: "w-full sm:w-auto",
-                })}
+                className={cn(
+                  buttonVariants({
+                    variant: "outline",
+                    size: "xl",
+                  }),
+                  "w-full sm:w-auto bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-secondary dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm hover:shadow transition-all"
+                )}
               >
                 <span>পার্টনার হাসপাতাল</span>
               </Link>

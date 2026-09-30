@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Star, ShieldCheck, Check } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export function LandingPricing() {
   const foundingPerks = [
@@ -101,11 +102,13 @@ export function LandingPricing() {
             <div className="pt-8">
               <Link
                 href="/register"
-                className={buttonVariants({
-                  variant: "outline",
-                  size: "lg",
-                  className: "w-full",
-                })}
+                className={cn(
+                  buttonVariants({
+                    variant: "secondary",
+                    size: "lg",
+                  }),
+                  "w-full shadow-md font-bold transition-all hover:shadow-lg"
+                )}
               >
                 <span>প্রিমিয়াম মেম্বার হোন</span>
               </Link>
