@@ -103,11 +103,11 @@ export const FENI_ENDOSCOPY_COLONOSCOPY_COMPARISON_TABLE: DiagnosticComparisonIt
     ultrasound4D: true,
     digitalXray: true,
     automatedLab: true,
-    discountBn: "১০-৩০% মেম্বার ছাড়",
-    discountEn: "10-30% Member Discount",
+    discountBn: "স্ট্যান্ডার্ড প্রাইভেট চার্জ (মেম্বার ছাড় প্রযোজ্য নয়)",
+    discountEn: "Standard Private Rates (No Member Discount)",
     locationBn: "মিজান রোড, ফেনী সদর",
     locationEn: "Mizan Road, Feni Sadar",
-    partnerStatus: true,
+    partnerStatus: false,
   },
   {
     rank: 8,
@@ -161,7 +161,7 @@ export const FENI_ENDOSCOPY_COLONOSCOPY_CENTERS: DiagnosticCenterReviewItem[] = 
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "pacific-health-care-feni",
+    partnerProfileSlug: "pacific-health-care-centre",
   },
   {
     rank: 2,
@@ -197,7 +197,7 @@ export const FENI_ENDOSCOPY_COLONOSCOPY_CENTERS: DiagnosticCenterReviewItem[] = 
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "life-care-diagnostic-feni",
+    partnerProfileSlug: "life-care-diagnostic-center",
   },
   {
     rank: 3,
@@ -233,7 +233,7 @@ export const FENI_ENDOSCOPY_COLONOSCOPY_CENTERS: DiagnosticCenterReviewItem[] = 
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "feni-max-diagnostic",
+    partnerProfileSlug: "feni-max-diagnostic-centre",
   },
   {
     rank: 4,
@@ -268,7 +268,7 @@ export const FENI_ENDOSCOPY_COLONOSCOPY_CENTERS: DiagnosticCenterReviewItem[] = 
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "imperial-neurocare-feni",
+    partnerProfileSlug: "imperial-neurocare-diagnostic-center",
   },
   {
     rank: 5,
@@ -303,7 +303,7 @@ export const FENI_ENDOSCOPY_COLONOSCOPY_CENTERS: DiagnosticCenterReviewItem[] = 
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "al-aqsa-hospital-feni",
+    partnerProfileSlug: "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
   },
   {
     rank: 6,

@@ -24,6 +24,7 @@ export const PARTNER_FULL_SELECT_FIELDS = {
   facilities: true,
   galleryImages: true,
   upazila: true,
+  isPartner: true,
   createdAt: true,
 } as const;
 
@@ -93,6 +94,7 @@ export type PrismaPartnerRecord = {
   facilities?: string | null;
   galleryImages?: string | null;
   upazila?: string | null;
+  isPartner?: boolean | null;
   createdAt?: Date | string | null;
 };
 
@@ -120,6 +122,7 @@ export function formatPartner(p: PrismaPartnerRecord): Partner {
     facilities: p.facilities || undefined,
     galleryImages: p.galleryImages || undefined,
     upazila: p.upazila || "feni-sadar",
+    isPartner: p.isPartner ?? true,
     createdAt: p.createdAt
       ? typeof p.createdAt === "string"
         ? p.createdAt

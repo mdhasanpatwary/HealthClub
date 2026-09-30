@@ -26,10 +26,7 @@ export async function generateMetadata({ params }: PageProps) {
   const deptSeo = getDepartmentSeoConfig(slug);
 
   if (!deptSeo) {
-    return {
-      title: "বিভাগ পাওয়া যায়নি | হেলথ ক্লাব",
-      description: "অনুরোধকৃত চিকিৎসা বিভাগটি খুঁজে পাওয়া যায়নি।",
-    };
+    notFound();
   }
 
   const canonicalUrl = `${SITE_URL}/consultants/department/${deptSeo.slug}`;

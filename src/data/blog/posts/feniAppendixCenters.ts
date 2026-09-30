@@ -39,7 +39,7 @@ export const FENI_APPENDIX_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
     partnerDiscountEn: "10-30% Member Discount",
-    partnerProfileSlug: "al-aqsa-hospital",
+    partnerProfileSlug: "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
     imageUrl: "/images/partners/al-aqsa.webp",
   },
   {
@@ -155,7 +155,7 @@ export const FENI_APPENDIX_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
     partnerDiscountEn: "10-30% Member Discount",
-    partnerProfileSlug: "pacific-health-care",
+    partnerProfileSlug: "pacific-health-care-centre",
     imageUrl: "/images/partners/pacific.webp",
   },
   {
@@ -196,7 +196,7 @@ export const FENI_APPENDIX_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
     partnerDiscountEn: "10-30% Member Discount",
-    partnerProfileSlug: "life-care-diagnostic",
+    partnerProfileSlug: "life-care-diagnostic-center",
     imageUrl: "/images/partners/lifecare.webp",
   },
   {
@@ -237,7 +237,7 @@ export const FENI_APPENDIX_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
     partnerDiscountEn: "10-30% Member Discount",
-    partnerProfileSlug: "imperial-neurocare",
+    partnerProfileSlug: "imperial-neurocare-diagnostic-center",
     imageUrl: "/images/partners/imperial.webp",
   },
   {
@@ -278,7 +278,7 @@ export const FENI_APPENDIX_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
     partnerDiscountEn: "10-30% Member Discount",
-    partnerProfileSlug: "feni-max-diagnostic",
+    partnerProfileSlug: "feni-max-diagnostic-centre",
     imageUrl: "/images/partners/fenimax.webp",
   },
   {

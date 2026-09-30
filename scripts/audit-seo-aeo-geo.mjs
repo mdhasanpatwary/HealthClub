@@ -128,12 +128,18 @@ async function main() {
   }
 
   const partners = [
-    { id: "p1", name: "পপুলার ডায়াগনস্টিক সেন্টার", upazila: "feni-sadar", discount: "১০-৩০% ডিসকাউন্ট" },
-    { id: "p2", name: "ল্যাবএইড স্পেশালাইজড হাসপাতাল", upazila: "feni-sadar", discount: "১০-৩০% ডিসকাউন্ট" },
-    { id: "p3", name: "লাজ ফার্মা লিমিটেড", upazila: "feni-sadar", discount: "১০-৩০% ডিসকাউন্ট" },
-    { id: "p5", name: "ইবনে সিনা ডায়াগনস্টিক সেন্টার", upazila: "feni-sadar", discount: "১০-৩০% ডিসকাউন্ট" },
-    { id: "p6", name: "স্কয়ার হাসপাতাল", upazila: "feni-sadar", discount: "১০-৩০% ডিসকাউন্ট" },
-    { id: "p_lifecare", name: "লাইফ কেয়ার ডায়াগনস্টিক সেন্টার", upazila: "feni-sadar", discount: "১০-৩০% ডিসকাউন্ট" },
+    { id: "life-care-diagnostic-center", name: "লাইফ কেয়ার ডায়াগনস্টিক সেন্টার", upazila: "feni-sadar", discount: "১০-৩০% ডিসকাউন্ট" },
+    { id: "imperial-neurocare-diagnostic-center", name: "ইম্পেরিয়াল নিউরোকেয়ার অ্যান্ড ডায়াগনস্টিক সেন্টার", upazila: "feni-sadar", discount: "১০-৩০% ডিসকাউন্ট" },
+    { id: "নিরাময়-ডায়াগনস্টিক-এন্ড-কনসালটেশন-সেন্টার", name: "নিরাময় ডায়াগনস্টিক এন্ড কনসালটেশন সেন্টার", upazila: "feni-sadar", discount: "১০-৩০% ডিসকাউন্ট" },
+    { id: "m-rahaman-medical-stories", name: "এম রহমান মেডিকেল স্টোর", upazila: "feni-sadar", discount: "১০-৩০% ডিসকাউন্ট" },
+    { id: "ফেনী-কেয়ার-হসপিটাল", name: "ফেনী কেয়ার হসপিটাল", upazila: "feni-sadar", discount: "১০-৩০% ডিসকাউন্ট" },
+    { id: "ঢাকা-ফার্মেসি", name: "ঢাকা ফার্মেসি", upazila: "feni-sadar", discount: "১০-৩০% ডিসকাউন্ট" },
+    { id: "feni-max-diagnostic-centre", name: "ফেনি ম্যাক্স ডায়াগনস্টিক সেন্টার", upazila: "feni-sadar", discount: "১০-৩০% ডিসকাউন্ট" },
+    { id: "ইসলামিয়া-ফিজিওথেরাপি-এন্ড-রিহ্যাবিলিটেশন-সেন্টার", name: "ইসলামিয়া ফিজিওথেরাপি এন্ড রিহ্যাবিলিটেশন সেন্টার", upazila: "feni-sadar", discount: "১০-৩০% ডিসকাউন্ট" },
+    { id: "মজুমদার-ডেন্টাল-ক্লিনিক", name: "মজুমদার ডেন্টাল ক্লিনিক", upazila: "feni-sadar", discount: "১০-৩০% ডিসকাউন্ট" },
+    { id: "আল-আকসা-হাসপাতাল-লিঃ-ফেনী", name: "আল-আকসা হাসপাতাল লিঃ ফেনী", upazila: "feni-sadar", discount: "১০-৩০% ডিসকাউন্ট" },
+    { id: "সেন্ট্রাল-ফিজিওথেরাপি-এন্ড-রিহ্যাবিলিটেশন-সেন্টার", name: "সেন্ট্রাল ফিজিওথেরাপি এন্ড রিহ্যাবিলিটেশন সেন্টার", upazila: "feni-sadar", discount: "১০-৩০% ডিসকাউন্ট" },
+    { id: "pacific-health-care-centre", name: "প্যাসিফিক হেলথ কেয়ার সেন্টার", upazila: "feni-sadar", discount: "১০-৩০% ডিসকাউন্ট" },
   ];
 
   // 1. Suite 1: Line Limit

@@ -2,6 +2,8 @@ import "dotenv/config";
 import { prisma } from "../src/lib/prisma";
 import { scryptSync, randomBytes } from "crypto";
 
+import { initialPartners } from "../src/data/initialPartnersData";
+
 function hashPassword(password: string): string {
   const salt = randomBytes(16).toString("hex");
   const hash = scryptSync(password, salt, 64).toString("hex");
@@ -18,84 +20,28 @@ async function main() {
   await prisma.member.deleteMany();
   await prisma.partnerRequest.deleteMany();
 
-  // 1. Seed Partners
-  const p1 = await prisma.partner.create({
-    data: {
-      id: "p1",
-      name: "পপুলার ডায়াগনস্টিক সেন্টার",
-      category: "diagnostic",
-      address: "এসএসকে রোড, ফেনী",
-      discount: "১০-৩০% ডিসকাউন্ট",
-      phone: "০৯৬১৩৭৮৭৮০১",
-      email: "popular@healthclub.com",
-      password: hashedPw,
-      logoText: "Popular",
-      imageUrl: "/images/placeholders/diagnostic.png"
-    }
-  });
-
-  const p2 = await prisma.partner.create({
-    data: {
-      id: "p2",
-      name: "ল্যাবএইড স্পেশালাইজড হাসপাতাল",
-      category: "hospital",
-      address: "মিজান রোড, ফেনী",
-      discount: "১০-৩০% ডিসকাউন্ট",
-      phone: "১০৬০৬",
-      email: "labaid@healthclub.com",
-      password: hashedPw,
-      logoText: "Labaid",
-      imageUrl: "/images/placeholders/hospital.png"
-    }
-  });
-
-  const p3 = await prisma.partner.create({
-    data: {
-      id: "p3",
-      name: "লাজ ফার্মা লিমিটেড",
-      category: "pharmacy",
-      address: "ট্রাঙ্ক রোড, ফেনী",
-      discount: "১০-৩০% ডিসকাউন্ট",
-      phone: "০২-৯৩৪৩৫১৬",
-      email: "lazz@healthclub.com",
-      password: hashedPw,
-      logoText: "Lazz",
-      imageUrl: "/images/placeholders/pharmacy.png"
-    }
-  });
-
-  await prisma.partner.create({
-    data: {
-      id: "p5",
-      name: "ইবনে সিনা ডায়াগনস্টিক সেন্টার",
-      category: "diagnostic",
-      address: "মহিপাল, ফেনী",
-      discount: "১০-৩০% ডিসকাউন্ট",
-      phone: "০৯৬১০০০৯৬১০",
-      email: "ibnesina@healthclub.com",
-      password: hashedPw,
-      logoText: "Ibn Sina",
-      imageUrl: "/images/placeholders/diagnostic.png"
-    }
-  });
-
-  await prisma.partner.create({
-    data: {
-      id: "p6",
-      name: "স্কয়ার হাসপাতাল (সিলেক্টেড সুবিধা)",
-      category: "hospital",
-      address: "গ্র্যান্ড ট্রাঙ্ক রোড, ফেনী",
-      discount: "১০-৩০% ডিসকাউন্ট",
-      phone: "১০৬১৬",
-      email: "square@healthclub.com",
-      password: hashedPw,
-      logoText: "Square",
-      imageUrl: "/images/placeholders/hospital.png"
-    }
-  });
+  // 1. Seed Verified 12 Partners
+  for (const p of initialPartners) {
+    await prisma.partner.create({
+      data: {
+        id: p.id,
+        slug: p.slug,
+        name: p.name,
+        category: p.category,
+        address: p.address,
+        discount: p.discount,
+        phone: p.phone,
+        email: p.email || `${p.slug}@healthclub.com`,
+        password: hashedPw,
+        logoText: p.logoText,
+        imageUrl: p.imageUrl,
+        upazila: p.upazila,
+        isPartner: p.isPartner,
+      },
+    });
+  }
 
   // 2. Seed Members
-
   const m1 = await prisma.member.create({
     data: {
       id: "HC-1001",
@@ -108,8 +54,8 @@ async function main() {
       joinedDate: new Date("2026-01-10"),
       expiryDate: new Date("2027-01-10"),
       totalSaved: 2000,
-      emailVerified: true
-    }
+      emailVerified: true,
+    },
   });
 
   const m2 = await prisma.member.create({
@@ -124,8 +70,8 @@ async function main() {
       joinedDate: new Date("2026-03-15"),
       expiryDate: new Date("2027-03-15"),
       totalSaved: 300,
-      emailVerified: true
-    }
+      emailVerified: true,
+    },
   });
 
   // 3. Seed Transactions
@@ -134,38 +80,38 @@ async function main() {
       id: "tx1",
       memberId: m1.id,
       memberName: m1.name,
-      partnerId: p1.id,
-      partnerName: p1.name,
+      partnerId: "p_55db306d-13e5-42b6-a4fa-8c0d7e3c6a92",
+      partnerName: "লাইফ কেয়ার ডায়াগনস্টিক সেন্টার",
       amount: 5000,
       saved: 500,
-      date: new Date("2026-06-12T10:30:00+06:00")
-    }
+      date: new Date("2026-06-12T10:30:00+06:00"),
+    },
+  });
+
+  await prisma.transaction.create({
+    data: {
+      id: "tx2",
+      memberId: m2.id,
+      memberName: m2.name,
+      partnerId: "p_d6c41b8a-e9fa-47cb-bfa2-0d1279efb925",
+      partnerName: "প্যাসিফিক হেলথ কেয়ার সেন্টার",
+      amount: 3000,
+      saved: 300,
+      date: new Date("2026-07-02T13:20:00+06:00"),
+    },
   });
 
   await prisma.transaction.create({
     data: {
       id: "tx3",
-      memberId: m2.id,
-      memberName: m2.name,
-      partnerId: p3.id,
-      partnerName: p3.name,
-      amount: 3000,
-      saved: 300,
-      date: new Date("2026-07-02T13:20:00+06:00")
-    }
-  });
-
-  await prisma.transaction.create({
-    data: {
-      id: "tx4",
       memberId: m1.id,
       memberName: m1.name,
-      partnerId: p2.id,
-      partnerName: p2.name,
+      partnerId: "p_c361405e-fbb8-4fcb-8761-a5d625902047",
+      partnerName: "আল-আকসা হাসপাতাল লিঃ ফেনী",
       amount: 15000,
       saved: 1500,
-      date: new Date("2026-07-10T11:45:00+06:00")
-    }
+      date: new Date("2026-07-10T11:45:00+06:00"),
+    },
   });
 
   console.log("Seeding completed successfully!");

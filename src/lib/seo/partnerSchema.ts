@@ -314,7 +314,7 @@ export function generatePartnerJsonLd({
             "@type": "Physician",
             name: doc.name,
             jobTitle: doc.specialty,
-            url: `${SITE_URL}/consultants/${doc.id}`,
+            url: `${SITE_URL}/consultants/${encodeURIComponent(doc.slug || doc.id)}`,
             telephone: doc.serialPhone,
             ...(doc.degrees ? { hasCredential: doc.degrees } : {}),
           })),

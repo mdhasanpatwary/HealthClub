@@ -17,6 +17,24 @@ const PARTNERS_TAG = "partners";
 const DOCTORS_TAG = "doctors";
 
 /**
+ * Canonical partner slug alias mapping.
+ * Normalizes historical or alternative slugs to their canonical database partner slugs.
+ */
+const KNOWN_PARTNER_ALIASES: Record<string, string> = {
+  "pacific-health-care": "pacific-health-care-centre",
+  "pacific-health-care-feni": "pacific-health-care-centre",
+  "life-care-diagnostic": "life-care-diagnostic-center",
+  "life-care-diagnostic-feni": "life-care-diagnostic-center",
+  "life-care-diagnostic-center-feni": "life-care-diagnostic-center",
+  "লাইফ-কেয়ার-ডায়াগনস্টিক-সেন্টার": "life-care-diagnostic-center",
+  "imperial-neurocare": "imperial-neurocare-diagnostic-center",
+  "imperial-neurocare-feni": "imperial-neurocare-diagnostic-center",
+  "feni-max-diagnostic": "feni-max-diagnostic-centre",
+  "al-aqsa-hospital": "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
+  "al-aqsa-hospital-feni": "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
+};
+
+/**
  * Fetch a single partner by ID or Slug.
  * Request-memoized via React cache() to deduplicate DB queries between generateMetadata and page body.
  * Falls back to initialPartners if not found in database.
@@ -32,16 +50,29 @@ export const getPartnerByIdAction = cache(
         // keep original
       }
 
+      const resolvedSlug =
+        KNOWN_PARTNER_ALIASES[decoded] ||
+        KNOWN_PARTNER_ALIASES[idOrSlug] ||
+        decoded;
+
       if (!prisma?.partner) {
         const fallback = initialPartners.find(
-          (p) => p.slug === decoded || p.slug === idOrSlug || p.id === idOrSlug || p.id === decoded
+          (p) =>
+            p.isPartner !== false &&
+            (p.slug === resolvedSlug ||
+              p.slug === decoded ||
+              p.slug === idOrSlug ||
+              p.id === idOrSlug ||
+              p.id === decoded)
         );
         return fallback || null;
       }
 
       const p = await prisma.partner.findFirst({
         where: {
+          isPartner: true,
           OR: [
+            { slug: resolvedSlug },
             { slug: decoded },
             { slug: idOrSlug },
             { id: idOrSlug },
@@ -51,9 +82,15 @@ export const getPartnerByIdAction = cache(
         select: PARTNER_FULL_SELECT_FIELDS,
       });
 
-      if (!p) {
+      if (!p || p.isPartner === false) {
         const fallback = initialPartners.find(
-          (item) => item.slug === decoded || item.slug === idOrSlug || item.id === idOrSlug || item.id === decoded
+          (item) =>
+            item.isPartner !== false &&
+            (item.slug === resolvedSlug ||
+              item.slug === decoded ||
+              item.slug === idOrSlug ||
+              item.id === idOrSlug ||
+              item.id === decoded)
         );
         return fallback || null;
       }
@@ -62,7 +99,9 @@ export const getPartnerByIdAction = cache(
     } catch (error) {
       logger.error("Error in getPartnerByIdAction:", error);
       const fallback = initialPartners.find(
-        (item) => item.slug === idOrSlug || item.id === idOrSlug
+        (item) =>
+          item.isPartner !== false &&
+          (item.slug === idOrSlug || item.id === idOrSlug)
       );
       return fallback || null;
     }

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import JsonLd from "@/components/seo/JsonLd";
 import HospitalProfileView from "@/components/partner-hospitals/HospitalProfileView";
@@ -26,35 +27,23 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateMetadata({ params }: PageProps) {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
+  let decodedParam = slug;
+  try {
+    decodedParam = decodeURIComponent(slug);
+  } catch {
+    // keep as is
+  }
+
+  if (decodedParam === "feni-sadar-hospital" || decodedParam === "feni-sadar-hospital-guide") {
+    permanentRedirect("/blog/feni-sadar-hospital-guide");
+  }
+
   const partner = await getPartnerByIdAction(slug);
 
   if (!partner) {
-    const notFoundTitle = "পার্টনার প্রতিষ্ঠান পাওয়া যায়নি - হেলথ ক্লাব";
-    const notFoundDesc = "অনুরোধকৃত হাসপাতাল বা ডায়াগনস্টিক সেন্টার হেলথ ক্লাব ডিরেক্টরিতে পাওয়া যায়নি।";
-    return {
-      title: notFoundTitle,
-      description: notFoundDesc,
-      openGraph: {
-        title: notFoundTitle,
-        description: notFoundDesc,
-        images: [
-          {
-            url: `${SITE_URL}/og-image.png`,
-            width: 1200,
-            height: 630,
-            alt: "Health Club",
-          },
-        ],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: notFoundTitle,
-        description: notFoundDesc,
-        images: [`${SITE_URL}/og-image.png`],
-      },
-    };
+    notFound();
   }
 
   const categoryLabel =
@@ -128,19 +117,21 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function PartnerHospitalDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const partner = await getPartnerByIdAction(slug);
-
-  if (!partner) {
-    notFound();
-  }
-
-  // If accessed via ID (e.g. p_9abc5886-...) or mismatched slug,
-  // permanently redirect to the canonical name slug URL
   let decodedParam = slug;
   try {
     decodedParam = decodeURIComponent(slug);
   } catch {
     // keep as is
+  }
+
+  if (decodedParam === "feni-sadar-hospital" || decodedParam === "feni-sadar-hospital-guide") {
+    permanentRedirect("/blog/feni-sadar-hospital-guide");
+  }
+
+  const partner = await getPartnerByIdAction(slug);
+
+  if (!partner) {
+    notFound();
   }
 
   if (partner.slug && decodedParam !== partner.slug) {

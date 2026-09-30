@@ -52,7 +52,7 @@ export const FENI_BLOOD_BANK_PROFILES_PART2: BloodBankReviewItem[] = [
     partnerStatus: false,
     partnerDiscountBn: "দরিদ্র ও সুবিধাবঞ্চিত রোগীদের জন্য সম্পূর্ণ বিনামূল্যে",
     partnerDiscountEn: "100% Free Service for Indigent & Underprivileged Patients",
-    partnerProfileSlug: "feni-sadar-hospital-guide",
+    partnerProfileSlug: "/blog/feni-sadar-hospital-guide",
     imageUrl: "/images/placeholders/hospital.webp",
     mapQuery: "Feni Sadar Hospital Social Welfare Office",
   },

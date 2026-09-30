@@ -26,7 +26,7 @@ export const FENI_LASER_PILES_FISTULA_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "বিকাল ৩:৩০ - রাত ৮:০০",
         serialPhone: "01815583960, 01869865543",
         consultationFeeBn: "৳৮০০ - ৳১,০০০",
-        consultantProfileUrl: "/consultants/doc_92f055c0",
+        consultantProfileUrl: "/consultants/সহকারী-অধ্যাপক-ডা-মো-হারুন-অর-রশিদ",
         featuredBadgeBn: "আমেরিকান ও রয়্যাল কলেজ ফেলো কলোরেক্টাল সার্জন",
       },
       {
@@ -45,7 +45,7 @@ export const FENI_LASER_PILES_FISTULA_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "সন্ধ্যা ৬:০০ - রাত ৮:৩০",
         serialPhone: "01824917777",
         consultationFeeBn: "৳৭০০ - ৳৮০০",
-        consultantProfileUrl: "/consultants/doc_fenir_777",
+        consultantProfileUrl: "/consultants/ডা-তানভীর-আহমেদ-সনেট",
         featuredBadgeBn: "বিএসএমএমইউ কলোরেক্টাল ও লেজার প্রোক্টোলজি কনসালটেন্ট",
       },
       {
@@ -64,7 +64,7 @@ export const FENI_LASER_PILES_FISTULA_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "সকাল ১০:০০ - দুপুর ২:০০",
         serialPhone: "01752431244",
         consultationFeeBn: "৳৮০০",
-        consultantProfileUrl: "/consultants/doc_3e92bd20",
+        consultantProfileUrl: "/consultants/সহকারী-অধ্যাপক-জসিম-উদদীন",
         featuredBadgeBn: "মুগদা মেডিকেল কলেজ সহকারী অধ্যাপক সার্জন",
       },
       {
@@ -83,7 +83,7 @@ export const FENI_LASER_PILES_FISTULA_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "বিকাল ৩:০০ - বিকাল ৫:৩০",
         serialPhone: "01898221111, 01898445555",
         consultationFeeBn: "৳৭০০ - ৳৮০০",
-        consultantProfileUrl: "/consultants/doc_fenir_469",
+        consultantProfileUrl: "/consultants/ডা-রাজীব-গুহ",
         featuredBadgeBn: "এন্ডোল্যাপারোস্কপিক ও কলোরেক্টাল ফেলো সার্জন",
       },
       {
@@ -101,7 +101,7 @@ export const FENI_LASER_PILES_FISTULA_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "সন্ধ্যা ৬:০০ - রাত ১০:০০",
         serialPhone: "01711984629",
         consultationFeeBn: "৳৬০০ - ৳৮০০",
-        consultantProfileUrl: "/consultants/doc_fenir_162",
+        consultantProfileUrl: "/consultants/ডা-মো-কামরুজ্জামান",
         featuredBadgeBn: "ফেনী সদর হাসপাতাল সিনিয়র সার্জারি কনসালটেন্ট",
       },
     ],
@@ -129,7 +129,7 @@ export const FENI_LASER_PILES_FISTULA_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "বিকাল ৩:০০ - সন্ধ্যা ৭:০০",
         serialPhone: "01834031113",
         consultationFeeBn: "৳৮০০ - ৳১,০০০",
-        consultantProfileUrl: "/consultants/doc_fenir_688",
+        consultantProfileUrl: "/consultants/সহকারী-অধ্যাপক-ডা-তাহিরা-বেনজীর",
         featuredBadgeBn: "মহিলা রোগীদের জন্য বিশেষায়িত চমেক কলোরেক্টাল সার্জন",
       },
       {
@@ -147,7 +147,7 @@ export const FENI_LASER_PILES_FISTULA_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "সকাল ১০:০০ - বিকাল ৪:০০",
         serialPhone: "01834031113",
         consultationFeeBn: "৳৮০০ - ৳১,০০০",
-        consultantProfileUrl: "/consultants/doc_fenir_842",
+        consultantProfileUrl: "/consultants/সহকারী-অধ্যাপক-ডা-নিগহাত-জাবিন",
         featuredBadgeBn: "চমেক সহকারী অধ্যাপক ও মহিলা সার্জন",
       },
       {
@@ -165,7 +165,7 @@ export const FENI_LASER_PILES_FISTULA_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "বিকাল ৩:০০ - সন্ধ্যা ৭:০০",
         serialPhone: "01841925695",
         consultationFeeBn: "৳৭০০",
-        consultantProfileUrl: "/consultants/doc_fenir_529",
+        consultantProfileUrl: "/consultants/ডা-সাদিয়া-আকতার",
         featuredBadgeBn: "চট্টগ্রাম মেডিকেল কলেজ সার্জন",
       },
     ],

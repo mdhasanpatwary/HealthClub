@@ -170,7 +170,7 @@ export const FENI_FULL_BODY_CHECKUP_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড়",
     partnerDiscountEn: "10-30% Member Discount",
-    partnerProfileSlug: "pacific-health-care",
+    partnerProfileSlug: "pacific-health-care-centre",
     imageUrl: "/images/blog/best-diagnostic-centers-feni.webp",
   },
   {
@@ -216,7 +216,7 @@ export const FENI_FULL_BODY_CHECKUP_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড়",
     partnerDiscountEn: "10-30% Member Discount",
-    partnerProfileSlug: "life-care-diagnostic",
+    partnerProfileSlug: "life-care-diagnostic-center",
     imageUrl: "/images/blog/best-diagnostic-centers-feni.webp",
   },
   {
@@ -262,7 +262,7 @@ export const FENI_FULL_BODY_CHECKUP_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড়",
     partnerDiscountEn: "10-30% Member Discount",
-    partnerProfileSlug: "imperial-neurocare",
+    partnerProfileSlug: "imperial-neurocare-diagnostic-center",
     imageUrl: "/images/blog/best-diagnostic-centers-feni.webp",
   },
   {
@@ -308,7 +308,7 @@ export const FENI_FULL_BODY_CHECKUP_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড়",
     partnerDiscountEn: "10-30% Member Discount",
-    partnerProfileSlug: "feni-max-diagnostic",
+    partnerProfileSlug: "feni-max-diagnostic-centre",
     imageUrl: "/images/blog/best-diagnostic-centers-feni.webp",
   },
   {

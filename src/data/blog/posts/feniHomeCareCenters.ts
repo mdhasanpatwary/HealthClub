@@ -20,7 +20,7 @@ export const FENI_HOME_CARE_PROVIDERS: HospitalReviewItem[] = [
     emergency24x7: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড় (ইনডোর সেবা, অন-কল নার্স ও ল্যাব টেস্টে)",
-    partnerProfileSlug: "al-aqsa-hospital-feni",
+    partnerProfileSlug: "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
     imageUrl: "/images/partners/al-aqsa-hospital.webp",
     mapQuery: "Al-Aqsa Hospital Trunk Road Feni",
     descriptionBn:
@@ -70,7 +70,7 @@ export const FENI_HOME_CARE_PROVIDERS: HospitalReviewItem[] = [
     emergency24x7: false,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড় (হোম স্যাম্পল কালেকশন ও সকল ল্যাব টেস্টে)",
-    partnerProfileSlug: "pacific-health-care-feni",
+    partnerProfileSlug: "pacific-health-care-centre",
     imageUrl: "/images/partners/pacific-health-care.webp",
     mapQuery: "Pacific Health Care SSK Road Feni",
     descriptionBn:
@@ -120,7 +120,7 @@ export const FENI_HOME_CARE_PROVIDERS: HospitalReviewItem[] = [
     emergency24x7: false,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড় (হোম প্যাথলজি ও বায়োকেমিস্ট্রি বিলে)",
-    partnerProfileSlug: "life-care-diagnostic-feni",
+    partnerProfileSlug: "life-care-diagnostic-center",
     imageUrl: "/images/partners/life-care-diagnostic.webp",
     mapQuery: "Life Care Diagnostic GT Road Feni",
     descriptionBn:
@@ -170,7 +170,7 @@ export const FENI_HOME_CARE_PROVIDERS: HospitalReviewItem[] = [
     emergency24x7: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড় (নিউরো ল্যাব টেস্ট ও স্যাম্পল পিকআপে)",
-    partnerProfileSlug: "imperial-neurocare-feni",
+    partnerProfileSlug: "imperial-neurocare-diagnostic-center",
     imageUrl: "/images/partners/imperial-neurocare.webp",
     mapQuery: "Imperial Neurocare Trunk Road Feni",
     descriptionBn:
@@ -220,7 +220,7 @@ export const FENI_HOME_CARE_PROVIDERS: HospitalReviewItem[] = [
     emergency24x7: false,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড় (প্যাথলজি টেস্ট ও হোম সার্ভিসে)",
-    partnerProfileSlug: "feni-max-diagnostic",
+    partnerProfileSlug: "feni-max-diagnostic-centre",
     imageUrl: "/images/partners/feni-max-diagnostic.webp",
     mapQuery: "Feni Max Diagnostic SSK Road Feni",
     descriptionBn:

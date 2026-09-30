@@ -284,9 +284,9 @@ export const BEST_CARDIOLOGISTS_IN_FENI: BlogPost = {
       questionBn: "ফেনীতে কোথায় ইকোকার্ডিওগ্রাম (Echo) এবং ইটিটি (ETT) পরীক্ষা সবচেয়ে নির্ভরযোগ্য?",
       questionEn: "Where are the best Echocardiogram and ETT facilities in Feni?",
       answerBn:
-        "ফেনী ন্যাশনাল হার্ট ফাউন্ডেশন হাসপাতাল, শেভরন ডায়াগনস্টিক, পপুলার ডায়াগনস্টিক এবং ল্যাবএইডে উচ্চমানের কালার ডপলার ২ডি ইকো এবং ট্রেডমিল ইটিটি মেশিন রয়েছে। এসব সেন্টারে কার্ডিওলজিস্ট চিকিৎসকরা নিজেরাই ইকো পরীক্ষা সম্পন্ন করে তাৎক্ষণিক রিপোর্ট প্রদান করেন। হেলথ ক্লাব মেম্বাররা এসব সেন্টারে বিশেষ ছাড় পান।",
+        "ফেনী ন্যাশনাল হার্ট ফাউন্ডেশন হাসপাতাল, প্যাসিফিক হেলথ কেয়ার সেন্টার এবং লাইফ কেয়ার ডায়াগনস্টিক সেন্টারে উচ্চমানের কালার ডপলার ২ডি ইকো এবং ইটিটি সুবিধা রয়েছে। এছাড়া রেফারেন্স ডায়াগনস্টিক হিসেবে শেভরন ও ল্যাবএইডেও এই পরীক্ষাগুলো করা হয়। হেলথ ক্লাব মেম্বাররা অফিসিয়াল পার্টনার কেন্দ্রগুলোতে (যেমন: প্যাসিফিক হেলথ কেয়ার ও লাইফ কেয়ার ডায়াগনস্টিক) কার্ডিয়াক টেস্টে ১০-৩০% মেম্বার ছাড় পেয়ে থাকেন।",
       answerEn:
-        "Feni Heart Foundation Hospital, Chevron, Popular, and LabAid provide advanced 2D Color Doppler Echo and computerized ETT performed directly by cardiologists.",
+        "Feni Heart Foundation Hospital, Pacific Health Care Centre, and Life Care Diagnostic Centre provide advanced 2D Color Doppler Echo and computerized ETT. Reference centers like Chevron and LabAid also perform these tests. Health Club members receive 10-30% discounts on cardiac tests at certified partner centers.",
     },
     {
       questionBn: "উচ্চ রক্তচাপ (High BP) থাকলে কতদিন পর পর হার্টের ডাক্তারের পরামর্শ নেওয়া উচিত?",

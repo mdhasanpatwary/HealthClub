@@ -218,7 +218,11 @@ export function PharmacyReviewCard({
         <div className="flex items-center gap-2">
           {pharmacy.partnerStatus && pharmacy.partnerProfileSlug && (
             <Link
-              href={`/partner-hospitals/${encodeURIComponent(pharmacy.partnerProfileSlug)}`}
+              href={
+                pharmacy.partnerProfileSlug.startsWith("/")
+                  ? pharmacy.partnerProfileSlug
+                  : `/partner-hospitals/${encodeURIComponent(pharmacy.partnerProfileSlug)}`
+              }
               className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
             >
               <span>পার্টনার প্রোফাইল দেখুন</span>

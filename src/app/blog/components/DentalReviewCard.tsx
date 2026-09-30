@@ -176,7 +176,11 @@ export function DentalReviewCard({
             </Link>
             {clinic.partnerProfileSlug && (
               <Link
-                href={`/partner-hospitals/${encodeURIComponent(clinic.partnerProfileSlug)}`}
+                href={
+                  clinic.partnerProfileSlug.startsWith("/")
+                    ? clinic.partnerProfileSlug
+                    : `/partner-hospitals/${encodeURIComponent(clinic.partnerProfileSlug)}`
+                }
                 aria-label={`পার্টনার প্রোফাইল - ${name}`}
                 className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border hover:bg-muted text-foreground text-xs font-medium transition-colors"
               >

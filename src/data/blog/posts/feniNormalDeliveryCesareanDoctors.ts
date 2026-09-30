@@ -24,7 +24,7 @@ export const FENI_NORMAL_DELIVERY_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "বিকাল ৪:০০ - সন্ধ্যা ৭:০০",
         serialPhone: "01971351270",
         consultationFeeBn: "৳৭০০",
-        consultantProfileUrl: "/consultants/doc_fenir_453",
+        consultantProfileUrl: "/consultants/ডা-নিলুফা-সুলতানা",
         featuredBadgeBn: "স্বাভাবিক প্রসব বিশেষজ্ঞ",
       },
       {
@@ -42,7 +42,7 @@ export const FENI_NORMAL_DELIVERY_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "বিকাল ৪:০০ - রাত ৮:০০",
         serialPhone: "01898221122",
         consultationFeeBn: "৳৬০০",
-        consultantProfileUrl: "/consultants/doc_fenir_770",
+        consultantProfileUrl: "/consultants/ডা-আফরোজা-আক্তার",
         featuredBadgeBn: "স্বাভাবিক প্রসব ও এএনসি কাউন্সিলর",
       },
       {
@@ -60,7 +60,7 @@ export const FENI_NORMAL_DELIVERY_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "সকাল ১০:০০ - দুপুর ২:০০",
         serialPhone: "09666787819",
         consultationFeeBn: "৳৭০০",
-        consultantProfileUrl: "/consultants/doc_fenir_512",
+        consultantProfileUrl: "/consultants/ডা-ফরিদা-ইয়াসমিন-কবির",
         featuredBadgeBn: "মাতৃস্বাস্থ্য ও প্রসব বিশেষজ্ঞ",
       },
       {
@@ -78,7 +78,7 @@ export const FENI_NORMAL_DELIVERY_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "বিকাল ৫:০০ - রাত ৮:৩০",
         serialPhone: "01766663000",
         consultationFeeBn: "৳৮০০",
-        consultantProfileUrl: "/consultants/doc_fenir_945",
+        consultantProfileUrl: "/consultants/ডা-শামীমা-নাসরিন",
         featuredBadgeBn: "গর্ভকালীন ডায়াবেটিস কেয়ার",
       },
     ],
@@ -106,7 +106,7 @@ export const FENI_NORMAL_DELIVERY_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "বিকাল ৩:০০ - রাত ৮:০০",
         serialPhone: "01898221111",
         consultationFeeBn: "৳৮০০",
-        consultantProfileUrl: "/consultants/doc_fenir_728",
+        consultantProfileUrl: "/consultants/সহকারী-অধ্যাপক-ডা-আসমা-আক্তার-2",
         featuredBadgeBn: "জটিল প্রসূতি সার্জন",
       },
       {
@@ -124,7 +124,7 @@ export const FENI_NORMAL_DELIVERY_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "সকাল ৯:০০ - দুপুর ১:০০",
         serialPhone: "01841925695",
         consultationFeeBn: "৳৮০০",
-        consultantProfileUrl: "/consultants/doc_fenir_233",
+        consultantProfileUrl: "/consultants/সহকারী-অধ্যাপিকা-ডা-আরেফিন-আরিফ-নিপা",
         featuredBadgeBn: "লন্ডন ডিগ্রিপ্রাপ্ত (MRCOG)",
       },
       {
@@ -142,7 +142,7 @@ export const FENI_NORMAL_DELIVERY_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "বিকাল ৪:০০ - রাত ৮:০০",
         serialPhone: "01847222888",
         consultationFeeBn: "৳৭০০",
-        consultantProfileUrl: "/consultants/doc_fenir_901",
+        consultantProfileUrl: "/consultants/ডা-নাজনীন-আক্তার-রুমি",
         featuredBadgeBn: "এনআইসিইউ ওটি সাপোর্ট",
       },
       {
@@ -160,7 +160,7 @@ export const FENI_NORMAL_DELIVERY_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "বিকাল ৪:০০ - সন্ধ্যা ৭:৩০",
         serialPhone: "01869865543",
         consultationFeeBn: "৳৮০০",
-        consultantProfileUrl: "/consultants/doc_fenir_884",
+        consultantProfileUrl: "/consultants/সহকারী-অধ্যাপক-ডা-কামরুন-নাহার-রলী",
         featuredBadgeBn: "জটিল প্রসূতি ও ল্যাপারোস্কপি",
       },
       {
@@ -178,7 +178,7 @@ export const FENI_NORMAL_DELIVERY_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "বিকাল ৫:০০ - রাত ৯:০০",
         serialPhone: "01819383838",
         consultationFeeBn: "৳৬০০",
-        consultantProfileUrl: "/consultants/doc_fenir_320",
+        consultantProfileUrl: "/consultants/ডা-তাহমিনা-সুলতানা-নীলা",
         featuredBadgeBn: "জরুরি সিজারিয়ান সার্জন",
       },
     ],

@@ -341,7 +341,7 @@ export const BEST_KIDNEY_DOCTORS_IN_FENI: BlogPost = {
       questionBn: "হেলথ ক্লাব সদস্য হলে কিডনি ডায়াগনস্টিক পরীক্ষা ও ডায়ালাইসিসে কী কী সুবিধা পাওয়া যায়?",
       questionEn: "What kidney diagnostic and dialysis discounts are available for Health Club members?",
       answerBn:
-        "হেলথ ক্লাবের ডিজিটাল মেম্বারশিপ কার্ড দেখালে ফেনীর পার্টনার প্রতিষ্ঠানগুলোতে (যেমন: ডিডি ল্যাব, নিউ ইবনে সিনা, শেভরন ও ল্যাবএইড) সিরাম ক্রিয়েটিনিন, ইলেক্ট্রোলাইটস, ইউরিন এসিআর ও ইউএসজিসহ সকল রেনাল টেস্টে ১০% থেকে ৩০% পর্যন্ত তাৎক্ষণিক ক্যাশ ডিসকাউন্ট পাওয়া যায়।",
+        "হেলথ ক্লাবের ডিজিটাল মেম্বারশিপ কার্ড দেখালে ফেনীর অফিসিয়াল পার্টনার প্রতিষ্ঠানগুলোতে (যেমন: প্যাসিফিক হেলথ কেয়ার সেন্টার, লাইফ কেয়ার ডায়াগনস্টিক, ইম্পেরিয়াল নিউরোকেয়ার ও ফেনি ম্যাক্স ডায়াগনস্টিক) সিরাম ক্রিয়েটিনিন, ইলেক্ট্রোলাইটস, ইউরিন এসিআর ও ইউএসজিসহ সকল রেনাল টেস্টে ১০% থেকে ৩০% পর্যন্ত তাৎক্ষণিক মেম্বার ছাড় পাওয়া যায়।",
       answerEn:
         "Health Club members receive guaranteed 10% to 30% discounts on all renal pathology, ultrasound KUB, and creatinine investigations across certified partner centers in Feni.",
     },

@@ -168,7 +168,7 @@ export const FENI_PREGNANCY_USG_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
     partnerDiscountEn: "10-30% Member Discount",
-    partnerProfileSlug: "pacific-health-care-feni",
+    partnerProfileSlug: "pacific-health-care-centre",
   },
   {
     rank: 2,
@@ -210,7 +210,7 @@ export const FENI_PREGNANCY_USG_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
     partnerDiscountEn: "10-30% Member Discount",
-    partnerProfileSlug: "life-care-diagnostic-feni",
+    partnerProfileSlug: "life-care-diagnostic-center",
   },
   {
     rank: 3,
@@ -252,7 +252,7 @@ export const FENI_PREGNANCY_USG_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
     partnerDiscountEn: "10-30% Member Discount",
-    partnerProfileSlug: "imperial-neurocare-feni",
+    partnerProfileSlug: "imperial-neurocare-diagnostic-center",
   },
   {
     rank: 4,
@@ -294,7 +294,7 @@ export const FENI_PREGNANCY_USG_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
     partnerDiscountEn: "10-30% Member Discount",
-    partnerProfileSlug: "feni-max-diagnostic",
+    partnerProfileSlug: "feni-max-diagnostic-centre",
   },
   {
     rank: 5,

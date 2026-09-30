@@ -189,7 +189,11 @@ export function DiagnosticReviewCard({
             </Link>
             {center.partnerProfileSlug && (
               <Link
-                href={`/partner-hospitals/${encodeURIComponent(center.partnerProfileSlug)}`}
+                href={
+                  center.partnerProfileSlug.startsWith("/")
+                    ? center.partnerProfileSlug
+                    : `/partner-hospitals/${encodeURIComponent(center.partnerProfileSlug)}`
+                }
                 aria-label={`পার্টনার প্রোফাইল - ${name}`}
                 className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border hover:bg-muted text-foreground text-xs font-medium transition-colors"
               >

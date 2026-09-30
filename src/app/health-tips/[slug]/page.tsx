@@ -44,26 +44,7 @@ export async function generateMetadata({ params }: ArticlePageProps) {
   const { slug } = await params;
   const article = await getHealthTipBySlugAction(slug);
   if (!article) {
-    const notFoundTitle = "নিবন্ধ পাওয়া যায়নি - হেলথ ক্লাব";
-    return {
-      title: notFoundTitle,
-      openGraph: {
-        title: notFoundTitle,
-        images: [
-          {
-            url: `${SITE_URL}/og-image.png`,
-            width: 1200,
-            height: 630,
-            alt: "Health Club",
-          },
-        ],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: notFoundTitle,
-        images: [`${SITE_URL}/og-image.png`],
-      },
-    };
+    notFound();
   }
 
   const pageTitle = article.titleBn;

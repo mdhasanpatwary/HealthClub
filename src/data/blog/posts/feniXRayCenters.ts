@@ -160,7 +160,7 @@ export const FENI_XRAY_CENTERS: DiagnosticCenterReviewItem[] = [
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "pacific-health-care",
+    partnerProfileSlug: "pacific-health-care-centre",
   },
   {
     rank: 2,
@@ -230,7 +230,7 @@ export const FENI_XRAY_CENTERS: DiagnosticCenterReviewItem[] = [
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "imperial-neurocare",
+    partnerProfileSlug: "imperial-neurocare-diagnostic-center",
   },
   {
     rank: 4,
@@ -300,7 +300,7 @@ export const FENI_XRAY_CENTERS: DiagnosticCenterReviewItem[] = [
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "al-aqsa-hospital",
+    partnerProfileSlug: "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
   },
   {
     rank: 6,

@@ -3,12 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import {
-  Phone, PhoneCall, Calendar, Clock, MapPin, Building2,
-  Stethoscope, CheckCircle2, Share2, Navigation,
-  ArrowLeft, ShieldCheck,
-  FileText, Clock3, CreditCard, Sparkles, ArrowRight
+  PhoneCall, Building2, Stethoscope, CheckCircle2,
+  Share2, Navigation, ArrowLeft, ShieldCheck
 } from "lucide-react";
-import { trackEvent } from "@/lib/analytics";
 import { Doctor, Partner } from "@/services/db";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -18,6 +15,10 @@ import { DoctorAvailabilityBadge, DoctorNoticeBanner } from "@/components/ui/doc
 import { DEPT_ICONS, CLINICAL_FOCUS_MAP, DEPT_LABEL_MAP } from "./consultantData";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { DoctorPillarGuideCard } from "./DoctorPillarGuideCard";
+import { DoctorQuickSummary } from "./DoctorQuickSummary";
+import { DoctorChamberSchedule } from "./DoctorChamberSchedule";
+import { DoctorClinicalGuidance } from "./DoctorClinicalGuidance";
+import { DoctorDepartmentFaq } from "./DoctorDepartmentFaq";
 import { toast } from "sonner";
 import { SITE_URL } from "@/lib/siteConfig";
 
@@ -35,15 +36,6 @@ export default function DoctorProfileView({
   const DeptIcon = DEPT_ICONS[doctor.department] || Stethoscope;
   const clinicalFocus = CLINICAL_FOCUS_MAP[doctor.department] || CLINICAL_FOCUS_MAP.other;
 
-  const parsePhones = (phoneStr: string) => {
-    return phoneStr
-      .split(/[,/|]+/)
-      .map((p) => p.trim())
-      .filter(Boolean);
-  };
-
-  const phoneNumbers = parsePhones(doctor.serialPhone);
-
   const getMapUrl = () => {
     if (doctor.partner?.mapLink) return doctor.partner.mapLink;
     const query = `${doctor.chamberName}, ${doctor.chamberAddress}, Feni`;
@@ -51,7 +43,9 @@ export default function DoctorProfileView({
   };
 
   const handleShare = async () => {
-    const profileUrl = typeof window !== "undefined" ? window.location.href : `${SITE_URL}/consultants/${encodeURIComponent(doctor.slug || doctor.id)}`;
+    const profileUrl = typeof window !== "undefined"
+      ? window.location.href
+      : `${SITE_URL}/consultants/${encodeURIComponent(doctor.slug || doctor.id)}`;
     const shareTitle = `${doctor.name} - ${doctor.specialty} | Health Club`;
     const shareText = `${doctor.name} (${doctor.specialty}), ${doctor.chamberName}, Feni. সিরিয়াল হটলাইন: ${doctor.serialPhone}`;
 
@@ -186,10 +180,13 @@ export default function DoctorProfileView({
           </div>
         </Card>
 
+        {/* Voice/Answer Engine & AI Overview Direct Answer Capsule (BLUF) */}
+        <DoctorQuickSummary doctor={doctor} />
+
         {/* Main Grid: Chamber & Details vs Side Information */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-start">
           
-          {/* Left Column: Chamber Schedule & Hotline */}
+          {/* Left Column: Chamber Schedule, Clinical Guidance, FAQs & Pillar Guide */}
           <div className="lg:col-span-2 space-y-6">
             
             {/* Notice Callout Banner */}
@@ -198,148 +195,7 @@ export default function DoctorProfileView({
             )}
 
             {/* Chamber Schedule Card */}
-            <Card className="rounded-3xl border-border/80 bg-card p-5 sm:p-7 shadow-xs space-y-6">
-              <div className="flex items-center justify-between pb-3 border-b border-border/60">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                    <Calendar className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h2 className="font-heading font-bold text-base sm:text-lg text-foreground">
-                      চেম্বার ও রোগী দেখার সময়সূচী
-                    </h2>
-                    <p className="text-xs text-muted-foreground">
-                      {doctor.chamberName}
-                    </p>
-                  </div>
-                </div>
-                <DoctorAvailabilityBadge doctor={doctor} size="sm" />
-              </div>
-
-              {/* Chamber Details & Address */}
-              <div className="space-y-4">
-                <div className="bg-muted/30 border border-border/60 rounded-2xl p-4 sm:p-5 space-y-3">
-                  <div className="flex items-start gap-3">
-                    <Building2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                    <div className="space-y-1 min-w-0">
-                      <h3 className="font-heading font-bold text-sm sm:text-base text-foreground">
-                        {doctor.chamberName}
-                      </h3>
-                      <p className="text-xs sm:text-sm text-muted-foreground flex items-center gap-1.5">
-                        <MapPin className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                        <span>{doctor.chamberAddress}</span>
-                      </p>
-                      {doctor.roomNo && (
-                        <p className="text-xs font-semibold text-primary inline-flex items-center gap-1 mt-1 bg-primary/10 px-2.5 py-0.5 rounded-lg">
-                          <span>রুম নং:</span>
-                          <span>{doctor.roomNo}</span>
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Timing & Visiting Schedule Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  <div className="p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/20 space-y-1">
-                    <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400 font-bold text-xs">
-                      <Clock3 className="h-4 w-4 shrink-0" />
-                      <span>রোগী দেখার দিন</span>
-                    </div>
-                    <p className="font-heading font-bold text-sm sm:text-base text-foreground pt-1">
-                      {doctor.visitingDays}
-                    </p>
-                  </div>
-
-                  <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20 space-y-1">
-                    <div className="flex items-center gap-2 text-primary font-bold text-xs">
-                      <Clock className="h-4 w-4 shrink-0" />
-                      <span>সময়সূচী</span>
-                    </div>
-                    <p className="font-heading font-bold text-sm sm:text-base text-foreground pt-1">
-                      {doctor.visitingHours}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Consultation Fee */}
-                {doctor.consultationFee && (
-                  <div className="flex items-center justify-between p-4 rounded-2xl bg-amber-500/5 border border-amber-500/20">
-                    <div className="flex items-center gap-2.5 text-xs font-bold text-amber-800 dark:text-amber-300">
-                      <CreditCard className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
-                      <span>পরামর্শ ফি</span>
-                    </div>
-                    <span className="font-heading font-bold text-sm sm:text-base text-amber-700 dark:text-amber-300">
-                      {doctor.consultationFee}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* Direct Serial Helpline List */}
-              <div className="space-y-3 pt-2">
-                <h3 className="font-heading font-bold text-xs sm:text-sm text-foreground uppercase tracking-wider text-muted-foreground">
-                  চেম্বার সিরিয়াল ও বুকিং নাম্বার
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {phoneNumbers.map((phone, idx) => (
-                    <a
-                      key={idx}
-                      href={`tel:${phone.replace(/\s+/g, "")}`}
-                      className="flex items-center justify-between p-3.5 rounded-2xl border-2 border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors group"
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <Phone className="h-4 w-4 text-primary" />
-                        <span className="font-heading font-bold text-sm text-foreground font-mono">
-                          {phone}
-                        </span>
-                      </div>
-                      <span className="text-[11px] font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-xl group-hover:bg-primary group-hover:text-white transition-colors">
-                        কল দিন
-                      </span>
-                    </a>
-                  ))}
-                </div>
-
-                {/* On-Page Serial Member Discount In-Funnel Prompt */}
-                <div className="p-3.5 sm:p-4 rounded-2xl border-2 border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-primary/5 to-teal-500/10 space-y-2.5">
-                  <div className="flex items-start gap-2.5">
-                    <div className="h-7 w-7 rounded-xl bg-primary text-white flex items-center justify-center shrink-0 shadow-xs mt-0.5">
-                      <Sparkles className="h-4 w-4" />
-                    </div>
-                    <div className="space-y-0.5 min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full">
-                          ফাউন্ডিং মেম্বার অফার
-                        </span>
-                        <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400">
-                          ১ বছর সম্পূর্ণ ফ্রি
-                        </span>
-                      </div>
-                      <p className="font-heading font-bold text-xs sm:text-sm text-foreground leading-snug">
-                        সিরিয়াল বুকিংয়ের পর টেস্টে ১০-৩০% ডিসকাউন্ট চান?
-                      </p>
-                      <p className="text-[11px] text-muted-foreground leading-relaxed">
-                        ডাক্তারের প্রেসক্রিপশন অনুযায়ী সকল টেস্ট ও ডায়াগনস্টিকে ছাড় পেতে এখনই সংগ্রহ করুন হেলথ ক্লাব ডিজিটাল মেম্বার কার্ড।
-                      </p>
-                    </div>
-                  </div>
-                  <Link
-                    href="/membership"
-                    onClick={() => {
-                      trackEvent("membership_funnel", {
-                        step: "serial_cta_click",
-                        source: `doctor_profile_serial_${doctor.id}`,
-                      });
-                    }}
-                    className="flex items-center justify-center gap-1.5 w-full py-2.5 px-3 rounded-xl bg-primary hover:bg-primary-dark text-white text-xs font-bold transition-all shadow-xs"
-                  >
-                    <span>১ মিনিটে ফ্রি মেম্বার কার্ড সংগ্রহ করুন</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                </div>
-              </div>
-            </Card>
+            <DoctorChamberSchedule doctor={doctor} />
 
             {/* Clinical Focus & Department Guide */}
             <Card className="rounded-3xl border-border/80 bg-card p-5 sm:p-7 shadow-xs space-y-4">
@@ -360,29 +216,13 @@ export default function DoctorProfileView({
               <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                 {clinicalFocus.bn}
               </p>
-
-              {/* Patient Preparation Checklist */}
-              <div className="bg-muted/30 border border-border/60 rounded-2xl p-4 sm:p-5 space-y-3 mt-4">
-                <h3 className="font-heading font-bold text-xs sm:text-sm text-foreground flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-primary" />
-                  <span>চেম্বারে আসার পূর্বে রোগীর প্রস্তুতি</span>
-                </h3>
-                <ul className="space-y-2 text-xs text-muted-foreground">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                    <span>পূর্বের সকল প্রেসক্রিপশন, টেস্ট রিপোর্ট এবং নিয়মিত ঔষধের তালিকা সাথে রাখুন।</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                    <span>সিরিয়াল ফোনে নিশ্চিত করুন এবং নির্ধারিত সময়ের অন্তত ১৫-২০ মিনিট পূর্বে চেম্বারে উপস্থিত হোন।</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                    <span>পার্টনার ডায়াগনস্টিক সেন্টার বা হাসপাতালে ছাড় পেতে হেলথ ক্লাব ডিজিটাল কার্ড প্রদর্শন করুন।</span>
-                  </li>
-                </ul>
-              </div>
             </Card>
+
+            {/* Chamber Visit Preparation, Serial Protocol & Emergency Warnings */}
+            <DoctorClinicalGuidance doctor={doctor} />
+
+            {/* Department Conversational FAQs */}
+            <DoctorDepartmentFaq doctor={doctor} />
 
             {/* Contextual Department Blog Pillar Guide Card */}
             <DoctorPillarGuideCard

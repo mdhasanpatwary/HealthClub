@@ -163,7 +163,7 @@ export const FENI_HORMONE_CENTERS: DiagnosticCenterReviewItem[] = [
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "pacific-health-care",
+    partnerProfileSlug: "pacific-health-care-centre",
     mapQuery: "Pacific Health Care SSK Road Feni",
   },
   {
@@ -202,7 +202,7 @@ export const FENI_HORMONE_CENTERS: DiagnosticCenterReviewItem[] = [
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "life-care-diagnostic",
+    partnerProfileSlug: "life-care-diagnostic-center",
     mapQuery: "Life Care Diagnostic Grand Trunk Road Feni",
   },
   {
@@ -241,7 +241,7 @@ export const FENI_HORMONE_CENTERS: DiagnosticCenterReviewItem[] = [
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "imperial-neurocare",
+    partnerProfileSlug: "imperial-neurocare-diagnostic-center",
     mapQuery: "Imperial Neurocare Trunk Road Feni",
   },
   {
@@ -280,7 +280,7 @@ export const FENI_HORMONE_CENTERS: DiagnosticCenterReviewItem[] = [
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "feni-max-diagnostic",
+    partnerProfileSlug: "feni-max-diagnostic-centre",
     mapQuery: "Feni Max Diagnostic SSK Road Feni",
   },
   {
@@ -319,7 +319,7 @@ export const FENI_HORMONE_CENTERS: DiagnosticCenterReviewItem[] = [
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "al-aqsa-hospital-feni",
+    partnerProfileSlug: "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
     mapQuery: "Al-Aqsa Hospital Hospital Road Feni",
   },
   {

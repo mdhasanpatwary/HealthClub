@@ -1,6 +1,10 @@
 import { Doctor, Partner } from "@/services/db";
 import { SITE_URL } from "@/lib/siteConfig";
 import { CLINICAL_FOCUS_MAP } from "@/components/consultants/consultantData";
+import {
+  generateDoctorProfileFaqs,
+  generateDoctorQuickSummary,
+} from "@/data/doctorFaqData";
 
 import {
   SCHEMA_SPECIALTY_MAP,
@@ -175,7 +179,7 @@ export function generateDoctorJsonLd(
     image: imageUrl,
     telephone: primaryPhone,
     jobTitle: doctor.designation || doctor.specialty,
-    description: `${doctor.name} ফেনীর একজন প্রখ্যাত ${doctor.specialty} বিশেষজ্ঞ। চেম্বার: ${doctor.chamberName}, ${doctor.chamberAddress}। শিক্ষাগত যোগ্যতা ও ডিগ্রি: ${doctor.degrees}। সিরিয়াল বুকিং হটলাইন: ${doctor.serialPhone}।`,
+    description: generateDoctorQuickSummary(doctor),
     priceRange: doctor.consultationFee || "৳৳",
     currenciesAccepted: "BDT",
     paymentAccepted: "Cash, bKash, Nagad, Rocket, Mobile Banking",
@@ -332,13 +336,14 @@ export function generateDoctorJsonLd(
     url: profileUrl,
     image: imageUrl,
     name: `${doctor.name} - ${doctor.specialty} (Feni) | Health Club`,
-    description: `${doctor.name}, ${doctor.specialty}, ${doctor.degrees}। চেম্বার: ${doctor.chamberName}। সিরিয়াল হটলাইন: ${doctor.serialPhone}।`,
+    description: generateDoctorQuickSummary(doctor),
     speakable: {
       "@type": "SpeakableSpecification",
       cssSelector: [
+        "#doctor-quick-summary",
         ".geo-answer-capsule",
+        "#faq-section",
         ".faq-answer",
-        "#overview",
         "#doctor-profile-header",
       ],
     },
@@ -359,52 +364,20 @@ export function generateDoctorJsonLd(
   };
 
   // 4. Doctor-Specific High-Density FAQPage Schema for Direct Google & Voice SERP Answers
+  const doctorFaqs = generateDoctorProfileFaqs(doctor);
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: `ফেনীতে ${doctor.name}-এর চেম্বার কোথায় এবং রোগী দেখার সময় কখন?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `${doctor.name}-এর চেম্বার হলো ${doctor.chamberName}, ${doctor.chamberAddress}। রোগী দেখার সময়সূচী: ${doctor.visitingDays} (${doctor.visitingHours})। চেম্বার রুম: ${doctor.roomNo || "নির্ধারিত কনসালটেশন সেন্টার"}। সিরিয়াল দিতে কল করুন: ${doctor.serialPhone}।`,
-        },
+    mainEntity: doctorFaqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
       },
-      {
-        "@type": "Question",
-        name: `${doctor.name}-এর সিরিয়াল বা অ্যাপয়েন্টমেন্ট কীভাবে বুক করবেন?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `সরাসরি সিরিয়াল বুকিংয়ের জন্য চেম্বার হটলাইন নম্বরে কল করুন: ${doctor.serialPhone}। কোনো মধ্যস্বত্বভোগী বা বাড়তি ফি ছাড়াই সরাসরি সিরিয়াল নিশ্চিত করা যায়।`,
-        },
-      },
-      {
-        "@type": "Question",
-        name: `${doctor.name}-এর ভিজিট ফি (কনসাল্টেশন ফি) ও শিক্ষাগত যোগ্যতা কী?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `শিক্ষাগত যোগ্যতা ও ডিগ্রি: ${doctor.degrees}। পদবী/সংযুক্তি: ${doctor.designation}। কনসাল্টেশন ফি: ${doctor.consultationFee || "চেম্বারের নির্ধারিত ভিজিট প্রযোজ্য, বিস্তারিত জানতে সিরিয়ালে কল করুন"}।`,
-        },
-      },
-      {
-        "@type": "Question",
-        name: `${doctor.name}-এর পরামর্শে ডায়াগনস্টিক টেস্টে কি মেম্বার ছাড় পাওয়া যায়?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `হ্যাঁ, ${doctor.name}-এর প্রেসক্রিপশন অনুযায়ী ফেনী সদরের পার্টনার হাসপাতাল ও ল্যাবগুলোতে সকল প্যাথলজি ও রেডিওলজি পরীক্ষায় হেলথ ক্লাব কার্ডে ১০% থেকে ৩০% তাৎক্ষণিক ছাড় পাওয়া যায়।`,
-        },
-      },
-      {
-        "@type": "Question",
-        name: `চেম্বারে ${doctor.name}-কে দেখানোর পূর্বে রোগীর কী প্রস্তুতি প্রয়োজন?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `রোগীর পূর্ববর্তী সকল প্রেসক্রিপশন ও মেডিকেল রিপোর্ট সাথে রাখুন এবং নির্ধারিত চেম্বার সময়ের অন্তত ২০-৩০ মিনিট পূর্বে উপস্থিত হয়ে সিরিয়াল কার্ড সংগ্রহ করুন।`,
-        },
-      },
-    ],
+    })),
   };
 
   return [breadcrumbsSchema, physicianSchema, medicalWebPageSchema, faqSchema];
 }
+

@@ -36,10 +36,7 @@ export async function generateMetadata({ params }: PageProps) {
   const seo = getPartnerCategorySeoConfig(type);
 
   if (!seo) {
-    return {
-      title: "ক্যাটাগরি খুঁজে পাওয়া যায়নি | হেলথ ক্লাব",
-      description: "অনুরোধকৃত পার্টনার ক্যাটাগরি ডিরেক্টরি পাওয়া যায়নি।",
-    };
+    notFound();
   }
 
   const canonicalUrl = `${SITE_URL}/partner-hospitals/category/${seo.slug}`;

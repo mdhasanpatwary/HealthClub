@@ -35,9 +35,7 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
   const post = await getBlogPostBySlugAction(slug);
 
   if (!post) {
-    return {
-      title: "নিবন্ধ পাওয়া যায়নি - হেলথ ক্লাব",
-    };
+    notFound();
   }
 
   // If titleBn does not have English letters, append primary English keywords from titleEn

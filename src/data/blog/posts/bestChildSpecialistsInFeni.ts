@@ -357,7 +357,7 @@ export const BEST_CHILD_SPECIALISTS_IN_FENI: BlogPost = {
       questionBn: "হেলথ ক্লাব সদস্য হলে শিশুদের ল্যাব টেস্ট ও স্বাস্থ্যসেবায় কী কী ছাড় পাওয়া যায়?",
       questionEn: "What pediatric lab and diagnostic discounts are available for Health Club members in Feni?",
       answerBn:
-        "হেলথ ক্লাবের ডিজিটাল কার্ড দেখালে ফেনীর পার্টনার ডায়াগনস্টিক ল্যাবগুলোতে (ডিডি ল্যাব, শেভরন, নিউ ইবনে সিনা ইত্যাদি) শিশুদের রক্তের সিবিসি, সিআরপি, সিরাম বিলিরুবিন, ইউরিন টেস্ট, ডিজিটাল এক্স-রে ও আল্ট্রাসনোগ্রাফিতে ১০% থেকে ৩০% পর্যন্ত তাৎক্ষণিক ক্যাশ ডিসকাউন্ট পাওয়া যায়।",
+        "হেলথ ক্লাবের ডিজিটাল কার্ড দেখালে ফেনী সদরের অফিসিয়াল পার্টনার ডায়াগনস্টিক ল্যাবগুলোতে (প্যাসিফিক হেলথ কেয়ার সেন্টার, লাইফ কেয়ার ডায়াগনস্টিক, ইম্পেরিয়াল নিউরোকেয়ার, নিরাময় ও ফেনি ম্যাক্স ডায়াগনস্টিক সেন্টার) শিশুদের রক্তের সিবিসি, সিআরপি, সিরাম বিলিরুবিন, ইউরিন টেস্ট, ডিজিটাল এক্স-রে ও আল্ট্রাসনোগ্রাফিতে ১০% থেকে ৩০% পর্যন্ত তাৎক্ষণিক ক্যাশ ডিসকাউন্ট পাওয়া যায়।",
       answerEn:
         "Health Club members receive guaranteed 10% to 30% discounts on pediatric blood tests, CRP, bilirubin checks, digital X-rays, and ultrasounds across certified partner diagnostic centers in Feni.",
     },

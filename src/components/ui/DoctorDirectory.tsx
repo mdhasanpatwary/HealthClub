@@ -42,13 +42,15 @@ function isDiabetesDoctor(doc: Doctor): boolean {
 }
 
 const PARTNER_HOSPITAL_ALIASES: Record<string, string> = {
-  p_ddlab: "dd lab ddlab d.d. lab dd lab consultation centre",
-  p1: "popular popular diagnostic popular hospital",
-  p2: "labaid labaid hospital labaid specialized",
-  p3: "lazz lazz pharma",
-  p5: "ibn sina ibnsina ibn sina diagnostic",
-  p6: "square square hospital",
-  p_lifecare: "life care lifecare life care diagnostic",
+  "life-care-diagnostic-center": "life care lifecare life care diagnostic",
+  "imperial-neurocare-diagnostic-center": "imperial neurocare imperial diagnostic",
+  "নিরাময়-ডায়াগনস্টিক-এন্ড-কনসালটেশন-সেন্টার": "niramoy niramay niramoy diagnostic",
+  "m-rahaman-medical-stories": "m rahaman rahaman medical m rahman",
+  "ঢাকা-ফার্মেসি": "dhaka pharmacy dhaka medical",
+  "feni-max-diagnostic-centre": "feni max fenimax feni max diagnostic",
+  "আল-আকসা-হাসপাতাল-লিঃ-ফেনী": "al aqsa al-aqsa hospital al aqsa hospital",
+  "pacific-health-care-centre": "pacific pacific health care centre",
+  "ফেনী-কেয়ার-হসপিটাল": "feni care fenicare feni care hospital",
 };
 
 function getChamberSearchAliases(doc: Doctor): string {

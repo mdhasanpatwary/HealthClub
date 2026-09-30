@@ -20,7 +20,7 @@ export const FENI_OXYGEN_PROVIDERS: HospitalReviewItem[] = [
     emergency24x7: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড় (ইনডোর বেড, জরুরি অক্সিজেন ও ডায়াগনস্টিকে)",
-    partnerProfileSlug: "al-aqsa-hospital-feni",
+    partnerProfileSlug: "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
     imageUrl: "/images/partners/al-aqsa-hospital.webp",
     mapQuery: "Al-Aqsa Hospital Trunk Road Feni",
     descriptionBn:
@@ -70,7 +70,7 @@ export const FENI_OXYGEN_PROVIDERS: HospitalReviewItem[] = [
     emergency24x7: false,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড় (হোম ইকুইপমেন্ট রেন্টাল ও ল্যাব টেস্টে)",
-    partnerProfileSlug: "pacific-health-care-feni",
+    partnerProfileSlug: "pacific-health-care-centre",
     imageUrl: "/images/partners/pacific-health-care.webp",
     mapQuery: "Pacific Health Care SSK Road Feni",
     descriptionBn:

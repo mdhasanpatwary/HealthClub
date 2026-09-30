@@ -118,6 +118,7 @@ export interface Partner {
   facilities?: string;
   galleryImages?: string;
   upazila?: string;
+  isPartner?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -216,81 +217,8 @@ export interface PublicMemberVerification {
   isExpired: boolean;
 }
 
-// Initial seed data
-export const initialPartners: Partner[] = [
-  {
-    id: "p1",
-    slug: "পপুলার-ডায়াগনস্টিক-সেন্টার",
-    name: "পপুলার ডায়াগনস্টিক সেন্টার",
-    category: "diagnostic",
-    address: "এসএসকে রোড, ফেনী",
-    discount: "১০-৩০% ডিসকাউন্ট",
-    phone: "০৯৬১৩৭৮৭৮০১",
-    logoText: "Popular",
-    imageUrl: "/images/placeholders/diagnostic.webp",
-    upazila: "feni-sadar"
-  },
-  {
-    id: "p2",
-    slug: "ল্যাবএইড-স্পেশালাইজড-হাসপাতাল",
-    name: "ল্যাবএইড স্পেশালাইজড হাসপাতাল",
-    category: "hospital",
-    address: "মিজান রোড, ফেনী",
-    discount: "১০-৩০% ডিসকাউন্ট",
-    phone: "১০৬০৬",
-    logoText: "Labaid",
-    imageUrl: "/images/placeholders/hospital.webp",
-    upazila: "feni-sadar"
-  },
-  {
-    id: "p3",
-    slug: "লাজ-ফার্মা-লিমিটেড",
-    name: "লাজ ফার্মা লিমিটেড",
-    category: "pharmacy",
-    address: "ট্রাঙ্ক রোড, ফেনী",
-    discount: "১০-৩০% ডিসকাউন্ট",
-    phone: "০২-৯৩৪৩৫১৬",
-    logoText: "Lazz",
-    imageUrl: "/images/placeholders/pharmacy.webp",
-    upazila: "feni-sadar"
-  },
-  {
-    id: "p5",
-    slug: "ইবনে-সিনা-ডায়াগনস্টিক-সেন্টার",
-    name: "ইবনে সিনা ডায়াগনস্টিক সেন্টার",
-    category: "diagnostic",
-    address: "মহিপাল, ফেনী",
-    discount: "১০-৩০% ডিসকাউন্ট",
-    phone: "০৯৬১০০০৯৬১০",
-    logoText: "Ibn Sina",
-    imageUrl: "/images/placeholders/diagnostic.webp",
-    upazila: "feni-sadar"
-  },
-  {
-    id: "p6",
-    slug: "স্কয়ার-হাসপাতাল",
-    name: "স্কয়ার হাসপাতাল (সিলেক্টেড সুবিধা)",
-    category: "hospital",
-    address: "গ্র্যান্ড ট্রাঙ্ক রোড, ফেনী",
-    discount: "১০-৩০% ডিসকাউন্ট",
-    phone: "১০৬১৬",
-    logoText: "Square",
-    imageUrl: "/images/placeholders/hospital.webp",
-    upazila: "feni-sadar"
-  },
-  {
-    id: "p_lifecare",
-    slug: "লাইফ-কেয়ার-ডায়াগনস্টিক-সেন্টার",
-    name: "লাইফ কেয়ার ডায়াগনস্টিক সেন্টার",
-    category: "diagnostic",
-    address: "কেন্দ্রীয় বোরো জামে মসজিদের পূর্ব পাশে, গ্র্যান্ড ট্রাঙ্ক রোড-ফেনী।",
-    discount: "১০-৩০% ডিসকাউন্ট",
-    phone: "01819112233",
-    logoText: "লাইফ কেয়ার",
-    imageUrl: "/images/partners/life-care-diagnostic.webp",
-    upazila: "feni-sadar"
-  }
-];
+// Initial seed data from verified Feni Sadar partners
+export { initialPartners } from "@/data/initialPartnersData";
 
 export const initialMembers: Member[] = [
   {
@@ -324,8 +252,8 @@ export const initialTransactions: Transaction[] = [
     id: "tx1",
     memberId: "HC-1001",
     memberName: "মোঃ আব্দুর রহমান",
-    partnerId: "p1",
-    partnerName: "পপুলার ডায়াগনস্টিক সেন্টার",
+    partnerId: "p_55db306d-13e5-42b6-a4fa-8c0d7e3c6a92",
+    partnerName: "লাইফ কেয়ার ডায়াগনস্টিক সেন্টার",
     amount: 5000,
     saved: 500,
     date: "2026-06-12 10:30 AM"
@@ -334,8 +262,8 @@ export const initialTransactions: Transaction[] = [
     id: "tx3",
     memberId: "HC-1002",
     memberName: "নুসরাত জাহান",
-    partnerId: "p3",
-    partnerName: "লাজ ফার্মা লিমিটেড",
+    partnerId: "p_0144039c-e5ec-4fee-acae-67a2f3398c5c",
+    partnerName: "এম রহমান মেডিকেল স্টোর",
     amount: 3000,
     saved: 300,
     date: "2026-07-02 01:20 PM"
@@ -344,8 +272,8 @@ export const initialTransactions: Transaction[] = [
     id: "tx4",
     memberId: "HC-1001",
     memberName: "মোঃ আব্দুর রহমান",
-    partnerId: "p2",
-    partnerName: "ল্যাবএইড স্পেশালাইজড হাসপাতাল",
+    partnerId: "p_6e4ee249-31f1-49f3-8ba5-c23191adcf06",
+    partnerName: "আল-আকসা হাসপাতাল লিঃ ফেনী",
     amount: 15000,
     saved: 1500,
     date: "2026-07-10 11:45 AM"

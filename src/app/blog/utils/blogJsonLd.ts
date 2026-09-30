@@ -23,6 +23,13 @@ function getFeniAddress(streetAddress: string) {
   };
 }
 
+function getFacilityUrl(partnerStatus?: boolean, slug?: string, fallbackUrl?: string) {
+  if (!slug) return fallbackUrl;
+  if (slug.startsWith("/")) return `${SITE_URL}${slug}`;
+  if (!partnerStatus) return fallbackUrl;
+  return `${SITE_URL}/partner-hospitals/${encodeURIComponent(slug)}`;
+}
+
 export function generateBlogJsonLd(
   post: BlogPost,
   title: string,
@@ -208,10 +215,7 @@ export function generateBlogJsonLd(
           "@type": "Hospital",
           name: h.nameBn,
           ...(getFirstPhone(h.phone) ? { telephone: getFirstPhone(h.phone) } : {}),
-          address: getFeniAddress(h.addressBn),
-          url: h.partnerProfileSlug
-            ? `${SITE_URL}/partner-hospitals/${encodeURIComponent(h.partnerProfileSlug)}`
-            : pageUrl,
+          url: getFacilityUrl(h.partnerStatus, h.partnerProfileSlug, pageUrl),
         },
       })),
     });
@@ -262,10 +266,7 @@ export function generateBlogJsonLd(
           ...(getFirstPhone(diag.phone || (diag as unknown as { contactHotline?: string }).contactHotline)
             ? { telephone: getFirstPhone(diag.phone || (diag as unknown as { contactHotline?: string }).contactHotline) }
             : {}),
-          address: getFeniAddress(diag.addressBn),
-          url: diag.partnerProfileSlug
-            ? `${SITE_URL}/partner-hospitals/${encodeURIComponent(diag.partnerProfileSlug)}`
-            : pageUrl,
+          url: getFacilityUrl(diag.partnerStatus, diag.partnerProfileSlug, pageUrl),
         },
       })),
     });
@@ -310,10 +311,7 @@ export function generateBlogJsonLd(
           description: `${clinic.doctorInChargeBn} (${clinic.degreesBn}). ${clinic.descriptionBn}`,
           ...(getFirstPhone(clinic.phone) ? { telephone: getFirstPhone(clinic.phone) } : {}),
           medicalSpecialty: "Dentistry",
-          address: getFeniAddress(clinic.addressBn),
-          url: clinic.partnerProfileSlug
-            ? `${SITE_URL}/partner-hospitals/${encodeURIComponent(clinic.partnerProfileSlug)}`
-            : pageUrl,
+          url: getFacilityUrl(clinic.partnerStatus, clinic.partnerProfileSlug, pageUrl),
         },
       })),
     });
@@ -336,10 +334,7 @@ export function generateBlogJsonLd(
           description: `${center.doctorInChargeBn} (${center.degreesBn}). ${center.descriptionBn}`,
           ...(getFirstPhone(center.phone) ? { telephone: getFirstPhone(center.phone) } : {}),
           medicalSpecialty: "Physiotherapy",
-          address: getFeniAddress(center.addressBn),
-          url: center.partnerProfileSlug
-            ? `${SITE_URL}/partner-hospitals/${encodeURIComponent(center.partnerProfileSlug)}`
-            : pageUrl,
+          url: getFacilityUrl(center.partnerStatus, center.partnerProfileSlug, pageUrl),
         },
       })),
     });
@@ -361,10 +356,7 @@ export function generateBlogJsonLd(
           name: pharmacy.nameBn,
           description: pharmacy.descriptionBn,
           ...(getFirstPhone(pharmacy.phone) ? { telephone: getFirstPhone(pharmacy.phone) } : {}),
-          address: getFeniAddress(pharmacy.addressBn),
-          ...(pharmacy.partnerProfileSlug
-            ? { url: `${SITE_URL}/partner-hospitals/${encodeURIComponent(pharmacy.partnerProfileSlug)}` }
-            : { url: pageUrl }),
+          url: getFacilityUrl(pharmacy.partnerStatus, pharmacy.partnerProfileSlug, pageUrl),
         },
       })),
     });
@@ -386,10 +378,7 @@ export function generateBlogJsonLd(
           name: bank.nameBn,
           description: bank.descriptionBn,
           ...(getFirstPhone(bank.phone) ? { telephone: getFirstPhone(bank.phone) } : {}),
-          address: getFeniAddress(bank.addressBn),
-          ...(bank.partnerProfileSlug
-            ? { url: `${SITE_URL}/partner-hospitals/${encodeURIComponent(bank.partnerProfileSlug)}` }
-            : { url: pageUrl }),
+          url: getFacilityUrl(bank.partnerStatus, bank.partnerProfileSlug, pageUrl),
         },
       })),
     });
@@ -411,10 +400,7 @@ export function generateBlogJsonLd(
           name: amb.nameBn,
           description: amb.descriptionBn,
           ...(getFirstPhone(amb.phone) ? { telephone: getFirstPhone(amb.phone) } : {}),
-          address: getFeniAddress(amb.addressBn),
-          ...(amb.partnerProfileSlug
-            ? { url: `${SITE_URL}/partner-hospitals/${encodeURIComponent(amb.partnerProfileSlug)}` }
-            : { url: pageUrl }),
+          url: getFacilityUrl(amb.partnerStatus, amb.partnerProfileSlug, pageUrl),
         },
       })),
     });

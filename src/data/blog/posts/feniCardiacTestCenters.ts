@@ -161,7 +161,7 @@ export const FENI_CARDIAC_TEST_CENTERS: DiagnosticCenterReviewItem[] = [
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "pacific-health-care-feni",
+    partnerProfileSlug: "pacific-health-care-centre",
     mapQuery: "Pacific Health Care Centre SSK Road Feni",
   },
   {
@@ -198,7 +198,7 @@ export const FENI_CARDIAC_TEST_CENTERS: DiagnosticCenterReviewItem[] = [
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "life-care-diagnostic-feni",
+    partnerProfileSlug: "life-care-diagnostic-center",
     mapQuery: "Life Care Diagnostic Center Grand Trunk Road Feni",
   },
   {
@@ -270,7 +270,7 @@ export const FENI_CARDIAC_TEST_CENTERS: DiagnosticCenterReviewItem[] = [
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "imperial-neurocare-feni",
+    partnerProfileSlug: "imperial-neurocare-diagnostic-center",
     mapQuery: "Imperial Neurocare Diagnostic Trunk Road Feni",
   },
   {
@@ -306,7 +306,7 @@ export const FENI_CARDIAC_TEST_CENTERS: DiagnosticCenterReviewItem[] = [
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "feni-max-diagnostic",
+    partnerProfileSlug: "feni-max-diagnostic-centre",
     mapQuery: "Feni Max Diagnostic Centre Zahiria Tower Trunk Road Feni",
   },
   {
@@ -342,7 +342,7 @@ export const FENI_CARDIAC_TEST_CENTERS: DiagnosticCenterReviewItem[] = [
     onlineReport: false,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "al-aqsa-hospital-feni",
+    partnerProfileSlug: "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
     mapQuery: "Al-Aqsa Hospital Ltd Trunk Road Feni",
   },
   {

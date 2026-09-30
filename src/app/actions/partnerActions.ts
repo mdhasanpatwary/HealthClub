@@ -168,6 +168,7 @@ export const getPartnersAction = unstable_cache(
     try {
       const data = await withDbRetry(() =>
         prisma.partner.findMany({
+          where: { isPartner: true },
           orderBy: { createdAt: "desc" },
           select: PARTNER_CARD_SELECT_FIELDS,
         })

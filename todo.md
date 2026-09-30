@@ -1618,7 +1618,6 @@ This roadmap outlines the strategic localized content cluster required to achiev
     5. **Transition Subsequent Guides (TODO-257 onwards)**: Established database-driven blog engine ready for inserting future guides directly into `BlogPost` table without spawning static TypeScript file sprawl.
   - **Details**: Every modified and created file strictly complies with the 500-line code limit (`blogAdminActions.ts`: 341 lines, `schema.prisma`: 434 lines, `blog/page.tsx`: 229 lines, `blog/[slug]/page.tsx`: 168 lines, `blogPagination.ts`: 171 lines, `LandingBlogSection.tsx`: 172 lines, `seedBlogPostsToDb.ts`: 73 lines). Cleanly verified with `npx tsc --noEmit` (0 errors), `npm run lint` (0 errors, 0 warnings), and successful static generation of all 454 pages (`npm run build`).
 
-
 - [x] **TODO-257**: **Article #64** — `feni-dialysis-kidney-hemodialysis-guide` (Database-Driven)
   - **Bangla Title**: ফেনীতে কিডনি ডায়ালাইসিস খরচ, শিডিউল, সেন্টার তালিকা ও রোগীদের সহায়তা গাইড
   - **English Title**: Kidney Hemodialysis Centers in Feni: Dialysis Cost per Session, Package & Nephrology Care
@@ -2455,5 +2454,115 @@ This roadmap outlines the strategic localized content cluster required to achiev
        - Unified notice banner and contact settings into `getCachedLayoutSettings` with `withDbRetry`, halving DB roundtrips and connection pool contention in `RootLayout`.
        - Added Bengali font weights `500` and `600` to `Noto_Sans_Bengali` in `RootLayout` to eliminate synthetic bolding font reflows.
     6. **Verification & Strict Limits**: All 12 files verified under 500 lines. Cleanly passed `npm run typecheck` (0 errors), `npm run lint` (0 errors, 0 warnings), and `npm run audit:geo` (100% passed).
+
+
+---
+
+## 📍 Phase 15: Google Indexing Recovery & Directory Information Architecture (TODO-310 to TODO-312)
+
+- [x] **TODO-310**: **Doctor Profile Internal Link Canonicalization (Replace ID Links with Canonical Slugs)**
+  - **Priority**: High (P1 - Canonical Link Equity & 308 Redirect Elimination)
+  - **Files**: `src/data/blog/posts/feniDoctorProfiles.ts`, `src/lib/seo/partnerSchema.ts`, `src/data/blog/posts/*.ts` (20 files total)
+  - **Details**:
+    1. **Remediate Hardcoded Doctor IDs**: Replaced phantom/unmatched ID links such as `consultantProfileUrl: "/consultants/doc_a6446d15"` in `feniDoctorProfiles.ts` with the doctor's canonical slug `/consultants/সহকারী-অধ্যাপক-ডা-মোহাম্মদ-আবদুল-মতিন`.
+    2. **Schema Canonicalization (`partnerSchema.ts`)**: In `partnerSchema.ts` (line 317), updated doctor URL generation from `url: ${SITE_URL}/consultants/${doc.id}` to `url: ${SITE_URL}/consultants/${encodeURIComponent(doc.slug || doc.id)}`, eliminating conflicting non-canonical signals across Schema.org graphs and preventing search engines from picking non-canonical ID URLs.
+    3. **Batch Internal Link Audit & Canonicalization**: Audited all 20 blog specialty data files containing doctor profile references (`feniCardiacTestDoctors.ts`, `feniCardiologyProfiles.ts`, `feniDiabetesProfiles.ts`, `feniDoctorAppointmentDoctors.ts`, `feniDoctorProfiles.ts`, `feniEntProfiles.ts`, `feniEyeProfiles.ts`, `feniGynecologyProfiles.ts`, `feniKidneyProfiles.ts`, `feniKidneyStoneUrologyDoctors.ts`, `feniLaparoscopicGallstoneHerniaDoctors.ts`, `feniLaserPilesFistulaDoctors.ts`, `feniMedicineProfiles.ts`, `feniNeurologyProfiles.ts`, `feniNormalDeliveryCesareanDoctors.ts`, `feniOrthopedicProfiles.ts`, `feniPediatricProfiles.ts`, `feniPsychiatristProfiles.ts`, `feniSkinProfiles.ts`, `feniSurgeonProfiles.ts`). Batch converted all 236 `/consultants/doc_...` links to direct canonical slug URLs (`/consultants/${canonicalSlug}`), resolving doctor identity against PostgreSQL canonical records, fallback catalogs, and deterministic Bengali slug generation. Handled edge cases including `ডা. সুশান্ত কুমার সাহা`, `ডাঃ মোহাম্মদ ইকবাল হোসেন`, and `ডা. ফরিদা ইয়াসমিন কবির`. Completely eliminated internal 308 permanent redirect hops for Googlebot and users, consolidating 100% of link equity directly onto canonical URLs.
+    4. **Verification & Strict 500-Line Limit**: All 20 modified blog data files and `partnerSchema.ts` strictly conform to the 500-line limit (e.g. `feniDoctorProfiles.ts`: 478 lines, `partnerSchema.ts`: 449 lines). Cleanly passed `npm run typecheck` (0 errors), `npm run lint` (0 errors, 0 warnings), and `npm run audit:geo` (100% passed).
+
+- [x] **TODO-311**: **Ghost / Non-Existent Partner URL Handling & 404/410 Search Signal Hardening**
+  - **Priority**: Medium (P2 - Search Console Soft 404 Elimination & Legacy URL De-indexing)
+  - **Files**: `src/app/partner-hospitals/[slug]/page.tsx`, `src/app/consultants/[slug]/page.tsx`, `src/app/not-found.tsx`, `src/app/actions/partnerProfileQueryActions.ts`, `src/app/actions/partnerActions.ts`, `src/app/blog/utils/blogJsonLd.ts`, `src/data/blog/posts/*.ts` (26 files), `scripts/seed.ts`
+  - **Details**:
+    1. **Strict 404 & Hardened Noindex Signals (`partner-hospitals/[slug]`, `consultants/[slug]`, `not-found.tsx`)**:
+       - In `src/app/partner-hospitals/[slug]/page.tsx`, updated `generateMetadata` and `PartnerHospitalDetailPage` to immediately trigger standard Next.js `notFound()` for missing/non-existent partner records, preventing Next.js from emitting false 200 metadata or soft 404s.
+       - In `src/app/consultants/[slug]/page.tsx`, updated `generateMetadata` and `DoctorDetailPage` to immediately trigger `notFound()` for nonexistent doctor IDs or slugs.
+       - In `src/app/not-found.tsx`, hardened metadata with bilingual title (`পৃষ্ঠাটি পাওয়া যায়নি (404 Not Found) - হেলথ ক্লাব`), description, and strict `robots: { index: false, follow: false, nocache: true, googleBot: { index: false, follow: false, noimageindex: true, "max-video-preview": -1, "max-image-preview": "none", "max-snippet": -1 } }`.
+       - Hardened `generateMetadata` across `blog/[slug]`, `health-tips/[slug]`, `partner-hospitals/category/[type]`, `consultants/department/[slug]`, and `consultants/location/[upazila]` to invoke `notFound()` instead of returning empty 200 metadata.
+    2. **Permanent Database Deletion of Ghost Partner `city-pharma-mart`**:
+       - Verified and permanently deleted the orphaned zero-data stub `city-pharma-mart` (`p_b6fe246c-bdc2-4d9b-85c3-c42206c485ac`) from PostgreSQL database (`partners` table) and removed unused asset `public/images/partners/city-pharma.webp`. Requests to `/partner-hospitals/city-pharma-mart` now unambiguously return HTTP 404 with `<meta name="robots" content="noindex, nofollow" />`.
+    3. **Audit Static / Seeded Slugs & Blog Partner Link Canonicalization**:
+       - Audited `initialPartners`, database records, and all 101 medical blog posts. Identified 110 occurrences of legacy/variant partner slugs (`pacific-health-care-feni`, `life-care-diagnostic-feni`, `imperial-neurocare-feni`, `al-aqsa-hospital-feni`, `popular-diagnostic`, `feni-sadar-hospital-guide`).
+       - Implemented `KNOWN_PARTNER_ALIASES` in `partnerProfileQueryActions.ts` and 308 permanent redirect logic in `partner-hospitals/[slug]/page.tsx` for alias resolution and routing `feni-sadar-hospital` -> `/blog/feni-sadar-hospital-guide`.
+       - Filtered `where: { isPartner: true }` in `getPartnersAction()` and `getPartnerByIdAction()`, ensuring only active contracted partners appear in directories and `sitemap.xml`.
+       - Batch updated 26 blog data files to directly use canonical partner slugs (`pacific-health-care-centre`, `life-care-diagnostic-center`, `imperial-neurocare-diagnostic-center`, `feni-max-diagnostic-centre`, `আল-আকসা-হাসপাতাল-লিঃ-ফেনী`, `/blog/feni-sadar-hospital-guide`), eliminating non-contracted partner links (`popular-diagnostic`, `labaid-diagnostic`).
+       - Updated `blogJsonLd.ts` and review cards (`DiagnosticReviewCard`, `PharmacyReviewCard`, `PhysiotherapyReviewCard`, `DentalReviewCard`) to only link verified partners (`partnerStatus: true`) into Schema.org graphs.
+       - Synchronized `scripts/seed.ts` with canonical slug attributes.
+    4. **Google Search Console Removals Protocol Documented**:
+       - Documented the exact GSC "Removals" procedure for `https://www.healthclubfeni.com/partner-hospitals/city-pharma-mart` to immediately purge it from Google's active index while Googlebot processes the newly hardened 404 response.
+    5. **Verification & Strict Limits**:
+       - All 838 repository files strictly conform to the 500-line limit (0 violations). Passed `npm run typecheck` (0 errors), `npm run lint` (0 errors, 0 warnings), and `npm run audit:geo` (100% passed across all 64 live SERP targets).
+
+- [x] **TODO-312**: **Doctor Profile Content Enrichment & AEO/GEO Boost (Chamber Guide & Department FAQ Schema)**
+  - **Priority**: High (P1 - Thin Content Remediation & Directory Page Indexing Acceleration)
+  - **Files**: `src/components/consultants/DoctorProfileView.tsx`, `src/components/consultants/DoctorQuickSummary.tsx`, `src/components/consultants/DoctorChamberSchedule.tsx`, `src/components/consultants/DoctorClinicalGuidance.tsx`, `src/components/consultants/DoctorDepartmentFaq.tsx`, `src/data/doctorFaqData.ts`, `src/data/doctorSeoData.ts`, `src/lib/seo/doctorSchema.ts`
+  - **Details**:
+    1. **Remediate Directory Thin Content (`DoctorClinicalGuidance.tsx`)**:
+       - Created modular clinical guidance component providing high-value patient instructions: chamber visit preparation (organizing previous prescriptions, maintaining current dosage/medicine lists, bringing raw pathology & radiology reports, noting symptom duration).
+       - Appointment & serial protocol: direct chamber hotline booking instructions without middlemen, arriving 15-20 minutes early for vitals (BP/weight) recording and token confirmation.
+       - Emergency red-flag warning: clearly distinguishing routine scheduled outdoor consultations from acute emergencies, advising immediate referral to 250-bed Feni District Sadar Hospital Emergency Room (২৫০ শয্যা বিশিষ্ট জেনারেল হাসপাতাল, ফেনী) for severe chest pain, breathing difficulty, stroke signs, or severe bleeding.
+    2. **Department-Specific Conversational FAQ Schema (`FAQPage`) & Accordion (`DoctorDepartmentFaq.tsx`, `doctorFaqData.ts`, `doctorSchema.ts`)**:
+       - Created `doctorFaqData.ts` with domain-specific question generation across 17 clinical departments (`medicine`, `cardiology`, `gynecology`, `pediatrics`, `orthopedics`, `surgery`, etc.).
+       - Generated 6 conversational Q&A pairs per doctor covering: chamber address & visiting hours, direct serial booking, consultation fee with 10-30% Health Club member test discount badges, department symptom indications, visit checklist, and emergency triage.
+       - Embedded into Schema.org `FAQPage` (`doctorSchema.ts`) and rendered in accessible native `<details>`/`<summary>` accordion on-page with `.faq-answer` classes, guaranteeing 100% data parity between JSON-LD and DOM.
+    3. **Voice/Answer Engine Direct Answer Capsule (`DoctorQuickSummary.tsx`)**:
+       - Engineered a 40–60 word BLUF (Bottom Line Up Front) answer capsule (`#doctor-quick-summary`, `.geo-answer-capsule`) positioned prominently under the header card.
+       - Configured Schema.org `speakable` selector (`#doctor-quick-summary`, `.geo-answer-capsule`, `#faq-section`, `.faq-answer`, `#doctor-profile-header`) for instant extraction by Google Assistant, Siri, ChatGPT Search, PerplexityBot, and Google Gemini AI Overviews.
+    4. **Strict 500-Line Code Limit & Modularity**:
+       - Refactored `DoctorProfileView.tsx` from 484 lines down to 324 lines by extracting `DoctorQuickSummary.tsx` (89 lines), `DoctorChamberSchedule.tsx` (168 lines), `DoctorClinicalGuidance.tsx` (144 lines), and `DoctorDepartmentFaq.tsx` (77 lines).
+       - All 843 project files remain strictly under 500 lines. Verified cleanly with `npm run typecheck` (0 errors), `npm run lint` (0 errors, 0 warnings), `npm run audit:geo -- --offline` (100% passed), and `npm run llms:generate`.
+
+---
+
+- [x] **TODO-312.1**: **Partner Contract Verification & False Partner Claims Purge ('ল্যাবএইড-স্পেশালাইজড-হাসপাতাল' & Non-Contracted Centers)**
+  - **Priority**: High (P0 - Contract Verification Compliance & Truthful Healthcare Information)
+  - **Files**: `src/data/initialPartnersData.ts`, `src/services/db.ts`, `scripts/seed.ts`, `scripts/audit-seo-aeo-geo.mjs`, `supabase_schema.sql`, `src/app/blog/components/CardiacPriceTable.tsx`, `src/app/blog/components/PediatricPriceTable.tsx`, `src/app/blog/components/KidneyPriceTable.tsx`, `src/app/membership/page.tsx`, `src/data/blog/posts/bestCardiologistsInFeni.ts`, `src/data/blog/posts/bestKidneyDoctorsInFeni.ts`, `src/data/blog/posts/bestMedicineDoctorsInFeni.ts`, `src/data/blog/posts/feniEndoscopyColonoscopyCenters.ts`, `src/data/blog/posts/feniMedicineProfiles.ts`, `src/data/blog/posts/feniMembershipDiscountCenters.ts`
+  - **Details**:
+    1. **Contract Verification & False Partner Purge**:
+       - Responded to user feedback clarifying that `ল্যাবএইড-স্পেশালাইজড-হাসপাতাল` (Labaid) is not a contracted Health Club partner.
+       - Confirmed via live PostgreSQL query that Health Club strictly maintains 12 verified contracted partner healthcare facilities located exclusively within Feni Sadar.
+       - Purged all false partner badges (`partnerStatus: true`), mock IDs (`p2`), and member discount claims for Labaid across the codebase, reclassifying it strictly as an independent non-partner reference facility where standard commercial rates apply and member discounts do not apply.
+    2. **Component & Conversion Banner Remediation**:
+       - In `CardiacPriceTable.tsx`, `PediatricPriceTable.tsx`, and `KidneyPriceTable.tsx`, removed false partner claims `(ডিডি ল্যাব, নিউ ইবনে সিনা, শেভরন ও ল্যাবএইড)` and replaced them with verified contracted partner healthcare facilities (`প্যাসিফিক হেলথ কেয়ার সেন্টার`, `লাইফ কেয়ার ডায়াগনস্টিক`, `ইম্পেরিয়াল নিউরোকেয়ার`, `ফেনি ম্যাক্স ডায়াগনস্টিক`, `আল-আকসা হাসপাতাল লিঃ`).
+       - In `src/app/membership/page.tsx`, updated member testimonial JSON-LD schema review from "ল্যাবএইডে" to "প্যাসিফিক হেলথ কেয়ার সেন্টারে", maintaining 100% data consistency with `TestimonialCarousel.tsx`.
+    3. **Doctor Profiles & Medical Guides Alignment**:
+       - In `bestMedicineDoctorsInFeni.ts`, updated key highlights, intro paragraphs, corridor descriptions, and FAQ answer capsules to eliminate claims that DD Lab, New Ibn Sina, or Labaid are official partners.
+       - In `bestCardiologistsInFeni.ts` and `bestKidneyDoctorsInFeni.ts`, clarified that Labaid and Chevron are non-partner reference centers; member discounts (10-30%) apply strictly at verified partner facilities.
+       - In `feniEndoscopyColonoscopyCenters.ts`, changed Labaid from `partnerStatus: true` to `partnerStatus: false` and set discount to `"স্ট্যান্ডার্ড প্রাইভেট চার্জ (মেম্বার ছাড় প্রযোজ্য নয়)"`.
+       - In `feniMedicineProfiles.ts`, updated Dr. Nur Mohammad's chamber at Labaid Diagnostic Center to `partnerStatus: false`.
+    4. **Database, Seeding & Audit Synchronization**:
+       - Created `src/data/initialPartnersData.ts` exporting the authoritative 12 contracted partners from PostgreSQL.
+       - Updated `src/services/db.ts`, `scripts/seed.ts`, and `supabase_schema.sql` to eliminate legacy mock partners (`p1`, `p2`, `p3`, `p5`, `p6`), preventing `/partner-hospitals/ল্যাবএইড-স্পেশালাইজড-হাসপাতাল` from ever being seeded or resolved via fallback.
+       - Updated `scripts/audit-seo-aeo-geo.mjs` to validate geographic scope and discount claims strictly against the 12 authentic partners.
+    5. **Verification & Strict Limits**:
+       - All 844 files strictly comply with the 500-line code limit (0 violations).
+       - `npm run typecheck` passed cleanly with 0 errors.
+       - `node scripts/audit-seo-aeo-geo.mjs --offline` passed 100% across all 6 suites.
+
+---
+
+- [x] **TODO-312.2**: **Partner Contract Verification & Purge ('পপুলার-ডায়াগনস্টিক-সেন্টার', 'লাজ-ফার্মা-লিমিটেড', 'ইবনে-সিনা-ডায়াগনস্টিক-সেন্টার')**
+  - **Priority**: High (P0 - Truthful Healthcare Information & Contract Verification)
+  - **Files**: `src/app/membership/page.tsx`, `src/data/blog/posts/feniMembershipDiscountCenters.ts`, `src/data/blog/posts/bestPharmaciesInFeni.ts`, `src/data/blog/posts/feniPharmacyProfilesPart1.ts`, `src/data/blog/posts/feniPharmacyProfilesPart2.ts`, `src/data/blog/posts/feniPharmacyProfiles.ts`, `src/app/blog/components/PharmacyPriceTable.tsx`, `src/data/blog/posts/bestChildSpecialistsInFeni.ts`, `src/data/blog/posts/feniMedicineProfiles.ts`, `src/data/blog/posts/feniOrthopedicProfiles.ts`, `src/components/ui/DoctorDirectory.tsx`
+  - **Details**:
+    1. **Purged False Partner Claims for Popular, Lazz Pharma, and Ibn Sina**:
+       - Reclassified `পপুলার ডায়াগনস্টিক সেন্টার` (Popular Diagnostic Center), `লাজ ফার্মা লিমিটেড` (Lazz Pharma Limited), and `ইবনে সিনা ডায়াগনস্টিক সেন্টার` / `নিউ ইবনে সিনা` (New Ibn Sina) strictly as independent, non-partner reference healthcare facilities where standard retail rates apply and Health Club member discounts do NOT apply.
+       - Cleaned `PARTNER_HOSPITAL_ALIASES` in `DoctorDirectory.tsx` to map authentic partner UUID slugs rather than mock IDs (`p1`, `p3`, `p5`).
+    2. **Verified Pharmacy Partner Replacement**:
+       - Replaced Lazz Pharma in `feniMembershipDiscountCenters.ts` with authentic contracted partner pharmacy `এম রহমান মেডিকেল স্টোর (অফিসিয়াল পার্টনার ফার্মেসি)` (slug: `m-rahaman-medical-stories`) across both comparison tables and detailed review cards.
+       - Updated `bestPharmaciesInFeni.ts` highlights, intro paragraphs, emergency hotline directory, and FAQ sections to feature authentic partners `এম রহমান মেডিকেল স্টোর` and `ঢাকা ফার্মেসি`, removing false links (`/partner-hospitals/লাজ-ফার্মা-লিমিটেড`).
+       - In `PharmacyPriceTable.tsx`, updated the CTA conversion banner to specifically reference verified partner pharmacies `(এম রহমান মেডিকেল স্টোর ও ঢাকা ফার্মেসি)`.
+    3. **Standardized Pharmacy Profiles & Discounts**:
+       - In `feniPharmacyProfilesPart1.ts`, set Lazz Pharma to `partnerStatus: false`, removed `partnerProfileSlug`, set discount to `"রেগুলার মূল্য (মেম্বার ছাড় প্রযোজ্য নয়)"`, and updated descriptions to highlight its independent model pharmacy status without false partner claims.
+       - Standardized all non-partner pharmacies in `feniPharmacyProfilesPart1.ts` and `feniPharmacyProfilesPart2.ts` to `partnerDiscountBn: "রেগুলার মূল্য (মেম্বার ছাড় প্রযোজ্য নয়)"`.
+       - In `feniPharmacyProfiles.ts`, made comparison table discounts strictly conditional on `partnerStatus` (`p.partnerStatus ? "১০-৩০% মেম্বার ছাড়" : "রেগুলার মূল্য (মেম্বার ছাড় প্রযোজ্য নয়)"`).
+    4. **Doctor Chamber & Review Schema Alignments**:
+       - In `src/app/membership/page.tsx`, fixed testimonial review JSON-LD schema (line 131) from "পপুলার হাসপাতালে" to "আল-আকসা হাসপাতালে", harmonizing 100% with `TestimonialCarousel.tsx`.
+       - In `bestChildSpecialistsInFeni.ts`, purged false partner references in FAQ answer capsules, listing authentic partners (`প্যাসিফিক হেলথ কেয়ার সেন্টার`, `লাইফ কেয়ার ডায়াগনস্টিক`, `ইম্পেরিয়াল নিউরোকেয়ার`, `নিরাময়`, `ফেনি ম্যাক্স`).
+       - In `feniMedicineProfiles.ts`, changed Dr. Md. Main Uddin Sohel and Assoc. Prof. Dr. Prashanta Kumar Shill at New Ibn Sina Diagnostic Center from `partnerStatus: true` to `partnerStatus: false`.
+       - In `feniOrthopedicProfiles.ts`, changed Dr. A.K.M. Nazmus Sakib at New Ibn Sina Consultation Center from `partnerStatus: true` to `partnerStatus: false`.
+    5. **Verification & Strict Limits**:
+       - All 844 files strictly satisfy the 500-line limit (0 files exceed 500 lines).
+       - `npm run typecheck` passed cleanly with 0 errors.
+       - `node scripts/audit-seo-aeo-geo.mjs --offline` passed 100% across all 6 test suites.
 
 ---

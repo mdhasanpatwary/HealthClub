@@ -3,10 +3,20 @@ import Link from "next/link";
 import { FileQuestion, Home, Building2 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Page Not Found",
+  title: "পৃষ্ঠাটি পাওয়া যায়নি (404 Not Found) - হেলথ ক্লাব",
+  description: "অনুরোধকৃত পৃষ্ঠাটি পাওয়া যায়নি। এটি অপসারিত হয়েছে বা অস্তিত্বহীন।",
   robots: {
     index: false,
     follow: false,
+    nocache: true,
+    googleBot: {
+      index: false,
+      follow: false,
+      noimageindex: true,
+      "max-video-preview": -1,
+      "max-image-preview": "none",
+      "max-snippet": -1,
+    },
   },
 };
 

@@ -106,7 +106,7 @@ export const FENI_BLOOD_BANK_PROFILES_PART1: BloodBankReviewItem[] = [
     partnerStatus: false,
     partnerDiscountBn: "সরকারি নির্ধারিত নামমাত্র টোকেন ফি (রক্ত সম্পূর্ণ বিনামূল্যে)",
     partnerDiscountEn: "Nominal subsidized government fee (Blood is 100% Free)",
-    partnerProfileSlug: "feni-sadar-hospital-guide",
+    partnerProfileSlug: "/blog/feni-sadar-hospital-guide",
     imageUrl: "/images/placeholders/hospital.webp",
     mapQuery: "Feni 250 Bed Sadar Hospital Blood Transfusion Unit",
   },

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import JsonLd from "@/components/seo/JsonLd";
 import DoctorProfileView from "@/components/consultants/DoctorProfileView";
@@ -25,35 +26,12 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateMetadata({ params }: PageProps) {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const doctor = await getDoctorByIdAction(slug);
   // Public pages are always served in Bengali ("bn") — same as all list pages.
   if (!doctor) {
-    const notFoundTitle = "ডাক্তার পাওয়া যায়নি - হেলথ ক্লাব";
-    const notFoundDesc = "অনুরোধকৃত ডাক্তারের প্রোফাইল হেলথ ক্লাব ডিরেক্টরিতে পাওয়া যায়নি।";
-    return {
-      title: notFoundTitle,
-      description: notFoundDesc,
-      openGraph: {
-        title: notFoundTitle,
-        description: notFoundDesc,
-        images: [
-          {
-            url: `${SITE_URL}/og-image.png`,
-            width: 1200,
-            height: 630,
-            alt: "Health Club",
-          },
-        ],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: notFoundTitle,
-        description: notFoundDesc,
-        images: [`${SITE_URL}/og-image.png`],
-      },
-    };
+    notFound();
   }
 
   const pageTitle = formatDoctorMetaTitle(doctor.name, doctor.specialty);

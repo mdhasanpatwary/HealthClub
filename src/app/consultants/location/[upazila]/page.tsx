@@ -35,10 +35,7 @@ export async function generateMetadata({ params }: PageProps) {
   const seo = getUpazilaSeoConfig(upazila);
 
   if (!seo) {
-    return {
-      title: "এলাকা খুঁজে পাওয়া যায়নি | হেলথ ক্লাব",
-      description: "অনুরোধকৃত উপজেলার ডাক্তার ডিরেক্টরি খুঁজে পাওয়া যায়নি।",
-    };
+    notFound();
   }
 
   const canonicalUrl = `${SITE_URL}/consultants/location/${seo.slug}`;

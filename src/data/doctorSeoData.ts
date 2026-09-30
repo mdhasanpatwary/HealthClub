@@ -136,3 +136,9 @@ export function generateDoctorKeywords(doc: DoctorMetadataSource): string[] {
   return Array.from(new Set(keywords));
 }
 
+export {
+  generateDoctorQuickSummary,
+  generateDoctorProfileFaqs,
+} from "./doctorFaqData";
+export type { DoctorFaqItem } from "./doctorFaqData";
+
