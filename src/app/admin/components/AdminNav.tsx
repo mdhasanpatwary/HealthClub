@@ -22,6 +22,7 @@ import {
   UploadCloud,
   Settings,
   ShieldCheck,
+  Printer,
 } from "lucide-react";
 export interface AdminNavLink {
   href: string;
@@ -69,6 +70,11 @@ export const ADMIN_NAV_LINKS: AdminNavLink[] = [
     href: "/admin/partner-requests",
     label: "অংশীদার আবেদন",
     icon: FileCheck,
+  },
+  {
+    href: "/admin/marketing/posters",
+    label: "মার্কেটিং পোস্টার",
+    icon: Printer,
   },
   {
     href: "/admin/reviews",

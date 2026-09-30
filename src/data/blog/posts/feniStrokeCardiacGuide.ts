@@ -22,6 +22,7 @@ export const FENI_STROKE_CARDIAC_GUIDE: BlogPost = {
   modifiedDate: "2026-09-23",
   readTimeBn: "১৫ মিনিট পাঠ",
   readTimeEn: "15 min read",
+  embeddedTool: "blood-pressure",
   author: {
     nameBn: "মেডিকেল এডিটোরিয়াল টিম",
     nameEn: "Medical Editorial Team",

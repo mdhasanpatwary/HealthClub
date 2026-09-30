@@ -14,6 +14,17 @@ export interface BlogAuthor {
   avatarUrl?: string;
 }
 
+export interface BlogReviewer {
+  doctorNameBn: string;
+  doctorNameEn?: string;
+  degreesBn: string;
+  specialtyBn: string;
+  profileSlug?: string;
+  photoUrl?: string;
+  bmdcRegNo?: string;
+  reviewDateBn?: string;
+}
+
 export interface HospitalReviewItem {
   rank: number;
   nameBn: string;
@@ -302,6 +313,31 @@ import type {
   DiabeticHospitalPackageItem,
 } from "./blogCarePackages";
 
+export interface GeoFeeReferenceItem {
+  serviceNameBn: string;
+  serviceNameEn?: string;
+  regularPriceRangeBn: string;
+  discountBadgeBn?: string;
+}
+
+export interface GeoAnswerCapsuleData {
+  directAnswerBn: string;
+  directAnswerEn?: string;
+  quickTakeawaysBn: string[];
+  quickTakeawaysEn?: string[];
+  referenceFees?: GeoFeeReferenceItem[];
+  verifiedNoteBn?: string;
+}
+
+export interface BlogClinicalSource {
+  titleBn: string;
+  titleEn: string;
+  organization: string;
+  url: string;
+  yearOrEdition?: string;
+  type?: "guideline" | "regulatory" | "textbook" | "protocol" | "research";
+  descriptionBn?: string;
+}
 
 export interface BlogPost {
   slug: string;
@@ -317,11 +353,12 @@ export interface BlogPost {
   readTimeBn: string;
   readTimeEn: string;
   author: BlogAuthor;
+  reviewedBy?: BlogReviewer;
   coverImage: string;
   coverImageAlt: string;
   tags: string[];
   metaKeywords: string[];
-  keyHighlightsBn?: string[];
+  keyHighlightsBn?: (string | { icon?: string; titleBn?: string; descriptionBn?: string })[];
   keyHighlightsEn?: string[];
   introParagraphsBn: string[];
   introParagraphsEn?: string[];
@@ -393,9 +430,12 @@ export interface BlogPost {
   };
   faqs: BlogFAQItem[];
   relatedSlugs?: string[];
+  embeddedTool?: "bmi" | "pregnancy-due-date" | "blood-pressure";
   facilityCount?: number;
   facilityLabelBn?: string;
   facilityLabelEn?: string;
+  geoAnswerCapsule?: GeoAnswerCapsuleData;
+  clinicalSources?: BlogClinicalSource[];
 }
 
 export interface BlogPostCardItem {

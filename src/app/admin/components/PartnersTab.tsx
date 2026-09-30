@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Edit3, Trash2, Download, Building2, Activity, Pill, LayoutGrid, UploadCloud, KeyRound } from "lucide-react";
+import Link from "next/link";
+import { Search, Edit3, Trash2, Download, Building2, Activity, Pill, LayoutGrid, UploadCloud, KeyRound, Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -143,6 +144,17 @@ export function PartnersTab({
               <Download className="h-3.5 w-3.5" />
               <span>এক্সপোর্ট</span>
             </Button>
+            <Link href="/admin/marketing/posters">
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 gap-1.5 text-xs font-semibold shrink-0"
+              >
+                <Printer className="h-3.5 w-3.5 text-emerald-600" />
+                <span>পোস্টার জেনারেটর</span>
+              </Button>
+            </Link>
+
             <Button onClick={onNewPartnerClick} size="sm" className="bg-primary hover:bg-primary-dark text-white shrink-0">
               + নতুন পার্টনার যুক্ত করুন
             </Button>
@@ -265,6 +277,14 @@ export function PartnersTab({
                               <KeyRound className="h-4 w-4" />
                             </Button>
                           )}
+                          <Link
+                            href={`/admin/marketing/posters?partnerId=${p.id}`}
+                            title={`${p.name} এর পোস্টার ও QR কোড জেনারেট করুন`}
+                            aria-label={`${p.name} এর পোস্টার জেনারেট করুন`}
+                            className="inline-flex items-center justify-center h-8 w-8 rounded-lg text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 cursor-pointer"
+                          >
+                            <Printer className="h-4 w-4" />
+                          </Link>
                           <Button
                             variant="ghost"
                             size="icon"

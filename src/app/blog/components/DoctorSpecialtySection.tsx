@@ -100,10 +100,14 @@ export function DoctorSpecialtySection({
           <span>যাচাইকৃত বিশেষজ্ঞ তালিকা</span>
         </div>
         <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-          {titleBn || "২. ফেনীর শীর্ষ বিশেষজ্ঞ ডাক্তারদের তালিকা ও চেম্বার শিডিউল"}
+          {titleBn
+            ? titleBn.includes("কোথায়")
+              ? titleBn
+              : titleBn.replace(/^([০-৯১-৯\d]+[\.\s]*)/, "$1কোথায় দেখাবেন: ")
+            : "২. কোথায় দেখাবেন: ফেনীর শীর্ষ বিশেষজ্ঞ ডাক্তারদের তালিকা ও চেম্বার শিডিউল"}
         </h2>
-        <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-          {subtitleBn || "মেডিসিন, হৃদরোগ, সার্জারি, গাইনী, শিশু ও অর্থোপেডিক চিকিৎসকদের চেম্বার, ভিজিটিং সময় ও ফোন নম্বর।"}
+        <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">
+          {subtitleBn || "ফেনী সদর হাসপাতাল রোড ও এসএসকে রোডের প্রধান চেম্বারগুলোতে বিএমডিসি নিবন্ধিত অভিজ্ঞ বিশেষজ্ঞ চিকিৎসকরা নিয়মিত রোগী দেখেন; সিরিয়ালের জন্য চেম্বার হটলাইনে সরাসরি যোগাযোগ করুন।"}
         </p>
       </div>
 
@@ -167,7 +171,7 @@ export function DoctorSpecialtySection({
               </div>
 
               {/* Doctor Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 items-stretch">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-6 items-stretch">
                 {(group.doctors || []).map((doctor, docIdx) => (
                   <DoctorCard
                     key={doctor.id}
@@ -200,7 +204,7 @@ function DoctorCard({
       rank={rank}
       partnerStatus={doctor.partnerStatus}
       wrapperClassName="h-full flex flex-col"
-      contentPadding="p-4 sm:p-5"
+      contentPadding="p-0 sm:p-5"
       contentSpacing="space-y-4"
       className="flex-1 flex flex-col justify-between"
     >

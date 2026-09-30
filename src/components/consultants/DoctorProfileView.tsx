@@ -124,7 +124,7 @@ export default function DoctorProfileView({
                 </Badge>
               </div>
 
-              <h1 className="font-heading text-xl sm:text-3xl lg:text-4xl font-extrabold text-secondary dark:text-white tracking-tight leading-tight">
+              <h1 id="doctor-profile-header" className="font-heading text-xl sm:text-3xl lg:text-4xl font-extrabold text-secondary dark:text-white tracking-tight leading-tight">
                 {doctor.name}
               </h1>
 

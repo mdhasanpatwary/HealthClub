@@ -19,6 +19,7 @@ import {
   getAllPartnerCategorySlugs,
   getPartnerCategorySeoConfig,
 } from "@/data/partnerCategorySeoData";
+import { generatePartnerCategoryJsonLd, getHighDensityPartnerCategoryFaqs } from "../../utils/hospitalJsonLd";
 
 export const revalidate = 86400;
 
@@ -90,66 +91,12 @@ export default async function PartnerCategoryPage({ params }: PageProps) {
   const categoryPartners = allPartners.filter((p) => p.category === seo.slug);
   const pageUrl = `${SITE_URL}/partner-hospitals/category/${seo.slug}`;
 
-  const breadcrumbItems = [
-    { "@type": "ListItem", position: 1, name: "হোম", item: SITE_URL },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "পার্টনার প্রতিষ্ঠান",
-      item: `${SITE_URL}/partner-hospitals`,
-    },
-    { "@type": "ListItem", position: 3, name: seo.nameBn, item: pageUrl },
-  ];
-
-  const faqJsonLd = seo.faqItems.map((item) => ({
-    "@type": "Question",
-    name: item.question,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: item.answer,
-    },
-  }));
-
-  const jsonLdData = [
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: breadcrumbItems,
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": ["MedicalBusiness", "MedicalOrganization"],
-      name: `হেলথ ক্লাব ${seo.h1TitleBn}`,
-      url: pageUrl,
-      description: seo.metaDescriptionBn,
-      areaServed: "Feni Sadar, Feni, Bangladesh",
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      name: seo.h1TitleBn,
-      itemListElement: categoryPartners.slice(0, 15).map((partner, index) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        item: {
-          "@type": "MedicalOrganization",
-          name: partner.name,
-          telephone: partner.phone,
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: partner.address,
-            addressLocality: "Feni Sadar, Feni",
-            addressCountry: "BD",
-          },
-        },
-      })),
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: faqJsonLd,
-    },
-  ];
+  const categoryFaqs = getHighDensityPartnerCategoryFaqs(seo);
+  const jsonLdData = generatePartnerCategoryJsonLd({
+    pageUrl,
+    seo,
+    categoryPartners,
+  });
 
   return (
     <div className="bg-background min-h-screen py-4 sm:py-10">
@@ -230,9 +177,9 @@ export default async function PartnerCategoryPage({ params }: PageProps) {
           />
         </section>
 
-        {/* Category Specific FAQ Section */}
+        {/* Category Specific FAQ Section (AEO & Speakable Specification) */}
         <section
-          aria-labelledby="category-faq-heading"
+          aria-labelledby="partner-category-heading"
           className="rounded-3xl border border-border/80 bg-card p-6 sm:p-10 space-y-6"
         >
           <div className="text-center space-y-2 max-w-2xl mx-auto">
@@ -241,7 +188,7 @@ export default async function PartnerCategoryPage({ params }: PageProps) {
               <span>সাধারণ প্রশ্নোত্তর</span>
             </div>
             <h2
-              id="category-faq-heading"
+              id="partner-category-heading"
               className="text-xl sm:text-2xl font-bold text-foreground font-heading"
             >
               {seo.nameBn} সংক্রান্ত সচরাচর জিজ্ঞাসা
@@ -252,7 +199,7 @@ export default async function PartnerCategoryPage({ params }: PageProps) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
-            {seo.faqItems.map((item, idx) => (
+            {categoryFaqs.map((item, idx) => (
               <div
                 key={idx}
                 className="p-4 sm:p-5 rounded-2xl bg-muted/30 border border-border/70 space-y-2"
@@ -263,7 +210,7 @@ export default async function PartnerCategoryPage({ params }: PageProps) {
                     {item.question}
                   </h3>
                 </div>
-                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed pl-6">
+                <p className="faq-answer text-xs sm:text-sm text-muted-foreground leading-relaxed pl-6">
                   {item.answer}
                 </p>
               </div>

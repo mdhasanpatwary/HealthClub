@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { CLUSTER_NODES_PROCEDURES } from "./clusterNodesProcedures";
 import { CLUSTER_NODES_SURGERIES } from "./clusterNodesSurgeries";
+import { CLUSTER_NODES_HUBS } from "./clusterNodesHubs";
 
 export type ClusterGroupId =
   | "hospitals"
@@ -91,6 +92,7 @@ export interface ClusterNode {
 export const FENI_CLUSTER_NODES: ClusterNode[] = [
   ...CLUSTER_NODES_PROCEDURES,
   ...CLUSTER_NODES_SURGERIES,
+  ...CLUSTER_NODES_HUBS,
   {
     slug: "feni-sadar-hospital-guide",
     clusterGroupId: "hospitals",
@@ -356,6 +358,20 @@ export const FENI_CLUSTER_NODES: ClusterNode[] = [
     accentColor: "text-emerald-600 dark:text-emerald-400",
     borderColor: "hover:border-emerald-500/50",
     bgLight: "bg-emerald-500/10",
+  },
+  {
+    slug: "feni-hearing-aid-audiometry-hearing-test-guide",
+    clusterGroupId: "diagnostics",
+    titleBn: "শ্রবণশক্তি পরীক্ষা ও হিয়ারিং এইড",
+    titleEn: "Hearing Test & Hearing Aids in Feni",
+    subtitleBn: "পিটিএ অডিওমেট্রি, টিম্প্যানোমেট্রি, ডিজিটাল হিয়ারিং এইড ও সেন্টার",
+    subtitleEn: "Pure tone audiometry, tympanometry & digital hearing aids in Feni",
+    categoryBn: "শ্রবণশক্তি ও হিয়ারিং এইড",
+    categoryEn: "Audiometry & Hearing Aids",
+    icon: Ear,
+    accentColor: "text-teal-600 dark:text-teal-400",
+    borderColor: "hover:border-teal-500/50",
+    bgLight: "bg-teal-500/10",
   },
   {
     slug: "best-dental-clinics-in-feni",

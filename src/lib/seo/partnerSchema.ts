@@ -1,5 +1,6 @@
 import { Partner, Doctor, DepartmentDiscount, Review, PartnerReviewStats, parsePartnerSocialLinks, formatSocialUrl } from "@/services/db";
 import { SITE_URL } from "@/lib/siteConfig";
+import { getSemanticKnowledgeGraphForPartner } from "./medicalEntityGraph";
 
 export interface PartnerJsonLdOptions {
   partner: Partner;
@@ -152,6 +153,7 @@ export function generatePartnerJsonLd({
 
   // Parse discounts & services
   const deptList = parseDepartmentDiscounts(partner);
+  const semanticGraph = getSemanticKnowledgeGraphForPartner(partner);
 
   // 1. Breadcrumbs Schema
   const breadcrumbCategoryName =
@@ -318,6 +320,9 @@ export function generatePartnerJsonLd({
           })),
         }
       : {}),
+    recognizingAuthority: [semanticGraph.recognizingAuthority],
+    knowsAbout: semanticGraph.knowsAbout,
+    availableService: semanticGraph.availableService,
     // Offer Catalog with PriceSpecification & Offers
     hasOfferCatalog: {
       "@type": "OfferCatalog",
@@ -353,6 +358,15 @@ export function generatePartnerJsonLd({
     url: profileUrl,
     name: `${partner.name} (${categoryConfig.nameBn}, Feni) | Health Club`,
     description: `${partner.name}, ${partner.address}, ফেনী। হেলথ ক্লাব কার্ডে পান ${partner.discount} ছাড়। হটলাইন: ${partner.phone}।`,
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: [
+        ".geo-answer-capsule",
+        ".faq-answer",
+        "#overview",
+        "#partner-profile-header",
+      ],
+    },
     mainEntity: {
       "@id": `${profileUrl}#facility`,
     },
@@ -369,7 +383,7 @@ export function generatePartnerJsonLd({
     ],
   };
 
-  // 4. Partner-Specific FAQPage Schema
+  // 4. Partner-Specific High-Density FAQPage Schema
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -410,6 +424,22 @@ export function generatePartnerJsonLd({
             partner.category === "hospital"
               ? `${partner.name}-এ ২৪ ঘণ্টা জরুরি স্বাস্থ্যসেবা, ইমার্জেন্সি সাপোর্ট ও ইনডোর চিকিৎসা সেবা চালু থাকে। প্যাথলজি ও বহির্বিভাগ সেবা প্রতিদিন সকাল থেকে রাত পর্যন্ত পরিচালিত হয়।`
               : `${partner.name} প্রতিদিন ডায়াগনস্টিক টেস্ট ও সেবা প্রদানের জন্য খোলা থাকে (${partner.workingHours || "সপ্তাহের ৭ দিন খোলা"})।`,
+        },
+      },
+      {
+        "@type": "Question",
+        name: `${partner.name}-এ কী কী প্যাথলজি ও ডায়াগনস্টিক টেস্ট করানো যায়?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `এখানে ডিজিটাল এক্স-রে, আল্ট্রাসনোগ্রাম (USG), ইকোকার্ডিওগ্রাফি, ইসিজি, হরমোন প্রোফাইল ও সকল প্রকার বায়োকেমিস্ট্রি ল্যাব টেস্টের নির্ভরযোগ্য সুবিধা রয়েছে।`,
+        },
+      },
+      {
+        "@type": "Question",
+        name: `টেস্ট রিপোর্ট পেতে সাধারণত কত সময় লাগে?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `রুটিন রক্ত ও প্যাথলজি পরীক্ষার রিপোর্ট একই দিনে সরবরাহ করা হয়। জরুরি প্রয়োজনে দ্রুততম সময়ে অনলাইন বা ফিজিক্যাল রিপোর্ট ডেলিভারির ব্যবস্থা রয়েছে।`,
         },
       },
     ],

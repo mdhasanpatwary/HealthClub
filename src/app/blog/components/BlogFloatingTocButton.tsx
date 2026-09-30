@@ -38,7 +38,7 @@ export function BlogFloatingTocButton() {
   return (
     <aside
       aria-label="দ্রুত নেভিগেশন নিয়ন্ত্রণ"
-      className="fixed bottom-20 right-3.5 z-40 lg:hidden flex items-center gap-1 p-1 rounded-full bg-background/95 backdrop-blur-md border border-border/80 shadow-lg transition-all animate-in fade-in zoom-in-95 duration-200"
+      className="fixed bottom-24 right-3.5 z-40 lg:hidden flex items-center gap-1 p-1 rounded-full bg-background/95 backdrop-blur-md border border-border/80 shadow-lg transition-all animate-in fade-in zoom-in-95 duration-200"
     >
       <button
         type="button"

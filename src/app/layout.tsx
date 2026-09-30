@@ -96,8 +96,8 @@ export const metadata: Metadata = {
   alternates: {
     types: {
       "text/markdown": [
-        { url: "/llms.txt", title: "Health Club LLM Knowledge Base (llms.txt)" },
-        { url: "/llms-full.txt", title: "Health Club Full Knowledge Base (llms-full.txt)" },
+        { url: "/llms.txt", title: "LLM Knowledge Base" },
+        { url: "/llms-full.txt", title: "Full LLM Knowledge Base" },
       ],
     },
   },

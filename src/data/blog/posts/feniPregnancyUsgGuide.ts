@@ -22,6 +22,7 @@ export const FENI_PREGNANCY_ULTRASONOGRAPHY_GUIDE: BlogPost = {
   modifiedDate: "2026-09-23",
   readTimeBn: "১৩ মিনিট পাঠ",
   readTimeEn: "13 min read",
+  embeddedTool: "pregnancy-due-date",
   author: {
     nameBn: "মেডিকেল এডিটোরিয়াল টিম",
     nameEn: "Medical Editorial Team",

@@ -65,10 +65,10 @@ export function MedicalTestPriceTable({
           <span>প্রমিত ডায়াগনস্টিক ও প্যাথলজি খরচ ডিরেক্টরি ২০২৬</span>
         </div>
         <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-          ২. {pricingData.titleBn}
+          ২. {pricingData.titleBn.includes("খরচ কত") ? pricingData.titleBn : `খরচ কত: ${pricingData.titleBn}`}
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-          {pricingData.subtitleBn}
+          {pricingData.subtitleBn || "ফেনী সদর উপজেলার অনুমোদিত ল্যাবগুলোতে সাধারণ বাজার খরচ ও হেলথ ক্লাব নিবন্ধিত পার্টনার সেন্টারে কার্ডধারীদের জন্য নিশ্চিত ১০-৩০% মেম্বার ছাড়ের হালনাগাদ তালিকা।"}
         </p>
       </div>
 

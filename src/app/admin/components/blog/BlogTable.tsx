@@ -1,6 +1,7 @@
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ExternalLink, Edit3, Trash2 } from "lucide-react";
+import { ExternalLink, Edit3, Trash2, Search, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -13,14 +14,34 @@ import {
 } from "@/components/ui/table";
 import { BlogPost } from "@/types/blog";
 import { formatArticleDate } from "@/lib/dateUtils";
+import { pingIndexNowForBlogAction } from "@/app/actions/blogAdminActions";
+import { toast } from "sonner";
 
 interface BlogTableProps {
   posts: BlogPost[];
   onEdit: (post: BlogPost) => void;
   onDelete: (post: BlogPost) => void;
+  onPreviewSeo?: (post: BlogPost) => void;
 }
 
-export function BlogTable({ posts, onEdit, onDelete }: BlogTableProps) {
+export function BlogTable({ posts, onEdit, onDelete, onPreviewSeo }: BlogTableProps) {
+  const [pingingSlug, setPingingSlug] = useState<string | null>(null);
+
+  const handlePingIndexNow = async (post: BlogPost) => {
+    setPingingSlug(post.slug);
+    try {
+      const res = await pingIndexNowForBlogAction(post.slug);
+      if (res.success) {
+        toast.success(`IndexNow সফল: ${res.submittedCount}টি URL সার্চ ইঞ্জিনে পাঠানো হয়েছে!`);
+      } else {
+        toast.error(res.error || "IndexNow পিং করতে ব্যর্থ হয়েছে");
+      }
+    } catch {
+      toast.error("সার্ভার ত্রুটি: IndexNow পিং করা যায়নি");
+    } finally {
+      setPingingSlug(null);
+    }
+  };
   return (
     <div className="hidden md:block overflow-x-auto">
       <Table>
@@ -72,6 +93,31 @@ export function BlogTable({ posts, onEdit, onDelete }: BlogTableProps) {
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex items-center justify-end gap-1">
+                  {onPreviewSeo && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => onPreviewSeo(post)}
+                      className="h-8 w-8 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40"
+                      title="গুগল SERP প্রিভিউ ও এসইও অডিট"
+                    >
+                      <Search className="h-4 w-4" />
+                    </Button>
+                  )}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handlePingIndexNow(post)}
+                    disabled={pingingSlug === post.slug}
+                    className="h-8 w-8 text-sky-600 dark:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-950/40"
+                    title="IndexNow দিয়ে সার্চ ইঞ্জিনে (Bing/Yandex) তাত্ক্ষণিক নোটিফিকেশন পাঠান"
+                  >
+                    {pingingSlug === post.slug ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Send className="h-4 w-4" />
+                    )}
+                  </Button>
                   <Link
                     href={`/blog/${post.slug}`}
                     target="_blank"

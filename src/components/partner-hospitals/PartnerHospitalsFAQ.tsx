@@ -111,7 +111,7 @@ export default function PartnerHospitalsFAQ() {
                       : "max-h-0 opacity-0 overflow-hidden"
                   }`}
                 >
-                  <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
+                  <p className="faq-answer text-xs sm:text-sm leading-relaxed text-muted-foreground">
                     {faq.answer}
                   </p>
                 </div>

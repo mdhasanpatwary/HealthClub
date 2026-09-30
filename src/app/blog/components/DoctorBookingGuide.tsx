@@ -24,10 +24,10 @@ export function DoctorBookingGuide({
           <span>সিরিয়াল গাইডলাইন</span>
         </div>
         <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-          {`৪. ${title}`}
+          {title.includes("কীভাবে") ? `৪. ${title}` : `৪. কীভাবে সিরিয়াল নিবেন: ${title}`}
         </h2>
-        <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-          ডাক্তারের সিরিয়াল নিশ্চিত করতে ও চেম্বারে অযথা দীর্ঘ অপেক্ষা এড়াতে এই নিয়মগুলো মেনে চলুন।
+        <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">
+          চেম্বারে অযথা দীর্ঘ অপেক্ষা এড়াতে সকাল ৮টা-১০টার মধ্যে সরাসরি সিরিয়াল হটলাইনে কল করে অ্যাপয়েন্টমেন্ট কনফার্ম করুন অথবা হেলথ ক্লাবের পেশেন্ট হেল্পডেস্কের সহায়তা নিন।
         </p>
       </div>
 

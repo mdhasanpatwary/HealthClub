@@ -149,6 +149,7 @@ export default async function Footer() {
                   { href: "/membership", label: "মেম্বারশিপ প্ল্যান" },
                   { href: "/become-partner", label: "পার্টনার হোন" },
                   { href: "/about-us", label: "আমাদের সম্পর্কে" },
+                  { href: "/editorial-policy", label: "এডিটোরিয়াল নীতিমালা" },
                 ].map((link) => (
                   <li key={link.href}>
                     <Link
@@ -203,7 +204,10 @@ export default async function Footer() {
           <p className="text-xs text-slate-400">
             &copy; {new Date().getFullYear()} হেলথ ক্লাব। সর্বস্বত্ব সংরক্ষিত।
           </p>
-          <div className="flex space-x-6 text-xs text-slate-400">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-400">
+            <Link href="/editorial-policy" prefetch={false} className="hover:text-white transition-colors">
+              এডিটোরিয়াল নীতিমালা
+            </Link>
             <Link href="/privacy-policy" prefetch={false} className="hover:text-white transition-colors">
               গোপনীয়তা নীতি
             </Link>

@@ -62,7 +62,7 @@ export default function ConsultantsFAQ() {
               <ChevronDown className="h-5 w-5 text-primary shrink-0 transition-transform duration-300 group-open:rotate-180" />
             </summary>
             <div className="border-t border-border/60 p-4 sm:p-5 pt-3 sm:pt-4 bg-muted/20">
-              <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
+              <p className="faq-answer text-xs sm:text-sm leading-relaxed text-muted-foreground">
                 {faq.answer}
               </p>
             </div>

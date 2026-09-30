@@ -10,6 +10,8 @@ import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteC
 
 import { getDepartmentSeoConfig } from "@/data/doctorSeoData";
 import { getUpazilaSeoConfig } from "@/data/feniLocations";
+import { GeoAnswerCapsule } from "@/app/blog/components/GeoAnswerCapsule";
+import { generateConsultantsDirectoryJsonLd, DEFAULT_CONSULTANT_GEO_DATA } from "./utils/consultantJsonLd";
 
 export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
 
@@ -158,136 +160,11 @@ export default async function ConsultantsPage({ searchParams }: ConsultantsPageP
   // Fetch doctors server-side (cached with ISR)
   const doctors = await getDoctorsAction();
 
-  // Breadcrumb Schema
-  const breadcrumbItems = [
-    {
-      "@type": "ListItem",
-      position: 1,
-      name: "হোম",
-      item: SITE_URL,
-    },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "ডাক্তার ও কনসালট্যান্টস",
-      item: `${SITE_URL}/consultants`,
-    },
-  ];
-
-  // FAQ Schema
-  const faqItems = [
-    {
-      "@type": "Question",
-      name: "ফেনীতে বিশেষজ্ঞ ডাক্তারের সিরিয়াল বা অ্যাপয়েন্টমেন্ট কীভাবে বুক করবেন?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "হেলথ ক্লাব ডিরেক্টরিতে যেকোনো ডাক্তারের প্রোফাইলে 'সিরিয়াল কল করুন' বাটনে চাপ দিন। এতে সরাসরি সংশ্লিষ্ট হাসপাতাল ও চেম্বার কাউন্টারের অফিসিয়াল হটলাইন নাম্বার চলে আসবে। সেখানে কল করে কোনো প্রকার মধ্যস্বত্বভোগী বা বাড়তি ফি ছাড়াই আপনার সিরিয়াল নিশ্চিত করুন।",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "ফেনীতে আজ কোন ডাক্তার চেম্বারে বসবেন তা কীভাবে জানব?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "হেলথ ক্লাব ডিরেক্টরির প্রতিটি ডাক্তারের কার্ডে 'আজ চেম্বার খোলা' বা 'আজ চেম্বার বন্ধ' স্ট্যাটাস ব্যাজ এবং রোগী দেখার দিন ও সময় স্পষ্ট উল্লেখ থাকে। এছাড়া আপনার প্রয়োজনীয় বিভাগ (যেমন মেডিসিন, গাইনী, শিশু রোগ) নির্বাচন করে আজকের শিডিউল অনুযায়ী সহজেই ডাক্তার খুঁজে নিতে পারেন।",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "ফেনীর ডাক্তারদের চেম্বার ও সময়সূচী কোথায় পাওয়া যাবে?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "আমাদের ডিরেক্টরিতে ফেনীর এস.এস.কে রোড, ট্রাঙ্ক রোড, শহীদ শহীদুল্লা কায়সার সড়ক ও গ্র্যান্ড ট্রাঙ্ক রোডের সকল প্রধান ক্লিনিক ও ডায়াগনস্টিক সেন্টারের চিকিৎসকদের চেম্বার নাম, রুম নম্বর, রোগী দেখার দিন এবং সময়সূচী সম্পূর্ণ হালনাগাদ আকারে পাওয়া যায়।",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "ফেনীর কোন কোন হাসপাতাল ও ডায়াগনস্টিক সেন্টারের ডাক্তার তালিকা এখানে রয়েছে?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "ফেনীর শীর্ষ স্বাস্থ্যসেবা প্রতিষ্ঠান যেমন আধুনিক ডায়াগনস্টিক সেন্টার, ফেনী ডায়াবেটিক সমিতি, কনসেপ্ট হাসপাতাল, সাজেদা হাসপাতাল, ড্রিম প্রাইভেট হাসপাতাল, ফেনী হার্ট ফাউন্ডেশন, আল-কেমাল হাসপাতাল সহ শহরের সকল রেজিস্টার্ড সেন্টারের অভিজ্ঞ চিকিৎসকদের তথ্য এখানে অন্তর্ভুক্ত রয়েছে।",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "ডাক্তার দেখানোর পর টেস্ট বা পরীক্ষায় হেলথ ক্লাব মেম্বাররা কী সুবিধা পান?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "ডাক্তার দেখানোর পর চিকিৎসকের পরামর্শ অনুযায়ী সকল প্রয়োজনীয় ডায়াগনস্টিক পরীক্ষা (যেমন: রক্ত পরীক্ষা, ডিজিটাল এক্স-রে, আল্ট্রাসনোগ্রাম, ইকো, এমআরআই, সিটি স্ক্যান)-এ হেলথ ক্লাব মেম্বাররা পার্টনার হাসপাতাল ও ল্যাবগুলোতে ১০% থেকে ৩০% পর্যন্ত তাৎক্ষণিক ডিসকাউন্ট পান।",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "চেম্বারে যাওয়ার পূর্বে কী প্রস্তুতি নেওয়া প্রয়োজন ও তথ্য কতটা নির্ভরযোগ্য?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "আমাদের ডেডিকেটেড হেলথ টিম নিয়মিত হাসপাতাল ও চেম্বারগুলোর সাথে সরাসরি যোগাযোগ রেখে ডাক্তারদের সময়সূচি এবং সিরিয়াল নম্বর যাচাই করে। চেম্বারে যাওয়ার পূর্বে ফোনে সিরিয়াল নিশ্চিত করুন এবং রোগীর পূর্বের প্রেসক্রিপশন ও রিপোর্ট সাথে নিয়ে নির্ধারিত সময়ের ৩০ মিনিট পূর্বে উপস্থিত হোন।",
-      },
-    },
-  ];
-
-  // Structured Data for Google Rich Snippets & AI Search Engines
-  const jsonLdData = [
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: breadcrumbItems,
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "MedicalBusiness",
-      name: "Health Club Specialist Doctors Network",
-      url: `${SITE_URL}/consultants`,
-      description: "Directory of specialist doctors, consultants, chamber schedules, and appointment serial booking in Feni, Bangladesh.",
-      areaServed: "Feni, Bangladesh",
-      medicalSpecialty: [
-        "Psychiatry",
-        "Medicine",
-        "Gastroenterology",
-        "Vascular Surgery",
-        "Orthopaedics",
-        "Nephrology",
-        "Hepatology",
-        "Rheumatology",
-        "Nutrition",
-        "Gynaecology",
-        "Pediatrics",
-        "Cardiology",
-      ],
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: faqItems,
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      name: "Specialist Doctors in Feni",
-      itemListElement: doctors.slice(0, 20).map((doc, index) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        item: {
-          "@type": "Physician",
-          name: doc.name,
-          image: doc.imageUrl || `${SITE_URL}/og-image.png`,
-          medicalSpecialty: doc.specialty,
-          jobTitle: doc.designation,
-          telephone: doc.serialPhone,
-          worksFor: {
-            "@type": "MedicalOrganization",
-            name: doc.chamberName,
-          },
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: doc.chamberAddress,
-            addressLocality: "Feni",
-            addressCountry: "BD",
-          },
-        },
-      })),
-    },
-  ];
+  // Structured Data for Google Rich Snippets & AI Search Engines (AEO & Speakable Specification)
+  const jsonLdData = generateConsultantsDirectoryJsonLd({
+    pageUrl: `${SITE_URL}/consultants`,
+    doctors,
+  });
 
   return (
     <div className="bg-background min-h-screen py-6 sm:py-12">
@@ -352,6 +229,12 @@ export default async function ConsultantsPage({ searchParams }: ConsultantsPageP
             </div>
           </div>
         </div>
+
+        {/* Standardized GEO Answer Capsule (BLUF) */}
+        <GeoAnswerCapsule
+          data={DEFAULT_CONSULTANT_GEO_DATA}
+          title="ফেনী বিশেষজ্ঞ ডাক্তার ও চেম্বার সিরিয়াল সারসংক্ষেপ"
+        />
 
         {/* Interactive Directory Component */}
         <div className="sm:bg-muted/30 sm:border sm:border-border/80 sm:rounded-3xl sm:p-8">

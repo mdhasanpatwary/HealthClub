@@ -36,7 +36,7 @@ export function BlogFAQSection({ faqs }: BlogFAQSectionProps) {
               </summary>
 
               <div className="px-4 pb-4 sm:px-5 sm:pb-5 text-xs sm:text-sm text-muted-foreground leading-relaxed animate-in fade-in-50">
-                <p>{answer}</p>
+                <p className="faq-answer">{answer}</p>
               </div>
             </details>
           );

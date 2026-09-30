@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import { BlogPost } from "@/types/blog";
 import { Badge } from "@/components/ui/badge";
@@ -26,10 +27,17 @@ export function BlogArticleHeader({
         <Badge variant="outline" className="text-xs border-border/80">
           তথ্যবহুল পর্যালোচনা ২০২৬
         </Badge>
-        <Badge variant="outline" className="text-xs border-primary/30 text-primary bg-primary/5 flex items-center gap-1">
-          <CheckCircle2 className="h-3 w-3" />
-          <span>ক্লিনিক্যাল রিসার্চ টিম কর্তৃক যাচাইকৃত</span>
-        </Badge>
+        <Link
+          href="/editorial-policy"
+          prefetch={false}
+          className="hover:opacity-85 transition-opacity"
+          title="হেলথ ক্লাব এডিটোরিয়াল ও ফ্যাক্ট-চেকিং নীতিমালা পড়ুন"
+        >
+          <Badge variant="outline" className="text-xs border-primary/30 text-primary bg-primary/5 flex items-center gap-1 cursor-pointer">
+            <CheckCircle2 className="h-3 w-3" />
+            <span>ক্লিনিক্যাল রিসার্চ টিম কর্তৃক যাচাইকৃত</span>
+          </Badge>
+        </Link>
       </div>
 
       <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground leading-[1.2]">
@@ -41,7 +49,14 @@ export function BlogArticleHeader({
         <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-muted-foreground">
           <span className="flex items-center gap-1.5 font-medium text-foreground">
             <ShieldCheck className="h-4 w-4 text-primary" />
-            {post.author.nameBn}
+            <Link
+              href="/editorial-policy"
+              prefetch={false}
+              className="hover:text-primary hover:underline transition-colors"
+              title="এডিটোরিয়াল টিম ও ফ্যাক্ট-চেকিং নীতিমালা"
+            >
+              {post.author.nameBn}
+            </Link>
           </span>
           <span>•</span>
           <time
@@ -93,12 +108,20 @@ export function BlogArticleHeader({
             <span>এই লেখার মূল বিষয়সমূহ</span>
           </h2>
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs sm:text-sm text-foreground/90">
-            {highlights.map((hl, idx) => (
-              <li key={idx} className="flex items-start gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0 mt-2" />
-                <span className="leading-snug">{hl}</span>
-              </li>
-            ))}
+            {highlights.map((hl, idx) => {
+              const text =
+                typeof hl === "string"
+                  ? hl
+                  : hl.titleBn && hl.descriptionBn
+                  ? `${hl.titleBn}: ${hl.descriptionBn}`
+                  : hl.titleBn || hl.descriptionBn || "";
+              return (
+                <li key={idx} className="flex items-start gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0 mt-2" />
+                  <span className="leading-snug">{text}</span>
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}

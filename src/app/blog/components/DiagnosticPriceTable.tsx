@@ -39,6 +39,10 @@ export function DiagnosticPriceTable({
     pricingData.titleBn.includes("পিআরপি") ||
     pricingData.titleBn.includes("থেরাপি") ||
     pricingData.titleBn.includes("জরুরি") ||
+    pricingData.titleBn.includes("ট্রমা") ||
+    pricingData.titleBn.includes("ভ্যাকসিন") ||
+    pricingData.titleBn.includes("টিকা") ||
+    pricingData.titleBn.includes("এন্টিভেনম") ||
     pricingData.titleBn.includes("ভর্তি");
 
   return (

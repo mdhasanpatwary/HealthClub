@@ -16,10 +16,14 @@ export function DoctorChamberHubs({ hubs, titleBn, subtitleBn }: DoctorChamberHu
           <span>চেম্বার হাব গাইড</span>
         </div>
         <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-          {titleBn || "৩. ফেনী শহরের প্রধান ডাক্তার চেম্বার ও ক্লিনিক্যাল হাবসমূহ"}
+          {titleBn
+            ? titleBn.includes("কোথায়")
+              ? titleBn
+              : titleBn.replace(/^([০-৯১-৯\d]+[\.\s]*)/, "$1কোথায় চেম্বার পাবেন: ")
+            : "৩. কোথায় চেম্বার পাবেন: ফেনী শহরের প্রধান ডাক্তার চেম্বার ও ক্লিনিক্যাল হাবসমূহ"}
         </h2>
-        <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-          {subtitleBn || "এসএসকে রোড, হাসপাতাল রোড, ট্রাঙ্ক রোড ও মিজান রোডের বিশিষ্ট চেম্বার লোকেশন ও যাতায়াত নির্দেশিকা।"}
+        <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">
+          {subtitleBn || "এসএসকে রোড, হাসপাতাল রোড, ট্রাঙ্ক রোড ও মিজান রোডের বিশিষ্ট চেম্বার লোকেশন ও যাতায়াত নির্দেশিকা; জরুরি প্রয়োজনে এক এলাকাতেই একাধিক বিশেষজ্ঞ পরামর্শ ও প্যাথলজি সেবা পাওয়ার উপায়।"}
         </p>
       </div>
 

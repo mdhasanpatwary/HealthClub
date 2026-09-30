@@ -81,6 +81,7 @@ export const blogPostSchema = z.object({
   bookingGuideBn: z.any().optional(),
   selectionGuideBn: z.any().optional(),
   emergencyDirectoryBn: z.any().optional(),
+  clinicalSources: z.array(z.any()).optional(),
 });
 
 export type BlogPostFormValues = z.infer<typeof blogPostSchema>;

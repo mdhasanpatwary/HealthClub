@@ -8,13 +8,20 @@ import { getPartnersAction } from "@/app/actions/partnerActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 import { Sparkles, ShieldCheck, Tag, Pill, MapPin } from "lucide-react";
 import { VALID_PARTNER_CATEGORY_SLUGS } from "@/data/partnerCategorySeoData";
+import { GeoAnswerCapsule } from "@/app/blog/components/GeoAnswerCapsule";
+import { GeoAnswerCapsuleData } from "@/types/blog";
+import { generatePartnerHospitalsHubJsonLd } from "./utils/hospitalJsonLd";
 
 export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
 
+const PAGE_TITLE = "ফেনী সদর হাসপাতাল ও ডায়াগনস্টিক সেন্টার তালিকা | ১০-৩০% মেম্বার ছাড়";
+const OG_TITLE = "ফেনী সদর হাসপাতাল ও ডায়াগনস্টিক সেন্টার তালিকা | ১০-৩০% মেম্বার ছাড় - হেলথ ক্লাব";
+const PAGE_DESC = "ফেনী সদর, এসএসকে রোড, ট্রাঙ্ক রোড, হাসপাতাল রোড ও আশেপাশের পার্টনার হাসপাতাল, প্যাথলজি ল্যাব, ডায়াগনস্টিক সেন্টার ও মডেল ফার্মেসির তালিকা। হেলথ ক্লাব মেম্বার কার্ডে পান ১০% থেকে ৩০% নিশ্চিত ডিসকাউন্ট।";
+
 export async function generateMetadata() {
-  const pageTitle = "ফেনী সদর হাসপাতাল ও ডায়াগনস্টিক সেন্টার তালিকা | ১০-৩০% মেম্বার ছাড়";
-  const ogTitle = "ফেনী সদর হাসপাতাল ও ডায়াগনস্টিক সেন্টার তালিকা | ১০-৩০% মেম্বার ছাড় - হেলথ ক্লাব";
-  const pageDesc = "ফেনী সদর, এসএসকে রোড, ট্রাঙ্ক রোড, হাসপাতাল রোড ও আশেপাশের পার্টনার হাসপাতাল, প্যাথলজি ল্যাব, ডায়াগনস্টিক সেন্টার ও মডেল ফার্মেসির তালিকা। হেলথ ক্লাব মেম্বার কার্ডে পান ১০% থেকে ৩০% নিশ্চিত ডিসকাউন্ট।";
+  const pageTitle = PAGE_TITLE;
+  const ogTitle = OG_TITLE;
+  const pageDesc = PAGE_DESC;
 
   return {
     title: pageTitle,
@@ -101,102 +108,50 @@ export default async function PartnerHospitalsPage({ searchParams }: PartnerHosp
   // Fetch partners server-side (cached with ISR)
   const allPartners = await getPartnersAction();
 
-  const jsonLdData = [
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "হোম",
-          "item": SITE_URL
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "পার্টনার হাসপাতাল ও ডায়াগনস্টিক সেন্টার",
-          "item": `${SITE_URL}/partner-hospitals`
-        }
-      ]
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": ["MedicalBusiness", "MedicalOrganization"],
-      "name": "হেলথ ক্লাব পার্টনার হাসপাতাল ও ডায়াগনস্টিক নেটওয়ার্ক (ফেনী)",
-      "url": `${SITE_URL}/partner-hospitals`,
-      "description": "ফেনীর শীর্ষ বেসরকারি হাসপাতাল, প্যাথলজি ল্যাব, ডায়াগনস্টিক সেন্টার ও মডেল ফার্মেসির তালিকা এবং ১০% থেকে ৩০% মেম্বার ডিসকাউন্ট নেটওয়ার্ক।",
-      "areaServed": [
-        "Feni Sadar",
-        "Daganbhuiyan",
-        "Sonagazi",
-        "Chhagalnaiya",
-        "Parshuram",
-        "Fulgazi",
-        "Mohipal"
-      ],
-      "medicalSpecialty": [
-        "General Medical Services",
-        "Diagnostic Pathology & Laboratory",
-        "Radiology & Imaging",
-        "Pharmacy & Prescription Medicine Discount"
-      ]
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "ফেনীতে হাসপাতালে এবং মেডিকেল টেস্টে কীভাবে ডিসকাউন্ট পেতে পারি?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "হেলথ ক্লাব (Health Club)-এর ডিজিটাল মেম্বারশিপ কার্ড ব্যবহার করে ফেনীর চুক্তিবদ্ধ সকল বেসরকারি হাসপাতাল, ক্লিনিক এবং ডায়াগনস্টিক সেন্টারে প্যাথলজি ল্যাব টেস্ট (রক্ত, হরমোন পরীক্ষা), ডিজিটাল এক্স-রে, আল্ট্রাসনোগ্রাম (USG), সিটি স্ক্যান এবং কেবিন ভাড়ায় ১০% থেকে ৩০% পর্যন্ত নিশ্চিত ডিসকাউন্ট পাওয়া যায়। বিলিং কাউন্টারে শুধু আপনার হেলথ ক্লাব মেম্বার আইডি বা কার্ডটি প্রদর্শন করলেই তাৎক্ষণিকভাবে বিল থেকে নির্ধারিত ছাড় পেয়ে যাবেন।"
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "ডায়াগনস্টিক সেন্টারে কোন কোন টেস্টে ছাড় পাওয়া যায়?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "সকল প্রকার প্যাথলজি রক্ত পরীক্ষা (CBC, Lipid, HbA1c, Thyroid ইত্যাদি), ডিজিটাল এক্স-রে, আল্ট্রাসনোগ্রাম (USG), ইসিজি (ECG), ইকোকার্ডিওগ্রাফি, এন্ডোস্কোপি, সিটি স্ক্যান ও এমআরআই টেস্টে ১০% থেকে ৩০% পর্যন্ত ছাড় পাবেন।"
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "ফার্মেসিতে ওষুধ কেনার সময় কি ডিসকাউন্ট প্রযোজ্য?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "হ্যাঁ, আমাদের তালিকাভুক্ত মডেল ফার্মেসি ও পার্টনার ওষুধের দোকানগুলোতে প্রেসক্রিপশন অনুযায়ী প্রয়োজনীয় ওষুধ ক্রয়ে হেলথ ক্লাব মেম্বার কার্ড দেখালে বিশেষ ছাড় পাওয়া যাবে।"
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "ফেনীর বাইরে কি এই মেম্বার কার্ড ব্যবহার করা যাবে?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "হ্যাঁ, হেলথ ক্লাবের নেটওয়ার্কভুক্ত ঢাকা, চট্টগ্রাম সহ অন্যান্য জেলার পার্টনার হাসপাতাল ও ডায়াগনস্টিক ল্যাবেও আপনি একই সুবিধা উপভোগ করতে পারবেন।"
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "জরুরি প্রয়োজনে কীভাবে নিকটস্থ অ্যাম্বুলেন্স বা অক্সিজেন খুঁজে পাবো?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "হেলথ ক্লাবের 'জরুরি সেবা' পেজ থেকে সরাসরি হটলাইনে কল করে ২৪/৭ আইসিইউ/এসি অ্যাম্বুলেন্স, ব্লাড ডোনার এবং অক্সিজেন সিলিন্ডার সহায়তা পাওয়া যাবে।"
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "ফেনীতে মেডিকেল টেস্ট ও প্যাথলজি ল্যাব টেস্টে কত টাকা সাশ্রয় হয়?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "টেস্টের ধরন অনুযায়ী মেম্বাররা রুটিন প্যাথলজি, হরমোন টেস্ট, এক্স-রে, ৪ডি ইউএসজি, সিটি স্ক্যান এবং এমআরআই-তে ১৫% থেকে ৩০% পর্যন্ত ছাড় পান, যা প্রতিটি মেডিকেল চেকআপে উল্লেখযোগ্য আর্থিক সাশ্রয় নিশ্চিত করে।"
-          }
-        }
-      ]
-    }
-  ];
+  const partnerGeoData: GeoAnswerCapsuleData = {
+    directAnswerBn:
+      "ফেনী সদর ও পার্শ্ববর্তী এলাকায় অনুমোদিত পার্টনার হাসপাতাল, ডায়াগনস্টিক সেন্টার ও প্যাথলজি ল্যাবে হেলথ ক্লাবের ডিজিটাল কার্ড দেখালে প্যাথলজি টেস্ট, ডিজিটাল এক্স-রে, ৪ডি ইউএসজি, সিটি স্ক্যান ও ইনপেশেন্ট কেবিনে ১০% থেকে ৩০% নিশ্চিত ডিসকাউন্ট পাওয়া যায়। দালালমুক্ত সেবা ও দ্রুত সিরিয়ালের জন্য হেলথ ক্লাবের সার্বক্ষণিক পেশেন্ট সাপোর্ট সক্রিয় রয়েছে।",
+    quickTakeawaysBn: [
+      "ফেনী সদরের শীর্ষ অনুমোদিত বেসরকারি হাসপাতাল ও আধুনিক ল্যাব নেটওয়ার্ক",
+      "ডিজিটাল কার্ডে প্যাথলজি ও রেডিওলজিতে ১০% থেকে ৩০% নিশ্চিত ছাড়",
+      "জরুরি অ্যাম্বুলেন্স, অক্সিজেন ও ইনপেশেন্ট কেবিন ভর্তি সুবিধা",
+      "বিএমডিসি ও ডিজিএইচএস নিবন্ধিত মানসম্মত স্বাস্থ্যসেবা নিশ্চয়তা",
+    ],
+    referenceFees: [
+      {
+        serviceNameBn: "কমপ্লিট ব্লাড কাউন্ট (CBC) ও ইএসআর",
+        serviceNameEn: "Complete Blood Count (CBC) with ESR",
+        regularPriceRangeBn: "৳৩৫০ - ৳৫৫০",
+        discountBadgeBn: "১০-৩০% মেম্বার ছাড়",
+      },
+      {
+        serviceNameBn: "ডিজিটাল চেস্ট এক্স-রে (Digital Chest X-Ray)",
+        serviceNameEn: "Digital Chest X-Ray",
+        regularPriceRangeBn: "৳৫০০ - ৳৮৫০",
+        discountBadgeBn: "১০-৩০% মেম্বার ছাড়",
+      },
+      {
+        serviceNameBn: "হোল অ্যাবডোমেন ৪ডি আল্ট্রাসনোগ্রাম (4D USG)",
+        serviceNameEn: "Whole Abdomen 4D Ultrasonography",
+        regularPriceRangeBn: "৳১,০০০ - ৳১,৮০০",
+        discountBadgeBn: "১০-৩০% মেম্বার ছাড়",
+      },
+      {
+        serviceNameBn: "জেনারেল কেবিন ও জরুরি ইনপেশেন্ট ভর্তি",
+        serviceNameEn: "Inpatient Cabin & Emergency Admission",
+        regularPriceRangeBn: "৳১,০০০ - ৳৩,৫০০",
+        discountBadgeBn: "১০-৩০% মেম্বার ছাড়",
+      },
+    ],
+    verifiedNoteBn: "হেলথ ক্লাব ভেরিফিকেশন টিম কর্তৃক ফেনী সদরের সকল পার্টনার প্রতিষ্ঠান সরেজমিনে পরিদর্শনকৃত",
+  };
+
+  const jsonLdData = generatePartnerHospitalsHubJsonLd({
+    pageUrl: `${SITE_URL}/partner-hospitals`,
+    partners: allPartners,
+    pageTitle: PAGE_TITLE,
+    pageDesc: PAGE_DESC,
+  });
 
   return (
     <div className="bg-background min-h-screen">
@@ -248,6 +203,12 @@ export default async function PartnerHospitalsPage({ searchParams }: PartnerHosp
       {/* Main Content Directory & SEO Guides */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-10 sm:space-y-16">
         
+        {/* Standardized GEO Answer Capsule (BLUF) */}
+        <GeoAnswerCapsule
+          data={partnerGeoData}
+          title="ফেনী পার্টনার হাসপাতাল ও ডায়াগনস্টিক নেটওয়ার্ক সারসংক্ষেপ"
+        />
+
         {/* Directory Component — server-fetched data, no client-side loading */}
         <section aria-labelledby="partner-directory-heading" className="bg-muted/30 border border-border/80 rounded-3xl p-3.5 sm:p-8 space-y-4">
           <h2 id="partner-directory-heading" className="sr-only">

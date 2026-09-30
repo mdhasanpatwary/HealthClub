@@ -8,6 +8,7 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { getDoctorsByDepartmentAction } from "@/app/actions/doctorActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 import { getDepartmentSeoConfig, getAllDepartmentSlugs, DOCTOR_DEPARTMENTS_SEO } from "@/data/doctorSeoData";
+import { generateConsultantDepartmentJsonLd, getHighDensityDepartmentFaqs } from "../../utils/consultantJsonLd";
 
 export const revalidate = 86400; // 24-hour ISR
 
@@ -69,93 +70,12 @@ export default async function DepartmentLandingPage({ params, searchParams }: Pa
   const deptDoctors = await getDoctorsByDepartmentAction(slug);
   const pageUrl = `${SITE_URL}/consultants/department/${deptSeo.slug}`;
 
-  // Breadcrumb schema
-  const breadcrumbItems = [
-    {
-      "@type": "ListItem",
-      position: 1,
-      name: "হোম",
-      item: SITE_URL,
-    },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "ডাক্তার ও কনসালট্যান্টস",
-      item: `${SITE_URL}/consultants`,
-    },
-    {
-      "@type": "ListItem",
-      position: 3,
-      name: deptSeo.nameBn,
-      item: pageUrl,
-    },
-  ];
-
-  // FAQ schema from department-curated FAQs
-  const faqSchema = deptSeo.faqs.map((faq) => ({
-    "@type": "Question",
-    name: faq.qBn,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: faq.aBn,
-    },
-  }));
-
-  const jsonLdData = [
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: breadcrumbItems,
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "MedicalBusiness",
-      name: `${deptSeo.nameBn} - হেলথ ক্লাব ফেনী`,
-      url: pageUrl,
-      description: deptSeo.metaDescriptionBn,
-      areaServed: {
-        "@type": "City",
-        name: "Feni",
-        containedInPlace: {
-          "@type": "Country",
-          name: "Bangladesh",
-        },
-      },
-      medicalSpecialty: deptSeo.medicalSpecialtySchema,
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: faqSchema,
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      name: `Specialist Doctors in ${deptSeo.nameEn} (Feni)`,
-      itemListElement: deptDoctors.slice(0, 15).map((doc, index) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        item: {
-          "@type": "Physician",
-          name: doc.name,
-          image: doc.imageUrl || `${SITE_URL}/og-image.png`,
-          medicalSpecialty: doc.specialty,
-          jobTitle: doc.designation,
-          telephone: doc.serialPhone,
-          worksFor: {
-            "@type": "MedicalOrganization",
-            name: doc.chamberName,
-          },
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: doc.chamberAddress,
-            addressLocality: "Feni",
-            addressCountry: "BD",
-          },
-        },
-      })),
-    },
-  ];
+  const departmentFaqs = getHighDensityDepartmentFaqs(deptSeo);
+  const jsonLdData = generateConsultantDepartmentJsonLd({
+    pageUrl,
+    deptSeo,
+    deptDoctors,
+  });
 
   // Top related departments for interlinking
   const relatedDepartments = Object.values(DOCTOR_DEPARTMENTS_SEO)
@@ -247,21 +167,21 @@ export default async function DepartmentLandingPage({ params, searchParams }: Pa
           />
         </div>
 
-        {/* Department-Curated FAQ Section (AEO & Featured Snippets) */}
-        {deptSeo.faqs && deptSeo.faqs.length > 0 && (
+        {/* Department-Curated FAQ Section (AEO & Speakable Featured Snippets) */}
+        {departmentFaqs && departmentFaqs.length > 0 && (
           <div className="max-w-4xl mx-auto space-y-4 pt-4">
             <div className="flex items-center gap-2 text-foreground font-bold text-lg sm:text-xl">
               <HelpCircle className="h-5 w-5 text-primary" />
-              <h2>{deptSeo.nameBn} সংক্রান্ত সাধারণ জিজ্ঞাসা ও উত্তর</h2>
+              <h2 id="dept-heading">{deptSeo.nameBn} সংক্রান্ত সাধারণ জিজ্ঞাসা ও উত্তর</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-              {deptSeo.faqs.map((faq, i) => (
+              {departmentFaqs.map((faq, i) => (
                 <div key={i} className="p-4 rounded-2xl bg-card border border-border/80 shadow-xs space-y-2">
                   <h3 className="text-xs sm:text-sm font-bold text-foreground leading-snug">
-                    {faq.qBn}
+                    {faq.question}
                   </h3>
-                  <p className="text-[11px] sm:text-xs text-muted-foreground leading-relaxed">
-                    {faq.aBn}
+                  <p className="faq-answer text-[11px] sm:text-xs text-muted-foreground leading-relaxed">
+                    {faq.answer}
                   </p>
                 </div>
               ))}

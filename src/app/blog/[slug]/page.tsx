@@ -5,13 +5,17 @@ import {
   getAllBlogSlugsAction,
   getBlogPostBySlugAction,
 } from "@/app/actions/blogAdminActions";
-import { BlogPostCardItem } from "@/types/blog";
+import { BlogPost, BlogPostCardItem } from "@/types/blog";
 import { BlogPostDetailView } from "../components/BlogPostDetailView";
 import { generateBlogJsonLd } from "../utils/blogJsonLd";
 import { SITE_URL } from "@/lib/siteConfig";
 import { getArticleIsoDate } from "@/lib/dateUtils";
 import { getBlogDoctorDepartment } from "@/data/blog/departmentBlogMapping";
 import { getDoctorsByDepartmentAction } from "@/app/actions/doctorActions";
+import { resolveBlogReviewer } from "../utils/blogReviewerUtils";
+import { computeBlogDateModified } from "../utils/blogDateFreshnessUtils";
+import { BlogStickyActionBar } from "../components/BlogStickyActionBar";
+import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -142,9 +146,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     relatedPosts = [...sameCat, ...others].slice(0, 3);
   }
 
-  // Schema.org Structured Data
-  const jsonLdData = generateBlogJsonLd(post, title, pageUrl, relatedPosts);
-
   // Fetch live active doctors for this department to augment blog guides
   const targetDepartment = getBlogDoctorDepartment(
     post.slug,
@@ -152,15 +153,36 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   );
   const liveDoctors = await getDoctorsByDepartmentAction(targetDepartment);
 
+  // Compute fresh programmatic dateModified (signals ongoing freshness with live roster and partner fee updates)
+  const freshDateModified = computeBlogDateModified(post, liveDoctors);
+
+  // Resolve medical reviewer for Schema.org and E-E-A-T presentation
+  const resolvedReviewer = post.reviewedBy || resolveBlogReviewer(post);
+  const postWithReviewer: BlogPost = {
+    ...post,
+    modifiedDate: freshDateModified,
+    reviewedBy: resolvedReviewer,
+  };
+
+  // Schema.org Structured Data
+  const jsonLdData = generateBlogJsonLd(postWithReviewer, title, pageUrl, relatedPosts, { liveDoctors });
+
+  // Fetch site contact settings for emergency hotline and serial assistance
+  const contact = await getCachedContactSettings();
+
   return (
     <>
       <JsonLd data={jsonLdData} />
       <BlogPostDetailView
-        post={post}
+        post={postWithReviewer}
         pageUrl={pageUrl}
         relatedPosts={relatedPosts}
         liveDoctors={liveDoctors}
         liveDepartment={targetDepartment}
+      />
+      <BlogStickyActionBar
+        hotline={contact.hotline}
+        whatsapp={contact.whatsapp}
       />
     </>
   );

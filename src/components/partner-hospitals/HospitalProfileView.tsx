@@ -154,7 +154,7 @@ export default function HospitalProfileView({
           {/* Partner Primary Info Bar Below Cover (Mobile-First Layout) */}
           <div className="p-4 sm:p-6 lg:p-7 flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 bg-card border-t border-border/40">
             <div className="space-y-1.5 min-w-0 flex-1">
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-secondary dark:text-white font-heading tracking-tight leading-snug">
+              <h1 id="partner-profile-header" className="text-xl sm:text-2xl md:text-3xl font-extrabold text-secondary dark:text-white font-heading tracking-tight leading-snug">
                 {partner.name}
               </h1>
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm text-muted-foreground">

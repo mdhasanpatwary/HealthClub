@@ -103,6 +103,12 @@ export function BlogDoctorToc({
   }
 
   const isDoctorAppointment = currentSlug === "feni-doctor-serial-appointment-guide";
+  const isHospitalSskHub = currentSlug === "feni-hospital-road-ss-k-road-chamber-hub-guide";
+  const isTrunkMizanHub = currentSlug === "feni-trunk-road-mizan-road-clinic-pharmacy-hub-guide";
+  const isFridayWeekendGuide = currentSlug === "feni-friday-weekend-doctor-chamber-serial-guide";
+  const isFemaleGynaeGuide = currentSlug === "feni-female-gynecologist-doctor-chamber-list";
+  const isEveningGuide = currentSlug === "feni-evening-doctor-chambers-after-5pm-guide";
+  const isHubGuide = isHospitalSskHub || isTrunkMizanHub || isFridayWeekendGuide || isFemaleGynaeGuide || isEveningGuide;
 
   return (
     <ol className="space-y-1.5 list-none pl-0">
@@ -111,6 +117,16 @@ export function BlogDoctorToc({
           {secNum(1)}
           {isDoctorAppointment
             ? "ফেনীতে ডাক্তার সিরিয়াল ও স্বাস্থ্যসেবা প্রেক্ষাপট"
+            : isHospitalSskHub
+            ? "হাসপাতাল রোড ও এসএসকে রোড স্বাস্থ্যসেবা প্রেক্ষাপট"
+            : isTrunkMizanHub
+            ? "ট্রাঙ্ক রোড ও মিজান রোড স্বাস্থ্যসেবা প্রেক্ষাপট"
+            : isFridayWeekendGuide
+            ? "শুক্রবার ও ছুটির দিনের স্বাস্থ্যসেবা প্রেক্ষাপট"
+            : isFemaleGynaeGuide
+            ? "ফেনীতে মহিলা গাইনী ডাক্তার ও প্রসূতিসেবা প্রেক্ষাপট"
+            : isEveningGuide
+            ? "বিকেল ও সান্ধ্যকালীন স্বাস্থ্যসেবা প্রেক্ষাপট"
             : "ফেনীর স্বাস্থ্যসেবা ও বিশেষজ্ঞ ডাক্তার"}
         </a>
       </li>
@@ -122,6 +138,16 @@ export function BlogDoctorToc({
           {secNum(2)}
           {isDoctorAppointment
             ? "বিভাগভিত্তিক বিশেষজ্ঞ ডাক্তার ও চেম্বার শিডিউল"
+            : isHospitalSskHub
+            ? "হাসপাতাল ও এসএসকে রোডের প্রধান বিশেষজ্ঞ ডাক্তার তালিকা"
+            : isTrunkMizanHub
+            ? "ট্রাঙ্ক ও মিজান রোডের প্রধান বিশেষজ্ঞ ডাক্তার তালিকা"
+            : isFridayWeekendGuide
+            ? "শুক্রবার ও ছুটির দিনের প্রধান বিশেষজ্ঞ ডাক্তার তালিকা"
+            : isFemaleGynaeGuide
+            ? "শীর্ষ ২০ জন মহিলা গাইনী ও প্রসূতিরোগ বিশেষজ্ঞ তালিকা"
+            : isEveningGuide
+            ? "সান্ধ্যকালীন প্রধান বিশেষজ্ঞ ডাক্তার তালিকা (সন্ধ্যা ৫টার পর)"
             : "বিভাগভিত্তিক বিশেষজ্ঞ ডাক্তার তালিকা"}
         </a>
         <TocSubList
@@ -134,7 +160,18 @@ export function BlogDoctorToc({
       </li>
       <li>
         <a href="#chamber-hubs" className={linkClass("chamber-hubs")}>
-          {secNum(3)}ফেনী শহরের প্রধান চেম্বার হাবসমূহ
+          {secNum(3)}
+          {isHospitalSskHub
+            ? "হাসপাতাল ও এসএসকে রোড প্রধান চেম্বার করিডোর"
+            : isTrunkMizanHub
+            ? "ট্রাঙ্ক ও মিজান রোড প্রধান চেম্বার ও ফার্মেসি হাব"
+            : isFridayWeekendGuide
+            ? "শুক্রবার ও ছুটির দিনের প্রধান চেম্বার করিডোর"
+            : isFemaleGynaeGuide
+            ? "মহিলা স্বাস্থ্য ও প্রধান চেম্বার করিডোরসমূহ"
+            : isEveningGuide
+            ? "সান্ধ্যকালীন প্রধান চেম্বার ও ফার্মেসি করিডোর"
+            : "ফেনী শহরের প্রধান চেম্বার হাবসমূহ"}
         </a>
       </li>
       <li>
@@ -142,6 +179,8 @@ export function BlogDoctorToc({
           {secNum(4)}
           {isDoctorAppointment
             ? "দালালমুক্ত সরাসরি সিরিয়াল নেওয়ার সহজ উপায়"
+            : isHubGuide
+            ? "দালালমুক্ত সরাসরি সিরিয়াল নেওয়ার সহজ ৫টি নিয়ম"
             : "ডাক্তারের সিরিয়াল নেওয়ার নিয়মাবলী"}
         </a>
       </li>
@@ -155,7 +194,7 @@ export function BlogDoctorToc({
       <li>
         <a href="#selection-guide" className={linkClass("selection-guide")}>
           {secNum(hasDoctorPricing ? 6 : 5)}
-          {isDoctorAppointment
+          {isDoctorAppointment || isHubGuide
             ? "নির্ভরযোগ্য ডাক্তার নির্বাচন ও দালাল প্রতিরোধের উপায়"
             : "সঠিক ডাক্তার ও ক্লিনিক নির্বাচনের উপায়"}
         </a>

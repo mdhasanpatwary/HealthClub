@@ -22,6 +22,7 @@ export const FENI_FULL_BODY_HEALTH_CHECKUP_GUIDE: BlogPost = {
   modifiedDate: "2026-09-23",
   readTimeBn: "১৪ মিনিট পাঠ",
   readTimeEn: "14 min read",
+  embeddedTool: "bmi",
   author: {
     nameBn: "মেডিকেল এডিটোরিয়াল টিম",
     nameEn: "Medical Editorial Team",

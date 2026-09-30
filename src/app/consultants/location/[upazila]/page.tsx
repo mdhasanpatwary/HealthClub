@@ -17,6 +17,8 @@ import {
   getAllUpazilaSlugs,
   getUpazilaSeoConfig,
 } from "@/data/feniLocations";
+import { generateConsultantLocationJsonLd, getHighDensityLocationFaqs } from "../../utils/consultantJsonLd";
+import { HelpCircle } from "lucide-react";
 
 export const revalidate = 86400;
 
@@ -81,71 +83,13 @@ export default async function UpazilaDoctorLandingPage({ params }: PageProps) {
 
   const pageUrl = `${SITE_URL}/consultants/location/${seo.slug}`;
 
-  const breadcrumbItems = [
-    { "@type": "ListItem", position: 1, name: "হোম", item: SITE_URL },
-    { "@type": "ListItem", position: 2, name: "ডাক্তার ও কনসালট্যান্টস", item: `${SITE_URL}/consultants` },
-    { "@type": "ListItem", position: 3, name: seo.nameBn, item: pageUrl },
-  ];
-
-  const faqItems = [
-    {
-      "@type": "Question",
-      name: `${seo.nameBn} এলাকার ডাক্তার খুঁজতে কীভাবে দ্রুত সার্চ করব?`,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: `${seo.nameBn} এলাকায় চেম্বার, সিরিয়াল, রোগী দেখার সময় ও হাসপাতাল ঠিকানা খুঁজতে হেলথ ক্লাবের ডিরেক্টরি ব্যবহার করুন। বিভাগ অনুযায়ী ফিল্টার করে দ্রুত প্রয়োজনীয় বিশেষজ্ঞের নাম, ফোন ও ঠিকানা খুঁজে নিন।`,
-      },
-    },
-    {
-      "@type": "Question",
-      name: `${seo.nameBn} থেকে ফেনী সদর হাসপাতালে ডাক্তার দেখাতে গেলে কীভাবে সুবিধা পাবো?`,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "ফেনী সদর-ভিত্তিক বিশেষজ্ঞ ডাক্তারদের চেম্বার, হাসপাতাল ও ডায়াগনস্টিক সেন্টারের ঠিকানা দেখে রেফারেল অনুযায়ী নির্ধারিত সময়ের আগে ফোনে সিরিয়াল নিশ্চিত করুন। এতে ভ্রমণ, সিরিয়াল ও পরীক্ষা নিয়ে ঝামেলা কমে।",
-      },
-    },
-  ];
-
-  const jsonLdData = [
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: breadcrumbItems,
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "MedicalBusiness",
-      name: `${seo.nameBn} ডাক্তার ও চেম্বার ডিরেক্টরি - হেলথ ক্লাব`,
-      url: pageUrl,
-      description: seo.metaDescriptionBn,
-      areaServed: seo.nameEn,
-      medicalSpecialty: ["General Medicine", "Cardiology", "Gynaecology", "Pediatrics", "Orthopaedics"],
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      name: `${seo.nameBn} বিশেষজ্ঞ ডাক্তার তালিকা`,
-      itemListElement: (filteredDoctors.length > 0 ? filteredDoctors : allDoctors.slice(0, 10)).slice(0, 15).map((doc, idx) => ({
-        "@type": "ListItem",
-        position: idx + 1,
-        item: {
-          "@type": "Physician",
-          name: doc.name,
-          medicalSpecialty: doc.specialty,
-          telephone: doc.serialPhone,
-          worksFor: {
-            "@type": "MedicalOrganization",
-            name: doc.chamberName,
-          },
-        },
-      })),
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: faqItems,
-    },
-  ];
+  const locationFaqs = getHighDensityLocationFaqs(seo);
+  const locationDoctors = filteredDoctors.length > 0 ? filteredDoctors : allDoctors.slice(0, 15);
+  const jsonLdData = generateConsultantLocationJsonLd({
+    pageUrl,
+    upzSeo: seo,
+    doctors: locationDoctors,
+  });
 
   return (
     <div className="bg-background min-h-screen py-4 sm:py-10">
@@ -222,6 +166,28 @@ export default async function UpazilaDoctorLandingPage({ params }: PageProps) {
             isLocationPage={true}
           />
         </div>
+
+        {/* Location-Specific High-Density FAQ Section (AEO & Speakable Specification) */}
+        {locationFaqs && locationFaqs.length > 0 && (
+          <div className="max-w-4xl mx-auto space-y-4 pt-4">
+            <div className="flex items-center gap-2 text-foreground font-bold text-lg sm:text-xl">
+              <HelpCircle className="h-5 w-5 text-primary" />
+              <h2 id="location-heading">{seo.nameBn} স্বাস্থ্যসেবা ও ডাক্তার সিরিয়াল সম্পর্কিত প্রশ্নোত্তর</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+              {locationFaqs.map((faq, i) => (
+                <div key={i} className="p-4 rounded-2xl bg-card border border-border/80 shadow-xs space-y-2">
+                  <h3 className="text-xs sm:text-sm font-bold text-foreground leading-snug">
+                    {faq.question}
+                  </h3>
+                  <p className="faq-answer text-[11px] sm:text-xs text-muted-foreground leading-relaxed">
+                    {faq.answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <CommunityNetworkCTA />
       </div>

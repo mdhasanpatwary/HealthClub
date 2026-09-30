@@ -1,18 +1,44 @@
 import { BlogPost, BlogPostCardItem } from "@/types/blog";
 import { SITE_URL } from "@/lib/siteConfig";
 import { getArticleIsoDate } from "@/lib/dateUtils";
+import { resolveBlogReviewer, getReviewerSchema } from "./blogReviewerUtils";
+import { getHighDensityBlogFaqs, SPEAKABLE_AEO_SELECTORS } from "./blogAeoFaqUtils";
+import { getSemanticKnowledgeGraphForBlog } from "@/lib/seo/medicalEntityGraph";
+import { getBlogClinicalSources } from "./blogClinicalSourcesUtils";
+import { computeBlogDateModified } from "./blogDateFreshnessUtils";
+import type { Doctor } from "@/services/db";
 
 function getFirstPhone(phone?: string | null): string {
   if (!phone) return "";
   return phone.split(/[,/|]+/)[0]?.trim() || "";
 }
 
+function getFeniAddress(streetAddress: string) {
+  return {
+    "@type": "PostalAddress",
+    streetAddress,
+    addressLocality: "Feni",
+    addressRegion: "Chittagong",
+    addressCountry: "BD",
+  };
+}
+
 export function generateBlogJsonLd(
   post: BlogPost,
   title: string,
   pageUrl: string,
-  relatedPosts?: (BlogPost | BlogPostCardItem)[]
+  relatedPosts?: (BlogPost | BlogPostCardItem)[],
+  options?: {
+    liveDoctors?: Doctor[];
+    latestFreshnessDate?: string | Date;
+  }
 ): Record<string, unknown> {
+  const freshDateModified = computeBlogDateModified(
+    post,
+    options?.liveDoctors,
+    options?.latestFreshnessDate
+  );
+  const clinicalSources = getBlogClinicalSources(post);
   const coverImageUrl = post.coverImage.startsWith("http")
     ? post.coverImage
     : `${SITE_URL}${post.coverImage}`;
@@ -20,6 +46,8 @@ export function generateBlogJsonLd(
   const relatedUrls = (relatedPosts && relatedPosts.length > 0)
     ? relatedPosts.map((r) => `${SITE_URL}/blog/${r.slug}`)
     : (post.relatedSlugs || []).map((s) => `${SITE_URL}/blog/${s}`);
+
+  const semanticGraph = getSemanticKnowledgeGraphForBlog(post, pageUrl);
 
   const graph: Record<string, unknown>[] = [
     // WebSite Entity
@@ -44,12 +72,7 @@ export function generateBlogJsonLd(
       ...(relatedUrls.length > 0 ? { relatedLink: relatedUrls } : {}),
       speakable: {
         "@type": "SpeakableSpecification",
-        cssSelector: [
-          "#article-quick-summary",
-          "#overview",
-          "#key-highlights",
-          "#faq-section",
-        ],
+        cssSelector: SPEAKABLE_AEO_SELECTORS,
       },
     },
 
@@ -92,7 +115,7 @@ export function generateBlogJsonLd(
       abstract: post.excerptEn,
       image: coverImageUrl,
       datePublished: getArticleIsoDate(post.publishedDate),
-      dateModified: getArticleIsoDate(post.modifiedDate),
+      dateModified: freshDateModified,
       inLanguage: ["bn-BD", "en-US"],
       isAccessibleForFree: true,
       mainEntityOfPage: {
@@ -126,15 +149,46 @@ export function generateBlogJsonLd(
         "@type": "MedicalAudience",
         medicalAudienceType: "Patient",
       },
-      reviewedBy: {
-        "@type": "Organization",
-        name: "হেলথ ক্লাব ক্লিনিক্যাল এডিটোরিয়াল বোর্ড",
-        url: `${SITE_URL}/about-us`,
-      },
-      lastReviewed: getArticleIsoDate(post.modifiedDate),
+      reviewedBy: getReviewerSchema(post.reviewedBy || resolveBlogReviewer(post), SITE_URL),
+      lastReviewed: freshDateModified,
       timeRequired: `PT${post.readTimeEn ? (post.readTimeEn.match(/\d+/)?.[0] || "8") : "8"}M`,
+      citation: [
+        {
+          "@type": "CreativeWork",
+          name: `${post.titleBn} - হেলথ ক্লাব ফেনী স্বাস্থ্য গাইড`,
+          headline: post.titleBn,
+          author: { "@type": "Organization", name: "Health Club (হেলথ ক্লাব)", url: SITE_URL },
+          datePublished: getArticleIsoDate(post.publishedDate),
+          dateModified: freshDateModified,
+          url: pageUrl,
+        },
+        ...clinicalSources.map((src) => ({
+          "@type": "CreativeWork",
+          name: src.titleBn,
+          headline: src.titleBn,
+          alternateName: src.titleEn,
+          url: src.url,
+          publisher: { "@type": "Organization", name: src.organization },
+          ...(src.yearOrEdition ? { datePublished: src.yearOrEdition } : {}),
+        })),
+      ],
+      copyrightHolder: {
+        "@type": "Organization",
+        "@id": `${SITE_URL}/#organization`,
+        name: "Health Club (হেলথ ক্লাব)",
+        url: SITE_URL,
+      },
+      copyrightYear: new Date(getArticleIsoDate(post.publishedDate) || "2026-01-01").getFullYear(),
+      license: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      ...(semanticGraph.aboutRefs.length > 0 ? { about: semanticGraph.aboutRefs } : {}),
+      ...(semanticGraph.mentionsRefs.length > 0 ? { mentions: semanticGraph.mentionsRefs } : {}),
     },
   ];
+
+  // Semantic Medical Entity Knowledge Graph (MedicalCondition & MedicalTest)
+  if (semanticGraph.conditionNodes.length > 0) {
+    graph.push(...semanticGraph.conditionNodes, ...semanticGraph.testNodes);
+  }
 
   // Hospital structured data
   if (post.hospitals && post.hospitals.length > 0) {
@@ -154,13 +208,7 @@ export function generateBlogJsonLd(
           "@type": "Hospital",
           name: h.nameBn,
           ...(getFirstPhone(h.phone) ? { telephone: getFirstPhone(h.phone) } : {}),
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: h.addressBn,
-            addressLocality: "Feni",
-            addressRegion: "Chittagong",
-            addressCountry: "BD",
-          },
+          address: getFeniAddress(h.addressBn),
           url: h.partnerProfileSlug
             ? `${SITE_URL}/partner-hospitals/${encodeURIComponent(h.partnerProfileSlug)}`
             : pageUrl,
@@ -187,13 +235,7 @@ export function generateBlogJsonLd(
           medicalSpecialty: doc.specialtyBn,
           description: `${doc.designationBn}, ${doc.degreesBn}`,
           ...(getFirstPhone(doc.serialPhone) ? { telephone: getFirstPhone(doc.serialPhone) } : {}),
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: doc.chamberAddressBn,
-            addressLocality: "Feni",
-            addressRegion: "Chittagong",
-            addressCountry: "BD",
-          },
+          address: getFeniAddress(doc.chamberAddressBn),
           url: doc.consultantProfileUrl
             ? `${SITE_URL}${doc.consultantProfileUrl}`
             : `${SITE_URL}/consultants/${doc.id}`,
@@ -220,13 +262,7 @@ export function generateBlogJsonLd(
           ...(getFirstPhone(diag.phone || (diag as unknown as { contactHotline?: string }).contactHotline)
             ? { telephone: getFirstPhone(diag.phone || (diag as unknown as { contactHotline?: string }).contactHotline) }
             : {}),
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: diag.addressBn,
-            addressLocality: "Feni",
-            addressRegion: "Chittagong",
-            addressCountry: "BD",
-          },
+          address: getFeniAddress(diag.addressBn),
           url: diag.partnerProfileSlug
             ? `${SITE_URL}/partner-hospitals/${encodeURIComponent(diag.partnerProfileSlug)}`
             : pageUrl,
@@ -274,13 +310,7 @@ export function generateBlogJsonLd(
           description: `${clinic.doctorInChargeBn} (${clinic.degreesBn}). ${clinic.descriptionBn}`,
           ...(getFirstPhone(clinic.phone) ? { telephone: getFirstPhone(clinic.phone) } : {}),
           medicalSpecialty: "Dentistry",
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: clinic.addressBn,
-            addressLocality: "Feni",
-            addressRegion: "Chittagong",
-            addressCountry: "BD",
-          },
+          address: getFeniAddress(clinic.addressBn),
           url: clinic.partnerProfileSlug
             ? `${SITE_URL}/partner-hospitals/${encodeURIComponent(clinic.partnerProfileSlug)}`
             : pageUrl,
@@ -306,13 +336,7 @@ export function generateBlogJsonLd(
           description: `${center.doctorInChargeBn} (${center.degreesBn}). ${center.descriptionBn}`,
           ...(getFirstPhone(center.phone) ? { telephone: getFirstPhone(center.phone) } : {}),
           medicalSpecialty: "Physiotherapy",
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: center.addressBn,
-            addressLocality: "Feni",
-            addressRegion: "Chittagong",
-            addressCountry: "BD",
-          },
+          address: getFeniAddress(center.addressBn),
           url: center.partnerProfileSlug
             ? `${SITE_URL}/partner-hospitals/${encodeURIComponent(center.partnerProfileSlug)}`
             : pageUrl,
@@ -337,13 +361,7 @@ export function generateBlogJsonLd(
           name: pharmacy.nameBn,
           description: pharmacy.descriptionBn,
           ...(getFirstPhone(pharmacy.phone) ? { telephone: getFirstPhone(pharmacy.phone) } : {}),
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: pharmacy.addressBn,
-            addressLocality: "Feni",
-            addressRegion: "Chittagong",
-            addressCountry: "BD",
-          },
+          address: getFeniAddress(pharmacy.addressBn),
           ...(pharmacy.partnerProfileSlug
             ? { url: `${SITE_URL}/partner-hospitals/${encodeURIComponent(pharmacy.partnerProfileSlug)}` }
             : { url: pageUrl }),
@@ -368,13 +386,7 @@ export function generateBlogJsonLd(
           name: bank.nameBn,
           description: bank.descriptionBn,
           ...(getFirstPhone(bank.phone) ? { telephone: getFirstPhone(bank.phone) } : {}),
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: bank.addressBn,
-            addressLocality: "Feni",
-            addressRegion: "Chittagong",
-            addressCountry: "BD",
-          },
+          address: getFeniAddress(bank.addressBn),
           ...(bank.partnerProfileSlug
             ? { url: `${SITE_URL}/partner-hospitals/${encodeURIComponent(bank.partnerProfileSlug)}` }
             : { url: pageUrl }),
@@ -399,13 +411,7 @@ export function generateBlogJsonLd(
           name: amb.nameBn,
           description: amb.descriptionBn,
           ...(getFirstPhone(amb.phone) ? { telephone: getFirstPhone(amb.phone) } : {}),
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: amb.addressBn,
-            addressLocality: "Feni",
-            addressRegion: "Chittagong",
-            addressCountry: "BD",
-          },
+          address: getFeniAddress(amb.addressBn),
           ...(amb.partnerProfileSlug
             ? { url: `${SITE_URL}/partner-hospitals/${encodeURIComponent(amb.partnerProfileSlug)}` }
             : { url: pageUrl }),
@@ -453,13 +459,14 @@ export function generateBlogJsonLd(
     });
   }
 
-  // FAQ structured data
-  if (post.faqs && post.faqs.length > 0) {
+  // FAQ structured data: ensure every article generates a high-density Schema.org FAQPage graph with 5–8 conversational questions and precise answers
+  const highDensityFaqs = getHighDensityBlogFaqs(post);
+  if (highDensityFaqs.length > 0) {
     graph.push({
       "@type": "FAQPage",
       "@id": `${pageUrl}#faq`,
       isPartOf: { "@id": `${pageUrl}#webpage` },
-      mainEntity: post.faqs.map((faq) => ({
+      mainEntity: highDensityFaqs.map((faq) => ({
         "@type": "Question",
         name: faq.questionBn,
         acceptedAnswer: {

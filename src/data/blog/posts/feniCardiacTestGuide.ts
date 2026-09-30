@@ -26,6 +26,7 @@ export const FENI_CARDIAC_ECG_ECHO_ETT_TEST_GUIDE: BlogPost = {
   modifiedDate: "2026-09-27",
   readTimeBn: "১২ মিনিট পাঠ",
   readTimeEn: "12 min read",
+  embeddedTool: "blood-pressure",
   author: {
     nameBn: "মেডিকেল এডিটোরিয়াল টিম",
     nameEn: "Medical Editorial Team",

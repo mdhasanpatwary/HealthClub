@@ -55,14 +55,22 @@ export function BlogPriceTable({
     variant: "button",
   };
 
+  const prefixMatch = title.match(/^([০-৯১-৯\d]+[\.\s]*)/);
+  const numberPrefix = prefixMatch ? prefixMatch[1] : "";
+  const rawCleanTitle = title.replace(/^[০-৯১-৯\d]+[\.\s]*/, "");
+  const formattedTitle = title.includes("খরচ কত")
+    ? title
+    : `${numberPrefix}${rawCleanTitle.startsWith("খরচ কত") ? rawCleanTitle : `খরচ কত: ${rawCleanTitle}`}`;
+  const directAnswerSubtitle = subtitle || "ফেনী সদরের অনুমোদিত ডায়াগনস্টিক ল্যাব ও ক্লিনিকে প্রমিত সাধারণ বাজার ফি প্রযোজ্য হলেও হেলথ ক্লাব মেম্বারশিপ কার্ড দেখালে নিশ্চিত ১০-৩০% বিশেষ ছাড় পাওয়া যায়।";
+
   return (
     <section id={id} className="scroll-mt-24 space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-1.5">
         <div className="space-y-1.5">
           <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-            {title}
+            {formattedTitle}
           </h2>
-          <p className="text-xs sm:text-sm text-muted-foreground">{subtitle}</p>
+          <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{directAnswerSubtitle}</p>
         </div>
         <div className="flex sm:hidden items-center gap-1 text-[11px] font-medium text-muted-foreground/80 self-end">
           <span>← সম্পূর্ণ দেখতে স্ক্রোল করুন →</span>

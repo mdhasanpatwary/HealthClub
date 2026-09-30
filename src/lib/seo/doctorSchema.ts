@@ -2,96 +2,12 @@ import { Doctor, Partner } from "@/services/db";
 import { SITE_URL } from "@/lib/siteConfig";
 import { CLINICAL_FOCUS_MAP } from "@/components/consultants/consultantData";
 
-/**
- * Mapping of internal department slugs to official Schema.org MedicalSpecialty URIs
- */
-export const SCHEMA_SPECIALTY_MAP: Record<string, { uri: string; nameEn: string; nameBn: string }> = {
-  medicine: {
-    uri: "https://schema.org/InternalMedicine",
-    nameEn: "Internal Medicine & General Practice",
-    nameBn: "মেডিসিন ও ইন্টারনাল কেয়ার",
-  },
-  cardiology: {
-    uri: "https://schema.org/Cardiovascular",
-    nameEn: "Cardiology & Cardiovascular Medicine",
-    nameBn: "হৃদরোগ ও কার্ডিওলজি",
-  },
-  gynecology: {
-    uri: "https://schema.org/Gynecologic",
-    nameEn: "Gynecology & Obstetrics",
-    nameBn: "গাইনী ও প্রসূতিরোগ",
-  },
-  orthopedics: {
-    uri: "https://schema.org/Musculoskeletal",
-    nameEn: "Orthopedics & Musculoskeletal Surgery",
-    nameBn: "অর্থোপেডিক্স ও হাড়-জোড়া সার্জারি",
-  },
-  pediatrics: {
-    uri: "https://schema.org/Pediatric",
-    nameEn: "Pediatrics & Child Health",
-    nameBn: "শিশুরোগ ও শিশু স্বাস্থ্য",
-  },
-  psychiatry: {
-    uri: "https://schema.org/Psychiatric",
-    nameEn: "Psychiatry & Neuropsychology",
-    nameBn: "মনোরোগ ও মানসিক স্বাস্থ্য",
-  },
-  nephrology: {
-    uri: "https://schema.org/Renal",
-    nameEn: "Nephrology & Renal Medicine",
-    nameBn: "কিডনি ও নেফ্রোলজি",
-  },
-  hepatology: {
-    uri: "https://schema.org/Gastroenterologic",
-    nameEn: "Hepatology & Gastroenterology",
-    nameBn: "লিভার ও গ্যাস্ট্রোএন্টারোলজি",
-  },
-  surgery: {
-    uri: "https://schema.org/Surgical",
-    nameEn: "General & Laparoscopic Surgery",
-    nameBn: "জেনারেল ও ল্যাপারোস্কপিক সার্জারি",
-  },
-  dermatology: {
-    uri: "https://schema.org/Dermatology",
-    nameEn: "Dermatology & Venereology",
-    nameBn: "চর্ম, এলার্জি ও যৌনরোগ",
-  },
-  ent: {
-    uri: "https://schema.org/Otolaryngologic",
-    nameEn: "Otolaryngology (ENT) & Head-Neck Surgery",
-    nameBn: "নাক, কান ও গলা রোগ (ইএনটি)",
-  },
-  eye: {
-    uri: "https://schema.org/Optometric",
-    nameEn: "Ophthalmology & Eye Care",
-    nameBn: "চক্ষুরোগ ও চক্ষু সার্জারি",
-  },
-  dental: {
-    uri: "https://schema.org/Dentistry",
-    nameEn: "Dentistry & Oral Surgery",
-    nameBn: "দন্ত ও মুখগহ্বর চিকিৎসা",
-  },
-  diabetes: {
-    uri: "https://schema.org/Endocrine",
-    nameEn: "Endocrinology & Diabetology",
-    nameBn: "ডায়াবেটিস, থাইরয়েড ও হরমোন",
-  },
-  nutrition: {
-    uri: "https://schema.org/DietNutrition",
-    nameEn: "Clinical Nutrition & Dietetics",
-    nameBn: "ক্লিনিক্যাল নিউট্রিশন ও ডায়েট",
-  },
-  rheumatology: {
-    uri: "https://schema.org/Rheumatologic",
-    nameEn: "Rheumatology & Arthritis",
-    nameBn: "রিউমাটোলজি ও বাত-ব্যথা",
-  },
-  other: {
-    uri: "https://schema.org/MedicalSpecialty",
-    nameEn: "Specialized Clinical Medicine",
-    nameBn: "বিশেষায়িত চিকিৎসা সেবা",
-  },
-};
+import {
+  SCHEMA_SPECIALTY_MAP,
+  getSemanticKnowledgeGraphForDoctor,
+} from "./medicalEntityGraph";
+
+export { SCHEMA_SPECIALTY_MAP } from "./medicalEntityGraph";
 
 type SchemaDayOfWeek =
   | "Monday"
@@ -180,6 +96,7 @@ export function generateDoctorJsonLd(
   const profileUrl = `${SITE_URL}/consultants/${doctorSlugOrId}`;
   const specialtyInfo = SCHEMA_SPECIALTY_MAP[doctor.department] || SCHEMA_SPECIALTY_MAP.other;
   const clinicalFocus = CLINICAL_FOCUS_MAP[doctor.department] || CLINICAL_FOCUS_MAP.other;
+  const semanticGraph = getSemanticKnowledgeGraphForDoctor(doctor);
 
   // Format absolute image URL
   const rawImage = doctor.imageUrl?.trim();
@@ -290,6 +207,8 @@ export function generateDoctorJsonLd(
         description: clinicalFocus.bn,
       },
     ],
+    recognizingAuthority: [semanticGraph.recognizingAuthority],
+    knowsAbout: semanticGraph.knowsAbout,
     ...(alumniOfValue ? { alumniOf: alumniOfValue } : {}),
     ...(doctor.partner?.name || doctor.chamberName
       ? {
@@ -393,6 +312,7 @@ export function generateDoctorJsonLd(
             }
           : {}),
       },
+      ...semanticGraph.availableService,
     ],
     // Contact Point for serial booking
     contactPoint: {
@@ -413,6 +333,15 @@ export function generateDoctorJsonLd(
     image: imageUrl,
     name: `${doctor.name} - ${doctor.specialty} (Feni) | Health Club`,
     description: `${doctor.name}, ${doctor.specialty}, ${doctor.degrees}। চেম্বার: ${doctor.chamberName}। সিরিয়াল হটলাইন: ${doctor.serialPhone}।`,
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: [
+        ".geo-answer-capsule",
+        ".faq-answer",
+        "#overview",
+        "#doctor-profile-header",
+      ],
+    },
     mainEntity: {
       "@id": `${profileUrl}#physician`,
     },
@@ -429,7 +358,7 @@ export function generateDoctorJsonLd(
     ],
   };
 
-  // 4. Doctor-Specific FAQPage Schema for Direct Google SERP Answers
+  // 4. Doctor-Specific High-Density FAQPage Schema for Direct Google & Voice SERP Answers
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -447,7 +376,7 @@ export function generateDoctorJsonLd(
         name: `${doctor.name}-এর সিরিয়াল বা অ্যাপয়েন্টমেন্ট কীভাবে বুক করবেন?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `সরাসরি সিরিয়াল বুকিংয়ের জন্য চেম্বার হটলাইন নম্বরে কল করুন: ${doctor.serialPhone}। হেলথ ক্লাব মেম্বারদের জন্য রয়েছে বিশেষ ডিসকাউন্ট ও সহায়তা সুবিধা।`,
+          text: `সরাসরি সিরিয়াল বুকিংয়ের জন্য চেম্বার হটলাইন নম্বরে কল করুন: ${doctor.serialPhone}। কোনো মধ্যস্বত্বভোগী বা বাড়তি ফি ছাড়াই সরাসরি সিরিয়াল নিশ্চিত করা যায়।`,
         },
       },
       {
@@ -455,7 +384,23 @@ export function generateDoctorJsonLd(
         name: `${doctor.name}-এর ভিজিট ফি (কনসাল্টেশন ফি) ও শিক্ষাগত যোগ্যতা কী?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `শিক্ষাগত যোগ্যতা ও ডিগ্রি: ${doctor.degrees}। বর্তমান পদবী/সংযুক্তি: ${doctor.designation}। কনসাল্টেশন ফি: ${doctor.consultationFee || "চেম্বারের নির্ধারিত ভিজিট প্রযোজ্য, বিস্তারিত জানতে সিরিয়ালে কল করুন"} (নগদ, বিকাশ ও রকেট পেমেন্ট গ্রহণযোগ্য)।`,
+          text: `শিক্ষাগত যোগ্যতা ও ডিগ্রি: ${doctor.degrees}। পদবী/সংযুক্তি: ${doctor.designation}। কনসাল্টেশন ফি: ${doctor.consultationFee || "চেম্বারের নির্ধারিত ভিজিট প্রযোজ্য, বিস্তারিত জানতে সিরিয়ালে কল করুন"}।`,
+        },
+      },
+      {
+        "@type": "Question",
+        name: `${doctor.name}-এর পরামর্শে ডায়াগনস্টিক টেস্টে কি মেম্বার ছাড় পাওয়া যায়?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `হ্যাঁ, ${doctor.name}-এর প্রেসক্রিপশন অনুযায়ী ফেনী সদরের পার্টনার হাসপাতাল ও ল্যাবগুলোতে সকল প্যাথলজি ও রেডিওলজি পরীক্ষায় হেলথ ক্লাব কার্ডে ১০% থেকে ৩০% তাৎক্ষণিক ছাড় পাওয়া যায়।`,
+        },
+      },
+      {
+        "@type": "Question",
+        name: `চেম্বারে ${doctor.name}-কে দেখানোর পূর্বে রোগীর কী প্রস্তুতি প্রয়োজন?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `রোগীর পূর্ববর্তী সকল প্রেসক্রিপশন ও মেডিকেল রিপোর্ট সাথে রাখুন এবং নির্ধারিত চেম্বার সময়ের অন্তত ২০-৩০ মিনিট পূর্বে উপস্থিত হয়ে সিরিয়াল কার্ড সংগ্রহ করুন।`,
         },
       },
     ],

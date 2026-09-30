@@ -36,6 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/login",
     "/privacy-policy",
     "/terms-conditions",
+    "/editorial-policy",
   ];
 
   const staticEntries: MetadataRoute.Sitemap = staticRoutes.map((route) => {
@@ -57,6 +58,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     } else if (route === "/about-us" || route === "/contact" || route === "/become-partner" || route === "/register") {
       priority = 0.8;
       changeFrequency = "weekly";
+    } else if (route === "/editorial-policy") {
+      priority = 0.6;
+      changeFrequency = "monthly";
     } else if (route === "/login") {
       priority = 0.5;
       changeFrequency = "monthly";

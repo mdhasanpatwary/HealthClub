@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { ChevronLeft, Phone, Siren } from "lucide-react";
+import { ChevronLeft, Phone, Siren, ShieldCheck } from "lucide-react";
 import { BlogPost, BlogPostCardItem } from "@/types/blog";
 import { toBanglaNums } from "@/lib/utils";
 import { BlogArticleHeader } from "./BlogArticleHeader";
-import { BlogQuickAnswer } from "./BlogQuickAnswer";
+import { BlogMedicalReviewerBadge } from "./BlogMedicalReviewerBadge";
+import { GeoAnswerCapsule } from "./GeoAnswerCapsule";
 import { BlogTableOfContents } from "./BlogTableOfContents";
 import { BlogReadingProgress } from "./BlogReadingProgress";
 import { BlogFloatingTocButton } from "./BlogFloatingTocButton";
@@ -14,6 +15,8 @@ import { DoctorChamberHubs } from "./DoctorChamberHubs";
 import { DoctorBookingGuide } from "./DoctorBookingGuide";
 import { BlogSpecializedSections } from "./BlogSpecializedSections";
 import { BlogFAQSection } from "./BlogFAQSection";
+import { BlogClinicalSources } from "./BlogClinicalSources";
+import { BlogCitationBlock } from "./BlogCitationBlock";
 import { BlogShareBar } from "./BlogShareBar";
 import { BlogCard } from "./BlogCard";
 import { BlogClusterMesh } from "./BlogClusterMesh";
@@ -21,6 +24,19 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { BlogLiveDoctorRoster } from "./BlogLiveDoctorRoster";
 import { Doctor } from "@/services/db";
 import { getDiagnosticTocTitles } from "@/app/blog/utils/blogDiagnosticMetadata";
+import { SPECIALIZED_HUB_HEADERS } from "@/app/blog/utils/blogHubHeaders";
+import { BlogEmbeddedTool } from "./BlogEmbeddedTool";
+import { getHighDensityBlogFaqs } from "@/app/blog/utils/blogAeoFaqUtils";
+import { BlogMarkdownParagraphs } from "./BlogMarkdownParagraphs";
+import {
+  formatAeoOverviewHeading,
+  formatAeoSelectionHeading,
+  formatAeoEmergencyHeading,
+  getOverviewDirectAnswer,
+  getSelectionDirectAnswer,
+  getEmergencyDirectAnswer,
+  checkHasPricingGuide,
+} from "@/app/blog/utils/blogAeoHeadingUtils";
 
 interface BlogPostDetailViewProps {
   post: BlogPost;
@@ -42,31 +58,9 @@ export function BlogPostDetailView({
   const selectionGuide = post.selectionGuideBn;
   const emergencyDirectory = post.emergencyDirectoryBn;
   const bookingGuide = post.bookingGuideBn;
+  const hubHeader = SPECIALIZED_HUB_HEADERS[post.slug];
 
-  const hasPricingGuide = Boolean(
-    post.diagnosticTestPricingBn ||
-    post.dentalProcedurePricingBn ||
-    post.physiotherapyTreatmentPricingBn ||
-    post.maternityCarePricingBn ||
-    post.cardiacCarePricingBn ||
-    post.kidneyCarePricingBn ||
-    post.pediatricCarePricingBn ||
-    post.skinCarePricingBn ||
-    post.eyeCarePricingBn ||
-    post.orthopedicCarePricingBn ||
-    post.entCarePricingBn ||
-    post.surgicalCarePricingBn ||
-    post.neurologyCarePricingBn ||
-    post.diabetesCarePricingBn ||
-    post.psychiatryCarePricingBn ||
-    post.sadarHospitalPricingBn ||
-    post.diabeticHospitalPricingBn ||
-    post.criticalCarePricingBn ||
-    post.strokeCardiacPricingBn ||
-    post.homeCarePricingBn ||
-    post.oxygenPricingBn ||
-    post.dengueTyphoidPricingBn
-  );
+  const hasPricingGuide = checkHasPricingGuide(post);
 
   const isPurePriceList = post.slug === "feni-medical-test-price-list";
   const isUpazilaArticle = Boolean(
@@ -77,18 +71,18 @@ export function BlogPostDetailView({
   const selectionGuideNumber = isPurePriceList
     ? 3
     : isUpazilaArticle
-    ? 8
-    : hasDoctorGroups
-    ? (hasPricingGuide ? 6 : 5)
-    : (hasPricingGuide ? 5 : 4);
+      ? 8
+      : hasDoctorGroups
+        ? (hasPricingGuide ? 6 : 5)
+        : (hasPricingGuide ? 5 : 4);
 
   const emergencyDirectoryNumber = isPurePriceList
     ? 4
     : isUpazilaArticle
-    ? 9
-    : selectionGuide
-    ? selectionGuideNumber + 1
-    : selectionGuideNumber;
+      ? 9
+      : selectionGuide
+        ? selectionGuideNumber + 1
+        : selectionGuideNumber;
 
   return (
     <div className="min-h-screen bg-background pb-16">
@@ -124,8 +118,11 @@ export function BlogPostDetailView({
               {/* Article Header (Title, Author, Highlights) */}
               <BlogArticleHeader post={post} pageUrl={pageUrl} />
 
-              {/* AEO Quick Answer / AI Decision Summary */}
-              <BlogQuickAnswer post={post} />
+              {/* Medical Reviewer E-E-A-T Badge */}
+              <BlogMedicalReviewerBadge post={post} />
+
+              {/* Standardized GEO Answer Capsule (BLUF) */}
+              <GeoAnswerCapsule post={post} />
 
               {/* Mobile Table of Contents (Direct in-flow jump menu) */}
               <div id="mobile-toc" className="lg:hidden scroll-mt-24">
@@ -166,58 +163,66 @@ export function BlogPostDetailView({
                 />
               </div>
 
-              {/* Overview / Introduction */}
-              <section id="overview" className="scroll-mt-24 space-y-4">
+              {/* Overview / Introduction with AEO Conversational Direct Answer Capsule */}
+              <section id="overview" className="scroll-mt-24 space-y-5">
                 <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-                  {isPurePriceList
-                    ? "১. ফেনীর ডায়াগনস্টিক পরিকাঠামো ও প্রেক্ষাপট"
-                    : post.slug === "feni-doctor-serial-appointment-guide"
-                    ? "১. ফেনীতে ডাক্তার সিরিয়াল, চেম্বার শিডিউল ও স্বাস্থ্যসেবা প্রেক্ষাপট"
-                    : post.slug === "best-dental-specialists-in-feni"
-                    ? "১. ফেনীতে আধুনিক ডেন্টাল কেয়ার ও বিশেষজ্ঞ দন্ত চিকিৎসকের ভূমিকা"
-                    : isUpazilaArticle
-                    ? "১. উপজেলা স্বাস্থ্যসেবা ও পটভূমি"
-                    : `১. ${getDiagnosticTocTitles(post.slug).overviewTitle}`}
+                  {`১. ${formatAeoOverviewHeading(
+                    post.slug,
+                    isPurePriceList
+                      ? "ফেনীর ডায়াগনস্টিক পরিকাঠামো ও প্রেক্ষাপট"
+                      : post.slug === "feni-doctor-serial-appointment-guide"
+                        ? "ফেনীতে ডাক্তার সিরিয়াল ও স্বাস্থ্যসেবা"
+                        : post.slug === "best-dental-specialists-in-feni"
+                          ? "ফেনীতে আধুনিক ডেন্টাল কেয়ার"
+                          : post.slug === "feni-hospital-road-ss-k-road-chamber-hub-guide"
+                            ? "হাসপাতাল রোড ও এসএসকে রোড স্বাস্থ্যসেবা করিডোর"
+                            : post.slug === "feni-trunk-road-mizan-road-clinic-pharmacy-hub-guide"
+                              ? "ট্রাঙ্ক রোড ও মিজান রোড স্বাস্থ্যসেবা হাব"
+                              : post.slug === "feni-friday-weekend-doctor-chamber-serial-guide"
+                                ? "শুক্রবার ও ছুটির দিনে বিশেষজ্ঞ ডাক্তার স্বাস্থ্যসেবা"
+                                : isUpazilaArticle
+                                  ? "উপজেলা স্বাস্থ্যসেবা ও পটভূমি"
+                                  : getDiagnosticTocTitles(post.slug).overviewTitle
+                  )}`}
                 </h2>
-                <div className="space-y-4 text-sm sm:text-base text-foreground/90 leading-relaxed">
-                  {introParagraphs.map((p, idx) => {
-                    const regex = /\[([^\]]+)\]\(([^)]+)\)/g;
-                    const parts = [];
-                    let lastIndex = 0;
-                    let match;
 
-                    while ((match = regex.exec(p)) !== null) {
-                      if (match.index > lastIndex) {
-                        parts.push(p.substring(lastIndex, match.index));
-                      }
-                      const [, label, href] = match;
-                      parts.push(
-                        <Link
-                          key={`${href}-${match.index}`}
-                          href={href}
-                          className="font-semibold text-primary underline underline-offset-4 decoration-primary/40 hover:decoration-primary transition-colors"
-                        >
-                          {label}
-                        </Link>
-                      );
-                      lastIndex = regex.lastIndex;
-                    }
-
-                    if (lastIndex < p.length) {
-                      parts.push(p.substring(lastIndex));
-                    }
-
-                    return <p key={idx}>{parts.length > 0 ? parts : p}</p>;
-                  })}
+                {/* Self-contained 1-2 sentence direct answer capsule for AEO & Voice Search */}
+                <div
+                  id="article-quick-summary"
+                  className="rounded-2xl border border-primary/20 bg-primary/5 p-4 sm:p-5 space-y-1.5"
+                >
+                  <span className="text-[11px] uppercase tracking-wider font-bold text-primary block">
+                    সরাসরি প্রশ্নোত্তর ও মূল তথ্য (Quick Answer)
+                  </span>
+                  <p className="text-sm sm:text-base font-medium text-foreground leading-relaxed">
+                    {getOverviewDirectAnswer(post)}
+                  </p>
                 </div>
+
+                <BlogMarkdownParagraphs paragraphs={introParagraphs} />
               </section>
+
+              {/* Interactive Health Calculator Tool (Dwell Time Multiplier) */}
+              <BlogEmbeddedTool
+                tool={post.embeddedTool}
+                slug={post.slug}
+                category={post.category}
+              />
 
               {/* Doctor Specialty Sections */}
               {post.doctorGroups && post.doctorGroups.length > 0 && (
                 <DoctorSpecialtySection
                   doctorGroups={post.doctorGroups}
-                  titleBn={isUpazilaArticle ? "২. উপজেলা অনুযায়ী বিশেষজ্ঞ ডাক্তার তালিকা" : undefined}
-                  subtitleBn={isUpazilaArticle ? "উপজেলার স্থানীয় ভিজিটিং বিশেষজ্ঞ ও ফেনী সদর রেফারেল চিকিৎসকদের চেম্বার শিডিউল।" : undefined}
+                  titleBn={
+                    isUpazilaArticle
+                      ? "২. উপজেলা অনুযায়ী বিশেষজ্ঞ ডাক্তার তালিকা"
+                      : hubHeader?.doctorTitle
+                  }
+                  subtitleBn={
+                    isUpazilaArticle
+                      ? "উপজেলার স্থানীয় ভিজিটিং বিশেষজ্ঞ ও ফেনী সদর রেফারেল চিকিৎসকদের চেম্বার শিডিউল।"
+                      : hubHeader?.doctorSubtitle
+                  }
                 />
               )}
 
@@ -233,8 +238,16 @@ export function BlogPostDetailView({
               {post.chamberHubsBn && post.chamberHubsBn.length > 0 && (
                 <DoctorChamberHubs
                   hubs={post.chamberHubsBn}
-                  titleBn={isUpazilaArticle ? "৩. উপজেলার প্রধান চেম্বার হাবসমূহ" : undefined}
-                  subtitleBn={isUpazilaArticle ? "পৌর বাজার, হাসপাতাল রোড ও হাইওয়ে সংলগ্ন প্রধান চেম্বার লোকেশন ও যাতায়াত নির্দেশিকা।" : undefined}
+                  titleBn={
+                    isUpazilaArticle
+                      ? "৩. উপজেলার প্রধান চেম্বার হাবসমূহ"
+                      : hubHeader?.hubTitle
+                  }
+                  subtitleBn={
+                    isUpazilaArticle
+                      ? "পৌর বাজার, হাসপাতাল রোড ও হাইওয়ে সংলগ্ন প্রধান চেম্বার লোকেশন ও যাতায়াত নির্দেশিকা।"
+                      : hubHeader?.hubSubtitle
+                  }
                 />
               )}
 
@@ -251,8 +264,11 @@ export function BlogPostDetailView({
                 <section id="selection-guide" className="scroll-mt-24 space-y-5">
                   <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
                     {`${toBanglaNums(selectionGuideNumber)}. `}
-                    {selectionGuide.titleBn}
+                    {formatAeoSelectionHeading(selectionGuide.titleBn)}
                   </h2>
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                    {getSelectionDirectAnswer(post)}
+                  </p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {(
@@ -290,9 +306,12 @@ export function BlogPostDetailView({
                     <Siren className="h-5 w-5" />
                     <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
                       {`${toBanglaNums(emergencyDirectoryNumber)}. `}
-                      {emergencyDirectory.titleBn}
+                      {formatAeoEmergencyHeading(emergencyDirectory.titleBn)}
                     </h2>
                   </div>
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                    {getEmergencyDirectAnswer(post)}
+                  </p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {(emergencyDirectory.services || []).map((item, idx) => (
@@ -323,11 +342,49 @@ export function BlogPostDetailView({
                 </section>
               )}
 
-              {/* FAQ Accordion */}
-              <BlogFAQSection faqs={post.faqs} />
+              {/* FAQ Accordion (AEO & Voice Search Optimized) */}
+              <BlogFAQSection faqs={getHighDensityBlogFaqs(post)} />
+
+              {/* Medical Trust & Editorial Policy Disclaimer */}
+              <aside
+                aria-label="মেডিকেল তথ্য নির্দেশিকা ও ডিসক্লেইমার"
+                className="rounded-2xl border border-primary/20 bg-primary/5 p-4 sm:p-5 flex items-start gap-3.5 text-xs text-muted-foreground"
+              >
+                <ShieldCheck className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <div className="space-y-1 leading-relaxed">
+                  <p className="font-bold text-foreground">
+                    মেডিকেল তথ্য যাচাই ও ক্লিনিক্যাল ডিসক্লেইমার
+                  </p>
+                  <p>
+                    এই স্বাস্থ্য গাইডের তথ্যসমূহ জাতীয় স্বাস্থ্য প্রটোকল ও BMDC নিবন্ধিত বিশেষজ্ঞ চিকিৎসকের পর্যালোচনায় সাধারণ মানুষের সচেতনতার জন্য প্রকাশিত। এটি কোনো অবস্থাতেই চিকিৎসকের সরাসরি পরামর্শ বা প্রেসক্রিপশনের বিকল্প নয়।
+                  </p>
+                  <p className="pt-0.5">
+                    <Link
+                      href="/editorial-policy"
+                      prefetch={false}
+                      className="text-primary font-medium hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>আমাদের সম্পূর্ণ এডিটোরিয়াল ও ফ্যাক্ট-চেকিং নীতিমালা পড়ুন</span> →
+                    </Link>
+                  </p>
+                </div>
+              </aside>
+
+              {/* Clinical Sources & DGHS/BMDC Evidence Guidelines */}
+              <BlogClinicalSources sources={post.clinicalSources} post={post} />
+
+              {/* GEO Citation Attribution Block */}
+              <BlogCitationBlock
+                title={title}
+                titleEn={post.titleEn}
+                publishedDate={post.publishedDate}
+                modifiedDate={post.modifiedDate}
+                canonicalUrl={pageUrl}
+                authorName={post.author.nameBn}
+              />
 
               {/* Bottom Share Bar */}
-              <div className="p-5 rounded-2xl border border-border/70 bg-card flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="p-5 rounded-2xl border border-border/70 bg-card flex flex-col gap-4">
                 <span className="text-xs sm:text-sm font-medium text-foreground">
                   তথ্যটি প্রয়োজনীয় মনে হলে পরিবার ও পরিচিতজনদের সাথে শেয়ার করুন!
                 </span>

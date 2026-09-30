@@ -8,6 +8,9 @@ import {
   Download,
   Loader2,
   Trash2,
+  LayoutGrid,
+  List,
+  Send,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,6 +35,7 @@ import { BLOG_CATEGORIES } from "@/data/blog/blogPosts";
 import {
   getPaginatedBlogPostsAdminAction,
   deleteBlogPostAction,
+  pingIndexNowForBlogAction,
 } from "@/app/actions/blogAdminActions";
 import { exportToCsv } from "@/lib/exportUtils";
 import { toast } from "sonner";
@@ -39,6 +43,8 @@ import { BlogDialog } from "./BlogDialog";
 import { BlogStatsCards } from "./blog/BlogStatsCards";
 import { BlogMobileCard } from "./blog/BlogMobileCard";
 import { BlogTable } from "./blog/BlogTable";
+import { BlogManagementCard } from "./blog/BlogManagementCard";
+import { BlogSeoPreviewModal } from "./blog/BlogSeoPreviewModal";
 import { Pagination } from "@/components/ui/pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 
@@ -52,6 +58,11 @@ export function BlogsTab() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [viewMode, setViewMode] = useState<"table" | "grid">("table");
+
+  // SEO Preview Modal
+  const [seoModalOpen, setSeoModalOpen] = useState(false);
+  const [seoPreviewPost, setSeoPreviewPost] = useState<BlogPost | null>(null);
 
   // Dialog & Delete Modal
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -60,6 +71,23 @@ export function BlogsTab() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deletingPost, setDeletingPost] = useState<BlogPost | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [syncingIndexNow, setSyncingIndexNow] = useState(false);
+
+  const handleSyncAllIndexNow = async () => {
+    setSyncingIndexNow(true);
+    try {
+      const res = await pingIndexNowForBlogAction();
+      if (res.success) {
+        toast.success(`IndexNow সফল: ${res.submittedCount}টি পেজ সার্চ ইঞ্জিনে সাবমিট করা হয়েছে!`);
+      } else {
+        toast.error(res.error || "IndexNow সিঙ্ক ব্যর্থ হয়েছে");
+      }
+    } catch {
+      toast.error("সার্ভার ত্রুটি: IndexNow সিঙ্ক করা যায়নি");
+    } finally {
+      setSyncingIndexNow(false);
+    }
+  };
 
   const loadPosts = useCallback(async () => {
     setLoading(true);
@@ -100,6 +128,11 @@ export function BlogsTab() {
   const handleEdit = (post: BlogPost) => {
     setEditingPost(post);
     setDialogOpen(true);
+  };
+
+  const handlePreviewSeo = (post: BlogPost) => {
+    setSeoPreviewPost(post);
+    setSeoModalOpen(true);
   };
 
   const handleDeleteClick = (post: BlogPost) => {
@@ -157,6 +190,21 @@ export function BlogsTab() {
         </div>
 
         <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleSyncAllIndexNow}
+            disabled={syncingIndexNow || loading || posts.length === 0}
+            className="h-9 gap-1.5 text-xs font-semibold text-sky-700 dark:text-sky-300 border-sky-500/30 hover:bg-sky-50 dark:hover:bg-sky-950/40"
+            title="সকল ব্লগের জন্য সার্চ ইঞ্জিন (Bing/Yandex) IndexNow পিং পাঠান"
+          >
+            {syncingIndexNow ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Send className="h-3.5 w-3.5" />
+            )}
+            <span className="hidden sm:inline">IndexNow সিঙ্ক</span>
+          </Button>
           <Button
             variant="outline"
             size="sm"
@@ -223,6 +271,30 @@ export function BlogsTab() {
                   </option>
                 ))}
               </select>
+
+              {/* View Switcher: Table vs Grid */}
+              <div className="flex items-center gap-1 bg-muted/60 p-1 rounded-lg border shrink-0">
+                <Button
+                  type="button"
+                  variant={viewMode === "table" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setViewMode("table")}
+                  className="h-7 w-7 p-0"
+                  title="টেবিল ভিউ"
+                >
+                  <List className="h-3.5 w-3.5" />
+                </Button>
+                <Button
+                  type="button"
+                  variant={viewMode === "grid" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setViewMode("grid")}
+                  className="h-7 w-7 p-0"
+                  title="গ্রিড কার্ড ভিউ"
+                >
+                  <LayoutGrid className="h-3.5 w-3.5" />
+                </Button>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -250,6 +322,18 @@ export function BlogsTab() {
                 প্রথম ব্লগ লিখুন
               </Button>
             </div>
+          ) : viewMode === "grid" ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+              {posts.map((post) => (
+                <BlogManagementCard
+                  key={post.slug}
+                  post={post}
+                  onEdit={handleEdit}
+                  onDelete={handleDeleteClick}
+                  onPreviewSeo={handlePreviewSeo}
+                />
+              ))}
+            </div>
           ) : (
             <>
               {/* Mobile View: Cards Layout */}
@@ -260,6 +344,7 @@ export function BlogsTab() {
                     post={post}
                     onEdit={handleEdit}
                     onDelete={handleDeleteClick}
+                    onPreviewSeo={handlePreviewSeo}
                   />
                 ))}
               </div>
@@ -269,6 +354,7 @@ export function BlogsTab() {
                 posts={posts}
                 onEdit={handleEdit}
                 onDelete={handleDeleteClick}
+                onPreviewSeo={handlePreviewSeo}
               />
             </>
           )}
@@ -301,6 +387,14 @@ export function BlogsTab() {
         onOpenChange={setDialogOpen}
         post={editingPost}
         onSuccess={loadPosts}
+      />
+
+      {/* Google SERP Preview & Technical Validator Modal */}
+      <BlogSeoPreviewModal
+        open={seoModalOpen}
+        onOpenChange={setSeoModalOpen}
+        post={seoPreviewPost}
+        onEdit={handleEdit}
       />
 
       {/* Delete Confirmation Modal */}

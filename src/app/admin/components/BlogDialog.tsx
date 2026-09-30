@@ -17,10 +17,11 @@ import { BlogPost } from "@/types/blog";
 import { BLOG_CATEGORIES } from "@/data/blog/blogPosts";
 import { saveBlogPostAction } from "@/app/actions/blogAdminActions";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { BlogBasicTab } from "./blog/BlogBasicTab";
 import { BlogContentTab } from "./blog/BlogContentTab";
 import { BlogAuthorFaqTab } from "./blog/BlogAuthorFaqTab";
+import { BlogSeoPreviewModal } from "./blog/BlogSeoPreviewModal";
 
 interface BlogDialogProps {
   open: boolean;
@@ -66,6 +67,7 @@ export function BlogDialog({
 
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState("basic");
+  const [seoPreviewOpen, setSeoPreviewOpen] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -84,7 +86,13 @@ export function BlogDialog({
         setExcerptEn(post.excerptEn || "");
         setKeyHighlightsBn(
           post.keyHighlightsBn && post.keyHighlightsBn.length > 0
-            ? post.keyHighlightsBn
+            ? post.keyHighlightsBn.map((hl) =>
+                typeof hl === "string"
+                  ? hl
+                  : hl.titleBn && hl.descriptionBn
+                  ? `${hl.titleBn}: ${hl.descriptionBn}`
+                  : hl.titleBn || hl.descriptionBn || ""
+              )
             : [""]
         );
         setIntroParagraphsBn(
@@ -237,6 +245,32 @@ export function BlogDialog({
     }
   };
 
+  const draftPostForPreview: Partial<BlogPost> = {
+    ...(post || {}),
+    slug: slug.trim() || "draft-preview",
+    titleBn: titleBn.trim() || "খসড়া বাংলা শিরোনাম",
+    titleEn: titleEn.trim() || "Draft English Title",
+    excerptBn: excerptBn.trim() || "",
+    excerptEn: excerptEn.trim() || "",
+    category,
+    categoryNameBn: BLOG_CATEGORIES.find((c) => c.id === category)?.nameBn || "স্বাস্থ্যসেবা গাইড",
+    categoryNameEn: BLOG_CATEGORIES.find((c) => c.id === category)?.nameEn || "Healthcare Guide",
+    publishedDate: post?.publishedDate || new Date().toISOString().split("T")[0],
+    readTimeBn: readTimeBn || "৫ মিনিট",
+    readTimeEn: readTimeEn || "5 min read",
+    coverImage: coverImage || "/images/blog/feni-hospitals-guide.webp",
+    coverImageAlt: coverImageAlt || titleBn,
+    tags: tagsInput.split(",").map((t) => t.trim()).filter(Boolean),
+    metaKeywords: keywordsInput.split(",").map((k) => k.trim()).filter(Boolean),
+    author: {
+      nameBn: authorNameBn.trim(),
+      nameEn: authorNameEn.trim(),
+      roleBn: authorRoleBn.trim(),
+      roleEn: authorRoleEn.trim(),
+    },
+    faqs,
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-[calc(100vw-2rem)] sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
@@ -362,22 +396,40 @@ export function BlogDialog({
             </TabsContent>
           </Tabs>
 
-          <DialogFooter className="gap-2 pt-2 sm:pt-4 sm:-mx-6 sm:-mb-6 sm:p-6">
+          <DialogFooter className="flex-col sm:flex-row gap-2 pt-2 sm:pt-4 sm:-mx-6 sm:-mb-6 sm:p-6 items-stretch sm:items-center">
             <Button
               type="button"
               variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={saving}
+              onClick={() => setSeoPreviewOpen(true)}
+              className="gap-1.5 text-xs font-semibold border-emerald-500/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 sm:mr-auto"
             >
-              বাতিল
+              <Search className="h-3.5 w-3.5" />
+              <span>গুগল SERP প্রিভিউ দেখুন</span>
             </Button>
-            <Button type="submit" disabled={saving} className="gap-1.5 font-bold">
-              {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-              {post ? "ব্লগ আপডেট করুন" : "ব্লগ প্রকাশ করুন"}
-            </Button>
+            <div className="flex items-center gap-2 justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+                disabled={saving}
+              >
+                বাতিল
+              </Button>
+              <Button type="submit" disabled={saving} className="gap-1.5 font-bold">
+                {saving && <Loader2 className="h-4 w-4 animate-spin" />}
+                {post ? "ব্লগ আপডেট করুন" : "ব্লগ প্রকাশ করুন"}
+              </Button>
+            </div>
           </DialogFooter>
         </form>
       </DialogContent>
+
+      {/* Draft Google SERP Snippet Preview & Validator */}
+      <BlogSeoPreviewModal
+        open={seoPreviewOpen}
+        onOpenChange={setSeoPreviewOpen}
+        post={draftPostForPreview}
+      />
     </Dialog>
   );
 }
