@@ -2435,4 +2435,25 @@ This roadmap outlines the strategic localized content cluster required to achiev
     6. **AI Crawlability & LLM Knowledge Base Health**: Verified `public/llms.txt` (25.6 KB) and `public/llms-full.txt` (222 KB) presence, size, entity disclosures, and confirmed `src/app/robots.ts` explicitly allows key AI crawlers (`GPTBot`, `ClaudeBot`, `PerplexityBot`, `Google-Extended`, etc.) while protecting sensitive paths (`/admin`, `/dashboard`, `/api`).
     7. **Strict 500-Line Code Limit & Production Verification**: Inspected all 838 source files across `src/` and `scripts/` (0 files over 500 lines). Refactored legacy static files `feniCataractCenters.ts` and `feniDoctorAppointmentDoctors.ts` into modular companions (`feniCataractReviews.ts` and `feniDoctorAppointmentHubs.ts`). Cleanly verified with `npm run typecheck` (0 errors), `npm run lint` (0 errors, 0 warnings), and `npm run audit:geo` (100% passed in 3.58s).
 
+- [x] **TODO-309**: **Core Web Vitals & Vercel Speed Insights Performance Optimization (`/dashboard`, `/`, `/blog/[slug]`)**
+  - **Priority**: High (P1 - Core Web Vitals, RUM Speed Score & INP/LCP/CLS)
+  - **Files**: `src/components/layout/DeferredClientComponents.tsx`, `src/app/actions/systemSettingsActions.ts`, `src/app/layout.tsx`, `src/components/layout/Header.tsx`, `src/components/ui/MemberCard.tsx`, `src/app/globals.css`, `src/app/page.tsx`, `src/app/dashboard/page.tsx`, `src/app/dashboard/components/DashboardCardSection.tsx`, `src/app/dashboard/components/DashboardSkeleton.tsx`, `src/app/blog/components/BlogArticleHeader.tsx`, `src/app/blog/components/BlogStickyActionBar.tsx`
+  - **Details**:
+    1. **INP Interaction Protection (`DeferredClientComponents.tsx`)**: Replaced user event hijacking (`touchstart`, `click`, `scroll`) with `requestIdleCallback` (and 3.5s idle fallback). Auxiliary modules (`PwaTracker`, `InstallAppBanner`, `PushNotificationPrompt`, `WebVitalsTracker`, `Toaster`, `Analytics`) now load exclusively when the browser main thread is idle, eliminating input latency spikes during early user interactions.
+    2. **`/dashboard` LCP, CLS & Query Optimization**:
+       - Added `priority={true}` to `<MemberCard />` in `DashboardCardSection.tsx` so Next.js eager-loads the card background image (`fetchPriority="high"`), accelerating LCP.
+       - Rebuilt `DashboardSkeleton.tsx` to match the exact proportions of `DashboardWelcomeHeader`, `DashboardStatsCards`, and `DashboardCardSection` (including headers and button actions), preventing Cumulative Layout Shift (CLS) when user data loads.
+       - Removed eager `getPartnersAction()` call from mount `Promise.all` in `DashboardContent`, deferring partner queries until the manual transaction dialog actually opens.
+    3. **Homepage `/` Layout Shift & Static Image Delivery**:
+       - Updated `.content-auto` in `globals.css` with `contain-intrinsic-size: auto 600px;` so browsers retain rendered section heights on subsequent scroll passes.
+       - Removed `content-auto` from variable-height and near-fold sections (`LandingHowItWorks`, `LandingBenefits`, `LandingPricing`, `LandingComparison`, `LandingBlogSection`, and CTA banner) to eliminate scroll jumping.
+       - Added `unoptimized` on `member-card-logo.webp` in `Header.tsx` and `MemberCard.tsx` to serve the 11KB static WebP directly from the immutable CDN edge, bypassing serverless resize delays.
+    4. **`/blog/[slug]` Main-Thread Decoding & Forced Reflow Elimination**:
+       - In `BlogArticleHeader.tsx`: Changed hero cover image decoding from blocking `sync` to `async`, and optimized quality to 65 (reducing payload by ~30% with zero perceptual loss).
+       - In `BlogStickyActionBar.tsx`: Removed synchronous `footer.getBoundingClientRect()` layout thrashing from the scroll handler, delegating footer proximity detection entirely to `IntersectionObserver`.
+    5. **Consolidated RootLayout Query & Bengali Font Metrics**:
+       - Unified notice banner and contact settings into `getCachedLayoutSettings` with `withDbRetry`, halving DB roundtrips and connection pool contention in `RootLayout`.
+       - Added Bengali font weights `500` and `600` to `Noto_Sans_Bengali` in `RootLayout` to eliminate synthetic bolding font reflows.
+    6. **Verification & Strict Limits**: All 12 files verified under 500 lines. Cleanly passed `npm run typecheck` (0 errors), `npm run lint` (0 errors, 0 warnings), and `npm run audit:geo` (100% passed).
+
 ---

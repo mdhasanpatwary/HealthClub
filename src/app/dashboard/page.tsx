@@ -104,11 +104,10 @@ function DashboardContent() {
       setIsExpired(diffDays < 0);
 
       try {
-        const [freshUser, userTx, allowed, pts] = await Promise.all([
+        const [freshUser, userTx, allowed] = await Promise.all([
           getMemberByIdAction(currentUser.id).catch(() => null),
           getTransactionsAction(currentUser.id).catch(() => []),
           isMemberTxAllowedAction().catch(() => false),
-          getPartnersAction().catch(() => []),
         ]);
 
         if (!isMounted) return;
@@ -141,7 +140,6 @@ function DashboardContent() {
 
         setTransactions(userTx);
         setAllowMemberTx(allowed);
-        setPartners(pts);
       } catch {
         if (isMounted) {
           toast.error("ড্যাশবোর্ডের কিছু তথ্য আপডেট করতে সমস্যা হয়েছে। ক্যাশড তথ্য প্রদর্শিত হচ্ছে।");
@@ -153,6 +151,13 @@ function DashboardContent() {
       isMounted = false;
     };
   }, [router]);
+
+  // Load partners lazily only when opening the add transaction dialog
+  useEffect(() => {
+    if (isAddTxOpen && allowMemberTx && partners.length === 0) {
+      getPartnersAction().then(setPartners).catch(() => {});
+    }
+  }, [isAddTxOpen, allowMemberTx, partners.length]);
 
   const handleAddMemberTransaction = async (e: React.FormEvent) => {
     e.preventDefault();

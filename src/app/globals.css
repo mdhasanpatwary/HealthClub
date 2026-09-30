@@ -409,7 +409,7 @@ label {
 /* Offscreen layout deferral for CWV & main-thread reduction */
 .content-auto {
   content-visibility: auto;
-  contain-intrinsic-size: 1px 700px;
+  contain-intrinsic-size: auto 600px;
 }
 
 /* Custom Range Slider */

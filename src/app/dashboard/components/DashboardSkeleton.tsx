@@ -42,18 +42,36 @@ export function DashboardSkeleton() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: Digital Card Skeleton */}
           <div className="lg:col-span-5 space-y-4">
-            <Card className="border-border/60 bg-background dark:bg-slate-900 p-4">
-              <Skeleton className="h-60 w-full rounded-2xl" />
+            <Card className="border-border/60 shadow-md overflow-hidden bg-background dark:bg-slate-900">
+              <div className="border-b border-border/60 p-4 sm:p-5 bg-muted/30 dark:bg-slate-900/60 space-y-2">
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-8 w-8 rounded-lg shrink-0" />
+                  <Skeleton className="h-5 w-44" />
+                </div>
+                <Skeleton className="h-3.5 w-64 max-w-full" />
+              </div>
+              <CardContent className="p-3 sm:p-5 space-y-4">
+                <Skeleton className="w-full max-w-md mx-auto aspect-[1.586/1] min-h-[200px] sm:min-h-[220px] rounded-2xl" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <Skeleton className="h-9 w-full rounded-md" />
+                  <Skeleton className="h-9 w-full rounded-md" />
+                </div>
+              </CardContent>
             </Card>
           </div>
 
           {/* Right Column: Tabs Skeleton */}
           <div className="lg:col-span-7 space-y-4">
-            <Skeleton className="h-12 w-full rounded-xl" />
+            <div className="grid grid-cols-2 bg-muted/60 dark:bg-slate-900/60 p-1.5 rounded-xl border border-border/60 h-11">
+              <Skeleton className="h-full rounded-lg" />
+              <div className="h-full" />
+            </div>
             <Card className="border-border/60 bg-background dark:bg-slate-900 p-6 space-y-4">
-              <Skeleton className="h-6 w-40" />
-              <Skeleton className="h-4 w-60" />
-              <div className="space-y-3 pt-4">
+              <div className="flex items-center justify-between pb-2 border-b border-border/40">
+                <Skeleton className="h-5 w-36" />
+                <Skeleton className="h-8 w-28 rounded-lg" />
+              </div>
+              <div className="space-y-3 pt-2">
                 <Skeleton className="h-10 w-full rounded-lg" />
                 <Skeleton className="h-10 w-full rounded-lg" />
                 <Skeleton className="h-10 w-full rounded-lg" />

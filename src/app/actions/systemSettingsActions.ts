@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { prisma, withDbRetry } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag, revalidatePath } from "next/cache";
@@ -12,6 +12,11 @@ const SYSTEM_SETTINGS_TAG = "system-settings";
 export interface GlobalNoticeSetting {
   enabled: boolean;
   text: string;
+}
+
+export interface PublicLayoutSettings {
+  notice: GlobalNoticeSetting;
+  contact: PublicContactSettings;
 }
 
 export async function getSystemSettingAction(key: string, defaultValue: string = "false"): Promise<string> {
@@ -71,35 +76,115 @@ const getCachedMemberTxSetting = unstable_cache(
 );
 
 /**
- * Cached reader for global website notice banner.
- * Hits the DB at most once per 60 seconds; instantly invalidated on writes
- * via updateTag(SYSTEM_SETTINGS_TAG).
+ * Consolidated cached reader for both notice and contact settings.
+ * Fused into a single DB query wrapped with retry to cut TTFB and connection contention.
  */
-export const getCachedNoticeSetting = unstable_cache(
-  async (): Promise<GlobalNoticeSetting> => {
+export const getCachedLayoutSettings = unstable_cache(
+  async (): Promise<PublicLayoutSettings> => {
     try {
-      const settings = await prisma.systemSetting.findMany({
-        where: {
-          key: { in: ["notice_enabled", "notice_text"] },
-        },
-        select: { key: true, value: true },
-      });
+      const settings = await withDbRetry(() =>
+        prisma.systemSetting.findMany({
+          where: {
+            key: {
+              in: [
+                "notice_enabled",
+                "notice_text",
+                "contact_hotline",
+                "hotline_phone",
+                "contact_whatsapp",
+                "whatsapp_phone",
+                "contact_email",
+                "official_email",
+                "facebook_url",
+                "youtube_url",
+                "instagram_url",
+                "x_url",
+                "twitter_url",
+                "linkedin_url",
+              ],
+            },
+          },
+          select: { key: true, value: true },
+        })
+      );
       const map: Record<string, string> = {};
       for (const s of settings) {
         map[s.key] = s.value;
       }
       return {
-        enabled: map["notice_enabled"] === "true",
-        text: map["notice_text"] || "",
+        notice: {
+          enabled: map["notice_enabled"] === "true",
+          text: map["notice_text"] || "",
+        },
+        contact: {
+          hotline:
+            map["contact_hotline"] ||
+            map["hotline_phone"] ||
+            process.env.NEXT_PUBLIC_HOTLINE_PHONE ||
+            process.env.HOTLINE_PHONE ||
+            "01886763849",
+          whatsapp:
+            map["contact_whatsapp"] ||
+            map["whatsapp_phone"] ||
+            process.env.NEXT_PUBLIC_WHATSAPP_PHONE ||
+            process.env.WHATSAPP_PHONE ||
+            "01886763849",
+          email:
+            map["contact_email"] ||
+            map["official_email"] ||
+            process.env.NEXT_PUBLIC_OFFICIAL_EMAIL ||
+            process.env.OFFICIAL_EMAIL ||
+            process.env.NEXT_PUBLIC_ADMIN_EMAIL ||
+            "healthclubfeni@gmail.com",
+          facebookUrl:
+            map["facebook_url"] ||
+            process.env.NEXT_PUBLIC_FACEBOOK_URL ||
+            "https://www.facebook.com/profile.php?id=61591616953090",
+          youtubeUrl:
+            map["youtube_url"] ||
+            process.env.NEXT_PUBLIC_YOUTUBE_URL ||
+            "",
+          instagramUrl:
+            map["instagram_url"] ||
+            process.env.NEXT_PUBLIC_INSTAGRAM_URL ||
+            "",
+          xUrl:
+            map["x_url"] ||
+            map["twitter_url"] ||
+            process.env.NEXT_PUBLIC_X_URL ||
+            process.env.NEXT_PUBLIC_TWITTER_URL ||
+            "",
+          linkedinUrl:
+            map["linkedin_url"] ||
+            process.env.NEXT_PUBLIC_LINKEDIN_URL ||
+            "",
+        },
       };
     } catch (error) {
-      logger.error("Error fetching notice setting:", error);
-      return { enabled: false, text: "" };
+      logger.error("Error fetching layout settings:", error);
+      return {
+        notice: { enabled: false, text: "" },
+        contact: {
+          hotline: process.env.NEXT_PUBLIC_HOTLINE_PHONE || process.env.HOTLINE_PHONE || "01886763849",
+          whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_PHONE || process.env.WHATSAPP_PHONE || "01886763849",
+          email: process.env.NEXT_PUBLIC_OFFICIAL_EMAIL || process.env.OFFICIAL_EMAIL || process.env.NEXT_PUBLIC_ADMIN_EMAIL || "healthclubfeni@gmail.com",
+          facebookUrl: process.env.NEXT_PUBLIC_FACEBOOK_URL || "https://www.facebook.com/profile.php?id=61591616953090",
+          youtubeUrl: "",
+          instagramUrl: "",
+          xUrl: "",
+          linkedinUrl: "",
+        },
+      };
     }
   },
-  ["global_notice_setting"],
+  ["public_layout_settings"],
   { revalidate: 86400, tags: [SYSTEM_SETTINGS_TAG] }
 );
+
+export const getCachedNoticeSetting = async (): Promise<GlobalNoticeSetting> => {
+  const { notice } = await getCachedLayoutSettings();
+  return notice;
+};
 
 export async function getAllSystemSettingsAction(): Promise<Record<string, string>> {
   try {
@@ -233,115 +318,10 @@ export interface PublicContactSettings {
   linkedinUrl: string;
 }
 
-export const getCachedContactSettings = unstable_cache(
-  async (): Promise<PublicContactSettings> => {
-    try {
-      const settings = await prisma.systemSetting.findMany({
-        where: {
-          key: {
-            in: [
-              "contact_hotline",
-              "hotline_phone",
-              "contact_whatsapp",
-              "whatsapp_phone",
-              "contact_email",
-              "official_email",
-              "facebook_url",
-              "youtube_url",
-              "instagram_url",
-              "x_url",
-              "twitter_url",
-              "linkedin_url",
-            ],
-          },
-        },
-        select: { key: true, value: true },
-      });
-      const map: Record<string, string> = {};
-      for (const s of settings) {
-        map[s.key] = s.value;
-      }
-      return {
-        hotline:
-          map["contact_hotline"] ||
-          map["hotline_phone"] ||
-          process.env.NEXT_PUBLIC_HOTLINE_PHONE ||
-          process.env.HOTLINE_PHONE ||
-          "01886763849",
-        whatsapp:
-          map["contact_whatsapp"] ||
-          map["whatsapp_phone"] ||
-          process.env.NEXT_PUBLIC_WHATSAPP_PHONE ||
-          process.env.WHATSAPP_PHONE ||
-          "01886763849",
-        email:
-          map["contact_email"] ||
-          map["official_email"] ||
-          process.env.NEXT_PUBLIC_OFFICIAL_EMAIL ||
-          process.env.OFFICIAL_EMAIL ||
-          process.env.NEXT_PUBLIC_ADMIN_EMAIL ||
-          "healthclubfeni@gmail.com",
-        facebookUrl:
-          map["facebook_url"] ||
-          process.env.NEXT_PUBLIC_FACEBOOK_URL ||
-          "https://www.facebook.com/profile.php?id=61591616953090",
-        youtubeUrl:
-          map["youtube_url"] ||
-          process.env.NEXT_PUBLIC_YOUTUBE_URL ||
-          "",
-        instagramUrl:
-          map["instagram_url"] ||
-          process.env.NEXT_PUBLIC_INSTAGRAM_URL ||
-          "",
-        xUrl:
-          map["x_url"] ||
-          map["twitter_url"] ||
-          process.env.NEXT_PUBLIC_X_URL ||
-          process.env.NEXT_PUBLIC_TWITTER_URL ||
-          "",
-        linkedinUrl:
-          map["linkedin_url"] ||
-          process.env.NEXT_PUBLIC_LINKEDIN_URL ||
-          "",
-      };
-    } catch (error) {
-      logger.error("Error fetching contact settings:", error);
-      return {
-        hotline:
-          process.env.NEXT_PUBLIC_HOTLINE_PHONE ||
-          process.env.HOTLINE_PHONE ||
-          "01886763849",
-        whatsapp:
-          process.env.NEXT_PUBLIC_WHATSAPP_PHONE ||
-          process.env.WHATSAPP_PHONE ||
-          "01886763849",
-        email:
-          process.env.NEXT_PUBLIC_OFFICIAL_EMAIL ||
-          process.env.OFFICIAL_EMAIL ||
-          process.env.NEXT_PUBLIC_ADMIN_EMAIL ||
-          "healthclubfeni@gmail.com",
-        facebookUrl:
-          process.env.NEXT_PUBLIC_FACEBOOK_URL ||
-          "https://www.facebook.com/profile.php?id=61591616953090",
-        youtubeUrl:
-          process.env.NEXT_PUBLIC_YOUTUBE_URL ||
-          "",
-        instagramUrl:
-          process.env.NEXT_PUBLIC_INSTAGRAM_URL ||
-          "",
-        xUrl:
-          process.env.NEXT_PUBLIC_X_URL ||
-          process.env.NEXT_PUBLIC_TWITTER_URL ||
-          "",
-        linkedinUrl:
-          process.env.NEXT_PUBLIC_LINKEDIN_URL ||
-          "",
-      };
-    }
-  },
-  ["public_contact_settings"],
-  { revalidate: 86400, tags: [SYSTEM_SETTINGS_TAG] }
-);
+export const getCachedContactSettings = async (): Promise<PublicContactSettings> => {
+  const { contact } = await getCachedLayoutSettings();
+  return contact;
+};
 
 export async function getPublicContactSettingsAction(): Promise<PublicContactSettings> {
   return getCachedContactSettings();

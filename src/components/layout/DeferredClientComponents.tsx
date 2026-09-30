@@ -33,32 +33,22 @@ export default function DeferredClientComponents() {
   const [canLoad, setCanLoad] = useState(false);
 
   useEffect(() => {
-    let triggered = false;
-    const trigger = () => {
-      if (triggered) return;
-      triggered = true;
-      cleanup();
-      setCanLoad(true);
-    };
-
-    const cleanup = () => {
-      window.removeEventListener("scroll", trigger);
-      window.removeEventListener("touchstart", trigger);
-      window.removeEventListener("click", trigger);
-      window.removeEventListener("keydown", trigger);
-    };
-
-    window.addEventListener("scroll", trigger, { passive: true, once: true });
-    window.addEventListener("touchstart", trigger, { passive: true, once: true });
-    window.addEventListener("click", trigger, { passive: true, once: true });
-    window.addEventListener("keydown", trigger, { passive: true, once: true });
-
-    const timer = setTimeout(trigger, 7000);
-
-    return () => {
-      cleanup();
-      clearTimeout(timer);
-    };
+    // Schedule background components when the main thread is completely idle,
+    // avoiding freezing the main thread on the user's first touch/click (preserves INP).
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      const idleCallback = (window as unknown as { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback(
+        () => setCanLoad(true),
+        { timeout: 3500 }
+      );
+      return () => {
+        if ("cancelIdleCallback" in window) {
+          (window as unknown as { cancelIdleCallback: (id: number) => void }).cancelIdleCallback(idleCallback);
+        }
+      };
+    } else {
+      const timer = setTimeout(() => setCanLoad(true), 3000);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   if (!canLoad) return null;

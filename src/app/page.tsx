@@ -162,19 +162,13 @@ export default async function Home() {
       />
 
       {/* 3. HOW IT WORKS SECTION */}
-      <div className="content-auto">
-        <LandingHowItWorks />
-      </div>
+      <LandingHowItWorks />
 
       {/* 4. MEMBERSHIP BENEFITS SECTION */}
-      <div className="content-auto">
-        <LandingBenefits />
-      </div>
+      <LandingBenefits />
 
       {/* 5. PRICING PLANS SECTION */}
-      <div className="content-auto">
-        <LandingPricing />
-      </div>
+      <LandingPricing />
 
       {/* 6. PARTNER DIRECTORY PREVIEW */}
       <section className="content-auto py-10 sm:py-20 lg:py-28 bg-background">
@@ -227,12 +221,10 @@ export default async function Home() {
       </section>
 
       {/* 9. WHY CHOOSE - COMPARISON TABLE */}
-      <div className="content-auto">
-        <LandingComparison />
-      </div>
+      <LandingComparison />
 
       {/* CTA BANNER */}
-      <section className="content-auto py-10 sm:py-20 bg-gradient-to-r from-primary via-emerald-500 to-primary dark:from-primary-dark dark:via-emerald-600 dark:to-primary-dark relative overflow-hidden">
+      <section className="py-10 sm:py-20 bg-gradient-to-r from-primary via-emerald-500 to-primary dark:from-primary-dark dark:via-emerald-600 dark:to-primary-dark relative overflow-hidden">
         <div
           className="absolute inset-0 opacity-10"
           style={{
@@ -261,9 +253,7 @@ export default async function Home() {
       </section>
 
       {/* 9.5 HEALTHCARE BLOG & HOSPITAL GUIDES */}
-      <div className="content-auto">
-        <LandingBlogSection posts={blogPosts} />
-      </div>
+      <LandingBlogSection posts={blogPosts} />
 
       {/* 10. FAQ SECTION */}
       <section id="faq" className="content-auto py-10 sm:py-20 lg:py-28 bg-background">

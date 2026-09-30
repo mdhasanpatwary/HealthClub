@@ -6,7 +6,7 @@ import Footer from "@/components/layout/Footer";
 import BottomNav from "@/components/layout/BottomNav";
 import GlobalNoticeBanner from "@/components/layout/GlobalNoticeBanner";
 import DeferredClientComponents from "@/components/layout/DeferredClientComponents";
-import { getCachedNoticeSetting, getCachedContactSettings } from "@/app/actions/systemSettingsActions";
+import { getCachedLayoutSettings } from "@/app/actions/systemSettingsActions";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
@@ -22,7 +22,7 @@ const inter = Inter({
 const notoSansBengali = Noto_Sans_Bengali({
   variable: "--font-noto-sans-bengali",
   subsets: ["bengali"],
-  weight: ["400", "700"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
   preload: true,
 });
@@ -157,10 +157,7 @@ export default async function RootLayout({
 }>) {
   const theme = "light";
 
-  const [notice, contactSettings] = await Promise.all([
-    getCachedNoticeSetting(),
-    getCachedContactSettings(),
-  ]);
+  const { notice, contact: contactSettings } = await getCachedLayoutSettings();
 
   const rawHotline = contactSettings.hotline.replace(/[^0-9]/g, "");
   const formattedTel = `+880${rawHotline.replace(/^(880|88|0)/, "")}`;

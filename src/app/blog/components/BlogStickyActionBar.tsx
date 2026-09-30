@@ -76,13 +76,6 @@ export function BlogStickyActionBar({
         const scrollPercent = (scrollY / docHeight) * 100;
         setIsPastThreshold(scrollPercent >= 25);
       }
-
-      // Check footer proximity as scroll fallback
-      const footer = document.querySelector("footer");
-      if (footer) {
-        const rect = footer.getBoundingClientRect();
-        setIsNearFooter(rect.top <= window.innerHeight + 50);
-      }
     };
 
     const onScroll = () => {
