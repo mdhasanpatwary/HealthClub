@@ -1,12 +1,11 @@
-import Link from "next/link";
 import {
   Calendar, Clock, MapPin, Building2, Phone,
-  Clock3, CreditCard, Sparkles, ArrowRight
+  Clock3, CreditCard, Sparkles
 } from "lucide-react";
 import { Doctor, Partner } from "@/services/db";
 import { Card } from "@/components/ui/card";
 import { DoctorAvailabilityBadge } from "@/components/ui/doctors/DoctorAvailabilityBadge";
-import { trackEvent } from "@/lib/analytics";
+import { DoctorSerialMembershipCta } from "./DoctorSerialMembershipCta";
 
 interface DoctorChamberScheduleProps {
   doctor: Doctor & { partner?: Partner | null };
@@ -148,19 +147,7 @@ export function DoctorChamberSchedule({ doctor }: DoctorChamberScheduleProps) {
               </p>
             </div>
           </div>
-          <Link
-            href="/membership"
-            onClick={() => {
-              trackEvent("membership_funnel", {
-                step: "serial_cta_click",
-                source: `doctor_profile_serial_${doctor.id}`,
-              });
-            }}
-            className="flex items-center justify-center gap-1.5 w-full py-2.5 px-3 rounded-xl bg-primary hover:bg-primary-dark text-white text-xs font-bold transition-all shadow-xs"
-          >
-            <span>১ মিনিটে ফ্রি মেম্বার কার্ড সংগ্রহ করুন</span>
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+          <DoctorSerialMembershipCta doctorId={doctor.id} />
         </div>
       </div>
     </Card>

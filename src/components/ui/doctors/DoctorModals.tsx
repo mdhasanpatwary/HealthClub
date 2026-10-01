@@ -1,11 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import {
-  Phone, PhoneCall, Calendar, Building2,
-  Stethoscope, X, Sparkles, ArrowRight
+  Phone, PhoneCall, Calendar, Building2, X, Sparkles, ArrowRight
 } from "lucide-react";
 import { Doctor } from "@/services/db";
 import { Button } from "@/components/ui/button";
@@ -327,14 +325,14 @@ export function DoctorDetailsModal({ doctor: initialDoctor, onClose, onCallSeria
             className="w-full bg-primary hover:bg-primary-dark text-white rounded-2xl h-11 font-semibold cursor-pointer shadow-xs"
           >
             <PhoneCall className="h-4 w-4 mr-2" />
-              সিরিয়াল নিন
+            সিরিয়াল নিন
           </Button>
 
           <Link
             href={`/consultants/${encodeURIComponent(doctor.slug || doctor.id)}`}
             className="inline-flex items-center justify-center w-full h-10 rounded-2xl border border-border bg-muted/40 hover:bg-muted text-xs font-bold text-foreground transition-colors"
           >
-              সম্পূর্ণ প্রোফাইল দেখুন
+            সম্পূর্ণ প্রোফাইল দেখুন
           </Link>
         </div>
       </div>

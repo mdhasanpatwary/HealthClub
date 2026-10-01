@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Stethoscope, CheckCircle2, ArrowLeft, ShieldCheck, Sparkles, MapPin } from "lucide-react";
 import { DepartmentSeoConfig } from "@/data/doctorSeoData";
