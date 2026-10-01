@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Noto_Sans_Bengali } from "next/font/google";
+import { Noto_Sans_Bengali } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -12,17 +12,9 @@ import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "optional",
-  preload: false,
-});
-
 const notoSansBengali = Noto_Sans_Bengali({
   variable: "--font-noto-sans-bengali",
-  subsets: ["bengali"],
-  weight: ["400", "500", "600", "700"],
+  subsets: ["bengali", "latin"],
   display: "swap",
   preload: true,
 });
@@ -257,7 +249,7 @@ export default async function RootLayout({
   ];
 
   return (
-    <html lang="bn" data-scroll-behavior="smooth" className={`${theme} ${inter.variable} ${notoSansBengali.variable}`}>
+    <html lang="bn" data-scroll-behavior="smooth" className={`${theme} ${notoSansBengali.variable}`}>
       <head>
         {/* Preload critical LCP Hero background asset */}
         <link

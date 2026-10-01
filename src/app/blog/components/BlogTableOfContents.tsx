@@ -107,14 +107,26 @@ export function BlogTableOfContents({
     ];
 
     let ticking = false;
+    let sectionPositions: { id: string; top: number }[] = [];
+
+    const computePositions = () => {
+      sectionPositions = sectionIds
+        .map((id) => {
+          const el = document.getElementById(id);
+          return el ? { id, top: el.offsetTop } : null;
+        })
+        .filter((item): item is { id: string; top: number } => item !== null);
+    };
+
+    computePositions();
+
     const handleScrollSpy = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const scrollPosition = window.scrollY + 120;
-          for (let i = sectionIds.length - 1; i >= 0; i--) {
-            const el = document.getElementById(sectionIds[i]);
-            if (el && scrollPosition >= el.offsetTop) {
-              setActiveId(sectionIds[i]);
+          for (let i = sectionPositions.length - 1; i >= 0; i--) {
+            if (scrollPosition >= sectionPositions[i].top) {
+              setActiveId(sectionPositions[i].id);
               ticking = false;
               return;
             }
@@ -127,9 +139,13 @@ export function BlogTableOfContents({
     };
 
     window.addEventListener("scroll", handleScrollSpy, { passive: true });
+    window.addEventListener("resize", computePositions, { passive: true });
     handleScrollSpy();
 
-    return () => window.removeEventListener("scroll", handleScrollSpy);
+    return () => {
+      window.removeEventListener("scroll", handleScrollSpy);
+      window.removeEventListener("resize", computePositions);
+    };
   }, []);
 
   const hasDoctorPricing =

@@ -45,7 +45,7 @@ const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCa
       data-member-card="true"
       className={`notranslate relative w-full max-w-md mx-auto rounded-2xl p-3.5 sm:p-5 overflow-hidden shadow-2xl flex flex-col justify-between min-h-[200px] sm:min-h-[220px] bg-slate-950 text-white border ${borderAccent} print:w-[85.60mm] print:h-[53.98mm] print:min-h-[53.98mm] print:max-h-[53.98mm] print:max-w-[85.60mm] print:min-w-[85.60mm] print:rounded-[3.18mm] print:p-[3.2mm] print:m-0 print:border-none print:shadow-none print:box-border print:overflow-hidden`}
       style={{
-        fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
+        fontFamily: "var(--font-sans), ui-sans-serif, system-ui, sans-serif",
         backgroundColor: "#020617",
       }}
     >

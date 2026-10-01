@@ -97,7 +97,8 @@ export default function Header() {
 
   // 3. Body scroll lock effect when mobile drawer is open
   useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
+    if (!isOpen) return;
+    document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "";
     };

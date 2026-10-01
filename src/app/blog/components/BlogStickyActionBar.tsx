@@ -67,13 +67,18 @@ export function BlogStickyActionBar({
     if (isDismissed) return;
 
     let ticking = false;
+    let cachedDocHeight = 1;
+
+    const updateDocHeight = () => {
+      cachedDocHeight = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    };
+
+    updateDocHeight();
 
     const handleScroll = () => {
       const scrollY = window.scrollY || document.documentElement.scrollTop;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-
-      if (docHeight > 0) {
-        const scrollPercent = (scrollY / docHeight) * 100;
+      if (cachedDocHeight > 0) {
+        const scrollPercent = (scrollY / cachedDocHeight) * 100;
         setIsPastThreshold(scrollPercent >= 25);
       }
     };
@@ -92,6 +97,7 @@ export function BlogStickyActionBar({
     handleScroll();
 
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", updateDocHeight, { passive: true });
 
     // IntersectionObserver on footer to reliably prevent visual overlap
     const footer = document.querySelector("footer");
@@ -113,6 +119,7 @@ export function BlogStickyActionBar({
 
     return () => {
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", updateDocHeight);
       if (observer) observer.disconnect();
     };
   }, [isDismissed]);

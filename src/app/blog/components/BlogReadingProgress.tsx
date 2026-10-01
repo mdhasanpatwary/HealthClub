@@ -7,16 +7,20 @@ export function BlogReadingProgress() {
 
   useEffect(() => {
     let ticking = false;
+    let cachedDocHeight = 1;
+
+    const updateDocHeight = () => {
+      cachedDocHeight = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    };
+
+    updateDocHeight();
 
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          const totalHeight =
-            document.documentElement.scrollHeight - window.innerHeight;
-          if (totalHeight > 0) {
-            const current = (window.scrollY / totalHeight) * 100;
-            setProgress(Math.min(100, Math.max(0, current)));
-          }
+          const current = (window.scrollY / cachedDocHeight) * 100;
+          const clamped = Math.min(100, Math.max(0, current));
+          setProgress((prev) => (Math.abs(prev - clamped) > 0.5 ? clamped : prev));
           ticking = false;
         });
         ticking = true;
@@ -24,10 +28,12 @@ export function BlogReadingProgress() {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", updateDocHeight, { passive: true });
     handleScroll();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", updateDocHeight);
     };
   }, []);
 
@@ -39,8 +45,8 @@ export function BlogReadingProgress() {
       aria-hidden="true"
     >
       <div
-        className="h-full bg-primary transition-all duration-100 ease-out"
-        style={{ width: `${progress}%` }}
+        className="h-full w-full bg-primary transition-transform duration-100 ease-out origin-left will-change-transform"
+        style={{ transform: `scaleX(${progress / 100})` }}
       />
     </div>
   );
