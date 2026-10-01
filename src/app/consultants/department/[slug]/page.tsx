@@ -14,7 +14,6 @@ export const revalidate = 86400; // 24-hour ISR
 
 interface PageProps {
   params: Promise<{ slug: string }>;
-  searchParams?: Promise<{ upazila?: string }>;
 }
 
 export async function generateStaticParams() {
@@ -55,9 +54,8 @@ export async function generateMetadata({ params }: PageProps) {
   };
 }
 
-export default async function DepartmentLandingPage({ params, searchParams }: PageProps) {
+export default async function DepartmentLandingPage({ params }: PageProps) {
   const { slug } = await params;
-  const resolvedSearchParams = searchParams ? await searchParams : {};
   const deptSeo = getDepartmentSeoConfig(slug);
 
   if (!deptSeo) {
@@ -159,7 +157,7 @@ export default async function DepartmentLandingPage({ params, searchParams }: Pa
           <DoctorDirectory
             doctors={deptDoctors}
             initialDept={slug}
-            initialUpazila={resolvedSearchParams.upazila || "all"}
+            initialUpazila="all"
             isDepartmentPage={true}
           />
         </div>

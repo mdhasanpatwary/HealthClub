@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "@/lib/session";
 import { canAccessAdminRoute } from "@/lib/permissions";
 import { logger } from "@/lib/logger";
+import { getDepartmentSeoConfig } from "@/data/doctorSeoData";
+import { getUpazilaSeoConfig } from "@/data/feniLocations";
 
 const protectedRoutes = ["/dashboard", "/admin", "/profile", "/partner"];
 const adminRoutes = ["/admin"];
@@ -53,6 +55,25 @@ export async function proxy(req: NextRequest) {
       const cleanSlug = malformedBlogMatch[1].trim().replace(/^[—–\s-]+|[—–\s-]+$/g, "");
       if (cleanSlug) {
         return NextResponse.redirect(new URL(`/blog/${cleanSlug}`, req.nextUrl), 308);
+      }
+    }
+
+    // Direct legacy /consultants query parameters (?dept=... or ?upazila=...) to dedicated canonical landing pages
+    if (path === "/consultants") {
+      const dept = req.nextUrl.searchParams.get("dept");
+      const upazila = req.nextUrl.searchParams.get("upazila");
+      if (dept && dept !== "all") {
+        const deptSeo = getDepartmentSeoConfig(dept);
+        if (deptSeo) {
+          const upazilaParam = upazila && upazila !== "all" ? `?upazila=${encodeURIComponent(upazila)}` : "";
+          return NextResponse.redirect(new URL(`/consultants/department/${deptSeo.slug}${upazilaParam}`, req.nextUrl), 308);
+        }
+      }
+      if (upazila && upazila !== "all") {
+        const upzSeo = getUpazilaSeoConfig(upazila);
+        if (upzSeo) {
+          return NextResponse.redirect(new URL(`/consultants/location/${upzSeo.slug}`, req.nextUrl), 308);
+        }
       }
     }
 

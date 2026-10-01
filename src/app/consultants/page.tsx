@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import type { Metadata } from "next";
 import JsonLd from "@/components/seo/JsonLd";
 import DoctorDirectory from "@/components/ui/DoctorDirectory";
 import ConsultantsGuide from "@/components/consultants/ConsultantsGuide";
@@ -8,74 +8,12 @@ import { getDoctorsAction } from "@/app/actions/doctorActions";
 import { Stethoscope, ShieldCheck, HeartHandshake, PhoneCall } from "lucide-react";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
-import { getDepartmentSeoConfig } from "@/data/doctorSeoData";
-import { getUpazilaSeoConfig } from "@/data/feniLocations";
 import { GeoAnswerCapsule } from "@/app/blog/components/GeoAnswerCapsule";
 import { generateConsultantsDirectoryJsonLd, DEFAULT_CONSULTANT_GEO_DATA } from "./utils/consultantJsonLd";
 
 export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
 
-interface ConsultantsPageProps {
-  searchParams?: Promise<{ dept?: string; upazila?: string }>;
-}
-
-export async function generateMetadata({ searchParams }: ConsultantsPageProps) {
-  const resolvedSearchParams = searchParams ? await searchParams : {};
-  const dept = resolvedSearchParams.dept;
-  const deptSeo = getDepartmentSeoConfig(dept);
-
-  if (deptSeo) {
-    return {
-      title: deptSeo.metaTitleBn,
-      description: deptSeo.metaDescriptionBn,
-      keywords: deptSeo.keywords,
-      alternates: {
-        canonical: `${SITE_URL}/consultants/department/${deptSeo.slug}`,
-      },
-      openGraph: {
-        title: deptSeo.metaTitleBn,
-        description: deptSeo.metaDescriptionBn,
-        url: `${SITE_URL}/consultants?dept=${deptSeo.slug}`,
-        siteName: "হেলথ ক্লাব (Health Club)",
-        type: "website",
-        images: DEFAULT_OG_IMAGES,
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: deptSeo.metaTitleBn,
-        description: deptSeo.metaDescriptionBn,
-        images: DEFAULT_TWITTER_IMAGES,
-      },
-    };
-  }
-
-  const upazila = resolvedSearchParams.upazila;
-  const upazilaSeo = upazila && upazila !== "all" ? getUpazilaSeoConfig(upazila) : null;
-  if (upazilaSeo) {
-    return {
-      title: upazilaSeo.metaTitleBn,
-      description: upazilaSeo.metaDescriptionBn,
-      keywords: upazilaSeo.keywords,
-      alternates: {
-        canonical: `${SITE_URL}/consultants/location/${upazilaSeo.slug}`,
-      },
-      openGraph: {
-        title: upazilaSeo.metaTitleBn,
-        description: upazilaSeo.metaDescriptionBn,
-        url: `${SITE_URL}/consultants/location/${upazilaSeo.slug}`,
-        siteName: "হেলথ ক্লাব (Health Club)",
-        type: "website",
-        images: DEFAULT_OG_IMAGES,
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: upazilaSeo.metaTitleBn,
-        description: upazilaSeo.metaDescriptionBn,
-        images: DEFAULT_TWITTER_IMAGES,
-      },
-    };
-  }
-
+export async function generateMetadata(): Promise<Metadata> {
   const ogTitle = "ফেনী ডাক্তার তালিকা ও সিরিয়াল নাম্বার | ফেনী সদর ও উপজেলা ভিত্তিক চেম্বার তথ্য - হেলথ ক্লাব";
   const ogDesc = "ফেনীর সেরা মেডিসিন, গাইনী, শিশু, হৃদরোগ ও কিডনি বিশেষজ্ঞ ডাক্তার, চেম্বার শিডিউল, রোগী দেখার সময় এবং সরাসরি সিরিয়াল নাম্বার ও অ্যাপয়েন্টমেন্ট তথ্য।";
 
@@ -135,28 +73,7 @@ export async function generateMetadata({ searchParams }: ConsultantsPageProps) {
   };
 }
 
-export default async function ConsultantsPage({ searchParams }: ConsultantsPageProps) {
-  const resolvedSearchParams = searchParams ? await searchParams : {};
-  const initialDept = resolvedSearchParams.dept || "all";
-  const initialUpazila = resolvedSearchParams.upazila || "all";
-
-  // Redirect department-specific queries to dedicated SEO landing pages to avoid over-fetching
-  if (initialDept !== "all") {
-    const deptSeo = getDepartmentSeoConfig(initialDept);
-    if (deptSeo) {
-      const upazilaParam = initialUpazila !== "all" ? `?upazila=${encodeURIComponent(initialUpazila)}` : "";
-      redirect(`/consultants/department/${deptSeo.slug}${upazilaParam}`);
-    }
-  }
-
-  // Redirect upazila-specific queries to dedicated location landing pages
-  if (initialUpazila !== "all") {
-    const upzSeo = getUpazilaSeoConfig(initialUpazila);
-    if (upzSeo) {
-      redirect(`/consultants/location/${upzSeo.slug}`);
-    }
-  }
-
+export default async function ConsultantsPage() {
   // Fetch doctors server-side (cached with ISR)
   const doctors = await getDoctorsAction();
 
@@ -240,8 +157,8 @@ export default async function ConsultantsPage({ searchParams }: ConsultantsPageP
         <div className="sm:bg-muted/30 sm:border sm:border-border/80 sm:rounded-3xl sm:p-8">
           <DoctorDirectory
             doctors={doctors}
-            initialDept={initialDept}
-            initialUpazila={initialUpazila}
+            initialDept="all"
+            initialUpazila="all"
           />
         </div>
 
