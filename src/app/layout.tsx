@@ -258,6 +258,16 @@ export default async function RootLayout({
 
   return (
     <html lang="bn" data-scroll-behavior="smooth" className={`${theme} ${inter.variable} ${notoSansBengali.variable}`}>
+      <head>
+        {/* Preload critical LCP Hero background asset */}
+        <link
+          rel="preload"
+          as="image"
+          href="/images/member-card-bg.webp"
+          type="image/webp"
+          fetchPriority="high"
+        />
+      </head>
       <body className="font-sans antialiased bg-background text-foreground min-h-screen flex flex-col">
         {/* Skip to Main Content Link for Keyboard / Screen Reader users */}
         <a

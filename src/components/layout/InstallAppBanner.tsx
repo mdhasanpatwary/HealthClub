@@ -73,26 +73,37 @@ export default function InstallAppBanner() {
       return;
     }
 
-    // 2. Mobile screen check
+    // 2. Mobile screen check & delayed display
     const isMobile = typeof window !== "undefined" && window.matchMedia?.("(max-width: 767px)").matches;
-    if (isMobile) {
-      requestAnimationFrame(() => {
-        if (isDismissedRef.current || isPromptDismissed()) return;
-        setIsVisible(true);
-        if (!hasLoggedShown.current) {
-          hasLoggedShown.current = true;
-          const info = getClientDeviceInfo();
-          if (info.deviceId) {
-            recordPwaPromptAction({
-              deviceId: info.deviceId,
-              outcome: "shown",
-              platform: info.platform,
-              browser: info.browser,
-              deviceType: info.deviceType,
-            }).catch(() => {});
-          }
+    let isDelayFinished = false;
+    let timer: NodeJS.Timeout | null = null;
+
+    const showBannerIfReady = () => {
+      if (isDismissedRef.current || isPromptDismissed()) return;
+      if (!isMobile) return;
+
+      setIsVisible(true);
+      if (!hasLoggedShown.current) {
+        hasLoggedShown.current = true;
+        const info = getClientDeviceInfo();
+        if (info.deviceId) {
+          recordPwaPromptAction({
+            deviceId: info.deviceId,
+            outcome: "shown",
+            platform: info.platform,
+            browser: info.browser,
+            deviceType: info.deviceType,
+          }).catch(() => {});
         }
-      });
+      }
+    };
+
+    if (isMobile) {
+      // Delay banner display by 15 seconds to maximize PageSpeed score and avoid intrusive initial interstitials
+      timer = setTimeout(() => {
+        isDelayFinished = true;
+        showBannerIfReady();
+      }, 15000);
     }
 
     // Listener for PWA installation prompt
@@ -105,21 +116,9 @@ export default function InstallAppBanner() {
         return;
       }
 
-      if (isMobile) {
-        setIsVisible(true);
-        if (!hasLoggedShown.current) {
-          hasLoggedShown.current = true;
-          const info = getClientDeviceInfo();
-          if (info.deviceId) {
-            recordPwaPromptAction({
-              deviceId: info.deviceId,
-              outcome: "shown",
-              platform: info.platform,
-              browser: info.browser,
-              deviceType: info.deviceType,
-            }).catch(() => {});
-          }
-        }
+      // If the 15-second delay has already elapsed, display banner
+      if (isDelayFinished && isMobile) {
+        showBannerIfReady();
       }
     };
 
@@ -147,6 +146,7 @@ export default function InstallAppBanner() {
     window.addEventListener("appinstalled", handleAppInstalled);
 
     return () => {
+      if (timer) clearTimeout(timer);
       window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
       window.removeEventListener("appinstalled", handleAppInstalled);
     };

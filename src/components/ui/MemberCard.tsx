@@ -49,16 +49,18 @@ const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCa
         backgroundColor: "#020617",
       }}
     >
-      {/* Custom Generated Background Texture — uses next/image with priority for instant LCP discovery & high fetch priority */}
+      {/* Custom Generated Background Texture — uses next/image with unoptimized for instant CDN hit & sync decoding for zero LCP render delay */}
       <Image
         src="/images/member-card-bg.webp"
         alt=""
         fill
+        unoptimized
         sizes="(max-width: 640px) 100vw, 448px"
         className="object-cover opacity-60 mix-blend-screen pointer-events-none rounded-2xl print:rounded-[3.18mm] print:opacity-80"
         priority={priority}
         fetchPriority={priority ? "high" : "auto"}
         loading={priority ? "eager" : "lazy"}
+        decoding={priority ? "sync" : "async"}
       />
 
       {/* Radial ambient glow & glass overlay */}
@@ -81,7 +83,6 @@ const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCa
             width={40}
             height={40}
             sizes="40px"
-            unoptimized
             className="h-8 w-8 sm:h-10 sm:w-10 object-contain drop-shadow-[0_2px_8px_rgba(34,197,94,0.4)] shrink-0 print:h-[7.5mm] print:w-[7.5mm] print:drop-shadow-none"
           />
           <div className="min-w-0">

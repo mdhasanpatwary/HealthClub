@@ -18,34 +18,54 @@ export default function HeroCardWrapper({ demoMember, priority = true }: HeroCar
   const [member, setMember] = useState<Member | null>(null);
 
   useEffect(() => {
+    let cancelId: number | null = null;
+    let timerId: NodeJS.Timeout | null = null;
+
     const syncUser = () => {
       const currentUser = authStore.getCurrentUser();
       if (!currentUser) {
-        setMember(null);
+        // If already null, do not trigger an unnecessary re-render during hydration
         return;
       }
 
       if (currentUser.qrCodeUrl) {
-        // Wrap in Promise.resolve so setState is called asynchronously,
-        // satisfying the react-hooks/set-state-in-effect rule.
-        Promise.resolve(currentUser).then(setMember);
+        setMember(currentUser);
       } else {
         // qrCodeUrl missing: fetch fresh data from DB
         getMemberByIdAction(currentUser.id)
           .then((freshUser) => {
-            setMember(freshUser ?? null);
+            setMember(freshUser ?? currentUser);
           })
           .catch(() => {
-            setMember(currentUser ?? null);
+            setMember(currentUser);
           });
       }
     };
 
-    syncUser();
+    // Defer sync until after initial paint when the main thread is completely idle (preserves LCP)
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      cancelId = (window as unknown as { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback(
+        syncUser,
+        { timeout: 2000 }
+      );
+    } else {
+      timerId = setTimeout(syncUser, 1000);
+    }
 
-    window.addEventListener("auth-change", syncUser);
+    const handleAuthChange = () => {
+      const currentUser = authStore.getCurrentUser();
+      setMember(currentUser ?? null);
+    };
+
+    window.addEventListener("auth-change", handleAuthChange);
     return () => {
-      window.removeEventListener("auth-change", syncUser);
+      if (cancelId !== null && "cancelIdleCallback" in window) {
+        (window as unknown as { cancelIdleCallback: (id: number) => void }).cancelIdleCallback(cancelId);
+      }
+      if (timerId !== null) {
+        clearTimeout(timerId);
+      }
+      window.removeEventListener("auth-change", handleAuthChange);
     };
   }, []);
 

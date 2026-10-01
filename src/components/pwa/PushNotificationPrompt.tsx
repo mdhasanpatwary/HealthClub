@@ -52,6 +52,7 @@ export function PushNotificationPrompt() {
 
     let isMounted = true;
     let timer: NodeJS.Timeout | null = null;
+    const mountTime = Date.now();
 
     // Timeout fail-safe in case SW ready hangs
     const swReadyWithTimeout = Promise.race([
@@ -87,15 +88,29 @@ export function PushNotificationPrompt() {
             }
           } catch {}
 
-          // Delay display to prevent simultaneous prompt overlap on mobile
+          // Delay display 15-20 seconds to maximize PageSpeed score and avoid intrusive initial interstitials
           const isMobile = typeof window !== "undefined" && window.matchMedia?.("(max-width: 767px)").matches;
-          const delayMs = isMobile ? 5000 : 1500;
+          // 15 seconds for desktop; 20 seconds for mobile (preventing overlap with mobile PWA install banner)
+          const targetDelayMs = isMobile ? 20000 : 15000;
+          const remainingDelay = Math.max(0, targetDelayMs - (Date.now() - mountTime));
 
-          timer = setTimeout(() => {
-            if (isMounted && Notification.permission === "default") {
-              setIsVisible(true);
+          const checkAndShow = () => {
+            if (!isMounted || Notification.permission !== "default") return;
+
+            // On mobile, if App Install Banner is currently visible, defer push prompt to avoid overlapping
+            const isAppBannerVisible =
+              typeof document !== "undefined" &&
+              !!document.querySelector('aside[aria-label="App Install Banner"]');
+
+            if (isMobile && isAppBannerVisible) {
+              timer = setTimeout(checkAndShow, 10000);
+              return;
             }
-          }, delayMs);
+
+            setIsVisible(true);
+          };
+
+          timer = setTimeout(checkAndShow, remainingDelay);
         }
       })
       .catch(() => {
