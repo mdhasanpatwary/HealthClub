@@ -1,6 +1,3 @@
-"use client";
-
-import { useMemo } from "react";
 import { AlertCircle, CalendarOff } from "lucide-react";
 import { Doctor } from "@/services/db";
 
@@ -72,7 +69,7 @@ export function DoctorAvailabilityBadge({
   size = "md",
   className = "",
 }: DoctorAvailabilityBadgeProps) {
-  const info = useMemo(() => getDoctorAvailabilityInfo(doctor), [doctor]);
+  const info = getDoctorAvailabilityInfo(doctor);
 
   const sizeClasses = {
     sm: "text-[10px] px-2 py-0.5 gap-1",

@@ -13,41 +13,8 @@ import { DoctorAvailabilityBadge, DoctorNoticeBanner } from "./DoctorAvailabilit
 import { trackEvent } from "@/lib/analytics";
 import { getDoctorByIdAction } from "@/app/actions/doctorQueryActions";
 
-export function DoctorAvatar({
-  src,
-  alt,
-  className = "",
-  priority = false,
-  sizes = "(max-width: 640px) 64px, 72px",
-}: {
-  src?: string;
-  alt: string;
-  className?: string;
-  priority?: boolean;
-  sizes?: string;
-}) {
-  const [hasError, setHasError] = useState(false);
-
-  return (
-    <div className={`relative shrink-0 rounded-2xl overflow-hidden bg-emerald-500/10 border-2 border-emerald-500/20 flex items-center justify-center ${className}`}>
-      {!hasError && src ? (
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          sizes={sizes}
-          priority={priority}
-          loading={priority ? "eager" : "lazy"}
-          unoptimized={Boolean(typeof src === "string" && src.startsWith("data:"))}
-          className="object-cover object-top"
-          onError={() => setHasError(true)}
-        />
-      ) : (
-        <Stethoscope className="h-1/2 w-1/2 text-primary/60" />
-      )}
-    </div>
-  );
-}
+import { DoctorAvatar } from "./DoctorAvatar";
+export { DoctorAvatar };
 
 interface DoctorSerialModalProps {
   doctor: Doctor;

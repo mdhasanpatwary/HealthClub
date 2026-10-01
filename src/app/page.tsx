@@ -139,6 +139,14 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Preload critical LCP Hero background asset exclusively for the main landing page */}
+      <link
+        rel="preload"
+        as="image"
+        href="/images/member-card-bg.webp"
+        type="image/webp"
+        fetchPriority="high"
+      />
       <JsonLd data={homepageJsonLd} />
 
       {/* 1. HERO SECTION */}
