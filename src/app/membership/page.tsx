@@ -188,9 +188,15 @@ export default async function MembershipPage() {
           "availability": "https://schema.org/InStock",
           "itemCondition": "https://schema.org/NewCondition",
           "url": `${SITE_URL}/membership`,
+          "validFrom": `${new Date().getFullYear()}-01-01`,
           "priceValidUntil": `${new Date().getFullYear() + 1}-12-31`,
           "hasMerchantReturnPolicy": merchantReturnPolicy,
-          "shippingDetails": digitalShippingDetails
+          "shippingDetails": digitalShippingDetails,
+          "seller": {
+            "@type": "Organization",
+            "name": "Health Club",
+            "url": SITE_URL
+          }
         },
         {
           "@type": "Offer",
@@ -200,9 +206,15 @@ export default async function MembershipPage() {
           "availability": "https://schema.org/InStock",
           "itemCondition": "https://schema.org/NewCondition",
           "url": `${SITE_URL}/membership`,
+          "validFrom": `${new Date().getFullYear()}-01-01`,
           "priceValidUntil": `${new Date().getFullYear() + 1}-12-31`,
           "hasMerchantReturnPolicy": merchantReturnPolicy,
-          "shippingDetails": digitalShippingDetails
+          "shippingDetails": digitalShippingDetails,
+          "seller": {
+            "@type": "Organization",
+            "name": "Health Club",
+            "url": SITE_URL
+          }
         }
       ]
     }
