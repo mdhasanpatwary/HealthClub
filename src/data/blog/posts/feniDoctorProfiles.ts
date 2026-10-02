@@ -468,7 +468,7 @@ export const FENI_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "বিকাল ৫:০০ টা - রাত ৯:০০ টা",
         serialPhone: "01716543210",
         consultationFeeBn: "৳৮০০",
-        consultantProfileUrl: "/consultants?dept=orthopedics",
+        consultantProfileUrl: "/consultants/department/orthopedics",
         featuredBadgeBn: "ট্রমা ও অর্থোপেডিক কনসালটেন্ট",
         partnerStatus: false,
         rank: 4,

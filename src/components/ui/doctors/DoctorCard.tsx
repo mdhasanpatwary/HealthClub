@@ -9,7 +9,7 @@ import {
 import { Doctor } from "@/services/db";
 import { Card } from "@/components/ui/card";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { DoctorAvatar } from "./DoctorModals";
+import { DoctorAvatar } from "./DoctorAvatar";
 import { DoctorAvailabilityBadge, DoctorNoticeBanner } from "./DoctorAvailabilityBadge";
 import { getUpazilaLabel } from "@/data/feniLocations";
 

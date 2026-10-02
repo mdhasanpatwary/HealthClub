@@ -157,7 +157,7 @@ export function generateDoctorJsonLd(
         "@type": "ListItem",
         position: 3,
         name: specialtyInfo.nameBn,
-        item: `${SITE_URL}/consultants?dept=${doctor.department}`,
+        item: `${SITE_URL}/consultants/department/${doctor.department}`,
       },
       {
         "@type": "ListItem",

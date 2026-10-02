@@ -1,10 +1,15 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Stethoscope, ShieldCheck, PhoneCall, HeartHandshake, HelpCircle } from "lucide-react";
+import dynamic from "next/dynamic";
 import JsonLd from "@/components/seo/JsonLd";
 import DoctorDirectory from "@/components/ui/DoctorDirectory";
-import CommunityNetworkCTA from "@/components/common/CommunityNetworkCTA";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+
+const CommunityNetworkCTA = dynamic(
+  () => import("@/components/common/CommunityNetworkCTA"),
+  { ssr: true }
+);
 import { getDoctorsByDepartmentAction } from "@/app/actions/doctorActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 import { getDepartmentSeoConfig, getAllDepartmentSlugs, DOCTOR_DEPARTMENTS_SEO } from "@/data/doctorSeoData";
@@ -126,7 +131,7 @@ export default async function DepartmentLandingPage({ params }: PageProps) {
               <ShieldCheck className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-xs sm:text-sm font-bold text-foreground">যাচাইকৃত বিশেষজ্ঞ</h2>
+              <div className="text-xs sm:text-sm font-bold text-foreground">যাচাইকৃত বিশেষজ্ঞ</div>
               <p className="text-[11px] sm:text-xs text-muted-foreground">বিএমডিসি নিবন্ধিত অভিজ্ঞ চিকিৎসক</p>
             </div>
           </div>
@@ -136,7 +141,7 @@ export default async function DepartmentLandingPage({ params }: PageProps) {
               <PhoneCall className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-xs sm:text-sm font-bold text-foreground">সরাসরি সিরিয়াল</h2>
+              <div className="text-xs sm:text-sm font-bold text-foreground">সরাসরি সিরিয়াল</div>
               <p className="text-[11px] sm:text-xs text-muted-foreground">চেম্বারে সরাসরি সিরিয়াল কল সুবিধা</p>
             </div>
           </div>
@@ -146,7 +151,7 @@ export default async function DepartmentLandingPage({ params }: PageProps) {
               <HeartHandshake className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-xs sm:text-sm font-bold text-foreground">মেম্বার বিশেষ ছাড়</h2>
+              <div className="text-xs sm:text-sm font-bold text-foreground">মেম্বার বিশেষ ছাড়</div>
               <p className="text-[11px] sm:text-xs text-muted-foreground">১০-৩০% মেম্বার ছাড় টেস্ট ও ল্যাবে</p>
             </div>
           </div>

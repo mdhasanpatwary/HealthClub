@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Search, MapPin, Stethoscope, X, ChevronDown } from "lucide-react";
 import { Doctor } from "@/services/db";
@@ -9,12 +10,14 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
 import { DoctorCard } from "./doctors/DoctorCard";
-import DepartmentSeoHero from "@/components/consultants/DepartmentSeoHero";
 import { getDepartmentSeoConfig } from "@/data/doctorSeoData";
 import { FENI_UPAZILAS, detectUpazilaFromText } from "@/data/feniLocations";
 import { DEPARTMENTS } from "@/components/consultants/consultantData";
 import { toBanglaNums } from "@/lib/utils";
 
+const DepartmentSeoHero = dynamic(
+  () => import("@/components/consultants/DepartmentSeoHero")
+);
 const DoctorSerialModal = dynamic(
   () => import("./doctors/DoctorModals").then((m) => m.DoctorSerialModal)
 );
@@ -31,7 +34,7 @@ interface DoctorDirectoryProps {
   isLocationPage?: boolean;
 }
 
-const INITIAL_VISIBLE_COUNT = 12;
+const INITIAL_VISIBLE_COUNT = 9;
 
 function isDiabetesDoctor(doc: Doctor): boolean {
   if (doc.department === "diabetes") return true;
@@ -98,61 +101,35 @@ export default function DoctorDirectory({
   const [activeSerialDoctor, setActiveSerialDoctor] = useState<Doctor | null>(null);
   const [activeDetailsDoctor, setActiveDetailsDoctor] = useState<Doctor | null>(null);
 
-  // Sync with URL query parameters on initial client mount
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const params = new URLSearchParams(window.location.search);
-    const dept = params.get("dept");
-    const upazila = params.get("upazila");
-    if (!isDepartmentPage && dept && dept !== "all") {
-      queueMicrotask(() => setSelectedDept(dept));
-    }
-    if (!isLocationPage && upazila && upazila !== "all") {
-      queueMicrotask(() => setSelectedUpazila(upazila));
-    }
-  }, [isDepartmentPage, isLocationPage]);
-
-  // Update browser URL query params without full page reload
-  const updateUrlParams = (dept: string, upazila: string) => {
-    if (typeof window === "undefined") return;
-    const url = new URL(window.location.href);
-    if (dept && dept !== "all") url.searchParams.set("dept", dept);
-    else url.searchParams.delete("dept");
-    if (upazila && upazila !== "all") url.searchParams.set("upazila", upazila);
-    else url.searchParams.delete("upazila");
-    window.history.replaceState(null, "", `${url.pathname}${url.search}`);
-  };
-
   const handleDeptChange = (deptId: string) => {
-    if (isDepartmentPage) {
-      if (deptId === "all") {
-        router.push("/consultants");
-      } else if (deptId !== selectedDept) {
-        router.push(`/consultants/department/${deptId}`);
-      }
-      return;
+    if (deptId === "all") {
+      router.push("/consultants");
+    } else {
+      router.push(`/consultants/department/${deptId}`);
     }
-    setSelectedDept(deptId);
-    setVisibleCount(INITIAL_VISIBLE_COUNT);
-    updateUrlParams(deptId, selectedUpazila);
   };
 
   const handleUpazilaChange = (upzId: string) => {
-    if (isLocationPage) {
-      if (upzId === "all") {
-        router.push("/consultants");
-      } else if (upzId !== selectedUpazila) {
-        router.push(`/consultants/location/${upzId}`);
-      }
+    if (isDepartmentPage) {
+      setSelectedUpazila(upzId);
+      setVisibleCount(INITIAL_VISIBLE_COUNT);
       return;
     }
-    setSelectedUpazila(upzId);
-    setVisibleCount(INITIAL_VISIBLE_COUNT);
-    updateUrlParams(selectedDept, upzId);
+    if (upzId === "all") {
+      router.push("/consultants");
+    } else {
+      router.push(`/consultants/location/${upzId}`);
+    }
   };
 
   const handleResetFilters = () => {
-    if (isDepartmentPage || isLocationPage) {
+    if (isDepartmentPage) {
+      setSelectedUpazila("all");
+      setSearchQuery("");
+      setVisibleCount(INITIAL_VISIBLE_COUNT);
+      return;
+    }
+    if (isLocationPage) {
       router.push("/consultants");
       return;
     }
@@ -160,7 +137,6 @@ export default function DoctorDirectory({
     setSelectedDept("all");
     setSearchQuery("");
     setVisibleCount(INITIAL_VISIBLE_COUNT);
-    updateUrlParams("all", "all");
   };
 
   // Precompute upazila for each doctor (server provides pre-resolved upazila, fallback provided)
@@ -232,7 +208,7 @@ export default function DoctorDirectory({
       </div>
 
       {/* Contextual Department SEO Hero if a specialty is selected */}
-      {deptSeo && (
+      {!isDepartmentPage && !isLocationPage && deptSeo && (
         <DepartmentSeoHero
           seoConfig={deptSeo}
           matchingDoctorsCount={filteredDoctors.length}
@@ -292,6 +268,33 @@ export default function DoctorDirectory({
           {FENI_UPAZILAS.map((upz) => {
             const isSelected = selectedUpazila === upz.id;
             const count = upazilaCounts[upz.id] || 0;
+            const href = upz.id === "all" ? "/consultants" : `/consultants/location/${upz.id}`;
+
+            if (!isDepartmentPage) {
+              return (
+                <Link
+                  key={upz.id}
+                  href={href}
+                  className={`flex items-center gap-1.5 px-3.5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
+                    isSelected
+                      ? "bg-primary text-white shadow-sm ring-2 ring-primary/20"
+                      : "bg-background hover:bg-muted text-muted-foreground border border-border/80"
+                  }`}
+                >
+                  <MapPin className={`h-3 w-3 ${isSelected ? "text-white" : "text-primary"}`} />
+                  <span>{upz.nameBn}</span>
+                  {count > 0 && (
+                    <span
+                      className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                        isSelected ? "bg-white/30 text-white" : "bg-muted text-muted-foreground"
+                      }`}
+                    >
+                      {toBanglaNums(count)}
+                    </span>
+                  )}
+                </Link>
+              );
+            }
 
             return (
               <button
@@ -323,63 +326,66 @@ export default function DoctorDirectory({
       </div>
 
       {/* Mobile Department Select Field */}
-      <div className="block sm:hidden">
-        <div className="relative">
-          <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-primary flex items-center gap-1.5">
-            <Stethoscope className="h-4 w-4" />
-          </div>
-          <select
-            id="mobile-department-select"
-            aria-label="সকল বিভাগ"
-            value={selectedDept}
-            onChange={(e) => handleDeptChange(e.target.value)}
-            className="w-full appearance-none pl-10 pr-10 py-3 text-sm font-semibold rounded-2xl border border-border/80 bg-background text-foreground shadow-xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all cursor-pointer"
-          >
-            {DEPARTMENTS.map((dept) => {
-              const count = departmentCounts[dept.id] || 0;
-              return (
-                <option key={dept.id} value={dept.id} className="bg-popover text-popover-foreground py-1">
-                  {dept.labelBn} {count > 0 ? `(${toBanglaNums(count)})` : ""}
-                </option>
-              );
-            })}
-          </select>
-          <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
-            <ChevronDown className="h-4 w-4" />
+      {!isDepartmentPage && (
+        <div className="block sm:hidden">
+          <div className="relative">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-primary flex items-center gap-1.5">
+              <Stethoscope className="h-4 w-4" />
+            </div>
+            <select
+              id="mobile-department-select"
+              aria-label="সকল বিভাগ"
+              value={selectedDept}
+              onChange={(e) => handleDeptChange(e.target.value)}
+              className="w-full appearance-none pl-10 pr-10 py-3 text-sm font-semibold rounded-2xl border border-border/80 bg-background text-foreground shadow-xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all cursor-pointer"
+            >
+              {DEPARTMENTS.map((dept) => {
+                const count = departmentCounts[dept.id] || 0;
+                return (
+                  <option key={dept.id} value={dept.id} className="bg-popover text-popover-foreground py-1">
+                    {dept.labelBn} {count > 0 ? `(${toBanglaNums(count)})` : ""}
+                  </option>
+                );
+              })}
+            </select>
+            <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+              <ChevronDown className="h-4 w-4" />
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Desktop Department Filter Pills */}
-      <div className="hidden sm:flex items-center gap-2 pb-2 pt-1 sm:flex-wrap sm:justify-center">
-        {DEPARTMENTS.map((dept) => {
-          const Icon = dept.icon;
-          const isSelected = selectedDept === dept.id;
-          const count = departmentCounts[dept.id] || 0;
+      {!isDepartmentPage && (
+        <div className="hidden sm:flex items-center gap-2 pb-2 pt-1 sm:flex-wrap sm:justify-center">
+          {DEPARTMENTS.map((dept) => {
+            const Icon = dept.icon;
+            const isSelected = selectedDept === dept.id;
+            const count = departmentCounts[dept.id] || 0;
+            const href = dept.id === "all" ? "/consultants" : `/consultants/department/${dept.id}`;
 
-          return (
-            <button
-              key={dept.id}
-              type="button"
-              aria-pressed={isSelected}
-              onClick={() => handleDeptChange(dept.id)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
-                isSelected
-                  ? "bg-secondary text-white shadow-sm ring-2 ring-secondary/20"
-                  : "bg-background hover:bg-muted text-muted-foreground border border-border/70"
-              }`}
-            >
-              <Icon className="h-3.5 w-3.5" />
-              <span>{dept.labelBn}</span>
-              {count > 0 && (
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${isSelected ? "bg-white/20 text-white" : "bg-muted-foreground/10 text-muted-foreground"}`}>
-                  {toBanglaNums(count)}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
+            return (
+              <Link
+                key={dept.id}
+                href={href}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
+                  isSelected
+                    ? "bg-secondary text-white shadow-sm ring-2 ring-secondary/20"
+                    : "bg-background hover:bg-muted text-muted-foreground border border-border/70"
+                }`}
+              >
+                <Icon className="h-3.5 w-3.5" />
+                <span>{dept.labelBn}</span>
+                {count > 0 && (
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${isSelected ? "bg-white/20 text-white" : "bg-muted-foreground/10 text-muted-foreground"}`}>
+                    {toBanglaNums(count)}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+        </div>
+      )}
 
       {/* Doctors Grid */}
       {displayedDoctors.length > 0 ? (
@@ -400,7 +406,7 @@ export default function DoctorDirectory({
             <div className="text-center pt-4">
               <Button
                 variant="outline"
-                onClick={() => setVisibleCount((prev) => prev + 12)}
+                onClick={() => setVisibleCount((prev) => prev + 9)}
                 className="px-6 py-2.5 rounded-xl text-sm font-semibold border-border hover:bg-muted cursor-pointer"
               >
                 আরও ডাক্তার দেখুন ({toBanglaNums(filteredDoctors.length - displayedDoctors.length)} জন বাকি)
