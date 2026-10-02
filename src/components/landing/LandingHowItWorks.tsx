@@ -18,7 +18,7 @@ export function LandingHowItWorks() {
   ];
 
   return (
-    <section className="py-10 sm:py-20 lg:py-28 bg-muted/40 dark:bg-slate-950/60 border-b border-border/60">
+    <section className="content-auto py-10 sm:py-20 lg:py-28 bg-muted/40 dark:bg-slate-950/60 border-b border-border/60">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-6 sm:space-y-14">
         <div className="space-y-2 sm:space-y-4 max-w-2xl mx-auto">
           <span className="section-label">ব্যবহার বিধি</span>

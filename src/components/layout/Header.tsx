@@ -109,8 +109,8 @@ export default function Header() {
       <header
         className={`sticky top-0 z-50 w-full pt-[env(safe-area-inset-top,0px)] transition-all duration-300 ${
           scrolled
-            ? "border-b border-border/60 bg-background/80 backdrop-blur-xl shadow-xs"
-            : "border-b border-transparent bg-background/60 backdrop-blur-md"
+            ? "border-b border-border/60 bg-background/95 sm:bg-background/80 backdrop-blur-xs sm:backdrop-blur-xl shadow-xs"
+            : "border-b border-transparent bg-background/95 sm:bg-background/60 backdrop-blur-xs sm:backdrop-blur-md"
         }`}
       >
         <div className="mx-auto flex h-14 min-[992px]:h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">

@@ -13,15 +13,15 @@ interface LandingHeroProps {
 export function LandingHero({ sampleMember }: LandingHeroProps) {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-primary-light/60 via-emerald-50/30 to-background dark:from-slate-950 dark:via-slate-900 dark:to-background py-10 sm:py-20 lg:py-28">
-      {/* Background orbs (optimized for mobile paint performance) */}
+      {/* Background orbs (optimized for mobile paint & compositor performance) */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden -z-10" aria-hidden="true">
         <div
-          className="absolute -top-32 sm:-top-48 -right-32 sm:-right-48 w-[280px] h-[280px] sm:w-[500px] sm:h-[500px] rounded-full sm:animate-gradient will-change-transform"
+          className="absolute -top-32 sm:-top-48 -right-32 sm:-right-48 w-[280px] h-[280px] sm:w-[500px] sm:h-[500px] rounded-full sm:animate-gradient sm:will-change-transform"
           style={{
             background: "radial-gradient(circle, rgba(22, 163, 74, 0.18) 0%, rgba(22, 163, 74, 0.04) 50%, transparent 70%)",
           }}
         />
-        <div className="absolute top-36 sm:top-48 -left-32 sm:-left-48 w-[240px] h-[240px] sm:w-[420px] sm:h-[420px] bg-emerald-200/40 dark:bg-emerald-900/20 rounded-full blur-lg sm:blur-2xl will-change-transform" />
+        <div className="hidden sm:block absolute top-36 sm:top-48 -left-32 sm:-left-48 w-[240px] h-[240px] sm:w-[420px] sm:h-[420px] bg-emerald-200/40 dark:bg-emerald-900/20 rounded-full blur-2xl sm:will-change-transform" />
         <div className="hidden sm:block absolute bottom-0 right-1/3 w-80 h-80 bg-emerald-100/60 dark:bg-emerald-950/30 rounded-full blur-2xl" />
       </div>
 
@@ -38,7 +38,7 @@ export function LandingHero({ sampleMember }: LandingHeroProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
           {/* Left Content Column */}
           <div className="space-y-4 sm:space-y-7 lg:col-span-7 text-center lg:text-left">
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-primary/10 text-emerald-800 dark:text-emerald-300 border border-primary/20 animate-fade-in shadow-sm">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-primary/10 text-emerald-800 dark:text-emerald-300 border border-primary/20 shadow-sm">
               <Heart className="h-3.5 w-3.5 fill-primary" />
               স্বাস্থ্য সুবিধা মেম্বারশিপ প্ল্যাটফর্ম
             </span>

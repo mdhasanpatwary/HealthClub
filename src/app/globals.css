@@ -377,21 +377,15 @@ label {
   border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
 }
 
-/* Glass card */
-.glass-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-}
-
-/* Hover lift & button glow */
-.hover-lift {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-.hover-lift:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-card-hover);
+/* Hover lift (desktop only to prevent sticky touch states on mobile) */
+@media (hover: hover) {
+  .hover-lift {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-card-hover);
+  }
 }
 .btn-glow {
   box-shadow: var(--shadow-primary);

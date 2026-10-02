@@ -35,7 +35,7 @@ export function LandingBenefits() {
   ];
 
   return (
-    <section id="benefits" className="py-10 sm:py-20 lg:py-28 bg-background">
+    <section id="benefits" className="content-auto py-10 sm:py-20 lg:py-28 bg-background">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-14">
         <div className="text-center space-y-2 sm:space-y-4 max-w-2xl mx-auto">
           <span className="section-label">মেম্বারশিপ সুবিধা</span>
