@@ -184,7 +184,7 @@ export function MembersTab({
                     <TableCell className="font-mono whitespace-nowrap">{m.phone}</TableCell>
                     <TableCell className="text-xs whitespace-nowrap">
                       <div className="font-semibold">
-                        {m.tier === "founding" ? "ফাউন্ডিং মেম্বার" : m.tier === "premium" ? "প্রিমিয়াম মেম্বার" : "ফ্যামিলি মেম্বার"}
+                        {(m.tier === "founding" || m.tier === "free") ? "ফ্রি মেম্বার" : m.tier === "premium" ? "প্রিমিয়াম মেম্বার" : "অন্যান্য"}
                       </div>
                       {m.referenceCode && (
                         <span className="inline-block mt-0.5 text-[10px] font-mono font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded border border-primary/20">

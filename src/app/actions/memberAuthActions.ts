@@ -223,9 +223,10 @@ export async function verifyEmailOtpAction(
       expiry.setFullYear(joined.getFullYear() + 1);
 
       const paymentSettings = await getCachedPaymentSettings();
-      const standardFee = pending.tier === "founding" ? 0 : parseInt(paymentSettings.premiumFee || "500", 10);
+      const isFreeTier = pending.tier === "free" || pending.tier === "founding";
+      const standardFee = isFreeTier ? 0 : parseInt(paymentSettings.premiumFee || "500", 10);
       const discount = pending.discountAmount || 0;
-      const isFree = pending.tier === "founding" || discount >= standardFee;
+      const isFree = isFreeTier || discount >= standardFee;
       const nextStatus = isFree ? "active" : "inactive";
       const finalProfilePicture = (await ensureStorageUrl(profilePictureUrl || pending.profilePictureUrl, "members", newId)) || null;
 
@@ -315,7 +316,7 @@ export async function verifyEmailOtpAction(
       return { success: false, message: `ভুল ওটিপি কোড। আর ${remaining}টি সুযোগ বাকি।` };
     }
 
-    const nextStatus = member.tier === "founding" ? "active" : member.status;
+    const nextStatus = (member.tier === "founding" || member.tier === "free") ? "active" : member.status;
     const updated = await prisma.member.update({
       where: { id: member.id },
       data: {

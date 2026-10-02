@@ -99,7 +99,7 @@ export async function getAdminRevenueAnalyticsAction(): Promise<{
         SELECT
           (SELECT COUNT(*) FROM members) AS total_members,
           (SELECT COUNT(*) FROM members WHERE tier = 'premium' AND status = 'active' AND expiry_date >= ${now}) AS active_premium_count,
-          (SELECT COUNT(*) FROM members WHERE tier = 'founding' AND status = 'active' AND expiry_date >= ${now}) AS active_founding_count,
+          (SELECT COUNT(*) FROM members WHERE tier IN ('founding', 'free') AND status = 'active' AND expiry_date >= ${now}) AS active_founding_count,
           (SELECT COUNT(*) FROM members WHERE expiry_date > (joined_date + INTERVAL '1 year') OR id IN (SELECT member_id FROM member_notifications WHERE type = 'renewal_approved')) AS total_renewed_count,
           (SELECT COUNT(*) FROM members WHERE renewal_status = 'pending') AS pending_renewals_count,
           (SELECT COUNT(*) FROM members WHERE expiry_date < ${now} AND (renewal_status IS NULL OR renewal_status != 'pending')) AS expired_members_count,
@@ -115,7 +115,7 @@ export async function getAdminRevenueAnalyticsAction(): Promise<{
           TO_CHAR(COALESCE(created_at, joined_date), 'YYYY-MM') AS month_key,
           COUNT(*) AS total_count,
           COUNT(*) FILTER (WHERE tier = 'premium') AS premium_count,
-          COUNT(*) FILTER (WHERE tier = 'founding') AS founding_count
+          COUNT(*) FILTER (WHERE tier IN ('founding', 'free')) AS founding_count
         FROM members
         WHERE COALESCE(created_at, joined_date) IS NOT NULL
         GROUP BY TO_CHAR(COALESCE(created_at, joined_date), 'YYYY-MM')

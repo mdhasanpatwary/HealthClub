@@ -14,16 +14,16 @@ const MemberCard = forwardRef<HTMLDivElement, MemberCardProps>(function MemberCa
   ref
 ) {
   // Determine card tier badge & accent styling
-  let badgeText = "Founding Member";
-  let badgeIcon = <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400 shrink-0 print:h-[2.5mm] print:w-[2.5mm]" />;
-  let badgeBg = "bg-amber-500/20 text-amber-300 border border-amber-400/40 shadow-sm";
+  let badgeText = "Free Member";
+  let badgeIcon = <Star className="h-3.5 w-3.5 fill-emerald-400 text-emerald-400 shrink-0 print:h-[2.5mm] print:w-[2.5mm]" />;
+  let badgeBg = "bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-sm";
   let borderAccent = "border-emerald-500/30";
 
   if (member.tier === "premium") {
     badgeText = "Premium Member";
-    badgeIcon = <ShieldCheck className="h-3.5 w-3.5 text-emerald-400 shrink-0 print:h-[2.5mm] print:w-[2.5mm]" />;
-    badgeBg = "bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-sm";
-    borderAccent = "border-emerald-400/30";
+    badgeIcon = <ShieldCheck className="h-3.5 w-3.5 text-amber-400 shrink-0 print:h-[2.5mm] print:w-[2.5mm]" />;
+    badgeBg = "bg-amber-500/20 text-amber-300 border border-amber-400/40 shadow-sm";
+    borderAccent = "border-amber-400/30";
   }
 
   // Use stored QR code URL from DB if available (avoids external API call on every render).

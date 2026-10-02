@@ -43,11 +43,9 @@ export function DashboardWelcomeHeader({
   const status = statusConfig[user.status as keyof typeof statusConfig] || statusConfig.inactive;
 
   const tierLabel =
-    user.tier?.toLowerCase() === "founding"
-      ? "প্রতিষ্ঠাতা মেম্বার"
-      : user.tier?.toLowerCase() === "premium"
+    user.tier?.toLowerCase() === "premium"
       ? "প্রিমিয়াম মেম্বার"
-      : "সাধারণ মেম্বার";
+      : "ফ্রি মেম্বার";
 
   return (
     <>

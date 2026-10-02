@@ -26,7 +26,7 @@ export const getHomepageStats = unstable_cache(
       >`
         SELECT
           (SELECT COUNT(*) FROM members WHERE status = 'active') AS member_count,
-          (SELECT COUNT(*) FROM members WHERE tier = 'founding') AS founding_count,
+          (SELECT COUNT(*) FROM members WHERE tier IN ('founding', 'free')) AS founding_count,
           (SELECT COUNT(*) FROM partners WHERE category = 'hospital') AS hospital_count,
           (SELECT COUNT(*) FROM partners WHERE category = 'diagnostic') AS diagnostic_count,
           (SELECT COUNT(*) FROM partners WHERE category = 'pharmacy') AS pharmacy_count,

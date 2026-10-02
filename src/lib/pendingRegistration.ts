@@ -24,7 +24,7 @@ export interface PendingRegistrationData {
   phone: string;
   email: string;
   hashedPassword: string;
-  tier: "founding" | "premium";
+  tier: "free" | "premium" | "founding";
   address?: string;
   birthDate?: string;
   profession?: string;
@@ -81,7 +81,7 @@ async function verifyPendingRegistrationToken(token: string): Promise<PendingReg
       phone: payload.phone as string,
       email: payload.email as string,
       hashedPassword: payload.hashedPassword as string,
-      tier: payload.tier as "founding" | "premium",
+      tier: (payload.tier as "free" | "premium" | "founding") || "free",
       address: payload.address as string | undefined,
       birthDate: payload.birthDate as string | undefined,
       profession: payload.profession as string | undefined,

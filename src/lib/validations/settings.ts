@@ -5,7 +5,7 @@ export const systemSettingsSchema = z.object({
   founding_fee: z
     .string()
     .trim()
-    .regex(/^\d+$/, "ফাউন্ডিং মেম্বার ফি সংখ্যা হতে হবে।"),
+    .regex(/^\d+$/, "ফ্রি মেম্বার ফি সংখ্যা হতে হবে।"),
   premium_fee: z
     .string()
     .trim()

@@ -359,7 +359,7 @@ const getCachedAdminStats = unstable_cache(
           (SELECT COUNT(*) FROM members WHERE status = 'active') AS active_members,
           (SELECT COUNT(*) FROM members WHERE status = 'inactive') AS inactive_members,
           (SELECT COUNT(*) FROM members WHERE status IN ('pending_approval', 'pending_payment')) AS pending_members,
-          (SELECT COUNT(*) FROM members WHERE tier = 'founding') AS founding_members,
+          (SELECT COUNT(*) FROM members WHERE tier IN ('founding', 'free')) AS founding_members,
           (SELECT COUNT(*) FROM members WHERE tier = 'premium') AS premium_members,
           (SELECT COUNT(*) FROM members WHERE status = 'active' AND expiry_date >= ${now} AND expiry_date <= ${in30Days}) AS expiring_members,
           (SELECT COUNT(*) FROM members WHERE created_at >= ${startOfMonth}) AS new_members_this_month,

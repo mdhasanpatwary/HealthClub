@@ -105,8 +105,6 @@ export default async function Home() {
     getCachedContactSettings(),
   ]);
   const {
-    memberCount,
-    foundingCount,
     hospitalCount,
     diagnosticCount,
     pharmacyCount,
@@ -115,7 +113,6 @@ export default async function Home() {
     ambulanceCount,
   } = stats;
 
-  const remainingSeats = Math.max(0, 100 - (foundingCount ?? memberCount));
   const allBlogCards = await getAllBlogPostCardsAction();
   const blogPosts = allBlogCards.slice(0, 3);
 
@@ -125,7 +122,7 @@ export default async function Home() {
     name: "মোঃ আশরাফুল আলম",
     phone: "01712345678",
     email: "ashraful@example.com",
-    tier: "founding",
+    tier: "free",
     status: "active",
     joinedDate: "2026-01-15",
     expiryDate: "2027-01-15",
@@ -156,7 +153,6 @@ export default async function Home() {
 
       {/* 2. STATS SECTION */}
       <LandingStats
-        remainingSeats={remainingSeats}
         hospitalCount={hospitalCount}
         diagnosticCount={diagnosticCount}
         pharmacyCount={pharmacyCount}

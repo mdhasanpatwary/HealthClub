@@ -279,8 +279,8 @@ export function AdminStatsGrid({ stats, onSelectTab }: AdminStatsGridProps) {
             <div className="space-y-2 text-xs">
               <div className="flex items-center justify-between py-1 border-b border-border/40">
                 <span className="text-muted-foreground flex items-center gap-1.5">
-                  <Sparkles className="h-3.5 w-3.5 text-amber-500" />
-                  ফাউন্ডিং মেম্বার:
+                  <Sparkles className="h-3.5 w-3.5 text-emerald-500" />
+                  ফ্রি মেম্বার:
                 </span>
                 <span className="font-bold font-mono text-foreground">{toBanglaNums(stats.foundingMembers)}</span>
               </div>

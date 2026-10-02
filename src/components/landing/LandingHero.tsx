@@ -60,7 +60,7 @@ export function LandingHero({ sampleMember }: LandingHeroProps) {
                   className: "w-full sm:w-auto",
                 })}
               >
-                <span>আজই ফাউন্ডিং মেম্বার হোন</span>
+                <span>ফ্রি মেম্বার কার্ড নিন</span>
                 <ArrowRight className="h-5 w-5" />
               </Link>
 
@@ -83,7 +83,7 @@ export function LandingHero({ sampleMember }: LandingHeroProps) {
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
                 <span className="text-xs font-bold text-secondary dark:text-white">
-                  ১০০% ফ্রি ফাউন্ডিং সদস্যতা
+                  ১০০% ফ্রি মেম্বারশিপ
                 </span>
               </div>
 
@@ -97,7 +97,7 @@ export function LandingHero({ sampleMember }: LandingHeroProps) {
               <div className="flex items-center gap-2 col-span-2 sm:col-span-1">
                 <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
                 <span className="text-xs font-bold text-secondary dark:text-white">
-                  সকল পার্টনার নেটওয়ার্কে প্রযোজ্য
+                  প্রিমিয়ামে ১৫-৩০% ছাড় ও প্রায়োরিটি
                 </span>
               </div>
             </div>

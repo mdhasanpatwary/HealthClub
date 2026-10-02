@@ -9,11 +9,11 @@ export const revalidate = 86400; // 24-hour ISR
 
 export async function generateMetadata() {
   const ogTitle = "মেম্বারশিপ প্ল্যান - হেলথ ক্লাব";
-  const ogDesc = "প্রথম ১০০ জন সদস্য পাচ্ছেন ১ বছরের ফাউন্ডিং মেম্বারশিপ সম্পূর্ণ ফ্রি।";
+  const ogDesc = "ফ্রি মেম্বারশিপে ১০-২৫% ছাড় এবং প্রিমিয়াম মেম্বারশিপে ১৫-৩০% ছাড় ও প্রায়োরিটি সুবিধা।";
 
   return {
     title: "মেম্বারশিপ প্ল্যান ও ফ্রি রেজিস্ট্রেশন",
-    description: "ফাউন্ডিং মেম্বার (১ বছর সম্পূর্ণ ফ্রি) ও প্রিমিয়াম মেম্বারশিপের সুবিধা দেখে নিন এবং আপনার জন্য সেরা প্ল্যানটি বেছে নিন।",
+    description: "ফ্রি মেম্বারশিপ (১০-২৫% ছাড়) ও প্রিমিয়াম মেম্বারশিপ (১৫-৩০% ছাড় ও প্রায়োরিটি)-এর সুবিধা দেখে নিন এবং সেরা প্ল্যানটি বেছে নিন।",
     alternates: {
       canonical: `${SITE_URL}/membership`,
     },
@@ -40,7 +40,7 @@ export default async function MembershipPage() {
     { title: "ডায়াগনস্টিক টেস্ট ছাড়", desc: "রক্ত পরীক্ষা, এক্স-রে সহ সকল প্যাথলজিক্যাল ও ইমেজিং পরীক্ষায় ১০-৩০% ডিসকাউন্ট।", gradient: "from-blue-500 to-cyan-600" },
     { title: "মডেল ফার্মেসি অফার", desc: "নির্ধারিত পার্টনার ফার্মেসিগুলো থেকে প্রয়োজনীয় ঔষধ ক্রয়ের ক্ষেত্রে ৫% থেকে ১০% ডিসকাউন্ট।", gradient: "from-violet-500 to-purple-600" },
     { title: "ফ্রি স্বাস্থ্য ক্যাম্প", desc: "নিয়মিত আয়োজিত ফ্রি ডায়াবেটিস চেকআপ, আই ক্যাম্প এবং রক্তচাপ পরীক্ষা।", gradient: "from-rose-500 to-pink-600" },
-    { title: "১ বছর প্রতিষ্ঠাতা স্ট্যাটাস", desc: "প্রথম ১০০ ফাউন্ডিং মেম্বারদের জন্য মেম্বারশিপ ১ বছরের জন্য সম্পূর্ণ ফ্রি।", gradient: "from-amber-500 to-orange-600" }
+    { title: "প্রাইওরিটি স্বাস্থ্য সেবা", desc: "প্রিমিয়াম সদস্যদের জন্য রয়েছে সর্বোচ্চ ১৫-৩০% ছাড় এবং চেম্বার ও সিরিয়ালে অগ্রাধিকার সুবিধা।", gradient: "from-amber-500 to-orange-600" }
   ];
 
   const merchantReturnPolicy = {
@@ -182,7 +182,7 @@ export default async function MembershipPage() {
       "offers": [
         {
           "@type": "Offer",
-          "name": "Founding Member (First 100 Users)",
+          "name": "Free Member Plan",
           "price": "0",
           "priceCurrency": "BDT",
           "availability": "https://schema.org/InStock",
@@ -261,30 +261,30 @@ export default async function MembershipPage() {
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-stretch max-w-3xl mx-auto">
 
-          {/* Founding Member */}
+          {/* Free Member */}
           <div className="relative bg-gradient-to-b from-primary/10 via-primary/5 to-background dark:from-primary/15 dark:via-primary/8 dark:to-slate-900 border-2 border-primary rounded-3xl p-5 sm:p-8 flex flex-col justify-between shadow-xl ring-4 ring-primary/10 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/5 to-transparent rounded-3xl" />
             <div className="absolute top-4 right-4 bg-gradient-to-r from-primary to-emerald-500 text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-md">
-              সীমিত অফার
+              জনপ্রিয়
             </div>
             <div className="relative space-y-6">
               <div>
                 <div className="h-10 w-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-3">
                   <Star className="h-5 w-5 text-primary fill-primary/20" />
                 </div>
-                <h3 className="font-heading text-xl font-bold text-secondary dark:text-white">ফাউন্ডিং মেম্বার</h3>
-                <p className="text-xs text-muted-foreground mt-1">প্রথম ১০০ জন ফাউন্ডিং মেম্বারশিপ পাবেন।</p>
+                <h3 className="font-heading text-xl font-bold text-secondary dark:text-white">ফ্রি মেম্বারশিপ</h3>
+                <p className="text-xs text-muted-foreground mt-1">চিকিৎসায় ১০-২৫% ডিসকাউন্ট উপভোগ করুন।</p>
               </div>
               <div className="flex items-baseline gap-2 text-secondary dark:text-white">
                 <span className="text-5xl font-extrabold font-mono">৳০</span>
-                <span className="text-sm text-muted-foreground font-semibold">/ ১ বছর ফ্রি</span>
+                <span className="text-sm text-muted-foreground font-semibold">/ সম্পূর্ণ ফ্রি</span>
               </div>
               <ul className="space-y-3 text-sm">
                 {[
+                  "হাসপাতাল ও টেস্টে ১০-২৫% নিশ্চিত ডিসকাউন্ট",
                   "১টি কার্ডে পরিবার ও সকল আত্মীয়দের ডিসকাউন্ট কভারেজ",
-                  "১ বছর মেম্বারশিপ",
-                  "সকল পার্টনার হাসপাতালে ডিসকাউন্ট",
                   "ডিজিটাল মেম্বারশিপ কার্ড ও ভেরিফাইড কিউআর",
+                  "সম্পূর্ণ বিনামূল্যে মেম্বারশিপ সুবিধা",
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
                     <div className="h-5 w-5 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 mt-0.5">
@@ -309,7 +309,7 @@ export default async function MembershipPage() {
             </div>
           </div>
 
-          {/* Premium */}
+          {/* Premium Member */}
           <div className="bg-background dark:bg-slate-900 border border-border rounded-3xl p-5 sm:p-8 flex flex-col justify-between shadow-md hover-lift">
             <div className="space-y-6">
               <div>
@@ -317,7 +317,7 @@ export default async function MembershipPage() {
                   <ShieldCheck className="h-5 w-5 text-slate-600 dark:text-slate-300" />
                 </div>
                 <h3 className="font-heading text-xl font-bold text-secondary dark:text-white">প্রিমিয়াম মেম্বারশিপ</h3>
-                <p className="text-xs text-muted-foreground mt-1">প্রিমিয়াম সদস্যদের বাৎসরিক কার্ড ও সুবিধা।</p>
+                <p className="text-xs text-muted-foreground mt-1">১৫-৩০% সর্বোচ্চ ছাড় ও প্রায়োরিটি সুবিধা।</p>
               </div>
               <div className="flex items-baseline gap-2 text-secondary dark:text-white">
                 <span className="text-5xl font-extrabold font-mono">৳৫০০</span>
@@ -325,10 +325,11 @@ export default async function MembershipPage() {
               </div>
               <ul className="space-y-3 text-sm text-muted-foreground">
                 {[
+                  "হাসপাতাল ও টেস্টে ১৫-৩০% সর্বোচ্চ ডিসকাউন্ট",
+                  "প্রাইওরিটি কাস্টমার সাপোর্ট ও ডেডিকেটেড হেল্পলাইন",
+                  "ডাক্তার চেম্বার ও সিরিয়ালে অগ্রাধিকার সুবিধা",
                   "১টি কার্ডে পরিবার ও সকল আত্মীয়দের ডিসকাউন্ট কভারেজ",
-                  "বাৎসরিক রিনিউয়াল সাপেক্ষে মেয়াদ বৃদ্ধি",
-                  "সকল পার্টনার হাসপাতালে ডিসকাউন্ট",
-                  "ডিজিটাল মেম্বারশিপ কার্ড ও ভেরিফাইড কিউআর",
+                  "প্রিমিয়াম ডিজিটাল মেম্বারশিপ কার্ড ও কিউআর",
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
                     <div className="h-5 w-5 rounded-full bg-muted border border-border flex items-center justify-center shrink-0 mt-0.5">
@@ -348,7 +349,7 @@ export default async function MembershipPage() {
                   className: "w-full",
                 })}
               >
-                <span>প্ল্যান কিনুন</span>
+                <span>প্রিমিয়াম মেম্বার হোন</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>

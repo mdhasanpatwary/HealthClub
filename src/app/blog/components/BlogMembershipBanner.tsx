@@ -19,15 +19,15 @@ export function BlogMembershipBanner() {
       </div>
 
       <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-        হেলথ ক্লাবের ডিজিটাল মেম্বারশিপ কার্ড থাকলে আপনি ও আপনার পরিবারের সদস্যরা আল-আকসা হাসপাতাল, প্যাসিফিক হেলথ কেয়ারসহ ফেনী সদরের শীর্ষ পার্টনার স্বাস্থ্যসেবা কেন্দ্রগুলোতে ১০-৩০% নিশ্চিত ছাড় পাবেন।
+        হেলথ ক্লাবের ডিজিটাল কার্ড থাকলে আপনি ও আপনার পরিবারের সদস্যরা আল-আকসা হাসপাতাল, প্যাসিফিক হেলথ কেয়ারসহ ফেনী সদরের শীর্ষ পার্টনার স্বাস্থ্যসেবা কেন্দ্রগুলোতে ১০-৩০% নিশ্চিত ছাড় পাবেন। ফ্রি মেম্বারশিপে ১০-২৫% এবং প্রিমিয়ামে ১৫-৩০% বিশেষ ছাড় ও প্রায়োরিটি সুবিধা অন্তর্ভুক্ত।
       </p>
 
       <div className="flex flex-wrap items-center gap-3 pt-2">
         <Link
-          href="/membership"
+          href="/register"
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-xs sm:text-sm font-bold shadow-xs hover:bg-primary/90 transition-all"
         >
-          <span>মেম্বারশিপ কার্ড গ্রহণ করুন</span>
+          <span>১ মিনিটে ফ্রি কার্ড নিন (৳০)</span>
           <ArrowRight className="h-4 w-4" />
         </Link>
 

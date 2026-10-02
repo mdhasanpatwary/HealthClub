@@ -135,13 +135,13 @@ export default function SavingsCalculator() {
           </div>
         </div>
 
-        {/* Mobile: Founding member + CTA */}
+        {/* Mobile: Free member + CTA */}
         <div className="flex items-start gap-3 bg-primary/5 dark:bg-primary/10 border border-primary/20 rounded-2xl p-4">
           <Sparkles className="h-4 w-4 text-primary mt-0.5 shrink-0" />
           <div>
-            <p className="text-xs font-bold text-primary">ফাউন্ডিং মেম্বারদের জন্য আজীবন ফ্রি!</p>
+            <p className="text-xs font-bold text-primary">ফ্রি মেম্বার কার্ডে কোনো ফি নেই!</p>
             <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-              প্রথম ব্যাচে নিবন্ধন করলে কোনো বাৎসরিক নবায়ন ফি নেই। আজীবন মেম্বারশিপ উপভোগ করুন।
+              নিবন্ধন করলেই পাবেন ১০-২৫% নিশ্চিত ডিসকাউন্ট এবং প্রিমিয়ামে ১৫-৩০% ছাড় ও প্রায়োরিটি সুবিধা।
             </p>
           </div>
         </div>
@@ -223,9 +223,9 @@ export default function SavingsCalculator() {
           <div className="flex items-start gap-3 bg-primary/5 dark:bg-primary/10 border border-primary/20 rounded-2xl p-4">
             <Sparkles className="h-4 w-4 text-primary mt-0.5 shrink-0" />
             <div>
-              <p className="text-xs font-bold text-primary">ফাউন্ডিং মেম্বারদের জন্য আজীবন ফ্রি!</p>
+              <p className="text-xs font-bold text-primary">ফ্রি মেম্বার কার্ডে কোনো ফি নেই!</p>
               <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-                প্রথম ব্যাচে নিবন্ধন করলে কোনো বাৎসরিক নবায়ন ফি নেই। আজীবন মেম্বারশিপ উপভোগ করুন।
+                নিবন্ধন করলেই পাবেন ১০-২৫% নিশ্চিত ডিসকাউন্ট এবং প্রিমিয়ামে ১৫-৩০% ছাড় ও প্রায়োরিটি সুবিধা।
               </p>
             </div>
           </div>

@@ -230,14 +230,14 @@ export function MedicalTestPriceTable({
             ফেনীর শীর্ষ ডায়াগনস্টিক সেন্টারে প্রতিটি টেস্টে ১০-৩০% মেম্বার ছাড় পান
           </h3>
           <p className="text-xs sm:text-sm text-muted-foreground max-w-xl">
-            আজই পরিবারের জন্য ডিজিটাল হেলথ ক্লাব কার্ড সংগ্রহ করে প্যাথলজি ও রেডিওলজি পরীক্ষায় নিশ্চিত ছাড় ও অগ্রাধিকার সেবা নিন।
+            আজই পরিবারের জন্য ডিজিটাল হেলথ ক্লাব কার্ড সংগ্রহ করে প্যাথলজি ও রেডিওলজি পরীক্ষায় নিশ্চিত ছাড় ও অগ্রাধিকার সেবা নিন। ফ্রি মেম্বার কার্ডে ১০-২৫% এবং প্রিমিয়ামে ১৫-৩০% ছাড়।
           </p>
         </div>
         <Link
-          href="/membership"
+          href="/register"
           className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-sm transition-all hover:gap-3 shrink-0 w-full sm:w-auto"
         >
-          <span>মেম্বারশিপ কার্ড নিন</span>
+          <span>১ মিনিটে ফ্রি কার্ড নিন (৳০)</span>
           <ArrowRight className="h-4 w-4" />
         </Link>
       </div>

@@ -212,7 +212,7 @@ export function formatNewMemberNotifications(
   }>
 ): AdminNotificationItem[] {
   return recentMembers.map((mem) => {
-    const tierLabel = mem.tier === "founding" ? "ফাউন্ডিং মেম্বার" : "প্রিমিয়াম মেম্বার";
+    const tierLabel = (mem.tier === "founding" || mem.tier === "free") ? "ফ্রি মেম্বার" : "প্রিমিয়াম মেম্বার";
     return {
       id: `new-mem-${mem.id}`,
       category: "member_new" as const,

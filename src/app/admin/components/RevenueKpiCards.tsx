@@ -137,7 +137,7 @@ export function RevenueKpiCards({ kpis }: RevenueKpiCardsProps) {
             <Sparkles className="h-4 w-4" />
           </div>
           <div>
-            <p className="text-[11px] text-muted-foreground">ফাউন্ডিং সদস্য</p>
+            <p className="text-[11px] text-muted-foreground">ফ্রি সদস্য</p>
             <p className="font-bold font-mono text-foreground text-sm">
               {formatNum(kpis.activeFoundingCount)} জন
             </p>

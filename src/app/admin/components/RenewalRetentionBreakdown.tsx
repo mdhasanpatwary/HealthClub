@@ -48,7 +48,7 @@ export function RenewalRetentionBreakdown({
                 মেম্বারশিপ প্ল্যান ও রাজস্ব উৎস বিভাজন
               </CardTitle>
               <CardDescription className="text-xs text-muted-foreground">
-                ফাউন্ডিং ও প্রিমিয়াম সদস্য সংখ্যার অনুপাত ও রাজস্ব অবদান
+                ফ্রি ও প্রিমিয়াম সদস্য সংখ্যার অনুপাত ও রাজস্ব অবদান
               </CardDescription>
             </div>
           </div>
@@ -85,7 +85,7 @@ export function RenewalRetentionBreakdown({
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs font-semibold">
                 <div className="flex items-center gap-2">
-                  <span className="text-purple-700 dark:text-purple-300 font-bold">ফাউন্ডিং মেম্বারশিপ</span>
+                  <span className="text-purple-700 dark:text-purple-300 font-bold">ফ্রি মেম্বারশিপ</span>
                   <Badge variant="outline" className="bg-purple-500/10 text-purple-600 border-purple-500/30 text-[10px] py-0">
                     ৳{formatNum(tierBreakdown.foundingFee)} / বছর
                   </Badge>

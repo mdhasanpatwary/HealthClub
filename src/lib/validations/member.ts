@@ -20,7 +20,7 @@ export const memberRegistrationSchema = z.object({
   password: z
     .string()
     .min(6, "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।"),
-  tier: z.enum(["founding", "premium"], {
+  tier: z.enum(["free", "premium", "founding"], {
     message: "সদস্যপদ প্ল্যান নির্বাচন করুন।",
   }),
   address: z
@@ -73,7 +73,7 @@ export const adminAddMemberSchema = z.object({
     .min(6, "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।")
     .optional()
     .or(z.literal("")),
-  tier: z.enum(["founding", "premium"]),
+  tier: z.enum(["free", "premium", "founding"]),
   address: z.string().trim().optional().or(z.literal("")),
   birthDate: z.string().trim().optional().or(z.literal("")),
   profession: z.string().trim().optional().or(z.literal("")),

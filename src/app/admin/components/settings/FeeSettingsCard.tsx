@@ -28,7 +28,7 @@ export function FeeSettingsCard({
       <CardContent className="space-y-4">
         <div className="space-y-1.5">
           <Label htmlFor="founding-fee" className="text-xs font-semibold">
-            ফাউন্ডিং মেম্বার ফি (৳)
+            ফ্রি মেম্বার ফি (৳)
           </Label>
           <Input
             id="founding-fee"

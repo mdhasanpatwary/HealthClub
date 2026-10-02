@@ -101,13 +101,14 @@ export async function getAllActiveReferenceCodes(): Promise<ReferenceCodeItem[]>
  */
 export async function evaluateReferenceCode(
   rawCode: string,
-  tier: "founding" | "premium"
+  tier: "free" | "premium" | "founding"
 ): Promise<ReferenceCodeValidationResult> {
   const cleanCode = rawCode?.trim().toUpperCase();
 
+  const isFreeTier = tier === "free" || tier === "founding";
   const paymentSettings = await getCachedPaymentSettings();
-  const rawFee = tier === "founding" ? paymentSettings.foundingFee : paymentSettings.premiumFee;
-  const originalFee = Math.max(0, parseInt(rawFee || (tier === "founding" ? "0" : "500"), 10));
+  const rawFee = isFreeTier ? paymentSettings.foundingFee : paymentSettings.premiumFee;
+  const originalFee = Math.max(0, parseInt(rawFee || (isFreeTier ? "0" : "500"), 10));
 
   if (!cleanCode) {
     return {

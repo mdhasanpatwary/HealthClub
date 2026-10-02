@@ -14,7 +14,7 @@ interface MemberDialogProps {
     name: string;
     phone: string;
     email: string;
-    tier: "founding" | "premium";
+    tier: "free" | "premium" | "founding";
     address: string;
     birthDate: string;
     profession: string;
@@ -24,7 +24,7 @@ interface MemberDialogProps {
     name: string;
     phone: string;
     email: string;
-    tier: "founding" | "premium";
+    tier: "free" | "premium" | "founding";
     address: string;
     birthDate: string;
     profession: string;
@@ -74,7 +74,7 @@ export function MemberDialog({
           <div className="space-y-2">
             <label htmlFor="admin-member-tier" className="text-xs font-semibold text-secondary cursor-pointer">মেম্বারশিপ প্ল্যান</label>
             <select id="admin-member-tier" value={newMember.tier} onChange={e => setNewMember({ ...newMember, tier: e.target.value as Member["tier"] })} className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary">
-              <option value="founding">ফাউন্ডিং মেম্বার (১ বছর)</option>
+              <option value="free">ফ্রি মেম্বার</option>
               <option value="premium">প্রিমিয়াম মেম্বার</option>
             </select>
           </div>

@@ -45,13 +45,13 @@ export function BlogPriceTable({
   const defaultDurationHeader = "সময়কাল / সুবিধা";
 
   const defaultBannerTitle = "ফেনীর শীর্ষ পার্টনার হাসপাতাল ও ডায়াগনস্টিক ল্যাবে সাশ্রয়ী চিকিৎসা";
-  const defaultBannerText = "আজই হেলথ ক্লাবের মেম্বারশিপ কার্ড সংগ্রহ করে চিকিৎসায় নিশ্চিত ১০-৩০% ছাড় পান।";
-  const defaultButtonText = "মেম্বারশিপ কার্ড নিন";
+  const defaultBannerText = "আজই হেলথ ক্লাবের ফ্রি ডিজিটাল কার্ড সংগ্রহ করে চিকিৎসায় নিশ্চিত ১০-৩০% ছাড় পান (ফ্রি মেম্বারে ১০-২৫%, প্রিমিয়ামে ১৫-৩০% ও প্রায়োরিটি সুবিধা)।";
+  const defaultButtonText = "১ মিনিটে ফ্রি কার্ড নিন";
 
   const banner = conversionBanner || {
     text: defaultBannerText,
     buttonText: defaultButtonText,
-    href: "/membership",
+    href: "/register",
     variant: "button",
   };
 

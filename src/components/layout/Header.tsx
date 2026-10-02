@@ -201,10 +201,10 @@ export default function Header() {
                   href="/register"
                   className={buttonVariants({
                     size: "sm",
-                    className: "rounded-xl font-bold",
+                    className: "rounded-xl font-bold shadow-xs",
                   })}
                 >
-                  সদস্য হোন
+                  ফ্রি কার্ড নিন
                 </Link>
               </>
             )}

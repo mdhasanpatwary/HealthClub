@@ -133,17 +133,17 @@ export function DoctorChamberSchedule({ doctor }: DoctorChamberScheduleProps) {
             <div className="space-y-0.5 min-w-0 flex-1">
               <div className="flex items-center gap-1.5 flex-wrap">
                 <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full">
-                  ফাউন্ডিং মেম্বার অফার
+                  মেম্বারশিপ অফার
                 </span>
                 <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400">
-                  ১ বছর সম্পূর্ণ ফ্রি
+                  ১০০% ফ্রি মেম্বার কার্ড
                 </span>
               </div>
               <p className="font-heading font-bold text-xs sm:text-sm text-foreground leading-snug">
                 সিরিয়াল বুকিংয়ের পর টেস্টে ১০-৩০% ডিসকাউন্ট চান?
               </p>
               <p className="text-[11px] text-muted-foreground leading-relaxed">
-                ডাক্তারের প্রেসক্রিপশন অনুযায়ী সকল টেস্ট ও ডায়াগনস্টিকে ছাড় পেতে এখনই সংগ্রহ করুন হেলথ ক্লাব ডিজিটাল মেম্বার কার্ড।
+                ফ্রি মেম্বারশিপে ১০-২৫% এবং প্রিমিয়ামে ১৫-৩০% বিশেষ ছাড় ও প্রায়োরিটি সুবিধা পেতে এখনই সংগ্রহ করুন হেলথ ক্লাব ডিজিটাল মেম্বার কার্ড।
               </p>
             </div>
           </div>

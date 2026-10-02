@@ -137,14 +137,14 @@ export function PartnerVerifiedMemberCard({
             <h3 className="font-bold text-secondary dark:text-white truncate">{verifiedMember.name}</h3>
             <span
               className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                verifiedMember.tier === "founding"
+                verifiedMember.tier === "premium"
                   ? "bg-amber-500/10 text-amber-600 dark:text-amber-500 border border-amber-500/20"
                   : "bg-primary/10 text-primary border border-primary/20"
               }`}
             >
-              {verifiedMember.tier === "founding"
-                ? "ফাউন্ডিং মেম্বার"
-                : "প্রিমিয়াম মেম্বার"}
+              {verifiedMember.tier === "premium"
+                ? "প্রিমিয়াম মেম্বার (১৫-৩০% ছাড় + প্রায়োরিটি)"
+                : "ফ্রি মেম্বার (১০-২৫% ছাড়)"}
             </span>
           </div>
           <p className="text-xs text-muted-foreground mt-0.5">

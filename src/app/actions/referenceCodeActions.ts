@@ -15,7 +15,7 @@ import { hasAdminPermission } from "@/lib/permissions";
  */
 export async function validateReferenceCodeAction(
   rawCode: string,
-  tier: "founding" | "premium"
+  tier: "free" | "premium" | "founding"
 ): Promise<ReferenceCodeValidationResult> {
   return evaluateReferenceCode(rawCode, tier);
 }

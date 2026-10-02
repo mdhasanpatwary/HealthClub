@@ -44,9 +44,9 @@ export function ReviewCard({ review }: ReviewCardProps) {
               <span className="text-sm font-bold text-foreground truncate font-heading">
                 {memberName}
               </span>
-              {memberTier === "founding" && (
-                <span className="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20">
-                  ফাউন্ডিং
+              {(memberTier === "founding" || memberTier === "free") && (
+                <span className="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                  ফ্রি মেম্বার
                 </span>
               )}
               {memberTier === "premium" && (

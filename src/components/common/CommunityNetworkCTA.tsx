@@ -170,7 +170,7 @@ export default function CommunityNetworkCTA({ hotline }: CommunityNetworkCTAProp
               <ul className="text-2xs sm:text-xs text-muted-foreground space-y-1.5 pt-1">
                 <li className="flex items-center gap-1.5">
                   <ShieldCheck className="h-3.5 w-3.5 text-blue-600 shrink-0" />
-                  <span>১০০+ নিয়মিত মেম্বারদের কাছে প্রচার</span>
+                  <span>ভেরিফাইড মেম্বার ও পরিবারগুলোর কাছে প্রচার</span>
                 </li>
                 <li className="flex items-center gap-1.5">
                   <ShieldCheck className="h-3.5 w-3.5 text-blue-600 shrink-0" />

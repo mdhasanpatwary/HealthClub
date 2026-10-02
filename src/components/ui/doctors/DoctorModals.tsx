@@ -133,17 +133,17 @@ export function DoctorSerialModal({ doctor, onClose }: DoctorSerialModalProps) {
             <div className="space-y-1 min-w-0 flex-1">
               <div className="flex items-center gap-1.5 flex-wrap">
                 <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full">
-                  সীমিত সময়ের অফার
+                  মেম্বারশিপ সুবিধা
                 </span>
                 <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400">
-                  ১ বছর সম্পূর্ণ ফ্রি
+                  ১০০% ফ্রি কার্ড
                 </span>
               </div>
               <h5 className="font-heading font-bold text-xs sm:text-sm text-foreground leading-snug">
                 ডাক্তারের টেস্টে ১০-৩০% ডিসকাউন্ট চান?
               </h5>
               <p className="text-[11px] text-muted-foreground leading-relaxed">
-                প্রথম ১০০ জন পাচ্ছেন হেলথ ক্লাবের <strong className="text-foreground font-semibold">ফাউন্ডিং মেম্বারশিপ ফ্রি</strong>। ফেনীর পার্টনার হাসপাতালে টেস্ট করানোর পূর্বে ডিজিটাল কার্ডটি সংগ্রহ করে নিন।
+                ফ্রি মেম্বারশিপে <strong className="text-foreground font-semibold">১০-২৫%</strong> এবং প্রিমিয়ামে <strong className="text-foreground font-semibold">১৫-৩০%</strong> নিশ্চিত ছাড় ও প্রায়োরিটি সুবিধা। ফেনীর পার্টনার হাসপাতালে টেস্ট করানোর পূর্বে ডিজিটাল কার্ডটি সংগ্রহ করে নিন।
               </p>
             </div>
           </div>

@@ -1,14 +1,12 @@
 import { toBanglaNums } from "@/lib/utils";
 
 interface LandingStatsProps {
-  remainingSeats: number;
   hospitalCount: number;
   diagnosticCount: number;
   pharmacyCount: number;
 }
 
 export function LandingStats({
-  remainingSeats,
   hospitalCount,
   diagnosticCount,
   pharmacyCount,
@@ -17,24 +15,24 @@ export function LandingStats({
     <section className="bg-background py-8 sm:py-14 border-y border-border/60">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-5">
-          {/* 1. Remaining Seats */}
+          {/* 1. Free Membership */}
           <div className="col-span-2 sm:col-span-1 relative bg-gradient-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/5 p-4 sm:p-6 rounded-2xl border border-primary/15 text-center hover-lift shadow-sm group overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent" />
-            <p className="text-3xl font-extrabold text-primary font-mono tabular-nums">
-              মাত্র {toBanglaNums(remainingSeats)}টি বাকি
+            <p className="text-2xl sm:text-3xl font-extrabold text-primary font-mono tabular-nums">
+              ১০-২৫% ছাড়
             </p>
-            <p className="text-sm font-bold text-secondary dark:text-white mt-1.5">অবশিষ্ট আসন</p>
+            <p className="text-sm font-bold text-secondary dark:text-white mt-1.5">ফ্রি মেম্বারশিপ</p>
             <p className="text-xs text-muted-foreground mt-1">
-              ফাউন্ডিং মেম্বার সীমা: {toBanglaNums(100)}
+              সম্পূর্ণ বিনামূল্যে ডিজিটাল কার্ড
             </p>
           </div>
 
-          {/* 2. Medical Bill Savings */}
+          {/* 2. Premium Membership */}
           <div className="relative bg-gradient-to-br from-emerald-500/5 to-emerald-500/10 dark:from-emerald-500/10 dark:to-emerald-500/5 p-4 sm:p-6 rounded-2xl border border-emerald-500/15 text-center hover-lift shadow-sm overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-emerald-500 to-transparent" />
-            <p className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">১০-৩০% ডিসকাউন্ট</p>
-            <p className="text-sm font-bold text-secondary dark:text-white mt-1.5">চিকিৎসা ব্যয় সাশ্রয়</p>
-            <p className="text-xs text-muted-foreground mt-1">পার্টনার হাসপাতালে ১০-৩০% পর্যন্ত বিশেষ ছাড়।</p>
+            <p className="text-2xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">১৫-৩০% ছাড়</p>
+            <p className="text-sm font-bold text-secondary dark:text-white mt-1.5">প্রিমিয়াম মেম্বারশিপ</p>
+            <p className="text-xs text-muted-foreground mt-1">সর্বোচ্চ ছাড় ও প্রায়োরিটি সুবিধা।</p>
           </div>
 
           {/* 3. Partner Hospitals */}

@@ -158,7 +158,7 @@ export function MemberDetailsDialog({
             <div className="flex flex-col gap-0.5">
               <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">প্ল্যানের ধরন</span>
               <span className="text-xs font-bold text-secondary">
-                {viewingMember.tier === "founding" ? "ফাউন্ডিং মেম্বার (১ বছর)" : viewingMember.tier === "premium" ? "প্রিমিয়াম মেম্বার" : "ফ্যামিলি মেম্বার"}
+                {(viewingMember.tier === "founding" || viewingMember.tier === "free") ? "ফ্রি মেম্বার" : viewingMember.tier === "premium" ? "প্রিমিয়াম মেম্বার" : "অন্যান্য"}
               </span>
             </div>
             <div className="flex flex-col items-end gap-0.5">

@@ -36,7 +36,7 @@ Health Club's medical network, emergency response system, ambulance directory, a
 - **Hospital Admissions**: 10% to 20% discount on hospital cabin rent, bed charges, and post-operative care at partner hospitals.
 - **Pharmacies**: 5% to 10% discount on genuine medicines at partner model pharmacies.
 - **Family Coverage**: Single membership card covers the primary cardholder, spouse, dependent children, and parents.
-- **Membership Pricing**: Founding Member is **FREE (৳0 for 1 Year)** for the first 100 members; Premium Membership is **৳500 / Year**.
+- **Membership Pricing**: Free Membership is **FREE (৳0)** offering **10-25% discount**; Premium Membership is **৳500 / Year** offering **15-30% discount** and priority doctor serial appointment booking & support.
 
 ### 2. 24/7 Emergency Services & Blood Network (`/emergency`)
 - **Ambulance Fleet Directory**: 24/7 direct driver contact across AC Ambulances, Non-AC Ambulances, ICU Support Ambulances (with ventilator & oxygen for critical transfers to Chittagong/Dhaka), and Freezer/Mortuary Vans.

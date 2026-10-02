@@ -239,7 +239,7 @@ export default function MobileNavDrawer({
                     className: "w-full text-xs font-bold",
                   })}
                 >
-                  সদস্য হোন
+                  ফ্রি কার্ড নিন
                 </Link>
               </div>
             )}

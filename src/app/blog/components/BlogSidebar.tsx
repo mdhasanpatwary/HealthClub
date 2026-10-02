@@ -138,18 +138,18 @@ export function BlogSidebar({
           <div className="flex items-center gap-2 text-primary">
             <ShieldCheck className="h-5 w-5" />
             <h3 className="font-heading text-sm font-bold text-foreground">
-              হেলথ ক্লাব কার্ড নিন
+              ফ্রি মেম্বার কার্ড নিন
             </h3>
           </div>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            ফেনীর শীর্ষ ডায়াগনস্টিক ল্যাব ও পার্টনার হাসপাতালে নিশ্চিত মেম্বার ছাড় পান।
+            ফেনীর শীর্ষ ডায়াগনস্টিক ল্যাব ও পার্টনার হাসপাতালে ১০-৩০% নিশ্চিত ছাড় (ফ্রি মেম্বারে ১০-২৫%, প্রিমিয়ামে ১৫-৩০% + প্রায়োরিটি সুবিধা)।
           </p>
           <Link
             href="/membership"
             prefetch={false}
             className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-bold shadow-xs transition-colors"
           >
-            <span>মেম্বারশিপ প্ল্যান দেখুন</span>
+            <span>ফ্রি কার্ড সংগ্রহ করুন (৳০)</span>
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>

@@ -43,7 +43,7 @@ function RegisterForm() {
       phone: "",
       email: "",
       password: "",
-      tier: (planParam === "premium" ? "premium" : "founding"),
+      tier: (planParam === "premium" ? "premium" : "free"),
       address: "",
       birthDate: "",
       profession: "",
@@ -178,22 +178,22 @@ function RegisterForm() {
           <button
             type="button"
             role="radio"
-            aria-checked={selectedTier === "founding"}
-            onClick={() => setValue("tier", "founding", { shouldValidate: true })}
+            aria-checked={selectedTier === "free" || selectedTier === "founding"}
+            onClick={() => setValue("tier", "free", { shouldValidate: true })}
             className={`relative p-4 rounded-2xl border-2 text-left transition-all duration-200 cursor-pointer ${
-              selectedTier === "founding"
+              selectedTier === "free" || selectedTier === "founding"
                 ? "border-primary bg-primary/5 dark:bg-primary/10"
                 : "border-border/60 hover:border-primary/30"
             }`}
           >
-            {selectedTier === "founding" && (
+            {(selectedTier === "free" || selectedTier === "founding") && (
               <div className="absolute top-2 right-2 h-5 w-5 rounded-full bg-primary flex items-center justify-center">
                 <Star className="h-3 w-3 text-white fill-white" />
               </div>
             )}
-            <Star className={`h-5 w-5 mb-2 ${selectedTier === "founding" ? "text-primary fill-primary/20" : "text-muted-foreground"}`} />
-            <p className="text-xs font-bold text-secondary dark:text-white">ফাউন্ডিং মেম্বার</p>
-            <p className="text-[11px] text-primary font-semibold">আজীবন মেম্বারশিপ</p>
+            <Star className={`h-5 w-5 mb-2 ${(selectedTier === "free" || selectedTier === "founding") ? "text-primary fill-primary/20" : "text-muted-foreground"}`} />
+            <p className="text-xs font-bold text-secondary dark:text-white">ফ্রি মেম্বার</p>
+            <p className="text-[11px] text-primary font-semibold">১০-২৫% ছাড় (৳০ ফি)</p>
           </button>
           <button
             type="button"
@@ -223,7 +223,7 @@ function RegisterForm() {
                 ৳{refStatus.finalFee} (ছাড়সহ)
               </p>
             ) : (
-              <p className="text-[11px] text-muted-foreground font-semibold">১ বছরের মেম্বারশিপ</p>
+              <p className="text-[11px] text-muted-foreground font-semibold">১৫-৩০% ছাড় ও প্রায়োরিটি</p>
             )}
           </button>
         </div>
