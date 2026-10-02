@@ -89,13 +89,13 @@ export function PartnerDialog({
             <Input
               id="admin-partner-slug"
               type="text"
-              placeholder="যেমন: mojumdar-dental-clinic বা মজুমদার-ডেন্টাল-ক্লিনিক"
+              placeholder="যেমন: islamia-physiotherapy-feni বা mazumder-dental-clinic"
               value={newPartner.slug || ""}
               onChange={(e) => setNewPartner({ ...newPartner, slug: e.target.value })}
               className="border-border bg-background font-mono text-xs"
             />
             <p className="text-[10px] text-muted-foreground">
-              খালি রাখলে পার্টনারের নাম থেকে স্বয়ংক্রিয়ভাবে ক্লিন URL তৈরি হবে।
+              খালি রাখলে পার্টনারের নাম থেকে স্বয়ংক্রিয়ভাবে ক্লিন ইংরেজি URL তৈরি হবে।
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

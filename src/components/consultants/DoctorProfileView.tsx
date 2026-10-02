@@ -16,6 +16,7 @@ import { DoctorChamberSchedule } from "./DoctorChamberSchedule";
 import { DoctorClinicalGuidance } from "./DoctorClinicalGuidance";
 import { DoctorDepartmentFaq } from "./DoctorDepartmentFaq";
 import { DoctorProfileActions } from "./DoctorProfileActions";
+import { DoctorMemberBenefitHook } from "./DoctorMemberBenefitHook";
 
 interface DoctorProfileViewProps {
   doctor: Doctor & { partner?: Partner | null };
@@ -110,6 +111,13 @@ export default function DoctorProfileView({
           </div>
         </Card>
 
+        {/* In-Context Member Benefit Hook (Prominent Above-the-Fold on Mobile) */}
+        <DoctorMemberBenefitHook
+          variant="mobile-above-fold"
+          doctorName={doctor.name}
+          specialty={doctor.specialty}
+        />
+
         {/* Voice/Answer Engine & AI Overview Direct Answer Capsule (BLUF) */}
         <DoctorQuickSummary doctor={doctor} />
 
@@ -164,24 +172,12 @@ export default function DoctorProfileView({
           {/* Right Column: Member Discount Callout & Related Doctors */}
           <div className="space-y-6">
             
-            {/* Health Club Member Savings Callout */}
-            <Card className="rounded-3xl border-2 border-primary/30 bg-primary/5 p-5 sm:p-6 shadow-xs space-y-3 relative overflow-hidden">
-              <div className="flex items-center gap-2.5 text-primary font-bold text-sm">
-                <ShieldCheck className="h-5 w-5 shrink-0" />
-                <span>হেলথ ক্লাব মেম্বার সুবিধা</span>
-              </div>
-              <p className="text-xs text-foreground/80 leading-relaxed">
-                হেলথ ক্লাব মেম্বারগণ এই ডাক্তারের প্রেসক্রিপশন অনুযায়ী সকল ডায়াগনস্টিক টেস্টে পার্টনার হাসপাতালগুলোতে ১০-৩০% পর্যন্ত বিশেষ ছাড় উপভোগ করবেন।
-              </p>
-              <div className="pt-2">
-                <Link
-                  href="/membership"
-                  className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary-dark transition-colors shadow-xs"
-                >
-                  মেম্বারশিপ কার্ড সংগ্রহ করুন
-                </Link>
-              </div>
-            </Card>
+            {/* Health Club Member Savings Callout (Desktop Sidebar) */}
+            <DoctorMemberBenefitHook
+              variant="sidebar"
+              doctorName={doctor.name}
+              specialty={doctor.specialty}
+            />
 
             {/* Related Specialists in same department */}
             {relatedDoctors.length > 0 && (

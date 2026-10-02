@@ -157,7 +157,7 @@ export async function addDoctorAction(
   try {
     const baseSlug = doctor.slug?.trim()
       ? sanitizeDoctorSlug(doctor.slug)
-      : generateDoctorSlug(doctor.name) || `doc-${newDocId.replace(/^doc_/, "")}`;
+      : generateDoctorSlug(doctor.name, doctor.nameEn || undefined) || `doc-${newDocId.replace(/^doc_/, "")}`;
     const resolvedSlug = await resolveUniqueDoctorSlug(prisma, baseSlug);
 
     const d = await prisma.doctor.create({
@@ -224,7 +224,7 @@ export async function updateDoctorAction(
       if (!current?.slug) {
         finalSlug = await resolveUniqueDoctorSlug(
           prisma,
-          generateDoctorSlug(doctor.name),
+          generateDoctorSlug(doctor.name, doctor.nameEn || undefined),
           id
         );
       }
@@ -300,7 +300,7 @@ export async function seedDoctorsAction(): Promise<{ success: boolean; count?: n
   try {
     const dataWithSlugs = await Promise.all(
       initialDoctors.map(async (doc) => {
-        const baseSlug = doc.slug || generateDoctorSlug(doc.name) || `doc-${doc.id.replace(/^doc_/, "")}`;
+        const baseSlug = doc.slug || generateDoctorSlug(doc.name, doc.nameEn) || `doc-${doc.id.replace(/^doc_/, "")}`;
         const uniqueSlug = await resolveUniqueDoctorSlug(prisma, baseSlug, doc.id);
         return {
           id: doc.id,

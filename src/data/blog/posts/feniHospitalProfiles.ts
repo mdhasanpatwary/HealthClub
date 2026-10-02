@@ -65,7 +65,7 @@ export const FENI_HOSPITAL_PROFILES: HospitalReviewItem[] = [
     emergency24x7: true,
     partnerStatus: true,
     partnerDiscountBn: "হেলথ ক্লাব কার্ডে সর্বোচ্চ ২৫% পর্যন্ত বিশেষ ছাড়",
-    partnerProfileSlug: "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
+    partnerProfileSlug: "al-aqsa-hospital-feni",
     mapQuery: "Al-Aqsa Hospital Trunk Road Feni",
   },
   {

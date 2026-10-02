@@ -14,6 +14,11 @@ import { getDepartmentSeoConfig } from "@/data/doctorSeoData";
 import { FENI_UPAZILAS, detectUpazilaFromText } from "@/data/feniLocations";
 import { DEPARTMENTS } from "@/components/consultants/consultantData";
 import { toBanglaNums } from "@/lib/utils";
+import {
+  getChamberSearchAliases,
+  getSpecialtySearchAliases,
+  transliterateBengaliToEnglish,
+} from "@/lib/transliteration";
 
 const DepartmentSeoHero = dynamic(
   () => import("@/components/consultants/DepartmentSeoHero")
@@ -42,35 +47,6 @@ function isDiabetesDoctor(doc: Doctor): boolean {
   return ["ডায়াবেটিস", "diabetes", "হরমোন", "hormone", "থাইরয়েড", "thyroid", "endocrin"].some((k) =>
     spec.includes(k)
   );
-}
-
-const PARTNER_HOSPITAL_ALIASES: Record<string, string> = {
-  "life-care-diagnostic-center": "life care lifecare life care diagnostic",
-  "imperial-neurocare-diagnostic-center": "imperial neurocare imperial diagnostic",
-  "নিরাময়-ডায়াগনস্টিক-এন্ড-কনসালটেশন-সেন্টার": "niramoy niramay niramoy diagnostic",
-  "m-rahaman-medical-stories": "m rahaman rahaman medical m rahman",
-  "ঢাকা-ফার্মেসি": "dhaka pharmacy dhaka medical",
-  "feni-max-diagnostic-centre": "feni max fenimax feni max diagnostic",
-  "আল-আকসা-হাসপাতাল-লিঃ-ফেনী": "al aqsa al-aqsa hospital al aqsa hospital",
-  "pacific-health-care-centre": "pacific pacific health care centre",
-  "ফেনী-কেয়ার-হসপিটাল": "feni care fenicare feni care hospital",
-};
-
-function getChamberSearchAliases(doc: Doctor): string {
-  const parts: string[] = [];
-  if (doc.partnerId && PARTNER_HOSPITAL_ALIASES[doc.partnerId]) {
-    parts.push(PARTNER_HOSPITAL_ALIASES[doc.partnerId]);
-  }
-  const chamber = (doc.chamberName || "").toLowerCase();
-  if (chamber.includes("ডিডি ল্যাব")) parts.push("dd lab ddlab d.d. lab");
-  if (chamber.includes("পপুলার")) parts.push("popular popular diagnostic");
-  if (chamber.includes("ল্যাবএইড")) parts.push("labaid labaid specialized hospital");
-  if (chamber.includes("ইবনে সিনা")) parts.push("ibn sina ibnsina");
-  if (chamber.includes("স্কয়ার") || chamber.includes("স্কয়ার")) parts.push("square square hospital");
-  if (chamber.includes("লাইফ কেয়ার") || chamber.includes("লাইফ কেয়ার")) parts.push("life care lifecare");
-  if (chamber.includes("হার্ট ফাউন্ডেশন")) parts.push("heart foundation national heart foundation");
-  if (chamber.includes("জেনারেল হাসপাতাল")) parts.push("general hospital 250 bed general hospital");
-  return parts.join(" ");
 }
 
 export default function DoctorDirectory({
@@ -172,13 +148,16 @@ export default function DoctorDirectory({
       let matchesSearch = true;
 
       if (q) {
-        const searchableText = `${doc.name} ${doc.nameEn || ""} ${doc.specialty} ${doc.degrees || ""} ${doc.designation || ""} ${doc.chamberName} ${doc.chamberAddress} ${getChamberSearchAliases(doc)}`.toLowerCase();
+        const transliteratedName = transliterateBengaliToEnglish(doc.name);
+        const specialtyAliases = getSpecialtySearchAliases(`${doc.specialty} ${doc.department}`);
+        const chamberAliases = getChamberSearchAliases(doc);
+        const searchableText = `${doc.name} ${transliteratedName} ${doc.nameEn || ""} ${doc.slug || ""} ${doc.specialty} ${specialtyAliases} ${doc.degrees || ""} ${doc.designation || ""} ${doc.chamberName} ${doc.chamberAddress} ${chamberAliases}`.toLowerCase();
         matchesSearch = searchableText.includes(q);
 
-        // If direct match fails, test tokenized words (e.g. "Dr Asma" without punctuation)
+        // If direct match fails, test tokenized words (e.g. "Dr Asma" or "Kamrun Nahar")
         if (!matchesSearch) {
           const cleaned = q.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, " ").replace(/\s+/g, " ").trim();
-          const tokens = cleaned.split(" ").filter((t) => t.length > 1 && t !== "dr" && t !== "ডাঃ");
+          const tokens = cleaned.split(" ").filter((t) => t.length > 1 && t !== "dr" && t !== "ডাঃ" && t !== "doctor");
           if (tokens.length > 0) {
             matchesSearch = tokens.every((token) => searchableText.includes(token));
           }

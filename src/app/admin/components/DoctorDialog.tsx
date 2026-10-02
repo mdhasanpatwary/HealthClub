@@ -102,7 +102,7 @@ export function DoctorDialog({
                   setNewDoctor({
                     ...newDoctor,
                     name: newName,
-                    ...(!editingDoctor && !newDoctor.slug ? { slug: generateDoctorSlug(newName) } : {}),
+                    ...(!editingDoctor && !newDoctor.slug ? { slug: generateDoctorSlug(newName, newDoctor.nameEn) } : {}),
                   });
                 }}
                 className="border-border bg-background"
@@ -119,7 +119,14 @@ export function DoctorDialog({
                 type="text"
                 placeholder="যেমন: Dr. Md. Shahadat Hossain"
                 value={newDoctor.nameEn || ""}
-                onChange={(e) => setNewDoctor({ ...newDoctor, nameEn: e.target.value })}
+                onChange={(e) => {
+                  const newNameEn = e.target.value;
+                  setNewDoctor({
+                    ...newDoctor,
+                    nameEn: newNameEn,
+                    ...(!editingDoctor ? { slug: generateDoctorSlug(newDoctor.name, newNameEn) } : {}),
+                  });
+                }}
                 className="border-border bg-background"
               />
             </div>
@@ -129,12 +136,12 @@ export function DoctorDialog({
             <div className="space-y-1.5">
               <label htmlFor="admin-doc-slug" className="text-xs font-semibold text-secondary cursor-pointer">
                 ইউআরএল স্লাগ (URL Slug)
-                <span className="text-[10px] text-muted-foreground ml-1.5 font-normal">(খালি রাখলে স্বয়ংক্রিয় তৈরি হবে)</span>
+                <span className="text-[10px] text-muted-foreground ml-1.5 font-normal">(খালি রাখলে স্বয়ংক্রিয় ক্লিন ইংরেজি তৈরি হবে)</span>
               </label>
               <Input
                 id="admin-doc-slug"
                 type="text"
-                placeholder="যেমন: ডা-মোঃ-শাহাদাত-হোসেন"
+                placeholder="যেমন: dr-md-shahadat-hossain"
                 value={newDoctor.slug || ""}
                 onChange={(e) => setNewDoctor({ ...newDoctor, slug: e.target.value })}
                 className="border-border bg-background font-mono text-xs"

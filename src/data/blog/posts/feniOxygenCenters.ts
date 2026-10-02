@@ -20,7 +20,7 @@ export const FENI_OXYGEN_PROVIDERS: HospitalReviewItem[] = [
     emergency24x7: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড় (ইনডোর বেড, জরুরি অক্সিজেন ও ডায়াগনস্টিকে)",
-    partnerProfileSlug: "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
+    partnerProfileSlug: "al-aqsa-hospital-feni",
     imageUrl: "/images/partners/al-aqsa-hospital.webp",
     mapQuery: "Al-Aqsa Hospital Trunk Road Feni",
     descriptionBn:

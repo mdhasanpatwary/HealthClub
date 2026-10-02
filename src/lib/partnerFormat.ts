@@ -1,4 +1,5 @@
 import { Partner } from "@/services/db";
+import { generatePartnerSlug } from "@/lib/slugify";
 
 /**
  * Full selection projection for single partner profile view (/partner-hospitals/[slug]),
@@ -102,9 +103,13 @@ export type PrismaPartnerRecord = {
  * Pure sync helper to format Prisma Partner records into the unified Partner interface.
  */
 export function formatPartner(p: PrismaPartnerRecord): Partner {
+  const canonicalSlug = p.slug && /^[a-z0-9-]+$/.test(p.slug)
+    ? p.slug
+    : generatePartnerSlug(p.name) || p.id;
+
   return {
     id: p.id,
-    slug: p.slug || undefined,
+    slug: canonicalSlug,
     name: p.name,
     category: p.category as Partner["category"],
     address: p.address,

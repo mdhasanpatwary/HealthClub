@@ -8,8 +8,6 @@ import { getPartnersAction } from "@/app/actions/partnerActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 import { Sparkles, ShieldCheck, Tag, Pill, MapPin } from "lucide-react";
 import { VALID_PARTNER_CATEGORY_SLUGS } from "@/data/partnerCategorySeoData";
-import { GeoAnswerCapsule } from "@/app/blog/components/GeoAnswerCapsule";
-import { GeoAnswerCapsuleData } from "@/types/blog";
 import { generatePartnerHospitalsHubJsonLd } from "./utils/hospitalJsonLd";
 
 export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
@@ -108,44 +106,6 @@ export default async function PartnerHospitalsPage({ searchParams }: PartnerHosp
   // Fetch partners server-side (cached with ISR)
   const allPartners = await getPartnersAction();
 
-  const partnerGeoData: GeoAnswerCapsuleData = {
-    directAnswerBn:
-      "ফেনী সদর ও পার্শ্ববর্তী এলাকায় অনুমোদিত পার্টনার হাসপাতাল, ডায়াগনস্টিক সেন্টার ও প্যাথলজি ল্যাবে হেলথ ক্লাবের ডিজিটাল কার্ড দেখালে প্যাথলজি টেস্ট, ডিজিটাল এক্স-রে, ৪ডি ইউএসজি, সিটি স্ক্যান ও ইনপেশেন্ট কেবিনে ১০% থেকে ৩০% নিশ্চিত ডিসকাউন্ট পাওয়া যায়। দালালমুক্ত সেবা ও দ্রুত সিরিয়ালের জন্য হেলথ ক্লাবের সার্বক্ষণিক পেশেন্ট সাপোর্ট সক্রিয় রয়েছে।",
-    quickTakeawaysBn: [
-      "ফেনী সদরের শীর্ষ অনুমোদিত বেসরকারি হাসপাতাল ও আধুনিক ল্যাব নেটওয়ার্ক",
-      "ডিজিটাল কার্ডে প্যাথলজি ও রেডিওলজিতে ১০% থেকে ৩০% নিশ্চিত ছাড়",
-      "জরুরি অ্যাম্বুলেন্স, অক্সিজেন ও ইনপেশেন্ট কেবিন ভর্তি সুবিধা",
-      "বিএমডিসি ও ডিজিএইচএস নিবন্ধিত মানসম্মত স্বাস্থ্যসেবা নিশ্চয়তা",
-    ],
-    referenceFees: [
-      {
-        serviceNameBn: "কমপ্লিট ব্লাড কাউন্ট (CBC) ও ইএসআর",
-        serviceNameEn: "Complete Blood Count (CBC) with ESR",
-        regularPriceRangeBn: "৳৩৫০ - ৳৫৫০",
-        discountBadgeBn: "১০-৩০% মেম্বার ছাড়",
-      },
-      {
-        serviceNameBn: "ডিজিটাল চেস্ট এক্স-রে (Digital Chest X-Ray)",
-        serviceNameEn: "Digital Chest X-Ray",
-        regularPriceRangeBn: "৳৫০০ - ৳৮৫০",
-        discountBadgeBn: "১০-৩০% মেম্বার ছাড়",
-      },
-      {
-        serviceNameBn: "হোল অ্যাবডোমেন ৪ডি আল্ট্রাসনোগ্রাম (4D USG)",
-        serviceNameEn: "Whole Abdomen 4D Ultrasonography",
-        regularPriceRangeBn: "৳১,০০০ - ৳১,৮০০",
-        discountBadgeBn: "১০-৩০% মেম্বার ছাড়",
-      },
-      {
-        serviceNameBn: "জেনারেল কেবিন ও জরুরি ইনপেশেন্ট ভর্তি",
-        serviceNameEn: "Inpatient Cabin & Emergency Admission",
-        regularPriceRangeBn: "৳১,০০০ - ৳৩,৫০০",
-        discountBadgeBn: "১০-৩০% মেম্বার ছাড়",
-      },
-    ],
-    verifiedNoteBn: "হেলথ ক্লাব ভেরিফিকেশন টিম কর্তৃক ফেনী সদরের সকল পার্টনার প্রতিষ্ঠান সরেজমিনে পরিদর্শনকৃত",
-  };
-
   const jsonLdData = generatePartnerHospitalsHubJsonLd({
     pageUrl: `${SITE_URL}/partner-hospitals`,
     partners: allPartners,
@@ -203,12 +163,6 @@ export default async function PartnerHospitalsPage({ searchParams }: PartnerHosp
       {/* Main Content Directory & SEO Guides */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-10 sm:space-y-16">
         
-        {/* Standardized GEO Answer Capsule (BLUF) */}
-        <GeoAnswerCapsule
-          data={partnerGeoData}
-          title="ফেনী পার্টনার হাসপাতাল ও ডায়াগনস্টিক নেটওয়ার্ক সারসংক্ষেপ"
-        />
-
         {/* Directory Component — server-fetched data, no client-side loading */}
         <section aria-labelledby="partner-directory-heading" className="bg-muted/30 border border-border/80 rounded-3xl p-3.5 sm:p-8 space-y-4">
           <h2 id="partner-directory-heading" className="sr-only">

@@ -300,7 +300,7 @@ export const FENI_XRAY_CENTERS: DiagnosticCenterReviewItem[] = [
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
+    partnerProfileSlug: "al-aqsa-hospital-feni",
   },
   {
     rank: 6,

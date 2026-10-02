@@ -2566,3 +2566,72 @@ This roadmap outlines the strategic localized content cluster required to achiev
        - `node scripts/audit-seo-aeo-geo.mjs --offline` passed 100% across all 6 test suites.
 
 ---
+
+## 📍 Phase 16: Member Conversion Rate Optimization (CRO) & Registration Form Experience (TODO-313 to TODO-316)
+
+- [x] **TODO-313**: **Registration Form Image Upload, Live Preview & Robust Error Resilience**
+  - **Priority**: High (P0 - Conversion Friction & User Registration UX)
+  - **Files**: `src/components/ui/ImageUpload.tsx`, `src/app/register/page.tsx`
+  - **Details**:
+    1. **Eliminated Preview Disappearance / Flicker**: Fixed the issue where local preview would disappear or flicker when `uploadImageAction` succeeded. Kept `localPreview` persistent in component state, avoiding race conditions with remote CDN URLs.
+    2. **Instant Thumbnail Preview via Unoptimized Flag**: Set `unoptimized={true}` on the 64x64 thumbnail preview `<Image>`, preventing Next.js `/_next/image` proxy roundtrip failures or delays. Added `onError` fallback handling so preview never crashes or displays a broken image icon.
+    3. **Broadened Mobile Image Type Support**: Replaced strict array check with regex fallback (`file.type.startsWith("image/") || /\.(jpe?g|png|webp|heic|heif|bmp|gif)$/i.test(file.name)`), preventing false file rejections on iOS Safari (HEIC/camera) and Android WebViews.
+    4. **Prevented Submit Race Condition**: Added `isPhotoUploading` state tracking via `onUploadingChange`. When an image is being compressed and uploaded, the registration submit button displays "ছবি আপলোড হচ্ছে..." and disables submission until the upload completes or local fallback is ready.
+    5. **Immediate Value Population & Fallback**: Canvas-compressed image DataURL is immediately set in React Hook Form via `onChange(compressedDataUrl)`, ensuring form validation (`profilePictureUrl` requirement) never fails prematurely. If CDN upload has transient network issues, the compressed DataURL acts as fallback which the server `ensureStorageUrl` safely processes.
+    6. **Verification**: Verified cleanly with `npm run typecheck` (0 errors) and `npm run lint` (0 errors, 0 warnings).
+
+- [x] **TODO-314**: **In-Context Member Benefit Hooks & Doctor Chamber Serial Integration**
+  - **Priority**: High (P1 - Traffic Intent & Direct Value Conversion)
+  - **Files**: `src/components/consultants/DoctorMemberBenefitHook.tsx`, `src/components/consultants/DoctorProfileView.tsx`, `src/components/consultants/DoctorChamberSchedule.tsx`, `src/components/ui/doctors/DoctorModals.tsx`
+  - **Details**:
+    1. **Mobile Above-the-Fold In-Context Member Benefit Hook**: Created modular `DoctorMemberBenefitHook.tsx` and positioned it directly below the Top Header Card on mobile doctor profile views (`/consultants/[slug]`). Prominently connects patient intent (consulting this specialist) with 10-30% diagnostic savings at contracted Feni Sadar facilities with a 1-click CTA to `/membership`.
+    2. **Deduplication & Page Clutter Elimination**: Removed the legacy duplicate promotional box from the bottom of `DoctorChamberSchedule.tsx` and deleted the now redundant `DoctorSerialMembershipCta.tsx`. Kept `DoctorProfileActions.tsx` uncluttered with only core actions.
+    3. **Upgraded Desktop Sidebar Benefit Callout**: Integrated `DoctorMemberBenefitHook` with `variant="sidebar"` into the desktop sidebar, replacing static text with rich feature highlights (prescription discount, verified Feni Sadar partners, digital card speed) and direct directory links.
+    4. **In-Funnel Serial Prompt Repositioned (Before Dialing)**: In `DoctorSerialModal`, repositioned the In-Funnel Member Savings Smart Prompt to appear **BEFORE dialing the doctor's chamber serial**. Visitors now see the 10-30% discount tip and "১ মিনিটে ফ্রি মেম্বার কার্ড নিন" CTA before their native mobile dialer is triggered and exits the browser.
+    5. **Strict Pricing & Geographic Compliance**: Strictly adheres to the 10-30% member discount text/badge rule (`১০-৩০% মেম্বার ছাড়` / `১০-২৫% ফ্রি ও ১৫-৩০% প্রিমিয়ামে`) with zero direct discounted taka amounts. Strictly reinforces that contracted partner facilities are located in Feni Sadar.
+    6. **Preserved Mandatory Fields & Verification Integrity**: Maintained all Zod registration fields as mandatory and retained full email verification integrity to prevent fraudulent accounts.
+    7. **Line Limits & Verification**: All created and modified files remain well under the 500-line limit (`DoctorMemberBenefitHook.tsx`: 108 lines, `DoctorProfileView.tsx`: 242 lines, `DoctorChamberSchedule.tsx`: 131 lines, `DoctorModals.tsx`: 342 lines). Verified cleanly with `npm run typecheck` (0 errors) and `npm run lint` (0 errors, 0 warnings).
+
+- [x] **TODO-315**: **WhatsApp Assisted Onboarding & Helpline Support Channel**
+  - **Priority**: Medium (P2 - Reducing Email/Form Drop-off for Real Patients)
+  - **Files**: `src/components/common/WhatsAppAssistanceCard.tsx`, `src/app/register/page.tsx`, `src/app/register/verify-email/page.tsx`, `src/app/membership/page.tsx`
+  - **Details**:
+    1. **Reusable `WhatsAppAssistanceCard` Component**: Created a dedicated, modular assistance component supporting 3 visual variants (`compact`, `banner`, `card`) and 5 context channels (`register`, `verify_email`, `membership`, `payment`, `general`). Features live support pulsating indicator, pre-filled localized Bengali greeting messages, official WhatsApp SVG branding, telephone hotline fallback, and dynamic system settings integration.
+    2. **Assisted Registration Onboarding**: Integrated compact WhatsApp support into `src/app/register/page.tsx` right below the login link, helping patients who face difficulties with form fields or mobile photo uploads.
+    3. **OTP & Email Verification Guidance**: Integrated WhatsApp verification help directly into `src/app/register/verify-email/page.tsx` with email context pre-filled, so patients not finding their OTP code (e.g. spam folder or provider delays) receive instant personal guidance or manual account activation assistance.
+    4. **Interactive Membership Value & Inquiries Banner**: Added a high-converting gradient banner with direct WhatsApp advice CTA and hotline contact in `src/app/membership/page.tsx` between the pricing tiers and detailed benefits grid.
+    5. **Strict Rules & Line Limit Compliance**: All 4 files strictly conform to the 500-line limit (`WhatsAppAssistanceCard.tsx`: 283 lines, `register/page.tsx`: 466 lines, `register/verify-email/page.tsx`: 243 lines, `membership/page.tsx`: 422 lines). Zero direct discounted taka amounts shown.
+    6. **Verification**: Cleanly verified with `npm run typecheck` (0 errors) and `npm run lint` (0 errors, 0 warnings).
+
+- [x] **TODO-316**: **Mobile Visitor Value Hook & Sticky Bottom Awareness Bar**
+  - **Priority**: Medium (P2 - Mobile UX & Value Proposition)
+  - **Files**: `src/app/blog/components/BlogStickyActionBar.tsx`, `src/components/layout/BottomNav.tsx`
+  - **Details**:
+    1. **Existing Sticky Mobile Conversion Bar**: Confirmed already implemented via `BlogStickyActionBar.tsx` and active on all 66+ medical blog guide pages (`/blog/[slug]`).
+    2. **Features Present**:
+       - Fixed bottom mobile container (`fixed bottom-0 left-0 right-0 z-50 min-[992px]:hidden`) with backdrop blur and shadow.
+       - Direct 10-30% discount value CTA: `১০-৩০% মেম্বার ছাড় নিন` with `<CreditCard />` icon linking directly to `/membership`.
+       - Pulsating live indicator badge: `হেলথ ক্লাব মেম্বার সুবিধা • ফেনী সদর`.
+       - Urgent serial helpline button (`tel:+880...`) and WhatsApp quick trigger for mobile users.
+       - Smart scroll trigger (appears after 25% scroll depth), footer collision avoidance via `IntersectionObserver`, and session-persisted dismissal (`hc_blog_sticky_bar_dismissed`).
+    3. **Global Mobile Navigation Integration**: In `BottomNav.tsx`, the central prominent elevated button (`ডিজিタル কার্ড`) is permanently accessible on all mobile screens with an active pulse indicator directing to `/membership` (or dashboard if logged in).
+
+- [x] **TODO-317**: **Bilingual English Search & Clean ASCII Slugs for Partners and Doctors**
+  - **Priority**: High (P1 - SEO, Social Sharing UX & Search Usability)
+  - **Files**: `src/lib/transliteration.ts`, `src/lib/slugify.ts`, `src/lib/partnerFormat.ts`, `src/lib/doctorFormat.ts`, `src/services/initialDoctors.ts`, `src/data/initialPartnersData.ts`, `src/app/actions/doctorQueryActions.ts`, `src/app/actions/partnerProfileQueryActions.ts`, `src/app/actions/doctorActions.ts`, `src/app/actions/partnerDoctorActions.ts`, `src/components/ui/DoctorDirectory.tsx`, `src/components/ui/PartnerDirectory.tsx`, `src/components/partner-hospitals/HospitalDoctorRoster.tsx`, `src/app/admin/components/DoctorDialog.tsx`, `src/app/admin/components/PartnerDialog.tsx`, `src/data/blog/posts/*.ts`
+  - **Details**:
+    1. **Clean ASCII URL Slugs (No `%E0%A6...` Percent-Encoding)**:
+       - Upgraded `generatePartnerSlug` and `generateDoctorSlug` in `src/lib/slugify.ts` to strictly produce clean ASCII slugs using English names or phonetic Bengali-to-English transliteration fallback.
+       - Assigned canonical ASCII slugs to all 45 initial doctors in `src/services/initialDoctors.ts` (e.g., `/consultants/dr-kamrunnahar-roli`, `/consultants/dr-abdul-kuddus`) and all partner facilities in `src/data/initialPartnersData.ts` (e.g., `/partner-hospitals/islamia-physiotherapy-rehabilitation-center`).
+       - Replaced legacy Bengali `partnerProfileSlug` strings across 29 blog post files in `src/data/blog/posts/*.ts`.
+    2. **English Search & Transliteration Engine**:
+       - Built `src/lib/transliteration.ts` containing `transliterateBengaliToEnglish`, `generateCleanAsciiSlug`, `PARTNER_HOSPITAL_ALIASES`, `getChamberSearchAliases`, and `getSpecialtySearchAliases`.
+       - Integrated bilingual transliteration and alias mapping into `DoctorDirectory.tsx`, `PartnerDirectory.tsx`, and `HospitalDoctorRoster.tsx`. Users searching in English (e.g., "Roli", "Kuddus", "Islamia", "Care", "Gynae", "Cardio") immediately find the respective doctors and hospitals even if data is in Bengali.
+    3. **Backward Compatibility & 301 Permanent Redirects**:
+       - Retained mapping for old Bengali slugs in `KNOWN_PARTNER_ALIASES` (`partnerProfileQueryActions.ts`) and enhanced `getDoctorByIdAction` (`doctorQueryActions.ts`) with ASCII candidate matching. Any existing links or bookmarks automatically 301 redirect to the clean ASCII canonical URLs.
+    4. **Line Limit & Verification**:
+       - Kept all touched files under the strict 500-line code limit (`transliteration.ts`: 385 lines, `DoctorDirectory.tsx`: 436 lines, `PartnerDirectory.tsx`: 356 lines, `doctorQueryActions.ts`: 267 lines, `slugify.ts`: 118 lines).
+       - Cleanly verified with `npx tsc --noEmit` (0 errors) and `npm run lint` (0 errors, 0 warnings).
+
+---
+

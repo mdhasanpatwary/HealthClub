@@ -92,39 +92,7 @@ export function DoctorSerialModal({ doctor, onClose }: DoctorSerialModalProps) {
           )}
         </div>
 
-        <div className="space-y-2.5">
-          <p className="text-xs text-muted-foreground font-medium">
-            সরাসরি চেম্বার বা রিসিপশনে কল করে সিরিয়াল কনফার্ম করুন:
-          </p>
-          {parsePhones(doctor.serialPhone).map((phone, idx) => (
-            <a
-              key={idx}
-              href={`tel:${phone.replace(/\s+/g, "")}`}
-              onClick={() => {
-                trackEvent("doctor_serial_click", {
-                  doctor_id: doctor.id,
-                  doctor_name: doctor.name,
-                  specialty: doctor.specialty,
-                  hospital: doctor.chamberName,
-                  phone: phone.trim(),
-                });
-              }}
-              className="flex items-center justify-between p-3.5 rounded-2xl border-2 border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors group"
-            >
-              <div className="flex items-center gap-3">
-                <Phone className="h-4 w-4 text-primary" />
-                <span className="font-heading font-bold text-sm sm:text-base text-foreground tracking-wide font-mono">
-                  {phone}
-                </span>
-              </div>
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-xl group-hover:bg-primary group-hover:text-white transition-colors">
-                কল দিন
-              </span>
-            </a>
-          ))}
-        </div>
-
-        {/* In-Funnel Member Savings Smart Prompt */}
+        {/* In-Funnel Member Savings Smart Prompt (Presented BEFORE Dialing) */}
         <div className="relative overflow-hidden rounded-2xl border-2 border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-primary/5 to-teal-500/10 p-3.5 space-y-2.5">
           <div className="flex items-start gap-2.5">
             <div className="h-7 w-7 rounded-xl bg-primary text-white flex items-center justify-center shrink-0 shadow-xs mt-0.5">
@@ -135,15 +103,15 @@ export function DoctorSerialModal({ doctor, onClose }: DoctorSerialModalProps) {
                 <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full">
                   মেম্বারশিপ সুবিধা
                 </span>
-                <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400">
+                <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full">
                   ১০০% ফ্রি কার্ড
                 </span>
               </div>
               <h5 className="font-heading font-bold text-xs sm:text-sm text-foreground leading-snug">
-                ডাক্তারের টেস্টে ১০-৩০% ডিসকাউন্ট চান?
+                ডাক্তারের টেস্টে ১০-৩০% মেম্বার ছাড় চান?
               </h5>
               <p className="text-[11px] text-muted-foreground leading-relaxed">
-                ফ্রি মেম্বারশিপে <strong className="text-foreground font-semibold">১০-২৫%</strong> এবং প্রিমিয়ামে <strong className="text-foreground font-semibold">১৫-৩০%</strong> নিশ্চিত ছাড় ও প্রায়োরিটি সুবিধা। ফেনীর পার্টনার হাসপাতালে টেস্ট করানোর পূর্বে ডিজিটাল কার্ডটি সংগ্রহ করে নিন।
+                ডাক্তার দেখানোর পর প্রেসক্রিপশনের টেস্টে ফেনী সদরের পার্টনার হাসপাতালে <strong className="text-foreground font-semibold">১০-৩০% নিশ্চিত ছাড়</strong> পেতে এখনই ফ্রি ডিজিটাল কার্ড সাথে রাখুন।
               </p>
             </div>
           </div>
@@ -162,6 +130,40 @@ export function DoctorSerialModal({ doctor, onClose }: DoctorSerialModalProps) {
             <span>১ মিনিটে ফ্রি মেম্বার কার্ড নিন</span>
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
+        </div>
+
+        {/* Direct Chamber Dialing Hotlines */}
+        <div className="space-y-2.5">
+          <p className="text-xs text-muted-foreground font-medium flex items-center justify-between">
+            <span>সরাসরি চেম্বার বা রিসিপশনে কল করে সিরিয়াল নিন:</span>
+            <span className="text-[10px] text-primary font-semibold">হটলাইন কল</span>
+          </p>
+          {parsePhones(doctor.serialPhone).map((phone, idx) => (
+            <a
+              key={idx}
+              href={`tel:${phone.replace(/\s+/g, "")}`}
+              onClick={() => {
+                trackEvent("doctor_serial_click", {
+                  doctor_id: doctor.id,
+                  doctor_name: doctor.name,
+                  specialty: doctor.specialty,
+                  hospital: doctor.chamberName,
+                  phone: phone.trim(),
+                });
+              }}
+              className="flex items-center justify-between p-3.5 rounded-2xl border-2 border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors group cursor-pointer"
+            >
+              <div className="flex items-center gap-3">
+                <Phone className="h-4 w-4 text-primary" />
+                <span className="font-heading font-bold text-sm sm:text-base text-foreground tracking-wide font-mono">
+                  {phone}
+                </span>
+              </div>
+              <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-xl group-hover:bg-primary group-hover:text-white transition-colors">
+                কল দিন
+              </span>
+            </a>
+          ))}
         </div>
 
         <Button

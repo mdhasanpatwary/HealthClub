@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { DoctorSerialModal } from "@/components/ui/doctors/DoctorModals";
 import { DoctorCard } from "@/components/ui/doctors/DoctorCard";
 import { toBanglaNums } from "@/lib/utils";
+import { transliterateBengaliToEnglish, getSpecialtySearchAliases } from "@/lib/transliteration";
 
 interface HospitalDoctorRosterProps {
   doctors: Doctor[];
@@ -66,11 +67,13 @@ export default function HospitalDoctorRoster({ doctors, partner }: HospitalDocto
       if (!matchDept) return false;
 
       if (!q) return true;
-      const searchableText = `${doc.name} ${doc.nameEn || ""} ${doc.specialty} ${doc.degrees} ${doc.designation} ${doc.visitingDays}`.toLowerCase();
+      const transliteratedName = transliterateBengaliToEnglish(doc.name);
+      const specialtyAliases = getSpecialtySearchAliases(`${doc.specialty} ${doc.department}`);
+      const searchableText = `${doc.name} ${transliteratedName} ${doc.nameEn || ""} ${doc.slug || ""} ${doc.specialty} ${specialtyAliases} ${doc.degrees} ${doc.designation} ${doc.visitingDays}`.toLowerCase();
       if (searchableText.includes(q)) return true;
 
       const cleaned = q.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, " ").replace(/\s+/g, " ").trim();
-      const tokens = cleaned.split(" ").filter((t) => t.length > 1 && t !== "dr" && t !== "ডাঃ");
+      const tokens = cleaned.split(" ").filter((t) => t.length > 1 && t !== "dr" && t !== "ডাঃ" && t !== "doctor");
       return tokens.length > 0 && tokens.every((token) => searchableText.includes(token));
     });
   }, [doctors, selectedDept, searchQuery]);

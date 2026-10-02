@@ -319,7 +319,7 @@ export const FENI_HORMONE_CENTERS: DiagnosticCenterReviewItem[] = [
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
+    partnerProfileSlug: "al-aqsa-hospital-feni",
     mapQuery: "Al-Aqsa Hospital Hospital Road Feni",
   },
   {

@@ -1,41 +1,36 @@
 /**
  * Utility functions for generating clean, SEO-friendly URL slugs
- * with first-class support for Bengali Unicode characters and English text.
+ * with clean English ASCII formatting and intelligent Bengali transliteration.
  */
 
+import { generateCleanAsciiSlug, transliterateBengaliToEnglish } from "@/lib/transliteration";
+
+export { transliterateBengaliToEnglish, generateCleanAsciiSlug };
+
 /**
- * Generates an SEO-friendly URL slug from a name or title.
- * Supports Bengali characters (\u0980-\u09FF), English alphanumeric (a-z, 0-9),
- * and converts spaces, punctuation, and symbols into single hyphens.
+ * Generates an SEO-friendly URL slug for a partner healthcare facility.
+ * Prefers English name/title if provided; otherwise cleanly transliterates Bengali to English ASCII.
  *
  * Examples:
- * - "মজুমদার ডেন্টাল ক্লিনিক" -> "মজুমদার-ডেন্টাল-ক্লিনিক"
- * - "Imperial Neurocare & Diagnostic Center" -> "imperial-neurocare-diagnostic-center"
- * - "আল-আকসা হাসপাতাল লিঃ ফেনী" -> "আল-আকসা-হাসপাতাল-লি-ফেনী"
+ * - ("ইসলামিয়া ফিজিওথেরাপি এন্ড রিহ্যাবিলিটেশন সেন্টার") -> "islamia-physiotherapy-and-rehabilitation-center"
+ * - ("মজুমদার ডেন্টাল ক্লিনিক", "Mazumder Dental Clinic") -> "mazumder-dental-clinic"
+ * - ("Imperial Neurocare & Diagnostic Center") -> "imperial-neurocare-and-diagnostic-center"
  */
-export function generatePartnerSlug(input: string): string {
+export function generatePartnerSlug(input: string, nameEn?: string): string {
+  if (nameEn && nameEn.trim()) {
+    return generateCleanAsciiSlug(nameEn);
+  }
   if (!input || !input.trim()) {
     return "";
   }
-
-  return input
-    .trim()
-    .toLowerCase()
-    // Replace ampersand with hyphen
-    .replace(/&/g, "-")
-    // Replace characters that are NOT Bengali Unicode (\u0980-\u09FF), English alphanumeric, or hyphens with hyphens
-    .replace(/[^\u0980-\u09FFa-z0-9-]/g, "-")
-    // Collapse multiple consecutive hyphens into a single hyphen
-    .replace(/-+/g, "-")
-    // Remove leading and trailing hyphens
-    .replace(/^-+|-+$/g, "");
+  return generateCleanAsciiSlug(input);
 }
 
 /**
- * Sanitizes an explicitly user-provided custom slug.
+ * Sanitizes an explicitly user-provided custom slug into clean ASCII.
  */
 export function sanitizePartnerSlug(customSlug: string): string {
-  return generatePartnerSlug(customSlug);
+  return generateCleanAsciiSlug(customSlug);
 }
 
 /**
@@ -68,39 +63,29 @@ export async function resolveUniquePartnerSlug(
 }
 
 /**
- * Generates an SEO-friendly URL slug for a doctor profile.
- * Cleans doctor title abbreviations, punctuation, and parentheses.
- * Supports Bengali Unicode (\u0980-\u09FF) and English alphanumeric (a-z, 0-9).
+ * Generates an SEO-friendly clean English URL slug for a doctor profile.
+ * Prefers English name if provided; otherwise cleanly transliterates Bengali name.
  *
  * Examples:
- * - "ডাঃ মো: আবদুল কুদ্দুছ (সোহাগ)" -> "ডা-মো-আবদুল-কুদ্দুছ-সোহাগ"
- * - "সহকারী অধ্যাপক ডাঃ মোঃ আরিফুর রহমান" -> "সহকারী-অধ্যাপক-ডা-মো-আরিফুর-রহমান"
- * - "Dr. Champa Kundu" -> "dr-champa-kundu"
+ * - ("ডাঃ কামরুন্নাহার রলি") -> "dr-kamrunnahar-roli"
+ * - ("ডাঃ মো: আবদুল কুদ্দুছ (সোহাগ)", "Dr. Md. Abdul Kuddus (Sohag)") -> "dr-md-abdul-kuddus-sohag"
+ * - ("Dr. Champa Kundu") -> "dr-champa-kundu"
  */
-export function generateDoctorSlug(input: string): string {
+export function generateDoctorSlug(input: string, nameEn?: string): string {
+  if (nameEn && nameEn.trim()) {
+    return generateCleanAsciiSlug(nameEn);
+  }
   if (!input || !input.trim()) {
     return "";
   }
-
-  return input
-    .trim()
-    .toLowerCase()
-    .replace(/&/g, "-")
-    // Replace punctuation, visarga, colons, dots, parentheses, and brackets with hyphens
-    .replace(/[.:,ঃ\u0983()\[\]\/\\_]/g, "-")
-    // Replace characters that are NOT Bengali Unicode (\u0980-\u09FF), English alphanumeric, or hyphens with hyphens
-    .replace(/[^\u0980-\u09FFa-z0-9-]/g, "-")
-    // Collapse multiple consecutive hyphens into a single hyphen
-    .replace(/-+/g, "-")
-    // Remove leading and trailing hyphens
-    .replace(/^-+|-+$/g, "");
+  return generateCleanAsciiSlug(input);
 }
 
 /**
  * Sanitizes an explicitly user-provided custom doctor slug.
  */
 export function sanitizeDoctorSlug(customSlug: string): string {
-  return generateDoctorSlug(customSlug);
+  return generateCleanAsciiSlug(customSlug);
 }
 
 /**
@@ -131,4 +116,3 @@ export async function resolveUniqueDoctorSlug(
     counter++;
   }
 }
-

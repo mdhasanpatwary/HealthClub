@@ -39,7 +39,7 @@ export const FENI_TONSIL_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
     partnerDiscountEn: "10-30% Member Discount",
-    partnerProfileSlug: "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
+    partnerProfileSlug: "al-aqsa-hospital-feni",
     imageUrl: "/images/partners/al-aqsa.webp",
   },
   {

@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import JsonLd from "@/components/seo/JsonLd";
 import { LazyTestimonialsSection } from "@/components/landing/LazyLandingComponents";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
+import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
+import WhatsAppAssistanceCard from "@/components/common/WhatsAppAssistanceCard";
 
 export const revalidate = 86400; // 24-hour ISR
 
@@ -36,6 +38,8 @@ export async function generateMetadata() {
 }
 
 export default async function MembershipPage() {
+  const contact = await getCachedContactSettings();
+
   const benefitDetails = [
     { title: "হাসপাতাল ডিসকাউন্ট", desc: "যেকোনো অংশীদার হাসপাতালে শুধু ডিজিটাল মেম্বার কার্ড প্রদর্শন করে বিলের উপর ১০-৩০% ডিসকাউন্ট।", gradient: "from-emerald-500 to-green-600" },
     { title: "ডায়াগনস্টিক টেস্ট ছাড়", desc: "রক্ত পরীক্ষা, এক্স-রে সহ সকল প্যাথলজিক্যাল ও ইমেজিং পরীক্ষায় ১০-৩০% ডিসকাউন্ট।", gradient: "from-blue-500 to-cyan-600" },
@@ -358,6 +362,16 @@ export default async function MembershipPage() {
             </div>
           </div>
 
+        </div>
+
+        {/* WhatsApp Assisted Onboarding & Helpline Support Banner */}
+        <div className="max-w-3xl mx-auto w-full">
+          <WhatsAppAssistanceCard
+            context="membership"
+            variant="banner"
+            whatsappNumber={contact.whatsapp}
+            hotlineNumber={contact.hotline}
+          />
         </div>
 
         {/* Detailed Benefits Grid */}

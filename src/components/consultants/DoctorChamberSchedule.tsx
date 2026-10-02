@@ -1,11 +1,10 @@
 import {
   Calendar, Clock, MapPin, Building2, Phone,
-  Clock3, CreditCard, Sparkles
+  Clock3, CreditCard
 } from "lucide-react";
 import { Doctor, Partner } from "@/services/db";
 import { Card } from "@/components/ui/card";
 import { DoctorAvailabilityBadge } from "@/components/ui/doctors/DoctorAvailabilityBadge";
-import { DoctorSerialMembershipCta } from "./DoctorSerialMembershipCta";
 
 interface DoctorChamberScheduleProps {
   doctor: Doctor & { partner?: Partner | null };
@@ -122,32 +121,6 @@ export function DoctorChamberSchedule({ doctor }: DoctorChamberScheduleProps) {
               </span>
             </a>
           ))}
-        </div>
-
-        {/* On-Page Serial Member Discount In-Funnel Prompt */}
-        <div className="p-3.5 sm:p-4 rounded-2xl border-2 border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-primary/5 to-teal-500/10 space-y-2.5">
-          <div className="flex items-start gap-2.5">
-            <div className="h-7 w-7 rounded-xl bg-primary text-white flex items-center justify-center shrink-0 shadow-xs mt-0.5">
-              <Sparkles className="h-4 w-4" />
-            </div>
-            <div className="space-y-0.5 min-w-0 flex-1">
-              <div className="flex items-center gap-1.5 flex-wrap">
-                <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full">
-                  মেম্বারশিপ অফার
-                </span>
-                <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400">
-                  ১০০% ফ্রি মেম্বার কার্ড
-                </span>
-              </div>
-              <p className="font-heading font-bold text-xs sm:text-sm text-foreground leading-snug">
-                সিরিয়াল বুকিংয়ের পর টেস্টে ১০-৩০% ডিসকাউন্ট চান?
-              </p>
-              <p className="text-[11px] text-muted-foreground leading-relaxed">
-                ফ্রি মেম্বারশিপে ১০-২৫% এবং প্রিমিয়ামে ১৫-৩০% বিশেষ ছাড় ও প্রায়োরিটি সুবিধা পেতে এখনই সংগ্রহ করুন হেলথ ক্লাব ডিজিটাল মেম্বার কার্ড।
-              </p>
-            </div>
-          </div>
-          <DoctorSerialMembershipCta doctorId={doctor.id} />
         </div>
       </div>
     </Card>

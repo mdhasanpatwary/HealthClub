@@ -16,6 +16,7 @@ interface ImageUploadProps {
   fallbackType?: 'user' | 'building' | 'doctor' | 'stethoscope';
   folder?: StorageFolder;
   disabled?: boolean;
+  onUploadingChange?: (uploading: boolean) => void;
 }
 
 export function ImageUpload({
@@ -25,17 +26,21 @@ export function ImageUpload({
   fallbackType = 'user',
   folder = 'members',
   disabled = false,
+  onUploadingChange,
 }: ImageUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [localPreview, setLocalPreview] = useState<string | null>(null);
+  const [hasImageError, setHasImageError] = useState(false);
 
-  // Seamlessly migrate legacy base64 values if existing in database records
+
+  // Seamlessly migrate legacy base64 values if existing in database records (e.g. admin or profile edits)
   const migratedRef = useRef(false);
   useEffect(() => {
-    if (!migratedRef.current && value && value.startsWith("data:image/") && !isUploading) {
+    if (!migratedRef.current && value && value.startsWith("data:image/") && !isUploading && !localPreview) {
       migratedRef.current = true;
       setIsUploading(true);
+      onUploadingChange?.(true);
       uploadImageAction(value, folder)
         .then((res) => {
           if (res.success && res.url) {
@@ -47,18 +52,22 @@ export function ImageUpload({
         })
         .finally(() => {
           setIsUploading(false);
+          onUploadingChange?.(false);
         });
     }
-  }, [value, folder, isUploading, onChange]);
+  }, [value, folder, isUploading, localPreview, onChange, onUploadingChange]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
-    const validMimeTypes = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
-    if (!validMimeTypes.includes(file.type.toLowerCase())) {
-      toast.error("শুধুমাত্র JPG, PNG বা WebP ফরম্যাটের ছবি আপলোড করা যাবে।");
+    // Validate file type (supports camera captures and common formats)
+    const isImage =
+      file.type.startsWith("image/") ||
+      /\.(jpe?g|png|webp|heic|heif|bmp|gif)$/i.test(file.name);
+
+    if (!isImage) {
+      toast.error("শুধুমাত্র ছবি (JPG, PNG বা WebP) আপলোড করা যাবে।");
       e.target.value = "";
       return;
     }
@@ -122,39 +131,36 @@ export function ImageUpload({
           }
 
           ctx.drawImage(img, 0, 0, width, height);
-          const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.82);
+          const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.85);
 
-          // Show immediate local preview with loading state
+          // Show immediate local preview and populate form value immediately
           setLocalPreview(compressedDataUrl);
+          setHasImageError(false);
+          onChange(compressedDataUrl);
+
           setIsUploading(true);
+          onUploadingChange?.(true);
 
           // Upload to Supabase Storage CDN asynchronously
           uploadImageAction(compressedDataUrl, folder)
             .then((res) => {
               if (res.success && res.url) {
                 onChange(res.url);
-                setLocalPreview(null);
                 toast.success("ছবি সফলভাবে আপলোড হয়েছে।");
               } else {
-                setLocalPreview(null);
-                if (fileInputRef.current) {
-                  fileInputRef.current.value = "";
-                }
-                toast.error(res.error || "ছবি প্রসেস করতে ব্যর্থ হয়েছে।");
+                // Keep compressedDataUrl as robust fallback in form state
+                toast.info("ছবি সফলভাবে সংযুক্ত হয়েছে।");
               }
             })
             .catch(() => {
-              setLocalPreview(null);
-              if (fileInputRef.current) {
-                fileInputRef.current.value = "";
-              }
-              toast.error("ছবি প্রসেস করতে ব্যর্থ হয়েছে।");
+              // Keep compressedDataUrl as fallback
+              toast.info("ছবি সফলভাবে সংযুক্ত হয়েছে।");
             })
             .finally(() => {
               setIsUploading(false);
+              onUploadingChange?.(false);
             });
         } catch {
-          setLocalPreview(null);
           if (fileInputRef.current) fileInputRef.current.value = "";
           toast.error("ছবি প্রসেস করতে ব্যর্থ হয়েছে।");
         }
@@ -172,13 +178,14 @@ export function ImageUpload({
       {label && <label className="text-xs font-semibold text-secondary block">{label}</label>}
       <div className="flex items-center gap-4">
         <div className="relative h-16 w-16 rounded-xl border border-border bg-muted/40 overflow-hidden flex items-center justify-center shrink-0 shadow-sm group">
-          {displayUrl ? (
+          {displayUrl && !hasImageError ? (
             <Image
               src={displayUrl}
               alt={label ? `${label} Preview` : "Image Preview"}
               fill
               sizes="64px"
-              unoptimized={displayUrl.startsWith("data:")}
+              unoptimized={true}
+              onError={() => setHasImageError(true)}
               className="object-cover object-left-top"
             />
           ) : fallbackType === 'building' ? (
@@ -231,11 +238,12 @@ export function ImageUpload({
               onClick={() => {
                 onChange("");
                 setLocalPreview(null);
+                setHasImageError(false);
                 if (fileInputRef.current) {
                   fileInputRef.current.value = "";
                 }
               }}
-              className="text-[10px] text-rose-600 hover:text-rose-700 p-0 h-auto mt-1 flex items-center gap-1 hover:bg-transparent"
+              className="text-[10px] text-rose-600 hover:text-rose-700 p-0 h-auto mt-1 flex items-center gap-1 hover:bg-transparent cursor-pointer"
             >
               <Trash2 className="h-3 w-3" />
               ছবি মুছুন

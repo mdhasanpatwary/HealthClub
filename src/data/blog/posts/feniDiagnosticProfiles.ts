@@ -150,7 +150,7 @@ export const FENI_DIAGNOSTIC_CENTERS: DiagnosticCenterReviewItem[] = [
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "হেলথ ক্লাব কার্ডে ১০-৩০% পর্যন্ত বিশেষ ছাড়",
-    partnerProfileSlug: "নিরাময়-ডায়াগনস্টিক-এন্ড-কনসালটেশন-সেন্টার",
+    partnerProfileSlug: "niramoy-diagnostic-consultation-center",
     imageUrl: "/images/partners/niramoy-diagnostic.webp",
     mapQuery: "Niramoy Diagnostic Center Khejur Chottor Trunk Road Feni",
   },

@@ -47,7 +47,7 @@ export const FENI_DENTAL_CLINICS: DentalClinicReviewItem[] = [
     sterilizationStandardBn: "ক্লাস-বি প্রি-ভ্যাকুয়াম অটোক্লেভ ও ইউরোপীয় মানসম্পন্ন জীবাণুমুক্তকরণ",
     partnerStatus: true,
     partnerDiscountBn: "হেলথ ক্লাব মেম্বারদের জন্য ১০-৩০% পর্যন্ত বিশেষ ছাড়",
-    partnerProfileSlug: "মজুমদার-ডেন্টাল-ক্লিনিক",
+    partnerProfileSlug: "mazumder-dental-clinic",
     imageUrl: "/images/partners/mazumder-dental.webp",
     mapQuery: "Zero Point Trunk Road Feni",
   },

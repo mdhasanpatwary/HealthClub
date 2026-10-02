@@ -342,7 +342,7 @@ export const FENI_CARDIAC_TEST_CENTERS: DiagnosticCenterReviewItem[] = [
     onlineReport: false,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
+    partnerProfileSlug: "al-aqsa-hospital-feni",
     mapQuery: "Al-Aqsa Hospital Ltd Trunk Road Feni",
   },
   {

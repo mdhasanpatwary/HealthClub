@@ -304,7 +304,7 @@ export async function addPartnerDoctorAction(
     }
 
     const newDocId = `doc_${crypto.randomUUID().slice(0, 8)}`;
-    const baseSlug = generateDoctorSlug(input.name.trim()) || `doc-${newDocId.replace(/^doc_/, "")}`;
+    const baseSlug = generateDoctorSlug(input.name.trim(), input.nameEn?.trim()) || `doc-${newDocId.replace(/^doc_/, "")}`;
     const resolvedSlug = await resolveUniqueDoctorSlug(prisma, baseSlug);
     const created = await prisma.doctor.create({
       data: {

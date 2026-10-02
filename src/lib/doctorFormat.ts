@@ -1,5 +1,6 @@
 import { Doctor } from "@/services/db";
 import { detectUpazilaFromText } from "@/data/feniLocations";
+import { generateDoctorSlug } from "@/lib/slugify";
 
 /**
  * Full selection projection for single doctor profile view (/consultants/[slug]),
@@ -96,9 +97,13 @@ export type PrismaDoctorRecord = {
 
 // Pure sync helper to format Prisma Doctor record to Doctor interface
 export function formatDoctor(d: PrismaDoctorRecord): Doctor {
+  const canonicalSlug = d.slug && /^[a-z0-9-]+$/.test(d.slug)
+    ? d.slug
+    : generateDoctorSlug(d.name, d.nameEn || undefined) || d.id;
+
   return {
     id: d.id,
-    slug: d.slug || undefined,
+    slug: canonicalSlug,
     name: d.name,
     nameEn: d.nameEn || undefined,
     specialty: d.specialty,

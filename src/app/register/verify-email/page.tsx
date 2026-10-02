@@ -14,6 +14,7 @@ import {
   getPendingRegistrationEmailAction,
 } from "@/app/actions/memberAuthActions";
 import { toast } from "sonner";
+import WhatsAppAssistanceCard from "@/components/common/WhatsAppAssistanceCard";
 
 function VerifyEmailForm() {
   const router = useRouter();
@@ -196,6 +197,12 @@ function VerifyEmailForm() {
             </Link>
           </div>
         </div>
+
+        <WhatsAppAssistanceCard
+          context="verify_email"
+          variant="compact"
+          userEmail={email}
+        />
       </CardContent>
     </Card>
   );

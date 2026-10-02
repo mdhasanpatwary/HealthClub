@@ -179,7 +179,7 @@ export const FENI_STROKE_CARDIAC_HOSPITALS: HospitalReviewItem[] = [
     icuAvailable: true,
     emergency24x7: true,
     partnerStatus: true,
-    partnerProfileSlug: "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
+    partnerProfileSlug: "al-aqsa-hospital-feni",
     mapQuery: "Al-Aqsa Hospital Trunk Road Feni",
   },
   {

@@ -22,6 +22,7 @@ import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { ReferenceCodeField, type RefStatusState } from "./components/ReferenceCodeField";
+import WhatsAppAssistanceCard from "@/components/common/WhatsAppAssistanceCard";
 
 function RegisterForm() {
   const router = useRouter();
@@ -55,6 +56,7 @@ function RegisterForm() {
   const selectedTier = useWatch({ control, name: "tier" });
 
   const [refStatus, setRefStatus] = useState<RefStatusState>({ status: "idle", message: "" });
+  const [isPhotoUploading, setIsPhotoUploading] = useState(false);
 
   const handleVerifyRefCode = useCallback(async (codeToVerify?: string) => {
     const code = (codeToVerify ?? getValues("referenceCode") ?? "").trim();
@@ -237,6 +239,7 @@ function RegisterForm() {
                 <ImageUpload
                   value={field.value}
                   onChange={field.onChange}
+                  onUploadingChange={setIsPhotoUploading}
                   label="প্রোফাইল ছবি"
                   folder="members"
                 />
@@ -377,12 +380,20 @@ function RegisterForm() {
 
           <Button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isPhotoUploading}
             size="lg"
-            className="w-full mt-1"
+            className="w-full mt-1 cursor-pointer"
           >
             {isSubmitting ? (
-              <div className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+              <div className="flex items-center justify-center gap-2">
+                <div className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                <span>অ্যাকাউন্ট তৈরি হচ্ছে...</span>
+              </div>
+            ) : isPhotoUploading ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                <span>ছবি আপলোড হচ্ছে...</span>
+              </div>
             ) : (
               <>
                 পরবর্তী ধাপে যান
@@ -398,6 +409,11 @@ function RegisterForm() {
             লগইন করুন
           </Link>
         </div>
+
+        <WhatsAppAssistanceCard
+          context="register"
+          variant="compact"
+        />
       </div>
     </div>
   );

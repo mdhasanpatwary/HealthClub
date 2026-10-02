@@ -320,7 +320,7 @@ export const FENI_HBA1C_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
     partnerDiscountEn: "10-30% Member Discount",
-    partnerProfileSlug: "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
+    partnerProfileSlug: "al-aqsa-hospital-feni",
   },
   {
     rank: 6,

@@ -20,7 +20,7 @@ export const FENI_HOME_CARE_PROVIDERS: HospitalReviewItem[] = [
     emergency24x7: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% বিশেষ ছাড় (ইনডোর সেবা, অন-কল নার্স ও ল্যাব টেস্টে)",
-    partnerProfileSlug: "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
+    partnerProfileSlug: "al-aqsa-hospital-feni",
     imageUrl: "/images/partners/al-aqsa-hospital.webp",
     mapQuery: "Al-Aqsa Hospital Trunk Road Feni",
     descriptionBn:

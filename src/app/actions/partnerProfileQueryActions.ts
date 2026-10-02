@@ -21,17 +21,69 @@ const DOCTORS_TAG = "doctors";
  * Normalizes historical or alternative slugs to their canonical database partner slugs.
  */
 const KNOWN_PARTNER_ALIASES: Record<string, string> = {
+  // Pacific Health Care
   "pacific-health-care": "pacific-health-care-centre",
   "pacific-health-care-feni": "pacific-health-care-centre",
+  "pacific-health-care-center": "pacific-health-care-centre",
+  "প্যাসিফিক-হেলথ-কেয়ার-সেন্টার": "pacific-health-care-centre",
+
+  // Life Care
   "life-care-diagnostic": "life-care-diagnostic-center",
   "life-care-diagnostic-feni": "life-care-diagnostic-center",
   "life-care-diagnostic-center-feni": "life-care-diagnostic-center",
   "লাইফ-কেয়ার-ডায়াগনস্টিক-সেন্টার": "life-care-diagnostic-center",
+
+  // Imperial Neurocare
   "imperial-neurocare": "imperial-neurocare-diagnostic-center",
   "imperial-neurocare-feni": "imperial-neurocare-diagnostic-center",
+  "ইম্পেরিয়াল-নিউরোকেয়ার-অ্যান্ড-ডায়াগনস্টিক-সেন্টার": "imperial-neurocare-diagnostic-center",
+
+  // Feni Max
   "feni-max-diagnostic": "feni-max-diagnostic-centre",
-  "al-aqsa-hospital": "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
-  "al-aqsa-hospital-feni": "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
+  "feni-max-diagnostic-center": "feni-max-diagnostic-centre",
+  "ফেনি-ম্যাক্স-ডায়াগনস্টিক-সেন্টার": "feni-max-diagnostic-centre",
+
+  // Al-Aqsa
+  "al-aqsa-hospital": "al-aqsa-hospital-feni",
+  "al-aqsa-hospital-feni": "al-aqsa-hospital-feni",
+  "al-aqsa-hospital-ltd-feni": "al-aqsa-hospital-feni",
+  "আল-আকসা-হাসপাতাল-লিঃ-ফেনী": "al-aqsa-hospital-feni",
+  "আল-আকসা-হাসপাতাল-লি-ফেনী": "al-aqsa-hospital-feni",
+
+  // Islamia Physiotherapy
+  "islamia-physiotherapy": "islamia-physiotherapy-and-rehabilitation-center",
+  "islamia-physiotherapy-center": "islamia-physiotherapy-and-rehabilitation-center",
+  "islamia-physiotherapy-rehabilitation-center": "islamia-physiotherapy-and-rehabilitation-center",
+  "islamia-physiotherapy-and-rehabilitation-center": "islamia-physiotherapy-and-rehabilitation-center",
+  "ইসলামিয়া-ফিজিওথেরাপি-এন্ড-রিহ্যাবিলিটেশন-সেন্টার": "islamia-physiotherapy-and-rehabilitation-center",
+
+  // Feni Care Hospital
+  "feni-care": "feni-care-hospital",
+  "feni-care-hospital": "feni-care-hospital",
+  "ফেনী-কেয়ার-হসপিটাল": "feni-care-hospital",
+
+  // Niramoy Diagnostic
+  "niramoy-diagnostic": "niramoy-diagnostic-consultation-center",
+  "niramoy-diagnostic-and-consultation-center": "niramoy-diagnostic-consultation-center",
+  "niramoy-diagnostic-consultation-center": "niramoy-diagnostic-consultation-center",
+  "নিরাময়-ডায়াগনস্টিক-এন্ড-কনসালটেশন-সেন্টার": "niramoy-diagnostic-consultation-center",
+  "নিরাময়-ডায়াগনস্টিক-এন্ড-কনসালটেশন-সেন্টার": "niramoy-diagnostic-consultation-center",
+
+  // Dhaka Pharmacy
+  "dhaka-pharmacy": "dhaka-pharmacy",
+  "ঢাকা-ফার্মেসি": "dhaka-pharmacy",
+
+  // Mazumder Dental
+  "mazumder-dental-clinic": "mazumder-dental-clinic",
+  "mojumdar-dental-clinic": "mazumder-dental-clinic",
+  "মজুমদার-ডেন্টাল-ক্লিনিক": "mazumder-dental-clinic",
+
+  // Central Physiotherapy
+  "central-physiotherapy": "central-physiotherapy-rehabilitation-center",
+  "central-physiotherapy-and-rehabilitation-center": "central-physiotherapy-rehabilitation-center",
+  "central-physiotherapy-and-rehabilitation-sentar": "central-physiotherapy-rehabilitation-center",
+  "central-physiotherapy-rehabilitation-center": "central-physiotherapy-rehabilitation-center",
+  "সেন্ট্রাল-ফিজিওথেরাপি-এন্ড-রিহ্যাবিলিটেশন-সেন্টার": "central-physiotherapy-rehabilitation-center",
 };
 
 /**
@@ -55,26 +107,37 @@ export const getPartnerByIdAction = cache(
         KNOWN_PARTNER_ALIASES[idOrSlug] ||
         decoded;
 
+      // Construct candidate slug set including reverse aliases for resilient matching
+      const candidateSlugs = new Set<string>([
+        resolvedSlug,
+        decoded,
+        idOrSlug,
+      ]);
+
+      for (const [aliasKey, targetSlug] of Object.entries(KNOWN_PARTNER_ALIASES)) {
+        if (targetSlug === resolvedSlug || targetSlug === decoded || aliasKey === resolvedSlug || aliasKey === decoded) {
+          candidateSlugs.add(aliasKey);
+          candidateSlugs.add(targetSlug);
+        }
+      }
+
       if (!prisma?.partner) {
         const fallback = initialPartners.find(
           (p) =>
             p.isPartner !== false &&
-            (p.slug === resolvedSlug ||
-              p.slug === decoded ||
-              p.slug === idOrSlug ||
+            (candidateSlugs.has(p.slug || "") ||
               p.id === idOrSlug ||
               p.id === decoded)
         );
         return fallback || null;
       }
 
-      const p = await prisma.partner.findFirst({
+      // 1. Direct query with candidate slugs or IDs
+      let p = await prisma.partner.findFirst({
         where: {
           isPartner: true,
           OR: [
-            { slug: resolvedSlug },
-            { slug: decoded },
-            { slug: idOrSlug },
+            ...Array.from(candidateSlugs).map((s) => ({ slug: s })),
             { id: idOrSlug },
             { id: decoded },
           ],
@@ -82,13 +145,33 @@ export const getPartnerByIdAction = cache(
         select: PARTNER_FULL_SELECT_FIELDS,
       });
 
+      // 2. Fallback: if not found by stored slug, scan active partners and match on formatted slug
+      if (!p) {
+        const allPartners = await prisma.partner.findMany({
+          where: { isPartner: true },
+          select: PARTNER_FULL_SELECT_FIELDS,
+        });
+
+        const matched = allPartners.find((item) => {
+          const formatted = formatPartner(item);
+          return (
+            candidateSlugs.has(formatted.slug || "") ||
+            candidateSlugs.has(item.slug || "") ||
+            item.id === idOrSlug ||
+            item.id === decoded
+          );
+        });
+
+        if (matched) {
+          p = matched;
+        }
+      }
+
       if (!p || p.isPartner === false) {
         const fallback = initialPartners.find(
           (item) =>
             item.isPartner !== false &&
-            (item.slug === resolvedSlug ||
-              item.slug === decoded ||
-              item.slug === idOrSlug ||
+            (candidateSlugs.has(item.slug || "") ||
               item.id === idOrSlug ||
               item.id === decoded)
         );

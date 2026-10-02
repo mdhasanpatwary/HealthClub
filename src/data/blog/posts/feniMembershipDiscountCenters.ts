@@ -267,7 +267,7 @@ export const FENI_MEMBERSHIP_DISCOUNT_CENTERS: DiagnosticCenterReviewItem[] = [
     onlineReport: true,
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
-    partnerProfileSlug: "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
+    partnerProfileSlug: "al-aqsa-hospital-feni",
     imageUrl: "/images/placeholders/hospital.png",
     mapQuery: "Al Aqsa Hospital Trunk Road Feni",
   },

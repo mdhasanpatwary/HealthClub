@@ -335,7 +335,7 @@ export const FENI_LIPID_CENTERS: DiagnosticCenterReviewItem[] = [
     partnerStatus: true,
     partnerDiscountBn: "১০-৩০% মেম্বার ছাড়",
     partnerDiscountEn: "10-30% Member Discount",
-    partnerProfileSlug: "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
+    partnerProfileSlug: "al-aqsa-hospital-feni",
     imageUrl: "/images/blog/best-diagnostic-centers-feni.webp",
     mapQuery: "Al-Aqsa Hospital Trunk Road Feni",
   },

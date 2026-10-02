@@ -33,7 +33,7 @@ export const initialPartners: Partner[] = [
   },
   {
     id: "p_b6383465-388d-4c4a-b806-eff03b6d7c51",
-    slug: "নিরাময়-ডায়াগনস্টিক-এন্ড-কনসালটেশন-সেন্টার",
+    slug: "niramoy-diagnostic-consultation-center",
     name: "নিরাময় ডায়াগনস্টিক এন্ড কনসালটেশন সেন্টার",
     category: "diagnostic",
     address: "জুহানা শপিং সেন্টার, খেজুর চত্বর, ট্রাংক রোড, ফেনী",
@@ -59,7 +59,7 @@ export const initialPartners: Partner[] = [
   },
   {
     id: "p_d2907a36-d893-437a-80dc-ebf29db5e541",
-    slug: "ফেনী-কেয়ার-হসপিটাল",
+    slug: "feni-care-hospital",
     name: "ফেনী কেয়ার হসপিটাল",
     category: "hospital",
     address: "এসএসকে রোড স্টার লাইন বাস টার্মিনালের সামনে, ফেনী",
@@ -72,7 +72,7 @@ export const initialPartners: Partner[] = [
   },
   {
     id: "p_bd9006f0-324f-43d7-a429-b37ef40666f5",
-    slug: "ঢাকা-ফার্মেসি",
+    slug: "dhaka-pharmacy",
     name: "ঢাকা ফার্মেসি",
     category: "pharmacy",
     address: "ফেনী কেন্দ্রিয় বড় জামে মসজিদের পূর্ব পাশে, ট্রাঙ্ক রোড, ফেনী",
@@ -98,7 +98,7 @@ export const initialPartners: Partner[] = [
   },
   {
     id: "p_4e9a6aed-4f52-4382-aeca-951c461eae41",
-    slug: "ইসলামিয়া-ফিজিওথেরাপি-এন্ড-রিহ্যাবিলিটেশন-সেন্টার",
+    slug: "islamia-physiotherapy-and-rehabilitation-center",
     name: "ইসলামিয়া  ফিজিওথেরাপি  এন্ড রিহ্যাবিলিটেশন সেন্টার",
     category: "hospital",
     address: "আল কেমী হাসপাতালের দক্ষিণ পার্শ্বে, (জসিম ম্যানশন), এস.এস.কে রোড, ফেনী।",
@@ -111,7 +111,7 @@ export const initialPartners: Partner[] = [
   },
   {
     id: "p_9abc5886-459d-43a7-8d26-52d51ac9589c",
-    slug: "মজুমদার-ডেন্টাল-ক্লিনিক",
+    slug: "mazumder-dental-clinic",
     name: "মজুমদার ডেন্টাল ক্লিনিক",
     category: "hospital",
     address: "জিরো পয়েন্ট, ট্রাঙ্ক রোড, ফেনী।",
@@ -124,7 +124,7 @@ export const initialPartners: Partner[] = [
   },
   {
     id: "p_6e4ee249-31f1-49f3-8ba5-c23191adcf06",
-    slug: "আল-আকসা-হাসপাতাল-লিঃ-ফেনী",
+    slug: "al-aqsa-hospital-feni",
     name: "আল-আকসা হাসপাতাল লিঃ ফেনী",
     category: "hospital",
     address: "খাজুরিয়া কোট বিল্ডিং, ট্রাংক রোড, ফেনী। ৩৯০০",
@@ -137,7 +137,7 @@ export const initialPartners: Partner[] = [
   },
   {
     id: "p_6cf545c7-f2a2-4b4c-80bc-8c792c8d5374",
-    slug: "সেন্ট্রাল-ফিজিওথেরাপি-এন্ড-রিহ্যাবিলিটেশন-সেন্টার",
+    slug: "central-physiotherapy-rehabilitation-center",
     name: "সেন্ট্রাল ফিজিওথেরাপি  এন্ড রিহ্যাবিলিটেশন সেন্টার|",
     category: "hospital",
     address: "সাইকা প্লাস এর বিপরীতে দিদার টাইলস্ এর পাশের গলি সুজাত ম্যানশন, এস.এস.কে রোড, ফেনী।",

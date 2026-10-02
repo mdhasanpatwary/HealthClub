@@ -2,7 +2,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@/generated/client/client";
-import { Doctor, Partner } from "@/services/db";
+import { Doctor, Partner, initialDoctors } from "@/services/db";
+import { generateDoctorSlug } from "@/lib/slugify";
 import { logger } from "@/lib/logger";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
@@ -136,13 +137,32 @@ export const getDoctorByIdAction = cache(
         // Keep original
       }
 
+      const asciiSlug = generateDoctorSlug(decoded);
+
+      if (!prisma?.doctor) {
+        const fallback = initialDoctors.find(
+          (doc) =>
+            doc.slug === asciiSlug ||
+            doc.slug === decoded ||
+            doc.slug === idOrSlug ||
+            doc.id === idOrSlug ||
+            doc.id === decoded ||
+            doc.name === decoded ||
+            (doc.nameEn && doc.nameEn.toLowerCase() === decoded.toLowerCase())
+        );
+        return fallback ? { ...fallback, partner: null } : null;
+      }
+
       const d = await prisma.doctor.findFirst({
         where: {
           OR: [
+            { slug: asciiSlug },
             { slug: decoded },
             { slug: idOrSlug },
             { id: idOrSlug },
             { id: decoded },
+            { name: decoded },
+            { nameEn: { equals: decoded, mode: "insensitive" } },
           ],
         },
         include: {
@@ -167,28 +187,81 @@ export const getDoctorByIdAction = cache(
         },
       });
 
-      if (!d) {
-        return null;
+      let resolvedDoc = d;
+
+      // 2. Fallback: If not found by direct slug, scan active doctors and match by formatted slug
+      if (!resolvedDoc) {
+        const allActive = await prisma.doctor.findMany({
+          where: { isActive: true },
+          include: {
+            partner: {
+              select: {
+                id: true,
+                slug: true,
+                name: true,
+                category: true,
+                address: true,
+                discount: true,
+                phone: true,
+                logoText: true,
+                mapLink: true,
+                imageUrl: true,
+                emergencyPhone: true,
+                workingHours: true,
+                departmentDiscounts: true,
+                upazila: true,
+              },
+            },
+          },
+        });
+
+        const matched = allActive.find((doc) => {
+          const formatted = formatDoctor(doc);
+          return (
+            formatted.slug === asciiSlug ||
+            formatted.slug === decoded ||
+            formatted.slug === idOrSlug ||
+            generateDoctorSlug(doc.name, doc.nameEn || undefined) === asciiSlug
+          );
+        });
+
+        if (matched) {
+          resolvedDoc = matched;
+        }
+      }
+
+      if (!resolvedDoc) {
+        const fallback = initialDoctors.find(
+          (doc) =>
+            doc.slug === asciiSlug ||
+            doc.slug === decoded ||
+            doc.slug === idOrSlug ||
+            doc.id === idOrSlug ||
+            doc.id === decoded ||
+            doc.name === decoded ||
+            (doc.nameEn && doc.nameEn.toLowerCase() === decoded.toLowerCase())
+        );
+        return fallback ? { ...fallback, partner: null } : null;
       }
 
       return {
-        ...formatDoctor(d),
-        partner: d.partner
+        ...formatDoctor(resolvedDoc),
+        partner: resolvedDoc.partner
           ? {
-            id: d.partner.id,
-            slug: d.partner.slug || undefined,
-            name: d.partner.name,
-            category: d.partner.category as "hospital" | "diagnostic" | "pharmacy",
-            address: d.partner.address,
-            discount: d.partner.discount,
-            phone: d.partner.phone,
-            logoText: d.partner.logoText,
-            mapLink: d.partner.mapLink || undefined,
-            imageUrl: d.partner.imageUrl || undefined,
-            emergencyPhone: d.partner.emergencyPhone || undefined,
-            workingHours: d.partner.workingHours || undefined,
-            departmentDiscounts: d.partner.departmentDiscounts || undefined,
-            upazila: d.partner.upazila || "feni-sadar",
+            id: resolvedDoc.partner.id,
+            slug: resolvedDoc.partner.slug || undefined,
+            name: resolvedDoc.partner.name,
+            category: resolvedDoc.partner.category as "hospital" | "diagnostic" | "pharmacy",
+            address: resolvedDoc.partner.address,
+            discount: resolvedDoc.partner.discount,
+            phone: resolvedDoc.partner.phone,
+            logoText: resolvedDoc.partner.logoText,
+            mapLink: resolvedDoc.partner.mapLink || undefined,
+            imageUrl: resolvedDoc.partner.imageUrl || undefined,
+            emergencyPhone: resolvedDoc.partner.emergencyPhone || undefined,
+            workingHours: resolvedDoc.partner.workingHours || undefined,
+            departmentDiscounts: resolvedDoc.partner.departmentDiscounts || undefined,
+            upazila: resolvedDoc.partner.upazila || "feni-sadar",
           }
           : undefined,
       };

@@ -13,6 +13,7 @@ import { PartnerCardSkeleton } from "@/components/ui/skeleton";
 import { FENI_UPAZILAS, detectUpazilaFromText } from "@/data/feniLocations";
 import PartnerCard from "@/components/ui/PartnerCard";
 import { toast } from "sonner";
+import { transliterateBengaliToEnglish, PARTNER_HOSPITAL_ALIASES } from "@/lib/transliteration";
 
 interface PartnerDirectoryProps {
   partners?: Partner[];
@@ -149,7 +150,10 @@ export default function PartnerDirectory({
       let matchesSearch = true;
 
       if (q) {
-        const searchableText = `${p.name} ${p.logoText || ""} ${p.slug || ""} ${p.address} ${p.facilities || ""} ${p.departmentDiscounts || ""}`.toLowerCase();
+        const transliteratedName = transliterateBengaliToEnglish(p.name);
+        const partnerAliases = PARTNER_HOSPITAL_ALIASES[p.slug || ""] || PARTNER_HOSPITAL_ALIASES[p.id] || "";
+        const categoryLabel = p.category === "hospital" ? "hospital হাসপাতাল" : p.category === "diagnostic" ? "diagnostic ডায়াগনস্টিক" : "pharmacy ফার্মেসি";
+        const searchableText = `${p.name} ${transliteratedName} ${p.logoText || ""} ${p.slug || ""} ${partnerAliases} ${categoryLabel} ${p.address} ${p.facilities || ""} ${p.departmentDiscounts || ""}`.toLowerCase();
         matchesSearch = searchableText.includes(q);
 
         if (!matchesSearch) {
