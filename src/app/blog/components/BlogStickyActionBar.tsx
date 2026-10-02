@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { CreditCard, PhoneCall, X } from "lucide-react";
+import { CreditCard, PhoneCall, X, ArrowRight } from "lucide-react";
 import { WhatsAppIcon } from "@/components/ui/SocialBrandIcons";
 
 interface BlogStickyActionBarProps {
@@ -145,7 +145,7 @@ export function BlogStickyActionBar({
       }`}
     >
       <div className="mx-auto max-w-md sm:max-w-lg">
-        {/* Subtle micro-header with live status and dismiss button */}
+        {/* Subtle micro-header with live status, mobile call hotline, and dismiss button */}
         <div className="flex items-center justify-between text-[11px] font-medium text-muted-foreground pb-1.5 px-0.5">
           <div className="flex items-center gap-1.5 min-w-0">
             <span className="relative flex h-2 w-2 shrink-0">
@@ -157,49 +157,62 @@ export function BlogStickyActionBar({
             </span>
             <span className="text-muted-foreground/40">•</span>
             <span className="text-[10px] text-primary font-medium truncate">
-              ফেনী সদর পার্টনার নেটওয়ার্ক
+              ফেনী সদর
             </span>
           </div>
 
-          <button
-            type="button"
-            onClick={handleDismiss}
-            aria-label="অ্যাকশন বার বন্ধ করুন"
-            className="h-6 w-6 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground flex items-center justify-center shrink-0 cursor-pointer transition-colors ml-2"
-          >
-            <X className="h-3.5 w-3.5" />
-          </button>
+          <div className="flex items-center gap-2 shrink-0 ml-2">
+            {/* Direct hotline tap for mobile visitors who need urgent serial assistance */}
+            <a
+              href={`tel:${hotlineTel}`}
+              className="sm:hidden inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 transition-colors py-0.5 px-1 rounded-md"
+              title="সিরিয়াল হেল্পলাইন"
+            >
+              <PhoneCall className="h-3 w-3" />
+              <span>কল</span>
+            </a>
+
+            <button
+              type="button"
+              onClick={handleDismiss}
+              aria-label="অ্যাকশন বার বন্ধ করুন"
+              className="h-6 w-6 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground flex items-center justify-center shrink-0 cursor-pointer transition-colors"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
         </div>
 
-        {/* High-converting touchpoint action buttons */}
+        {/* High-converting touchpoint action buttons: single full-width button on mobile to avoid space issue / text ellipsis */}
         <div className="flex items-center gap-2">
-          {/* 1. 10-30% Member Discount CTA */}
+          {/* 1. 10-30% Member Discount CTA (Always visible, full-width on mobile to prevent text truncation) */}
           <Link
             href="/membership"
             prefetch={false}
-            className="flex-1 min-w-0 flex items-center justify-center gap-1.5 h-10 px-2.5 rounded-xl bg-primary hover:bg-primary-dark text-white font-bold text-xs sm:text-sm shadow-sm transition-all active:scale-[0.98]"
+            className="flex-1 w-full min-w-0 flex items-center justify-center gap-2 h-11 px-3.5 sm:px-4 rounded-xl bg-primary hover:bg-primary-dark text-white font-bold text-xs sm:text-sm shadow-sm transition-all active:scale-[0.98]"
           >
             <CreditCard className="h-4 w-4 shrink-0" />
-            <span className="truncate">১০-৩০% মেম্বার ছাড় নিন</span>
+            <span className="whitespace-nowrap font-bold">১০-৩০% মেম্বার ছাড় নিন</span>
+            <ArrowRight className="h-3.5 w-3.5 shrink-0 opacity-90" />
           </Link>
 
-          {/* 2. Serial Helpline Dialer */}
+          {/* 2. Serial Helpline Dialer (Hidden on mobile to give full width to converter CTA; visible on sm: screens) */}
           <a
             href={`tel:${hotlineTel}`}
-            className="flex-1 min-w-0 flex items-center justify-center gap-1.5 h-10 px-2.5 rounded-xl bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold text-xs sm:text-sm border border-border/70 shadow-sm transition-all active:scale-[0.98]"
+            className="hidden sm:flex flex-1 min-w-0 items-center justify-center gap-1.5 h-11 px-3 rounded-xl bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold text-xs sm:text-sm border border-border/70 shadow-sm transition-all active:scale-[0.98]"
           >
             <PhoneCall className="h-4 w-4 text-emerald-500 shrink-0" />
-            <span className="truncate">সিরিয়াল হেল্পলাইন</span>
+            <span className="whitespace-nowrap">সিরিয়াল হেল্পলাইন</span>
           </a>
 
-          {/* 3. WhatsApp Quick Trigger */}
+          {/* 3. WhatsApp Quick Trigger (Hidden on mobile; visible on sm: screens) */}
           {whatsappUrl && (
             <a
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="হোয়াটসঅ্যাপে যোগাযোগ করুন"
-              className="flex items-center justify-center h-10 w-10 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25 shrink-0 transition-all active:scale-[0.98]"
+              className="hidden sm:flex items-center justify-center h-11 w-11 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25 shrink-0 transition-all active:scale-[0.98]"
             >
               <WhatsAppIcon className="h-4 w-4" />
             </a>
