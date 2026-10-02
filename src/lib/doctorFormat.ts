@@ -61,11 +61,6 @@ export const DOCTOR_CARD_SELECT_FIELDS = {
   availableToday: true,
 } as const;
 
-/**
- * Default projection for directory listing queries.
- * Aliased to DOCTOR_CARD_SELECT_FIELDS for wire protocol trimming across all list queries.
- */
-export const DOCTOR_SELECT_FIELDS = DOCTOR_CARD_SELECT_FIELDS;
 
 export const DOCTOR_ADMIN_SELECT_FIELDS = {
   ...DOCTOR_FULL_SELECT_FIELDS,

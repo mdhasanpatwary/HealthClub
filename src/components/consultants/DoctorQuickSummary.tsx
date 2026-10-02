@@ -82,5 +82,3 @@ export function DoctorQuickSummary({ doctor }: DoctorQuickSummaryProps) {
     </section>
   );
 }
-
-export default DoctorQuickSummary;

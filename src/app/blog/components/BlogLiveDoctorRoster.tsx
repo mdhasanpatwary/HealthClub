@@ -264,5 +264,3 @@ export function BlogLiveDoctorRoster({
     </section>
   );
 }
-
-export default BlogLiveDoctorRoster;

@@ -153,5 +153,3 @@ export function DoctorChamberSchedule({ doctor }: DoctorChamberScheduleProps) {
     </Card>
   );
 }
-
-export default DoctorChamberSchedule;

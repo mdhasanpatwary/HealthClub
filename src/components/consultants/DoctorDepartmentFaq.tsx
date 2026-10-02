@@ -71,5 +71,3 @@ export function DoctorDepartmentFaq({
     </section>
   );
 }
-
-export default DoctorDepartmentFaq;

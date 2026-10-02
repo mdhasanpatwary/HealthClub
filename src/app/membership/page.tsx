@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Check, Star, ShieldCheck, ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import JsonLd from "@/components/seo/JsonLd";
 import { LazyTestimonialsSection } from "@/components/landing/LazyLandingComponents";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
@@ -343,11 +344,13 @@ export default async function MembershipPage() {
             <div className="pt-8">
               <Link
                 href="/register?plan=premium"
-                className={buttonVariants({
-                  variant: "outline",
-                  size: "lg",
-                  className: "w-full",
-                })}
+                className={cn(
+                  buttonVariants({
+                    variant: "secondary",
+                    size: "lg",
+                  }),
+                  "w-full shadow-md font-bold transition-all hover:shadow-lg"
+                )}
               >
                 <span>প্রিমিয়াম মেম্বার হোন</span>
                 <ArrowRight className="h-4 w-4" />

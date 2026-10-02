@@ -52,5 +52,3 @@ export function XIcon({ className = "h-4 w-4" }: SocialIconProps) {
   );
 }
 
-export const TwitterIcon = XIcon;
-

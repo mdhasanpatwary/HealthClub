@@ -220,65 +220,6 @@ export interface PublicMemberVerification {
 // Initial seed data from verified Feni Sadar partners
 export { initialPartners } from "@/data/initialPartnersData";
 
-export const initialMembers: Member[] = [
-  {
-    id: "HC-1001",
-    name: "মোঃ আব্দুর রহমান",
-    phone: "01711112222",
-    email: "arahman@gmail.com",
-    tier: "founding",
-    status: "active",
-    joinedDate: "2026-01-10",
-    expiryDate: "2027-01-10",
-    totalSaved: 2000,
-    emailVerified: true
-  },
-  {
-    id: "HC-1002",
-    name: "নুসরাত জাহান",
-    phone: "01811112222",
-    email: "nusrat@gmail.com",
-    tier: "premium",
-    status: "active",
-    joinedDate: "2026-03-15",
-    expiryDate: "2027-03-15",
-    totalSaved: 300,
-    emailVerified: true
-  }
-];
-
-export const initialTransactions: Transaction[] = [
-  {
-    id: "tx1",
-    memberId: "HC-1001",
-    memberName: "মোঃ আব্দুর রহমান",
-    partnerId: "p_55db306d-13e5-42b6-a4fa-8c0d7e3c6a92",
-    partnerName: "লাইফ কেয়ার ডায়াগনস্টিক সেন্টার",
-    amount: 5000,
-    saved: 500,
-    date: "2026-06-12 10:30 AM"
-  },
-  {
-    id: "tx3",
-    memberId: "HC-1002",
-    memberName: "নুসরাত জাহান",
-    partnerId: "p_0144039c-e5ec-4fee-acae-67a2f3398c5c",
-    partnerName: "এম রহমান মেডিকেল স্টোর",
-    amount: 3000,
-    saved: 300,
-    date: "2026-07-02 01:20 PM"
-  },
-  {
-    id: "tx4",
-    memberId: "HC-1001",
-    memberName: "মোঃ আব্দুর রহমান",
-    partnerId: "p_6e4ee249-31f1-49f3-8ba5-c23191adcf06",
-    partnerName: "আল-আকসা হাসপাতাল লিঃ ফেনী",
-    amount: 15000,
-    saved: 1500,
-    date: "2026-07-10 11:45 AM"
-  }
-];
 
 export interface Doctor {
   id: string;

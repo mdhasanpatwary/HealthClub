@@ -64,5 +64,3 @@ export function DoctorPillarGuideCard({
     </div>
   );
 }
-
-export default DoctorPillarGuideCard;

@@ -151,5 +151,3 @@ export function DoctorClinicalGuidance({ doctor }: DoctorClinicalGuidanceProps) 
     </div>
   );
 }
-
-export default DoctorClinicalGuidance;

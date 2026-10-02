@@ -30,7 +30,7 @@ export interface AdminNavLink {
   icon: React.ComponentType<{ className?: string }>;
 }
 
-export const ADMIN_NAV_LINKS: AdminNavLink[] = [
+const ADMIN_NAV_LINKS: AdminNavLink[] = [
   {
     href: "/admin",
     label: "ড্যাশবোর্ড",

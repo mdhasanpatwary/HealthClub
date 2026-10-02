@@ -25,5 +25,3 @@ export function DoctorSerialMembershipCta({ doctorId }: DoctorSerialMembershipCt
     </Link>
   );
 }
-
-export default DoctorSerialMembershipCta;

@@ -446,5 +446,3 @@ export function PushBroadcastModal({
     </Dialog>
   );
 }
-
-export default PushBroadcastModal;

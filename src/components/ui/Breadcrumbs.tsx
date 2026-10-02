@@ -89,5 +89,3 @@ export function Breadcrumbs({
     </>
   );
 }
-
-export default Breadcrumbs;

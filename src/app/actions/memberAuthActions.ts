@@ -159,17 +159,15 @@ export async function loginAdminAction(
   return loginAdminActionImpl(identifier, passwordInput);
 }
 
-export async function logoutUserAction(): Promise<boolean> {
+export async function logoutMemberAction(): Promise<boolean> {
   try {
     await clearSessionUser();
     return true;
   } catch (error) {
-    logger.error("Error in logoutUserAction:", error);
+    logger.error("Error in logoutMemberAction:", error);
     return false;
   }
 }
-
-export const logoutMemberAction = logoutUserAction;
 
 export async function verifyEmailOtpAction(
   email: string,
