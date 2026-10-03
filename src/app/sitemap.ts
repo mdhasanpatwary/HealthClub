@@ -11,6 +11,7 @@ import { getAllDepartmentSlugs } from "@/data/doctorSeoData";
 import { getAllUpazilaSlugs } from "@/data/feniLocations";
 import { getAllPartnerCategorySlugs } from "@/data/partnerCategorySeoData";
 import { getAllBlogPostCardsAction } from "@/app/actions/blogAdminActions";
+import { getAllProductSlugsAction } from "@/app/actions/productActions";
 import { BLOG_FILTER_PILLS } from "@/data/blog/blogCategories";
 import { logger } from "@/lib/logger";
 
@@ -25,6 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/emergency",
     "/consultants",
     "/partner-hospitals",
+    "/shop",
     "/blog",
     "/health-tips",
     "/health-tools",
@@ -207,6 +209,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
   });
 
+  // Dynamic shop products
+  const products = await getAllProductSlugsAction();
+  const productEntries: MetadataRoute.Sitemap = products.map((item) => ({
+    url: `${baseUrl}/shop/${encodeURIComponent(item.slug)}`,
+    lastModified: parseArticleDate(item.updatedAt, STATIC_LAST_MODIFIED),
+    changeFrequency: "daily",
+    priority: 0.85,
+  }));
+
   return [
     ...staticEntries,
     ...departmentEntries,
@@ -217,5 +228,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...articleEntries,
     ...doctorEntries,
     ...partnerEntries,
+    ...productEntries,
   ];
 }

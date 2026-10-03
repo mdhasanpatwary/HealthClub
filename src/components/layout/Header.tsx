@@ -12,7 +12,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { useTheme } from "@/components/layout/ThemeProvider";
 import { isAdminUser } from "@/lib/permissions";
 
-const PublicHeaderNav = dynamic(() => import("./PublicHeaderNav"), { ssr: true });
+import PublicHeaderNav from "./PublicHeaderNav";
 const UserDropdown = dynamic(() => import("./UserDropdown"), { ssr: false });
 const PartnerDropdown = dynamic(() => import("./PartnerDropdown"), { ssr: false });
 const AdminHeaderNav = dynamic(() => import("./AdminHeaderNav"), { ssr: false });

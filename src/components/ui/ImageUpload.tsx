@@ -131,7 +131,12 @@ export function ImageUpload({
           }
 
           ctx.drawImage(img, 0, 0, width, height);
-          const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.85);
+
+          // Auto-compress using modern WebP (30-40% smaller size), fallback to JPEG
+          let compressedDataUrl = canvas.toDataURL("image/webp", 0.82);
+          if (!compressedDataUrl.startsWith("data:image/webp")) {
+            compressedDataUrl = canvas.toDataURL("image/jpeg", 0.85);
+          }
 
           // Show immediate local preview and populate form value immediately
           setLocalPreview(compressedDataUrl);

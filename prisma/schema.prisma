@@ -431,3 +431,32 @@ model BlogPost {
   @@map("blog_posts")
 }
 
+model Product {
+  id            String   @id @default(uuid())
+  slug          String   @unique
+  nameBn        String   @map("name_bn")
+  nameEn        String   @map("name_en")
+  price         Int
+  regularPrice  Int?     @map("regular_price")
+  discountBadge String?  @map("discount_badge")
+  category      String   @default("general")
+  categoryBn    String?  @map("category_bn")
+  descriptionBn String   @db.Text @map("description_bn")
+  descriptionEn String?  @db.Text @map("description_en")
+  featuresBn    Json?    @map("features_bn")
+  imageUrl      String   @map("image_url")
+  inStock       Boolean  @default(true) @map("in_stock")
+  featured      Boolean  @default(false)
+  order         Int      @default(0)
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([slug], map: "products_slug_idx")
+  @@index([category], map: "products_category_idx")
+  @@index([inStock], map: "products_in_stock_idx")
+  @@index([featured], map: "products_featured_idx")
+  @@index([createdAt(sort: Desc)], map: "products_created_at_idx")
+  @@map("products")
+}
+
+

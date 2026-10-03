@@ -67,7 +67,8 @@ export const ModelName = {
   PushSubscription: 'PushSubscription',
   BloodDonor: 'BloodDonor',
   AmbulanceService: 'AmbulanceService',
-  BlogPost: 'BlogPost'
+  BlogPost: 'BlogPost',
+  Product: 'Product'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -419,6 +420,30 @@ export const BlogPostScalarFieldEnum = {
 } as const
 
 export type BlogPostScalarFieldEnum = (typeof BlogPostScalarFieldEnum)[keyof typeof BlogPostScalarFieldEnum]
+
+
+export const ProductScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  nameBn: 'nameBn',
+  nameEn: 'nameEn',
+  price: 'price',
+  regularPrice: 'regularPrice',
+  discountBadge: 'discountBadge',
+  category: 'category',
+  categoryBn: 'categoryBn',
+  descriptionBn: 'descriptionBn',
+  descriptionEn: 'descriptionEn',
+  featuresBn: 'featuresBn',
+  imageUrl: 'imageUrl',
+  inStock: 'inStock',
+  featured: 'featured',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
 
 
 export const SortOrder = {

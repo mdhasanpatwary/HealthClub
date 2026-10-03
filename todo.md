@@ -2633,5 +2633,15 @@ This roadmap outlines the strategic localized content cluster required to achiev
        - Kept all touched files under the strict 500-line code limit (`transliteration.ts`: 385 lines, `DoctorDirectory.tsx`: 436 lines, `PartnerDirectory.tsx`: 356 lines, `doctorQueryActions.ts`: 267 lines, `slugify.ts`: 118 lines).
        - Cleanly verified with `npx tsc --noEmit` (0 errors) and `npm run lint` (0 errors, 0 warnings).
 
+- [x] **TODO-318**: **Directory UX Streamlining — Elimination of Heavy Above-the-Fold Summary Cards**
+  - **Priority**: Medium (P2 - User Experience, Bounce Rate & Directory Usability)
+  - **Files**: `src/app/partner-hospitals/page.tsx`, `src/app/consultants/page.tsx`, `src/app/consultants/utils/consultantJsonLd.ts`
+  - **Details**:
+    1. **Eliminated Above-the-Fold Friction**: Removed the heavy, text-dense `GeoAnswerCapsule` block ("ফেনী পার্টনার হাসপাতাল ও ডায়াগনস্টিক নেটওয়ার্ক সারসংক্ষেপ" and "ফেনী বিশেষজ্ঞ ডাক্তার ও চেম্বার সিরিয়াল সারসংক্ষেপ") from above the interactive directory on both `/partner-hospitals` and `/consultants`.
+    2. **Instant Directory Access**: Visitors landing on either directory page now immediately see search inputs, category filters, and hospital/doctor cards right under the header with zero unnecessary scrolling.
+    3. **Preserved Complete SEO & E-E-A-T Authority**: All structured search content, comprehensive diagnostic pricing guides, and conversational FAQs remain actively rendered in visible bottom sections (`PartnerHospitalsGuide`, `PartnerHospitalsFAQ`, `ConsultantsGuide`, `ConsultantsFAQ`) and machine-readable `JsonLd` schema graphs.
+    4. **Code Cleanliness & Verification**: Removed dead data structures (`partnerGeoData`, `DEFAULT_CONSULTANT_GEO_DATA`) to prevent unused variable warnings. All files strictly adhere to the <500-line limit (`partner-hospitals/page.tsx`: 186 lines, `consultants/page.tsx`: 170 lines, `consultantJsonLd.ts`: 409 lines). Verified cleanly with `yarn lint` (0 errors) and `yarn build` (all 477 pages generated cleanly).
+
 ---
+
 

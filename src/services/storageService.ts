@@ -57,7 +57,7 @@ export function isStorageConfigured(): boolean {
   );
 }
 
-export type StorageFolder = "members" | "partners" | "doctors";
+export type StorageFolder = "members" | "partners" | "doctors" | "products";
 
 export interface StorageUploadResult {
   success: boolean;

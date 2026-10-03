@@ -19,7 +19,8 @@ export type AdminPermissionKey =
   | "manage_notifications"
   | "manage_messages"
   | "view_pwa"
-  | "manage_reviews";
+  | "manage_reviews"
+  | "manage_products";
 
 export interface RoleConfig {
   role: AdminRole;
@@ -49,6 +50,7 @@ export const ROLE_CONFIGS: Record<AdminRole, RoleConfig> = {
       "/admin/doctors",
       "/admin/blogs",
       "/admin/blog",
+      "/admin/products",
       "/admin/partners",
       "/admin/partner-requests",
       "/admin/reviews",
@@ -83,20 +85,22 @@ export const ROLE_CONFIGS: Record<AdminRole, RoleConfig> = {
       "manage_messages",
       "view_pwa",
       "manage_reviews",
+      "manage_products",
     ],
   },
   content_moderator: {
     role: "content_moderator",
     titleBn: "কন্টেন্ট মডারেটর",
     titleEn: "Content Moderator",
-    descriptionBn: "ডাক্তার, ব্লগ, স্বাস্থ্য টিপস, রিভিউ মডারেশন, জরুরি সেবা ও ব্রডকাস্ট ক্যাম্পেইন পরিচালনা",
-    descriptionEn: "Manage doctors, blogs, health tips, review moderation, emergency services & broadcast campaigns",
+    descriptionBn: "ডাক্তার, ব্লগ, প্রোডাক্ট শপ, স্বাস্থ্য টিপস, রিভিউ মডারেশন, জরুরি সেবা ও ব্রডকাস্ট ক্যাম্পেইন পরিচালনা",
+    descriptionEn: "Manage doctors, blogs, product shop, health tips, review moderation, emergency services & broadcast campaigns",
     badgeClass: "bg-blue-500/15 text-blue-700 dark:text-blue-300 border-blue-500/30",
     allowedRoutes: [
       "/admin",
       "/admin/doctors",
       "/admin/blogs",
       "/admin/blog",
+      "/admin/products",
       "/admin/health-tips",
       "/admin/reviews",
       "/admin/emergency",
@@ -107,6 +111,7 @@ export const ROLE_CONFIGS: Record<AdminRole, RoleConfig> = {
     permissions: [
       "manage_doctors",
       "manage_blogs",
+      "manage_products",
       "manage_health_tips",
       "manage_emergency",
       "manage_reviews",

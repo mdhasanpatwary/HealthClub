@@ -23,6 +23,7 @@ import {
   Settings,
   ShieldCheck,
   Printer,
+  ShoppingBag,
 } from "lucide-react";
 export interface AdminNavLink {
   href: string;
@@ -90,6 +91,11 @@ const ADMIN_NAV_LINKS: AdminNavLink[] = [
     href: "/admin/blogs",
     label: "ব্লগ পোস্ট",
     icon: Newspaper,
+  },
+  {
+    href: "/admin/products",
+    label: "প্রোডাক্ট শপ",
+    icon: ShoppingBag,
   },
   {
     href: "/admin/health-tips",

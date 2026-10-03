@@ -8,8 +8,7 @@ import { getDoctorsAction } from "@/app/actions/doctorActions";
 import { Stethoscope, ShieldCheck, HeartHandshake, PhoneCall } from "lucide-react";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
-import { GeoAnswerCapsule } from "@/app/blog/components/GeoAnswerCapsule";
-import { generateConsultantsDirectoryJsonLd, DEFAULT_CONSULTANT_GEO_DATA } from "./utils/consultantJsonLd";
+import { generateConsultantsDirectoryJsonLd } from "./utils/consultantJsonLd";
 
 export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
 
@@ -146,12 +145,6 @@ export default async function ConsultantsPage() {
             </div>
           </div>
         </div>
-
-        {/* Standardized GEO Answer Capsule (BLUF) */}
-        <GeoAnswerCapsule
-          data={DEFAULT_CONSULTANT_GEO_DATA}
-          title="ফেনী বিশেষজ্ঞ ডাক্তার ও চেম্বার সিরিয়াল সারসংক্ষেপ"
-        />
 
         {/* Interactive Directory Component */}
         <div className="sm:bg-muted/30 sm:border sm:border-border/80 sm:rounded-3xl sm:p-8">

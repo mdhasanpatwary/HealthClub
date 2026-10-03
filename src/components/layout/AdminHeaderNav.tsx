@@ -23,6 +23,7 @@ import {
   Radio,
   ShieldCheck,
   Newspaper,
+  ShoppingBag,
 } from "lucide-react";
 import { toBanglaNums } from "@/lib/utils";
 import { useAdminCounts } from "@/app/admin/hooks/useAdminCounts";
@@ -123,7 +124,8 @@ export default function AdminHeaderNav() {
     pathname.startsWith("/admin/emergency") ||
     pathname.startsWith("/admin/health-tips") ||
     pathname.startsWith("/admin/blogs") ||
-    pathname.startsWith("/admin/blog");
+    pathname.startsWith("/admin/blog") ||
+    pathname.startsWith("/admin/products");
 
   const isSystemActive =
     pathname.startsWith("/admin/staff") ||
@@ -336,6 +338,15 @@ export default function AdminHeaderNav() {
             title="ব্লগ পোস্ট"
             description="হাসপাতাল রিভিউ ও ব্লগ আর্টিকেল"
             active={pathname.startsWith("/admin/blogs") || pathname.startsWith("/admin/blog")}
+          />
+          <AdminNavDropdownItem
+            href="/admin/products"
+            icon={ShoppingBag}
+            iconBg="bg-emerald-500/15"
+            iconColor="text-emerald-600 dark:text-emerald-400"
+            title="প্রোডাক্ট শপ"
+            description="স্বাস্থ্যসেবা প্রোডাক্ট ও ইনভেন্টরি"
+            active={pathname.startsWith("/admin/products")}
           />
         </DropdownMenuContent>
       </DropdownMenu>

@@ -2,45 +2,7 @@ import { Doctor } from "@/services/db";
 import { SITE_URL } from "@/lib/siteConfig";
 import { DepartmentSeoConfig } from "@/data/doctorSeoData";
 import { UpazilaSeoConfig } from "@/data/feniLocations";
-import { GeoAnswerCapsuleData } from "@/types/blog";
 
-export const DEFAULT_CONSULTANT_GEO_DATA: GeoAnswerCapsuleData = {
-  directAnswerBn:
-    "ফেনী সদর ও পার্শ্ববর্তী এলাকায় বিএমডিসি নিবন্ধিত বিশেষজ্ঞ চিকিৎসকদের চেম্বার কনসালটেশন ফি সাধারণত ৫০০ থেকে ১৫০০ টাকা। হেলথ ক্লাব মেম্বারদের জন্য রয়েছে দ্রুত সিরিয়াল সহায়তা এবং বিশেষজ্ঞ ডাক্তারের প্রেসক্রিপশন অনুযায়ী প্রয়োজনীয় প্যাথলজি টেস্ট ও ডিজিটাল ইমেজিংয়ে ১০% থেকে ৩০% পর্যন্ত বিশেষ ছাড় সুবিধা।",
-  quickTakeawaysBn: [
-    "মেডিসিন, সার্জারি, গাইনি, শিশু, অর্থোপেডিক ও কার্ডিওলজি বিশেষজ্ঞ ডিরেক্টরি",
-    "সরাসরি চেম্বার সহকারী ও হাসপাতালের অফিসিয়াল সিরিয়াল হেল্পলাইন",
-    "প্রেসক্রিপশন অনুযায়ী প্যাথলজি ও রেডিওলজি টেস্টে ১০-৩০% মেম্বার ছাড়",
-    "বিএমডিসি নিবন্ধিত ও অভিজ্ঞ কনসালট্যান্টদের ভেরিফাইড শিডিউল",
-  ],
-  referenceFees: [
-    {
-      serviceNameBn: "বিশেষজ্ঞ কনসালট্যান্ট ভিজিট (এমবিবিএস/এফসিপিএস)",
-      serviceNameEn: "Specialist Consultant Consultation",
-      regularPriceRangeBn: "৳৭০০ - ৳১,৫০০",
-      discountBadgeBn: "১০-৩০% মেম্বার ছাড়",
-    },
-    {
-      serviceNameBn: "জেনারেল ফিজিশিয়ান / মেডিকেল অফিসার ভিজিট",
-      serviceNameEn: "General Physician / Medical Officer",
-      regularPriceRangeBn: "৳৩০০ - ৳৬০০",
-      discountBadgeBn: "১০-৩০% মেম্বার ছাড়",
-    },
-    {
-      serviceNameBn: "ফলো-আপ ভিজিট (১৪ দিনের মধ্যে)",
-      serviceNameEn: "Follow-up Consultation Fee",
-      regularPriceRangeBn: "৳৪০০ - ৳৮০০",
-      discountBadgeBn: "১০-৩০% মেম্বার ছাড়",
-    },
-    {
-      serviceNameBn: "প্রেসক্রিপশন প্যাথলজি ও ডায়াগনস্টিক টেস্ট",
-      serviceNameEn: "Pathological & Diagnostic Investigations",
-      regularPriceRangeBn: "৳৩০০ - ৳৩,০০০",
-      discountBadgeBn: "১০-৩০% মেম্বার ছাড়",
-    },
-  ],
-  verifiedNoteBn: "হেলথ ক্লাব ক্লিনিক্যাল এডিটোরিয়াল বোর্ড কর্তৃক চিকিৎসকদের বিএমডিসি রেজিস্ট্রেশন ও চেম্বার সময়সূচী যাচাইকৃত",
-};
 
 export interface ConsultantFaqItem {
   question: string;

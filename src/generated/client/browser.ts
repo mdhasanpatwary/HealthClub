@@ -102,3 +102,8 @@ export type AmbulanceService = Prisma.AmbulanceServiceModel
  * 
  */
 export type BlogPost = Prisma.BlogPostModel
+/**
+ * Model Product
+ * 
+ */
+export type Product = Prisma.ProductModel
