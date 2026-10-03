@@ -176,7 +176,7 @@ export const getAllHealthTipsAction = unstable_cache(
     }
   },
   ["all-health-tips-articles-v2"],
-  { revalidate: 86400, tags: [HEALTH_TIPS_TAG] }
+  { revalidate: false, tags: [HEALTH_TIPS_TAG] }
 );
 
 /**

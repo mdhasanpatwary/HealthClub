@@ -21,7 +21,7 @@ import {
 } from "@/data/partnerCategorySeoData";
 import { generatePartnerCategoryJsonLd, getHighDensityPartnerCategoryFaqs } from "../../utils/hospitalJsonLd";
 
-export const revalidate = 86400;
+export const revalidate = false; // Pure static SSG (zero ISR writes)
 
 interface PageProps {
   params: Promise<{ type: string }>;

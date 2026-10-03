@@ -64,19 +64,19 @@ export function getHomepageJsonLd({ hotline }: HomepageSchemaParams = {}) {
           "@type": "ListItem",
           position: 2,
           name: "জরুরি রক্তদাতা খুঁজুন",
-          url: `${SITE_URL}/emergency?tab=donors`,
+          url: `${SITE_URL}/emergency/blood-donors`,
         },
         {
           "@type": "ListItem",
           position: 3,
           name: "২৪/৭ জরুরি অ্যাম্বুলেন্স সেবা",
-          url: `${SITE_URL}/emergency?tab=ambulances`,
+          url: `${SITE_URL}/emergency/ambulances`,
         },
         {
           "@type": "ListItem",
           position: 4,
           name: "হাসপাতাল ও অক্সিজেন সেবা",
-          url: `${SITE_URL}/emergency?tab=hotlines`,
+          url: `${SITE_URL}/emergency/hotlines`,
         },
       ],
     },
@@ -107,7 +107,7 @@ export function getHomepageJsonLd({ hotline }: HomepageSchemaParams = {}) {
           name: "ফেনীতে জরুরি রক্তের প্রয়োজনে কীভাবে রক্তদাতা খুঁজে পাব?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "হেলথ ক্লাবের জরুরি রক্তদাতা ডিরেক্টরি (/emergency?tab=donors) থেকে রক্তের গ্রুপ (A+, B+, O+, AB+) ও উপজেলা সিলেক্ট করে ফেনীর ভেরিফাইড স্বেচ্ছাসেবী রক্তদাতাদের নম্বর পাওয়া যাবে এবং সরাসরি সম্পূর্ণ বিনামূল্যে কল করা যাবে।",
+            text: "হেলথ ক্লাবের জরুরি রক্তদাতা ডিরেক্টরি (/emergency/blood-donors) থেকে রক্তের গ্রুপ (A+, B+, O+, AB+) ও উপজেলা সিলেক্ট করে ফেনীর ভেরিফাইড স্বেচ্ছাসেবী রক্তদাতাদের নম্বর পাওয়া যাবে এবং সরাসরি সম্পূর্ণ বিনামূল্যে কল করা যাবে।",
           },
         },
         {
@@ -115,7 +115,7 @@ export function getHomepageJsonLd({ hotline }: HomepageSchemaParams = {}) {
           name: "ফেনীতে ২৪/৭ আইসিইউ বা এসি অ্যাম্বুলেন্স কীভাবে পাওয়া যাবে?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "হেলথ ক্লাবের অ্যাম্বুলেন্স ডিরেক্টরি (/emergency?tab=ambulances) থেকে ফেনী, ঢাকা ও চট্টগ্রাম রুটের জন্য ২৪ ঘণ্টা প্রস্তুত আইসিইউ, এসি, নন-এসি এবং ফ্রিজার অ্যাম্বুলেন্সের যাচাইকৃত চালক ও সার্ভিস প্রোভাইডারদের নম্বর পাওয়া যাবে।",
+            text: "হেলথ ক্লাবের অ্যাম্বুলেন্স ডিরেক্টরি (/emergency/ambulances) থেকে ফেনী, ঢাকা ও চট্টগ্রাম রুটের জন্য ২৪ ঘণ্টা প্রস্তুত আইসিইউ, এসি, নন-এসি এবং ফ্রিজার অ্যাম্বুলেন্সের যাচাইকৃত চালক ও সার্ভিস প্রোভাইডারদের নম্বর পাওয়া যাবে।",
           },
         },
         {

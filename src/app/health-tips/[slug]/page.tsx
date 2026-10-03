@@ -27,8 +27,8 @@ import { getArticleReadingTime } from "@/lib/readingTime";
 import { SITE_URL } from "@/lib/siteConfig";
 import { getArticleIsoDate, formatArticleDate } from "@/lib/dateUtils";
 
-// ISR: render once every 24h; busted on-demand via updateTag("health-tips")
-export const revalidate = 86400;
+// Pure static SSG: busted on-demand via updateTag("health-tips")
+export const revalidate = false;
 
 // Pre-render all health tip article pages at build time
 export async function generateStaticParams() {

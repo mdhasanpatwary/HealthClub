@@ -1,4 +1,7 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
+dotenv.config();
+
 import { prisma } from "../src/lib/prisma";
 import { scryptSync, randomBytes } from "crypto";
 
@@ -93,7 +96,7 @@ async function main() {
       id: "tx2",
       memberId: m2.id,
       memberName: m2.name,
-      partnerId: "p_d6c41b8a-e9fa-47cb-bfa2-0d1279efb925",
+      partnerId: "p_b4113be9-bae1-4022-ba03-6e3b3c2599f8",
       partnerName: "প্যাসিফিক হেলথ কেয়ার সেন্টার",
       amount: 3000,
       saved: 300,
@@ -106,7 +109,7 @@ async function main() {
       id: "tx3",
       memberId: m1.id,
       memberName: m1.name,
-      partnerId: "p_c361405e-fbb8-4fcb-8761-a5d625902047",
+      partnerId: "p_6e4ee249-31f1-49f3-8ba5-c23191adcf06",
       partnerName: "আল-আকসা হাসপাতাল লিঃ ফেনী",
       amount: 15000,
       saved: 1500,

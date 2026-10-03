@@ -212,7 +212,7 @@ export function AmbulanceReviewCard({
 
         <div className="flex flex-wrap items-center gap-2">
           <Link
-            href="/emergency?tab=ambulances"
+            href="/emergency/ambulances"
             className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-primary/10 text-primary font-semibold text-xs hover:bg-primary/20 transition-colors border border-primary/20"
           >
             <Search className="h-3.5 w-3.5" />

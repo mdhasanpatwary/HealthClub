@@ -40,7 +40,7 @@ export const getDoctorsAction = unstable_cache(
     }
   },
   ["doctors-list"],
-  { revalidate: 86400, tags: [DOCTORS_TAG] }
+  { revalidate: false, tags: [DOCTORS_TAG] }
 );
 
 /**
@@ -98,7 +98,7 @@ export const getDoctorsByDepartmentAction = unstable_cache(
     }
   },
   ["doctors-by-department"],
-  { revalidate: 86400, tags: [DOCTORS_TAG] }
+  { revalidate: false, tags: [DOCTORS_TAG] }
 );
 
 /**
@@ -118,10 +118,10 @@ export async function getDoctorImageAction(id: string): Promise<string | null> {
 }
 
 /**
- * Fetch single doctor by ID or Slug with partner hospital details.
- * Request-memoized via React cache() to deduplicate DB queries between generateMetadata and page body.
+ * Cached single doctor query at the Vercel Edge / Next.js Data Cache.
+ * Eliminates repeat PostgreSQL round-trips and egress leaks on profile routes.
  */
-export const getDoctorByIdAction = cache(
+const fetchDbDoctorByIdOrSlug = unstable_cache(
   async (
     idOrSlug: string
   ): Promise<(Doctor & { partner?: Partner | null }) | null> => {
@@ -138,20 +138,6 @@ export const getDoctorByIdAction = cache(
       }
 
       const asciiSlug = generateDoctorSlug(decoded);
-
-      if (!prisma?.doctor) {
-        const fallback = initialDoctors.find(
-          (doc) =>
-            doc.slug === asciiSlug ||
-            doc.slug === decoded ||
-            doc.slug === idOrSlug ||
-            doc.id === idOrSlug ||
-            doc.id === decoded ||
-            doc.name === decoded ||
-            (doc.nameEn && doc.nameEn.toLowerCase() === decoded.toLowerCase())
-        );
-        return fallback ? { ...fallback, partner: null } : null;
-      }
 
       const d = await prisma.doctor.findFirst({
         where: {
@@ -187,88 +173,63 @@ export const getDoctorByIdAction = cache(
         },
       });
 
-      let resolvedDoc = d;
-
-      // 2. Fallback: If not found by direct slug, scan active doctors and match by formatted slug
-      if (!resolvedDoc) {
-        const allActive = await prisma.doctor.findMany({
-          where: { isActive: true },
-          include: {
-            partner: {
-              select: {
-                id: true,
-                slug: true,
-                name: true,
-                category: true,
-                address: true,
-                discount: true,
-                phone: true,
-                logoText: true,
-                mapLink: true,
-                imageUrl: true,
-                emergencyPhone: true,
-                workingHours: true,
-                departmentDiscounts: true,
-                upazila: true,
-              },
-            },
-          },
-        });
-
-        const matched = allActive.find((doc) => {
-          const formatted = formatDoctor(doc);
-          return (
-            formatted.slug === asciiSlug ||
-            formatted.slug === decoded ||
-            formatted.slug === idOrSlug ||
-            generateDoctorSlug(doc.name, doc.nameEn || undefined) === asciiSlug
-          );
-        });
-
-        if (matched) {
-          resolvedDoc = matched;
-        }
+      if (d) {
+        return {
+          ...formatDoctor(d),
+          partner: d.partner
+            ? {
+                id: d.partner.id,
+                slug: d.partner.slug || undefined,
+                name: d.partner.name,
+                category: d.partner.category as "hospital" | "diagnostic" | "pharmacy",
+                address: d.partner.address,
+                discount: d.partner.discount,
+                phone: d.partner.phone,
+                logoText: d.partner.logoText,
+                mapLink: d.partner.mapLink || undefined,
+                imageUrl: d.partner.imageUrl || undefined,
+                emergencyPhone: d.partner.emergencyPhone || undefined,
+                workingHours: d.partner.workingHours || undefined,
+                departmentDiscounts: d.partner.departmentDiscounts || undefined,
+                upazila: d.partner.upazila || "feni-sadar",
+              }
+            : undefined,
+        };
       }
 
-      if (!resolvedDoc) {
-        const fallback = initialDoctors.find(
-          (doc) =>
-            doc.slug === asciiSlug ||
-            doc.slug === decoded ||
-            doc.slug === idOrSlug ||
-            doc.id === idOrSlug ||
-            doc.id === decoded ||
-            doc.name === decoded ||
-            (doc.nameEn && doc.nameEn.toLowerCase() === decoded.toLowerCase())
-        );
-        return fallback ? { ...fallback, partner: null } : null;
-      }
-
-      return {
-        ...formatDoctor(resolvedDoc),
-        partner: resolvedDoc.partner
-          ? {
-            id: resolvedDoc.partner.id,
-            slug: resolvedDoc.partner.slug || undefined,
-            name: resolvedDoc.partner.name,
-            category: resolvedDoc.partner.category as "hospital" | "diagnostic" | "pharmacy",
-            address: resolvedDoc.partner.address,
-            discount: resolvedDoc.partner.discount,
-            phone: resolvedDoc.partner.phone,
-            logoText: resolvedDoc.partner.logoText,
-            mapLink: resolvedDoc.partner.mapLink || undefined,
-            imageUrl: resolvedDoc.partner.imageUrl || undefined,
-            emergencyPhone: resolvedDoc.partner.emergencyPhone || undefined,
-            workingHours: resolvedDoc.partner.workingHours || undefined,
-            departmentDiscounts: resolvedDoc.partner.departmentDiscounts || undefined,
-            upazila: resolvedDoc.partner.upazila || "feni-sadar",
-          }
-          : undefined,
-      };
+      // Fast in-memory fallback check without database scan
+      const fallback = initialDoctors.find(
+        (doc) =>
+          doc.slug === asciiSlug ||
+          doc.slug === decoded ||
+          doc.slug === idOrSlug ||
+          doc.id === idOrSlug ||
+          doc.id === decoded ||
+          doc.name === decoded ||
+          (doc.nameEn && doc.nameEn.toLowerCase() === decoded.toLowerCase())
+      );
+      return fallback ? { ...fallback, partner: null } : null;
     } catch (error) {
-      logger.error("Error in getDoctorByIdAction:", error);
+      logger.error("Error in fetchDbDoctorByIdOrSlug:", error);
       return null;
     }
+  },
+  ["single-doctor-by-id-or-slug-v2"],
+  { revalidate: false, tags: [DOCTORS_TAG] }
+);
+
+/**
+ * Fetch single doctor by ID or Slug with partner hospital details.
+ * Combines Next.js unstable_cache (Edge Data Cache for 24h) with React cache()
+ * (per-request in-memory deduplication between generateMetadata & page body).
+ */
+export const getDoctorByIdAction = cache(
+  async (
+    idOrSlug: string
+  ): Promise<(Doctor & { partner?: Partner | null }) | null> => {
+    if (!idOrSlug) return null;
+    const normalizedKey = idOrSlug.trim().toLowerCase();
+    return fetchDbDoctorByIdOrSlug(normalizedKey);
   }
 );
 
@@ -306,5 +267,5 @@ export const getRelatedDoctorsAction = unstable_cache(
     }
   },
   ["related-doctors"],
-  { revalidate: 86400, tags: [DOCTORS_TAG] }
+  { revalidate: false, tags: [DOCTORS_TAG] }
 );

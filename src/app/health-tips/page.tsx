@@ -10,7 +10,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { getAllHealthTipsAction } from "@/app/actions/healthTipsAdminActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
-export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
+export const revalidate = false; // Pure static SSG (on-demand revalidated on health tips updates)
 
 export async function generateMetadata() {
   const ogTitle = "ডাক্তারদের পরামর্শ ও স্বাস্থ্য গাইড | হেলথ ক্লাব";

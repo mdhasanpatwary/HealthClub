@@ -59,6 +59,45 @@ function mapProductRow(p: {
   };
 }
 
+const fetchCachedProducts = unstable_cache(
+  async () => {
+    try {
+      const rows = await prisma.product.findMany({
+        orderBy: [{ featured: "desc" }, { order: "asc" }, { createdAt: "desc" }],
+      });
+      return rows.map(mapProductRow);
+    } catch (error) {
+      logger.error("Failed to fetch products from database:", error);
+      return [];
+    }
+  },
+  ["all-shop-products-v3"],
+  {
+    revalidate: false,
+    tags: [PRODUCTS_CACHE_TAG],
+  }
+);
+
+const fetchCachedProductBySlug = unstable_cache(
+  async (itemSlug: string) => {
+    try {
+      const row = await prisma.product.findUnique({
+        where: { slug: itemSlug },
+      });
+      if (!row) return null;
+      return mapProductRow(row);
+    } catch (error) {
+      logger.error(`Failed to fetch product with slug ${itemSlug}:`, error);
+      return null;
+    }
+  },
+  ["shop-product-by-slug-v3"],
+  {
+    revalidate: false,
+    tags: [PRODUCTS_CACHE_TAG],
+  }
+);
+
 /**
  * Fetch all active products with optional category and search filters
  */
@@ -67,26 +106,7 @@ export async function getProductsAction(options?: {
   query?: string;
   inStockOnly?: boolean;
 }): Promise<ProductItem[]> {
-  const getCachedProducts = unstable_cache(
-    async () => {
-      try {
-        const rows = await prisma.product.findMany({
-          orderBy: [{ featured: "desc" }, { order: "asc" }, { createdAt: "desc" }],
-        });
-        return rows.map(mapProductRow);
-      } catch (error) {
-        logger.error("Failed to fetch products from database:", error);
-        return [];
-      }
-    },
-    ["all-shop-products-v2"],
-    {
-      revalidate: 3600, // 1 hour cache
-      tags: [PRODUCTS_CACHE_TAG],
-    }
-  );
-
-  let products = await getCachedProducts();
+  let products = await fetchCachedProducts();
 
   if (options?.category && options.category !== "all") {
     products = products.filter((p) => p.category === options.category);
@@ -114,27 +134,8 @@ export async function getProductsAction(options?: {
  * Fetch a single product by its unique slug
  */
 export async function getProductBySlugAction(slug: string): Promise<ProductItem | null> {
-  const getCachedProduct = unstable_cache(
-    async (itemSlug: string) => {
-      try {
-        const row = await prisma.product.findUnique({
-          where: { slug: itemSlug },
-        });
-        if (!row) return null;
-        return mapProductRow(row);
-      } catch (error) {
-        logger.error(`Failed to fetch product with slug ${itemSlug}:`, error);
-        return null;
-      }
-    },
-    [`shop-product-slug-v2-${slug}`],
-    {
-      revalidate: 3600,
-      tags: [PRODUCTS_CACHE_TAG, `shop-product-${slug}`],
-    }
-  );
-
-  return getCachedProduct(slug);
+  if (!slug) return null;
+  return fetchCachedProductBySlug(slug.trim().toLowerCase());
 }
 
 /**

@@ -2,7 +2,7 @@ import { Heart, ShieldCheck, Users, Award, Target, Zap } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
-export const revalidate = 86400; // 24-hour ISR
+export const revalidate = false; // Pure static SSG (zero ISR writes)
 
 export async function generateMetadata() {
   const ogTitle = "আমাদের সম্পর্কে - হেলথ ক্লাব";

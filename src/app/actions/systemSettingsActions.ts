@@ -72,7 +72,7 @@ const getCachedMemberTxSetting = unstable_cache(
     }
   },
   ["allow_member_tx"],
-  { revalidate: 86400, tags: [SYSTEM_SETTINGS_TAG] }
+  { revalidate: false, tags: [SYSTEM_SETTINGS_TAG] }
 );
 
 /**
@@ -178,7 +178,7 @@ export const getCachedLayoutSettings = unstable_cache(
     }
   },
   ["public_layout_settings"],
-  { revalidate: 86400, tags: [SYSTEM_SETTINGS_TAG] }
+  { revalidate: false, tags: [SYSTEM_SETTINGS_TAG] }
 );
 
 export const getCachedNoticeSetting = async (): Promise<GlobalNoticeSetting> => {
@@ -286,7 +286,7 @@ export const getCachedPaymentSettings = unstable_cache(
     }
   },
   ["public_payment_settings"],
-  { revalidate: 86400, tags: [SYSTEM_SETTINGS_TAG] }
+  { revalidate: false, tags: [SYSTEM_SETTINGS_TAG] }
 );
 
 export async function getPublicPaymentSettingsAction(): Promise<PublicPaymentSettings> {

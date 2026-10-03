@@ -26,7 +26,7 @@ import { LandingBlogSection } from "@/components/landing/LandingBlogSection";
 import { getAllBlogPostCardsAction } from "@/app/actions/blogAdminActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
-export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
+export const revalidate = false; // Pure static SSG (on-demand revalidated on admin updates)
 
 export async function generateMetadata() {
   const ogTitle = "হেলথ ক্লাব - চিকিৎসা ব্যয়ে ৩০% পর্যন্ত ডিসকাউন্ট পান";

@@ -28,6 +28,9 @@ function revalidateEmergencyCaches() {
   updateTag("admin-stats");
   revalidateTag(EMERGENCY_TAG, "max");
   revalidatePath("/emergency");
+  revalidatePath("/emergency/hotlines");
+  revalidatePath("/emergency/ambulances");
+  revalidatePath("/emergency/blood-donors");
   revalidatePath("/admin");
   revalidatePath("/admin/emergency");
 }
@@ -275,7 +278,7 @@ export const getEmergencyDataAction = unstable_cache(
     }
   },
   ["all-emergency-data-v6"],
-  { tags: [EMERGENCY_TAG], revalidate: 86400 }
+  { tags: [EMERGENCY_TAG], revalidate: false }
 );
 
 export interface EmergencyCounts {

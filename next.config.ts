@@ -25,6 +25,9 @@ const nextConfig: NextConfig = {
     staticGenerationMaxConcurrency: 4,
   },
   images: {
+    // Disable Vercel on-demand image transformations to stay within free-tier limits and avoid 402 errors.
+    // Static assets are already compressed WebP files and remote images serve directly from CDNs.
+    unoptimized: true,
     remotePatterns: [
       // Supabase Storage CDN
       { protocol: "https", hostname: "*.supabase.co" },

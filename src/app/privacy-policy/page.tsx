@@ -1,4 +1,4 @@
-export const revalidate = 86400; // 24-hour ISR
+export const revalidate = false; // Pure static SSG (zero ISR writes)
 import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 

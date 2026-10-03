@@ -29,7 +29,7 @@ import {
   EDITORIAL_FAQS,
 } from "./data/editorialPolicyData";
 
-export const revalidate = 86400; // 24-hour ISR cache
+export const revalidate = false; // Pure static SSG (zero ISR writes)
 
 export async function generateMetadata(): Promise<Metadata> {
   const title = "এডিটোরিয়াল নীতিমালা ও ফ্যাক্ট-চেকিং প্রটোকল | হেলথ ক্লাব";

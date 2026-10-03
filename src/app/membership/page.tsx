@@ -8,7 +8,7 @@ import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteC
 import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 import WhatsAppAssistanceCard from "@/components/common/WhatsAppAssistanceCard";
 
-export const revalidate = 86400; // 24-hour ISR
+export const revalidate = false; // Pure static SSG (zero ISR writes)
 
 export async function generateMetadata() {
   const ogTitle = "মেম্বারশিপ প্ল্যান - হেলথ ক্লাব";

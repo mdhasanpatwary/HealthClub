@@ -8,6 +8,10 @@ const globalForPrisma = global as unknown as {
   pool?: pg.Pool;
 };
 
+import dotenv from "dotenv";
+dotenv.config({ path: ".env.local", override: true });
+dotenv.config();
+
 // Prefer DATABASE_URL (pgbouncer transaction-mode pooler, port 6543) for faster
 // connections. Fall back to DIRECT_URL (session-mode, port 5432) for migrations.
 const connectionString = process.env.DATABASE_URL || process.env.DIRECT_URL;
@@ -50,37 +54,58 @@ if (isProduction && connectionString && connectionString.includes(":5432")) {
   );
 }
 
-// Reuse pool across hot-reloads (dev) AND serverless cold starts (prod)
-if (!globalForPrisma.pool) {
-  globalForPrisma.pool = new pg.Pool({
+const isLocalDb = Boolean(
+  connectionString &&
+    (connectionString.includes("localhost") ||
+      connectionString.includes("127.0.0.1") ||
+      connectionString.includes(".local"))
+);
+
+const poolKey = `${connectionString}_ssl:${!isLocalDb}`;
+const globalWithKey = globalForPrisma as {
+  prisma?: PrismaClient;
+  pool?: pg.Pool;
+  currentPoolKey?: string;
+};
+
+// Reuse pool across hot-reloads (dev) AND serverless cold starts (prod),
+// but recreate if connectionString or local SSL mode changes
+if (!globalWithKey.pool || globalWithKey.currentPoolKey !== poolKey) {
+  if (globalWithKey.pool) {
+    globalWithKey.pool.end().catch(() => {});
+  }
+  globalWithKey.currentPoolKey = poolKey;
+  globalWithKey.pool = new pg.Pool({
     connectionString,
     max: maxPoolSize,
     idleTimeoutMillis,
     connectionTimeoutMillis,
     keepAlive: true,             // Send TCP keep-alive packets to prevent Supabase/AWS dropping idle connections
     keepAliveInitialDelayMillis: 10_000,
-    ssl: { rejectUnauthorized: false },
+    ssl: isLocalDb ? false : { rejectUnauthorized: false },
   });
 
   // Catch unhandled errors on idle clients to prevent Node process termination
-  globalForPrisma.pool.on("error", (err) => {
+  globalWithKey.pool.on("error", (err) => {
     logger.error("[Prisma:pg.Pool] Unexpected idle client error:", err);
   });
+
+  globalWithKey.prisma = undefined;
 }
 
 const createPrismaClient = () => {
-  const adapter = new PrismaPg(globalForPrisma.pool!);
+  const adapter = new PrismaPg(globalWithKey.pool!);
   return new PrismaClient({
     adapter,
     log: isProduction ? ["error"] : ["error", "warn"],
   });
 };
 
-export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+export const prisma = globalWithKey.prisma ?? createPrismaClient();
 
 // Always preserve prisma instance on global to prevent duplicate PrismaClient instances
 // across warm container invocations in both development and production serverless runtimes.
-globalForPrisma.prisma = prisma;
+globalWithKey.prisma = prisma;
 
 /**
  * Executes a database operation with automatic retry on transient connection timeouts.

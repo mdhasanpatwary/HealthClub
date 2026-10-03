@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { generateLlmsFullTxt } from "@/lib/seo/llmsGenerator";
 import { logger } from "@/lib/logger";
 
-export const revalidate = 86400; // Cache and revalidate every 24 hours
+export const dynamic = "force-static"; // Pre-rendered static route (zero ISR writes)
+export const revalidate = false;
 
 export async function GET() {
   try {

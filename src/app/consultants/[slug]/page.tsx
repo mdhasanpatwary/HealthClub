@@ -11,8 +11,8 @@ import {
   generateDoctorKeywords,
 } from "@/data/doctorSeoData";
 
-// ISR: render once every 24h; busted on-demand via updateTag("doctors")
-export const revalidate = 86400;
+// Pre-rendered static pages; busted on-demand via updateTag("doctors") or revalidatePath
+export const revalidate = false;
 
 // Pre-render all active doctor pages at build time so zero CPU is spent on first visit
 export async function generateStaticParams() {

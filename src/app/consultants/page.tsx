@@ -10,7 +10,7 @@ import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteC
 
 import { generateConsultantsDirectoryJsonLd } from "./utils/consultantJsonLd";
 
-export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
+export const revalidate = false; // Pure static SSG (on-demand revalidated on doctor updates)
 
 export async function generateMetadata(): Promise<Metadata> {
   const ogTitle = "ফেনী ডাক্তার তালিকা ও সিরিয়াল নাম্বার | ফেনী সদর ও উপজেলা ভিত্তিক চেম্বার তথ্য - হেলথ ক্লাব";

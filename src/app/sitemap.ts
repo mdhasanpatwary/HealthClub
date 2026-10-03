@@ -1,8 +1,8 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/siteConfig";
 
-// Cache the sitemap for 24 hours — prevents 5 DB queries on every bot crawl
-export const revalidate = 86400;
+// Cache sitemap statically at build time; on-demand revalidation via revalidatePath("/sitemap.xml")
+export const revalidate = false;
 import { getDoctorsAction } from "@/app/actions/doctorActions";
 import { getPartnersAction } from "@/app/actions/partnerActions";
 import { getAllHealthTipsAction } from "@/app/actions/healthTipsAdminActions";
@@ -24,6 +24,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [
     "",
     "/emergency",
+    "/emergency/hotlines",
+    "/emergency/ambulances",
+    "/emergency/blood-donors",
     "/consultants",
     "/partner-hospitals",
     "/shop",
@@ -48,7 +51,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (route === "") {
       priority = 1.0;
       changeFrequency = "daily";
-    } else if (route === "/emergency" || route === "/consultants") {
+    } else if (
+      route === "/emergency" ||
+      route === "/emergency/hotlines" ||
+      route === "/emergency/ambulances" ||
+      route === "/emergency/blood-donors" ||
+      route === "/consultants"
+    ) {
       priority = 0.95;
       changeFrequency = "daily";
     } else if (route === "/partner-hospitals" || route === "/membership" || route === "/blog") {

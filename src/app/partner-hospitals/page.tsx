@@ -10,7 +10,7 @@ import { Sparkles, ShieldCheck, Tag, Pill, MapPin } from "lucide-react";
 import { VALID_PARTNER_CATEGORY_SLUGS } from "@/data/partnerCategorySeoData";
 import { generatePartnerHospitalsHubJsonLd } from "./utils/hospitalJsonLd";
 
-export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
+export const revalidate = false; // Pure static SSG (on-demand revalidated on partner updates)
 
 const PAGE_TITLE = "ফেনী সদর হাসপাতাল ও ডায়াগনস্টিক সেন্টার তালিকা | ১০-৩০% মেম্বার ছাড়";
 const OG_TITLE = "ফেনী সদর হাসপাতাল ও ডায়াগনস্টিক সেন্টার তালিকা | ১০-৩০% মেম্বার ছাড় - হেলথ ক্লাব";

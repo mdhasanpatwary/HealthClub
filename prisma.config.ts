@@ -1,5 +1,9 @@
-import "dotenv/config";
+import dotenv from "dotenv";
 import { defineConfig, env } from "prisma/config";
+
+// Prioritize .env.local for local development if present, then fallback to .env
+dotenv.config({ path: ".env.local" });
+dotenv.config();
 
 export default defineConfig({
   schema: "prisma/schema.prisma",

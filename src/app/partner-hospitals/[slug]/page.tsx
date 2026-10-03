@@ -12,8 +12,8 @@ import { getPartnerReviewsAction } from "@/app/actions/reviewActions";
 import { SITE_URL } from "@/lib/siteConfig";
 import { generatePartnerJsonLd } from "@/lib/seo/partnerSchema";
 
-// ISR: render once every 24h; busted on-demand via updateTag("partners")
-export const revalidate = 86400;
+// Pure static SSG: busted on-demand via updateTag("partners") or revalidatePath
+export const revalidate = false;
 
 // Pre-render all active partner hospital pages at build time
 export async function generateStaticParams() {

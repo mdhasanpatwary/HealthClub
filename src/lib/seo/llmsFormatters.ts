@@ -143,7 +143,7 @@ export function formatEmergencySection(
     for (const [bg, count] of Object.entries(groupCounts)) {
       md += `| **${bg}** | ${count} জন |\n`;
     }
-    md += `\n*রক্তদাতাদের সরাসরি মোবাইল নম্বর ও উপজেলা ফিল্টারিংয়ের জন্য [https://www.healthclubfeni.com/emergency](https://www.healthclubfeni.com/emergency) দেখুন।*\n`;
+    md += `\n*রক্তদাতাদের সরাসরি মোবাইল নম্বর ও উপজেলা ফিল্টারিংয়ের জন্য [https://www.healthclubfeni.com/emergency/blood-donors](https://www.healthclubfeni.com/emergency/blood-donors) দেখুন। অ্যাম্বুলেন্স ফ্লিটের জন্য [https://www.healthclubfeni.com/emergency/ambulances](https://www.healthclubfeni.com/emergency/ambulances) এবং জরুরি হটলাইনের জন্য [https://www.healthclubfeni.com/emergency/hotlines](https://www.healthclubfeni.com/emergency/hotlines) দেখুন।*\n`;
   } else {
     md += `| রক্তদাতার নাম (Donor Name) | রক্তের গ্রুপ (Group) | উপজেলা (Upazila) | ফোন নম্বর (Phone) | সর্বশেষ রক্তদান (Last Donated) |\n`;
     md += `|:---|:---|:---|:---|:---|\n`;
@@ -181,7 +181,10 @@ export function formatCanonicalRoutesSection(blogPosts: LlmsBlogPostItem[], isFu
   md += `- **Healthcare Blog & Guides Directory**: https://www.healthclubfeni.com/blog\n`;
   md += `- **Specialist Doctors Directory**: https://www.healthclubfeni.com/consultants\n`;
   md += `- **Partner Hospitals & Diagnostic Centers**: https://www.healthclubfeni.com/partner-hospitals\n`;
-  md += `- **Emergency Ambulance & Blood Directory**: https://www.healthclubfeni.com/emergency\n`;
+  md += `- **Emergency Central Hub**: https://www.healthclubfeni.com/emergency\n`;
+  md += `- **Emergency Hotlines & Oxygen**: https://www.healthclubfeni.com/emergency/hotlines\n`;
+  md += `- **Emergency Ambulance Directory**: https://www.healthclubfeni.com/emergency/ambulances\n`;
+  md += `- **Voluntary Blood Donors**: https://www.healthclubfeni.com/emergency/blood-donors\n`;
   md += `- **Health Assessment Tools**: https://www.healthclubfeni.com/health-tools\n`;
   md += `- **Membership Registration**: https://www.healthclubfeni.com/membership\n`;
   md += `- **Card Verification Portal**: https://www.healthclubfeni.com/verify\n`;

@@ -1,15 +1,27 @@
 import JsonLd from "@/components/seo/JsonLd";
-import { EmergencyDirectory } from "./components/EmergencyDirectory";
+import { InstantEmergencyDial } from "./components/InstantEmergencyDial";
+import { EmergencyTabsNav } from "./components/EmergencyTabsNav";
 import EmergencyGuide from "@/components/emergency/EmergencyGuide";
 import EmergencyProtocol from "@/components/emergency/EmergencyProtocol";
 import EmergencyFAQ from "@/components/emergency/EmergencyFAQ";
 import CommunityNetworkCTA from "@/components/common/CommunityNetworkCTA";
-import { Siren, ShieldCheck, HeartHandshake, PhoneCall } from "lucide-react";
+import Link from "next/link";
+import { permanentRedirect } from "next/navigation";
+import {
+  Siren,
+  ShieldCheck,
+  HeartHandshake,
+  PhoneCall,
+  Heart,
+  Truck,
+  PhoneForwarded,
+  ArrowRight,
+} from "lucide-react";
 import { getEmergencyDataAction } from "@/app/actions/emergencyAdminActions";
 import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
-export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
+export const revalidate = false; // Pure static SSG (on-demand revalidated on emergency updates)
 
 export async function generateMetadata() {
   return {
@@ -74,7 +86,22 @@ export async function generateMetadata() {
   };
 }
 
-export default async function EmergencyPage() {
+interface EmergencyPageProps {
+  searchParams?: Promise<{ tab?: string }>;
+}
+
+export default async function EmergencyPage({ searchParams }: EmergencyPageProps) {
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const tab = resolvedSearchParams?.tab;
+
+  if (tab === "hotlines") {
+    permanentRedirect("/emergency/hotlines");
+  } else if (tab === "ambulances") {
+    permanentRedirect("/emergency/ambulances");
+  } else if (tab === "donors") {
+    permanentRedirect("/emergency/blood-donors");
+  }
+
   const [{ bloodDonors, ambulances, hotlines }, contactSettings] = await Promise.all([
     getEmergencyDataAction(),
     getCachedContactSettings(),
@@ -292,12 +319,12 @@ export default async function EmergencyPage() {
 
           {/* Heading */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-foreground font-heading">
-            জরুরি স্বাস্থ্য সেবা ও <span className="text-rose-600 dark:text-rose-500">রক্তদাতা ডিরেক্টরি</span>
+            ফেনী জরুরি স্বাস্থ্য সেবা ও <span className="text-rose-600 dark:text-rose-500">তাৎক্ষণিক সহায়তা কেন্দ্র</span>
           </h1>
 
           {/* Subtitle */}
           <p className="mx-auto max-w-2xl text-xs sm:text-sm md:text-base text-muted-foreground leading-relaxed">
-            মুহূর্তেই রক্তের গ্রুপ অনুযায়ী ফেনীর স্বেচ্ছাসেবী রক্তদাতা, ২৪/৭ আইসিইউ অ্যাম্বুলেন্স, জরুরি অক্সিজেন ও মেডিকেল হটলাইনে সরাসরি যোগাযোগ করুন।
+            মুহূর্তেই রক্তের গ্রুপ অনুযায়ী স্বেচ্ছাসেবী রক্তদাতা, ২৪/৭ আইসিইউ ও এসি অ্যাম্বুলেন্স, জরুরি অক্সিজেন ও মেডিকেল হটলাইনে সরাসরি যোগাযোগ করুন।
           </p>
 
           {/* Quick Highlight Feature Badges */}
@@ -319,19 +346,96 @@ export default async function EmergencyPage() {
       </header>
 
       {/* Main Content Area */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-12 sm:space-y-16">
-        
-        {/* 1. Interactive Directory Component (Blood Donors, Ambulances, Hotlines) */}
-        <section aria-labelledby="emergency-directory-heading" className="space-y-4">
-          <h2 id="emergency-directory-heading" className="sr-only">
-            জরুরি ডিরেক্টরি ও অনুসন্ধান
-          </h2>
-          <EmergencyDirectory
-            initialBloodDonors={approvedDonors}
-            initialAmbulances={approvedAmbulances}
-            initialHotlines={hotlines}
-          />
-        </section>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-10 sm:space-y-14">
+        {/* Navigation Tabs Bar */}
+        <EmergencyTabsNav activeTab="overview" />
+
+        {/* 3 Quick Action Pathway Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
+          <Link
+            href="/emergency/blood-donors"
+            prefetch={true}
+            className="p-4 sm:p-5 rounded-2xl bg-card border border-border/80 hover:border-rose-500/40 transition-all duration-200 shadow-xs flex flex-col justify-between group"
+          >
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="p-2 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400">
+                  <Heart className="h-5 w-5 fill-rose-500/20" />
+                </span>
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-600">
+                  {approvedDonors.length} জন ডোনার
+                </span>
+              </div>
+              <h3 className="font-heading font-bold text-base text-foreground group-hover:text-rose-600 transition-colors">
+                স্বেচ্ছাসেবী রক্তদাতা ডিরেক্টরি
+              </h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                রক্তের ৮টি গ্রুপ ও ফেনীর ৬টি উপজেলার ভেরিফাইড রক্তদাতাদের সাথে সরাসরি যোগাযোগ।
+              </p>
+            </div>
+            <div className="pt-3 mt-2 border-t border-border/50 flex items-center justify-between text-xs font-bold text-rose-600">
+              <span>রক্তদাতা তালিকা দেখুন</span>
+              <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            href="/emergency/ambulances"
+            prefetch={true}
+            className="p-4 sm:p-5 rounded-2xl bg-card border border-border/80 hover:border-primary/40 transition-all duration-200 shadow-xs flex flex-col justify-between group"
+          >
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="p-2 rounded-xl bg-primary/10 text-primary">
+                  <Truck className="h-5 w-5" />
+                </span>
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+                  {approvedAmbulances.length}টি অ্যাম্বুলেন্স
+                </span>
+              </div>
+              <h3 className="font-heading font-bold text-base text-foreground group-hover:text-primary transition-colors">
+                ২৪/৭ জরুরি অ্যাম্বুলেন্স বহর
+              </h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                আইসিইউ, এসি, নন-এসি ও ফ্রিজিং অ্যাম্বুলেন্সের সরাসরি চালক ও কাউন্টার নম্বর।
+              </p>
+            </div>
+            <div className="pt-3 mt-2 border-t border-border/50 flex items-center justify-between text-xs font-bold text-primary">
+              <span>অ্যাম্বুলেন্স বহর দেখুন</span>
+              <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            href="/emergency/hotlines"
+            prefetch={true}
+            className="p-4 sm:p-5 rounded-2xl bg-card border border-border/80 hover:border-amber-500/40 transition-all duration-200 shadow-xs flex flex-col justify-between group"
+          >
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                  <PhoneForwarded className="h-5 w-5" />
+                </span>
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600">
+                  {hotlines.length}টি হটলাইন
+                </span>
+              </div>
+              <h3 className="font-heading font-bold text-base text-foreground group-hover:text-amber-600 transition-colors">
+                জরুরি হটলাইন ও অক্সিজেন
+              </h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                সদর হাসপাতাল, অক্সিজেন সিলিন্ডার হোম ডেলিভারি, ফায়ার সার্ভিস ও ৯৯৯ হেল্পলাইন।
+              </p>
+            </div>
+            <div className="pt-3 mt-2 border-t border-border/50 flex items-center justify-between text-xs font-bold text-amber-600">
+              <span>সকল হটলাইন দেখুন</span>
+              <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+        </div>
+
+        {/* 1. Instant Emergency Dial Section (1-Tap Direct Calls) */}
+        <InstantEmergencyDial />
 
         {/* 2. Generative Engine Optimization (GEO) Healthcare Authority & Stats Guide */}
         <EmergencyGuide />

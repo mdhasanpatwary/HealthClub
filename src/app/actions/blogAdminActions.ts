@@ -99,8 +99,8 @@ export const getAllBlogPostCardsAction = unstable_cache(
       return mapStaticPostsToCards();
     }
   },
-  ["all-blog-post-cards-v2"],
-  { revalidate: 86400, tags: [BLOG_POSTS_TAG, BLOG_CARDS_TAG] }
+  ["all-blog-post-cards-v3"],
+  { revalidate: false, tags: [BLOG_POSTS_TAG, BLOG_CARDS_TAG] }
 );
 
 /**
@@ -125,7 +125,7 @@ export const getAllBlogSlugsAction = unstable_cache(
     }
   },
   ["all-blog-slugs-v2"],
-  { revalidate: 86400, tags: [BLOG_POSTS_TAG] }
+  { revalidate: false, tags: [BLOG_POSTS_TAG] }
 );
 
 const fetchDbBlogPostBySlug = unstable_cache(
@@ -147,7 +147,7 @@ const fetchDbBlogPostBySlug = unstable_cache(
     return null;
   },
   ["single-blog-post-by-slug-v1"],
-  { revalidate: 86400, tags: [BLOG_POSTS_TAG] }
+  { revalidate: false, tags: [BLOG_POSTS_TAG] }
 );
 
 /**
@@ -201,7 +201,7 @@ export const getAllBlogPostsAction = unstable_cache(
     }
   },
   ["all-blog-posts-v24"],
-  { revalidate: 86400, tags: [BLOG_POSTS_TAG] }
+  { revalidate: false, tags: [BLOG_POSTS_TAG] }
 );
 
 export interface GetPaginatedBlogsAdminParams {

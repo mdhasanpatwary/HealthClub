@@ -218,7 +218,7 @@ export const getDoctorsByPartnerIdAction = unstable_cache(
     }
   },
   ["doctors-by-partner"],
-  { revalidate: 86400, tags: [DOCTORS_TAG, PARTNERS_TAG] }
+  { revalidate: false, tags: [DOCTORS_TAG, PARTNERS_TAG] }
 );
 
 /**
@@ -277,5 +277,5 @@ export const getRelatedPartnersAction = unstable_cache(
     }
   },
   ["related-partners"],
-  { revalidate: 86400, tags: [PARTNERS_TAG] }
+  { revalidate: false, tags: [PARTNERS_TAG] }
 );

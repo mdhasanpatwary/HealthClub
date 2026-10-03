@@ -33,6 +33,25 @@ export default function DeferredClientComponents() {
   const [canLoad, setCanLoad] = useState(false);
 
   useEffect(() => {
+    // In development mode on localhost, unregister any leftover service workers from production builds
+    if (
+      process.env.NODE_ENV === "development" &&
+      typeof window !== "undefined" &&
+      "serviceWorker" in navigator &&
+      (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+    ) {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        for (const registration of registrations) {
+          registration.unregister();
+        }
+      });
+      if ("caches" in window) {
+        caches.keys().then((keys) => {
+          keys.forEach((key) => caches.delete(key));
+        });
+      }
+    }
+
     // Schedule background components when the main thread is completely idle,
     // avoiding freezing the main thread on the user's first touch/click (preserves INP).
     if (typeof window !== "undefined" && "requestIdleCallback" in window) {

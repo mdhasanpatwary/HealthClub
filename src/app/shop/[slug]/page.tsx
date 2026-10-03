@@ -23,7 +23,7 @@ import { ProductCard } from "../components/ProductCard";
 import { SITE_URL } from "@/lib/siteConfig";
 import { toBanglaNums } from "@/lib/utils";
 
-export const revalidate = 3600; // 1 hour ISR
+export const revalidate = false; // Pure static SSG (zero ISR writes, on-demand revalidation only)
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;

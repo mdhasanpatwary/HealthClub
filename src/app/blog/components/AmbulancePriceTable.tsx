@@ -45,7 +45,7 @@ export function AmbulancePriceTable({
         conversionBanner={{
           text: "হেলথ ক্লাব ফেনী জেলা জুড়ে নাগরিকদের জরুরি মুহূর্তে দ্রুত সহায়তার জন্য ভেরিফায়েড অ্যাম্বুলেন্স, আইসিইউ লাইফ সাপোর্ট ও অক্সিজেন সরবরাহকারীদের একটি উন্মুক্ত ২৪/৭ পাবলিক ডিরেক্টরি প্রকাশ করে (সরাসরি চালকের সাথে কথা বলে দালালমুক্ত সেবা নিশ্চিত করুন)।",
           buttonText: "জরুরি ডিরেক্টরি দেখুন",
-          href: "/emergency?tab=ambulances",
+          href: "/emergency/ambulances",
           variant: "link",
         }}
       />

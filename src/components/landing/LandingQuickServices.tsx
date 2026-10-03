@@ -55,7 +55,7 @@ export function LandingQuickServices({
       title: "জরুরি রক্তদাতা খুঁজুন",
       description: "A+, B+, O+, AB+ সহ সকল গ্রুপের ভেরিফাইড রক্তদাতাদের সাথে তাৎক্ষণিক যোগাযোগের তালিকা।",
       actionText: "রক্তদাতা খুঁজুন",
-      href: "/emergency?tab=donors",
+      href: "/emergency/blood-donors",
       icon: Heart,
       color: {
         bg: "bg-rose-500/10 dark:bg-rose-500/15",
@@ -76,7 +76,7 @@ export function LandingQuickServices({
       title: "জরুরি অ্যাম্বুলেন্স সেবা",
       description: "ফেনী জেলা ও ঢাকা-চট্টগ্রাম রুটে জরুরি এসি, নন-এসি ও আইসিইউ (ICU) অ্যাম্বুলেন্স সার্ভিস।",
       actionText: "অ্যাম্বুলেন্স খুঁজুন",
-      href: "/emergency?tab=ambulances",
+      href: "/emergency/ambulances",
       icon: Truck,
       color: {
         bg: "bg-sky-500/10 dark:bg-sky-500/15",
@@ -94,7 +94,7 @@ export function LandingQuickServices({
       title: "হাসপাতাল ও অক্সিজেন সেবা",
       description: "ফেনী সদর হাসপাতাল ইমার্জেন্সি, জরুরি অক্সিজেন সিলিন্ডার হোম ডেলিভারি ও রেড ক্রিসেন্ট হেল্পলাইন।",
       actionText: "জরুরি সেবা দেখুন",
-      href: "/emergency?tab=hotlines",
+      href: "/emergency/hotlines",
       icon: PhoneCall,
       color: {
         bg: "bg-amber-500/10 dark:bg-amber-500/15",

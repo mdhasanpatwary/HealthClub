@@ -5,7 +5,7 @@ import { ProductCard } from "./components/ProductCard";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 export const dynamic = "force-static";
-export const revalidate = 86400; // 24-hour Static Cache (instantly revalidated on admin updates)
+export const revalidate = false; // Pure static SSG (on-demand revalidated on admin updates)
 
 export const metadata: Metadata = {
   title: "হেলথ ক্লাব শপ - জরুরি মেডিকেল ডিভাইস ও হেলথ কেয়ার প্রোডাক্ট",

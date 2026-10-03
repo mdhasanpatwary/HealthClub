@@ -61,7 +61,7 @@ export const getHomepageStats = unstable_cache(
     }
   },
   ["homepage-stats"],
-  { revalidate: 86400, tags: ["homepage-stats", "partners", "emergency-data", "doctors"] }
+  { revalidate: false, tags: ["homepage-stats", "partners", "emergency-data", "doctors"] }
 );
 
 /**
@@ -84,5 +84,5 @@ export const getHomepagePartners = unstable_cache(
     }
   },
   ["homepage-partners"],
-  { revalidate: 86400, tags: ["homepage-partners", "partners"] }
+  { revalidate: false, tags: ["homepage-partners", "partners"] }
 );

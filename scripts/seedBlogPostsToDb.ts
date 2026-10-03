@@ -1,68 +1,111 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
+dotenv.config();
+
+import fs from "fs";
+import path from "path";
 import { prisma } from "../src/lib/prisma";
 import { BLOG_POSTS } from "../src/data/blog/blogPosts";
 import { getPostFacilityMeta } from "../src/app/blog/utils/blogPagination";
 
-const ALL_SEED_POSTS = [...BLOG_POSTS];
-
 async function main() {
-  console.log(`Starting migration/seeding of ${ALL_SEED_POSTS.length} blog posts into PostgreSQL database...`);
+  // Check for the most recent complete backup file first (contains all 101 posts)
+  const defaultBackup = path.resolve(process.cwd(), "backups/blog_posts_backup_2026-09-29.json");
+  const fallbackBackup = path.resolve(process.cwd(), "backups/blog_posts_backup_2026-09-28.json");
+  const backupPath = fs.existsSync(defaultBackup)
+    ? defaultBackup
+    : fs.existsSync(fallbackBackup)
+    ? fallbackBackup
+    : null;
 
-  let count = 0;
-  for (const post of ALL_SEED_POSTS) {
-    const facilityMeta = getPostFacilityMeta(post);
-    const hospitalCount = post.hospitals?.length ?? 0;
-    const facilityCount = facilityMeta.count;
-    const facilityLabelBn = facilityMeta.labelBn;
-    const facilityLabelEn = facilityMeta.labelEn;
+  if (backupPath) {
+    console.log(`Starting migration/seeding of all blog posts from complete backup (${path.basename(backupPath)})...`);
+    const raw = fs.readFileSync(backupPath, "utf-8");
+    const backupPosts = JSON.parse(raw) as Array<Record<string, unknown>>;
+    console.log(`Found ${backupPosts.length} posts in backup file.`);
 
-    const data = {
-      slug: post.slug.toLowerCase().trim(),
-      titleBn: post.titleBn,
-      titleEn: post.titleEn,
-      excerptBn: post.excerptBn,
-      excerptEn: post.excerptEn,
-      category: post.category,
-      categoryNameBn: post.categoryNameBn || "",
-      categoryNameEn: post.categoryNameEn || "",
-      publishedDate: post.publishedDate,
-      modifiedDate: post.modifiedDate || post.publishedDate,
-      readTimeBn: post.readTimeBn,
-      readTimeEn: post.readTimeEn,
-      coverImage: post.coverImage,
-      coverImageAlt: post.coverImageAlt || post.titleBn,
-      author: JSON.parse(JSON.stringify(post.author)),
-      hospitalCount,
-      facilityCount,
-      facilityLabelBn,
-      facilityLabelEn,
-      keyHighlightsBn: post.keyHighlightsBn ? JSON.parse(JSON.stringify(post.keyHighlightsBn)) : null,
-      introParagraphsBn: post.introParagraphsBn ? JSON.parse(JSON.stringify(post.introParagraphsBn)) : null,
-      diagnosticComparisonTable: post.diagnosticComparisonTable
-        ? JSON.parse(JSON.stringify(post.diagnosticComparisonTable))
-        : null,
-      diagnosticCenters: post.diagnosticCenters ? JSON.parse(JSON.stringify(post.diagnosticCenters)) : null,
-      diagnosticTestPricingBn: post.diagnosticTestPricingBn
-        ? JSON.parse(JSON.stringify(post.diagnosticTestPricingBn))
-        : null,
-      bookingGuideBn: post.bookingGuideBn ? JSON.parse(JSON.stringify(post.bookingGuideBn)) : null,
-      selectionGuideBn: post.selectionGuideBn ? JSON.parse(JSON.stringify(post.selectionGuideBn)) : null,
-      faqs: post.faqs ? JSON.parse(JSON.stringify(post.faqs)) : null,
-      relatedSlugs: post.relatedSlugs ? JSON.parse(JSON.stringify(post.relatedSlugs)) : null,
-      metaKeywords: post.metaKeywords ? JSON.parse(JSON.stringify(post.metaKeywords)) : null,
-      tags: post.tags ? JSON.parse(JSON.stringify(post.tags)) : null,
-      contentPayload: JSON.parse(JSON.stringify(post)),
-    };
+    let count = 0;
+    for (const post of backupPosts) {
+      const slug = (post.slug as string)?.toLowerCase().trim();
+      if (!slug) continue;
 
-    await prisma.blogPost.upsert({
-      where: { slug: data.slug },
-      update: data,
-      create: data,
-    });
+      const postData: Record<string, unknown> = { ...post, slug };
+      delete postData.id;
+      delete postData.createdAt;
+      delete postData.updatedAt;
 
-    count++;
-    if (count % 10 === 0 || count === ALL_SEED_POSTS.length) {
-      console.log(`Synced ${count}/${ALL_SEED_POSTS.length} posts...`);
+      await prisma.blogPost.upsert({
+        where: { slug },
+        update: postData,
+        create: {
+          ...postData,
+          slug,
+        } as never,
+      });
+
+      count++;
+      if (count % 20 === 0 || count === backupPosts.length) {
+        console.log(`Synced ${count}/${backupPosts.length} posts...`);
+      }
+    }
+  } else {
+    console.log(`Backup file not found. Seeding ${BLOG_POSTS.length} static blog posts from code...`);
+    let count = 0;
+    for (const post of BLOG_POSTS) {
+      const facilityMeta = getPostFacilityMeta(post);
+      const hospitalCount = post.hospitals?.length ?? 0;
+      const facilityCount = facilityMeta.count;
+      const facilityLabelBn = facilityMeta.labelBn;
+      const facilityLabelEn = facilityMeta.labelEn;
+
+      const data = {
+        slug: post.slug.toLowerCase().trim(),
+        titleBn: post.titleBn,
+        titleEn: post.titleEn,
+        excerptBn: post.excerptBn,
+        excerptEn: post.excerptEn,
+        category: post.category,
+        categoryNameBn: post.categoryNameBn || "",
+        categoryNameEn: post.categoryNameEn || "",
+        publishedDate: post.publishedDate,
+        modifiedDate: post.modifiedDate || post.publishedDate,
+        readTimeBn: post.readTimeBn,
+        readTimeEn: post.readTimeEn,
+        coverImage: post.coverImage,
+        coverImageAlt: post.coverImageAlt || post.titleBn,
+        author: JSON.parse(JSON.stringify(post.author)),
+        hospitalCount,
+        facilityCount,
+        facilityLabelBn,
+        facilityLabelEn,
+        keyHighlightsBn: post.keyHighlightsBn ? JSON.parse(JSON.stringify(post.keyHighlightsBn)) : null,
+        introParagraphsBn: post.introParagraphsBn ? JSON.parse(JSON.stringify(post.introParagraphsBn)) : null,
+        diagnosticComparisonTable: post.diagnosticComparisonTable
+          ? JSON.parse(JSON.stringify(post.diagnosticComparisonTable))
+          : null,
+        diagnosticCenters: post.diagnosticCenters ? JSON.parse(JSON.stringify(post.diagnosticCenters)) : null,
+        diagnosticTestPricingBn: post.diagnosticTestPricingBn
+          ? JSON.parse(JSON.stringify(post.diagnosticTestPricingBn))
+          : null,
+        bookingGuideBn: post.bookingGuideBn ? JSON.parse(JSON.stringify(post.bookingGuideBn)) : null,
+        selectionGuideBn: post.selectionGuideBn ? JSON.parse(JSON.stringify(post.selectionGuideBn)) : null,
+        faqs: post.faqs ? JSON.parse(JSON.stringify(post.faqs)) : null,
+        relatedSlugs: post.relatedSlugs ? JSON.parse(JSON.stringify(post.relatedSlugs)) : null,
+        metaKeywords: post.metaKeywords ? JSON.parse(JSON.stringify(post.metaKeywords)) : null,
+        tags: post.tags ? JSON.parse(JSON.stringify(post.tags)) : null,
+        contentPayload: JSON.parse(JSON.stringify(post)),
+      };
+
+      await prisma.blogPost.upsert({
+        where: { slug: data.slug },
+        update: data,
+        create: data,
+      });
+
+      count++;
+      if (count % 10 === 0 || count === BLOG_POSTS.length) {
+        console.log(`Synced ${count}/${BLOG_POSTS.length} posts...`);
+      }
     }
   }
 

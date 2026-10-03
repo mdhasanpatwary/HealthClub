@@ -4,16 +4,26 @@ import { useState } from "react";
 import { ChevronDown, HelpCircle, PhoneCall } from "lucide-react";
 import { toBanglaNums } from "@/lib/utils";
 
-interface FAQItem {
+export interface FAQItem {
   question: string;
   answer: string;
 }
 
 interface EmergencyFAQProps {
   hotline?: string;
+  items?: FAQItem[];
+  title?: string;
+  subtitle?: string;
+  badgeText?: string;
 }
 
-export default function EmergencyFAQ({ hotline }: EmergencyFAQProps) {
+export default function EmergencyFAQ({
+  hotline,
+  items,
+  title = "ফেনী রক্তদাতা, অ্যাম্বুলেন্স ও জরুরি স্বাস্থ্য সেবা সম্পর্কিত প্রশ্নোত্তর",
+  subtitle = "ফেনীতে রক্তদাতা সন্ধান, ব্লাড ব্যাংক কন্টাক্ট নম্বর, অ্যাম্বুলেন্স সেবা, অক্সিজেন সিলিন্ডার ও জরুরি মেডিকেল হটলাইন সম্পর্কিত তথ্যাবলি।",
+  badgeText = "সাধারণ জরুরি জিজ্ঞাসা (FAQ)",
+}: EmergencyFAQProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(0); // First FAQ open by default
 
   const rawHotline = (hotline || process.env.NEXT_PUBLIC_HOTLINE_PHONE || "01886763849").replace(/[^0-9]/g, "");
@@ -21,7 +31,7 @@ export default function EmergencyFAQ({ hotline }: EmergencyFAQProps) {
   const hotlineTel = `+880${normalizedHotline}`;
   const hotlineDisplay = toBanglaNums(`+880 ${normalizedHotline}`);
 
-  const faqs: FAQItem[] = [
+  const defaultFaqs: FAQItem[] = [
     {
       question: "ফেনীতে জরুরি রক্তের প্রয়োজনে কীভাবে তাৎক্ষণিক রক্তদাতা ও ব্লাড ব্যাংক খুঁজে পাবেন?",
       answer: "হেলথ ক্লাবের 'জরুরি সেবা' পেজে যান এবং রক্তের গ্রুপ ফিল্টার থেকে রোগীর প্রয়োজনীয় গ্রুপ (যেমন: A+, B+, O+, AB-) ও উপজেলা (ফেনী সদর, সোনাগাজী, দাগনভূঞা ইত্যাদি) নির্বাচন করুন। তালিকাভুক্ত ভেরিফাইড রক্তদাতার কার্ডে 'কল করুন' অথবা 'WhatsApp' বাটনে চাপ দিয়ে সরাসরি যোগাযোগ করুন। এছাড়া রেড ক্রিসেন্ট রক্ত কেন্দ্রের (01819-887766) সাথেও যোগাযোগ করতে পারেন।",
@@ -48,6 +58,8 @@ export default function EmergencyFAQ({ hotline }: EmergencyFAQProps) {
     },
   ];
 
+  const faqs = items && items.length > 0 ? items : defaultFaqs;
+
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
@@ -61,16 +73,16 @@ export default function EmergencyFAQ({ hotline }: EmergencyFAQProps) {
       <div className="text-center space-y-2">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
           <HelpCircle className="h-3.5 w-3.5" />
-          <span>সাধারণ জরুরি জিজ্ঞাসা (FAQ)</span>
+          <span>{badgeText}</span>
         </div>
         <h2
           id="emergency-faq-heading"
           className="font-heading text-xl sm:text-3xl font-bold text-secondary dark:text-white tracking-tight"
         >
-          ফেনী রক্তদাতা, অ্যাম্বুলেন্স ও জরুরি স্বাস্থ্য সেবা সম্পর্কিত প্রশ্নোত্তর
+          {title}
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-          ফেনীতে রক্তদাতা সন্ধান, ব্লাড ব্যাংক কন্টাক্ট নম্বর, অ্যাম্বুলেন্স সেবা, অক্সিজেন সিলিন্ডার ও জরুরি মেডিকেল হটলাইন সম্পর্কিত তথ্যাবলি।
+          {subtitle}
         </p>
       </div>
 

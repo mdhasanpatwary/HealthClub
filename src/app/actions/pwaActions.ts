@@ -361,7 +361,7 @@ const getCachedPwaStats = unstable_cache(
     };
   },
   ["admin-pwa-stats-cache"],
-  { revalidate: 3600, tags: [PWA_STATS_TAG] }
+  { revalidate: false, tags: [PWA_STATS_TAG] }
 );
 
 /**

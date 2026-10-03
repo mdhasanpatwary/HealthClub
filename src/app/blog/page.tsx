@@ -16,7 +16,7 @@ import {
   DEFAULT_BLOG_PAGE_SIZE,
 } from "./utils/blogPagination";
 
-export const revalidate = 86400; // 24-hour Incremental Static Regeneration (ISR)
+export const revalidate = false; // Pure static SSG (on-demand revalidated on blog updates)
 
 interface BlogPageProps {
   searchParams?: Promise<{
