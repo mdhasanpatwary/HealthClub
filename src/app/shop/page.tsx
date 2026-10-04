@@ -3,6 +3,8 @@ import { ShoppingBag, ShieldCheck, Truck, Percent, MessageCircle, PackageOpen } 
 import { getProductsAction } from "@/app/actions/productActions";
 import { ProductCard } from "./components/ProductCard";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
+import JsonLd from "@/components/seo/JsonLd";
+import { getProductCatalogJsonLd } from "@/lib/seo/productSchema";
 
 export const dynamic = "force-static";
 export const revalidate = false; // Pure static SSG (on-demand revalidated on admin updates)
@@ -45,42 +47,12 @@ export const metadata: Metadata = {
 export default async function ShopPage() {
   const products = await getProductsAction();
 
-  // Structured Schema.org ItemList for Products
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: "হেলথ ক্লাব শপ - মেডিকেল ও হেলথকেয়ার প্রোডাক্ট ক্যাটালগ",
-    description: "জরুরি স্বাস্থ্য ডিভাইস ও হোম হেলথকেয়ার পণ্যের তালিকা",
-    url: `${SITE_URL}/shop`,
-    numberOfItems: products.length,
-    itemListElement: products.map((product, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      item: {
-        "@type": "Product",
-        name: product.nameBn,
-        alternateName: product.nameEn,
-        image: product.imageUrl,
-        description: product.descriptionBn,
-        url: `${SITE_URL}/shop/${product.slug}`,
-        offers: {
-          "@type": "Offer",
-          price: product.price,
-          priceCurrency: "BDT",
-          availability: product.inStock
-            ? "https://schema.org/InStock"
-            : "https://schema.org/OutOfStock",
-        },
-      },
-    })),
-  };
+  // Standardized Google-compliant Merchant listings Schema.org ItemList
+  const jsonLd = getProductCatalogJsonLd(products);
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
 
       <div className="bg-muted/30 min-h-screen py-8 sm:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">

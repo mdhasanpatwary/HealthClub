@@ -7,15 +7,49 @@ import { Truck, ShieldCheck, PhoneCall, Activity, Wind, Snowflake } from "lucide
 import { getEmergencyDataAction } from "@/app/actions/emergencyAdminActions";
 import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
+import { toBanglaNums } from "@/lib/utils";
+import { AMBULANCE_TYPES } from "@/data/emergencyData";
+import {
+  paginateAmbulances,
+  DEFAULT_AMBULANCE_PAGE_SIZE,
+} from "../utils/ambulancePagination";
 
-export const revalidate = false; // Pure static SSG (on-demand revalidated on emergency updates)
+export const revalidate = false; // Pure static SSG on base page, on-demand revalidated on emergency updates
 
-export async function generateMetadata() {
+interface EmergencyAmbulancesPageProps {
+  searchParams?: Promise<{
+    page?: string;
+    type?: string;
+    search?: string;
+  }>;
+}
+
+export async function generateMetadata({ searchParams }: EmergencyAmbulancesPageProps) {
+  const resolvedParams = (await searchParams) || {};
+  const currentPage = Math.max(1, parseInt(resolvedParams.page || "1", 10) || 1);
+  const selectedType = (resolvedParams.type || "all").trim();
+  const searchQuery = (resolvedParams.search || "").trim();
+
+  const typeConfig = AMBULANCE_TYPES.find((t) => t.id.toLowerCase() === selectedType.toLowerCase());
+  const typeSuffix = typeConfig ? ` (${typeConfig.nameBn})` : "";
+  const pageSuffix = currentPage > 1 ? ` (পৃষ্ঠা ${toBanglaNums(currentPage)})` : "";
+
+  const title = `ফেনী অ্যাম্বুলেন্স সার্ভিস নম্বর${typeSuffix}${pageSuffix} | হেলথ ক্লাব`;
+  const description = `ফেনীর ২৪/৭ জরুরি অ্যাম্বুলেন্স সেবা${typeSuffix}: আইসিইউ (ICU), এসি, নন-এসি ও ফ্রিজার অ্যাম্বুলেন্স চালক ও সার্ভিসের সরাসরি ফোন নম্বর${pageSuffix}।`;
+
+  const queryParams = new URLSearchParams();
+  if (currentPage > 1) queryParams.set("page", String(currentPage));
+  if (selectedType !== "all") queryParams.set("type", selectedType);
+
+  const canonicalUrl = `${SITE_URL}/emergency/ambulances${
+    queryParams.toString() ? `?${queryParams.toString()}` : ""
+  }`;
+
   return {
-    title: "ফেনী অ্যাম্বুলেন্স সার্ভিস নম্বর ও ২৪/৭ আইসিইউ অ্যাম্বুলেন্স তালিকা",
-    description: "ফেনীর ২৪/৭ জরুরি অ্যাম্বুলেন্স সেবা: আইসিইউ (ICU), এসি, নন-এসি ও ফ্রিজার অ্যাম্বুলেন্স চালক ও সার্ভিসের সরাসরি ফোন নম্বর এবং ফেনী-ঢাকা-চট্টগ্রাম রুট তথ্য।",
+    title,
+    description,
     alternates: {
-      canonical: `${SITE_URL}/emergency/ambulances`,
+      canonical: canonicalUrl,
     },
     keywords: [
       "feni ambulance number",
@@ -34,24 +68,24 @@ export async function generateMetadata() {
       "লাশবাহী ফ্রিজিং অ্যাম্বুলেন্স ফেনী",
     ],
     openGraph: {
-      title: "ফেনী ২৪/৭ জরুরি অ্যাম্বুলেন্স সেবা ও চালক ডিরেক্টরি - হেলথ ক্লাব",
-      description: "মুহূর্তেই ফেনী শহর, মহাসড়ক ও ঢাকা-চট্টগ্রাম রুটের জন্য আইসিইউ, এসি ও ফ্রিজার অ্যাম্বুলেন্সের যাচাইকৃত চালকদের সরাসরি কল করুন।",
-      url: `${SITE_URL}/emergency/ambulances`,
+      title,
+      description,
+      url: canonicalUrl,
       siteName: "হেলথ ক্লাব (Health Club)",
       type: "website",
       images: DEFAULT_OG_IMAGES,
     },
     twitter: {
       card: "summary_large_image",
-      title: "ফেনী অ্যাম্বুলেন্স সার্ভিস নম্বর ডিরেক্টরি - হেলথ ক্লাব",
-      description: "২৪/৭ আইসিইউ, এসি ও জরুরি অ্যাম্বুলেন্স চালকের সরাসরি ফোন নম্বর।",
+      title,
+      description,
       images: DEFAULT_TWITTER_IMAGES,
     },
     robots: {
-      index: true,
+      index: !searchQuery,
       follow: true,
       googleBot: {
-        index: true,
+        index: !searchQuery,
         follow: true,
         "max-video-preview": -1,
         "max-image-preview": "large",
@@ -61,7 +95,14 @@ export async function generateMetadata() {
   };
 }
 
-export default async function EmergencyAmbulancesPage() {
+export default async function EmergencyAmbulancesPage({
+  searchParams,
+}: EmergencyAmbulancesPageProps) {
+  const resolvedParams = (await searchParams) || {};
+  const currentPage = Math.max(1, parseInt(resolvedParams.page || "1", 10) || 1);
+  const selectedType = (resolvedParams.type || "all").trim();
+  const searchQuery = (resolvedParams.search || "").trim();
+
   const [{ ambulances }, contactSettings] = await Promise.all([
     getEmergencyDataAction(),
     getCachedContactSettings(),
@@ -69,8 +110,25 @@ export default async function EmergencyAmbulancesPage() {
 
   const approvedAmbulances = ambulances.filter((a) => a.status !== "pending");
 
+  const paginatedResult = paginateAmbulances(approvedAmbulances, {
+    page: currentPage,
+    pageSize: DEFAULT_AMBULANCE_PAGE_SIZE,
+    type: selectedType,
+    search: searchQuery,
+  });
+
   const rawHotline = contactSettings.hotline.replace(/[^0-9]/g, "");
   const formattedTel = `+880${rawHotline.replace(/^(880|88|0)/, "")}`;
+
+  const queryParams = new URLSearchParams();
+  if (paginatedResult.currentPage > 1) {
+    queryParams.set("page", String(paginatedResult.currentPage));
+  }
+  if (selectedType !== "all") queryParams.set("type", selectedType);
+
+  const pageCanonicalUrl = `${SITE_URL}/emergency/ambulances${
+    queryParams.toString() ? `?${queryParams.toString()}` : ""
+  }`;
 
   const ambulanceFaqs: FAQItem[] = [
     {
@@ -117,7 +175,7 @@ export default async function EmergencyAmbulancesPage() {
           "@type": "ListItem",
           position: 3,
           name: "জরুরি অ্যাম্বুলেন্স",
-          item: `${SITE_URL}/emergency/ambulances`,
+          item: pageCanonicalUrl,
         },
       ],
     },
@@ -127,7 +185,7 @@ export default async function EmergencyAmbulancesPage() {
       "@context": "https://schema.org",
       "@type": ["EmergencyService", "MedicalBusiness", "LocalBusiness"],
       name: "ফেনী ২৪/৭ জরুরি অ্যাম্বুলেন্স সার্ভিস ও ড্রাইভার নেটওয়ার্ক",
-      url: `${SITE_URL}/emergency/ambulances`,
+      url: pageCanonicalUrl,
       logo: `${SITE_URL}/images/member-card-logo.webp`,
       description: "ফেনীর ২৪/৭ আইসিইউ, এসি, নন-এসি ও ফ্রিজিং অ্যাম্বুলেন্স সার্ভিসের সরাসরি ড্রাইভার যোগাযোগ নম্বর ও রুট ডিরেক্টরি।",
       areaServed: [
@@ -153,9 +211,9 @@ export default async function EmergencyAmbulancesPage() {
       "@context": "https://schema.org",
       "@type": "ItemList",
       name: "ফেনীর জরুরি অ্যাম্বুলেন্স ফ্লিট ও চালক তালিকা",
-      itemListElement: approvedAmbulances.map((amb, index) => ({
+      itemListElement: paginatedResult.ambulances.map((amb, index) => ({
         "@type": "ListItem",
-        position: index + 1,
+        position: (paginatedResult.currentPage - 1) * paginatedResult.pageSize + index + 1,
         item: {
           "@type": "EmergencyService",
           name: amb.name,
@@ -246,12 +304,21 @@ export default async function EmergencyAmbulancesPage() {
         {/* Navigation Tabs */}
         <EmergencyTabsNav activeTab="ambulances" />
 
-        {/* Ambulance Directory */}
+        {/* Ambulance Directory with Server-Side Pagination */}
         <section aria-labelledby="ambulance-directory-heading" className="space-y-4">
           <h2 id="ambulance-directory-heading" className="sr-only">
             ফেনী অ্যাম্বুলেন্স সেবা তালিকা ও ফিল্টার
           </h2>
-          <AmbulanceDirectory initialAmbulances={approvedAmbulances} />
+          <AmbulanceDirectory
+            ambulances={paginatedResult.ambulances}
+            totalItems={paginatedResult.totalItems}
+            totalPages={paginatedResult.totalPages}
+            currentPage={paginatedResult.currentPage}
+            pageSize={paginatedResult.pageSize}
+            currentType={selectedType}
+            currentSearch={searchQuery}
+            counts={paginatedResult.counts}
+          />
         </section>
 
         {/* Specialized Ambulance FAQ */}

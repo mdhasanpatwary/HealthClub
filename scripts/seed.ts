@@ -14,6 +14,16 @@ function hashPassword(password: string): string {
 }
 
 async function main() {
+  const dbUrl = process.env.DATABASE_URL || process.env.DIRECT_URL || "";
+  const isLocal = dbUrl.includes("localhost") || dbUrl.includes("127.0.0.1");
+
+  if (!isLocal && process.env.ALLOW_PRODUCTION_SEED !== "true") {
+    console.error("❌ CRITICAL SAFETY ERROR: scripts/seed.ts is configured to run ONLY against a local database (localhost/127.0.0.1)!");
+    console.error("DATABASE_URL points to a remote/production host:", dbUrl.replace(/:[^:@]+@/, ":***@"));
+    console.error("Aborting immediately to prevent accidental data loss.");
+    process.exit(1);
+  }
+
   console.log("Seeding database...");
   const hashedPw = hashPassword("123456");
 

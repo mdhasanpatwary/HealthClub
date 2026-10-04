@@ -1,50 +1,154 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useRef, useTransition, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { UPAZILAS_FENI, BLOOD_GROUPS, BloodDonor } from "@/data/emergencyData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Heart, Search, PlusCircle, Sparkles } from "lucide-react";
+import { Pagination } from "@/components/ui/pagination";
+import { Heart, Search, PlusCircle, Sparkles, X, Loader2 } from "lucide-react";
 import { BloodDonorRegisterDialog } from "./BloodDonorRegisterDialog";
 import { BloodDonorCard } from "./BloodDonorCard";
+import { toBanglaNums } from "@/lib/utils";
 
 interface BloodDonorDirectoryProps {
+  donors?: BloodDonor[];
   initialBloodDonors?: BloodDonor[];
+  totalItems?: number;
+  totalPages?: number;
+  currentPage?: number;
+  pageSize?: number;
+  currentGroup?: string;
+  currentUpazila?: string;
+  currentSearch?: string;
 }
 
-export function BloodDonorDirectory({ initialBloodDonors = [] }: BloodDonorDirectoryProps) {
-  const [selectedGroup, setSelectedGroup] = useState<string>("all");
-  const [selectedUpazila, setSelectedUpazila] = useState<string>("all");
-  const [searchQuery, setSearchQuery] = useState("");
+export function BloodDonorDirectory({
+  donors: initialDonors,
+  initialBloodDonors,
+  totalItems: initialTotalItems,
+  totalPages: initialTotalPages,
+  currentPage: initialCurrentPage = 1,
+  pageSize = 12,
+  currentGroup = "all",
+  currentUpazila = "all",
+  currentSearch = "",
+}: BloodDonorDirectoryProps) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
 
-  const donorsList = useMemo(() => initialBloodDonors ?? [], [initialBloodDonors]);
+  // Support both donors and fallback initialBloodDonors
+  const donors = initialDonors ?? initialBloodDonors ?? [];
+  const totalItems = initialTotalItems ?? donors.length;
+  const totalPages = initialTotalPages ?? Math.max(1, Math.ceil(totalItems / pageSize));
+  const currentPage = initialCurrentPage;
 
-  // Filtered blood donors
-  const filteredDonors = useMemo(() => {
-    return donorsList.filter((donor: BloodDonor) => {
-      if (donor.status === "pending") return false;
-      const matchGroup = selectedGroup === "all" || donor.bloodGroup === selectedGroup;
-      const matchUpazila = selectedUpazila === "all" || donor.upazila === selectedUpazila;
-      const matchSearch =
-        searchQuery.trim() === "" ||
-        donor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        donor.phone.includes(searchQuery) ||
-        donor.bloodGroup.toLowerCase().includes(searchQuery.toLowerCase());
+  const [searchQuery, setSearchQuery] = useState(currentSearch);
+  const [prevSearch, setPrevSearch] = useState(currentSearch);
+  const [selectedGroup, setSelectedGroup] = useState(currentGroup);
+  const [prevGroup, setPrevGroup] = useState(currentGroup);
+  const [selectedUpazila, setSelectedUpazila] = useState(currentUpazila);
+  const [prevUpazila, setPrevUpazila] = useState(currentUpazila);
 
-      return matchGroup && matchUpazila && matchSearch;
-    });
-  }, [donorsList, selectedGroup, selectedUpazila, searchQuery]);
+  // Sync state if server props update externally (e.g. browser back/forward or server re-render)
+  if (currentSearch !== prevSearch) {
+    setPrevSearch(currentSearch);
+    setSearchQuery(currentSearch);
+  }
+  if (currentGroup !== prevGroup) {
+    setPrevGroup(currentGroup);
+    setSelectedGroup(currentGroup);
+  }
+  if (currentUpazila !== prevUpazila) {
+    setPrevUpazila(currentUpazila);
+    setSelectedUpazila(currentUpazila);
+  }
+
+  const createUrl = useCallback(
+    (overrides: { page?: number; group?: string; upazila?: string; search?: string }) => {
+      const p = overrides.page !== undefined ? overrides.page : currentPage;
+      const g = overrides.group !== undefined ? overrides.group : selectedGroup;
+      const u = overrides.upazila !== undefined ? overrides.upazila : selectedUpazila;
+      const q = overrides.search !== undefined ? overrides.search : searchQuery;
+
+      const params = new URLSearchParams();
+      if (p > 1) params.set("page", String(p));
+      if (g && g !== "all") params.set("group", g);
+      if (u && u !== "all") params.set("upazila", u);
+      if (q.trim()) params.set("search", q.trim());
+
+      const qs = params.toString();
+      return `/emergency/blood-donors${qs ? `?${qs}` : ""}`;
+    },
+    [currentPage, selectedGroup, selectedUpazila, searchQuery]
+  );
+
+  const navigate = useCallback(
+    (
+      overrides: { page?: number; group?: string; upazila?: string; search?: string },
+      shouldScrollTop = false
+    ) => {
+      const targetUrl = createUrl(overrides);
+      startTransition(() => {
+        router.push(targetUrl, { scroll: false });
+        if (shouldScrollTop && containerRef.current) {
+          containerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    },
+    [createUrl, router]
+  );
+
+  // Debounced search query synchronization
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchQuery.trim() !== currentSearch.trim()) {
+        navigate({ search: searchQuery, page: 1 });
+      }
+    }, 350);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, currentSearch, navigate]);
+
+  const handleGroupSelect = (group: string) => {
+    if (group === selectedGroup) return;
+    setSelectedGroup(group);
+    navigate({ group, page: 1 });
+  };
+
+  const handleUpazilaChange = (upazila: string) => {
+    if (upazila === selectedUpazila) return;
+    setSelectedUpazila(upazila);
+    navigate({ upazila, page: 1 });
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+    navigate({ search: "", page: 1 });
+  };
+
+  const handleResetFilters = () => {
+    setSearchQuery("");
+    setSelectedGroup("all");
+    setSelectedUpazila("all");
+    navigate({ group: "all", upazila: "all", search: "", page: 1 });
+  };
+
+  const startItem = totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+  const endItem = Math.min(currentPage * pageSize, totalItems);
+  const isFiltered = searchQuery !== "" || selectedGroup !== "all" || selectedUpazila !== "all";
 
   return (
-    <div className="space-y-6">
+    <div ref={containerRef} className="space-y-6 scroll-mt-20">
       {/* Screen Reader Live Announcement */}
       <div aria-live="polite" role="status" aria-atomic="true" className="sr-only">
-        {filteredDonors.length} জন রক্তদাতা পাওয়া গেছে
+        মোট {totalItems} জন রক্তদাতা পাওয়া গেছে
       </div>
 
       {/* Header Action Banner */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-rose-500/10 via-rose-500/5 to-transparent border border-rose-500/20">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-2xl bg-linear-to-r from-rose-500/10 via-rose-500/5 to-transparent border border-rose-500/20">
         <div className="space-y-1">
           <h3 className="font-heading font-bold text-base sm:text-lg text-secondary dark:text-white flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-rose-500" />
@@ -56,7 +160,7 @@ export function BloodDonorDirectory({ initialBloodDonors = [] }: BloodDonorDirec
         </div>
         <Button
           onClick={() => setIsRegisterOpen(true)}
-          className="bg-rose-600 hover:bg-rose-700 text-white font-bold shrink-0 rounded-xl"
+          className="bg-rose-600 hover:bg-rose-700 text-white font-bold shrink-0 rounded-xl cursor-pointer"
           size="sm"
         >
           <PlusCircle className="mr-1.5 h-4 w-4" />
@@ -72,49 +176,63 @@ export function BloodDonorDirectory({ initialBloodDonors = [] }: BloodDonorDirec
             type="button"
             role="button"
             aria-pressed={selectedGroup === "all"}
-            onClick={() => setSelectedGroup("all")}
+            onClick={() => handleGroupSelect("all")}
             className={`px-3 py-1.5 rounded-full text-xs font-bold shrink-0 transition-all cursor-pointer ${
               selectedGroup === "all"
-                ? "bg-rose-600 text-white shadow-sm"
+                ? "bg-rose-600 text-white shadow-xs"
                 : "bg-muted text-muted-foreground hover:text-foreground"
             }`}
           >
             সব গ্রুপ
           </button>
-          {BLOOD_GROUPS.map((bg) => (
-            <button
-              type="button"
-              role="button"
-              key={bg}
-              aria-pressed={selectedGroup === bg}
-              onClick={() => setSelectedGroup(bg)}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold shrink-0 transition-all cursor-pointer ${
-                selectedGroup === bg
-                  ? "bg-rose-600 text-white shadow-sm"
-                  : "bg-muted text-muted-foreground hover:text-foreground border border-border/50"
-              }`}
-            >
-              {bg}
-            </button>
-          ))}
+          {BLOOD_GROUPS.map((bg) => {
+            const isSelected = selectedGroup === bg;
+            return (
+              <button
+                type="button"
+                role="button"
+                key={bg}
+                aria-pressed={isSelected}
+                onClick={() => handleGroupSelect(bg)}
+                className={`px-3 py-1.5 rounded-full text-xs font-bold shrink-0 transition-all cursor-pointer ${
+                  isSelected
+                    ? "bg-rose-600 text-white shadow-xs"
+                    : "bg-muted text-muted-foreground hover:text-foreground border border-border/50"
+                }`}
+              >
+                {bg}
+              </button>
+            );
+          })}
         </div>
 
-        {/* Upazila Filter & Search */}
+        {/* Upazila Filter & Search Input */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
             <Input
+              type="search"
               aria-label="নাম বা ফোন দিয়ে রক্তদাতা খুঁজুন"
               placeholder="নাম বা ফোন দিয়ে রক্তদাতা খুঁজুন..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 bg-background"
+              className="pl-9 pr-9 bg-background"
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={handleClearSearch}
+                aria-label="সার্চ মুছুন"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer p-0.5 rounded-full hover:bg-muted transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </div>
           <select
             aria-label="উপজেলা অনুযায়ী রক্তদাতা ফিল্টার"
             value={selectedUpazila}
-            onChange={(e) => setSelectedUpazila(e.target.value)}
+            onChange={(e) => handleUpazilaChange(e.target.value)}
             className="h-10 px-3 rounded-lg border border-border bg-background text-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/20 cursor-pointer"
           >
             {UPAZILAS_FENI.map((u) => (
@@ -126,35 +244,98 @@ export function BloodDonorDirectory({ initialBloodDonors = [] }: BloodDonorDirec
         </div>
       </div>
 
-      {/* Donors Count Summary */}
-      <div className="flex items-center justify-between px-1">
-        <p className="text-xs font-semibold text-muted-foreground">
-          মোট {filteredDonors.length} জন সক্রিয় রক্তদাতা প্রদর্শিত
-        </p>
+      {/* Donors Count Summary & Loading Indicator */}
+      <div className="flex items-center justify-between px-1 text-xs">
+        <div className="flex items-center gap-2 text-muted-foreground font-semibold">
+          <span>
+            মোট {toBanglaNums(totalItems)} জন সক্রিয় রক্তদাতার মধ্যে{" "}
+            {totalItems > 0 ? (
+              <>
+                {toBanglaNums(startItem)}–{toBanglaNums(endItem)} জন প্রদর্শিত
+              </>
+            ) : (
+              "০ জন"
+            )}
+          </span>
+          {isPending && (
+            <span className="inline-flex items-center gap-1 text-rose-600 dark:text-rose-400 font-bold animate-pulse">
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              <span>লোড হচ্ছে...</span>
+            </span>
+          )}
+        </div>
+
+        {isFiltered && (
+          <button
+            type="button"
+            onClick={handleResetFilters}
+            className="text-rose-600 dark:text-rose-400 hover:underline font-bold cursor-pointer"
+          >
+            ফিল্টার রিসেট করুন
+          </button>
+        )}
       </div>
 
       {/* Donors Grid */}
-      {filteredDonors.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
-          {filteredDonors.map((donor) => {
-            const upazilaObj = UPAZILAS_FENI.find((u) => u.id === donor.upazila);
-            const areaLabel = upazilaObj?.nameBn || "ফেনী";
+      <div
+        className={`transition-opacity duration-200 ${
+          isPending ? "opacity-60 pointer-events-none" : "opacity-100"
+        }`}
+      >
+        {donors.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
+            {donors.map((donor) => {
+              const upazilaObj = UPAZILAS_FENI.find(
+                (u) => u.id === donor.upazila || u.nameBn === donor.upazila
+              );
+              const areaLabel = upazilaObj?.nameBn || donor.upazila || "ফেনী";
 
-            return (
-              <BloodDonorCard
-                key={donor.id}
-                donor={donor}
-                areaLabel={areaLabel}
-              />
-            );
-          })}
-        </div>
-      ) : (
-        <div className="p-8 text-center bg-muted/40 rounded-2xl border border-dashed border-border space-y-2">
-          <Heart className="h-8 w-8 text-muted-foreground mx-auto" />
-          <p className="text-sm font-semibold text-muted-foreground">
-            এই মুহূর্তে নির্বাচিত ফিল্টারের কোনো রক্তদাতা পাওয়া যায়নি।
-          </p>
+              return (
+                <BloodDonorCard
+                  key={donor.id}
+                  donor={donor}
+                  areaLabel={areaLabel}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <div className="p-8 sm:p-12 text-center bg-muted/40 rounded-2xl border border-dashed border-border space-y-3">
+            <Heart className="h-8 w-8 text-rose-500/60 mx-auto" />
+            <h4 className="text-base font-bold text-foreground font-heading">
+              কোনো রক্তদাতা পাওয়া যায়নি
+            </h4>
+            <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto">
+              এই মুহূর্তে নির্বাচিত ফিল্টারের কোনো সক্রিয় রক্তদাতা পাওয়া যায়নি। ভিন্ন রক্তের গ্রুপ বা উপজেলা নির্বাচন করে আবার চেষ্টা করুন।
+            </p>
+            <div className="pt-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleResetFilters}
+                className="rounded-xl border-border/80 text-xs font-semibold cursor-pointer"
+              >
+                সকল রক্তদাতা দেখুন
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Server-Side Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="pt-2">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            pageSize={pageSize}
+            totalItems={totalItems}
+            getPageUrl={(page) => createUrl({ page })}
+            onPageChange={(page) => navigate({ page }, true)}
+            disabled={isPending}
+            itemLabel="জন রক্তদাতা"
+            className="rounded-2xl border border-border/70 bg-card shadow-xs"
+          />
         </div>
       )}
 

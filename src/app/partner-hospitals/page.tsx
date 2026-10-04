@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import PartnerDirectory from "@/components/ui/PartnerDirectory";
 import PartnerHospitalsGuide from "@/components/partner-hospitals/PartnerHospitalsGuide";
 import PartnerHospitalsFAQ from "@/components/partner-hospitals/PartnerHospitalsFAQ";
@@ -7,9 +6,9 @@ import JsonLd from "@/components/seo/JsonLd";
 import { getPartnersAction } from "@/app/actions/partnerActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 import { Sparkles, ShieldCheck, Tag, Pill, MapPin } from "lucide-react";
-import { VALID_PARTNER_CATEGORY_SLUGS } from "@/data/partnerCategorySeoData";
 import { generatePartnerHospitalsHubJsonLd } from "./utils/hospitalJsonLd";
 
+export const dynamic = "force-static";
 export const revalidate = false; // Pure static SSG (on-demand revalidated on partner updates)
 
 const PAGE_TITLE = "ফেনী সদর হাসপাতাল ও ডায়াগনস্টিক সেন্টার তালিকা | ১০-৩০% মেম্বার ছাড়";
@@ -91,18 +90,7 @@ export async function generateMetadata() {
   };
 }
 
-interface PartnerHospitalsPageProps {
-  searchParams?: Promise<{ category?: string; upazila?: string }>;
-}
-
-export default async function PartnerHospitalsPage({ searchParams }: PartnerHospitalsPageProps) {
-  const resolvedSearchParams = searchParams ? await searchParams : {};
-  const requestedCat = resolvedSearchParams.category?.trim().toLowerCase();
-
-  if (requestedCat && (VALID_PARTNER_CATEGORY_SLUGS as readonly string[]).includes(requestedCat)) {
-    redirect(`/partner-hospitals/category/${requestedCat}`);
-  }
-
+export default async function PartnerHospitalsPage() {
   // Fetch partners server-side (cached with ISR)
   const allPartners = await getPartnersAction();
 

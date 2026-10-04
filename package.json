@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
+    "db:pull-remote": "npx tsx scripts/pull-db-from-supabase.ts",
     "llms:generate": "npx tsx scripts/generate-llms-txt.ts",
     "seo:audit": "node scripts/verify-sitemap.mjs",
     "audit:geo": "node scripts/audit-seo-aeo-geo.mjs"

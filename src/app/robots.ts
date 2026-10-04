@@ -61,15 +61,23 @@ const AI_AND_SEARCH_BOTS = [
   "Google-Extended",
   "Applebot-Extended",
   "anthropic-ai",
-  "CCBot",
-  "Bytespider",
-  "Amazonbot",
   "DuckAssistBot",
   "GrokBot",
   "xAI-bot",
   "cohere-ai",
   "facebookexternalhit",
   "Meta-ExternalAgent",
+];
+
+const AGGRESSIVE_SCRAPERS = [
+  "Bytespider",
+  "CCBot",
+  "Amazonbot",
+  "SemrushBot",
+  "AhrefsBot",
+  "MJ12bot",
+  "DotBot",
+  "PetalBot",
 ];
 
 export default function robots(): MetadataRoute.Robots {
@@ -82,6 +90,10 @@ export default function robots(): MetadataRoute.Robots {
         allow: ALLOWED_PATHS,
         disallow: DISALLOWED_PATHS,
       },
+      ...AGGRESSIVE_SCRAPERS.map((bot) => ({
+        userAgent: bot,
+        disallow: ["/"],
+      })),
       ...AI_AND_SEARCH_BOTS.map((bot) => ({
         userAgent: bot,
         allow: ALLOWED_PATHS,

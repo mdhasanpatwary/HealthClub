@@ -38,6 +38,13 @@ const matchRoute = (path: string, route: string) => {
 export async function proxy(req: NextRequest) {
   try {
     const path = req.nextUrl.pathname;
+
+    // Reject aggressive, non-search scraping bots to preserve Vercel Active CPU quota
+    const userAgent = req.headers.get("user-agent") || "";
+    if (/(Bytespider|MJ12bot|DotBot|SemrushBot|AhrefsBot)/i.test(userAgent)) {
+      return new NextResponse("Access restricted for automated scrapers", { status: 403 });
+    }
+
     const requestHeaders = new Headers(req.headers);
     requestHeaders.set("x-pathname", path);
 
@@ -74,6 +81,28 @@ export async function proxy(req: NextRequest) {
         if (upzSeo) {
           return NextResponse.redirect(new URL(`/consultants/location/${upzSeo.slug}`, req.nextUrl), 308);
         }
+      }
+    }
+
+    // Direct legacy /partner-hospitals?category=... query parameter to dedicated canonical category route
+    if (path === "/partner-hospitals") {
+      const cat = req.nextUrl.searchParams.get("category");
+      if (cat && ["hospital", "diagnostic", "pharmacy"].includes(cat.trim().toLowerCase())) {
+        return NextResponse.redirect(new URL(`/partner-hospitals/category/${cat.trim().toLowerCase()}`, req.nextUrl), 308);
+      }
+    }
+
+    // Direct legacy /emergency?tab=... query parameter to dedicated sub-routes
+    if (path === "/emergency") {
+      const tab = req.nextUrl.searchParams.get("tab");
+      if (tab === "hotlines") {
+        return NextResponse.redirect(new URL("/emergency/hotlines", req.nextUrl), 308);
+      }
+      if (tab === "ambulances") {
+        return NextResponse.redirect(new URL("/emergency/ambulances", req.nextUrl), 308);
+      }
+      if (tab === "donors") {
+        return NextResponse.redirect(new URL("/emergency/blood-donors", req.nextUrl), 308);
       }
     }
 
@@ -167,7 +196,9 @@ export async function proxy(req: NextRequest) {
   }
 }
 
-// Run proxy on all routes except static assets and API routes
+// Run proxy ONLY on actual application navigation routes; exclude all static assets, media, fonts, and files
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.png$|.*\\.jpg$|.*\\.svg$).*)"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon\\.ico|sw\\.js|manifest\\.webmanifest|robots\\.txt|sitemap\\.xml|llms\\.txt|llms-full\\.txt|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff|woff2|ttf|eot|css|js|map|txt|xml|json)$).*)",
+  ],
 };

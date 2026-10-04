@@ -78,6 +78,25 @@ const nextConfig: NextConfig = {
           { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
         ],
       },
+      // Public directory Edge CDN caching to prevent Vercel Fluid Active CPU exhaustion
+      {
+        source: "/blog",
+        headers: [
+          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+        ],
+      },
+      {
+        source: "/emergency/ambulances",
+        headers: [
+          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+        ],
+      },
+      {
+        source: "/emergency/blood-donors",
+        headers: [
+          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+        ],
+      },
       // Security headers for all application routes (allows camera for self domain QR scanning)
       {
         source: "/:path*",

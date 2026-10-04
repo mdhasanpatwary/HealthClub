@@ -22,6 +22,8 @@ import { OrderButton } from "../components/OrderButton";
 import { ProductCard } from "../components/ProductCard";
 import { SITE_URL } from "@/lib/siteConfig";
 import { toBanglaNums } from "@/lib/utils";
+import JsonLd from "@/components/seo/JsonLd";
+import { getProductJsonLd } from "@/lib/seo/productSchema";
 
 export const revalidate = false; // Pure static SSG (zero ISR writes, on-demand revalidation only)
 
@@ -96,35 +98,12 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     .filter((p) => p.id !== product.id)
     .slice(0, 3);
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.nameBn,
-    alternateName: product.nameEn,
-    image: product.imageUrl,
-    description: product.descriptionBn,
-    sku: product.slug,
-    offers: {
-      "@type": "Offer",
-      url: `${SITE_URL}/shop/${product.slug}`,
-      priceCurrency: "BDT",
-      price: product.price,
-      availability: product.inStock
-        ? "https://schema.org/InStock"
-        : "https://schema.org/OutOfStock",
-      seller: {
-        "@type": "Organization",
-        name: "Health Club",
-      },
-    },
-  };
+  // Standardized Google-compliant Merchant listings Schema.org Product
+  const jsonLd = getProductJsonLd(product);
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
 
       <div className="bg-muted/30 min-h-screen py-6 sm:py-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-8">

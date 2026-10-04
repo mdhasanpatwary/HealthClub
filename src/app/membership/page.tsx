@@ -7,6 +7,10 @@ import { LazyTestimonialsSection } from "@/components/landing/LazyLandingCompone
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 import WhatsAppAssistanceCard from "@/components/common/WhatsAppAssistanceCard";
+import {
+  getDigitalMerchantReturnPolicy,
+  getDigitalShippingDetails,
+} from "@/lib/seo/productSchema";
 
 export const revalidate = false; // Pure static SSG (zero ISR writes)
 
@@ -48,40 +52,8 @@ export default async function MembershipPage() {
     { title: "প্রাইওরিটি স্বাস্থ্য সেবা", desc: "প্রিমিয়াম সদস্যদের জন্য রয়েছে সর্বোচ্চ ১৫-৩০% ছাড় এবং চেম্বার ও সিরিয়ালে অগ্রাধিকার সুবিধা।", gradient: "from-amber-500 to-orange-600" }
   ];
 
-  const merchantReturnPolicy = {
-    "@type": "MerchantReturnPolicy",
-    "applicableCountry": "BD",
-    "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
-    "merchantReturnLink": `${SITE_URL}/terms-conditions`
-  };
-
-  const digitalShippingDetails = {
-    "@type": "OfferShippingDetails",
-    "shippingRate": {
-      "@type": "MonetaryAmount",
-      "value": "0",
-      "currency": "BDT"
-    },
-    "shippingDestination": {
-      "@type": "DefinedRegion",
-      "addressCountry": "BD"
-    },
-    "deliveryTime": {
-      "@type": "ShippingDeliveryTime",
-      "handlingTime": {
-        "@type": "QuantitativeValue",
-        "minValue": 0,
-        "maxValue": 0,
-        "unitCode": "DAY"
-      },
-      "transitTime": {
-        "@type": "QuantitativeValue",
-        "minValue": 0,
-        "maxValue": 0,
-        "unitCode": "DAY"
-      }
-    }
-  };
+  const merchantReturnPolicy = getDigitalMerchantReturnPolicy();
+  const digitalShippingDetails = getDigitalShippingDetails();
 
   const jsonLdData = [
     {
@@ -113,6 +85,7 @@ export default async function MembershipPage() {
       ],
       "url": `${SITE_URL}/membership`,
       "sku": "HC-MEMBERSHIP-CARD",
+      "mpn": "HC-MEMBERSHIP-CARD",
       "brand": {
         "@type": "Brand",
         "name": "Health Club"

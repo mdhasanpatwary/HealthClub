@@ -25,6 +25,9 @@ function revalidateEmergencyCaches() {
   updateTag("admin-stats");
   revalidateTag(EMERGENCY_TAG, "max");
   revalidatePath("/emergency");
+  revalidatePath("/emergency/hotlines");
+  revalidatePath("/emergency/ambulances");
+  revalidatePath("/emergency/blood-donors");
   revalidatePath("/admin");
   revalidatePath("/admin/emergency");
 }

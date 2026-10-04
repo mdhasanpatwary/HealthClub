@@ -15,12 +15,29 @@ export const runtime = "nodejs";
  * transactions, and administrative alerts.
  */
 export async function GET(request: Request) {
-  const session = await getSessionUser();
+  // In production serverless environments (Vercel), holding open streaming SSE connections
+  // exhausts active CPU time and duration limits. Realtime is managed via Supabase WebSockets.
+  if (process.env.NODE_ENV === "production") {
+    return new Response(
+      JSON.stringify({ error: "SSE realtime is disabled in production serverless. Use Supabase WebSockets." }),
+      {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
 
-  // If no session exists, allow connection but only send public pings
-  const role = session?.role;
-  const userId = session?.userId;
-  const partnerId = session?.partnerId || (role === "partner" ? userId : undefined);
+  const session = await getSessionUser();
+  if (!session?.userId) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const role = session.role;
+  const userId = session.userId;
+  const partnerId = session.partnerId || (role === "partner" ? userId : undefined);
 
   const encoder = new TextEncoder();
 

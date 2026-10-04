@@ -6,7 +6,6 @@ import EmergencyProtocol from "@/components/emergency/EmergencyProtocol";
 import EmergencyFAQ from "@/components/emergency/EmergencyFAQ";
 import CommunityNetworkCTA from "@/components/common/CommunityNetworkCTA";
 import Link from "next/link";
-import { permanentRedirect } from "next/navigation";
 import {
   Siren,
   ShieldCheck,
@@ -21,6 +20,7 @@ import { getEmergencyDataAction } from "@/app/actions/emergencyAdminActions";
 import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
+export const dynamic = "force-static";
 export const revalidate = false; // Pure static SSG (on-demand revalidated on emergency updates)
 
 export async function generateMetadata() {
@@ -86,22 +86,7 @@ export async function generateMetadata() {
   };
 }
 
-interface EmergencyPageProps {
-  searchParams?: Promise<{ tab?: string }>;
-}
-
-export default async function EmergencyPage({ searchParams }: EmergencyPageProps) {
-  const resolvedSearchParams = searchParams ? await searchParams : undefined;
-  const tab = resolvedSearchParams?.tab;
-
-  if (tab === "hotlines") {
-    permanentRedirect("/emergency/hotlines");
-  } else if (tab === "ambulances") {
-    permanentRedirect("/emergency/ambulances");
-  } else if (tab === "donors") {
-    permanentRedirect("/emergency/blood-donors");
-  }
-
+export default async function EmergencyPage() {
   const [{ bloodDonors, ambulances, hotlines }, contactSettings] = await Promise.all([
     getEmergencyDataAction(),
     getCachedContactSettings(),

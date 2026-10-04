@@ -7,15 +7,55 @@ import { Heart, ShieldCheck, PhoneCall, Droplets, UserCheck, HeartHandshake } fr
 import { getEmergencyDataAction } from "@/app/actions/emergencyAdminActions";
 import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
+import { toBanglaNums } from "@/lib/utils";
+import { UPAZILAS_FENI } from "@/data/emergencyData";
+import {
+  paginateBloodDonors,
+  normalizeBloodGroup,
+  DEFAULT_DONOR_PAGE_SIZE,
+} from "../utils/bloodDonorPagination";
 
-export const revalidate = false; // Pure static SSG (on-demand revalidated on emergency updates)
+export const revalidate = false; // Pure static SSG on base page, on-demand revalidated on emergency updates
 
-export async function generateMetadata() {
+interface EmergencyBloodDonorsPageProps {
+  searchParams?: Promise<{
+    page?: string;
+    group?: string;
+    bloodGroup?: string;
+    upazila?: string;
+    search?: string;
+  }>;
+}
+
+export async function generateMetadata({ searchParams }: EmergencyBloodDonorsPageProps) {
+  const resolvedParams = (await searchParams) || {};
+  const currentPage = Math.max(1, parseInt(resolvedParams.page || "1", 10) || 1);
+  const selectedGroup = normalizeBloodGroup(resolvedParams.bloodGroup || resolvedParams.group);
+  const selectedUpazila = (resolvedParams.upazila || "all").trim();
+  const searchQuery = (resolvedParams.search || "").trim();
+
+  const upazilaObj = UPAZILAS_FENI.find((u) => u.id === selectedUpazila);
+  const upazilaNameBn = upazilaObj && upazilaObj.id !== "all" ? ` ${upazilaObj.nameBn}` : "";
+  const groupNameBn = selectedGroup !== "all" ? ` (${selectedGroup} রক্তের গ্রুপ)` : "";
+  const pageSuffix = currentPage > 1 ? ` (পৃষ্ঠা ${toBanglaNums(currentPage)})` : "";
+
+  const title = `ফেনী${upazilaNameBn} রক্তদাতা ডিরেক্টরি${groupNameBn}${pageSuffix} | হেলথ ক্লাব`;
+  const description = `ফেনীর${upazilaNameBn} ভেরিফাইড স্বেচ্ছাসেবী রক্তদাতা ডিরেক্টরি${groupNameBn}: A+, B+, O+, AB+ সহ সকল গ্রুপের রক্তদাতাদের সরাসরি মোবাইল ও WhatsApp নম্বর${pageSuffix}।`;
+
+  const queryParams = new URLSearchParams();
+  if (currentPage > 1) queryParams.set("page", String(currentPage));
+  if (selectedGroup !== "all") queryParams.set("group", selectedGroup);
+  if (selectedUpazila !== "all") queryParams.set("upazila", selectedUpazila);
+
+  const canonicalUrl = `${SITE_URL}/emergency/blood-donors${
+    queryParams.toString() ? `?${queryParams.toString()}` : ""
+  }`;
+
   return {
-    title: "ফেনী রক্তদাতা ডিরেক্টরি ও রক্তের গ্রুপ অনুযায়ী স্বেচ্ছাসেবী তালিকা",
-    description: "ফেনীর ভেরিফাইড স্বেচ্ছাসেবী রক্তদাতা ডিরেক্টরি: A+, B+, O+, AB+ সহ সকল রক্তের গ্রুপ ও ফেনী সদর, সোনাগাজী, দাগনভূঞা উপজেলার রক্তদাতাদের সরাসরি মোবাইল ও WhatsApp নম্বর।",
+    title,
+    description,
     alternates: {
-      canonical: `${SITE_URL}/emergency/blood-donors`,
+      canonical: canonicalUrl,
     },
     keywords: [
       "feni blood donor",
@@ -34,24 +74,24 @@ export async function generateMetadata() {
       "ব্লাড ডোনার ফেনী",
     ],
     openGraph: {
-      title: "ফেনী রক্তদাতা ও ব্লাড ব্যাংক ডিরেক্টরি - হেলথ ক্লাব",
-      description: "রক্তের গ্রুপ ও উপজেলা অনুযায়ী ফেনীর সক্রিয় স্বেচ্ছাসেবী রক্তদাতাদের সরাসরি মোবাইল ও হোয়াটসঅ্যাপ নম্বর থেকে যোগাযোগ করুন।",
-      url: `${SITE_URL}/emergency/blood-donors`,
+      title,
+      description,
+      url: canonicalUrl,
       siteName: "হেলথ ক্লাব (Health Club)",
       type: "website",
       images: DEFAULT_OG_IMAGES,
     },
     twitter: {
       card: "summary_large_image",
-      title: "ফেনী রক্তদাতা ডিরেক্টরি - হেলথ ক্লাব",
-      description: "ফেনীর সকল রক্তের গ্রুপের ভেরিফাইড রক্তদাতাদের সরাসরি যোগাযোগ নম্বর।",
+      title,
+      description,
       images: DEFAULT_TWITTER_IMAGES,
     },
     robots: {
-      index: true,
+      index: !searchQuery,
       follow: true,
       googleBot: {
-        index: true,
+        index: !searchQuery,
         follow: true,
         "max-video-preview": -1,
         "max-image-preview": "large",
@@ -61,7 +101,15 @@ export async function generateMetadata() {
   };
 }
 
-export default async function EmergencyBloodDonorsPage() {
+export default async function EmergencyBloodDonorsPage({
+  searchParams,
+}: EmergencyBloodDonorsPageProps) {
+  const resolvedParams = (await searchParams) || {};
+  const currentPage = Math.max(1, parseInt(resolvedParams.page || "1", 10) || 1);
+  const selectedGroup = normalizeBloodGroup(resolvedParams.bloodGroup || resolvedParams.group);
+  const selectedUpazila = (resolvedParams.upazila || "all").trim();
+  const searchQuery = (resolvedParams.search || "").trim();
+
   const [{ bloodDonors }, contactSettings] = await Promise.all([
     getEmergencyDataAction(),
     getCachedContactSettings(),
@@ -69,8 +117,27 @@ export default async function EmergencyBloodDonorsPage() {
 
   const approvedDonors = bloodDonors.filter((d) => d.status !== "pending");
 
+  const paginatedResult = paginateBloodDonors(approvedDonors, {
+    page: currentPage,
+    pageSize: DEFAULT_DONOR_PAGE_SIZE,
+    group: selectedGroup,
+    upazila: selectedUpazila,
+    search: searchQuery,
+  });
+
   const rawHotline = contactSettings.hotline.replace(/[^0-9]/g, "");
   const formattedTel = `+880${rawHotline.replace(/^(880|88|0)/, "")}`;
+
+  const queryParams = new URLSearchParams();
+  if (paginatedResult.currentPage > 1) {
+    queryParams.set("page", String(paginatedResult.currentPage));
+  }
+  if (selectedGroup !== "all") queryParams.set("group", selectedGroup);
+  if (selectedUpazila !== "all") queryParams.set("upazila", selectedUpazila);
+
+  const pageCanonicalUrl = `${SITE_URL}/emergency/blood-donors${
+    queryParams.toString() ? `?${queryParams.toString()}` : ""
+  }`;
 
   const bloodDonorFaqs: FAQItem[] = [
     {
@@ -117,7 +184,7 @@ export default async function EmergencyBloodDonorsPage() {
           "@type": "ListItem",
           position: 3,
           name: "রক্তদাতা ডিরেক্টরি",
-          item: `${SITE_URL}/emergency/blood-donors`,
+          item: pageCanonicalUrl,
         },
       ],
     },
@@ -127,7 +194,7 @@ export default async function EmergencyBloodDonorsPage() {
       "@context": "https://schema.org",
       "@type": ["EmergencyService", "MedicalBusiness"],
       name: "ফেনী স্বেচ্ছাসেবী রক্তদাতা ডিরেক্টরি ও ব্লাড ডোনার নেটওয়ার্ক",
-      url: `${SITE_URL}/emergency/blood-donors`,
+      url: pageCanonicalUrl,
       logo: `${SITE_URL}/images/member-card-logo.webp`,
       description: "ফেনীর সকল উপজেলার রক্তের গ্রুপ অনুযায়ী যাচাইকৃত রক্তদাতাদের সরাসরি মোবাইল ও হোয়াটসঅ্যাপ নম্বর ডিরেক্টরি।",
       areaServed: [
@@ -226,12 +293,21 @@ export default async function EmergencyBloodDonorsPage() {
         {/* Navigation Tabs */}
         <EmergencyTabsNav activeTab="donors" />
 
-        {/* Blood Donors Directory */}
+        {/* Blood Donors Directory with Server-Side Pagination */}
         <section aria-labelledby="blood-donors-directory-heading" className="space-y-4">
           <h2 id="blood-donors-directory-heading" className="sr-only">
             ফেনী রক্তদাতা তালিকা ও রক্তের গ্রুপ ফিল্টার
           </h2>
-          <BloodDonorDirectory initialBloodDonors={approvedDonors} />
+          <BloodDonorDirectory
+            donors={paginatedResult.donors}
+            totalItems={paginatedResult.totalItems}
+            totalPages={paginatedResult.totalPages}
+            currentPage={paginatedResult.currentPage}
+            pageSize={paginatedResult.pageSize}
+            currentGroup={selectedGroup}
+            currentUpazila={selectedUpazila}
+            currentSearch={searchQuery}
+          />
         </section>
 
         {/* Specialized Blood Donor FAQ */}
