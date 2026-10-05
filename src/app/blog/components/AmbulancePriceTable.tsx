@@ -1,5 +1,6 @@
 import { AmbulancePackagePriceItem } from "@/types/ambulanceBlog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { toBanglaNums } from "@/lib/utils";
 
 interface AmbulancePriceTableProps {
   pricingData: {
@@ -7,10 +8,12 @@ interface AmbulancePriceTableProps {
     subtitleBn: string;
     packages: AmbulancePackagePriceItem[];
   };
+  pricingNum?: number;
 }
 
 export function AmbulancePriceTable({
   pricingData,
+  pricingNum,
 }: AmbulancePriceTableProps) {
   const items = pricingData.packages.map((item) => ({
     name: item.procedureOrTestNameBn,
@@ -19,6 +22,9 @@ export function AmbulancePriceTable({
     durationOrTurnaround: item.durationOrTurnaroundBn,
     discountText: "প্রমিত পাবলিক ভাড়া",
   }));
+
+  const cleanTitle = pricingData.titleBn.replace(/^[০-৯১-৯\d]+[\.\:\-—\s]+/, "").trim();
+  const numStr = pricingNum ? `${toBanglaNums(pricingNum)}. ` : "";
 
   return (
     <div className="space-y-3">
@@ -33,7 +39,7 @@ export function AmbulancePriceTable({
 
       <BlogPriceTable
         id="ambulance-price-guide"
-        title={pricingData.titleBn}
+        title={`${numStr}${cleanTitle}`}
         subtitle={pricingData.subtitleBn}
         items={items}
         columnHeaders={{

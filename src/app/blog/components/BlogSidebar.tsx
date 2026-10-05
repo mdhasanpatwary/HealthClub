@@ -36,6 +36,7 @@ interface BlogSidebarProps {
   pharmacies?: import("@/types/pharmacyBlog").PharmacyReviewItem[];
   bloodBanks?: import("@/types/bloodBankBlog").BloodBankReviewItem[];
   ambulances?: import("@/types/ambulanceBlog").AmbulanceReviewItem[];
+  bookingGuideTitle?: string;
 }
 
 export function BlogSidebar({
@@ -68,6 +69,7 @@ export function BlogSidebar({
   hasOxygenPricing = false,
   hasDengueTyphoidPricing = false,
   hasUpazilaPricing = false,
+  bookingGuideTitle,
   pharmacies,
   bloodBanks,
   ambulances,
@@ -109,6 +111,7 @@ export function BlogSidebar({
           hasOxygenPricing={hasOxygenPricing}
           hasDengueTyphoidPricing={hasDengueTyphoidPricing}
           hasUpazilaPricing={hasUpazilaPricing}
+          bookingGuideTitle={bookingGuideTitle}
           currentSlug={currentSlug}
         />
 

@@ -1,5 +1,6 @@
 import { MaternityCarePackageItem } from "@/types/blog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { formatNumberedTitle } from "@/app/blog/utils/blogAeoHeadingUtils";
 
 interface MaternityPriceTableProps {
   pricingData: {
@@ -7,10 +8,12 @@ interface MaternityPriceTableProps {
     subtitleBn: string;
     packages: MaternityCarePackageItem[];
   };
+  pricingNum?: number;
 }
 
 export function MaternityPriceTable({
   pricingData,
+  pricingNum,
 }: MaternityPriceTableProps) {
 
   const items = pricingData.packages.map((item) => ({
@@ -24,8 +27,7 @@ export function MaternityPriceTable({
   return (
     <BlogPriceTable
       id="maternity-price-guide"
-      title={pricingData.titleBn
-      }
+      title={formatNumberedTitle(pricingData.titleBn, pricingNum)}
       subtitle={"ফেনীর বিভিন্ন প্রাইভেট ও পার্টনার হাসপাতালে স্বাভাবিক ও সিজারিয়ান প্রসবের সাধারণ বাজারদর এবং হেলথ ক্লাব মেম্বারদের জন্য ১০-৩০% ডিসকাউন্ট সুবিধা।"
       }
       items={items}

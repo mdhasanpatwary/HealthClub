@@ -1,12 +1,15 @@
 import { DengueTyphoidPricingData } from "@/types/dengueTyphoidBlog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { formatNumberedTitle } from "@/app/blog/utils/blogAeoHeadingUtils";
 
 interface DengueTyphoidPriceTableProps {
   pricingData: DengueTyphoidPricingData;
+  pricingNum?: number;
 }
 
 export function DengueTyphoidPriceTable({
   pricingData,
+  pricingNum,
 }: DengueTyphoidPriceTableProps) {
   const items = pricingData.packages.map((item) => ({
     name: item.procedureOrServiceNameBn,
@@ -19,7 +22,7 @@ export function DengueTyphoidPriceTable({
   return (
     <BlogPriceTable
       id="dengue-typhoid-price-guide"
-      title={pricingData.titleBn}
+      title={formatNumberedTitle(pricingData.titleBn, pricingNum)}
       subtitle="ফেনীর শীর্ষ ডায়াগনস্টিক ও বেসরকারি হাসপাতালে ডেঙ্গু এনএস১, সিবিসি প্লাটিলেট কাউন্ট, টাইফয়েড রক্ত পরীক্ষা, কালচার ও ইনডোর ওয়ার্ড বেডের সাধারণ ফি এবং হেলথ ক্লাব মেম্বার ছাড়।"
       items={items}
       columnHeaders={{

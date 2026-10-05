@@ -24,10 +24,16 @@ import {
 
 interface BlogSpecializedSectionsProps {
   post: BlogPost;
+  matrixNum?: number;
+  reviewsNum?: number;
+  pricingNum?: number;
 }
 
 export function BlogSpecializedSections({
   post,
+  matrixNum,
+  reviewsNum,
+  pricingNum,
 }: BlogSpecializedSectionsProps) {
   const isUpazila =
     post.slug.includes("healthcare-guide") || post.slug.includes("patient-guide");
@@ -37,13 +43,16 @@ export function BlogSpecializedSections({
   const isOxygen = post.slug === "feni-oxygen-cylinder-refill-and-home-rent-guide";
   const isDengueTyphoid = post.slug === "dengue-and-typhoid-test-cost-management-guide-feni";
 
+  const matrixNumStr = `${toBanglaNums(matrixNum || 1)}. `;
+  const reviewsNumStr = `${toBanglaNums(reviewsNum || 2)}. `;
+
   return (
     <>
       {/* Diagnostic Center Comparison Table */}
       {post.diagnosticComparisonTable && post.diagnosticComparisonTable.length > 0 && (
         <section id="comparison-matrix" className="scroll-mt-24 space-y-4">
           <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-            {`২. ${formatAeoMatrixHeading(getDiagnosticTocTitles(post.slug).matrixTitle)}`}
+            {`${matrixNumStr}${formatAeoMatrixHeading(getDiagnosticTocTitles(post.slug).matrixTitle)}`}
           </h2>
           <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
             {getMatrixDirectAnswer(post)}
@@ -57,7 +66,7 @@ export function BlogSpecializedSections({
         <section id="diagnostic-reviews" className="scroll-mt-24 space-y-6">
           <div>
             <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-              {`৩. ${formatAeoReviewsHeading(getDiagnosticTocTitles(post.slug).reviewsTitle)}`}
+              {`${reviewsNumStr}${formatAeoReviewsHeading(getDiagnosticTocTitles(post.slug).reviewsTitle)}`}
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">
               {getDiagnosticReviewsSubtitle(post.slug)}
@@ -80,10 +89,12 @@ export function BlogSpecializedSections({
         (post.slug === "feni-medical-test-price-list" ? (
           <MedicalTestPriceTable
             pricingData={post.diagnosticTestPricingBn}
+            pricingNum={pricingNum}
           />
         ) : (
           <DiagnosticPriceTable
             pricingData={post.diagnosticTestPricingBn}
+            pricingNum={pricingNum}
           />
         ))}
 
@@ -91,7 +102,7 @@ export function BlogSpecializedSections({
       {post.dentalComparisonTable && post.dentalComparisonTable.length > 0 && (
         <section id="comparison-matrix" className="scroll-mt-24 space-y-4">
           <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-            ২. কোথায় করাবেন: একনজরে ফেনীর সেরা ১০ ডেন্টাল ক্লিনিকের সুবিধা তুলনা
+            {`${matrixNumStr}কোথায় করাবেন: একনজরে ফেনীর সেরা ১০ ডেন্টাল ক্লিনিকের সুবিধা তুলনা`}
           </h2>
           <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
             ফেনী সদরে বিশ্বস্ত ও আধুনিক দাঁতের চিকিৎসার জন্য ডিজিটাল আরভিজি এক্স-রে, অটোকেভ জীবাণুমুক্তকরণ ও বিশেষজ্ঞ ডেন্টাল সার্জন সংবলিত শীর্ষ ক্লিনিকগুলোর তুলনামূলক তালিকা নিচে দেওয়া হলো।
@@ -105,7 +116,7 @@ export function BlogSpecializedSections({
         <section id="dental-reviews" className="scroll-mt-24 space-y-6">
           <div>
             <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-              ৩. কোথায় সেবা পাবেন: ফেনীর সেরা ১০টি ডেন্টাল ক্লিনিকের পূর্ণাঙ্গ পর্যালোচনা
+              {`${reviewsNumStr}কোথায় সেবা পাবেন: ফেনীর সেরা ১০টি ডেন্টাল ক্লিনিকের পূর্ণাঙ্গ পর্যালোচনা`}
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">
               প্রতিটি ক্লিনিকের আধুনিক প্রযুক্তি, স্কেলিং ও রুট ক্যানেল সুবিধা, চেম্বার শিডিউল এবং হেলথ ক্লাব মেম্বারদের জন্য নির্ধারিত ১০-৩০% ছাড়ের বিস্তারিত তথ্য।
@@ -127,7 +138,7 @@ export function BlogSpecializedSections({
       {post.physiotherapyComparisonTable && post.physiotherapyComparisonTable.length > 0 && (
         <section id="comparison-matrix" className="scroll-mt-24 space-y-4">
           <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-            ২. কোথায় করাবেন: একনজরে ফেনীর সেরা ফিজিওথেরাপি সেন্টারের সুবিধা তুলনা
+            {`${matrixNumStr}কোথায় করাবেন: একনজরে ফেনীর সেরা ফিজিওথেরাপি সেন্টারের সুবিধা তুলনা`}
           </h2>
           <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
             স্ট্রোক রিহ্যাব, কোমর ও ঘাড় ব্যথা নিরাময়ে আধুনিক ইলেকট্রোথেরাপি ও ফিজিওথেরাপিস্ট পরিচালিত ফেনীর শীর্ষ সেন্টারের তুলনা নিচে তুলে ধরা হলো।
@@ -141,7 +152,7 @@ export function BlogSpecializedSections({
         <section id="physiotherapy-reviews" className="scroll-mt-24 space-y-6">
           <div>
             <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-              ৩. কোথায় সেবা পাবেন: ফেনীর সেরা ফিজিওথেরাপি সেন্টারের পূর্ণাঙ্গ পর্যালোচনা
+              {`${reviewsNumStr}কোথায় সেবা পাবেন: ফেনীর সেরা ফিজিওথেরাপি সেন্টারের পূর্ণাঙ্গ পর্যালোচনা`}
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">
               প্রতিটি সেন্টারের আধুনিক ইলেকট্রোথেরাপি, স্ট্রোক রিহ্যাব, হোম সার্ভিস ও মেম্বার ছাড়ের তথ্য।
@@ -159,29 +170,23 @@ export function BlogSpecializedSections({
         </section>
       )}
 
-      {/* Specialized Care Pricing Tables (Modularized for performance & strict 500-line limit) */}
-      <BlogSpecialtyPriceTables post={post} />
-
-      {/* Emergency Care Specialized Sections: Pharmacies, Blood Banks & Ambulances */}
-      <BlogEmergencyCareSections post={post} />
-
       {/* Hospital / Upazila Comparison Matrix Table */}
       {post.comparisonTable && post.comparisonTable.length > 0 && (
         <section id="comparison-matrix" className="scroll-mt-24 space-y-4">
           <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-            {isUpazila
-              ? "৬. কোথায় করাবেন: একনজরে উপজেলা হাসপাতাল ও ক্লিনিকের তুলনামূলক তালিকা"
+            {`${matrixNumStr}${isUpazila
+              ? "কোথায় করাবেন: একনজরে উপজেলা হাসপাতাল ও ক্লিনিকের তুলনামূলক তালিকা"
               : isIcu
-              ? "২. কোথায় করাবেন: একনজরে ফেনীর শীর্ষ আইসিইউ, সিসিইউ ও এনআইসিইউ সুবিধা তুলনা"
+              ? "কোথায় করাবেন: একনজরে ফেনীর শীর্ষ আইসিইউ, সিসিইউ ও এনআইসিইউ সুবিধা তুলনা"
               : isStrokeCardiac
-              ? "২. কোথায় করাবেন: একনজরে ফেনীর শীর্ষ স্ট্রোক ও কার্ডিয়াক ইমার্জেন্সি সেন্টারের সুবিধা তুলনা"
+              ? "কোথায় করাবেন: একনজরে ফেনীর শীর্ষ স্ট্রোক ও কার্ডিয়াক ইমার্জেন্সি সেন্টারের সুবিধা তুলনা"
               : isHomeCare
-              ? "২. কোথায় করাবেন: একনজরে ফেনীর শীর্ষ হোম স্যাম্পল ও নার্সিং সেবা তুলনা"
+              ? "কোথায় করাবেন: একনজরে ফেনীর শীর্ষ হোম স্যাম্পল ও নার্সিং সেবা তুলনা"
               : isOxygen
-              ? "২. কোথায় পাবেন: একনজরে ফেনীর শীর্ষ অক্সিজেন ও ভেন্টিলেটর সরবরাহকারী তুলনা"
+              ? "কোথায় পাবেন: একনজরে ফেনীর শীর্ষ অক্সিজেন ও ভেন্টিলেটর সরবরাহকারী তুলনা"
               : isDengueTyphoid
-              ? "২. কোথায় করাবেন: একনজরে ফেনীর শীর্ষ ডেঙ্গু ও টাইফয়েড চিকিৎসা সুবিধা তুলনা"
-              : "২. কোথায় করাবেন: একনজরে ফেনীর সেরা ১০ হাসপাতালের তুলনামূলক তালিকা"}
+              ? "কোথায় করাবেন: একনজরে ফেনীর শীর্ষ ডেঙ্গু ও টাইফয়েড চিকিৎসা সুবিধা তুলনা"
+              : "কোথায় করাবেন: একনজরে ফেনীর সেরা ১০ হাসপাতালের তুলনামূলক তালিকা"}`}
           </h2>
           <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
             {getMatrixDirectAnswer(post)}
@@ -195,19 +200,19 @@ export function BlogSpecializedSections({
         <section id="hospital-reviews" className="scroll-mt-24 space-y-6">
           <div>
             <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-              {isUpazila
-                ? `৭. কোথায় সেবা পাবেন: উপজেলার ${toBanglaNums(post.hospitals.length)}টি শীর্ষ হাসপাতাল ও ক্লিনিকের পূর্ণাঙ্গ পর্যালোচনা`
+              {`${reviewsNumStr}${isUpazila
+                ? `কোথায় সেবা পাবেন: উপজেলার ${toBanglaNums(post.hospitals.length)}টি শীর্ষ হাসপাতাল ও ক্লিনিকের পূর্ণাঙ্গ পর্যালোচনা`
                 : isIcu
-                ? "৩. কোথায় সেবা পাবেন: ফেনীর শীর্ষ আইসিইউ, সিসিইউ ও নিওনেটাল হাসপাতালের পর্যালোচনা"
+                ? "কোথায় সেবা পাবেন: ফেনীর শীর্ষ আইসিইউ, সিসিইউ ও নিওনেটাল হাসপাতালের পর্যালোচনা"
                 : isStrokeCardiac
-                ? "৩. কোথায় সেবা পাবেন: ফেনীর শীর্ষ স্ট্রোক ও কার্ডিয়াক ইমার্জেন্সি চিকিৎসাকেন্দ্রের পর্যালোচনা"
+                ? "কোথায় সেবা পাবেন: ফেনীর শীর্ষ স্ট্রোক ও কার্ডিয়াক ইমার্জেন্সি চিকিৎসাকেন্দ্রের পর্যালোচনা"
                 : isHomeCare
-                ? "৩. কোথায় সেবা পাবেন: ফেনীর শীর্ষ হোম স্যাম্পল ও নার্সিং কেয়ার প্রতিষ্ঠানের পর্যালোচনা"
+                ? "কোথায় সেবা পাবেন: ফেনীর শীর্ষ হোম স্যাম্পল ও নার্সিং কেয়ার প্রতিষ্ঠানের পর্যালোচনা"
                 : isOxygen
-                ? "৩. কোথায় সেবা পাবেন: ফেনীর শীর্ষ অক্সিজেন সিলিন্ডার ও হোম ভেন্টিলেটর প্রদানকারী প্রতিষ্ঠানের পর্যালোচনা"
+                ? "কোথায় সেবা পাবেন: ফেনীর শীর্ষ অক্সিজেন সিলিন্ডার ও হোম ভেন্টিলেটর প্রদানকারী প্রতিষ্ঠানের পর্যালোচনা"
                 : isDengueTyphoid
-                ? "৩. কোথায় সেবা পাবেন: ফেনীর শীর্ষ ডেঙ্গু ও টাইফয়েড চিকিৎসাকেন্দ্রের পর্যালোচনা"
-                : "৩. কোথায় সেবা পাবেন: ফেনীর সেরা ১০টি হাসপাতালের পূর্ণাঙ্গ পর্যালোচনা"}
+                ? "কোথায় সেবা পাবেন: ফেনীর শীর্ষ ডেঙ্গু ও টাইফয়েড চিকিৎসাকেন্দ্রের পর্যালোচনা"
+                : "কোথায় সেবা পাবেন: ফেনীর সেরা ১০টি হাসপাতালের পূর্ণাঙ্গ পর্যালোচনা"}`}
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">
               {isIcu
@@ -234,6 +239,17 @@ export function BlogSpecializedSections({
           </div>
         </section>
       )}
+
+      {/* Specialized Care Pricing Tables (Modularized for performance & strict 500-line limit) */}
+      <BlogSpecialtyPriceTables post={post} pricingNum={pricingNum} />
+
+      {/* Emergency Care Specialized Sections: Pharmacies, Blood Banks & Ambulances */}
+      <BlogEmergencyCareSections
+        post={post}
+        matrixNum={matrixNum}
+        reviewsNum={reviewsNum}
+        pricingNum={pricingNum}
+      />
     </>
   );
 }

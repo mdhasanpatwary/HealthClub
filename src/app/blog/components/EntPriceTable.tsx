@@ -1,5 +1,6 @@
 import { EntCarePackageItem } from "@/types/blog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { formatNumberedTitle } from "@/app/blog/utils/blogAeoHeadingUtils";
 
 interface EntPriceTableProps {
   pricingData: {
@@ -7,10 +8,12 @@ interface EntPriceTableProps {
     subtitleBn: string;
     packages: EntCarePackageItem[];
   };
+  pricingNum?: number;
 }
 
 export function EntPriceTable({
   pricingData,
+  pricingNum,
 }: EntPriceTableProps) {
 
   const items = pricingData.packages.map((item) => ({
@@ -24,8 +27,7 @@ export function EntPriceTable({
   return (
     <BlogPriceTable
       id="ent-price-guide"
-      title={pricingData.titleBn
-      }
+      title={formatNumberedTitle(pricingData.titleBn, pricingNum)}
       subtitle={pricingData.subtitleBn
       }
       items={items}

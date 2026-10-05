@@ -295,7 +295,7 @@ export default function WhatsAppAssistanceCard({
         className
       )}
     >
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="flex flex-col justify-between gap-3">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="relative flex h-2 w-2 shrink-0">

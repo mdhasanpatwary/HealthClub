@@ -1,12 +1,15 @@
 import { OxygenPricingData } from "@/types/oxygenBlog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { formatNumberedTitle } from "@/app/blog/utils/blogAeoHeadingUtils";
 
 interface OxygenPriceTableProps {
   pricingData: OxygenPricingData;
+  pricingNum?: number;
 }
 
 export function OxygenPriceTable({
   pricingData,
+  pricingNum,
 }: OxygenPriceTableProps) {
   const items = pricingData.packages.map((item) => ({
     name: item.procedureOrServiceNameBn,
@@ -19,7 +22,7 @@ export function OxygenPriceTable({
   return (
     <BlogPriceTable
       id="oxygen-price-guide"
-      title={pricingData.titleBn}
+      title={formatNumberedTitle(pricingData.titleBn, pricingNum)}
       subtitle="ফেনীর শীর্ষ সরবরাহকারী ও বেসরকারি হাসপাতালে ১.৪m³ ও জাম্বো সিলিন্ডার গ্যাস রিফিল, হোম সেট ভাড়া, ৫-১০L কনসেনট্রেটর ও সিওপিডি বাইপ্যাপের সাধারণ ফি এবং হেলথ ক্লাব মেম্বার ছাড়।"
       items={items}
       columnHeaders={{

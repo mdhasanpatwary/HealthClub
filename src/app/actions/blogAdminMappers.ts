@@ -1,9 +1,10 @@
 import { BlogPost, BlogPostCardItem, BlogAuthor, BlogFAQItem } from "@/types/blog";
 import { BLOG_POSTS } from "@/data/blog/blogPosts";
 import { getPostFacilityMeta } from "@/app/blog/utils/blogPagination";
+import { sortBlogPostsByFamousOrder } from "@/data/blog/famousBlogRanking";
 
 export function mapStaticPostsToCards(): BlogPostCardItem[] {
-  return BLOG_POSTS.map((post) => {
+  const cards: BlogPostCardItem[] = BLOG_POSTS.map((post) => {
     const facilityMeta = getPostFacilityMeta(post);
     return {
       slug: post.slug,
@@ -31,6 +32,7 @@ export function mapStaticPostsToCards(): BlogPostCardItem[] {
       metaKeywords: post.metaKeywords,
     };
   });
+  return sortBlogPostsByFamousOrder(cards);
 }
 
 export function normalizeDiagnosticPricing(pricing: unknown): BlogPost["diagnosticTestPricingBn"] {
@@ -60,15 +62,69 @@ export function normalizeDiagnosticPricing(pricing: unknown): BlogPost["diagnost
 export function normalizeSelectionGuide(guide: unknown): BlogPost["selectionGuideBn"] {
   if (!guide || typeof guide !== "object") return undefined;
   const g = guide as Record<string, unknown>;
-  const rawPoints = (g.pointsBn || g.criteria || g.points || []) as unknown[];
+
+  const pointsBnArr = Array.isArray(g.pointsBn) ? g.pointsBn : [];
+  const criteriaArr = Array.isArray(g.criteria) ? g.criteria : [];
+  const pointsArr = Array.isArray(g.points) ? g.points : [];
+
+  let rawPoints: unknown[] = [];
+  if (pointsBnArr.length > 0) {
+    const hasValidDesc = pointsBnArr.some(
+      (p) =>
+        typeof p === "string" ||
+        Boolean(
+          (p as Record<string, unknown>)?.desc ||
+          (p as Record<string, unknown>)?.description ||
+          (p as Record<string, unknown>)?.descriptionBn ||
+          (p as Record<string, unknown>)?.detail
+        )
+    );
+    if (!hasValidDesc && criteriaArr.length > 0) {
+      rawPoints = criteriaArr;
+    } else {
+      rawPoints = pointsBnArr;
+    }
+  } else if (criteriaArr.length > 0) {
+    rawPoints = criteriaArr;
+  } else if (pointsArr.length > 0) {
+    rawPoints = pointsArr;
+  }
+
   return {
     titleBn: (g.titleBn || g.title || "") as string,
+    subtitleBn: (g.subtitleBn || g.subtitle || undefined) as string | undefined,
     pointsBn: Array.isArray(rawPoints)
       ? rawPoints.map((p) => {
+          if (typeof p === "string") {
+            const colonIdx = p.indexOf(":") !== -1 ? p.indexOf(":") : p.indexOf("ঃ");
+            if (colonIdx !== -1) {
+              return {
+                title: p.slice(0, colonIdx).trim(),
+                desc: p.slice(colonIdx + 1).trim(),
+              };
+            }
+            return {
+              title: p.trim(),
+              desc: "",
+            };
+          }
           const pt = (p || {}) as Record<string, unknown>;
+          const rawTitle = (pt.title || pt.titleBn || pt.point || pt.criterionBn || "") as string;
+          const rawDesc = (pt.desc || pt.descBn || pt.description || pt.descriptionBn || pt.detail || "") as string;
+
+          if (!rawDesc && rawTitle) {
+            const colonIdx = rawTitle.indexOf(":") !== -1 ? rawTitle.indexOf(":") : rawTitle.indexOf("ঃ");
+            if (colonIdx !== -1) {
+              return {
+                title: rawTitle.slice(0, colonIdx).trim(),
+                desc: rawTitle.slice(colonIdx + 1).trim(),
+              };
+            }
+          }
+
           return {
-            title: (pt.title || pt.titleBn || "") as string,
-            desc: (pt.desc || pt.descBn || pt.description || "") as string,
+            title: String(rawTitle).trim(),
+            desc: String(rawDesc).trim(),
           };
         })
       : [],

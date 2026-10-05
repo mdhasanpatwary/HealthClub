@@ -1,5 +1,6 @@
 import { DiagnosticTestPriceItem } from "@/types/blog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { toBanglaNums } from "@/lib/utils";
 
 interface DiagnosticPriceTableProps {
   pricingData: {
@@ -9,10 +10,12 @@ interface DiagnosticPriceTableProps {
     subtitleEn?: string;
     tests: DiagnosticTestPriceItem[];
   };
+  pricingNum?: number;
 }
 
 export function DiagnosticPriceTable({
   pricingData,
+  pricingNum,
 }: DiagnosticPriceTableProps) {
 
   const rawTests = pricingData.tests || (pricingData as unknown as { items?: DiagnosticTestPriceItem[] }).items || [];
@@ -45,10 +48,13 @@ export function DiagnosticPriceTable({
     pricingData.titleBn.includes("এন্টিভেনম") ||
     pricingData.titleBn.includes("ভর্তি");
 
+  const cleanTitle = pricingData.titleBn.replace(/^[০-৯১-৯\d]+[\.\:\-—\s]+/, "").trim();
+  const numStr = pricingNum ? `${toBanglaNums(pricingNum)}. ` : "";
+
   return (
     <BlogPriceTable
       id="price-guide"
-      title={`৪. ${pricingData.titleBn}`}
+      title={`${numStr}${cleanTitle}`}
       subtitle={pricingData.subtitleBn}
       items={items}
       columnHeaders={{

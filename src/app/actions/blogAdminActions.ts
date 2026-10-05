@@ -26,6 +26,7 @@ import {
   mapStaticPostsToCards,
   mapDbRowToBlogPost,
 } from "./blogAdminMappers";
+import { sortBlogPostsByFamousOrder } from "@/data/blog/famousBlogRanking";
 import {
   notifyBlogUpdatedToIndexNow,
   submitUrlsToIndexNow,
@@ -69,7 +70,7 @@ export const getAllBlogPostCardsAction = unstable_cache(
       );
 
       if (posts && posts.length > 0) {
-        return posts.map((p) => ({
+        const cards: BlogPostCardItem[] = posts.map((p) => ({
           slug: p.slug,
           titleBn: p.titleBn,
           titleEn: p.titleEn,
@@ -91,15 +92,16 @@ export const getAllBlogPostCardsAction = unstable_cache(
           tags: (p.tags as unknown as string[]) || undefined,
           metaKeywords: (p.metaKeywords as unknown as string[]) || undefined,
         }));
+        return sortBlogPostsByFamousOrder(cards);
       }
 
-      return mapStaticPostsToCards();
+      return sortBlogPostsByFamousOrder(mapStaticPostsToCards());
     } catch (err) {
       logger.error("Error in getAllBlogPostCardsAction:", err);
-      return mapStaticPostsToCards();
+      return sortBlogPostsByFamousOrder(mapStaticPostsToCards());
     }
   },
-  ["all-blog-post-cards-v3"],
+  ["all-blog-post-cards-v4"],
   { revalidate: false, tags: [BLOG_POSTS_TAG, BLOG_CARDS_TAG] }
 );
 
@@ -146,7 +148,7 @@ const fetchDbBlogPostBySlug = unstable_cache(
 
     return null;
   },
-  ["single-blog-post-by-slug-v1"],
+  ["single-blog-post-by-slug-v2"],
   { revalidate: false, tags: [BLOG_POSTS_TAG] }
 );
 
@@ -192,15 +194,15 @@ export const getAllBlogPostsAction = unstable_cache(
         orderBy: { publishedDate: "desc" },
       });
       if (dbPosts && dbPosts.length > 0) {
-        return dbPosts.map(mapDbRowToBlogPost);
+        return sortBlogPostsByFamousOrder(dbPosts.map(mapDbRowToBlogPost));
       }
-      return BLOG_POSTS;
+      return sortBlogPostsByFamousOrder(BLOG_POSTS);
     } catch (err) {
       logger.error("Error in getAllBlogPostsAction:", err);
-      return BLOG_POSTS;
+      return sortBlogPostsByFamousOrder(BLOG_POSTS);
     }
   },
-  ["all-blog-posts-v24"],
+  ["all-blog-posts-v25"],
   { revalidate: false, tags: [BLOG_POSTS_TAG] }
 );
 

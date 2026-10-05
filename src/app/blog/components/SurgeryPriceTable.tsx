@@ -1,5 +1,6 @@
 import { SurgicalCarePackageItem } from "@/types/blog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { formatNumberedTitle } from "@/app/blog/utils/blogAeoHeadingUtils";
 
 interface SurgeryPriceTableProps {
   pricingData: {
@@ -9,10 +10,12 @@ interface SurgeryPriceTableProps {
     subtitleEn?: string;
     packages: SurgicalCarePackageItem[];
   };
+  pricingNum?: number;
 }
 
 export function SurgeryPriceTable({
   pricingData,
+  pricingNum,
 }: SurgeryPriceTableProps) {
 
   const items = pricingData.packages.map((item) => ({
@@ -26,8 +29,7 @@ export function SurgeryPriceTable({
   return (
     <BlogPriceTable
       id="surgery-price-guide"
-      title={pricingData.titleBn
-      }
+      title={formatNumberedTitle(pricingData.titleBn, pricingNum)}
       subtitle={pricingData.subtitleBn
       }
       items={items}

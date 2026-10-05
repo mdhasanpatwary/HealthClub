@@ -1,5 +1,6 @@
 import { DentalProcedurePriceItem } from "@/types/blog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { formatNumberedTitle } from "@/app/blog/utils/blogAeoHeadingUtils";
 
 interface DentalPriceTableProps {
   pricingData: {
@@ -7,10 +8,12 @@ interface DentalPriceTableProps {
     subtitleBn: string;
     procedures: DentalProcedurePriceItem[];
   };
+  pricingNum?: number;
 }
 
 export function DentalPriceTable({
   pricingData,
+  pricingNum,
 }: DentalPriceTableProps) {
   const items = pricingData.procedures.map((proc) => ({
     name: proc.procedureNameBn,
@@ -23,7 +26,7 @@ export function DentalPriceTable({
   return (
     <BlogPriceTable
       id="price-guide"
-      title={pricingData.titleBn}
+      title={formatNumberedTitle(pricingData.titleBn, pricingNum)}
       subtitle={pricingData.subtitleBn}
       items={items}
       columnHeaders={{

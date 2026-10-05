@@ -1,5 +1,6 @@
 import { PhysiotherapyTreatmentPriceItem } from "@/types/blog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { formatNumberedTitle } from "@/app/blog/utils/blogAeoHeadingUtils";
 
 interface PhysiotherapyPriceTableProps {
   pricingData: {
@@ -7,10 +8,12 @@ interface PhysiotherapyPriceTableProps {
     subtitleBn: string;
     treatments: PhysiotherapyTreatmentPriceItem[];
   };
+  pricingNum?: number;
 }
 
 export function PhysiotherapyPriceTable({
   pricingData,
+  pricingNum,
 }: PhysiotherapyPriceTableProps) {
 
   const items = pricingData.treatments.map((item) => ({
@@ -24,7 +27,7 @@ export function PhysiotherapyPriceTable({
   return (
     <BlogPriceTable
       id="price-guide"
-      title={pricingData.titleBn}
+      title={formatNumberedTitle(pricingData.titleBn, pricingNum)}
       subtitle={pricingData.subtitleBn
       }
       items={items}

@@ -1,5 +1,6 @@
 import { SadarHospitalCarePackageItem } from "@/types/blog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { formatNumberedTitle } from "@/app/blog/utils/blogAeoHeadingUtils";
 
 interface SadarHospitalPriceTableProps {
   pricingData: {
@@ -7,10 +8,12 @@ interface SadarHospitalPriceTableProps {
     subtitleBn: string;
     packages: SadarHospitalCarePackageItem[];
   };
+  pricingNum?: number;
 }
 
 export function SadarHospitalPriceTable({
   pricingData,
+  pricingNum,
 }: SadarHospitalPriceTableProps) {
 
   const items = pricingData.packages.map((item) => ({
@@ -24,8 +27,7 @@ export function SadarHospitalPriceTable({
   return (
     <BlogPriceTable
       id="sadar-hospital-price-guide"
-      title={pricingData.titleBn
-      }
+      title={formatNumberedTitle(pricingData.titleBn, pricingNum)}
       subtitle={pricingData.subtitleBn
       }
       items={items}

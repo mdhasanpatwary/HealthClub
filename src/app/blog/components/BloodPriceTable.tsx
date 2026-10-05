@@ -1,5 +1,6 @@
 import { BloodCarePackageItem } from "@/types/bloodBankBlog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { toBanglaNums } from "@/lib/utils";
 
 interface BloodPriceTableProps {
   pricingData: {
@@ -7,10 +8,12 @@ interface BloodPriceTableProps {
     subtitleBn: string;
     packages: BloodCarePackageItem[];
   };
+  pricingNum?: number;
 }
 
 export function BloodPriceTable({
   pricingData,
+  pricingNum,
 }: BloodPriceTableProps) {
   const items = pricingData.packages.map((item) => ({
     name: item.procedureOrTestNameBn,
@@ -19,6 +22,9 @@ export function BloodPriceTable({
     durationOrTurnaround: item.durationOrTurnaroundBn,
     discountText: "১০-৩০% মেম্বার ছাড়",
   }));
+
+  const cleanTitle = pricingData.titleBn.replace(/^[০-৯১-৯\d]+[\.\:\-—\s]+/, "").trim();
+  const numStr = pricingNum ? `${toBanglaNums(pricingNum)}. ` : "";
 
   return (
     <div className="space-y-3">
@@ -33,7 +39,7 @@ export function BloodPriceTable({
 
       <BlogPriceTable
         id="blood-price-guide"
-        title={pricingData.titleBn}
+        title={`${numStr}${cleanTitle}`}
         subtitle={pricingData.subtitleBn}
         items={items}
         columnHeaders={{

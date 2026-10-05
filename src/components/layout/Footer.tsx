@@ -146,6 +146,7 @@ export default async function Footer() {
                   { href: "/health-tools", label: "হেলথ ক্যালকুলেটর" },
                   { href: "/health-tips", label: "স্বাস্থ্য টিপস ও ব্লগ" },
                   { href: "/blog", label: "স্বাস্থ্য ব্লগ ও গাইড" },
+                  { href: "/shop", label: "প্রোডাক্ট শপ" },
                   { href: "/membership", label: "মেম্বারশিপ প্ল্যান" },
                   { href: "/become-partner", label: "পার্টনার হোন" },
                   { href: "/about-us", label: "আমাদের সম্পর্কে" },

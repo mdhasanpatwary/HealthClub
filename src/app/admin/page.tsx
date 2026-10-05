@@ -22,6 +22,7 @@ import {
   ShieldCheck,
   Star,
   Newspaper,
+  ShoppingBag,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -208,6 +209,15 @@ export default function AdminDashboardPage() {
       count: 0,
       countLabel: "ব্লগ পরিচালনা",
       color: "indigo",
+    },
+    {
+      title: "প্রোডাক্ট শপ ম্যানেজমেন্ট",
+      description: "মেডিকেল ডিভাইস, সামগ্রী ও ইনভেন্টরি পরিচালনা",
+      href: "/admin/products",
+      icon: ShoppingBag,
+      count: 0,
+      countLabel: "শপ পরিচালনা",
+      color: "emerald",
     },
     {
       title: "PWA অ্যাপ অ্যানালিটিক্স",

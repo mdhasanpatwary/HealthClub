@@ -1,4 +1,5 @@
 import { CheckCircle2, PhoneCall } from "lucide-react";
+import { toBanglaNums } from "@/lib/utils";
 
 interface DoctorBookingGuideProps {
   guide: {
@@ -7,27 +8,35 @@ interface DoctorBookingGuideProps {
     steps?: { step: string; title: string; desc: string }[];
     stepsBn?: { step: string; title: string; desc: string }[];
   };
+  sectionNumber?: number;
 }
 
 export function DoctorBookingGuide({
   guide,
+  sectionNumber,
 }: DoctorBookingGuideProps) {
-  const title = guide.titleBn || guide.title || "";
+  const rawTitle = guide.titleBn || guide.title || "";
+  const title = rawTitle.replace(/^[০-৯১-৯\d]+[\.\:\-—\s]+/, "").trim();
   const steps = guide.stepsBn || guide.steps || [];
   const isEvenSteps = steps.length % 2 === 0;
+  const numStr = `${toBanglaNums(sectionNumber || 3)}. `;
+  const isPrep = title.includes("প্রস্তুতি") || title.includes("পরীক্ষা") || title.includes("ধাপ");
+  const displayTitle = title.includes("কীভাবে") || isPrep ? title : `কীভাবে সিরিয়াল নিবেন: ${title}`;
 
   return (
     <section id="serial-guide" className="scroll-mt-24 space-y-6">
       <div>
         <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-wider mb-1.5">
           <PhoneCall className="h-4 w-4" />
-          <span>সিরিয়াল গাইডলাইন</span>
+          <span>{isPrep ? "পরীক্ষার প্রস্তুতি ও সুরক্ষা নির্দেশিকা" : "সিরিয়াল গাইডলাইন"}</span>
         </div>
         <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-          {title.includes("কীভাবে") ? `৪. ${title}` : `৪. কীভাবে সিরিয়াল নিবেন: ${title}`}
+          {`${numStr}${displayTitle}`}
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">
-          চেম্বারে অযথা দীর্ঘ অপেক্ষা এড়াতে সকাল ৮টা-১০টার মধ্যে সরাসরি সিরিয়াল হটলাইনে কল করে অ্যাপয়েন্টমেন্ট কনফার্ম করুন অথবা হেলথ ক্লাবের পেশেন্ট হেল্পডেস্কের সহায়তা নিন।
+          {isPrep
+            ? "সঠিক ও নির্ভরযোগ্য ডায়াগনস্টিক রিপোর্ট প্রাপ্তির লক্ষ্যে পরীক্ষার পূর্বপ্রস্তুতি অত্যন্ত গুরুত্বপূর্ণ। সেন্টারে যাওয়ার পূর্বে নিচের গাইডলাইনগুলো যাচাই করুন।"
+            : "চেম্বারে অযথা দীর্ঘ অপেক্ষা এড়াতে সকাল ৮টা-১০টার মধ্যে সরাসরি সিরিয়াল হটলাইনে কল করে অ্যাপয়েন্টমেন্ট কনফার্ম করুন অথবা হেলথ ক্লাবের পেশেন্ট হেল্পডেস্কের সহায়তা নিন।"}
         </p>
       </div>
 

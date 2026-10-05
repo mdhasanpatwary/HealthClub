@@ -347,7 +347,10 @@ export function GeoAnswerCapsule({
       </div>
 
       {/* 40-60 Word Direct Factual Answer Capsule (BLUF) */}
-      <div className="rounded-2xl bg-card/90 border border-primary/20 p-4 sm:p-5 text-sm sm:text-base text-foreground font-medium leading-relaxed shadow-2xs">
+      <div
+        id="article-quick-summary"
+        className="rounded-2xl bg-card/90 border border-primary/20 p-4 sm:p-5 text-sm sm:text-base text-foreground font-medium leading-relaxed shadow-2xs"
+      >
         <p className="text-foreground/95">{directAnswer}</p>
       </div>
 

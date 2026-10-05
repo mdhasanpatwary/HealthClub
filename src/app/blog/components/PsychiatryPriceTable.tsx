@@ -1,5 +1,6 @@
 import { PsychiatryCarePackageItem } from "@/types/blog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { formatNumberedTitle } from "@/app/blog/utils/blogAeoHeadingUtils";
 
 interface PsychiatryPriceTableProps {
   pricingData: {
@@ -7,10 +8,12 @@ interface PsychiatryPriceTableProps {
     subtitleBn: string;
     packages: PsychiatryCarePackageItem[];
   };
+  pricingNum?: number;
 }
 
 export function PsychiatryPriceTable({
   pricingData,
+  pricingNum,
 }: PsychiatryPriceTableProps) {
 
   const items = pricingData.packages.map((item) => ({
@@ -24,8 +27,7 @@ export function PsychiatryPriceTable({
   return (
     <BlogPriceTable
       id="psychiatry-price-guide"
-      title={pricingData.titleBn
-      }
+      title={formatNumberedTitle(pricingData.titleBn, pricingNum)}
       subtitle={pricingData.subtitleBn
       }
       items={items}

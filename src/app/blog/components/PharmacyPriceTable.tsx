@@ -1,5 +1,6 @@
 import { PharmacyPackagePriceItem } from "@/types/pharmacyBlog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { toBanglaNums } from "@/lib/utils";
 
 interface PharmacyPriceTableProps {
   pricingData: {
@@ -7,10 +8,12 @@ interface PharmacyPriceTableProps {
     subtitleBn: string;
     packages: PharmacyPackagePriceItem[];
   };
+  pricingNum?: number;
 }
 
 export function PharmacyPriceTable({
   pricingData,
+  pricingNum,
 }: PharmacyPriceTableProps) {
 
   const items = pricingData.packages.map((item) => ({
@@ -21,11 +24,13 @@ export function PharmacyPriceTable({
     discountText: "১০-৩০% মেম্বার ছাড়",
   }));
 
+  const cleanTitle = pricingData.titleBn.replace(/^[০-৯১-৯\d]+[\.\:\-—\s]+/, "").trim();
+  const numStr = pricingNum ? `${toBanglaNums(pricingNum)}. ` : "";
+
   return (
     <BlogPriceTable
       id="pharmacy-price-guide"
-      title={pricingData.titleBn
-      }
+      title={`${numStr}${cleanTitle}`}
       subtitle={pricingData.subtitleBn
       }
       items={items}

@@ -1,12 +1,15 @@
 import { HomeCarePricingData } from "@/types/homeCareBlog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { formatNumberedTitle } from "@/app/blog/utils/blogAeoHeadingUtils";
 
 interface HomeCarePriceTableProps {
   pricingData: HomeCarePricingData;
+  pricingNum?: number;
 }
 
 export function HomeCarePriceTable({
   pricingData,
+  pricingNum,
 }: HomeCarePriceTableProps) {
 
   const items = pricingData.packages.map((item) => ({
@@ -20,7 +23,7 @@ export function HomeCarePriceTable({
   return (
     <BlogPriceTable
       id="home-care-price-guide"
-      title={pricingData.titleBn}
+      title={formatNumberedTitle(pricingData.titleBn, pricingNum)}
       subtitle={"ফেনীর শীর্ষ ডায়াগনস্টিক ল্যাব ও বেসরকারি হাসপাতালে হোম স্যাম্পল পিকআপ, মূত্রথলির ক্যাথেটার, আইভি স্যালাইন, ক্ষত ড্রেসিং ও নার্সিং কেয়ারের সাধারণ ফি এবং হেলথ ক্লাব মেম্বার ছাড়।"
       }
       items={items}

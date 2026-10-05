@@ -418,7 +418,7 @@ export interface BlogPost {
   dengueTyphoidPricingBn?: import("./dengueTyphoidBlog").DengueTyphoidPricingData;
   bookingGuideBn?: { titleBn: string; stepsBn: { step: string; title: string; desc: string }[] };
   bookingGuideEn?: { titleEn: string; stepsEn: { step: string; title: string; desc: string }[] };
-  selectionGuideBn?: { titleBn: string; pointsBn: { title: string; desc: string }[] };
+  selectionGuideBn?: { titleBn: string; subtitleBn?: string; pointsBn: { title: string; desc: string }[] };
   selectionGuideEn?: { titleEn: string; pointsEn: { title: string; desc: string }[] };
   emergencyDirectoryBn?: {
     titleBn: string;

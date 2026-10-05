@@ -1,5 +1,6 @@
 import { UpazilaCarePackageItem } from "@/types/upazilaBlog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { toBanglaNums } from "@/lib/utils";
 
 interface UpazilaPriceTableProps {
   pricingData: {
@@ -7,10 +8,12 @@ interface UpazilaPriceTableProps {
     subtitleBn: string;
     packages: UpazilaCarePackageItem[];
   };
+  pricingNum?: number;
 }
 
 export function UpazilaPriceTable({
   pricingData,
+  pricingNum,
 }: UpazilaPriceTableProps) {
   const items = pricingData.packages.map((item) => ({
     name: item.procedureOrTestNameBn,
@@ -20,10 +23,13 @@ export function UpazilaPriceTable({
     discountText: "১০-৩০% মেম্বার ছাড়",
   }));
 
+  const cleanTitle = pricingData.titleBn.replace(/^[০-৯১-৯\d]+[\.\:\-—\s]+/, "").trim();
+  const numStr = pricingNum ? `${toBanglaNums(pricingNum)}. ` : "";
+
   return (
     <BlogPriceTable
       id="upazila-price-guide"
-      title={pricingData.titleBn}
+      title={`${numStr}${cleanTitle}`}
       subtitle={pricingData.subtitleBn}
       items={items}
       showBenefitColumn={false}

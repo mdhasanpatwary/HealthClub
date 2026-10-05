@@ -1,5 +1,6 @@
 import { CardiacPackagePriceItem } from "@/types/blog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { formatNumberedTitle } from "@/app/blog/utils/blogAeoHeadingUtils";
 
 interface CardiacPriceTableProps {
   pricingData: {
@@ -7,10 +8,12 @@ interface CardiacPriceTableProps {
     subtitleBn: string;
     packages: CardiacPackagePriceItem[];
   };
+  pricingNum?: number;
 }
 
 export function CardiacPriceTable({
   pricingData,
+  pricingNum,
 }: CardiacPriceTableProps) {
 
   const items = pricingData.packages.map((item) => ({
@@ -24,7 +27,7 @@ export function CardiacPriceTable({
   return (
     <BlogPriceTable
       id="cardiac-price-guide"
-      title={pricingData.titleBn}
+      title={formatNumberedTitle(pricingData.titleBn, pricingNum)}
       subtitle={"ফেনীর শীর্ষ ডায়াগনস্টিক সেন্টারে কার্ডিয়াক পরীক্ষাগুলোর সাধারণ বাজারদর এবং হেলথ ক্লাব মেম্বারদের জন্য ১০-৩০% ডিসকাউন্ট সুবিধা।"
       }
       items={items}

@@ -23,6 +23,7 @@ import {
   Globe,
   ExternalLink,
   Newspaper,
+  ShoppingBag,
 } from "lucide-react";
 import { toBanglaNums } from "@/lib/utils";
 
@@ -270,6 +271,21 @@ export function MobileNavAdminLinks({
             <div className="flex items-center gap-2.5">
               <Newspaper className="h-4 w-4 text-indigo-500 shrink-0" />
               <span>ব্লগ পোস্ট</span>
+            </div>
+          </Link>
+
+          <Link
+            href="/admin/products"
+            onClick={onClose}
+            className={`flex items-center justify-between p-2 rounded-xl text-xs font-semibold transition-colors ${
+              isActive("/admin/products")
+                ? "bg-primary/10 text-primary font-bold"
+                : "text-foreground hover:bg-muted"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <ShoppingBag className="h-4 w-4 text-emerald-500 shrink-0" />
+              <span>প্রোডাক্ট শপ</span>
             </div>
           </Link>
         </div>

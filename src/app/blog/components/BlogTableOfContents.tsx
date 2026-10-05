@@ -29,6 +29,7 @@ interface BlogTableOfContentsProps {
   pharmacies?: import("@/types/pharmacyBlog").PharmacyReviewItem[];
   bloodBanks?: import("@/types/bloodBankBlog").BloodBankReviewItem[];
   ambulances?: import("@/types/ambulanceBlog").AmbulanceReviewItem[];
+  bookingGuideTitle?: string;
   currentSlug?: string;
   className?: string;
   id?: string;
@@ -51,6 +52,7 @@ export function BlogTableOfContents({
   hasSadarHospitalPricing = false, hasDiabeticHospitalPricing = false,
   hasPharmacyPricing = false, hasBloodPricing = false, hasAmbulancePricing = false,
   hasCriticalCarePricing = false, hasStrokeCardiacPricing = false, hasHomeCarePricing = false, hasOxygenPricing = false, hasDengueTyphoidPricing = false, hasUpazilaPricing = false,
+  bookingGuideTitle,
   currentSlug,
   className = "",
   id = "table-of-contents",
@@ -115,7 +117,8 @@ export function BlogTableOfContents({
           const el = document.getElementById(id);
           return el ? { id, top: el.offsetTop } : null;
         })
-        .filter((item): item is { id: string; top: number } => item !== null);
+        .filter((item): item is { id: string; top: number } => item !== null)
+        .sort((a, b) => a.top - b.top);
     };
 
     computePositions();
@@ -302,6 +305,7 @@ export function BlogTableOfContents({
               name: `${toBanglaNums(d.rank)}. ${d.nameBn}`,
             }))}
             priceGuideId="price-guide"
+            bookingGuideTitle={bookingGuideTitle}
             emergencyTitle="জরুরি যোগাযোগ ও অ্যাম্বুলেন্স হটলাইন"
             secNum={secNum}
             activeId={activeId}
@@ -318,6 +322,7 @@ export function BlogTableOfContents({
             }))}
             priceGuideId="price-guide"
             priceGuideTitle="চিকিৎসা ফি ও মেম্বার সাশ্রয় তালিকা"
+            bookingGuideTitle={bookingGuideTitle}
             selectionGuideTitle="সঠিক ডেন্টাল ক্লিনিক নির্বাচনের উপায়"
             secNum={secNum}
             activeId={activeId}
@@ -334,6 +339,7 @@ export function BlogTableOfContents({
             }))}
             priceGuideId="price-guide"
             priceGuideTitle="থেরাপি ফি ও মেম্বার সাশ্রয় তালিকা"
+            bookingGuideTitle={bookingGuideTitle}
             selectionGuideTitle="সঠিক ফিজিওথেরাপি সেন্টার নির্বাচনের উপায়"
             secNum={secNum}
             activeId={activeId}
@@ -350,6 +356,7 @@ export function BlogTableOfContents({
             }))}
             priceGuideId="pharmacy-price-guide"
             priceGuideTitle="জরুরি ওষুধ ও ডেলিভারি ফি তালিকা"
+            bookingGuideTitle={bookingGuideTitle}
             selectionGuideTitle="নিরাপদ ফার্মেসি ও ওষুধ ক্রয়ের নিয়ম"
             emergencyTitle="জরুরি যোগাযোগ ও ফার্মেসি হটলাইন"
             secNum={secNum}
@@ -367,6 +374,7 @@ export function BlogTableOfContents({
             }))}
             priceGuideId="blood-price-guide"
             priceGuideTitle="রক্ত পরীক্ষা ও ট্রান্সফিউশন ফি তালিকা"
+            bookingGuideTitle={bookingGuideTitle}
             selectionGuideTitle="নিরাপদ রক্ত পরিসঞ্চালন ও রক্তদাতার শর্তাবলী"
             emergencyTitle="জরুরি ব্লাড ব্যাংক ও রক্তদাতা হটলাইন"
             secNum={secNum}
@@ -384,6 +392,7 @@ export function BlogTableOfContents({
             }))}
             priceGuideId="ambulance-price-guide"
             priceGuideTitle="অ্যাম্বুলেন্স ভাড়া ও অক্সিজেন খরচের হিসাব"
+            bookingGuideTitle={bookingGuideTitle}
             selectionGuideTitle="জরুরি অ্যাম্বুলেন্স ও অক্সিজেন বুকিংয়ের নিয়ম"
             emergencyTitle="জরুরি অ্যাম্বুলেন্স ও অক্সিজেন হটলাইন"
             secNum={secNum}
@@ -397,6 +406,7 @@ export function BlogTableOfContents({
               id: `hospital-${h.rank}`,
               name: `${toBanglaNums(h.rank)}. ${h.nameBn}`,
             }))}
+            bookingGuideTitle={bookingGuideTitle}
             secNum={secNum}
             activeId={activeId}
           />

@@ -71,7 +71,7 @@ const fetchCachedProducts = unstable_cache(
       return [];
     }
   },
-  ["all-shop-products-v3"],
+  ["all-shop-products-v4"],
   {
     revalidate: false,
     tags: [PRODUCTS_CACHE_TAG],
@@ -91,7 +91,7 @@ const fetchCachedProductBySlug = unstable_cache(
       return null;
     }
   },
-  ["shop-product-by-slug-v3"],
+  ["shop-product-by-slug-v4"],
   {
     revalidate: false,
     tags: [PRODUCTS_CACHE_TAG],

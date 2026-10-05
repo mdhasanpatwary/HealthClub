@@ -1,4 +1,5 @@
 import { BlogPost } from "@/types/blog";
+import { toBanglaNums } from "@/lib/utils";
 
 /**
  * Strips existing numeric prefixes and bullet punctuation like "১. ", "২. ", " - "
@@ -36,8 +37,23 @@ export function formatAeoOverviewHeading(slug: string, rawTitle?: string): strin
   if (slug === "feni-trunk-road-mizan-road-clinic-pharmacy-hub-guide") {
     return "ট্রাঙ্ক রোড ও মিজান রোড স্বাস্থ্যসেবা হাব কী এবং কেন প্রয়োজন?";
   }
-  if (slug === "feni-friday-weekend-doctor-chamber-serial-guide") {
-    return "শুক্রবার ও ছুটির দিনে বিশেষজ্ঞ ডাক্তার স্বাস্থ্যসেবা কী এবং কেন জরুরি?";
+  if (slug === "best-10-hospitals-in-feni") {
+    return "ফেনী সদর ও জেলার হাসপাতাল স্বাস্থ্যসেবা পরিকাঠামো কী এবং কেন গুরুত্বপূর্ণ?";
+  }
+  if (slug === "feni-sadar-hospital-guide") {
+    return "ফেনী ২৫০ শয্যা আধুনিক সদর হাসপাতালের সরকারি স্বাস্থ্যসেবা কী এবং কেন গুরুত্বপূর্ণ?";
+  }
+  if (slug === "feni-diabetic-hospital-guide") {
+    return "ফেনী ডায়াবেটিক হাসপাতালের বিশেষায়িত চিকিৎসাসেবা কী এবং কেন গুরুত্বপূর্ণ?";
+  }
+  if (slug === "feni-ambulance-and-oxygen-service-guide") {
+    return "ফেনীতে জরুরি অ্যাম্বুলেন্স ও অক্সিজেন সিলিন্ডার সেবা কী এবং কেন প্রয়োজন?";
+  }
+  if (slug === "feni-blood-bank-and-donors-guide" || slug.includes("blood")) {
+    return "ফেনীতে জরুরি রক্ত পরিসঞ্চালন ও নিরাপদ রক্তদাতা নেটওয়ার্ক কী এবং কেন প্রয়োজন?";
+  }
+  if (slug === "24-hour-pharmacy-in-feni" || slug.includes("pharmacy")) {
+    return "ফেনীতে ২৪ ঘণ্টা জরুরি ফার্মেসি ও ওষুধ ডেলিভারি কী এবং কেন প্রয়োজন?";
   }
   if (slug.includes("healthcare-guide") || slug.includes("patient-guide")) {
     return "উপজেলায় প্রাথমিক স্বাস্থ্যসেবা কী এবং কখন ফেনী সদর রেফারেল প্রয়োজন?";
@@ -242,6 +258,112 @@ export function checkHasPricingGuide(post: BlogPost): boolean {
     post.strokeCardiacPricingBn ||
     post.homeCarePricingBn ||
     post.oxygenPricingBn ||
-    post.dengueTyphoidPricingBn
+    post.dengueTyphoidPricingBn ||
+    post.pharmacyCarePricingBn ||
+    post.bloodCarePricingBn ||
+    post.ambulanceCarePricingBn ||
+    post.upazilaCarePricingBn
   );
 }
+
+export interface BlogSectionNumbers {
+  matrixNum: number;
+  reviewsNum: number;
+  doctorNum: number;
+  hubNum: number;
+  bookingNum: number;
+  pricingNum: number;
+  overviewNum: number;
+  selectionNum: number;
+  emergencyNum: number;
+  faqNum: number;
+}
+
+/**
+ * Dynamically computes 1-indexed sequential section numbers across any blog post.
+ * Guarantees zero gaps and consistent layout order (Core Data First -> In-depth Overview Later).
+ */
+export function getBlogSectionNumbers(post: BlogPost): BlogSectionNumbers {
+  const isUpazila = Boolean(
+    post.slug.includes("healthcare-guide") || post.slug.includes("patient-guide")
+  );
+  const hasDoctorGroups = Boolean(post.doctorGroups && post.doctorGroups.length > 0);
+  const hasChamberHubs = Boolean(post.chamberHubsBn && post.chamberHubsBn.length > 0);
+  const hasBookingGuide = Boolean(post.bookingGuideBn);
+  const hasPricing = checkHasPricingGuide(post);
+  const hasMatrix = Boolean(
+    (post.comparisonTable && post.comparisonTable.length > 0) ||
+    (post.diagnosticComparisonTable && post.diagnosticComparisonTable.length > 0) ||
+    (post.dentalComparisonTable && post.dentalComparisonTable.length > 0) ||
+    (post.physiotherapyComparisonTable && post.physiotherapyComparisonTable.length > 0) ||
+    (post.pharmacyComparisonTable && post.pharmacyComparisonTable.length > 0) ||
+    (post.bloodBankComparisonTable && post.bloodBankComparisonTable.length > 0) ||
+    (post.ambulanceComparisonTable && post.ambulanceComparisonTable.length > 0)
+  );
+  const hasReviews = Boolean(
+    (post.hospitals && post.hospitals.length > 0) ||
+    (post.diagnosticCenters && post.diagnosticCenters.length > 0) ||
+    (post.dentalClinics && post.dentalClinics.length > 0) ||
+    (post.physiotherapyCenters && post.physiotherapyCenters.length > 0) ||
+    (post.pharmacies && post.pharmacies.length > 0) ||
+    (post.bloodBanks && post.bloodBanks.length > 0) ||
+    (post.ambulances && post.ambulances.length > 0)
+  );
+
+  let currentNumber = 1;
+
+  let matrixNum = 0;
+  let reviewsNum = 0;
+  let doctorNum = 0;
+  let hubNum = 0;
+  let bookingNum = 0;
+  let pricingNum = 0;
+
+  if (isUpazila) {
+    if (hasDoctorGroups) doctorNum = currentNumber++;
+    if (hasChamberHubs) hubNum = currentNumber++;
+    if (hasBookingGuide) bookingNum = currentNumber++;
+    if (hasMatrix) matrixNum = currentNumber++;
+    if (hasReviews) reviewsNum = currentNumber++;
+    if (hasPricing) pricingNum = currentNumber++;
+  } else if (hasDoctorGroups) {
+    doctorNum = currentNumber++;
+    if (hasChamberHubs) hubNum = currentNumber++;
+    if (hasBookingGuide) bookingNum = currentNumber++;
+    if (hasPricing) pricingNum = currentNumber++;
+  } else {
+    // Hospital / Diagnostic / Dental / Physio / Pure price list / Emergency
+    if (hasMatrix) matrixNum = currentNumber++;
+    if (hasReviews) reviewsNum = currentNumber++;
+    if (hasPricing) pricingNum = currentNumber++;
+    if (hasBookingGuide) bookingNum = currentNumber++;
+  }
+
+  const overviewNum = currentNumber++;
+  const selectionNum = post.selectionGuideBn ? currentNumber++ : 0;
+  const emergencyNum = post.emergencyDirectoryBn ? currentNumber++ : 0;
+  const faqNum = currentNumber++;
+
+  return {
+    matrixNum,
+    reviewsNum,
+    doctorNum,
+    hubNum,
+    bookingNum,
+    pricingNum,
+    overviewNum,
+    selectionNum,
+    emergencyNum,
+    faqNum,
+  };
+}
+
+/**
+ * Strips existing numeric prefixes and prepends dynamic 1-indexed Bengali section numeral
+ */
+export function formatNumberedTitle(title: string, secNum?: number): string {
+  const cleanTitle = title.replace(/^[০-৯১-৯\d]+[\.\:\-—\s]+/, "").trim();
+  const numStr = secNum ? `${toBanglaNums(secNum)}. ` : "";
+  return `${numStr}${cleanTitle}`;
+}
+

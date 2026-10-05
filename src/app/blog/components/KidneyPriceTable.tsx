@@ -1,5 +1,6 @@
 import { KidneyPackagePriceItem } from "@/types/blog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { formatNumberedTitle } from "@/app/blog/utils/blogAeoHeadingUtils";
 
 interface KidneyPriceTableProps {
   pricingData: {
@@ -7,10 +8,12 @@ interface KidneyPriceTableProps {
     subtitleBn: string;
     packages: KidneyPackagePriceItem[];
   };
+  pricingNum?: number;
 }
 
 export function KidneyPriceTable({
   pricingData,
+  pricingNum,
 }: KidneyPriceTableProps) {
   const items = pricingData.packages.map((item) => ({
     name: item.testOrPackageNameBn,
@@ -23,7 +26,7 @@ export function KidneyPriceTable({
   return (
     <BlogPriceTable
       id="kidney-price-guide"
-      title={pricingData.titleBn}
+      title={formatNumberedTitle(pricingData.titleBn, pricingNum)}
       subtitle={pricingData.subtitleBn}
       items={items}
       columnHeaders={{

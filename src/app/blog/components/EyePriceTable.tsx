@@ -1,5 +1,6 @@
 import { EyeCarePackageItem } from "@/types/blog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { formatNumberedTitle } from "@/app/blog/utils/blogAeoHeadingUtils";
 
 interface EyePriceTableProps {
   pricingData: {
@@ -7,10 +8,12 @@ interface EyePriceTableProps {
     subtitleBn: string;
     packages: EyeCarePackageItem[];
   };
+  pricingNum?: number;
 }
 
 export function EyePriceTable({
   pricingData,
+  pricingNum,
 }: EyePriceTableProps) {
   const items = pricingData.packages.map((item) => ({
     name: item.procedureOrTestNameBn,
@@ -23,7 +26,7 @@ export function EyePriceTable({
   return (
     <BlogPriceTable
       id="eye-price-guide"
-      title={pricingData.titleBn}
+      title={formatNumberedTitle(pricingData.titleBn, pricingNum)}
       subtitle={pricingData.subtitleBn}
       items={items}
       columnHeaders={{

@@ -1,12 +1,15 @@
 import { StrokeCardiacPricingData } from "@/types/strokeCardiacBlog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { formatNumberedTitle } from "@/app/blog/utils/blogAeoHeadingUtils";
 
 interface StrokeCardiacPriceTableProps {
   pricingData: StrokeCardiacPricingData;
+  pricingNum?: number;
 }
 
 export function StrokeCardiacPriceTable({
   pricingData,
+  pricingNum,
 }: StrokeCardiacPriceTableProps) {
   const items = pricingData.packages.map((item) => ({
     name: item.procedureOrTestNameBn,
@@ -19,7 +22,7 @@ export function StrokeCardiacPriceTable({
   return (
     <BlogPriceTable
       id="stroke-cardiac-price-guide"
-      title={pricingData.titleBn}
+      title={formatNumberedTitle(pricingData.titleBn, pricingNum)}
       subtitle="ফেনীর শীর্ষ বেসরকারি হাসপাতাল ও আধুনিক ডায়াগনস্টিকে জরুরি ইসিজি, ট্রপোনিন আই, ব্রেন সিটি স্ক্যান, সিসিইউ বেড ও লাইফ সাপোর্ট অ্যাম্বুলেন্সের সাধারণ ফি এবং হেলথ ক্লাব মেম্বার ছাড়।"
       items={items}
       columnHeaders={{

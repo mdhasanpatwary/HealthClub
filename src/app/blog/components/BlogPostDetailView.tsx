@@ -23,18 +23,17 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { BlogLiveDoctorRoster } from "./BlogLiveDoctorRoster";
 import { Doctor } from "@/services/db";
 import { getDiagnosticTocTitles } from "@/app/blog/utils/blogDiagnosticMetadata";
+import { getHospitalTocTitles } from "./BlogTocList";
 import { SPECIALIZED_HUB_HEADERS } from "@/app/blog/utils/blogHubHeaders";
 import { BlogEmbeddedTool } from "./BlogEmbeddedTool";
 import { getHighDensityBlogFaqs } from "@/app/blog/utils/blogAeoFaqUtils";
 import { BlogMarkdownParagraphs } from "./BlogMarkdownParagraphs";
+import { BlogSelectionGuideSection } from "./BlogSelectionGuideSection";
 import {
   formatAeoOverviewHeading,
-  formatAeoSelectionHeading,
   formatAeoEmergencyHeading,
-  getOverviewDirectAnswer,
-  getSelectionDirectAnswer,
   getEmergencyDirectAnswer,
-  checkHasPricingGuide,
+  getBlogSectionNumbers,
 } from "@/app/blog/utils/blogAeoHeadingUtils";
 
 interface BlogPostDetailViewProps {
@@ -59,29 +58,26 @@ export function BlogPostDetailView({
   const bookingGuide = post.bookingGuideBn;
   const hubHeader = SPECIALIZED_HUB_HEADERS[post.slug];
 
-  const hasPricingGuide = checkHasPricingGuide(post);
 
   const isPurePriceList = post.slug === "feni-medical-test-price-list";
   const isUpazilaArticle = Boolean(
     post.slug.includes("healthcare-guide") || post.slug.includes("patient-guide")
   );
-  const hasDoctorGroups = Boolean(post.doctorGroups && post.doctorGroups.length > 0);
+  const isHospitalArticle = Boolean(
+    post.category === "hospital-guide" ||
+    (post.hospitals && post.hospitals.length > 0) ||
+    post.slug.includes("hospital")
+  );
+  const isDoctorArticle = Boolean(
+    post.category === "doctor-guide" ||
+    (post.doctorGroups && post.doctorGroups.length > 0) ||
+    post.slug.includes("doctor")
+  );
 
-  const selectionGuideNumber = isPurePriceList
-    ? 3
-    : isUpazilaArticle
-      ? 8
-      : hasDoctorGroups
-        ? (hasPricingGuide ? 6 : 5)
-        : (hasPricingGuide ? 5 : 4);
-
-  const emergencyDirectoryNumber = isPurePriceList
-    ? 4
-    : isUpazilaArticle
-      ? 9
-      : selectionGuide
-        ? selectionGuideNumber + 1
-        : selectionGuideNumber;
+  const sectionNumbers = getBlogSectionNumbers(post);
+  const bookingGuideTitle = bookingGuide?.titleBn
+    ? bookingGuide.titleBn.replace(/^[০-৯১-৯\d]+[\.\s\:\-—]*/, "").trim()
+    : undefined;
 
   return (
     <div className="min-h-screen bg-background pb-16">
@@ -158,48 +154,10 @@ export function BlogPostDetailView({
                   bloodBanks={post.bloodBanks}
                   ambulances={post.ambulances}
                   currentSlug={post.slug}
+                  bookingGuideTitle={bookingGuideTitle}
                   defaultOpen={false}
                 />
               </div>
-
-              {/* Overview / Introduction with AEO Conversational Direct Answer Capsule */}
-              <section id="overview" className="scroll-mt-24 space-y-5">
-                <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-                  {`১. ${formatAeoOverviewHeading(
-                    post.slug,
-                    isPurePriceList
-                      ? "ফেনীর ডায়াগনস্টিক পরিকাঠামো ও প্রেক্ষাপট"
-                      : post.slug === "feni-doctor-serial-appointment-guide"
-                        ? "ফেনীতে ডাক্তার সিরিয়াল ও স্বাস্থ্যসেবা"
-                        : post.slug === "best-dental-specialists-in-feni"
-                          ? "ফেনীতে আধুনিক ডেন্টাল কেয়ার"
-                          : post.slug === "feni-hospital-road-ss-k-road-chamber-hub-guide"
-                            ? "হাসপাতাল রোড ও এসএসকে রোড স্বাস্থ্যসেবা করিডোর"
-                            : post.slug === "feni-trunk-road-mizan-road-clinic-pharmacy-hub-guide"
-                              ? "ট্রাঙ্ক রোড ও মিজান রোড স্বাস্থ্যসেবা হাব"
-                              : post.slug === "feni-friday-weekend-doctor-chamber-serial-guide"
-                                ? "শুক্রবার ও ছুটির দিনে বিশেষজ্ঞ ডাক্তার স্বাস্থ্যসেবা"
-                                : isUpazilaArticle
-                                  ? "উপজেলা স্বাস্থ্যসেবা ও পটভূমি"
-                                  : getDiagnosticTocTitles(post.slug).overviewTitle
-                  )}`}
-                </h2>
-
-                {/* Self-contained 1-2 sentence direct answer capsule for AEO & Voice Search */}
-                <div
-                  id="article-quick-summary"
-                  className="rounded-2xl border border-primary/20 bg-primary/5 p-4 sm:p-5 space-y-1.5"
-                >
-                  <span className="text-[11px] uppercase tracking-wider font-bold text-primary block">
-                    সরাসরি প্রশ্নোত্তর ও মূল তথ্য (Quick Answer)
-                  </span>
-                  <p className="text-sm sm:text-base font-medium text-foreground leading-relaxed">
-                    {getOverviewDirectAnswer(post)}
-                  </p>
-                </div>
-
-                <BlogMarkdownParagraphs paragraphs={introParagraphs} />
-              </section>
 
               {/* Interactive Health Calculator Tool (Dwell Time Multiplier) */}
               <BlogEmbeddedTool
@@ -214,8 +172,8 @@ export function BlogPostDetailView({
                   doctorGroups={post.doctorGroups}
                   titleBn={
                     isUpazilaArticle
-                      ? "২. উপজেলা অনুযায়ী বিশেষজ্ঞ ডাক্তার তালিকা"
-                      : hubHeader?.doctorTitle
+                      ? "১. উপজেলা অনুযায়ী বিশেষজ্ঞ ডাক্তার তালিকা"
+                      : hubHeader?.doctorTitle || "১. বিভাগভিত্তিক বিশেষজ্ঞ ডাক্তার তালিকা ও চেম্বার শিডিউল"
                   }
                   subtitleBn={
                     isUpazilaArticle
@@ -239,8 +197,8 @@ export function BlogPostDetailView({
                   hubs={post.chamberHubsBn}
                   titleBn={
                     isUpazilaArticle
-                      ? "৩. উপজেলার প্রধান চেম্বার হাবসমূহ"
-                      : hubHeader?.hubTitle
+                      ? "২. উপজেলার প্রধান চেম্বার হাবসমূহ"
+                      : hubHeader?.hubTitle || "২. কোথায় চেম্বার পাবেন: ফেনী শহরের প্রধান ডাক্তার চেম্বার ও ক্লিনিক্যাল হাবসমূহ"
                   }
                   subtitleBn={
                     isUpazilaArticle
@@ -250,47 +208,79 @@ export function BlogPostDetailView({
                 />
               )}
 
-              {/* Doctor Serial Booking Guide */}
-              {bookingGuide && (
-                <DoctorBookingGuide guide={bookingGuide} />
+              {/* Doctor Serial Booking Guide (for Doctor posts) */}
+              {post.doctorGroups && post.doctorGroups.length > 0 && bookingGuide && (
+                <DoctorBookingGuide
+                  guide={bookingGuide}
+                  sectionNumber={sectionNumbers.bookingNum}
+                />
               )}
 
               {/* Specialized Reviews, Comparison Matrix & Pricing Guides */}
-              <BlogSpecializedSections post={post} />
+              <BlogSpecializedSections
+                post={post}
+                matrixNum={sectionNumbers.matrixNum}
+                reviewsNum={sectionNumbers.reviewsNum}
+                pricingNum={sectionNumbers.pricingNum}
+              />
+
+              {/* Booking & Preparation Guide (for Hospital, Diagnostic & Specialized posts) */}
+              {(!post.doctorGroups || post.doctorGroups.length === 0) && bookingGuide && (
+                <DoctorBookingGuide
+                  guide={bookingGuide}
+                  sectionNumber={sectionNumbers.bookingNum}
+                />
+              )}
+
+              {/* Overview / Detailed Context with intro paragraphs */}
+              {introParagraphs && introParagraphs.length > 0 && (
+                <section id="overview" className="scroll-mt-24 space-y-5">
+                  <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-wider mb-1">
+                    <ShieldCheck className="h-4 w-4" />
+                    <span>পটভূমি ও স্বাস্থ্যসেবা নির্দেশিকা</span>
+                  </div>
+                  <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
+                    {`${toBanglaNums(sectionNumbers.overviewNum)}. ${formatAeoOverviewHeading(
+                      post.slug,
+                      isPurePriceList
+                        ? "ফেনীর ডায়াগনস্টিক পরিকাঠামো ও প্রেক্ষাপট"
+                        : post.slug === "feni-doctor-serial-appointment-guide"
+                          ? "ফেনীতে ডাক্তার সিরিয়াল ও স্বাস্থ্যসেবা প্রেক্ষাপট"
+                          : post.slug === "best-dental-specialists-in-feni"
+                            ? "ফেনীতে আধুনিক ডেন্টাল কেয়ার প্রেক্ষাপট"
+                            : post.slug === "feni-hospital-road-ss-k-road-chamber-hub-guide"
+                              ? "হাসপাতাল রোড ও এসএসকে রোড স্বাস্থ্যসেবা করিডোর"
+                              : post.slug === "feni-trunk-road-mizan-road-clinic-pharmacy-hub-guide"
+                                ? "ট্রাঙ্ক রোড ও মিজান রোড স্বাস্থ্যসেবা হাব"
+                                : post.slug === "feni-friday-weekend-doctor-chamber-serial-guide"
+                                  ? "শুক্রবার ও ছুটির দিনে বিশেষজ্ঞ ডাক্তার স্বাস্থ্যসেবা"
+                                  : isUpazilaArticle
+                                    ? "উপজেলা স্বাস্থ্যসেবা ও পটভূমি"
+                                    : post.slug === "24-hour-pharmacy-in-feni" || post.slug.includes("pharmacy")
+                                      ? "ফেনীতে জরুরি ওষুধ ও ফার্মেসির প্রেক্ষাপট"
+                                      : post.slug === "feni-blood-bank-and-donors-guide" || post.slug.includes("blood")
+                                        ? "ফেনীতে জরুরি রক্ত ও রক্তদাতার প্রেক্ষাপট"
+                                        : post.slug === "feni-ambulance-and-oxygen-service-guide" || post.slug.includes("ambulance")
+                                          ? "ফেনীতে জরুরি অ্যাম্বুলেন্স ও অক্সিজেন সেবার প্রেক্ষাপট"
+                                          : isHospitalArticle
+                                            ? getHospitalTocTitles(post.slug).overviewTitle
+                                            : isDoctorArticle
+                                              ? "ফেনীর বিশেষজ্ঞ ডাক্তার ও স্বাস্থ্যসেবা প্রেক্ষাপট"
+                                              : getDiagnosticTocTitles(post.slug).overviewTitle
+                    )}`}
+                  </h2>
+
+                  <BlogMarkdownParagraphs paragraphs={introParagraphs} />
+                </section>
+              )}
 
               {/* Selection Guide */}
               {selectionGuide && (
-                <section id="selection-guide" className="scroll-mt-24 space-y-5">
-                  <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-                    {`${toBanglaNums(selectionGuideNumber)}. `}
-                    {formatAeoSelectionHeading(selectionGuide.titleBn)}
-                  </h2>
-                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                    {getSelectionDirectAnswer(post)}
-                  </p>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {(
-                      selectionGuide.pointsBn ||
-                      (selectionGuide as unknown as { criteria?: { title: string; desc: string }[] }).criteria ||
-                      (selectionGuide as unknown as { points?: { title: string; desc: string }[] }).points ||
-                      []
-                    ).map((pt, idx) => (
-                      <div
-                        key={idx}
-                        className="rounded-2xl border border-border/80 bg-card p-5 space-y-2"
-                      >
-                        <h3 className="font-heading text-base font-bold text-primary flex items-center gap-2">
-                          <span className="h-2 w-2 rounded-full bg-primary" />
-                          <span>{pt.title}</span>
-                        </h3>
-                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                          {pt.desc}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </section>
+                <BlogSelectionGuideSection
+                  selectionGuide={selectionGuide}
+                  post={post}
+                  sectionNumber={sectionNumbers.selectionNum}
+                />
               )}
 
               {/* Health Club Member Discount Banner (Hidden for pure emergency public directory guides) */}
@@ -304,7 +294,7 @@ export function BlogPostDetailView({
                   <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400">
                     <Siren className="h-5 w-5" />
                     <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
-                      {`${toBanglaNums(emergencyDirectoryNumber)}. `}
+                      {`${toBanglaNums(sectionNumbers.emergencyNum)}. `}
                       {formatAeoEmergencyHeading(emergencyDirectory.titleBn)}
                     </h2>
                   </div>
@@ -413,6 +403,7 @@ export function BlogPostDetailView({
               hasOxygenPricing={!!post.oxygenPricingBn}
               hasDengueTyphoidPricing={!!post.dengueTyphoidPricingBn}
               hasUpazilaPricing={!!post.upazilaCarePricingBn}
+              bookingGuideTitle={bookingGuideTitle}
               pharmacies={post.pharmacies}
               bloodBanks={post.bloodBanks}
               ambulances={post.ambulances}

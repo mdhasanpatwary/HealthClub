@@ -1,0 +1,27 @@
+[
+  {
+    "id": "3e6632ba-fc81-49a1-9487-02fdd3cb60b5",
+    "slug": "omron-hem-7120-bp-monitor",
+    "nameBn": "ওমরন ডিজিটাল ব্লাড প্রেশার মনিটর (HEM-7120)",
+    "nameEn": "Omron HEM-7120 Digital Blood Pressure Monitor",
+    "price": 2650,
+    "regularPrice": 2950,
+    "discountBadge": null,
+    "category": "medical_device",
+    "categoryBn": "মেডিকেল ডিভাইস",
+    "descriptionBn": "জাপানি প্রযুক্তির অত্যন্ত নিখুঁত ও নির্ভরযোগ্য ডিজিটাল রক্তচাপ পরিমাপক যন্ত্র। বাড়িতে বসে সহজেই রক্তচাপ ও পালস রেট পরিমাপের জন্য আদর্শ। এক স্পর্শেই স্বয়ংক্রিয় রিডিং ও হাইপারটেনশন ইন্ডিকেটর যুক্ত।",
+    "descriptionEn": "Reliable digital blood pressure monitor with oscillometric technology. Features one-touch operation and hypertension indicator.",
+    "featuresBn": [
+      "এক-স্পর্শে স্বয়ংক্রিয় অপারেশন",
+      "ইনটেলিসেন্স প্রযুক্তি ও নিখুঁত রিডিং",
+      "সর্বশেষ রিডিং মেমোরি স্টোরেজ",
+      "৩ বছরের অফিসিয়াল ওয়ারেন্টি"
+    ],
+    "imageUrl": "https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=800&auto=format&fit=crop&q=80",
+    "inStock": true,
+    "featured": true,
+    "order": 1,
+    "createdAt": "2026-10-03T18:01:06.541Z",
+    "updatedAt": "2026-10-05T07:27:24.983Z"
+  }
+]

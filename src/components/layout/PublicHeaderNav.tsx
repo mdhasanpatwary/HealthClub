@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Siren, Calculator, BookOpen } from "lucide-react";
+import { ChevronDown, Siren, Calculator, BookOpen, ShoppingBag } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -93,6 +93,22 @@ export default function PublicHeaderNav() {
         )}
       </Link>
 
+      {/* 5. Shop */}
+      <Link
+        href="/shop"
+        prefetch={false}
+        aria-current={isActive("/shop") ? "page" : undefined}
+        className={`relative rounded-lg px-2.5 lg:px-3 py-2 text-sm font-medium transition-all duration-200 ${
+          isActive("/shop")
+            ? "text-primary font-bold"
+            : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+        }`}
+      >
+        শপ
+        {isActive("/shop") && (
+          <span className="absolute bottom-1 left-2.5 lg:left-3 right-2.5 lg:right-3 h-0.5 rounded-full bg-primary animate-scale-in" />
+        )}
+      </Link>
 
       {/* 5. Services Dropdown (Emergency, Calculators, Health Tips) */}
       <DropdownMenu>
@@ -176,7 +192,26 @@ export default function PublicHeaderNav() {
             </Link>
           </DropdownMenuItem>
 
-
+          <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
+            <Link
+              href="/shop"
+              prefetch={false}
+              aria-current={isActive("/shop") ? "page" : undefined}
+              className="flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 hover:bg-emerald-500/10 dark:hover:bg-emerald-950/40 text-foreground group"
+            >
+              <div className="h-8 w-8 rounded-xl bg-emerald-500/15 dark:bg-emerald-500/25 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <ShoppingBag className="h-4 w-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <span className="block text-xs font-bold text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors truncate">
+                  প্রোডাক্ট শপ
+                </span>
+                <span className="block text-[11px] text-muted-foreground group-hover:text-foreground/80 dark:group-hover:text-slate-300 font-normal transition-colors truncate">
+                  মেডিকেল ডিভাইস ও সামগ্রী
+                </span>
+              </div>
+            </Link>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 

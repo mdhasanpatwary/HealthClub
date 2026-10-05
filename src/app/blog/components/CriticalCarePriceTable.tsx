@@ -1,12 +1,15 @@
 import { CriticalCarePricingData } from "@/types/criticalCareBlog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { formatNumberedTitle } from "@/app/blog/utils/blogAeoHeadingUtils";
 
 interface CriticalCarePriceTableProps {
   pricingData: CriticalCarePricingData;
+  pricingNum?: number;
 }
 
 export function CriticalCarePriceTable({
   pricingData,
+  pricingNum,
 }: CriticalCarePriceTableProps) {
   const items = pricingData.packages.map((item) => ({
     name: item.serviceOrBedNameBn,
@@ -19,7 +22,7 @@ export function CriticalCarePriceTable({
   return (
     <BlogPriceTable
       id="critical-care-price-guide"
-      title={pricingData.titleBn}
+      title={formatNumberedTitle(pricingData.titleBn, pricingNum)}
       subtitle="ফেনীর শীর্ষ বেসরকারি হাসপাতালে জেনারেল আইসিইউ, সিসিইউ, এনআইসিইউ ইনকিউবেটর, মেকানিক্যাল ভেন্টিলেটর ও লাইফ সাপোর্টের সাধারণ খরচ এবং হেলথ ক্লাব মেম্বারদের ১০-৩০% নিশ্চিত ছাড়।"
       items={items}
       columnHeaders={{

@@ -36,6 +36,7 @@ export interface StandardEntityTocProps {
   subItems?: TocSubItem[];
   priceGuideId?: string;
   priceGuideTitle?: string;
+  bookingGuideTitle?: string;
   selectionGuideTitle?: string;
   emergencyTitle?: string;
   secNum: (n: number) => string;
@@ -50,6 +51,7 @@ export function StandardEntityToc({
   subItems,
   priceGuideId,
   priceGuideTitle,
+  bookingGuideTitle,
   selectionGuideTitle,
   emergencyTitle,
   secNum,
@@ -66,11 +68,6 @@ export function StandardEntityToc({
 
   return (
     <ol className="space-y-1.5 list-none pl-0">
-      <li>
-        <a href="#overview" className={linkClass("overview")}>
-          {secNum(cur++)}{overviewTitle}
-        </a>
-      </li>
       {matrixTitle && (
         <li>
           <a href="#comparison-matrix" className={linkClass("comparison-matrix")}>
@@ -96,6 +93,18 @@ export function StandardEntityToc({
           </a>
         </li>
       )}
+      {bookingGuideTitle && (
+        <li>
+          <a href="#serial-guide" className={linkClass("serial-guide")}>
+            {secNum(cur++)}{bookingGuideTitle}
+          </a>
+        </li>
+      )}
+      <li>
+        <a href="#overview" className={linkClass("overview")}>
+          {secNum(cur++)}{overviewTitle}
+        </a>
+      </li>
       {selectionGuideTitle && (
         <li>
           <a href="#selection-guide" className={linkClass("selection-guide")}>

@@ -1,5 +1,6 @@
 import { DiabetesCarePackageItem } from "@/types/blog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { formatNumberedTitle } from "@/app/blog/utils/blogAeoHeadingUtils";
 
 interface DiabetesPriceTableProps {
   pricingData: {
@@ -7,10 +8,12 @@ interface DiabetesPriceTableProps {
     subtitleBn: string;
     packages: DiabetesCarePackageItem[];
   };
+  pricingNum?: number;
 }
 
 export function DiabetesPriceTable({
   pricingData,
+  pricingNum,
 }: DiabetesPriceTableProps) {
 
   const items = pricingData.packages.map((item) => ({
@@ -24,8 +27,7 @@ export function DiabetesPriceTable({
   return (
     <BlogPriceTable
       id="diabetes-price-guide"
-      title={pricingData.titleBn
-      }
+      title={formatNumberedTitle(pricingData.titleBn, pricingNum)}
       subtitle={pricingData.subtitleBn
       }
       items={items}

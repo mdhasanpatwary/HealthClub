@@ -1,5 +1,6 @@
 import { PediatricCarePackageItem } from "@/types/blog";
 import { BlogPriceTable } from "./BlogPriceTable";
+import { formatNumberedTitle } from "@/app/blog/utils/blogAeoHeadingUtils";
 
 interface PediatricPriceTableProps {
   pricingData: {
@@ -7,10 +8,12 @@ interface PediatricPriceTableProps {
     subtitleBn: string;
     packages: PediatricCarePackageItem[];
   };
+  pricingNum?: number;
 }
 
 export function PediatricPriceTable({
   pricingData,
+  pricingNum,
 }: PediatricPriceTableProps) {
 
   const items = pricingData.packages.map((item) => ({
@@ -24,8 +27,7 @@ export function PediatricPriceTable({
   return (
     <BlogPriceTable
       id="pediatric-price-guide"
-      title={pricingData.titleBn
-      }
+      title={formatNumberedTitle(pricingData.titleBn, pricingNum)}
       subtitle={pricingData.subtitleBn
       }
       items={items}

@@ -60,7 +60,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ) {
       priority = 0.95;
       changeFrequency = "daily";
-    } else if (route === "/partner-hospitals" || route === "/membership" || route === "/blog") {
+    } else if (route === "/partner-hospitals" || route === "/membership" || route === "/blog" || route === "/shop") {
       priority = 0.9;
       changeFrequency = "daily";
     } else if (route === "/health-tips" || route === "/health-tools") {
