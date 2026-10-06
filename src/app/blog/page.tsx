@@ -2,7 +2,6 @@ import JsonLd from "@/components/seo/JsonLd";
 import { BLOG_FILTER_PILLS } from "@/data/blog/blogCategories";
 import { getAllBlogPostCardsAction } from "@/app/actions/blogAdminActions";
 import { BlogSearchFilter } from "./components/BlogSearchFilter";
-import { BlogCard } from "./components/BlogCard";
 import {
   BookOpen,
   Hospital,
@@ -10,46 +9,26 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
-import { toBanglaNums } from "@/lib/utils";
-import {
-  paginateBlogPosts,
-  DEFAULT_BLOG_PAGE_SIZE,
-} from "./utils/blogPagination";
 
+export const dynamic = "force-static";
 export const revalidate = false; // Pure static SSG (on-demand revalidated on blog updates)
 
-interface BlogPageProps {
-  searchParams?: Promise<{
-    page?: string;
-    category?: string;
-    search?: string;
-  }>;
-}
-
-export async function generateMetadata({ searchParams }: BlogPageProps) {
-  const { page, category, search } = (await searchParams) || {};
-  const currentPage = Math.max(1, parseInt(page || "1", 10) || 1);
-  const pageSuffix = currentPage > 1 ? ` (পৃষ্ঠা ${toBanglaNums(currentPage)})` : "";
-
-  const ogTitle = `স্বাস্থ্যসেবা ব্লগ ও ফেনী হাসপাতাল গাইড${pageSuffix} | হেলথ ক্লাব`;
+export async function generateMetadata() {
+  const ogTitle = "স্বাস্থ্যসেবা ব্লগ ও ফেনী হাসপাতাল গাইড | হেলথ ক্লাব";
   const ogDesc = "ফেনীর সেরা হাসপাতাল ও স্বাস্থ্যসেবা প্রতিষ্ঠানের বিস্তারিত রিভিউ, জরুরি অ্যাম্বুলেন্স তালিকা ও সাশ্রয়ী চিকিৎসার নির্ভরযোগ্য গাইড।";
-
-  const queryParams = new URLSearchParams();
-  if (currentPage > 1) queryParams.set("page", String(currentPage));
-  if (category && category !== "all") queryParams.set("category", category);
-  const canonicalUrl = `${SITE_URL}/blog${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
+  const canonicalUrl = `${SITE_URL}/blog`;
 
   return {
-    title: `স্বাস্থ্যসেবা ব্লগ ও ফেনী হাসপাতাল রিভিউ গাইড${pageSuffix}`,
+    title: "স্বাস্থ্যসেবা ব্লগ ও ফেনী হাসপাতাল রিভিউ গাইড",
     description: ogDesc,
     alternates: {
       canonical: canonicalUrl,
     },
     robots: {
-      index: !search,
+      index: true,
       follow: true,
       googleBot: {
-        index: !search,
+        index: true,
         follow: true,
         "max-video-preview": -1,
         "max-image-preview": "large",
@@ -120,22 +99,8 @@ function BlogHeroSection() {
   );
 }
 
-export default async function BlogPage({ searchParams }: BlogPageProps) {
-  const resolvedSearchParams = (await searchParams) || {};
-  const currentPage = Math.max(1, parseInt(resolvedSearchParams.page || "1", 10) || 1);
-  const selectedCategory = resolvedSearchParams.category?.trim() || "all";
-  const searchQuery = resolvedSearchParams.search?.trim() || "";
-
+export default async function BlogPage() {
   const allCardPosts = await getAllBlogPostCardsAction();
-  const paginatedResult = paginateBlogPosts(allCardPosts, {
-    page: currentPage,
-    pageSize: DEFAULT_BLOG_PAGE_SIZE,
-    category: selectedCategory,
-    search: searchQuery,
-    filterPills: BLOG_FILTER_PILLS,
-  });
-
-  const cardPosts = paginatedResult.posts;
 
   const jsonLdData = {
     "@context": "https://schema.org",
@@ -202,24 +167,9 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           </div>
 
           <BlogSearchFilter
-            totalItems={paginatedResult.totalItems}
-            totalPages={paginatedResult.totalPages}
-            currentPage={paginatedResult.currentPage}
-            pageSize={paginatedResult.pageSize}
-            currentCategory={selectedCategory}
-            currentSearch={searchQuery}
+            allPosts={allCardPosts}
             filterPills={BLOG_FILTER_PILLS}
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {cardPosts.map((post, idx) => (
-                <BlogCard
-                  key={post.slug}
-                  post={post}
-                  priority={idx < 3}
-                />
-              ))}
-            </div>
-          </BlogSearchFilter>
+          />
         </section>
       </div>
     </div>

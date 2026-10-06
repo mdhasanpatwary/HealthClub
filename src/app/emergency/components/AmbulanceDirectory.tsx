@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef, useTransition, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { AMBULANCE_TYPES, AmbulanceService } from "@/data/emergencyData";
+import { paginateAmbulances, DEFAULT_AMBULANCE_PAGE_SIZE } from "../utils/ambulancePagination";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Pagination } from "@/components/ui/pagination";
-import { Truck, Search, PlusCircle, Activity, Wind, Snowflake, X, Loader2 } from "lucide-react";
+import { Truck, Search, PlusCircle, Activity, Wind, Snowflake, X } from "lucide-react";
 import { AmbulanceRegisterDialog } from "./AmbulanceRegisterDialog";
 import { AmbulanceCard } from "./AmbulanceCard";
 import { toBanglaNums } from "@/lib/utils";
@@ -14,119 +14,102 @@ import { toBanglaNums } from "@/lib/utils";
 interface AmbulanceDirectoryProps {
   ambulances?: AmbulanceService[];
   initialAmbulances?: AmbulanceService[];
-  totalItems?: number;
-  totalPages?: number;
-  currentPage?: number;
   pageSize?: number;
-  currentType?: string;
-  currentSearch?: string;
-  counts?: Record<string, number>;
 }
 
 export function AmbulanceDirectory({
-  ambulances: initialAmbulancesList,
+  ambulances: passedAmbulances,
   initialAmbulances,
-  totalItems: initialTotalItems,
-  totalPages: initialTotalPages,
-  currentPage: initialCurrentPage = 1,
-  pageSize = 8,
-  currentType = "all",
-  currentSearch = "",
-  counts: initialCounts,
+  pageSize = DEFAULT_AMBULANCE_PAGE_SIZE,
 }: AmbulanceDirectoryProps) {
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isAmbulanceRegisterOpen, setIsAmbulanceRegisterOpen] = useState(false);
-
-  // Support both ambulances and fallback initialAmbulances
-  const ambulances = initialAmbulancesList ?? initialAmbulances ?? [];
-  const totalItems = initialTotalItems ?? ambulances.length;
-  const totalPages = initialTotalPages ?? Math.max(1, Math.ceil(totalItems / pageSize));
-  const currentPage = initialCurrentPage;
-
-  const [ambulanceSearch, setAmbulanceSearch] = useState(currentSearch);
-  const [prevSearch, setPrevSearch] = useState(currentSearch);
-  const [selectedAmbulanceType, setSelectedAmbulanceType] = useState(currentType);
-  const [prevType, setPrevType] = useState(currentType);
-
-  // Sync state if server props update externally (e.g. browser back/forward or server re-render)
-  if (currentSearch !== prevSearch) {
-    setPrevSearch(currentSearch);
-    setAmbulanceSearch(currentSearch);
-  }
-  if (currentType !== prevType) {
-    setPrevType(currentType);
-    setSelectedAmbulanceType(currentType);
-  }
-
-  const createUrl = useCallback(
-    (overrides: { page?: number; type?: string; search?: string }) => {
-      const p = overrides.page !== undefined ? overrides.page : currentPage;
-      const t = overrides.type !== undefined ? overrides.type : selectedAmbulanceType;
-      const q = overrides.search !== undefined ? overrides.search : ambulanceSearch;
-
-      const params = new URLSearchParams();
-      if (p > 1) params.set("page", String(p));
-      if (t && t !== "all") params.set("type", t);
-      if (q.trim()) params.set("search", q.trim());
-
-      const qs = params.toString();
-      return `/emergency/ambulances${qs ? `?${qs}` : ""}`;
-    },
-    [currentPage, selectedAmbulanceType, ambulanceSearch]
+  const allAmbulances = useMemo(
+    () => passedAmbulances ?? initialAmbulances ?? [],
+    [passedAmbulances, initialAmbulances]
   );
 
-  const navigate = useCallback(
-    (
-      overrides: { page?: number; type?: string; search?: string },
-      shouldScrollTop = false
-    ) => {
-      const targetUrl = createUrl(overrides);
-      startTransition(() => {
-        router.push(targetUrl, { scroll: false });
-        if (shouldScrollTop && containerRef.current) {
-          containerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      });
-    },
-    [createUrl, router]
-  );
+  const [ambulanceSearch, setAmbulanceSearch] = useState("");
+  const [selectedAmbulanceType, setSelectedAmbulanceType] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // Debounced search query synchronization
+  // Sync with URL query parameters on initial client mount
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (ambulanceSearch.trim() !== currentSearch.trim()) {
-        navigate({ search: ambulanceSearch, page: 1 });
-      }
-    }, 350);
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const t = params.get("type");
+    const q = params.get("search");
+    const p = parseInt(params.get("page") || "1", 10);
+    queueMicrotask(() => {
+      if (t) setSelectedAmbulanceType(t);
+      if (q) setAmbulanceSearch(q);
+      if (p > 1) setCurrentPage(p);
+    });
+  }, []);
 
-    return () => clearTimeout(timer);
-  }, [ambulanceSearch, currentSearch, navigate]);
+  const paginatedResult = useMemo(() => {
+    return paginateAmbulances(allAmbulances, {
+      page: currentPage,
+      pageSize,
+      type: selectedAmbulanceType,
+      search: ambulanceSearch,
+    });
+  }, [allAmbulances, currentPage, pageSize, selectedAmbulanceType, ambulanceSearch]);
+
+  const displayedAmbulances = paginatedResult.ambulances;
+  const totalItems = paginatedResult.totalItems;
+  const totalPages = paginatedResult.totalPages;
+  const counts = paginatedResult.counts;
+
+  // Sync URL in address bar without triggering Next.js server actions / RSC
+  const updateUrlParams = useCallback((p: number, t: string, q: string) => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams();
+    if (p > 1) params.set("page", String(p));
+    if (t && t !== "all") params.set("type", t);
+    if (q.trim()) params.set("search", q.trim());
+    const qs = params.toString();
+    const newPath = `/emergency/ambulances${qs ? `?${qs}` : ""}`;
+    window.history.replaceState(null, "", newPath);
+  }, []);
 
   const handleTypeSelect = (typeId: string) => {
     if (typeId === selectedAmbulanceType) return;
     setSelectedAmbulanceType(typeId);
-    navigate({ type: typeId, page: 1 });
+    setCurrentPage(1);
+    updateUrlParams(1, typeId, ambulanceSearch);
+  };
+
+  const handleSearchChange = (val: string) => {
+    setAmbulanceSearch(val);
+    setCurrentPage(1);
+    updateUrlParams(1, selectedAmbulanceType, val);
   };
 
   const handleClearSearch = () => {
     setAmbulanceSearch("");
-    navigate({ search: "", page: 1 });
+    setCurrentPage(1);
+    updateUrlParams(1, selectedAmbulanceType, "");
   };
 
   const handleResetFilters = () => {
     setAmbulanceSearch("");
     setSelectedAmbulanceType("all");
-    navigate({ type: "all", search: "", page: 1 });
+    setCurrentPage(1);
+    updateUrlParams(1, "all", "");
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    updateUrlParams(page, selectedAmbulanceType, ambulanceSearch);
+    if (containerRef.current) {
+      containerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
   const startItem = totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1;
   const endItem = Math.min(currentPage * pageSize, totalItems);
   const isFiltered = ambulanceSearch !== "" || selectedAmbulanceType !== "all";
-
-  // Counts fallback
-  const counts = initialCounts ?? { all: totalItems };
 
   return (
     <div ref={containerRef} className="space-y-4 scroll-mt-20">
@@ -229,7 +212,7 @@ export function AmbulanceDirectory({
             aria-label="অ্যাম্বুলেন্সের নাম, চালক, এলাকা বা ফোন নম্বর দিয়ে খুঁজুন"
             placeholder="অ্যাম্বুলেন্সের নাম, চালক, এলাকা বা ফোন নম্বর দিয়ে খুঁজুন..."
             value={ambulanceSearch}
-            onChange={(e) => setAmbulanceSearch(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
             className="pl-9.5 pr-9 h-10 bg-background text-sm rounded-xl border-border"
           />
           {ambulanceSearch && (
@@ -245,7 +228,7 @@ export function AmbulanceDirectory({
         </div>
       </div>
 
-      {/* Donors/Ambulance Count Summary & Loading Indicator */}
+      {/* Donors/Ambulance Count Summary */}
       <div className="flex items-center justify-between px-1 text-xs">
         <div className="flex items-center gap-2 text-muted-foreground font-semibold">
           <span>
@@ -258,12 +241,6 @@ export function AmbulanceDirectory({
               "০টি"
             )}
           </span>
-          {isPending && (
-            <span className="inline-flex items-center gap-1 text-primary font-bold animate-pulse">
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              <span>লোড হচ্ছে...</span>
-            </span>
-          )}
         </div>
 
         {isFiltered && (
@@ -278,14 +255,10 @@ export function AmbulanceDirectory({
       </div>
 
       {/* Ambulances Grid */}
-      <div
-        className={`transition-opacity duration-200 ${
-          isPending ? "opacity-60 pointer-events-none" : "opacity-100"
-        }`}
-      >
-        {ambulances.length > 0 ? (
+      <div>
+        {displayedAmbulances.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {ambulances.map((amb) => (
+            {displayedAmbulances.map((amb) => (
               <AmbulanceCard key={amb.id} ambulance={amb} />
             ))}
           </div>
@@ -312,7 +285,7 @@ export function AmbulanceDirectory({
         )}
       </div>
 
-      {/* Server-Side Pagination Controls */}
+      {/* Pagination Controls */}
       {totalPages > 1 && (
         <div className="pt-2">
           <Pagination
@@ -320,9 +293,8 @@ export function AmbulanceDirectory({
             totalPages={totalPages}
             pageSize={pageSize}
             totalItems={totalItems}
-            getPageUrl={(page) => createUrl({ page })}
-            onPageChange={(page) => navigate({ page }, true)}
-            disabled={isPending}
+            getPageUrl={(page) => `#page-${page}`}
+            onPageChange={(page) => handlePageChange(page)}
             itemLabel="টি অ্যাম্বুলেন্স সেবা"
             className="rounded-2xl border border-border/70 bg-card shadow-xs"
           />

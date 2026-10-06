@@ -7,49 +7,14 @@ import { Heart, ShieldCheck, PhoneCall, Droplets, UserCheck, HeartHandshake } fr
 import { getEmergencyDataAction } from "@/app/actions/emergencyAdminActions";
 import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
-import { toBanglaNums } from "@/lib/utils";
-import { UPAZILAS_FENI } from "@/data/emergencyData";
-import {
-  paginateBloodDonors,
-  normalizeBloodGroup,
-  DEFAULT_DONOR_PAGE_SIZE,
-} from "../utils/bloodDonorPagination";
 
+export const dynamic = "force-static";
 export const revalidate = false; // Pure static SSG on base page, on-demand revalidated on emergency updates
 
-interface EmergencyBloodDonorsPageProps {
-  searchParams?: Promise<{
-    page?: string;
-    group?: string;
-    bloodGroup?: string;
-    upazila?: string;
-    search?: string;
-  }>;
-}
-
-export async function generateMetadata({ searchParams }: EmergencyBloodDonorsPageProps) {
-  const resolvedParams = (await searchParams) || {};
-  const currentPage = Math.max(1, parseInt(resolvedParams.page || "1", 10) || 1);
-  const selectedGroup = normalizeBloodGroup(resolvedParams.bloodGroup || resolvedParams.group);
-  const selectedUpazila = (resolvedParams.upazila || "all").trim();
-  const searchQuery = (resolvedParams.search || "").trim();
-
-  const upazilaObj = UPAZILAS_FENI.find((u) => u.id === selectedUpazila);
-  const upazilaNameBn = upazilaObj && upazilaObj.id !== "all" ? ` ${upazilaObj.nameBn}` : "";
-  const groupNameBn = selectedGroup !== "all" ? ` (${selectedGroup} রক্তের গ্রুপ)` : "";
-  const pageSuffix = currentPage > 1 ? ` (পৃষ্ঠা ${toBanglaNums(currentPage)})` : "";
-
-  const title = `ফেনী${upazilaNameBn} রক্তদাতা ডিরেক্টরি${groupNameBn}${pageSuffix} | হেলথ ক্লাব`;
-  const description = `ফেনীর${upazilaNameBn} ভেরিফাইড স্বেচ্ছাসেবী রক্তদাতা ডিরেক্টরি${groupNameBn}: A+, B+, O+, AB+ সহ সকল গ্রুপের রক্তদাতাদের সরাসরি মোবাইল ও WhatsApp নম্বর${pageSuffix}।`;
-
-  const queryParams = new URLSearchParams();
-  if (currentPage > 1) queryParams.set("page", String(currentPage));
-  if (selectedGroup !== "all") queryParams.set("group", selectedGroup);
-  if (selectedUpazila !== "all") queryParams.set("upazila", selectedUpazila);
-
-  const canonicalUrl = `${SITE_URL}/emergency/blood-donors${
-    queryParams.toString() ? `?${queryParams.toString()}` : ""
-  }`;
+export async function generateMetadata() {
+  const title = "ফেনী রক্তদাতা ডিরেক্টরি | স্বেচ্ছাসেবী রক্তের গ্রুপ ও ডোনার তালিকা - হেলথ ক্লাব";
+  const description = "ফেনীর ভেরিফাইড স্বেচ্ছাসেবী রক্তদাতা ডিরেক্টরি: A+, B+, O+, AB+ সহ সকল গ্রুপের রক্তদাতাদের সরাসরি মোবাইল ও WhatsApp নম্বর।";
+  const canonicalUrl = `${SITE_URL}/emergency/blood-donors`;
 
   return {
     title,
@@ -88,10 +53,10 @@ export async function generateMetadata({ searchParams }: EmergencyBloodDonorsPag
       images: DEFAULT_TWITTER_IMAGES,
     },
     robots: {
-      index: !searchQuery,
+      index: true,
       follow: true,
       googleBot: {
-        index: !searchQuery,
+        index: true,
         follow: true,
         "max-video-preview": -1,
         "max-image-preview": "large",
@@ -101,43 +66,16 @@ export async function generateMetadata({ searchParams }: EmergencyBloodDonorsPag
   };
 }
 
-export default async function EmergencyBloodDonorsPage({
-  searchParams,
-}: EmergencyBloodDonorsPageProps) {
-  const resolvedParams = (await searchParams) || {};
-  const currentPage = Math.max(1, parseInt(resolvedParams.page || "1", 10) || 1);
-  const selectedGroup = normalizeBloodGroup(resolvedParams.bloodGroup || resolvedParams.group);
-  const selectedUpazila = (resolvedParams.upazila || "all").trim();
-  const searchQuery = (resolvedParams.search || "").trim();
-
+export default async function EmergencyBloodDonorsPage() {
   const [{ bloodDonors }, contactSettings] = await Promise.all([
     getEmergencyDataAction(),
     getCachedContactSettings(),
   ]);
 
   const approvedDonors = bloodDonors.filter((d) => d.status !== "pending");
-
-  const paginatedResult = paginateBloodDonors(approvedDonors, {
-    page: currentPage,
-    pageSize: DEFAULT_DONOR_PAGE_SIZE,
-    group: selectedGroup,
-    upazila: selectedUpazila,
-    search: searchQuery,
-  });
-
   const rawHotline = contactSettings.hotline.replace(/[^0-9]/g, "");
   const formattedTel = `+880${rawHotline.replace(/^(880|88|0)/, "")}`;
-
-  const queryParams = new URLSearchParams();
-  if (paginatedResult.currentPage > 1) {
-    queryParams.set("page", String(paginatedResult.currentPage));
-  }
-  if (selectedGroup !== "all") queryParams.set("group", selectedGroup);
-  if (selectedUpazila !== "all") queryParams.set("upazila", selectedUpazila);
-
-  const pageCanonicalUrl = `${SITE_URL}/emergency/blood-donors${
-    queryParams.toString() ? `?${queryParams.toString()}` : ""
-  }`;
+  const pageCanonicalUrl = `${SITE_URL}/emergency/blood-donors`;
 
   const bloodDonorFaqs: FAQItem[] = [
     {
@@ -299,14 +237,7 @@ export default async function EmergencyBloodDonorsPage({
             ফেনী রক্তদাতা তালিকা ও রক্তের গ্রুপ ফিল্টার
           </h2>
           <BloodDonorDirectory
-            donors={paginatedResult.donors}
-            totalItems={paginatedResult.totalItems}
-            totalPages={paginatedResult.totalPages}
-            currentPage={paginatedResult.currentPage}
-            pageSize={paginatedResult.pageSize}
-            currentGroup={selectedGroup}
-            currentUpazila={selectedUpazila}
-            currentSearch={searchQuery}
+            initialBloodDonors={approvedDonors}
           />
         </section>
 

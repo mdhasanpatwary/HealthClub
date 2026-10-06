@@ -2,34 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "@/lib/session";
 import { canAccessAdminRoute } from "@/lib/permissions";
 import { logger } from "@/lib/logger";
-import { getDepartmentSeoConfig } from "@/data/doctorSeoData";
-import { getUpazilaSeoConfig } from "@/data/feniLocations";
 
 const protectedRoutes = ["/dashboard", "/admin", "/profile", "/partner"];
 const adminRoutes = ["/admin"];
 const partnerRoutes = ["/partner"];
 const authRoutes = ["/login", "/register"];
-
-// Public routes that never need session checks — skip JWT decrypt entirely
-const publicRoutes = [
-  "/about-us",
-  "/partner-hospitals",
-  "/consultants",
-  "/doctors",
-  "/membership",
-  "/contact",
-  "/blog",
-  "/privacy-policy",
-  "/terms-conditions",
-  "/become-partner",
-  "/forgot-password",
-  "/offline",
-  "/verify",
-  "/emergency",
-  "/health-tools",
-  "/health-tips",
-  "/register/payment",
-];
 
 const matchRoute = (path: string, route: string) => {
   return path === route || path.startsWith(route + "/");
@@ -45,77 +22,7 @@ export async function proxy(req: NextRequest) {
       return new NextResponse("Access restricted for automated scrapers", { status: 403 });
     }
 
-    const requestHeaders = new Headers(req.headers);
-    requestHeaders.set("x-pathname", path);
-
-    // Auto-redirect malformed blog URLs like "/blog — slug" or "/blog - slug" or "/blog/ — slug" to canonical "/blog/:slug"
-    let decodedPath = path;
-    try {
-      decodedPath = decodeURIComponent(path);
-    } catch {
-      // ignore
-    }
-    const malformedBlogMatch = decodedPath.match(
-      /^\/blog(?:[\s%20]*[—–-][\s%20]*|\/+(?:[\s%20]*[—–-][\s%20]*))(.+)$/i
-    );
-    if (malformedBlogMatch) {
-      const cleanSlug = malformedBlogMatch[1].trim().replace(/^[—–\s-]+|[—–\s-]+$/g, "");
-      if (cleanSlug) {
-        return NextResponse.redirect(new URL(`/blog/${cleanSlug}`, req.nextUrl), 308);
-      }
-    }
-
-    // Direct legacy /consultants query parameters (?dept=... or ?upazila=...) to dedicated canonical landing pages
-    if (path === "/consultants") {
-      const dept = req.nextUrl.searchParams.get("dept");
-      const upazila = req.nextUrl.searchParams.get("upazila");
-      if (dept && dept !== "all") {
-        const deptSeo = getDepartmentSeoConfig(dept);
-        if (deptSeo) {
-          const upazilaParam = upazila && upazila !== "all" ? `?upazila=${encodeURIComponent(upazila)}` : "";
-          return NextResponse.redirect(new URL(`/consultants/department/${deptSeo.slug}${upazilaParam}`, req.nextUrl), 308);
-        }
-      }
-      if (upazila && upazila !== "all") {
-        const upzSeo = getUpazilaSeoConfig(upazila);
-        if (upzSeo) {
-          return NextResponse.redirect(new URL(`/consultants/location/${upzSeo.slug}`, req.nextUrl), 308);
-        }
-      }
-    }
-
-    // Direct legacy /partner-hospitals?category=... query parameter to dedicated canonical category route
-    if (path === "/partner-hospitals") {
-      const cat = req.nextUrl.searchParams.get("category");
-      if (cat && ["hospital", "diagnostic", "pharmacy"].includes(cat.trim().toLowerCase())) {
-        return NextResponse.redirect(new URL(`/partner-hospitals/category/${cat.trim().toLowerCase()}`, req.nextUrl), 308);
-      }
-    }
-
-    // Direct legacy /emergency?tab=... query parameter to dedicated sub-routes
-    if (path === "/emergency") {
-      const tab = req.nextUrl.searchParams.get("tab");
-      if (tab === "hotlines") {
-        return NextResponse.redirect(new URL("/emergency/hotlines", req.nextUrl), 308);
-      }
-      if (tab === "ambulances") {
-        return NextResponse.redirect(new URL("/emergency/ambulances", req.nextUrl), 308);
-      }
-      if (tab === "donors") {
-        return NextResponse.redirect(new URL("/emergency/blood-donors", req.nextUrl), 308);
-      }
-    }
-
-    // Fast path: skip JWT decrypt for public-only routes (saves ~20ms per request)
-    if (path === "/" || publicRoutes.some((r) => matchRoute(path, r))) {
-      return NextResponse.next({
-        request: {
-          headers: requestHeaders,
-        },
-      });
-    }
-
-    // Read session cookie directly (no DB call — optimistic check only)
+    // Read session cookie directly (no DB call — optimistic JWT decrypt)
     const sessionCookie = req.cookies.get("session")?.value;
     const session = await decrypt(sessionCookie);
 
@@ -169,11 +76,7 @@ export async function proxy(req: NextRequest) {
       const isAuthRoute = authRoutes.some((r) => matchRoute(path, r));
       if (isAuthRoute) {
         if (path === "/login/admin" || path === "/login/partner") {
-          return NextResponse.next({
-            request: {
-              headers: requestHeaders,
-            },
-          });
+          return NextResponse.next();
         }
         if (session.role === "admin") {
           return NextResponse.redirect(new URL("/admin", req.nextUrl));
@@ -185,20 +88,23 @@ export async function proxy(req: NextRequest) {
       }
     }
 
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
+    return NextResponse.next();
   } catch (error) {
     logger.error("[PROXY_ERROR] Unhandled exception in proxy middleware:", error);
     return NextResponse.next();
   }
 }
 
-// Run proxy ONLY on actual application navigation routes; exclude all static assets, media, fonts, and files
+// Scope proxy strictly to protected panels and auth routes.
+// Public visitors (browsing /, /consultants, /partner-hospitals, /blog, /emergency, /membership)
+// bypass proxy entirely, serving 100% from Vercel Edge CDN with 0 Active CPU.
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon\\.ico|sw\\.js|manifest\\.webmanifest|robots\\.txt|sitemap\\.xml|llms\\.txt|llms-full\\.txt|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff|woff2|ttf|eot|css|js|map|txt|xml|json)$).*)",
+    "/dashboard/:path*",
+    "/admin/:path*",
+    "/partner/:path*",
+    "/profile/:path*",
+    "/login/:path*",
+    "/register/:path*",
   ],
 };

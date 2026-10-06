@@ -7,7 +7,7 @@ import {
   Search,
   CheckCircle2,
   AlertCircle,
-  Sparkles,
+  Eye,
   ShoppingBag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -81,10 +81,11 @@ export function AdminProductsClient({
 
   const stats = useMemo(() => {
     const total = products.length;
+    const active = products.filter((p) => p.isActive).length;
     const inStock = products.filter((p) => p.inStock).length;
     const outOfStock = total - inStock;
     const featured = products.filter((p) => p.featured).length;
-    return { total, inStock, outOfStock, featured };
+    return { total, active, inStock, outOfStock, featured };
   }, [products]);
 
   return (
@@ -126,10 +127,24 @@ export function AdminProductsClient({
         <Card className="rounded-2xl border-border/80 shadow-xs">
           <CardContent className="p-4 flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-              <CheckCircle2 className="h-5 w-5" />
+              <Eye className="h-5 w-5" />
             </div>
             <div>
               <div className="text-xl font-bold leading-none text-emerald-600 dark:text-emerald-400">
+                {toBanglaNums(stats.active)}
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">ওয়েবসাইটে দৃশ্যমান</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-2xl border-border/80 shadow-xs">
+          <CardContent className="p-4 flex items-center gap-3">
+            <div className="h-10 w-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+              <CheckCircle2 className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="text-xl font-bold leading-none text-blue-600 dark:text-blue-400">
                 {toBanglaNums(stats.inStock)}
               </div>
               <p className="text-xs text-muted-foreground mt-1">স্টকে আছে</p>
@@ -146,21 +161,7 @@ export function AdminProductsClient({
               <div className="text-xl font-bold leading-none text-rose-600 dark:text-rose-400">
                 {toBanglaNums(stats.outOfStock)}
               </div>
-              <p className="text-xs text-muted-foreground mt-1">স্টক আউট</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="rounded-2xl border-border/80 shadow-xs">
-          <CardContent className="p-4 flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-              <Sparkles className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="text-xl font-bold leading-none text-amber-600 dark:text-amber-400">
-                {toBanglaNums(stats.featured)}
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">ফিচার্ড আইটেম</p>
+              <p className="text-xs text-muted-foreground mt-1">স্টক শেষ</p>
             </div>
           </CardContent>
         </Card>

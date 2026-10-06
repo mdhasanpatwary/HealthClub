@@ -2143,6 +2143,7 @@ export const ProductScalarFieldEnum = {
   imageUrl: 'imageUrl',
   inStock: 'inStock',
   featured: 'featured',
+  isActive: 'isActive',
   order: 'order',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

@@ -16,14 +16,14 @@ import type { RealtimeMemberNotificationPayload } from "@/lib/realtimeEmitter";
 
 const STORAGE_KEY = "hc_member_read_notifications";
 
-// Module-level deduplication and short TTL cache to prevent duplicate concurrent queries
-// when Header (desktop), Mobile Drawer, and DashboardWelcomeHeader mount simultaneously.
+// Module-level deduplication and 2-minute TTL cache to prevent duplicate queries
+// on page navigations. Inbound notifications are pushed immediately via Supabase Realtime.
 interface CachedMemberNotifications {
   data: Awaited<ReturnType<typeof getMemberNotificationsAction>>;
   timestamp: number;
 }
 
-const CACHE_TTL_MS = 5000; // 5-second cache
+const CACHE_TTL_MS = 120_000; // 2-minute in-memory cache
 const inFlightRequests = new Map<string, Promise<Awaited<ReturnType<typeof getMemberNotificationsAction>>>>();
 const cachedResults = new Map<string, CachedMemberNotifications>();
 const recentlyToastedIds = new Set<string>();

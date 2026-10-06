@@ -2,7 +2,7 @@
 
 import { randomInt } from "crypto";
 import { prisma } from "@/lib/prisma";
-import { Member, PublicMemberVerification } from "@/services/db";
+import { Member, PublicMemberVerification, Transaction } from "@/services/db";
 import { hashPassword } from "@/lib/crypto";
 import { getSessionUser } from "@/lib/session";
 import { sendOtpEmail } from "@/lib/mail";
@@ -10,6 +10,8 @@ import { logger } from "@/lib/logger";
 import { telemetry } from "@/lib/telemetry";
 import { SITE_URL } from "@/lib/siteConfig";
 import { updateTag } from "next/cache";
+import { isMemberTxAllowedAction } from "./systemSettingsActions";
+import { TRANSACTION_SELECT_FIELDS, mapPrismaTransaction } from "@/lib/transactionFormat";
 import {
   checkRateLimit,
   getClientIp,
@@ -353,5 +355,62 @@ export async function verifyMemberForPartnerAction(
   } catch (error) {
     logger.error("Error in verifyMemberForPartnerAction:", error);
     return { success: false, message: "মেম্বার যাচাই করতে সমস্যা হয়েছে।", errorKey: "common.error.server" };
+  }
+}
+
+export interface MemberDashboardBootstrapData {
+  user: Member | null;
+  transactions: Transaction[];
+  allowMemberTx: boolean;
+}
+
+/**
+ * Consolidated single-roundtrip bootstrap action for the member dashboard.
+ * Eliminates 3 concurrent Server Action cold starts into 1 fast response.
+ */
+export async function getMemberDashboardBootstrapAction(
+  memberId: string
+): Promise<MemberDashboardBootstrapData> {
+  const session = await getSessionUser();
+  if (!session) {
+    return { user: null, transactions: [], allowMemberTx: false };
+  }
+
+  const clean = memberId.trim();
+  const isAdmin = session.role === "admin";
+  if (!isAdmin && session.userId !== clean) {
+    return { user: null, transactions: [], allowMemberTx: false };
+  }
+
+  try {
+    const isEmail = clean.includes("@");
+    const [memberData, txData, allowed] = await Promise.all([
+      prisma.member.findFirst({
+        where: {
+          OR: [
+            { id: clean },
+            { phone: clean },
+            ...(isEmail ? [{ email: { equals: clean, mode: "insensitive" as const } }] : []),
+          ],
+        },
+        select: MEMBER_DETAIL_SELECT_FIELDS,
+      }),
+      prisma.transaction.findMany({
+        where: { memberId: clean },
+        orderBy: { createdAt: "desc" },
+        take: 20,
+        select: TRANSACTION_SELECT_FIELDS,
+      }),
+      isMemberTxAllowedAction().catch(() => false),
+    ]);
+
+    return {
+      user: memberData ? mapPrismaMember(memberData) : null,
+      transactions: txData.map(mapPrismaTransaction),
+      allowMemberTx: allowed,
+    };
+  } catch (error) {
+    logger.error("Error in getMemberDashboardBootstrapAction:", error);
+    return { user: null, transactions: [], allowMemberTx: false };
   }
 }

@@ -8,10 +8,6 @@ const globalForPrisma = global as unknown as {
   pool?: pg.Pool;
 };
 
-import dotenv from "dotenv";
-dotenv.config({ path: ".env.local", override: true });
-dotenv.config();
-
 // Prefer DATABASE_URL (pgbouncer transaction-mode pooler, port 6543) for faster
 // connections. Fall back to DIRECT_URL (session-mode, port 5432) for migrations.
 const connectionString = process.env.DATABASE_URL || process.env.DIRECT_URL;

@@ -447,6 +447,7 @@ model Product {
   imageUrl      String   @map("image_url")
   inStock       Boolean  @default(true) @map("in_stock")
   featured      Boolean  @default(false)
+  isActive      Boolean  @default(true) @map("is_active")
   order         Int      @default(0)
   createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
@@ -455,6 +456,7 @@ model Product {
   @@index([category], map: "products_category_idx")
   @@index([inStock], map: "products_in_stock_idx")
   @@index([featured], map: "products_featured_idx")
+  @@index([isActive], map: "products_is_active_idx")
   @@index([createdAt(sort: Desc)], map: "products_created_at_idx")
   @@map("products")
 }

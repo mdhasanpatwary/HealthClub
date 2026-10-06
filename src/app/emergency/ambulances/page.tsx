@@ -7,43 +7,14 @@ import { Truck, ShieldCheck, PhoneCall, Activity, Wind, Snowflake } from "lucide
 import { getEmergencyDataAction } from "@/app/actions/emergencyAdminActions";
 import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
-import { toBanglaNums } from "@/lib/utils";
-import { AMBULANCE_TYPES } from "@/data/emergencyData";
-import {
-  paginateAmbulances,
-  DEFAULT_AMBULANCE_PAGE_SIZE,
-} from "../utils/ambulancePagination";
 
+export const dynamic = "force-static";
 export const revalidate = false; // Pure static SSG on base page, on-demand revalidated on emergency updates
 
-interface EmergencyAmbulancesPageProps {
-  searchParams?: Promise<{
-    page?: string;
-    type?: string;
-    search?: string;
-  }>;
-}
-
-export async function generateMetadata({ searchParams }: EmergencyAmbulancesPageProps) {
-  const resolvedParams = (await searchParams) || {};
-  const currentPage = Math.max(1, parseInt(resolvedParams.page || "1", 10) || 1);
-  const selectedType = (resolvedParams.type || "all").trim();
-  const searchQuery = (resolvedParams.search || "").trim();
-
-  const typeConfig = AMBULANCE_TYPES.find((t) => t.id.toLowerCase() === selectedType.toLowerCase());
-  const typeSuffix = typeConfig ? ` (${typeConfig.nameBn})` : "";
-  const pageSuffix = currentPage > 1 ? ` (পৃষ্ঠা ${toBanglaNums(currentPage)})` : "";
-
-  const title = `ফেনী অ্যাম্বুলেন্স সার্ভিস নম্বর${typeSuffix}${pageSuffix} | হেলথ ক্লাব`;
-  const description = `ফেনীর ২৪/৭ জরুরি অ্যাম্বুলেন্স সেবা${typeSuffix}: আইসিইউ (ICU), এসি, নন-এসি ও ফ্রিজার অ্যাম্বুলেন্স চালক ও সার্ভিসের সরাসরি ফোন নম্বর${pageSuffix}।`;
-
-  const queryParams = new URLSearchParams();
-  if (currentPage > 1) queryParams.set("page", String(currentPage));
-  if (selectedType !== "all") queryParams.set("type", selectedType);
-
-  const canonicalUrl = `${SITE_URL}/emergency/ambulances${
-    queryParams.toString() ? `?${queryParams.toString()}` : ""
-  }`;
+export async function generateMetadata() {
+  const title = "ফেনী অ্যাম্বুলেন্স সার্ভিস নম্বর | ২৪/৭ জরুরি ড্রাইভার নেটওয়ার্ক - হেলথ ক্লাব";
+  const description = "ফেনীর ২৪/৭ জরুরি অ্যাম্বুলেন্স সেবা: আইসিইউ (ICU), এসি, নন-এসি ও ফ্রিজার অ্যাম্বুলেন্স চালক ও সার্ভিসের সরাসরি ফোন নম্বর।";
+  const canonicalUrl = `${SITE_URL}/emergency/ambulances`;
 
   return {
     title,
@@ -82,10 +53,10 @@ export async function generateMetadata({ searchParams }: EmergencyAmbulancesPage
       images: DEFAULT_TWITTER_IMAGES,
     },
     robots: {
-      index: !searchQuery,
+      index: true,
       follow: true,
       googleBot: {
-        index: !searchQuery,
+        index: true,
         follow: true,
         "max-video-preview": -1,
         "max-image-preview": "large",
@@ -95,40 +66,16 @@ export async function generateMetadata({ searchParams }: EmergencyAmbulancesPage
   };
 }
 
-export default async function EmergencyAmbulancesPage({
-  searchParams,
-}: EmergencyAmbulancesPageProps) {
-  const resolvedParams = (await searchParams) || {};
-  const currentPage = Math.max(1, parseInt(resolvedParams.page || "1", 10) || 1);
-  const selectedType = (resolvedParams.type || "all").trim();
-  const searchQuery = (resolvedParams.search || "").trim();
-
+export default async function EmergencyAmbulancesPage() {
   const [{ ambulances }, contactSettings] = await Promise.all([
     getEmergencyDataAction(),
     getCachedContactSettings(),
   ]);
 
   const approvedAmbulances = ambulances.filter((a) => a.status !== "pending");
-
-  const paginatedResult = paginateAmbulances(approvedAmbulances, {
-    page: currentPage,
-    pageSize: DEFAULT_AMBULANCE_PAGE_SIZE,
-    type: selectedType,
-    search: searchQuery,
-  });
-
   const rawHotline = contactSettings.hotline.replace(/[^0-9]/g, "");
   const formattedTel = `+880${rawHotline.replace(/^(880|88|0)/, "")}`;
-
-  const queryParams = new URLSearchParams();
-  if (paginatedResult.currentPage > 1) {
-    queryParams.set("page", String(paginatedResult.currentPage));
-  }
-  if (selectedType !== "all") queryParams.set("type", selectedType);
-
-  const pageCanonicalUrl = `${SITE_URL}/emergency/ambulances${
-    queryParams.toString() ? `?${queryParams.toString()}` : ""
-  }`;
+  const pageCanonicalUrl = `${SITE_URL}/emergency/ambulances`;
 
   const ambulanceFaqs: FAQItem[] = [
     {
@@ -211,9 +158,9 @@ export default async function EmergencyAmbulancesPage({
       "@context": "https://schema.org",
       "@type": "ItemList",
       name: "ফেনীর জরুরি অ্যাম্বুলেন্স ফ্লিট ও চালক তালিকা",
-      itemListElement: paginatedResult.ambulances.map((amb, index) => ({
+      itemListElement: approvedAmbulances.map((amb, index) => ({
         "@type": "ListItem",
-        position: (paginatedResult.currentPage - 1) * paginatedResult.pageSize + index + 1,
+        position: index + 1,
         item: {
           "@type": "EmergencyService",
           name: amb.name,
@@ -310,14 +257,7 @@ export default async function EmergencyAmbulancesPage({
             ফেনী অ্যাম্বুলেন্স সেবা তালিকা ও ফিল্টার
           </h2>
           <AmbulanceDirectory
-            ambulances={paginatedResult.ambulances}
-            totalItems={paginatedResult.totalItems}
-            totalPages={paginatedResult.totalPages}
-            currentPage={paginatedResult.currentPage}
-            pageSize={paginatedResult.pageSize}
-            currentType={selectedType}
-            currentSearch={searchQuery}
-            counts={paginatedResult.counts}
+            initialAmbulances={approvedAmbulances}
           />
         </section>
 

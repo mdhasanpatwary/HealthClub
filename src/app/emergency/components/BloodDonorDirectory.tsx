@@ -1,12 +1,16 @@
 "use client";
 
-import { useState, useEffect, useRef, useTransition, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { UPAZILAS_FENI, BLOOD_GROUPS, BloodDonor } from "@/data/emergencyData";
+import {
+  paginateBloodDonors,
+  normalizeBloodGroup,
+  DEFAULT_DONOR_PAGE_SIZE,
+} from "../utils/bloodDonorPagination";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Pagination } from "@/components/ui/pagination";
-import { Heart, Search, PlusCircle, Sparkles, X, Loader2 } from "lucide-react";
+import { Heart, Search, PlusCircle, Sparkles, X } from "lucide-react";
 import { BloodDonorRegisterDialog } from "./BloodDonorRegisterDialog";
 import { BloodDonorCard } from "./BloodDonorCard";
 import { toBanglaNums } from "@/lib/utils";
@@ -14,126 +18,109 @@ import { toBanglaNums } from "@/lib/utils";
 interface BloodDonorDirectoryProps {
   donors?: BloodDonor[];
   initialBloodDonors?: BloodDonor[];
-  totalItems?: number;
-  totalPages?: number;
-  currentPage?: number;
   pageSize?: number;
-  currentGroup?: string;
-  currentUpazila?: string;
-  currentSearch?: string;
 }
 
 export function BloodDonorDirectory({
-  donors: initialDonors,
+  donors: passedDonors,
   initialBloodDonors,
-  totalItems: initialTotalItems,
-  totalPages: initialTotalPages,
-  currentPage: initialCurrentPage = 1,
-  pageSize = 12,
-  currentGroup = "all",
-  currentUpazila = "all",
-  currentSearch = "",
+  pageSize = DEFAULT_DONOR_PAGE_SIZE,
 }: BloodDonorDirectoryProps) {
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
-
-  // Support both donors and fallback initialBloodDonors
-  const donors = initialDonors ?? initialBloodDonors ?? [];
-  const totalItems = initialTotalItems ?? donors.length;
-  const totalPages = initialTotalPages ?? Math.max(1, Math.ceil(totalItems / pageSize));
-  const currentPage = initialCurrentPage;
-
-  const [searchQuery, setSearchQuery] = useState(currentSearch);
-  const [prevSearch, setPrevSearch] = useState(currentSearch);
-  const [selectedGroup, setSelectedGroup] = useState(currentGroup);
-  const [prevGroup, setPrevGroup] = useState(currentGroup);
-  const [selectedUpazila, setSelectedUpazila] = useState(currentUpazila);
-  const [prevUpazila, setPrevUpazila] = useState(currentUpazila);
-
-  // Sync state if server props update externally (e.g. browser back/forward or server re-render)
-  if (currentSearch !== prevSearch) {
-    setPrevSearch(currentSearch);
-    setSearchQuery(currentSearch);
-  }
-  if (currentGroup !== prevGroup) {
-    setPrevGroup(currentGroup);
-    setSelectedGroup(currentGroup);
-  }
-  if (currentUpazila !== prevUpazila) {
-    setPrevUpazila(currentUpazila);
-    setSelectedUpazila(currentUpazila);
-  }
-
-  const createUrl = useCallback(
-    (overrides: { page?: number; group?: string; upazila?: string; search?: string }) => {
-      const p = overrides.page !== undefined ? overrides.page : currentPage;
-      const g = overrides.group !== undefined ? overrides.group : selectedGroup;
-      const u = overrides.upazila !== undefined ? overrides.upazila : selectedUpazila;
-      const q = overrides.search !== undefined ? overrides.search : searchQuery;
-
-      const params = new URLSearchParams();
-      if (p > 1) params.set("page", String(p));
-      if (g && g !== "all") params.set("group", g);
-      if (u && u !== "all") params.set("upazila", u);
-      if (q.trim()) params.set("search", q.trim());
-
-      const qs = params.toString();
-      return `/emergency/blood-donors${qs ? `?${qs}` : ""}`;
-    },
-    [currentPage, selectedGroup, selectedUpazila, searchQuery]
+  const allDonors = useMemo(
+    () => passedDonors ?? initialBloodDonors ?? [],
+    [passedDonors, initialBloodDonors]
   );
 
-  const navigate = useCallback(
-    (
-      overrides: { page?: number; group?: string; upazila?: string; search?: string },
-      shouldScrollTop = false
-    ) => {
-      const targetUrl = createUrl(overrides);
-      startTransition(() => {
-        router.push(targetUrl, { scroll: false });
-        if (shouldScrollTop && containerRef.current) {
-          containerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      });
-    },
-    [createUrl, router]
-  );
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState("all");
+  const [selectedUpazila, setSelectedUpazila] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // Debounced search query synchronization
+  // Sync with URL query parameters on initial client mount
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (searchQuery.trim() !== currentSearch.trim()) {
-        navigate({ search: searchQuery, page: 1 });
-      }
-    }, 350);
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const g = normalizeBloodGroup(params.get("group") || params.get("bloodGroup") || "");
+    const u = params.get("upazila");
+    const q = params.get("search");
+    const p = parseInt(params.get("page") || "1", 10);
+    queueMicrotask(() => {
+      if (g && g !== "all") setSelectedGroup(g);
+      if (u) setSelectedUpazila(u);
+      if (q) setSearchQuery(q);
+      if (p > 1) setCurrentPage(p);
+    });
+  }, []);
 
-    return () => clearTimeout(timer);
-  }, [searchQuery, currentSearch, navigate]);
+  const paginatedResult = useMemo(() => {
+    return paginateBloodDonors(allDonors, {
+      page: currentPage,
+      pageSize,
+      group: selectedGroup,
+      upazila: selectedUpazila,
+      search: searchQuery,
+    });
+  }, [allDonors, currentPage, pageSize, selectedGroup, selectedUpazila, searchQuery]);
+
+  const displayedDonors = paginatedResult.donors;
+  const totalItems = paginatedResult.totalItems;
+  const totalPages = paginatedResult.totalPages;
+
+  // Sync URL in address bar without triggering Next.js server actions / RSC
+  const updateUrlParams = useCallback((p: number, g: string, u: string, q: string) => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams();
+    if (p > 1) params.set("page", String(p));
+    if (g && g !== "all") params.set("group", g);
+    if (u && u !== "all") params.set("upazila", u);
+    if (q.trim()) params.set("search", q.trim());
+    const qs = params.toString();
+    const newPath = `/emergency/blood-donors${qs ? `?${qs}` : ""}`;
+    window.history.replaceState(null, "", newPath);
+  }, []);
 
   const handleGroupSelect = (group: string) => {
     if (group === selectedGroup) return;
     setSelectedGroup(group);
-    navigate({ group, page: 1 });
+    setCurrentPage(1);
+    updateUrlParams(1, group, selectedUpazila, searchQuery);
   };
 
   const handleUpazilaChange = (upazila: string) => {
     if (upazila === selectedUpazila) return;
     setSelectedUpazila(upazila);
-    navigate({ upazila, page: 1 });
+    setCurrentPage(1);
+    updateUrlParams(1, selectedGroup, upazila, searchQuery);
+  };
+
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val);
+    setCurrentPage(1);
+    updateUrlParams(1, selectedGroup, selectedUpazila, val);
   };
 
   const handleClearSearch = () => {
     setSearchQuery("");
-    navigate({ search: "", page: 1 });
+    setCurrentPage(1);
+    updateUrlParams(1, selectedGroup, selectedUpazila, "");
   };
 
   const handleResetFilters = () => {
     setSearchQuery("");
     setSelectedGroup("all");
     setSelectedUpazila("all");
-    navigate({ group: "all", upazila: "all", search: "", page: 1 });
+    setCurrentPage(1);
+    updateUrlParams(1, "all", "all", "");
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    updateUrlParams(page, selectedGroup, selectedUpazila, searchQuery);
+    if (containerRef.current) {
+      containerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
   const startItem = totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1;
@@ -215,7 +202,7 @@ export function BloodDonorDirectory({
               aria-label="নাম বা ফোন দিয়ে রক্তদাতা খুঁজুন"
               placeholder="নাম বা ফোন দিয়ে রক্তদাতা খুঁজুন..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               className="pl-9 pr-9 bg-background"
             />
             {searchQuery && (
@@ -244,7 +231,7 @@ export function BloodDonorDirectory({
         </div>
       </div>
 
-      {/* Donors Count Summary & Loading Indicator */}
+      {/* Donors Count Summary */}
       <div className="flex items-center justify-between px-1 text-xs">
         <div className="flex items-center gap-2 text-muted-foreground font-semibold">
           <span>
@@ -257,12 +244,6 @@ export function BloodDonorDirectory({
               "০ জন"
             )}
           </span>
-          {isPending && (
-            <span className="inline-flex items-center gap-1 text-rose-600 dark:text-rose-400 font-bold animate-pulse">
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              <span>লোড হচ্ছে...</span>
-            </span>
-          )}
         </div>
 
         {isFiltered && (
@@ -277,14 +258,10 @@ export function BloodDonorDirectory({
       </div>
 
       {/* Donors Grid */}
-      <div
-        className={`transition-opacity duration-200 ${
-          isPending ? "opacity-60 pointer-events-none" : "opacity-100"
-        }`}
-      >
-        {donors.length > 0 ? (
+      <div>
+        {displayedDonors.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
-            {donors.map((donor) => {
+            {displayedDonors.map((donor) => {
               const upazilaObj = UPAZILAS_FENI.find(
                 (u) => u.id === donor.upazila || u.nameBn === donor.upazila
               );
@@ -322,7 +299,7 @@ export function BloodDonorDirectory({
         )}
       </div>
 
-      {/* Server-Side Pagination Controls */}
+      {/* Pagination Controls */}
       {totalPages > 1 && (
         <div className="pt-2">
           <Pagination
@@ -330,9 +307,8 @@ export function BloodDonorDirectory({
             totalPages={totalPages}
             pageSize={pageSize}
             totalItems={totalItems}
-            getPageUrl={(page) => createUrl({ page })}
-            onPageChange={(page) => navigate({ page }, true)}
-            disabled={isPending}
+            getPageUrl={(page) => `#page-${page}`}
+            onPageChange={(page) => handlePageChange(page)}
             itemLabel="জন রক্তদাতা"
             className="rounded-2xl border border-border/70 bg-card shadow-xs"
           />

@@ -6,10 +6,9 @@ import { History, LayoutDashboard } from "lucide-react";
 import { toast } from "sonner";
 import { authStore } from "@/services/authStore";
 import { Member, Partner, Transaction } from "@/services/db";
-import { getMemberByIdAction } from "@/app/actions/memberActions";
+import { getMemberByIdAction, getMemberDashboardBootstrapAction } from "@/app/actions/memberActions";
 import { updateMemberProfileAction } from "@/app/actions/memberAdminActions";
 import { getTransactionsAction, addTransactionAction } from "@/app/actions/transactionActions";
-import { isMemberTxAllowedAction } from "@/app/actions/systemSettingsActions";
 import { getPartnersAction } from "@/app/actions/partnerActions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -104,15 +103,15 @@ function DashboardContent() {
       setIsExpired(diffDays < 0);
 
       try {
-        const [freshUser, userTx, allowed] = await Promise.all([
-          getMemberByIdAction(currentUser.id).catch(() => null),
-          getTransactionsAction(currentUser.id).catch(() => []),
-          isMemberTxAllowedAction().catch(() => false),
-        ]);
+        const bootstrap = await getMemberDashboardBootstrapAction(currentUser.id).catch(() => null);
 
         if (!isMounted) return;
 
-        if (typeof navigator !== "undefined" && navigator.onLine && !freshUser) {
+        const freshUser = bootstrap?.user;
+        const userTx = bootstrap?.transactions || [];
+        const allowed = bootstrap?.allowMemberTx ?? false;
+
+        if (typeof navigator !== "undefined" && navigator.onLine && bootstrap && !freshUser) {
           await authStore.logout();
           toast.error("আপনার অ্যাকাউন্টটি আর সক্রিয় নেই অথবা মুছে ফেলা হয়েছে।");
           router.replace("/login");

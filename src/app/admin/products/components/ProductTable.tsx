@@ -17,7 +17,10 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { ProductItem } from "@/lib/validations/product";
 import { toBanglaNums, cn } from "@/lib/utils";
-import { toggleProductStockAction } from "@/app/actions/productAdminActions";
+import {
+  toggleProductStockAction,
+  toggleProductActiveAction,
+} from "@/app/actions/productAdminActions";
 import { toast } from "sonner";
 
 interface ProductTableProps {
@@ -34,6 +37,29 @@ export function ProductTable({
   onStockChanged,
 }: ProductTableProps) {
   const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [togglingActiveId, setTogglingActiveId] = useState<string | null>(null);
+
+  const handleActiveToggle = async (product: ProductItem, currentStatus: boolean) => {
+    setTogglingActiveId(product.id);
+    try {
+      const nextStatus = !currentStatus;
+      const res = await toggleProductActiveAction(product.id, nextStatus);
+      if (res.success) {
+        toast.success(
+          nextStatus
+            ? `"${product.nameBn}" এখন শপ পেজে প্রদর্শিত হবে (দৃশ্যমান)।`
+            : `"${product.nameBn}" শপ পেজ থেকে লুকানো হয়েছে।`
+        );
+        onStockChanged();
+      } else {
+        toast.error(res.error || "স্ট্যাটাস পরিবর্তন ব্যর্থ হয়েছে।");
+      }
+    } catch {
+      toast.error("সার্ভার ত্রুটি। আবার চেষ্টা করুন।");
+    } finally {
+      setTogglingActiveId(null);
+    }
+  };
 
   const handleStockToggle = async (product: ProductItem, currentStatus: boolean) => {
     setTogglingId(product.id);
@@ -77,6 +103,7 @@ export function ProductTable({
               <TableHead className="w-14">ছবি</TableHead>
               <TableHead>নাম ও স্লাগ</TableHead>
               <TableHead>মূল্য</TableHead>
+              <TableHead>ওয়েবসাইটে শো করবে?</TableHead>
               <TableHead>স্টক স্ট্যাটাস</TableHead>
               <TableHead className="text-right">একশন</TableHead>
             </TableRow>
@@ -117,7 +144,6 @@ export function ProductTable({
                   </div>
                 </TableCell>
 
-
                 {/* Price */}
                 <TableCell>
                   <div className="space-y-0.5">
@@ -134,6 +160,31 @@ export function ProductTable({
                         {product.discountBadge}
                       </span>
                     )}
+                  </div>
+                </TableCell>
+
+                {/* Website Visibility Switch */}
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    {togglingActiveId === product.id ? (
+                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                    ) : (
+                      <Switch
+                        checked={product.isActive}
+                        onCheckedChange={() => handleActiveToggle(product, product.isActive)}
+                        aria-label="Toggle Website Visibility"
+                      />
+                    )}
+                    <span
+                      className={cn(
+                        "text-xs font-semibold px-2 py-0.5 rounded-full border",
+                        product.isActive
+                          ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
+                          : "bg-muted text-muted-foreground border-border"
+                      )}
+                    >
+                      {product.isActive ? "দৃশ্যমান" : "লুকানো"}
+                    </span>
                   </div>
                 </TableCell>
 

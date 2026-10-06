@@ -61,6 +61,43 @@ const nextConfig: NextConfig = {
         destination: "/consultants/:path*",
         permanent: true,
       },
+      // Edge-level redirects for legacy query parameters (0 Active CPU)
+      {
+        source: "/partner-hospitals",
+        has: [{ type: "query", key: "category", value: "hospital" }],
+        destination: "/partner-hospitals/category/hospital",
+        permanent: true,
+      },
+      {
+        source: "/partner-hospitals",
+        has: [{ type: "query", key: "category", value: "diagnostic" }],
+        destination: "/partner-hospitals/category/diagnostic",
+        permanent: true,
+      },
+      {
+        source: "/partner-hospitals",
+        has: [{ type: "query", key: "category", value: "pharmacy" }],
+        destination: "/partner-hospitals/category/pharmacy",
+        permanent: true,
+      },
+      {
+        source: "/emergency",
+        has: [{ type: "query", key: "tab", value: "hotlines" }],
+        destination: "/emergency/hotlines",
+        permanent: true,
+      },
+      {
+        source: "/emergency",
+        has: [{ type: "query", key: "tab", value: "ambulances" }],
+        destination: "/emergency/ambulances",
+        permanent: true,
+      },
+      {
+        source: "/emergency",
+        has: [{ type: "query", key: "tab", value: "donors" }],
+        destination: "/emergency/blood-donors",
+        permanent: true,
+      },
     ];
   },
   async headers() {
@@ -80,19 +117,79 @@ const nextConfig: NextConfig = {
       },
       // Public directory Edge CDN caching to prevent Vercel Fluid Active CPU exhaustion
       {
+        source: "/",
+        headers: [
+          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+        ],
+      },
+      {
+        source: "/consultants",
+        headers: [
+          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+        ],
+      },
+      {
+        source: "/consultants/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+        ],
+      },
+      {
+        source: "/partner-hospitals",
+        headers: [
+          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+        ],
+      },
+      {
+        source: "/partner-hospitals/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+        ],
+      },
+      {
         source: "/blog",
         headers: [
           { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
         ],
       },
       {
-        source: "/emergency/ambulances",
+        source: "/blog/:path*",
         headers: [
           { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
         ],
       },
       {
-        source: "/emergency/blood-donors",
+        source: "/emergency",
+        headers: [
+          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+        ],
+      },
+      {
+        source: "/emergency/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+        ],
+      },
+      {
+        source: "/membership",
+        headers: [
+          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+        ],
+      },
+      {
+        source: "/health-tools",
+        headers: [
+          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+        ],
+      },
+      {
+        source: "/health-tips",
+        headers: [
+          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+        ],
+      },
+      {
+        source: "/health-tips/:path*",
         headers: [
           { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
         ],

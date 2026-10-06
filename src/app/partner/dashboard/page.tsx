@@ -45,10 +45,23 @@ export default function PartnerDashboardPage() {
 
   const effectiveActiveTab = !canManageStaff && activeTab === "staff" ? "billing" : activeTab;
 
+  // Lazy-load tabs on-demand to prevent mounting and executing all 5 tabs' Server Actions concurrently
+  const [visitedTabs, setVisitedTabs] = useState<Set<string>>(() => new Set([effectiveActiveTab]));
+
+  const handleTabChange = useCallback((newTab: string) => {
+    setActiveTab(newTab);
+    setVisitedTabs((prev) => {
+      if (prev.has(newTab)) return prev;
+      const next = new Set(prev);
+      next.add(newTab);
+      return next;
+    });
+  }, []);
+
   const loadTransactions = useCallback(async () => {
     setLoadingTransactions(true);
     try {
-      const data = await getPartnerTransactionsAction();
+      const data = await getPartnerTransactionsAction(30);
       setTransactions(data);
     } catch {
       toast.error("লেনদেন তালিকা লোড করতে সমস্যা হয়েছে");
@@ -179,7 +192,7 @@ export default function PartnerDashboardPage() {
       <PartnerDashboardHeader partner={partner} currentStaff={currentStaff} onLogout={handleLogout} />
 
       {/* Main Tabbed Navigation */}
-      <Tabs value={effectiveActiveTab} onValueChange={setActiveTab} className="w-full space-y-6">
+      <Tabs value={effectiveActiveTab} onValueChange={handleTabChange} className="w-full space-y-6">
         <TabsList className="flex flex-wrap items-center justify-start sm:justify-center w-full h-auto group-data-horizontal/tabs:h-auto p-1.5 bg-muted/70 dark:bg-slate-900/80 rounded-2xl border border-border/60 gap-1.5">
           <TabsTrigger
             value="billing"
@@ -222,38 +235,42 @@ export default function PartnerDashboardPage() {
 
         {/* Tab 1: Member Verification & POS Billing */}
         <TabsContent value="billing" className="space-y-6 focus-visible:outline-none">
-          <PartnerBillingTab
-            partner={partner}
-            transactions={transactions}
-            loadingTransactions={loadingTransactions}
-            onTransactionComplete={loadTransactions}
-          />
+          {visitedTabs.has("billing") && (
+            <PartnerBillingTab
+              partner={partner}
+              transactions={transactions}
+              loadingTransactions={loadingTransactions}
+              onTransactionComplete={loadTransactions}
+            />
+          )}
         </TabsContent>
 
         {/* Tab 2: Hospital Doctor Roster & Chamber Management */}
         <TabsContent value="doctors" className="space-y-6 focus-visible:outline-none">
-          <PartnerDoctorsTab partner={partner} />
+          {visitedTabs.has("doctors") && <PartnerDoctorsTab partner={partner} />}
         </TabsContent>
 
         {/* Tab 3: Monthly Settlement Statements & Analytics */}
         <TabsContent value="analytics" className="space-y-6 focus-visible:outline-none">
-          <PartnerAnalyticsTab partner={partner} />
+          {visitedTabs.has("analytics") && <PartnerAnalyticsTab partner={partner} />}
         </TabsContent>
 
         {/* Tab 4: Hospital Multi-Cashier & Counter Staff Accounts */}
         {canManageStaff && (
           <TabsContent value="staff" className="space-y-6 focus-visible:outline-none">
-            <PartnerStaffTab partner={partner} />
+            {visitedTabs.has("staff") && <PartnerStaffTab partner={partner} />}
           </TabsContent>
         )}
 
         {/* Tab 5: Hospital Profile, Emergency Contact & Department Discounts */}
         <TabsContent value="profile" className="space-y-6 focus-visible:outline-none">
-          <PartnerProfileSettingsTab
-            partner={partner}
-            isStaff={Boolean(currentStaff)}
-            onProfileUpdated={handleProfileUpdated}
-          />
+          {visitedTabs.has("profile") && (
+            <PartnerProfileSettingsTab
+              partner={partner}
+              isStaff={Boolean(currentStaff)}
+              onProfileUpdated={handleProfileUpdated}
+            />
+          )}
         </TabsContent>
       </Tabs>
     </div>

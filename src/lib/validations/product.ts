@@ -80,6 +80,8 @@ export const productSchema = z.object({
     .boolean(),
   featured: z
     .boolean(),
+  isActive: z
+    .boolean(),
   order: z
     .number()
     .int(),
@@ -103,6 +105,7 @@ export interface ProductItem {
   imageUrl: string;
   inStock: boolean;
   featured: boolean;
+  isActive: boolean;
   order: number;
   createdAt: string;
   updatedAt: string;

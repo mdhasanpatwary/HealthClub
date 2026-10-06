@@ -73,6 +73,7 @@ export function ProductDialog({
       imageUrl: "",
       inStock: true,
       featured: false,
+      isActive: true,
       order: 0,
       featuresText: "",
     },
@@ -81,6 +82,7 @@ export function ProductDialog({
   const watchImageUrl = useWatch({ control, name: "imageUrl" });
   const watchInStock = useWatch({ control, name: "inStock" });
   const watchFeatured = useWatch({ control, name: "featured" });
+  const watchIsActive = useWatch({ control, name: "isActive" });
 
   useEffect(() => {
     if (product) {
@@ -98,6 +100,7 @@ export function ProductDialog({
         imageUrl: product.imageUrl,
         inStock: product.inStock,
         featured: product.featured,
+        isActive: product.isActive ?? true,
         order: product.order,
         featuresText: product.featuresBn ? product.featuresBn.join("\n") : "",
       });
@@ -116,6 +119,7 @@ export function ProductDialog({
         imageUrl: "",
         inStock: true,
         featured: false,
+        isActive: true,
         order: 0,
         featuresText: "",
       });
@@ -158,6 +162,7 @@ export function ProductDialog({
         imageUrl: values.imageUrl,
         inStock: values.inStock,
         featured: values.featured,
+        isActive: values.isActive ?? true,
         order: values.order,
         featuresBn: featuresArray.length > 0 ? featuresArray : null,
       };
@@ -254,8 +259,8 @@ export function ProductDialog({
             )}
           </div>
 
-          {/* Pricing & Discount Badge */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {/* Pricing */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="price" className="text-xs font-semibold">
                 মূল্য (টাকা) <span className="text-destructive">*</span>
@@ -282,17 +287,6 @@ export function ProductDialog({
                 {...register("regularPrice", {
                   setValueAs: (v) => (v === "" || isNaN(v) ? null : Number(v)),
                 })}
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <Label htmlFor="discountBadge" className="text-xs font-semibold">
-                মেম্বার অফার/ডিসকাউন্ট ব্যাজ
-              </Label>
-              <Input
-                id="discountBadge"
-                placeholder="যেমন: ১০-৩০% মেম্বার ছাড়"
-                {...register("discountBadge")}
               />
             </div>
           </div>
@@ -345,9 +339,24 @@ export function ProductDialog({
             />
           </div>
 
-          {/* Switches: inStock, featured */}
-          <div className="flex flex-wrap items-center justify-between gap-4 p-3 rounded-xl bg-muted/40 border border-border">
-            <div className="flex items-center gap-3">
+          {/* Switches: isActive, inStock, featured */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 rounded-xl bg-muted/40 border border-border">
+            <div className="flex items-center gap-2.5">
+              <Switch
+                id="isActive"
+                checked={watchIsActive}
+                onCheckedChange={(checked) => setValue("isActive", checked)}
+              />
+              <Label htmlFor="isActive" className="cursor-pointer text-xs font-semibold">
+                {watchIsActive ? (
+                  <span className="text-emerald-600 font-bold">ওয়েবসাইটে দৃশ্যমান</span>
+                ) : (
+                  <span className="text-amber-600 font-bold">লুকানো (হাইড)</span>
+                )}
+              </Label>
+            </div>
+
+            <div className="flex items-center gap-2.5">
               <Switch
                 id="inStock"
                 checked={watchInStock}
@@ -362,14 +371,14 @@ export function ProductDialog({
               </Label>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5">
               <Switch
                 id="featured"
                 checked={watchFeatured}
                 onCheckedChange={(checked) => setValue("featured", checked)}
               />
               <Label htmlFor="featured" className="cursor-pointer text-xs font-semibold">
-                ফিচার্ড প্রোডাক্ট (হোমে হাইলাইট)
+                ফিচার্ড প্রোডাক্ট
               </Label>
             </div>
           </div>

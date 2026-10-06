@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AdminNav } from "@/app/admin/components/AdminNav";
 import { getPartnersForPostersAction } from "@/app/actions/partnerPosterActions";
 import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 import { PartnerPrintPoster } from "@/components/marketing/PartnerPrintPoster";
@@ -40,12 +39,10 @@ export default async function AdminMarketingPostersPage({
 
   return (
     <div className="space-y-6">
-      {/* Admin Horizontal Navigation (hidden during print) */}
+      {/* Page Header (hidden during print) */}
       <div className="print:hidden space-y-4">
-        <AdminNav />
-
         {/* Breadcrumb & Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <nav className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1.5 font-medium">
               <Link href="/admin" className="hover:text-foreground">

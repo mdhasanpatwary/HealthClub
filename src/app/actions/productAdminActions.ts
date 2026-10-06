@@ -72,6 +72,7 @@ export async function getAdminProductsAction(): Promise<ProductItem[]> {
         imageUrl: p.imageUrl,
         inStock: p.inStock,
         featured: p.featured,
+        isActive: p.isActive ?? true,
         order: p.order,
         createdAt: p.createdAt.toISOString(),
         updatedAt: p.updatedAt.toISOString(),
@@ -126,6 +127,7 @@ export async function createProductAction(
         imageUrl: valid.imageUrl,
         inStock: valid.inStock,
         featured: valid.featured,
+        isActive: valid.isActive ?? true,
         order: valid.order,
       },
     });
@@ -150,6 +152,7 @@ export async function createProductAction(
         imageUrl: created.imageUrl,
         inStock: created.inStock,
         featured: created.featured,
+        isActive: created.isActive,
         order: created.order,
         createdAt: created.createdAt.toISOString(),
         updatedAt: created.updatedAt.toISOString(),
@@ -209,6 +212,7 @@ export async function updateProductAction(
         imageUrl: valid.imageUrl,
         inStock: valid.inStock,
         featured: valid.featured,
+        isActive: valid.isActive ?? true,
         order: valid.order,
       },
     });
@@ -274,5 +278,32 @@ export async function toggleProductStockAction(
   } catch (error) {
     logger.error("Failed to toggle product stock:", error);
     return { success: false, error: "স্টক স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে।" };
+  }
+}
+
+/**
+ * Toggle product isActive status (show/hide on frontend shop)
+ */
+export async function toggleProductActiveAction(
+  id: string,
+  isActive: boolean
+): Promise<{ success: boolean; error?: string }> {
+  const isAdmin = await verifyProductAdmin();
+  if (!isAdmin) {
+    return { success: false, error: "অনুমতি নেই।" };
+  }
+
+  try {
+    const updated = await prisma.product.update({
+      where: { id },
+      data: { isActive },
+      select: { slug: true },
+    });
+
+    revalidateProductCaches(updated.slug);
+    return { success: true };
+  } catch (error) {
+    logger.error("Failed to toggle product visibility:", error);
+    return { success: false, error: "ওয়েবসাইট ভিজিবিলিটি স্ট্যাটাস পরিবর্তন করতে সমস্যা হয়েছে।" };
   }
 }

@@ -21,6 +21,7 @@ function mapProductRow(p: {
   imageUrl: string;
   inStock: boolean;
   featured: boolean;
+  isActive: boolean;
   order: number;
   createdAt: Date;
   updatedAt: Date;
@@ -53,6 +54,7 @@ function mapProductRow(p: {
     imageUrl: p.imageUrl,
     inStock: p.inStock,
     featured: p.featured,
+    isActive: p.isActive ?? true,
     order: p.order,
     createdAt: p.createdAt.toISOString(),
     updatedAt: p.updatedAt.toISOString(),
@@ -63,6 +65,7 @@ const fetchCachedProducts = unstable_cache(
   async () => {
     try {
       const rows = await prisma.product.findMany({
+        where: { isActive: true },
         orderBy: [{ featured: "desc" }, { order: "asc" }, { createdAt: "desc" }],
       });
       return rows.map(mapProductRow);
@@ -71,7 +74,7 @@ const fetchCachedProducts = unstable_cache(
       return [];
     }
   },
-  ["all-shop-products-v4"],
+  ["all-shop-products-v5"],
   {
     revalidate: false,
     tags: [PRODUCTS_CACHE_TAG],
@@ -81,8 +84,8 @@ const fetchCachedProducts = unstable_cache(
 const fetchCachedProductBySlug = unstable_cache(
   async (itemSlug: string) => {
     try {
-      const row = await prisma.product.findUnique({
-        where: { slug: itemSlug },
+      const row = await prisma.product.findFirst({
+        where: { slug: itemSlug, isActive: true },
       });
       if (!row) return null;
       return mapProductRow(row);
@@ -91,7 +94,7 @@ const fetchCachedProductBySlug = unstable_cache(
       return null;
     }
   },
-  ["shop-product-by-slug-v4"],
+  ["shop-product-by-slug-v5"],
   {
     revalidate: false,
     tags: [PRODUCTS_CACHE_TAG],
@@ -144,6 +147,7 @@ export async function getProductBySlugAction(slug: string): Promise<ProductItem 
 export async function getAllProductSlugsAction(): Promise<{ slug: string; updatedAt: string }[]> {
   try {
     const rows = await prisma.product.findMany({
+      where: { isActive: true },
       select: { slug: true, updatedAt: true },
       orderBy: { createdAt: "desc" },
     });

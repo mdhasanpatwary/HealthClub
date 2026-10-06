@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { AdminNav } from "../components/AdminNav";
 import { AdminProductsClient } from "./components/AdminProductsClient";
 import { getAdminProductsAction } from "@/app/actions/productAdminActions";
 
@@ -16,7 +15,6 @@ export default async function AdminProductsPage() {
 
   return (
     <div className="space-y-6">
-      <AdminNav />
       <AdminProductsClient initialProducts={products} />
     </div>
   );
