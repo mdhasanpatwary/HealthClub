@@ -1,5 +1,6 @@
 import { SITE_URL } from "@/lib/siteConfig";
 import type { ProductItem } from "@/lib/validations/product";
+import { getGoogleProductCategory } from "./googleProductTaxonomy";
 
 /**
  * Returns a standardized MerchantReturnPolicy for physical healthcare products.
@@ -305,7 +306,8 @@ export function getProductReviews(product: ProductItem) {
 /**
  * Generates a complete, Google Search Console compliant Schema.org Product node.
  * Eliminates both:
- *  - Merchant listings issues: brand, mpn, sku, shippingDetails, hasMerchantReturnPolicy
+ *  - Merchant listings issues: category (aligned to Google Product Taxonomy),
+ *    brand, mpn, sku, shippingDetails, hasMerchantReturnPolicy
  *  - Product snippets issues: aggregateRating, review
  */
 export function getProductJsonLd(
@@ -314,6 +316,7 @@ export function getProductJsonLd(
 ) {
   const currentYear = new Date().getFullYear();
   const absImage = formatAbsoluteImageUrl(product.imageUrl);
+  const googleCategory = getGoogleProductCategory(product);
 
   const productNode = {
     ...(options?.isNestedInList ? {} : { "@context": "https://schema.org" }),
@@ -328,7 +331,7 @@ export function getProductJsonLd(
       "@type": "Brand",
       name: "Health Club",
     },
-    category: product.categoryBn || product.category,
+    category: googleCategory,
     aggregateRating: getProductAggregateRating(product),
     review: getProductReviews(product),
     offers: {
@@ -352,14 +355,45 @@ export function getProductJsonLd(
     },
   };
 
-  return productNode;
+  if (options?.isNestedInList) {
+    return productNode;
+  }
+
+  const breadcrumbNode = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "হোম",
+        item: SITE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "শপ",
+        item: `${SITE_URL}/shop`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: product.nameBn,
+        item: `${SITE_URL}/shop/${product.slug}`,
+      },
+    ],
+  };
+
+  return [productNode, breadcrumbNode];
 }
 
 /**
  * Generates a Schema.org ItemList catalog for the Shop directory page.
+ * Follows Google Search Central guidelines for category/collection pages:
+ * Does NOT embed heavy Product nodes with Merchant listings on listing pages.
  */
 export function getProductCatalogJsonLd(products: ProductItem[]) {
-  return {
+  const itemListNode = {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: "হেলথ ক্লাব শপ - মেডিকেল ও হেলথকেয়ার প্রোডাক্ট ক্যাটালগ",
@@ -369,7 +403,31 @@ export function getProductCatalogJsonLd(products: ProductItem[]) {
     itemListElement: products.map((product, index) => ({
       "@type": "ListItem",
       position: index + 1,
-      item: getProductJsonLd(product, { isNestedInList: true }),
+      name: product.nameBn,
+      url: `${SITE_URL}/shop/${product.slug}`,
+      image: formatAbsoluteImageUrl(product.imageUrl),
     })),
   };
+
+  const breadcrumbNode = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "হোম",
+        item: SITE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "শপ",
+        item: `${SITE_URL}/shop`,
+      },
+    ],
+  };
+
+  return [itemListNode, breadcrumbNode];
 }
+
