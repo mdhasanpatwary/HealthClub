@@ -63,7 +63,7 @@ export function AdminStaffPasswordDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-md p-4 sm:p-6 bg-background/95 backdrop-blur-xl border border-border">
+      <DialogContent className="w-full sm:max-w-md p-4 sm:p-6 bg-background/95 backdrop-blur-xl border border-border">
         <DialogHeader className="space-y-2 border-b border-border/60 pb-4">
           <div className="flex items-center gap-2.5">
             <div className="p-2.5 rounded-2xl bg-amber-500/10 text-amber-600">

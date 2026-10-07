@@ -160,7 +160,7 @@ function AdminStaffForm({ staff, onClose, onSave }: AdminStaffFormProps) {
           <Shield className="h-3.5 w-3.5 text-primary" />
           পারমিশন রোল (RBAC Role) *
         </label>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           {(Object.keys(ROLE_CONFIGS) as AdminRole[]).map((rKey) => {
             const conf = ROLE_CONFIGS[rKey];
             const isSelected = role === rKey;
@@ -243,7 +243,7 @@ export function AdminStaffDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto p-4 sm:p-6 bg-background/95 backdrop-blur-xl border border-border">
+      <DialogContent className="w-full sm:max-w-xl md:max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-6 bg-background/95 backdrop-blur-xl border border-border">
         <DialogHeader className="space-y-2 border-b border-border/60 pb-4">
           <div className="flex items-center gap-2.5">
             <div className="p-2.5 rounded-2xl bg-primary/10 text-primary">

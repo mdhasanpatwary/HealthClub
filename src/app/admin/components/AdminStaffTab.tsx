@@ -341,7 +341,7 @@ export function AdminStaffTab() {
 
       {/* Delete Confirmation Modal */}
       <Dialog open={!!staffToDelete} onOpenChange={(open) => !open && setStaffToDelete(null)}>
-        <DialogContent className="max-w-md p-6 bg-background/95 backdrop-blur-xl border border-border">
+        <DialogContent className="w-full sm:max-w-md p-6 bg-background/95 backdrop-blur-xl border border-border">
           <DialogHeader className="space-y-2">
             <div className="p-3 rounded-2xl bg-rose-500/10 text-rose-600 w-fit">
               <AlertTriangle className="h-6 w-6" />

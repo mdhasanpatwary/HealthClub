@@ -167,7 +167,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation — Context-Aware (Admin vs Public) */}
-          {isAdminMode ? <AdminHeaderNav /> : <PublicHeaderNav />}
+          {isAdminMode ? <AdminHeaderNav adminRole={user?.adminRole} /> : <PublicHeaderNav />}
 
           {/* Desktop Actions */}
           <div className="hidden min-[992px]:flex items-center space-x-2 shrink-0">

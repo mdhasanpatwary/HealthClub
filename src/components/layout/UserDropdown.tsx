@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
-import { LogOut, LayoutDashboard, Settings } from "lucide-react";
+import { LogOut, LayoutDashboard, Settings, ShoppingBag } from "lucide-react";
 import { Member } from "@/services/db";
 import { authStore } from "@/services/authStore";
 import { isAdminUser, canAccessAdminRoute } from "@/lib/permissions";
@@ -77,13 +77,23 @@ export default function UserDropdown({ user }: UserDropdownProps) {
         
         {isAdmin ? (
           <>
-            <DropdownMenuItem
-              render={<Link href="/admin" />}
-              className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md hover:bg-muted text-foreground transition-colors"
-            >
-              <LayoutDashboard className="h-4 w-4 text-primary" />
-              <span>অ্যাডমিন প্যানেল</span>
-            </DropdownMenuItem>
+            {user.adminRole === "shop_owner" ? (
+              <DropdownMenuItem
+                render={<Link href="/admin/products" />}
+                className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md hover:bg-muted text-foreground transition-colors"
+              >
+                <ShoppingBag className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                <span>প্রোডাক্ট শপ</span>
+              </DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem
+                render={<Link href="/admin" />}
+                className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md hover:bg-muted text-foreground transition-colors"
+              >
+                <LayoutDashboard className="h-4 w-4 text-primary" />
+                <span>অ্যাডমিন প্যানেল</span>
+              </DropdownMenuItem>
+            )}
             {canAccessAdminRoute(user.adminRole || "super_admin", "/admin/settings") && (
               <DropdownMenuItem
                 render={<Link href="/admin/settings" />}

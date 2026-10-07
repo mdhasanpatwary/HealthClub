@@ -125,7 +125,7 @@ export async function verifyActiveAdminUser(
       return null;
     }
 
-    const validRoles: AdminRole[] = ["super_admin", "content_moderator", "support_staff"];
+    const validRoles: AdminRole[] = ["super_admin", "content_moderator", "support_staff", "shop_owner"];
     if (!validRoles.includes(admin.role as AdminRole)) {
       return null;
     }

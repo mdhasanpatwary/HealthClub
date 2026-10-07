@@ -13,13 +13,13 @@ const createAdminUserSchema = z.object({
   email: z.string().trim().email("সঠিক ইমেইল অ্যাড্রেস লিখুন।").toLowerCase(),
   phone: z.string().trim().optional(),
   password: z.string().min(6, "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।"),
-  role: z.enum(["super_admin", "content_moderator", "support_staff"]),
+  role: z.enum(["super_admin", "content_moderator", "support_staff", "shop_owner"]),
 });
 
 const updateAdminUserSchema = z.object({
   name: z.string().trim().min(2, "নাম কমপক্ষে ২ অক্ষরের হতে হবে।").max(100),
   phone: z.string().trim().optional(),
-  role: z.enum(["super_admin", "content_moderator", "support_staff"]),
+  role: z.enum(["super_admin", "content_moderator", "support_staff", "shop_owner"]),
   isActive: z.boolean().default(true),
 });
 

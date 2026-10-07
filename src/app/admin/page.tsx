@@ -1,6 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { authStore } from "@/services/authStore";
 import {
   PlusCircle,
   Users,
@@ -35,6 +38,15 @@ import { useAdminDoctors } from "./hooks/useAdminDoctors";
 import { useAdminNotifications } from "./hooks/useAdminNotifications";
 
 export default function AdminDashboardPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const user = authStore.getCurrentUser();
+    if (user?.adminRole === "shop_owner") {
+      router.replace("/admin/products");
+    }
+  }, [router]);
+
   const adminData = useAdminData();
   const doctorData = useAdminDoctors();
   const notificationData = useAdminNotifications();

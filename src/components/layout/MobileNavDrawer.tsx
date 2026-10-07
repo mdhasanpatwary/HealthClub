@@ -124,6 +124,7 @@ export default function MobileNavDrawer({
               pendingPartnerRequests={pendingPartnerRequests}
               pendingRenewals={pendingRenewals}
               contactMessagesCount={contactMessagesCount}
+              adminRole={user?.adminRole}
             />
           ) : (
             <MobileNavPublicLinks

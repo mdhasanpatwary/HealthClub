@@ -149,6 +149,20 @@ export const ROLE_CONFIGS: Record<AdminRole, RoleConfig> = {
       "manage_messages",
     ],
   },
+  shop_owner: {
+    role: "shop_owner",
+    titleBn: "শপ ওনার",
+    titleEn: "Shop Owner",
+    descriptionBn: "শুধুমাত্র প্রোডাক্ট শপ মডিউল পরিচালনা, নতুন পণ্য যোগ, সম্পাদনা, ডিলিট ও ইনভেন্টরি নিয়ন্ত্রণ",
+    descriptionEn: "Exclusive access to shop module: add, edit, delete products & manage inventory",
+    badgeClass: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+    allowedRoutes: [
+      "/admin/products",
+    ],
+    permissions: [
+      "manage_products",
+    ],
+  },
 };
 
 /**
@@ -165,7 +179,12 @@ export function canAccessAdminRoute(role: AdminRole | undefined, pathname: strin
   // Clean pathname query strings or trailing slashes
   const cleanPath = pathname.split("?")[0].replace(/\/$/, "");
 
-  // /admin is always accessible
+  // Shop owner has exclusive access only to the shop module
+  if (role === "shop_owner") {
+    return cleanPath === "/admin/products" || cleanPath.startsWith("/admin/products/");
+  }
+
+  // /admin is always accessible for other roles
   if (cleanPath === "/admin" || cleanPath === "") return true;
 
   return config.allowedRoutes.some((route) => {

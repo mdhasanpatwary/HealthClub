@@ -24,7 +24,9 @@ import {
   ShieldCheck,
   Newspaper,
   ShoppingBag,
+  ExternalLink,
 } from "lucide-react";
+import { AdminRole } from "@/services/db";
 import { toBanglaNums } from "@/lib/utils";
 import { useAdminCounts } from "@/app/admin/hooks/useAdminCounts";
 import {
@@ -100,7 +102,11 @@ function AdminNavDropdownItem({
   );
 }
 
-export default function AdminHeaderNav() {
+interface AdminHeaderNavProps {
+  adminRole?: AdminRole;
+}
+
+export default function AdminHeaderNav({ adminRole }: AdminHeaderNavProps = {}) {
   const pathname = usePathname();
   const {
     doctorsCount,
@@ -108,6 +114,36 @@ export default function AdminHeaderNav() {
     pendingRenewals,
     contactMessagesCount,
   } = useAdminCounts();
+
+  if (adminRole === "shop_owner") {
+    return (
+      <nav aria-label="Shop Navigation" className="hidden min-[992px]:flex items-center space-x-2">
+        <Link
+          href="/admin/products"
+          aria-current={pathname.startsWith("/admin/products") ? "page" : undefined}
+          className={`relative inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 ${
+            pathname.startsWith("/admin/products")
+              ? "text-primary font-bold bg-primary/10"
+              : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+          }`}
+        >
+          <ShoppingBag className="h-3.5 w-3.5" />
+          <span>প্রোডাক্ট শপ</span>
+          {pathname.startsWith("/admin/products") && (
+            <span className="absolute bottom-0 left-3 right-3 h-0.5 rounded-full bg-primary" />
+          )}
+        </Link>
+        <Link
+          href="/shop"
+          target="_blank"
+          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-all"
+        >
+          <span>পাবলিক শপ</span>
+          <ExternalLink className="h-3 w-3 opacity-60" />
+        </Link>
+      </nav>
+    );
+  }
 
   const isMembersActive =
     pathname.startsWith("/admin/members") ||

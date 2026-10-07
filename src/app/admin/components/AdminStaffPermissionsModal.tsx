@@ -8,7 +8,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Check, X, Shield, Users, Stethoscope, Settings } from "lucide-react";
+import { Check, X, Shield, Users, Stethoscope, Settings, ShoppingBag } from "lucide-react";
 import { ROLE_CONFIGS } from "@/lib/permissions";
 
 interface AdminStaffPermissionsModalProps {
@@ -25,40 +25,48 @@ export function AdminStaffPermissionsModal({
       category: "স্টাফ ও সিস্টেম প্রশাসন",
       icon: Settings,
       items: [
-        { name: "স্টাফ ম্যানেজমেন্ট ও রোল পরিবর্তন", superAdmin: true, moderator: false, support: false },
-        { name: "সিস্টেম সেটিংস ও লেনদেন কনফিগ", superAdmin: true, moderator: false, support: false },
-        { name: "আর্থিক ও রাজস্ব অ্যানালিটিক্স", superAdmin: true, moderator: false, support: false },
-        { name: "বাল্ক ডাটা ইম্পোর্ট ও এক্সপোর্ট", superAdmin: true, moderator: false, support: false },
+        { name: "স্টাফ ম্যানেজমেন্ট ও রোল পরিবর্তন", superAdmin: true, moderator: false, support: false, shopOwner: false },
+        { name: "সিস্টেম সেটিংস ও লেনদেন কনফিগ", superAdmin: true, moderator: false, support: false, shopOwner: false },
+        { name: "আর্থিক ও রাজস্ব অ্যানালিটিক্স", superAdmin: true, moderator: false, support: false, shopOwner: false },
+        { name: "বাল্ক ডাটা ইম্পোর্ট ও এক্সপোর্ট", superAdmin: true, moderator: false, support: false, shopOwner: false },
       ],
     },
     {
       category: "মেম্বারশিপ ও কাস্টমার অপারেশন",
       icon: Users,
       items: [
-        { name: "মেম্বার তালিকা দেখা ও সার্চ", superAdmin: true, moderator: false, support: true },
-        { name: "মেম্বারশিপ রিনিউয়াল অনুমোদন ও বাতিল", superAdmin: true, moderator: false, support: true },
-        { name: "মেম্বারদের ডিসকাউন্ট লেনদেন লগ দেখা", superAdmin: true, moderator: false, support: true },
-        { name: "নতুন ডিসকাউন্ট লেনদেন তৈরি ও যোগ", superAdmin: true, moderator: false, support: false },
-        { name: "অংশীদারিত্ব (Partner) আবেদন যাচাই", superAdmin: true, moderator: false, support: true },
-        { name: "গ্রাহক অনুসন্ধানের বার্তা দেখা ও হ্যান্ডেল", superAdmin: true, moderator: true, support: true },
+        { name: "মেম্বার তালিকা দেখা ও সার্চ", superAdmin: true, moderator: false, support: true, shopOwner: false },
+        { name: "মেম্বারশিপ রিনিউয়াল অনুমোদন ও বাতিল", superAdmin: true, moderator: false, support: true, shopOwner: false },
+        { name: "মেম্বারদের ডিসকাউন্ট লেনদেন লগ দেখা", superAdmin: true, moderator: false, support: true, shopOwner: false },
+        { name: "নতুন ডিসকাউন্ট লেনদেন তৈরি ও যোগ", superAdmin: true, moderator: false, support: false, shopOwner: false },
+        { name: "অংশীদারিত্ব (Partner) আবেদন যাচাই", superAdmin: true, moderator: false, support: true, shopOwner: false },
+        { name: "গ্রাহক অনুসন্ধানের বার্তা দেখা ও হ্যান্ডেল", superAdmin: true, moderator: true, support: true, shopOwner: false },
       ],
     },
     {
       category: "চিকিৎসক ও কনটেন্ট নেটওয়ার্ক",
       icon: Stethoscope,
       items: [
-        { name: "ডাক্তার ও চেম্বার শিডিউল ব্যবস্থাপনা", superAdmin: true, moderator: true, support: false },
-        { name: "স্বাস্থ্য টিপস ও মেডিক্যাল আর্টিকেল", superAdmin: true, moderator: true, support: false },
-        { name: "হাসপাতাল রিভিউ ও রেটিং মডারেশন", superAdmin: true, moderator: true, support: true },
-        { name: "জরুরি সেবা (রক্তদাতা, অ্যাম্বুলেন্স, হটলাইন)", superAdmin: true, moderator: true, support: false },
-        { name: "গণ ব্রডকাস্ট এসএমএস ও ইমেইল নোটিশ", superAdmin: true, moderator: true, support: false },
+        { name: "ডাক্তার ও চেম্বার শিডিউল ব্যবস্থাপনা", superAdmin: true, moderator: true, support: false, shopOwner: false },
+        { name: "স্বাস্থ্য টিপস ও মেডিক্যাল আর্টিকেল", superAdmin: true, moderator: true, support: false, shopOwner: false },
+        { name: "হাসপাতাল রিভিউ ও রেটিং মডারেশন", superAdmin: true, moderator: true, support: true, shopOwner: false },
+        { name: "জরুরি সেবা (রক্তদাতা, অ্যাম্বুলেন্স, হটলাইন)", superAdmin: true, moderator: true, support: false, shopOwner: false },
+        { name: "গণ ব্রডকাস্ট এসএমএস ও ইমেইল নোটিশ", superAdmin: true, moderator: true, support: false, shopOwner: false },
+      ],
+    },
+    {
+      category: "প্রোডাক্ট শপ ও ই-কমার্স ইনভেন্টরি",
+      icon: ShoppingBag,
+      items: [
+        { name: "নতুন প্রোডাক্ট যোগ, সম্পাদন ও ডিলিট", superAdmin: true, moderator: true, support: false, shopOwner: true },
+        { name: "প্রোডাক্ট স্টক ও ইনভেন্টরি নিয়ন্ত্রণ", superAdmin: true, moderator: true, support: false, shopOwner: true },
       ],
     },
   ];
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto p-4 sm:p-6 bg-background/95 backdrop-blur-xl border border-border">
+      <DialogContent className="w-full sm:max-w-3xl md:max-w-4xl max-h-[85vh] overflow-y-auto p-4 sm:p-6 bg-background/95 backdrop-blur-xl border border-border">
         <DialogHeader className="space-y-2 border-b border-border/60 pb-4">
           <div className="flex items-center gap-2">
             <div className="p-2 rounded-xl bg-primary/10 text-primary">
@@ -75,7 +83,7 @@ export function AdminStaffPermissionsModal({
           </div>
         </DialogHeader>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 py-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 py-2">
           {Object.values(ROLE_CONFIGS).map((conf) => (
             <div
               key={conf.role}
@@ -96,9 +104,17 @@ export function AdminStaffPermissionsModal({
             const CatIcon = cat.icon;
             return (
               <div key={catIdx} className="border border-border/60 rounded-2xl overflow-hidden bg-card/40">
-                <div className="flex items-center gap-2 px-4 py-2.5 bg-muted/50 border-b border-border/40 text-xs font-bold text-secondary dark:text-white">
-                  <CatIcon className="h-4 w-4 text-primary" />
-                  <span>{cat.category}</span>
+                <div className="flex items-center justify-between px-4 py-2.5 bg-muted/50 border-b border-border/40 text-xs font-bold text-secondary dark:text-white">
+                  <div className="flex items-center gap-2">
+                    <CatIcon className="h-4 w-4 text-primary" />
+                    <span>{cat.category}</span>
+                  </div>
+                  <div className="hidden sm:grid grid-cols-8 gap-1 w-1/2 text-[10px] text-center text-muted-foreground font-semibold">
+                    <span className="col-span-2">সুপার এডমিন</span>
+                    <span className="col-span-2">মডারেটর</span>
+                    <span className="col-span-2">সাপোর্ট</span>
+                    <span className="col-span-2 text-emerald-600 dark:text-emerald-400">শপ ওনার</span>
+                  </div>
                 </div>
 
                 <div className="divide-y divide-border/30">
@@ -107,7 +123,7 @@ export function AdminStaffPermissionsModal({
                       key={itemIdx}
                       className="grid grid-cols-12 items-center px-4 py-2.5 text-xs hover:bg-muted/20 transition-colors"
                     >
-                      <div className="col-span-6 font-medium text-foreground pr-2">{item.name}</div>
+                      <div className="col-span-4 font-medium text-foreground pr-2">{item.name}</div>
 
                       <div className="col-span-2 text-center flex justify-center items-center">
                         {item.superAdmin ? (
@@ -144,6 +160,18 @@ export function AdminStaffPermissionsModal({
                           </div>
                         )}
                       </div>
+
+                      <div className="col-span-2 text-center flex justify-center items-center">
+                        {item.shopOwner ? (
+                          <div className="h-6 w-6 rounded-full bg-emerald-500/15 text-emerald-600 flex items-center justify-center">
+                            <Check className="h-3.5 w-3.5" />
+                          </div>
+                        ) : (
+                          <div className="h-6 w-6 rounded-full bg-muted text-muted-foreground flex items-center justify-center">
+                            <X className="h-3.5 w-3.5" />
+                          </div>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -152,7 +180,7 @@ export function AdminStaffPermissionsModal({
           })}
         </div>
 
-        <div className="flex items-center justify-end gap-6 text-[11px] font-semibold text-muted-foreground pt-3 border-t border-border/50">
+        <div className="flex flex-wrap items-center justify-end gap-4 sm:gap-6 text-[11px] font-semibold text-muted-foreground pt-3 border-t border-border/50">
           <div className="flex items-center gap-1.5">
             <div className="h-2.5 w-2.5 rounded-full bg-purple-500" />
             <span>সুপার এডমিন</span>
@@ -164,6 +192,10 @@ export function AdminStaffPermissionsModal({
           <div className="flex items-center gap-1.5">
             <div className="h-2.5 w-2.5 rounded-full bg-amber-500" />
             <span>সাপোর্ট স্টাফ</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+            <span>শপ ওনার</span>
           </div>
         </div>
       </DialogContent>

@@ -68,7 +68,8 @@ export async function proxy(req: NextRequest) {
         // Check granular RBAC permissions for admin sub-routes
         const adminRole = session.adminRole || "super_admin";
         if (!canAccessAdminRoute(adminRole, path)) {
-          return NextResponse.redirect(new URL("/admin", req.nextUrl));
+          const fallbackPath = adminRole === "shop_owner" ? "/admin/products" : "/admin";
+          return NextResponse.redirect(new URL(fallbackPath, req.nextUrl));
         }
       }
 
@@ -79,7 +80,8 @@ export async function proxy(req: NextRequest) {
           return NextResponse.next();
         }
         if (session.role === "admin") {
-          return NextResponse.redirect(new URL("/admin", req.nextUrl));
+          const defaultAdminPath = session.adminRole === "shop_owner" ? "/admin/products" : "/admin";
+          return NextResponse.redirect(new URL(defaultAdminPath, req.nextUrl));
         } else if (session.role === "partner" || session.role === "partner_staff") {
           return NextResponse.redirect(new URL("/partner/dashboard", req.nextUrl));
         } else {

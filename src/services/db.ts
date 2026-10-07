@@ -151,7 +151,7 @@ export function parsePartnerGallery(raw?: string | null): PartnerGalleryImage[] 
   }
 }
 
-export type AdminRole = 'super_admin' | 'content_moderator' | 'support_staff';
+export type AdminRole = 'super_admin' | 'content_moderator' | 'support_staff' | 'shop_owner';
 
 export interface AdminUser {
   id: string;
