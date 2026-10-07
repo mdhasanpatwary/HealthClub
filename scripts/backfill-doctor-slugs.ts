@@ -5,25 +5,21 @@ async function backfillDoctorSlugs() {
   console.log("Starting doctor slug backfill...");
 
   const doctors = await prisma.doctor.findMany({
-    where: {
-      OR: [
-        { slug: null },
-        { slug: "" },
-      ],
-    },
     select: {
       id: true,
       name: true,
+      nameEn: true,
       slug: true,
     },
     orderBy: { createdAt: "asc" },
   });
 
-  console.log(`Found ${doctors.length} doctors needing slugs.`);
+  const needingSlugs = doctors.filter((doc) => !doc.slug || !/^[a-z0-9-]+$/.test(doc.slug));
+  console.log(`Found ${needingSlugs.length} doctors needing slugs.`);
 
   let updatedCount = 0;
-  for (const doc of doctors) {
-    const baseSlug = generateDoctorSlug(doc.name) || `doc-${doc.id.replace(/^doc_/, "")}`;
+  for (const doc of needingSlugs) {
+    const baseSlug = generateDoctorSlug(doc.name, doc.nameEn || undefined) || `doc-${doc.id.replace(/^doc_/, "")}`;
     const uniqueSlug = await resolveUniqueDoctorSlug(prisma, baseSlug, doc.id);
 
     await prisma.doctor.update({

@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@/generated/client/client";
 import { Doctor, Partner, initialDoctors } from "@/services/db";
+import fallbackDoctors from "@/data/feniUniqueDoctors.json";
 import { generateDoctorSlug } from "@/lib/slugify";
 import { logger } from "@/lib/logger";
 import { unstable_cache } from "next/cache";
@@ -11,6 +12,7 @@ import { distributeDoctorsFairly } from "@/lib/doctorDistribution";
 import {
   formatDoctor,
   DOCTOR_CARD_SELECT_FIELDS,
+  type PrismaDoctorRecord,
 } from "@/lib/doctorFormat";
 
 const DOCTORS_TAG = "doctors";
@@ -197,8 +199,8 @@ const fetchDbDoctorByIdOrSlug = unstable_cache(
         };
       }
 
-      // Fast in-memory fallback check without database scan
-      const fallback = initialDoctors.find(
+      // Fast in-memory fallback check across all known catalog doctors
+      const fallbackFromInitial = initialDoctors.find(
         (doc) =>
           doc.slug === asciiSlug ||
           doc.slug === decoded ||
@@ -208,7 +210,23 @@ const fetchDbDoctorByIdOrSlug = unstable_cache(
           doc.name === decoded ||
           (doc.nameEn && doc.nameEn.toLowerCase() === decoded.toLowerCase())
       );
-      return fallback ? { ...fallback, partner: null } : null;
+      if (fallbackFromInitial) {
+        return { ...fallbackFromInitial, partner: null };
+      }
+
+      const rawFallback = (fallbackDoctors as unknown as PrismaDoctorRecord[]).find((doc) => {
+        const docAscii = formatDoctor(doc).slug;
+        return (
+          docAscii === asciiSlug ||
+          docAscii === decoded ||
+          docAscii === idOrSlug ||
+          doc.id === idOrSlug ||
+          doc.id === decoded ||
+          doc.name === decoded ||
+          (doc.nameEn && doc.nameEn.toLowerCase() === decoded.toLowerCase())
+        );
+      });
+      return rawFallback ? { ...formatDoctor(rawFallback), partner: null } : null;
     } catch (error) {
       logger.error("Error in fetchDbDoctorByIdOrSlug:", error);
       return null;

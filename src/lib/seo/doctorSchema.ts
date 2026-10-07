@@ -153,18 +153,29 @@ export function generateDoctorJsonLd(
         name: "বিশেষজ্ঞ ডাক্তারগণ",
         item: `${SITE_URL}/consultants`,
       },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: specialtyInfo.nameBn,
-        item: `${SITE_URL}/consultants/department/${doctor.department}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 4,
-        name: doctor.name,
-        item: profileUrl,
-      },
+      ...(doctor.department && doctor.department !== "other" && doctor.department !== "all"
+        ? [
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: specialtyInfo.nameBn,
+              item: `${SITE_URL}/consultants/department/${doctor.department}`,
+            },
+            {
+              "@type": "ListItem",
+              position: 4,
+              name: doctor.name,
+              item: profileUrl,
+            },
+          ]
+        : [
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: doctor.name,
+              item: profileUrl,
+            },
+          ]),
     ],
   };
 

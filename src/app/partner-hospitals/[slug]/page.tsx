@@ -40,6 +40,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     permanentRedirect("/blog/feni-sadar-hospital-guide");
   }
 
+  if (
+    decodedParam.startsWith("/blog/") ||
+    decodedParam.startsWith("blog/") ||
+    decodedParam.includes("/blog/")
+  ) {
+    const cleanPath = decodedParam.startsWith("/") ? decodedParam : `/${decodedParam}`;
+    permanentRedirect(cleanPath);
+  }
+
   const partner = await getPartnerByIdAction(slug);
 
   if (!partner) {
@@ -130,6 +139,15 @@ export default async function PartnerHospitalDetailPage({ params }: PageProps) {
 
   if (decodedParam === "feni-sadar-hospital" || decodedParam === "feni-sadar-hospital-guide") {
     permanentRedirect("/blog/feni-sadar-hospital-guide");
+  }
+
+  if (
+    decodedParam.startsWith("/blog/") ||
+    decodedParam.startsWith("blog/") ||
+    decodedParam.includes("/blog/")
+  ) {
+    const cleanPath = decodedParam.startsWith("/") ? decodedParam : `/${decodedParam}`;
+    permanentRedirect(cleanPath);
   }
 
   const partner = await getPartnerByIdAction(slug);

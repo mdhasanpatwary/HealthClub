@@ -12,7 +12,6 @@ import { getAllUpazilaSlugs } from "@/data/feniLocations";
 import { getAllPartnerCategorySlugs } from "@/data/partnerCategorySeoData";
 import { getAllBlogPostCardsAction } from "@/app/actions/blogAdminActions";
 import { getAllProductSlugsAction } from "@/app/actions/productActions";
-import { BLOG_FILTER_PILLS } from "@/data/blog/blogCategories";
 import { logger } from "@/lib/logger";
 
 import { parseArticleDate, STATIC_FALLBACK_DATE as STATIC_LAST_MODIFIED } from "@/lib/dateUtils";
@@ -191,19 +190,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
   });
 
-  // Dynamic blog filter category landing routes (excluding "all" which is covered by /blog)
-  const blogCategoryEntries: MetadataRoute.Sitemap = BLOG_FILTER_PILLS
-    .filter((pill) => pill.id !== "all")
-    .map((pill) => {
-      const url = `${baseUrl}/blog?category=${pill.id}`;
-      return {
-        url,
-        lastModified: STATIC_LAST_MODIFIED,
-        changeFrequency: "weekly",
-        priority: 0.85,
-      };
-    });
-
   // Dynamic blog articles (e.g. Best 10 Hospitals in Feni)
   const blogPosts = await getAllBlogPostCardsAction();
   const blogPostEntries: MetadataRoute.Sitemap = blogPosts.map((post) => {
@@ -232,7 +218,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...departmentEntries,
     ...upazilaEntries,
     ...partnerCategoryEntries,
-    ...blogCategoryEntries,
     ...blogPostEntries,
     ...articleEntries,
     ...doctorEntries,

@@ -78,7 +78,7 @@ export default function DoctorDirectory({
   const [activeDetailsDoctor, setActiveDetailsDoctor] = useState<Doctor | null>(null);
 
   const handleDeptChange = (deptId: string) => {
-    if (deptId === "all") {
+    if (deptId === "all" || deptId === "other") {
       router.push("/consultants");
     } else {
       router.push(`/consultants/department/${deptId}`);
@@ -341,7 +341,7 @@ export default function DoctorDirectory({
             const Icon = dept.icon;
             const isSelected = selectedDept === dept.id;
             const count = departmentCounts[dept.id] || 0;
-            const href = dept.id === "all" ? "/consultants" : `/consultants/department/${dept.id}`;
+            const href = dept.id === "all" || dept.id === "other" ? "/consultants" : `/consultants/department/${dept.id}`;
 
             return (
               <Link

@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Link from "next/link";
 import { Stethoscope, ShieldCheck, PhoneCall, HeartHandshake, HelpCircle } from "lucide-react";
 import dynamic from "next/dynamic";
@@ -27,6 +27,9 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
+  if (!slug || slug === "all" || slug === "other") {
+    permanentRedirect("/consultants");
+  }
   const deptSeo = getDepartmentSeoConfig(slug);
 
   if (!deptSeo) {
@@ -61,6 +64,9 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function DepartmentLandingPage({ params }: PageProps) {
   const { slug } = await params;
+  if (!slug || slug === "all" || slug === "other") {
+    permanentRedirect("/consultants");
+  }
   const deptSeo = getDepartmentSeoConfig(slug);
 
   if (!deptSeo) {

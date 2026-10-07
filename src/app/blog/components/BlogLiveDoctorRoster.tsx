@@ -64,7 +64,7 @@ export function BlogLiveDoctorRoster({
   const displayDoctors = uniqueDoctors.slice(0, limit);
   const remainingCount = uniqueDoctors.length - displayDoctors.length;
   const targetDepartmentUrl =
-    department && department !== "all"
+    department && department !== "all" && department !== "other"
       ? `/consultants/department/${department}`
       : "/consultants";
 

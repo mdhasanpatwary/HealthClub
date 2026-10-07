@@ -67,6 +67,23 @@ const nextConfig: NextConfig = {
         destination: "/consultants/asst-prof-dr-abdul-mtin",
         permanent: true,
       },
+      // Edge-level redirects for department filter fallbacks
+      {
+        source: "/consultants/department/other",
+        destination: "/consultants",
+        permanent: true,
+      },
+      {
+        source: "/consultants/department/all",
+        destination: "/consultants",
+        permanent: true,
+      },
+      // Edge-level redirect for malformed partner blog URLs
+      {
+        source: "/partner-hospitals/blog/:path*",
+        destination: "/blog/:path*",
+        permanent: true,
+      },
       // Edge-level redirects for legacy query parameters (0 Active CPU)
       {
         source: "/partner-hospitals",
@@ -109,6 +126,12 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       // Static assets: aggressive caching for images, icons, and partner logos
+      {
+        source: "/_next/static/media/:path*",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+        ],
+      },
       {
         source: "/images/:path*",
         headers: [

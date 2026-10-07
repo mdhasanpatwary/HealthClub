@@ -39,7 +39,13 @@ export default function DoctorProfileView({
           items={[
             { label: "হোম", href: "/" },
             { label: "বিশেষজ্ঞ ডাক্তার", href: "/consultants" },
-            { label: deptLabel, href: `/consultants/department/${doctor.department}` },
+            {
+              label: deptLabel,
+              href:
+                doctor.department && doctor.department !== "other" && doctor.department !== "all"
+                  ? `/consultants/department/${doctor.department}`
+                  : "/consultants",
+            },
             { label: doctor.name },
           ]}
         />

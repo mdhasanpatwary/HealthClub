@@ -183,7 +183,7 @@ export function generatePartnerJsonLd({
         "@type": "ListItem",
         position: 3,
         name: breadcrumbCategoryName,
-        item: `${SITE_URL}/partner-hospitals?category=${partner.category}`,
+        item: `${SITE_URL}/partner-hospitals/category/${partner.category}`,
       },
       {
         "@type": "ListItem",

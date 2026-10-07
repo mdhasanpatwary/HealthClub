@@ -47,6 +47,10 @@ const DISALLOWED_PATHS = [
   "/register/payment",
   "/register/verify-email",
   "/forgot-password/reset",
+  "/_next/static/media/*",
+  "/*.woff2$",
+  "/*.woff$",
+  "/*.ttf$",
 ];
 
 const AI_AND_SEARCH_BOTS = [
