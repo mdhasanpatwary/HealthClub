@@ -61,6 +61,12 @@ const nextConfig: NextConfig = {
         destination: "/consultants/:path*",
         permanent: true,
       },
+      // Edge-level permanent redirects for legacy doctor IDs (0 Active CPU)
+      {
+        source: "/consultants/doc_a6446d15",
+        destination: "/consultants/asst-prof-dr-abdul-mtin",
+        permanent: true,
+      },
       // Edge-level redirects for legacy query parameters (0 Active CPU)
       {
         source: "/partner-hospitals",

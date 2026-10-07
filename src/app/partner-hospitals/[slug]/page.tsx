@@ -46,6 +46,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     notFound();
   }
 
+  if (partner.slug && decodedParam !== partner.slug) {
+    permanentRedirect(`/partner-hospitals/${encodeURIComponent(partner.slug)}`);
+  }
+
   const categoryLabel =
     partner.category === "hospital"
       ? "হাসপাতাল"

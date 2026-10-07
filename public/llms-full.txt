@@ -39,7 +39,7 @@ Health Club's medical network, emergency response system, ambulance directory, a
 - **Hospital Admissions**: 10% to 20% discount on hospital cabin rent, bed charges, and post-operative care at partner hospitals.
 - **Pharmacies**: 5% to 10% discount on genuine medicines at partner model pharmacies.
 - **Family Coverage**: Single membership card covers the primary cardholder, spouse, dependent children, and parents.
-- **Membership Pricing**: Free Membership is **FREE (৳0)** offering **10-25% discount**; Premium Membership is **৳500 / Year** offering **15-30% discount** and priority doctor serial appointment booking & support.
+- **Membership Pricing**: Free Membership is **FREE (৳0)** offering **10-25% discount**; Premium Membership is **৳500 / Year** offering **15-30% discount** and priority support.
 
 ### 2. 24/7 Emergency Services & Blood Network (`/emergency`)
 - **Ambulance Fleet Directory**: 24/7 direct driver contact across AC Ambulances, Non-AC Ambulances, ICU Support Ambulances (with ventilator & oxygen for critical transfers to Chittagong/Dhaka), and Freezer/Mortuary Vans.
@@ -64,18 +64,18 @@ All partner facilities maintain formal discount contracts with Health Club, stri
 
 | প্রতিষ্ঠানের নাম (Organization Name) | ধরণ (Category) | ঠিকানা (Address) | হেলথ ক্লাব ছাড় (Discount) | যোগাযোগ (Phone) |
 |:---|:---|:---|:---|:---|
-| আল-আকসা হাসপাতাল লিঃ ফেনী | হাসপাতাল (Hospital) | খাজুরিয়া কোট বিল্ডিং, ট্রাংক রোড, ফেনী। ৩৯০০ | সর্বোচ্চ ২৫% পর্যন্ত ডিসকাউন্ট | 01815076266 |
-| ইম্পেরিয়াল নিউরোকেয়ার অ্যান্ড ডায়াগনস্টিক সেন্টার | ডায়াগনস্টিক (Diagnostic) |  ফেনী কেন্দ্রীয় বোরো জামে মসজিদ মার্কেট ২য় তলা, ট্রাঙ্ক রোড-ফেনী। | সর্বোচ্চ ৩০% পর্যন্ত ডিসকাউন্ট | +8801888750099 |
-| ইসলামিয়া  ফিজিওথেরাপি  এন্ড রিহ্যাবিলিটেশন সেন্টার | হাসপাতাল (Hospital) | আল কেমী হাসপাতালের দক্ষিণ পার্শ্বে, (জসিম ম্যানশন), এস.এস.কে রোড, ফেনী। | সর্বোচ্চ ৩০% পর্যন্ত ডিসকাউন্ট | 01828071865 |
-| এম রহমান মেডিকেল স্টোর | ফার্মেসি (Pharmacy) |  বড় মসজিদের পূর্ব পাশে, ট্রাঙ্ক রোড-ফেনী | ৫-১০% পর্যন্ত ডিসকাউন্ট | 01768382725 |
-| ঢাকা ফার্মেসি | ফার্মেসি (Pharmacy) | ফেনী কেন্দ্রিয় বড় জামে মসজিদের পূর্ব পাশে | ৫-১০% পর্যন্ত ডিসকাউন্ট | 01813943945 |
-| নিরাময় ডায়াগনস্টিক এন্ড কনসালটেশন সেন্টার | ডায়াগনস্টিক (Diagnostic) | জুহানা শপিং সেন্টার, খেজুর চত্বর,  ট্রাংক রোড , ফেনী | সর্বোচ্চ ৩০% পর্যন্ত ডিসকাউন্ট | 01815583960 |
-| প্যাসিফিক হেলথ কেয়ার সেন্টার | ডায়াগনস্টিক (Diagnostic) |  শহীদ শহীদুল্লাহ কায়সার সড়ক, জিরো পয়েন্ট-ফেনী | সর্বোচ্চ ৩০% পর্যন্ত ডিসকাউন্ট | +8801711365956 |
-| ফেনি ম্যাক্স ডায়াগনস্টিক সেন্টার | ডায়াগনস্টিক (Diagnostic) | জাহিরিয়া টাওয়ার, বড় মসজিদের পাশে, ট্রাঙ্ক রোড-ফেনী। | সর্বোচ্চ ৩০% পর্যন্ত ডিসকাউন্ট | 01816660616 |
-| ফেনী কেয়ার হসপিটাল | হাসপাতাল (Hospital) | এসএসকে রোড স্টার লাইন বাস টারমিনাল আর সামনে | সর্বোচ্চ ৩০% পর্যন্ত ডিসকাউন্ট | 01806968140 |
-| মজুমদার ডেন্টাল ক্লিনিক | হাসপাতাল (Hospital) | জিরো পয়েন্ট, ট্রাঙ্ক রোড, ফেনী। | সর্বোচ্চ ৩০% পর্যন্ত ডিসকাউন্ট | 01912887888 |
-| লাইফ কেয়ার ডায়াগনস্টিক সেন্টার | ডায়াগনস্টিক (Diagnostic) | কেন্দ্রীয় বোরো জামে মসজিদের পূর্ব পাশে, গ্র্যান্ড ট্রাঙ্ক রোড-ফেনী। | সর্বোচ্চ ৩০% পর্যন্ত ডিসকাউন্ট | +8801882462650 |
-| সেন্ট্রাল ফিজিওথেরাপি  এন্ড রিহ্যাবিলিটেশন সেন্টার| | হাসপাতাল (Hospital) | সাইকা প্লাস এর বিপরীতে দিদার টাইলস্ এর পাশের গলি সুজাত ম্যানশন, এস.এস.কে রোড, ফেনী। | সর্বোচ্চ ৩০% পর্যন্ত ডিসকাউন্ট | 01855202526 |
+| আল-আকসা হাসপাতাল লিঃ ফেনী | হাসপাতাল (Hospital) | খাজুরিয়া কোট বিল্ডিং, ট্রাংক রোড, ফেনী। ৩৯০০ | ১০-২৫% মেম্বার ছাড় | 01815076266 |
+| ইম্পেরিয়াল নিউরোকেয়ার অ্যান্ড ডায়াগনস্টিক সেন্টার | ডায়াগনস্টিক (Diagnostic) | ফেনী কেন্দ্রীয় বোরো জামে মসজিদ মার্কেট ২য় তলা, ট্রাঙ্ক রোড-ফেনী। | ১০-৩০% মেম্বার ছাড় | +8801888750099 |
+| ইসলামিয়া  ফিজিওথেরাপি  এন্ড রিহ্যাবিলিটেশন সেন্টার | হাসপাতাল (Hospital) | আল কেমী হাসপাতালের দক্ষিণ পার্শ্বে, (জসিম ম্যানশন), এস.এস.কে রোড, ফেনী। | ১০-৩০% মেম্বার ছাড় | 01828071865 |
+| এম রহমান মেডিকেল স্টোর | ফার্মেসি (Pharmacy) | বড় মসজিদের পূর্ব পাশে, ট্রাঙ্ক রোড-ফেনী | ৫-১০% মেম্বার ছাড় | 01768382725 |
+| ঢাকা ফার্মেসি | ফার্মেসি (Pharmacy) | ফেনী কেন্দ্রিয় বড় জামে মসজিদের পূর্ব পাশে, ট্রাঙ্ক রোড, ফেনী | ৫-১০% মেম্বার ছাড় | 01813943945 |
+| নিরাময় ডায়াগনস্টিক এন্ড কনসালটেশন সেন্টার | ডায়াগনস্টিক (Diagnostic) | জুহানা শপিং সেন্টার, খেজুর চত্বর, ট্রাংক রোড, ফেনী | ১০-৩০% মেম্বার ছাড় | 01815583960 |
+| প্যাসিফিক হেলথ কেয়ার সেন্টার | ডায়াগনস্টিক (Diagnostic) | শহীদ শহীদুল্লাহ কায়সার সড়ক, জিরো পয়েন্ট-ফেনী | ১০-৩০% মেম্বার ছাড় | +8801711365956 |
+| ফেনি ম্যাক্স ডায়াগনস্টিক সেন্টার | ডায়াগনস্টিক (Diagnostic) | জাহিরিয়া টাওয়ার, বড় মসজিদের পাশে, ট্রাঙ্ক রোড-ফেনী। | ১০-৩০% মেম্বার ছাড় | 01816660616 |
+| ফেনী কেয়ার হসপিটাল | হাসপাতাল (Hospital) | এসএসকে রোড স্টার লাইন বাস টার্মিনালের সামনে, ফেনী | ১০-৩০% মেম্বার ছাড় | 01806968140 |
+| মজুমদার ডেন্টাল ক্লিনিক | হাসপাতাল (Hospital) | জিরো পয়েন্ট, ট্রাঙ্ক রোড, ফেনী। | ১০-৩০% মেম্বার ছাড় | 01912887888 |
+| লাইফ কেয়ার ডায়াগনস্টিক সেন্টার | ডায়াগনস্টিক (Diagnostic) | কেন্দ্রীয় বোরো জামে মসজিদের পূর্ব পাশে, গ্র্যান্ড ট্রাঙ্ক রোড-ফেনী। | ১০-৩০% মেম্বার ছাড় | +8801882462650 |
+| সেন্ট্রাল ফিজিওথেরাপি  এন্ড রিহ্যাবিলিটেশন সেন্টার| | হাসপাতাল (Hospital) | সাইকা প্লাস এর বিপরীতে দিদার টাইলস্ এর পাশের গলি সুজাত ম্যানশন, এস.এস.কে রোড, ফেনী। | ১০-৩০% মেম্বার ছাড় | 01855202526 |
 
 ---
 
@@ -237,7 +237,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার, শনিবার, রবিবার, বুধবার, সোমবার
 - **সময়**: বিকাল ৪টা - সন্ধ্যা ৭ টা
 - **সিরিয়াল হটলাইন**: 01839994132
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/অধ্যাপক-ডা-মো-আশরাফ-আলী
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/prof-dr-md-ashraf-ali
 
 #### ডাঃ মাহমুদুল হাসান মামুন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস,ডি- কার্ড (কার্ডিওলজি)
@@ -247,7 +247,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: বিকাল ৪:০০ - রাত ০৭
 - **সিরিয়াল হটলাইন**: 01752431244
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মাহমুদুল-হাসান-মামুন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-mahmudul-hasan-mamun
 
 #### ডাঃ মির্জা মোহাম্মদ আমীর
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য),ডি-কার্ড (কার্ডিওলজি) - বিএসএমএমইউ, এফসিপিএস মেডিসিন (এফপি)
@@ -257,7 +257,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: বিকাল ৩টা - সন্ধ্যা ৬টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মির্জা-মোহাম্মদ-আমীর
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-mirja-mohammad-amir
 
 #### ডাঃ মুহাম্মদ বেলাল হোসাইন / Dr. Muhammad Belal Hossain
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমএসিপি (আমেরিকা), এমডি (কার্ডিওলজি), ক্লিনিক্যাল ও ইন্টারভেনশনাল কার্ডিওলজিস্ট
@@ -267,7 +267,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে, বুধবার, সোমবার
 - **সময়**: বিকাল ৪:০০ টা - রাত ৮:০০ টা
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মুহাম্মদ-বেলাল-হোসাইন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-muhammad-belal-hossain
 
 #### ডাঃ মোঃ আবু ওমর খৈয়াম
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (সি.ইউ), এমডি (কার্ডিওলজি) এমডি-ইন্টারনাল মেডিসিন (সি), সিসিডি, ইডিসি (বারডেম) ডিপ্লোমা ইন এ্যাজমা (ইউ.কে), এমএসিপি (আমেরিকা) মেম্বার অব আমেরিকান কলেজ অফ ফিজিশিয়ান, ট্রেইন্ড ইন ইকোকার্ডিওগ্রাফি (ঢাকা মেডিকেল কলেজ হাসপাতাল), BMDC REG NO: A 74867
@@ -277,7 +277,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শনিবার, রবিবার, বুধবার, সোমবার
 - **সময়**: বিকাল ৫টা - রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01824908173
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-আবু-ওমর-খৈয়াম
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-abu-omr-khoiyam
 
 #### ডাঃ মোঃ তৌহিদুর রহমান
 - **ডিগ্রি / যোগ্যতা**: এম.বি.বি.এস; সি.সি.ডি (ডায়াবেটোলজী), ডি-কার্ড (ডি ইউ), এম.এ.সি.পি (আমেরিকা) , কনসাল্টেন্ট (কার্ডিওলজী) এক্স-
@@ -287,7 +287,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার, শনিবার, রবিবার, বুধবার, সোমবার
 - **সময়**: সকাল ৯টা থেকে দুপুর ১২টা
 - **সিরিয়াল হটলাইন**: 01834031113
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-তৌহিদুর-রহমান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-touhidur-rahman
 
 #### ডাঃ মোঃ মাহতাব উদ্দীন আহমেদ
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য);, এমডি (কার্ডিওলজী) এন আই সি ভি ডি, ঢাকা ইকো স্পেশালিষ্ট ও সিনিয়র
@@ -297,7 +297,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বুধবার, সোমবার
 - **সময়**: : দুপুর ১ টা থেকে সন্ধ্যা ৭ টা
 - **সিরিয়াল হটলাইন**: 01849933222
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-মাহতাব-উদ্দীন-আহমেদ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-mahtab-uddin-ahmed
 
 #### ডাঃ মোঃ মাহমুদুল হাসান মামুন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (সিইউ) ডি-কার্ড (কার্ডিওলজি),এফসিপিএস (মেডিসিন) এফপি ,এমএসিপি (আমেরিকা),সিসিডি ডায়াবেটিস (বারডেম)
@@ -307,7 +307,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার, শনিবার, রবিবার, বুধবার, সোমবার
 - **সময়**: সকাল ১১টা- দুপুর ২টা
 - **সিরিয়াল হটলাইন**: 01882462650
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-মাহমুদুল-হাসান-মামুন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-mahmudul-hasan-mamun
 
 #### ডাঃ মোঃ মোফাজ্জল হক রায়হান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস; বিসিএস (স্বাস্থ্য) এমডি(কার্ডিওলজি), এফসিপিএস (মেডিসিন) এফপি , সি সি ডি (বারডেম)
@@ -317,7 +317,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার, রবিবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01866980873
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-মোফাজ্জল-হক-রায়হান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-mofajjl-hoque-rayhan
 
 #### ডাঃ মো: নাজমুল হাসান (সাম্মি) / Dr. Md. Nazmul Hasan (Sammi)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ডিইউ), বিসিএস (স্বাস্থ্য),, ডি-কার্ড (কার্ডিওলজি), বিএমইউ,, এফসিপিএস (মেডিসিন- এফপি), সিসিডি (বারডেম)
@@ -327,7 +327,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শনি - বৃহস্পতি
 - **সময়**: দুপুর ২ টা থেকে বিকাল 4 টা
 - **সিরিয়াল হটলাইন**: ০১৮১৫৫৮৩৯৬০
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-নাজমুল-হাসান-সাম্মি
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-nazmul-hasan-sammi
 
 #### ডাঃ মো: রাশেদুল হাসান / Dr. Md. Rashedul Hasan
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (চট্টগ্রাম মেডিকেল কলেজ), বিসিএস (স্বাস্থ্য)
@@ -337,7 +337,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-রাশেদুল-হাসান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-rashedul-hasan
 
 #### ডাঃ শাহ নেওয়াজ সিরাজ (মামুন) / Dr. Shah Newaz Siraj (Mamun)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, এমএসিপি, ডি-কার্ড (কার্ডিওলজি) – বিএমইউ
@@ -347,7 +347,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-শাহ-নেওয়াজ-সিরাজ-মামুন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-shah-newaz-siraj-mamun
 
 #### ডা. মো: নাজমুল হাসান (সাম্নি)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ডিইউ), বিসিএস (স্বাস্থ্য),, ডি-কার্ড (কার্ডিওলজি), বিএমইউ,, এফসিপিএস (মেডিসিন- এফপি), সিসিডি (বারডেম), ২৫০ শয্যা জেনারেল হাসপাতাল, ফেনী।
@@ -357,7 +357,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: দুপুর ২.৩০টা - বিকাল ৪.৩০টা
 - **সিরিয়াল হটলাইন**: 01896187742
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-নাজমুল-হাসান-সাম্নি
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-nazmul-hasan-samni
 
 #### ডা. রফিকুল ইসলাম
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য); ডি-কার্ড (বি.এস.এম.এম.ইউ) এমএসিপি (আমেরিকা) সিসিডি (বারডেম), মেম্বার- ইউরোপিয়ান সোসাইটি অব কার্ডিওলজি স্পেশালিস্ট ট্রেনিং অন ইকোকার্ডিওগ্রাফি (JROP, INDIA) ২৫০ শয্যা জেনারেল হাসপাতাল, ফেনী।, BMDC Reg. No : A-50698
@@ -367,7 +367,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-রফিকুল-ইসলাম
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-rfikul-islam
 
 #### সহকারী অধ্যাপক ডাঃ আবদুল মতিন
 - **ডিগ্রি / যোগ্যতা**: MBBS.BCS(H)MD(card)
@@ -377,7 +377,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতি- শুক্রবার
 - **সময়**: বিকাল ৫:০০ - রাত ৯:০০
 - **সিরিয়াল হটলাইন**: ০১৭৫২৪৩১২৪৪
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-আবদুল-মতিন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-abdul-mtin
 
 #### সহকারী অধ্যাপক ডাঃ খালেদ মাহমুদ (টিপু)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য) এমডি কার্ডিওলজি (এনআইসিভিডি), এমএসিপি (ইউএসএ) এফসিপিএস (মেডিসিন) এফপি
@@ -387,7 +387,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: বিকাল ৫টা থেকে রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01829542754
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-খালেদ-মাহমুদ-টিপু
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-khaled-mahmud-tipu
 
 #### সহকারী অধ্যাপক ডাঃ গোলাম সদরুদ্দিন (শামীম)
 - **ডিগ্রি / যোগ্যতা**: এম.বি.বি.এস ; বি.সি.এস (স্বাস্থ্য) এমডি ( কার্ডিওলজী ) ; এফসিপিএস (মেডিসিন) ; এফপি বঙ্গবন্ধু শেখ মুজিব মেডিকেল বিশ্ববিদ্যালয় ফেলো অফ ডায়াবেটোলজী (বারডেম) ট্রেইন্ড ইন ইন্টারভেনশনাল কার্ডিওলজী (ইন্ডিয়া) ২৫০ শয্যা জেনারেল হাসপাতাল , ফেনী । BMDC Reg : No - A - 33794
@@ -397,7 +397,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: দুপুর ৩টা -সন্ধ্যা ৬ টা
 - **সিরিয়াল হটলাইন**: 01711984629
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-গোলাম-সদরুদ্দিন-শামীম
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-golam-sdruddin-shamim
 
 #### সহকারী অধ্যাপক ডাঃ মোহাম্মদ আবদুল মতিন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস : বিসিএস (স্বাস্থ্য);ডি -কার্ড (বিএসএমএমইউ) এম.ডি কার্ডিওলজি জাতীয় হৃদরোগ ইনস্টিটিউট ,ঢাকা ।
@@ -407,7 +407,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: বিকাল ৪টা থেকে রাত ৯টা পর্যন্ত
 - **সিরিয়াল হটলাইন**: 01882462650
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মোহাম্মদ-আবদুল-মতিন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-mohammad-abdul-mtin
 
 #### সহযোগী অধ্যাপক ডাঃ মোঃ মাহফুজুর রহমান
 - **ডিগ্রি / যোগ্যতা**: এম.বি.বি.এস , এম.ডি ( কার্ডিওলজী ) , বি.সি.এস ( স্বাস্থ্য ) ; সিসিডি বারডেম , ঢাকা .সহযোগী
@@ -417,7 +417,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শনিবার, শুক্রবার, বৃহস্পতিবার
 - **সময়**: বিকাল ৪টা থেকে সন্ধ্যা ৬টা
 - **সিরিয়াল হটলাইন**: 01829542754
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহযোগী-অধ্যাপক-ডা-মো-মাহফুজুর-রহমান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/assoc-prof-dr-md-mahfujur-rahman
 
 #### সহযোগী অধ্যাপক ডাঃ মোহাম্মদ কফিল উদ্দিন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমডি (কার্ডিওলজি),ফেলো ইন ডায়াবেটোলজি (বারডেম), ঢাকা,ট্রেনিং ইন ইকোকার্ডিওগ্রাফি (দিল্লি, ভারত),সহকারী
@@ -427,7 +427,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: সকাল ১০টা - বিকাল ৪টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহযোগী-অধ্যাপক-ডা-মোহাম্মদ-কফিল-উদ্দিন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/assoc-prof-dr-mohammad-kfil-uddin
 
 #### সহযোগী অধ্যাপক ডাঃ মোহাম্মদ নাসির উদ্দীন
 - **ডিগ্রি / যোগ্যতা**: এম.বি.বি.এস ; বি.সি.এস (স্বাস্থ্য) , ডি কার্ড (ডি ইউ) হৃদরোগ , মেডিসিন ও বাতজ্বর বিশেষজ্ঞ
@@ -437,7 +437,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বুধবার
 - **সময়**: বিকাল ৫টা থেকে রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01786665377
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহযোগী-অধ্যাপক-ডা-মোহাম্মদ-নাসির-উদ্দীন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/assoc-prof-dr-mohammad-nasir-uddin
 
 #### সহযোগী অধ্যাপক ডা. হুমায়ুন কবির
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ডিইউ), বিসিএস (স্বাস্থ্য) এক্স, ডি-কার্ড (কার্ডিওলজি), ডিআইএইচ (ডিইউ)
@@ -447,7 +447,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতি, শুক্র, শনি, রবি
 - **সময়**: : সকাল ১০টা- দুপুর ১২টা  বিকাল ৩ টা - রাত ৮ টা
 - **সিরিয়াল হটলাইন**: ০১৮১৫৫৮৩৯৬০
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহযোগী-অধ্যাপক-ডা-হুমায়ুন-কবির
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/assoc-prof-dr-humayun-kabir
 
 ### দন্ত ও মুখগহ্বর সার্জারি (Dental Surgery) (4 জন)
 
@@ -459,7 +459,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার ছাড়া প্রতিদিন
 - **সময়**: সকাল ১০টা থেকে দুপুর ১টা বিকাল ৪টা থেকে রাত ৯ টা
 - **সিরিয়াল হটলাইন**: 01912887888
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-জাহিদ-হোসেন-মজুমদার
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-jahid-hossain-mazumder
 
 #### ডাঃ নীলা ভৌমিক
 - **ডিগ্রি / যোগ্যতা**: বি.ডি.এস (ডি.ইউ), পিজিটি (ওরাল এন্ড ম্যাক্সিলোফেসিয়াল সার্জারী) ঢাকা ডেন্টাল কলেজ।, বি.এম.ডি.সি. রেজি নং-৯৪৯৩
@@ -469,7 +469,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার, বুধবার, শনিবার, রবিবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01786665377
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-নীলা-ভৌমিক
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-nila-bhoumik
 
 #### ডাঃ মোঃ আবদুন নুর ভূঁঞা (অনি)
 - **ডিগ্রি / যোগ্যতা**: বি.ডি.এস (ঢা.বি), পি.জি.টি, ওএমএস (ওরাল এন্ড ম্যাক্সিলোফেসিয়াল সার্জারি), ঢাকা ডেন্টাল কলেজ বি.এম.ডি.সি. রেজি নং-১১২৩২
@@ -479,7 +479,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01786665377
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-আবদুন-নুর-ভূঁঞা-অনি
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-abdun-nur-bhuna-oni
 
 #### ডাঃ মোঃ সিয়াম মাহমুদ
 - **ডিগ্রি / যোগ্যতা**: বি.ডি.এস (ঢাকা ডেন্টাল কলেজ) পি.জি.টি (ওরাল এন্ড ম্যাক্সিলোফেসিয়াল সার্জারি),এন্ডোডন্টিকস ও অ্যাস্থেটিক ডেন্টিস্ট্রিতে বিশেষ প্রশিক্ষণপ্রাপ্ত ওরাল এন্ড ডেন্টাল সার্জন,BMDC REG NO-13513
@@ -489,7 +489,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01786665377
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-সিয়াম-মাহমুদ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-siyam-mahmud
 
 ### চর্ম, অ্যালার্জি ও যৌনরোগ (Dermatology & Venereology) (19 জন)
 
@@ -501,7 +501,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতিবার
 - **সময়**: সকাল ১০টা - বিকাল ৫টা
 - **সিরিয়াল হটলাইন**: 01849933222
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/অধ্যাপক-ডা-মো-ইমদাদুল-হক
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/prof-dr-md-imdadul-hoque
 
 #### অধ্যাপক ডাঃ মোঃ হাবিবুর রহমান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), ডিডিভি, চট্টগ্রাম মেডিকেল কলেজ এন্ড হাসপাতাল,BMDC REG NO- A 15182
@@ -511,7 +511,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: সকাল ১০টা - বিকাল ৫টা
 - **সিরিয়াল হটলাইন**: 01866980873
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/অধ্যাপক-ডা-মো-হাবিবুর-রহমান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/prof-dr-md-habibur-rahman
 
 #### ডাঃ ডালিয়া খানম
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস; বিসিএস (স্বাস্থ্য); সিসিডি (বারডেম) ডিডিভি (চর্ম ও যৌন রোগ) বঙ্গবন্ধু শেখ মুজিব মেডিকেল বিশ্ববিদ্যালয় (পিজি হাসপাতাল), ঢাকা। ২৫০ শয্যা আধুনিক সদর হাসপাতাল, ফেনী . BMDC REG NO: G-47611
@@ -521,7 +521,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: রবিবার, শনিবার, বুধবার, বৃহস্পতিবার, সোমবার
 - **সময়**: সকাল ৯টা –দুপুর ১২টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-ডালিয়া-খানম
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-daliya-khanm
 
 #### ডাঃ নয়ন চন্দ্র দেবনাথ / Dr. Noyon Chandra Debnath
 - **ডিগ্রি / যোগ্যতা**: বিসিএস (স্বাস্থ্য), সিসিডি (বারডেম), ডিডিভি (চর্ম ও যৌন রোগ), মেম্বার, বাংলাদেশ ডার্মাটোলজিক্যাল সোসাইটি (বিডিএস), বিএমডিসি রেজি: নং-এ-৬৬৫০৮
@@ -531,7 +531,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-নয়ন-চন্দ্র-দেবনাথ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-noyon-chandra-debnath
 
 #### ডাঃ মোঃ সাইফুর রহমান ভূঁঞা
 - **ডিগ্রি / যোগ্যতা**: এম.বি.বি.এস ডি.ডি.ভি ( চর্ম ও যৌন ) ডার্মাটোসসার্জারী এন্ড লেজার ট্রেনিং প্রাপ্ত, BMDC REG NO - A 44149
@@ -541,7 +541,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: রবিবার, শনিবার, মঙ্গলবার, বৃহস্পতিবার, সোমবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01711984629
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-সাইফুর-রহমান-ভূঁঞা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-saifur-rahman-bhuna
 
 #### ডাঃ শেখ আরিফুর রহমান (বিপুল) / Dr. Sheikh Arifur Rahman (Bipul)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), ডিডিভি (চর্ম ও যৌন), বিএমইউ, এমডি (থিসিস) চর্ম ও যৌন।
@@ -551,7 +551,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-শেখ-আরিফুর-রহমান-বিপুল
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-sheikh-arifur-rahman-bipul
 
 #### ডাঃ সিফাত সায়মা / Dr. Sifat Sayma
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমডি (চর্ম ও যৌনরোগ), চর্ম, যৌন ও এলার্জি রোগ বিশেষজ্ঞ
@@ -561,7 +561,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে, বৃহস্পতিবার
 - **সময়**: বিকাল ৩টা - রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-সিফাত-সায়মা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-sifat-sayma
 
 #### ডা. ইসতিয়াক আরিফ
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমডি (চর্ম ও যৌন) চট্টগ্রাম মেডিকেল কলেজ ও হাসপাতাল।, BMDC Reg. No: A-69028
@@ -571,7 +571,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শনিবার, বৃহস্পতিবার
 - **সময়**: বিকাল ৪টা - সন্ধ্যা ৭টা
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-ইসতিয়াক-আরিফ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-istiyak-arif
 
 #### ডা.নয়ন চন্দ্ৰ দেবনাথ
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), সিসিডি (বারডেম) ডিডিভি (চর্ম ও যৌন রোগ, বাংলাদেশ মেডিকেল বিশ্ববিদ্যালয় (পিজি হাসপাতাল), ঢাকা । ২৫০ শয্যা আধুনিক সদর হাসপাতাল, ফেনী।
@@ -581,7 +581,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: রবিবার, মঙ্গলবার, বৃহস্পতিবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01898221111
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-নয়ন-চন্দ্ৰ-দেবনাথ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-nyn-chnd-debnath
 
 #### ডা.ফাতেমাতুজ জোহরা অন্তরা
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, ডি.ডি(থাইল্যান্ড), এফসিপিএস (চর্ম ও যৌন), ফেলোশিপ ট্রেনিং ইন লেজার এন্ড কিউটেনিয়াস সার্জারী (থাইল্যান্ড), ডিপ্লোমা ইন এসথেটিক মেডিসিন (আমেরিকা), বাংলাদেশ মেডিকেল বিশ্ববিদ্যালয়, ঢাকা
@@ -591,7 +591,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: সকাল ১০টা - দুপুর ১টা
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-ফাতেমাতুজ-জোহরা-অন্তরা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-fatematuj-johra-ontra
 
 #### সহকারী অধ্যাপক ডাঃ এস.এম. ইকবাল হোসাইন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), ডিডিভি (বিএমইউ), ফেলোশীপ অন স্কীন সার্জারী ট্রেনিং
@@ -601,7 +601,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার, মঙ্গলবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01882462650
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-এস-এম-ইকবাল-হোসাইন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-es-em-iqbal-hossain
 
 #### সহকারী অধ্যাপক ডাঃ মোঃ মিজানুর রহমান
 - **ডিগ্রি / যোগ্যতা**: এম.বি.বি.এস ; বি.সি.এস (স্বাস্থ্য) ডি.ডি.ভি (বি.এস.এম.এম.ইউ)
@@ -611,7 +611,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: সকাল ১০টা থেকে বিকাল ৩টা
 - **সিরিয়াল হটলাইন**: 01829542754
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মো-মিজানুর-রহমান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-md-mijanur-rahman
 
 #### সহকারী অধ্যাপক ডা. অজয় কুমার ঘোষ
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য),ডিডিভি (বিএসএমএমইউ)
@@ -621,7 +621,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01822479666
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-অজয়-কুমার-ঘোষ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-ojy-kumar-ghosh
 
 #### সহকারী অধ্যাপক ডা. ইসমাইল হোসেন চৌধুরী (রিপন)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমডি (চর্ম ও যৌন)(বিএসএমএমইউ) কনসালট্যান্ট, চট্টগ্রাম মেডিকেল কলেজ হাসপতাল (এক্স) BMDC Reg. No: A-54310
@@ -631,7 +631,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: রবিবার, বুধবার
 - **সময়**: বিকাল ৪টা- রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-ইসমাইল-হোসেন-চৌধুরী-রিপন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-ismail-hossain-chowdhury-ripn
 
 #### সহকারী অধ্যাপক ডা. কাজী ইমরান হোসেন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, ডিডিভি, এমসিপিএস (চর্ম ও যৌন)
@@ -641,7 +641,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার
 - **সময়**: বিকাল ৪টা-রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-কাজী-ইমরান-হোসেন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-kaji-imran-hossain
 
 #### সহকারী অধ্যাপক ডা. নয়ন চন্দ্র শ্যাম
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ঢাকা) ডিডিভি (চর্ম ও যৌন) বিএসএমএমইউ (বাংলাদেশ মেডিকেল বিশ্ববিদ্যালয় ঢাকা)
@@ -651,7 +651,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার
 - **সময়**: বিকাল ৩:০০ - রাত ৮:০০
 - **সিরিয়াল হটলাইন**: 01815583960
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-নয়ন-চন্দ্র-শ্যাম
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-nyn-chandra-shyam
 
 #### সহকারী অধ্যাপক ডা. নয়ন চন্দ্ৰ শ্যাম
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ঢাকা), ডিডিভি (চর্ম ও যৌন), বিএসএমএমইউ বাংলাদেশ মেডিকেল বিশ্ববিদ্যালয়, ঢাকা। ফেলোশীপ ইন এনথেটিক ডার্মাটোলজি, লেজার ও ডার্মাটো (ডিডি আই, ঢাকা)
@@ -661,7 +661,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01824908173
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-নয়ন-চন্দ্ৰ-শ্যাম
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-nyn-chnd-shyam
 
 #### সহযোগী অধ্যাপক ডাঃ নাগিনা সুলতানা ঊর্মি
 - **ডিগ্রি / যোগ্যতা**: এম.বি.বি.এস; (ডি.ইউ), ডিডিভি (বিএসএমএমইউ)
@@ -671,7 +671,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: সোমবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01834031113
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহযোগী-অধ্যাপক-ডা-নাগিনা-সুলতানা-ঊর্মি
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/assoc-prof-dr-nagina-sultana-urmi
 
 #### সহযোগী অধ্যাপক ডা. রিফাত চৌধুরী অনিক
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ডি ইউ), ডিভিউটি, বাংলাদেশ মেডিকেল বিশ্ববিদ্যালয়/পিজি হাসপাতাল এমএসিপি (ইউএসএ), ডার্মাটোসার্জারিতে বিশেষ প্রশিক্ষণ চর্ম ও যৌন রোগ বিভাগ, সেন্ট্রাল মেডিকেল কলেজ, কুমিল্লা
@@ -681,7 +681,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: সোমবার
 - **সময়**: বিকাল ৩:০০ - সন্ধ্যা ৭:০০
 - **সিরিয়াল হটলাইন**: 01815076266
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহযোগী-অধ্যাপক-ডা-রিফাত-চৌধুরী-অনিক
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/assoc-prof-dr-rifat-chowdhury-onik
 
 ### নাক, কান ও গলা (ENT / Head & Neck) (14 জন)
 
@@ -703,7 +703,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শনি - বৃহস্পতি
 - **সময়**: বিকাল 3:00 - 5:00
 - **সিরিয়াল হটলাইন**: 01806968140
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-আসিফ-উদ্দিন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-asif-uddin
 
 #### ডাঃ তাহসিন নূর অমি
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য),, পিজিটি (মেডিসিন) সিসিডি (বারডেম),, ডিএলও (নাক, কান ও গলা), চট্টগ্রাম মেডিকেল কলেজ হাসপাতাল
@@ -713,7 +713,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: সোমবার, শনিবার
 - **সময়**: বিকাল ৪টা - সন্ধ্যা ৭টা
 - **সিরিয়াল হটলাইন**: 01869865543
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-তাহসিন-নূর-অমি
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-tahsin-nur-omi
 
 #### ডাঃ মহিন উদ্দিন রাজু
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস,ডিএলও (ইএনটি) - বিএসএমএমইউ,এফসিপিএস (ইএনটি) (এফপি),কানের মাইক্রোস্কোপিক সার্জারি ও নাকের এন্ডোস্কোপিক সাইনাস সার্জারিতে বিশেষ প্রশিক্ষণপ্রাপ্ত
@@ -723,7 +723,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার, বৃহস্পতিবার, বুধবার
 - **সময়**: সকাল ৯টা - বিকাল ৩টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মহিন-উদ্দিন-রাজু
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-mhin-uddin-raju
 
 #### ডাঃ মোঃ নাজমুস সাকিব।
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমসিপিএস (ইএনটি), ডিএলও,এফসিপিএস (ইএনটি),(ইএনটি এন্ড হেড-নেক সার্জারি)চট্টগ্রাম মেডিকেল কলেজ হাসপাতাল.
@@ -733,7 +733,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: রবিবার, মঙ্গলবার
 - **সময়**: বিকাল ৪টা - সন্ধ্যা ৭টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-নাজমুস-সাকিব
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-najmus-sakib
 
 #### ডাঃ মো: আবদুল কুদ্দুছ (সোহাগ) / Dr. Md. Abdul Kuddus (Sohag)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমএস (ইএনটি) এন্ড এইচএনএস ফেলোশিপ ট্রেনিং ইএনটি (চেন্নাই-ইন্ডিয়া ও ফিলিপাইন), হ্যান্ডস অন ট্রেনিং অন স্লিপ সার্জারি (সিঙ্গাপুর), অবজারভারশিপ ট্রেনিং ইন স্পি সার্জারি (ইন্ডিয়া), এডভান্সড ফেলোশিপ ট্রেনিং ইন হেড-নেক সার্জারি (বিএসএমএমইউ), হেড-নেক, ইএনটি, থাইরয়েড বিশেষজ্ঞ ও সার্জন
@@ -743,7 +743,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে, রবিবার, বৃহস্পতিবার, মঙ্গলবার
 - **সময়**: বিকাল ৩টা থেকে রাত ৯টা
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-আবদুল-কুদ্দুছ-সোহাগ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-abdul-kuddus-sohag
 
 #### ডা. আদনান জাওয়াদ
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, এম এস (ইএনটি),নাক কান গলা ও হেড নেক সার্জারী (BMU) প্রাক্তন পিজি হসপিটাল ,এন্ডোস্কপিক সাইনাস সার্জারী ও কানের মাইক্রো সার্জারীতে প্রশিক্ষণপ্রাপ্ত
@@ -753,7 +753,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: রবিবার
 - **সময়**: সকাল ১০টা - দুপুর ২টা পর্যন্ত
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-আদনান-জাওয়াদ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-adnan-jaoyad
 
 #### ডা. মোঃ আসিফ উদ্দিন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এম.এস. (ইএনটি) ডিএমসি, (কানের মাইক্রো সার্জারী ও এন্ডোস্কপিক সাইনাস সার্জারীতে অভিজ্ঞ) প্রাক্তন
@@ -763,7 +763,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: রবিবার, সোমবার, শনিবার, বুধবার, মঙ্গলবার
 - **সময়**: বিকাল ৩টা থেকে রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-আসিফ-উদ্দিন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-asif-uddin
 
 #### সহকারী অধ্যাপক ডাঃ মোহাম্মদ সালেহ্ উদ্দিন (শিবলু)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস ; বিসিএস ( স্বাস্থ্য ) ডিএলও ( ইএনটি ) বি.এস.এম.এম.ইউ ( পিজি হাসপাতাল )
@@ -773,7 +773,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: বিকাল ৫টা -রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01839994132
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মোহাম্মদ-সালেহ্-উদ্দিন-শিবলু
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-mohammad-saleh-uddin-shiblu
 
 #### সহকারী অধ্যাপক ডাঃ সা-আদ জামান
 - **ডিগ্রি / যোগ্যতা**: এম.বি.বি.এস; বি.সি.এস (স্বাস্থ্য); এম.এস. (ইএনটি), বি.এস.এম.এম.ইউ পিজি হাসপাতাল (ঢাকা) নাক, কান, গলা রোগ বিশেষজ্ঞ হেড-নেক সার্জন কুমিল্লা মেডিকেল কলেজ ও হাসপাতাল ।BMDC REG NO- A62565
@@ -783,7 +783,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শনিবার, বৃহস্পতিবার, মঙ্গলবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01834031113
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-সা-আদ-জামান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-sa-ad-jaman
 
 #### সহকারী অধ্যাপক ডা. আবুল কালাম আজাদ
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, ডিএলও, এফসিপিএস (এফপি) ফেলো-ইন্টারন্যাশনাল কলেজ অব সার্জনস (আমেরিকা)
@@ -793,7 +793,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার, বুধবার, মঙ্গলবার
 - **সময়**: সকাল ৯টা থেকে বিকাল ৩টা
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-আবুল-কালাম-আজাদ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-abul-kalam-azad
 
 #### সহকারী অধ্যাপক ডা. এ.কে.এম. গাজীউল হক
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ঢাকা), ডিএলও (নাক, কান, ও গলা), এমডি (বিএসএমএমইউ/পিজি হাসপাতাল), সিসিডি-ডায়াবেটোলজি (বারডেম), বঙ্গবন্ধু শেখ মুজিব মেডিকেল বিশ্ববিদ্যালয় (পিজি হাসপাতাল), সহকারি
@@ -803,7 +803,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: রবিবার, শনিবার, বৃহস্পতিবার
 - **সময়**: বিকাল ৩টা থেকে সন্ধ্যা ৭টা
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-এ-কে-এম-গাজীউল-হক
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-e-ke-em-gajiul-hoque
 
 #### সহযোগী অধ্যাপক ডাঃ মোঃ মজিবুর রহমান মিয়াজী
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, ডিএলও, এফসিপিএস (ইএনটি)
@@ -813,7 +813,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: সকাল ৯টা থেকে বিকাল ৫টা
 - **সিরিয়াল হটলাইন**: 01829542754
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহযোগী-অধ্যাপক-ডা-মো-মজিবুর-রহমান-মিয়াজী
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/assoc-prof-dr-md-mjibur-rahman-miyaji
 
 #### সহযোগী অধ্যাপক ডা. হাসান হাফিজুর রহমান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (কেএমসি), ডিএলও, এফসিপিএস(ইএনটি)এমএস (রেসিডেন্ট)  এমআরসিএস (ইংল্যান্ড)
@@ -823,7 +823,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতি শুক্রবার সকাল ১০ টা থেকে বিকেল ৪ টা
 - **সময়**: সকাল ১০টা থেকে বিকেল ৪ টা
 - **সিরিয়াল হটলাইন**: 01815583960
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহযোগী-অধ্যাপক-ডা-হাসান-হাফিজুর-রহমান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/assoc-prof-dr-hasan-hafijur-rahman
 
 ### চক্ষুরোগ ও চক্ষু সার্জারি (Ophthalmology) (1 জন)
 
@@ -835,7 +835,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: সকাল ৯টা - সন্ধ্যা ৭ টা
 - **সিরিয়াল হটলাইন**: 01881101018
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-ব্রজ-গোপাল-পাল
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-brj-gopal-pal
 
 ### স্ত্রীরোগ ও প্রসূতিবিদ্যা (Gynecology & Obstetrics) (32 জন)
 
@@ -857,7 +857,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-আফরোজা-আক্তার
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-afroza-akter
 
 #### ডাঃ কামরুন্নাহার রলি
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস,বিসিএস,এফসিপিএস,সহকারী অধ্যাপক নোয়াখালী মেডিকেল কলেজ হাসপাতাল
@@ -867,7 +867,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতি বৃহস্পতি
 - **সময়**: বিকাল ৩:০০ - রাত ৯:০০
 - **সিরিয়াল হটলাইন**: 01806968140
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-কামরুন্নাহার-রলি
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-kamrunnahar-roli
 
 #### ডাঃ চম্পা কুন্ড
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য) ডিজিও, এমসিপিএস (গাইনী এন্ড অবস্), এফসিপিএস (শেষ পর্ব) এমআরসিওজি (ইউকে- ১), সিএমইউ (আল্ট্রা),
@@ -877,7 +877,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: দুপুর ২:০০ - বিকাল ৫:০০
 - **সিরিয়াল হটলাইন**: 01815076266
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-চম্পা-কুন্ড
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-champa-kundu
 
 #### ডাঃ চম্পা কুন্ড
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য) ডিজিও, এমসিপিএস (গাইনী এন্ড অবস্), এফসিপিএস (শেষ পর্ব) এমআরসিওজি (ইউকে- ১), সিএমইউ (আল্ট্রা),
@@ -887,7 +887,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: দুপুর ২:০০ - বিকাল ৫:০০
 - **সিরিয়াল হটলাইন**: 01815076266
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-চম্পা-কুন্ড-2
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-champa-kundu
 
 #### ডাঃ চম্পা কুন্ডু
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস ; বিসিএস (স্বাস্থ্ ) পিজিটি (গাইনী) , সিএমইউ (আল্ট্রা) এফ.সি.পি.এস (গাইনী এন্ড অবস্ -সি) সহকারী সার্জন (গাইনী বিভাগ) উপজেলা স্বাস্থ্য কমপ্লেক্স , দাগনভূঞা , ফেনী., এমবিবিএস ; বিসিএস (স্বাস্থ্ ) পিজিটি (গাইনী) , সিএমইউ (আল্ট্রা) এফ.সি.পি.এস (গাইনী এন্ড অবস্ -সি) সহকারী সার্জন (গাইনী বিভাগ) উপজেলা স্বাস্থ্য কমপ্লেক্স , দাগনভূঞা , ফেনী.BMDC Reg No-A 68015
@@ -897,17 +897,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: বিকাল ৩টা থেকে রাত ৯টা
 - **সিরিয়াল হটলাইন**: 01882462650
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-চম্পা-কুন্ডু
-
-#### ডাঃ জান্নাতুল ফেরদৌস
-- **ডিগ্রি / যোগ্যতা**: এমবিবিএস; বিসিএস (স্বাস্থ্য), ডিজিও (গাইনী এন্ড অবস্),, ২৫০ শয্যা আধুনিক সদর হাসপাতাল, ফেনী ৷ বিএমডিসি রেজি: নং-এ-৫০৮১৪
-- **পদবি ও প্রতিষ্ঠান**: বিশেষজ্ঞ চিকিৎসক
-- **বিশেষজ্ঞতা**: প্রসূতি, বন্ধ্যাত্ব স্ত্রীরোগ বিশেষজ্ঞ ও সার্জন
-- **চেম্বার**: মেডিকেয়ার ডায়াগনস্টিক সেন্টার, ট্রাঙ্ক রোড, ফেনী
-- **সাক্ষাতের দিন**: প্রতিদিন
-- **সময়**: বিকাল ৫টা থেকে রাত ৮টা
-- **সিরিয়াল হটলাইন**: 01834031113
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-জান্নাতুল-ফেরদৌস
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-champa-kundu
 
 #### ডাঃ জান্নাতুল ফেরদৌস
 - **ডিগ্রি / যোগ্যতা**: MBBS,BCS,DGO(গাইনি&অবস)  BMDC REG NO 50814
@@ -917,7 +907,17 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শনি - বৃহস্পতি
 - **সময়**: বিকাল ৪:৩০ - রাত ৬:০০
 - **সিরিয়াল হটলাইন**: 01806968140
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-পিয়াস-কান্তি-পাল
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-jannatul-ferdous
+
+#### ডাঃ জান্নাতুল ফেরদৌস
+- **ডিগ্রি / যোগ্যতা**: এমবিবিএস; বিসিএস (স্বাস্থ্য), ডিজিও (গাইনী এন্ড অবস্),, ২৫০ শয্যা আধুনিক সদর হাসপাতাল, ফেনী ৷ বিএমডিসি রেজি: নং-এ-৫০৮১৪
+- **পদবি ও প্রতিষ্ঠান**: বিশেষজ্ঞ চিকিৎসক
+- **বিশেষজ্ঞতা**: প্রসূতি, বন্ধ্যাত্ব স্ত্রীরোগ বিশেষজ্ঞ ও সার্জন
+- **চেম্বার**: মেডিকেয়ার ডায়াগনস্টিক সেন্টার, ট্রাঙ্ক রোড, ফেনী
+- **সাক্ষাতের দিন**: প্রতিদিন
+- **সময়**: বিকাল ৫টা থেকে রাত ৮টা
+- **সিরিয়াল হটলাইন**: 01834031113
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-jannatul-ferdous
 
 #### ডাঃ টুম্পা দেবনাথ
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস; ডিজিও (গাইনী এন্ড অবস্) সম্মিলিত সামরিক হাসপাতাল (সিএমএইচ, ঢাকা) পিজিটি (গাইনী এন্ড অবস্); ডিএমইউ (আল্ট্রা) স্পেশাল ট্রেনিং ইন রিপ্রোডাক্টিভ মেডিসিন এন্ড ইনফাটিলিটি (ইন্ডিয়া)
@@ -927,7 +927,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার, রবিবার, সোমবার, বুধবার, শনিবার
 - **সময়**: সকাল ১০টা -দুপুর ১টা
 - **সিরিয়াল হটলাইন**: 01896187742
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-টুম্পা-দেবনাথ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-tumpa-debnath
 
 #### ডাঃ নাসরিন আক্তার (শিমু)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (এমএমসি) এফসিপিএস (গাইনী এন্ড অবস্), স্পেশাল ট্রেইন্ড ইন ল্যাপারোস্কপিক এন্ড ইনফার্টিলিটি ,BMDC REG NO-A-49081
@@ -937,7 +937,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার, রবিবার, সোমবার, বুধবার, শনিবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01711984629
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-নাসরিন-আক্তার-শিমু
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-nasrin-akter-shimu
 
 #### ডাঃ নিলুফা সুলতানা
 - **ডিগ্রি / যোগ্যতা**: এম বি বি এস ; বি সি এস ( স্বাস্থ্য ) এফ সি পি এস ( গাইনী এন্ড অবস্ ) প্রসূতি , স্ত্রীরোগ বিশেষজ্ঞ ও সার্জন ২৫০ শয্যা বিশিষ্ট আধুনিক সদর হাসপাতাল , ফেনী।
@@ -947,7 +947,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার, সোমবার, বুধবার, শনিবার
 - **সময়**: বিকাল ৪টা - সন্ধ্যা ৬টা
 - **সিরিয়াল হটলাইন**: 01971351270
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-নিলুফা-সুলতানা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-nilufa-sultana
 
 #### ডাঃ নুসরাত জাহান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ডিএমসি), এফসিপিএস (গাইনী ও অবস), এমআরসিওজি (লন্ডন)
@@ -957,7 +957,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার, রবিবার, সোমবার, বুধবার, শনিবার
 - **সময়**: সকাল ১০টা - বিকাল ৪ টা
 - **সিরিয়াল হটলাইন**: 01786665377
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-নুসরাত-জাহান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-nusrat-jahan
 
 #### ডাঃ ফারজানা জেসমীন (রত্না)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস ডিজিও (গাইনী এন্ড অবস) এমসিপিএস (গাইনী এন্ড অবস্) সদর হাসপাতাল, ফেনী
@@ -967,7 +967,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার, রবিবার, সোমবার, বুধবার, শনিবার
 - **সময়**: বিকাল ৪টা - সন্ধ্যা ৬টা
 - **সিরিয়াল হটলাইন**: 01869865543
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-ফারজানা-জেসমীন-রত্না
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-farjana-jesmin-rtna
 
 #### ডাঃ শমিষ্ঠা দে
 - **ডিগ্রি / যোগ্যতা**: MBBS,BCS,MCPS,EMC
@@ -977,7 +977,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শনি - বৃহস্পতি
 - **সময়**: বিকাল ৩:০০ - সন্ধ্যা ৬:০০
 - **সিরিয়াল হটলাইন**: 01806968140
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-শমিষ্ঠা-দে-2
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-shmishtha-de
 
 #### ডাঃ শমিষ্ঠা দে
 - **ডিগ্রি / যোগ্যতা**: MBBS,BCS,MCPS,EMC
@@ -987,7 +987,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শনি - বৃহস্পতি
 - **সময়**: বিকাল ৫:০০ - রাত ৯:০০
 - **সিরিয়াল হটলাইন**: 01806968140
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-শমিষ্ঠা-দে
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-shmishtha-de
 
 #### ডা:সায়েরা শরীফা (শিল্পী)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস(ঢাকা)বিসিএস(স্বাস্থ্য)ডিজিও(গাইনী এন্ড অবস্)এমসিপিএস(গাই
@@ -997,7 +997,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার।প্যাসিফিক হেলথ কেয়ার সেন্টার ফেনী
 - **সময়**: সকাল ১০:০০ থেকে রাত ৯:০০
 - **সিরিয়াল হটলাইন**: +8801711365956
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-সায়েরা-শরীফা-শিল্পী
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-sayera-shrifa-shilpi
 
 #### ডা. রেহনুমা নওরোজ অহনা
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (সিইউ) এফসিপিএস (গাইনি এন্ড অবস্) এফপি (নরমাল ডেলিভারী উপর উচ্চতর প্রশিক্ষণপ্রাপ্ত
@@ -1007,7 +1007,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: বিকাল ৩:০০ - রাত ৯:০০
 - **সিরিয়াল হটলাইন**: 01815583960
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-রেহনুমা-নওরোজ-অহনা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-rehnuma-noroj-ohna
 
 #### সহকারী অধ্যাপক (ডাঃ) কামরুন নাহার (রলী)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (SSMC), বিসিএস (স্বাস্থ্য) এফসিপিএস (গাইনী), এমআরসিওজি পার্ট-২(লন্ডন) ট্রেইন্ড অন ইনফাটিলিটি উইথ আইইউআই ২৫০ শয্যা বিশিষ্ট জেনারেল হাসপাতাল,ফেনী,BMDC REG NO-45967
@@ -1017,7 +1017,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার, রবিবার, সোমবার, বুধবার, শনিবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01869865543
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-কামরুন-নাহার-রলী
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-kamrun-nahar-rli
 
 #### সহকারী অধ্যাপক ডাঃ আফরোজা আক্তার
 - **ডিগ্রি / যোগ্যতা**: এম.বি.বি.এস,, এফ.সি.পি.এস (গাইনী এন্ড অবস্), এক্স.
@@ -1027,7 +1027,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার, রবিবার, সোমবার, বুধবার, শনিবার
 - **সময়**: সকাল ১০টা - দুপুর ১টা
 - **সিরিয়াল হটলাইন**: 01869865543
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-আফরোজা-আক্তার
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-afroza-akter
 
 #### সহকারী অধ্যাপক ডাঃ আসমা আক্তার / Asst. Prof. Dr. Asma Akter
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস, এমএস (গাইনী এন্ড অবস্)
@@ -1037,7 +1037,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-আসমা-আক্তার
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-asma-akter
 
 #### সহকারী অধ্যাপক ডাঃ জেনিফার শারমীন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ডিএমসি), বিসিএস (স্বাস্থ্য ), এমএস (অবস্ এন্ড গাইনী), সিএমইউ (আল্ট্রাসাউন্ড), বাংলাদেশ মেডিকেল বিশ্ববিদ্যালয় (পিজি হসপিটাল), ঢাকা
@@ -1047,7 +1047,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতিবার, রবিবার, সোমবার
 - **সময়**: দুপুর ২টা থেকে সন্ধ্যা ৭টা পর্যন্ত
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-জেনিফার-শারমীন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-jenifar-sharmin
 
 #### সহকারী অধ্যাপক ডাঃ ফারজানা হামিদ
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস; বিসিএস (স্বাস্থ্য); এম.এস. (অবস্ এন্ড গাইনী) এফসিপিএস কোর্স (ফিটোমেটারনাল মেডিসিন) বিশেষ ট্রেইন্ড ইন আইভিএফ এন্ড ইনফাটিলিটি ঝুকিপূর্ণ প্রেগন্যন্সি এবং স্ত্রীরোগ বিশেষজ্ঞ
@@ -1057,7 +1057,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01834031113
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-ফারজানা-হামিদ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-farjana-hamid
 
 #### সহকারী অধ্যাপক ডাঃ মেজর (অবঃ) শাহানাজ খানম চৌধুরী
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, এফসিপিএস ডিজিও (ভিউ) এমসিপিএস (গাইনী এন্ড অক্স) বন্ধ্যাত্ব রোগে প্রশিক্ষণপ্রাপ্ত (বাংলাদেশ আর্মি- সিএমএইচ, ঢাকা) স্ত্রী ক্যান্সার বিষয়ে প্রশিক্ষণ প্রাপ্ত (এন আই সি এর এইচ) প্রাক্তন
@@ -1067,7 +1067,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার, রবিবার, সোমবার, বুধবার, শনিবার
 - **সময়**: সকাল ১০টা -দুপুর ২ টা / বিকাল ৫ টা - রাত ৮ টা
 - **সিরিয়াল হটলাইন**: 01829542754
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মেজর-অব-শাহানাজ-খানম-চৌধুরী
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-mejr-obh-shahanaj-khanm-chowdhury
 
 #### সহকারী অধ্যাপক ডা. আসমা আক্তার
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমএস (গাইনী এন্ড অবস্)
@@ -1077,7 +1077,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার, রবিবার, সোমবার, বুধবার, শনিবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01898221111
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-আসমা-আক্তার-2
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-asma-akter
 
 #### সহকারী অধ্যাপক ডা. মুমতাহেনা আমির
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ঢাকা মেডিকেল কলেজ) এফসিপিএস (গাইনি এন্ড অবস্) এফসিপিএস (রিপ্রোডাক্টিভ অ্যান্ড্রোকাইনোলজি এন্ড ইনফাটিলিটি) বন্ধ্যাত্বের উপর উচ্চতর প্রশিক্ষণপ্রাপ্ত
@@ -1087,7 +1087,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: দুপুর ১২.৩০ থেকে বিকাল ৪টা
 - **সিরিয়াল হটলাইন**: 01815583960
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মুমতাহেনা-আমির-2
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-mumtahena-amir
 
 #### সহকারী অধ্যাপক ডা. মুমতাহেনা আমির
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ঢাকা মেডিকেল কলেজ হাসপাতাল), এফসিপিএস (গাইনী এন্ড অবস্), এফসিপিএস (রিপ্রোডাক্টিভ এন্ডোক্রাইনোলজি এন্ড, ইনফার্টিলিটি)
@@ -1097,7 +1097,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01824908173
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মুমতাহেনা-আমির
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-mumtahena-amir
 
 #### সহকারী অধ্যাপিকা ডাঃ আরেফিন আরিফ (নিপা)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, এমসিপিএস (গাইনী), এফসিপিএস (গাইনী এন্ড অবস্), এমআরসিওজি (লন্ডন),সহকারী অধ্যাপিকা, আর্মি মেডিকেল কলেজ হাসপাতাল, কুমিল্লা
@@ -1107,7 +1107,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: সকাল ৯টা থেকে দুপুর ১টা
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপিকা-ডা-আরেফিন-আরিফ-নিপা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-odhyapika-dr-arefin-arif-nipa
 
 #### সহকারী অধ্যাপিকা ডাঃ নূর-ই-ফাতেমা
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য) এফসিপিএস (গাইনী এন্ড অবস্), সহঃ
@@ -1117,7 +1117,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপিকা-ডা-নূর-ই-ফাতেমা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-odhyapika-dr-nur-i-fatema
 
 #### সহযোগী অধ্যাপক ডাঃ জাসরিন আক্তার (মিলি)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস; ডিজিও; (গাইনী এন্ড অবস) এফ.সি.পি.এস (গাইনী এন্ড অবস)
@@ -1127,7 +1127,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতিবার, রবিবার, সোমবার, শুক্রবার, শনিবার
 - **সময়**: বিকাল ৫ টা - রাত ৮ টা
 - **সিরিয়াল হটলাইন**: 01822479666
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহযোগী-অধ্যাপক-ডা-জাসরিন-আক্তার-মিলি
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/assoc-prof-dr-jasrin-akter-mili
 
 #### সহযোগী অধ্যাপক ডাঃ নার্গিস সুলতানা
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস;এমসিপিএস; ডিজিও; এফ.সি.পি.এস (গাইনী এন্ড অবস)
@@ -1137,7 +1137,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01896187742
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহযোগী-অধ্যাপক-ডা-নার্গিস-সুলতানা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/assoc-prof-dr-nargis-sultana
 
 #### সহযোগী অধ্যাপক ডাঃ সাদীয়া যবীন (সুমি)
 - **ডিগ্রি / যোগ্যতা**: এম.বি.বি.এস ; ডি.জি.ও ; এফ.সি.পি.এস ; এম.এম.এ.এড
@@ -1147,7 +1147,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতিবার, শুক্রবার
 - **সময়**: বিকাল ৪ টা - রাত ৮ টা
 - **সিরিয়াল হটলাইন**: 01829542754
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহযোগী-অধ্যাপক-ডা-সাদীয়া-যবীন-সুমি
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/assoc-prof-dr-sadiya-ybin-sumi
 
 #### সহযোগী অধ্যাপক ডাঃ সায়েরা শরীফা (শিল্পী)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ঢাকা) ; ডিজিও ; এমসিপিএস এফসিপিএস (গাইনী এন্ড অবস্)
@@ -1157,7 +1157,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: সকাল ৯ টা- রাত ১০টা
 - **সিরিয়াল হটলাইন**: 01897892828
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহযোগী-অধ্যাপক-ডা-সায়েরা-শরীফা-শিল্পী
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/assoc-prof-dr-sayera-shrifa-shilpi
 
 ### HEPATOLOGY (16 জন)
 
@@ -1169,7 +1169,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতিবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01834031113
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-চিন্ময়-সাহা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-chinmy-saha
 
 #### ডাঃ মো: কামরুল হাসান / Dr. Md. Kamrul Hasan
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমডি (হেপাটোলজি)
@@ -1179,7 +1179,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-কামরুল-হাসান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-kamrul-hasan
 
 #### ডাঃ সুকান্ত দাস / Dr. Sukanta Das
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ডিএমসি), বিসিএস (স্বাস্থ্য),, এফসিপিএস (মেডিসিন),, এমডি (গ্যাস্ট্রোএন্টেরোলজি)-বিএমইউ,, এমসিপিএস (মেডিসিন), এমএসিপি (আমেরিকা)
@@ -1189,7 +1189,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-সুকান্ত-দাস
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-sukanta-das
 
 #### ডা:মোঃ রাশেদুল হাসান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমসিপিএস(মেডিসিন), এমআরসিপি(ইউকে), এমডি(গ্যাস্ট্রোএন্টারোলজী), পরিপাকতন্ত্র, লিভার ও মেডিসিন বিশেষজ্ঞ, স্যার সলিমুল্লাহ মেডিকেল কলেজ মিটফোর্ড হাসপাতাল, ঢাকা BMDC REG NO-A 71474
@@ -1199,7 +1199,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: সকাল ১০টা - বিকাল ৫টা
 - **সিরিয়াল হটলাইন**: 01834031113
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-রাশেদুল-হাসান-2
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-rashedul-hasan
 
 #### ডা. মোঃ কামরুল হাসান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমডি (হেপাটোলজি), বাংলাদেশ মেডিকেল বিশ্ববিদ্যালয় (পিজি হাসপাতাল)
@@ -1209,7 +1209,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার, বৃহস্পতিবার
 - **সময়**: : বিকাল ৩টা - সন্ধ্যা ৭টা)
 - **সিরিয়াল হটলাইন**: 01898221111
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-কামরুল-হাসান-2
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-kamrul-hasan
 
 #### ডা. মো. আশিকুর রহমান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমডি (গ্যাস্ট্রোএন্টারোলজি) এমসিপিএস (মেডিসিন), এমএসিপি(আমেরিকা) এমআরসিপি (পেসেস) লন্ডন, মেম্বার, আমেরিকান কলেজ অব ফিজিশিয়ান জাতীয় গ্যাস্ট্রোলিভার ইনস্টিটিউট ও হাসপাতাল, ঢাকা ৷ BMDC Reg. No-A 6292
@@ -1219,7 +1219,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতিবার
 - **সময়**: : বিকাল ৫টা - রাত ১০টা
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-আশিকুর-রহমান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-ashikur-rahman
 
 #### ডা. রাজীব দত্ত
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমডি (গ্যাস্ট্রোএন্টারোলজি), মুগদা মেডিকেল কলেজ ও হাসপাতাল, ঢাকা।, এক্স
@@ -1229,7 +1229,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: রবিবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-রাজীব-দত্ত
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-rajib-dtt
 
 #### সহ: অধ্যাপক ডাঃ আরিফুর রহমান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, এমডি (গ্যাষ্ট্রোএন্টারোলজী),পিএইচডি (শিশু গ্যাষ্ট্রোএন্টারোলজী)
@@ -1239,7 +1239,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শনিবার, সোমবার
 - **সময়**: সকাল ১০টা -দুপুর ১টা
 - **সিরিয়াল হটলাইন**: 01882462650
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহ-অধ্যাপক-ডা-আরিফুর-রহমান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/sh-prof-dr-arifur-rahman
 
 #### সহকারি অধ্যাপক ডাঃ মোঃ ইয়াসির আরাফাত
 - **ডিগ্রি / যোগ্যতা**: এম.বি.বি.এস (ঢাকা), বি.সি.এস (স্বাস্থ্য),এম.আর সি.পি (মেডিসিন)-ইংল্যান্ড,এম.আর.সি.পি (গ্যাস্ট্রো-এন্টারোলজি এন্ড হেপাটোলজি)-ইংল্যান্ড,এম.ডি (গ্যাস্ট্রো-এন্টারোলজি)- বিএসএমএমইউ, ক্লিনিক্যাল এন্ড ইন্টারন্যাশনাল গ্যাস্ট্রোলোজিষ্ট এন্ড হেপাটোলজিস্ট,রেজিষ্টার গ্যাস্ট্রোরোলজি বিভাগ জাতীয় গ্যাস্ট্রোলিভার ইনস্টিটিউট ও হাসপাতাল, ঢাকা
@@ -1249,7 +1249,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতিবার
 - **সময়**: বিকাল ৩ টা - রাত ৯ টা পর্যন্ত
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারি-অধ্যাপক-ডা-মো-ইয়াসির-আরাফাত
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/shkari-prof-dr-md-iyasir-arafat
 
 #### সহকারী অধ্যাপক ডাঃ আরিফুর রহমান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, এমডি (গ্যাষ্ট্রোএন্টারোলজী),পিএইচডি (শিশু গ্যাষ্ট্রোএন্টারোলজী)
@@ -1259,7 +1259,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার, বুধবার
 - **সময়**: সকাল ১০টা -দুপুর ১টা
 - **সিরিয়াল হটলাইন**: 01882462650
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-আরিফুর-রহমান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-arifur-rahman
 
 #### সহকারী অধ্যাপক ডাঃ মোঃ ইয়াসির আরাফাত
 - **ডিগ্রি / যোগ্যতা**: এম.বি.বি.এস (ঢাকা), বি.সি.এস (স্বাস্থ্য),এম.আর সি.পি (মেডিসিন)-ইংল্যান্ড,এম.আর.সি.পি (গ্যাস্ট্রো-এন্টারোলজি এন্ড হেপাটোলজি)-ইংল্যান্ড,এম.ডি (গ্যাস্ট্রো-এন্টারোলজি)- বিএসএমএমইউ, ক্লিনিক্যাল এন্ড ইন্টারন্যাশনাল গ্যাস্ট্রোলোজিষ্ট এন্ড হেপাটোলজিস্ট,রেজিষ্টার গ্যাস্ট্রোরোলজি বিভাগ জাতীয় গ্যাস্ট্রোলিভার ইনস্টিটিউট ও হাসপাতাল, ঢাকা
@@ -1269,7 +1269,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: বিকাল ৪টা - রাত ৯টা পর্যন্ত
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মো-ইয়াসির-আরাফাত
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-md-iyasir-arafat
 
 #### সহকারী অধ্যাপক ডাঃ মোহাম্মদ সাইফুল ইসলাম
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস , বিসিএস ; এফসিপিএস (মেডিসিন) এমসিপিএস (মেডিসিন) ; এমডি (গ্যাস্ট্রোএন্টারোলজি) শেখ রাসেল জাতীয় গ্যাস্ট্রোলিভার ইনস্টিটিউট ও হাসপাতাল , ঢাকা । BMDC Reg No-A 37845
@@ -1279,7 +1279,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতিবার
 - **সময়**: দুপুর ২টা - বিকাল ৪টা
 - **সিরিয়াল হটলাইন**: 01869865543
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মোহাম্মদ-সাইফুল-ইসলাম
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-mohammad-saiful-islam
 
 #### সহকারী অধ্যাপক ডাঃ শেখ আব্দুল্লাহ আল-মামুন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, এমপিএইচ, এমডি (গ্যাস্ট্রোএন্টারোলজি),সহ.
@@ -1289,7 +1289,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার
 - **সময়**: সকাল ৯টা - বিকাল ৩টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-শেখ-আব্দুল্লাহ-আল-মামুন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-shekh-abdullah-al-mamun
 
 #### সহকারী অধ্যাপক ডা. এ কে এম শাহরিয়ার কবির
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এফসিপিএস (মেডিসিন), এমডি (গ্যাস্ট্রোএন্টারোলজী)
@@ -1299,7 +1299,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার, মঙ্গলবার
 - **সময়**: বিকাল ৫টা থেকে রাত ৯টা
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-এ-কে-এম-শাহরিয়ার-কবির
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-e-ke-em-shahriyar-kabir
 
 #### সহকারী অধ্যাপক ডা. মো. আশিকুর রহমান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমডি (গ্যাস্ট্রোএন্টারোলজি) এমসিপিএস (মেডিসিন), এমএসিপি(আমেরিকা) এমআরসিপি (পেসেস) লন্ডন, মেম্বার, আমেরিকান কলেজ অব ফিজিশিয়ান জাতীয় গ্যাস্ট্রোলিভার ইনস্টিটিউট ও হাসপাতাল, ঢাকা ৷ BMDC Reg. No-A 6292
@@ -1309,7 +1309,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: : সকাল ৯টা - দুপুর ১টা
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মো-আশিকুর-রহমান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-md-ashikur-rahman
 
 #### সহযোগী অধ্যাপক ডাঃ অসীম কুমার সাহা
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস ; বিসিএস ( স্বাস্থ্য ) ; এফসিপিএস ( মেডিসিন ) ; ট্রেনিং ফেলো , গ্যাষ্ট্রোএন্টারোলজী ( চায়না ও থাইল্যান্ড )
@@ -1319,7 +1319,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: বিকাল ৩টা - সন্ধ্যা ৬টা
 - **সিরিয়াল হটলাইন**: 01849933222
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহযোগী-অধ্যাপক-ডা-অসীম-কুমার-সাহা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/assoc-prof-dr-osim-kumar-saha
 
 ### মেডিসিন ও ইন্টারনাল মেডিসিন (Internal Medicine) (34 জন)
 
@@ -1331,7 +1331,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-অর্ণব-বণিক
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-arnab-banik
 
 #### ডাঃ তামিম মাহমুদ / Dr. Tamim Mahmud
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এফসিপিএস (হেমাটোলজি)
@@ -1341,7 +1341,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে, শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-তামিম-মাহমুদ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-tamim-mahmud
 
 #### ডাঃ বেলাল হোসেন / Dr. Belal Hossain
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমডি (নিউরোলজি), মেম্বার, এমেরিকান একাডেমি অফ নিউরোলজি, স্নায়ু, মাথা ব্যথা, ব্রেইন স্ট্রোক, প্যারালাইসিস বিশেষজ্ঞ
@@ -1351,7 +1351,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-বেলাল-হোসেন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-belal-hossain
 
 #### ডাঃ মাহমুদুল হাসান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস  সিসিডি,এফসিপিএস (মেডিসিন -সি)
@@ -1361,7 +1361,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: রবি - বৃহস্পতি
 - **সময়**: বিকাল ৪:০০ - রাত ০৭
 - **সিরিয়াল হটলাইন**: ০১৭৫২৪৩১২৪৪
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মাহমুদুল-হাসান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-mahmudul-hasan
 
 #### ডাঃ মীর শওকত নেওয়াজ (নিরব) / Dr. Mir Showkat Newaz (Nirob)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ঢাবি), এমসিজিপি (ঢাকা), সিএমইউ (আল্ট্রা)
@@ -1371,7 +1371,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মীর-শওকত-নেওয়াজ-নিরব
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-mir-showkat-newaz-nirob
 
 #### ডাঃ মোঃ আনিসুর রহমান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (সিইউ), বিসিএস (স্বাস্থ্য), এফসিপিএস (ডায়াবেটিস ও এন্ডোক্রাইনোলজি) এফপি, ঢাকা মেডিকেল কলেজ হাসপাতাল বিএমডিসি রেজি: নং: এ-১১৮৪১৪
@@ -1381,7 +1381,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: বিকেল ৫ টা থেকে সন্ধ্যা ৭ টা
 - **সিরিয়াল হটলাইন**: ০১৮১৫৫৮৩৯৬০
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-আনিসুর-রহমান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-anisur-rahman
 
 #### ডাঃ মোঃ রাফি-উল-আলম / Dr. Md. Rafi-Ul-Alam
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), রেসিডেন্ট, এমডি (নিউরোলজি), এফসিপিএস (মেডিসিন)-শেষপর্ব, সিসিডি (বারডেম)
@@ -1391,7 +1391,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-রাফি-উল-আলম
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-rafi-ul-alam
 
 #### ডাঃ মো: আবদুল্লাহ আল নোমান (তোহিদ) / Dr. Md. Abdullah Al Noman (Tohid)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (মমেক),, সিএমইউ, এফসিপিএস (মেডিসিন – এফপি)
@@ -1401,7 +1401,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-আবদুল্লাহ-আল-নোমান-তোহিদ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-abdullah-al-noman-tohid
 
 #### ডাঃ মো: আসিফ উদ্দৌলা / Dr. Md. Asif Uddowla
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য),, এফসিপিএস (মেডিসিন-সি), ডিএমইউ।
@@ -1411,7 +1411,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-আসিফ-উদ্দৌলা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-asif-uddowla
 
 #### ডাঃ মো: কবির হোসেন / Dr. Md. Kabir Hossain
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (চমেক), বিসিএস (স্বাস্থ্য), এমডি (এন্ডোক্রাইনোলজি-বিএমইউ), এমআরসিপি (লন্ডন- পেসেস), এফসিপিএস (মেডিসিন এফপি)
@@ -1421,7 +1421,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে, শুক্রবার
 - **সময়**: সকাল ৯টা থেকে সন্ধ্যা ৬টা
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-কবির-হোসেন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-kabir-hossain
 
 #### ডাঃ মো: ফাহিম হোসেন / Dr. Md. Fahim Hossain
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ঢাকা), বিসিএস (স্বাস্থ্য), সিসিডি (বারডেম), এফসিপিএস (মেডিসিন) থিসিস পিজিটি (বক্ষব্যাধি), পিজিটি (নিউরোলজি)
@@ -1431,7 +1431,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-ফাহিম-হোসেন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-fahim-hossain
 
 #### ডাঃ মোস্তাফিজুর রহমান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস,বিসিএস(স্বাস্থ্য) এফসিপিএস (মেডিসিন)
@@ -1441,7 +1441,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: রবি - বৃহস্পতি
 - **সময়**: সন্ধ্যা ৭:৩০ মিনিট ০৯ টা
 - **সিরিয়াল হটলাইন**: ০১৭৫২৪৩১২৪৪
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মোস্তাফিজুর-রহমান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-mostafizur-rahman
 
 #### ডাঃ মোহাম্মদ ছাইয়েদুর রহমান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস ( এসএসএমসি ) ; বিসিএস ( স্বাস্থ্য ) এফসিপিএস ( মেডিসিন )
@@ -1451,7 +1451,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার, বৃহস্পতিবার
 - **সময়**: সকাল ১০টা থেকে বিকাল ৫ টা
 - **সিরিয়াল হটলাইন**: 01829542754
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মোহাম্মদ-ছাইয়েদুর-রহমান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-mohammad-chhaiyedur-rahman
 
 #### ডাঃ যুবায়ের ইবনে খায়ের / Dr. Jubayer Ibne Khayer
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (সিওমেক), বিসিএস (স্বাস্থ্য), ডিওসি (চর্ম ও যৌন), সিসিডি (ডায়াবেটোলজি) বারডেম, পিজিটি (মেডিসিন), ট্রেনিং ইন কার্ডিওলজি (সিসিইউ)
@@ -1461,7 +1461,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-যুবায়ের-ইবনে-খায়ের
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-jubayer-ibne-khayer
 
 #### ডাঃ রিয়াজ উদ্দিন চৌধুরী / Dr. Riaz Uddin Chowdhury
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য),, এফসিপিএস (মেডিসিন), এমসিপিএস (মেডিসিন), মেম্বার, আমেরিকান কলেজ অব ফিজিশিয়ান।, ট্রেনিং ফেলো অফ গ্যাস্ট্রোএন্টেরোলজি (চীন ও তুরস্ক)
@@ -1471,7 +1471,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-রিয়াজ-উদ্দিন-চৌধুরী
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-riaz-uddin-chowdhury
 
 #### ডাঃ শিপন চন্দ্র পাল
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমডি (বক্ষব্যাধি মেডিসিন) বিএসএমএমইউ, এফসিপিএস (মেডিসিন) এফপি, বঙ্গবন্ধু শেখ মুজিব মেডিকেল বিশ্ববিদ্যালয়, ঢাকা । BMDC REG NO-A 66481
@@ -1481,7 +1481,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01834031113
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-শিপন-চন্দ্র-পাল
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-shipn-chandra-pal
 
 #### ডাঃ শুভ মজুমদার / Dr. Shuvo Majumder
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (সিএমসি), এমডি (বক্ষব্যাধি মেডিসিন), এমএসিপি (আমেরিকা), এডভান্স ট্রেনিং অন ব্রংকোস্কপি এন্ড প্লুরাল প্রসিডিউর, বক্ষ্যব্যাধি – মেডিসিন বিশেষজ্ঞ ও ইন্টারভেনশনাল পালমনোলজিস্ট, বিএমডিসি রেজি: নং-এ-৭৩৭৯১
@@ -1491,7 +1491,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-শুভ-মজুমদার
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-shuvo-majumder
 
 #### ডা: রাশেদুল ইসলাম
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, এমআরসিপি (মেডিসিন), লন্ডন ডিইএম (এন্ডোক্রাইনোলোজি-বিএমইউ) এক্স
@@ -1501,7 +1501,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শনিবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01869865543
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-রাশেদুল-ইসলাম
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-rashedul-islam
 
 #### ডা:মোতাহের উদ্দিন চৌধুরী সুমন
 - **ডিগ্রি / যোগ্যতা**: MBBS(du)CCD(birdem)MD(internal medicine)
@@ -1511,7 +1511,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শনি - বৃহস্পতি
 - **সময়**: বিকাল ৫:০০ - রাত ৮:০০
 - **সিরিয়াল হটলাইন**: +8801711365956
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মোতাহের-উদ্দিন-চৌধুরী-সুমন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-motaher-uddin-chowdhury-sumn
 
 #### ডা. আজিজুল হক
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, এফসিপিএস (মেডিসিন-এফপি), এমআরসিপি (লন্ডন, ইউকে) পেসেস, পিজিটি (কার্ডিওলজি), BMDC Reg. No: A-94850
@@ -1521,7 +1521,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-আজিজুল-হক
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-ajijul-hoque
 
 #### ডা. আব্দুলাহ আল মামুন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ইউএসটিসি), এফসিপিএস(এন্ডোক্রাইনোলজি)এফপি, সহকারী রেজিস্টার, ডায়বেটিস ও হরমোন রোগ বিভাগ, ইবনে সিনা মেডিকেল কলেজ ও হাসপাতাল, ঢাকা, BMDC Reg: No. A-84159
@@ -1531,7 +1531,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-আব্দুলাহ-আল-মামুন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-abdulah-al-mamun
 
 #### ডা. এস. এম. রিয়াসাদ শাহাবুদ্দিন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস বিসিএস স্বাস্থ্য এফসিপিএস মেডিসিন আবাসিক চিকিৎসক মেডিসিন চট্টগ্রাম মেডিকেল কলেজ হাসপাতাল
@@ -1541,7 +1541,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: সকাল ১১:০০ - বিকাল ৫:০০
 - **সিরিয়াল হটলাইন**: 01815076266
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-এস-এম-রিয়াসাদ-শাহাবুদ্দিন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-es-em-riyasad-shahabuddin
 
 #### ডা. জোবায়ের হোসেন তারেক
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমডি (মেডিসিন), সার্টিফাইড ডায়াবেটোলজিস্ট (বারডেম), বঙ্গবন্ধু শেখ মুজিব মেডিকেল বিশ্ববিদ্যালয়, ঢাকা। (এক্স)
@@ -1551,7 +1551,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শনিবার, সোমবার, রবিবার, বৃহস্পতিবার, বুধবার
 - **সময়**: বিকাল ৪টা- রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-জোবায়ের-হোসেন-তারেক
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-jobayer-hossain-tarek
 
 #### ডা. ফারহানা খানম (মিথিলা)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (এসএসএমসি), বিসিএস (স্বাস্থ্য) এফসিপিএস (এন্ডোক্রাইনলজি) পার্ট-২, এমডি (মেডিসিন ও ইনফেকশাস ডিজিজ, কোর্স) চট্টগ্রাম মেডিকেল কলেজ ও হাসপাতাল৷ BMDC Reg: No A-80017
@@ -1561,7 +1561,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: দুপুর ২টা - সন্ধ্যা ৬টা
 - **সিরিয়াল হটলাইন**: 01786665377
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-ফারহানা-খানম-মিথিলা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-farhana-khanm-mithila
 
 #### ডা. মোঃ জাবের আবেদীন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমডি (মেডিসিন)
@@ -1571,7 +1571,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শনিবার, সোমবার, রবিবার, বৃহস্পতিবার, বুধবার
 - **সময়**: বিকাল ৩টা থেকে সন্ধ্যা ৭টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-জাবের-আবেদীন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-jaber-abedin
 
 #### সহকারী অধ্যাপক ডাঃ এস.এম. শরীফ-উল-কবীর চৌধুরী
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ঢাকা মেডিকেল কলেজ), বিসিএস (স্বাস্থ্য),ডিটিসিডি (বিএসএমএমইউ), এফসিসিপি (আমেরিকা),এফসিপিএস (মেডিসিন-এফপি)
@@ -1581,7 +1581,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বুধবার, শনিবার, রবিবার, মঙ্গলবার, সোমবার
 - **সময়**: বিকাল ৩টা - সন্ধ্যা ৭ টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-এস-এম-শরীফ-উল-কবীর-চৌধুরী
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-es-em-shrif-ul-kbir-chowdhury
 
 #### সহকারী অধ্যাপক ডাঃ পলাশ চন্দ্র সূত্রধর
 - **ডিগ্রি / যোগ্যতা**: ডায়াবেটিস, থাইরয়েড ও হরমোন বিশেষজ্ঞ, এমবিবিএস (ডিএমসি), বিসিএস (স্বাস্থ্য), এমডি (এন্ডোক্রাইনোলজি), স্যার সলিমুল্লাহ মেডিকেল কলেজ, মিটফোর্ড হাসপাতাল, ঢাকা
@@ -1591,7 +1591,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: সকাল ১০টা - বিকাল ৫টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-পলাশ-চন্দ্র-সূত্রধর
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-plash-chandra-sutrdhr
 
 #### সহকারী অধ্যাপক ডাঃ মোঃ মাঈন উদ্দিন সোহেল
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এফসিপিএস (মেডিসিন), এমসিপিএস (মেডিসিন) এমআরসিপি (লন্ডন), এমডি রিউমাটোলজি (বিএমইউ)
@@ -1601,7 +1601,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার, বৃহস্পতিবার
 - **সময়**: সকাল ১০টা - সন্ধ্যা ৬টা
 - **সিরিয়াল হটলাইন**: 01822479666
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মো-মাঈন-উদ্দিন-সোহেল
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-md-main-uddin-sohel
 
 #### সহকারী অধ্যাপক ডাঃ মোঃ শাহজাহান সিদ্দিকী (শাকিল)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ঢাকা মেডিকেল কলেজ), বিসিএস (স্বাস্থ্য), এম.ডি (বক্ষব্যাধি)
@@ -1611,7 +1611,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: সকাল ১০টা - বিকাল ৪টা
 - **সিরিয়াল হটলাইন**: 01849933222
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মো-শাহজাহান-সিদ্দিকী-শাকিল
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-md-shahjahan-siddiki-shakil
 
 #### সহকারী অধ্যাপক ডাঃ মোঃ,আরিফুর রহমান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস,এমডি(গ্যাস্ট্রোএন্টোলজি)
@@ -1621,7 +1621,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: দুপুর ১২ - থেকে ০২ টা
 - **সিরিয়াল হটলাইন**: ০১৭৫২৪৩১২৪৪
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মো-আরিফুর-রহমান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-md-arifur-rahman
 
 #### সহকারী অধ্যাপক ডাঃ রাজিব বিশ্বাস
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস ; বিসিএস ( স্বাস্থ্য ); এফসিপিএস (মেডিসিন) হৃদরোগে বিশেষ প্রশিক্ষণ প্রাপ্ত ;
@@ -1631,7 +1631,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার, মঙ্গলবার
 - **সময়**: দুপুর ১টা থেকে সন্ধ্যা ৬টা
 - **সিরিয়াল হটলাইন**: 01897892828
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-রাজিব-বিশ্বাস
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-rajib-bishbas
 
 #### সহকারী অধ্যাপক ডাঃ সঞ্জয় কুমার পাল
 - **ডিগ্রি / যোগ্যতা**: এম.বি.বি.এস ; বি.সি.এস ; এফসিপিএস ( মেডিসিন )
@@ -1641,7 +1641,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: বিকাল ৩টা -বিকাল ৫টা
 - **সিরিয়াল হটলাইন**: 01881101018
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-সঞ্জয়-কুমার-পাল
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-snjy-kumar-pal
 
 #### সহকারী অধ্যাপক ডা. মো. শরীফুল আলম (জনি)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য) এমডি (বক্ষব্যাধি) এমসিপিএস (মেডিসিন), এফসিপিএস (মেডিসিন) এফপি বক্ষব্যাধি, হাঁপানী, এ্যাজমা ও মেডিসিন বিশেষজ্ঞ বাংলাদেশ মেডিকেল বিশ্ববিদ্যালয়, ঢাকা (এক্স) BMDC Reg. No: A-59929
@@ -1651,7 +1651,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: বিকাল ৪টা-রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মো-শরীফুল-আলম-জনি
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-md-shriful-alam-jni
 
 #### সহযোগী অধ্যাপক ডা. প্রশান্ত কুমার শীল
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য ); এফসিপিএস (মেডিসিন)
@@ -1661,7 +1661,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01822479666
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহযোগী-অধ্যাপক-ডা-প্রশান্ত-কুমার-শীল
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/assoc-prof-dr-prshant-kumar-shil
 
 ### কিডনি রোগ ও ডায়ালাইসিস (Nephrology) (9 জন)
 
@@ -1673,7 +1673,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01711984629
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/অধ্যাপক-ডা-রতন-দাশ-গুপ্ত
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/prof-dr-rtn-das-gupt
 
 #### ডাঃ জয়দেব সাহা
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্ব্যাস্থ),, এমডি (নেফ্রোলজী), সিসিডি বারডেম ডায়াবেটোলজী, রেসিডেন্সিয়াল ফিজিশিয়ান।, BMDC REG NO- A 24759
@@ -1683,7 +1683,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতিবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01866980873
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-জয়দেব-সাহা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-jydeb-saha
 
 #### ডাঃ তানভীর মাহমুদ
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস; বিসিএস (স্বাস্থ্য); এমডি (নেফ্রোলজি) এফসিপিএস (মেডিসিন) এফ.পি এম.আর.সি.পি (মেডিসিন) পেসেস ইউকে ২৫০শয্যা জেলা সদর হাসপাতাল, ফেনী।BMDC REG-A-64826
@@ -1693,7 +1693,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01896187742
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-তানভীর-মাহমুদ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-tanbhir-mahmud
 
 #### ডাঃ তুহিন শুভ্র দাশ / Dr. Tuhin Shuvro Das
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (চমেক), বিসিএস (স্বাস্থ্য), এমডি (নেফ্রোলজি), বিএমডিসি রেজিং: নং-এ-৬৩১৪৮
@@ -1703,7 +1703,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে, রবিবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-তুহিন-শুভ্র-দাশ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-tuhin-shuvro-das
 
 #### ডাঃ মোহাম্মদ নাঈম উদ্দিন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), ,এমডি (নেফ্রোলজি) এফসিপিএস (মেডিসিন)
@@ -1713,7 +1713,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: ০১৮১৫৫৮৩৯৬০
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মোহাম্মদ-নাঈম-উদ্দিন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-mohammad-naim-uddin
 
 #### ডাঃ সাইফুল আহসান রানা
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য),এমএসিপি (আমেরিকা) , এমডি (নেফ্রোলজী) ,কনসালট্যান্ট নেফ্রোলজীস্ট কিডনী রোগ বিভাগ মুগদা মেডিকেল কলেজ হাসপাতাল, ঢাকা । BMDC REG NO- A 39628
@@ -1723,7 +1723,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01849933222
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-সাইফুল-আহসান-রানা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-saiful-ahsan-rana
 
 #### ডা. এ কে এম সাইফুর রহমান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য) এমডি, নেফ্রোলজি (থিসিস), ২৫০ শয্যা জেলা সদর হাসপাতাল, ফেনী BMDC Reg. No: A-55649
@@ -1733,7 +1733,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বুধবার, মঙ্গলবার, বৃহস্পতিবার, রবিবার, শনিবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-এ-কে-এম-সাইফুর-রহমান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-e-ke-em-saifur-rahman
 
 #### ডা. এ.কে.এম. সাইফুর রহমান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য) এমডি, নেফ্রোলজি (থিসিস), ২৫০ শয্যা জেলা সদর হাসপাতাল, ফেনী BMDC Reg. No: A-55649
@@ -1743,7 +1743,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: বিকাল ৫:০০ - রাত ৯:০০
 - **সিরিয়াল হটলাইন**: 01815076266
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-এ-কে-এম-সাইফুর-রহমান-2
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-e-ke-em-saifur-rahman
 
 #### সহকারী অধ্যাপক ডাঃ রুকমিলা আফরোজ
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস; বিসিএস (স্বাস্থ্য), এফসিপিএস (মেডিসিন) এমডি (নেফ্রোলজি) বিএসএমএমইউ কিডনী রোগ ও মেডিসিন বিশেষজ্ঞ বাংলাদেশ মেডিকেল বিশ্ববিদ্যালয়, ঢাকা । BMDC REG NO- A 60781
@@ -1753,7 +1753,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বুধবার, রবিবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01834031113
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-রুকমিলা-আফরোজ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-rukmila-afroj
 
 ### নিউরোমেডিসিন ও নিউরোসার্জারি (Neurology & Neurosurgery) (16 জন)
 
@@ -1765,7 +1765,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: সোমবার ও বুধবার
 - **সময়**: সোমবার ০৩ টা থেকে ০৫ টা বুধবার ০২ টা থেকে ৪ টা
 - **সিরিয়াল হটলাইন**: 01752431244
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-অসীম-কুমার-চৌধুরী-2
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-osim-kumar-chowdhury
 
 #### ডাঃ অসীম কুমার চৌধুরী
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস , এমডি (নিউরোমেডিসিন) স্পোর্টস মেডিসিন (অষ্ট্রেলিয়া) এডভান্সড ট্রেইন্ড ইন ফিজিক্যাল মেডিসিন ও অর্থোপেডিক্স
@@ -1775,7 +1775,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বুধবার, সোমবার
 - **সময়**: দুপুর ১২টা - দুপুর ২টা
 - **সিরিয়াল হটলাইন**: 01882462650
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-অসীম-কুমার-চৌধুরী
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-osim-kumar-chowdhury
 
 #### ডাঃ পীযুষ মজুমদার
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য),এমডি - নিউরোলজি (বিএসএমএমইউ),সদস্য, আমেরিকান একাডেমি অব নিউরোলজি, BMDC REG: NO-A-51848
@@ -1785,7 +1785,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতিবার, শুক্রবার, সোমবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01869865543
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-পীযুষ-মজুমদার
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-piyush-mazumder
 
 #### ডাঃ মুহাম্মদ ইমাম হোসাইন রুবেল
 - **ডিগ্রি / যোগ্যতা**: ডাঃ মুহাম্মাদ ইমাম হোসাইন রুবেল এম.বি.বি.এস; সিসিডি (ডায়াবেটোলজি) এফ.সি.পি.এস (নিউরোলজী) এফ.পি কুমিল্লা মেডিকেল কলেজ ও হাসপাতাল বিএমডিসি রেজিঃ নং: A-81296
@@ -1795,7 +1795,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01829542754
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মুহাম্মদ-ইমাম-হোসাইন-রুবেল
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-muhammad-imam-hossain-rubel
 
 #### ডাঃ মোঃ আশ্রাফুল ইসলাম
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (সিএমসি);সিসিডি (বারডেম) এমডি(নিউরোমেডিসিন) ; এফসিপিএস(মেডিসিন -এফপি) চট্টগ্রাম মেডিকেল কলেজ হাসপাতাল: BMDC Reg No-A88209
@@ -1805,7 +1805,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতিবার, শুক্রবার
 - **সময়**: বিকাল ৪ টা থেকে রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01882462650
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-আশ্রাফুল-ইসলাম
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-ashraful-islam
 
 #### ডাঃ মোঃ মোশারফ হোসেন তালুকদার
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য),এম.ডি (নিউরোমেডিসিন), বঙ্গবন্ধু শেখ মুজিব মেডিকেল বিশ্ববিদ্যালয় (পিজি হাসপাতাল), ঢাকা
@@ -1815,7 +1815,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: রবিবার
 - **সময়**: বিকাল ৬টা - রাত ৯টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-মোশারফ-হোসেন-তালুকদার
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-mosharf-hossain-talukdar
 
 #### ডাঃ রনজিৎ কুমার ঘোষ
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, এমডি (নিউরোমেডিসিন),এফসিপিএস (মেডিসিন) এফ পি
@@ -1825,7 +1825,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতিবার
 - **সময়**: :বিকাল ৪টা – রাত ৯টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-রনজিৎ-কুমার-ঘোষ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-rnjit-kumar-ghosh
 
 #### ডা. সামী এম. আদনান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য) এমডি (নিউরোলজি), সিসিডি (বারডেম) চট্টগ্রাম মেডিকেল কলেজ ও হাসপাতাল BMDC Reg. No-A-63287
@@ -1835,7 +1835,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার, সোমবার
 - **সময়**: সকাল ৯টা - দুপুর ২টা
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-সামী-এম-আদনান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-sami-em-adnan
 
 #### সহকারী অধ্যাপক ডাঃ দেওয়ান মুশফিকুর রহমান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), সিসিডি (বারডেম), এমসিপিএস (মেডিসিন), এফসিপিএস (মেডিসিন) এফপি, এমডি (নিউরোলজি), এমএসিপি (আমেরিকা)
@@ -1845,7 +1845,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: : সকাল ৯টা - দুপুর ১টা পর্যন্ত।
 - **সিরিয়াল হটলাইন**: 01824908173
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-দেওয়ান-মুশফিকুর-রহমান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-deoyan-mushfikur-rahman
 
 #### সহকারী অধ্যাপক ডাঃ বিপ্লব পাল
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস ;বিসিএস (স্বাস্থ্য); এমডি (নিউরোলজি)
@@ -1855,7 +1855,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: সকাল ১০ টা থেকে রাত ৯টা
 - **সিরিয়াল হটলাইন**: 01829542754
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-বিপ্লব-পাল
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-biplb-pal
 
 #### সহকারী অধ্যাপক ডাঃ মোঃ আব্দুল্লাহ আল মুজাহিদ
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস; এম.ডি (নিউরোলজি); মেম্বার-আমেরিকান একাডেমী অব নিউরোলজি
@@ -1865,17 +1865,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01834031113
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মো-আব্দুল্লাহ-আল-মুজাহিদ
-
-#### সহকারী অধ্যাপক ডাঃ সিরাজুল মুনির ওহী
-- **ডিগ্রি / যোগ্যতা**: এমবিবিএস,বিসিএস(স্বাস্থ্য) এমএস
-- **পদবি ও প্রতিষ্ঠান**: চট্টগ্রাম মেডিকেল কলেজ হাসপাতাল
-- **বিশেষজ্ঞতা**: ব্রেইন, স্ট্রোক, মেরুদণ্ড ও বিশেষজ্ঞ নিউরো সার্জন
-- **চেম্বার**: ফেনী সদর
-- **সাক্ষাতের দিন**: শুক্রবার
-- **সময়**: সকাল ১০- দুপুর ০২ টা
-- **সিরিয়াল হটলাইন**: 01752431244
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-সিরাজুল-মুনির-ওহী
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-md-abdullah-al-mujahid
 
 #### সহকারী অধ্যাপক ডাঃ সিরাজুল মুনির ওহী
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস,বিসিএস(স্বাস্থ্য) এমএস
@@ -1885,7 +1875,17 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: সকাল ১০- দুপুর ০২ টা
 - **সিরিয়াল হটলাইন**: 01752431244
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-সিরাজুল-মুনির-ওহী-2
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-sirajul-munir-ohi
+
+#### সহকারী অধ্যাপক ডাঃ সিরাজুল মুনির ওহী
+- **ডিগ্রি / যোগ্যতা**: এমবিবিএস,বিসিএস(স্বাস্থ্য) এমএস
+- **পদবি ও প্রতিষ্ঠান**: চট্টগ্রাম মেডিকেল কলেজ হাসপাতাল
+- **বিশেষজ্ঞতা**: ব্রেইন, স্ট্রোক, মেরুদণ্ড ও বিশেষজ্ঞ নিউরো সার্জন
+- **চেম্বার**: ফেনী সদর
+- **সাক্ষাতের দিন**: শুক্রবার
+- **সময়**: সকাল ১০- দুপুর ০২ টা
+- **সিরিয়াল হটলাইন**: 01752431244
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-sirajul-munir-ohi
 
 #### সহকারী অধ্যাপক ডা. দেওয়ান মুশফিকুর রহমান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য) এমসিপিএস( মেডিসিন),  এমডি (নিউরোলজি)
@@ -1895,7 +1895,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্র ও শনি
 - **সময়**: শুক্রবার সকাল ৯ টা থেকে বিকাল ৩ টা, শনিবার বিকেল ৩ টা থেকে সন্ধ্যা ৭:০০ টা
 - **সিরিয়াল হটলাইন**: 01815583960
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-দেওয়ান-মুশফিকুর-রহমান-2
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-deoyan-mushfikur-rahman
 
 #### সহকারী অধ্যাপক ডা. বেলাল হোসেন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমডি (নিউরোলজি), মেম্বার, এমেরিকান একাডেমি অফ নিউরোলজি, স্নায়ু, মাথা ব্যথা, ব্রেইন স্ট্রোক, প্যারালাইসিস বিশেষজ্ঞ
@@ -1905,7 +1905,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতিবার, রবিবার, মঙ্গলবার
 - **সময়**: বিকাল ৪টা থেকে রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-বেলাল-হোসেন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-belal-hossain
 
 #### সহযোগী অধ্যাপক ডা. দেওয়ান মুশফিক
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য) এমসিপিএস( মেডিসিন), এমডি (নিউরোলজি)
@@ -1915,7 +1915,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতি, শুক্র ও শনি
 - **সময়**: বিকাল ৪:০০ - রাত ১০:০০
 - **সিরিয়াল হটলাইন**: 01815076266
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহযোগী-অধ্যাপক-ডা-দেওয়ান-মুশফিক
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/assoc-prof-dr-deoyan-mushfik
 
 ### ক্লিনিক্যাল পুষ্টি ও ডায়েট (Nutrition & Dietetics) (3 জন)
 
@@ -1927,7 +1927,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতি শুক্রবার
 - **সময়**: বিকাল ৩:০০ - রাত ৯:০০
 - **সিরিয়াল হটলাইন**: 01806968140
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-হাসান-উদ্দিন-আজমি
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-hasan-uddin-ajmi
 
 #### সায়মা আক্তার
 - **ডিগ্রি / যোগ্যতা**: বিএসসি (অনার্স), এমএসসি (খাদ্য ও পুষ্টিবিজ্ঞান), ঢাকা বিশ্ববিদ্যালয়, টিক্স), ব, পিজিটি (ক্লিনিক্যাল নিউট্রিশন এন্ড ডায়টেটিক্স), বারডেম, পিজিটি (ক্লিনিক্যাল নিউট্রিশন এন্ড ডায়টেটিক্স), পপুলার মেডিকেল কলেজ হাসপাতাল, ঢাকা
@@ -1937,7 +1937,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শনিবার, রবিবার
 - **সময়**: বিকাল ৪টা - রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01898221111
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সায়মা-আক্তার
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/sayma-akter
 
 #### সায়মা আক্তার / Sayma Akter
 - **ডিগ্রি / যোগ্যতা**: বিএসসি (অনার্স), এমএসসি (খাদ্য ও পুষ্টিবিজ্ঞান), ঢাকা বিশ্ববিদ্যালয়, পিজিটি (ক্লিনিক্যাল নিউট্রিশন এন্ড ডায়টেটিক্স), বারডেম, পিজিটি (ক্লিনিক্যাল নিউট্রিশন এন্ড ডায়টেটিক্স)
@@ -1947,7 +1947,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সায়মা-আক্তার
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/sayma-akter
 
 ### হাড়, জোড়া ও অর্থোপেডিক সার্জারি (Orthopedics & Trauma) (13 জন)
 
@@ -1969,7 +1969,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শনি - বৃহস্পতি
 - **সময়**: দুপুর ১:০০ বিকাল ৩:০০
 - **সিরিয়াল হটলাইন**: 01806968140
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-ইকবাল-হোসেন-2
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-iqbal-hossain
 
 #### ডাঃ মোঃ তাসফিক আহমেদ
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য),এমএস (অর্থোপেডিক সার্জারী) - বিএসএমএমইউ,এ ও ট্রমা বেসিক এন্ড এডভান্সড (মালশিয়া),এ ও স্পাইন বেসিক (ভারত)
@@ -1979,7 +1979,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার, সোমবার
 - **সময়**: সকাল ৯টা - সন্ধ্যা ৭ টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-তাসফিক-আহমেদ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-tasfik-ahmed
 
 #### ডাঃ মোঃ মমিনুল ইসলাম (সোহাগ)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস ; বিসিএস (স্বাস্থ্য) ডি - অর্থো (বিএসএমএমইউ) অর্থোপেডিক বিশেষজ্ঞ ও ট্রমা সার্জন- সদর হাসপাতাল , ফেনী । BMDC REG NO- A 71807
@@ -1989,7 +1989,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার, মঙ্গলবার, বুধবার
 - **সময়**: বিকাল ৫টা - রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01898221111
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-মমিনুল-ইসলাম-সোহাগ-2
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-mominul-islam-sohag
 
 #### ডাঃ মোঃ মুনির হোসেন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস; ডি.এ. (অ্যানেস্থেশিয়া)  এম.সি.পি.এস (সার্জারী)  এফ সি পি এস (অর্থোসার্জারী) এফ.ই
@@ -1999,7 +1999,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতি দিন
 - **সময়**: দুপুর ২:০০ - রাত ৮:০০
 - **সিরিয়াল হটলাইন**: 01815076266
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মনির-হোসেন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-munir-hossain
 
 #### ডাঃ মো: তৌফিকুল হাছান ভূঁইয়া / Dr. Md. Towfiqul Hasan Bhuiyan
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমএস (অর্থোপেডিক সার্জারি), অর্থোপেডিক, ট্রমা, অর্থোস্কপি ও স্পাইন সার্জন।
@@ -2009,7 +2009,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-তৌফিকুল-হাছান-ভূঁইয়া
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-towfiqul-hasan-bhuiyan
 
 #### ডাঃ মো: মমিনুল ইসলাম সোহাগ / Dr. Md. Mominul Islam Sohag
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য),, ডি-অর্থো (বিএমইউ),, অর্থোপেডিক বিশেষজ্ঞ ও ট্রমা সার্জন।
@@ -2019,7 +2019,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-মমিনুল-ইসলাম-সোহাগ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-mominul-islam-sohag
 
 #### ডা. আহসান হাবিব ভূঁইয়া
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস( সি ইউ) পিজিটি (সার্জারি) ডি -অর্থো (বিএসএমএমইউ)
@@ -2029,7 +2029,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শনি - সোম-বুধবার
 - **সময়**: বিকাল ৫:০০ - সন্ধ্যা ৭টা
 - **সিরিয়াল হটলাইন**: 01815583960
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-আহসান-হাবিব-ভূঁইয়া
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-ahsan-habib-bhuiyan
 
 #### ডা. মো. ইকবাল হোসেন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ডিএমসি), বিসিএস (স্বাস্থ্য), এমআরসিএস (ইংল্যান্ড), এমএস (অর্থোপেডিক্স) নিটোর, অর্থোপেডিক, ট্রমা বিশেষজ্ঞ ও সার্জন, জাতীয় পঙ্গু হাসপাতাল, নিটোর, ঢাকা, BMDC Reg: No. A-72802
@@ -2039,7 +2039,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: বিকাল ৪টা থেকে রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-ইকবাল-হোসেন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-iqbal-hossain
 
 #### সহকারি অধ্যাপক ডা. মোঃ তৌফিকুল হাসান ভূঁইয়া
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য) এমএস (অর্থোপেডিক সার্জারি)বাংলাদেশ  মেডিকেল বিশ্ববিদ্যালয় অর্থোপেডিক, ট্রমা,আর্থোস্কোপি  ও স্পাইন সার্জন,
@@ -2049,7 +2049,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতি শুক্রবার সকাল ৯ টা থেকে ১১ টা
 - **সময়**: সকাল ৯ টা থেকে ১১ টা
 - **সিরিয়াল হটলাইন**: 01815583960
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারি-অধ্যাপক-ডা-মো-তৌফিকুল-হাসান-ভূঁইয়া
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/shkari-prof-dr-md-towfiqul-hasan-bhuiya
 
 #### সহকারী অধ্যাপক ডাঃ জাবেদ জাহাঙ্গীরি
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস , বিসিএস ( স্বাস্থ্য ) এম.এস ( অর্থো - সার্জারী ) বি এস.এম.এম ইউ ( পিজি হাসপাতাল ঢাকা ) ২৫০ শয্যা আধুনিক সদর হাসপাতাল , নোয়াখালী ।BMDC Reg No-A52443
@@ -2059,7 +2059,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: বিকাল ৫টা থেকে রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01882462650
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-জাবেদ-জাহাঙ্গীরি
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-jabed-jahanggiri
 
 #### সহকারী অধ্যাপক ডা. এস. এম. কাউসার
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, ডি-অর্থো (নিটোর), জাতীয় পঙ্গু হাসপাতাল, ঢাকা ফেলোশিপ ট্রেইনিং ইন ইলিজারভ টেকনিক (বায়োসেন্টার, ঢাকা)। ফেলোশিপ ট্রেইনিং ইন ইলিজারভ টেকনিক (কুরগান, রাশিয়া)।
@@ -2069,7 +2069,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার, মঙ্গলবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-এস-এম-কাউসার
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-es-em-kausar
 
 #### সহকারী অধ্যাপক ডা. মো: তৌফিকুল হাছান ভূঁইয়া
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমএস (অর্থোপেডিক সার্জারি) বাংলাদেশ মেডিকেল বিশ্ববিদ্যালয় (পিজি হাসপাতাল অর্থোপেডিক, ট্রমা, অর্থোস্কপি ও স্পাইন সার্জন।
@@ -2079,7 +2079,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার, শনিবার, বৃহস্পতিবার, সোমবার, রবিবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01898221111
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মো-তৌফিকুল-হাছান-ভূঁইয়া
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-md-towfiqul-hasan-bhuiya
 
 ### অন্যান্য বিশেষজ্ঞ কনসালট্যান্ট (Other Specialists) (10 জন)
 
@@ -2091,7 +2091,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: সকাল ১১টা - দুপুর ১টা /বিকাল ৪টা - সন্ধ্যা ৬টা।
 - **সিরিয়াল হটলাইন**: 01786665377
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-আফসানা-আক্তার
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-afsana-akter
 
 #### ডাঃ ইকবাল হোসেন ভূঁঞা / Dr. Iqbal Hossain Bhuiyan
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ঢাকা), বিসিএস (স্বাস্থ্য), এম.পি.এইচ. (ইপিডেমিওলজি)
@@ -2101,7 +2101,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-ইকবাল-হোসেন-ভূঁঞা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-iqbal-hossain-bhuiyan
 
 #### ডাঃ ইফফাত আরা (রুহি)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস; পিজিটি (গাইনী এন্ড অবস), সিএমইউ; ডিএমইউ (আল্ট্রা), স্পেশালিস্ট ইন টিবিএস, বিএমডিসি রেজিঃ নংঃ এ-৭৬৭২৭
@@ -2111,7 +2111,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: সকাল ১০টা - দুপুর ২টা
 - **সিরিয়াল হটলাইন**: 01834031113
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-ইফফাত-আরা-রুহি
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-iffat-ara-ruhi
 
 #### ডাঃ এ.এম. তালুকদার
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য),সনোলজিস্ট প্রাক্তন আর,এম,ও ২৫০ শয্যা বিশিষ্ট জেলা সদর হাসপাতাল, ফেনী।
@@ -2121,7 +2121,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: সকাল ১০টা থেকে রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01711984629
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-এ-এম-তালুকদার
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-e-em-talukdar
 
 #### ডাঃ মোঃ আশরাফুল হক চৌধুরী
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস ; বিসিএস (স্বাস্থ্য) ; এফসিপিএস (হেমাটোলজি মেডিসিন) ও রক্তরোগ বিশেষজ্ঞ
@@ -2131,7 +2131,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: বিকাল 8টা থেকে রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01786665377
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-আশরাফুল-হক-চৌধুরী
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-ashraful-hoque-chowdhury
 
 #### ডাঃ রাশেদা আক্তার সাথী
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, সিএমইউ, এডিএমইউ, পিজিটি, ট্রেইন্ড ইন টিভিএস,, অ্যানোমালি এন্ড কালার ডপলার আল্ট্রাসাউন্ড, বিএমডিসি রেজিঃ নং- ১০৫৯৩৯
@@ -2141,7 +2141,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: : সকাল ৯ টা -থেকে দুপুর ২টা
 - **সিরিয়াল হটলাইন**: 01829542754
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-রাশেদা-আক্তার-সাথী
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-rasheda-akter-sathi
 
 #### ডা: কাজী মো: আলম
 - **ডিগ্রি / যোগ্যতা**: এম বি বি এস; বি সি এস (স্বাস্থ্য) এম ফিল (রেডিওলজি এন্ড ইমেজিং) বি এস এম এম ইউ, ঢাকা ।
@@ -2151,7 +2151,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: সকাল ১০টা -রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-কাজী-মো-আলম
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-kaji-md-alam
 
 #### ডা: মোহাম্মদ আব্দুল ওয়াদুদ
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস ,ইসিইউ, ডিএমইউডি, ট্রেইন ইন কলার ডপলার
@@ -2161,7 +2161,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01829542754
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মোহাম্মদ-আব্দুল-ওয়াদুদ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-mohammad-abdul-oyadud
 
 #### ডা. সৈয়দ মো: আরিফুল ইসলাম
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ঢাকা), বিসিএস (স্বাস্থ্য ) এমডি (মেডিকেল অনকোলজি) কুর্মিটোলা জেনারেল হাসপাতাল, ঢাকা
@@ -2171,7 +2171,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতিবার
 - **সময়**: বিকাল ৫টা - রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01869865543
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-সৈয়দ-মো-আরিফুল-ইসলাম
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-soiyd-mea-ariful-islam
 
 #### সহকারী অধ্যাপক ডা. এস. এম. জসিম উদ্দীন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য ) এফসিপিএস (হেমাটোলজি)
@@ -2181,7 +2181,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার
 - **সময়**: বিকাল ৫টা – সন্ধ্যা ৭টা)
 - **সিরিয়াল হটলাইন**: 01898221111
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-এস-এম-জসিম-উদ্দীন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-es-em-jsim-uddin
 
 ### শিশু ও নবজাতক রোগ (Pediatrics & Neonatology) (27 জন)
 
@@ -2193,7 +2193,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01819100515
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/অধ্যাপক-ডা-এ-এস-এম-ওয়ালী-উল্যাহ্
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/prof-dr-e-es-em-oyali-ulyah
 
 #### অধ্যাপক ডা: বিমল চন্দ্র দাস
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস,বিসিএস (স্বাস্থ্য),ডিসিএইচ,এমডি(শিশু)
@@ -2203,7 +2203,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: বিকাল ৪টা থেকে রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01864846888
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/অধ্যাপক-ডা-বিমল-চন্দ্র-দাস
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/prof-dr-biml-chandra-das
 
 #### অধ্যাপক ডা. মাহবুব মোতানাব্বি
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ডিএমসি), এফসিপিএস (শিশু), পোস্ট ফেলোশিপ ট্রেনিংঃ নিওনেটাল ভেন্টিলেশন (পি জি এম আই ই আর চন্ডিগড়)
@@ -2213,7 +2213,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার, সোমবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01810060770
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/অধ্যাপক-ডা-মাহবুব-মোতানাব্বি
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/prof-dr-mahbub-motanabbi
 
 #### অধ্যাপক ডা.এ,কে,এম জাহিদ হোসেন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, এমএস (শিশু সার্জন) শিশু সার্জন বিভাগ বঙ্গবন্ধু শেখ মুজিব মেডিকেল বিশ্ববিদ্যালয়, ঢাকা
@@ -2223,7 +2223,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার, বৃহস্পতিবার
 - **সময়**: সকাল ১০টা - দুপুর ১টা
 - **সিরিয়াল হটলাইন**: 01869865543
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/অধ্যাপক-ডা-এ-কে-এম-জাহিদ-হোসেন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/prof-dr-e-ke-em-jahid-hossain
 
 #### ডাঃ আনিসুর রহমান রাসেল / Dr. Anisur Rahman Russel
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমসিপিএস (শিশুরোগ),, এফসিপিএস (শিশুরোগ-সি), পিজিপিএন (আমেরিকা), ই.এন.এস (শিশু পুষ্টি, জার্মানি)
@@ -2233,7 +2233,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: বিকাল ৩টা থেকে বিকাল ৫টা
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-আনিসুর-রহমান-রাসেল
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-anisur-rahman-russel
 
 #### ডাঃ গুলশান-আরা-জাহান / Dr. Gulshan Ara Jahan
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এফসিপিএস (শিশু), এমডি (শিশু নিউরোলজি ও নিউরো ডেভেলপমেন্ট)
@@ -2243,7 +2243,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-গুলশান-আরা-জাহান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-gulshan-ara-jahan
 
 #### ডাঃ পিয়াস কান্তি পাল
 - **ডিগ্রি / যোগ্যতা**: MBBS,BCS,DSH,FCPS - শিশু (এফপি) BMDC REG NO  A-86184
@@ -2253,7 +2253,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শনি - বৃহস্পতি
 - **সময়**: বিকাল ৩:০০ - রাত ৯:০০
 - **সিরিয়াল হটলাইন**: 01806968140
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-পিয়াস-কান্তি-পাল-3
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-piyas-kanti-pal
 
 #### ডাঃ মু. সাজেদুল করিম (অপু)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), ডিসিএইচ (শিশু), এফসিপিএস (শিশু)
@@ -2263,7 +2263,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: বিকাল ৪ টা থেকে রাত ৯ টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মু-সাজেদুল-করিম-অপু
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-mu-sajedul-krim-opu
 
 #### ডাঃ মেহের নিগার নিশি
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ) এমডি (পেডিয়াট্রিক নিউরোলজি এন্ড নিউরোডেভেলপমেন্ট)- বিএসএমএমইউ (খিচুনী, স্ট্রোক, নিউরোডেভেলপমেন্টাল ডিসওর্ডার ও অটিজম বিশেষজ্ঞ) রেজিস্ট্রার, পেডিয়াট্রিক নিউরোলজি এন্ড ডেভেলপমেন্ট শহীদ সোহরাওয়ার্দী মেডিকেল কলেজ ও হাসপাতাল, ঢাকা বিএমডিসি রেজি. নং এ-৬৭৩৭৪
@@ -2273,7 +2273,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01786665377
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মেহের-নিগার-নিশি
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-meher-nigar-nishi
 
 #### ডাঃ মোঃ আসিফুল আমিন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস,এফসিপিএস (শিশু),এমসিপিএস (শিশু)
@@ -2283,7 +2283,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বুধবার, বৃহস্পতিবার, মঙ্গলবার, রবিবার, সোমবার
 - **সময়**: দুপুর ৩টা - রাত ৯টা
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-আসিফুল-আমিন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-asiful-amin
 
 #### ডাঃ মো: মোস্তাফিজুর রহমান ভূইয়া / Dr. Md. Mostafizur Rahman Bhuiyan
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (এএফএমসি), এমডি (শিশু হৃদরোগ)
@@ -2293,7 +2293,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-মোস্তাফিজুর-রহমান-ভূইয়া
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-mostafizur-rahman-bhuiyan
 
 #### ডাঃ রোকন উদ দৌলা / Dr. Rokon Ud Dowla
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমডি (শিশুরোগ), ফেলোশিপ ট্রেনিং অন নিউনেটোলজী এন্ড পোকাস, (Neo-POCUS) (ইন্ডিয়া), নবজাতক, শিশু ও কিশোর রোগ বিশেষজ্ঞ
@@ -2303,7 +2303,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: বিকাল ৫.৩০টা - রাত ৮.০০টা
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-রোকন-উদ-দৌলা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-rokon-ud-dowla
 
 #### ডাঃ হোসাইন আহমেদ ইব্রাহিম
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস ( সিইউ ) , পিজিটি ( শিশু ) , ডিসিএইচ ( শিশু বঙ্গবন্ধু শেখ মুজিব মেডিকেল বিশ্ববিদ্যাল এমএসিপি ( আমেরিকা ),BMDC Reg No-A 81798
@@ -2313,7 +2313,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: সকাল ১০ টা- দুপুর ১ টা
 - **সিরিয়াল হটলাইন**: 01869865543
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-হোসাইন-আহমেদ-ইব্রাহিম
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-hossain-ahmed-ibrahim
 
 #### ডা: প্রদীপ রায়
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস ;ডিসিএইচ (শিশু), পিজিপিএন(শিশু)
@@ -2323,7 +2323,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01829542754
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-প্রদীপ-রায়
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-prdip-ray
 
 #### ডা. মো: মোস্তাফিজুর রহমান ভূইয়া
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (এএফএমসি), এমডি (শিশু হৃদরোগ ) কনসালট্যান্ট, শিশু হৃদরোগ বিভাগ, বাংলাদেশ মেডিকেল বিশ্ববিদ্যালয় (পিজি হাসপাতাল), ঢাকা
@@ -2333,7 +2333,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01898221111
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-মোস্তাফিজুর-রহমান-ভূইয়া
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-mostafizur-rahman-bhuiya
 
 #### ডা.শর্মিলা চৌধুরী
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস ;বিসিএস(স্বাস্থ্য) ডিসি এইচ (শিশু) এফসিপিএস II (শিশু),ফেনী সদর হাসপাতাল। BMC Reg No-55564,
@@ -2343,7 +2343,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01786665377,
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-শর্মিলা-চৌধুরী
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-shrmila-chowdhury
 
 #### সহকারী অধ্যাপক ডাঃ কৃষ্ণ মোহন পোদ্দার
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস ( ঢাকা ) , বিসিএস ( স্বাস্থ্য ) এম.ডি ( শিশু নিউরো মেডিসিন )
@@ -2353,7 +2353,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: সকাল ৯টা থেকে সন্ধ্যা ৭টা
 - **সিরিয়াল হটলাইন**: 01849933222
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-কৃষ্ণ-মোহন-পোদ্দার
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-krishn-mohn-poddar
 
 #### সহকারী অধ্যাপক ডাঃ গাজী গোলাম মোস্তফা
 - **ডিগ্রি / যোগ্যতা**: এম.বি.বি.এস (এস.বি.এম.সি), বি.সি.এস (স্বাস্থ্য),ডি.সি.এইচ (শিশু স্বাস্থ্য)
@@ -2363,7 +2363,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বুধবার, শুক্রবার, বৃহস্পতিবার
 - **সময়**: বিকাল 8টা থেকে রাত ৯টা
 - **সিরিয়াল হটলাইন**: 01711338149
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-গাজী-গোলাম-মোস্তফা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-gaji-golam-mostfa
 
 #### সহকারী অধ্যাপক ডাঃ বিকাশ চন্দ্ৰ পাল
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, ডিসিএইচ, এমডি (শিশু নিউরোলজী), শিশু নিউরোলজীতে প্রশিক্ষনপ্রাপ্ত(AIIMSনিউ দিল্লি) ফেলো ইন অটিজম(সাউথ কোরিয়া) শিশু নিউরোলজী বিভাগ -ইপনা,বিএমইউ
@@ -2373,7 +2373,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01869865543
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-বিকাশ-চন্দ্ৰ-পাল
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-bikash-chnd-pal
 
 #### সহকারী অধ্যাপক ডাঃ মর্জিনা বেগম
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস; বিসিএস (স্বাস্থ্য) ডিসিএইচ-শিশু (বিএসএমএমইউ)
@@ -2383,7 +2383,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01971351270
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মর্জিনা-বেগম
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-mrjina-begum
 
 #### সহকারী অধ্যাপক ডাঃ মুকুল চন্দ্র নাথ
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, এমডি (শিশু, কিশোর ও মনোরোগ), স্পেশাল ট্রেনিং শিশু নিউরো,, বাংলাদেশ মেডিকেল বিশ্ববিদ্যালয়, ঢাকা
@@ -2393,7 +2393,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: বিকাল ৩টা - সন্ধ্যা ৭টা
 - **সিরিয়াল হটলাইন**: 01882462650
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মুকুল-চন্দ্র-নাথ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-mukul-chandra-nath
 
 #### সহকারী অধ্যাপক ডাঃ মোঃ নুরুল আবসার (মামুন)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস(স্বাস্থ্য ) ডিসিএইচ(শিশু) এফসিপিএস(শিশু), সদর হাসপাতাল,
@@ -2403,7 +2403,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01869865543
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মো-নুরুল-আবসার-মামুন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-md-nurul-absar-mamun
 
 #### সহকারী অধ্যাপক ডাঃ শেখ মুহাম্মদ আবদুল্লাহ্
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস(ঢাকা) ;বিসিএস (স্বাস্থ্য) এফসিপিএস (সার্জারী), এমএস (পিডিয়াট্রিক্স সার্জারী)
@@ -2413,7 +2413,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: সোমবার
 - **সময়**: বিকাল ৫টা থেকে রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01839994132
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-শেখ-মুহাম্মদ-আবদুল্লাহ্
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-shekh-muhammad-abdullah
 
 #### সহকারী অধ্যাপক ডা. আরমান-বিন আবদুল্লাহ
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস; বিসিএস (স্বাস্থ্য) ডিসিএইচ; এফসিপিএস
@@ -2423,7 +2423,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতিবার, মঙ্গলবার, রবিবার
 - **সময়**: বিকাল ৫টা থেকে রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01714046577
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-আরমান-বিন-আবদুল্লাহ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-arman-bin-abdullah
 
 #### সহকারী অধ্যাপক ডা. মোঃ মোজাম্মেল হোসাইন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস,, বিসিএস (স্বাস্থ্য ), এমডি (শিশু)
@@ -2433,7 +2433,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বুধবার, শনিবার, মঙ্গলবার, রবিবার, সোমবার
 - **সময়**: বিকাল ৪টা-সন্ধ্যা ৬টা
 - **সিরিয়াল হটলাইন**: 01822479666
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মো-মোজাম্মেল-হোসাইন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-md-mojammel-hossain
 
 #### সহযোগী অধ্যাপক ডাঃ এটিএম ফারুক আহমেদ
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, ডিসিএইস, এমডি (শিশু স্বাস্থ্য)
@@ -2443,7 +2443,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01786665377
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহযোগী-অধ্যাপক-ডা-এটিএম-ফারুক-আহমেদ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/assoc-prof-dr-etiem-faruk-ahmed
 
 #### সহযোগী অধ্যাপক ডাঃ জাহাঙ্গীর আলম
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস,এফসিপিএস (শিশু)
@@ -2453,7 +2453,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: প্রতিদিন
 - **সময়**: বিকাল ৩টা থেকে সন্ধ্যা ৭টা
 - **সিরিয়াল হটলাইন**: 01869865543
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহযোগী-অধ্যাপক-ডা-জাহাঙ্গীর-আলম
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/assoc-prof-dr-jahanggir-alam
 
 ### মানসিক রোগ ও সাইকোথেরাপি (Psychiatry) (8 জন)
 
@@ -2465,7 +2465,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার
 - **সময়**: বিকাল ৫টা - রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01834031113
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-আরাফাত-আজিম
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-arafat-ajim
 
 #### ডাঃ তাসলিমা বেগম / Dr. Taslima Begum
 - **ডিগ্রি / যোগ্যতা**: বিসিএস (স্বাস্থ্য), এমডি (শিশু ও কিশোর সাইকিয়াট্রি), এডভান্সড ট্রেনিং ইন সেক্সুয়াল মেডিসিন, বিএমডিসি রেজি: নং-এ-৭৬৭৬৫
@@ -2475,7 +2475,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-তাসলিমা-বেগম
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-taslima-begum
 
 #### ডাঃ মোহাম্মদ শাহাদাত হোসাইন / Dr. Mohammad Shahadat Hossain
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (চমেক), বিসিএস (স্বাস্থ্য), এমসিপিএস (সাইকিয়াট্রি), এফসিপিএস (সাইকিয়াট্রি), স্নায়ু-মনোরোগ, মাদকাসক্তি, ঘুম এবং সেক্স সমস্যা বিশেষজ্ঞ
@@ -2485,7 +2485,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মোহাম্মদ-শাহাদাত-হোসাইন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-mohammad-shahadat-hossain
 
 #### ডাঃ সুরজিত রায় চৌধুরী
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, এমডি (সাইকিয়াট্রি),মনোরোগ বিশেষজ্ঞ ও সাইকোথেরাপিষ্ট,বাংলাদেশ মেডিকেল বিশ্ববিদ্যালয়, ঢাকা।
@@ -2495,7 +2495,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: বিকাল ৪টা - সন্ধ্যা ৬টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-সুরজিত-রায়-চৌধুরী
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-surjit-ray-chowdhury
 
 #### সহকারী অধ্যাপক ডাঃ ফাতিমা জোহরা
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, এমডি (সাইকিয়াট্রি), মনোরোগ বিদ্যা বিভাগ, বঙ্গবন্ধু শেখ মুজিব মেডিক্যাল বিশ্ববিদ্যালয়
@@ -2505,7 +2505,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: সোমবার, শুক্রবার
 - **সময়**: দুপুর ১২টা - বিকাল ৪টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-ফাতিমা-জোহরা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-fatima-johra
 
 #### সহকারী অধ্যাপক ডা: জহর দত্ত
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য) এমডি (সাইকিয়াট্রি)
@@ -2515,7 +2515,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: সোমবার
 - **সময়**: বিকাল ৩টা থেকে সন্ধ্যা ৬টা
 - **সিরিয়াল হটলাইন**: 01829542754
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-জহর-দত্ত
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-jhr-dtt
 
 #### সহকারী অধ্যাপক ডা. বিজয় কুমার দত্ত
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস(ঢাকা) বিসিএস (স্বাস্থ্য) এমডি (সাইকিয়াট্রি) সহকারি
@@ -2525,7 +2525,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: বিকাল ৫টা - রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-বিজয়-কুমার-দত্ত
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-bijy-kumar-dtt
 
 #### সহকারী অধ্যাপক ডা. মোহাম্মদ শাহাদাত হোসাইন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (চমেক), বিসিএস (স্বাস্থ্য), এমসিপিএস (সাইকিয়াট্রি), এফসিপিএস (সাইকিয়াট্রি), স্নায়ু-মনোরোগ, মাদকাসক্তি, ঘুম এবং সেক্স সমস্যা বিশেষজ্ঞ
@@ -2535,7 +2535,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01898221111
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মোহাম্মদ-শাহাদাত-হোসাইন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-mohammad-shahadat-hossain
 
 ### RHEUMATOLOGY (7 জন)
 
@@ -2547,7 +2547,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: সকাল ৯টা - দুপুর ১টা
 - **সিরিয়াল হটলাইন**: 01882462650
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-নুর-আলম-চৌধুরী
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-nur-alam-chowdhury
 
 #### ডাঃ নুর ই আলম চৌধুরী
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস,(স্বাস্থ্য) এমডি(ফিজিকেল মেডিসিন)
@@ -2557,7 +2557,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: রবিবার, মঙ্গলবার ও বুধবার
 - **সময়**: বিকাল ০৫ টা ০৭ টা
 - **সিরিয়াল হটলাইন**: ০১৭৫২৪৩১২৪৪
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-নুর-ই-আলম-চৌধুরী
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-nur-i-alam-chowdhury
 
 #### ডাঃ মো: আতিকুর রহমান / Dr. Md. Atiqur Rahman
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমডি (রিউমাটোলজি)-বিএমইউ, এফএসিআর (ইউএসএ), এম.এ.সি.পি (মেডিসিন), EULAR সার্টিফাইড রিউমাটোলজিস্ট (ভিয়েনা), বিএমডিসি রেজি: নং-এ-৬৭৮১৬
@@ -2567,7 +2567,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-আতিকুর-রহমান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-atiqur-rahman
 
 #### সহকারী অধ্যাপক ডাঃ কাজী মোঃ সাঈদুজ্জামান
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস; এমডি (ফিজিক্যাল মেডিসিন এন্ড রিহ্যাবিলিটেশন)-বিএসএমএমইউ
@@ -2577,7 +2577,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতিবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01834031113
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-কাজী-মো-সাঈদুজ্জামান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-kaji-md-saidujjaman
 
 #### সহকারী অধ্যাপক ডাঃ সালেহ আহমদ শাওন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, এমপিএইচ, এমডি (ফিজিক্যাল মেডিসিন এন্ড রিহ্যাবিলিটেশন)
@@ -2587,7 +2587,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01824908173
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-সালেহ-আহমদ-শাওন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-saleh-ahmd-shaon
 
 #### সহকারী অধ্যাপক ডা. আরিফুল হুদা
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমডি (ফিজিক্যাল মেডিসিন), বাংলাদেশ মেডিকেল বিশ্ববিদ্যালয়, ঢাকা, এফসিপিএস (মেডিসিন) এফপি, সিসিডি (বারডেম)
@@ -2597,7 +2597,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার, রবিবার, বৃহস্পতিবার
 - **সময়**: বিকাল ৪টা- সন্ধ্যা ৭টা
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-আরিফুল-হুদা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-ariful-huda
 
 #### সহযোগী অধ্যাপক ডাঃ ফারজানা খান সোমা
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ডিএমসি) এফসিপিএস (ফিজিক্যাল মেডিসিন এন্ড রিহ্যাবিলিটেশন
@@ -2607,7 +2607,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতিবার, শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01849933222
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহযোগী-অধ্যাপক-ডা-ফারজানা-খান-সোমা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/assoc-prof-dr-farjana-khan-soma
 
 ### জেনারেল ও ল্যাপারোস্কোপিক সার্জারি (General & Laparoscopic Surgery) (33 জন)
 
@@ -2619,7 +2619,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বুধবার
 - **সময়**: বিকাল ২টা - সন্ধ্যা ৭টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-ইফফাত-আরা-মাহমুদ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-iffat-ara-mahmud
 
 #### ডাঃ জয়নাব আকতার মুন্নী / Dr. Joynab Akter Munni
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমএস (কলোরেক্টাল সার্জারি), কলোরেক্টাল বিশেষজ্ঞ ও সার্জন, বিএমডিসি রেজি: নং-এ-৭৬৯৭৯
@@ -2629,7 +2629,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-জয়নাব-আকতার-মুন্নী
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-joynab-akter-munni
 
 #### ডাঃ তানভীর আহমেদ (সনেট)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ডি.এম.সি), বিসিএস (স্বাস্থ্য), এফসিপিএস (সার্জারী), ফেলো, ল্যাপারোস্কপিক সার্জারী (ইন্ডিয়া), এমএস (কলোরেক্টাল সার্জারী), ফেইজ বি, বাংলাদেশ মেডিকেল বিশ্ববিদ্যালয়, ঢাকা
@@ -2639,7 +2639,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতিবার, শুক্রবার
 - **সময়**: সন্ধ্যা ৬টা - রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-তানভীর-আহমেদ-সনেট
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-tanbhir-ahmed-snet
 
 #### ডাঃ ফারজানা সুলতানা
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস , বিসিএস (স্বাস্থ্য); এফসিপিএস (সার্জারী) জেনারেল এন্ড লেপারোস্কপিক সার্জন রেজিস্টার , সার্জারী স্যার সলিমুল্লাহ মেডিকেল কলেজ এন্ড মিটফোর্ড হাসপাতাল , ঢাকা.BMDC REG NO -A ৫৪৬৮৪
@@ -2649,7 +2649,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: সকাল ১০টা থেকে বিকাল ৪টা
 - **সিরিয়াল হটলাইন**: 01849933222
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-ফারজানা-সুলতানা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-farjana-sultana
 
 #### ডাঃ মঈনুল মাহমুদ (সানি) / Dr. Moinul Mahmud (Sunny)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ঢাকা), এমএস (ভাসকুলার সার্জারী)-বিএমইউ
@@ -2659,7 +2659,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মঈনুল-মাহমুদ-সানি
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-moinul-mahmud-sunny
 
 #### ডাঃ মোঃ ইয়াকুব নবী
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমএস (ইউরোলজী), রেসিডেন্ট, স্যার সলিমুল্লাহ মেডিকেল কলেজ, মিডফোর্ট হাসপাতাল, ঢাকা BMDC REG NO- A 73628
@@ -2669,7 +2669,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বৃহস্পতিবার, সোমবার
 - **সময়**: বিকাল ৪টা - সন্ধ্যা ৭টা
 - **সিরিয়াল হটলাইন**: 01882462650
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-ইয়াকুব-নবী
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-iyakub-nbi
 
 #### ডাঃ মোঃ কামরুজ্জামান
 - **ডিগ্রি / যোগ্যতা**: এম.বি.বি.এস ; বি.সি.এস (স্বাস্থ্য) এম.সি.পি.এস (সার্জারী) সিনিয়র
@@ -2679,7 +2679,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: সোমবার, শনিবার, রবিবার
 - **সময়**: সন্ধ্যা ৬টা থেকে রাত ১০টা
 - **সিরিয়াল হটলাইন**: 01711984629
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-কামরুজ্জামান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-kamrujjaman
 
 #### ডাঃ মোঃ রেজাউল করিম
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, (সিএমসি) বিসিএস (স্বাস্থ্য) এমএস (ইউরোলজী), ইউরোলোজিস্ট ও সার্জন, চট্টগ্রাম মেডিকেল কলেজ হাসপাতাল
@@ -2689,7 +2689,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01834031113
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-রেজাউল-করিম
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-rejaul-krim
 
 #### ডাঃ মোঃ হুমায়ুন কবির ভূঁইয়া
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস; বিসিএস (স্বাস্থ্য) এফসিপিএস (ইউরোলজী), ইউরোলজী, এন্ডোসকপিক ও ল্যাপারোস্কপিক সার্জন
@@ -2699,7 +2699,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01834031113
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-হুমায়ুন-কবির-ভূঁইয়া
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-humayun-kabir-bhuiya
 
 #### ডাঃ মো: কামাল উদ্দিন মজুমদার / Dr. Md. Kamal Uddin Majumder
 - **ডিগ্রি / যোগ্যতা**: বিসিএস (স্বাস্থ্য), এমএস (ইউরোলজি), ইউরোলজিস্ট, এন্ড্রোলজিস্ট ও এন্ডো ল্যাপারোস্কোপিক সার্জন
@@ -2709,7 +2709,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-কামাল-উদ্দিন-মজুমদার
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-kamal-uddin-majumder
 
 #### ডাঃ মো: ফাহমিদুল হক (রিয়ন) / Dr. Md. Fahmidul Hoque (Rion)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমএস (ইউরোলজি)
@@ -2719,7 +2719,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: রবিবার ও শুক্রবার
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: ০১৮১৫৫৮৩৯৬০
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-ফাহমিদুল-হক-রিয়ন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-fahmidul-hoque-rion
 
 #### ডাঃ মোহাম্মদ আবুল কালাম আজাদ / Dr. Mohammad Abul Kalam Azad
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমএস (প্লাস্টিক সার্জারি), এফএসিএস (ইউএসএ)
@@ -2729,7 +2729,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে, শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মোহাম্মদ-আবুল-কালাম-আজাদ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-mohammad-abul-kalam-azad
 
 #### ডাঃ রাজীব গুহ / Dr. Rajib Guha
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এফসিপিএস (সার্জারি), জেনারেল, এন্ডোল্যাপারোস্কপিক এন্ড কলোরেক্টাল সার্জন, ল্যাপারোস্কপিক সার্জারিতে উচ্চতর প্রশিক্ষণপ্রাপ্ত (এসইএলএসবি), এন্ডোস্কপিক ইন্টারভেনশানে উচ্চতর প্রশিক্ষণপ্রাপ্ত (জিএলইএলসি)
@@ -2739,7 +2739,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে, রবিবার
 - **সময়**: বিকাল ৩টা - বিকাল ৫টা।
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-রাজীব-গুহ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-rajib-guha
 
 #### ডাঃ রাজু চন্দ্র সরকার / Dr. Raju Chandra Sarkar
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এম এস (ইউরোলজি), ন্যাশনাল ইন্সটিটিউট অব কিডনি, ডিজিজেজ এন্ড ইউরোলজি,, শের- এ- বাংলা নগর, ঢাকা, বিএমডিসি রেজি: নং-এ-৮০৩৮৮
@@ -2749,7 +2749,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-রাজু-চন্দ্র-সরকার
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-raju-chandra-sarkar
 
 #### ডাঃ সামিয়া সবুর সারা
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ডি ইউ),এম এস (জেনারেল সার্জারি)
@@ -2759,7 +2759,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বুধবার
 - **সময়**: বিকাল ২টা - রাত ৭টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-সামিয়া-সবুর-সারা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-samiya-sbur-sara
 
 #### ডাঃ সৈয়দ মো: আরিফুল ইসলাম / Dr. Syed Md. Ariful Islam
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ঢাকা), বিসিএস (স্বাস্থ্য), বিএমডিসি রেজি নং: এ-৪১৩৬৩
@@ -2769,7 +2769,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে
 - **সময়**: সিরিয়ালের মাধ্যমে সময় জানানো হবে
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-সৈয়দ-মো-আরিফুল-ইসলাম
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-syed-md-ariful-islam
 
 #### ডাঃ সোনিয়া রহমান / Dr. Sonia Rahman
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ঢাকা), এমসিপিএস (সার্জারি), এফসিপিএস (সার্জারি), এমআরসিএস (এডিনবার্গ),, এমএস (সার্জিকাল অনকোলজি), জাতীয় ক্যান্সার রিসার্চ ইন্সটিটিউট, মহাখালী, ঢাকা।
@@ -2779,7 +2779,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: যোগাযোগ সাপেক্ষে / প্রতি সপ্তাহে নির্ধারিত দিনে, শুক্রবার
 - **সময়**: বিকাল ৪.০০ টা - সন্ধ্যা ৬.০০ টা।
 - **সিরিয়াল হটলাইন**: 01898221111, 01898445555, 09666747575
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-সোনিয়া-রহমান
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-sonia-rahman
 
 #### ডা. তপু দত্ত
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এফসিপিএস (ফাইনাল পার্ট) - সার্জারি, ২৫০ শয্যা জেনারেল হাসপাতাল, ফেনী,, BMDC REG NO- A102063
@@ -2789,7 +2789,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার, রবিবার, বৃহস্পতিবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01829542754
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-তপু-দত্ত
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-tpu-dtt
 
 #### ডা. মো: ফাহমিদুল হক (রিয়ন)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এমএস (ইউরোলজি), কুমিল্লা মেডিকেল কলেজ হাসপাতাল, কুমিল্লা
@@ -2799,7 +2799,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: রবিবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01898221111
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-ফাহমিদুল-হক-রিয়ন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-fahmidul-hoque-rion
 
 #### ডা. মো: হারুন অর -রশিদ
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ডিএমসি)বিসিএস ( স্বাস্থ্য) এফসিপিএস (সার্জারি)  এমএস(কলোরেক্টাল  সার্জারি) এমআরসিএস (লন্ডন) এফএসিএস (আমেরিকা) এফএমএএস (দুবাই) ফেলোশিপ ট্রেনিং  ইন কলোরেক্টাল সার্জারি (সিঙ্গাপুর) ফেলোশিপ ট্রেনিং  ইন ল্যাপারোস্কোপিক সার্জারি (দুবাই)
@@ -2809,7 +2809,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: বিকাল ৪ঃ০০ টা থেকে সন্ধ্যা ৭:০০ টা
 - **সিরিয়াল হটলাইন**: 01815583960
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-মো-হারুন-অর-রশিদ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-md-harun-or-rshid
 
 #### ডা. সাদিয়া আকতার
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এফসিপিএস (সার্জারী), জেনারেল, ল্যাপারোস্কপিক, ব্রেস্ট,হার্নিয়া ও কলোরেক্টাল সার্জন, এ্যাসিস্টেন্ট রেজিস্টার, চট্টগ্রাম মেডিকেল কলেজ ও হাসপাতাল
@@ -2819,7 +2819,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: বুধবার, শনিবার
 - **সময়**: বিকাল ৩টা- সন্ধ্যা ৭টা
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/ডা-সাদিয়া-আকতার
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/dr-sadiya-aktar
 
 #### সহকারী অধ্যাপক জসিম উদদীন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস,বিসিএস(স্বাস্থ্য) এফসিপিএস (সার্জারি)
@@ -2829,7 +2829,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: সকাল ১০- দুপুর ০২ টা
 - **সিরিয়াল হটলাইন**: 01752431244
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-জসিম-উদদীন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-jsim-uddin
 
 #### সহকারী অধ্যাপক ডাঃ এ. এইচ. এম আফজালুল হক রানা
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ডিএমসি), বিসিএস (স্বাস্থ্য), এমএস (ইউরোলজী) অ্যাডভান্স ট্রেনিং অন এন্ডোইউরোলজী এন্ড ল্যাপারোস্কপিক সার্জারী (সিঙ্গাপুর, ইন্ডিয়া) কিডনি পাথর অপারেশনে বিশেষ প্রশিক্ষণপ্রাপ্ত (ইন্ডিয়া)
@@ -2839,7 +2839,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: রবিবার
 - **সময়**: দুপুর ২টা - রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01849933222
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-এ-এইচ-এম-আফজালুল-হক-রানা
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-e-eich-em-afjalul-hoque-rana
 
 #### সহকারী অধ্যাপক ডাঃ এম.কে.এম ফয়সল কাদের চৌধুরী
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, এমএস (ইউরোলজী) (বিএসএমএমইউ)
@@ -2849,7 +2849,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার, সোমবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01829542754
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-এম-কে-এম-ফয়সল-কাদের-চৌধুরী
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-em-ke-em-fysl-kader-chowdhury
 
 #### সহকারী অধ্যাপক ডাঃ তাহিরা বেনজীর
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস; বিসিএস (স্বাস্থ্য ) এফসিপিএস (সার্জারী), ব্রেস্ট, পাইলস্, ফিশার, ফিস্টুলা ও জেনারেল ল্যাপারোস্কপিক সার্জন চট্টগ্রাম মেডিকেল কলেজ হাসপাতাল । BMDC REG NO -A ৬১৪০৪
@@ -2859,7 +2859,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: সোমবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01834031113
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-তাহিরা-বেনজীর
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-tahira-benjir
 
 #### সহকারী অধ্যাপক ডাঃ নিগহাত জাবিন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস; বিসিএস (স্বাস্থ্য), এফসিপিএস (সার্জারী)
@@ -2869,7 +2869,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: যোগাযোগ সাপেক্ষে
 - **সিরিয়াল হটলাইন**: 01834031113
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-নিগহাত-জাবিন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-nighat-jabin
 
 #### সহকারী অধ্যাপক ডাঃ মোঃ খলিলুর রহমান (অপু)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (সিএমসি); বিসিএস (স্বাস্থ্য);এফসিপিএস (সার্জারী)
@@ -2879,7 +2879,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: বিকাল ৪ টা থেকে বিকাল ৫টা
 - **সিরিয়াল হটলাইন**: 01869865543
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মো-খলিলুর-রহমান-অপু
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-md-khlilur-rahman-opu
 
 #### সহকারী অধ্যাপক ডাঃ মোঃ হারুন অর - রশিদ
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ডিএমসি) , বিসিএস (স্বাস্থ্য), এফসিপিএস (সার্জারী) , এমআরসিএস (ইউকে)ফেলোশীপ ট্রেনিং ইন কলোরেক্টাল সার্জারী (সিঙ্গাপুর) এফএসিএস (আমেরিকা) ; এমএস (কলোরেক্টাল সার্জারী , ফেইজ - বি)
@@ -2889,7 +2889,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: সকাল ১০টা - সন্ধ্যা ৭টা
 - **সিরিয়াল হটলাইন**: 01869865543
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মো-হারুন-অর-রশিদ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-md-harun-or-rshid
 
 #### সহকারী অধ্যাপক ডাঃ মোহাম্মদ মহিউদ্দিন
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস (স্বাস্থ্য), এম এস (ইউরোলজি),এফসিপিএস সার্জারী, এফপি
@@ -2899,7 +2899,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার, মঙ্গলবার
 - **সময়**: সকাল ৯টা - দুপুর ২টা
 - **সিরিয়াল হটলাইন**: 01824917777
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মোহাম্মদ-মহিউদ্দিন
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-mohammad-mhiuddin
 
 #### সহকারী অধ্যাপক ডা. মঈনুল মাহমুদ (সানি)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ঢাকা), এমএস (ভাসকুলার সার্জারী)-বিএমইউ
@@ -2909,7 +2909,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার
 - **সময়**: সকাল ৯টা-বিকাল ৫টা পর্যন্ত
 - **সিরিয়াল হটলাইন**: 01898221111
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-মঈনুল-মাহমুদ-সানি
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-moinul-mahmud-sunny
 
 #### সহকারী অধ্যাপক ডা.আ.স. ম বদরুদ্দোজা জুয়েল
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস, বিসিএস(স্বাস্থ্য) এমএস(ইউরোলজী), কিডনি, কিডনি নালী, মূত্রনালী,মুত্রথলি, প্রোস্টেট, অন্ডকোষ, যৌন ও পুরুষ বন্ধ্যাত্ব বিশেষজ্ঞ ও সার্জন, ঢাকা মেডিকেল কলেজ ও হাসপাতাল, ঢাকা।, BMDC REG NO- A 52346
@@ -2919,7 +2919,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: শুক্রবার, রবিবার, বুধবার
 - **সময়**: সকাল ৯টা থেকে সন্ধ্যা ৬টা
 - **সিরিয়াল হটলাইন**: 01841925695
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহকারী-অধ্যাপক-ডা-আ-স-ম-বদরুদ্দোজা-জুয়েল
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/asst-prof-dr-a-s-m-bdruddoja-juyel
 
 #### সহযোগী অধ্যাপক ডাঃ এ.কে.এম মুশফিকার হায়দার (সায়েম)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস ;বিসিএস (স্বাস্থ্য) ;এফসিপিএস (সার্জারী) এফএমএস (ইন্ডিয়া) ;ডিপ্লোমা (মিনিমাল এক্সেস সার্জারী) সহযোগী
@@ -2929,7 +2929,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার, রবিবার, বৃহস্পতিবার
 - **সময়**: সন্ধ্যা ৬টা থেকে রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01829542754
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহযোগী-অধ্যাপক-ডা-এ-কে-এম-মুশফিকার-হায়দার-সায়েম
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/assoc-prof-dr-e-ke-em-mushfikar-haydar-sayem
 
 #### সহযোগী অধ্যাপক ডাঃ মোঃ মরফুদুল ইসলাম (মারুফ)
 - **ডিগ্রি / যোগ্যতা**: এমবিবিএস (ঢাকা); বিসিএস (স্বাস্থ্য) ; এফসিপিএস (সার্জারী) বার্ণ প্লাস্টিক সার্জারীতে প্রশিক্ষণ প্রাপ্ত (CMCH)
@@ -2939,7 +2939,7 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **সাক্ষাতের দিন**: মঙ্গলবার, রবিবার, বৃহস্পতিবার
 - **সময়**: বিকাল ৪টা থেকে রাত ৮টা
 - **সিরিয়াল হটলাইন**: 01819100515
-- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/সহযোগী-অধ্যাপক-ডা-মো-মরফুদুল-ইসলাম-মারুফ
+- **প্রোফাইল লিংক**: https://www.healthclubfeni.com/consultants/assoc-prof-dr-md-mrfudul-islam-maruf
 
 ---
 
@@ -3043,7 +3043,10 @@ Active blood donors covering all 8 blood groups (A+, A-, B+, B-, O+, O-, AB+, AB
 - **Healthcare Blog & Guides Directory**: https://www.healthclubfeni.com/blog
 - **Specialist Doctors Directory**: https://www.healthclubfeni.com/consultants
 - **Partner Hospitals & Diagnostic Centers**: https://www.healthclubfeni.com/partner-hospitals
-- **Emergency Ambulance & Blood Directory**: https://www.healthclubfeni.com/emergency
+- **Emergency Central Hub**: https://www.healthclubfeni.com/emergency
+- **Emergency Hotlines & Oxygen**: https://www.healthclubfeni.com/emergency/hotlines
+- **Emergency Ambulance Directory**: https://www.healthclubfeni.com/emergency/ambulances
+- **Voluntary Blood Donors**: https://www.healthclubfeni.com/emergency/blood-donors
 - **Health Assessment Tools**: https://www.healthclubfeni.com/health-tools
 - **Membership Registration**: https://www.healthclubfeni.com/membership
 - **Card Verification Portal**: https://www.healthclubfeni.com/verify
@@ -3052,104 +3055,104 @@ Active blood donors covering all 8 blood groups (A+, A-, B+, B-, O+, O-, AB+, AB
 
 ### Published Medical & Facility Guides (101 Guides)
 
-- [ফেনীতে কানের শ্রবণশক্তি পরীক্ষা (PTA Audiometry) খরচ ও হিয়ারিং এইড ডিজিটাল মেশিনের দোকান](https://www.healthclubfeni.com/blog/feni-hearing-aid-audiometry-hearing-test-guide)
-- [ফেনীতে বিকেল ও সন্ধ্যায় (সন্ধ্যা ৫টার পর) বসা বিশেষজ্ঞ ডাক্তারদের চেম্বার ও ভিজিটিং তালিকা](https://www.healthclubfeni.com/blog/feni-evening-doctor-chambers-after-5pm-guide)
-- [ফেনীর শীর্ষ মহিলা গাইনী ও প্রসূতিরোগ বিশেষজ্ঞ ডাক্তার তালিকা: চেম্বার, সময়সূচি ও সিরিয়াল](https://www.healthclubfeni.com/blog/feni-female-gynecologist-doctor-chamber-list)
-- [ফেনীতে শুক্রবার ও ছুটির দিনে বসা বিশেষজ্ঞ ডাক্তারদের তালিকা, সময়সূচি ও অগ্রিম সিরিয়াল গাইড](https://www.healthclubfeni.com/blog/feni-friday-weekend-doctor-chamber-serial-guide)
-- [ফেনী ট্রাঙ্ক রোড ও মিজান রোড স্বাস্থ্যসেবা হাব: বিশেষজ্ঞ ডাক্তার, ডায়াগনস্টিক ও ২৪ ঘণ্টা ফার্মেসি](https://www.healthclubfeni.com/blog/feni-trunk-road-mizan-road-clinic-pharmacy-hub-guide)
-- [ফেনী হাসপাতাল রোড ও এসএসকে রোড ডাক্তার চেম্বার গাইড: প্রধান ক্লিনিক, ল্যাব ও সিরিয়াল পয়েন্ট](https://www.healthclubfeni.com/blog/feni-hospital-road-ss-k-road-chamber-hub-guide)
-- [ফেনীতে কালার ডপলার ২ডি ইকোকার্ডিওগ্রাফি (Echo) টেস্ট খরচ, চেম্বার ও হার্ট সেন্টার](https://www.healthclubfeni.com/blog/feni-echocardiogram-color-doppler-heart-test-guide)
-- [ফেনীতে ম্যামোগ্রাফি (Mammography) টেস্ট খরচ, স্তন ক্যান্সার সচেতনতা ও সেরা ল্যাব](https://www.healthclubfeni.com/blog/feni-mammography-breast-cancer-screening-guide)
-- [ফেনীতে বিএমডি (BMD / DEXA Scan) হাড়ের ক্ষয়রোগ পরীক্ষা খরচ ও অস্টিওপোরোসিস গাইড](https://www.healthclubfeni.com/blog/feni-bone-mineral-density-bmd-test-guide)
+- [ফেনীতে ডিপ্রেশন, অতিরিক্ত চিন্তা ও মানসিক স্বাস্থ্য কাউন্সেলিং: সাইকিয়াট্রিস্ট ও থেরাপিস্ট গাইড](https://www.healthclubfeni.com/blog/feni-depression-anxiety-mental-health-counseling-guide)
+- [ফেনী বক্ষব্যাধি ক্লিনিক ও হাসপাতাল: যক্ষ্মা (TB) জিনএক্সপার্ট বিনামূল্যে টেস্ট ও ডটস ওষুধ](https://www.healthclubfeni.com/blog/feni-chest-disease-tb-hospital-guide)
+- [ফেনীতে উচ্চ রক্তচাপ (High BP) নিয়ন্ত্রণ, স্ট্রোক ঝুঁকি ও অভিজ্ঞ কার্ডিওলজি/মেডিসিন বিশেষজ্ঞ](https://www.healthclubfeni.com/blog/feni-hypertension-high-blood-pressure-control-guide)
 - [ফেনীতে ইইজি (EEG) ব্রেন টেস্টের খরচ, মৃগীরোগ নির্ণয় ও অভিজ্ঞ নিউরোলজিস্ট সেন্টার](https://www.healthclubfeni.com/blog/feni-eeg-brain-test-cost-guide)
 - [ফেনীতে প্রেগন্যান্সি ৪ডি অ্যানোমালি স্ক্যান (Anomaly Scan) খরচ, সঠিক সময় ও বিশেষজ্ঞ সোনোলজিস্ট](https://www.healthclubfeni.com/blog/feni-4d-anomaly-scan-pregnancy-ultrasound-guide)
 - [ফেনীতে শিশুর সরকারি ইপিআই (EPI) টিকা দেওয়ার কেন্দ্র, বয়স অনুযায়ী শিডিউল ও জরুরি তথ্য](https://www.healthclubfeni.com/blog/feni-epi-child-vaccination-schedule-centers-guide)
-- [ফেনী ট্রমা সেন্টার ও মহাসড়ক দুর্ঘটনা জরুরি সেবা: মহিপাল ট্রমা সেন্টারের সেবা ও জরুরি হেল্পলাইন](https://www.healthclubfeni.com/blog/feni-trauma-center-emergency-highway-accident-guide)
-- [ফেনী বক্ষব্যাধি ক্লিনিক ও হাসপাতাল: যক্ষ্মা (TB) জিনএক্সপার্ট বিনামূল্যে টেস্ট ও ডটস ওষুধ](https://www.healthclubfeni.com/blog/feni-chest-disease-tb-hospital-guide)
-- [ফেনী মা ও শিশু কল্যাণ কেন্দ্র (মাতৃসদন) সেবা গাইড: স্বাভাবিক প্রসব, ওপিডি ও বিনামূল্যে ওষুধ](https://www.healthclubfeni.com/blog/feni-maternal-and-child-welfare-centre-matri-sadan-guide)
-- [ফেনীতে উচ্চ রক্তচাপ (High BP) নিয়ন্ত্রণ, স্ট্রোক ঝুঁকি ও অভিজ্ঞ কার্ডিওলজি/মেডিসিন বিশেষজ্ঞ](https://www.healthclubfeni.com/blog/feni-hypertension-high-blood-pressure-control-guide)
-- [ফেনীতে সাপের কামড় (সর্পদংশন) ও এন্টিভেনম ইনজেকশন সেবা: তাৎক্ষণিক করণীয় ও হাসপাতাল](https://www.healthclubfeni.com/blog/feni-snake-bite-antivenom-emergency-guide)
-- [ফেনীতে কুকুর বা বিড়ালের কামড়ে জলাতঙ্ক রেবিস ভ্যাকসিন (Rabies Vaccine) প্রাপ্তিস্থান ও প্রটোকল](https://www.healthclubfeni.com/blog/feni-dog-bite-rabies-vaccine-guide)
-- [ফেনীতে আগুনে পোড়া বা গরম পানিতে ঝলসে গেলে জরুরি প্রাথমিক চিকিৎসা ও হাসপাতাল সেবা](https://www.healthclubfeni.com/blog/feni-burn-injury-emergency-first-aid-hospital-guide)
-- [ফেনীতে ডিপ্রেশন, অতিরিক্ত চিন্তা ও মানসিক স্বাস্থ্য কাউন্সেলিং: সাইকিয়াট্রিস্ট ও থেরাপিস্ট গাইড](https://www.healthclubfeni.com/blog/feni-depression-anxiety-mental-health-counseling-guide)
+- [ফেনী হাসপাতাল রোড ও এসএসকে রোড ডাক্তার চেম্বার গাইড: প্রধান ক্লিনিক, ল্যাব ও সিরিয়াল পয়েন্ট](https://www.healthclubfeni.com/blog/feni-hospital-road-ss-k-road-chamber-hub-guide)
+- [ফেনীতে কালার ডপলার ২ডি ইকোকার্ডিওগ্রাফি (Echo) টেস্ট খরচ, চেম্বার ও হার্ট সেন্টার](https://www.healthclubfeni.com/blog/feni-echocardiogram-color-doppler-heart-test-guide)
+- [ফেনীতে ম্যামোগ্রাফি (Mammography) টেস্ট খরচ, স্তন ক্যান্সার সচেতনতা ও সেরা ল্যাব](https://www.healthclubfeni.com/blog/feni-mammography-breast-cancer-screening-guide)
+- [ফেনীতে বিকেল ও সন্ধ্যায় (সন্ধ্যা ৫টার পর) বসা বিশেষজ্ঞ ডাক্তারদের চেম্বার ও ভিজিটিং তালিকা](https://www.healthclubfeni.com/blog/feni-evening-doctor-chambers-after-5pm-guide)
+- [ফেনীর শীর্ষ মহিলা গাইনী ও প্রসূতিরোগ বিশেষজ্ঞ ডাক্তার তালিকা: চেম্বার, সময়সূচি ও সিরিয়াল](https://www.healthclubfeni.com/blog/feni-female-gynecologist-doctor-chamber-list)
+- [ফেনীতে শুক্রবার ও ছুটির দিনে বসা বিশেষজ্ঞ ডাক্তারদের তালিকা, সময়সূচি ও অগ্রিম সিরিয়াল গাইড](https://www.healthclubfeni.com/blog/feni-friday-weekend-doctor-chamber-serial-guide)
+- [ফেনীতে তিল, আঁচিল ও স্কিন লেজার ট্রিটমেন্ট খরচ, কসমেটিক ডার্মাটোলজি ক্লিনিক](https://www.healthclubfeni.com/blog/feni-skin-laser-wart-mole-removal-cost-guide)
 - [ফেনীতে থাইরয়েড গ্রন্থি ফোলা (গলগণ্ড বা নডিউল) চিকিৎসা ও এন্ডোক্রাইনোলজি বিশেষজ্ঞ গাইড](https://www.healthclubfeni.com/blog/feni-thyroid-swelling-goiter-treatment-guide)
-- [ফেনীতে মাইগ্রেন ও তীব্র মাথাব্যথার কারণ, লক্ষণ ও অভিজ্ঞ স্নায়ুরোগ (নিউরোলজি) বিশেষজ্ঞ](https://www.healthclubfeni.com/blog/feni-headache-migraine-treatment-guide)
-- [শিশুর তীব্র জ্বর ও জ্বরের খিঁচুনি হলে ফেনীতে তাৎক্ষণিক করণীয় ও জরুরি শিশু বিশেষজ্ঞ গাইড](https://www.healthclubfeni.com/blog/feni-pediatric-child-fever-convulsion-emergency-guide)
-- [ফেনীতে চর্মরোগ, চুলকানি, দাদ ও একজিমা রোগের স্থায়ী চিকিৎসা ও অভিজ্ঞ স্কিন বিশেষজ্ঞ](https://www.healthclubfeni.com/blog/feni-allergy-skin-rash-eczema-treatment-guide)
+- [ফেনীতে সাপের কামড় (সর্পদংশন) ও এন্টিভেনম ইনজেকশন সেবা: তাৎক্ষণিক করণীয় ও হাসপাতাল](https://www.healthclubfeni.com/blog/feni-snake-bite-antivenom-emergency-guide)
+- [ফেনী মা ও শিশু কল্যাণ কেন্দ্র (মাতৃসদন) সেবা গাইড: স্বাভাবিক প্রসব, ওপিডি ও বিনামূল্যে ওষুধ](https://www.healthclubfeni.com/blog/feni-maternal-and-child-welfare-centre-matri-sadan-guide)
+- [ফেনী ট্রমা সেন্টার ও মহাসড়ক দুর্ঘটনা জরুরি সেবা: মহিপাল ট্রমা সেন্টারের সেবা ও জরুরি হেল্পলাইন](https://www.healthclubfeni.com/blog/feni-trauma-center-emergency-highway-accident-guide)
+- [ফেনীতে বিএমডি (BMD / DEXA Scan) হাড়ের ক্ষয়রোগ পরীক্ষা খরচ ও অস্টিওপোরোসিস গাইড](https://www.healthclubfeni.com/blog/feni-bone-mineral-density-bmd-test-guide)
+- [ফেনী ট্রাঙ্ক রোড ও মিজান রোড স্বাস্থ্যসেবা হাব: বিশেষজ্ঞ ডাক্তার, ডায়াগনস্টিক ও ২৪ ঘণ্টা ফার্মেসি](https://www.healthclubfeni.com/blog/feni-trunk-road-mizan-road-clinic-pharmacy-hub-guide)
+- [ফেনীতে কানের শ্রবণশক্তি পরীক্ষা (PTA Audiometry) খরচ ও হিয়ারিং এইড ডিজিটাল মেশিনের দোকান](https://www.healthclubfeni.com/blog/feni-hearing-aid-audiometry-hearing-test-guide)
+- [ফেনীতে জরায়ু অপারেশন (হিস্টেরেক্টমি) খরচ, টিউমার/ফাইব্রয়েড চিকিৎসা ও গাইনোকোলজি গাইড](https://www.healthclubfeni.com/blog/feni-hysterectomy-uterus-removal-surgery-guide)
+- [ফেনীতে হাইড্রোসিল ও ভেরিকোসিল অপারেশন খরচ, লক্ষণ ও বিশেষজ্ঞ ইউরোলজিস্ট সার্জন](https://www.healthclubfeni.com/blog/feni-hydrocele-varicocele-surgery-cost-guide)
+- [ফেনীতে হাঁটু ব্যথা ও অস্টিওআর্থ্রাইটিস চিকিৎসা: পিআরপি ইনজেকশন, থেরাপি ও অর্থোপেডিক পরামর্শ](https://www.healthclubfeni.com/blog/feni-knee-pain-osteoarthritis-treatment-guide)
 - [ফেনীতে মাথা ঘোরা (Vertigo), কান ভোঁ ভোঁ করা ও ভারসাম্য হারানোর সঠিক চিকিৎসা ও ডাক্তার](https://www.healthclubfeni.com/blog/feni-vertigo-dizziness-imbalance-treatment-guide)
 - [ফেনীতে বন্ধ্যাত্ব চিকিৎসা ও সন্তানহীনতার সমাধান: আইইউআই, আইভিএফ পরামর্শ ও বিশেষজ্ঞ ডাক্তার](https://www.healthclubfeni.com/blog/feni-infertility-treatment-ivf-iui-guide)
 - [ফেনীতে চুল পড়া বন্ধের চিকিৎসা, খুশকি ও পিআরপি (PRP) থেরাপি খরচ ও স্কিন স্পেশালিস্ট](https://www.healthclubfeni.com/blog/feni-hair-fall-prp-treatment-guide)
-- [ফেনীতে হাঁটু ব্যথা ও অস্টিওআর্থ্রাইটিস চিকিৎসা: পিআরপি ইনজেকশন, থেরাপি ও অর্থোপেডিক পরামর্শ](https://www.healthclubfeni.com/blog/feni-knee-pain-osteoarthritis-treatment-guide)
-- [ফেনীতে তিল, আঁচিল ও স্কিন লেজার ট্রিটমেন্ট খরচ, কসমেটিক ডার্মাটোলজি ক্লিনিক](https://www.healthclubfeni.com/blog/feni-skin-laser-wart-mole-removal-cost-guide)
-- [ফেনীতে জরায়ু অপারেশন (হিস্টেরেক্টমি) খরচ, টিউমার/ফাইব্রয়েড চিকিৎসা ও গাইনোকোলজি গাইড](https://www.healthclubfeni.com/blog/feni-hysterectomy-uterus-removal-surgery-guide)
-- [ফেনীতে হাইড্রোসিল ও ভেরিকোসিল অপারেশন খরচ, লক্ষণ ও বিশেষজ্ঞ ইউরোলজিস্ট সার্জন](https://www.healthclubfeni.com/blog/feni-hydrocele-varicocele-surgery-cost-guide)
+- [ফেনীতে মাইগ্রেন ও তীব্র মাথাব্যথার কারণ, লক্ষণ ও অভিজ্ঞ স্নায়ুরোগ (নিউরোলজি) বিশেষজ্ঞ](https://www.healthclubfeni.com/blog/feni-headache-migraine-treatment-guide)
+- [শিশুর তীব্র জ্বর ও জ্বরের খিঁচুনি হলে ফেনীতে তাৎক্ষণিক করণীয় ও জরুরি শিশু বিশেষজ্ঞ গাইড](https://www.healthclubfeni.com/blog/feni-pediatric-child-fever-convulsion-emergency-guide)
+- [ফেনীতে চর্মরোগ, চুলকানি, দাদ ও একজিমা রোগের স্থায়ী চিকিৎসা ও অভিজ্ঞ স্কিন বিশেষজ্ঞ](https://www.healthclubfeni.com/blog/feni-allergy-skin-rash-eczema-treatment-guide)
+- [ফেনীতে কুকুর বা বিড়ালের কামড়ে জলাতঙ্ক রেবিস ভ্যাকসিন (Rabies Vaccine) প্রাপ্তিস্থান ও প্রটোকল](https://www.healthclubfeni.com/blog/feni-dog-bite-rabies-vaccine-guide)
+- [ফেনীতে আগুনে পোড়া বা গরম পানিতে ঝলসে গেলে জরুরি প্রাথমিক চিকিৎসা ও হাসপাতাল সেবা](https://www.healthclubfeni.com/blog/feni-burn-injury-emergency-first-aid-hospital-guide)
+- [ফেনীতে কিডনি ডায়ালাইসিস খরচ, শিডিউল, সেন্টার তালিকা ও রোগীদের সহায়তা গাইড](https://www.healthclubfeni.com/blog/feni-dialysis-kidney-hemodialysis-guide)
 - [ফেনীতে দীর্ঘস্থায়ী গ্যাস্ট্রিক, পেপটিক আলসার ও বুক জ্বালাপোড়ার স্থায়ী সমাধান ও বিশেষজ্ঞ ডাক্তার](https://www.healthclubfeni.com/blog/feni-gastric-ulcer-acidity-treatment-guide)
-- [ফেনীতে কোমর ব্যথা, স্পাইন স্লিপ ডিস্ক (PLID) ও বাতের ব্যথার চিকিৎসা ও বিশেষজ্ঞ ডাক্তার](https://www.healthclubfeni.com/blog/feni-back-pain-spine-slip-disc-treatment-guide)
-- [ফেনীতে শিশুর খাতনা বা মুসলমানি (সারকামসিশন) খরচ: প্লাস্টিবেল ও লেজার আধুনিক পদ্ধতি](https://www.healthclubfeni.com/blog/feni-circumcision-khatna-cost-guide)
 - [ফেনীতে দাঁতের রুট ক্যানেল, ক্যাপ ও আঁকাবাঁকা দাঁতে ব্রেসেস পরানোর খরচ ও সেরা ডেন্টাল ক্লিনিক](https://www.healthclubfeni.com/blog/feni-root-canal-cap-dental-braces-cost-guide)
 - [ফেনীতে হাড়ভাঙা অপারেশন, রড/স্ক্রু বসানো ও অর্থোপেডিক ট্রমা সার্জারি খরচ গাইড](https://www.healthclubfeni.com/blog/feni-orthopedic-fracture-bone-surgery-cost-guide)
-- [ফেনীতে কিডনি ডায়ালাইসিস খরচ, শিডিউল, সেন্টার তালিকা ও রোগীদের সহায়তা গাইড](https://www.healthclubfeni.com/blog/feni-dialysis-kidney-hemodialysis-guide)
+- [ফেনীতে কোমর ব্যথা, স্পাইন স্লিপ ডিস্ক (PLID) ও বাতের ব্যথার চিকিৎসা ও বিশেষজ্ঞ ডাক্তার](https://www.healthclubfeni.com/blog/feni-back-pain-spine-slip-disc-treatment-guide)
+- [ফেনীতে শিশুর খাতনা বা মুসলমানি (সারকামসিশন) খরচ: প্লাস্টিবেল ও লেজার আধুনিক পদ্ধতি](https://www.healthclubfeni.com/blog/feni-circumcision-khatna-cost-guide)
 - [ফেনীর সেরা ডেন্টাল বিশেষজ্ঞ ডাক্তার ও দন্ত চিকিৎসক তালিকা ২০২৬ | Best Dental Specialist in Feni](https://www.healthclubfeni.com/blog/best-dental-specialists-in-feni)
 - [ফেনীতে সিবিসি (CBC) রক্তের পরীক্ষা খরচ, ল্যাব তালিকা ও রিপোর্ট বোঝার সহজ উপায় ২০২৬](https://www.healthclubfeni.com/blog/feni-blood-test-cbc-cost-guide)
-- [ফেনীতে লিপিড প্রোফাইল (রক্তে চর্বি/কোলেস্টেরল) টেস্ট খরচ, ফাস্টিং নিয়ম ও সেরা ল্যাব ২০২৬](https://www.healthclubfeni.com/blog/feni-lipid-profile-cholesterol-test-guide)
-- [ফেনীতে থাইরয়েড টেস্ট (TSH, T3, T4) খরচ, লক্ষণ ও বিশ্বস্ত ডায়াগনস্টিক সেন্টার ২০২৬](https://www.healthclubfeni.com/blog/feni-thyroid-tsh-test-cost-guide)
-- [ফেনীতে HbA1c (৩ মাসের গড় ডায়াবেটিস) ও ব্লাড সুগার টেস্ট খরচ ও ডায়াবেটিস গাইড ২০২৬](https://www.healthclubfeni.com/blog/feni-hba1c-diabetes-test-guide)
-- [ফেনীতে লিভার ফাংশন টেস্ট (SGPT, SGOT, Bilirubin) খরচ, জন্ডিস ও ফ্যাটি লিভার গাইড ২০২৬](https://www.healthclubfeni.com/blog/feni-liver-function-sgpt-test-guide)
-- [ফেনীতে সিরাম ক্রিয়েটিনিন ও কিডনি টেস্ট খরচ, স্বাভাবিক মাত্রা ও সেরা ডায়াগনস্টিক ল্যাব ২০২৬](https://www.healthclubfeni.com/blog/feni-kidney-creatinine-urea-test-guide)
-- [ফেনীতে প্রস্রাব পরীক্ষা (Urine R/E ও Culture) খরচ, ইউটিআই লক্ষণ ও সঠিক নমুনা সংগ্রহ নিয়ম ২০২৬](https://www.healthclubfeni.com/blog/feni-urine-re-culture-test-guide)
-- [ফেনীতে ডিজিটাল এক্স-রে (DR X-Ray) খরচ, বিভিন্ন অঙ্গের ভিউ ও সেরা ডায়াগনস্টিক সেন্টার ২০২৬](https://www.healthclubfeni.com/blog/feni-x-ray-digital-dr-cost-guide)
-- [ফেনীতে হরমোন টেস্ট (FSH, LH, Prolactin, Testosterone) খরচ ও প্রজনন স্বাস্থ্য পরীক্ষা ২০২৬](https://www.healthclubfeni.com/blog/feni-hormone-test-fertility-guide)
-- [ফেনীতে প্যাপ স্মিয়ার (Pap Smear) ও জরায়ুমুখের ক্যান্সার স্ক্রিনিং টেস্ট খরচ ও বিশেষজ্ঞ সেন্টার ২০২৬](https://www.healthclubfeni.com/blog/feni-pap-smear-cervical-cancer-screening-guide)
+- [ফেনীতে টনসিল ও এডিনয়েড অপারেশন খরচ, আধুনিক পদ্ধতি ও ইএনটি বিশেষজ্ঞ সার্জন ২০২৬](https://www.healthclubfeni.com/blog/feni-tonsil-adenoid-surgery-cost-guide)
 - [ফেনীতে অ্যালার্জি টেস্ট (Total IgE, Skin Prick) ও অ্যাজমা স্পাইরোমেট্রি টেস্ট খরচ ও ল্যাব গাইড ২০২৬](https://www.healthclubfeni.com/blog/feni-allergy-asthma-test-guide)
+- [ফেনীতে প্যাপ স্মিয়ার (Pap Smear) ও জরায়ুমুখের ক্যান্সার স্ক্রিনিং টেস্ট খরচ ও বিশেষজ্ঞ সেন্টার ২০২৬](https://www.healthclubfeni.com/blog/feni-pap-smear-cervical-cancer-screening-guide)
+- [ফেনীতে হরমোন টেস্ট (FSH, LH, Prolactin, Testosterone) খরচ ও প্রজনন স্বাস্থ্য পরীক্ষা ২০২৬](https://www.healthclubfeni.com/blog/feni-hormone-test-fertility-guide)
+- [ফেনীতে HbA1c (৩ মাসের গড় ডায়াবেটিস) ও ব্লাড সুগার টেস্ট খরচ ও ডায়াবেটিস গাইড ২০২৬](https://www.healthclubfeni.com/blog/feni-hba1c-diabetes-test-guide)
+- [ফেনীতে এপেন্ডিসাইটিস অপারেশন (এপেনডেক্টমি) খরচ, জরুরি লক্ষণ ও ল্যাপারোস্কোপিক সার্জারি ২০২৬](https://www.healthclubfeni.com/blog/feni-appendix-appendectomy-surgery-cost-guide)
+- [ফেনীতে চোখের ছানি অপারেশন (ফ্যাকো সার্জারি) খরচ, লেন্সের প্রকারভেদ ও চক্ষু হাসপাতাল গাইড ২০২৬](https://www.healthclubfeni.com/blog/feni-cataract-phaco-eye-surgery-cost-guide)
 - [ফেনীতে সিমেন অ্যানালাইসিস (শুক্রাণু পরীক্ষা) খরচ, প্রস্তুতি ও বিশ্বস্ত ল্যাব গাইড ২০২৬](https://www.healthclubfeni.com/blog/feni-semen-analysis-infertility-test-guide)
 - [ফেনীতে এফএনএসি (FNAC) ও বায়োপসি (Biopsy) টিউমার টেস্ট খরচ ও হিস্টোপ্যাথলজি ল্যাব ২০২৬](https://www.healthclubfeni.com/blog/feni-biopsy-fnac-tumor-test-guide)
-- [ফেনীতে চোখের ছানি অপারেশন (ফ্যাকো সার্জারি) খরচ, লেন্সের প্রকারভেদ ও চক্ষু হাসপাতাল গাইড ২০২৬](https://www.healthclubfeni.com/blog/feni-cataract-phaco-eye-surgery-cost-guide)
-- [ফেনীতে টনসিল ও এডিনয়েড অপারেশন খরচ, আধুনিক পদ্ধতি ও ইএনটি বিশেষজ্ঞ সার্জন ২০২৬](https://www.healthclubfeni.com/blog/feni-tonsil-adenoid-surgery-cost-guide)
-- [ফেনীতে এপেন্ডিসাইটিস অপারেশন (এপেনডেক্টমি) খরচ, জরুরি লক্ষণ ও ল্যাপারোস্কোপিক সার্জারি ২০২৬](https://www.healthclubfeni.com/blog/feni-appendix-appendectomy-surgery-cost-guide)
+- [ফেনীতে প্রস্রাব পরীক্ষা (Urine R/E ও Culture) খরচ, ইউটিআই লক্ষণ ও সঠিক নমুনা সংগ্রহ নিয়ম ২০২৬](https://www.healthclubfeni.com/blog/feni-urine-re-culture-test-guide)
+- [ফেনীতে লিভার ফাংশন টেস্ট (SGPT, SGOT, Bilirubin) খরচ, জন্ডিস ও ফ্যাটি লিভার গাইড ২০২৬](https://www.healthclubfeni.com/blog/feni-liver-function-sgpt-test-guide)
+- [ফেনীতে ডিজিটাল এক্স-রে (DR X-Ray) খরচ, বিভিন্ন অঙ্গের ভিউ ও সেরা ডায়াগনস্টিক সেন্টার ২০২৬](https://www.healthclubfeni.com/blog/feni-x-ray-digital-dr-cost-guide)
+- [ফেনীতে থাইরয়েড টেস্ট (TSH, T3, T4) খরচ, লক্ষণ ও বিশ্বস্ত ডায়াগনস্টিক সেন্টার ২০২৬](https://www.healthclubfeni.com/blog/feni-thyroid-tsh-test-cost-guide)
+- [ফেনীতে লিপিড প্রোফাইল (রক্তে চর্বি/কোলেস্টেরল) টেস্ট খরচ, ফাস্টিং নিয়ম ও সেরা ল্যাব ২০২৬](https://www.healthclubfeni.com/blog/feni-lipid-profile-cholesterol-test-guide)
+- [ফেনীতে সিরাম ক্রিয়েটিনিন ও কিডনি টেস্ট খরচ, স্বাভাবিক মাত্রা ও সেরা ডায়াগনস্টিক ল্যাব ২০২৬](https://www.healthclubfeni.com/blog/feni-kidney-creatinine-urea-test-guide)
+- [ফেনীতে বিশেষজ্ঞ ডাক্তারদের সিরিয়াল নেওয়ার সহজ উপায়, চেম্বার শিডিউল ও দালালমুক্ত অ্যাপয়েন্টমেন্ট গাইড ২০২৬](https://www.healthclubfeni.com/blog/feni-doctor-serial-appointment-guide)
 - [ফেনী হেলথ ক্লাব মেম্বারশিপ কার্ড কী ও কীভাবে হাসপাতালে ১০-৩০% ডিসকাউন্ট পাওয়া যায় | সম্পূর্ণ গাইড ২০২৬](https://www.healthclubfeni.com/blog/feni-health-club-membership-discount-guide)
 - [ফেনীতে এন্ডোস্কোপি ও কোলনোস্কোপি পরীক্ষার খরচ, প্রস্তুতি ও অভিজ্ঞ গ্যাস্ট্রোএন্টারোলজি সেন্টার গাইড ২০২৬](https://www.healthclubfeni.com/blog/feni-endoscopy-colonoscopy-test-cost-guide)
 - [ফেনীতে ইসিজি (ECG), ইকো (Echo) ও ইটিটি (ETT) পরীক্ষার খরচ, প্রস্তুতি ও নির্ভরযোগ্য হার্ট সেন্টার গাইড ২০২৬](https://www.healthclubfeni.com/blog/feni-cardiac-ecg-echo-ett-test-guide)
-- [ফেনীতে বিশেষজ্ঞ ডাক্তারদের সিরিয়াল নেওয়ার সহজ উপায়, চেম্বার শিডিউল ও দালালমুক্ত অ্যাপয়েন্টমেন্ট গাইড ২০২৬](https://www.healthclubfeni.com/blog/feni-doctor-serial-appointment-guide)
-- [দাগনভূঞা, ছাগলনাইয়া ও সোনাগাজী স্বাস্থ্যসেবা, হাসপাতাল ও ডাক্তার গাইড ২০২৬](https://www.healthclubfeni.com/blog/daganbhuiyan-chagalnaiya-sonagazi-healthcare-guide)
-- [পরশুরাম ও ফুলগাজী উপজেলা স্বাস্থ্যসেবা, হাসপাতাল ও ডাক্তার গাইড ২০২৬](https://www.healthclubfeni.com/blog/parshuram-fulgazi-healthcare-guide)
-- [ফেনীতে নরমাল ডেলিভারি ও সিজারিয়ান অপারেশন খরচ ও ক্লিনিক গাইড ২০২৬: হাসপাতাল প্যাকেজ, এনআইসিইউ ও প্রসব প্রস্তুতি](https://www.healthclubfeni.com/blog/feni-normal-delivery-and-cesarean-cost-guide)
-- [ফেনীতে পাইলস, ফিশার ও ফিস্টুলার লেজার চিকিৎসা ও ক্লিনিক গাইড ২০২৬: লেজার সার্জারি খরচ, বিশেষজ্ঞ ডাক্তার ও দ্রুত নিরাময়](https://www.healthclubfeni.com/blog/laser-piles-fissure-fistula-treatment-cost-in-feni)
-- [ফেনীতে পিত্তথলির পাথর ও হার্নিয়া ল্যাপারোস্কোপিক সার্জারি গাইড ২০২৬: অপারেশন খরচ, বিশেষজ্ঞ সার্জন ও আধুনিক ওটি প্যাকেজ](https://www.healthclubfeni.com/blog/laparoscopic-gallstone-and-hernia-surgery-guide-feni)
-- [ফেনীতে কিডনি পাথর অপসারণ, পিসিএনএল ও ইউরোলজি লেজার চিকিৎসা গাইড ২০২৬: আধুনিক অপারেশন খরচ, বিশেষজ্ঞ ইউরোলজিস্ট ও ওটি প্যাকেজ](https://www.healthclubfeni.com/blog/kidney-stone-laser-treatment-and-urology-guide-feni)
-- [ফেনীতে ১২৮-স্লাইস সিটি স্ক্যান ও ১.৫ টেসলা এমআরআই টেস্ট গাইড ২০২৬: খরচ, প্রস্তুতি, বৈসাদৃশ্য প্রটোকল ও সেরা ডায়াগনস্টিক সেন্টার](https://www.healthclubfeni.com/blog/feni-ct-scan-and-mri-test-price-guide)
-- [ফেনীতে প্রেগন্যান্সি আল্ট্রাসনোগ্রাফি, ৪ডি কালার ডপলার ও অ্যানোমালি স্ক্যান গাইড ২০২৬: খরচ, ট্রাইমিস্টার ক্যালেন্ডার, ব্লাডার প্রস্তুতি ও সেরা ডায়াগনস্টিক সেন্টার](https://www.healthclubfeni.com/blog/pregnancy-ultrasonography-4d-anomaly-scan-in-feni)
-- [ফেনীতে হোল বডি হেলথ চেকআপ ও এক্সিকিউটিভ প্যাকেজ গাইড ২০২৬: টেস্ট তালিকা, খরচ, ফাস্টিং নিয়ম ও সেরা ডায়াগনস্টিক সেন্টার](https://www.healthclubfeni.com/blog/full-body-health-checkup-packages-in-feni)
-- [ফেনীতে আইসিইউ, সিসিইউ ও এনআইসিইউ বেড চার্জ ও লাইফ সাপোর্ট গাইড ২০২৬: হাসপাতাল তালিকা, ভেন্টিলেটর খরচ ও জরুরি সেবা](https://www.healthclubfeni.com/blog/feni-icu-ccu-nicu-bed-charges-and-facilities-guide)
-- [ফেনীতে স্ট্রোক ও হার্ট অ্যাটাক ইমার্জেন্সি প্রোটোকল ও গোল্ডেন আওয়ার গাইড ২০২৬: তাৎক্ষণিক লক্ষণ, প্রাথমিক চিকিৎসা, জরুরি হাসপাতাল ও টেস্ট খরচ](https://www.healthclubfeni.com/blog/stroke-and-heart-attack-emergency-protocol-feni)
-- [ফেনীতে হোম স্যাম্পল কালেকশন ও বয়স্কদের নার্সিং সেবা গাইড ২০২৬: ঘরে বসে রক্ত পরীক্ষা, ক্যাথেটার, স্যালাইন ও নার্সিং চার্জ](https://www.healthclubfeni.com/blog/home-sample-collection-and-nursing-service-in-feni)
-- [ফেনীতে অক্সিজেন সিলিন্ডার রিফিল ও হোম ভেন্টিলেটর সেবা গাইড ২০২৬: সিলিন্ডার ভাড়া, সিকিউরিটি ডিপোজিট, ৫/১০L কনসেনট্রেটর ও বাইপ্যাপ চার্জ](https://www.healthclubfeni.com/blog/feni-oxygen-cylinder-refill-and-home-rent-guide)
-- [ফেনীতে ডেঙ্গু ও টাইফয়েড জ্বর: টেস্ট খরচ, প্লাটিলেট মনিটরিং ও ভর্তি গাইড ২০২৬: এনএস১, সিবিসি, আইভি ফ্লুইড ও হাসপাতাল নিয়ম](https://www.healthclubfeni.com/blog/dengue-and-typhoid-test-cost-management-guide-feni)
 - [সোনাগাজীর রোগীদের স্বাস্থ্যসেবা ও ফেনী সদর হাসপাতাল রেফারেল গাইড ২০২৬](https://www.healthclubfeni.com/blog/sonagazi-patient-guide)
-- [ছাগলনাইয়ার রোগীদের স্বাস্থ্যসেবা ও ফেনী সদর হাসপাতাল রেফারেল গাইড ২০২৬](https://www.healthclubfeni.com/blog/chhagalnaiya-patient-guide)
-- [দাগনভূঞার রোগীদের স্বাস্থ্যসেবা ও ফেনী সদর হাসপাতাল রেফারেল গাইড ২০২৬](https://www.healthclubfeni.com/blog/daganbhuiyan-patient-guide)
 - [ফুলগাজীর রোগীদের জন্য ফেনী স্বাস্থ্যসেবা ও ডাক্তার গাইড: যাতায়াত, জরুরি সেবা ও ১০-৩০% ডিসকাউন্ট](https://www.healthclubfeni.com/blog/fulgazi-patient-guide)
+- [দাগনভূঞার রোগীদের স্বাস্থ্যসেবা ও ফেনী সদর হাসপাতাল রেফারেল গাইড ২০২৬](https://www.healthclubfeni.com/blog/daganbhuiyan-patient-guide)
+- [ছাগলনাইয়ার রোগীদের স্বাস্থ্যসেবা ও ফেনী সদর হাসপাতাল রেফারেল গাইড ২০২৬](https://www.healthclubfeni.com/blog/chhagalnaiya-patient-guide)
+- [ফেনীতে ডেঙ্গু ও টাইফয়েড জ্বর: টেস্ট খরচ, প্লাটিলেট মনিটরিং ও ভর্তি গাইড ২০২৬: এনএস১, সিবিসি, আইভি ফ্লুইড ও হাসপাতাল নিয়ম](https://www.healthclubfeni.com/blog/dengue-and-typhoid-test-cost-management-guide-feni)
+- [ফেনীতে অক্সিজেন সিলিন্ডার রিফিল ও হোম ভেন্টিলেটর সেবা গাইড ২০২৬: সিলিন্ডার ভাড়া, সিকিউরিটি ডিপোজিট, ৫/১০L কনসেনট্রেটর ও বাইপ্যাপ চার্জ](https://www.healthclubfeni.com/blog/feni-oxygen-cylinder-refill-and-home-rent-guide)
+- [ফেনীতে হোম স্যাম্পল কালেকশন ও বয়স্কদের নার্সিং সেবা গাইড ২০২৬: ঘরে বসে রক্ত পরীক্ষা, ক্যাথেটার, স্যালাইন ও নার্সিং চার্জ](https://www.healthclubfeni.com/blog/home-sample-collection-and-nursing-service-in-feni)
+- [ফেনীতে আইসিইউ, সিসিইউ ও এনআইসিইউ বেড চার্জ ও লাইফ সাপোর্ট গাইড ২০২৬: হাসপাতাল তালিকা, ভেন্টিলেটর খরচ ও জরুরি সেবা](https://www.healthclubfeni.com/blog/feni-icu-ccu-nicu-bed-charges-and-facilities-guide)
+- [ফেনীতে হোল বডি হেলথ চেকআপ ও এক্সিকিউটিভ প্যাকেজ গাইড ২০২৬: টেস্ট তালিকা, খরচ, ফাস্টিং নিয়ম ও সেরা ডায়াগনস্টিক সেন্টার](https://www.healthclubfeni.com/blog/full-body-health-checkup-packages-in-feni)
+- [ফেনীতে প্রেগন্যান্সি আল্ট্রাসনোগ্রাফি, ৪ডি কালার ডপলার ও অ্যানোমালি স্ক্যান গাইড ২০২৬: খরচ, ট্রাইমিস্টার ক্যালেন্ডার, ব্লাডার প্রস্তুতি ও সেরা ডায়াগনস্টিক সেন্টার](https://www.healthclubfeni.com/blog/pregnancy-ultrasonography-4d-anomaly-scan-in-feni)
+- [ফেনীতে কিডনি পাথর অপসারণ, পিসিএনএল ও ইউরোলজি লেজার চিকিৎসা গাইড ২০২৬: আধুনিক অপারেশন খরচ, বিশেষজ্ঞ ইউরোলজিস্ট ও ওটি প্যাকেজ](https://www.healthclubfeni.com/blog/kidney-stone-laser-treatment-and-urology-guide-feni)
+- [ফেনীতে পিত্তথলির পাথর ও হার্নিয়া ল্যাপারোস্কোপিক সার্জারি গাইড ২০২৬: অপারেশন খরচ, বিশেষজ্ঞ সার্জন ও আধুনিক ওটি প্যাকেজ](https://www.healthclubfeni.com/blog/laparoscopic-gallstone-and-hernia-surgery-guide-feni)
+- [ফেনীতে পাইলস, ফিশার ও ফিস্টুলার লেজার চিকিৎসা ও ক্লিনিক গাইড ২০২৬: লেজার সার্জারি খরচ, বিশেষজ্ঞ ডাক্তার ও দ্রুত নিরাময়](https://www.healthclubfeni.com/blog/laser-piles-fissure-fistula-treatment-cost-in-feni)
+- [পরশুরাম ও ফুলগাজী উপজেলা স্বাস্থ্যসেবা, হাসপাতাল ও ডাক্তার গাইড ২০২৬](https://www.healthclubfeni.com/blog/parshuram-fulgazi-healthcare-guide)
+- [ফেনীতে স্ট্রোক ও হার্ট অ্যাটাক ইমার্জেন্সি প্রোটোকল ও গোল্ডেন আওয়ার গাইড ২০২৬: তাৎক্ষণিক লক্ষণ, প্রাথমিক চিকিৎসা, জরুরি হাসপাতাল ও টেস্ট খরচ](https://www.healthclubfeni.com/blog/stroke-and-heart-attack-emergency-protocol-feni)
 - [পরশুরামবাসীর জন্য ফেনী স্বাস্থ্যসেবা ও হাসপাতাল গাইড: যাতায়াত, ডাক্তার সিরিয়াল ও ছাড় সুবিধা](https://www.healthclubfeni.com/blog/parshuram-patient-guide)
-- [ফেনীতে প্যাথলজি ও রেডিওলজি টেস্টের খরচ তালিকা ২০২৬: ৮০+ পরীক্ষার বাজারদর ও ডিসকাউন্ট](https://www.healthclubfeni.com/blog/feni-medical-test-price-list)
-- [ফেনী ডায়াবেটিক সমিতি হাসপাতাল সম্পূর্ণ গাইড ২০২৬: সেবা, ডাক্তার তালিকা, ল্যাব ও রেজিস্ট্রেশন](https://www.healthclubfeni.com/blog/feni-diabetic-hospital-guide)
-- [ফেনী ২৫০ শয্যা জেনারেল (সদর) হাসপাতাল সম্পূর্ণ গাইড ২০২৬: বহির্বিভাগ (OPD), জরুরি ও ভর্তি প্রক্রিয়া](https://www.healthclubfeni.com/blog/feni-sadar-hospital-guide)
+- [ফেনীতে ১২৮-স্লাইস সিটি স্ক্যান ও ১.৫ টেসলা এমআরআই টেস্ট গাইড ২০২৬: খরচ, প্রস্তুতি, বৈসাদৃশ্য প্রটোকল ও সেরা ডায়াগনস্টিক সেন্টার](https://www.healthclubfeni.com/blog/feni-ct-scan-and-mri-test-price-guide)
+- [দাগনভূঞা, ছাগলনাইয়া ও সোনাগাজী স্বাস্থ্যসেবা, হাসপাতাল ও ডাক্তার গাইড ২০২৬](https://www.healthclubfeni.com/blog/daganbhuiyan-chagalnaiya-sonagazi-healthcare-guide)
+- [ফেনীতে নরমাল ডেলিভারি ও সিজারিয়ান অপারেশন খরচ ও ক্লিনিক গাইড ২০২৬: হাসপাতাল প্যাকেজ, এনআইসিইউ ও প্রসব প্রস্তুতি](https://www.healthclubfeni.com/blog/feni-normal-delivery-and-cesarean-cost-guide)
+- [ফেনী ২৪/৭ অ্যাম্বুলেন্স ও অক্সিজেন সার্ভিস গাইড ২০২৬: আইসিইউ, এসি, ঢাকা-চট্টগ্রাম ভাড়া ও ফ্রিজিং গাড়ি](https://www.healthclubfeni.com/blog/feni-ambulance-and-oxygen-service-guide)
 - [ফেনীর সেরা চক্ষু বিশেষজ্ঞ ডাক্তার ও চক্ষু হাসপাতাল গাইড ২০২৬ | Best Eye Specialists in Feni](https://www.healthclubfeni.com/blog/best-eye-specialists-in-feni)
-- [ফেনীর সেরা নাক, কান ও গলা (ইএনটি) বিশেষজ্ঞ ডাক্তার ২০২৬ | Best ENT Specialists in Feni](https://www.healthclubfeni.com/blog/best-ent-doctors-in-feni)
+- [ফেনী জেলা ব্লাড ব্যাংক ও জরুরি রক্তদাতা গাইড ২০২৬: রেড ক্রিসেন্ট, স্বেচ্ছাসেবী ক্লাব ও নিরাপদ রক্ত পরিসঞ্চালন](https://www.healthclubfeni.com/blog/feni-blood-bank-and-donors-guide)
+- [ফেনীর সেরা ডায়াবেটিস ও হরমোন বিশেষজ্ঞ ডাক্তার ২০২৬ | Best Diabetes & Hormone Doctors in Feni](https://www.healthclubfeni.com/blog/best-diabetes-doctors-in-feni)
 - [ফেনীর সেরা জেনারেল, ল্যাপারোস্কোপিক ও পাইলস সার্জন ২০২৬ | Best Surgeons in Feni](https://www.healthclubfeni.com/blog/best-surgeons-in-feni)
 - [ফেনীর সেরা মানসিক রোগ ও সাইকিয়াট্রি বিশেষজ্ঞ ডাক্তার ২০২৬ | Best Psychiatrists in Feni](https://www.healthclubfeni.com/blog/best-psychiatrists-in-feni)
-- [ফেনীর সেরা ডায়াবেটিস ও হরমোন বিশেষজ্ঞ ডাক্তার ২০২৬ | Best Diabetes & Hormone Doctors in Feni](https://www.healthclubfeni.com/blog/best-diabetes-doctors-in-feni)
 - [ফেনীর সেরা নিউরোমেডিসিন ও স্ট্রোক বিশেষজ্ঞ ডাক্তার ২০২৬ | Best Neurologists in Feni](https://www.healthclubfeni.com/blog/best-neurologists-in-feni)
 - [ফেনীর সেরা অর্থোপেডিক, হাড় ভাঙা ও ট্রমা বিশেষজ্ঞ ডাক্তার ২০২৬ | Best Orthopedic Doctors in Feni](https://www.healthclubfeni.com/blog/best-orthopedic-doctors-in-feni)
 - [ফেনীতে ২৪ ঘণ্টা খোলা ফার্মেসি ও জরুরি ওষুধ ডেলিভারি গাইড ২০২৬: শীর্ষ ওষুধের দোকান, হটলাইন ও হোম ডেলিভারি](https://www.healthclubfeni.com/blog/24-hour-pharmacy-in-feni)
-- [ফেনী জেলা ব্লাড ব্যাংক ও জরুরি রক্তদাতা গাইড ২০২৬: রেড ক্রিসেন্ট, স্বেচ্ছাসেবী ক্লাব ও নিরাপদ রক্ত পরিসঞ্চালন](https://www.healthclubfeni.com/blog/feni-blood-bank-and-donors-guide)
-- [ফেনী ২৪/৭ অ্যাম্বুলেন্স ও অক্সিজেন সার্ভিস গাইড ২০২৬: আইসিইউ, এসি, ঢাকা-চট্টগ্রাম ভাড়া ও ফ্রিজিং গাড়ি](https://www.healthclubfeni.com/blog/feni-ambulance-and-oxygen-service-guide)
+- [ফেনী ২৫০ শয্যা জেনারেল (সদর) হাসপাতাল সম্পূর্ণ গাইড ২০২৬: বহির্বিভাগ (OPD), জরুরি ও ভর্তি প্রক্রিয়া](https://www.healthclubfeni.com/blog/feni-sadar-hospital-guide)
+- [ফেনী ডায়াবেটিক সমিতি হাসপাতাল সম্পূর্ণ গাইড ২০২৬: সেবা, ডাক্তার তালিকা, ল্যাব ও রেজিস্ট্রেশন](https://www.healthclubfeni.com/blog/feni-diabetic-hospital-guide)
+- [ফেনীতে প্যাথলজি ও রেডিওলজি টেস্টের খরচ তালিকা ২০২৬: ৮০+ পরীক্ষার বাজারদর ও ডিসকাউন্ট](https://www.healthclubfeni.com/blog/feni-medical-test-price-list)
+- [ফেনীর সেরা নাক, কান ও গলা (ইএনটি) বিশেষজ্ঞ ডাক্তার ২০২৬ | Best ENT Specialists in Feni](https://www.healthclubfeni.com/blog/best-ent-doctors-in-feni)
 - [ফেনীর সেরা কিডনি বিশেষজ্ঞ ডাক্তার ও ডায়ালাইসিস সেন্টার তালিকা ২০২৬ | Best Kidney Doctors in Feni](https://www.healthclubfeni.com/blog/best-kidney-doctors-in-feni)
 - [ফেনীর সেরা শিশু বিশেষজ্ঞ ডাক্তার ও চেম্বার সিরিয়াল ২০২৬ | Best Child Specialists in Feni](https://www.healthclubfeni.com/blog/best-child-specialists-in-feni)
 - [ফেনীর সেরা চর্ম, এলার্জি ও যৌন রোগ বিশেষজ্ঞ ডাক্তার ও চেম্বার সিরিয়াল ২০২৬ | Best Skin Specialists in Feni](https://www.healthclubfeni.com/blog/best-skin-specialists-in-feni)
 - [ফেনীর সেরা মেডিসিন বিশেষজ্ঞ ডাক্তার তালিকা ও চেম্বার সিরিয়াল ২০২৬ | Best Medicine Doctor in Feni](https://www.healthclubfeni.com/blog/best-medicine-doctor-in-feni)
 - [ফেনীর সেরা ফিজিওথেরাপি ও রিহ্যাবিলিটেশন সেন্টার ২০২৬ (Best Physiotherapy Centers in Feni)](https://www.healthclubfeni.com/blog/best-physiotherapy-centers-in-feni)
 - [ফেনীর সেরা ডেন্টাল ক্লিনিক ও বিশেষজ্ঞ দন্ত চিকিৎসক ২০২৬ (Best Dental Specialists & Clinics in Feni)](https://www.healthclubfeni.com/blog/best-dental-clinics-in-feni)
-- [ফেনীর সেরা গাইনি ও প্রসূতি বিশেষজ্ঞ ডাক্তার তালিকা ও গর্ভকালীন সেবা ২০২৬ | Best Gynecologists & Maternity Care in Feni](https://www.healthclubfeni.com/blog/best-gynecologists-in-feni)
 - [ফেনীর সেরা হৃদরোগ ও কার্ডিওলজিস্ট ডাক্তার তালিকা এবং সিসিইউ গাইড ২০২৬ | Best Cardiologists in Feni](https://www.healthclubfeni.com/blog/best-cardiologists-in-feni)
+- [ফেনীর সেরা গাইনি ও প্রসূতি বিশেষজ্ঞ ডাক্তার তালিকা ও গর্ভকালীন সেবা ২০২৬ | Best Gynecologists & Maternity Care in Feni](https://www.healthclubfeni.com/blog/best-gynecologists-in-feni)
 - [ফেনীর সেরা ১০টি ডায়াগনস্টিক সেন্টার ও প্যাথলজি ল্যাব ২০২৬ | Best Diagnostic Centers in Feni](https://www.healthclubfeni.com/blog/best-diagnostic-centers-in-feni)
 - [ফেনীর সেরা বিশেষজ্ঞ ডাক্তার তালিকা ও চেম্বার সিরিয়াল ২০২৬ | Best Doctors in Feni](https://www.healthclubfeni.com/blog/best-doctors-in-feni)
 - [ফেনীর সেরা ১০টি হাসপাতাল ও স্বাস্থ্যসেবা প্রতিষ্ঠান | Best 10 Hospitals in Feni (2026)](https://www.healthclubfeni.com/blog/best-10-hospitals-in-feni)

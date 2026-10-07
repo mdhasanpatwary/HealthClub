@@ -34,6 +34,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     notFound();
   }
 
+  let decodedParam = slug;
+  try {
+    decodedParam = decodeURIComponent(slug);
+  } catch {
+    // Keep as is
+  }
+
+  if (doctor.slug && decodedParam !== doctor.slug) {
+    permanentRedirect(`/consultants/${encodeURIComponent(doctor.slug)}`);
+  }
+
   const pageTitle = formatDoctorMetaTitle(doctor.name, doctor.specialty);
   const ogTitle = `${pageTitle} - হেলথ ক্লাব`;
   const pageDesc = formatDoctorMetaDescription(doctor);

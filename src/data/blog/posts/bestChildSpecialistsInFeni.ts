@@ -13,7 +13,7 @@ export const BEST_CHILD_SPECIALISTS_IN_FENI: BlogPost = {
   categoryNameBn: "শিশু ও নবজাতক সেবা গাইড",
   categoryNameEn: "Pediatrics & Neonatal Care",
   publishedDate: "2026-03-19",
-  modifiedDate: "2026-09-19",
+  modifiedDate: "2026-10-07",
   readTimeBn: "১৪ মিনিট পাঠ",
   readTimeEn: "14 min read",
   author: {

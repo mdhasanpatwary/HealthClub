@@ -18,6 +18,7 @@ import { FENI_BIOPSY_FNAC_TEST_PRICING } from "@/data/blog/posts/feniBiopsyFnacP
 import { FENI_SEMEN_ANALYSIS_TEST_PRICING } from "@/data/blog/posts/feniSemenAnalysisPricing";
 import { INITIAL_AMBULANCES, INITIAL_BLOOD_DONORS } from "@/data/emergencyData";
 import fallbackDoctors from "@/data/feniUniqueDoctors.json";
+import { generateDoctorSlug } from "@/lib/slugify";
 
 /**
  * Collects and normalizes 100+ diagnostic tests & clinical procedures in Feni.
@@ -85,7 +86,13 @@ export async function collectDoctors(): Promise<LlmsDoctorItem[]> {
       });
 
       if (dbDoctors.length > 0) {
-        return dbDoctors;
+        return dbDoctors.map((doc) => ({
+          ...doc,
+          slug:
+            doc.slug && /^[a-z0-9-]+$/.test(doc.slug)
+              ? doc.slug
+              : generateDoctorSlug(doc.name, doc.nameEn || undefined) || doc.id,
+        }));
       }
     }
   } catch (error) {
@@ -95,7 +102,10 @@ export async function collectDoctors(): Promise<LlmsDoctorItem[]> {
   // Fallback to static verified doctors
   return (fallbackDoctors as LlmsDoctorItem[]).map((doc) => ({
     id: doc.id,
-    slug: doc.slug || null,
+    slug:
+      doc.slug && /^[a-z0-9-]+$/.test(doc.slug)
+        ? doc.slug
+        : generateDoctorSlug(doc.name, doc.nameEn || undefined) || doc.id,
     name: doc.name,
     nameEn: doc.nameEn || null,
     specialty: doc.specialty,

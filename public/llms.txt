@@ -36,7 +36,7 @@ Health Club's medical network, emergency response system, ambulance directory, a
 - **Hospital Admissions**: 10% to 20% discount on hospital cabin rent, bed charges, and post-operative care at partner hospitals.
 - **Pharmacies**: 5% to 10% discount on genuine medicines at partner model pharmacies.
 - **Family Coverage**: Single membership card covers the primary cardholder, spouse, dependent children, and parents.
-- **Membership Pricing**: Free Membership is **FREE (৳0)** offering **10-25% discount**; Premium Membership is **৳500 / Year** offering **15-30% discount** and priority doctor serial appointment booking & support.
+- **Membership Pricing**: Free Membership is **FREE (৳0)** offering **10-25% discount**; Premium Membership is **৳500 / Year** offering **15-30% discount** and priority support.
 
 ### 2. 24/7 Emergency Services & Blood Network (`/emergency`)
 - **Ambulance Fleet Directory**: 24/7 direct driver contact across AC Ambulances, Non-AC Ambulances, ICU Support Ambulances (with ventilator & oxygen for critical transfers to Chittagong/Dhaka), and Freezer/Mortuary Vans.
@@ -61,18 +61,18 @@ All partner facilities maintain formal discount contracts with Health Club, stri
 
 | প্রতিষ্ঠানের নাম (Organization Name) | ধরণ (Category) | ঠিকানা (Address) | হেলথ ক্লাব ছাড় (Discount) | যোগাযোগ (Phone) |
 |:---|:---|:---|:---|:---|
-| আল-আকসা হাসপাতাল লিঃ ফেনী | হাসপাতাল (Hospital) | খাজুরিয়া কোট বিল্ডিং, ট্রাংক রোড, ফেনী। ৩৯০০ | সর্বোচ্চ ২৫% পর্যন্ত ডিসকাউন্ট | 01815076266 |
-| ইম্পেরিয়াল নিউরোকেয়ার অ্যান্ড ডায়াগনস্টিক সেন্টার | ডায়াগনস্টিক (Diagnostic) |  ফেনী কেন্দ্রীয় বোরো জামে মসজিদ মার্কেট ২য় তলা, ট্রাঙ্ক রোড-ফেনী। | সর্বোচ্চ ৩০% পর্যন্ত ডিসকাউন্ট | +8801888750099 |
-| ইসলামিয়া  ফিজিওথেরাপি  এন্ড রিহ্যাবিলিটেশন সেন্টার | হাসপাতাল (Hospital) | আল কেমী হাসপাতালের দক্ষিণ পার্শ্বে, (জসিম ম্যানশন), এস.এস.কে রোড, ফেনী। | সর্বোচ্চ ৩০% পর্যন্ত ডিসকাউন্ট | 01828071865 |
-| এম রহমান মেডিকেল স্টোর | ফার্মেসি (Pharmacy) |  বড় মসজিদের পূর্ব পাশে, ট্রাঙ্ক রোড-ফেনী | ৫-১০% পর্যন্ত ডিসকাউন্ট | 01768382725 |
-| ঢাকা ফার্মেসি | ফার্মেসি (Pharmacy) | ফেনী কেন্দ্রিয় বড় জামে মসজিদের পূর্ব পাশে | ৫-১০% পর্যন্ত ডিসকাউন্ট | 01813943945 |
-| নিরাময় ডায়াগনস্টিক এন্ড কনসালটেশন সেন্টার | ডায়াগনস্টিক (Diagnostic) | জুহানা শপিং সেন্টার, খেজুর চত্বর,  ট্রাংক রোড , ফেনী | সর্বোচ্চ ৩০% পর্যন্ত ডিসকাউন্ট | 01815583960 |
-| প্যাসিফিক হেলথ কেয়ার সেন্টার | ডায়াগনস্টিক (Diagnostic) |  শহীদ শহীদুল্লাহ কায়সার সড়ক, জিরো পয়েন্ট-ফেনী | সর্বোচ্চ ৩০% পর্যন্ত ডিসকাউন্ট | +8801711365956 |
-| ফেনি ম্যাক্স ডায়াগনস্টিক সেন্টার | ডায়াগনস্টিক (Diagnostic) | জাহিরিয়া টাওয়ার, বড় মসজিদের পাশে, ট্রাঙ্ক রোড-ফেনী। | সর্বোচ্চ ৩০% পর্যন্ত ডিসকাউন্ট | 01816660616 |
-| ফেনী কেয়ার হসপিটাল | হাসপাতাল (Hospital) | এসএসকে রোড স্টার লাইন বাস টারমিনাল আর সামনে | সর্বোচ্চ ৩০% পর্যন্ত ডিসকাউন্ট | 01806968140 |
-| মজুমদার ডেন্টাল ক্লিনিক | হাসপাতাল (Hospital) | জিরো পয়েন্ট, ট্রাঙ্ক রোড, ফেনী। | সর্বোচ্চ ৩০% পর্যন্ত ডিসকাউন্ট | 01912887888 |
-| লাইফ কেয়ার ডায়াগনস্টিক সেন্টার | ডায়াগনস্টিক (Diagnostic) | কেন্দ্রীয় বোরো জামে মসজিদের পূর্ব পাশে, গ্র্যান্ড ট্রাঙ্ক রোড-ফেনী। | সর্বোচ্চ ৩০% পর্যন্ত ডিসকাউন্ট | +8801882462650 |
-| সেন্ট্রাল ফিজিওথেরাপি  এন্ড রিহ্যাবিলিটেশন সেন্টার| | হাসপাতাল (Hospital) | সাইকা প্লাস এর বিপরীতে দিদার টাইলস্ এর পাশের গলি সুজাত ম্যানশন, এস.এস.কে রোড, ফেনী। | সর্বোচ্চ ৩০% পর্যন্ত ডিসকাউন্ট | 01855202526 |
+| আল-আকসা হাসপাতাল লিঃ ফেনী | হাসপাতাল (Hospital) | খাজুরিয়া কোট বিল্ডিং, ট্রাংক রোড, ফেনী। ৩৯০০ | ১০-২৫% মেম্বার ছাড় | 01815076266 |
+| ইম্পেরিয়াল নিউরোকেয়ার অ্যান্ড ডায়াগনস্টিক সেন্টার | ডায়াগনস্টিক (Diagnostic) | ফেনী কেন্দ্রীয় বোরো জামে মসজিদ মার্কেট ২য় তলা, ট্রাঙ্ক রোড-ফেনী। | ১০-৩০% মেম্বার ছাড় | +8801888750099 |
+| ইসলামিয়া  ফিজিওথেরাপি  এন্ড রিহ্যাবিলিটেশন সেন্টার | হাসপাতাল (Hospital) | আল কেমী হাসপাতালের দক্ষিণ পার্শ্বে, (জসিম ম্যানশন), এস.এস.কে রোড, ফেনী। | ১০-৩০% মেম্বার ছাড় | 01828071865 |
+| এম রহমান মেডিকেল স্টোর | ফার্মেসি (Pharmacy) | বড় মসজিদের পূর্ব পাশে, ট্রাঙ্ক রোড-ফেনী | ৫-১০% মেম্বার ছাড় | 01768382725 |
+| ঢাকা ফার্মেসি | ফার্মেসি (Pharmacy) | ফেনী কেন্দ্রিয় বড় জামে মসজিদের পূর্ব পাশে, ট্রাঙ্ক রোড, ফেনী | ৫-১০% মেম্বার ছাড় | 01813943945 |
+| নিরাময় ডায়াগনস্টিক এন্ড কনসালটেশন সেন্টার | ডায়াগনস্টিক (Diagnostic) | জুহানা শপিং সেন্টার, খেজুর চত্বর, ট্রাংক রোড, ফেনী | ১০-৩০% মেম্বার ছাড় | 01815583960 |
+| প্যাসিফিক হেলথ কেয়ার সেন্টার | ডায়াগনস্টিক (Diagnostic) | শহীদ শহীদুল্লাহ কায়সার সড়ক, জিরো পয়েন্ট-ফেনী | ১০-৩০% মেম্বার ছাড় | +8801711365956 |
+| ফেনি ম্যাক্স ডায়াগনস্টিক সেন্টার | ডায়াগনস্টিক (Diagnostic) | জাহিরিয়া টাওয়ার, বড় মসজিদের পাশে, ট্রাঙ্ক রোড-ফেনী। | ১০-৩০% মেম্বার ছাড় | 01816660616 |
+| ফেনী কেয়ার হসপিটাল | হাসপাতাল (Hospital) | এসএসকে রোড স্টার লাইন বাস টার্মিনালের সামনে, ফেনী | ১০-৩০% মেম্বার ছাড় | 01806968140 |
+| মজুমদার ডেন্টাল ক্লিনিক | হাসপাতাল (Hospital) | জিরো পয়েন্ট, ট্রাঙ্ক রোড, ফেনী। | ১০-৩০% মেম্বার ছাড় | 01912887888 |
+| লাইফ কেয়ার ডায়াগনস্টিক সেন্টার | ডায়াগনস্টিক (Diagnostic) | কেন্দ্রীয় বোরো জামে মসজিদের পূর্ব পাশে, গ্র্যান্ড ট্রাঙ্ক রোড-ফেনী। | ১০-৩০% মেম্বার ছাড় | +8801882462650 |
+| সেন্ট্রাল ফিজিওথেরাপি  এন্ড রিহ্যাবিলিটেশন সেন্টার| | হাসপাতাল (Hospital) | সাইকা প্লাস এর বিপরীতে দিদার টাইলস্ এর পাশের গলি সুজাত ম্যানশন, এস.এস.কে রোড, ফেনী। | ১০-৩০% মেম্বার ছাড় | 01855202526 |
 
 ---
 
@@ -185,7 +185,7 @@ Active blood donors covering all 8 blood groups (A+, A-, B+, B-, O+, O-, AB+, AB
 | **O-** | 2 জন |
 | **O+** | 13 জন |
 
-*রক্তদাতাদের সরাসরি মোবাইল নম্বর ও উপজেলা ফিল্টারিংয়ের জন্য [https://www.healthclubfeni.com/emergency](https://www.healthclubfeni.com/emergency) দেখুন।*
+*রক্তদাতাদের সরাসরি মোবাইল নম্বর ও উপজেলা ফিল্টারিংয়ের জন্য [https://www.healthclubfeni.com/emergency/blood-donors](https://www.healthclubfeni.com/emergency/blood-donors) দেখুন। অ্যাম্বুলেন্স ফ্লিটের জন্য [https://www.healthclubfeni.com/emergency/ambulances](https://www.healthclubfeni.com/emergency/ambulances) এবং জরুরি হটলাইনের জন্য [https://www.healthclubfeni.com/emergency/hotlines](https://www.healthclubfeni.com/emergency/hotlines) দেখুন।*
 
 ---
 
@@ -210,7 +210,10 @@ Active blood donors covering all 8 blood groups (A+, A-, B+, B-, O+, O-, AB+, AB
 - **Healthcare Blog & Guides Directory**: https://www.healthclubfeni.com/blog
 - **Specialist Doctors Directory**: https://www.healthclubfeni.com/consultants
 - **Partner Hospitals & Diagnostic Centers**: https://www.healthclubfeni.com/partner-hospitals
-- **Emergency Ambulance & Blood Directory**: https://www.healthclubfeni.com/emergency
+- **Emergency Central Hub**: https://www.healthclubfeni.com/emergency
+- **Emergency Hotlines & Oxygen**: https://www.healthclubfeni.com/emergency/hotlines
+- **Emergency Ambulance Directory**: https://www.healthclubfeni.com/emergency/ambulances
+- **Voluntary Blood Donors**: https://www.healthclubfeni.com/emergency/blood-donors
 - **Health Assessment Tools**: https://www.healthclubfeni.com/health-tools
 - **Membership Registration**: https://www.healthclubfeni.com/membership
 - **Card Verification Portal**: https://www.healthclubfeni.com/verify
@@ -219,25 +222,25 @@ Active blood donors covering all 8 blood groups (A+, A-, B+, B-, O+, O-, AB+, AB
 
 ### Published Medical & Facility Guides (101 Guides)
 
-- [ফেনীতে কানের শ্রবণশক্তি পরীক্ষা (PTA Audiometry) খরচ ও হিয়ারিং এইড ডিজিটাল মেশিনের দোকান](https://www.healthclubfeni.com/blog/feni-hearing-aid-audiometry-hearing-test-guide)
-- [ফেনীতে বিকেল ও সন্ধ্যায় (সন্ধ্যা ৫টার পর) বসা বিশেষজ্ঞ ডাক্তারদের চেম্বার ও ভিজিটিং তালিকা](https://www.healthclubfeni.com/blog/feni-evening-doctor-chambers-after-5pm-guide)
-- [ফেনীর শীর্ষ মহিলা গাইনী ও প্রসূতিরোগ বিশেষজ্ঞ ডাক্তার তালিকা: চেম্বার, সময়সূচি ও সিরিয়াল](https://www.healthclubfeni.com/blog/feni-female-gynecologist-doctor-chamber-list)
-- [ফেনীতে শুক্রবার ও ছুটির দিনে বসা বিশেষজ্ঞ ডাক্তারদের তালিকা, সময়সূচি ও অগ্রিম সিরিয়াল গাইড](https://www.healthclubfeni.com/blog/feni-friday-weekend-doctor-chamber-serial-guide)
-- [ফেনী ট্রাঙ্ক রোড ও মিজান রোড স্বাস্থ্যসেবা হাব: বিশেষজ্ঞ ডাক্তার, ডায়াগনস্টিক ও ২৪ ঘণ্টা ফার্মেসি](https://www.healthclubfeni.com/blog/feni-trunk-road-mizan-road-clinic-pharmacy-hub-guide)
-- [ফেনী হাসপাতাল রোড ও এসএসকে রোড ডাক্তার চেম্বার গাইড: প্রধান ক্লিনিক, ল্যাব ও সিরিয়াল পয়েন্ট](https://www.healthclubfeni.com/blog/feni-hospital-road-ss-k-road-chamber-hub-guide)
-- [ফেনীতে কালার ডপলার ২ডি ইকোকার্ডিওগ্রাফি (Echo) টেস্ট খরচ, চেম্বার ও হার্ট সেন্টার](https://www.healthclubfeni.com/blog/feni-echocardiogram-color-doppler-heart-test-guide)
-- [ফেনীতে ম্যামোগ্রাফি (Mammography) টেস্ট খরচ, স্তন ক্যান্সার সচেতনতা ও সেরা ল্যাব](https://www.healthclubfeni.com/blog/feni-mammography-breast-cancer-screening-guide)
-- [ফেনীতে বিএমডি (BMD / DEXA Scan) হাড়ের ক্ষয়রোগ পরীক্ষা খরচ ও অস্টিওপোরোসিস গাইড](https://www.healthclubfeni.com/blog/feni-bone-mineral-density-bmd-test-guide)
+- [ফেনীতে ডিপ্রেশন, অতিরিক্ত চিন্তা ও মানসিক স্বাস্থ্য কাউন্সেলিং: সাইকিয়াট্রিস্ট ও থেরাপিস্ট গাইড](https://www.healthclubfeni.com/blog/feni-depression-anxiety-mental-health-counseling-guide)
+- [ফেনী বক্ষব্যাধি ক্লিনিক ও হাসপাতাল: যক্ষ্মা (TB) জিনএক্সপার্ট বিনামূল্যে টেস্ট ও ডটস ওষুধ](https://www.healthclubfeni.com/blog/feni-chest-disease-tb-hospital-guide)
+- [ফেনীতে উচ্চ রক্তচাপ (High BP) নিয়ন্ত্রণ, স্ট্রোক ঝুঁকি ও অভিজ্ঞ কার্ডিওলজি/মেডিসিন বিশেষজ্ঞ](https://www.healthclubfeni.com/blog/feni-hypertension-high-blood-pressure-control-guide)
 - [ফেনীতে ইইজি (EEG) ব্রেন টেস্টের খরচ, মৃগীরোগ নির্ণয় ও অভিজ্ঞ নিউরোলজিস্ট সেন্টার](https://www.healthclubfeni.com/blog/feni-eeg-brain-test-cost-guide)
 - [ফেনীতে প্রেগন্যান্সি ৪ডি অ্যানোমালি স্ক্যান (Anomaly Scan) খরচ, সঠিক সময় ও বিশেষজ্ঞ সোনোলজিস্ট](https://www.healthclubfeni.com/blog/feni-4d-anomaly-scan-pregnancy-ultrasound-guide)
 - [ফেনীতে শিশুর সরকারি ইপিআই (EPI) টিকা দেওয়ার কেন্দ্র, বয়স অনুযায়ী শিডিউল ও জরুরি তথ্য](https://www.healthclubfeni.com/blog/feni-epi-child-vaccination-schedule-centers-guide)
-- [ফেনী ট্রমা সেন্টার ও মহাসড়ক দুর্ঘটনা জরুরি সেবা: মহিপাল ট্রমা সেন্টারের সেবা ও জরুরি হেল্পলাইন](https://www.healthclubfeni.com/blog/feni-trauma-center-emergency-highway-accident-guide)
-- [ফেনী বক্ষব্যাধি ক্লিনিক ও হাসপাতাল: যক্ষ্মা (TB) জিনএক্সপার্ট বিনামূল্যে টেস্ট ও ডটস ওষুধ](https://www.healthclubfeni.com/blog/feni-chest-disease-tb-hospital-guide)
-- [ফেনী মা ও শিশু কল্যাণ কেন্দ্র (মাতৃসদন) সেবা গাইড: স্বাভাবিক প্রসব, ওপিডি ও বিনামূল্যে ওষুধ](https://www.healthclubfeni.com/blog/feni-maternal-and-child-welfare-centre-matri-sadan-guide)
-- [ফেনীতে উচ্চ রক্তচাপ (High BP) নিয়ন্ত্রণ, স্ট্রোক ঝুঁকি ও অভিজ্ঞ কার্ডিওলজি/মেডিসিন বিশেষজ্ঞ](https://www.healthclubfeni.com/blog/feni-hypertension-high-blood-pressure-control-guide)
+- [ফেনী হাসপাতাল রোড ও এসএসকে রোড ডাক্তার চেম্বার গাইড: প্রধান ক্লিনিক, ল্যাব ও সিরিয়াল পয়েন্ট](https://www.healthclubfeni.com/blog/feni-hospital-road-ss-k-road-chamber-hub-guide)
+- [ফেনীতে কালার ডপলার ২ডি ইকোকার্ডিওগ্রাফি (Echo) টেস্ট খরচ, চেম্বার ও হার্ট সেন্টার](https://www.healthclubfeni.com/blog/feni-echocardiogram-color-doppler-heart-test-guide)
+- [ফেনীতে ম্যামোগ্রাফি (Mammography) টেস্ট খরচ, স্তন ক্যান্সার সচেতনতা ও সেরা ল্যাব](https://www.healthclubfeni.com/blog/feni-mammography-breast-cancer-screening-guide)
+- [ফেনীতে বিকেল ও সন্ধ্যায় (সন্ধ্যা ৫টার পর) বসা বিশেষজ্ঞ ডাক্তারদের চেম্বার ও ভিজিটিং তালিকা](https://www.healthclubfeni.com/blog/feni-evening-doctor-chambers-after-5pm-guide)
+- [ফেনীর শীর্ষ মহিলা গাইনী ও প্রসূতিরোগ বিশেষজ্ঞ ডাক্তার তালিকা: চেম্বার, সময়সূচি ও সিরিয়াল](https://www.healthclubfeni.com/blog/feni-female-gynecologist-doctor-chamber-list)
+- [ফেনীতে শুক্রবার ও ছুটির দিনে বসা বিশেষজ্ঞ ডাক্তারদের তালিকা, সময়সূচি ও অগ্রিম সিরিয়াল গাইড](https://www.healthclubfeni.com/blog/feni-friday-weekend-doctor-chamber-serial-guide)
+- [ফেনীতে তিল, আঁচিল ও স্কিন লেজার ট্রিটমেন্ট খরচ, কসমেটিক ডার্মাটোলজি ক্লিনিক](https://www.healthclubfeni.com/blog/feni-skin-laser-wart-mole-removal-cost-guide)
+- [ফেনীতে থাইরয়েড গ্রন্থি ফোলা (গলগণ্ড বা নডিউল) চিকিৎসা ও এন্ডোক্রাইনোলজি বিশেষজ্ঞ গাইড](https://www.healthclubfeni.com/blog/feni-thyroid-swelling-goiter-treatment-guide)
 - [ফেনীতে সাপের কামড় (সর্পদংশন) ও এন্টিভেনম ইনজেকশন সেবা: তাৎক্ষণিক করণীয় ও হাসপাতাল](https://www.healthclubfeni.com/blog/feni-snake-bite-antivenom-emergency-guide)
-- [ফেনীতে কুকুর বা বিড়ালের কামড়ে জলাতঙ্ক রেবিস ভ্যাকসিন (Rabies Vaccine) প্রাপ্তিস্থান ও প্রটোকল](https://www.healthclubfeni.com/blog/feni-dog-bite-rabies-vaccine-guide)
-- [ফেনীতে আগুনে পোড়া বা গরম পানিতে ঝলসে গেলে জরুরি প্রাথমিক চিকিৎসা ও হাসপাতাল সেবা](https://www.healthclubfeni.com/blog/feni-burn-injury-emergency-first-aid-hospital-guide)
-- [ফেনীতে ডিপ্রেশন, অতিরিক্ত চিন্তা ও মানসিক স্বাস্থ্য কাউন্সেলিং: সাইকিয়াট্রিস্ট ও থেরাপিস্ট গাইড](https://www.healthclubfeni.com/blog/feni-depression-anxiety-mental-health-counseling-guide)
+- [ফেনী মা ও শিশু কল্যাণ কেন্দ্র (মাতৃসদন) সেবা গাইড: স্বাভাবিক প্রসব, ওপিডি ও বিনামূল্যে ওষুধ](https://www.healthclubfeni.com/blog/feni-maternal-and-child-welfare-centre-matri-sadan-guide)
+- [ফেনী ট্রমা সেন্টার ও মহাসড়ক দুর্ঘটনা জরুরি সেবা: মহিপাল ট্রমা সেন্টারের সেবা ও জরুরি হেল্পলাইন](https://www.healthclubfeni.com/blog/feni-trauma-center-emergency-highway-accident-guide)
+- [ফেনীতে বিএমডি (BMD / DEXA Scan) হাড়ের ক্ষয়রোগ পরীক্ষা খরচ ও অস্টিওপোরোসিস গাইড](https://www.healthclubfeni.com/blog/feni-bone-mineral-density-bmd-test-guide)
+- [ফেনী ট্রাঙ্ক রোড ও মিজান রোড স্বাস্থ্যসেবা হাব: বিশেষজ্ঞ ডাক্তার, ডায়াগনস্টিক ও ২৪ ঘণ্টা ফার্মেসি](https://www.healthclubfeni.com/blog/feni-trunk-road-mizan-road-clinic-pharmacy-hub-guide)
+- [ফেনীতে কানের শ্রবণশক্তি পরীক্ষা (PTA Audiometry) খরচ ও হিয়ারিং এইড ডিজিটাল মেশিনের দোকান](https://www.healthclubfeni.com/blog/feni-hearing-aid-audiometry-hearing-test-guide)
 
 *...এবং আরও 81টি স্বাস্থ্য গাইডের জন্য [https://www.healthclubfeni.com/blog](https://www.healthclubfeni.com/blog) দেখুন।*
