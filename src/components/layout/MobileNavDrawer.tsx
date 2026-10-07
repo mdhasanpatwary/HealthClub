@@ -9,6 +9,7 @@ import {
   Sun,
   Moon,
   LayoutDashboard,
+  Settings,
   LogOut,
 } from "lucide-react";
 import { Member, Partner } from "@/services/db";
@@ -177,17 +178,41 @@ export default function MobileNavDrawer({
                     <span>এডমিন প্যানেল</span>
                   </Link>
                 ) : (
-                  <Link
-                    href="/dashboard"
-                    onClick={onClose}
-                    className={buttonVariants({
-                      variant: "outline",
-                      className: "w-full justify-start text-xs border-primary/30 text-primary",
-                    })}
-                  >
-                    <LayoutDashboard className="h-4 w-4 mr-2" />
-                    <span>ড্যাশবোর্ড</span>
-                  </Link>
+                  <>
+                    <Link
+                      href="/dashboard"
+                      onClick={() => {
+                        onClose();
+                        if (pathname === "/dashboard" && typeof window !== "undefined") {
+                          window.dispatchEvent(new CustomEvent("switch-dashboard-tab", { detail: "history" }));
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                        }
+                      }}
+                      className={buttonVariants({
+                        variant: "outline",
+                        className: "w-full justify-start text-xs border-primary/30 text-primary",
+                      })}
+                    >
+                      <LayoutDashboard className="h-4 w-4 mr-2" />
+                      <span>ড্যাশবোর্ড</span>
+                    </Link>
+                    <Link
+                      href="/dashboard?tab=profile"
+                      onClick={() => {
+                        onClose();
+                        if (pathname === "/dashboard" && typeof window !== "undefined") {
+                          window.dispatchEvent(new CustomEvent("switch-dashboard-tab", { detail: "profile" }));
+                        }
+                      }}
+                      className={buttonVariants({
+                        variant: "outline",
+                        className: "w-full justify-start text-xs border-border text-foreground hover:bg-muted",
+                      })}
+                    >
+                      <Settings className="h-4 w-4 mr-2 text-primary" />
+                      <span>প্রোফাইল সেটিংস</span>
+                    </Link>
+                  </>
                 )}
                 <Button
                   variant="ghost"

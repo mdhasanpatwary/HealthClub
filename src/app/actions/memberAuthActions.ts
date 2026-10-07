@@ -4,7 +4,7 @@ import { randomInt } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { Member } from "@/services/db";
 import { verifyPassword } from "@/lib/crypto";
-import { setSessionUser, clearSessionUser } from "@/lib/session";
+import { getSessionUser, setSessionUser, clearSessionUser } from "@/lib/session";
 import { sendOtpEmail } from "@/lib/mail";
 import { logger } from "@/lib/logger";
 import { telemetry } from "@/lib/telemetry";
@@ -134,15 +134,6 @@ export async function loginMemberAction(
     resetRateLimit(`login_id:${cleanId}`);
 
     const safeMember = toSafeMember(m);
-
-    if (m.email && !m.emailVerified) {
-      return { 
-        success: true, 
-        error: "PENDING_VERIFICATION",
-        message: "আপনার ইমেইল ভেরিফাই করা হয়নি। অনুগ্রহ করে ইমেইল ভেরিফিকেশন সম্পন্ন করুন।",
-        member: safeMember,
-      };
-    }
 
     await setSessionUser(safeMember.id, "user");
     return { success: true, member: safeMember };
@@ -408,5 +399,22 @@ export async function resendVerificationCodeAction(email: string): Promise<{ suc
 export async function getPendingRegistrationEmailAction(): Promise<string | null> {
   const pending = await getPendingRegistration();
   return pending?.email || null;
+}
+
+export async function getCurrentSessionMemberAction(): Promise<Member | null> {
+  try {
+    const session = await getSessionUser();
+    if (!session || !session.userId) return null;
+
+    const m = await prisma.member.findUnique({
+      where: { id: session.userId },
+      select: MEMBER_AUTH_SELECT,
+    });
+    if (!m) return null;
+    return toSafeMember(m);
+  } catch (error) {
+    logger.error("Error in getCurrentSessionMemberAction:", error);
+    return null;
+  }
 }
 

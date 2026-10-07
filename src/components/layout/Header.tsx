@@ -11,6 +11,7 @@ import dynamic from "next/dynamic";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useTheme } from "@/components/layout/ThemeProvider";
 import { isAdminUser } from "@/lib/permissions";
+import { getCurrentSessionMemberAction } from "@/app/actions/memberAuthActions";
 
 import PublicHeaderNav from "./PublicHeaderNav";
 const UserDropdown = dynamic(() => import("./UserDropdown"), { ssr: false });
@@ -49,14 +50,42 @@ export default function Header() {
   const isAdminMode = pathname.startsWith("/admin");
   const isAdmin = isAdminUser(user);
 
-  // 1. Mount effect: window event listeners (auth sync, scroll detection with RAF throttle, mobile menu trigger)
+  // 1. Auth sync on mount and route change, plus recovery from server session if missing in local storage
   useEffect(() => {
+    let isMounted = true;
     const syncUser = () => {
-      setUser(authStore.getCurrentUser());
-      setPartner(authStore.getCurrentPartner());
+      const currentUser = authStore.getCurrentUser();
+      const currentPartner = authStore.getCurrentPartner();
+      if (isMounted) {
+        setUser(currentUser);
+        setPartner(currentPartner);
+      }
+
+      // If user is not yet in client safe storage, attempt session recovery from server cookie
+      if (!currentUser && !currentPartner) {
+        getCurrentSessionMemberAction()
+          .then((sessionMember) => {
+            if (isMounted && sessionMember) {
+              authStore.setCurrentUser(sessionMember);
+              setUser(sessionMember);
+            }
+          })
+          .catch(() => {});
+      }
     };
+
     syncUser();
 
+    window.addEventListener("auth-change", syncUser);
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener("auth-change", syncUser);
+    };
+  }, [pathname]);
+
+  // 2. Global UI event listeners (scroll detection, mobile menu, account termination)
+  useEffect(() => {
     let ticking = false;
     const handleScroll = () => {
       if (!ticking) {
@@ -82,13 +111,11 @@ export default function Header() {
       }
     };
 
-    window.addEventListener("auth-change", syncUser);
     window.addEventListener("hc-account-terminated", handleAccountTerminated);
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("open-mobile-menu", handleOpenMenu);
 
     return () => {
-      window.removeEventListener("auth-change", syncUser);
       window.removeEventListener("hc-account-terminated", handleAccountTerminated);
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("open-mobile-menu", handleOpenMenu);

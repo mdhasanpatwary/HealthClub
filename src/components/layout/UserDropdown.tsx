@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { LogOut, LayoutDashboard, Settings } from "lucide-react";
 import { Member } from "@/services/db";
 import { authStore } from "@/services/authStore";
@@ -21,10 +21,26 @@ interface UserDropdownProps {
 
 export default function UserDropdown({ user }: UserDropdownProps) {
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleLogout = () => {
     authStore.logout();
     router.push("/");
+  };
+
+  const handleDashboardClick = () => {
+    if (pathname === "/dashboard" && typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("switch-dashboard-tab", { detail: "history" }));
+      router.replace("/dashboard");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const handleProfileClick = () => {
+    if (pathname === "/dashboard" && typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("switch-dashboard-tab", { detail: "profile" }));
+      router.replace("/dashboard?tab=profile");
+    }
   };
 
   const isAdmin = isAdminUser(user);
@@ -82,6 +98,7 @@ export default function UserDropdown({ user }: UserDropdownProps) {
           <>
             <DropdownMenuItem
               render={<Link href="/dashboard" />}
+              onClick={handleDashboardClick}
               className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md hover:bg-muted text-foreground transition-colors"
             >
               <LayoutDashboard className="h-4 w-4 text-primary" />
@@ -89,6 +106,7 @@ export default function UserDropdown({ user }: UserDropdownProps) {
             </DropdownMenuItem>
             <DropdownMenuItem
               render={<Link href="/dashboard?tab=profile" />}
+              onClick={handleProfileClick}
               className="flex w-full items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md hover:bg-muted text-foreground transition-colors"
             >
               <Settings className="h-4 w-4 text-primary" />

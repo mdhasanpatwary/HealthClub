@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 import type { Transporter } from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { logger } from "@/lib/logger";
+import { SITE_URL } from "@/lib/siteConfig";
 
 export const smtpUser = process.env.SMTP_USER;
 export const smtpPassword = process.env.SMTP_PASSWORD;
@@ -354,6 +355,70 @@ export async function sendBulkBroadcastEmails(
     sent,
     failed,
   };
+}
+
+export async function sendWelcomeEmail(
+  email: string,
+  name: string,
+  memberId: string,
+  tier: string
+): Promise<boolean> {
+  if (!smtpUser || !smtpPassword || smtpPassword.includes("placeholder") || smtpPassword.includes("your-16-char")) {
+    logger.info(`[EMAIL SIMULATOR] Welcome email to ${email} (ID: ${memberId})`);
+    return true;
+  }
+
+  const tierNameBn = tier === "premium" ? "প্রিমিয়াম মেম্বারশিপ" : "ফ্রি মেম্বারশিপ";
+  const mailOptions = {
+    from: `"হেলথ ক্লাব (Health Club)" <${smtpUser}>`,
+    to: email,
+    subject: `হেলথ ক্লাবে স্বাগতম! আপনার মেম্বারশিপ আইডি: ${memberId}`,
+    html: `
+      <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f8fafc; padding: 40px 10px; margin: 0; min-height: 100%;">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); overflow: hidden; margin: 0 auto;">
+          <tr>
+            <td style="background-color: #0f172a; padding: 30px 40px; text-align: center; border-bottom: 3px solid #16a34a;">
+              <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700;">
+                হেলথ <span style="color: #16a34a;">ক্লাব</span>
+              </h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 40px; color: #334155; line-height: 1.6;">
+              <p style="font-size: 16px; margin-top: 0; margin-bottom: 20px;">
+                প্রিয় <strong>${name}</strong>,
+              </p>
+              <p style="font-size: 15px; margin-bottom: 20px;">
+                হেলথ ক্লাবে আপনাকে স্বাগতম! আপনার <strong>${tierNameBn}</strong> সফলভাবে সক্রিয় হয়েছে।
+              </p>
+              <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 20px; text-align: center; margin: 25px 0;">
+                <p style="margin: 0; font-size: 13px; color: #166534; font-weight: 600;">আপনার ডিজিটাল মেম্বারশিপ আইডি</p>
+                <p style="margin: 8px 0 0 0; font-size: 22px; font-weight: 800; color: #15803d; letter-spacing: 1px;">${memberId}</p>
+              </div>
+              <p style="font-size: 14px; color: #475569; margin-bottom: 25px;">
+                এখন থেকে ফেনী সদরের যেকোনো পার্টনার হাসপাতালে আপনার ডিজিটাল মেম্বার কার্ড দেখিয়ে সেবা বা টেস্টে ১০-৩০% বিশেষ ছাড় উপভোগ করতে পারবেন।
+              </p>
+              <div style="text-align: center; margin-top: 30px;">
+                <a href="${SITE_URL}/dashboard" style="display: inline-block; background-color: #16a34a; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 14px; padding: 12px 28px; border-radius: 8px;">
+                  ডিজিটাল কার্ড দেখুন
+                </a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color: #f1f5f9; padding: 20px 40px; text-align: center; border-top: 1px solid #e2e8f0;">
+              <p style="font-size: 12px; color: #94a3b8; margin: 0;">
+                &copy; 2026 হেলথ ক্লাব (Health Club)। Feni, Bangladesh.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </div>
+    `,
+  };
+
+  const result = await sendWithRetry(mailOptions);
+  return result.success;
 }
 
 export {

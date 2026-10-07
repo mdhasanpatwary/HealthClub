@@ -1,16 +1,15 @@
 "use client";
 
-import { Suspense, useState, useEffect, useCallback } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  Heart, User, Phone, Mail, Lock, MapPin, Calendar, Briefcase,
+  Heart, User, Phone, Lock, MapPin, Calendar, Briefcase,
   ArrowRight, Star, ShieldCheck, Sparkles
 } from "lucide-react";
 import { addMemberAction } from "@/app/actions/memberActions";
-import { validateReferenceCodeAction } from "@/app/actions/referenceCodeActions";
 import {
   memberRegistrationSchema,
   type MemberRegistrationInput,
@@ -21,7 +20,7 @@ import { ImageUpload } from "@/components/ui/ImageUpload";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
-import { ReferenceCodeField, type RefStatusState } from "./components/ReferenceCodeField";
+import { authStore } from "@/services/authStore";
 import WhatsAppAssistanceCard from "@/components/common/WhatsAppAssistanceCard";
 
 function RegisterForm() {
@@ -35,7 +34,6 @@ function RegisterForm() {
     handleSubmit,
     control,
     setValue,
-    getValues,
     formState: { errors, isSubmitting },
   } = useForm<MemberRegistrationInput>({
     resolver: zodResolver(memberRegistrationSchema),
@@ -54,84 +52,11 @@ function RegisterForm() {
   });
 
   const selectedTier = useWatch({ control, name: "tier" });
-
-  const [refStatus, setRefStatus] = useState<RefStatusState>({ status: "idle", message: "" });
   const [isPhotoUploading, setIsPhotoUploading] = useState(false);
-
-  const handleVerifyRefCode = useCallback(async (codeToVerify?: string) => {
-    const code = (codeToVerify ?? getValues("referenceCode") ?? "").trim();
-    if (!code) {
-      setRefStatus({ status: "idle", message: "" });
-      return;
-    }
-    setRefStatus({ status: "checking", message: "" });
-    try {
-      const res = await validateReferenceCodeAction(code, selectedTier);
-      if (res.valid) {
-        setRefStatus({
-          status: "valid",
-          message: res.messageBn,
-          discountType: res.discountType,
-          discountAmount: res.discountAmount,
-          finalFee: res.finalFee,
-        });
-      } else {
-        setRefStatus({
-          status: "invalid",
-          message: res.messageBn,
-        });
-      }
-    } catch {
-      setRefStatus({
-        status: "invalid",
-        message: "কোড যাচাই করতে সমস্যা হয়েছে।",
-      });
-    }
-  }, [getValues, selectedTier]);
-
-  useEffect(() => {
-    if (!refParam) return;
-    let isMounted = true;
-    validateReferenceCodeAction(refParam, selectedTier)
-      .then((res) => {
-        if (!isMounted) return;
-        setRefStatus(
-          res.valid
-            ? {
-                status: "valid",
-                message: res.messageBn,
-                discountType: res.discountType,
-                discountAmount: res.discountAmount,
-                finalFee: res.finalFee,
-              }
-            : {
-                status: "invalid",
-                message: res.messageBn,
-              }
-        );
-      })
-      .catch(() => {
-        if (!isMounted) return;
-        setRefStatus({
-          status: "invalid",
-          message: "কোড যাচাই করতে সমস্যা হয়েছে।",
-        });
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, [refParam, selectedTier]);
+  const [showMoreDetails, setShowMoreDetails] = useState(false);
 
   const onSubmit = async (data: MemberRegistrationInput) => {
     try {
-      if (data.profilePictureUrl && typeof window !== "undefined") {
-        try {
-          sessionStorage.setItem("hc_pending_photo", data.profilePictureUrl);
-        } catch {
-          // Ignore quota errors if storage is full
-        }
-      }
-
       const result = await addMemberAction(data);
 
       if ("error" in result) {
@@ -139,25 +64,35 @@ function RegisterForm() {
         return;
       }
 
-      toast.success("রেজিস্ট্রেশন সফল হয়েছে! আপনার ইমেইল যাচাই করুন।");
-      router.push(`/register/verify-email?email=${encodeURIComponent(data.email.trim())}`);
+      // Sync authStore, local storage, and dispatch auth-change for Header
+      authStore.setCurrentUser(result);
+
+      if (result.tier === "premium" && result.status !== "active") {
+        toast.success("অ্যাকাউন্ট তৈরি হয়েছে! মেম্বারশিপ সক্রিয় করতে পেমেন্ট সম্পন্ন করুন।");
+        router.push(`/register/payment?memberId=${result.id}`);
+      } else {
+        toast.success("অভিনন্দন! আপনার ফ্রি মেম্বারশিপ কার্ড সফলভাবে সক্রিয় হয়েছে।");
+        router.replace("/dashboard");
+      }
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "রেজিস্ট্রেশন সম্পন্ন করা যায়নি। আবার চেষ্টা করুন।";
       toast.error(errorMessage);
     }
   };
 
+  const isPremiumSelected = selectedTier === "premium";
+
   return (
-    <div className="relative bg-background/90 dark:bg-slate-900/90 backdrop-blur-xl border border-border/60 rounded-3xl shadow-2xl overflow-hidden w-full max-w-xl">
+    <div className="relative bg-background/95 dark:bg-slate-900/95 backdrop-blur-xl border border-border/60 rounded-3xl shadow-2xl overflow-hidden w-full max-w-xl">
       {/* Top accent */}
       <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent" />
 
-      <div className="p-8 sm:p-10 space-y-6">
+      <div className="p-6 sm:p-10 space-y-5">
         {/* Logo & Title */}
-        <div className="text-center">
-          <Link href="/" className="inline-flex items-center justify-center space-x-2 group mb-4">
+        <div className="text-center space-y-2">
+          <Link href="/" className="inline-flex items-center justify-center space-x-2 group">
             <div className="relative">
-              <Heart className="h-8 w-8 fill-primary text-primary transition-transform duration-300 group-hover:scale-110" />
+              <Heart className="h-7 w-7 fill-primary text-primary transition-transform duration-300 group-hover:scale-110" />
             </div>
             <span className="font-heading text-2xl font-bold text-secondary dark:text-white">
               হেলথ <span className="gradient-text">ক্লাব</span>
@@ -166,228 +101,201 @@ function RegisterForm() {
           <h1 className="font-heading text-xl font-bold text-secondary dark:text-white">
             নতুন সদস্য নিবন্ধন
           </h1>
-          <p className="text-sm text-muted-foreground mt-1.5">
-            হেলথ ক্লাবের মেম্বারশিপ নিয়ে উপভোগ করুন বিশেষ ছাড় ও সেবা
+          <p className="text-xs sm:text-sm text-muted-foreground">
+            মাত্র ৩০ সেকেন্ডে তৈরি করুন আপনার ডিজিটাল মেম্বারশিপ কার্ড
           </p>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/60 dark:border-emerald-800/40 text-emerald-700 dark:text-emerald-400 text-[11px] font-semibold">
+            <Sparkles className="h-3 w-3 text-emerald-600" />
+            <span>কোনো গোপন ফি নেই • সাথে সাথে কার্ড চালু</span>
+          </div>
         </div>
 
         {/* Plan Selector */}
         <div
           role="radiogroup"
           aria-label="মেম্বারশিপ প্ল্যান নির্বাচন করুন"
-          className="grid grid-cols-2 gap-3 mb-6"
+          className="grid grid-cols-2 gap-3"
         >
           <button
             type="button"
             role="radio"
-            aria-checked={selectedTier === "free" || selectedTier === "founding"}
+            aria-checked={!isPremiumSelected}
             onClick={() => setValue("tier", "free", { shouldValidate: true })}
-            className={`relative p-4 rounded-2xl border-2 text-left transition-all duration-200 cursor-pointer ${
-              selectedTier === "free" || selectedTier === "founding"
-                ? "border-primary bg-primary/5 dark:bg-primary/10"
+            className={`relative p-3.5 sm:p-4 rounded-2xl border-2 text-left transition-all duration-200 cursor-pointer ${
+              !isPremiumSelected
+                ? "border-primary bg-primary/5 dark:bg-primary/10 shadow-xs"
                 : "border-border/60 hover:border-primary/30"
             }`}
           >
-            {(selectedTier === "free" || selectedTier === "founding") && (
-              <div className="absolute top-2 right-2 h-5 w-5 rounded-full bg-primary flex items-center justify-center">
-                <Star className="h-3 w-3 text-white fill-white" />
+            {!isPremiumSelected && (
+              <div className="absolute top-2.5 right-2.5 h-4 w-4 rounded-full bg-primary flex items-center justify-center">
+                <Star className="h-2.5 w-2.5 text-white fill-white" />
               </div>
             )}
-            <Star className={`h-5 w-5 mb-2 ${(selectedTier === "free" || selectedTier === "founding") ? "text-primary fill-primary/20" : "text-muted-foreground"}`} />
+            <Star className={`h-4 w-4 mb-1.5 ${!isPremiumSelected ? "text-primary fill-primary/20" : "text-muted-foreground"}`} />
             <p className="text-xs font-bold text-secondary dark:text-white">ফ্রি মেম্বার</p>
-            <p className="text-[11px] text-primary font-semibold">১০-২৫% ছাড় (৳০ ফি)</p>
+            <p className="text-[11px] text-primary font-bold">১০-২৫% ছাড় (৳০ ফি)</p>
           </button>
           <button
             type="button"
             role="radio"
-            aria-checked={selectedTier === "premium"}
+            aria-checked={isPremiumSelected}
             onClick={() => setValue("tier", "premium", { shouldValidate: true })}
-            className={`relative p-4 rounded-2xl border-2 text-left transition-all duration-200 cursor-pointer ${
-              selectedTier === "premium"
-                ? "border-primary bg-primary/5 dark:bg-primary/10"
+            className={`relative p-3.5 sm:p-4 rounded-2xl border-2 text-left transition-all duration-200 cursor-pointer ${
+              isPremiumSelected
+                ? "border-primary bg-primary/5 dark:bg-primary/10 shadow-xs"
                 : "border-border/60 hover:border-primary/30"
             }`}
           >
-            {selectedTier === "premium" && (
-              <div className="absolute top-2 right-2 h-5 w-5 rounded-full bg-primary flex items-center justify-center">
-                <ShieldCheck className="h-3 w-3 text-white" />
+            {isPremiumSelected && (
+              <div className="absolute top-2.5 right-2.5 h-4 w-4 rounded-full bg-primary flex items-center justify-center">
+                <ShieldCheck className="h-2.5 w-2.5 text-white" />
               </div>
             )}
-            <ShieldCheck className={`h-5 w-5 mb-2 ${selectedTier === "premium" ? "text-primary" : "text-muted-foreground"}`} />
+            <ShieldCheck className={`h-4 w-4 mb-1.5 ${isPremiumSelected ? "text-primary" : "text-muted-foreground"}`} />
             <p className="text-xs font-bold text-secondary dark:text-white">প্রিমিয়াম মেম্বার</p>
-            {refStatus.status === "valid" && (refStatus.discountType === "free" || refStatus.finalFee === 0) ? (
-              <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
-                <Sparkles className="h-3 w-3" />
-                রেফারেন্সে ১০০% ফ্রি
-              </p>
-            ) : refStatus.status === "valid" && refStatus.discountAmount && refStatus.discountAmount > 0 ? (
-              <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">
-                ৳{refStatus.finalFee} (ছাড়সহ)
-              </p>
-            ) : (
-              <p className="text-[11px] text-muted-foreground font-semibold">১৫-৩০% ছাড় ও প্রায়োরিটি</p>
-            )}
+            <p className="text-[11px] text-muted-foreground font-semibold">১৫-৩০% ছাড় ও প্রায়োরিটি</p>
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <Controller
-            name="profilePictureUrl"
-            control={control}
-            render={({ field, fieldState }) => (
-              <div className="space-y-1">
-                <ImageUpload
-                  value={field.value}
-                  onChange={field.onChange}
-                  onUploadingChange={setIsPhotoUploading}
-                  label="প্রোফাইল ছবি"
-                  folder="members"
-                />
-                {fieldState.error && (
-                  <p className="text-xs text-destructive">{fieldState.error.message}</p>
-                )}
-              </div>
-            )}
-          />
-
-          <div className="space-y-1.5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3.5">
+          {/* Core Essential 1: Name */}
+          <div className="space-y-1">
             <label htmlFor="reg-name" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
               <User className="h-3.5 w-3.5 text-primary" />
-              পূর্ণ নাম (Full Name)
+              পূর্ণ নাম (Full Name) <span className="text-destructive">*</span>
             </label>
             <Input
               id="reg-name"
               type="text"
               {...register("name")}
               placeholder="আপনার পূর্ণ নাম লিখুন"
-              className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
+              className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40 text-sm"
             />
             {errors.name && (
               <p className="text-xs text-destructive">{errors.name.message}</p>
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <label htmlFor="reg-phone" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
-                <Phone className="h-3.5 w-3.5 text-primary" />
-                মোবাইল নম্বর
-              </label>
-              <Input
-                id="reg-phone"
-                type="tel"
-                {...register("phone")}
-                placeholder="017XXXXXXXX"
-                className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
-              />
-              {errors.phone && (
-                <p className="text-xs text-destructive">{errors.phone.message}</p>
-              )}
-            </div>
-            <div className="space-y-1.5">
-              <label htmlFor="reg-email" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
-                <Mail className="h-3.5 w-3.5 text-primary" />
-                ইমেইল অ্যাড্রেস
-              </label>
-              <Input
-                id="reg-email"
-                type="email"
-                {...register("email")}
-                placeholder="name@domain.com"
-                className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
-              />
-              {errors.email && (
-                <p className="text-xs text-destructive">{errors.email.message}</p>
-              )}
-            </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <label htmlFor="reg-address" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
-              <MapPin className="h-3.5 w-3.5 text-primary" />
-              ঠিকানা
+          {/* Core Essential 2: Phone */}
+          <div className="space-y-1">
+            <label htmlFor="reg-phone" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
+              <Phone className="h-3.5 w-3.5 text-primary" />
+              মোবাইল নম্বর <span className="text-destructive">*</span>
             </label>
             <Input
-              id="reg-address"
-              type="text"
-              {...register("address")}
-              placeholder="বাসা/রোড, এলাকা, জেলা"
-              className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
+              id="reg-phone"
+              type="tel"
+              {...register("phone")}
+              placeholder="017XXXXXXXX"
+              className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40 text-sm font-mono"
             />
-            {errors.address && (
-              <p className="text-xs text-destructive">{errors.address.message}</p>
+            {errors.phone && (
+              <p className="text-xs text-destructive">{errors.phone.message}</p>
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <label htmlFor="reg-birthDate" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
-                <Calendar className="h-3.5 w-3.5 text-primary" />
-                জন্ম তারিখ
-              </label>
-              <Input
-                id="reg-birthDate"
-                type="date"
-                {...register("birthDate")}
-                className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
-              />
-              {errors.birthDate && (
-                <p className="text-xs text-destructive">{errors.birthDate.message}</p>
-              )}
-            </div>
-            <div className="space-y-1.5">
-              <label htmlFor="reg-profession" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
-                <Briefcase className="h-3.5 w-3.5 text-primary" />
-                পেশা
-              </label>
-              <Input
-                id="reg-profession"
-                type="text"
-                {...register("profession")}
-                placeholder="যেমন: শিক্ষক, চাকরিজীবী, ব্যবসায়ী"
-                className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
-              />
-              {errors.profession && (
-                <p className="text-xs text-destructive">{errors.profession.message}</p>
-              )}
-            </div>
-          </div>
-
-          <ReferenceCodeField
-            register={register}
-            error={errors.referenceCode}
-            refStatus={refStatus}
-            setRefStatus={setRefStatus}
-            onVerify={() => handleVerifyRefCode()}
-          />
-
-          <div className="space-y-1.5">
+          {/* Core Essential 3: Password */}
+          <div className="space-y-1">
             <label htmlFor="reg-password" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
               <Lock className="h-3.5 w-3.5 text-primary" />
-              পাসওয়ার্ড
+              লগইন পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর) <span className="text-destructive">*</span>
             </label>
             <Input
               id="reg-password"
               type="password"
               {...register("password")}
               placeholder="••••••••"
-              className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40"
+              className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40 text-sm"
             />
             {errors.password && (
               <p className="text-xs text-destructive">{errors.password.message}</p>
             )}
           </div>
 
+          {/* Optional Collapsible Extra Profile Fields */}
+          <div className="pt-1">
+            <button
+              type="button"
+              onClick={() => setShowMoreDetails((prev) => !prev)}
+              className="text-xs font-semibold text-primary hover:text-primary-dark inline-flex items-center gap-1.5 transition-colors cursor-pointer py-1"
+            >
+              <span>{showMoreDetails ? "− অতিরিক্ত তথ্য লুকান" : "+ প্রোফাইল ছবি ও ঠিকানা যোগ করুন (ঐচ্ছিক)"}</span>
+            </button>
+          </div>
+
+          {showMoreDetails && (
+            <div className="space-y-3.5 pt-2 border-t border-border/50 animate-in fade-in duration-200">
+              <Controller
+                name="profilePictureUrl"
+                control={control}
+                render={({ field }) => (
+                  <div className="space-y-1">
+                    <ImageUpload
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      onUploadingChange={setIsPhotoUploading}
+                      label="প্রোফাইল ছবি (ঐচ্ছিক - ড্যাশবোর্ড থেকেও দেওয়া যাবে)"
+                      folder="members"
+                    />
+                  </div>
+                )}
+              />
+
+              <div className="space-y-1">
+                <label htmlFor="reg-address" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
+                  <MapPin className="h-3.5 w-3.5 text-primary" />
+                  বর্তমান ঠিকানা <span className="text-[11px] text-muted-foreground font-normal">(ঐচ্ছিক)</span>
+                </label>
+                <Input
+                  id="reg-address"
+                  type="text"
+                  {...register("address")}
+                  placeholder="বাসা/রোড, এলাকা, উপজেলা/জেলা"
+                  className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40 text-xs"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label htmlFor="reg-birthDate" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
+                    <Calendar className="h-3.5 w-3.5 text-primary" />
+                    জন্ম তারিখ <span className="text-[11px] text-muted-foreground font-normal">(ঐচ্ছিক)</span>
+                  </label>
+                  <Input
+                    id="reg-birthDate"
+                    type="date"
+                    {...register("birthDate")}
+                    className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40 text-xs"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label htmlFor="reg-profession" className="text-xs font-semibold text-secondary dark:text-white flex items-center gap-1.5 cursor-pointer">
+                    <Briefcase className="h-3.5 w-3.5 text-primary" />
+                    পেশা <span className="text-[11px] text-muted-foreground font-normal">(ঐচ্ছিক)</span>
+                  </label>
+                  <Input
+                    id="reg-profession"
+                    type="text"
+                    {...register("profession")}
+                    placeholder="যেমন: শিক্ষক, চাকরিজীবী"
+                    className="border-border/60 bg-background dark:bg-slate-800/60 rounded-xl h-10 focus:border-primary/40 text-xs"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
           <Button
             type="submit"
             disabled={isSubmitting || isPhotoUploading}
             size="lg"
-            className="w-full mt-1 cursor-pointer"
+            className="w-full mt-2 h-11 text-sm font-bold shadow-md cursor-pointer"
           >
             {isSubmitting ? (
               <div className="flex items-center justify-center gap-2">
                 <div className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                <span>অ্যাকাউন্ট তৈরি হচ্ছে...</span>
+                <span>কার্ড তৈরি হচ্ছে...</span>
               </div>
             ) : isPhotoUploading ? (
               <div className="flex items-center justify-center gap-2">
@@ -395,16 +303,16 @@ function RegisterForm() {
                 <span>ছবি আপলোড হচ্ছে...</span>
               </div>
             ) : (
-              <>
-                পরবর্তী ধাপে যান
+              <span className="flex items-center justify-center gap-2">
+                {isPremiumSelected ? "পরবর্তী ধাপে পেমেন্ট করুন" : "বিনামূল্যে মেম্বার কার্ড নিন (৳০)"}
                 <ArrowRight className="h-4 w-4" />
-              </>
+              </span>
             )}
           </Button>
         </form>
 
-        <div className="text-center text-sm text-muted-foreground border-t border-border/60 pt-5">
-          ইতিমধ্যে একাউন্ট আছে?{" "}
+        <div className="text-center text-xs text-muted-foreground border-t border-border/60 pt-4">
+          ইতিমধ্যে অ্যাকাউন্ট আছে?{" "}
           <Link href="/login" className="text-primary hover:text-primary-dark font-semibold transition-colors">
             লগইন করুন
           </Link>

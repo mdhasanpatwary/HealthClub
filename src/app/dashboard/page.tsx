@@ -32,6 +32,41 @@ function DashboardContent() {
   const searchParams = useSearchParams();
   const requestedTab = searchParams.get("tab") === "profile" ? "profile" : "history";
   const [activeTab, setActiveTab] = useState(requestedTab);
+  const [prevRequestedTab, setPrevRequestedTab] = useState(requestedTab);
+
+  // Adjust activeTab during render when URL query param changes
+  if (requestedTab !== prevRequestedTab) {
+    setPrevRequestedTab(requestedTab);
+    setActiveTab(requestedTab);
+  }
+
+  // Smooth scroll to profile settings when requested via URL query param
+  useEffect(() => {
+    if (searchParams.get("tab") === "profile") {
+      const timer = setTimeout(() => {
+        document.getElementById("profile-settings")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams]);
+
+  // Handle immediate in-page tab switch event dispatched from UserDropdown or MobileNav
+  useEffect(() => {
+    const handleSwitchTab = (e: Event) => {
+      const target = (e as CustomEvent<string>).detail || "profile";
+      setActiveTab(target);
+      if (target === "profile") {
+        setTimeout(() => {
+          document.getElementById("profile-settings")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 50);
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    };
+    window.addEventListener("switch-dashboard-tab", handleSwitchTab);
+    return () => window.removeEventListener("switch-dashboard-tab", handleSwitchTab);
+  }, []);
+
   const [user, setUser] = useState<Member | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -367,8 +402,15 @@ function DashboardContent() {
           />
 
           {/* Right Column: Dynamic Tabs */}
-          <div className="lg:col-span-7">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <div id="profile-settings" className="lg:col-span-7 scroll-mt-24">
+            <Tabs
+              value={activeTab}
+              onValueChange={(val) => {
+                setActiveTab(val);
+                router.replace(val === "profile" ? "/dashboard?tab=profile" : "/dashboard", { scroll: false });
+              }}
+              className="w-full"
+            >
               <TabsList className="grid w-full grid-cols-2 bg-muted/60 dark:bg-slate-900/60 p-1.5 rounded-xl border border-border/60">
                 <TabsTrigger value="history" className="rounded-lg text-xs font-semibold py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm">
                   <History className="h-3.5 w-3.5 mr-1.5" />

@@ -2,7 +2,7 @@ export interface Member {
   id: string;
   name: string;
   phone: string;
-  email: string;
+  email?: string;
   tier: 'free' | 'premium' | 'founding';
   status: 'active' | 'inactive' | 'pending_payment' | 'pending_approval';
   joinedDate: string;

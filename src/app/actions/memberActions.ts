@@ -1,25 +1,21 @@
 "use server";
 
-import { randomInt } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { Member, PublicMemberVerification, Transaction } from "@/services/db";
 import { hashPassword } from "@/lib/crypto";
-import { getSessionUser } from "@/lib/session";
-import { sendOtpEmail } from "@/lib/mail";
+import { getSessionUser, setSessionUser } from "@/lib/session";
+import { sendWelcomeEmail } from "@/lib/mail";
 import { logger } from "@/lib/logger";
-import { telemetry } from "@/lib/telemetry";
 import { SITE_URL } from "@/lib/siteConfig";
 import { updateTag } from "next/cache";
-import { isMemberTxAllowedAction } from "./systemSettingsActions";
+import { isMemberTxAllowedAction, getCachedPaymentSettings } from "./systemSettingsActions";
 import { TRANSACTION_SELECT_FIELDS, mapPrismaTransaction } from "@/lib/transactionFormat";
 import {
   checkRateLimit,
   getClientIp,
   RATE_LIMIT_RULES,
 } from "@/lib/rateLimit";
-import {
-  setPendingRegistration,
-} from "@/lib/pendingRegistration";
+
 import {
   memberRegistrationSchema,
   adminAddMemberSchema,
@@ -110,7 +106,6 @@ export async function addMemberAction(
 
   const rawPassword = member.password || "123456";
   const hashedPassword = hashPassword(rawPassword);
-  const verificationCode = randomInt(100000, 1000000).toString();
 
   // If Admin is adding a member directly, insert into database immediately as verified
   if (isAdmin) {
@@ -165,60 +160,71 @@ export async function addMemberAction(
     }
   }
 
-  // Public User Registration: DO NOT insert into DB yet. Store in secure pending registration cookie and send OTP.
+  // Public User Registration: Insert into DB directly, establish session, and eliminate high-friction blocking email OTP wall
   try {
-    if (!member.email) {
-      return { error: "ইমেইল অ্যাড্রেস আবশ্যক।" };
-    }
+    const year = new Date().getFullYear();
+    const rand = crypto.randomUUID().slice(0, 8).toUpperCase();
+    const newId = `HC-${year}-${rand}`;
+    const joined = new Date();
+    const expiry = new Date();
+    expiry.setFullYear(joined.getFullYear() + 1);
 
-    const pendingProfilePhoto = (await ensureStorageUrl(member.profilePictureUrl, "members")) || undefined;
+    const isFreeTier = member.tier === "free" || member.tier === "founding";
+    const paymentSettings = await getCachedPaymentSettings();
+    const standardFee = isFreeTier ? 0 : parseInt(paymentSettings.premiumFee || "500", 10);
+    const isFree = isFreeTier || computedDiscount >= standardFee;
+    const initialStatus = isFree ? "active" : "inactive";
 
-    await setPendingRegistration(
-      {
+    const finalProfilePicture = member.profilePictureUrl
+      ? (await ensureStorageUrl(member.profilePictureUrl, "members", newId)) || null
+      : null;
+
+    const createdMember = await prisma.member.create({
+      data: {
+        id: newId,
         name: member.name,
         phone: member.phone,
-        email: member.email,
-        hashedPassword,
+        email: member.email ? member.email.trim().toLowerCase() : null,
+        password: hashedPassword,
         tier: member.tier,
-        address: member.address,
-        birthDate: member.birthDate,
-        profession: member.profession,
-        profilePictureUrl: pendingProfilePhoto,
-        referenceCode: validatedRefCode,
+        status: initialStatus,
+        joinedDate: joined,
+        expiryDate: expiry,
+        qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`${SITE_URL}/verify/${newId}`)}`,
+        totalSaved: 0,
+        address: member.address || null,
+        birthDate: member.birthDate ? new Date(member.birthDate) : null,
+        profession: member.profession || null,
+        profilePictureUrl: finalProfilePicture,
+        emailVerified: true,
+        referenceCode: validatedRefCode || member.referenceCode || null,
         discountAmount: computedDiscount,
       },
-      verificationCode
-    );
+    });
 
-    const sent = await sendOtpEmail(member.email, verificationCode, member.name);
-    if (!sent) {
-      logger.error(`[SIGNUP] OTP email send failed for ${member.email}`);
-      telemetry.captureEvent(
-        "otp_delivery_failed",
-        { email: member.email, flow: "signup_verification", tier: member.tier },
-        "error",
-        { route: "addMemberAction", action: "signup_otp" }
-      );
-      return { error: "ইমেইলে ওটিপি কোড পাঠাতে সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।" };
+    updateTag("admin-stats");
+
+    // Automatically establish session for immediate dashboard access
+    await setSessionUser(createdMember.id, "user");
+
+    // Optional asynchronous welcome email (non-blocking)
+    if (createdMember.email) {
+      sendWelcomeEmail(createdMember.email, createdMember.name, newId, createdMember.tier).catch((e) => {
+        logger.warn("[SIGNUP] Welcome email failed to send (non-critical):", e);
+      });
     }
 
-    const now = new Date();
-    const expiry = new Date();
-    expiry.setFullYear(now.getFullYear() + 1);
-
     return {
-      id: "PENDING",
-      name: member.name,
-      phone: member.phone,
-      email: member.email,
-      tier: member.tier,
-      status: "inactive",
-      joinedDate: formatDate(now),
-      expiryDate: formatDate(expiry),
-      totalSaved: 0,
-      emailVerified: false,
-      referenceCode: validatedRefCode,
-      discountAmount: computedDiscount,
+      ...createdMember,
+      email: createdMember.email || undefined,
+      joinedDate: formatDate(createdMember.joinedDate),
+      expiryDate: formatDate(createdMember.expiryDate),
+      address: createdMember.address || undefined,
+      birthDate: createdMember.birthDate ? formatDate(createdMember.birthDate) : undefined,
+      profession: createdMember.profession || undefined,
+      profilePictureUrl: createdMember.profilePictureUrl || undefined,
+      referenceCode: createdMember.referenceCode || undefined,
+      discountAmount: createdMember.discountAmount,
     } as Member;
   } catch (error: unknown) {
     logger.error("Error in addMemberAction (public):", error);

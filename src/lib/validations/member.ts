@@ -16,7 +16,9 @@ export const memberRegistrationSchema = z.object({
     .string()
     .trim()
     .email("সঠিক ইমেইল অ্যাড্রেস লিখুন।")
-    .toLowerCase(),
+    .toLowerCase()
+    .optional()
+    .or(z.literal("")),
   password: z
     .string()
     .min(6, "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।"),
@@ -26,21 +28,25 @@ export const memberRegistrationSchema = z.object({
   address: z
     .string()
     .trim()
-    .min(3, "ঠিকানা লিখুন (কমপক্ষে ৩ অক্ষর)।")
-    .max(200, "ঠিকানা ২০০ অক্ষরের মধ্যে হতে হবে।"),
+    .max(200, "ঠিকানা ২০০ অক্ষরের মধ্যে হতে হবে।")
+    .optional()
+    .or(z.literal("")),
   birthDate: z
     .string()
     .trim()
-    .min(1, "জন্ম তারিখ নির্বাচন করুন।"),
+    .optional()
+    .or(z.literal("")),
   profession: z
     .string()
     .trim()
-    .min(2, "পেশা লিখুন।")
-    .max(100, "পেশা ১০০ অক্ষরের মধ্যে হতে হবে।"),
+    .max(100, "পেশা ১০০ অক্ষরের মধ্যে হতে হবে।")
+    .optional()
+    .or(z.literal("")),
   profilePictureUrl: z
     .string()
     .trim()
-    .min(1, "প্রোফাইল ছবি আপলোড করুন।"),
+    .optional()
+    .or(z.literal("")),
   referenceCode: z
     .string()
     .trim()
