@@ -395,7 +395,7 @@ export function PartnerDoctorsTab({ partner }: PartnerDoctorsTabProps) {
                       className="flex-1 rounded-xl text-xs font-semibold gap-1.5 h-8 border-border hover:border-primary/50 cursor-pointer"
                     >
                       <Edit3 className="h-3.5 w-3.5 text-primary" />
-                      <span>চেম্বার এডিট</span>
+                      <span>ডাক্তার এডিট</span>
                     </Button>
 
                     <Button

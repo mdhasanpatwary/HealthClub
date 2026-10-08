@@ -7,7 +7,6 @@ import { getSessionUser } from "@/lib/session";
 import { hashPassword } from "@/lib/crypto";
 import { logger } from "@/lib/logger";
 import { unstable_cache, updateTag, revalidateTag, revalidatePath } from "next/cache";
-import { cache } from "react";
 import { PaginatedResult } from "@/types/pagination";
 import {
   addPartnerRequestAction as _addPartnerRequestAction,

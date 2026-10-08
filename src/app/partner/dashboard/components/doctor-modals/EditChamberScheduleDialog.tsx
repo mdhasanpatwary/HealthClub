@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ImageUpload } from "@/components/ui/ImageUpload";
 import { Doctor } from "@/services/db";
 import { updatePartnerDoctorChamberAction } from "@/app/actions/partnerDoctorActions";
 import {
@@ -37,7 +38,6 @@ function EditChamberForm({
   onClose: () => void;
   onSuccess: () => void;
 }) {
-
   const {
     register,
     handleSubmit,
@@ -48,6 +48,7 @@ function EditChamberForm({
     resolver: zodResolver(updatePartnerDoctorSchema),
     defaultValues: {
       name: doctor.name || "",
+      nameEn: doctor.nameEn || "",
       specialty: doctor.specialty || "",
       department: doctor.department || "medicine",
       degrees: doctor.degrees || "",
@@ -57,6 +58,7 @@ function EditChamberForm({
       visitingHours: doctor.visitingHours || "",
       serialPhone: doctor.serialPhone || "",
       consultationFee: doctor.consultationFee || "",
+      imageUrl: doctor.imageUrl || "",
       isActive: doctor.isActive ?? true,
       availableToday: doctor.availableToday !== false,
       onLeaveUntil: doctor.onLeaveUntil ? doctor.onLeaveUntil.slice(0, 10) : "",
@@ -65,28 +67,32 @@ function EditChamberForm({
   });
 
   const availableToday = useWatch({ control, name: "availableToday" });
+  const isActive = useWatch({ control, name: "isActive" });
+  const imageUrl = useWatch({ control, name: "imageUrl" });
 
   const onSubmit = async (data: UpdatePartnerDoctorFormValues) => {
     try {
       const res = await updatePartnerDoctorChamberAction(doctor.id, {
         name: data.name?.trim(),
+        nameEn: data.nameEn?.trim() || "",
         specialty: data.specialty?.trim(),
         department: data.department,
-        degrees: data.degrees?.trim(),
-        designation: data.designation?.trim(),
-        roomNo: data.roomNo?.trim() || undefined,
+        degrees: data.degrees !== undefined ? data.degrees?.trim() || "" : "",
+        designation: data.designation !== undefined ? data.designation?.trim() || "" : "",
+        roomNo: data.roomNo !== undefined ? data.roomNo?.trim() || "" : "",
         visitingDays: data.visitingDays?.trim(),
         visitingHours: data.visitingHours?.trim(),
         serialPhone: data.serialPhone?.trim(),
-        consultationFee: data.consultationFee?.trim() || undefined,
+        consultationFee: data.consultationFee !== undefined ? data.consultationFee?.trim() || "" : "",
+        imageUrl: data.imageUrl !== undefined ? data.imageUrl?.trim() || "" : "",
         isActive: data.isActive,
         availableToday: data.availableToday,
-        onLeaveUntil: data.onLeaveUntil || undefined,
-        notice: data.notice?.trim() || undefined,
+        onLeaveUntil: data.onLeaveUntil !== undefined ? data.onLeaveUntil?.trim() || "" : "",
+        notice: data.notice !== undefined ? data.notice?.trim() || "" : "",
       });
 
       if (res.success) {
-        toast.success("চেম্বার সময়সূচী সফলভাবে আপডেট করা হয়েছে।");
+        toast.success("ডাক্তার ও চেম্বারের তথ্য সফলভাবে আপডেট করা হয়েছে।");
         onSuccess();
         onClose();
       } else {
@@ -102,20 +108,33 @@ function EditChamberForm({
       <DialogHeader className="space-y-1">
         <DialogTitle className="font-heading font-bold text-base sm:text-lg md:text-xl flex items-center gap-2">
           <Building2 className="h-5 w-5 text-primary shrink-0" />
-          <span className="truncate">চেম্বার সময়সূচী পরিবর্তন করুন</span>
+          <span className="truncate">ডাক্তার ও চেম্বার তথ্য পরিবর্তন করুন</span>
         </DialogTitle>
         <DialogDescription className="text-xs text-muted-foreground">
-          {doctor.name} - চেম্বারের সময়সূচী, ফি ও অন্যান্য তথ্য আপডেট করুন
+          {doctor.name} - ডাক্তারের পরিচিতি, ডিগ্রি, চেম্বারের সময়সূচী, ফি ও জরুরি নোটিশ আপডেট করুন
         </DialogDescription>
       </DialogHeader>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-2 w-full max-w-full overflow-x-hidden">
+        {/* Doctor Photo */}
+        <ImageUpload
+          value={imageUrl || ""}
+          onChange={(url) => setValue("imageUrl", url, { shouldValidate: true })}
+          label="ডাক্তারের ছবি (ঐচ্ছিক)"
+          fallbackType="doctor"
+          folder="doctors"
+        />
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-full">
+          {/* Doctor Name (Bangla) */}
           <div className="space-y-1.5">
-            <label htmlFor="edit-doc-name" className="text-xs font-semibold text-foreground">ডাক্তারের নাম</label>
+            <label htmlFor="edit-doc-name" className="text-xs font-semibold text-foreground">
+              ডাক্তারের নাম (বাংলা) *
+            </label>
             <Input
               id="edit-doc-name"
               {...register("name")}
+              placeholder="যেমন: সহযোগী অধ্যাপক ডাঃ মোঃ রফিকুল ইসলাম"
               className="h-10 text-sm"
             />
             {errors.name && (
@@ -123,8 +142,24 @@ function EditChamberForm({
             )}
           </div>
 
+          {/* Doctor Name (English) */}
           <div className="space-y-1.5">
-            <label htmlFor="edit-doc-dept" className="text-xs font-semibold text-foreground">বিভাগ</label>
+            <label htmlFor="edit-doc-name-en" className="text-xs font-semibold text-foreground">
+              ডাক্তারের নাম (ইংরেজি, ঐচ্ছিক)
+            </label>
+            <Input
+              id="edit-doc-name-en"
+              {...register("nameEn")}
+              placeholder="e.g. Dr. Md. Rafiqul Islam"
+              className="h-10 text-sm"
+            />
+          </div>
+
+          {/* Department */}
+          <div className="space-y-1.5">
+            <label htmlFor="edit-doc-dept" className="text-xs font-semibold text-foreground">
+              বিভাগ *
+            </label>
             <select
               id="edit-doc-dept"
               {...register("department")}
@@ -136,12 +171,15 @@ function EditChamberForm({
             </select>
           </div>
 
-          <div className="space-y-1.5 sm:col-span-2">
-            <label htmlFor="edit-doc-spec" className="text-xs font-semibold text-foreground">বিশেষজ্ঞতা ও ডিগ্রী</label>
+          {/* Specialty */}
+          <div className="space-y-1.5">
+            <label htmlFor="edit-doc-spec" className="text-xs font-semibold text-foreground">
+              বিশেষজ্ঞতা *
+            </label>
             <Input
               id="edit-doc-spec"
               {...register("specialty")}
-              placeholder="মেডিসিন ও হৃদরোগ বিশেষজ্ঞ"
+              placeholder="যেমন: মেডিসিন ও হৃদরোগ বিশেষজ্ঞ"
               className="h-10 text-sm"
             />
             {errors.specialty && (
@@ -149,29 +187,63 @@ function EditChamberForm({
             )}
           </div>
 
-          {/* Chamber Fields */}
-          <div className="space-y-1.5">
-            <label htmlFor="edit-doc-room" className="text-xs font-semibold text-primary">রুম / চেম্বার নম্বর</label>
+          {/* Degrees */}
+          <div className="space-y-1.5 sm:col-span-2">
+            <label htmlFor="edit-doc-degrees" className="text-xs font-semibold text-foreground">
+              ডিগ্রি ও শিক্ষাগত যোগ্যতা
+            </label>
             <Input
-              id="edit-doc-room"
-              {...register("roomNo")}
-              placeholder="রুম নং ২০৪, ২য় তলা"
-              className="h-10 text-sm border-primary/40 focus-visible:ring-primary"
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <label htmlFor="edit-doc-fee" className="text-xs font-semibold text-foreground">পরামর্শ ফি</label>
-            <Input
-              id="edit-doc-fee"
-              {...register("consultationFee")}
-              placeholder="৳৮০০"
+              id="edit-doc-degrees"
+              {...register("degrees")}
+              placeholder="যেমন: এমবিবিএস (ডিএমসি), বিসিএস (স্বাস্থ্য), এফসিপিএস (মেডিসিন)"
               className="h-10 text-sm"
             />
           </div>
 
+          {/* Designation */}
           <div className="space-y-1.5 sm:col-span-2">
-            <label htmlFor="edit-doc-days" className="text-xs font-semibold text-foreground">রোগী দেখার দিনসমূহ *</label>
+            <label htmlFor="edit-doc-designation" className="text-xs font-semibold text-foreground">
+              বর্তমান পদবী ও কর্মস্থল
+            </label>
+            <Input
+              id="edit-doc-designation"
+              {...register("designation")}
+              placeholder="যেমন: সহযোগী অধ্যাপক, ২৫০ শয্যা জেলা সদর হাসপাতাল, ফেনী"
+              className="h-10 text-sm"
+            />
+          </div>
+
+          {/* Chamber Room */}
+          <div className="space-y-1.5">
+            <label htmlFor="edit-doc-room" className="text-xs font-semibold text-primary">
+              রুম / চেম্বার নম্বর
+            </label>
+            <Input
+              id="edit-doc-room"
+              {...register("roomNo")}
+              placeholder="যেমন: রুম নং ২০৪, ২য় তলা"
+              className="h-10 text-sm border-primary/40 focus-visible:ring-primary"
+            />
+          </div>
+
+          {/* Consultation Fee */}
+          <div className="space-y-1.5">
+            <label htmlFor="edit-doc-fee" className="text-xs font-semibold text-foreground">
+              পরামর্শ ফি
+            </label>
+            <Input
+              id="edit-doc-fee"
+              {...register("consultationFee")}
+              placeholder="যেমন: ৳৮০০"
+              className="h-10 text-sm"
+            />
+          </div>
+
+          {/* Visiting Days */}
+          <div className="space-y-1.5 sm:col-span-2">
+            <label htmlFor="edit-doc-days" className="text-xs font-semibold text-foreground">
+              রোগী দেখার দিনসমূহ *
+            </label>
             <Input
               id="edit-doc-days"
               {...register("visitingDays")}
@@ -194,11 +266,15 @@ function EditChamberForm({
             </div>
           </div>
 
+          {/* Visiting Hours */}
           <div className="space-y-1.5">
-            <label htmlFor="edit-doc-hours" className="text-xs font-semibold text-foreground">রোগী দেখার সময় *</label>
+            <label htmlFor="edit-doc-hours" className="text-xs font-semibold text-foreground">
+              রোগী দেখার সময় *
+            </label>
             <Input
               id="edit-doc-hours"
               {...register("visitingHours")}
+              placeholder="যেমন: বিকাল ৫:০০ - রাত ৯:০০"
               className="h-10 text-sm"
             />
             {errors.visitingHours && (
@@ -206,8 +282,11 @@ function EditChamberForm({
             )}
           </div>
 
+          {/* Serial Phone */}
           <div className="space-y-1.5">
-            <label htmlFor="edit-doc-phone" className="text-xs font-semibold text-foreground">সিরিয়ালের ফোন নম্বর *</label>
+            <label htmlFor="edit-doc-phone" className="text-xs font-semibold text-foreground">
+              সিরিয়ালের ফোন নম্বর *
+            </label>
             <Input
               id="edit-doc-phone"
               {...register("serialPhone")}
@@ -219,9 +298,28 @@ function EditChamberForm({
           </div>
         </div>
 
-        {/* Availability & Notices in Edit Modal */}
+        {/* Status, Availability & Notices in Edit Modal */}
         <div className="p-3.5 bg-muted/20 border border-border/80 rounded-2xl space-y-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+            {/* Active Status Toggle */}
+            <div className="flex items-center justify-between p-2.5 bg-background border border-border/80 rounded-xl">
+              <div>
+                <label htmlFor="edit-doc-active" className="text-xs font-bold text-foreground block cursor-pointer">
+                  ডাক্তার সক্রিয় (Active)
+                </label>
+                <span className="text-[10px] text-muted-foreground">
+                  {isActive ? "প্রোফাইল ওয়েবসাইটে দৃশ্যমান রয়েছে" : "প্রোফাইল সাময়িকভাবে লুকানো রয়েছে"}
+                </span>
+              </div>
+              <input
+                id="edit-doc-active"
+                type="checkbox"
+                {...register("isActive")}
+                className="h-5 w-5 rounded border-border text-primary focus:ring-primary cursor-pointer accent-primary"
+              />
+            </div>
+
+            {/* Available Today Toggle */}
             <div className="flex items-center justify-between p-2.5 bg-background border border-border/80 rounded-xl">
               <div>
                 <label htmlFor="edit-doc-available" className="text-xs font-bold text-foreground block cursor-pointer">
@@ -238,10 +336,12 @@ function EditChamberForm({
                 className="h-5 w-5 rounded border-border text-primary focus:ring-primary cursor-pointer accent-primary"
               />
             </div>
+          </div>
 
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1">
               <label htmlFor="edit-doc-leave" className="text-xs font-semibold text-foreground cursor-pointer">
-                কত তারিখ পর্যন্ত ছুটিতে আছেন
+                ছুটির শেষ তারিখ (ঐচ্ছিক)
               </label>
               <Input
                 id="edit-doc-leave"
@@ -250,27 +350,37 @@ function EditChamberForm({
                 className="h-9 text-xs"
               />
             </div>
-          </div>
 
-          <div className="space-y-1">
-            <label htmlFor="edit-doc-notice" className="text-xs font-semibold text-foreground cursor-pointer">
-              বিশেষ জরুরি নোটিশ (ঐচ্ছিক)
-            </label>
-            <Input
-              id="edit-doc-notice"
-              type="text"
-              placeholder="আজ সন্ধ্যা ৬টার পর রোগী দেখা শুরু হবে"
-              {...register("notice")}
-              className="h-9 text-xs"
-            />
+            <div className="space-y-1">
+              <label htmlFor="edit-doc-notice" className="text-xs font-semibold text-foreground cursor-pointer">
+                জরুরি নোটিশ (ঐচ্ছিক)
+              </label>
+              <Input
+                id="edit-doc-notice"
+                type="text"
+                placeholder="যেমন: আজ সন্ধ্যা ৬টার পর রোগী দেখা শুরু হবে"
+                {...register("notice")}
+                className="h-9 text-xs"
+              />
+            </div>
           </div>
         </div>
 
         <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-4 border-t border-border w-full">
-          <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting} className="rounded-xl w-full sm:w-auto">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            disabled={isSubmitting}
+            className="rounded-xl w-full sm:w-auto"
+          >
             বাতিল
           </Button>
-          <Button type="submit" disabled={isSubmitting} className="rounded-xl bg-primary text-white hover:bg-primary/90 cursor-pointer w-full sm:w-auto">
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="rounded-xl bg-primary text-white hover:bg-primary/90 cursor-pointer w-full sm:w-auto"
+          >
             {isSubmitting ? "সংরক্ষণ করা হচ্ছে..." : "পরিবর্তন সংরক্ষণ করুন"}
           </Button>
         </div>

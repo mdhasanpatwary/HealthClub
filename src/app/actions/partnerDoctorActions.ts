@@ -37,6 +37,7 @@ function revalidateDoctorCaches(doctorSlug?: string) {
     revalidatePath("/consultants");
     revalidatePath("/partner-hospitals");
     revalidatePath("/partner-hospitals/[slug]", "page");
+    revalidatePath("/partner/dashboard");
     revalidatePath("/partner/dashboard/doctors");
     revalidatePath("/admin/doctors");
     if (doctorSlug) {
@@ -379,7 +380,7 @@ export async function updatePartnerDoctorChamberAction(
   try {
     const doctor = await prisma.doctor.findUnique({
       where: { id: doctorId },
-      select: { partnerId: true },
+      select: { partnerId: true, slug: true },
     });
 
     if (!doctor || doctor.partnerId !== partnerId) {
@@ -393,23 +394,29 @@ export async function updatePartnerDoctorChamberAction(
         ...(input.nameEn !== undefined && { nameEn: input.nameEn?.trim() || null }),
         ...(input.specialty && { specialty: input.specialty.trim() }),
         ...(input.department && { department: input.department.trim() }),
-        ...(input.degrees !== undefined && { degrees: input.degrees.trim() }),
-        ...(input.designation !== undefined && { designation: input.designation.trim() }),
-        ...(input.roomNo !== undefined && { roomNo: input.roomNo.trim() || null }),
+        ...(input.degrees !== undefined && { degrees: input.degrees?.trim() || "" }),
+        ...(input.designation !== undefined && { designation: input.designation?.trim() || "" }),
+        ...(input.roomNo !== undefined && { roomNo: input.roomNo?.trim() || null }),
         ...(input.visitingDays && { visitingDays: input.visitingDays.trim() }),
         ...(input.visitingHours && { visitingHours: input.visitingHours.trim() }),
         ...(input.serialPhone && { serialPhone: input.serialPhone.trim() }),
-        ...(input.consultationFee !== undefined && { consultationFee: input.consultationFee.trim() || null }),
-        ...(input.imageUrl !== undefined && { imageUrl: (await ensureStorageUrl(input.imageUrl.trim(), "doctors", doctorId)) || null }),
+        ...(input.consultationFee !== undefined && { consultationFee: input.consultationFee?.trim() || null }),
+        ...(input.imageUrl !== undefined && {
+          imageUrl: input.imageUrl?.trim()
+            ? (await ensureStorageUrl(input.imageUrl.trim(), "doctors", doctorId)) || null
+            : null,
+        }),
         ...(input.upazila !== undefined && { upazila: input.upazila || "feni-sadar" }),
         ...(input.isActive !== undefined && { isActive: input.isActive }),
         ...(input.availableToday !== undefined && { availableToday: input.availableToday }),
-        ...(input.onLeaveUntil !== undefined && { onLeaveUntil: input.onLeaveUntil ? new Date(input.onLeaveUntil) : null }),
-        ...(input.notice !== undefined && { notice: input.notice ? input.notice.trim() || null : null }),
+        ...(input.onLeaveUntil !== undefined && {
+          onLeaveUntil: input.onLeaveUntil?.trim() ? new Date(input.onLeaveUntil.trim()) : null,
+        }),
+        ...(input.notice !== undefined && { notice: input.notice?.trim() || null }),
       },
     });
 
-    revalidateDoctorCaches();
+    revalidateDoctorCaches(doctor.slug || undefined);
     return { success: true };
   } catch (error) {
     logger.error("Error in updatePartnerDoctorChamberAction:", error);

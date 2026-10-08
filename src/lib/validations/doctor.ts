@@ -34,22 +34,23 @@ export type AddPartnerDoctorFormValues = z.infer<typeof addPartnerDoctorSchema>;
 
 export const updatePartnerDoctorSchema = z.object({
   name: z.string().trim().min(2, "ডাক্তারের নাম লিখুন।").optional(),
-  nameEn: z.string().trim().optional(),
+  nameEn: z.string().trim().optional().nullable(),
   specialty: z.string().trim().min(2, "বিশেষজ্ঞতা লিখুন।").optional(),
   department: z.string().trim().min(2, "বিভাগ নির্বাচন করুন।").optional(),
-  degrees: z.string().trim().optional(),
-  designation: z.string().trim().optional(),
-  roomNo: z.string().trim().optional(),
+  degrees: z.string().trim().optional().nullable(),
+  designation: z.string().trim().optional().nullable(),
+  roomNo: z.string().trim().optional().nullable(),
   visitingDays: z.string().trim().min(2, "রোগী দেখার দিন উল্লেখ করুন।").optional(),
   visitingHours: z.string().trim().min(2, "রোগী দেখার সময় উল্লেখ করুন।").optional(),
   serialPhone: z.string().trim().min(5, "সিরিয়ালের মোবাইল নম্বর দিন।").optional(),
-  consultationFee: z.string().trim().optional(),
-  imageUrl: z.string().trim().optional(),
-  upazila: z.string().trim().optional(),
+  consultationFee: z.string().trim().optional().nullable(),
+  imageUrl: z.string().trim().optional().nullable(),
+  upazila: z.string().trim().optional().nullable(),
   isActive: z.boolean().optional(),
   availableToday: z.boolean().optional(),
-  onLeaveUntil: z.string().optional(),
-  notice: z.string().trim().optional(),
+  onLeaveUntil: z.string().optional().nullable(),
+  notice: z.string().trim().optional().nullable(),
 });
 
 export type UpdatePartnerDoctorFormValues = z.infer<typeof updatePartnerDoctorSchema>;
+
