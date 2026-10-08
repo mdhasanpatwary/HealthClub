@@ -5,7 +5,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Receipt, Building2, Stethoscope, BarChart3, Users } from "lucide-react";
 import { authStore, StaffSessionUser } from "@/services/authStore";
 import { Partner, Transaction } from "@/services/db";
-import { getPartnerTransactionsAction, getPartnerProfileAction } from "@/app/actions/partnerActions";
+import {
+  getPartnerTransactionsAction,
+  getPartnerProfileAction,
+  stopImpersonatingPartnerAction,
+} from "@/app/actions/partnerActions";
 import { getCurrentPartnerStaffSessionAction } from "@/app/actions/partnerStaffActions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toBanglaNums } from "@/lib/utils";
@@ -37,6 +41,7 @@ export default function PartnerDashboardPage() {
 
   const [activeTab, setActiveTab] = useState(initialTab);
   const [partner, setPartner] = useState<Partner | null>(null);
+  const [isImpersonating, setIsImpersonating] = useState(false);
   const [currentStaff, setCurrentStaff] = useState<StaffSessionUser | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loadingTransactions, setLoadingTransactions] = useState(true);
@@ -131,6 +136,9 @@ export default function PartnerDashboardPage() {
           activePartner = profileRes.partner;
           setPartner(activePartner);
           authStore.setCurrentPartner(activePartner);
+          if (profileRes.isImpersonating) {
+            setIsImpersonating(true);
+          }
         }
 
         if (staffSessionRes?.isStaff && staffSessionRes.staff) {
@@ -172,7 +180,14 @@ export default function PartnerDashboardPage() {
     };
   }, [router]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    if (isImpersonating) {
+      await stopImpersonatingPartnerAction();
+      await authStore.logoutPartner();
+      toast.success("অ্যাডমিন প্যানেলে সফলভাবে ফিরে এসেছেন");
+      window.location.href = "/admin/partners";
+      return;
+    }
     authStore.logoutPartner();
     toast.success("সফলভাবে লগআউট হয়েছেন");
     window.location.href = "/login/partner";
@@ -189,7 +204,12 @@ export default function PartnerDashboardPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8">
       {/* Top Header Profile Card */}
-      <PartnerDashboardHeader partner={partner} currentStaff={currentStaff} onLogout={handleLogout} />
+      <PartnerDashboardHeader
+        partner={partner}
+        currentStaff={currentStaff}
+        isImpersonating={isImpersonating}
+        onLogout={handleLogout}
+      />
 
       {/* Main Tabbed Navigation */}
       <Tabs value={effectiveActiveTab} onValueChange={handleTabChange} className="w-full space-y-6">

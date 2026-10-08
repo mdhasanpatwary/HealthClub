@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Search, Edit3, Trash2, Download, Building2, Activity, Pill, LayoutGrid, UploadCloud, KeyRound, Printer } from "lucide-react";
+import { Search, Edit3, Trash2, Download, Building2, Activity, Pill, LayoutGrid, UploadCloud, KeyRound, Printer, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -36,6 +36,7 @@ interface PartnersTabProps {
   onEditClick: (p: Partner) => void;
   onDeleteClick: (id: string, name: string) => void;
   onResetPasswordClick?: (p: Partner) => void;
+  onImpersonateClick?: (p: Partner) => void;
   loading?: boolean;
 }
 
@@ -56,6 +57,7 @@ export function PartnersTab({
   onEditClick,
   onDeleteClick,
   onResetPasswordClick,
+  onImpersonateClick,
   loading = false,
 }: PartnersTabProps) {
   const [isImportOpen, setIsImportOpen] = useState(false);
@@ -265,6 +267,18 @@ export function PartnersTab({
                       <TableCell className="font-mono text-xs whitespace-nowrap">{p.phone}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
+                          {onImpersonateClick && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => onImpersonateClick(p)}
+                              title={`${p.name}-এর পার্টনার প্যানেলে সরাসরি প্রবেশ করুন (১-ক্লিক অ্যাক্সেস)`}
+                              aria-label={`${p.name}-এর পার্টনার প্যানেলে প্রবেশ করুন`}
+                              className="h-8 w-8 text-sky-600 hover:text-sky-700 hover:bg-sky-50 dark:hover:bg-sky-950/40 cursor-pointer"
+                            >
+                              <LogIn className="h-4 w-4" />
+                            </Button>
+                          )}
                           {onResetPasswordClick && (
                             <Button
                               variant="ghost"

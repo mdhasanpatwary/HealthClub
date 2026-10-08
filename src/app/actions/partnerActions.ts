@@ -32,6 +32,11 @@ import {
 import { getPartnerTransactionsAction as _getPartnerTransactionsAction, addPartnerTransactionAction as _addPartnerTransactionAction } from "./partnerTransactionActions";
 import { getPartnerAnalyticsAction as _getPartnerAnalyticsAction, getPartnerMonthlyTransactionsAction as _getPartnerMonthlyTransactionsAction } from "./partnerAnalyticsActions";
 import {
+  impersonatePartnerAction as _impersonatePartnerAction,
+  stopImpersonatingPartnerAction as _stopImpersonatingPartnerAction,
+  getImpersonationStatusAction as _getImpersonationStatusAction,
+} from "./partnerImpersonationActions";
+import {
   getPartnerByIdAction as _getPartnerByIdAction,
   getDoctorsByPartnerIdAction as _getDoctorsByPartnerIdAction,
   getRelatedPartnersAction as _getRelatedPartnersAction,
@@ -41,6 +46,7 @@ import { generatePartnerSlug, sanitizePartnerSlug, resolveUniquePartnerSlug } fr
 import { ensureStorageUrl } from "@/services/storageService";
 
 const PARTNERS_TAG = "partners";
+const DOCTORS_TAG = "doctors";
 
 async function verifyPartnerAdmin(): Promise<boolean> {
   const session = await getSessionUser();
@@ -49,7 +55,7 @@ async function verifyPartnerAdmin(): Promise<boolean> {
   return hasAdminPermission(role, "manage_partners");
 }
 
-export const getPartnerByIdAction = cache(async (id: string) => { return _getPartnerByIdAction(id); });
+export async function getPartnerByIdAction(id: string) { return _getPartnerByIdAction(id); }
 export async function getDoctorsByPartnerIdAction(partnerId: string) { return _getDoctorsByPartnerIdAction(partnerId); }
 export async function getRelatedPartnersAction(category: string, currentId: string, limit?: number) { return _getRelatedPartnersAction(category, currentId, limit); }
 export async function addPartnerRequestAction(...args: Parameters<typeof _addPartnerRequestAction>) { return _addPartnerRequestAction(...args); }
@@ -64,6 +70,9 @@ export async function loginPartnerAction(identifier: string, password: string) {
 export async function changePartnerPasswordAction(currentPassword: string, newPassword: string) { return _changePartnerPasswordAction(currentPassword, newPassword); }
 export async function requestPartnerPasswordResetAction(email: string) { return _requestPartnerPasswordResetAction(email); }
 export async function resetPartnerPasswordAction(email: string, code: string, rawNewPassword: string) { return _resetPartnerPasswordAction(email, code, rawNewPassword); }
+export async function impersonatePartnerAction(partnerId: string) { return _impersonatePartnerAction(partnerId); }
+export async function stopImpersonatingPartnerAction() { return _stopImpersonatingPartnerAction(); }
+export async function getImpersonationStatusAction() { return _getImpersonationStatusAction(); }
 
 import {
   PARTNER_SELECT_FIELDS,
@@ -144,15 +153,20 @@ export async function getPaginatedPartnersAdminAction(
 function revalidatePartnerCaches(slugOrId?: string) {
   try {
     updateTag(PARTNERS_TAG);
+    updateTag(DOCTORS_TAG);
     updateTag("homepage-partners");
     updateTag("admin-stats");
     revalidateTag(PARTNERS_TAG, "max");
+    revalidateTag(DOCTORS_TAG, "max");
     revalidateTag("homepage-partners", "max");
     revalidateTag("admin-stats", "max");
     revalidatePath("/partner-hospitals");
+    revalidatePath("/partner-hospitals/[slug]", "page");
+    revalidatePath("/consultants");
     revalidatePath("/");
     revalidatePath("/admin/partners");
     revalidatePath("/dashboard");
+    revalidatePath("/partner/dashboard/doctors");
     if (slugOrId) {
       revalidatePath(`/partner-hospitals/${slugOrId}`);
     }
@@ -294,6 +308,8 @@ export async function deletePartnerAction(id: string): Promise<boolean> {
 export async function getPartnerProfileAction(): Promise<{
   success: boolean;
   partner?: Partner;
+  isImpersonating?: boolean;
+  adminName?: string;
   error?: string;
 }> {
   const session = await getSessionUser();
@@ -316,6 +332,8 @@ export async function getPartnerProfileAction(): Promise<{
     return {
       success: true,
       partner: formatPartner(data),
+      isImpersonating: Boolean(session.impersonatorAdminId),
+      adminName: session.impersonatorAdminName,
     };
   } catch (error) {
     logger.error("Error in getPartnerProfileAction:", error);
@@ -395,7 +413,7 @@ export async function updatePartnerProfileAction(
       select: PARTNER_SELECT_FIELDS,
     });
 
-    revalidatePartnerCaches(session.userId);
+    revalidatePartnerCaches(updated.slug || session.userId);
     return {
       success: true,
       partner: formatPartner(updated),

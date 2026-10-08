@@ -30,6 +30,9 @@ export interface SessionPayload {
   staffRole?: "cashier" | "manager";
   partnerId?: string;
   staffUpdatedAt?: number;
+  impersonatorAdminId?: string;
+  impersonatorAdminRole?: AdminRole;
+  impersonatorAdminName?: string;
   expiresAt: Date;
 }
 
@@ -65,6 +68,9 @@ export async function decrypt(session: string | undefined = ""): Promise<Session
       staffRole: payload.staffRole as ("cashier" | "manager") | undefined,
       partnerId: payload.partnerId as string | undefined,
       staffUpdatedAt: typeof payload.staffUpdatedAt === "number" ? payload.staffUpdatedAt : undefined,
+      impersonatorAdminId: payload.impersonatorAdminId as string | undefined,
+      impersonatorAdminRole: payload.impersonatorAdminRole as AdminRole | undefined,
+      impersonatorAdminName: payload.impersonatorAdminName as string | undefined,
       expiresAt: new Date(payload.expiresAt as string),
     };
   } catch {
@@ -187,6 +193,9 @@ export async function setSessionUser(
     staffRole?: "cashier" | "manager";
     partnerId?: string;
     staffUpdatedAt?: number;
+    impersonatorAdminId?: string;
+    impersonatorAdminRole?: AdminRole;
+    impersonatorAdminName?: string;
   }
 ) {
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 1 week
@@ -261,6 +270,20 @@ export async function getSessionUser(): Promise<SessionPayload | null> {
     session.adminRole = admin.role;
     session.adminName = admin.name;
     session.adminEmail = admin.email;
+  }
+
+  // Verify impersonator admin if present
+  if (session.impersonatorAdminId) {
+    const admin = await verifyActiveAdminUser(session.impersonatorAdminId, session.impersonatorAdminRole);
+    if (!admin) {
+      logger.warn(`[AUTH] Revoking impersonated session because impersonator admin is invalid/inactive: ${session.impersonatorAdminId}`);
+      try {
+        cookieStore.delete("session");
+      } catch {
+        // Readonly in RSC render pass
+      }
+      return null;
+    }
   }
 
   return session;

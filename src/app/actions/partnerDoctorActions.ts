@@ -5,7 +5,7 @@ import { Prisma } from "@/generated/client/client";
 import { Doctor, initialDoctors } from "@/services/db";
 import { getSessionUser } from "@/lib/session";
 import { logger } from "@/lib/logger";
-import { updateTag } from "next/cache";
+import { updateTag, revalidateTag, revalidatePath } from "next/cache";
 import { ensureStorageUrl } from "@/services/storageService";
 import { generateDoctorSlug, resolveUniqueDoctorSlug } from "@/lib/slugify";
 
@@ -24,6 +24,27 @@ async function getAuthenticatedPartnerId(): Promise<string | null> {
     return null;
   }
   return session.role === "partner_staff" ? session.partnerId || null : session.userId;
+}
+
+function revalidateDoctorCaches(doctorSlug?: string) {
+  try {
+    updateTag(DOCTORS_TAG);
+    updateTag(PARTNERS_TAG);
+    updateTag("admin-stats");
+    revalidateTag(DOCTORS_TAG, "max");
+    revalidateTag(PARTNERS_TAG, "max");
+    revalidateTag("admin-stats", "max");
+    revalidatePath("/consultants");
+    revalidatePath("/partner-hospitals");
+    revalidatePath("/partner-hospitals/[slug]", "page");
+    revalidatePath("/partner/dashboard/doctors");
+    revalidatePath("/admin/doctors");
+    if (doctorSlug) {
+      revalidatePath(`/consultants/${doctorSlug}`);
+    }
+  } catch (err) {
+    logger.warn("[partnerDoctorActions] Revalidation error:", err);
+  }
 }
 
 import {
@@ -200,9 +221,7 @@ export async function linkDoctorToPartnerAction(
             notice: initDoc.notice || null,
           },
         });
-        updateTag(DOCTORS_TAG);
-        updateTag(PARTNERS_TAG);
-        updateTag("admin-stats");
+        revalidateDoctorCaches();
         return { success: true };
       }
       return { success: false, error: "ডাক্তার খুঁজে পাওয়া যায়নি।" };
@@ -223,9 +242,7 @@ export async function linkDoctorToPartnerAction(
       },
     });
 
-    updateTag(DOCTORS_TAG);
-    updateTag(PARTNERS_TAG);
-    updateTag("admin-stats");
+    revalidateDoctorCaches();
     return { success: true };
   } catch (error) {
     logger.error("Error in linkDoctorToPartnerAction:", error);
@@ -267,9 +284,7 @@ export async function unlinkDoctorFromPartnerAction(
       },
     });
 
-    updateTag(DOCTORS_TAG);
-    updateTag(PARTNERS_TAG);
-    updateTag("admin-stats");
+    revalidateDoctorCaches();
     return { success: true };
   } catch (error) {
     logger.error("Error in unlinkDoctorFromPartnerAction:", error);
@@ -333,9 +348,7 @@ export async function addPartnerDoctorAction(
       },
     });
 
-    updateTag(DOCTORS_TAG);
-    updateTag(PARTNERS_TAG);
-    updateTag("admin-stats");
+    revalidateDoctorCaches(resolvedSlug);
     return {
       success: true,
       doctor: formatDoctor(created),
@@ -396,9 +409,7 @@ export async function updatePartnerDoctorChamberAction(
       },
     });
 
-    updateTag(DOCTORS_TAG);
-    updateTag(PARTNERS_TAG);
-    updateTag("admin-stats");
+    revalidateDoctorCaches();
     return { success: true };
   } catch (error) {
     logger.error("Error in updatePartnerDoctorChamberAction:", error);
@@ -446,9 +457,7 @@ export async function deletePartnerDoctorAction(
       });
     }
 
-    updateTag(DOCTORS_TAG);
-    updateTag(PARTNERS_TAG);
-    updateTag("admin-stats");
+    revalidateDoctorCaches();
     return { success: true };
   } catch (error) {
     logger.error("Error in deletePartnerDoctorAction:", error);

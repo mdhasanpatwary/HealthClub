@@ -18,6 +18,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useDebounce } from "@/hooks/useDebounce";
 import { PartnersTab } from "../components/PartnersTab";
 import { PartnerDialog, PartnerFormData } from "../components/PartnerDialog";
+import { PartnerImpersonateDialog } from "../components/PartnerImpersonateDialog";
 
 function AdminPartnersContent() {
   const searchParams = useSearchParams();
@@ -49,6 +50,7 @@ function AdminPartnersContent() {
   // Dialog States
   const [isPartnerOpen, setIsPartnerOpen] = useState(false);
   const [editingPartner, setEditingPartner] = useState<Partner | null>(null);
+  const [impersonatingPartner, setImpersonatingPartner] = useState<Partner | null>(null);
   const [newPartner, setNewPartner] = useState<PartnerFormData>({
     name: "",
     slug: "",
@@ -333,7 +335,16 @@ function AdminPartnersContent() {
         }}
         onDeleteClick={handleDeletePartner}
         onResetPasswordClick={handleResetPassword}
+        onImpersonateClick={(p) => setImpersonatingPartner(p)}
         loading={loading}
+      />
+
+      <PartnerImpersonateDialog
+        partner={impersonatingPartner}
+        open={Boolean(impersonatingPartner)}
+        onOpenChange={(open) => {
+          if (!open) setImpersonatingPartner(null);
+        }}
       />
 
       {isPartnerOpen && (

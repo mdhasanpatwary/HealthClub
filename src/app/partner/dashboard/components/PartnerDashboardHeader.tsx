@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2, LogOut, PhoneCall, Clock, ShieldCheck } from "lucide-react";
+import { Building2, LogOut, PhoneCall, Clock, ShieldCheck, ArrowLeft, Crown } from "lucide-react";
 import { Partner } from "@/services/db";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,10 +10,11 @@ import { authStore } from "@/services/authStore";
 interface PartnerDashboardHeaderProps {
   partner: Partner;
   currentStaff?: { id: string; name: string; deskName: string } | null;
+  isImpersonating?: boolean;
   onLogout: () => void;
 }
 
-export function PartnerDashboardHeader({ partner, currentStaff: propStaff, onLogout }: PartnerDashboardHeaderProps) {
+export function PartnerDashboardHeader({ partner, currentStaff: propStaff, isImpersonating = false, onLogout }: PartnerDashboardHeaderProps) {
   const currentStaff = propStaff !== undefined ? propStaff : authStore.getCurrentStaff();
 
   const getCategoryLabel = (category: Partner["category"]) => {
@@ -44,6 +45,12 @@ export function PartnerDashboardHeader({ partner, currentStaff: propStaff, onLog
               <ShieldCheck className="h-3 w-3 mr-1 inline" />
               {getCategoryLabel(partner.category)}
             </Badge>
+            {isImpersonating && (
+              <Badge variant="outline" className="bg-amber-500/20 text-amber-300 border-amber-500/40 text-xs font-semibold px-2.5 py-0.5 gap-1">
+                <Crown className="h-3 w-3 text-amber-400 inline" />
+                সুপার অ্যাডমিন মোড
+              </Badge>
+            )}
           </div>
 
           <div className="flex flex-wrap items-center gap-y-1 gap-x-3 text-xs text-slate-300">
@@ -75,16 +82,29 @@ export function PartnerDashboardHeader({ partner, currentStaff: propStaff, onLog
       </div>
 
       <div className="flex items-center gap-2.5 shrink-0 self-stretch sm:self-auto justify-end pt-2 md:pt-0 border-t md:border-t-0 border-slate-800/80 w-full sm:w-auto">
-        {!currentStaff && <ChangePartnerPasswordDialog />}
+        {!currentStaff && !isImpersonating && <ChangePartnerPasswordDialog />}
 
         <Button
           onClick={onLogout}
-          variant="destructive"
+          variant={isImpersonating ? "secondary" : "destructive"}
           size="sm"
-          className="gap-1.5 rounded-xl font-semibold shadow-sm cursor-pointer"
+          className={
+            isImpersonating
+              ? "gap-1.5 rounded-xl font-semibold shadow-sm cursor-pointer bg-amber-600 hover:bg-amber-700 text-white"
+              : "gap-1.5 rounded-xl font-semibold shadow-sm cursor-pointer"
+          }
         >
-          <LogOut className="h-4 w-4" />
-          <span>লগআউট</span>
+          {isImpersonating ? (
+            <>
+              <ArrowLeft className="h-4 w-4" />
+              <span>অ্যাডমিন প্যানেলে ফিরুন</span>
+            </>
+          ) : (
+            <>
+              <LogOut className="h-4 w-4" />
+              <span>লগআউট</span>
+            </>
+          )}
         </Button>
       </div>
     </div>
