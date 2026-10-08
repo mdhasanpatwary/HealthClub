@@ -14,6 +14,7 @@ import {
   Wind,
 } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { getWhatsAppUniversalUrl, handleWhatsAppClick } from "@/lib/whatsapp";
 
 interface AmbulanceCardProps {
   ambulance: AmbulanceService;
@@ -57,7 +58,8 @@ export function getAmbulanceTypeMeta(type: AmbulanceType) {
 export function AmbulanceCard({ ambulance }: AmbulanceCardProps) {
   const typeMeta = getAmbulanceTypeMeta(ambulance.type);
   const TypeIcon = typeMeta.icon;
-  const cleanPhone = ambulance.phone.replace(/[^0-9]/g, "");
+  const whatsappMsg = `আসসালামু আলাইকুম, হেলথ ক্লাব জরুরি সেবা থেকে ${ambulance.name} (${typeMeta.label}) সংক্রান্ত তথ্যের জন্য যোগাযোগ করছি।`;
+  const whatsappUrl = getWhatsAppUniversalUrl(ambulance.phone, whatsappMsg);
 
   return (
     <Card className="border border-border/80 bg-background hover:border-primary/40 transition-all duration-300 shadow-xs hover:shadow-md flex flex-col justify-between h-full">
@@ -108,9 +110,21 @@ export function AmbulanceCard({ ambulance }: AmbulanceCardProps) {
             </span>
           </a>
           <a
-            href={`https://wa.me/88${cleanPhone}`}
+            href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(e) => {
+              trackEvent("emergency_dial", {
+                service_type: "ambulance",
+                target_name: ambulance.name,
+                phone: ambulance.phone,
+                upazila: ambulance.location,
+              });
+              handleWhatsAppClick(e, {
+                phone: ambulance.phone,
+                message: whatsappMsg,
+              });
+            }}
             aria-label={`WhatsApp: ${ambulance.name}`}
             className="sm:col-span-2 inline-flex items-center justify-center gap-1.5 h-10 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-xs font-bold transition-all active:scale-[0.98]"
           >

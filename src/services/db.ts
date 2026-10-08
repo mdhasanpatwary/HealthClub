@@ -77,6 +77,8 @@ export function parsePartnerSocialLinks(raw?: string | null): PartnerSocialLinks
   }
 }
 
+import { getWhatsAppUniversalUrl } from "@/lib/whatsapp";
+
 export function formatSocialUrl(platform: keyof PartnerSocialLinks, value?: string): string | undefined {
   if (!value || !value.trim()) return undefined;
   const trimmed = value.trim();
@@ -85,9 +87,7 @@ export function formatSocialUrl(platform: keyof PartnerSocialLinks, value?: stri
     if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
       return trimmed;
     }
-    const rawNumber = trimmed.replace(/[^0-9]/g, "");
-    const normalizedNumber = rawNumber.replace(/^(880|88|0)/, "");
-    return `https://wa.me/880${normalizedNumber}`;
+    return getWhatsAppUniversalUrl(trimmed);
   }
 
   if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {

@@ -12,6 +12,8 @@ import {
   LinkedInIcon,
 } from "@/components/ui/SocialBrandIcons";
 
+import { getWhatsAppUniversalUrl } from "@/lib/whatsapp";
+
 function formatSocialUrl(url?: string): string {
   if (!url || !url.trim()) return "";
   const trimmed = url.trim();
@@ -31,7 +33,7 @@ export default async function Footer() {
 
   const rawWhatsapp = contact.whatsapp.replace(/[^0-9]/g, "");
   const normalizedWhatsapp = rawWhatsapp.replace(/^(880|88|0)/, "");
-  const whatsappUrl = normalizedWhatsapp ? `https://wa.me/880${normalizedWhatsapp}` : "";
+  const whatsappUrl = normalizedWhatsapp ? getWhatsAppUniversalUrl(normalizedWhatsapp) : "";
 
   const socialLinks = [
     {

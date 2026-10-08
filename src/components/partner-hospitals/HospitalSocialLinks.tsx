@@ -11,6 +11,7 @@ import {
   LinkedInIcon,
   InstagramIcon,
 } from "@/components/ui/SocialBrandIcons";
+import { handleWhatsAppClick } from "@/lib/whatsapp";
 
 interface HospitalSocialLinksProps {
   partner: Partner;
@@ -39,13 +40,16 @@ export default function HospitalSocialLinks({
   const inUrl = formatSocialUrl("linkedin", linkedin);
   const igUrl = formatSocialUrl("instagram", instagram);
 
-  const handleLinkClick = (platform: string, url?: string) => {
+  const handleLinkClick = (e: React.MouseEvent, platform: string, url?: string) => {
     trackEvent("partner_social_click", {
       partner_id: partner.id,
       partner_name: partner.name,
       platform,
       url: url || "",
     });
+    if (platform === "whatsapp" && whatsapp) {
+      handleWhatsAppClick(e, { phone: whatsapp });
+    }
   };
 
   if (variant === "chips") {
@@ -56,7 +60,7 @@ export default function HospitalSocialLinks({
             href={waUrl}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => handleLinkClick("whatsapp", waUrl)}
+            onClick={(e) => handleLinkClick(e, "whatsapp", waUrl)}
             aria-label={`${partner.name} WhatsApp`}
             className="h-7 px-2.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-[11px] font-bold flex items-center gap-1.5 transition-all duration-200 cursor-pointer shadow-2xs hover:scale-105"
           >
@@ -70,7 +74,7 @@ export default function HospitalSocialLinks({
             href={fbUrl}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => handleLinkClick("facebook", fbUrl)}
+            onClick={(e) => handleLinkClick(e, "facebook", fbUrl)}
             aria-label={`${partner.name} Facebook`}
             className="h-7 px-2.5 rounded-full bg-[#1877F2]/10 hover:bg-[#1877F2]/20 text-[#1877F2] border border-[#1877F2]/30 text-[11px] font-bold flex items-center gap-1.5 transition-all duration-200 cursor-pointer shadow-2xs hover:scale-105"
           >
@@ -84,7 +88,7 @@ export default function HospitalSocialLinks({
             href={webUrl}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => handleLinkClick("website", webUrl)}
+            onClick={(e) => handleLinkClick(e, "website", webUrl)}
             aria-label={`${partner.name} Website`}
             className="h-7 px-2.5 rounded-full bg-sky-500/10 hover:bg-sky-500/20 text-sky-600 dark:text-sky-400 border border-sky-500/30 text-[11px] font-bold flex items-center gap-1.5 transition-all duration-200 cursor-pointer shadow-2xs hover:scale-105"
           >
@@ -98,7 +102,7 @@ export default function HospitalSocialLinks({
             href={ytUrl}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => handleLinkClick("youtube", ytUrl)}
+            onClick={(e) => handleLinkClick(e, "youtube", ytUrl)}
             aria-label={`${partner.name} YouTube`}
             className="h-7 px-2 rounded-full bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/30 text-[11px] font-bold flex items-center gap-1 transition-all duration-200 cursor-pointer shadow-2xs hover:scale-105"
           >
@@ -111,7 +115,7 @@ export default function HospitalSocialLinks({
             href={inUrl}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => handleLinkClick("linkedin", inUrl)}
+            onClick={(e) => handleLinkClick(e, "linkedin", inUrl)}
             aria-label={`${partner.name} LinkedIn`}
             className="h-7 px-2 rounded-full bg-[#0A66C2]/10 hover:bg-[#0A66C2]/20 text-[#0A66C2] border border-[#0A66C2]/30 text-[11px] font-bold flex items-center gap-1 transition-all duration-200 cursor-pointer shadow-2xs hover:scale-105"
           >
@@ -124,7 +128,7 @@ export default function HospitalSocialLinks({
             href={igUrl}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => handleLinkClick("instagram", igUrl)}
+            onClick={(e) => handleLinkClick(e, "instagram", igUrl)}
             aria-label={`${partner.name} Instagram`}
             className="h-7 px-2 rounded-full bg-pink-500/10 hover:bg-pink-500/20 text-pink-600 dark:text-pink-400 border border-pink-500/30 text-[11px] font-bold flex items-center gap-1 transition-all duration-200 cursor-pointer shadow-2xs hover:scale-105"
           >
@@ -152,7 +156,7 @@ export default function HospitalSocialLinks({
             href={waUrl}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => handleLinkClick("whatsapp", waUrl)}
+            onClick={(e) => handleLinkClick(e, "whatsapp", waUrl)}
             className={buttonVariants({
               variant: "outline",
               size: "sm",
@@ -170,7 +174,7 @@ export default function HospitalSocialLinks({
             href={fbUrl}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => handleLinkClick("facebook", fbUrl)}
+            onClick={(e) => handleLinkClick(e, "facebook", fbUrl)}
             className={buttonVariants({
               variant: "outline",
               size: "sm",
@@ -188,7 +192,7 @@ export default function HospitalSocialLinks({
             href={webUrl}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => handleLinkClick("website", webUrl)}
+            onClick={(e) => handleLinkClick(e, "website", webUrl)}
             className={buttonVariants({
               variant: "outline",
               size: "sm",
@@ -206,7 +210,7 @@ export default function HospitalSocialLinks({
             href={ytUrl}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => handleLinkClick("youtube", ytUrl)}
+            onClick={(e) => handleLinkClick(e, "youtube", ytUrl)}
             className={buttonVariants({
               variant: "outline",
               size: "sm",
@@ -224,7 +228,7 @@ export default function HospitalSocialLinks({
             href={inUrl}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => handleLinkClick("linkedin", inUrl)}
+            onClick={(e) => handleLinkClick(e, "linkedin", inUrl)}
             className={buttonVariants({
               variant: "outline",
               size: "sm",
@@ -242,7 +246,7 @@ export default function HospitalSocialLinks({
             href={igUrl}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => handleLinkClick("instagram", igUrl)}
+            onClick={(e) => handleLinkClick(e, "instagram", igUrl)}
             className={buttonVariants({
               variant: "outline",
               size: "sm",

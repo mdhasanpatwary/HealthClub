@@ -5,6 +5,7 @@ import { PhoneCall, Sparkles, HelpCircle, ShieldCheck } from "lucide-react";
 import { WhatsAppIcon } from "@/components/ui/SocialBrandIcons";
 import { getPublicContactSettingsAction } from "@/app/actions/systemSettingsActions";
 import { cn, toBanglaNums } from "@/lib/utils";
+import { getWhatsAppUniversalUrl, handleWhatsAppClick } from "@/lib/whatsapp";
 
 export type AssistanceContext =
   | "register"
@@ -96,7 +97,7 @@ export default function WhatsAppAssistanceCard({
     }
   }, [context, userEmail]);
 
-  const whatsappUrl = `https://wa.me/880${cleanWhatsapp}?text=${encodeURIComponent(defaultWhatsappMsg)}`;
+  const whatsappUrl = getWhatsAppUniversalUrl(cleanWhatsapp, defaultWhatsappMsg);
   const hotlineTel = `+880${cleanHotline}`;
   const hotlineDisplay = toBanglaNums(`+880 ${cleanHotline}`);
 
@@ -204,6 +205,12 @@ export default function WhatsAppAssistanceCard({
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) =>
+                handleWhatsAppClick(e, {
+                  phone: cleanWhatsapp,
+                  message: defaultWhatsappMsg,
+                })
+              }
               className={cn(
                 "inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-2xl",
                 "bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm sm:text-base",
@@ -266,6 +273,12 @@ export default function WhatsAppAssistanceCard({
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(e) =>
+              handleWhatsAppClick(e, {
+                phone: cleanWhatsapp,
+                message: defaultWhatsappMsg,
+              })
+            }
             className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md transition-all cursor-pointer"
             aria-label="হোয়াটসঅ্যাপে হেল্প নিন"
           >
@@ -316,6 +329,12 @@ export default function WhatsAppAssistanceCard({
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(e) =>
+              handleWhatsAppClick(e, {
+                phone: cleanWhatsapp,
+                message: defaultWhatsappMsg,
+              })
+            }
             className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-sm transition-all cursor-pointer shrink-0"
             aria-label="হোয়াটসঅ্যাপে সরাসরি সহায়তা নিন"
           >

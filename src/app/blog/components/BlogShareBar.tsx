@@ -8,6 +8,7 @@ import {
   LinkedInIcon,
 } from "@/components/ui/SocialBrandIcons";
 import { toast } from "sonner";
+import { openWhatsAppShare } from "@/lib/whatsapp";
 
 interface BlogShareBarProps {
   url: string;
@@ -53,6 +54,10 @@ export function BlogShareBar({ url, title }: BlogShareBarProps) {
       icon: WhatsAppIcon,
       href: `https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`,
       className: "hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400",
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        openWhatsAppShare({ title, url });
+      },
     },
     {
       name: "LinkedIn",
@@ -104,6 +109,7 @@ export function BlogShareBar({ url, title }: BlogShareBarProps) {
             href={item.href}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={item.onClick}
             aria-label={shareLabel}
             className={`flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] px-3 py-2 rounded-lg border border-border/70 bg-card text-muted-foreground transition-colors active:scale-95 ${item.className}`}
           >

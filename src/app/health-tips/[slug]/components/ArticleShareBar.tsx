@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Share2, Link as LinkIcon, MessageCircle } from "lucide-react";
+import { openWhatsAppShare } from "@/lib/whatsapp";
 
 interface ArticleShareBarProps {
   title: string;
@@ -25,8 +26,10 @@ export function ArticleShareBar({ title, slug }: ArticleShareBarProps) {
 
   const handleWhatsAppShare = () => {
     if (typeof window === "undefined") return;
-    const text = encodeURIComponent(`${title} - ${window.location.origin}/health-tips/${slug}`);
-    window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
+    openWhatsAppShare({
+      title,
+      url: `${window.location.origin}/health-tips/${slug}`,
+    });
   };
 
   return (

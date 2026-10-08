@@ -18,6 +18,7 @@ import {
 } from "@/lib/validations/contact";
 import { toBanglaNums } from "@/lib/utils";
 import { toast } from "sonner";
+import { getWhatsAppUniversalUrl, handleWhatsAppClick } from "@/lib/whatsapp";
 
 interface ContactFormProps {
   initialSettings?: PublicContactSettings;
@@ -79,7 +80,7 @@ export default function ContactForm({ initialSettings }: ContactFormProps) {
 
   const rawWhatsapp = settings.whatsapp.replace(/[^0-9]/g, "");
   const normalizedWhatsapp = rawWhatsapp.replace(/^(880|88|0)/, "");
-  const whatsappUrl = `https://wa.me/880${normalizedWhatsapp}`;
+  const whatsappUrl = getWhatsAppUniversalUrl(normalizedWhatsapp);
   const whatsappDisplay = toBanglaNums(`+880 ${normalizedWhatsapp}`);
 
   const onSubmit = async (data: ContactMessageInput) => {
@@ -140,6 +141,11 @@ export default function ContactForm({ initialSettings }: ContactFormProps) {
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) =>
+                handleWhatsAppClick(e, {
+                  phone: normalizedWhatsapp,
+                })
+              }
               className="flex items-start gap-4 p-4 rounded-xl border border-border bg-card/50 hover:bg-card hover:border-emerald-500/50 transition-colors group cursor-pointer"
             >
               <div className="h-10 w-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 group-hover:scale-105 transition-transform">

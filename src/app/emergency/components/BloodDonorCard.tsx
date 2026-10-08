@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { PhoneCall, MessageCircle, MapPin, Clock, Droplet } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { getWhatsAppUniversalUrl, handleWhatsAppClick } from "@/lib/whatsapp";
 
 interface BloodDonorCardProps {
   donor: BloodDonor;
@@ -12,7 +13,8 @@ interface BloodDonorCardProps {
 }
 
 export function BloodDonorCard({ donor, areaLabel }: BloodDonorCardProps) {
-  const cleanPhone = donor.phone.replace(/[^0-9]/g, "");
+  const whatsappMsg = `আসসালামু আলাইকুম ${donor.name}, হেলথ ক্লাব জরুরি সেবা থেকে আপনার সাথে রক্তদানের বিষয়ে যোগাযোগ করছি।`;
+  const whatsappUrl = getWhatsAppUniversalUrl(donor.phone, whatsappMsg);
 
   return (
     <Card className="border border-border/80 bg-background hover:border-rose-500/30 transition-all duration-300 shadow-xs flex flex-col justify-between h-full">
@@ -60,9 +62,21 @@ export function BloodDonorCard({ donor, areaLabel }: BloodDonorCardProps) {
             <span>কল করুন</span>
           </a>
           <a
-            href={`https://wa.me/88${cleanPhone}`}
+            href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(e) => {
+              trackEvent("emergency_dial", {
+                service_type: "blood_donor",
+                target_name: `${donor.name} (${donor.bloodGroup})`,
+                phone: donor.phone,
+                upazila: donor.upazila,
+              });
+              handleWhatsAppClick(e, {
+                phone: donor.phone,
+                message: whatsappMsg,
+              });
+            }}
             className="inline-flex items-center justify-center gap-1.5 h-8.5 px-2.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-xs font-bold transition-colors"
             aria-label={`রক্তদাতা ${donor.name}-কে হোয়াটসঅ্যাপে বার্তা পাঠান`}
           >

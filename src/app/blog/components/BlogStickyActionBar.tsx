@@ -4,6 +4,7 @@ import React, { useState, useEffect, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { CreditCard, PhoneCall, X, ArrowRight } from "lucide-react";
 import { WhatsAppIcon } from "@/components/ui/SocialBrandIcons";
+import { getWhatsAppUniversalUrl, handleWhatsAppClick } from "@/lib/whatsapp";
 
 interface BlogStickyActionBarProps {
   hotline?: string;
@@ -55,11 +56,10 @@ export function BlogStickyActionBar({
 
   const rawWhatsapp = (whatsapp || hotline || "01886763849").replace(/[^0-9]/g, "");
   const normalizedWhatsapp = rawWhatsapp.replace(/^(880|88|0)/, "");
-  const defaultWhatsappMsg = encodeURIComponent(
-    "আসসালামু আলাইকুম, আমি হেলথ ক্লাব ওয়েবসাইট থেকে ডাক্তার ও ডায়াগনস্টিক সিরিয়ালের বিষয়ে জানতে চাই।"
-  );
+  const defaultWhatsappMsg =
+    "আসসালামু আলাইকুম, আমি হেলথ ক্লাব ওয়েবসাইট থেকে ডাক্তার ও ডায়াগনস্টিক সিরিয়ালের বিষয়ে জানতে চাই।";
   const whatsappUrl = normalizedWhatsapp
-    ? `https://wa.me/880${normalizedWhatsapp}?text=${defaultWhatsappMsg}`
+    ? getWhatsAppUniversalUrl(normalizedWhatsapp, defaultWhatsappMsg)
     : "";
 
   // Track scroll depth (>=25%) and footer proximity
@@ -211,6 +211,12 @@ export function BlogStickyActionBar({
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) =>
+                handleWhatsAppClick(e, {
+                  phone: normalizedWhatsapp,
+                  message: defaultWhatsappMsg,
+                })
+              }
               aria-label="হোয়াটসঅ্যাপে যোগাযোগ করুন"
               className="hidden sm:flex items-center justify-center h-11 w-11 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25 shrink-0 transition-all active:scale-[0.98]"
             >
