@@ -14,14 +14,11 @@ import {
   DOCTOR_CARD_SELECT_FIELDS,
   type PrismaDoctorRecord,
 } from "@/lib/doctorFormat";
+import { DOCTOR_SLUG_ALIASES } from "@/data/doctorSlugAliases";
 
 const DOCTORS_TAG = "doctors";
 
-/**
- * Server action to fetch all active doctors.
- * Cached with ISR tags and revalidated on changes.
- */
-export const getDoctorsAction = unstable_cache(
+const fetchDoctorsCached = unstable_cache(
   async (): Promise<Doctor[]> => {
     try {
       if (!prisma?.doctor) {
@@ -45,12 +42,16 @@ export const getDoctorsAction = unstable_cache(
   { revalidate: false, tags: [DOCTORS_TAG] }
 );
 
+export async function getDoctorsAction(): Promise<Doctor[]> {
+  return fetchDoctorsCached();
+}
+
 /**
  * Server action to fetch active doctors by department.
  * Eliminates over-fetching all doctors across the database when requesting a single department.
  * Cached with ISR tags and revalidated on changes.
  */
-export const getDoctorsByDepartmentAction = unstable_cache(
+const fetchDoctorsByDepartmentCached = unstable_cache(
   async (department: string): Promise<Doctor[]> => {
     try {
       if (!prisma?.doctor) {
@@ -103,6 +104,10 @@ export const getDoctorsByDepartmentAction = unstable_cache(
   { revalidate: false, tags: [DOCTORS_TAG] }
 );
 
+export async function getDoctorsByDepartmentAction(department: string): Promise<Doctor[]> {
+  return fetchDoctorsByDepartmentCached(department);
+}
+
 /**
  * Fetch doctor image on-demand when opening edit dialog.
  */
@@ -118,6 +123,7 @@ export async function getDoctorImageAction(id: string): Promise<string | null> {
     return null;
   }
 }
+
 
 /**
  * Cached single doctor query at the Vercel Edge / Next.js Data Cache.
@@ -139,14 +145,22 @@ const fetchDbDoctorByIdOrSlug = unstable_cache(
         // Keep original
       }
 
-      const asciiSlug = generateDoctorSlug(decoded);
+      const normalizedKey = decoded.toLowerCase().trim();
+      const resolvedSlug =
+        DOCTOR_SLUG_ALIASES[normalizedKey] ||
+        DOCTOR_SLUG_ALIASES[idOrSlug.toLowerCase().trim()] ||
+        decoded;
+
+      const asciiSlug = generateDoctorSlug(resolvedSlug);
 
       const d = await prisma.doctor.findFirst({
         where: {
           OR: [
+            { slug: resolvedSlug },
             { slug: asciiSlug },
             { slug: decoded },
             { slug: idOrSlug },
+            { id: resolvedSlug },
             { id: idOrSlug },
             { id: decoded },
             { name: decoded },
@@ -202,9 +216,11 @@ const fetchDbDoctorByIdOrSlug = unstable_cache(
       // Fast in-memory fallback check across all known catalog doctors
       const fallbackFromInitial = initialDoctors.find(
         (doc) =>
+          doc.slug === resolvedSlug ||
           doc.slug === asciiSlug ||
           doc.slug === decoded ||
           doc.slug === idOrSlug ||
+          doc.id === resolvedSlug ||
           doc.id === idOrSlug ||
           doc.id === decoded ||
           doc.name === decoded ||
@@ -217,9 +233,11 @@ const fetchDbDoctorByIdOrSlug = unstable_cache(
       const rawFallback = (fallbackDoctors as unknown as PrismaDoctorRecord[]).find((doc) => {
         const docAscii = formatDoctor(doc).slug;
         return (
+          docAscii === resolvedSlug ||
           docAscii === asciiSlug ||
           docAscii === decoded ||
           docAscii === idOrSlug ||
+          doc.id === resolvedSlug ||
           doc.id === idOrSlug ||
           doc.id === decoded ||
           doc.name === decoded ||
@@ -232,8 +250,8 @@ const fetchDbDoctorByIdOrSlug = unstable_cache(
       return null;
     }
   },
-  ["single-doctor-by-id-or-slug-v2"],
-  { revalidate: false, tags: [DOCTORS_TAG] }
+  ["single-doctor-by-id-or-slug-v4"],
+  { revalidate: 3600, tags: [DOCTORS_TAG] }
 );
 
 /**
@@ -241,7 +259,7 @@ const fetchDbDoctorByIdOrSlug = unstable_cache(
  * Combines Next.js unstable_cache (Edge Data Cache for 24h) with React cache()
  * (per-request in-memory deduplication between generateMetadata & page body).
  */
-export const getDoctorByIdAction = cache(
+const fetchDoctorByIdCached = cache(
   async (
     idOrSlug: string
   ): Promise<(Doctor & { partner?: Partner | null }) | null> => {
@@ -251,12 +269,13 @@ export const getDoctorByIdAction = cache(
   }
 );
 
-/**
- * Fetch related specialist doctors in the same department.
- * Wrapped with unstable_cache so identical department queries are served from
- * the Next.js data cache instead of hitting the DB on every profile render.
- */
-export const getRelatedDoctorsAction = unstable_cache(
+export async function getDoctorByIdAction(
+  idOrSlug: string
+): Promise<(Doctor & { partner?: Partner | null }) | null> {
+  return fetchDoctorByIdCached(idOrSlug);
+}
+
+const fetchRelatedDoctorsCached = unstable_cache(
   async (
     department: string,
     excludeDoctorId: string,
@@ -287,3 +306,11 @@ export const getRelatedDoctorsAction = unstable_cache(
   ["related-doctors"],
   { revalidate: false, tags: [DOCTORS_TAG] }
 );
+
+export async function getRelatedDoctorsAction(
+  department: string,
+  excludeDoctorId: string,
+  limit = 3
+): Promise<Doctor[]> {
+  return fetchRelatedDoctorsCached(department, excludeDoctorId, limit);
+}

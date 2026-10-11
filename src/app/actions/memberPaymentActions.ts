@@ -17,7 +17,6 @@ export interface MemberPaymentInfo {
   status: string;
   bkashTxnId?: string;
   bkashSender?: string;
-  referenceCode?: string;
   discountAmount?: number;
 }
 
@@ -37,7 +36,6 @@ export async function getMemberForPaymentAction(memberId: string): Promise<Membe
         status: true,
         bkashTxnId: true,
         bkashSender: true,
-        referenceCode: true,
         discountAmount: true,
       },
     });
@@ -63,7 +61,6 @@ export async function getMemberForPaymentAction(memberId: string): Promise<Membe
       status: m.status,
       bkashTxnId: m.bkashTxnId || undefined,
       bkashSender: m.bkashSender || undefined,
-      referenceCode: m.referenceCode || undefined,
       discountAmount: m.discountAmount || 0,
     };
   } catch (error) {

@@ -22,7 +22,6 @@ import { ContactSettingsCard } from "./settings/ContactSettingsCard";
 import { NoticeSettingsCard } from "./settings/NoticeSettingsCard";
 import { MemberTxSettingsCard } from "./settings/MemberTxSettingsCard";
 import { DatabaseBackupCard } from "./settings/DatabaseBackupCard";
-import { ReferenceCodesCard } from "./settings/ReferenceCodesCard";
 
 export function SettingsTab() {
   const [loading, setLoading] = useState(true);
@@ -237,10 +236,6 @@ export function SettingsTab() {
           errors={errors}
         />
 
-        {/* 3. Reference & Discount Codes */}
-        <div className="lg:col-span-2">
-          <ReferenceCodesCard />
-        </div>
 
         {/* 4. Contact & Hotline Setup */}
         <ContactSettingsCard

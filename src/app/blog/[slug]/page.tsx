@@ -155,7 +155,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const freshDateModified = computeBlogDateModified(post, liveDoctors);
 
   // Resolve medical reviewer for Schema.org and E-E-A-T presentation
-  const resolvedReviewer = post.reviewedBy || resolveBlogReviewer(post);
+  const resolvedReviewer = resolveBlogReviewer(post);
   const postWithReviewer: BlogPost = {
     ...post,
     modifiedDate: freshDateModified,

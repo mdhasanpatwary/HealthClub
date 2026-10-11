@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { BlogPost, BlogReviewer } from "@/types/blog";
-import { resolveBlogReviewer } from "../utils/blogReviewerUtils";
+import { resolveBlogReviewer, EDITORIAL_REVIEWER } from "../utils/blogReviewerUtils";
 import { Badge } from "@/components/ui/badge";
 import {
   Stethoscope,
@@ -24,11 +24,25 @@ export function BlogMedicalReviewerBadge({
   reviewer,
   className = "",
 }: BlogMedicalReviewerBadgeProps) {
-  const activeReviewer = reviewer || post.reviewedBy || resolveBlogReviewer(post);
-  const profileUrl = activeReviewer.profileSlug
-    ? (activeReviewer.profileSlug.startsWith("/")
-        ? activeReviewer.profileSlug
-        : `/consultants/${activeReviewer.profileSlug.replace(/^\//, "")}`)
+  const candidateReviewer = reviewer || post.reviewedBy;
+  const activeReviewer =
+    candidateReviewer &&
+    typeof candidateReviewer === "object" &&
+    "doctorNameBn" in candidateReviewer &&
+    Boolean(candidateReviewer.doctorNameBn)
+      ? candidateReviewer
+      : resolveBlogReviewer(post);
+
+  const isDoctorReviewer = Boolean(
+    activeReviewer.bmdcRegNo &&
+    activeReviewer.doctorNameBn !== EDITORIAL_REVIEWER.doctorNameBn
+  );
+
+  const rawSlug = activeReviewer?.profileSlug?.trim();
+  const profileUrl = isDoctorReviewer && rawSlug
+    ? (rawSlug.startsWith("/")
+        ? rawSlug
+        : `/consultants/${rawSlug.replace(/^\//, "")}`)
     : null;
 
   return (
@@ -43,8 +57,17 @@ export function BlogMedicalReviewerBadge({
             variant="outline"
             className="bg-primary/10 text-primary border-primary/25 text-xs font-semibold px-2.5 py-0.5 flex items-center gap-1.5"
           >
-            <Stethoscope className="h-3.5 w-3.5" />
-            <span>ক্লিনিক্যাল মেডিকেল রিভিউ</span>
+            {isDoctorReviewer ? (
+              <>
+                <Stethoscope className="h-3.5 w-3.5" />
+                <span>ক্লিনিক্যাল মেডিকেল রিভিউ</span>
+              </>
+            ) : (
+              <>
+                <ShieldCheck className="h-3.5 w-3.5" />
+                <span>তথ্য যাচাই ও সম্পাদকীয় রিভিউ</span>
+              </>
+            )}
           </Badge>
           <Badge
             variant="outline"
@@ -70,9 +93,9 @@ export function BlogMedicalReviewerBadge({
 
       {/* Main Reviewer Information Row */}
       <div className="flex items-start sm:items-center gap-3.5 pt-3.5">
-        {/* Doctor Avatar or Stethoscope Badge */}
+        {/* Avatar or Editorial Shield */}
         <div className="relative shrink-0">
-          {activeReviewer.photoUrl ? (
+          {isDoctorReviewer && activeReviewer.photoUrl ? (
             <div className="relative h-12 w-12 sm:h-14 sm:w-14 rounded-full overflow-hidden border-2 border-primary/30 shadow-xs">
               <Image
                 src={activeReviewer.photoUrl}
@@ -83,7 +106,11 @@ export function BlogMedicalReviewerBadge({
             </div>
           ) : (
             <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-primary/10 border-2 border-primary/25 flex items-center justify-center text-primary shadow-xs">
-              <UserCheck className="h-6 w-6" />
+              {isDoctorReviewer ? (
+                <UserCheck className="h-6 w-6" />
+              ) : (
+                <ShieldCheck className="h-6 w-6" />
+              )}
             </div>
           )}
           <div className="absolute -bottom-0.5 -right-0.5 rounded-full bg-emerald-500 text-white p-0.5 ring-2 ring-background">
@@ -91,10 +118,12 @@ export function BlogMedicalReviewerBadge({
           </div>
         </div>
 
-        {/* Doctor Credentials & Profile Link */}
+        {/* Credentials & Details */}
         <div className="space-y-1 min-w-0 flex-1">
           <div className="text-xs font-semibold text-primary uppercase tracking-wide">
-            মেডিকেল তথ্য যাচাই ও পর্যালোচনা করেছেন:
+            {isDoctorReviewer
+              ? "মেডিকেল তথ্য পর্যালোচনা করেছেন:"
+              : "তথ্য যাচাই ও সংকলন করেছে:"}
           </div>
 
           <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
@@ -119,7 +148,7 @@ export function BlogMedicalReviewerBadge({
             )}
           </div>
 
-          {/* Specialty & BMDC Tags */}
+          {/* Specialty & Authority Tags */}
           <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
             <Badge
               variant="outline"
@@ -128,22 +157,31 @@ export function BlogMedicalReviewerBadge({
               {activeReviewer.specialtyBn}
             </Badge>
 
-            {activeReviewer.bmdcRegNo && (
+            {isDoctorReviewer && activeReviewer.bmdcRegNo ? (
+              <>
+                <Badge
+                  variant="outline"
+                  className="bg-muted text-muted-foreground border-border/80 text-[11px] font-medium py-0 px-2"
+                >
+                  বিএমডিসি রেজিঃ {toBanglaNums(activeReviewer.bmdcRegNo)}
+                </Badge>
+                <Badge
+                  variant="outline"
+                  className="bg-emerald-500/5 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 text-[11px] font-medium py-0 px-2 hidden md:inline-flex items-center gap-1"
+                >
+                  <CheckCircle2 className="h-3 w-3" />
+                  <span>BMDC নিবন্ধিত চিকিৎসক দ্বারা পরীক্ষিত</span>
+                </Badge>
+              </>
+            ) : (
               <Badge
                 variant="outline"
-                className="bg-muted text-muted-foreground border-border/80 text-[11px] font-medium py-0 px-2"
+                className="bg-emerald-500/5 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 text-[11px] font-medium py-0 px-2 inline-flex items-center gap-1"
               >
-                বিএমডিসি রেজিঃ {toBanglaNums(activeReviewer.bmdcRegNo)}
+                <CheckCircle2 className="h-3 w-3" />
+                <span>তথ্যসূত্র: স্বাস্থ্য অধিদপ্তর, হাসপাতাল রোস্টার ও বিএমডিসি নির্দেশিকা</span>
               </Badge>
             )}
-
-            <Badge
-              variant="outline"
-              className="bg-emerald-500/5 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 text-[11px] font-medium py-0 px-2 hidden md:inline-flex items-center gap-1"
-            >
-              <CheckCircle2 className="h-3 w-3" />
-              <span>BMDC নিবন্ধিত চিকিৎসক দ্বারা পরীক্ষিত</span>
-            </Badge>
           </div>
         </div>
       </div>
@@ -152,7 +190,11 @@ export function BlogMedicalReviewerBadge({
       <div className="mt-3 pt-2.5 border-t border-border/50 text-[11px] text-muted-foreground flex flex-wrap items-center justify-between gap-2">
         <span className="flex items-center gap-1.5">
           <ShieldCheck className="h-3.5 w-3.5 text-primary shrink-0" />
-          <span>রোগীদের সঠিক সিদ্ধান্ত সহায়তায় বিশেষজ্ঞ চিকিৎসকের ক্লিনিক্যাল তথ্য ও স্বাস্থ্যবিধি অনুসৃত।</span>
+          <span>
+            {isDoctorReviewer
+              ? "রোগীদের সঠিক সিদ্ধান্ত সহায়তায় বিশেষজ্ঞ চিকিৎসকের ক্লিনিক্যাল তথ্য ও স্বাস্থ্যবিধি অনুসৃত।"
+              : "রোগীদের নির্ভরযোগ্য সিদ্ধান্তের সুবিধার্থে সরকারি স্বাস্থ্য অধিদপ্তর ও স্থানীয় স্বাস্থ্যসেবা নির্দেশিকা অনুসারে তথ্য সংকলিত।"}
+          </span>
         </span>
         <Link
           href="/editorial-policy"

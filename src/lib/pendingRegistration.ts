@@ -29,7 +29,6 @@ export interface PendingRegistrationData {
   birthDate?: string;
   profession?: string;
   profilePictureUrl?: string;
-  referenceCode?: string;
   discountAmount?: number;
 }
 
@@ -86,7 +85,6 @@ async function verifyPendingRegistrationToken(token: string): Promise<PendingReg
       birthDate: payload.birthDate as string | undefined,
       profession: payload.profession as string | undefined,
       profilePictureUrl: payload.profilePictureUrl as string | undefined,
-      referenceCode: payload.referenceCode as string | undefined,
       discountAmount: typeof payload.discountAmount === "number" ? payload.discountAmount : 0,
       otpCode: payload.otpCode as string,
       attempts: typeof payload.attempts === "number" ? payload.attempts : 0,
@@ -144,7 +142,6 @@ export async function updatePendingRegistrationAttempts(
       birthDate: current.birthDate,
       profession: current.profession,
       profilePictureUrl: current.profilePictureUrl,
-      referenceCode: current.referenceCode,
       discountAmount: current.discountAmount,
     },
     current.otpCode,
@@ -182,7 +179,6 @@ export async function updatePendingRegistrationOtp(
       birthDate: current.birthDate,
       profession: current.profession,
       profilePictureUrl: current.profilePictureUrl,
-      referenceCode: current.referenceCode,
       discountAmount: current.discountAmount,
     },
     newOtpCode,

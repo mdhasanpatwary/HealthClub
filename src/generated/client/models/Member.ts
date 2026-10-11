@@ -58,7 +58,6 @@ export type MemberMinAggregateOutputType = {
   createdAt: Date | null
   bkashSender: string | null
   bkashTxnId: string | null
-  referenceCode: string | null
   discountAmount: number | null
   renewalStatus: string | null
   renewalBkashSender: string | null
@@ -87,7 +86,6 @@ export type MemberMaxAggregateOutputType = {
   createdAt: Date | null
   bkashSender: string | null
   bkashTxnId: string | null
-  referenceCode: string | null
   discountAmount: number | null
   renewalStatus: string | null
   renewalBkashSender: string | null
@@ -116,7 +114,6 @@ export type MemberCountAggregateOutputType = {
   createdAt: number
   bkashSender: number
   bkashTxnId: number
-  referenceCode: number
   discountAmount: number
   renewalStatus: number
   renewalBkashSender: number
@@ -157,7 +154,6 @@ export type MemberMinAggregateInputType = {
   createdAt?: true
   bkashSender?: true
   bkashTxnId?: true
-  referenceCode?: true
   discountAmount?: true
   renewalStatus?: true
   renewalBkashSender?: true
@@ -186,7 +182,6 @@ export type MemberMaxAggregateInputType = {
   createdAt?: true
   bkashSender?: true
   bkashTxnId?: true
-  referenceCode?: true
   discountAmount?: true
   renewalStatus?: true
   renewalBkashSender?: true
@@ -215,7 +210,6 @@ export type MemberCountAggregateInputType = {
   createdAt?: true
   bkashSender?: true
   bkashTxnId?: true
-  referenceCode?: true
   discountAmount?: true
   renewalStatus?: true
   renewalBkashSender?: true
@@ -331,7 +325,6 @@ export type MemberGroupByOutputType = {
   createdAt: Date
   bkashSender: string | null
   bkashTxnId: string | null
-  referenceCode: string | null
   discountAmount: number
   renewalStatus: string | null
   renewalBkashSender: string | null
@@ -383,7 +376,6 @@ export type MemberWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   bkashSender?: Prisma.StringNullableFilter<"Member"> | string | null
   bkashTxnId?: Prisma.StringNullableFilter<"Member"> | string | null
-  referenceCode?: Prisma.StringNullableFilter<"Member"> | string | null
   discountAmount?: Prisma.IntFilter<"Member"> | number
   renewalStatus?: Prisma.StringNullableFilter<"Member"> | string | null
   renewalBkashSender?: Prisma.StringNullableFilter<"Member"> | string | null
@@ -415,7 +407,6 @@ export type MemberOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   bkashSender?: Prisma.SortOrderInput | Prisma.SortOrder
   bkashTxnId?: Prisma.SortOrderInput | Prisma.SortOrder
-  referenceCode?: Prisma.SortOrderInput | Prisma.SortOrder
   discountAmount?: Prisma.SortOrder
   renewalStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   renewalBkashSender?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -450,7 +441,6 @@ export type MemberWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   bkashSender?: Prisma.StringNullableFilter<"Member"> | string | null
   bkashTxnId?: Prisma.StringNullableFilter<"Member"> | string | null
-  referenceCode?: Prisma.StringNullableFilter<"Member"> | string | null
   discountAmount?: Prisma.IntFilter<"Member"> | number
   renewalStatus?: Prisma.StringNullableFilter<"Member"> | string | null
   renewalBkashSender?: Prisma.StringNullableFilter<"Member"> | string | null
@@ -482,7 +472,6 @@ export type MemberOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   bkashSender?: Prisma.SortOrderInput | Prisma.SortOrder
   bkashTxnId?: Prisma.SortOrderInput | Prisma.SortOrder
-  referenceCode?: Prisma.SortOrderInput | Prisma.SortOrder
   discountAmount?: Prisma.SortOrder
   renewalStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   renewalBkashSender?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -519,7 +508,6 @@ export type MemberScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Member"> | Date | string
   bkashSender?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
   bkashTxnId?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
-  referenceCode?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
   discountAmount?: Prisma.IntWithAggregatesFilter<"Member"> | number
   renewalStatus?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
   renewalBkashSender?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
@@ -548,7 +536,6 @@ export type MemberCreateInput = {
   createdAt?: Date | string
   bkashSender?: string | null
   bkashTxnId?: string | null
-  referenceCode?: string | null
   discountAmount?: number
   renewalStatus?: string | null
   renewalBkashSender?: string | null
@@ -580,7 +567,6 @@ export type MemberUncheckedCreateInput = {
   createdAt?: Date | string
   bkashSender?: string | null
   bkashTxnId?: string | null
-  referenceCode?: string | null
   discountAmount?: number
   renewalStatus?: string | null
   renewalBkashSender?: string | null
@@ -612,7 +598,6 @@ export type MemberUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referenceCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discountAmount?: Prisma.IntFieldUpdateOperationsInput | number
   renewalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   renewalBkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -644,7 +629,6 @@ export type MemberUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referenceCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discountAmount?: Prisma.IntFieldUpdateOperationsInput | number
   renewalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   renewalBkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -676,7 +660,6 @@ export type MemberCreateManyInput = {
   createdAt?: Date | string
   bkashSender?: string | null
   bkashTxnId?: string | null
-  referenceCode?: string | null
   discountAmount?: number
   renewalStatus?: string | null
   renewalBkashSender?: string | null
@@ -705,7 +688,6 @@ export type MemberUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referenceCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discountAmount?: Prisma.IntFieldUpdateOperationsInput | number
   renewalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   renewalBkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -734,7 +716,6 @@ export type MemberUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referenceCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discountAmount?: Prisma.IntFieldUpdateOperationsInput | number
   renewalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   renewalBkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -763,7 +744,6 @@ export type MemberCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   bkashSender?: Prisma.SortOrder
   bkashTxnId?: Prisma.SortOrder
-  referenceCode?: Prisma.SortOrder
   discountAmount?: Prisma.SortOrder
   renewalStatus?: Prisma.SortOrder
   renewalBkashSender?: Prisma.SortOrder
@@ -797,7 +777,6 @@ export type MemberMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   bkashSender?: Prisma.SortOrder
   bkashTxnId?: Prisma.SortOrder
-  referenceCode?: Prisma.SortOrder
   discountAmount?: Prisma.SortOrder
   renewalStatus?: Prisma.SortOrder
   renewalBkashSender?: Prisma.SortOrder
@@ -826,7 +805,6 @@ export type MemberMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   bkashSender?: Prisma.SortOrder
   bkashTxnId?: Prisma.SortOrder
-  referenceCode?: Prisma.SortOrder
   discountAmount?: Prisma.SortOrder
   renewalStatus?: Prisma.SortOrder
   renewalBkashSender?: Prisma.SortOrder
@@ -935,7 +913,6 @@ export type MemberCreateWithoutTransactionsInput = {
   createdAt?: Date | string
   bkashSender?: string | null
   bkashTxnId?: string | null
-  referenceCode?: string | null
   discountAmount?: number
   renewalStatus?: string | null
   renewalBkashSender?: string | null
@@ -966,7 +943,6 @@ export type MemberUncheckedCreateWithoutTransactionsInput = {
   createdAt?: Date | string
   bkashSender?: string | null
   bkashTxnId?: string | null
-  referenceCode?: string | null
   discountAmount?: number
   renewalStatus?: string | null
   renewalBkashSender?: string | null
@@ -1013,7 +989,6 @@ export type MemberUpdateWithoutTransactionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referenceCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discountAmount?: Prisma.IntFieldUpdateOperationsInput | number
   renewalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   renewalBkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1044,7 +1019,6 @@ export type MemberUncheckedUpdateWithoutTransactionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referenceCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discountAmount?: Prisma.IntFieldUpdateOperationsInput | number
   renewalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   renewalBkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1075,7 +1049,6 @@ export type MemberCreateWithoutNotificationsInput = {
   createdAt?: Date | string
   bkashSender?: string | null
   bkashTxnId?: string | null
-  referenceCode?: string | null
   discountAmount?: number
   renewalStatus?: string | null
   renewalBkashSender?: string | null
@@ -1106,7 +1079,6 @@ export type MemberUncheckedCreateWithoutNotificationsInput = {
   createdAt?: Date | string
   bkashSender?: string | null
   bkashTxnId?: string | null
-  referenceCode?: string | null
   discountAmount?: number
   renewalStatus?: string | null
   renewalBkashSender?: string | null
@@ -1153,7 +1125,6 @@ export type MemberUpdateWithoutNotificationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referenceCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discountAmount?: Prisma.IntFieldUpdateOperationsInput | number
   renewalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   renewalBkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1184,7 +1155,6 @@ export type MemberUncheckedUpdateWithoutNotificationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referenceCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discountAmount?: Prisma.IntFieldUpdateOperationsInput | number
   renewalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   renewalBkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1215,7 +1185,6 @@ export type MemberCreateWithoutReviewsInput = {
   createdAt?: Date | string
   bkashSender?: string | null
   bkashTxnId?: string | null
-  referenceCode?: string | null
   discountAmount?: number
   renewalStatus?: string | null
   renewalBkashSender?: string | null
@@ -1246,7 +1215,6 @@ export type MemberUncheckedCreateWithoutReviewsInput = {
   createdAt?: Date | string
   bkashSender?: string | null
   bkashTxnId?: string | null
-  referenceCode?: string | null
   discountAmount?: number
   renewalStatus?: string | null
   renewalBkashSender?: string | null
@@ -1293,7 +1261,6 @@ export type MemberUpdateWithoutReviewsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referenceCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discountAmount?: Prisma.IntFieldUpdateOperationsInput | number
   renewalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   renewalBkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1324,7 +1291,6 @@ export type MemberUncheckedUpdateWithoutReviewsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bkashTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referenceCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discountAmount?: Prisma.IntFieldUpdateOperationsInput | number
   renewalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   renewalBkashSender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1404,7 +1370,6 @@ export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   createdAt?: boolean
   bkashSender?: boolean
   bkashTxnId?: boolean
-  referenceCode?: boolean
   discountAmount?: boolean
   renewalStatus?: boolean
   renewalBkashSender?: boolean
@@ -1437,7 +1402,6 @@ export type MemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   createdAt?: boolean
   bkashSender?: boolean
   bkashTxnId?: boolean
-  referenceCode?: boolean
   discountAmount?: boolean
   renewalStatus?: boolean
   renewalBkashSender?: boolean
@@ -1466,7 +1430,6 @@ export type MemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   createdAt?: boolean
   bkashSender?: boolean
   bkashTxnId?: boolean
-  referenceCode?: boolean
   discountAmount?: boolean
   renewalStatus?: boolean
   renewalBkashSender?: boolean
@@ -1495,14 +1458,13 @@ export type MemberSelectScalar = {
   createdAt?: boolean
   bkashSender?: boolean
   bkashTxnId?: boolean
-  referenceCode?: boolean
   discountAmount?: boolean
   renewalStatus?: boolean
   renewalBkashSender?: boolean
   renewalBkashTxnId?: boolean
 }
 
-export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "phone" | "email" | "password" | "tier" | "status" | "joinedDate" | "expiryDate" | "qrCodeUrl" | "totalSaved" | "address" | "birthDate" | "profession" | "profilePictureUrl" | "emailVerified" | "verificationCode" | "verificationCodeCreatedAt" | "createdAt" | "bkashSender" | "bkashTxnId" | "referenceCode" | "discountAmount" | "renewalStatus" | "renewalBkashSender" | "renewalBkashTxnId", ExtArgs["result"]["member"]>
+export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "phone" | "email" | "password" | "tier" | "status" | "joinedDate" | "expiryDate" | "qrCodeUrl" | "totalSaved" | "address" | "birthDate" | "profession" | "profilePictureUrl" | "emailVerified" | "verificationCode" | "verificationCodeCreatedAt" | "createdAt" | "bkashSender" | "bkashTxnId" | "discountAmount" | "renewalStatus" | "renewalBkashSender" | "renewalBkashTxnId", ExtArgs["result"]["member"]>
 export type MemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactions?: boolean | Prisma.Member$transactionsArgs<ExtArgs>
   notifications?: boolean | Prisma.Member$notificationsArgs<ExtArgs>
@@ -1541,7 +1503,6 @@ export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     createdAt: Date
     bkashSender: string | null
     bkashTxnId: string | null
-    referenceCode: string | null
     discountAmount: number
     renewalStatus: string | null
     renewalBkashSender: string | null
@@ -1993,7 +1954,6 @@ export interface MemberFieldRefs {
   readonly createdAt: Prisma.FieldRef<"Member", 'DateTime'>
   readonly bkashSender: Prisma.FieldRef<"Member", 'String'>
   readonly bkashTxnId: Prisma.FieldRef<"Member", 'String'>
-  readonly referenceCode: Prisma.FieldRef<"Member", 'String'>
   readonly discountAmount: Prisma.FieldRef<"Member", 'Int'>
   readonly renewalStatus: Prisma.FieldRef<"Member", 'String'>
   readonly renewalBkashSender: Prisma.FieldRef<"Member", 'String'>

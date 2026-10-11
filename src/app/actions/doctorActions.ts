@@ -16,20 +16,36 @@ import {
   DOCTOR_ADMIN_SELECT_FIELDS,
 } from "@/lib/doctorFormat";
 import {
-  getDoctorsAction,
-  getDoctorsByDepartmentAction,
-  getDoctorImageAction,
-  getDoctorByIdAction,
-  getRelatedDoctorsAction,
+  getDoctorsAction as _getDoctorsAction,
+  getDoctorsByDepartmentAction as _getDoctorsByDepartmentAction,
+  getDoctorImageAction as _getDoctorImageAction,
+  getDoctorByIdAction as _getDoctorByIdAction,
+  getRelatedDoctorsAction as _getRelatedDoctorsAction,
 } from "./doctorQueryActions";
 
-export {
-  getDoctorsAction,
-  getDoctorsByDepartmentAction,
-  getDoctorImageAction,
-  getDoctorByIdAction,
-  getRelatedDoctorsAction,
-};
+export async function getDoctorsAction(): Promise<Doctor[]> {
+  return _getDoctorsAction();
+}
+
+export async function getDoctorsByDepartmentAction(department: string): Promise<Doctor[]> {
+  return _getDoctorsByDepartmentAction(department);
+}
+
+export async function getDoctorImageAction(id: string): Promise<string | null> {
+  return _getDoctorImageAction(id);
+}
+
+export async function getDoctorByIdAction(idOrSlug: string) {
+  return _getDoctorByIdAction(idOrSlug);
+}
+
+export async function getRelatedDoctorsAction(
+  department: string,
+  excludeDoctorId: string,
+  limit = 3
+) {
+  return _getRelatedDoctorsAction(department, excludeDoctorId, limit);
+}
 
 const DOCTORS_TAG = "doctors";
 

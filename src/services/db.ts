@@ -21,7 +21,6 @@ export interface Member {
   renewalStatus?: string;
   renewalBkashSender?: string;
   renewalBkashTxnId?: string;
-  referenceCode?: string;
   discountAmount?: number;
   role?: string;
   adminRole?: AdminRole;

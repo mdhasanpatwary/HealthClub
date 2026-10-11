@@ -156,7 +156,7 @@ export function generateBlogJsonLd(
         "@type": "MedicalAudience",
         medicalAudienceType: "Patient",
       },
-      reviewedBy: getReviewerSchema(post.reviewedBy || resolveBlogReviewer(post), SITE_URL),
+      reviewedBy: getReviewerSchema(resolveBlogReviewer(post), SITE_URL),
       lastReviewed: freshDateModified,
       timeRequired: `PT${post.readTimeEn ? (post.readTimeEn.match(/\d+/)?.[0] || "8") : "8"}M`,
       citation: [

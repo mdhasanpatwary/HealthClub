@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ShieldCheck, AlertCircle, CheckCircle2, Copy, Check, Smartphone, User, ArrowLeft, Tag } from "lucide-react";
+import { ShieldCheck, AlertCircle, CheckCircle2, Copy, Check, Smartphone, User, ArrowLeft } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -269,19 +269,11 @@ function PaymentForm() {
                 </div>
               )}
 
-              {/* Reference Discount Breakdown Card */}
+              {/* Discount Breakdown Card */}
               {discountAmount > 0 && (
                 <div className="p-3.5 rounded-xl bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-xs space-y-1.5 shadow-xs">
                   <div className="flex items-center justify-between font-semibold text-emerald-800 dark:text-emerald-200">
-                    <span className="flex items-center gap-1.5">
-                      <Tag className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-                      <span>রেফারেন্স ডিসকাউন্ট প্রযোজ্য</span>
-                    </span>
-                    {member.referenceCode && (
-                      <span className="font-mono bg-emerald-100 dark:bg-emerald-900/80 text-emerald-800 dark:text-emerald-300 px-2 py-0.5 rounded text-[11px] font-bold">
-                        {member.referenceCode}
-                      </span>
-                    )}
+                    <span>স্পেশাল ডিসকাউন্ট প্রযোজ্য</span>
                   </div>
                   <div className="flex justify-between text-[11px] text-muted-foreground pt-1 border-t border-emerald-200/60 dark:border-emerald-800/40">
                     <span>নির্ধারিত বার্ষিক ফি: ৳{toBanglaNums(standardFee)}</span>

@@ -239,7 +239,6 @@ export async function verifyEmailOtpAction(
           emailVerified: true,
           verificationCode: null,
           verificationCodeCreatedAt: null,
-          referenceCode: pending.referenceCode || null,
           discountAmount: pending.discountAmount || 0,
         },
       });

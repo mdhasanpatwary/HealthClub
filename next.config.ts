@@ -67,6 +67,107 @@ const nextConfig: NextConfig = {
         destination: "/consultants/asst-prof-dr-abdul-mtin",
         permanent: true,
       },
+      // Edge-level permanent redirects for legacy reviewer slugs (0 Active CPU)
+      {
+        source: "/consultants/dr-zahid-hossain-mazumder",
+        destination: "/consultants/dr-jahid-hossain-mazumder",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-kamrun-nahar-roli",
+        destination: "/consultants/asst-prof-dr-kamrun-nahar-rli",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-salma-akter-gynecologist",
+        destination: "/consultants/asst-prof-dr-kamrun-nahar-rli",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-rokeya-begum-gynecology",
+        destination: "/consultants/asst-prof-dr-kamrun-nahar-rli",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-rokeya-begum-radiologist",
+        destination: "/consultants/asst-prof-dr-kamrun-nahar-rli",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-md-iqbal-hossain-orthopedic",
+        destination: "/consultants/dr-md-iqbal-hossain",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-md-iqbal-hossain-nephrologist",
+        destination: "/consultants/dr-saiful-ahsan-rana",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-md-kamrul-hasan-medicine",
+        destination: "/consultants/dr-md-kamrul-hasan",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-md-kabir-hossain-endocrinologist",
+        destination: "/consultants/dr-md-kabir-hossain",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-md-fahmidul-haque-rion",
+        destination: "/consultants/dr-md-fahmidul-hoque-rion",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-fatematuz-zohra-antara",
+        destination: "/consultants/dr-fatematuj-johra-ontra",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-ashim-kumar-saha",
+        destination: "/consultants/assoc-prof-dr-osim-kumar-saha",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-mohammad-shahadat-hossain-psychiatrist",
+        destination: "/consultants/asst-prof-dr-mohammad-shahadat-hossain",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-md-nizam-uddin-cardiologist",
+        destination: "/consultants/dr-muhammad-belal-hossain",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-md-nazmul-hasan-neurologist",
+        destination: "/consultants/dr-osim-kumar-chowdhury",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-md-saiful-islam-surgeon",
+        destination: "/consultants/dr-md-harun-or-rshid",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-md-saiful-islam-ent",
+        destination: "/consultants/dr-asif-uddin",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-mohammad-zahirul-islam-ent",
+        destination: "/consultants/dr-asif-uddin",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-md-rafiqul-islam-eye",
+        destination: "/consultants/dr-brj-gopal-pal",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-md-ziauddin-ahmed",
+        destination: "/consultants/dr-piyas-kanti-pal",
+        permanent: true,
+      },
       // Edge-level redirects for department filter fallbacks
       {
         source: "/consultants/department/other",

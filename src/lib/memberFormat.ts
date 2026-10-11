@@ -26,7 +26,6 @@ export const MEMBER_SELECT_FIELDS = {
 export const MEMBER_DETAIL_SELECT_FIELDS = {
   ...MEMBER_SELECT_FIELDS,
   profilePictureUrl: true,
-  referenceCode: true,
   discountAmount: true,
 } as const;
 
@@ -63,7 +62,6 @@ export function mapPrismaMember(m: PrismaMemberRecord): Member {
     renewalStatus: m.renewalStatus || undefined,
     renewalBkashSender: m.renewalBkashSender || undefined,
     renewalBkashTxnId: m.renewalBkashTxnId || undefined,
-    referenceCode: (m as { referenceCode?: string | null }).referenceCode || undefined,
     discountAmount: (m as { discountAmount?: number | null }).discountAmount ?? 0,
   };
 }

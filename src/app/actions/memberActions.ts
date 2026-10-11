@@ -21,7 +21,6 @@ import {
   adminAddMemberSchema,
 } from "@/lib/validations/member";
 import { ensureStorageUrl } from "@/services/storageService";
-import { evaluateReferenceCode } from "@/lib/referenceCodes";
 import { MEMBER_DETAIL_SELECT_FIELDS, mapPrismaMember } from "@/lib/memberFormat";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "healthclubfeni@gmail.com";
@@ -92,17 +91,6 @@ export async function addMemberAction(
     return { error: "ডাটাবেজ সংযোগে সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।" };
   }
 
-  let validatedRefCode: string | undefined = undefined;
-  let computedDiscount = 0;
-
-  if (member.referenceCode && member.referenceCode.trim()) {
-    const refEval = await evaluateReferenceCode(member.referenceCode, member.tier);
-    if (!refEval.valid) {
-      return { error: refEval.messageBn || "রেফারেন্স কোডটি সঠিক নয় বা মেয়াদোত্তীর্ণ।" };
-    }
-    validatedRefCode = refEval.code;
-    computedDiscount = refEval.discountAmount;
-  }
 
   const rawPassword = member.password || "123456";
   const hashedPassword = hashPassword(rawPassword);
@@ -135,8 +123,7 @@ export async function addMemberAction(
           profession: member.profession || null,
           profilePictureUrl: (await ensureStorageUrl(member.profilePictureUrl, "members", newId)) || null,
           emailVerified: true,
-          referenceCode: validatedRefCode || member.referenceCode || null,
-          discountAmount: member.discountAmount ?? computedDiscount,
+          discountAmount: member.discountAmount ?? 0,
         },
       });
 
@@ -151,7 +138,6 @@ export async function addMemberAction(
         birthDate: m.birthDate ? formatDate(m.birthDate) : undefined,
         profession: m.profession || undefined,
         profilePictureUrl: m.profilePictureUrl || undefined,
-        referenceCode: m.referenceCode || undefined,
         discountAmount: m.discountAmount,
       } as Member;
     } catch (error: unknown) {
@@ -172,7 +158,7 @@ export async function addMemberAction(
     const isFreeTier = member.tier === "free" || member.tier === "founding";
     const paymentSettings = await getCachedPaymentSettings();
     const standardFee = isFreeTier ? 0 : parseInt(paymentSettings.premiumFee || "500", 10);
-    const isFree = isFreeTier || computedDiscount >= standardFee;
+    const isFree = isFreeTier || standardFee === 0;
     const initialStatus = isFree ? "active" : "inactive";
 
     const finalProfilePicture = member.profilePictureUrl
@@ -197,8 +183,7 @@ export async function addMemberAction(
         profession: member.profession || null,
         profilePictureUrl: finalProfilePicture,
         emailVerified: true,
-        referenceCode: validatedRefCode || member.referenceCode || null,
-        discountAmount: computedDiscount,
+        discountAmount: 0,
       },
     });
 
@@ -223,7 +208,6 @@ export async function addMemberAction(
       birthDate: createdMember.birthDate ? formatDate(createdMember.birthDate) : undefined,
       profession: createdMember.profession || undefined,
       profilePictureUrl: createdMember.profilePictureUrl || undefined,
-      referenceCode: createdMember.referenceCode || undefined,
       discountAmount: createdMember.discountAmount,
     } as Member;
   } catch (error: unknown) {

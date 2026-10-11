@@ -27,7 +27,6 @@ function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const planParam = searchParams.get("plan");
-  const refParam = searchParams.get("ref") || searchParams.get("reference") || "";
 
   const {
     register,
@@ -47,7 +46,6 @@ function RegisterForm() {
       birthDate: "",
       profession: "",
       profilePictureUrl: "",
-      referenceCode: refParam,
     },
   });
 

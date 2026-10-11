@@ -47,12 +47,6 @@ export const memberRegistrationSchema = z.object({
     .trim()
     .optional()
     .or(z.literal("")),
-  referenceCode: z
-    .string()
-    .trim()
-    .max(50, "রেফারেন্স কোড ৫০ অক্ষরের মধ্যে হতে হবে।")
-    .optional()
-    .or(z.literal("")),
 });
 
 export type MemberRegistrationInput = z.infer<typeof memberRegistrationSchema>;
@@ -84,7 +78,6 @@ export const adminAddMemberSchema = z.object({
   birthDate: z.string().trim().optional().or(z.literal("")),
   profession: z.string().trim().optional().or(z.literal("")),
   profilePictureUrl: z.string().trim().optional().or(z.literal("")),
-  referenceCode: z.string().trim().optional().or(z.literal("")),
   discountAmount: z.number().int().min(0).optional(),
 });
 

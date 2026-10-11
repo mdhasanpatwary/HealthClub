@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { 
   User, Mail, Phone, Calendar, MapPin, Briefcase, CreditCard, ShieldCheck, Edit3, Heart,
-  History as HistoryIcon, ZoomIn, ExternalLink, Loader2, Tag
+  History as HistoryIcon, ZoomIn, ExternalLink, Loader2
 } from "lucide-react";
 import { Member, Transaction } from "@/services/db";
 import { toBanglaNums } from "@/lib/utils";
@@ -260,24 +260,6 @@ export function MemberDetailsDialog({
               <p className="text-sm text-secondary">{viewingMember.profession || "প্রদান করা হয়নি"}</p>
             </div>
 
-            {viewingMember.referenceCode && (
-              <div className="space-y-1 col-span-1 sm:col-span-2 p-3 rounded-xl bg-primary/5 dark:bg-primary/10 border border-primary/20">
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-semibold">
-                  <Tag className="h-3.5 w-3.5 text-primary" />
-                  <span>ব্যবহৃত রেফারেন্স কোড:</span>
-                </div>
-                <div className="flex items-center justify-between pt-1">
-                  <span className="text-sm font-mono font-bold text-primary bg-primary/10 px-2.5 py-0.5 rounded-md border border-primary/30">
-                    {viewingMember.referenceCode}
-                  </span>
-                  {viewingMember.discountAmount ? (
-                    <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold">
-                      ছাড়: ৳{toBanglaNums(viewingMember.discountAmount)}
-                    </span>
-                  ) : null}
-                </div>
-              </div>
-            )}
           </div>
 
           {/* bKash Payment Details */}

@@ -82,7 +82,6 @@ export function MembersTab({
                 { header: "Joined Date", accessor: "joinedDate" },
                 { header: "Expiry Date", accessor: "expiryDate" },
                 { header: "Total Saved (BDT)", accessor: "totalSaved" },
-                { header: "Reference Code", accessor: (m) => m.referenceCode || "" },
                 { header: "Discount (BDT)", accessor: (m) => m.discountAmount || 0 },
                 { header: "Address", accessor: (m) => m.address || "" },
               ])
@@ -186,11 +185,6 @@ export function MembersTab({
                       <div className="font-semibold">
                         {(m.tier === "founding" || m.tier === "free") ? "ফ্রি মেম্বার" : m.tier === "premium" ? "প্রিমিয়াম মেম্বার" : "অন্যান্য"}
                       </div>
-                      {m.referenceCode && (
-                        <span className="inline-block mt-0.5 text-[10px] font-mono font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded border border-primary/20">
-                          রেফ: {m.referenceCode}
-                        </span>
-                      )}
                     </TableCell>
                     <TableCell className="font-mono font-semibold whitespace-nowrap">৳{toBanglaNums(m.totalSaved || 0)}</TableCell>
                     <TableCell>
