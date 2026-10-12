@@ -61,6 +61,7 @@ All partner facilities maintain formal discount contracts with Health Club, stri
 
 | প্রতিষ্ঠানের নাম (Organization Name) | ধরণ (Category) | ঠিকানা (Address) | হেলথ ক্লাব ছাড় (Discount) | যোগাযোগ (Phone) |
 |:---|:---|:---|:---|:---|
+| City Pharma & Mart | ফার্মেসি (Pharmacy) | জিরো পয়েন্ট ট্রাংক রোড,ফেনী।  নবী হোটেল এর উত্তর পাশে। | ৫-১০% মেম্বার ছাড় | 01733-993374 |
 | আল-আকসা হাসপাতাল লিঃ ফেনী | হাসপাতাল (Hospital) | খাজুরিয়া কোট বিল্ডিং, ট্রাংক রোড, ফেনী। ৩৯০০ | ১০-২৫% মেম্বার ছাড় | 01815076266 |
 | ইম্পেরিয়াল নিউরোকেয়ার অ্যান্ড ডায়াগনস্টিক সেন্টার | ডায়াগনস্টিক (Diagnostic) | ফেনী কেন্দ্রীয় বোরো জামে মসজিদ মার্কেট ২য় তলা, ট্রাঙ্ক রোড-ফেনী। | ১০-৩০% মেম্বার ছাড় | +8801888750099 |
 | ইসলামিয়া  ফিজিওথেরাপি  এন্ড রিহ্যাবিলিটেশন সেন্টার | হাসপাতাল (Hospital) | আল কেমী হাসপাতালের দক্ষিণ পার্শ্বে, (জসিম ম্যানশন), এস.এস.কে রোড, ফেনী। | ১০-৩০% মেম্বার ছাড় | 01828071865 |
@@ -114,7 +115,7 @@ All partner facilities maintain formal discount contracts with Health Club, stri
 
 ## Specialist Doctors Directory (`/consultants`)
 
-Health Club maintains an active, verified directory of **268 specialist doctors** practicing across Feni Sadar and visiting consultants from Dhaka Medical College Hospital (DMCH), Chittagong Medical College Hospital (CMCH), and BSMMU.
+Health Club maintains an active, verified directory of **253 specialist doctors** practicing across Feni Sadar and visiting consultants from Dhaka Medical College Hospital (DMCH), Chittagong Medical College Hospital (CMCH), and BSMMU.
 
 ### Medical Specialties & Consultant Distribution:
 - **হৃদরোগ ও কার্ডিওলজি (Cardiology)**: 22 জন কনসালট্যান্ট
@@ -122,18 +123,18 @@ Health Club maintains an active, verified directory of **268 specialist doctors*
 - **চর্ম, অ্যালার্জি ও যৌনরোগ (Dermatology & Venereology)**: 19 জন কনসালট্যান্ট
 - **নাক, কান ও গলা (ENT / Head & Neck)**: 14 জন কনসালট্যান্ট
 - **চক্ষুরোগ ও চক্ষু সার্জারি (Ophthalmology)**: 1 জন কনসালট্যান্ট
-- **স্ত্রীরোগ ও প্রসূতিবিদ্যা (Gynecology & Obstetrics)**: 32 জন কনসালট্যান্ট
-- **hepatology**: 16 জন কনসালট্যান্ট
+- **স্ত্রীরোগ ও প্রসূতিবিদ্যা (Gynecology & Obstetrics)**: 27 জন কনসালট্যান্ট
+- **hepatology**: 14 জন কনসালট্যান্ট
 - **মেডিসিন ও ইন্টারনাল মেডিসিন (Internal Medicine)**: 34 জন কনসালট্যান্ট
-- **কিডনি রোগ ও ডায়ালাইসিস (Nephrology)**: 9 জন কনসালট্যান্ট
-- **নিউরোমেডিসিন ও নিউরোসার্জারি (Neurology & Neurosurgery)**: 16 জন কনসালট্যান্ট
-- **ক্লিনিক্যাল পুষ্টি ও ডায়েট (Nutrition & Dietetics)**: 3 জন কনসালট্যান্ট
-- **হাড়, জোড়া ও অর্থোপেডিক সার্জারি (Orthopedics & Trauma)**: 13 জন কনসালট্যান্ট
+- **কিডনি রোগ ও ডায়ালাইসিস (Nephrology)**: 8 জন কনসালট্যান্ট
+- **নিউরোমেডিসিন ও নিউরোসার্জারি (Neurology & Neurosurgery)**: 13 জন কনসালট্যান্ট
+- **ক্লিনিক্যাল পুষ্টি ও ডায়েট (Nutrition & Dietetics)**: 2 জন কনসালট্যান্ট
+- **হাড়, জোড়া ও অর্থোপেডিক সার্জারি (Orthopedics & Trauma)**: 11 জন কনসালট্যান্ট
 - **অন্যান্য বিশেষজ্ঞ কনসালট্যান্ট (Other Specialists)**: 10 জন কনসালট্যান্ট
 - **শিশু ও নবজাতক রোগ (Pediatrics & Neonatology)**: 27 জন কনসালট্যান্ট
 - **মানসিক রোগ ও সাইকোথেরাপি (Psychiatry)**: 8 জন কনসালট্যান্ট
 - **rheumatology**: 7 জন কনসালট্যান্ট
-- **জেনারেল ও ল্যাপারোস্কোপিক সার্জারি (General & Laparoscopic Surgery)**: 33 জন কনসালট্যান্ট
+- **জেনারেল ও ল্যাপারোস্কোপিক সার্জারি (General & Laparoscopic Surgery)**: 32 জন কনসালট্যান্ট
 
 ### Key Chamber Hubs in Feni Sadar:
 1. **SSK Road Corridor**: Al-Aqsa Hospital, Feni Care, Pacific Health Care, Medinova.

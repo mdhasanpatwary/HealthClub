@@ -168,6 +168,82 @@ const nextConfig: NextConfig = {
         destination: "/consultants/dr-piyas-kanti-pal",
         permanent: true,
       },
+      // Edge-level permanent redirects for duplicate doctor slugs (-2 suffix)
+      {
+        source: "/consultants/dr-md-kamrul-hasan-2",
+        destination: "/consultants/dr-md-kamrul-hasan",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-md-iqbal-hossain-2",
+        destination: "/consultants/dr-md-iqbal-hossain",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-md-fahmidul-hoque-rion-2",
+        destination: "/consultants/dr-md-fahmidul-hoque-rion",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-osim-kumar-chowdhury-2",
+        destination: "/consultants/dr-osim-kumar-chowdhury",
+        permanent: true,
+      },
+      {
+        source: "/consultants/asst-prof-dr-asma-akter-2",
+        destination: "/consultants/asst-prof-dr-asma-akter",
+        permanent: true,
+      },
+      {
+        source: "/consultants/asst-prof-dr-deoyan-mushfikur-rahman-2",
+        destination: "/consultants/asst-prof-dr-deoyan-mushfikur-rahman",
+        permanent: true,
+      },
+      {
+        source: "/consultants/asst-prof-dr-mumtahena-amir-2",
+        destination: "/consultants/asst-prof-dr-mumtahena-amir",
+        permanent: true,
+      },
+      {
+        source: "/consultants/asst-prof-dr-sirajul-munir-ohi-2",
+        destination: "/consultants/asst-prof-dr-sirajul-munir-ohi",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-champa-kundu-2",
+        destination: "/consultants/dr-champa-kundu",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-e-ke-em-saifur-rahman-2",
+        destination: "/consultants/dr-e-ke-em-saifur-rahman",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-jannatul-ferdous-2",
+        destination: "/consultants/dr-jannatul-ferdous",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-md-mominul-islam-sohag-2",
+        destination: "/consultants/dr-md-mominul-islam-sohag",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-md-rashedul-hasan-2",
+        destination: "/consultants/dr-md-rashedul-hasan",
+        permanent: true,
+      },
+      {
+        source: "/consultants/dr-shmishtha-de-2",
+        destination: "/consultants/dr-shmishtha-de",
+        permanent: true,
+      },
+      {
+        source: "/consultants/sayma-akter-2",
+        destination: "/consultants/sayma-akter",
+        permanent: true,
+      },
       // Edge-level redirects for department filter fallbacks
       {
         source: "/consultants/department/other",

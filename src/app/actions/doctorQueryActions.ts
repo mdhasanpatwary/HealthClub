@@ -251,12 +251,12 @@ const fetchDbDoctorByIdOrSlug = unstable_cache(
     }
   },
   ["single-doctor-by-id-or-slug-v4"],
-  { revalidate: 3600, tags: [DOCTORS_TAG] }
+  { revalidate: false, tags: [DOCTORS_TAG] }
 );
 
 /**
  * Fetch single doctor by ID or Slug with partner hospital details.
- * Combines Next.js unstable_cache (Edge Data Cache for 24h) with React cache()
+ * Combines Next.js unstable_cache (pure on-demand Edge Data Cache with DOCTORS_TAG) with React cache()
  * (per-request in-memory deduplication between generateMetadata & page body).
  */
 const fetchDoctorByIdCached = cache(

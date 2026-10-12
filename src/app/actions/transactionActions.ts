@@ -458,7 +458,7 @@ const getCachedAdminStats = unstable_cache(
     };
   },
   ["admin-stats"],
-  { revalidate: 900, tags: [ADMIN_STATS_TAG] }
+  { revalidate: false, tags: [ADMIN_STATS_TAG] }
 );
 
 export async function getStatsAction() {

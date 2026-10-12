@@ -1028,7 +1028,7 @@
     "serialPhone": "01898221111",
     "consultationFee": "৳৫০০ - ৳১,০০০",
     "imageUrl": "https://fenirdoctor.com/storage/doctor/doctor-2025-10-28-69004f25e19e5.jpg",
-    "isActive": true
+    "isActive": false
   },
   {
     "id": "doc_fenir_233",
@@ -1198,7 +1198,7 @@
     "serialPhone": "01834031113",
     "consultationFee": "৳৭০০",
     "imageUrl": "https://fenirdoctor.com/storage/doctor/doctor-2025-10-07-68e463fdca516.jpg",
-    "isActive": true
+    "isActive": false
   },
   {
     "id": "doc_fenir_751",
@@ -1555,7 +1555,7 @@
     "serialPhone": "01824908173",
     "consultationFee": "৳৭০০",
     "imageUrl": "https://fenirdoctor.com/storage/doctor/doctor-2026-01-30-697c51687ce7b.png",
-    "isActive": true
+    "isActive": false
   },
   {
     "id": "doc_fenir_404",
@@ -1708,7 +1708,7 @@
     "serialPhone": "01898221111",
     "consultationFee": "৳৫০০ - ৳১,০০০",
     "imageUrl": "https://fenirdoctor.com/storage/doctor/doctor-2025-10-26-68fe1eebc3438.jpg",
-    "isActive": true
+    "isActive": false
   },
   {
     "id": "doc_fenir_371",
@@ -1742,7 +1742,7 @@
     "serialPhone": "01882462650",
     "consultationFee": "৳৭০০",
     "imageUrl": "https://fenirdoctor.com/storage/doctor/doctor-2025-10-07-68e45ed6afbf2.jpg",
-    "isActive": true
+    "isActive": false
   },
   {
     "id": "doc_fenir_783",
@@ -1776,7 +1776,7 @@
     "serialPhone": "01824908173",
     "consultationFee": "৳৫০০ - ৳১,০০০",
     "imageUrl": "https://fenirdoctor.com/storage/doctor/doctor-2025-12-20-6946a0989c505.",
-    "isActive": true
+    "isActive": false
   },
   {
     "id": "doc_fenir_843",
@@ -1895,7 +1895,7 @@
     "serialPhone": "01841925695",
     "consultationFee": "৳৭০০",
     "imageUrl": "https://fenirdoctor.com/storage/doctor/doctor-2025-10-07-68e53245b7450.jpg",
-    "isActive": true
+    "isActive": false
   },
   {
     "id": "doc_fenir_511",
@@ -1929,7 +1929,7 @@
     "serialPhone": "01898221111",
     "consultationFee": "৳৫০০ - ৳১,০০০",
     "imageUrl": "https://fenirdoctor.com/storage/doctor/doctor-2025-10-14-68edd3e207152.jpg",
-    "isActive": true
+    "isActive": false
   },
   {
     "id": "doc_fenir_886",
@@ -2541,7 +2541,7 @@
     "serialPhone": "01898221111",
     "consultationFee": "৳৭০০",
     "imageUrl": "https://fenirdoctor.com/storage/doctor/doctor-2025-10-08-68e65dc438128.jpg",
-    "isActive": true
+    "isActive": false
   },
   {
     "id": "doc_fenir_673",
@@ -2558,7 +2558,7 @@
     "serialPhone": "01834031113",
     "consultationFee": "৳৮০০",
     "imageUrl": "https://fenirdoctor.com/storage/doctor/doctor-2025-10-18-68f331f1ebf5a.jpg",
-    "isActive": true
+    "isActive": false
   },
   {
     "id": "doc_fenir_253",
@@ -3578,7 +3578,7 @@
     "serialPhone": "01841925695",
     "consultationFee": "৳৭০০",
     "imageUrl": "https://fenirdoctor.com/storage/doctor/doctor-2026-02-09-6989fe95b00c7.png",
-    "isActive": true
+    "isActive": false
   },
   {
     "id": "doc_fenir_795",
@@ -3816,7 +3816,7 @@
     "serialPhone": "01898221111",
     "consultationFee": "৳৭০০",
     "imageUrl": "https://fenirdoctor.com/storage/doctor/doctor-2025-10-08-68e661312ab81.jpg",
-    "isActive": true
+    "isActive": false
   },
   {
     "id": "doc_fenir_341",

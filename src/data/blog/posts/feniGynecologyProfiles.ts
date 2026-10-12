@@ -24,7 +24,7 @@ export const FENI_GYNECOLOGY_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "বিকাল ৩:০০ - রাত ৮:০০",
         serialPhone: "01898221111",
         consultationFeeBn: "৳৮০০",
-        consultantProfileUrl: "/consultants/asst-prof-dr-asma-akter-2",
+        consultantProfileUrl: "/consultants/asst-prof-dr-asma-akter",
         featuredBadgeBn: "২৫০ শয্যা জেনারেল হাসপাতাল",
       },
       {

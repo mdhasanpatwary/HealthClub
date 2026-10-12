@@ -106,7 +106,7 @@ export const FENI_NORMAL_DELIVERY_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "বিকাল ৩:০০ - রাত ৮:০০",
         serialPhone: "01898221111",
         consultationFeeBn: "৳৮০০",
-        consultantProfileUrl: "/consultants/asst-prof-dr-asma-akter-2",
+        consultantProfileUrl: "/consultants/asst-prof-dr-asma-akter",
         featuredBadgeBn: "জটিল প্রসূতি সার্জন",
       },
       {

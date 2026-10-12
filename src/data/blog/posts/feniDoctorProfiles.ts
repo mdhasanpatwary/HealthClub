@@ -270,7 +270,7 @@ export const FENI_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "দুপুর ১২:৩০ টা - বিকাল ৪:০০ টা",
         serialPhone: "01815583960",
         consultationFeeBn: "৳৮০০",
-        consultantProfileUrl: "/consultants/asst-prof-dr-mumtahena-amir-2",
+        consultantProfileUrl: "/consultants/asst-prof-dr-mumtahena-amir",
         featuredBadgeBn: "ঢাকা মেডিকেল কলেজ কনসালটেন্ট",
         partnerStatus: true,
         rank: 2,

@@ -43,7 +43,7 @@ export const FENI_ORTHOPEDIC_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "বিকাল ৫:০০ - রাত ৮:০০",
         serialPhone: "01898221111, 01898445555",
         consultationFeeBn: "৳৬০০ - ৳৮০০",
-        consultantProfileUrl: "/consultants/dr-md-mominul-islam-sohag-2",
+        consultantProfileUrl: "/consultants/dr-md-mominul-islam-sohag",
         featuredBadgeBn: "ফেনী সদর হাসপাতাল অর্থোপেডিক কনসালটেন্ট",
         partnerStatus: true,
       },

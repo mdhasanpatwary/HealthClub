@@ -234,7 +234,7 @@ export const FENI_DOCTOR_APPOINTMENT_DOCTOR_GROUPS: DoctorSpecialtyGroup[] = [
         visitingHoursBn: "বিকাল ৫:০০ টা - রাত ৯:০০ টা",
         serialPhone: "01752431244",
         consultationFeeBn: "৳৮০০",
-        consultantProfileUrl: "/consultants/dr-md-iqbal-hossain-2",
+        consultantProfileUrl: "/consultants/dr-md-iqbal-hossain",
         featuredBadgeBn: "শিশু ও নবজাতক বিশেষজ্ঞ",
         partnerStatus: true,
         rank: 1,
