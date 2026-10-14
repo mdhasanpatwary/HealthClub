@@ -119,7 +119,7 @@ export default function OfflinePage() {
               </Badge>
             </CardHeader>
             <CardContent className="p-3 sm:p-5 flex justify-center">
-              <MemberCard member={offlineMember} />
+              <MemberCard member={offlineMember} priority={true} />
             </CardContent>
           </Card>
         )}

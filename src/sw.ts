@@ -21,45 +21,31 @@ declare global {
 
 declare const self: ServiceWorkerGlobalScope;
 
-const isLocalhost =
-  typeof self !== "undefined" &&
-  (self.location.hostname === "localhost" || self.location.hostname === "127.0.0.1");
-
-// Guard against dev environment running a build's service worker
-if (isLocalhost) {
-  self.addEventListener("install", () => {
-    void self.skipWaiting();
-  });
-  self.addEventListener("activate", (event: ExtendableEvent) => {
-    event.waitUntil(
-      (async () => {
-        if ("caches" in self) {
-          const keys = await caches.keys();
-          await Promise.all(keys.map((k) => caches.delete(k)));
-        }
-        await self.registration.unregister();
-      })()
-    );
-  });
-}
-
-
 // ---------------------------------------------------------------------------
 // High-Priority Offline Caching Strategies
 // ---------------------------------------------------------------------------
 
 const customOfflineCache: RuntimeCaching[] = [
-  // 1. Digital Member Card & Emergency Pages - Network First with Fast Timeout Fallback
+  // 1. Next.js Static JS Chunks (immutable hashes) - Cache First with 30-day TTL
   {
-    matcher: ({ url: { pathname }, sameOrigin }) =>
-      sameOrigin &&
-      (pathname === "/dashboard" ||
-        pathname.startsWith("/dashboard/") ||
-        pathname === "/emergency" ||
-        pathname.startsWith("/emergency/") ||
-        pathname === "/offline"),
-    handler: new NetworkFirst({
-      cacheName: "hc-critical-offline-pages",
+    matcher: /\/_next\/static.+\.js$/i,
+    handler: new CacheFirst({
+      cacheName: "hc-static-js-assets",
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: 128,
+          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+          maxAgeFrom: "last-used",
+        }),
+      ],
+    }),
+  },
+
+  // 2. Next.js Static Stylesheets - Cache First with 30-day TTL
+  {
+    matcher: /\/_next\/static.+\.css$/i,
+    handler: new CacheFirst({
+      cacheName: "hc-static-css-assets",
       plugins: [
         new ExpirationPlugin({
           maxEntries: 32,
@@ -67,22 +53,31 @@ const customOfflineCache: RuntimeCaching[] = [
           maxAgeFrom: "last-used",
         }),
       ],
-      networkTimeoutSeconds: 3,
     }),
   },
 
-  // 2. Partner Hospitals Directory & Profile Pages - Network First with Fast Timeout and 1-hour TTL
+  // 3. Digital Member Card & Emergency HTML Pages - Network First with Fast Timeout Fallback
+  // Matches full document navigations (not RSC requests) to avoid cache collision
   {
-    matcher: ({ url: { pathname }, sameOrigin }) =>
+    matcher: ({ request, url: { pathname }, sameOrigin }) =>
       sameOrigin &&
-      (pathname === "/partner-hospitals" ||
-        pathname.startsWith("/partner-hospitals/")),
+      (request.destination === "document" ||
+        request.mode === "navigate" ||
+        (request.headers.get("Accept")?.includes("text/html") ?? false)) &&
+      !request.headers.get("RSC") &&
+      (pathname === "/dashboard" ||
+        pathname.startsWith("/dashboard/") ||
+        pathname === "/emergency" ||
+        pathname.startsWith("/emergency/") ||
+        pathname === "/partner-hospitals" ||
+        pathname.startsWith("/partner-hospitals/") ||
+        pathname === "/offline"),
     handler: new NetworkFirst({
-      cacheName: "hc-partner-hospitals-cache",
+      cacheName: "hc-critical-html-pages",
       plugins: [
         new ExpirationPlugin({
           maxEntries: 32,
-          maxAgeSeconds: 3600, // 1 hour max TTL
+          maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
           maxAgeFrom: "last-used",
         }),
       ],
@@ -90,7 +85,32 @@ const customOfflineCache: RuntimeCaching[] = [
     }),
   },
 
-  // 3. Member Card QR Code Generator Service - Cache First with long TTL
+  // 4. Critical RSC Flight Payloads for Dashboard & Emergency Routes
+  // Cached separately from HTML to prevent App Router stream/HTML payload corruption
+  {
+    matcher: ({ request, url: { pathname }, sameOrigin }) =>
+      sameOrigin &&
+      request.headers.get("RSC") === "1" &&
+      (pathname === "/dashboard" ||
+        pathname.startsWith("/dashboard/") ||
+        pathname === "/emergency" ||
+        pathname.startsWith("/emergency/") ||
+        pathname === "/partner-hospitals" ||
+        pathname.startsWith("/partner-hospitals/")),
+    handler: new NetworkFirst({
+      cacheName: "hc-critical-rsc-payloads",
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: 32,
+          maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
+          maxAgeFrom: "last-used",
+        }),
+      ],
+      networkTimeoutSeconds: 3,
+    }),
+  },
+
+  // 5. Member Card QR Code Generator Service - Cache First with long TTL
   {
     matcher: ({ url, sameOrigin }) =>
       (sameOrigin && url.pathname.startsWith("/api/qr")) ||
@@ -107,19 +127,36 @@ const customOfflineCache: RuntimeCaching[] = [
     }),
   },
 
-  // 3. Member Card Assets, Logos, and Background Textures - Cache First
+  // 6. Member Card Assets, Logos, and Background Textures - Cache First
   {
     matcher: ({ url: { pathname }, sameOrigin }) =>
       sameOrigin &&
       (pathname.startsWith("/images/member-card-") ||
         pathname.startsWith("/icons/") ||
-        pathname.startsWith("/images/logo")),
+        pathname.startsWith("/images/logo") ||
+        pathname === "/favicon.ico"),
     handler: new CacheFirst({
       cacheName: "hc-card-branding-assets",
       plugins: [
         new ExpirationPlugin({
-          maxEntries: 32,
+          maxEntries: 64,
           maxAgeSeconds: 60 * 24 * 60 * 60, // 60 days
+          maxAgeFrom: "last-used",
+        }),
+      ],
+    }),
+  },
+
+  // 7. Supabase CDN Avatars and Profile Images - Cache First
+  {
+    matcher: ({ url }) =>
+      url.hostname.includes("supabase.co") && url.pathname.includes("/storage/v1/object/public/"),
+    handler: new CacheFirst({
+      cacheName: "hc-member-avatars-cache",
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: 64,
+          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
           maxAgeFrom: "last-used",
         }),
       ],
@@ -127,62 +164,68 @@ const customOfflineCache: RuntimeCaching[] = [
   },
 ];
 
-// Essential offline shell assets precached during SW install.
-// Route-specific chunks are cached dynamically on-demand via runtimeCaching
-// to prevent hundreds of background network downloads from saturating mobile connections on initial page visit.
+// Filter precache entries to ensure all core runtime, layout, styles, and offline chunks
+// are precached, while excluding heavy administrative panels (admin & partner portal)
+// to keep the initial SW install lightweight and blazing fast.
+const manifestEntries = (self.__SW_MANIFEST || []).filter((entry) => {
+  const url = typeof entry === "string" ? entry : entry.url;
+  // Exclude admin and partner dashboard chunks (not required for public offline app)
+  if (url.includes("/app/admin/") || url.includes("/app/partner/") || url.includes("/app/api/")) {
+    return false;
+  }
+  // Exclude text documentation and sourcemaps
+  if (url.endsWith(".txt") || url.endsWith(".map")) {
+    return false;
+  }
+  return true;
+});
+
 const precacheEntries: (PrecacheEntry | string)[] = [
+  ...manifestEntries,
   { url: "/offline", revision: "1.0.0" },
 ];
 
-// Reference injection point required by @serwist/next webpack plugin
-void self.__SW_MANIFEST;
-
-if (!isLocalhost) {
-  const serwist = new Serwist({
-    precacheEntries,
-    skipWaiting: true,
-    clientsClaim: true,
-    navigationPreload: true,
-    runtimeCaching: [...customOfflineCache, ...defaultCache],
-    fallbacks: {
-      entries: [
-        {
-          url: "/offline",
-          matcher({ request }) {
-            return request.destination === "document";
-          },
+const serwist = new Serwist({
+  precacheEntries,
+  skipWaiting: true,
+  clientsClaim: true,
+  navigationPreload: true,
+  runtimeCaching: [...customOfflineCache, ...defaultCache],
+  fallbacks: {
+    entries: [
+      {
+        url: "/offline",
+        matcher({ request }) {
+          return request.destination === "document" || request.mode === "navigate";
         },
-      ],
-    },
-  });
+      },
+    ],
+  },
+});
 
-  serwist.addEventListeners();
+serwist.addEventListeners();
 
-  // Purge stale Next.js RSC and page caches on activate to prevent ghost/deleted records
-  self.addEventListener("activate", (event: ExtendableEvent) => {
-    event.waitUntil(
-      (async () => {
-        try {
-          const cacheNames = await caches.keys();
-          await Promise.all(
-            cacheNames.map((name) => {
-              if (
-                name === "pages-rsc" ||
-                name === "pages" ||
-                name === "pages-rsc-prefetch" ||
-                name === "others"
-              ) {
-                return caches.delete(name);
-              }
-              return Promise.resolve(false);
-            })
-          );
-        } catch {
-          // Cache cleanup failure should not block activation
-        }
-      })()
-    );
-  });
+// Cleanup obsolete legacy cache names from earlier app versions on activate
+self.addEventListener("activate", (event: ExtendableEvent) => {
+  event.waitUntil(
+    (async () => {
+      try {
+        const cacheNames = await caches.keys();
+        const legacyCaches = ["hc-critical-offline-pages", "hc-partner-hospitals-cache"];
+        await Promise.all(
+          cacheNames.map((name) => {
+            if (legacyCaches.includes(name)) {
+              return caches.delete(name);
+            }
+            return Promise.resolve(false);
+          })
+        );
+      } catch {
+        // Cache cleanup failure should not block activation
+      }
+    })()
+  );
+});
 
   // ---------------------------------------------------------------------------
   // Web Push Notifications Engine
@@ -274,4 +317,3 @@ if (!isLocalhost) {
       })
     );
   });
-}

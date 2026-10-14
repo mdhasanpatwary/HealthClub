@@ -8,6 +8,13 @@ const withSerwist = withSerwistInit({
   swDest: "public/sw.js",
   // Disable in development (avoids stale cache issues during dev)
   disable: process.env.NODE_ENV === "development",
+  // Precaches only essential app shell branding assets from public/ directory
+  globPublicPatterns: [
+    "icons/**/*.{png,svg,webp}",
+    "images/member-card-*.webp",
+    "images/health-club-logo.webp",
+    "favicon.ico",
+  ],
 });
 
 const nextConfig: NextConfig = {
