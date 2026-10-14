@@ -49,6 +49,7 @@ export function AmbulanceComparisonTable({
               এটি সবার জন্য উন্মুক্ত একটি জরুরি পাবলিক ডিরেক্টরি — যেখানে সরাসরি ভেরিফায়েড চালক ও এজেন্সির সাথে যোগাযোগ করে সাধারণ প্রমিত ভাড়ায় দ্রুত সেবা নিশ্চিত করা যায়। হাসপাতালের জরুরি গেটে থাকা দালাল চক্র এড়িয়ে সরাসরি চালকের সাথে কথা বলে অতিরিক্ত ৩০-৫০% কমিশন ছাড়া দ্রুত গাড়ি বুকিং করুন। তাৎক্ষণিক অ্যাম্বুলেন্স পেতে হেলথ ক্লাবের লাইভ{" "}
               <Link
                 href="/emergency/ambulances"
+                prefetch={false}
                 className="text-primary font-bold underline inline-flex items-center gap-0.5"
               >
                 জরুরি অ্যাম্বুলেন্স তালিকা (/emergency/ambulances)

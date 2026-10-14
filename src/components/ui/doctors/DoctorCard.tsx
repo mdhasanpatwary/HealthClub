@@ -192,6 +192,7 @@ export function DoctorCard({
             </Button>
             <Link
               href={`/consultants/${encodeURIComponent(doc.slug || doc.id)}`}
+              prefetch={false}
               aria-label={`প্রোফাইল - ${doc.name}`}
               className={buttonVariants({
                 variant: "outline",

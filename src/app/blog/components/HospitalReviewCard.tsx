@@ -111,6 +111,7 @@ export function HospitalReviewCard({
 
           <Link
             href="/membership"
+            prefetch={false}
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-bold shadow-xs hover:bg-primary/90 transition-colors whitespace-nowrap self-stretch sm:self-auto justify-center"
           >
             ডিসকাউন্ট কার্ড নিন
@@ -208,6 +209,7 @@ export function HospitalReviewCard({
                     : `/partner-hospitals/${encodeURIComponent(hospital.partnerProfileSlug)}`
                   : "/partner-hospitals"
               }
+              prefetch={false}
               aria-label={`হাসপাতাল প্রোফাইল - ${name}`}
               className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/90 shadow-xs transition-colors"
             >

@@ -1,6 +1,8 @@
 import { HelpCircle } from "lucide-react";
 import PartnerRequestForm from "./PartnerRequestForm";
 
+export const revalidate = false; // Pure static SSG (zero ISR writes)
+
 export default function BecomePartnerPage() {
   return (
     <div className="bg-background min-h-screen py-12">

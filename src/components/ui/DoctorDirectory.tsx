@@ -254,6 +254,7 @@ export default function DoctorDirectory({
                 <Link
                   key={upz.id}
                   href={href}
+                  prefetch={false}
                   className={`flex items-center gap-1.5 px-3.5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                     isSelected
                       ? "bg-primary text-white shadow-sm ring-2 ring-primary/20"
@@ -347,6 +348,7 @@ export default function DoctorDirectory({
               <Link
                 key={dept.id}
                 href={href}
+                prefetch={false}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                   isSelected
                     ? "bg-secondary text-white shadow-sm ring-2 ring-secondary/20"

@@ -24,6 +24,7 @@ export function BlogMarkdownParagraphs({ paragraphs }: BlogMarkdownParagraphsPro
             <Link
               key={`${href}-${match.index}`}
               href={href}
+              prefetch={false}
               className="font-semibold text-primary underline underline-offset-4 decoration-primary/40 hover:decoration-primary transition-colors"
             >
               {label}

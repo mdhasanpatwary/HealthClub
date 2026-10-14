@@ -49,6 +49,7 @@ export function BloodBankComparisonTable({
               রক্ত কেনাবেচা বা রক্ত নিয়ে আর্থিক লেনদেন আইনত সম্পূর্ণ নিষিদ্ধ ও দণ্ডনীয় অপরাধ। ফেনীর কোনো ব্লাড ব্যাংক বা রক্তদান সংগঠনের সাথে হেলথ ক্লাবের কোনো বাণিজ্যিক চুক্তি বা ছাড়ের সম্পর্ক নেই—সংগঠনগুলো সম্পূর্ণ অলাভজনকভাবে রোগীদের রক্তদাতা পেতে নিঃস্বার্থ সহায়তা দেয়। তাৎক্ষণিক রক্তদাতার প্রয়োজনে আপনি হেলথ ক্লাবের নিজস্ব ফ্রি{" "}
               <Link
                 href="/emergency"
+                prefetch={false}
                 className="text-primary font-bold underline inline-flex items-center gap-0.5"
               >
                 জরুরি রক্তদাতা ডিরেক্টরি (/emergency)
@@ -65,6 +66,7 @@ export function BloodBankComparisonTable({
         </h3>
         <Link
           href="/emergency"
+          prefetch={false}
           className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
         >
           <Search className="h-3.5 w-3.5" />

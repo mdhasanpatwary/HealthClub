@@ -223,6 +223,7 @@ export function PharmacyReviewCard({
                   ? pharmacy.partnerProfileSlug
                   : `/partner-hospitals/${encodeURIComponent(pharmacy.partnerProfileSlug)}`
               }
+              prefetch={false}
               className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
             >
               <span>পার্টনার প্রোফাইল দেখুন</span>

@@ -183,6 +183,7 @@ export function PhysiotherapyReviewCard({
           <div className="flex items-center gap-2 shrink-0">
             <Link
               href="/membership"
+              prefetch={false}
               className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-bold shadow-xs transition-colors"
             >
               <span>ডিসকাউন্ট কার্ড নিন</span>
@@ -194,6 +195,7 @@ export function PhysiotherapyReviewCard({
                     ? center.partnerProfileSlug
                     : `/partner-hospitals/${encodeURIComponent(center.partnerProfileSlug)}`
                 }
+                prefetch={false}
                 aria-label={`পার্টনার প্রোফাইল - ${name}`}
                 className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border hover:bg-muted text-foreground text-xs font-medium transition-colors"
               >

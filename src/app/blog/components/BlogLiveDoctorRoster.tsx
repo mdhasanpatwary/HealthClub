@@ -92,6 +92,7 @@ export function BlogLiveDoctorRoster({
 
         <Link
           href={targetDepartmentUrl}
+          prefetch={false}
           className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline shrink-0 self-start sm:self-auto"
         >
           <span>সকল {deptLabel} ডাক্তার ({toBanglaNums(uniqueDoctors.length)} জন)</span>
@@ -140,7 +141,7 @@ export function BlogLiveDoctorRoster({
                 {/* Doctor Name & Designation */}
                 <div>
                   <h3 className="font-heading text-base sm:text-lg font-bold text-foreground group-hover:text-primary transition-colors">
-                    <Link href={`/consultants/${profileSlug}`} className="hover:underline">
+                    <Link href={`/consultants/${profileSlug}`} prefetch={false} className="hover:underline">
                       {doctor.name}
                     </Link>
                   </h3>
@@ -218,6 +219,7 @@ export function BlogLiveDoctorRoster({
                 ) : (
                   <Link
                     href={`/consultants/${profileSlug}`}
+                    prefetch={false}
                     className="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-primary text-primary-foreground text-xs font-bold shadow-xs hover:bg-primary/90 transition-colors"
                   >
                     <span>সিরিয়াল দেখুন</span>
@@ -226,6 +228,7 @@ export function BlogLiveDoctorRoster({
 
                 <Link
                   href={`/consultants/${profileSlug}`}
+                  prefetch={false}
                   className="inline-flex items-center justify-center gap-1 py-2 px-3 rounded-xl border border-border bg-muted/50 hover:bg-muted text-foreground text-xs font-semibold transition-colors"
                 >
                   <span>প্রোফাইল</span>
@@ -255,6 +258,7 @@ export function BlogLiveDoctorRoster({
 
         <Link
           href={targetDepartmentUrl}
+          prefetch={false}
           className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs sm:text-sm font-bold shadow-xs transition-colors shrink-0 w-full sm:w-auto"
         >
           <span>সকল {deptLabel} ডাক্তার দেখুন</span>

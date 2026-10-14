@@ -231,7 +231,10 @@ function DoctorCard({
         {/* Doctor Name & Designation */}
         <div>
           <h4 className="font-heading text-base sm:text-lg font-bold text-foreground hover:text-primary transition-colors">
-            <Link href={doctor.consultantProfileUrl || `/consultants/${doctor.id}`}>
+            <Link
+              href={doctor.consultantProfileUrl || `/consultants/${doctor.id}`}
+              prefetch={false}
+            >
               {doctor.nameBn || doctor.nameEn}
             </Link>
           </h4>
@@ -297,6 +300,7 @@ function DoctorCard({
 
         <Link
           href={doctor.consultantProfileUrl || `/consultants/${doctor.id}`}
+          prefetch={false}
           className="inline-flex items-center justify-center gap-1 py-2 px-3 rounded-xl border border-border bg-muted/50 hover:bg-muted text-foreground text-xs font-semibold transition-colors"
         >
           <span>প্রোফাইল</span>

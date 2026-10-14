@@ -321,83 +321,84 @@ const nextConfig: NextConfig = {
           { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
         ],
       },
-      // Public directory Edge CDN caching to prevent Vercel Fluid Active CPU exhaustion
+      // Public directory Edge CDN caching: 1-year edge TTL (on-demand revalidated via tags/revalidatePath)
+      // Prevents hourly cache eviction that triggers massive Vercel Compute / Fast Origin Transfer spikes
       {
         source: "/",
         headers: [
-          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+          { key: "Cache-Control", value: "public, s-maxage=31536000, stale-while-revalidate=86400" },
         ],
       },
       {
         source: "/consultants",
         headers: [
-          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+          { key: "Cache-Control", value: "public, s-maxage=31536000, stale-while-revalidate=86400" },
         ],
       },
       {
         source: "/consultants/:path*",
         headers: [
-          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+          { key: "Cache-Control", value: "public, s-maxage=31536000, stale-while-revalidate=86400" },
         ],
       },
       {
         source: "/partner-hospitals",
         headers: [
-          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+          { key: "Cache-Control", value: "public, s-maxage=31536000, stale-while-revalidate=86400" },
         ],
       },
       {
         source: "/partner-hospitals/:path*",
         headers: [
-          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+          { key: "Cache-Control", value: "public, s-maxage=31536000, stale-while-revalidate=86400" },
         ],
       },
       {
         source: "/blog",
         headers: [
-          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+          { key: "Cache-Control", value: "public, s-maxage=31536000, stale-while-revalidate=86400" },
         ],
       },
       {
         source: "/blog/:path*",
         headers: [
-          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+          { key: "Cache-Control", value: "public, s-maxage=31536000, stale-while-revalidate=86400" },
         ],
       },
       {
         source: "/emergency",
         headers: [
-          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+          { key: "Cache-Control", value: "public, s-maxage=31536000, stale-while-revalidate=86400" },
         ],
       },
       {
         source: "/emergency/:path*",
         headers: [
-          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+          { key: "Cache-Control", value: "public, s-maxage=31536000, stale-while-revalidate=86400" },
         ],
       },
       {
         source: "/membership",
         headers: [
-          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+          { key: "Cache-Control", value: "public, s-maxage=31536000, stale-while-revalidate=86400" },
         ],
       },
       {
         source: "/health-tools",
         headers: [
-          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+          { key: "Cache-Control", value: "public, s-maxage=31536000, stale-while-revalidate=86400" },
         ],
       },
       {
         source: "/health-tips",
         headers: [
-          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+          { key: "Cache-Control", value: "public, s-maxage=31536000, stale-while-revalidate=86400" },
         ],
       },
       {
         source: "/health-tips/:path*",
         headers: [
-          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+          { key: "Cache-Control", value: "public, s-maxage=31536000, stale-while-revalidate=86400" },
         ],
       },
       // Security headers for all application routes (allows camera for self domain QR scanning)

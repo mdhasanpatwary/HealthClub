@@ -156,6 +156,7 @@ export function BlogPriceTable({
 
         <Link
           href={banner.href || "/membership"}
+          prefetch={false}
           className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs sm:text-sm font-bold shadow-xs transition-all hover:gap-3 shrink-0 w-full sm:w-auto self-start sm:self-auto"
         >
           <ShieldCheck className="h-4 w-4" />

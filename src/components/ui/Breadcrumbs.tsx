@@ -76,6 +76,7 @@ export function Breadcrumbs({
                 ) : (
                   <Link
                     href={item.href}
+                    prefetch={false}
                     className="hover:text-primary transition-colors text-muted-foreground"
                   >
                     {item.label}

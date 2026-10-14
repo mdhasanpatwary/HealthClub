@@ -12,6 +12,8 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
+export const revalidate = false; // Pure static SSG (zero ISR writes)
+
 export const metadata: Metadata = {
   title: "ফ্রি স্বাস্থ্য ক্যালকুলেটর: বিএমআই, রক্তচাপ ও ডায়াবেটিস, পানির চাহিদা, ক্যালোরি ও গর্ভকালীন ইডিডি",
   description: "সহজেই আপনার বডি ম্যাস ইনডেক্স (BMI), রক্তচাপ ও ডায়াবেটিস মাত্রা মূল্যায়ন, দৈনিক পানির প্রয়োজনীয়তা, ক্যালোরি চাহিদা ও গর্ভকালীন প্রসবের সম্ভাব্য তারিখ (EDD) হিসাব করুন।",

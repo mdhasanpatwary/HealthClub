@@ -42,6 +42,7 @@ export function LandingBlogSection({
 
           <Link
             href="/blog"
+            prefetch={false}
             className={cn(
               buttonVariants({ variant: "outline" }),
               "border-primary/40 text-primary hover:bg-primary/5 shrink-0 self-center sm:self-end text-xs sm:text-sm hidden sm:inline-flex"
@@ -119,7 +120,7 @@ export function LandingBlogSection({
 
                     {/* Title */}
                     <h3 className="font-heading text-base sm:text-lg font-bold tracking-tight text-foreground line-clamp-2 group-hover:text-primary transition-colors">
-                      <Link href={`/blog/${post.slug}`} className="focus:outline-hidden">
+                      <Link href={`/blog/${post.slug}`} prefetch={false} className="focus:outline-hidden">
                         <span className="absolute inset-0" aria-hidden="true" />
                         {title}
                       </Link>
@@ -154,6 +155,7 @@ export function LandingBlogSection({
         <div className="pt-2 sm:hidden">
           <Link
             href="/blog"
+            prefetch={false}
             className={cn(
               buttonVariants({ variant: "outline" }),
               "w-full border-primary/40 text-primary hover:bg-primary/5 py-2.5 text-xs font-semibold justify-center flex items-center gap-1.5"

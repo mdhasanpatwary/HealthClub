@@ -7,6 +7,8 @@ import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 
+export const revalidate = false; // Pure static SSG (zero ISR writes)
+
 export const metadata: Metadata = {
   title: "যোগাযোগ করুন - হটলাইন ও অফিস",
   description: "হেলথ ক্লাবের সাথে যোগাযোগ করুন। আমাদের ফোন নাম্বার, ইমেইল, অফিস ঠিকানা ও সাপোর্ট সেন্টার।",
