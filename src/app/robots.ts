@@ -1,56 +1,16 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/siteConfig";
 
-const ALLOWED_PATHS = [
-  "/",
-  "/blog",
-  "/blog/*",
-  "/consultants",
-  "/consultants/*",
-  "/partner-hospitals",
-  "/partner-hospitals/*",
-  "/emergency",
-  "/health-tips",
-  "/health-tips/*",
-  "/health-tools",
-  "/membership",
-  "/about-us",
-  "/contact",
-  "/become-partner",
-  "/register",
-  "/login",
-  "/privacy-policy",
-  "/terms-conditions",
-  "/llms.txt",
-  "/llms-full.txt",
-  "/images/*",
-  "/icons/*",
-  "/logo/*",
-];
-
+/**
+ * Disallowed API endpoints for legitimate search bots.
+ * Note: Private user/admin pages (/admin, /dashboard, /profile, /verify, /login/admin)
+ * use <meta name="robots" content="noindex, nofollow"> in their layouts instead of robots.txt
+ * disallow, so Googlebot can crawl and discover the noindex directive to prevent
+ * "Indexed, though blocked by robots.txt" Search Console warnings.
+ */
 const DISALLOWED_PATHS = [
-  "/admin",
-  "/admin/*",
-  "/dashboard",
-  "/dashboard/*",
-  "/partner/*",
-  "/profile",
-  "/profile/*",
-  "/verify",
-  "/verify/*",
   "/api",
   "/api/*",
-  "/offline",
-  "/offline/*",
-  "/login/admin",
-  "/login/partner",
-  "/register/payment",
-  "/register/verify-email",
-  "/forgot-password/reset",
-  "/_next/static/media/*",
-  "/*.woff2$",
-  "/*.woff$",
-  "/*.ttf$",
 ];
 
 const AI_AND_SEARCH_BOTS = [
@@ -91,7 +51,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ALLOWED_PATHS,
+        allow: "/",
         disallow: DISALLOWED_PATHS,
       },
       ...AGGRESSIVE_SCRAPERS.map((bot) => ({
@@ -100,11 +60,12 @@ export default function robots(): MetadataRoute.Robots {
       })),
       ...AI_AND_SEARCH_BOTS.map((bot) => ({
         userAgent: bot,
-        allow: ALLOWED_PATHS,
+        allow: "/",
         disallow: DISALLOWED_PATHS,
       })),
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
   };
 }
+
 

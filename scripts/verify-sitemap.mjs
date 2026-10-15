@@ -76,22 +76,24 @@ const UPAZILA_SLUGS = [
   "fulgazi",
 ];
 
-// Major Doctor Department Slugs
+// Major Doctor Department Slugs (16 active departments)
 const DEPARTMENT_SLUGS = [
-  "general-medicine",
-  "cardiology",
-  "gynecology-obstetrics",
-  "pediatrics-child",
+  "medicine",
+  "pediatrics",
+  "diabetes",
+  "nutrition",
+  "gynecology",
   "orthopedics",
-  "general-laparoscopic-surgery",
-  "ent-head-neck",
-  "dermatology-venereology",
-  "neurology-stroke",
-  "nephrology-kidney",
-  "urology-care",
-  "gastroenterology-liver",
-  "ophthalmology-eye",
-  "dental-care",
+  "eye",
+  "ent",
+  "surgery",
+  "dental",
+  "cardiology",
+  "dermatology",
+  "nephrology",
+  "psychiatry",
+  "hepatology",
+  "rheumatology",
 ];
 
 // Partner Category Slugs

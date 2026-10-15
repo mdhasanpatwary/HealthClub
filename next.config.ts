@@ -251,7 +251,7 @@ const nextConfig: NextConfig = {
         destination: "/consultants/sayma-akter",
         permanent: true,
       },
-      // Edge-level redirects for department filter fallbacks
+      // Edge-level redirects for department filter fallbacks & legacy department slugs
       {
         source: "/consultants/department/other",
         destination: "/consultants",
@@ -259,6 +259,66 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/consultants/department/all",
+        destination: "/consultants",
+        permanent: true,
+      },
+      {
+        source: "/consultants/department/dental-care",
+        destination: "/consultants/department/dental",
+        permanent: true,
+      },
+      {
+        source: "/consultants/department/general-medicine",
+        destination: "/consultants/department/medicine",
+        permanent: true,
+      },
+      {
+        source: "/consultants/department/pediatrics-child",
+        destination: "/consultants/department/pediatrics",
+        permanent: true,
+      },
+      {
+        source: "/consultants/department/gynecology-obstetrics",
+        destination: "/consultants/department/gynecology",
+        permanent: true,
+      },
+      {
+        source: "/consultants/department/ent-head-neck",
+        destination: "/consultants/department/ent",
+        permanent: true,
+      },
+      {
+        source: "/consultants/department/ophthalmology-eye",
+        destination: "/consultants/department/eye",
+        permanent: true,
+      },
+      {
+        source: "/consultants/department/general-laparoscopic-surgery",
+        destination: "/consultants/department/surgery",
+        permanent: true,
+      },
+      {
+        source: "/consultants/department/dermatology-venereology",
+        destination: "/consultants/department/dermatology",
+        permanent: true,
+      },
+      {
+        source: "/consultants/department/nephrology-kidney",
+        destination: "/consultants/department/nephrology",
+        permanent: true,
+      },
+      {
+        source: "/consultants/department/gastroenterology-liver",
+        destination: "/consultants/department/hepatology",
+        permanent: true,
+      },
+      {
+        source: "/consultants/department/neurology-stroke",
+        destination: "/consultants",
+        permanent: true,
+      },
+      {
+        source: "/consultants/department/urology-care",
         destination: "/consultants",
         permanent: true,
       },

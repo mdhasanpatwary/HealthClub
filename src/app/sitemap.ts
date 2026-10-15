@@ -36,8 +36,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/about-us",
     "/become-partner",
     "/contact",
-    "/register",
-    "/login",
     "/privacy-policy",
     "/terms-conditions",
     "/editorial-policy",
@@ -65,14 +63,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     } else if (route === "/health-tips" || route === "/health-tools") {
       priority = 0.85;
       changeFrequency = "daily";
-    } else if (route === "/about-us" || route === "/contact" || route === "/become-partner" || route === "/register") {
+    } else if (route === "/about-us" || route === "/contact" || route === "/become-partner") {
       priority = 0.8;
       changeFrequency = "weekly";
     } else if (route === "/editorial-policy") {
       priority = 0.6;
-      changeFrequency = "monthly";
-    } else if (route === "/login") {
-      priority = 0.5;
       changeFrequency = "monthly";
     } else if (route === "/privacy-policy" || route === "/terms-conditions") {
       priority = 0.3;
