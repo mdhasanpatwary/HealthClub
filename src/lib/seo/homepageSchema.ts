@@ -34,6 +34,9 @@ export function getHomepageJsonLd({ hotline }: HomepageSchemaParams = {}) {
       ],
       availableService: [
         "Specialist Doctor & Chamber Directory",
+        "Dental Care & Oral Surgeon Directory",
+        "Diagnostic & Pathology Lab Test Discounts (10-30%)",
+        "Partner Private Hospital Cabin & Bed Coordination",
         "Voluntary Blood Donor Matching",
         "24/7 ICU & AC Ambulance Dispatch",
         "Hospital ER & Oxygen Cylinder Coordination",
@@ -52,7 +55,7 @@ export function getHomepageJsonLd({ hotline }: HomepageSchemaParams = {}) {
     {
       "@context": "https://schema.org",
       "@type": "ItemList",
-      name: "ফেনীর জরুরি স্বাস্থ্য সেবা ও ডিরেক্টরি",
+      name: "ফেনীর জরুরি স্বাস্থ্য সেবা ও মেডিকেল ডিরেক্টরি",
       itemListElement: [
         {
           "@type": "ListItem",
@@ -63,18 +66,36 @@ export function getHomepageJsonLd({ hotline }: HomepageSchemaParams = {}) {
         {
           "@type": "ListItem",
           position: 2,
+          name: "ডেন্টাল ও দাঁতের বিশেষজ্ঞ ডাক্তার",
+          url: `${SITE_URL}/consultants/department/dental`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "ডায়াগনস্টিক ও ল্যাব টেস্টে ১০-৩০% ছাড়",
+          url: `${SITE_URL}/partner-hospitals/category/diagnostic`,
+        },
+        {
+          "@type": "ListItem",
+          position: 4,
+          name: "পার্টনার হাসপাতাল তালিকা",
+          url: `${SITE_URL}/partner-hospitals/category/hospital`,
+        },
+        {
+          "@type": "ListItem",
+          position: 5,
           name: "জরুরি রক্তদাতা খুঁজুন",
           url: `${SITE_URL}/emergency/blood-donors`,
         },
         {
           "@type": "ListItem",
-          position: 3,
+          position: 6,
           name: "২৪/৭ জরুরি অ্যাম্বুলেন্স সেবা",
           url: `${SITE_URL}/emergency/ambulances`,
         },
         {
           "@type": "ListItem",
-          position: 4,
+          position: 7,
           name: "হাসপাতাল ও অক্সিজেন সেবা",
           url: `${SITE_URL}/emergency/hotlines`,
         },
@@ -172,6 +193,30 @@ export function getHomepageJsonLd({ hotline }: HomepageSchemaParams = {}) {
           acceptedAnswer: {
             "@type": "Answer",
             text: "হ্যাঁ! হেলথ ক্লাবের একজন মেম্বার তার কার্ড ব্যবহার করে নিজের পুরো পরিবার এবং আত্মীয়-স্বজনদের চিকিৎসার বিল পরিশোধ করতে পারবেন এবং নির্ধারিত সকল ডিসকাউন্ট সুবিধা উপভোগ করতে পারবেন।",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "ফেনীতে ডেন্টাল ক্লিনিক বা দাঁতের বিশেষজ্ঞ ডাক্তার কীভাবে খুঁজব?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "হেলথ ক্লাবের ডেন্টাল ডিরেক্টরি (/consultants/department/dental) থেকে ফেনী সদরের বিএমডিসি নিবন্ধিত ডেন্টাল সার্জন, রুট ক্যানেল ও অর্থোডন্টিক বিশেষজ্ঞ এবং আধুনিক ডেন্টাল ক্লিনিকের চেম্বার শিডিউল ও সিরিয়াল নম্বর পাওয়া যায়।",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "ফেনীতে রক্ত পরীক্ষা, আল্ট্রাসনোগ্রাফি বা ডায়াগনস্টিক টেস্টে কীভাবে ছাড় পাওয়া যায়?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "হেলথ ক্লাবের পার্টনার ডায়াগনস্টিক সেন্টারে (/partner-hospitals/category/diagnostic) রক্ত পরীক্ষা, এক্স-রে, ইউএসজি ও প্যাথলজি টেস্টের বিলিংয়ের সময় ডিজিটাল মেম্বার কার্ড প্রদর্শন করলে তাত্ক্ষণিকভাবে ১০% থেকে ৩০% মেম্বার ছাড় পাওয়া যায়।",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "ফেনীর সেরা প্রাইভেট হাসপাতাল তালিকা ও ভর্তি সুবিধা কোথায় পাব?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "হেলথ ক্লাবের পার্টনার হাসপাতাল ডিরেক্টরি (/partner-hospitals/category/hospital) থেকে ফেনী সদরের অনুমোদিত বেসরকারি হাসপাতালের তালিকা, কেবিন ও আইসিইউ সুবিধা এবং ভর্তি সেবায় ১০-৩০% মেম্বার সাশ্রয়ের বিস্তারিত তথ্য পাওয়া যায়।",
           },
         },
       ],

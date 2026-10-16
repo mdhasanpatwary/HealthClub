@@ -7,6 +7,7 @@ import { Phone, MapPin, CheckCircle, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { FacebookIcon } from "@/components/ui/SocialBrandIcons";
 import { addContactMessageAction } from "@/app/actions/contactActions";
 import {
   getPublicContactSettingsAction,
@@ -185,9 +186,11 @@ export default function ContactForm({ initialSettings }: ContactFormProps) {
               href={settings.facebookUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-primary hover:underline font-semibold flex items-center gap-1.5 cursor-pointer"
+              className="inline-flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm bg-[#1877F2] hover:bg-[#166fe5] text-white transition-all duration-200 shadow-sm hover:shadow hover:-translate-y-0.5 group cursor-pointer"
             >
-              <span>ফেসবুক পেজ দেখুন</span> &rarr;
+              <FacebookIcon className="h-4 w-4 fill-white shrink-0 group-hover:scale-110 transition-transform" />
+              <span>ফেসবুক পেজ দেখুন</span>
+              <span className="transition-transform duration-200 group-hover:translate-x-1">&rarr;</span>
             </a>
           </div>
         )}

@@ -224,6 +224,40 @@ export function LandingQuickServices({
           })}
         </div>
 
+        {/* Local Intent Quick Search Cluster */}
+        <div className="pt-2 sm:pt-4 border-t border-border/40">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <h3 className="text-xs sm:text-sm font-bold text-secondary dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-primary" />
+              ফেনীর জনপ্রিয় স্বাস্থ্য সেবা ও ডাক্তার ডিপার্টমেন্ট
+            </h3>
+            <span className="text-xs text-muted-foreground">সরাসরি চেম্বার তথ্য ও মেম্বার ছাড়</span>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+            {[
+              { href: "/consultants/department/dental", label: "🦷 ডেন্টাল ও দাঁতের ডাক্তার", badge: "সিরিয়াল ও চেম্বার" },
+              { href: "/partner-hospitals/category/diagnostic", label: "🔬 ডায়াগনস্টিক ও ল্যাব টেস্ট", badge: "১০-৩০% ছাড়" },
+              { href: "/partner-hospitals/category/hospital", label: "🏥 পার্টনার হাসপাতাল", badge: "কেবিন ও ভর্তি ছাড়" },
+              { href: "/consultants/department/medicine", label: "🩺 মেডিসিন বিশেষজ্ঞ", badge: "চেম্বার শিডিউল" },
+              { href: "/consultants/department/gynecology", label: "🤰 গাইনী ও প্রসূতি বিশেষজ্ঞ", badge: "লেডি ডাক্তার" },
+              { href: "/consultants/department/pediatrics", label: "👶 শিশু বিশেষজ্ঞ", badge: "ফেনী সদর" },
+              { href: "/consultants/department/orthopedics", label: "🦴 অর্থোপেডিক সার্জন", badge: "হাড় ও জয়েন্ট" },
+              { href: "/emergency/ambulances", label: "🚑 ফেনী অ্যাম্বুলেন্স", badge: "২৪/৭ জরুরি" },
+            ].map((topic) => (
+              <Link
+                key={topic.href}
+                href={topic.href}
+                className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-medium bg-card hover:bg-primary/10 border border-border/80 hover:border-primary/40 text-foreground transition-all duration-200 shadow-xs hover:shadow-sm group"
+              >
+                <span>{topic.label}</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-muted text-muted-foreground group-hover:bg-primary/20 group-hover:text-primary transition-colors font-semibold">
+                  {topic.badge}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+
         {/* Public Service Guarantee Strip */}
         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 pt-1 text-xs sm:text-sm text-muted-foreground">
           <div className="inline-flex items-center gap-1.5">

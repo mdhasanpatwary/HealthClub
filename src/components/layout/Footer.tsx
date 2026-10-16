@@ -143,6 +143,8 @@ export default async function Footer() {
                 {[
                   { href: "/", label: "হোম" },
                   { href: "/consultants", label: "ডাক্তার ও কনসালট্যান্টস" },
+                  { href: "/consultants/department/dental", label: "ডেন্টাল ও দাঁতের চিকিৎসা" },
+                  { href: "/partner-hospitals/category/diagnostic", label: "ডায়াগনস্টিক ও টেস্ট ছাড়" },
                   { href: "/partner-hospitals", label: "পার্টনার হাসপাতাল" },
                   { href: "/emergency", label: "জরুরি সেবা" },
                   { href: "/health-tools", label: "হেলথ ক্যালকুলেটর" },

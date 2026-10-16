@@ -40,15 +40,15 @@ export function LandingHero({ sampleMember }: LandingHeroProps) {
           <div className="space-y-4 sm:space-y-7 lg:col-span-7 text-center lg:text-left">
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-primary/10 text-emerald-800 dark:text-emerald-300 border border-primary/20 shadow-sm">
               <Heart className="h-3.5 w-3.5 fill-primary" />
-              স্বাস্থ্য সুবিধা মেম্বারশিপ প্ল্যাটফর্ম
+              ফেনী সদর ডিজিটাল স্বাস্থ্য ও মেডিকেল সেবা
             </span>
 
-            <h1 className="font-heading text-4xl sm:text-5xl xl:text-6xl font-bold text-secondary dark:text-white leading-[1.3] tracking-tight">
-              স্বাস্থ্য সেবা হোক <span className="gradient-text">সহজ ও সাশ্রয়ী</span> সকলের জন্য
+            <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-secondary dark:text-white leading-[1.25] tracking-tight">
+              ফেনীর বিশেষজ্ঞ ডাক্তার, হাসপাতাল ও টেস্টে <span className="gradient-text">১০-৩০% বিশেষ ছাড়</span>
             </h1>
 
             <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-              হেলথ ক্লাবের সদস্য হয়ে যেকোনো পার্টনার হাসপাতালে শুধু ডিজিটাল মেম্বার কার্ড প্রদর্শন করে ১০-৩০% ডিসকাউন্ট উপভোগ করুন।
+              ফেনীর বিশেষজ্ঞ ডাক্তারদের চেম্বার শিডিউল ও সিরিয়াল, হাসপাতাল ডিরেক্টরি এবং ডিজিটাল মেম্বার কার্ড দেখিয়ে পার্টনার ডায়াগনস্টিক ও ল্যাব টেস্টে উপভোগ করুন নিশ্চিত ১০-৩০% মেম্বার ছাড়।
             </p>
 
             {/* CTA Group */}
