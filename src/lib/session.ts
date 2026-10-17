@@ -154,9 +154,9 @@ export async function verifyActiveAdminUser(
 }
 
 /**
- * Validates that an active member account is still enabled, exists, and
- * has active status ('active'). If the member has been deactivated, suspended,
- * or deleted, returns false.
+ * Validates that a member account exists in the database and has not been
+ * suspended, banned, or deleted. Members in 'active', 'inactive' (awaiting payment),
+ * 'pending_approval', or 'pending_payment' are valid account holders.
  */
 export async function verifyActiveMemberUser(userId: string): Promise<boolean> {
   try {
@@ -166,7 +166,11 @@ export async function verifyActiveMemberUser(userId: string): Promise<boolean> {
       select: { id: true, status: true },
     });
 
-    if (!member || member.status !== "active") {
+    if (!member) {
+      return false;
+    }
+
+    if (member.status === "suspended" || member.status === "banned" || member.status === "deleted") {
       return false;
     }
 
@@ -226,11 +230,11 @@ export async function getSessionUser(): Promise<SessionPayload | null> {
   const session = await decrypt(sessionCookie);
   if (!session) return null;
 
-  // Immediate session invalidation for member (role "user") if deactivated, suspended, or not active
+  // Immediate session invalidation for member (role "user") if suspended, banned, or deleted
   if (session.role === "user" && session.userId) {
     const isValid = await verifyActiveMemberUser(session.userId);
     if (!isValid) {
-      logger.warn(`[AUTH] Revoking invalid/inactive member session for userId: ${session.userId}`);
+      logger.warn(`[AUTH] Revoking invalid/suspended member session for userId: ${session.userId}`);
       try {
         cookieStore.delete("session");
       } catch {

@@ -13,6 +13,7 @@ import type { PublicPaymentSettings } from "@/app/actions/systemSettingsActions"
 import { Member } from "@/services/db";
 import { Skeleton } from "@/components/ui/skeleton";
 import { safeStorage } from "@/lib/safeStorage";
+import { authStore } from "@/services/authStore";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { toBanglaNums } from "@/lib/utils";
@@ -152,8 +153,7 @@ function PaymentForm() {
           bkashSender: cleanSender,
           bkashTxnId: cleanTxnId,
         };
-        safeStorage.setItem("hc_current_user", updatedUser);
-        window.dispatchEvent(new Event("auth-change"));
+        authStore.setCurrentUser(updatedUser as Member);
 
         toast.success("পেমেন্ট তথ্য সফলভাবে জমা হয়েছে!");
         setTimeout(() => {

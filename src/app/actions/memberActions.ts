@@ -359,14 +359,18 @@ export interface MemberDashboardBootstrapData {
  * Eliminates 3 concurrent Server Action cold starts into 1 fast response.
  */
 export async function getMemberDashboardBootstrapAction(
-  memberId: string
+  memberId?: string
 ): Promise<MemberDashboardBootstrapData> {
   const session = await getSessionUser();
   if (!session) {
     return { user: null, transactions: [], allowMemberTx: false };
   }
 
-  const clean = memberId.trim();
+  const clean = (memberId || "").trim() || (session.role === "user" ? session.userId : "");
+  if (!clean) {
+    return { user: null, transactions: [], allowMemberTx: false };
+  }
+
   const isAdmin = session.role === "admin";
   if (!isAdmin && session.userId !== clean) {
     return { user: null, transactions: [], allowMemberTx: false };

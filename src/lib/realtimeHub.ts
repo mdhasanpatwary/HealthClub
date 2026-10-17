@@ -318,7 +318,7 @@ function initSubscription(entry: SubscriptionEntry) {
           { event: "UPDATE", schema: "public", table: "members", filter: `id=eq.${entry.memberId}` },
           (payload) => {
             const row = payload.new as Record<string, unknown>;
-            if (row && row.status && row.status !== "active") {
+            if (row && row.status && (row.status === "suspended" || row.status === "banned" || row.status === "deleted")) {
               dispatchAccountTerminated(entry, { memberId: entry.memberId || "", status: "deactivated" });
             }
           }

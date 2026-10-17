@@ -100,14 +100,20 @@ function DashboardContent() {
       if (!isMounted) return;
 
       let currentUser = authStore.getCurrentUser();
-      // If not in local storage (e.g. offline cold start), attempt to recover from IndexedDB
+      // If not in local storage (e.g. offline cold start), attempt to recover from IndexedDB or active session
       if (!currentUser) {
         const offlineCard = await getOfflineMemberCard();
         if (offlineCard) {
           currentUser = offlineCard;
         } else {
-          router.push("/login");
-          return;
+          const bootstrap = await getMemberDashboardBootstrapAction().catch(() => null);
+          if (bootstrap?.user) {
+            currentUser = bootstrap.user;
+            authStore.setCurrentUser(currentUser);
+          } else {
+            router.push("/login");
+            return;
+          }
         }
       }
 
@@ -452,12 +458,9 @@ function DashboardContent() {
                   setProfileProfession={setProfileProfession}
                 />
               </TabsContent>
-
             </Tabs>
           </div>
-
         </div>
-
       </div>
 
       {/* Member Add Transaction Dialog */}

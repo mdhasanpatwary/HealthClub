@@ -172,9 +172,9 @@ export async function submitBkashPaymentAction(
 
     updateTag("admin-stats");
 
-    // Maintain member session only if the caller is the member themselves
-    // Never overwrite an admin session, and never issue a session to an unauthenticated caller
-    if (session?.userId === cleanId && session?.role === "user") {
+    // Maintain or establish member session for the paying member
+    // Never overwrite an admin session
+    if ((session?.userId === cleanId || !session) && session?.role !== "admin") {
       await setSessionUser(cleanId, "user");
     }
 

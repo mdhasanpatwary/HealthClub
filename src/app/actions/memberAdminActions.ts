@@ -185,9 +185,6 @@ export async function updateMemberStatusAction(id: string, status: Member["statu
       where: { id },
       data: updateData,
     });
-    if (status !== "active") {
-      broadcastAccountStatus({ memberId: id, status: "deactivated" });
-    }
     updateTag("admin-stats");
     return true;
   } catch (error) {
