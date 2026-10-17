@@ -26,6 +26,7 @@ export default function AdminMembersPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [memberSearch, setMemberSearch] = useState("");
+  const [tierFilter, setTierFilter] = useState<"all" | "free" | "premium">("all");
   const debouncedSearch = useDebounce(memberSearch, 300);
 
   // Dialog States
@@ -49,6 +50,7 @@ export default function AdminMembersPage() {
         page,
         pageSize,
         search: debouncedSearch,
+        tier: tierFilter !== "all" ? tierFilter : undefined,
       });
       setMembers(membersRes.data);
       setTotalItems(membersRes.totalItems);
@@ -58,7 +60,12 @@ export default function AdminMembersPage() {
     } finally {
       setLoading(false);
     }
-  }, [page, pageSize, debouncedSearch]);
+  }, [page, pageSize, debouncedSearch, tierFilter]);
+
+  const handleTierFilterChange = (newTier: "all" | "free" | "premium") => {
+    setTierFilter(newTier);
+    setPage(1);
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -259,6 +266,8 @@ export default function AdminMembersPage() {
         }}
         memberSearch={memberSearch}
         setMemberSearch={setMemberSearch}
+        tierFilter={tierFilter}
+        onTierFilterChange={handleTierFilterChange}
         onNewMemberClick={() => {
           setEditingMember(null);
           setNewMember({

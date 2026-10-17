@@ -13,6 +13,15 @@ const DISALLOWED_PATHS = [
   "/api/*",
 ];
 
+const ALLOWED_PATHS = [
+  "/",
+  "/llms.txt",
+  "/llms-full.txt",
+  "/blog",
+  "/consultants",
+  "/partner-hospitals",
+];
+
 const AI_AND_SEARCH_BOTS = [
   "Googlebot",
   "Bingbot",
@@ -51,7 +60,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: "/",
+        allow: ALLOWED_PATHS,
         disallow: DISALLOWED_PATHS,
       },
       ...AGGRESSIVE_SCRAPERS.map((bot) => ({
@@ -60,7 +69,7 @@ export default function robots(): MetadataRoute.Robots {
       })),
       ...AI_AND_SEARCH_BOTS.map((bot) => ({
         userAgent: bot,
-        allow: "/",
+        allow: ALLOWED_PATHS,
         disallow: DISALLOWED_PATHS,
       })),
     ],

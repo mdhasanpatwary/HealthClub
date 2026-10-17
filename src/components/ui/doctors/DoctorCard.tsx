@@ -12,6 +12,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { DoctorAvatar } from "./DoctorAvatar";
 import { DoctorAvailabilityBadge, DoctorNoticeBanner } from "./DoctorAvailabilityBadge";
 import { getUpazilaLabel } from "@/data/feniLocations";
+import { getDoctorClinicalScope } from "@/data/doctorSeoData";
 
 interface DoctorCardProps {
   doctor: Doctor & { resolvedUpazila?: string };
@@ -27,6 +28,7 @@ export function DoctorCard({
   onSerialClick,
 }: DoctorCardProps) {
   const isDirectory = variant === "directory";
+  const clinicalScopeTags = getDoctorClinicalScope(doc);
 
   return (
     <Card className="h-full flex flex-col justify-between overflow-hidden rounded-2xl border-border/80 bg-card hover:shadow-lg transition-all duration-300 group hover:border-primary/40">
@@ -103,6 +105,25 @@ export function DoctorCard({
         {/* Notice Banner if present */}
         {doc.notice && (
           <DoctorNoticeBanner notice={doc.notice} compact />
+        )}
+
+        {/* Clinical Scope & Symptoms Section */}
+        {clinicalScopeTags.length > 0 && (
+          <div className="pt-0.5" aria-label="চিকিৎসা পরিধি ও উপসর্গসমূহ">
+            <div className="flex flex-wrap gap-1 items-center" role="list">
+              {clinicalScopeTags.slice(0, 3).map((tag, idx) => (
+                <span
+                  key={idx}
+                  role="listitem"
+                  className="inline-flex items-center text-[10px] sm:text-[11px] font-medium text-muted-foreground/90 bg-muted/60 dark:bg-muted/40 hover:text-foreground px-2 py-0.5 rounded-md border border-border/50 truncate max-w-full"
+                  title={tag}
+                >
+                  <span className="w-1 h-1 rounded-full bg-primary/70 mr-1.5 shrink-0" aria-hidden="true" />
+                  <span className="truncate">{tag}</span>
+                </span>
+              ))}
+            </div>
+          </div>
         )}
 
         {/* Chamber Schedule & Address with Upazila Badge / Visiting Hours */}

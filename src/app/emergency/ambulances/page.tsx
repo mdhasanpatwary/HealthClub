@@ -1,9 +1,10 @@
 import JsonLd from "@/components/seo/JsonLd";
+import Link from "next/link";
 import { AmbulanceDirectory } from "../components/AmbulanceDirectory";
 import { EmergencyTabsNav } from "../components/EmergencyTabsNav";
 import EmergencyFAQ, { FAQItem } from "@/components/emergency/EmergencyFAQ";
 import CommunityNetworkCTA from "@/components/common/CommunityNetworkCTA";
-import { Truck, ShieldCheck, PhoneCall, Activity, Wind, Snowflake } from "lucide-react";
+import { Truck, ShieldCheck, PhoneCall, Activity, Wind, Snowflake, PlusCircle } from "lucide-react";
 import { getEmergencyDataAction } from "@/app/actions/emergencyAdminActions";
 import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
@@ -242,6 +243,17 @@ export default async function EmergencyAmbulancesPage() {
               <ShieldCheck className="h-3.5 w-3.5 text-primary" />
               দালালমুক্ত সরাসরি চালক নম্বর
             </span>
+          </div>
+
+          {/* Dedicated Ambulance Registration CTA */}
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/emergency/ambulances/register"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all cursor-pointer"
+            >
+              <PlusCircle className="h-4 w-4" />
+              <span>+ অ্যাম্বুলেন্স তালিকাভুক্ত করুন</span>
+            </Link>
           </div>
         </div>
       </header>

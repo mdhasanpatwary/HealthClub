@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import Link from "next/link";
 import { AMBULANCE_TYPES, AmbulanceService } from "@/data/emergencyData";
 import { paginateAmbulances, DEFAULT_AMBULANCE_PAGE_SIZE } from "../utils/ambulancePagination";
 import { Button } from "@/components/ui/button";
@@ -129,14 +130,23 @@ export function AmbulanceDirectory({
             ফেনী ও মহাসড়কে জরুরি রোগীর জন্য আইসিইউ, এসি, নন-এসি ও ফ্রিজিং অ্যাম্বুলেন্সের সরাসরি যোগাযোগ নম্বর।
           </p>
         </div>
-        <Button
-          onClick={() => setIsAmbulanceRegisterOpen(true)}
-          className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold shrink-0 rounded-xl cursor-pointer"
-          size="sm"
-        >
-          <PlusCircle className="mr-1.5 h-4 w-4" />
-          অ্যাম্বুলেন্স যুক্ত করুন
-        </Button>
+        <div className="flex items-center gap-2 shrink-0">
+          <Link
+            href="/emergency/ambulances/register"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs shadow-xs transition-colors cursor-pointer"
+          >
+            <PlusCircle className="h-3.5 w-3.5" />
+            <span>অ্যাম্বুলেন্স যুক্ত করুন</span>
+          </Link>
+          <Button
+            variant="outline"
+            onClick={() => setIsAmbulanceRegisterOpen(true)}
+            className="text-xs font-semibold rounded-xl cursor-pointer"
+            size="sm"
+          >
+            দ্রুত ফরম
+          </Button>
+        </div>
       </div>
 
       {/* Vehicle Type Filter Chips */}

@@ -7,12 +7,13 @@ import { MapPin, Phone, Clock, Hospital, ShieldAlert, Pill, HeartHandshake, Chev
 import { Partner } from "@/services/db";
 import { Card } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
-import { formatDiscount } from "@/lib/utils";
+import { formatDiscount, cn } from "@/lib/utils";
 import { getUpazilaLabel } from "@/data/feniLocations";
 
 interface PartnerCardProps {
   partner: Partner & { resolvedUpazila?: string };
   t?: (key: string) => string;
+  className?: string;
 }
 
 function PartnerCardBanner({
@@ -43,7 +44,7 @@ function PartnerCardBanner({
   );
 }
 
-export default function PartnerCard({ partner }: PartnerCardProps) {
+export default function PartnerCard({ partner, className }: PartnerCardProps) {
   const getCategoryFallbackImage = (category: string) => {
     switch (category) {
       case "hospital":
@@ -90,7 +91,7 @@ export default function PartnerCard({ partner }: PartnerCardProps) {
     )}`;
 
   return (
-    <Card className="group relative overflow-hidden rounded-2xl border-border bg-card shadow-xs hover:shadow-xl hover:border-primary/40 transition-all duration-300 flex flex-col justify-between p-0 py-0 gap-0">
+    <Card className={cn("group relative overflow-hidden rounded-2xl border-border bg-card shadow-xs hover:shadow-xl hover:border-primary/40 transition-all duration-300 flex flex-col justify-between p-0 py-0 gap-0", className)}>
       {/* Full Image Banner with Overlay & Floating Info */}
       <div className="relative h-52 sm:h-56 w-full bg-slate-900 overflow-hidden">
         <PartnerCardBanner

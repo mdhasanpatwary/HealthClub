@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Search, User, Edit3, Trash2, Download } from "lucide-react";
+import { Search, User, Edit3, Trash2, Download, Crown, Sparkles, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -23,6 +23,8 @@ interface MembersTabProps {
   onPageSizeChange: (size: number) => void;
   memberSearch: string;
   setMemberSearch: (val: string) => void;
+  tierFilter?: "all" | "free" | "premium";
+  onTierFilterChange?: (tier: "all" | "free" | "premium") => void;
   onNewMemberClick: () => void;
   onViewMemberClick: (m: Member) => void;
   onToggleStatus: (id: string) => void;
@@ -41,6 +43,8 @@ export function MembersTab({
   onPageSizeChange,
   memberSearch,
   setMemberSearch,
+  tierFilter = "all",
+  onTierFilterChange,
   onNewMemberClick,
   onViewMemberClick,
   onToggleStatus,
@@ -50,14 +54,104 @@ export function MembersTab({
 }: MembersTabProps) {
   return (
     <Card className="border-border shadow-md">
-      <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <CardTitle className="font-heading text-lg font-bold text-secondary">নিবন্ধিত মেম্বারবৃন্দ</CardTitle>
-          <CardDescription>মেম্বারদের তথ্য, সাবস্ক্রিপশন স্ট্যাটাস ও সঞ্চয় পর্যবেক্ষণ করুন</CardDescription>
+      <CardHeader className="space-y-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <CardTitle className="font-heading text-lg font-bold text-secondary">নিবন্ধিত মেম্বারবৃন্দ</CardTitle>
+            <CardDescription>মেম্বারদের তথ্য, সাবস্ক্রিপশন স্ট্যাটাস ও সঞ্চয় পর্যবেক্ষণ করুন</CardDescription>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              onClick={() =>
+                exportToCsv(members, "healthclub_members", [
+                  { header: "Member ID", accessor: "id" },
+                  { header: "Name", accessor: "name" },
+                  { header: "Phone", accessor: "phone" },
+                  { header: "Email", accessor: (m) => m.email || "" },
+                  { header: "Tier", accessor: "tier" },
+                  { header: "Status", accessor: "status" },
+                  { header: "Joined Date", accessor: "joinedDate" },
+                  { header: "Expiry Date", accessor: "expiryDate" },
+                  { header: "Total Saved (BDT)", accessor: "totalSaved" },
+                  { header: "Discount (BDT)", accessor: (m) => m.discountAmount || 0 },
+                  { header: "Address", accessor: (m) => m.address || "" },
+                ])
+              }
+              variant="outline"
+              size="sm"
+              className="border-border gap-1.5 text-xs font-semibold shrink-0 cursor-pointer"
+            >
+              <Download className="h-3.5 w-3.5" />
+              <span>এক্সপোর্ট CSV</span>
+            </Button>
+            <Button onClick={onNewMemberClick} size="sm" className="bg-primary hover:bg-primary-dark text-white shrink-0 cursor-pointer">
+              নতুন মেম্বার যুক্ত করুন
+            </Button>
+          </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-          <div className="relative flex-1 sm:w-60 min-w-[180px]">
+        {/* Filter & Search Toolbar */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3 border-t border-border/60">
+          {/* Tier Filter Pills */}
+          <div className="flex items-center gap-1.5 p-1 bg-muted/60 rounded-xl border border-border/60 w-fit max-w-full overflow-x-auto">
+            <button
+              type="button"
+              onClick={() => onTierFilterChange?.("all")}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                tierFilter === "all"
+                  ? "bg-primary text-white shadow-xs"
+                  : "text-muted-foreground hover:text-foreground hover:bg-background/60"
+              }`}
+            >
+              <Users className="h-3.5 w-3.5" />
+              <span>সকল মেম্বার</span>
+              {tierFilter === "all" && totalItems > 0 && (
+                <span className="ml-0.5 px-1.5 py-0.2 rounded-full text-[10px] bg-white/20 text-white font-mono">
+                  {toBanglaNums(totalItems)}
+                </span>
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onTierFilterChange?.("free")}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                tierFilter === "free"
+                  ? "bg-emerald-600 text-white shadow-xs"
+                  : "text-muted-foreground hover:text-foreground hover:bg-background/60"
+              }`}
+            >
+              <Sparkles className="h-3.5 w-3.5 text-emerald-200" />
+              <span>ফ্রি মেম্বার</span>
+              {tierFilter === "free" && totalItems > 0 && (
+                <span className="ml-0.5 px-1.5 py-0.2 rounded-full text-[10px] bg-white/20 text-white font-mono">
+                  {toBanglaNums(totalItems)}
+                </span>
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onTierFilterChange?.("premium")}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                tierFilter === "premium"
+                  ? "bg-amber-600 text-white shadow-xs"
+                  : "text-muted-foreground hover:text-foreground hover:bg-background/60"
+              }`}
+            >
+              <Crown className="h-3.5 w-3.5 text-amber-200" />
+              <span>প্রিমিয়াম মেম্বার</span>
+              {tierFilter === "premium" && totalItems > 0 && (
+                <span className="ml-0.5 px-1.5 py-0.2 rounded-full text-[10px] bg-white/20 text-white font-mono">
+                  {toBanglaNums(totalItems)}
+                </span>
+              )}
+            </button>
+          </div>
+
+          {/* Search Box */}
+          <div className="relative flex-1 sm:w-72 sm:max-w-xs min-w-[200px]">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="text"
@@ -67,35 +161,9 @@ export function MembersTab({
                 setMemberSearch(e.target.value);
                 onPageChange(1);
               }}
-              className="pl-9 h-9 border-border bg-background"
+              className="pl-9 h-9 border-border bg-background text-xs sm:text-sm"
             />
           </div>
-          <Button
-            onClick={() =>
-              exportToCsv(members, "healthclub_members", [
-                { header: "Member ID", accessor: "id" },
-                { header: "Name", accessor: "name" },
-                { header: "Phone", accessor: "phone" },
-                { header: "Email", accessor: (m) => m.email || "" },
-                { header: "Tier", accessor: "tier" },
-                { header: "Status", accessor: "status" },
-                { header: "Joined Date", accessor: "joinedDate" },
-                { header: "Expiry Date", accessor: "expiryDate" },
-                { header: "Total Saved (BDT)", accessor: "totalSaved" },
-                { header: "Discount (BDT)", accessor: (m) => m.discountAmount || 0 },
-                { header: "Address", accessor: (m) => m.address || "" },
-              ])
-            }
-            variant="outline"
-            size="sm"
-            className="border-border gap-1.5 text-xs font-semibold shrink-0"
-          >
-            <Download className="h-3.5 w-3.5" />
-            <span>এক্সপোর্ট CSV</span>
-          </Button>
-          <Button onClick={onNewMemberClick} size="sm" className="bg-primary hover:bg-primary-dark text-white shrink-0">
-            নতুন মেম্বার যুক্ত করুন
-          </Button>
         </div>
       </CardHeader>
 
@@ -182,9 +250,17 @@ export function MembersTab({
                     </TableCell>
                     <TableCell className="font-mono whitespace-nowrap">{m.phone}</TableCell>
                     <TableCell className="text-xs whitespace-nowrap">
-                      <div className="font-semibold">
-                        {(m.tier === "founding" || m.tier === "free") ? "ফ্রি মেম্বার" : m.tier === "premium" ? "প্রিমিয়াম মেম্বার" : "অন্যান্য"}
-                      </div>
+                      {m.tier === "premium" ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-300/40">
+                          <Crown className="h-3 w-3 text-amber-500" />
+                          <span>প্রিমিয়াম মেম্বার</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-300/40">
+                          <Sparkles className="h-3 w-3 text-emerald-600" />
+                          <span>ফ্রি মেম্বার</span>
+                        </span>
+                      )}
                     </TableCell>
                     <TableCell className="font-mono font-semibold whitespace-nowrap">৳{toBanglaNums(m.totalSaved || 0)}</TableCell>
                     <TableCell>
@@ -245,8 +321,22 @@ export function MembersTab({
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground text-xs">
-                    কোনো মেম্বার পাওয়া যায়নি
+                  <TableCell colSpan={7} className="text-center py-10 text-muted-foreground text-xs sm:text-sm">
+                    <div className="flex flex-col items-center justify-center gap-1.5 py-4">
+                      <Users className="h-8 w-8 text-muted-foreground/40" />
+                      <p className="font-medium text-foreground">
+                        {tierFilter === "free"
+                          ? "কোনো ফ্রি মেম্বার পাওয়া যায়নি"
+                          : tierFilter === "premium"
+                          ? "কোনো প্রিমিয়াম মেম্বার পাওয়া যায়নি"
+                          : "কোনো মেম্বার পাওয়া যায়নি"}
+                      </p>
+                      {memberSearch && (
+                        <span className="text-xs text-muted-foreground">
+                          &ldquo;{memberSearch}&rdquo; এর সাথে মিল রেখে কোনো মেম্বার পাওয়া যায়নি
+                        </span>
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               )}

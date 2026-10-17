@@ -9,6 +9,7 @@ import {
   ambulanceRegistrationSchema,
 } from "@/lib/validations/emergency";
 import { Prisma } from "@/generated/client/client";
+import { broadcastAdminAlert } from "@/lib/realtimeEmitter";
 
 const EMERGENCY_TAG = "emergency-data";
 
@@ -35,9 +36,12 @@ function revalidateEmergencyCaches() {
 export interface RegisterBloodDonorInput {
   name: string;
   phone: string;
+  altPhone?: string;
   bloodGroup: string;
   upazila: string;
+  specificArea?: string;
   lastDonated?: string;
+  notes?: string;
 }
 
 export interface RegisterAmbulanceInput {
@@ -48,6 +52,7 @@ export interface RegisterAmbulanceInput {
   type: string;
   location: string;
   coverage?: string;
+  notes?: string;
 }
 
 export async function registerBloodDonorAction(
@@ -67,7 +72,13 @@ export async function registerBloodDonorAction(
       };
     }
 
-    const parsed = bloodDonorRegistrationSchema.safeParse(input);
+    const parsed = bloodDonorRegistrationSchema.safeParse({
+      name: input.name,
+      phone: input.phone,
+      bloodGroup: input.bloodGroup,
+      upazila: input.upazila,
+      lastDonated: input.lastDonated,
+    });
     if (!parsed.success) {
       return {
         success: false,
@@ -90,18 +101,48 @@ export async function registerBloodDonorAction(
       };
     }
 
+    const newDonorId = `donor-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+    const fullUpazila = input.specificArea?.trim()
+      ? `${parsed.data.upazila} (${input.specificArea.trim()})`
+      : parsed.data.upazila;
+
+    const extraDetails: string[] = [];
+    if (parsed.data.lastDonated?.trim()) {
+      extraDetails.push(parsed.data.lastDonated.trim());
+    }
+    if (input.altPhone?.trim()) {
+      extraDetails.push(`বিকল্প ফোন: ${input.altPhone.trim()}`);
+    }
+    if (input.notes?.trim()) {
+      extraDetails.push(`নোট: ${input.notes.trim()}`);
+    }
+
+    const lastDonatedFinal = extraDetails.length > 0 ? extraDetails.join(" | ") : "তথ্য নেই";
+
     await prisma.bloodDonor.create({
       data: {
-        id: `donor-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+        id: newDonorId,
         name: parsed.data.name.trim(),
         phone: cleanInputPhone,
         bloodGroup: parsed.data.bloodGroup,
-        upazila: parsed.data.upazila,
-        lastDonated: parsed.data.lastDonated?.trim() || "তথ্য নেই",
+        upazila: fullUpazila,
+        lastDonated: lastDonatedFinal,
         isAvailable: true,
         status: "pending",
       },
     });
+
+    try {
+      broadcastAdminAlert({
+        category: "partner_request",
+        titleBn: `নতুন রক্তদাতা নিবন্ধনের আবেদন: ${parsed.data.name.trim()} (${parsed.data.bloodGroup})`,
+        titleEn: `New blood donor registration submitted: ${parsed.data.name.trim()} (${parsed.data.bloodGroup})`,
+        id: newDonorId,
+        timestamp: new Date().toISOString(),
+      });
+    } catch {
+      // Graceful fallback if emitter fails
+    }
 
     revalidateEmergencyCaches();
 
@@ -165,18 +206,32 @@ export async function registerAmbulanceAction(
     }
 
     const coverageInfo = parsed.data.coverage ? ` | কভারেজ: ${parsed.data.coverage}` : "";
+    const notesInfo = parsed.data.notes ? ` | নোট: ${parsed.data.notes}` : "";
+    const newAmbId = `amb-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
 
     await prisma.ambulanceService.create({
       data: {
-        id: `amb-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+        id: newAmbId,
         name: `${parsed.data.serviceName.trim()}${parsed.data.operatorName ? ` (${parsed.data.operatorName.trim()})` : ""}`,
         type: parsed.data.type,
-        location: `${parsed.data.location.trim()}${coverageInfo}`,
+        location: `${parsed.data.location.trim()}${coverageInfo}${notesInfo}`,
         phone: cleanInputPhone,
         availableHours: "২৪/৭ সার্বক্ষণিক",
         status: "pending",
       },
     });
+
+    try {
+      broadcastAdminAlert({
+        category: "partner_request",
+        titleBn: `নতুন অ্যাম্বুলেন্স নিবন্ধনের আবেদন: ${parsed.data.serviceName.trim()}`,
+        titleEn: `New ambulance registration submitted: ${parsed.data.serviceName.trim()}`,
+        id: newAmbId,
+        timestamp: new Date().toISOString(),
+      });
+    } catch {
+      // Graceful fallback if emitter fails
+    }
 
     revalidateEmergencyCaches();
 

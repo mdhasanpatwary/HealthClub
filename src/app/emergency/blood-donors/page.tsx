@@ -1,9 +1,10 @@
+import Link from "next/link";
 import JsonLd from "@/components/seo/JsonLd";
 import { BloodDonorDirectory } from "../components/BloodDonorDirectory";
 import { EmergencyTabsNav } from "../components/EmergencyTabsNav";
 import EmergencyFAQ, { FAQItem } from "@/components/emergency/EmergencyFAQ";
 import CommunityNetworkCTA from "@/components/common/CommunityNetworkCTA";
-import { Heart, ShieldCheck, PhoneCall, Droplets, UserCheck, HeartHandshake } from "lucide-react";
+import { Heart, ShieldCheck, PhoneCall, Droplets, UserCheck, HeartHandshake, PlusCircle } from "lucide-react";
 import { getEmergencyDataAction } from "@/app/actions/emergencyAdminActions";
 import { getCachedContactSettings } from "@/app/actions/systemSettingsActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
@@ -222,6 +223,17 @@ export default async function EmergencyBloodDonorsPage() {
               <ShieldCheck className="h-3.5 w-3.5 text-blue-600" />
               দালালমুক্ত সরাসরি যোগাযোগ
             </span>
+          </div>
+
+          {/* Dedicated Blood Donor Registration CTA */}
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/emergency/blood-donors/register"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all cursor-pointer"
+            >
+              <PlusCircle className="h-4 w-4" />
+              <span>+ রক্তদাতা হিসেবে যুক্ত হোন</span>
+            </Link>
           </div>
         </div>
       </header>

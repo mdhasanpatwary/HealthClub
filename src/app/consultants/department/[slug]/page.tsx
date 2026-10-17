@@ -1,10 +1,13 @@
+import { Suspense } from "react";
 import { notFound, permanentRedirect } from "next/navigation";
 import Link from "next/link";
-import { Stethoscope, ShieldCheck, PhoneCall, HeartHandshake, HelpCircle } from "lucide-react";
+import { Stethoscope, ShieldCheck, PhoneCall, HeartHandshake, HelpCircle, Building2, ArrowRight } from "lucide-react";
 import dynamic from "next/dynamic";
 import JsonLd from "@/components/seo/JsonLd";
 import DoctorDirectory from "@/components/ui/DoctorDirectory";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { FENI_HOSPITALS_DIRECTORY } from "@/data/feniHospitalsData";
+import { DepartmentDiagnosticGuides } from "@/components/consultants/DepartmentDiagnosticGuides";
 
 const CommunityNetworkCTA = dynamic(
   () => import("@/components/common/CommunityNetworkCTA"),
@@ -165,12 +168,74 @@ export default async function DepartmentLandingPage({ params }: PageProps) {
 
         {/* Interactive Doctor Directory with pre-selected department */}
         <div className="sm:bg-muted/30 sm:border sm:border-border/80 sm:rounded-3xl sm:p-8">
-          <DoctorDirectory
-            doctors={deptDoctors}
-            initialDept={slug}
-            initialUpazila="all"
-            isDepartmentPage={true}
-          />
+          <Suspense fallback={<div className="h-96 animate-pulse bg-muted/20 rounded-3xl" />}>
+            <DoctorDirectory
+              doctors={deptDoctors}
+              initialDept={slug}
+              initialUpazila="all"
+              isDepartmentPage={true}
+            />
+          </Suspense>
+        </div>
+
+        {/* Contextual Diagnostic Test Pricing Guides & Member Savings Hub */}
+        <DepartmentDiagnosticGuides
+          departmentId={slug}
+          departmentNameBn={deptSeo.nameBn}
+        />
+
+        {/* Partner Hospitals Cross-Linking Hub */}
+        <div className="max-w-5xl mx-auto space-y-4 pt-4 border-t border-border/80">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[11px] font-bold uppercase tracking-wider mb-1">
+                <Building2 className="h-3.5 w-3.5" />
+                <span>ফেনী সদর পার্টনার নেটওয়ার্ক</span>
+              </div>
+              <h2 className="text-base sm:text-xl font-bold text-foreground font-heading">
+                {deptSeo.nameBn} সেবা ও সহযোগী হাসপাতালসমূহ
+              </h2>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                হেলথ ক্লাব ডিজিটাল মেম্বার কার্ডে পান ১০-৩০% মেম্বার ছাড় ও দ্রুত সেবা
+              </p>
+            </div>
+            <Link
+              href="/partner-hospitals"
+              className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1 shrink-0"
+            >
+              <span>সকল পার্টনার প্রতিষ্ঠান</span>
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {FENI_HOSPITALS_DIRECTORY.filter((h) => h.isPartner && h.partnerSlug).slice(0, 6).map((hospital) => (
+              <Link
+                key={hospital.id}
+                href={`/partner-hospitals/${hospital.partnerSlug}`}
+                className="p-3.5 rounded-2xl bg-card hover:bg-primary/5 border border-border/80 hover:border-primary/40 transition-all duration-200 group flex flex-col justify-between gap-2 shadow-2xs"
+              >
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between gap-1 text-[10px]">
+                    <span className="font-semibold text-muted-foreground">{hospital.categoryBn}</span>
+                    <span className="font-bold px-1.5 py-0.2 rounded-md bg-primary/15 text-primary">
+                      {hospital.memberDiscountBn || "১০-৩০% মেম্বার ছাড়"}
+                    </span>
+                  </div>
+                  <h3 className="text-xs sm:text-sm font-bold text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                    {hospital.nameBn}
+                  </h3>
+                  <p className="text-[11px] text-muted-foreground line-clamp-1">
+                    {hospital.addressBn}
+                  </p>
+                </div>
+                <div className="flex items-center justify-between pt-1 text-[11px] font-semibold text-primary">
+                  <span>হাসপাতাল বিস্তারিত ও চেম্বার</span>
+                  <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-1" />
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
 
         {/* Department-Curated FAQ Section (AEO & Speakable Featured Snippets) */}

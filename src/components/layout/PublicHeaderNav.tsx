@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Siren, Calculator, BookOpen, ShoppingBag } from "lucide-react";
+import { ChevronDown, Siren, Calculator, BookOpen, ShoppingBag, Building2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,7 +21,8 @@ export default function PublicHeaderNav() {
   const isServicesActive =
     isActive("/emergency") ||
     isActive("/health-tools") ||
-    isActive("/health-tips");
+    isActive("/health-tips") ||
+    isActive("/become-partner");
 
   return (
     <nav aria-label="Main Navigation" className="hidden min-[992px]:flex items-center space-x-0.5 lg:space-x-1">
@@ -208,6 +209,27 @@ export default function PublicHeaderNav() {
                 </span>
                 <span className="block text-[11px] text-muted-foreground group-hover:text-foreground/80 dark:group-hover:text-slate-300 font-normal transition-colors truncate">
                   মেডিকেল ডিভাইস ও সামগ্রী
+                </span>
+              </div>
+            </Link>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem className="p-0 rounded-xl focus:bg-transparent cursor-pointer focus:outline-hidden">
+            <Link
+              href="/become-partner"
+              prefetch={false}
+              aria-current={isActive("/become-partner") ? "page" : undefined}
+              className="flex items-center gap-3 w-full p-2.5 rounded-xl transition-colors duration-150 hover:bg-blue-500/10 dark:hover:bg-blue-950/40 text-foreground group"
+            >
+              <div className="h-8 w-8 rounded-xl bg-blue-500/15 dark:bg-blue-500/25 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <Building2 className="h-4 w-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <span className="block text-xs font-bold text-foreground group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">
+                  পার্টনার হোন
+                </span>
+                <span className="block text-[11px] text-muted-foreground group-hover:text-foreground/80 dark:group-hover:text-slate-300 font-normal transition-colors truncate">
+                  হাসপাতাল ও ল্যাব অনবোর্ডিং
                 </span>
               </div>
             </Link>

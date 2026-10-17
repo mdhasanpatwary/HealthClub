@@ -1,11 +1,14 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import JsonLd from "@/components/seo/JsonLd";
 import DoctorDirectory from "@/components/ui/DoctorDirectory";
 import ConsultantsGuide from "@/components/consultants/ConsultantsGuide";
 import ConsultantsFAQ from "@/components/consultants/ConsultantsFAQ";
+import HospitalDoctorQuickLinks from "@/components/consultants/HospitalDoctorQuickLinks";
 import CommunityNetworkCTA from "@/components/common/CommunityNetworkCTA";
 import { getDoctorsAction } from "@/app/actions/doctorActions";
-import { Stethoscope, ShieldCheck, HeartHandshake, PhoneCall } from "lucide-react";
+import Link from "next/link";
+import { Stethoscope, ShieldCheck, HeartHandshake, PhoneCall, UserPlus, ArrowRight } from "lucide-react";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
 
 import { generateConsultantsDirectoryJsonLd } from "./utils/consultantJsonLd";
@@ -99,6 +102,16 @@ export default async function ConsultantsPage() {
           <p className="text-xs sm:text-base text-muted-foreground leading-relaxed max-w-2xl mx-auto">
             ফেনীর সকল হাসপাতালের বিশেষজ্ঞ ডাক্তারদের তালিকা, চেম্বার শিডিউল, রোগী দেখার সময়সূচী এবং সরাসরি সিরিয়াল নাম্বার ও অ্যাপয়েন্টমেন্ট তথ্য।
           </p>
+          <div className="pt-1 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/doctor-registration"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 hover:bg-primary/20 text-emerald-800 dark:text-emerald-300 border border-primary/30 text-xs sm:text-sm font-bold transition-all shadow-2xs hover:shadow-xs group cursor-pointer"
+            >
+              <UserPlus className="h-4 w-4 text-primary transition-transform group-hover:scale-110" />
+              <span>আপনি কি একজন চিকিৎসক? চেম্বার যুক্ত করুন (ফ্রি)</span>
+              <ArrowRight className="h-3.5 w-3.5 text-primary transition-transform group-hover:translate-x-0.5" />
+            </Link>
+          </div>
         </div>
 
         {/* Highlight Banner / Notice */}
@@ -148,12 +161,17 @@ export default async function ConsultantsPage() {
 
         {/* Interactive Directory Component */}
         <div className="sm:bg-muted/30 sm:border sm:border-border/80 sm:rounded-3xl sm:p-8">
-          <DoctorDirectory
-            doctors={doctors}
-            initialDept="all"
-            initialUpazila="all"
-          />
+          <Suspense fallback={<div className="h-96 animate-pulse bg-muted/20 rounded-3xl" />}>
+            <DoctorDirectory
+              doctors={doctors}
+              initialDept="all"
+              initialUpazila="all"
+            />
+          </Suspense>
         </div>
+
+        {/* Dedicated "হাসপাতাল অনুযায়ী ডাক্তার" Navigation Grid */}
+        <HospitalDoctorQuickLinks variant="grid" />
 
         {/* Generative Engine Optimization (GEO) Healthcare Guide & Authority Block */}
         <ConsultantsGuide />

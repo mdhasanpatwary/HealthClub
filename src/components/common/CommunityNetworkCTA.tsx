@@ -3,10 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Truck, Heart, Building2, PhoneCall, ArrowRight, ShieldCheck, Sparkles } from "lucide-react";
+import { Truck, Heart, Building2, PhoneCall, ArrowRight, ShieldCheck, Sparkles, Stethoscope } from "lucide-react";
 import { cn, toBanglaNums } from "@/lib/utils";
 
 const BloodDonorRegisterDialog = dynamic(
@@ -91,13 +91,16 @@ export default function CommunityNetworkCTA({ hotline }: CommunityNetworkCTAProp
               </ul>
             </div>
 
-            <Button
-              onClick={() => setIsAmbulanceModalOpen(true)}
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-xl mt-2 cursor-pointer"
+            <Link
+              href="/emergency/ambulances/register"
+              className={cn(
+                buttonVariants({ variant: "default" }),
+                "w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-xl mt-2 cursor-pointer shadow-xs"
+              )}
             >
               <Truck className="mr-2 h-4 w-4" />
               অ্যাম্বুলেন্স যুক্ত করুন
-            </Button>
+            </Link>
           </CardContent>
         </Card>
 
@@ -135,13 +138,16 @@ export default function CommunityNetworkCTA({ hotline }: CommunityNetworkCTAProp
               </ul>
             </div>
 
-            <Button
-              onClick={() => setIsDonorModalOpen(true)}
-              className="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl mt-2 cursor-pointer"
+            <Link
+              href="/emergency/blood-donors/register"
+              className={cn(
+                buttonVariants({ variant: "default" }),
+                "w-full bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl mt-2 cursor-pointer shadow-xs"
+              )}
             >
               <Heart className="mr-2 h-4 w-4 fill-white" />
               রক্তদাতা হিসেবে যুক্ত হোন
-            </Button>
+            </Link>
           </CardContent>
         </Card>
 
@@ -204,7 +210,28 @@ export default function CommunityNetworkCTA({ hotline }: CommunityNetworkCTAProp
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-center sm:justify-end gap-2.5">
+          <Link
+            href="/emergency/ambulances/register"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary/10 hover:bg-primary/20 text-emerald-800 dark:text-emerald-300 border border-primary/30 text-xs font-bold transition-colors cursor-pointer"
+          >
+            <Truck className="h-3.5 w-3.5 text-primary" />
+            <span>অ্যাম্বুলেন্স নিবন্ধন (ফ্রি)</span>
+          </Link>
+          <Link
+            href="/emergency/blood-donors/register"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-800 dark:text-rose-300 border border-rose-500/30 text-xs font-bold transition-colors cursor-pointer"
+          >
+            <Heart className="h-3.5 w-3.5 text-rose-600" />
+            <span>রক্তদাতা নিবন্ধন (ফ্রি)</span>
+          </Link>
+          <Link
+            href="/doctor-registration"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary/10 hover:bg-primary/20 text-emerald-800 dark:text-emerald-300 border border-primary/30 text-xs font-bold transition-colors cursor-pointer"
+          >
+            <Stethoscope className="h-3.5 w-3.5 text-primary" />
+            <span>ডাক্তার চেম্বার নিবন্ধন (ফ্রি)</span>
+          </Link>
           <a
             href={`tel:${hotlineTel}`}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-card border border-border text-xs font-bold text-primary hover:bg-primary/10 transition-colors"

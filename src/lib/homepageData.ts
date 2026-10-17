@@ -69,7 +69,7 @@ export const getHomepageStats = unstable_cache(
  * Cached for 60 seconds. Returns a limited set ordered by newest first.
  */
 export const getHomepagePartners = unstable_cache(
-  async (limit: number): Promise<Partner[]> => {
+  async (limit: number = 6): Promise<Partner[]> => {
     try {
       const data = await prisma.partner.findMany({
         orderBy: { createdAt: "desc" },

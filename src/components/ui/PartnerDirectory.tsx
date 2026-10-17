@@ -18,6 +18,7 @@ import { transliterateBengaliToEnglish, PARTNER_HOSPITAL_ALIASES } from "@/lib/t
 interface PartnerDirectoryProps {
   partners?: Partner[];
   limit?: number;
+  mobileLimit?: number;
   showFilters?: boolean;
   initialCategory?: string;
   isCategoryPage?: boolean;
@@ -26,6 +27,7 @@ interface PartnerDirectoryProps {
 export default function PartnerDirectory({
   partners: initialPartners,
   limit,
+  mobileLimit,
   showFilters = true,
   initialCategory = "all",
   isCategoryPage = false,
@@ -301,16 +303,20 @@ export default function PartnerDirectory({
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-6">
           {Array.from({ length: limit || 6 }).map((_, i) => (
-            <PartnerCardSkeleton key={i} />
+            <PartnerCardSkeleton
+              key={i}
+              className={mobileLimit && i >= mobileLimit ? "hidden sm:flex" : undefined}
+            />
           ))}
         </div>
       ) : displayedPartners.length > 0 ? (
         <div className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-6">
-            {displayedPartners.map((partner) => (
+            {displayedPartners.map((partner, index) => (
               <PartnerCard
                 key={partner.id}
                 partner={partner}
+                className={mobileLimit && index >= mobileLimit ? "hidden sm:flex" : undefined}
               />
             ))}
           </div>

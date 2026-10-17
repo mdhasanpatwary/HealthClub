@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {
   Building2, Stethoscope, CheckCircle2,
-  ArrowLeft, ShieldCheck
+  ArrowLeft, ShieldCheck, Activity
 } from "lucide-react";
 import { Doctor, Partner } from "@/services/db";
 import { Card } from "@/components/ui/card";
@@ -17,6 +17,8 @@ import { DoctorClinicalGuidance } from "./DoctorClinicalGuidance";
 import { DoctorDepartmentFaq } from "./DoctorDepartmentFaq";
 import { DoctorProfileActions } from "./DoctorProfileActions";
 import { DoctorMemberBenefitHook } from "./DoctorMemberBenefitHook";
+import { DoctorPrescribedInvestigationCard } from "./DoctorPrescribedInvestigationCard";
+import { getDoctorClinicalScope, getDoctorSymptomKeywords } from "@/data/doctorSeoData";
 
 interface DoctorProfileViewProps {
   doctor: Doctor & { partner?: Partner | null };
@@ -30,6 +32,8 @@ export default function DoctorProfileView({
   const DeptIcon = DEPT_ICONS[doctor.department] || Stethoscope;
   const clinicalFocus = CLINICAL_FOCUS_MAP[doctor.department] || CLINICAL_FOCUS_MAP.other;
   const deptLabel = DEPT_LABEL_MAP[doctor.department] || doctor.department || doctor.specialty;
+  const clinicalScopeTags = getDoctorClinicalScope(doctor);
+  const symptomKeywords = getDoctorSymptomKeywords(doctor);
 
   return (
     <div className="bg-background min-h-screen py-4 sm:py-10">
@@ -97,6 +101,21 @@ export default function DoctorProfileView({
                 {doctor.specialty}
               </p>
 
+              {/* Quick Clinical Scope Pills */}
+              {clinicalScopeTags.length > 0 && (
+                <div className="flex flex-wrap items-center justify-center md:justify-start gap-1.5 pt-0.5" aria-label="প্রধান চিকিৎসা পরিধি">
+                  {clinicalScopeTags.slice(0, 4).map((tag, idx) => (
+                    <span
+                      key={idx}
+                      className="inline-flex items-center text-[10px] sm:text-[11px] font-medium bg-muted/60 dark:bg-muted/40 text-foreground/80 px-2 py-0.5 rounded-md border border-border/50"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary mr-1.5 shrink-0" aria-hidden="true" />
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+
               <div className="bg-muted/40 p-3 sm:p-4 rounded-2xl text-xs sm:text-sm text-foreground/90 font-medium leading-relaxed max-w-3xl">
                 <span className="font-bold text-muted-foreground block mb-0.5 text-[11px] uppercase tracking-wider">
                   শিক্ষাগত যোগ্যতা ও ডিগ্রি
@@ -141,29 +160,93 @@ export default function DoctorProfileView({
             {/* Chamber Schedule Card */}
             <DoctorChamberSchedule doctor={doctor} />
 
-            {/* Clinical Focus & Department Guide */}
-            <Card className="rounded-3xl border-border/80 bg-card p-5 sm:p-7 shadow-xs space-y-4">
-              <div className="flex items-center gap-3 pb-2 border-b border-border/60">
+            {/* Clinical Focus, Clinical Scope & Symptom Keyword Engine */}
+            <section
+              aria-labelledby="clinical-expertise-heading"
+              className="rounded-3xl border border-border/80 bg-card p-5 sm:p-7 shadow-xs space-y-5"
+              itemScope
+              itemType="https://schema.org/MedicalSpecialty"
+            >
+              <div className="flex items-center gap-3 pb-3 border-b border-border/60">
                 <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
                   <Stethoscope className="h-5 w-5" />
                 </div>
                 <div>
-                  <h2 className="font-heading font-bold text-base sm:text-lg text-foreground">
+                  <h2 id="clinical-expertise-heading" className="font-heading font-bold text-base sm:text-lg text-foreground">
                     বিশেষায়িত চিকিৎসাসেবা ও পারদর্শিতা
                   </h2>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-muted-foreground" itemProp="name">
                     {doctor.specialty}
                   </p>
                 </div>
               </div>
 
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              {/* Direct BLUF Clinical Overview */}
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed" itemProp="description">
                 {clinicalFocus.bn}
               </p>
-            </Card>
+
+              {/* Structured Clinical Scope Points */}
+              {clinicalScopeTags.length > 0 && (
+                <div className="space-y-2 pt-1">
+                  <h3 className="font-heading font-bold text-xs sm:text-sm text-foreground flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+                    <span>চিকিৎসা পরিধি ও বিশেষজ্ঞ সেবা (Clinical Scope)</span>
+                  </h3>
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-muted-foreground" role="list">
+                    {clinicalScopeTags.map((scope, idx) => (
+                      <li
+                        key={idx}
+                        className="flex items-center gap-2 p-2.5 rounded-xl bg-muted/40 border border-border/50 text-foreground/90 font-medium"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" aria-hidden="true" />
+                        <span>{scope}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Highlighted Long-Tail Symptom Keywords Cloud */}
+              {symptomKeywords.length > 0 && (
+                <div className="space-y-2.5 pt-3 border-t border-border/60">
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <h3 className="font-heading font-bold text-xs sm:text-sm text-foreground flex items-center gap-2">
+                      <Activity className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                      <span>যেসব উপসর্গ বা লক্ষণ দেখা দিলে পরামর্শ নেবেন</span>
+                    </h3>
+                    {doctor.department && doctor.department !== "other" && doctor.department !== "all" && (
+                      <Link
+                        href={`/consultants/department/${doctor.department}`}
+                        className="text-[11px] font-bold text-primary hover:underline"
+                      >
+                        {deptLabel} বিভাগ →
+                      </Link>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    ফেনীতে যেসব শারীরিক লক্ষণ ও স্বাস্থ্য সমস্যার জন্য রোগীগণ {doctor.name}-এর পরামর্শ নেন:
+                  </p>
+                  <div className="flex flex-wrap gap-1.5 pt-1" aria-label="উপসর্গ ও রোগের লক্ষণসমূহ">
+                    {symptomKeywords.map((symptom, idx) => (
+                      <span
+                        key={idx}
+                        className="inline-flex items-center text-[11px] sm:text-xs font-medium bg-primary/10 hover:bg-primary/15 text-emerald-800 dark:text-emerald-300 border border-primary/20 px-2.5 py-1 rounded-xl transition-colors"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 shrink-0" aria-hidden="true" />
+                        {symptom}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </section>
 
             {/* Chamber Visit Preparation, Serial Protocol & Emergency Warnings */}
             <DoctorClinicalGuidance doctor={doctor} />
+
+            {/* Prescribed Lab Investigations & 10-30% Health Club Member Discount Guide */}
+            <DoctorPrescribedInvestigationCard doctor={doctor} />
 
             {/* Department Conversational FAQs */}
             <DoctorDepartmentFaq doctor={doctor} />

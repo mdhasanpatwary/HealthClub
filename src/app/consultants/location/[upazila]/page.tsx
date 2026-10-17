@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import {
   HeartHandshake,
@@ -156,12 +157,14 @@ export default async function UpazilaDoctorLandingPage({ params }: PageProps) {
         </div>
 
         <div className="sm:bg-muted/30 sm:border sm:border-border/80 sm:rounded-3xl sm:p-8">
-          <DoctorDirectory
-            doctors={allDoctors}
-            initialDept="all"
-            initialUpazila={seo.id}
-            isLocationPage={true}
-          />
+          <Suspense fallback={<div className="h-96 animate-pulse bg-muted/20 rounded-3xl" />}>
+            <DoctorDirectory
+              doctors={allDoctors}
+              initialDept="all"
+              initialUpazila={seo.id}
+              isLocationPage={true}
+            />
+          </Suspense>
         </div>
 
         {/* Location-Specific High-Density FAQ Section (AEO & Speakable Specification) */}

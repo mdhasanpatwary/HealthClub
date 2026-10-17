@@ -101,7 +101,7 @@ export default async function Home() {
   // Single cached query for all homepage stats & settings (60s cache)
   const [stats, homepagePartners, contactSettings] = await Promise.all([
     getHomepageStats(),
-    getHomepagePartners(3),
+    getHomepagePartners(6),
     getCachedContactSettings(),
   ]);
   const {

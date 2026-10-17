@@ -32,9 +32,9 @@ function PageHeaderSkeleton({ className }: { className?: string }) {
 /**
  * Reusable skeleton for partner cards matching PartnerDirectory layout
  */
-function PartnerCardSkeleton() {
+function PartnerCardSkeleton({ className }: { className?: string } = {}) {
   return (
-    <Card className="p-0 gap-0 overflow-hidden border-border bg-background dark:bg-slate-900 group flex flex-col justify-between rounded-2xl border">
+    <Card className={cn("p-0 gap-0 overflow-hidden border-border bg-background dark:bg-slate-900 group flex flex-col justify-between rounded-2xl border", className)}>
       <div className="relative h-52 sm:h-56 w-full bg-slate-900/10 dark:bg-slate-900 overflow-hidden flex flex-col justify-between p-4">
         <div className="flex justify-end">
           <Skeleton className="h-6 w-24 rounded-full bg-slate-200/50 dark:bg-slate-800" />
@@ -294,11 +294,20 @@ function ContactFormSkeleton() {
   );
 }
 
-function PartnerGridSkeleton({ count = 3 }: { count?: number }) {
+function PartnerGridSkeleton({
+  count = 6,
+  mobileCount,
+}: {
+  count?: number;
+  mobileCount?: number;
+} = {}) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {Array.from({ length: count }).map((_, i) => (
-        <PartnerCardSkeleton key={i} />
+        <PartnerCardSkeleton
+          key={i}
+          className={mobileCount && i >= mobileCount ? "hidden sm:flex" : undefined}
+        />
       ))}
     </div>
   );

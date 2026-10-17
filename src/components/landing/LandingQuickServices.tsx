@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn, toBanglaNums } from "@/lib/utils";
+import HospitalDoctorQuickLinks from "@/components/consultants/HospitalDoctorQuickLinks";
 
 interface LandingQuickServicesProps {
   doctorCount?: number;
@@ -222,6 +223,11 @@ export function LandingQuickServices({
               </article>
             );
           })}
+        </div>
+
+        {/* Doctors by Hospital Hub - Capture Hospital-Wise Search Intent */}
+        <div className="pt-2 sm:pt-4 border-t border-border/40">
+          <HospitalDoctorQuickLinks variant="landing" />
         </div>
 
         {/* Local Intent Quick Search Cluster */}

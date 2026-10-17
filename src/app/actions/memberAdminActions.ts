@@ -61,7 +61,11 @@ export async function getPaginatedMembersAction(
     where.status = status;
   }
   if (tier && tier !== "all") {
-    where.tier = tier;
+    if (tier === "free") {
+      where.tier = { in: ["free", "founding"] };
+    } else {
+      where.tier = tier;
+    }
   }
   if (search) {
     where.OR = [

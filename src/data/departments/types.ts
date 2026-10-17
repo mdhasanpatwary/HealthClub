@@ -16,6 +16,8 @@ export interface DepartmentSeoConfig {
   introDescriptionEn: string;
   clinicalScopeBn: string[];
   clinicalScopeEn: string[];
+  symptomKeywordsBn?: string[];
+  symptomKeywordsEn?: string[];
   medicalSpecialtySchema: string;
   faqs: {
     qBn: string;

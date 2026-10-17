@@ -2710,4 +2710,94 @@ This roadmap outlines the strategic localized content cluster required to achiev
 
 ---
 
+## 🎯 Phase 34: Local Medical Search Dominance & Hyper-Local SEO Engine (Outranking Competitors)
 
+- [x] **TODO-323**: **Doctor Symptom & Clinical Scope Keyword Engine (`DoctorCard` & `DoctorProfile`)**
+  - **Priority**: High (P1 - High-converting local intent matching: e.g., "জন্ডিস ডাক্তার", "ডায়াবেটিস বিশেষজ্ঞ", "বুকের ব্যথা ডাক্তার ফেনী")
+  - **Files**: `src/components/ui/doctors/DoctorCard.tsx`, `src/components/consultants/DoctorProfileView.tsx`, `src/data/doctorSeoData.ts`, `src/data/departments/types.ts`
+  - **Details**:
+    1. Render 3-5 clinical scope pills / symptom tags on each `DoctorCard` (e.g., "জ্বর ও সংক্রমণ", "ডায়াবেটিস ও প্রেশার", "পেটের সমস্যা ও গ্যাস্ট্রিক") mapped from doctor department/specialty.
+    2. Display highlighted symptom keywords on `DoctorProfileView` to capture long-tail Google search queries matching specific diseases.
+    3. Ensure semantic HTML markup so search engines and generative bots (`GPTBot`, `PerplexityBot`) index disease-doctor associations directly.
+
+- [x] **TODO-324**: **Smart Disease & Symptom-Based Search in `DoctorDirectory`**
+  - **Priority**: High (P1 - Search UX & Zero-Friction Healthcare Discovery)
+  - **Files**: `src/components/ui/DoctorDirectory.tsx`, `src/components/consultants/consultantData.ts`
+  - **Details**:
+    1. Expand search indexing beyond doctor names and designations to include clinical symptoms and conditions (e.g., typing "জন্ডিস", "টাইফয়েড", "হাঁপানি", "মাথাব্যথা", "বাতের ব্যথা" filters to matching specialists).
+    2. Add symptom hint chips under the search bar for one-click filtering of popular conditions in Feni.
+
+- [x] **TODO-325**: **"Doctors by Hospital" Navigation Hub & Cross-Linking**
+  - **Priority**: High (P1 - Capture Hospital-Wise Search Volume: e.g., "Feni United doctor list", "Concept Hospital doctor list", "Feni Clinic doctors")
+  - **Files**: `src/app/consultants/page.tsx`, `src/components/consultants/HospitalDoctorQuickLinks.tsx`, `src/components/landing/LandingQuickServices.tsx`
+  - **Details**:
+    1. Implement a dedicated "হাসপাতাল অনুযায়ী ডাক্তার" (Doctors by Hospital) navigation grid on `/consultants` and Homepage linking to hospital rosters.
+    2. Add chamber-location filter chips in `DoctorDirectory` allowing patients to instantly filter doctors practicing at specific hospitals/clinics.
+    3. Cross-link between `/partner-hospitals/[slug]` and specialty pages to create an airtight internal linking mesh.
+
+- [x] **TODO-326**: **Specialty to Diagnostic Pricing Guides Cross-Linking & Topical Depth**
+  - **Priority**: Medium (P2 - Information Gain, E-E-A-T & Health Club Member Conversion)
+  - **Files**: `src/app/consultants/department/[slug]/page.tsx`, `src/components/consultants/DoctorProfileView.tsx`
+  - **Details**:
+    1. Contextually embed relevant diagnostic test pricing guides inside specialty department landing pages (e.g., MRI & X-Ray guides on Orthopedic pages; Endoscopy & USG guides on Medicine/Gastroenterology pages).
+    2. Emphasize the 10-30% Health Club member discount on prescribed lab investigations directly within doctor profile pages.
+
+- [x] **TODO-327**: **"Available Today" (আজ চেম্বার খোলা আছে) Real-Time Filter in Doctor Directory**
+  - **Priority**: Medium (P2 - Exclusive Competitive Advantage over Static Directories)
+  - **Files**: `src/components/ui/DoctorDirectory.tsx`, `src/components/ui/doctors/DoctorAvailabilityBadge.tsx`
+  - **Details**:
+    1. Add an interactive toggle filter `[✓ আজ চেম্বারে রোগী দেখছেন]` in `DoctorDirectory` using `availableToday`, `visitingDays`, and day-of-week parsing.
+    2. Cater to urgent real-time patient searches (e.g., "আজ ফেনীতে কোন কোন ডাক্তার বসেন") that competitors with static directories cannot fulfill.
+
+- [x] **TODO-328**: **Dedicated 100% Free "Join as Doctor" Registration Page (`/doctor-registration`) & Directory Onboarding**
+  - **Priority**: High (P1 - Crowdsourced Doctor Enlistment, High-Intent Medical SEO & E-E-A-T)
+  - **Files**: `src/app/doctor-registration/page.tsx`, `src/app/doctor-registration/DoctorRegistrationForm.tsx`, `src/app/actions/doctorRegistrationActions.ts`, `src/lib/validations/doctorRegistration.ts`, `src/app/consultants/page.tsx`, `src/components/common/CommunityNetworkCTA.tsx`, `src/components/layout/Footer.tsx`, `src/app/sitemap.ts`
+  - **Details**:
+    1. Built a dedicated, SEO/AEO-optimized doctor registration landing page at `/doctor-registration` with rich Schema.org (`WebPage`, `HowTo`, `FAQPage`), direct answer capsules (BLUF), and anti-quackery BMDC verification disclosures.
+    2. Implemented a robust React Hook Form + Zod client submission interface capturing doctor degrees, BMDC registration number, clinical department, chamber schedule, serial hotline, and personal verification contact.
+    3. Created a server action with sliding-window IP rate limiting, duplicate submission prevention, and realtime administrator alert triggering (`broadcastAdminAlert`).
+    4. Added alternative fast-track WhatsApp submission channel for doctors/assistants wishing to send prescription pad or visiting card photos directly.
+    5. Integrated strategic CTA links from `/consultants` header, `CommunityNetworkCTA` collaboration bar, and the global `Footer`.
+
+- [x] **TODO-329**: **Dedicated Ambulance Registration & Driver Enlistment Page (`/emergency/ambulances/register`)**
+  - **Priority**: High (P1 - Emergency Service Supply, Driver Onboarding & High-Intent Local SEO)
+  - **Files**: `src/app/emergency/ambulances/register/page.tsx`, `src/app/emergency/ambulances/register/AmbulanceRegistrationForm.tsx`, `src/app/emergency/ambulances/register/ambulanceRegisterSeo.ts`, `src/app/emergency/ambulances/page.tsx`, `src/app/emergency/components/AmbulanceDirectory.tsx`, `src/components/common/CommunityNetworkCTA.tsx`, `src/lib/validations/emergency.ts`, `src/app/actions/emergencyActions.ts`, `src/app/sitemap.ts`
+  - **Details**:
+    1. Built a dedicated, full SEO/AEO-optimized ambulance registration landing page at `/emergency/ambulances/register` with Schema.org (`WebPage`, `BreadcrumbList`, `EmergencyService`, `HowTo`, `FAQPage`), direct answer capsules (BLUF), vehicle type guidelines (AC, Non-AC, ICU, Freezer), and fair fare commitment disclosure.
+    2. Implemented a robust React Hook Form + Zod client registration form (`AmbulanceRegistrationForm.tsx`) capturing service name, operator/driver name, vehicle type selector chips, stand location, upazila, phone, coverage area, and additional notes.
+    3. Enhanced server action (`registerAmbulanceAction`) with sliding-window rate limiting, duplicate check, and realtime administrator alert triggering (`broadcastAdminAlert`).
+    4. Added alternative fast-track WhatsApp submission channel for ambulance drivers/owners wishing to send visiting cards directly.
+    5. Linked prominently with `[+ অ্যাম্বুলেন্স তালিকাভুক্ত করুন]` buttons in `/emergency/ambulances` Hero section, `AmbulanceDirectory` action banner, and `CommunityNetworkCTA` cards and footer bar.
+
+- [x] **TODO-330**: **Dedicated Voluntary Blood Donor Registration Page (`/emergency/blood-donors/register`)**
+  - **Priority**: High (P1 - Life-Saving Community Network, Medical E-E-A-T & Local Search Authority)
+  - **Files**: `src/app/emergency/blood-donors/register/page.tsx`, `src/app/emergency/blood-donors/register/BloodDonorRegistrationForm.tsx`, `src/app/emergency/blood-donors/register/bloodDonorRegisterSeo.ts`, `src/app/emergency/blood-donors/page.tsx`, `src/app/emergency/components/BloodDonorDirectory.tsx`, `src/components/common/CommunityNetworkCTA.tsx`, `src/lib/validations/emergency.ts`, `src/app/actions/emergencyActions.ts`, `src/components/layout/Footer.tsx`, `src/app/sitemap.ts`
+  - **Details**:
+    1. Built a dedicated voluntary blood donor enlistment landing page at `/emergency/blood-donors/register` with Schema.org (`WebPage`, `MedicalWebPage`, `BreadcrumbList`, `EmergencyService`, `HowTo`, `FAQPage`), direct answer capsules (BLUF), and speakable specifications.
+    2. Embedded structured medical eligibility checklist (age 18-60, weight 50+ kg, 3-4 month interval, hemoglobin ≥ 12.0 g/dL, normal blood pressure) and strict donor privacy & security disclosure.
+    3. Created a client registration form (`BloodDonorRegistrationForm.tsx`) using React Hook Form + Zod (`bloodDonorRegistrationPageSchema`) with 8 blood group selection chips, upazila selector, specific area, last donation interval pills, notes, and medical eligibility consent.
+    4. Enhanced server action (`registerBloodDonorAction`) with sliding-window rate limiting, duplicate phone check, extended location & donation details, and realtime administrator alert triggering (`broadcastAdminAlert`).
+    5. Added alternative fast-track WhatsApp submission channel with pre-filled message for donors desiring direct WhatsApp messaging.
+    6. Linked prominently with `[+ রক্তদাতা হিসেবে যুক্ত হোন]` button on `/emergency/blood-donors` Hero section, `BloodDonorDirectory` header banner, `CommunityNetworkCTA` collaboration cards & quick chips, global `Footer`, and indexed in `sitemap.ts`.
+
+- [x] **TODO-331**: **Healthcare Facility & Hospital Partner Onboarding (`/become-partner`) SEO & CTA Enhancements**
+  - **Priority**: High (P1 - Hospital & Diagnostic Center Partnership Expansion & Direct Navigation)
+  - **Files**: `src/app/become-partner/page.tsx`, `src/app/become-partner/layout.tsx`, `src/app/become-partner/becomePartnerSeo.ts`, `src/app/become-partner/BecomePartnerFaqAccordion.tsx`, `src/app/become-partner/PartnerRequestForm.tsx`, `src/lib/validations/partnerRequest.ts`, `src/app/partner-hospitals/page.tsx`, `src/components/layout/PublicHeaderNav.tsx`, `src/components/layout/MobileNavPublicLinks.tsx`
+  - **Details**:
+    1. Built comprehensive Schema.org JSON-LD graph (`WebPage`, `BreadcrumbList`, `Organization`, `HowTo`, `FAQPage`) and SEO metadata in `becomePartnerSeo.ts`.
+    2. Enhanced `/become-partner` static page with Direct Answer Capsules (BLUF) on institutional onboarding guidelines and 4 detailed institutional benefit cards (new patient volume, instant QR card verification, 10-30% member discount traffic optimization, free digital branding).
+    3. Rebuilt `PartnerRequestForm.tsx` using React Hook Form + Zod (`partnerRequestSchema`), interactive category selector chips (Hospital, Diagnostic, Pharmacy), Feni Sadar geographic compliance confirmation, Sonner toast notifications, and fast-track WhatsApp direct submission fallback.
+    4. Added interactive accessible FAQ accordion (`BecomePartnerFaqAccordion.tsx`) answering contract timelines (24-48 hours), partner dashboard access (`/partner/dashboard`), Feni Sadar geographic compliance scope, 10-30% member discount rules, required documentation (DGHS/Trade license), and 100% free partnership policy.
+    5. Added prominent `[+ হাসপাতাল বা ডায়াগনস্টিক পার্টনার হোন]` onboarding CTA button on `/partner-hospitals` directory hero header.
+    6. Integrated direct navigation links to `/become-partner` inside Desktop Header's "সেবাসমূহ" dropdown (`PublicHeaderNav.tsx`) and Mobile Drawer Navigation (`MobileNavPublicLinks.tsx`).
+    7. Maintained strict < 500-line code limits across all touched files and passed all TypeScript (`tsc --noEmit`) and ESLint audits (0 errors, 0 warnings).
+
+- [x] **TODO-332**: **Admin Member Table Tier Filter for Free & Premium Members**
+  - **Priority**: High (P1 - Admin Member Management, Membership Tier Segmentation & Usability)
+  - **Files**: `src/app/actions/memberAdminActions.ts`, `src/app/admin/components/MembersTab.tsx`, `src/app/admin/members/page.tsx`
+  - **Details**:
+    1. Added interactive tier filter pills ("সকল মেম্বার", "ফ্রি মেম্বার", "প্রিমিয়াম মেম্বার") to `MembersTab.tsx` with dedicated icons (`Users`, `Sparkles`, `Crown`), active color treatments, and dynamic Bangla count badges.
+    2. Updated `getPaginatedMembersAction` in `memberAdminActions.ts` to map the `free` tier query filter correctly across both `"free"` and `"founding"` database records (`where.tier = { in: ["free", "founding"] }`).
+    3. Integrated `tierFilter` state and automatic page reset in `AdminMembersPage` (`/admin/members/page.tsx`) with real-time paginated fetching.
+    4. Enhanced table tier cells with clear visual status badges for Premium and Free members, and added contextual empty-state messages when no members match the selected filter.
+    5. Maintained strict < 500-line limit across all touched files (322, 364, 330 lines) and verified 0 TypeScript (`tsc --noEmit`) and ESLint errors.

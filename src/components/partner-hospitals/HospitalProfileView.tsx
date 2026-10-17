@@ -22,6 +22,7 @@ import { toBanglaNums } from "@/lib/utils";
 import HospitalFacilityBadges from "./HospitalFacilityBadges";
 import HospitalDiscountsSection from "./HospitalDiscountsSection";
 import HospitalDoctorRoster from "./HospitalDoctorRoster";
+import HospitalSpecialtyCrossLinks from "./HospitalSpecialtyCrossLinks";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import HospitalContactSidebar from "./HospitalContactSidebar";
 import HospitalGalleryModal from "./HospitalGalleryModal";
@@ -212,6 +213,11 @@ export default function HospitalProfileView({
             {/* Section 3: Resident Consultant Doctors Roster */}
             <div className="p-4 sm:p-6 rounded-3xl border border-border/80 bg-card shadow-2xs">
               <HospitalDoctorRoster doctors={doctors} partner={partner} />
+            </div>
+
+            {/* Section 3.5: Specialty Departments & Feni Doctor Roster Cross-Links */}
+            <div className="p-4 sm:p-6 rounded-3xl border border-border/80 bg-card shadow-2xs">
+              <HospitalSpecialtyCrossLinks partner={partner} doctors={doctors} />
             </div>
 
             {/* Section 4: Verified Member Reviews & Rating System */}

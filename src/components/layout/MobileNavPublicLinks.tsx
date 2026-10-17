@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Siren, Calculator, BookOpen, ShoppingBag } from "lucide-react";
+import { Siren, Calculator, BookOpen, ShoppingBag, Building2 } from "lucide-react";
 
 interface MobileNavPublicLinksProps {
   pathname: string;
@@ -96,6 +96,18 @@ export function MobileNavPublicLinks({
               <ShoppingBag className="h-4 w-4" />
             </div>
             <span>প্রোডাক্ট শপ (মেডিকেল ডিভাইস)</span>
+          </Link>
+
+          <Link
+            href="/become-partner"
+            prefetch={false}
+            onClick={onClose}
+            className="flex items-center gap-3 p-2.5 rounded-xl bg-blue-500/5 hover:bg-blue-500/10 border border-blue-500/20 text-blue-700 dark:text-blue-300 text-xs font-bold"
+          >
+            <div className="h-7 w-7 rounded-lg bg-blue-500/10 text-blue-600 flex items-center justify-center shrink-0">
+              <Building2 className="h-4 w-4" />
+            </div>
+            <span>পার্টনার হোন (হাসপাতাল ও ল্যাব অনবোর্ডিং)</span>
           </Link>
         </div>
       </div>

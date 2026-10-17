@@ -2,18 +2,28 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Search, MapPin, Stethoscope, X, ChevronDown } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Search, MapPin, Stethoscope, X } from "lucide-react";
 import { Doctor } from "@/services/db";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
 import { DoctorCard } from "./doctors/DoctorCard";
+import { SymptomHintChips } from "./doctors/SymptomHintChips";
+import { ChamberFilterChips } from "./doctors/ChamberFilterChips";
+import { AvailableTodayToggle } from "./doctors/AvailableTodayToggle";
+import { DepartmentFilterBar } from "./doctors/DepartmentFilterBar";
 import { getDepartmentSeoConfig } from "@/data/doctorSeoData";
 import { FENI_UPAZILAS, detectUpazilaFromText } from "@/data/feniLocations";
-import { DEPARTMENTS } from "@/components/consultants/consultantData";
+import { getDoctorDiseaseKeywords } from "@/components/consultants/consultantData";
+import { matchesHospitalDoctor } from "@/data/feniHospitalsData";
 import { toBanglaNums } from "@/lib/utils";
+import {
+  isDoctorAvailableToday,
+  extractTodayIntent,
+  getBangladeshDayInfo,
+} from "@/lib/doctorAvailability";
 import {
   getChamberSearchAliases,
   getSpecialtySearchAliases,
@@ -35,6 +45,7 @@ interface DoctorDirectoryProps {
   limit?: number;
   initialDept?: string;
   initialUpazila?: string;
+  initialChamber?: string;
   isDepartmentPage?: boolean;
   isLocationPage?: boolean;
 }
@@ -49,20 +60,45 @@ function isDiabetesDoctor(doc: Doctor): boolean {
   );
 }
 
+function normalizeBengaliQuery(str: string): string {
+  return str
+    .toLowerCase()
+    .normalize("NFC")
+    .replace(/\u09AF\u09BC/g, "য়")
+    .replace(/\u09A1\u09BC/g, "ড়")
+    .replace(/\u09A2\u09BC/g, "ঢ়");
+}
+
 export default function DoctorDirectory({
   doctors = [],
   limit,
   initialDept = "all",
   initialUpazila = "all",
+  initialChamber = "all",
   isDepartmentPage = false,
   isLocationPage = false,
 }: DoctorDirectoryProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const chamberQueryParam =
+    searchParams?.get("chamber") ||
+    searchParams?.get("hospital") ||
+    initialChamber ||
+    "all";
+  const todayQueryParam =
+    searchParams?.get("today") === "true" ||
+    searchParams?.get("available") === "today";
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDept, setSelectedDept] = useState(initialDept || "all");
   const [selectedUpazila, setSelectedUpazila] = useState(initialUpazila || "all");
+  const [selectedChamber, setSelectedChamber] = useState(chamberQueryParam);
+  const [isAvailableTodayOnly, setIsAvailableTodayOnly] = useState(todayQueryParam);
+
   const [prevInitialDept, setPrevInitialDept] = useState(initialDept);
   const [prevInitialUpazila, setPrevInitialUpazila] = useState(initialUpazila);
+  const [prevChamberParam, setPrevChamberParam] = useState(chamberQueryParam);
+  const [prevTodayParam, setPrevTodayParam] = useState(todayQueryParam);
 
   if (initialDept !== prevInitialDept) {
     setPrevInitialDept(initialDept);
@@ -72,10 +108,20 @@ export default function DoctorDirectory({
     setPrevInitialUpazila(initialUpazila);
     setSelectedUpazila(initialUpazila || "all");
   }
+  if (chamberQueryParam !== prevChamberParam) {
+    setPrevChamberParam(chamberQueryParam);
+    setSelectedChamber(chamberQueryParam);
+  }
+  if (todayQueryParam !== prevTodayParam) {
+    setPrevTodayParam(todayQueryParam);
+    setIsAvailableTodayOnly(todayQueryParam);
+  }
 
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
   const [activeSerialDoctor, setActiveSerialDoctor] = useState<Doctor | null>(null);
   const [activeDetailsDoctor, setActiveDetailsDoctor] = useState<Doctor | null>(null);
+
+  const todayInfo = useMemo(() => getBangladeshDayInfo(), []);
 
   const handleDeptChange = (deptId: string) => {
     if (deptId === "all" || deptId === "other") {
@@ -99,8 +145,10 @@ export default function DoctorDirectory({
   };
 
   const handleResetFilters = () => {
+    setIsAvailableTodayOnly(false);
     if (isDepartmentPage) {
       setSelectedUpazila("all");
+      setSelectedChamber("all");
       setSearchQuery("");
       setVisibleCount(INITIAL_VISIBLE_COUNT);
       return;
@@ -111,25 +159,44 @@ export default function DoctorDirectory({
     }
     setSelectedUpazila("all");
     setSelectedDept("all");
+    setSelectedChamber("all");
     setSearchQuery("");
     setVisibleCount(INITIAL_VISIBLE_COUNT);
   };
 
-  // Precompute upazila for each doctor (server provides pre-resolved upazila, fallback provided)
+  // Precompute upazila, search index, and real-time today availability for each doctor
   const doctorsWithUpazila = useMemo(() => {
-    return doctors.map((doc) => ({
-      ...doc,
-      resolvedUpazila: doc.upazila || (doc.chamberAddress ? detectUpazilaFromText(doc.chamberAddress) : "feni-sadar"),
-    }));
+    return doctors.map((doc) => {
+      const resolvedUpazila =
+        doc.upazila || (doc.chamberAddress ? detectUpazilaFromText(doc.chamberAddress) : "feni-sadar");
+      const transliteratedName = transliterateBengaliToEnglish(doc.name);
+      const specialtyAliases = getSpecialtySearchAliases(`${doc.specialty} ${doc.department}`);
+      const chamberAliases = getChamberSearchAliases(doc);
+      const diseaseKeywords = getDoctorDiseaseKeywords(doc);
+      const rawSearchable = `${doc.name} ${transliteratedName} ${doc.nameEn || ""} ${doc.slug || ""} ${doc.specialty} ${specialtyAliases} ${doc.degrees || ""} ${doc.designation || ""} ${doc.chamberName} ${doc.chamberAddress} ${chamberAliases} ${diseaseKeywords}`;
+      const searchIndex = normalizeBengaliQuery(rawSearchable);
+      const isAvailableToday = isDoctorAvailableToday(doc);
+
+      return {
+        ...doc,
+        resolvedUpazila,
+        searchIndex,
+        isAvailableToday,
+      };
+    });
   }, [doctors]);
 
-  // Single-pass computation of department and upazila counts for maximum performance
-  const { departmentCounts, upazilaCounts } = useMemo(() => {
+  // Single-pass computation of department, upazila, and available-today counts
+  const { departmentCounts, upazilaCounts, availableTodayCount } = useMemo(() => {
     const deptMap: Record<string, number> = { all: doctorsWithUpazila.length };
     const upzMap: Record<string, number> = { all: doctorsWithUpazila.length };
+    let availableCount = 0;
 
     for (let i = 0; i < doctorsWithUpazila.length; i++) {
       const doc = doctorsWithUpazila[i];
+      if (doc.isAvailableToday) {
+        availableCount++;
+      }
       const dept = doc.department || "other";
       deptMap[dept] = (deptMap[dept] || 0) + 1;
       if (isDiabetesDoctor(doc)) {
@@ -139,41 +206,50 @@ export default function DoctorDirectory({
       upzMap[upz] = (upzMap[upz] || 0) + 1;
     }
 
-    return { departmentCounts: deptMap, upazilaCounts: upzMap };
+    return { departmentCounts: deptMap, upazilaCounts: upzMap, availableTodayCount: availableCount };
   }, [doctorsWithUpazila]);
 
   const filteredDoctors = useMemo(() => {
+    const rawQ = searchQuery.trim();
+    const { hasTodayIntent, cleanedQuery } = extractTodayIntent(rawQ);
+    const q = normalizeBengaliQuery(cleanedQuery);
+
     return doctorsWithUpazila.filter((doc) => {
-      const q = searchQuery.toLowerCase().trim();
+      // 1. Available Today check (either via toggle button OR search query keyword)
+      if ((isAvailableTodayOnly || hasTodayIntent) && !doc.isAvailableToday) {
+        return false;
+      }
+
+      // 2. Search query check
       let matchesSearch = true;
-
       if (q) {
-        const transliteratedName = transliterateBengaliToEnglish(doc.name);
-        const specialtyAliases = getSpecialtySearchAliases(`${doc.specialty} ${doc.department}`);
-        const chamberAliases = getChamberSearchAliases(doc);
-        const searchableText = `${doc.name} ${transliteratedName} ${doc.nameEn || ""} ${doc.slug || ""} ${doc.specialty} ${specialtyAliases} ${doc.degrees || ""} ${doc.designation || ""} ${doc.chamberName} ${doc.chamberAddress} ${chamberAliases}`.toLowerCase();
-        matchesSearch = searchableText.includes(q);
+        matchesSearch = doc.searchIndex.includes(q);
 
-        // If direct match fails, test tokenized words (e.g. "Dr Asma" or "Kamrun Nahar")
         if (!matchesSearch) {
           const cleaned = q.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, " ").replace(/\s+/g, " ").trim();
           const tokens = cleaned.split(" ").filter((t) => t.length > 1 && t !== "dr" && t !== "ডাঃ" && t !== "doctor");
           if (tokens.length > 0) {
-            matchesSearch = tokens.every((token) => searchableText.includes(token));
+            matchesSearch = tokens.every((token) => doc.searchIndex.includes(token));
           }
         }
       }
 
+      // 3. Department check
       const matchesDept =
         selectedDept === "all" ||
         doc.department === selectedDept ||
         (selectedDept === "diabetes" && isDiabetesDoctor(doc));
 
+      // 4. Upazila check
       const matchesUpazila = selectedUpazila === "all" || doc.resolvedUpazila === selectedUpazila;
 
-      return matchesSearch && matchesDept && matchesUpazila;
+      // 5. Hospital / Chamber check
+      const matchesChamber =
+        selectedChamber === "all" || matchesHospitalDoctor(doc, selectedChamber);
+
+      return matchesSearch && matchesDept && matchesUpazila && matchesChamber;
     });
-  }, [doctorsWithUpazila, searchQuery, selectedDept, selectedUpazila]);
+  }, [doctorsWithUpazila, searchQuery, isAvailableTodayOnly, selectedDept, selectedUpazila, selectedChamber]);
 
   const displayedDoctors = limit ? filteredDoctors.slice(0, limit) : filteredDoctors.slice(0, visibleCount);
 
@@ -195,33 +271,61 @@ export default function DoctorDirectory({
         />
       )}
 
-      {/* Search Bar */}
-      <div className="relative max-w-2xl mx-auto">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-        <Input
-          type="text"
-          aria-label="ডাক্তারের নাম, হাসপাতাল বা বিশেষজ্ঞতা দিয়ে খুঁজুন"
-          placeholder="ডাক্তারের নাম, হাসপাতাল/চেম্বার বা বিশেষজ্ঞতা দিয়ে খুঁজুন..."
-          value={searchQuery}
-          onChange={(e) => {
-            setSearchQuery(e.target.value);
-            setVisibleCount(INITIAL_VISIBLE_COUNT);
-          }}
-          className="pl-12 pr-10 py-3.5 sm:py-6 text-sm sm:text-base rounded-2xl border-border/80 bg-background shadow-xs focus-visible:ring-primary"
-        />
-        {searchQuery && (
-          <button
-            type="button"
-            aria-label="Clear search"
-            onClick={() => {
-              setSearchQuery("");
+      {/* Search Bar, Symptom Hint Chips & Available Today Toggle */}
+      <div className="space-y-3.5 max-w-2xl mx-auto">
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+          <Input
+            type="text"
+            aria-label="ডাক্তারের নাম, লক্ষণ, রোগ, হাসপাতাল বা বিশেষজ্ঞতা দিয়ে খুঁজুন"
+            placeholder="ডাক্তারের নাম, লক্ষণ (যেমন: জন্ডিস, হাঁপানি), হাসপাতাল বা বিশেষজ্ঞতা দিয়ে খুঁজুন..."
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
               setVisibleCount(INITIAL_VISIBLE_COUNT);
             }}
-            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 cursor-pointer"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        )}
+            className="pl-12 pr-10 py-3.5 sm:py-6 text-sm sm:text-base rounded-2xl border-border/80 bg-background shadow-xs focus-visible:ring-primary"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              aria-label="Clear search"
+              onClick={() => {
+                setSearchQuery("");
+                setVisibleCount(INITIAL_VISIBLE_COUNT);
+              }}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 cursor-pointer"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+
+        {/* Quick Symptom & Disease Hint Chips */}
+        <SymptomHintChips
+          activeSearchQuery={searchQuery}
+          onSelectSymptom={(term) => {
+            setSearchQuery(term);
+            setVisibleCount(INITIAL_VISIBLE_COUNT);
+          }}
+          onClear={() => {
+            setSearchQuery("");
+            setVisibleCount(INITIAL_VISIBLE_COUNT);
+          }}
+        />
+
+        {/* Real-Time "Available Today" Filter Toggle */}
+        <div className="flex items-center justify-center pt-0.5">
+          <AvailableTodayToggle
+            isActive={isAvailableTodayOnly}
+            onToggle={() => {
+              setIsAvailableTodayOnly((prev) => !prev);
+              setVisibleCount(INITIAL_VISIBLE_COUNT);
+            }}
+            count={availableTodayCount}
+            dayNameBn={todayInfo.nameBn}
+          />
+        </div>
       </div>
 
       {/* Upazila / Area Location Filter Bar */}
@@ -231,7 +335,7 @@ export default function DoctorDirectory({
             <MapPin className="h-3.5 w-3.5 text-primary" />
             <span>উপজেলা / এলাকা অনুযায়ী খুঁজুন</span>
           </span>
-          {(selectedUpazila !== "all" || selectedDept !== "all" || searchQuery) && (
+          {(isAvailableTodayOnly || selectedUpazila !== "all" || selectedDept !== "all" || selectedChamber !== "all" || searchQuery) && (
             <button
               type="button"
               onClick={handleResetFilters}
@@ -242,131 +346,67 @@ export default function DoctorDirectory({
           )}
         </div>
 
-        {/* Upazila Pills - Horizontal Scroll on Mobile, Flex Wrap on Desktop */}
+        {/* Upazila Pills */}
         <div className="flex items-center gap-2 overflow-x-auto pb-1.5 sm:pb-0 scrollbar-none sm:flex-wrap sm:justify-center">
           {FENI_UPAZILAS.map((upz) => {
             const isSelected = selectedUpazila === upz.id;
             const count = upazilaCounts[upz.id] || 0;
             const href = upz.id === "all" ? "/consultants" : `/consultants/location/${upz.id}`;
+            const pillClass = `flex items-center gap-1.5 px-3.5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
+              isSelected
+                ? "bg-primary text-white shadow-sm ring-2 ring-primary/20"
+                : "bg-background hover:bg-muted text-muted-foreground border border-border/80"
+            }`;
+            const pillContent = (
+              <>
+                <MapPin className={`h-3 w-3 ${isSelected ? "text-white" : "text-primary"}`} />
+                <span>{upz.nameBn}</span>
+                {count > 0 && (
+                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${isSelected ? "bg-white/30 text-white" : "bg-muted text-muted-foreground"}`}>
+                    {toBanglaNums(count)}
+                  </span>
+                )}
+              </>
+            );
 
             if (!isDepartmentPage) {
               return (
-                <Link
-                  key={upz.id}
-                  href={href}
-                  prefetch={false}
-                  className={`flex items-center gap-1.5 px-3.5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
-                    isSelected
-                      ? "bg-primary text-white shadow-sm ring-2 ring-primary/20"
-                      : "bg-background hover:bg-muted text-muted-foreground border border-border/80"
-                  }`}
-                >
-                  <MapPin className={`h-3 w-3 ${isSelected ? "text-white" : "text-primary"}`} />
-                  <span>{upz.nameBn}</span>
-                  {count > 0 && (
-                    <span
-                      className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                        isSelected ? "bg-white/30 text-white" : "bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      {toBanglaNums(count)}
-                    </span>
-                  )}
+                <Link key={upz.id} href={href} prefetch={false} className={pillClass}>
+                  {pillContent}
                 </Link>
               );
             }
 
             return (
-              <button
-                key={upz.id}
-                type="button"
-                aria-pressed={isSelected}
-                onClick={() => handleUpazilaChange(upz.id)}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
-                  isSelected
-                    ? "bg-primary text-white shadow-sm ring-2 ring-primary/20"
-                    : "bg-background hover:bg-muted text-muted-foreground border border-border/80"
-                }`}
-              >
-                <MapPin className={`h-3 w-3 ${isSelected ? "text-white" : "text-primary"}`} />
-                <span>{upz.nameBn}</span>
-                {count > 0 && (
-                  <span
-                    className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                      isSelected ? "bg-white/30 text-white" : "bg-muted text-muted-foreground"
-                    }`}
-                  >
-                    {toBanglaNums(count)}
-                  </span>
-                )}
+              <button key={upz.id} type="button" aria-pressed={isSelected} onClick={() => handleUpazilaChange(upz.id)} className={pillClass}>
+                {pillContent}
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Mobile Department Select Field */}
-      {!isDepartmentPage && (
-        <div className="block sm:hidden">
-          <div className="relative">
-            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-primary flex items-center gap-1.5">
-              <Stethoscope className="h-4 w-4" />
-            </div>
-            <select
-              id="mobile-department-select"
-              aria-label="সকল বিভাগ"
-              value={selectedDept}
-              onChange={(e) => handleDeptChange(e.target.value)}
-              className="w-full appearance-none pl-10 pr-10 py-3 text-sm font-semibold rounded-2xl border border-border/80 bg-background text-foreground shadow-xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all cursor-pointer"
-            >
-              {DEPARTMENTS.map((dept) => {
-                const count = departmentCounts[dept.id] || 0;
-                return (
-                  <option key={dept.id} value={dept.id} className="bg-popover text-popover-foreground py-1">
-                    {dept.labelBn} {count > 0 ? `(${toBanglaNums(count)})` : ""}
-                  </option>
-                );
-              })}
-            </select>
-            <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
-              <ChevronDown className="h-4 w-4" />
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Hospital / Clinic Chamber Filter Bar */}
+      <ChamberFilterChips
+        doctors={doctorsWithUpazila}
+        selectedChamber={selectedChamber}
+        onSelectChamber={(chamberId) => {
+          setSelectedChamber(chamberId);
+          setVisibleCount(INITIAL_VISIBLE_COUNT);
+        }}
+        onClear={() => {
+          setSelectedChamber("all");
+          setVisibleCount(INITIAL_VISIBLE_COUNT);
+        }}
+      />
 
-      {/* Desktop Department Filter Pills */}
-      {!isDepartmentPage && (
-        <div className="hidden sm:flex items-center gap-2 pb-2 pt-1 sm:flex-wrap sm:justify-center">
-          {DEPARTMENTS.map((dept) => {
-            const Icon = dept.icon;
-            const isSelected = selectedDept === dept.id;
-            const count = departmentCounts[dept.id] || 0;
-            const href = dept.id === "all" || dept.id === "other" ? "/consultants" : `/consultants/department/${dept.id}`;
-
-            return (
-              <Link
-                key={dept.id}
-                href={href}
-                prefetch={false}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
-                  isSelected
-                    ? "bg-secondary text-white shadow-sm ring-2 ring-secondary/20"
-                    : "bg-background hover:bg-muted text-muted-foreground border border-border/70"
-                }`}
-              >
-                <Icon className="h-3.5 w-3.5" />
-                <span>{dept.labelBn}</span>
-                {count > 0 && (
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${isSelected ? "bg-white/20 text-white" : "bg-muted-foreground/10 text-muted-foreground"}`}>
-                    {toBanglaNums(count)}
-                  </span>
-                )}
-              </Link>
-            );
-          })}
-        </div>
-      )}
+      {/* Department Filter Bar */}
+      <DepartmentFilterBar
+        selectedDept={selectedDept}
+        departmentCounts={departmentCounts}
+        onDeptChange={handleDeptChange}
+        isDepartmentPage={isDepartmentPage}
+      />
 
       {/* Doctors Grid */}
       {displayedDoctors.length > 0 ? (
@@ -402,7 +442,9 @@ export default function DoctorDirectory({
             কোনো ডাক্তার পাওয়া যায়নি
           </h3>
           <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto mb-4">
-            অনুগ্রহ করে অন্য কোনো কি-ওয়ার্ড বা বিভাগ দিয়ে পুনরায় চেষ্টা করুন।
+            {isAvailableTodayOnly
+              ? `আজ (${todayInfo.nameBn}) আপনার ফিল্টারের সাথে মিলে এমন কোনো ডাক্তারের নিয়মিত চেম্বার পাওয়া যায়নি। অন্যান্য দিন বা বিভাগে দেখতে ফিল্টার রিসেট করুন।`
+              : "অনুগ্রহ করে অন্য কোনো কি-ওয়ার্ড বা বিভাগ দিয়ে পুনরায় চেষ্টা করুন।"}
           </p>
           <Button
             variant="outline"

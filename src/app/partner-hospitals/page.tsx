@@ -1,3 +1,4 @@
+import Link from "next/link";
 import PartnerDirectory from "@/components/ui/PartnerDirectory";
 import PartnerHospitalsGuide from "@/components/partner-hospitals/PartnerHospitalsGuide";
 import PartnerHospitalsFAQ from "@/components/partner-hospitals/PartnerHospitalsFAQ";
@@ -5,7 +6,7 @@ import CommunityNetworkCTA from "@/components/common/CommunityNetworkCTA";
 import JsonLd from "@/components/seo/JsonLd";
 import { getPartnersAction } from "@/app/actions/partnerActions";
 import { SITE_URL, DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from "@/lib/siteConfig";
-import { Sparkles, ShieldCheck, Tag, Pill, MapPin } from "lucide-react";
+import { Sparkles, ShieldCheck, Tag, Pill, MapPin, PlusCircle, ArrowRight } from "lucide-react";
 import { generatePartnerHospitalsHubJsonLd } from "./utils/hospitalJsonLd";
 
 export const dynamic = "force-static";
@@ -144,6 +145,18 @@ export default async function PartnerHospitalsPage() {
               <MapPin className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
               ফেনীর ৬টি উপজেলা কভারেজ
             </span>
+          </div>
+
+          {/* Prominent Partner Onboarding CTA Button */}
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/become-partner"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-primary hover:bg-primary-dark text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all cursor-pointer group"
+            >
+              <PlusCircle className="h-4 w-4 transition-transform group-hover:scale-110" />
+              <span>+ হাসপাতাল বা ডায়াগনস্টিক পার্টনার হোন</span>
+              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+            </Link>
           </div>
         </div>
       </header>

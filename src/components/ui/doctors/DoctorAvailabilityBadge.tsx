@@ -1,75 +1,31 @@
 import { AlertCircle, CalendarOff } from "lucide-react";
 import { Doctor } from "@/services/db";
+import {
+  DoctorAvailabilityStatus,
+  DoctorAvailabilityInfo,
+  DoctorAvailabilityReason,
+  getDoctorAvailabilityInfo,
+  isDoctorAvailableToday,
+  isAvailableOnDay,
+} from "@/lib/doctorAvailability";
+
+export type { DoctorAvailabilityStatus, DoctorAvailabilityInfo, DoctorAvailabilityReason };
+export { getDoctorAvailabilityInfo, isDoctorAvailableToday, isAvailableOnDay };
 
 interface DoctorAvailabilityBadgeProps {
-  doctor: Doctor;
+  doctor: Pick<Doctor, "availableToday" | "onLeaveUntil"> & { visitingDays?: string | null };
   size?: "sm" | "md" | "lg";
   className?: string;
-}
-
-export type DoctorAvailabilityStatus = "available_today" | "closed_today" | "on_leave";
-
-export interface DoctorAvailabilityInfo {
-  status: DoctorAvailabilityStatus;
-  label: string;
-  badgeClass: string;
-  dotClass: string;
-  formattedLeaveDate?: string;
-}
-
-function formatLeaveDate(dateStr: string): string {
-  try {
-    const d = new Date(dateStr.includes("T") ? dateStr : `${dateStr}T00:00:00`);
-    if (isNaN(d.getTime())) return dateStr;
-    return d.toLocaleDateString("bn-BD", { month: "long", day: "numeric", year: "numeric" });
-  } catch {
-    return dateStr;
-  }
-}
-
-export function getDoctorAvailabilityInfo(
-  doctor: Pick<Doctor, "availableToday" | "onLeaveUntil">
-): DoctorAvailabilityInfo {
-  const now = new Date();
-  const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-
-  if (doctor.onLeaveUntil) {
-    const rawDate = typeof doctor.onLeaveUntil === "string" ? doctor.onLeaveUntil.slice(0, 10) : "";
-    if (rawDate && rawDate >= todayStr) {
-      const formattedDate = formatLeaveDate(doctor.onLeaveUntil);
-      return {
-        status: "on_leave",
-        label: `ছুটিতে আছেন (${formattedDate} পর্যন্ত)`,
-        badgeClass: "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30",
-        dotClass: "bg-amber-500",
-        formattedLeaveDate: formattedDate,
-      };
-    }
-  }
-
-  if (doctor.availableToday === false) {
-    return {
-      status: "closed_today",
-      label: "আজ চেম্বার বন্ধ",
-      badgeClass: "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/30",
-      dotClass: "bg-rose-500",
-    };
-  }
-
-  return {
-    status: "available_today",
-    label: "আজ চেম্বার খোলা",
-    badgeClass: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30",
-    dotClass: "bg-emerald-500",
-  };
+  targetDate?: Date;
 }
 
 export function DoctorAvailabilityBadge({
   doctor,
   size = "md",
   className = "",
+  targetDate,
 }: DoctorAvailabilityBadgeProps) {
-  const info = getDoctorAvailabilityInfo(doctor);
+  const info = getDoctorAvailabilityInfo(doctor, targetDate);
 
   const sizeClasses = {
     sm: "text-[10px] px-2 py-0.5 gap-1",
@@ -77,12 +33,19 @@ export function DoctorAvailabilityBadge({
     lg: "text-xs sm:text-sm px-3 py-1 gap-2",
   };
 
+  const tooltip =
+    info.reason === "scheduled_off" && doctor.visitingDays
+      ? `রোগী দেখার দিন: ${doctor.visitingDays}`
+      : undefined;
+
   return (
     <span
+      title={tooltip}
       className={`inline-flex items-center rounded-full font-semibold border shrink-0 transition-colors ${info.badgeClass} ${sizeClasses[size]} ${className}`}
     >
       {info.status === "available_today" && (
         <span className="relative flex h-2 w-2 shrink-0">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
           <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
         </span>
       )}

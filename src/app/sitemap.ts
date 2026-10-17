@@ -25,7 +25,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/emergency",
     "/emergency/hotlines",
     "/emergency/ambulances",
+    "/emergency/ambulances/register",
     "/emergency/blood-donors",
+    "/emergency/blood-donors/register",
     "/consultants",
     "/partner-hospitals",
     "/shop",
@@ -35,6 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/membership",
     "/about-us",
     "/become-partner",
+    "/doctor-registration",
     "/contact",
     "/privacy-policy",
     "/terms-conditions",
@@ -52,8 +55,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       route === "/emergency" ||
       route === "/emergency/hotlines" ||
       route === "/emergency/ambulances" ||
+      route === "/emergency/ambulances/register" ||
       route === "/emergency/blood-donors" ||
-      route === "/consultants"
+      route === "/emergency/blood-donors/register" ||
+      route === "/consultants" ||
+      route === "/doctor-registration"
     ) {
       priority = 0.95;
       changeFrequency = "daily";
